@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="OpenDentalDiffDocumentation.xsl"?>
+<database version="20.2.17.0">
+    <table name="apptreminderrule">
+        <summary></summary>
+        <column order="21" name="EmailTemplateType" type="varchar(255)">
+            <summary>Enum. The Type of email for the template.</summary>
+        </column>
+        <column order="22" name="AggEmailTemplateType" type="varchar(255)">
+            <summary>Enum:EmailType The type of email for the aggregated template. </summary>
+            <Enumeration name="EmailType">
+                <summary />
+                <EnumValue name="Regular">0 - This is a regular email that may contain our special wiki markup.</EnumValue>
+                <EnumValue name="Html">1 - Html. Basic html email which uses the master template.</EnumValue>
+                <EnumValue name="RawHtml">2 - More advanced html that does not include the master template, user must provide everything.</EnumValue>
+            </Enumeration>
+        </column>
+    </table>
+    <table name="asapcomm">
+        <summary></summary>
+        <column order="22" name="EmailTemplateType" type="varchar(255)">
+            <summary>Enum:EmailType Type of markup for the template.</summary>
+            <Enumeration name="EmailType">
+                <summary />
+                <EnumValue name="Regular">0 - This is a regular email that may contain our special wiki markup.</EnumValue>
+                <EnumValue name="Html">1 - Html. Basic html email which uses the master template.</EnumValue>
+                <EnumValue name="RawHtml">2 - More advanced html that does not include the master template, user must provide everything.</EnumValue>
+            </Enumeration>
+        </column>
+    </table>
+    <table name="carecreditwebresponse">
+        <summary></summary>
+        <column order="6" name="ProcessingStatus" type="varchar(255)">
+            <summary>Enum:CareCreditWebStatus Used to determine if the request is pending, needs action, or is completed.</summary>
+            <Enumeration name="CareCreditWebStatus">
+                <summary />
+                <EnumValue name="Declined">7.</EnumValue>
+                <EnumValue name="CallForAuth">8.</EnumValue>
+                <EnumValue name="DupQS">9.</EnumValue>
+                <EnumValue name="AccountFound">10.</EnumValue>
+                <EnumValue name="BatchError">12.</EnumValue>
+            </Enumeration>
+        </column>
+        <column order="13" name="ClinicNum" type="bigint(20)" fk="clinic">
+            <summary>FK to clinic.ClinicNum.</summary>
+        </column>
+        <column order="14" name="ServiceType" type="varchar(255)">
+            <summary>Enum:CareCreditServiceType Used to determine what service was requested for this web response.</summary>
+            <Enumeration name="CareCreditServiceType">
+                <summary />
+                <EnumValue name="Batch">0.</EnumValue>
+                <EnumValue name="Prefill">1.</EnumValue>
+            </Enumeration>
+        </column>
+        <column order="15" name="TransType" type="varchar(255)">
+            <summary>Enum:CareCreditTransType Used to determine the transaction type.</summary>
+            <Enumeration name="CareCreditTransType">
+                <summary />
+                <EnumValue name="Purchase">0.</EnumValue>
+                <EnumValue name="Refund">1.</EnumValue>
+            </Enumeration>
+        </column>
+    </table>
+    <table name="computerpref">
+        <summary></summary>
+        <column order="30" name="GraphicsUseDirectX11" type="tinyint(4)">
+            <summary>Enum:YN Unknown, Yes, No.</summary>
+            <Enumeration name="YN">
+                <summary>0=Unknown,1=Yes, or 2=No. UI can be tricky. Some success with a 3x1 listbox, multicolumn, see FormPatientEdit. Radiobuttons are also an option.  You can also use another YN variable to store unknown, and then use a click event on the checkbox to change to Y or N.  You can also use a three state checkbox if you translate properly between the enums.</summary>
+                <EnumValue name="Unknown">0</EnumValue>
+                <EnumValue name="Yes">1</EnumValue>
+                <EnumValue name="No">2</EnumValue>
+            </Enumeration>
+        </column>
+    </table>
+    <table name="creditcard">
+        <summary></summary>
+        <column order="16" name="CCSource" type="tinyint(4)">
+            <summary>Enum:CreditCardSource Indicates which application made this credit card and token.</summary>
+            <Enumeration name="CreditCardSource">
+                <summary />
+                <EnumValue name="CareCredit">10 - Care Credit.</EnumValue>
+            </Enumeration>
+        </column>
+        <column order="22" name="PaymentType" type="bigint(20)" fk="definition">
+            <summary>FK to definition.DefNum. Payment type override for recurring charges.</summary>
+        </column>
+    </table>
+    <table name="entrylog">
+        <summary></summary>
+        <column order="4" name="LogSource" type="tinyint(4)">
+            <summary>Enum:LogSources</summary>
+            <Enumeration name="LogSources">
+                <summary>Known entities that create security logs.</summary>
+                <EnumValue name="CareCredit">18 - Care Credit.</EnumValue>
+            </Enumeration>
+        </column>
+    </table>
+    <table name="mount">
+        <summary></summary>
+        <column order="8" name="ColorBack" type="int(11)">
+            <summary>Color of the mount background.  Typically white for photos and black for radiographs.</summary>
+        </column>
+    </table>
+    <table name="mountdef">
+        <summary></summary>
+        <column order="5" name="ColorBack" type="int(11)">
+            <summary>Color of the mount background.  Typically white for photos and black for radiographs.</summary>
+        </column>
+    </table>
+    <table name="payconnectresponseweb">
+        <summary></summary>
+        <column order="12" name="CCSource" type="tinyint(4)">
+            <summary>Enum:CreditCardSource .</summary>
+            <Enumeration name="CreditCardSource">
+                <summary />
+                <EnumValue name="CareCredit">10 - Care Credit.</EnumValue>
+            </Enumeration>
+        </column>
+    </table>
+    <table name="payment">
+        <summary></summary>
+        <column order="16" name="PaymentSource" type="tinyint(4)">
+            <summary>Enum:CreditCardSource Indicates the origin of the payment if the payment came from a credit card. Will be 'None' if this payment 
+            did not use a credit card.</summary>
+            <Enumeration name="CreditCardSource">
+                <summary />
+                <EnumValue name="CareCredit">10 - Care Credit.</EnumValue>
+            </Enumeration>
+        </column>
+    </table>
+    <table name="securitylog">
+        <summary></summary>
+        <column order="8" name="LogSource" type="tinyint(4)">
+            <summary>Enum:LogSources None, WebSched, InsPlanImport834, FHIR, PatientPortal.</summary>
+            <Enumeration name="LogSources">
+                <summary>Known entities that create security logs.</summary>
+                <EnumValue name="CareCredit">18 - Care Credit.</EnumValue>
+            </Enumeration>
+        </column>
+    </table>
+    <table name="xwebresponse">
+        <summary></summary>
+        <column order="33" name="CCSource" type="tinyint(4)">
+            <summary>Enum:CreditCardSource The source of where this transaction originated from.</summary>
+            <Enumeration name="CreditCardSource">
+                <summary />
+                <EnumValue name="CareCredit">10 - Care Credit.</EnumValue>
+            </Enumeration>
+        </column>
+    </table>
+</database>
