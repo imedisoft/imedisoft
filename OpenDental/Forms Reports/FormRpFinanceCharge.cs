@@ -25,7 +25,7 @@ namespace OpenDental {
 		private CheckBox checkAllBilling;
 		private Label label1;
 		private Label label4;
-		private FormQuery FormQuery2;
+		//private FormQuery FormQuery2;
 		private List<Provider> _listProviders=new List<Provider>();
 		private List<Def> _listBillingTypeDefs=new List<Def>();
 

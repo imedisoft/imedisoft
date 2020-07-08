@@ -154,9 +154,7 @@ namespace OpenDental{
 			if(string.IsNullOrEmpty(UserCur.PasswordHash)){
 				butPassword.Text=Lan.g(this,"Create Password");
 			}
-			if(!PrefC.IsODHQ) {
-				butJobRoles.Visible=false;
-			}
+
 			if(IsNew) {
 				butUnlock.Visible=false;
 			}
@@ -178,7 +176,6 @@ namespace OpenDental{
 				checkRequireReset.Checked=true;
 				checkRequireReset.Enabled=false;
 				butUnlock.Visible=false;
-				butJobRoles.Visible=false;
 			}
 			if(!PrefC.HasClinicsEnabled) {
 				butDoseSpotAdditional.Visible=false;
@@ -268,11 +265,6 @@ namespace OpenDental{
 			catch(Exception) {
 				MsgBox.Show(this,"There was a problem unlocking this user.  Please call support or wait the allotted lock time.");
 			}
-		}
-
-		private void butJobRoles_Click(object sender,EventArgs e) {
-			FormJobPermissions FormJR=new FormJobPermissions(UserCur.UserNum);
-			FormJR.ShowDialog();
 		}
 
 		private void butDoseSpotAdditional_Click(object sender,EventArgs e) {

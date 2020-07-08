@@ -30,8 +30,8 @@ namespace OpenDental.UI {
 		///<summary>Used for special cases where signature logic varies from our default.</summary>
 		private SigMode _signatureMode=SigMode.Default;
 
-		[Category("Property"),Description("Set the text that shows in the invalid signature label"),DefaultValue("Invalid Signature")]
 		///<summary>Usually "Invalid Signature", but this can be changed for different situations.</summary>
+		[Category("Property"),Description("Set the text that shows in the invalid signature label"),DefaultValue("Invalid Signature")]
 		public string LabelText {
 			get {
 				return labelInvalidSig.Text;
@@ -116,7 +116,7 @@ namespace OpenDental.UI {
 				try {
 					InitializeTopaz();
 				}
-				catch(Exception ex) {
+				catch(Exception) {
 					//FriendlyException.Show(Lans.g(this,"Unable to initialize Topaz."),ex);
 					return false;
 				}

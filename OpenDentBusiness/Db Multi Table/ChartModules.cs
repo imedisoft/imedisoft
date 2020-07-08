@@ -731,100 +731,6 @@ namespace OpenDentBusiness {
 					rows.Add(row);
 				}
 				#endregion Commlog
-				#region WebChatNote - HQ only
-				if(PrefC.IsODHQ) {
-					//connect to the webchat db for this query
-					List<WebChatSession> listWebChatSessions=new List<WebChatSession>();
-					WebChatMisc.DbAction(delegate() {
-						command=@"SELECT *
-										FROM webchatsession
-										WHERE webchatsession.PatNum="+POut.Long(patNum)+@" OR webchatsession.PatNum="+POut.Long(family.Guarantor.PatNum)+@" 
-										ORDER BY webchatsession.DateTcreated";
-						listWebChatSessions=Crud.WebChatSessionCrud.SelectMany(command);
-					});
-					//Since this is an internal database on another server, be defensive to allow chart access if the other server is down for any reason.
-					if(listWebChatSessions!=null) {//Will be null if the query failed or the server is unavailable or any reason.
-						foreach(WebChatSession session in listWebChatSessions) {
-							row=table.NewRow();
-							row["AbbrDesc"]="";
-							row["aptDateTime"]=DateTime.MinValue;
-							row["AptNum"]=0;
-							row["clinic"]="";
-							row["ClinicNum"]=0;
-							row["CodeNum"]="";
-							row["colorBackG"]=Color.White.ToArgb();
-							row["colorText"]=listProgNoteColorDefs[6].ItemColor.ToArgb().ToString();
-							row["CommlogNum"]=0;
-							row["dateEntryC"]="";
-							row["dateTP"]="";
-							row["description"]=Lans.g("ChartModule","Web Chat Session")+" - "+session.WebChatSessionNum.ToString();
-							row["DocNum"]=0;
-							row["dx"]="";
-							row["Dx"]="";
-							row["EmailMessageNum"]=0;
-							row["FormPatNum"]=0;
-							row["HideGraphics"]="";
-							row["isLocked"]="";
-							row["LabCaseNum"]=0;
-							row["length"]="";
-							if(PIn.DateT(session.DateTend.ToString()).Year>1880) {
-									DateTime startTime=PIn.DateT(session.DateTcreated.ToString());
-									DateTime endTime=PIn.DateT(session.DateTend.ToString());
-									row["length"]=(endTime-startTime).ToStringHmm();
-							}
-							row["note"]=session.Note.ToString();
-							row["orionDateScheduleBy"]="";
-							row["orionDateStopClock"]="";
-							row["orionDPC"]="";
-							row["orionDPCpost"]="";
-							row["orionIsEffectiveComm"]="";
-							row["orionIsOnCall"]="";
-							row["orionStatus2"]="";
-							row["PatNum"]=session.PatNum.ToString();
-							row["Priority"]="";
-							row["priority"]="";
-							row["ProcCode"]="";
-							dateT=PIn.DateT(session.DateTcreated.ToString()); 
-							if(dateT.Year<1880) {
-								row["procDate"]="";
-							}
-							else {
-								row["procDate"]=dateT.ToString(Lans.GetShortDateTimeFormat());
-							}
-							row["ProcDate"]=dateT;
-							row["procTime"]="";
-							if(dateT.TimeOfDay!=TimeSpan.Zero) {
-								row["procTime"]=dateT.ToString("h:mm")+dateT.ToString("%t").ToLower();
-							}
-							row["procTimeEnd"]="";
-							if(dateT.TimeOfDay!=TimeSpan.Zero) {
-								row["procTimeEnd"]=dateT.ToString("h:mm")+dateT.ToString("%t").ToLower();
-							}
-							row["procFee"]="";
-							row["ProcNum"]=0;
-							row["ProcNumLab"]="";
-							row["procStatus"]="";
-							row["ProcStatus"]="";
-							row["prov"]="";
-							row["ProvNum"]="";
-							row["quadrant"]="";
-							row["RxNum"]=0;
-							row["SheetNum"]=0;
-							row["signature"]="";
-							row["Surf"]="";
-							row["TaskNum"]=0;
-							row["toothNum"]="";
-							row["ToothNum"]="";
-							row["ToothRange"]="";
-							row["user"]=session.TechName;
-							row["WebChatSessionNum"]=session.WebChatSessionNum.ToString();
-							row["EmailMessageHideIn"]="0";
-							row["EmailMessageHtmlType"]="0";
-							rows.Add(row);
-						}
-					}
-				}
-				#endregion WebChatNote
 			}
 			if(componentsToLoad.ShowFormPat) {
 				#region formpat
@@ -1911,6 +1817,7 @@ namespace OpenDentBusiness {
 		CommLog,
 		///<summary>3 - WebChatSessionNum is not 0.</summary>
 		[ProgNotesRow("WebChatSessionNum")]
+		[Obsolete]
 		WebChatSession,
 		///<summary>4 - RxNum is not 0.</summary>
 		[ProgNotesRow("RxNum")]

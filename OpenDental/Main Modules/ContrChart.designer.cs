@@ -213,7 +213,6 @@
 			this.textMonth2 = new System.Windows.Forms.TextBox();
 			this.textMonth1 = new System.Windows.Forms.TextBox();
 			this.listCommonProcs = new System.Windows.Forms.ListBox();
-			this.gridCustomerViews = new OpenDental.UI.ODGrid();
 			this.menuConsent = new System.Windows.Forms.ContextMenu();
 			this.panelEcw = new System.Windows.Forms.Panel();
 			this.labelECWerror = new System.Windows.Forms.Label();
@@ -245,7 +244,6 @@
 			this.button1 = new OpenDental.UI.Button();
 			this.gridPtInfo = new OpenDental.UI.ODGrid();
 			this.textTreatmentNotes = new OpenDental.ODtextBox();
-			this.odInternalCustomerGrids = new OpenDental.UI.ODInternalCustomerGrids();
 			this.panelToothTrackBar = new System.Windows.Forms.Panel();
 			this.panelTPpriority = new System.Windows.Forms.Panel();
 			this.gridProgPageNav = new OpenDental.UI.ODGridPageNav();
@@ -2122,7 +2120,6 @@
 			this.tabCustomer.Controls.Add(this.textMonth2);
 			this.tabCustomer.Controls.Add(this.textMonth1);
 			this.tabCustomer.Controls.Add(this.listCommonProcs);
-			this.tabCustomer.Controls.Add(this.gridCustomerViews);
 			this.tabCustomer.Location = new System.Drawing.Point(4, 22);
 			this.tabCustomer.Name = "tabCustomer";
 			this.tabCustomer.Padding = new System.Windows.Forms.Padding(3);
@@ -2264,17 +2261,6 @@
 			this.listCommonProcs.Size = new System.Drawing.Size(131, 173);
 			this.listCommonProcs.TabIndex = 46;
 			this.listCommonProcs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listCommonProcs_MouseDown);
-			// 
-			// gridCustomerViews
-			// 
-			this.gridCustomerViews.Location = new System.Drawing.Point(6, 30);
-			this.gridCustomerViews.Name = "gridCustomerViews";
-			this.gridCustomerViews.Size = new System.Drawing.Size(191, 173);
-			this.gridCustomerViews.TabIndex = 45;
-			this.gridCustomerViews.Title = "Chart Views";
-			this.gridCustomerViews.TranslationName = "TableCustomerViews";
-			this.gridCustomerViews.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridCustomerViews_CellDoubleClick);
-			this.gridCustomerViews.CellClick += new OpenDental.UI.ODGridClickEventHandler(this.gridCustomerViews_CellClick);
 			// 
 			// menuConsent
 			// 
@@ -2576,15 +2562,6 @@
 			this.textTreatmentNotes.Leave += new System.EventHandler(this.textTreatmentNotes_Leave);
 			this.textTreatmentNotes.MouseLeave += new System.EventHandler(this.textTreatmentNotes_MouseLeave);
 			// 
-			// odInternalCustomerGrids
-			// 
-			this.odInternalCustomerGrids.Location = new System.Drawing.Point(0, 27);
-			this.odInternalCustomerGrids.Name = "odInternalCustomerGrids";
-			this.odInternalCustomerGrids.PatCur = null;
-			this.odInternalCustomerGrids.Size = new System.Drawing.Size(410, 334);
-			this.odInternalCustomerGrids.TabIndex = 213;
-			this.odInternalCustomerGrids.Visible = false;
-			// 
 			// panelToothTrackBar
 			// 
 			this.panelToothTrackBar.Controls.Add(this.textToothProcDate);
@@ -2685,7 +2662,6 @@
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.gridPtInfo);
 			this.Controls.Add(this.textTreatmentNotes);
-			this.Controls.Add(this.odInternalCustomerGrids);
 			this.Controls.Add(this.panelTPpriority);
 			this.Name = "ContrChart";
 			this.Size = new System.Drawing.Size(939, 708);
@@ -2900,7 +2876,6 @@
 		private UI.Button butShowDateRange;
 		private System.Windows.Forms.TextBox textShowDateRange;
 		private System.Windows.Forms.TabPage tabCustomer;
-		private OpenDental.UI.ODGrid gridCustomerViews;
 		private System.Windows.Forms.Label labelTimes;
 		private System.Windows.Forms.Label labelMonth1;
 		private System.Windows.Forms.Label labelMonth2;
@@ -2940,7 +2915,6 @@
 		private System.Windows.Forms.Label label23;
 		private ODtextBox textSearch;
 		private System.Windows.Forms.Label labelSearchClear;
-		private OpenDental.UI.ODInternalCustomerGrids odInternalCustomerGrids;
 		private System.Windows.Forms.MenuItem menuItemSetEC;
 		private System.Windows.Forms.MenuItem menuItemSetEO;
 		private System.Windows.Forms.MenuItem menuItemGroupMultiVisit;

@@ -1182,6 +1182,27 @@ namespace OpenDental {
 				MessageBox.Show("No Labels to Print for Selected Criteria");
 			}
 		}
+
+		public static void FitText(string text, Font font, Brush brush, RectangleF rectF, StringFormat stringFormat, Graphics graphics)
+		{
+			// TODO: Move this somewhere more appropriate...
+
+			float emSize = font.Size;
+			Size size = TextRenderer.MeasureText(text, font);
+			if (size.Width >= rectF.Width)
+			{
+				emSize = emSize * (rectF.Width / size.Width);//get the ratio of the room width to font width and multiply that by the font size
+				if (emSize < 2)
+				{//don't let the font be smaller than 2 point font
+					emSize = 2F;
+				}
+			}
+			using (Font newFont = new Font(font.FontFamily, emSize, font.Style))
+			{
+				graphics.DrawString(text, newFont, brush, rectF, stringFormat);
+			}
+		}
+
 		private void pdLabels_PrintPage(object sender,PrintPageEventArgs ev) {
 			int totalPages = (int)Math.Ceiling((double)AddrTable.Rows.Count / 30);
 			Graphics g = ev.Graphics;
@@ -1216,7 +1237,7 @@ namespace OpenDental {
 				text += AddrTable.Rows[labelsPrinted]["State"].ToString() + "   "
                     + AddrTable.Rows[labelsPrinted]["Zip"].ToString() + "\r\n";
 				Rectangle rect=new Rectangle((int)xPos,(int)yPos,275,100);
-				MapAreaRoomControl.FitText(text,new Font(FontFamily.GenericSansSerif,11),Brushes.Black,rect,new StringFormat(),g);
+				FitText(text,new Font(FontFamily.GenericSansSerif,11),Brushes.Black,rect,new StringFormat(),g);
 				//reposition for next label
 				xPos += 275;
 				if(xPos > 850) {//drop a line

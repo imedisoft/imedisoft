@@ -149,15 +149,6 @@ namespace OpenDentBusiness {
 			Prefs.UpdateDateT(PrefName.RepeatingChargesBeginDateTime,dateRun);
 			try {
 				List<RepeatCharge> listRepeatingCharges=RepeatCharges.Refresh(0).ToList();
-				if(PrefC.IsODHQ) {
-					//EService charges have already been calculated and stored in EServiceBilling table. Add those here.
-					List<string> listEServiceCodes=EServiceCodeLink.GetProcCodesForAll();
-					List<RepeatCharge> listRepeatChargesEServices=listRepeatingCharges.FindAll(x => listEServiceCodes.Contains(x.ProcCode));
-					result.ProceduresAddedCount+=EServiceBillings.AddEServiceRepeatingChargesHelper(dateRun,listRepeatChargesEServices).Count;
-					result.ProceduresAddedCount+=APIBillings.AddFHIRRepeatingChargesHelper(dateRun,listRepeatChargesEServices).Count;
-					//Remove all eService repeating charges.
-					listRepeatingCharges.RemoveAll(x => listEServiceCodes.Contains(x.ProcCode));
-				}
 				//Must contain all procedures that affect the date range, safe to contain too many, bad to contain too few.
 				List<Procedure> listExistingProcs=Procedures.GetCompletedForDateRange(dateRun.AddMonths(-3),dateRun.AddDays(1),
 					listRepeatingCharges.Select(x => x.ProcCode).Distinct().Select(x => ProcedureCodes.GetProcCode(x).CodeNum).ToList());
@@ -519,123 +510,6 @@ namespace OpenDentBusiness {
 			}
 			payCur.PayNote="Allocated "+noteText+" prepayments to repeating charge.";
 			Payments.Insert(payCur,listInsertPaySplits,listAssociatedSplits);
-		}
-
-		///<summary>Should only be called if ODHQ.</summary>
-		private static List<Procedure> AddSmsRepeatingChargesHelper(DateTime dateRun) {
-			//No remoting role check; no call to db
-			DateTime dateStart=new DateTime(dateRun.AddMonths(-1).AddDays(-20).Year,dateRun.AddMonths(-1).AddDays(-20).Month,1);
-			DateTime dateStop=dateRun.AddDays(1);
-			List<SmsBilling> listSmsBilling=SmsBillings.GetByDateRange(dateStart,dateStop);
-			List<Patient> listPatients=Patients.GetMultPats(listSmsBilling.Select(x => x.CustPatNum).Distinct().ToList()).ToList(); //local cache
-			ProcedureCode procCodeAccess=ProcedureCodes.GetProcCode(ProcedureCodes.GetProcCodeForEService(eServiceCode.IntegratedTexting));
-			ProcedureCode procCodeUsage=ProcedureCodes.GetProcCode(ProcedureCodes.GetProcCodeForEService(eServiceCode.IntegratedTextingUsage));
-			ProcedureCode procCodeConfirm=ProcedureCodes.GetProcCode(ProcedureCodes.GetProcCodeForEService(eServiceCode.ConfirmationRequest));
-			List<Procedure> listProcsAccess=Procedures.GetCompletedForDateRange(dateStart,dateStop,new List<long> {procCodeAccess.CodeNum});
-			List<Procedure> listProcsUsage=Procedures.GetCompletedForDateRange(dateStart,dateStop,new List<long> {procCodeUsage.CodeNum});
-			List<Procedure> listProcsConfirm=Procedures.GetCompletedForDateRange(dateStart,dateStop,new List<long> {procCodeConfirm.CodeNum});
-			List<Procedure> retVal=new List<Procedure>();
-			foreach(SmsBilling smsBilling in listSmsBilling) {
-				Patient pat=listPatients.FirstOrDefault(x => x.PatNum==smsBilling.CustPatNum);
-				if(pat==null) {
-					EServiceSignal eSignal=new EServiceSignal {
-						ServiceCode=(int)eServiceCode.IntegratedTexting,
-						SigDateTime=MiscData.GetNowDateTime(),
-						Severity=eServiceSignalSeverity.Error,
-						Description="Sms billing row found for non existent patient PatNum:"+smsBilling.CustPatNum
-					};
-					EServiceSignals.Insert(eSignal);
-					continue;
-				}
-				//Find the billing date based on the date usage.
-				DateTime billingDate=smsBilling.DateUsage.AddMonths(1);//we always bill the month after usage posts. Example: all January usage = 01/01/2015
-				billingDate=new DateTime(
-					billingDate.Year,
-					billingDate.Month,
-					Math.Min(pat.BillingCycleDay,DateTime.DaysInMonth(billingDate.Year,billingDate.Month)));
-				//example: dateUsage=08/01/2015, billing cycle date=8/14/2012, billing date should be 9/14/2015.
-				if(billingDate>dateRun || billingDate<dateRun.AddMonths(-1).AddDays(-20)) {
-					//One month and 20 day window. Bill regardless of presence of "038" repeat charge.
-					continue;
-				}
-				if(smsBilling.AccessChargeTotalUSD==0 && smsBilling.MsgChargeTotalUSD==0 &&smsBilling.ConfirmationChargeTotalUSD==0) {
-					//No charges so skip this customer.
-					continue;
-				}
-				//Only post confirmation charge if valid.
-				if(smsBilling.ConfirmationChargeTotalUSD>0
-					&& (billingDate.Date <= DateTime.Today.Date || PrefC.GetBool(PrefName.FutureTransDatesAllowed)
-					&& !listProcsConfirm.Exists(x => x.PatNum==pat.PatNum && x.ProcDate.Year==billingDate.Year && x.ProcDate.Month==billingDate.Month)))
-				{
-					//The calculated access charge was greater than 0 and there is not an existing "038" procedure on the account for that month.
-					Procedure procConfirm=new Procedure();
-					procConfirm.CodeNum=procCodeConfirm.CodeNum;
-					procConfirm.DateEntryC=DateTime.Today;
-					procConfirm.PatNum=pat.PatNum;
-					procConfirm.ProcDate=billingDate;
-					procConfirm.DateTP=billingDate;
-					procConfirm.ProcFee=smsBilling.ConfirmationChargeTotalUSD;
-					procConfirm.ProcStatus=ProcStat.C;
-					procConfirm.ProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
-					procConfirm.MedicalCode=procCodeConfirm.MedicalCode;
-					procConfirm.BaseUnits=procCodeConfirm.BaseUnits;
-					procConfirm.DiagnosticCode=PrefC.GetString(PrefName.ICD9DefaultForNewProcs);
-					procConfirm.BillingNote=smsBilling.BillingDescConfirmation;
-					procConfirm.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used.
-					Procedures.Insert(procConfirm);
-					listProcsConfirm.Add(procConfirm);
-					retVal.Add(procConfirm);
-				}
-				//Confirmation charges may wipe out access charges. We still want to see the $0 charge in this case so post this charge if either of the 2 are valid.
-				if((smsBilling.AccessChargeTotalUSD>0 || smsBilling.ConfirmationChargeTotalUSD>0)
-					&& (billingDate.Date <= DateTime.Today.Date || PrefC.GetBool(PrefName.FutureTransDatesAllowed)) 
-					&& !listProcsAccess.Exists(x => x.PatNum==pat.PatNum && x.ProcDate.Year==billingDate.Year && x.ProcDate.Month==billingDate.Month))
-				{
-					//The calculated access charge was greater than 0 and there is not an existing "038" procedure on the account for that month.
-					Procedure procAccess=new Procedure();
-					procAccess.CodeNum=procCodeAccess.CodeNum;
-					procAccess.DateEntryC=DateTime.Today;
-					procAccess.PatNum=pat.PatNum;
-					procAccess.ProcDate=billingDate;
-					procAccess.DateTP=billingDate;
-					procAccess.ProcFee=smsBilling.AccessChargeTotalUSD;
-					procAccess.ProcStatus=ProcStat.C;
-					procAccess.ProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
-					procAccess.MedicalCode=procCodeAccess.MedicalCode;
-					procAccess.BaseUnits=procCodeAccess.BaseUnits;
-					procAccess.DiagnosticCode=PrefC.GetString(PrefName.ICD9DefaultForNewProcs);
-					procAccess.BillingNote=smsBilling.BillingDescSms;
-					procAccess.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used. 
-					Procedures.Insert(procAccess);
-					listProcsAccess.Add(procAccess);
-					retVal.Add(procAccess);
-				}
-				//Only post usage charge if valid.
-				if(smsBilling.MsgChargeTotalUSD>0
-					&& (billingDate.Date <= DateTime.Today.Date || PrefC.GetBool(PrefName.FutureTransDatesAllowed))
-					&& !listProcsUsage.Exists(x => x.PatNum==pat.PatNum && x.ProcDate.Year==billingDate.Year && x.ProcDate.Month==billingDate.Month))
-				{
-					//Calculated Usage charge > 0 and not already billed, may exist without access charge
-					Procedure procUsage=new Procedure();
-					procUsage.CodeNum=procCodeUsage.CodeNum;
-					procUsage.DateEntryC=DateTime.Today;
-					procUsage.PatNum=pat.PatNum;
-					procUsage.ProcDate=billingDate;
-					procUsage.DateTP=billingDate;
-					procUsage.ProcFee=smsBilling.MsgChargeTotalUSD;
-					procUsage.ProcStatus=ProcStat.C;
-					procUsage.ProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
-					procUsage.MedicalCode=procCodeUsage.MedicalCode;
-					procUsage.BaseUnits=procCodeUsage.BaseUnits;
-					procUsage.DiagnosticCode=PrefC.GetString(PrefName.ICD9DefaultForNewProcs);
-					procUsage.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used. 
-					procUsage.BillingNote="Texting Usage charge for "+smsBilling.DateUsage.ToString("MMMM yyyy")+".";
-					Procedures.Insert(procUsage);
-					listProcsUsage.Add(procUsage);
-					retVal.Add(procUsage);
-				}
-			}
-			return retVal;
 		}
 
 		///<summary>Returns true if the existing procedure was for the possibleBillingDate.</summary>

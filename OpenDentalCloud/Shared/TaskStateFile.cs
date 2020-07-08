@@ -14,7 +14,7 @@ namespace OpenDentalCloud.Core {
 		private string _folder;
 		private string _fileName;
 		private byte[] _fileContent=new byte[1];
-		private string _fileId;
+		//private string _fileId;
 		
 		///<summary>The folder of the corresponding file to be downloaded</summary>
 		public string Folder {

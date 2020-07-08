@@ -443,24 +443,6 @@ namespace OpenDental {
 		}
 
 		private void ContrApptPanel_ApptRightClicked(object sender, UI.ApptRightClickEventArgs e){
-			if(PrefC.IsODHQ) {
-				menuApt.MenuItems.RemoveByKey(MenuItemNames.Jobs);
-				menuApt.MenuItems.RemoveByKey(MenuItemNames.JobsSpacer);
-				MenuItem menuSpacer=new MenuItem("-");
-				menuSpacer.Name=MenuItemNames.JobsSpacer;
-				menuApt.MenuItems.Add(menuSpacer);
-				MenuItem menuJobs=new MenuItem(Lan.g(this,"Jobs"));
-				menuJobs.Name=MenuItemNames.Jobs;
-				menuJobs.MenuItems.Add(Lan.g(this,"Attach Job"),new EventHandler(menuJobs_Attach));
-				List<JobLink> jobLinks = JobLinks.GetForApptNum(contrApptPanel.SelectedAptNum);
-				List<Job> listJobs = Jobs.GetMany(jobLinks.Select(x => x.JobNum).ToList());
-				foreach(Job job in listJobs) {
-					MenuItem menuItemJob=new MenuItem(job.ToString(),new EventHandler(menuJobs_GoToJob));
-					menuItemJob.Tag=job.JobNum;
-					menuJobs.MenuItems.Add(menuItemJob);
-				}
-				menuApt.MenuItems.Add(menuJobs);
-			}
 			menuApt.MenuItems.RemoveByKey(MenuItemNames.PhoneDiv);
 			menuApt.MenuItems.RemoveByKey(MenuItemNames.HomePhone);
 			menuApt.MenuItems.RemoveByKey(MenuItemNames.WorkPhone);
@@ -2326,31 +2308,6 @@ namespace OpenDental {
 		}
 		#endregion Methods - Event Handlers Menu TextAppts Click
 
-		#region Methods - Event Handlers Menu Jobs
-		private void menuJobs_Attach(object sender,System.EventArgs e) {
-			if(contrApptPanel.SelectedAptNum<=0) {
-				return;
-			}
-			//Atach new job
-			FormJobSearch FormJS = new FormJobSearch();
-			FormJS.ShowDialog();
-			if(FormJS.DialogResult!=DialogResult.OK || FormJS.SelectedJobNum==0) {
-				return;
-			}
-			JobLink jobLink = new JobLink();
-			jobLink.JobNum=FormJS.SelectedJobNum;
-			jobLink.FKey=contrApptPanel.SelectedAptNum;
-			jobLink.LinkType=JobLinkType.Appointment;
-			JobLinks.Insert(jobLink);
-			Signalods.SetInvalid(InvalidType.Jobs,KeyType.Job,jobLink.JobNum);
-			return;
-		}
-
-		private void menuJobs_GoToJob(object sender,System.EventArgs e) {
-				FormOpenDental.S_GoToJob(((long)((MenuItem)sender).Tag));
-		}
-		#endregion Methods - Event Handlers Menu Jobs
-
 		#region Methods - Event Handlers Search
 		private void ButAdvSearch_Click(object sender, EventArgs e){
 			if(pinBoard.SelectedIndex==-1) {
@@ -2525,10 +2482,6 @@ namespace OpenDental {
 			menuApt.MenuItems.Clear();
 			menuItem=menuApt.MenuItems.Add(Lan.g(this,"Copy to Pinboard"),new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.CopyToPinboard;
-			if(PrefC.IsODHQ) {
-				menuItem=menuApt.MenuItems.Add(Lan.g(this,"Copy Appointment Structure"),new EventHandler(menuApt_Click));
-				menuItem.Name=MenuItemNames.CopyAppointmentStructure;
-			}
 			menuApt.MenuItems.Add("-");
 			menuItem=menuApt.MenuItems.Add(Lan.g(this,"Send to Unscheduled List"),new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.SendToUnscheduledList;
@@ -2598,9 +2551,6 @@ namespace OpenDental {
 			toolTip1.SetToolTip(butComplete,Lan.g(this,"Set Complete"));
 			toolTip1.SetToolTip(butDelete,Lan.g(this,"Delete"));
 			//toolTip1.SetToolTip(butOther,,"Other Appointments");
-			if(PrefC.IsODHQ) {
-				butGraph.Visible=true;
-			}
 			SetWeeklyView(PrefC.GetBool(PrefName.ApptModuleDefaultToWeek));
 			SendToPinboardEvent.Fired+=HandlePinClicked;
 			_hasInitializedOnStartup=true;
@@ -3250,9 +3200,6 @@ namespace OpenDental {
 			FillProduction(contrApptPanel.DateStart,contrApptPanel.DateEnd);
 			FillProductionGoal(contrApptPanel.DateStart,contrApptPanel.DateEnd);
 			bool hasNotes=true;
-			if(PrefC.IsODHQ){
-				hasNotes=Security.IsAuthorized(Permissions.Schedules,true);
-			}
 			FillProvSched(hasNotes);
 			FillEmpSched(hasNotes);
 			FillWaitingRoom();

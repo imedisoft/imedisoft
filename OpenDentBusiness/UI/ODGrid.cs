@@ -119,10 +119,6 @@ namespace OpenDental.UI {
 		//<summary>Set at the very beginning of OnPaint.  Uses the column width of each column to set up this array with one element for each column.  Contains the columns Pos for that column.</summary>
 		//private int[] ColPos;
 		private ComboBox comboBox=new ComboBox();
-		///<summary>Examples might be 96 or 144.  This may not match device dpi if we are printing to sheets, for example.  We might also set this to 100 for printing.</summary>
-		private int _dpiCurrent;
-		///<summary>Each time we paint, we compare this to current dpi to see if it's changed.</summary>
-		private int _dpiOld;
 		///<summary>At 96dpi</summary>
 		private const int EDITABLE_ROW_HEIGHT=19;
 		///<summary>The GridColumn that was clicked on during the MouseDown event.</summary>

@@ -574,9 +574,6 @@ namespace OpenDentBusiness{
 		///<summary>176 - Allows user to create and edit FAQ objects shown by the help button(?).</summary>
 		[Description("Open Dental Help, FAQ edit and creation.")]
 		FAQEdit,
-		///<summary>177 - HQ only. Alows user to edit feature request.</summary>
-		[Description("Feature Requests Edit"),IsODHQ()]
-		FeatureRequestEdit,
 		///<summary>178- Logs when a reminder task is popped up.  Used for audit trail only.</summary>
 		[Description("Task Reminder Popup")]
 		TaskReminderPopup,

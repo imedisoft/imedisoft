@@ -1047,10 +1047,7 @@ namespace OpenDental{
 				FormT=new FormTasks();
 			}
 			FormT.Show();
-			if(isTriage) {
-				FormT.ShowTriage();
-			}
-			else if(tab!=UserControlTasksTab.Invalid) {
+			if(tab!=UserControlTasksTab.Invalid) {
 				FormT.TaskTab=tab;
 			}
 			if(FormT.WindowState==FormWindowState.Minimized) {
@@ -1248,13 +1245,6 @@ namespace OpenDental{
 				SelectEmpI(-1);
 				return;
 			}
-			if(PrefC.GetBool(PrefName.DockPhonePanelShow) && !Security.IsAuthorized(Permissions.TimecardsEditAll,true)) {
-				//Check if the employee set their ext to 0 in the phoneempdefault table.
-				if(PhoneEmpDefaults.GetByExtAndEmp(0,EmployeeCur.EmployeeNum)==null) {
-					MessageBox.Show("Not allowed.  Use the small phone panel or the \"Big\" phone window to clock in.\r\nIf you are trying to clock in as a \"floater\", you need to set your extension to 0 first before using this Clock In button.");
-					return;
-				}
-			}
 			try{
 				bool[] authorized=new bool[1] { false };
 				if(Plugins.HookMethod(this,"ContrStaff.butClockIn_Click_ClockIn",authorized,EmployeeCur)) {
@@ -1270,9 +1260,6 @@ namespace OpenDental{
 			}
 			EmployeeCur.ClockStatus=Lan.g(this,"Working");
 			Employees.Update(EmployeeCur);
-			if(PrefC.GetBool(PrefName.DockPhonePanelShow)) {
-				Phones.SetPhoneStatus(ClockStatusEnum.Available,Phones.GetExtensionForEmp(EmployeeCur.EmployeeNum),EmployeeCur.EmployeeNum);
-			}
 			ModuleSelected(PatCurNum);
 			if(!PayPeriods.HasPayPeriodForDate(DateTime.Today)) {
 				MsgBox.Show(this,"No dates exist for this pay period.  Time clock events will not display until pay periods have been created for this date range");
@@ -1283,13 +1270,6 @@ namespace OpenDental{
 			if(gridEmp.SelectedGridRows.Count>1) {
 				SelectEmpI(-1);
 				return;
-			}
-			if(PrefC.GetBool(PrefName.DockPhonePanelShow) && !Security.IsAuthorized(Permissions.TimecardsEditAll,true)) {
-				//Check if the employee set their ext to 0 in the phoneempdefault table.
-				if(PhoneEmpDefaults.GetByExtAndEmp(0,EmployeeCur.EmployeeNum)==null) {
-					MessageBox.Show("Not allowed.  Use the small phone panel or the \"Big\" phone window to clock out.\r\nIf you are trying to clock out as a \"floater\", you need to set your extension to 0 first before using this Clock Out For: button.");
-					return;
-				}
 			}
 			if(listStatus.SelectedIndex==-1){
 				MsgBox.Show(this,"Please select a status first.");
@@ -1313,9 +1293,6 @@ namespace OpenDental{
 			EmployeeCur.ClockStatus=Lan.g("enumTimeClockStatus",(_listShownTimeClockStatuses[listStatus.SelectedIndex]).GetDescription());
 			Employees.Update(EmployeeCur);
 			ModuleSelected(PatCurNum);
-			if(PrefC.GetBool(PrefName.DockPhonePanelShow)) {
-				Phones.SetPhoneStatus(Phones.GetClockStatusFromEmp(EmployeeCur.ClockStatus),Phones.GetExtensionForEmp(EmployeeCur.EmployeeNum),EmployeeCur.EmployeeNum);
-			}
 		}
 
 		private void timerUpdateTime_Tick(object sender, System.EventArgs e) {

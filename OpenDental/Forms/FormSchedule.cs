@@ -528,10 +528,6 @@ namespace OpenDental{
 					butDelete.Visible=false;
 					groupCopy.Visible=false;
 					groupPaste.Visible=false;
-					if(PrefC.GetBool(PrefName.DistributorKey)) {//if this is OD HQ
-						checkPracticeNotes.Checked=false;
-						checkPracticeNotes.Enabled=false;
-					}
 					dateFrom=DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);//Sunday of current week.
 					textDateFrom.Text=dateFrom.ToShortDateString();
 					textDateTo.Text=dateFrom.AddMonths(1).AddDays(-1).ToShortDateString();
@@ -694,9 +690,6 @@ namespace OpenDental{
 			empNums.RemoveAll(x => x==0);
 			if(doRefreshData || this._tableScheds==null) {
 				bool canViewNotes=true;
-				if(PrefC.IsODHQ) {
-					canViewNotes=Security.IsAuthorized(Permissions.Schedules,true);
-				}
 				_fromDateCur=PIn.Date(textDateFrom.Text);
 				_toDateCur=PIn.Date(textDateTo.Text);
 				Logger.LogToPath("Schedules.GetPeriod",LogPath.Signals,LogPhase.Start);

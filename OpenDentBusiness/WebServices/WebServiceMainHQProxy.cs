@@ -606,7 +606,7 @@ namespace OpenDentBusiness {
 				///Back-end will detect this flag and change foreign keys to match new setup for this customer.</summary>
 				public bool IsSwitchClinicPref=false;
 				///<summary>ClinicPref.  Individual clinics can specify a Clinic Title to use in the Short Code Opt In Reply, substitutes [YourDentist]
-				///"You'll now receive appointment messages from [YourDentist] Reply HELP for Help, Reply STOP to cancel. Msg&data rates may apply."
+				///"You'll now receive appointment messages from [YourDentist] Reply HELP for Help, Reply STOP to cancel. Msg and data rates may apply."
 				///</summary>
 				public string ShortCodeOptInYourDentist;
 

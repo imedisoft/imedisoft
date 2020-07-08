@@ -86,10 +86,6 @@ namespace OpenDentBusiness{
 					return GetSheetFromResource(Properties.Resources.RxInstruction);
 				case SheetInternalType.ChartModule:
 					SheetDef sheetDef=GetSheetFromResource(Properties.Resources.ChartModuleStandardLayout);
-					if(!PrefC.IsODHQ && !PrefC.GetBool(PrefName.DistributorKey)) {
-						//Exclude HQ specific controls when not HQ.
-						sheetDef.SheetFieldDefs.RemoveAll(x => x.FieldName.In("ButtonErxAccess","ButtonPhoneNums","ButtonForeignKey","ButtonUSAKey"));
-					}
 					return sheetDef;
 				case SheetInternalType.PatientDashboard:
 					sheetDef=GetSheetFromResource(Properties.Resources.PatientDashboard);

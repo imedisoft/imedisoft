@@ -408,22 +408,6 @@ namespace OpenDental {
 				node2=SetNode(Permissions.MobileWeb);
 				node.Nodes.Add(node2);
 			treePermissions.Nodes.Add(node);
-			#region HQ Only Permissions
-			if(PrefC.IsODHQ) {
-				node=SetNode("HQ Only");
-					node2=SetNode(Permissions.CommlogPersistent);
-					node.Nodes.Add(node2);
-					node2=SetNode(Permissions.SalesTaxAdjEdit);
-					node.Nodes.Add(node2);
-					node2=SetNode(Permissions.HeadmasterSetup);
-					node.Nodes.Add(node2);
-					node2=SetNode(Permissions.FAQEdit);
-					node.Nodes.Add(node2);
-					node2=SetNode(Permissions.FeatureRequestEdit);
-					node.Nodes.Add(node2);
-				treePermissions.Nodes.Add(node);
-			}
-			#endregion
 			treePermissions.ExpandAll();
 		}
 

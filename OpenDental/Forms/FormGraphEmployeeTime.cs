@@ -16,7 +16,7 @@ namespace OpenDental {
 		private DateTime DateShowing;
 		private int[] minutesBehind;
 		///<summary>Retrieved once when opening the form, then reused.</summary>
-		private List<PhoneEmpDefault> _listPhoneEmpDefaults;
+		//private List<PhoneEmpDefault> _listPhoneEmpDefaults;
 		private List<Schedule> _listSchedules;
 		private List<Region> _listRegions;
 		private int CurrentHoverRegionIdx=-1;
@@ -33,10 +33,10 @@ namespace OpenDental {
 
 		private void FormGraphEmployeeTime_Load(object sender,EventArgs e) {
 			butEdit.Visible=Security.IsAuthorized(Permissions.Schedules,true);
-			_listPhoneEmpDefaults=PhoneEmpDefaults.Refresh();
+			//_listPhoneEmpDefaults=PhoneEmpDefaults.Refresh();
 			//DateShowing=AppointmentL.DateSelected.Date;
 			//fill in the missing PhoneGraph entries for today
-			PhoneGraphs.AddMissingEntriesForToday(_listPhoneEmpDefaults);
+			//PhoneGraphs.AddMissingEntriesForToday(_listPhoneEmpDefaults);
 			FillData();
 		}
 
@@ -91,7 +91,7 @@ namespace OpenDental {
 			buckets=new float[56];//Number of total bucket. 4 buckets per hour * 14 hours = 56 buckets.
 			_listSchedules=Schedules.GetDayList(DateShowing);
 			//PhoneGraph exceptions will take precedence over employee default
-			List<PhoneGraph> listPhoneGraphs=PhoneGraphs.GetAllForDate(DateShowing);			
+			//List<PhoneGraph> listPhoneGraphs=PhoneGraphs.GetAllForDate(DateShowing);			
 			TimeSpan time1;
 			TimeSpan time2;
 			TimeSpan delta;
@@ -107,24 +107,24 @@ namespace OpenDental {
 				bool hasPhoneGraphEntry=false;
 				bool isGraphed=false; 
 				//PhoneGraph entries will take priority over the default employee graph state
-				for(int iPG=0;iPG<listPhoneGraphs.Count;iPG++) {
-					if(listPhoneGraphs[iPG].EmployeeNum==employee.EmployeeNum) {
-						isGraphed=listPhoneGraphs[iPG].IsGraphed;
-						hasPhoneGraphEntry=true;
-						break;
-					}
-				}
+				//for(int iPG=0;iPG<listPhoneGraphs.Count;iPG++) {
+				//	if(listPhoneGraphs[iPG].EmployeeNum==employee.EmployeeNum) {
+				//		isGraphed=listPhoneGraphs[iPG].IsGraphed;
+				//		hasPhoneGraphEntry=true;
+				//		break;
+				//	}
+				//}
 				if(!hasPhoneGraphEntry) {//no phone graph entry found (likely for a future date which does not have entries created yet OR past date where current employee didn't work here yet)
 					if(DateShowing<=DateTime.Today) {//no phone graph entry and we are on a past OR current date. if it's not already created then don't graph this employee for this date
 						continue;
 					}
 					//we are on a future date AND we don't have a PhoneGraph entry explicitly set so use the default for this employee
-					PhoneEmpDefault ped=PhoneEmpDefaults.GetEmpDefaultFromList(_listSchedules[i].EmployeeNum,_listPhoneEmpDefaults);
-					if(ped==null) {//we will default to PhoneEmpDefault.IsGraphed so make sure the deafult exists
-						continue;
-					}
+					//PhoneEmpDefault ped=PhoneEmpDefaults.GetEmpDefaultFromList(_listSchedules[i].EmployeeNum,_listPhoneEmpDefaults);
+					//if(ped==null) {//we will default to PhoneEmpDefault.IsGraphed so make sure the deafult exists
+					//	continue;
+					//}
 					//no entry in PhoneGraph for the employee on this date so use the default
-					isGraphed=ped.IsGraphed;
+					//isGraphed=ped.IsGraphed;
 				}
 				if(!isGraphed) {//only care about employees that are being graphed
 					continue;
@@ -176,7 +176,7 @@ namespace OpenDental {
 			//  }
 			//}
 			//Minutes Behind
-			minutesBehind=PhoneMetrics.AverageMinutesBehind(DateShowing);
+			//minutesBehind=PhoneMetrics.AverageMinutesBehind(DateShowing);
 			this.Invalidate();
 		}
 
@@ -360,9 +360,9 @@ namespace OpenDental {
 		}
 
 		private void butEdit_Click(object sender,EventArgs e) {
-			FormPhoneGraphDateEdit formPhoneGraphDateEdit=new FormPhoneGraphDateEdit(DateShowing);
-			formPhoneGraphDateEdit.ShowDialog();
-			FillData(); //always refill, we may have new entries regardless of form dialog result
+			//FormPhoneGraphDateEdit formPhoneGraphDateEdit=new FormPhoneGraphDateEdit(DateShowing);
+			//formPhoneGraphDateEdit.ShowDialog();
+			//FillData(); //always refill, we may have new entries regardless of form dialog result
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {

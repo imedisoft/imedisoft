@@ -26,25 +26,10 @@ namespace OpenDental {
 		};
 
 		///<summary>This ONLY runs when first opening the program.  It returns true if either no conversion is necessary, or if conversion was successful.  False for other situations like corrupt db, trying to convert to older version, etc.  Silent mode is mostly used from internal tools.  It is currently used in the Main Program if the silent command line argument is set.</summary>
-		public static bool ConvertDB(bool silent,string toVersion,Form currentForm,bool useDynamicMode) {
-			ClassConvertDatabase ClassConvertDatabase2=new ClassConvertDatabase();
-			string pref=PrefC.GetString(PrefName.DataBaseVersion);
-			if(ClassConvertDatabase2.Convert(pref,toVersion,silent,currentForm,useDynamicMode)) {
-				return true;
-			}
-			else {
-				if(FormOpenDental.ExitCode==0) {
-					FormOpenDental.ExitCode=200;//Convert Database has failed during execution (Unknown Error)
-				}
-				Environment.Exit(FormOpenDental.ExitCode);
-				return false;
-			}
-		}
+		public static bool ConvertDB(bool silent, string toVersion, Form currentForm, bool useDynamicMode) => true;
 
 		///<summary>This ONLY runs when first opening the program.  It returns true if either no conversion is necessary, or if conversion was successful.  False for other situations like corrupt db, trying to convert to older version, etc.</summary>
-		public static bool ConvertDB(Form currentForm,bool useDynamicMode) {
-			return ConvertDB(false,Application.ProductVersion,currentForm,useDynamicMode);
-		}
+		public static bool ConvertDB(Form currentForm, bool useDynamicMode) => true;
 
 		///<summary>Copies the installation directory files into the database.</summary>
 		///<param name="versionCurrent">The versioning information that will go into the Manifest.txt</param>

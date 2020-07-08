@@ -240,9 +240,9 @@ namespace OpenDentBusiness {
 					break;
 				default://Unknown network_foler, CanadianNetworkNum will not be set.
 					ODException.SwallowAnyException(() => {//Let HQ known if this ever happens so that it doesn't go unnoticed.
-						BugSubmissions.SubmitException(
-							new ApplicationException("Unknown iTrans Network. Name: "+jsonCarrierNetwork.Name+" - Folder: "+jsonCarrierNetwork.Network_Folder)
-						);
+						//BugSubmissions.SubmitException(
+						//	new ApplicationException("Unknown iTrans Network. Name: "+jsonCarrierNetwork.Name+" - Folder: "+jsonCarrierNetwork.Network_Folder)
+						//);
 					});
 					break;
 			}

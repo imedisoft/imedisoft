@@ -16,7 +16,7 @@ namespace OpenDental {
 	///<summary>THIS FORM HAS BEEN DEPRECATED!!! All functionality that previously existed in this form has been moved to FormPatientPortalSetup.</summary>
 	public partial class FormMobile:ODForm {
 		private static MobileWeb.Mobile mb=new MobileWeb.Mobile();
-		private static int BatchSize=100;
+		//private static int BatchSize=100;
 		/////<summary>All statements of a patient are not uploaded. The limit is defined by the recent [statementLimitPerPatient] records</summary>
 		//private static int statementLimitPerPatient=5;
 		///<summary>This variable prevents the synching methods from being called when a previous synch is in progress.</summary>
@@ -26,7 +26,7 @@ namespace OpenDental {
 		///<summary>True if a pref was saved and the other workstations need to have their cache refreshed when this form closes.</summary>
 		private bool changed;
 		///<summary>If this variable is true then records are uploaded one at a time so that an error in uploading can be traced down to a single record</summary>
-		private static bool IsTroubleshootMode=false;
+		//private static bool IsTroubleshootMode=false;
 		private static FormProgress FormP;
 
 		private enum SynchEntity {
@@ -221,12 +221,6 @@ namespace OpenDental {
 		}
 		
 		private void ShowProgressForm(DateTime changedSince){
-			if(checkTroubleshooting.Checked) {
-				IsTroubleshootMode=true;
-			}
-			else {
-				IsTroubleshootMode=false;
-			}
 			DateTime timeSynchStarted=MiscData.GetNowDateTime();
 			FormP=new FormProgress();
 			FormP.MaxVal=100;//to keep the form from closing until the real MaxVal is set.

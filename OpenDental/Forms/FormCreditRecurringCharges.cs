@@ -34,91 +34,106 @@ namespace OpenDental {
 			Lan.F(this);
 		}
 
-		private void FormRecurringCharges_Load(object sender,EventArgs e) {
-			if(Programs.HasMultipleCreditCardProgramsEnabled()) {
-				gridMain.HScrollVisible=true;
+		private void FormRecurringCharges_Load(object sender, EventArgs e)
+		{
+			if (Programs.HasMultipleCreditCardProgramsEnabled())
+			{
+				gridMain.HScrollVisible = true;
 			}
-			if(!PrefC.IsODHQ) {
-				checkHideBold.Checked=true;
-				checkHideBold.Visible=false;
+
+			checkHideBold.Checked = true;
+			checkHideBold.Visible = false;
+
+			Program progCur = null;
+			if (Programs.IsEnabled(ProgramName.PaySimple))
+			{
+				progCur = Programs.GetCur(ProgramName.PaySimple);
+				labelUpdated.Visible = false;
+				checkForceDuplicates.Checked = false;
+				checkForceDuplicates.Visible = false;//PaySimple always rejects identical transactions made within 5 minutes of eachother.
 			}
-			Program progCur=null;
-			if(Programs.IsEnabled(ProgramName.PaySimple)) {
-				progCur=Programs.GetCur(ProgramName.PaySimple);
-				labelUpdated.Visible=false;
-				checkForceDuplicates.Checked=false;
-				checkForceDuplicates.Visible=false;//PaySimple always rejects identical transactions made within 5 minutes of eachother.
+			if (Programs.IsEnabled(ProgramName.PayConnect))
+			{
+				progCur = Programs.GetCur(ProgramName.PayConnect);
+				labelUpdated.Visible = false;
+				checkForceDuplicates.Visible = true;
+				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.ProgramNum,
+					PayConnect.ProgramProperties.PayConnectForceRecurringCharge, Clinics.ClinicNum));
 			}
-			if(Programs.IsEnabled(ProgramName.PayConnect)) {
-				progCur=Programs.GetCur(ProgramName.PayConnect);
-				labelUpdated.Visible=false;
-				checkForceDuplicates.Visible=true;
-				checkForceDuplicates.Checked=PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.ProgramNum,
-					PayConnect.ProgramProperties.PayConnectForceRecurringCharge,Clinics.ClinicNum));
-			}
-			if(Programs.IsEnabled(ProgramName.Xcharge)) {
-				progCur=Programs.GetCur(ProgramName.Xcharge);
-				labelUpdated.Visible=true;
-				checkForceDuplicates.Visible=true;
-				string xPath=Programs.GetProgramPath(progCur);
-				checkForceDuplicates.Checked=PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.ProgramNum,
-					ProgramProperties.PropertyDescs.XCharge.XChargeForceRecurringCharge,Clinics.ClinicNum));
-				if(!File.Exists(xPath)) {//program path is invalid
-					//if user has setup permission and they want to edit the program path, show the X-Charge setup window
-					if(Security.IsAuthorized(Permissions.Setup)
-						&& MsgBox.Show(this,MsgBoxButtons.YesNo,"The X-Charge path is not valid.  Would you like to edit the path?"))
+			if (Programs.IsEnabled(ProgramName.Xcharge))
+			{
+				progCur = Programs.GetCur(ProgramName.Xcharge);
+				labelUpdated.Visible = true;
+				checkForceDuplicates.Visible = true;
+				string xPath = Programs.GetProgramPath(progCur);
+				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.ProgramNum,
+					ProgramProperties.PropertyDescs.XCharge.XChargeForceRecurringCharge, Clinics.ClinicNum));
+				if (!File.Exists(xPath))
+				{//program path is invalid
+				 //if user has setup permission and they want to edit the program path, show the X-Charge setup window
+					if (Security.IsAuthorized(Permissions.Setup)
+						&& MsgBox.Show(this, MsgBoxButtons.YesNo, "The X-Charge path is not valid.  Would you like to edit the path?"))
 					{
-						FormXchargeSetup FormX=new FormXchargeSetup();
+						FormXchargeSetup FormX = new FormXchargeSetup();
 						FormX.ShowDialog();
-						if(FormX.DialogResult==DialogResult.OK) {
+						if (FormX.DialogResult == DialogResult.OK)
+						{
 							//The user could have correctly enabled the X-Charge bridge, we need to update our local _programCur and _xPath variable2
-							progCur=Programs.GetCur(ProgramName.Xcharge);
-							xPath=Programs.GetProgramPath(progCur);
+							progCur = Programs.GetCur(ProgramName.Xcharge);
+							xPath = Programs.GetProgramPath(progCur);
 						}
 					}
 					//if the program path still does not exist, whether or not they attempted to edit the program link, tell them to edit and close the form
-					if(!File.Exists(xPath)) {
-						MsgBox.Show(this,"The X-Charge program path is not valid.  Edit the program link in order to use the CC Recurring Charges feature.");
+					if (!File.Exists(xPath))
+					{
+						MsgBox.Show(this, "The X-Charge program path is not valid.  Edit the program link in order to use the CC Recurring Charges feature.");
 						Close();
 						return;
 					}
 				}
 			}
-			if(progCur==null) {
-				MsgBox.Show(this,"The PayConnect, PaySimple, or X-Charge program link must be enabled in order to use the CC Recurring Charges feature.");
+			if (progCur == null)
+			{
+				MsgBox.Show(this, "The PayConnect, PaySimple, or X-Charge program link must be enabled in order to use the CC Recurring Charges feature.");
 				Close();
 				return;
 			}
-			_isSelecting=true;
-			_listUserClinics=new List<Clinic>();
-			if(PrefC.HasClinicsEnabled) {
-				if(!Security.CurUser.ClinicIsRestricted) {
-					_listUserClinics.Add(new Clinic() { Description=Lan.g(this,"Unassigned") });
+			_isSelecting = true;
+			_listUserClinics = new List<Clinic>();
+			if (PrefC.HasClinicsEnabled)
+			{
+				if (!Security.CurUser.ClinicIsRestricted)
+				{
+					_listUserClinics.Add(new Clinic() { Description = Lan.g(this, "Unassigned") });
 				}
 				Clinics.GetForUserod(Security.CurUser).ForEach(x => _listUserClinics.Add(x));
-				for(int i=0;i<_listUserClinics.Count;i++) {
+				for (int i = 0; i < _listUserClinics.Count; i++)
+				{
 					listClinics.Items.Add(_listUserClinics[i].Description);
-					listClinics.SetSelected(i,true);
+					listClinics.SetSelected(i, true);
 				}
 				//checkAllClin.Checked=true;//checked true by default in designer so we don't trigger the event to select all and fill grid
 			}
-			else {
-				groupClinics.Visible=false;
+			else
+			{
+				groupClinics.Visible = false;
 			}
-			_charger=new RecurringChargerator(new ShowErrors(this),true);
-			_charger.SingleCardFinished=new Action(() => {
-				this.Invoke(() => {
-					labelCharged.Text=Lans.g(this,"Charged=")+_charger.Success;
-					labelFailed.Text=Lans.g(this,"Failed=")+_charger.Failed;
-					labelUpdated.Text=Lans.g(this,"Updated=")+_charger.Updated;
+			_charger = new RecurringChargerator(new ShowErrors(this), true);
+			_charger.SingleCardFinished = new Action(() =>
+			{
+				this.Invoke(() =>
+				{
+					labelCharged.Text = Lans.g(this, "Charged=") + _charger.Success;
+					labelFailed.Text = Lans.g(this, "Failed=") + _charger.Failed;
+					labelUpdated.Text = Lans.g(this, "Updated=") + _charger.Updated;
 				});
 			});
-			GeneralProgramEvent.Fired+=StopRecurringCharges;//This is so we'll be alerted in case of a shutdown.
-			labelCharged.Text=Lan.g(this,"Charged=")+"0";
-			labelFailed.Text=Lan.g(this,"Failed=")+"0";
+			GeneralProgramEvent.Fired += StopRecurringCharges;//This is so we'll be alerted in case of a shutdown.
+			labelCharged.Text = Lan.g(this, "Charged=") + "0";
+			labelFailed.Text = Lan.g(this, "Failed=") + "0";
 			FillGrid(true);
 			gridMain.SetSelected(true);
-			labelSelected.Text=Lan.g(this,"Selected=")+gridMain.SelectedIndices.Length.ToString();
+			labelSelected.Text = Lan.g(this, "Selected=") + gridMain.SelectedIndices.Length.ToString();
 		}
 
 		///<summary>The DataTable used to fill the grid will only be refreshed from the db if isFromDb is true.  Otherwise the grid will be refilled using

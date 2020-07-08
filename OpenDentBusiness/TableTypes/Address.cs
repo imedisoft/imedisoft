@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenDentBusiness {
+	///<summary>For extra addresses.  Currently only for tax physical address for customers.</summary>
 	[Serializable]
 	[CrudTable(IsMissingInGeneral=true)]
-	///<summary>For extra addresses.  Currently only for tax physical address for customers.</summary>
+	
 	public class Address : TableBase {
 		///<summary></summary>
 		[CrudColumn(IsPriKey=true)]

@@ -80,9 +80,6 @@ namespace OpenDentBusiness {
 		///<summary>1 - Opens the Online Payments Window when clicked</summary>
 		[Description("Online Payments Pending")]
 		OnlinePaymentsPending,
-		///<summary>2 - Only used by Open Dental HQ. The server monitoring incoming voicemails is not working.</summary>
-		[Description("Voice Mail Monitor Issues"),IsODHQ()]
-		VoiceMailMonitor,
 		///<summary>3 - Opens the Radiology Order List window when clicked.</summary>
 		[Description("Radiology Orders")]
 		RadiologyProcedures,
@@ -104,9 +101,6 @@ namespace OpenDentBusiness {
 		///<summary>9 - Alerts related to new ASAP appointments via web sched.</summary>
 		[Description("Web Sched ASAP Appointment Created")]
 		WebSchedASAPApptCreated,
-		///<summary>10 - Only used by Open Dental HQ. The Asterisk Server is not processing messages or is getting all blank payloads.</summary>
-		[Description("Phone Tracking Server Issues"),IsODHQ()]
-		AsteriskServerMonitor,
 		///<summary>11 - Multiple computers are running eConnector services. There should only ever be one.</summary>
 		[Description("Multiple eConnectors")]
 		MultipleEConnectors,

@@ -285,12 +285,12 @@ namespace OpenDental {
 			//see LayoutPanels()
 		}
 
-		private void ContrAccount_Load(object sender,EventArgs e) {
-			this.Parent.MouseWheel+=new MouseEventHandler(Parent_MouseWheel);
-			if(!PrefC.IsODHQ) {
-				menuPrepayment.Visible=false;
-				menuPrepayment.Enabled=false;
-			}
+		private void ContrAccount_Load(object sender, EventArgs e)
+		{
+			Parent.MouseWheel += new MouseEventHandler(Parent_MouseWheel);
+
+			menuPrepayment.Visible = false;
+			menuPrepayment.Enabled = false;
 		}
 
 		private void ContrAccount_Resize(object sender,EventArgs e) {
@@ -547,13 +547,7 @@ namespace OpenDental {
 					}
 				}
 			}
-			else if(_dataSetMain.Tables["Commlog"].Rows[row]["WebChatSessionNum"].ToString()!="0") {
-				long webChatSessionNum=PIn.Long(_dataSetMain.Tables["Commlog"].Rows[row]["WebChatSessionNum"].ToString());
-				WebChatSession webChatSession=WebChatSessions.GetOne(webChatSessionNum);
-				FormWebChatSession formWebChatSession=new FormWebChatSession(webChatSession,() => {ModuleSelected(_patCur.PatNum);});
-				formWebChatSession.ShowDialog();
-			}
-			else if(_dataSetMain.Tables["Commlog"].Rows[row]["EmailMessageNum"].ToString()!="0") {
+			if(_dataSetMain.Tables["Commlog"].Rows[row]["EmailMessageNum"].ToString()!="0") {
 				EmailMessage email=
 					EmailMessages.GetOne(PIn.Long(_dataSetMain.Tables["Commlog"].Rows[row]["EmailMessageNum"].ToString()));
 				if(email.SentOrReceived==EmailSentOrReceived.WebMailReceived
@@ -1691,19 +1685,6 @@ namespace OpenDental {
 				return;
 			}
 			string quickProcText=textQuickProcs.Text;//because the text seems to disappear from textbox in menu bar when MsgBox comes up.
-			if(PrefC.IsODHQ){
-				if (_patCur.State=="") {
-					MessageBox.Show("A valid state is required to process sales tax on procedures. "
-						+"Please delete the procedure, enter a valid state, then reenter the procedure.");
-				}
-				//if this patient is in a taxable state
-				if(AvaTax.ListTaxableStates!=null && AvaTax.ListTaxableStates.Any(x => x==_patCur.State)){
-					if(!Patients.HasValidUSZipCode(_patCur)) {
-						MessageBox.Show("A valid zip code is required to process sales tax on procedures in this patient's state. "
-						+"Please delete the procedure, enter a valid zip, then reenter the procedure.");
-					}
-				}
-			}
 			Provider patProvider=Providers.GetProv(_patCur.PriProv);
 			if(AddProcAndValidate(quickProcText,patProvider)) {
 				SecurityLogs.MakeLogEntry(Permissions.AccountProcsQuickAdd,_patCur.PatNum
@@ -1901,10 +1882,6 @@ namespace OpenDental {
 			if(!PrefC.GetBool(PrefName.EasyHideRepeatCharges)) {
 				button=new ODToolBarButton(Lan.g(this,"Repeating Charge"),-1,"","RepeatCharge");
 				button.Style=ODToolBarButtonStyle.PushButton;
-				if(PrefC.GetBool(PrefName.DockPhonePanelShow)) {//contextMenuRepeat items only get initialized when at HQ.
-					button.Style=ODToolBarButtonStyle.DropDownButton;
-					button.DropDownMenu=contextMenuRepeat;
-				}
 				ToolBarMain.Buttons.Add(button);
 			}
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));

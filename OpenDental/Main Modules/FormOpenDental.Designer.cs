@@ -157,9 +157,6 @@ namespace OpenDental{
 			this.menuItemCustomReports = new System.Windows.Forms.MenuItem();
 			this.menuItemTools = new System.Windows.Forms.MenuItem();
 			this.menuItemJobManager = new System.Windows.Forms.MenuItem();
-			this.menuItemWebChat = new System.Windows.Forms.MenuItem();
-			this.menuItemWebChatSessions = new System.Windows.Forms.MenuItem();
-			this.menuItemWebChatSurveys = new System.Windows.Forms.MenuItem();
 			this.menuItemPrintScreen = new System.Windows.Forms.MenuItem();
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
 			this.menuItemAutoClosePayPlans = new System.Windows.Forms.MenuItem();
@@ -1207,7 +1204,6 @@ namespace OpenDental{
 			this.menuItemTools.Index = 6;
 			this.menuItemTools.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItemJobManager,
-            this.menuItemWebChat,
             this.menuItemPrintScreen,
             this.menuItem1,
             this.menuItem9,
@@ -1247,28 +1243,6 @@ namespace OpenDental{
 			this.menuItemJobManager.Index = 0;
 			this.menuItemJobManager.Text = "Job Manager";
 			this.menuItemJobManager.Visible = false;
-			this.menuItemJobManager.Click += new System.EventHandler(this.menuItemJobManager_Click);
-			// 
-			// menuItemWebChat
-			// 
-			this.menuItemWebChat.Index = 1;
-			this.menuItemWebChat.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItemWebChatSessions,
-            this.menuItemWebChatSurveys});
-			this.menuItemWebChat.Text = "Web Chat Tools";
-			this.menuItemWebChat.Visible = false;
-			// 
-			// menuItemWebChatSessions
-			// 
-			this.menuItemWebChatSessions.Index = 0;
-			this.menuItemWebChatSessions.Text = "Sessions";
-			this.menuItemWebChatSessions.Click += new System.EventHandler(this.menuItemWebChatSessions_Click);
-			// 
-			// menuItemWebChatSurveys
-			// 
-			this.menuItemWebChatSurveys.Index = 1;
-			this.menuItemWebChatSurveys.Text = "Surveys";
-			this.menuItemWebChatSurveys.Click += new System.EventHandler(this.menuItemWebChatSurveys_Click);
 			// 
 			// menuItemPrintScreen
 			// 
@@ -1783,7 +1757,6 @@ namespace OpenDental{
 			this.butVoiceMails.Size = new System.Drawing.Size(18, 24);
 			this.butVoiceMails.TabIndex = 89;
 			this.butVoiceMails.Text = "V";
-			this.butVoiceMails.Click += new System.EventHandler(this.butVoiceMails_Click);
 			// 
 			// labelFieldType
 			// 
@@ -1803,7 +1776,6 @@ namespace OpenDental{
 			this.comboTriageCoordinator.Name = "comboTriageCoordinator";
 			this.comboTriageCoordinator.Size = new System.Drawing.Size(213, 21);
 			this.comboTriageCoordinator.TabIndex = 87;
-			this.comboTriageCoordinator.SelectionChangeCommitted += new System.EventHandler(this.comboTriageCoordinator_SelectionChangeCommitted);
 			// 
 			// labelMsg
 			// 
@@ -1823,7 +1795,6 @@ namespace OpenDental{
 			this.butMapPhones.Size = new System.Drawing.Size(19, 24);
 			this.butMapPhones.TabIndex = 54;
 			this.butMapPhones.Text = "M";
-			this.butMapPhones.Click += new System.EventHandler(this.butMapPhones_Click);
 			// 
 			// butTriage
 			// 
@@ -1841,7 +1812,6 @@ namespace OpenDental{
 			this.butBigPhones.Size = new System.Drawing.Size(18, 24);
 			this.butBigPhones.TabIndex = 52;
 			this.butBigPhones.Text = "B";
-			this.butBigPhones.Click += new System.EventHandler(this.butBigPhones_Click);
 			// 
 			// labelWaitTime
 			// 
@@ -2115,7 +2085,6 @@ namespace OpenDental{
 		private MenuItem menuApptFieldDefs;
 		private MenuItem menuItemWebForms;
 		private MenuItem menuItemCCRecurring;
-		private UserControlPhoneSmall phoneSmall;
 		/////<summary>This will be null if EHR didn't load up.  EHRTEST conditional compilation constant is used because the EHR project is only part of the solution here at HQ.  We need to use late binding in a few places so that it will still compile for people who download our sourcecode.  But late binding prevents us from stepping through for debugging, so the EHRTEST lets us switch to early binding.</summary>
 		//public static object ObjFormEhrMeasures;
 		private MenuItem menuItemEHR;
@@ -2224,12 +2193,7 @@ namespace OpenDental{
 		private MenuItem menuPatientStatusSetter;
 		private ImageList imageListFlat;
 		private MenuItem menuItemEnterprise;
-		private MenuItem menuItemWebChat;
-		private FormWebChatTools _formWCT;
-		private FormWebChatSurveys _formWebChatSurveys;
 		private SplitContainerNoFlicker splitContainerNoFlickerDashboard;
-		private MenuItem menuItemWebChatSessions;
-		private MenuItem menuItemWebChatSurveys;
 		private MenuItem menuItemPatDashboards;
 		private MenuItem menuItemScheduledProcesses;
 		private MenuItem menuItemQueryMonitor;

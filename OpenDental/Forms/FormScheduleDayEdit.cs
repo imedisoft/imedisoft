@@ -55,12 +55,9 @@ namespace OpenDental{
 		public bool ShowOkSchedule = false;
 		///<summary>Set by butOkSchedule only.</summary>
 		public bool GotoScheduleOnClose = false;
-		private UI.Button butGraphEdit;
-		private UI.Button butViewGraph;
 		private List<long> _listSelectedProvNums;
 		private TextBox textSearch;
 		private Label labelSearch;
-		private List<Provider> _listProviders;
 		///<summary>True if the called from FromSchedule, else False. </summary>
 		private bool _isFromSchedule;
 		///<summary>The provider that was selected in FormSchedule. Will be blank if no provider or multiple providers were selected. </summary>
@@ -131,8 +128,6 @@ namespace OpenDental{
 			this.butCloseOffice = new OpenDental.UI.Button();
 			this.butCancel = new OpenDental.UI.Button();
 			this.butOkSchedule = new OpenDental.UI.Button();
-			this.butGraphEdit = new OpenDental.UI.Button();
-			this.butViewGraph = new OpenDental.UI.Button();
 			this.textSearch = new System.Windows.Forms.TextBox();
 			this.labelSearch = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
@@ -452,31 +447,6 @@ namespace OpenDental{
 			this.butOkSchedule.Text = "OK + Goto Schedules";
 			this.butOkSchedule.Click += new System.EventHandler(this.butOkSchedule_Click);
 			// 
-			// butGraphEdit
-			// 
-			this.butGraphEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butGraphEdit.Image = global::OpenDental.Properties.Resources.editPencil;
-			this.butGraphEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butGraphEdit.Location = new System.Drawing.Point(590, 680);
-			this.butGraphEdit.Name = "butGraphEdit";
-			this.butGraphEdit.Size = new System.Drawing.Size(91, 24);
-			this.butGraphEdit.TabIndex = 12;
-			this.butGraphEdit.Text = "Edit Graph";
-			this.butGraphEdit.Visible = false;
-			this.butGraphEdit.Click += new System.EventHandler(this.butGraphEdit_Click);
-			// 
-			// butViewGraph
-			// 
-			this.butViewGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butViewGraph.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butViewGraph.Location = new System.Drawing.Point(493, 680);
-			this.butViewGraph.Name = "butViewGraph";
-			this.butViewGraph.Size = new System.Drawing.Size(91, 24);
-			this.butViewGraph.TabIndex = 41;
-			this.butViewGraph.Text = "View Graph";
-			this.butViewGraph.Visible = false;
-			this.butViewGraph.Click += new System.EventHandler(this.butViewGraph_Click);
-			// 
 			// textSearch
 			// 
 			this.textSearch.Location = new System.Drawing.Point(564, 10);
@@ -499,8 +469,6 @@ namespace OpenDental{
 			this.ClientSize = new System.Drawing.Size(1003, 720);
 			this.Controls.Add(this.labelSearch);
 			this.Controls.Add(this.textSearch);
-			this.Controls.Add(this.butViewGraph);
-			this.Controls.Add(this.butGraphEdit);
 			this.Controls.Add(this.butOkSchedule);
 			this.Controls.Add(this.butForward);
 			this.Controls.Add(this.butBack);
@@ -538,8 +506,6 @@ namespace OpenDental{
 
 		private void FormScheduleDay_Load(object sender,System.EventArgs e) {
 			SetFilterControlsAndAction(() => FillGrid(),textSearch);
-			butGraphEdit.Visible=PrefC.IsODHQ;
-			butViewGraph.Visible=PrefC.IsODHQ;
 			butOkSchedule.Visible=ShowOkSchedule;
 			_listClinics=new List<Clinic>();
 			_listClinics.Add(new Clinic() { Abbr="" });//so HQ always comes before other clinics in the sort order; only for notes and holidays
@@ -640,26 +606,9 @@ namespace OpenDental{
 				.Where(x => x!=null).ToDictionary(x => x.EmployeeNum);//speed up sort.
 			_dictProvNumProvider=_listScheds.Select(x => x.ProvNum).Distinct().Select(x => Providers.GetProv(x))//returns null if ProvNum==0 or invalid
 				.Where(x => x!=null).ToDictionary(x => x.ProvNum);//speed up sort.
-			if(PrefC.IsODHQ) {
-				//HQ wants their own sort, so instead of complicating the comparer we will just do the comparer on four seperate lists.
-				List<Schedule> listPracticeNotes=_listScheds.Where(x => x.EmployeeNum==0 && x.ProvNum==0).ToList();
-				listPracticeNotes.Sort(CompareSchedule);
-				List<Schedule> listEmpNotes=_listScheds.Where(x => x.EmployeeNum!=0 && x.ProvNum==0 && x.StartTime==TimeSpan.Zero).ToList();
-				listEmpNotes.Sort(CompareSchedule);
-				List<Schedule> listProvSched=_listScheds.Where(x => x.EmployeeNum==0 && x.ProvNum!=0).ToList();
-				listProvSched.Sort(CompareSchedule);
-				List<Schedule> listEmpSched=_listScheds.Where(x => x.EmployeeNum!=0 && x.ProvNum==0 && x.StartTime!=TimeSpan.Zero).ToList();
-				listEmpSched.Sort(CompareSchedule);
-				_listScheds=new List<Schedule>();
-				_listScheds.AddRange(listPracticeNotes);
-				_listScheds.AddRange(listEmpNotes);
-				_listScheds.AddRange(listProvSched);
-				_listScheds.AddRange(listEmpSched);
-				_listScheds.Distinct();
-			}
-			else {
-				_listScheds.Sort(CompareSchedule);
-			}
+
+			_listScheds.Sort(CompareSchedule);
+			
 			graphScheduleDay.SetSchedules(_listScheds);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
@@ -1052,11 +1001,6 @@ namespace OpenDental{
 		private void butViewGraph_Click(object sender,EventArgs e) {
 			FormGraphEmployeeTime formGraphEmployeeTime=new FormGraphEmployeeTime(_dateSched);
 			formGraphEmployeeTime.ShowDialog();
-		}
-
-		private void butGraphEdit_Click(object sender,EventArgs e) {
-			FormPhoneGraphDateEdit FormPGDE=new FormPhoneGraphDateEdit(_dateSched,false);
-			FormPGDE.ShowDialog();
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

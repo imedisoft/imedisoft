@@ -1011,7 +1011,6 @@ namespace OpenDentBusiness.Eclaims {
 				etrans=Etranss.SetCanadianEtransFields(etrans);//etrans.CarrierNum, etrans.CarrierNum2 and etrans.EType all set prior to calling this.
 			}
 			catch(Exception ex){
-				BugSubmissions.SubmitException(ex);//Inform HQ if this ever happens.
 				throw ex;//Throw exception still since currently calling methods also throw other exceptions. Previously this was not try/caught.
 			}
 			Etranss.Insert(etrans);

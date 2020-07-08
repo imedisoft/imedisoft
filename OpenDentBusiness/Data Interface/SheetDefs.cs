@@ -263,8 +263,10 @@ namespace OpenDentBusiness{
 			return retVal;
 		}
 
-		///<summary>Returns the SheetTypeEnum & Sheet Def defaults for a clinic, if clinics is not on/or user is altering HQ settings 
-		///it will instead return user defaults, if neither is present then it will return the pratice default.</summary>
+		/// <summary>
+		/// Returns the SheetTypeEnum and Sheet Def defaults for a clinic, if clinics is not on/or user is altering HQ settings 
+		/// it will instead return user defaults, if neither is present then it will return the pratice default.
+		/// </summary>
 		public static Dictionary<SheetTypeEnum,SheetDef> GetDefaultSheetDefs(long clinicNum=0,params SheetTypeEnum[] arrSheetTypes) {
 			//No need to check RemotingRole; no call to db.
 			Dictionary<SheetTypeEnum,SheetDef> retVal=new Dictionary<SheetTypeEnum,SheetDef>();

@@ -137,48 +137,53 @@ namespace OpenDental {
 			}
 		}
 
-		private void FormPatientAddAll_Load(object sender,EventArgs e) {
-			_isLoad=true;
-			textLName1.Text=LName;
-			textFName1.Text=FName;
-			if(Birthdate.Year<1880) {
-				textBirthdate1.Text="";
+		private void FormPatientAddAll_Load(object sender, EventArgs e)
+		{
+			_isLoad = true;
+			textLName1.Text = LName;
+			textFName1.Text = FName;
+			if (Birthdate.Year < 1880)
+			{
+				textBirthdate1.Text = "";
 			}
-			else {
-				textBirthdate1.Text=Birthdate.ToShortDateString();
+			else
+			{
+				textBirthdate1.Text = Birthdate.ToShortDateString();
 			}
-			textBirthdate1_Validated(this,null);
-			listTextOk1.SelectedIndex=0;
-			listTextOk2.SelectedIndex=0;
-			listTextOk3.SelectedIndex=0;
-			listTextOk4.SelectedIndex=0;
-			listTextOk5.SelectedIndex=0;
-			listGender1.SelectedIndex=2;
-			listGender2.SelectedIndex=2;
-			listGender3.SelectedIndex=2;
-			listGender4.SelectedIndex=2;
-			listGender5.SelectedIndex=2;
-			listPosition1.SelectedIndex=1;
-			listPosition2.SelectedIndex=1;
-			if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
-				comboPriProv1.Items.Add(Lan.g(this,"Select Provider"));
-				comboPriProv2.Items.Add(Lan.g(this,"Select Provider"));
-				comboPriProv3.Items.Add(Lan.g(this,"Select Provider"));
-				comboPriProv4.Items.Add(Lan.g(this,"Select Provider"));
-				comboPriProv5.Items.Add(Lan.g(this,"Select Provider"));
+			textBirthdate1_Validated(this, null);
+			listTextOk1.SelectedIndex = 0;
+			listTextOk2.SelectedIndex = 0;
+			listTextOk3.SelectedIndex = 0;
+			listTextOk4.SelectedIndex = 0;
+			listTextOk5.SelectedIndex = 0;
+			listGender1.SelectedIndex = 2;
+			listGender2.SelectedIndex = 2;
+			listGender3.SelectedIndex = 2;
+			listGender4.SelectedIndex = 2;
+			listGender5.SelectedIndex = 2;
+			listPosition1.SelectedIndex = 1;
+			listPosition2.SelectedIndex = 1;
+			if (PrefC.GetBool(PrefName.PriProvDefaultToSelectProv))
+			{
+				comboPriProv1.Items.Add(Lan.g(this, "Select Provider"));
+				comboPriProv2.Items.Add(Lan.g(this, "Select Provider"));
+				comboPriProv3.Items.Add(Lan.g(this, "Select Provider"));
+				comboPriProv4.Items.Add(Lan.g(this, "Select Provider"));
+				comboPriProv5.Items.Add(Lan.g(this, "Select Provider"));
 			}
-			comboSecProv1.Items.Add(Lan.g(this,"none"));
-			comboSecProv1.SelectedIndex=0;
-			comboSecProv2.Items.Add(Lan.g(this,"none"));
-			comboSecProv2.SelectedIndex=0;
-			comboSecProv3.Items.Add(Lan.g(this,"none"));
-			comboSecProv3.SelectedIndex=0;
-			comboSecProv4.Items.Add(Lan.g(this,"none"));
-			comboSecProv4.SelectedIndex=0;
-			comboSecProv5.Items.Add(Lan.g(this,"none"));
-			comboSecProv5.SelectedIndex=0;
-			_listProviders=Providers.GetDeepCopy(true);
-			for(int i=0;i<_listProviders.Count;i++){
+			comboSecProv1.Items.Add(Lan.g(this, "none"));
+			comboSecProv1.SelectedIndex = 0;
+			comboSecProv2.Items.Add(Lan.g(this, "none"));
+			comboSecProv2.SelectedIndex = 0;
+			comboSecProv3.Items.Add(Lan.g(this, "none"));
+			comboSecProv3.SelectedIndex = 0;
+			comboSecProv4.Items.Add(Lan.g(this, "none"));
+			comboSecProv4.SelectedIndex = 0;
+			comboSecProv5.Items.Add(Lan.g(this, "none"));
+			comboSecProv5.SelectedIndex = 0;
+			_listProviders = Providers.GetDeepCopy(true);
+			for (int i = 0; i < _listProviders.Count; i++)
+			{
 				comboPriProv1.Items.Add(_listProviders[i].GetLongDesc());
 				comboSecProv1.Items.Add(_listProviders[i].GetLongDesc());
 				comboPriProv2.Items.Add(_listProviders[i].GetLongDesc());
@@ -190,23 +195,27 @@ namespace OpenDental {
 				comboPriProv5.Items.Add(_listProviders[i].GetLongDesc());
 				comboSecProv5.Items.Add(_listProviders[i].GetLongDesc());
 			}
-			int defaultindex=0;
-			if(!PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
-				if(PrefC.HasClinicsEnabled && Clinics.ClinicNum!=0) {
-					defaultindex=Providers.GetIndex((Clinics.GetFirstOrDefault(x => x.ClinicNum==Clinics.ClinicNum).DefaultProv));
+			int defaultindex = 0;
+			if (!PrefC.GetBool(PrefName.PriProvDefaultToSelectProv))
+			{
+				if (PrefC.HasClinicsEnabled && Clinics.ClinicNum != 0)
+				{
+					defaultindex = Providers.GetIndex((Clinics.GetFirstOrDefault(x => x.ClinicNum == Clinics.ClinicNum).DefaultProv));
 				}
-				else {
-					defaultindex=Providers.GetIndex(PrefC.GetLong(PrefName.PracticeDefaultProv));
+				else
+				{
+					defaultindex = Providers.GetIndex(PrefC.GetLong(PrefName.PracticeDefaultProv));
 				}
-				if(defaultindex==-1) {//default provider hidden
-					defaultindex=0;
+				if (defaultindex == -1)
+				{//default provider hidden
+					defaultindex = 0;
 				}
 			}
-			comboPriProv1.SelectedIndex=defaultindex;
-			comboPriProv2.SelectedIndex=defaultindex;
-			comboPriProv3.SelectedIndex=defaultindex;
-			comboPriProv4.SelectedIndex=defaultindex;
-			comboPriProv5.SelectedIndex=defaultindex;
+			comboPriProv1.SelectedIndex = defaultindex;
+			comboPriProv2.SelectedIndex = defaultindex;
+			comboPriProv3.SelectedIndex = defaultindex;
+			comboPriProv4.SelectedIndex = defaultindex;
+			comboPriProv5.SelectedIndex = defaultindex;
 			FillListPatStatus(listStatus1);
 			FillListPatStatus(listStatus2);
 			FillListPatStatus(listStatus3);
@@ -217,42 +226,47 @@ namespace OpenDental {
 			FillComboBillTypes(comboBillType3);
 			FillComboBillTypes(comboBillType4);
 			FillComboBillTypes(comboBillType5);
-			if(!PrefC.HasClinicsEnabled) {
-				labelClinic.Visible=false;
+			if (!PrefC.HasClinicsEnabled)
+			{
+				labelClinic.Visible = false;
 			}
-			else if(PrefC.GetBool(PrefName.ClinicAllowPatientsAtHeadquarters)){
-				comboClinic1.IncludeUnassigned=true;
-				comboClinic2.IncludeUnassigned=true;
-				comboClinic3.IncludeUnassigned=true;
-				comboClinic4.IncludeUnassigned=true;
-				comboClinic5.IncludeUnassigned=true;
+			else if (PrefC.GetBool(PrefName.ClinicAllowPatientsAtHeadquarters))
+			{
+				comboClinic1.IncludeUnassigned = true;
+				comboClinic2.IncludeUnassigned = true;
+				comboClinic3.IncludeUnassigned = true;
+				comboClinic4.IncludeUnassigned = true;
+				comboClinic5.IncludeUnassigned = true;
 			}
-			if(!Security.IsAuthorized(Permissions.RefAttachAdd,true)) {
-				butClearReferralSource.Enabled=false;
-				butReferredFrom.Enabled=false;
+			if (!Security.IsAuthorized(Permissions.RefAttachAdd, true))
+			{
+				butClearReferralSource.Enabled = false;
+				butReferredFrom.Enabled = false;
 			}
-			if(!PrefC.GetBool(PrefName.DockPhonePanelShow)) {
-				labelST.Text="ST";
-				textCountry.Visible=false;
+
+			labelST.Text = "ST";
+			textCountry.Visible = false;
+
+			if (CultureInfo.CurrentCulture.Name.EndsWith("CA"))
+			{//Canadian. en-CA or fr-CA
+				labelSSN.Text = Lan.g(this, "SIN");
+				labelZip.Text = Lan.g(this, "Postal Code");
+				labelST.Text = Lan.g(this, "Province");
 			}
-			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				labelSSN.Text=Lan.g(this,"SIN");
-				labelZip.Text=Lan.g(this,"Postal Code");
-				labelST.Text=Lan.g(this,"Province");
+			if (CultureInfo.CurrentCulture.Name.EndsWith("GB"))
+			{//en-GB
+				labelZip.Text = Lan.g(this, "Postcode");
+				labelST.Text = "";//no such thing as state in GB
 			}
-			if(CultureInfo.CurrentCulture.Name.EndsWith("GB")) {//en-GB
-				labelZip.Text=Lan.g(this,"Postcode");
-				labelST.Text="";//no such thing as state in GB
-			}
-			_listZipCodes=ZipCodes.GetDeepCopy(true);
+			_listZipCodes = ZipCodes.GetDeepCopy(true);
 			FillComboZip();
 			ResetSubscriberLists();
-			_listRequiredFields=RequiredFields.GetWhere(x => x.FieldType==RequiredFieldType.PatientInfo);
+			_listRequiredFields = RequiredFields.GetWhere(x => x.FieldType == RequiredFieldType.PatientInfo);
 			RemoveUnnecessaryRequiredFields();
-			_errorProv.BlinkStyle=ErrorBlinkStyle.NeverBlink;
+			_errorProv.BlinkStyle = ErrorBlinkStyle.NeverBlink;
 			SetRequiredFields();
-			_isLoad=false;
-			Plugins.HookAddCode(this,"FormPatientAddAll.FormPatientAddAll_Load_end");
+			_isLoad = false;
+			Plugins.HookAddCode(this, "FormPatientAddAll.FormPatientAddAll_Load_end");
 		}
 
 		///<summary>Removes required fields that are not used in this window.</summary>

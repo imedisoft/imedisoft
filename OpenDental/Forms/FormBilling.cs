@@ -1041,7 +1041,7 @@ namespace OpenDental{
 				}
 				pat=fam.GetPatient(stmt.PatNum);
 				patFolder=ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath());
-				dataSet=AccountModules.GetStatementDataSet(stmt,isComputeAging,doIncludePatLName:PrefC.IsODHQ);
+				dataSet=AccountModules.GetStatementDataSet(stmt,isComputeAging);
 				if(comboEmailFrom.SelectedIndex==0) { //clinic/practice default
 					emailAddress=EmailAddresses.GetByClinic(pat.ClinicNum);
 				}
@@ -1343,7 +1343,7 @@ namespace OpenDental{
 						fam=listClinicStmts[j].family;
 						listClinicStmts.RemoveAt(j);//Remove the statement from our list so that we do not send it again in the next batch.
 						pat=fam.GetPatient(stmtCur.PatNum);
-						dataSet=AccountModules.GetStatementDataSet(stmtCur,isComputeAging,doIncludePatLName:PrefC.IsODHQ);
+						dataSet=AccountModules.GetStatementDataSet(stmtCur,isComputeAging);
 						bool statementWritten = true;
 						try {
 							//Write the statement into a temporary string builder, so that if the statement fails to generate (due to exception),

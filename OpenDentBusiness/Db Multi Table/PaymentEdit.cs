@@ -1727,7 +1727,7 @@ namespace OpenDentBusiness {
 				amtToAllocate=0;
 				split.DatePay=autoSplitData.Payment.PayDate;
 				split.PatNum=autoSplitData.Payment.PatNum;
-				split.ProvNum=(PrefC.IsODHQ) ? 7 : 0;//Jordan's ProvNum for HQ.
+				split.ProvNum=0;
 				split.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
 				if(PrefC.HasClinicsEnabled) {
 					split.ClinicNum=autoSplitData.Payment.ClinicNum;

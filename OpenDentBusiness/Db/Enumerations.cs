@@ -1587,7 +1587,7 @@ namespace OpenDentBusiness{
 		///<summary>2.</summary>
 		[Description("PatNum Asc")]
 		PatNumAsc,
-		///<summary>3.</summary
+		///<summary>3.</summary>
 		[Description("PatNum Desc")]
 		PatNumDesc
 	}

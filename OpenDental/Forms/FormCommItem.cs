@@ -39,9 +39,7 @@ namespace OpenDental {
 		private void FormCommItem_Load(object sender,EventArgs e) {
 			_isStartingUp=true;
 			_listCommlogTypeDefs=Defs.GetDefsForCategory(DefCat.CommLogTypes,true);
-			if(!PrefC.IsODHQ) {
-				_listCommlogTypeDefs.RemoveAll(x => x.ItemValue==CommItemTypeAuto.ODHQ.ToString());
-			}
+
 			//there will usually be a commtype set before this dialog is opened
 			for(int i=0;i<_listCommlogTypeDefs.Count;i++){
 				listType.Items.Add(_listCommlogTypeDefs[i].ItemName);
@@ -55,12 +53,12 @@ namespace OpenDental {
 			for(int i=0;i<Enum.GetNames(typeof(CommSentOrReceived)).Length;i++) {
 				listSentOrReceived.Items.Add(Lan.g("enumCommSentOrReceived",Enum.GetNames(typeof(CommSentOrReceived))[i]));
 			}
-			if(!PrefC.IsODHQ) {
+
 				labelDateTimeEnd.Visible=false;
 				textDateTimeEnd.Visible=false;
 				butNow.Visible=false;
 				butNowEnd.Visible=false;
-			}
+			
 			if(!Security.IsAuthorized(Permissions.CommlogEdit,_commlogCur.CommDateTime)) {
 				//The user does not have permissions to create or edit commlogs.
 				if(_commlogOld.IsNew || _isPersistent) {

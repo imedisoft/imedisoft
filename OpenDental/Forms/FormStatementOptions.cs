@@ -655,9 +655,6 @@ namespace OpenDental{
 				checkSinglePatient.Checked=StmtCur.SinglePatient;
 				checkIntermingled.Checked=StmtCur.Intermingled;
 				checkIsReceipt.Checked=StmtCur.IsReceipt;
-				if(PrefC.IsODHQ){
-					checkShowLName.Checked=true;
-				}
 				if(StmtCur.IsInvoice) {//If they got here with drop down menu invoice item.
 					if(CultureInfo.CurrentCulture.Name=="en-US") {
 						checkIsInvoiceCopy.Visible=false;

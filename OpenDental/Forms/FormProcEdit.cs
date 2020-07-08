@@ -137,14 +137,6 @@ namespace OpenDental {
 		}
 
 		private void FormProcInfo_Load(object sender,System.EventArgs e) {
-			if(PrefC.IsODHQ) {
-				labelTaxEst.Visible=true;
-				textTaxAmt.Visible=true;
-				textTaxAmt.Text=POut.Double(_procCur.TaxAmt);
-				if(_procCur.ProcStatus==ProcStat.C) {
-					labelTaxEst.Text="Tax Amt";
-				}
-			}
 			_loadData=ProcEdit.GetLoadData(_procCur,_patCur,_famCur);
 			_orthoProcLink=_loadData.OrthoProcedureLink;
 			if(_orthoProcLink!=null) {

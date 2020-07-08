@@ -283,61 +283,61 @@ namespace OpenDental{
 		}
 
 		private void butDiagnostics_Click(object sender,EventArgs e) {
-			BugSubmission.SubmissionInfo subInfo=new BugSubmission(new Exception()).Info;
-			StringBuilder strBuilder=new StringBuilder();
-			foreach(FieldInfo field in subInfo.GetType().GetFields()) {
-				object value=field.GetValue(subInfo);
-				if(value.In(null,"")) {
-					continue;
-				}
-				if(value is Dictionary<PrefName,string>) {//DictPrefValues
-					Dictionary<PrefName,string> dictPrefValues=value as Dictionary<PrefName,string>;
-					if(dictPrefValues.Keys.Count>0) {
-						strBuilder.AppendLine(field.Name+":");
-						dictPrefValues.ToList().ForEach(x => strBuilder.AppendLine("  "+x.Key.ToString()+": "+x.Value));
-						strBuilder.AppendLine("-------------");
-					}
-				}
-				else if(value is List<string>) {//EnabledPlugins
-					List<string> enabledPlugins=value as List<string>;
-					if(enabledPlugins.Count>0) { 
-						strBuilder.AppendLine(field.Name+":");
-						enabledPlugins.ForEach(x => strBuilder.AppendLine("  "+x));
-						strBuilder.AppendLine("-------------");
-					}
-				}
-				else if (value is bool) {
-					strBuilder.AppendLine(field.Name+": "+(((bool)value)==true?"true":"false"));
-				}
-				else {
-					strBuilder.AppendLine(field.Name+": "+value);
-				}
-			}
-			//Display the current HQ connection information.
-			if(PrefC.IsODHQ) {
-				Action<ConnectionNames> action=(connName) => {
-					strBuilder.AppendLine($"{connName.ToString()}:");
-					strBuilder.AppendLine($"  Server Name: {DataConnection.GetServerName()}");
-					strBuilder.AppendLine($"  Database Name: {DataConnection.GetDatabaseName()}");
-					strBuilder.AppendLine($"  MySQL User: {DataConnection.GetMysqlUser()}");
-					strBuilder.AppendLine($"  MySQL Password: {DataConnection.GetMysqlPass()}");
-				};
-				strBuilder.AppendLine("-------------");
-				strBuilder.AppendLine("HQ Connection Settings");
-				try {
-					DataAction.RunBugsHQ(() => action(ConnectionNames.BugsHQ),useConnectionStore: false);
-					DataAction.RunCustomers(() => action(ConnectionNames.CustomersHQ),useConnectionStore: false);
-					DataAction.RunManualPublisherHQ(() => action(ConnectionNames.ManualPublisher));
-					DataAction.RunWebChat(() => action(ConnectionNames.WebChat));
-				}
-				catch(Exception ex) {
-					strBuilder.AppendLine($"ERROR: {ex.Message}");
-				}
-				strBuilder.AppendLine("-------------");
-			}
-			MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(strBuilder.ToString());
-			msgbox.Text=Lans.g(this,"Diagnostics");
-			msgbox.ShowDialog();
+			//BugSubmission.SubmissionInfo subInfo=new BugSubmission(new Exception()).Info;
+			//StringBuilder strBuilder=new StringBuilder();
+			//foreach(FieldInfo field in subInfo.GetType().GetFields()) {
+			//	object value=field.GetValue(subInfo);
+			//	if(value.In(null,"")) {
+			//		continue;
+			//	}
+			//	if(value is Dictionary<PrefName,string>) {//DictPrefValues
+			//		Dictionary<PrefName,string> dictPrefValues=value as Dictionary<PrefName,string>;
+			//		if(dictPrefValues.Keys.Count>0) {
+			//			strBuilder.AppendLine(field.Name+":");
+			//			dictPrefValues.ToList().ForEach(x => strBuilder.AppendLine("  "+x.Key.ToString()+": "+x.Value));
+			//			strBuilder.AppendLine("-------------");
+			//		}
+			//	}
+			//	else if(value is List<string>) {//EnabledPlugins
+			//		List<string> enabledPlugins=value as List<string>;
+			//		if(enabledPlugins.Count>0) { 
+			//			strBuilder.AppendLine(field.Name+":");
+			//			enabledPlugins.ForEach(x => strBuilder.AppendLine("  "+x));
+			//			strBuilder.AppendLine("-------------");
+			//		}
+			//	}
+			//	else if (value is bool) {
+			//		strBuilder.AppendLine(field.Name+": "+(((bool)value)==true?"true":"false"));
+			//	}
+			//	else {
+			//		strBuilder.AppendLine(field.Name+": "+value);
+			//	}
+			//}
+			////Display the current HQ connection information.
+			//if(PrefC.IsODHQ) {
+			//	Action<ConnectionNames> action=(connName) => {
+			//		strBuilder.AppendLine($"{connName.ToString()}:");
+			//		strBuilder.AppendLine($"  Server Name: {DataConnection.GetServerName()}");
+			//		strBuilder.AppendLine($"  Database Name: {DataConnection.GetDatabaseName()}");
+			//		strBuilder.AppendLine($"  MySQL User: {DataConnection.GetMysqlUser()}");
+			//		strBuilder.AppendLine($"  MySQL Password: {DataConnection.GetMysqlPass()}");
+			//	};
+			//	strBuilder.AppendLine("-------------");
+			//	strBuilder.AppendLine("HQ Connection Settings");
+			//	try {
+			//		DataAction.RunBugsHQ(() => action(ConnectionNames.BugsHQ),useConnectionStore: false);
+			//		DataAction.RunCustomers(() => action(ConnectionNames.CustomersHQ),useConnectionStore: false);
+			//		DataAction.RunManualPublisherHQ(() => action(ConnectionNames.ManualPublisher));
+			//		DataAction.RunWebChat(() => action(ConnectionNames.WebChat));
+			//	}
+			//	catch(Exception ex) {
+			//		strBuilder.AppendLine($"ERROR: {ex.Message}");
+			//	}
+			//	strBuilder.AppendLine("-------------");
+			//}
+			//MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(strBuilder.ToString());
+			//msgbox.Text=Lans.g(this,"Diagnostics");
+			//msgbox.ShowDialog();
 		}
 
 		private void butLicense_Click(object sender,EventArgs e) {

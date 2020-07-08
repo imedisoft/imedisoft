@@ -62,7 +62,7 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Get all claim attachments for every 835 in the list.  Ran as a batch for efficiency purposes.
-		///Returned list is ordered by Etrans835Attach.DateTimeEntry, this is very important when identifying claims split from an ERA.</summary></summary>
+		///Returned list is ordered by Etrans835Attach.DateTimeEntry, this is very important when identifying claims split from an ERA.</summary>
 		public static List<Etrans835Attach> GetForEtrans(params long[] listEtrans835Nums) {
 			return GetForEtrans(true,listEtrans835Nums);
 		}

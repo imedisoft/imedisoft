@@ -19,7 +19,7 @@ namespace OpenDental {
 		private int _headingPrintH;
 
 		private List<RpUnfinalizedInsPay.UnfinalizedInsPay> _listUnfinalizedInsPay;
-		private List<Clinic> _listClinics;
+		//private List<Clinic> _listClinics;
 		private List<string> _listTypes;
 
 		public FormRpUnfinalizedInsPay() {

@@ -15,7 +15,7 @@ namespace OpenDental {
 		///<summary>End date used to populate _listEtranss.</summary>
 		private DateTime _reportDateTo=DateTime.MaxValue;
 		///<summary>List of clinics user has access to.</summary>
-		private List<Clinic> _listUserClinics;
+		//private List<Clinic> _listUserClinics;
 		///<summary>List of every 835 Etrans in date range for etype of EtransType.ERA_835.</summary>
 		private List<Etrans> _listAllEtrans=new List<Etrans>();
 		///<summary>Dictionary such that they key is an etrans.EtransNum and value is a list of paid claims associated to it from the database.

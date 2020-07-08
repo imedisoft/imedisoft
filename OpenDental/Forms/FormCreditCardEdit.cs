@@ -32,49 +32,50 @@ namespace OpenDental {
 			_isPaySimpleEnabled=Programs.IsEnabled(ProgramName.PaySimple);
 		}
 
-		private void FormCreditCardEdit_Load(object sender,EventArgs e) {
-			_creditCardOld=CreditCardCur.Clone();
+		private void FormCreditCardEdit_Load(object sender, EventArgs e)
+		{
+			_creditCardOld = CreditCardCur.Clone();
 			FillFrequencyCombos();
 			FillData();
 			FillPayTypeCombo();
-			checkExcludeProcSync.Checked=CreditCardCur.ExcludeProcSync;
-			if((_isXChargeEnabled || _isPayConnectEnabled || _isPaySimpleEnabled) 
-				&& (!CreditCardCur.IsXWeb() && !CreditCardCur.IsPayConnectPortal())) 
+			checkExcludeProcSync.Checked = CreditCardCur.ExcludeProcSync;
+			if ((_isXChargeEnabled || _isPayConnectEnabled || _isPaySimpleEnabled)
+				&& (!CreditCardCur.IsXWeb() && !CreditCardCur.IsPayConnectPortal()))
 			{//Get recurring payment plan information if using X-Charge or PayConnect and the card is not from XWeb or PayConnectPortal.
-				PayPlanList=PayPlans.GetValidPlansNoIns(PatCur.PatNum);
-				List<PayPlanCharge> chargeList=PayPlanCharges.GetForPayPlans(PayPlanList.Select(x => x.PayPlanNum).ToList());
+				PayPlanList = PayPlans.GetValidPlansNoIns(PatCur.PatNum);
+				List<PayPlanCharge> chargeList = PayPlanCharges.GetForPayPlans(PayPlanList.Select(x => x.PayPlanNum).ToList());
 				comboPaymentPlans.Items.Add("None");
-				comboPaymentPlans.SelectedIndex=0;
-				for(int i=0;i<PayPlanList.Count;i++) {
-					comboPaymentPlans.Items.Add(PayPlans.GetTotalPrinc(PayPlanList[i].PayPlanNum,chargeList).ToString("F")
-					+"  "+Patients.GetPat(PayPlanList[i].PatNum).GetNameFL());
-					if(PayPlanList[i].PayPlanNum==CreditCardCur.PayPlanNum) {
-						comboPaymentPlans.SelectedIndex=i+1;
+				comboPaymentPlans.SelectedIndex = 0;
+				for (int i = 0; i < PayPlanList.Count; i++)
+				{
+					comboPaymentPlans.Items.Add(PayPlans.GetTotalPrinc(PayPlanList[i].PayPlanNum, chargeList).ToString("F")
+					+ "  " + Patients.GetPat(PayPlanList[i].PatNum).GetNameFL());
+					if (PayPlanList[i].PayPlanNum == CreditCardCur.PayPlanNum)
+					{
+						comboPaymentPlans.SelectedIndex = i + 1;
 					}
 				}
-				if(PrefC.IsODHQ) {
-					groupProcedures.Visible=true;
-					FillProcs();
-				}
-				else {
-					this.ClientSize=new System.Drawing.Size(this.ClientSize.Width,this.ClientSize.Height-144);
-				}
+
+				this.ClientSize = new System.Drawing.Size(this.ClientSize.Width, this.ClientSize.Height - 144);
+
 				UpdateFrequencyText();
 				EnableFrequencyControls();
 			}
-			else {//This will hide the recurring section and change the window size.
-				groupRecurringCharges.Visible=false;
-				groupChargeFrequency.Visible=false;
-				this.ClientSize=new System.Drawing.Size(this.ClientSize.Width,this.ClientSize.Height-486);
+			else
+			{//This will hide the recurring section and change the window size.
+				groupRecurringCharges.Visible = false;
+				groupChargeFrequency.Visible = false;
+				this.ClientSize = new System.Drawing.Size(this.ClientSize.Width, this.ClientSize.Height - 486);
 			}
-			if(_isPaySimpleEnabled && !CreditCardCur.IsNew) {
-				labelAcctType.Visible=true;
-				textAccountType.Visible=true;
+			if (_isPaySimpleEnabled && !CreditCardCur.IsNew)
+			{
+				labelAcctType.Visible = true;
+				textAccountType.Visible = true;
 			}
-			checkChrgWithNoBal.Checked=CreditCardCur.CanChargeWhenNoBal;
+			checkChrgWithNoBal.Checked = CreditCardCur.CanChargeWhenNoBal;
 			//Only visible if preference is on.
-			checkChrgWithNoBal.Visible=PrefC.GetBool(PrefName.RecurringChargesAllowedWhenNoPatBal);
-			Plugins.HookAddCode(this,"FormCreditCardEdit.Load_end",PatCur);
+			checkChrgWithNoBal.Visible = PrefC.GetBool(PrefName.RecurringChargesAllowedWhenNoPatBal);
+			Plugins.HookAddCode(this, "FormCreditCardEdit.Load_end", PatCur);
 		}
 
 		private void FillFrequencyCombos() {
@@ -309,7 +310,7 @@ namespace OpenDental {
 
 		private void butToday_Click(object sender,EventArgs e) {
 			if(textDayOfMonth.Text=="" && radioDayOfMonth.Checked) {
-				textDayOfMonth.Text=PrefC.IsODHQ ? PatCur.BillingCycleDay.ToString() : DateTime.Today.Day.ToString();
+				textDayOfMonth.Text=DateTime.Today.Day.ToString();
 			}
 			textDateStart.Text=DateTime.Today.ToShortDateString();
 		}
@@ -318,16 +319,14 @@ namespace OpenDental {
 			if(radioWeekDay.Checked) {
 				return;
 			}
-			if(PrefC.IsODHQ) {
-				textDayOfMonth.Text=PatCur.BillingCycleDay.ToString();
-			}
-			else {
+
+
 				DateTime dateStart=PIn.Date(textDateStart.Text);
 				if(dateStart.Year < 1880 || textDayOfMonth.Text!="") {//if invalid date or if they already have something in the day of the month text
 					return;
 				}
 				textDayOfMonth.Text=dateStart.Date.Day.ToString();
-			}
+			
 		}
 
 		private void butAddProc_Click(object sender,EventArgs e) {

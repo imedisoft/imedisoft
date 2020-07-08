@@ -19,7 +19,7 @@ using OpenDentBusiness.WebTypes.WebForms;
 namespace OpenDental {
 	public partial class FormWebForms:ODForm {
 		///<summary>List of all clinics for the user currently logged in.  Includes "Headquarters".  Filled on load, will be null if clinics turned off.</summary>
-		private List<Clinic> _listClinics;
+		//private List<Clinic> _listClinics;
 		private WebForms_Preference _webFormPref=new WebForms_Preference();
 
 		/// <summary>

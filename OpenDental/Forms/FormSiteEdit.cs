@@ -390,7 +390,7 @@ namespace OpenDental{
 			FillComboZip();
 			textZip.Text=SiteCur.Zip;
 			textNote.Text=SiteCur.Note;
-			butSiteLink.Visible=PrefC.IsODHQ;
+			butSiteLink.Visible=false;
 			butSiteLink.Enabled=(!SiteCur.IsNew);
 		}
 
@@ -512,20 +512,6 @@ namespace OpenDental{
 		}
 
 		private void butSiteLink_Click(object sender,EventArgs e) {
-			SiteLink siteLink=SiteLinks.GetFirstOrDefault(x => x.SiteNum==SiteCur.SiteNum);
-			if(siteLink==null) {
-				siteLink=new SiteLink() {
-					SiteNum=SiteCur.SiteNum,
-					ForeColor=Color.Black,
-					InnerColor=Color.LightCyan,
-					OuterColor=Color.Blue
-				};
-			}
-			FormSiteLinkEdit FormSE=new FormSiteLinkEdit(siteLink);
-			FormSE.ShowDialog();
-			if(FormSE.DialogResult==DialogResult.OK) {
-				DataValid.SetInvalid(InvalidType.Sites);
-			}
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {

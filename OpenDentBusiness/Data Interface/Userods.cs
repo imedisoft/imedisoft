@@ -330,13 +330,6 @@ namespace OpenDentBusiness {
 			return listUserods;
 		}
 
-		///<summary>Returns all users that are associated to the permission passed in.  Returns empty list if no matches found.</summary>
-		public static List<Userod> GetUsersByJobRole(JobPerm jobPerm,bool showHidden) {
-			//No need to check RemotingRole; no call to db.
-			List<JobPermission> listJobRoles=JobPermissions.GetList().FindAll(x=>x.JobPermType==jobPerm);
-			return Userods.GetWhere(x=>listJobRoles.Any(y=>x.UserNum==y.UserNum),!showHidden);
-		}
-
 		///<summary>Gets all non-hidden users that have an associated provider.</summary>
 		public static List<Userod> GetUsersWithProviders() {
 			//No need to check RemotingRole; no call to db.
@@ -854,7 +847,7 @@ namespace OpenDentBusiness {
 		/// <param name="excludeUserNum">The UserNum that is excluded when checking if a username is in use.</param>
 		/// <param name="excludeHiddenUsers">Set to true to exclude hidden patients when checking if a username is in use, otherwise false</param>
 		/// <param name="searchCEMTUsers">Set to true to include checking usernames that are associated to CEMT users.</param>
-		/// <param name="uniqueUserName">When returning true this is set to a unique username, otherwise null.</parm>
+		/// <param name="uniqueUserName">When returning true this is set to a unique username, otherwise null.</param>
 		/// <returns></returns>
 		public static bool TryGetUniqueUsername(string username,long excludeUserNum,bool excludeHiddenUsers,bool searchCEMTUsers,out string uniqueUserName) {
 			int attempt=1;

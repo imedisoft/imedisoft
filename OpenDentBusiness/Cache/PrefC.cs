@@ -50,13 +50,13 @@ namespace OpenDentBusiness {
 			}
 		}
 
-		///<summary>Returns true if DockPhonePanelShow is enabled. Convenience function that should be used if for ODHQ only, and not resellers.</summary>
-		/// <returns></returns>
-		public static bool IsODHQ {
-			get {
-				return GetBool(PrefName.DockPhonePanelShow);
-			}
-		}
+		/// <summary>
+		/// Returns true if DockPhonePanelShow is enabled. 
+		/// Convenience function that should be used if for ODHQ only, and not resellers.
+		/// </summary>
+		[Obsolete]
+		public static bool IsODHQ => GetBool(PrefName.DockPhonePanelShow);
+
 		
 		///<summary>Returns a list of DefNums that represent WSNPA Generally Allowed blockout types.</summary>
 		public static List<long> GetWebSchedNewPatAllowedBlockouts {

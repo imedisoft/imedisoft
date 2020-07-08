@@ -18,9 +18,6 @@ namespace OpenDental {
 				if(defCatCur.GetDescription() == "NotUsed") {
 					continue;
 				}
-				if(defCatCur.GetDescription().Contains("HqOnly") && !PrefC.IsODHQ) {
-					continue;
-				}
 				DefCatOptions defCOption=new DefCatOptions(defCatCur);
 				switch(defCatCur) {
 					case DefCat.AccountColors:
@@ -318,9 +315,6 @@ namespace OpenDental {
 			gridDefs.ListGridRows.Clear();
 			GridRow row;
 			foreach(Def defCur in listDefsCur) {
-				if(!PrefC.IsODHQ && defCur.ItemValue==CommItemTypeAuto.ODHQ.ToString()) {
-					continue;
-				}
 				if(Defs.IsDefDeprecated(defCur)) {
 					defCur.IsHidden=true;
 				}

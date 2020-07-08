@@ -458,25 +458,6 @@ namespace CodeBase {
 			return false;
 		}
 
-		///<summary>The IsODHQAttribute can  be applied to a field, and checked. Returns true if the class or field is marked ODHQ only.</summary>
-		public static bool IsODHQ<T>(this T val) {
-			try {
-				FieldInfo field=typeof(T).GetField(val.ToString());
-				if(field==null) {
-					return false;
-				}
-				IsODHQAttribute ODHQ=(IsODHQAttribute)Attribute.GetCustomAttribute(field,typeof(IsODHQAttribute));
-				if(ODHQ==null) {
-					return false;
-				}
-				return ODHQ.IsODHQ;
-			}
-			catch(Exception e) {
-				e.DoNothing();
-				return false;
-			}
-		}
-
 		///<summary>Allows for custom comparison of TSource. Implements IEqualityComparer, which is required by LINQ for inline comparisons.</summary>
 		public class ODEqualityComparer<TSource>:IEqualityComparer<TSource> {
 			private Func<TSource,TSource,bool> _funcCompare;
@@ -511,25 +492,4 @@ namespace CodeBase {
 			set { _shortDesc=value; }
 		}
 	}
-
-	///<summary>The IsODHQAttribute can  be applied to a field, and checked. Use in tandem with PrefC.IsODHQ to hide HQ only features.</summary>
-	public class IsODHQAttribute:Attribute {
-		private bool _isODHQ=false;
-
-		///<summary></summary>
-		public IsODHQAttribute() {
-			IsODHQ=true;
-		}
-
-		///<summary>The class or field is only used at OD HQ. Defaults to false.</summary>
-		public bool IsODHQ {
-			get {
-				return _isODHQ;
-			}
-			set {
-				_isODHQ=value;
-			}
-		}
-	}
-
 }

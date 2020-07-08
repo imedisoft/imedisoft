@@ -191,11 +191,6 @@ namespace OpenDentBusiness {
 					list.Add(new DisplayField("SSN",70,category));
 					list.Add(new DisplayField("Hm Phone",90,category));
 					list.Add(new DisplayField("Wk Phone",90,category));
-					if(PrefC.GetBool(PrefName.DistributorKey)) {//if for OD HQ
-						//list.Add(new DisplayField("OtherPhone",90,category));
-						//list.Add(new DisplayField("Country",90,category));
-						//list.Add(new DisplayField("RegKey",150,category));
-					}
 					list.Add(new DisplayField("PatNum",80,category));
 					//list.Add(new DisplayField("ChartNum",60,category));
 					list.Add(new DisplayField("Address",100,category));
@@ -234,12 +229,6 @@ namespace OpenDentBusiness {
 					list.Add(new DisplayField("Address2",0,category));
 					list.Add(new DisplayField("City",0,category));
 					list.Add(new DisplayField("State",0,category));
-					if(PrefC.GetBool(PrefName.DockPhonePanelShow)) {
-						list.Add(new DisplayField("Country",0,category));
-					}
-					if(PrefC.IsODHQ) {
-						list.Add(new DisplayField("Tax Address",0,category));
-					}
 					list.Add(new DisplayField("Zip",0,category));
 					list.Add(new DisplayField("Hm Phone",0,category));
 					list.Add(new DisplayField("Wk Phone",0,category));
@@ -263,9 +252,6 @@ namespace OpenDentBusiness {
 					//list.Add(new DisplayField("Guardians",0,category));
 					//list.Add(new DisplayField("Arrive Early",0,category));
 					//list.Add(new DisplayField("Super Head",0,category));
-					if(PrefC.GetBool(PrefName.DistributorKey)) {
-						list.Add(new DisplayField("References",0,category));
-					}
 					list.Add(new DisplayField("Pat Restrictions",0,category));
 					list.Add(new DisplayField("ICE Name",0,category));
 					list.Add(new DisplayField("ICE Phone",0,category));
@@ -314,11 +300,6 @@ namespace OpenDentBusiness {
 					list.Add(new DisplayField("Pri Ins",0,category));
 					list.Add(new DisplayField("Sec Ins",0,category));
 					list.Add(new DisplayField("Payor Types",0,category));
-					if(PrefC.GetBool(PrefName.DistributorKey)) {
-						list.Add(new DisplayField("Registration Keys",0,category));
-						list.Add(new DisplayField("Ehr Provider Keys",0,category));
-						list.Add(new DisplayField("References",0,category));
-					}
 					if(!Programs.UsingEcwTightOrFullMode()) {//different default list for eCW:
 						list.Add(new DisplayField("Premedicate",0,category));
 						list.Add(new DisplayField("Problems",0,category));
@@ -663,11 +644,6 @@ namespace OpenDentBusiness {
 					list.Add(new DisplayField("SSN",70,category));
 					list.Add(new DisplayField("Hm Phone",90,category));
 					list.Add(new DisplayField("Wk Phone",90,category));
-					if(PrefC.GetBool(PrefName.DistributorKey)) {//if for OD HQ
-						list.Add(new DisplayField("OtherPhone",90,category));
-						list.Add(new DisplayField("Country",90,category));
-						list.Add(new DisplayField("RegKey",150,category));
-					}
 					list.Add(new DisplayField("PatNum",80,category));
 					list.Add(new DisplayField("ChartNum",60,category));
 					list.Add(new DisplayField("Address",100,category));
@@ -706,12 +682,6 @@ namespace OpenDentBusiness {
 					list.Add(new DisplayField("Address2",0,category));
 					list.Add(new DisplayField("City",0,category));
 					list.Add(new DisplayField("State",0,category));
-					if(PrefC.GetBool(PrefName.DockPhonePanelShow)) {
-						list.Add(new DisplayField("Country",0,category));
-					}
-					if(PrefC.IsODHQ) {
-						list.Add(new DisplayField("Tax Address",0,category));
-					}
 					list.Add(new DisplayField("Zip",0,category));
 					list.Add(new DisplayField("Hm Phone",0,category));
 					list.Add(new DisplayField("Wk Phone",0,category));
@@ -735,9 +705,6 @@ namespace OpenDentBusiness {
 					list.Add(new DisplayField("Guardians",0,category));
 					list.Add(new DisplayField("Arrive Early",0,category));
 					list.Add(new DisplayField("Super Head",0,category));
-					if(PrefC.GetBool(PrefName.DistributorKey)) {
-						list.Add(new DisplayField("References",0,category));
-					}
 					list.Add(new DisplayField("Pat Restrictions",0,category));
 					list.Add(new DisplayField("ICE Name",0,category));
 					list.Add(new DisplayField("ICE Phone",0,category));
@@ -790,11 +757,6 @@ namespace OpenDentBusiness {
 					list.Add(new DisplayField("Pri Ins",0,category));
 					list.Add(new DisplayField("Sec Ins",0,category));
 					list.Add(new DisplayField("Payor Types",0,category));
-					if(PrefC.GetBool(PrefName.DistributorKey)) {
-						list.Add(new DisplayField("Registration Keys",0,category));
-						list.Add(new DisplayField("Ehr Provider Keys",0,category));
-						list.Add(new DisplayField("References",0,category));
-					}
 					list.Add(new DisplayField("Premedicate",0,category));
 					list.Add(new DisplayField("Problems",0,category));
 					list.Add(new DisplayField("Med Urgent",0,category));
@@ -854,9 +816,6 @@ namespace OpenDentBusiness {
 					list.Add(new DisplayField("Prognosis",60,category));
 					list.Add(new DisplayField("Dx",28,category));
 					list.Add(new DisplayField("Abbr",110,category));//proc abbr
-					if(PrefC.IsODHQ) { //We should only give this option when the user is in HQ for now so as not to mislead customers
-						list.Add(new DisplayField("Tax Est",60,category));
-					}
 					list.Add(new DisplayField("Prov",50,category));//provnum
 					list.Add(new DisplayField("DateTP",65,category));
 					list.Add(new DisplayField("Clinic",50,category));//clinicnum

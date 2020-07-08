@@ -347,63 +347,9 @@ namespace OpenDentBusiness{
 				clockEvent.TimeDisplayed2=clockEvent.TimeEntered2;
 				clockEvent.ClockStatus=clockStatus;//whatever the user selected
 				ClockEvents.Update(clockEvent);
-				if(PrefC.GetBool(PrefName.DockPhonePanelShow) && clockEvent.ClockStatus==TimeClockStatus.Home) { //only applies to HQ
-					ClockOutForHQ(employeeNum);
-				}
 			}
 			Employee emp=Employees.GetEmp(employeeNum);
 			SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,emp.FName+" "+emp.LName+" "+"clocked out for "+clockEvent.ClockStatus.ToString()+".");
-		}
-
-		///<summary>Special logic needs to be run for the phone system when users clock out.</summary>
-		private static void ClockOutForHQ(long employeeNum) {
-			//The name showing for this extension might change to a different user.  
-			//It would only need to change if the employee clocking out is not assigned to the current extension. (assigned ext set in the employee table)
-			//Get the information corresponding to the employee clocking out.
-			PhoneEmpDefault pedClockingOut=PhoneEmpDefaults.GetOne(employeeNum);
-			if(pedClockingOut==null) {
-				return;//This should never happen.
-			}
-			//Get the employee that is normally assigned to this extension (assigned ext set in the employee table).
-			long permanentLinkageEmployeeNum=Employees.GetEmpNumAtExtension(pedClockingOut.PhoneExt);
-			if(permanentLinkageEmployeeNum>=1) { //Extension is nomrally assigned to an employee.
-				if(employeeNum!=permanentLinkageEmployeeNum) {//This is not the normally linked employee so let's revert back to the proper employee.
-					PhoneEmpDefault pedRevertTo=PhoneEmpDefaults.GetOne(permanentLinkageEmployeeNum);
-					//Make sure the employee we are about to revert is not logged in at yet a different workstation. This would be rare but it's worth checking.
-					if(pedRevertTo!=null && !ClockEvents.IsClockedIn(pedRevertTo.EmployeeNum)) {
-						//Revert to the permanent extension for this PhoneEmpDefault.
-						pedRevertTo.PhoneExt=pedClockingOut.PhoneExt;
-						PhoneEmpDefaults.Update(pedRevertTo);
-						//Update phone table to match this change.
-						Phones.SetPhoneStatus(ClockStatusEnum.Home,pedRevertTo.PhoneExt,pedRevertTo.EmployeeNum);
-					}
-				}
-			}
-			//Now let's switch this employee back to his normal extension.
-			Employee employeeClockingOut=Employees.GetEmp(employeeNum);
-			if(employeeClockingOut==null) {//should not get here
-				return;
-			}
-			//Now check if the assigned extension is associated to a valid phone tile.
-			Phone phoneAssignedToEmp=Phones.GetPhoneForExtensionDB(employeeClockingOut.PhoneExt);
-			//If the employee is assigned to a valid phone tile (extension) and they are assigned to a different phone tile than the one they just clocked out of.
-			if(phoneAssignedToEmp!=null && employeeClockingOut.PhoneExt!=pedClockingOut.PhoneExt) {
-				//Revert PhoneEmpDefault and Phone to the normally assigned extension for this employee.	
-				//Start by setting this employee back to their normally assigned extension.
-				pedClockingOut.PhoneExt=employeeClockingOut.PhoneExt;
-				//Check if someone is currently using their assigned extension
-				if(ClockEvents.IsClockedIn(phoneAssignedToEmp.EmployeeNum)) {
-					//The third employee is clocked in so set our employee extension to 0.
-					//The currently clocked in employee will retain the extension for now.
-					//Our employee will retain the proper extension next time they clock in.
-					pedClockingOut.PhoneExt=0;
-					//Update the phone table accordingly.
-					Phones.UpdatePhoneToEmpty(pedClockingOut.EmployeeNum,-1);
-				}
-				PhoneEmpDefaults.Update(pedClockingOut);
-			}
-			//Update phone table to match this change.
-			Phones.SetPhoneStatus(ClockStatusEnum.Home,pedClockingOut.PhoneExt,employeeClockingOut.EmployeeNum);
 		}
 
 		///<summary>Used in the timecard to track hours worked per week when the week started in a previous time period.  This gets all the hours of the first week before the date listed.  Also adds in any adjustments for that week.</summary>
@@ -793,9 +739,6 @@ namespace OpenDentBusiness{
 		/// <param name="isPrintReport">Only applicable to ODHQ. If true, will add ADP pay numer and note. The query takes about 9 seconds if this is set top true vs. about 2 seconds if set to false.</param>
 		public static string GetTimeCardManageCommand(DateTime startDate,DateTime stopDate,bool isPrintReport) {
 			string command=@"SELECT clockevent.EmployeeNum,";
-			if(PrefC.GetBool(PrefName.DistributorKey) && isPrintReport) {//OD HQ
-				command+="COALESCE(wikilist_employees.ADPNum,'NotInList') AS ADPNum,";
-			}
 			command += @"employee.FName,employee.LName,
 					SEC_TO_TIME((((TIME_TO_SEC(tempclockevent.TotalTime)-TIME_TO_SEC(tempclockevent.OverTime))
 						+TIME_TO_SEC(tempclockevent.AdjEvent))+TIME_TO_SEC(IFNULL(temptimeadjust.AdjReg,0)))
@@ -847,9 +790,7 @@ namespace OpenDentBusiness{
 					AND ceb.ClockStatus = '2'
 					GROUP BY ceb.EmployeeNum) tempbreak ON clockevent.EmployeeNum=tempbreak.EmployeeNum
 				INNER JOIN employee ON clockevent.EmployeeNum=employee.EmployeeNum AND IsHidden=0 ";
-			if(PrefC.GetBool(PrefName.DistributorKey) && isPrintReport) {//OD HQ
-				command+="LEFT JOIN wikilist_employees ON wikilist_employees.EmployeeNum=employee.EmployeeNum ";
-			}
+
 			//TODO:add Rate2Hours and Rate2Auto Columns to report.
 			command+=@"GROUP BY EmployeeNum
 				ORDER BY employee.LName";

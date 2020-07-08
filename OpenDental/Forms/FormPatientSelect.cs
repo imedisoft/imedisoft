@@ -772,119 +772,141 @@ namespace OpenDental{
 		#endregion
 
 		///<summary></summary>
-		public void FormSelectPatient_Load(object sender, System.EventArgs e){
-			if(!PrefC.GetBool(PrefName.DockPhonePanelShow)) {
-				labelCountry.Visible=false;
-				textCountry.Visible=false;
-			}
-			if(!PrefC.GetBool(PrefName.DistributorKey)) {
-				labelRegKey.Visible=false;
-				textRegKey.Visible=false;
-			}
-			checkShowInactive.Checked=PrefC.GetBool(PrefName.PatientSelectShowInactive);
-			if(SelectionModeOnly){
-				groupAddPt.Visible=false;
+		public void FormSelectPatient_Load(object sender, System.EventArgs e)
+		{
+
+			labelCountry.Visible = false;
+			textCountry.Visible = false;
+
+
+			labelRegKey.Visible = false;
+			textRegKey.Visible = false;
+
+			checkShowInactive.Checked = PrefC.GetBool(PrefName.PatientSelectShowInactive);
+			if (SelectionModeOnly)
+			{
+				groupAddPt.Visible = false;
 			}
 			//Cannot add new patients from OD select patient interface.  Patient must be added from HL7 message.
-			if(HL7Defs.IsExistingHL7Enabled()) {
-				HL7Def def=HL7Defs.GetOneDeepEnabled();
-				if(def.ShowDemographics!=HL7ShowDemographics.ChangeAndAdd) {
-					groupAddPt.Visible=false;
+			if (HL7Defs.IsExistingHL7Enabled())
+			{
+				HL7Def def = HL7Defs.GetOneDeepEnabled();
+				if (def.ShowDemographics != HL7ShowDemographics.ChangeAndAdd)
+				{
+					groupAddPt.Visible = false;
 				}
 			}
-			else {
-				if(Programs.UsingEcwTightOrFullMode()) {
-					groupAddPt.Visible=false;
+			else
+			{
+				if (Programs.UsingEcwTightOrFullMode())
+				{
+					groupAddPt.Visible = false;
 				}
 			}
-			comboBillingType.Items.Add(Lan.g(this,"All"));
-			comboBillingType.SelectedIndex=0;
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
-			for(int i=0;i<_listBillingTypeDefs.Count;i++){
+			comboBillingType.Items.Add(Lan.g(this, "All"));
+			comboBillingType.SelectedIndex = 0;
+			_listBillingTypeDefs = Defs.GetDefsForCategory(DefCat.BillingTypes, true);
+			for (int i = 0; i < _listBillingTypeDefs.Count; i++)
+			{
 				comboBillingType.Items.Add(_listBillingTypeDefs[i].ItemName);
 			}
-			if(PrefC.GetBool(PrefName.EasyHidePublicHealth)){
-				comboSite.Visible=false;
-				labelSite.Visible=false;
+			if (PrefC.GetBool(PrefName.EasyHidePublicHealth))
+			{
+				comboSite.Visible = false;
+				labelSite.Visible = false;
 			}
-			else{
-				comboSite.Items.Add(Lan.g(this,"All"));
-				comboSite.SelectedIndex=0;
-				_listSites=Sites.GetDeepCopy();
-				for(int i=0;i<_listSites.Count;i++) {
+			else
+			{
+				comboSite.Items.Add(Lan.g(this, "All"));
+				comboSite.SelectedIndex = 0;
+				_listSites = Sites.GetDeepCopy();
+				for (int i = 0; i < _listSites.Count; i++)
+				{
 					comboSite.Items.Add(_listSites[i].Description);
 				}
 			}
-			if(PrefC.HasClinicsEnabled) {
-				if(Clinics.ClinicNum==0) {
-					comboClinic.IsAllSelected=true;
+			if (PrefC.HasClinicsEnabled)
+			{
+				if (Clinics.ClinicNum == 0)
+				{
+					comboClinic.IsAllSelected = true;
 				}
-				else {
-					comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+				else
+				{
+					comboClinic.SelectedClinicNum = Clinics.ClinicNum;
 				}
 			}
-			if(PrefC.GetBool(PrefName.PatientSSNMasked)) {
+			if (PrefC.GetBool(PrefName.PatientSSNMasked))
+			{
 				//Add "View SS#" right click option, MenuItemPopup() will show and hide it as needed.
-				if(gridMain.ContextMenu==null) {
-					gridMain.ContextMenu=new ContextMenu();//ODGrid will automatically attach the default Popups
+				if (gridMain.ContextMenu == null)
+				{
+					gridMain.ContextMenu = new ContextMenu();//ODGrid will automatically attach the default Popups
 				}
 				ContextMenu menu = gridMain.ContextMenu;
-				MenuItem menuItemUnmaskSSN=new MenuItem();
-				menuItemUnmaskSSN.Enabled=false;
-				menuItemUnmaskSSN.Visible=false;
-				menuItemUnmaskSSN.Name="ViewSS#";
-				menuItemUnmaskSSN.Text="View SS#";
-				if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-					menuItemUnmaskSSN.Text="View SIN";
+				MenuItem menuItemUnmaskSSN = new MenuItem();
+				menuItemUnmaskSSN.Enabled = false;
+				menuItemUnmaskSSN.Visible = false;
+				menuItemUnmaskSSN.Name = "ViewSS#";
+				menuItemUnmaskSSN.Text = "View SS#";
+				if (CultureInfo.CurrentCulture.Name.EndsWith("CA"))
+				{//Canadian. en-CA or fr-CA
+					menuItemUnmaskSSN.Text = "View SIN";
 				}
-				menuItemUnmaskSSN.Click+= new System.EventHandler(this.MenuItemUnmaskSSN_Click);
+				menuItemUnmaskSSN.Click += new System.EventHandler(this.MenuItemUnmaskSSN_Click);
 				menu.MenuItems.Add(menuItemUnmaskSSN);
-				menu.Popup+=MenuItemPopupUnmaskSSN;
+				menu.Popup += MenuItemPopupUnmaskSSN;
 			}
-			if(PrefC.GetBool(PrefName.PatientDOBMasked)) {
+			if (PrefC.GetBool(PrefName.PatientDOBMasked))
+			{
 				//Add "View DOB" right click option, MenuItemPopup() will show and hide it as needed.
-				if(gridMain.ContextMenu==null) {
-					gridMain.ContextMenu=new ContextMenu();//ODGrid will automatically attach the default Popups
+				if (gridMain.ContextMenu == null)
+				{
+					gridMain.ContextMenu = new ContextMenu();//ODGrid will automatically attach the default Popups
 				}
 				ContextMenu menu = gridMain.ContextMenu;
-				MenuItem menuItemUnmaskDOB=new MenuItem();
-				menuItemUnmaskDOB.Enabled=false;
-				menuItemUnmaskDOB.Visible=false;
-				menuItemUnmaskDOB.Name="ViewDOB";
-				menuItemUnmaskDOB.Text="View DOB";
-				menuItemUnmaskDOB.Click+= new System.EventHandler(this.MenuItemUnmaskDOB_Click);
+				MenuItem menuItemUnmaskDOB = new MenuItem();
+				menuItemUnmaskDOB.Enabled = false;
+				menuItemUnmaskDOB.Visible = false;
+				menuItemUnmaskDOB.Name = "ViewDOB";
+				menuItemUnmaskDOB.Text = "View DOB";
+				menuItemUnmaskDOB.Click += new System.EventHandler(this.MenuItemUnmaskDOB_Click);
 				menu.MenuItems.Add(menuItemUnmaskDOB);
-				menu.Popup+=MenuItemPopupUnmaskDOB;
+				menu.Popup += MenuItemPopupUnmaskDOB;
 			}
 			FillSearchOption();
 			SetGridCols();
 			//Using PrefC.GetString on the following two prefs so that we can call PIn.Int with hasExceptions=false and using the Math.Max and Math.Min we
 			//are guaranteed to get a valid number from these prefs.
-			timerFillGrid.Interval=PIn.Int(PrefC.GetString(PrefName.PatientSelectSearchPauseMs));
-			_patSearchMinChars=PIn.Int(PrefC.GetString(PrefName.PatientSelectSearchMinChars));
-			if(ExplicitPatNums!=null && ExplicitPatNums.Count>0) {
-				FillGrid(false,ExplicitPatNums);
+			timerFillGrid.Interval = PIn.Int(PrefC.GetString(PrefName.PatientSelectSearchPauseMs));
+			_patSearchMinChars = PIn.Int(PrefC.GetString(PrefName.PatientSelectSearchMinChars));
+			if (ExplicitPatNums != null && ExplicitPatNums.Count > 0)
+			{
+				FillGrid(false, ExplicitPatNums);
 				return;
 			}
-			if(InitialPatNum!=0){
-				Patient iPatient=Patients.GetLim(InitialPatNum);
-				textLName.Text=iPatient.LName;
+			if (InitialPatNum != 0)
+			{
+				Patient iPatient = Patients.GetLim(InitialPatNum);
+				textLName.Text = iPatient.LName;
 				FillGrid(false);
 				return;
 			}
 			//Always fillGrid if _isPreFilledLoad.  Since the first name and last name are pre-filled, the results should be minimal.
 			//Also FillGrid if checkRefresh is checked and either PatientSelectSearchWithEmptyParams is set or there is a character in at least one textbox
-			if(_isPreFillLoad || DoRefreshGrid()) {
+			if (_isPreFillLoad || DoRefreshGrid())
+			{
 				FillGrid(true);
-				_isPreFillLoad=false;
+				_isPreFillLoad = false;
 			}
 			//Set the Textbox Enter Event Handler to keep track of which TextBox had focus last.  
 			//This helps dictate the desired text box for input after opening up the On Screen Keyboard.
 			SetAllTextBoxEnterEventListeners();
-      if(ODBuild.IsWeb()) {
-        //Keyboard does not currently work with WEB users. 
-        butOnScreenKeyboard.Visible=false;
-      }
+			if (ODBuild.IsWeb())
+			{
+				//Keyboard does not currently work with WEB users. 
+				butOnScreenKeyboard.Visible = false;
+			}
 		}
 
 		///<summary>This used to be called all the time, now only needs to be called on load.</summary>

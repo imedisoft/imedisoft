@@ -488,48 +488,6 @@ namespace OpenDentBusiness {
 				rows.Add(row);
 			}
 			#endregion commlog
-			#region webchatnote - ODHQ Only
-			if(PrefC.IsODHQ) {
-				//connect to the webchat db for this query
-				List<WebChatSession> listWebChatSessions=new List<WebChatSession>();
-				WebChatMisc.DbAction(delegate() {
-					command=@"SELECT *
-									FROM webchatsession
-									WHERE webchatsession.PatNum IN ("+familyPatNums+@") 
-									ORDER BY webchatsession.DateTcreated";
-					listWebChatSessions=Crud.WebChatSessionCrud.SelectMany(command);
-				});
-				//Since this is an internal database on another server, be defensive to allow chart access if the other server is down for any reason.
-				if(listWebChatSessions!=null) {//Will be null if the query failed or the server is unavailable or any reason.
-					foreach(WebChatSession session in listWebChatSessions) {
-						row=table.NewRow();
-						dateT=PIn.DateT(session.DateTcreated.ToString());//use DateTend since DateTcreated is a TimeStamp and will be updated upon editing.
-						row["CommDateTime"]=dateT;
-						row["commDate"]=dateT.ToString(Lans.GetShortDateTimeFormat());
-						row["commTime"]="";
-						if(dateT.TimeOfDay!=TimeSpan.Zero) {
-							row["commTime"]=dateT.ToString("h:mm")+dateT.ToString("%t").ToLower();
-						}
-						row["CommlogNum"]="0";
-						row["commType"]="Web Chat Session - "+session.WebChatSessionNum.ToString();
-						row["EmailMessageNum"]="0";
-						row["FormPatNum"]="0";
-						row["mode"]="";
-						row["Note"]=session.Note;
-						string patName;
-						if(!dictPatFNames.TryGetValue(session.PatNum.ToString(),out patName)) {
-							patName="";
-						}
-						row["patName"]=patName;
-						row["PatNum"]=session.PatNum.ToString();
-						row["SheetNum"]="0";
-						row["WebChatSessionNum"]=session.WebChatSessionNum.ToString();
-						row["EmailMessageHideIn"]="0";
-						rows.Add(row);
-					}
-				}
-			}
-			#endregion webchatnote
 			#region emailmessage
 			//Get all emails for the entire family.  If a user creates an email that is attached to a patient, it will show up here for everyone.
 			command="SELECT emailmessage.MsgDateTime,emailmessage.SentOrReceived,emailmessage.Subject,emailmessage.EmailMessageNum, "

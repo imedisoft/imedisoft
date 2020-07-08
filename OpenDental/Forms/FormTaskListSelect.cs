@@ -359,7 +359,7 @@ namespace OpenDental {
 		}
 
 		private void listMain_DoubleClick(object sender, System.EventArgs e) {
-			if(listMain.SelectedIndex==-1 || (checkMulti.Checked && PrefC.IsODHQ)){//If user is in checkMulti state, disable doubleclick
+			if(listMain.SelectedIndex==-1){//If user is in checkMulti state, disable doubleclick
 				return;
 			}
 			ListSelectedLists=listMain.GetListSelected<TaskList>().Select(x => x.TaskListNum).ToList();
@@ -367,10 +367,6 @@ namespace OpenDental {
 		}
 
 		private void checkMulti_CheckedChanged(object sender,EventArgs e) {
-			if(checkMulti.Checked && PrefC.IsODHQ) {//If user is in checkMulti state, deselect the list
-				listMain.ClearSelected();
-				textFilter.Focus();
-			}
 			SetLabelText();
 		}
 

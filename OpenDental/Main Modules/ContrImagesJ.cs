@@ -35,7 +35,7 @@ namespace OpenDental{
 		private Cursor _cursorPan;
 		private DateTime _dateTimeMouseDownPanel;
 		private Family _familyCur=null;
-		private Form _formImaging;
+		//private Form _formImaging;
 		///<summary>The index of the currently selected item within a mount.</summary>
 		private int _idxSelectedInMount=-1;
 		///<summary>The index of the previously selected item within a mount.</summary>
@@ -77,7 +77,7 @@ namespace OpenDental{
 		private Rectangle _rectangleCrop;
 		///<summary>Used to display Topaz signatures on Windows.</summary>
 		private Control _sigBoxTopaz;
-		private Type _typeFormImaging;
+		//private Type _typeFormImaging;
 		///<summary>Tracks the last user to load ContrImages</summary>
 		private long _userNumPrev=-1;
 		private WebBrowser _webBrowser=null;

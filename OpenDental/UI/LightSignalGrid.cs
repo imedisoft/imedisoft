@@ -17,8 +17,6 @@ namespace OpenDental.UI {
 		//private bool IsUpdating;
 		//<summary>collection of SignalButtonStates</summary>
 		private SignalButtonState[] sigButStates;
-		///<summary>Used for conference room highlighting.</summary>
-		public List<PhoneConf> ListPhoneConfs;
 		///<summary>number of pixels that the control has been scrolled by.</summary>
 		private int _scrollVal;
 		private int _buttonH;
@@ -137,23 +135,7 @@ namespace OpenDental.UI {
 				}
 				//outline control
 				g.DrawRectangle(Pens.DarkGray,0,0,Width-1,Height-1);
-				//Highlight conference rooms
-				if(ListPhoneConfs==null) {
-					ListPhoneConfs=new List<PhoneConf>();
-				}
-				for(int i = 0;i<ListPhoneConfs.Count;i++) {
-					if(ListPhoneConfs[i].Occupants==0) {
-						continue;//do not draw anything for "empty" conference rooms.
-					}
-					if(ListPhoneConfs[i].ButtonIndex>=sigButStates.Length) {
-						continue;//do not draw anything for conference rooms that no longer exist
-					}
-					g.DrawRectangle(Pens.Blue,0,ListPhoneConfs[i].ButtonIndex*_buttonH-_scrollVal,Width-1,_buttonH);//blue outline.
-					g.DrawString(ListPhoneConfs[i].Occupants.ToString(),_fontBlue,//White drop shadow for blue counter in upper right corner.
-						Brushes.White,Width-g.MeasureString(ListPhoneConfs[i].Occupants.ToString(),_fontBlue,20).Width,1+ListPhoneConfs[i].ButtonIndex*_buttonH-_scrollVal);
-					g.DrawString(ListPhoneConfs[i].Occupants.ToString(),_fontBlue,//Blue text for occupant count in upper right hand corner or button.
-						Brushes.Blue,Width-1-g.MeasureString(ListPhoneConfs[i].Occupants.ToString(),_fontBlue,20).Width,ListPhoneConfs[i].ButtonIndex*_buttonH-_scrollVal);
-				}
+
 				e.Graphics.DrawImageUnscaled(doubleBuffer,0,0);
 			}
 			base.OnPaint(e);
@@ -192,12 +174,6 @@ namespace OpenDental.UI {
 						.FirstOrDefault(x => x.ButDef!=null && x.ButDef.SigButDefNum==sigButStates[i].ButDef.SigButDefNum).ActiveSignal;
 				}
 			}
-			Invalidate();
-		}
-
-		///<summary>This will reset conference rooms to the specified list, and invalidate for repaint.</summary>
-		public void SetConfs(List<PhoneConf> listPhoneConfs) {
-			ListPhoneConfs=listPhoneConfs;
 			Invalidate();
 		}
 
@@ -301,10 +277,6 @@ namespace OpenDental.UI {
 		protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e) {
 			base.OnMouseDown(e);
 			if((e.Button & MouseButtons.Left)!=MouseButtons.Left) {
-				if(e.Button==MouseButtons.Right && PrefC.IsODHQ && Security.IsAuthorized(Permissions.Setup,true)) {
-					_mouseCoords=new Point(e.X,e.Y);
-					contextMenuConfKick.Show(this,_mouseCoords);
-				}
 				return;
 			}
 			mouseIsDown=true;
@@ -353,17 +325,6 @@ namespace OpenDental.UI {
 			ODLightSignalGridClickEventArgs bArgs=new ODLightSignalGridClickEventArgs(myButton,myDef,mySignal);
 			if(ButtonClick!=null)
 				ButtonClick(this,bArgs);
-		}
-
-		protected void menuItemKick_Click(object sender,EventArgs e) {
-			int button=HitTest(_mouseCoords.X,_mouseCoords.Y);//idx of button
-			if(!IsValidSigButState(button)) {//if there is no current hover button
-				return;
-			}
-			string confRoom=new string(Array.FindAll(sigButStates[button].Text.ToCharArray(),(x => char.IsDigit(x))));
-			if(!string.IsNullOrEmpty(confRoom)) {
-				PhoneConfs.KickConfRoom(PIn.Long(confRoom));
-			}
 		}
 	}
 

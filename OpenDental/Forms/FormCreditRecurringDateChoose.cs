@@ -104,10 +104,6 @@ namespace OpenDental {
 		private DateTime GetValidPayDate(DateTime date) {
 			int dayOfMonth;
 			DateTime retVal;
-			if(PrefC.IsODHQ && PrefC.GetBool(PrefName.BillingUseBillingCycleDay)) {
-				dayOfMonth=_pat.BillingCycleDay;
-				return GetDateForDayOfMonth(date,dayOfMonth);
-			}
 			switch(CreditCards.GetFrequencyType(_creditCardCur.ChargeFrequency)) {
 				case ChargeFrequencyType.FixedDayOfMonth://EX: 1st of Each Month (This check only accounts for a singular day of the month being run)
 					List<int> listDaysOfMonth=CreditCards.GetDaysOfMonthForChargeFrequency(_creditCardCur.ChargeFrequency).Split(',').Select(x => PIn.Int(x))

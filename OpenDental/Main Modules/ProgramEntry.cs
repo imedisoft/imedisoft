@@ -69,7 +69,7 @@ namespace OpenDental {
 					//We want to submit a maximum of one exception per instance of OD.
 					if(submittedException==null) {
 						submittedException=e;
-						BugSubmissions.SubmitException(e,out displayMsg,threadName,FormOpenDental.CurPatNum,formOD.GetSelectedModuleName());
+						// TODO: BugSubmissions.SubmitException(e,out displayMsg,threadName,FormOpenDental.CurPatNum,formOD.GetSelectedModuleName());
 					}
 				}
 				catch(Exception ex) {

@@ -51,17 +51,7 @@ namespace OpenDentBusiness {
 				isAll=true;
 			}
 			DataSet ds=new DataSet();
-			//All Internal OD Tables that are cached go here
-			if(PrefC.IsODHQ) {
-				if(listITypes.Contains(InvalidType.JobPermission) || isAll) {
-					ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.JobPermission.ToString());
-					ds.Tables.Add(JobPermissions.RefreshCache());
-				}
-				if(listITypes.Contains(InvalidType.PhoneComps) || isAll) {
-					ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.PhoneComps.ToString());
-					ds.Tables.Add(PhoneComps.GetTableFromCache(doRefreshServerCache));
-				}
-			}
+
 			//All cached public tables go here
 			if(listITypes.Contains(InvalidType.AccountingAutoPays) || isAll) {
 				ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.AccountingAutoPays.ToString());
@@ -324,10 +314,6 @@ namespace OpenDentBusiness {
 			if(listITypes.Contains(InvalidType.Sites) || isAll) {
 				ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.Sites.ToString());
 				ds.Tables.Add(Sites.GetTableFromCache(doRefreshServerCache));
-				if(PrefC.IsODHQ) {
-					DataAction.ClearDictHqCentralConnections();//The HQ connection overrides could have changed.
-					ds.Tables.Add(SiteLinks.GetTableFromCache(doRefreshServerCache));
-				}
 			}
 			if(listITypes.Contains(InvalidType.SmsBlockPhones) || isAll) {
 				ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.SmsBlockPhones.ToString());
@@ -398,16 +384,6 @@ namespace OpenDentBusiness {
 				isAll=true;
 			}
 			//All Internal OD Tables that are cached go here
-			if(PrefC.IsODHQ) {
-				if(listITypes.Contains(InvalidType.JobPermission) || isAll) {
-					ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.JobPermission.ToString());
-					JobPermissions.FillCache(ds.Tables["JobRole"]);
-				}
-				if(listITypes.Contains(InvalidType.PhoneComps) || isAll) {
-					ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.PhoneComps.ToString());
-					PhoneComps.FillCacheFromTable(ds.Tables["PhoneComp"]);
-				}
-			}
 			if(listITypes.Contains(InvalidType.AccountingAutoPays) || isAll) {
 				ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.AccountingAutoPays.ToString());
 				AccountingAutoPays.FillCacheFromTable(ds.Tables["AccountingAutoPay"]);
@@ -660,9 +636,6 @@ namespace OpenDentBusiness {
 			if(listITypes.Contains(InvalidType.Sites) || isAll) {
 				ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.Sites.ToString());
 				Sites.FillCacheFromTable(ds.Tables["Site"]);
-				if(PrefC.IsODHQ) {
-					SiteLinks.FillCacheFromTable(ds.Tables["SiteLink"]);
-				}
 			}
 			if(listITypes.Contains(InvalidType.SmsBlockPhones) || isAll) {
 				ODEvent.Fire(ODEventType.Cache,suffix+InvalidType.SmsBlockPhones.ToString());

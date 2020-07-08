@@ -282,6 +282,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Required dlls\VBbridges.dll</HintPath>
     </Reference>
+    <Reference Include="VirtualWeb">
+      <HintPath>..\Required dlls\VirtualWeb.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="xImageDeviceManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -634,12 +637,6 @@
     <Compile Include="Forms\FormFeeSchedGroupEdit.designer.cs">
       <DependentUpon>FormFeeSchedGroupEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormBugSubmissionHashVitals.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormBugSubmissionHashVitals.designer.cs">
-      <DependentUpon>FormBugSubmissionHashVitals.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormMobileCode.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -839,18 +836,6 @@
     <Compile Include="Forms\FormRecallList.designer.cs">
       <DependentUpon>FormRecallList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormWebChatSurveys.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormWebChatSurveys.designer.cs">
-      <DependentUpon>FormWebChatSurveys.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormWebChatTools.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormWebChatTools.designer.cs">
-      <DependentUpon>FormWebChatTools.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormInsHistSetup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -871,75 +856,6 @@
     </Compile>
     <Compile Include="Forms\FormTsiHistory.designer.cs">
       <DependentUpon>FormTsiHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobEdit.Designer.cs">
-      <DependentUpon>FormJobEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobEstimate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobEstimate.Designer.cs">
-      <DependentUpon>FormJobEstimate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobLogs.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobLogs.designer.cs">
-      <DependentUpon>FormJobLogs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobManagerDashboard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobManagerDashboard.Designer.cs">
-      <DependentUpon>FormJobManagerDashboard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobSprints.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobSprints.designer.cs">
-      <DependentUpon>FormJobSprints.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormSprintManagerDashboard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormSprintManagerDashboard.Designer.cs">
-      <DependentUpon>FormSprintManagerDashboard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobTimeLog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobTimeLog.Designer.cs">
-      <DependentUpon>FormJobTimeLog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\UserControlMarketingEdit.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\UserControlMarketingEdit.designer.cs">
-      <DependentUpon>UserControlMarketingEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\UserControlSprintManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\UserControlSprintManager.Designer.cs">
-      <DependentUpon>UserControlSprintManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormMapHQPrefs.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormMapHQPrefs.Designer.cs">
-      <DependentUpon>FormMapHQPrefs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormMapHQ.Designer.cs">
-      <DependentUpon>FormMapHQ.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\UserControlMapDetails.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\UserControlMapDetails.Designer.cs">
-      <DependentUpon>UserControlMapDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\AutoNoteL.cs" />
     <Compile Include="Logic\PayConnectL.cs" />
@@ -1038,7 +954,6 @@
     <Compile Include="UI\SheetLayoutController.cs" />
     <Compile Include="Logic\ApptViewItemL.cs" />
     <Compile Include="Logic\AutomationL.cs" />
-    <Compile Include="Logic\BugSubmissionL.cs" />
     <Compile Include="Logic\ClaimL.cs" />
     <Compile Include="Logic\ClearinghouseL.cs" />
     <Compile Include="Logic\DefL.cs" />
@@ -1113,23 +1028,11 @@
     <Compile Include="Forms\FormPrepaymentTool.designer.cs">
       <DependentUpon>FormPrepaymentTool.cs</DependentUpon>
     </Compile>
-    <Compile Include="InternalTools\Job Manager\FormBackport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormBackport.designer.cs">
-      <DependentUpon>FormBackport.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormApptSearchAdvanced.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormApptSearchAdvanced.designer.cs">
       <DependentUpon>FormApptSearchAdvanced.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormWebChatSession.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormWebChatSession.designer.cs">
-      <DependentUpon>FormWebChatSession.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormBenefitFrequencies.cs">
       <SubType>Form</SubType>
@@ -1230,12 +1133,6 @@
     <Compile Include="Forms Reports\FormRpProdGoal.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormBugSubmission.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormBugSubmission.designer.cs">
-      <DependentUpon>FormBugSubmission.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormChooseDatabase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1290,12 +1187,6 @@
     <Compile Include="Forms\FormDatabaseMaintenancePat.designer.cs">
       <DependentUpon>FormDatabaseMaintenancePat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormSiteLinkEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormSiteLinkEdit.designer.cs">
-      <DependentUpon>FormSiteLinkEdit.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormGlobalSecurity.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1308,12 +1199,6 @@
     <Compile Include="Forms\FormSecurity.designer.cs">
       <DependentUpon>FormSecurity.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormBugSubmissions.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormBugSubmissions.designer.cs">
-      <DependentUpon>FormBugSubmissions.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormDoseSpotProperyEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1325,60 +1210,6 @@
     </Compile>
     <Compile Include="Forms\FormErxSetup.designer.cs">
       <DependentUpon>FormErxSetup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobTimeAdd.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobTimeAdd.Designer.cs">
-      <DependentUpon>FormJobTimeAdd.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobTime.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobTime.Designer.cs">
-      <DependentUpon>FormJobTime.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobManagerOverview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobManagerOverview.Designer.cs">
-      <DependentUpon>FormJobManagerOverview.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormReleaseCalculator.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormReleaseCalculator.Designer.cs">
-      <DependentUpon>FormReleaseCalculator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobAdd.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobAdd.Designer.cs">
-      <DependentUpon>FormJobAdd.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\ODjobTextEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\ODjobTextEditor.Designer.cs">
-      <DependentUpon>ODjobTextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneComps.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneComps.Designer.cs">
-      <DependentUpon>FormPhoneComps.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneConfEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneConfEdit.Designer.cs">
-      <DependentUpon>FormPhoneConfEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneConfs.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneConfs.designer.cs">
-      <DependentUpon>FormPhoneConfs.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormDunningSetup.cs">
       <SubType>Form</SubType>
@@ -1680,47 +1511,11 @@
     <Compile Include="Forms\FormQueryParser.Designer.cs">
       <DependentUpon>FormQueryParser.cs</DependentUpon>
     </Compile>
-    <Compile Include="InternalTools\Job Manager\FormFeatureRequestPrompt.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormFeatureRequestPrompt.Designer.cs">
-      <DependentUpon>FormFeatureRequestPrompt.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormBugEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormBugEdit.designer.cs">
-      <DependentUpon>FormBugEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobManager.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobManager.Designer.cs">
-      <DependentUpon>FormJobManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormOrthoAutoClaims.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormOrthoAutoClaims.designer.cs">
       <DependentUpon>FormOrthoAutoClaims.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormCommitPrompt.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormCommitPrompt.Designer.cs">
-      <DependentUpon>FormCommitPrompt.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormVersionPrompt.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormVersionPrompt.Designer.cs">
-      <DependentUpon>FormVersionPrompt.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormVoiceMails.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormVoiceMails.designer.cs">
-      <DependentUpon>FormVoiceMails.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormOrthoSetup.cs">
       <SubType>Form</SubType>
@@ -1896,12 +1691,6 @@
     <Compile Include="Forms\FormSheetFieldRect.designer.cs">
       <DependentUpon>FormSheetFieldRect.cs</DependentUpon>
     </Compile>
-    <Compile Include="InternalTools\Job Manager\FormEmailJobTemplateEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormEmailJobTemplateEdit.designer.cs">
-      <DependentUpon>FormEmailJobTemplateEdit.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormCdsTriggerEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1913,9 +1702,6 @@
     </Compile>
     <Compile Include="Forms\FormCdsTriggers.designer.cs">
       <DependentUpon>FormCdsTriggers.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormEmailJobs.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormPodiumSetup.cs">
       <SubType>Form</SubType>
@@ -1958,12 +1744,6 @@
     </Compile>
     <Compile Include="Forms\FormConnectionLost.designer.cs">
       <DependentUpon>FormConnectionLost.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormBugSearch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormBugSearch.designer.cs">
-      <DependentUpon>FormBugSearch.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormInsVerificationList.cs">
       <SubType>Form</SubType>
@@ -2075,18 +1855,6 @@
     </Compile>
     <Compile Include="Forms\FormWikiDrafts.designer.cs">
       <DependentUpon>FormWikiDrafts.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobSearch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobSearch.designer.cs">
-      <DependentUpon>FormJobSearch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\ODtextEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\ODtextEditor.Designer.cs">
-      <DependentUpon>ODtextEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormProcBroken.cs">
       <SubType>Form</SubType>
@@ -2747,12 +2515,6 @@
     </Compile>
     <Compile Include="Forms\FormMapAreaEdit.Designer.cs">
       <DependentUpon>FormMapAreaEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormMapSetup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormMapSetup.Designer.cs">
-      <DependentUpon>FormMapSetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormEhrClinicalSummary.cs">
       <SubType>Form</SubType>
@@ -5056,130 +4818,6 @@
     <Compile Include="Forms\FormTPsign.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InternalTools\EServices\EServiceMetricsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\EServices\EServiceMetricsControl.Designer.cs">
-      <DependentUpon>EServiceMetricsControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobQuoteEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobQuoteEdit.designer.cs">
-      <DependentUpon>FormJobQuoteEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobLinks.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobLinks.designer.cs">
-      <DependentUpon>FormJobLinks.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobNoteEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobNoteEdit.designer.cs">
-      <DependentUpon>FormJobNoteEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobPermissions.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobPermissions.designer.cs">
-      <DependentUpon>FormJobPermissions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\UserControlJobEdit.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\UserControlJobEdit.Designer.cs">
-      <DependentUpon>UserControlJobEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobReviewEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobReviewEdit.designer.cs">
-      <DependentUpon>FormJobReviewEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobContainer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\FormJobContainer.Designer.cs">
-      <DependentUpon>FormJobContainer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\JobManagerUserOverview.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\JobManagerUserOverview.Designer.cs">
-      <DependentUpon>JobManagerUserOverview.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\EscalationViewControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\EscalationViewControl.Designer.cs">
-      <DependentUpon>EscalationViewControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormMapHQ.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneEmpDefaultEscalationEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneEmpDefaultEscalationEdit.Designer.cs">
-      <DependentUpon>FormPhoneEmpDefaultEscalationEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneGraphDateEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneGraphDateEdit.Designer.cs">
-      <DependentUpon>FormPhoneGraphDateEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneEmpDefaultEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneEmpDefaults.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneGraphEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneGraphEdit.Designer.cs">
-      <DependentUpon>FormPhoneGraphEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormScreenshotBrowse.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormScreenshotBrowse.designer.cs">
-      <DependentUpon>FormScreenshotBrowse.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneTiles.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\FormPhoneTiles.designer.cs">
-      <DependentUpon>FormPhoneTiles.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\PhoneTile.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\PhoneTile.designer.cs">
-      <DependentUpon>PhoneTile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\UserControlPhoneSmall.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\UserControlPhoneSmall.designer.cs">
-      <DependentUpon>UserControlPhoneSmall.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Phones\PhoneUI.cs" />
-    <Compile Include="InternalTools\Job Manager\UserControlQueryEdit.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\UserControlQueryEdit.designer.cs">
-      <DependentUpon>UserControlQueryEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\UserControlJobVersionStatistics.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Job Manager\UserControlJobVersionStatistics.Designer.cs">
-      <DependentUpon>UserControlJobVersionStatistics.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main Modules\ContrAccount.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -5341,9 +4979,6 @@
     <Compile Include="UI\ODDatePicker.Designer.cs">
       <DependentUpon>ODDatePicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\ODInternalCustomerGrids.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="UI\OdProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -5379,12 +5014,6 @@
     <Compile Include="UI\Voice\VoiceCommandList.cs" />
     <Compile Include="UI\Voice\VoiceController.cs" />
     <Compile Include="UI\Voice\VoiceMsgBox.cs" />
-    <Compile Include="User Controls\BugSubmissionControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="User Controls\BugSubmissionControl.Designer.cs">
-      <DependentUpon>BugSubmissionControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\ClinicSelector\ComboBoxClinicPicker.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -5446,24 +5075,6 @@
     </Compile>
     <Compile Include="User Controls\GraphScheduleDay.Designer.cs">
       <DependentUpon>GraphScheduleDay.cs</DependentUpon>
-    </Compile>
-    <Compile Include="User Controls\MapAreaDisplayLabelControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="User Controls\MapAreaDisplayLabelControl.Designer.cs">
-      <DependentUpon>MapAreaDisplayLabelControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="User Controls\MapAreaPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="User Controls\MapAreaPanel.Designer.cs">
-      <DependentUpon>MapAreaPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="User Controls\MapAreaRoomControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="User Controls\MapAreaRoomControl.Designer.cs">
-      <DependentUpon>MapAreaRoomControl.cs</DependentUpon>
     </Compile>
     <Compile Include="User Controls\Dashboard\DashApptGrid.cs">
       <SubType>UserControl</SubType>
@@ -5795,9 +5406,6 @@
     <EmbeddedResource Include="Forms\FormFeeSchedGroupEdit.resx">
       <DependentUpon>FormFeeSchedGroupEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormBugSubmissionHashVitals.resx">
-      <DependentUpon>FormBugSubmissionHashVitals.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMobileCode.resx">
       <DependentUpon>FormMobileCode.cs</DependentUpon>
     </EmbeddedResource>
@@ -5877,12 +5485,6 @@
       <DependentUpon>FormDashboardWidgetSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormWebChatSurveys.resx">
-      <DependentUpon>FormWebChatSurveys.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormWebChatTools.resx">
-      <DependentUpon>FormWebChatTools.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormInsHistSetup.resx">
       <DependentUpon>FormInsHistSetup.cs</DependentUpon>
     </EmbeddedResource>
@@ -5894,39 +5496,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormTsiHistory.resx">
       <DependentUpon>FormTsiHistory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobEdit.resx">
-      <DependentUpon>FormJobEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobEstimate.resx">
-      <DependentUpon>FormJobEstimate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobLogs.resx">
-      <DependentUpon>FormJobLogs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobManagerDashboard.resx">
-      <DependentUpon>FormJobManagerDashboard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobSprints.resx">
-      <DependentUpon>FormJobSprints.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormSprintManagerDashboard.resx">
-      <DependentUpon>FormSprintManagerDashboard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobTimeLog.resx">
-      <DependentUpon>FormJobTimeLog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\UserControlMarketingEdit.resx">
-      <DependentUpon>UserControlMarketingEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\UserControlSprintManager.resx">
-      <DependentUpon>UserControlSprintManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormMapHQPrefs.resx">
-      <DependentUpon>FormMapHQPrefs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\UserControlMapDetails.resx">
-      <DependentUpon>UserControlMapDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main Modules\ContrApptJ.resx">
       <DependentUpon>ContrApptJ.cs</DependentUpon>
@@ -5958,14 +5527,8 @@
     <EmbeddedResource Include="Forms\FormPrepaymentTool.resx">
       <DependentUpon>FormPrepaymentTool.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormBackport.resx">
-      <DependentUpon>FormBackport.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormApptSearchAdvanced.resx">
       <DependentUpon>FormApptSearchAdvanced.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormWebChatSession.resx">
-      <DependentUpon>FormWebChatSession.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormRecurringChargesHistory.resx">
       <DependentUpon>FormRecurringChargesHistory.cs</DependentUpon>
@@ -6013,9 +5576,6 @@
     <EmbeddedResource Include="Forms\FormPaySimple.resx">
       <DependentUpon>FormPaySimple.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormBugSubmission.resx">
-      <DependentUpon>FormBugSubmission.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormChooseDatabase.resx">
       <DependentUpon>FormChooseDatabase.cs</DependentUpon>
     </EmbeddedResource>
@@ -6044,50 +5604,17 @@
     <EmbeddedResource Include="Forms\FormDatabaseMaintenancePat.resx">
       <DependentUpon>FormDatabaseMaintenancePat.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormSiteLinkEdit.resx">
-      <DependentUpon>FormSiteLinkEdit.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormGlobalSecurity.resx">
       <DependentUpon>FormGlobalSecurity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormSecurity.resx">
       <DependentUpon>FormSecurity.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormBugSubmissions.resx">
-      <DependentUpon>FormBugSubmissions.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormDoseSpotProperyEdit.resx">
       <DependentUpon>FormDoseSpotProperyEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormErxSetup.resx">
       <DependentUpon>FormErxSetup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobTimeAdd.resx">
-      <DependentUpon>FormJobTimeAdd.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobTime.resx">
-      <DependentUpon>FormJobTime.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobManagerOverview.resx">
-      <DependentUpon>FormJobManagerOverview.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormReleaseCalculator.resx">
-      <DependentUpon>FormReleaseCalculator.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobAdd.resx">
-      <DependentUpon>FormJobAdd.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\ODjobTextEditor.resx">
-      <DependentUpon>ODjobTextEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormPhoneComps.resx">
-      <DependentUpon>FormPhoneComps.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormPhoneConfEdit.resx">
-      <DependentUpon>FormPhoneConfEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormPhoneConfs.resx">
-      <DependentUpon>FormPhoneConfs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormDunningSetup.resx">
       <DependentUpon>FormDunningSetup.cs</DependentUpon>
@@ -6254,29 +5781,11 @@
     <EmbeddedResource Include="Forms\FormQueryParser.resx">
       <DependentUpon>FormQueryParser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormFeatureRequestPrompt.resx">
-      <DependentUpon>FormFeatureRequestPrompt.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormWikiListAdvancedSearch.resx">
       <DependentUpon>FormWikiListAdvancedSearch.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormBugEdit.resx">
-      <DependentUpon>FormBugEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobManager.resx">
-      <DependentUpon>FormJobManager.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormOrthoAutoClaims.resx">
       <DependentUpon>FormOrthoAutoClaims.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormCommitPrompt.resx">
-      <DependentUpon>FormCommitPrompt.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormVersionPrompt.resx">
-      <DependentUpon>FormVersionPrompt.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormVoiceMails.resx">
-      <DependentUpon>FormVoiceMails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormOrthoSetup.resx">
       <DependentUpon>FormOrthoSetup.cs</DependentUpon>
@@ -6370,18 +5879,11 @@
     <EmbeddedResource Include="Forms\FormSheetFieldRect.resx">
       <DependentUpon>FormSheetFieldRect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormEmailJobTemplateEdit.resx">
-      <DependentUpon>FormEmailJobTemplateEdit.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormCdsTriggerEdit.resx">
       <DependentUpon>FormCdsTriggerEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormCdsTriggers.resx">
       <DependentUpon>FormCdsTriggers.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormEmailJobs.resx">
-      <DependentUpon>FormEmailJobs.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormPodiumSetup.resx">
       <DependentUpon>FormPodiumSetup.cs</DependentUpon>
@@ -6403,9 +5905,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormConnectionLost.resx">
       <DependentUpon>FormConnectionLost.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormBugSearch.resx">
-      <DependentUpon>FormBugSearch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormInsVerificationList.resx">
       <DependentUpon>FormInsVerificationList.cs</DependentUpon>
@@ -6466,12 +5965,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormWikiDrafts.resx">
       <DependentUpon>FormWikiDrafts.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobSearch.resx">
-      <DependentUpon>FormJobSearch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\ODtextEditor.resx">
-      <DependentUpon>ODtextEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormProcBroken.resx">
       <DependentUpon>FormProcBroken.cs</DependentUpon>
@@ -6829,9 +6322,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMapAreaEdit.resx">
       <DependentUpon>FormMapAreaEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormMapSetup.resx">
-      <DependentUpon>FormMapSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormPopupAudit.resx">
       <DependentUpon>FormPopupAudit.cs</DependentUpon>
@@ -8528,64 +8018,6 @@
       <DependentUpon>FormTPsign.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\EServices\EServiceMetricsControl.resx">
-      <DependentUpon>EServiceMetricsControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobQuoteEdit.resx">
-      <DependentUpon>FormJobQuoteEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobLinks.resx">
-      <DependentUpon>FormJobLinks.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobNoteEdit.resx">
-      <DependentUpon>FormJobNoteEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobPermissions.resx">
-      <DependentUpon>FormJobPermissions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\UserControlJobEdit.resx">
-      <DependentUpon>UserControlJobEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobReviewEdit.resx">
-      <DependentUpon>FormJobReviewEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\FormJobContainer.resx">
-      <DependentUpon>FormJobContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\JobManagerUserOverview.resx">
-      <DependentUpon>JobManagerUserOverview.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\EscalationViewControl.resx">
-      <DependentUpon>EscalationViewControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormMapHQ.resx">
-      <DependentUpon>FormMapHQ.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormPhoneEmpDefaultEscalationEdit.resx">
-      <DependentUpon>FormPhoneEmpDefaultEscalationEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormPhoneGraphDateEdit.resx">
-      <DependentUpon>FormPhoneGraphDateEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormPhoneEmpDefaultEdit.resx">
-      <DependentUpon>FormPhoneEmpDefaultEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormPhoneEmpDefaults.resx">
-      <DependentUpon>FormPhoneEmpDefaults.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormPhoneGraphEdit.resx">
-      <DependentUpon>FormPhoneGraphEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormScreenshotBrowse.resx">
-      <DependentUpon>FormScreenshotBrowse.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\UserControlQueryEdit.resx">
-      <DependentUpon>UserControlQueryEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Job Manager\UserControlJobVersionStatistics.resx">
-      <DependentUpon>UserControlJobVersionStatistics.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Main Modules\ContrAccount.resx">
       <DependentUpon>ContrAccount.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -8800,9 +8232,6 @@
     <EmbeddedResource Include="UI\ODForm.resx">
       <DependentUpon>ODForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\ODInternalCustomerGrids.resx">
-      <DependentUpon>ODInternalCustomerGrids.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\ODPictureBox.resx">
       <DependentUpon>ODPictureBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -8816,9 +8245,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Voice\FormMsgBox.resx">
       <DependentUpon>FormMsgBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="User Controls\BugSubmissionControl.resx">
-      <DependentUpon>BugSubmissionControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="User Controls\ContrCalendar.resx">
       <DependentUpon>ContrCalendar.cs</DependentUpon>
@@ -8850,9 +8276,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="User Controls\EmailPreviewControl.resx">
       <DependentUpon>EmailPreviewControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="User Controls\MapAreaRoomControl.resx">
-      <DependentUpon>MapAreaRoomControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="User Controls\Dashboard\DashApptGrid.resx">
       <DependentUpon>DashApptGrid.cs</DependentUpon>
@@ -9175,12 +8598,6 @@
     </Compile>
     <Compile Include="User Controls\ModuleBar.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\UserControlPhonePanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="InternalTools\Phones\UserControlPhonePanel.designer.cs">
-      <DependentUpon>UserControlPhonePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="User Controls\UserControlTasks.cs">
       <SubType>UserControl</SubType>
@@ -9896,18 +9313,6 @@
       <DependentUpon>FormPatientAddAll.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\FormPhoneTiles.resx">
-      <DependentUpon>FormPhoneTiles.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\PhoneTile.resx">
-      <DependentUpon>PhoneTile.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\UserControlPhoneSmall.resx">
-      <DependentUpon>UserControlPhoneSmall.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Main Modules\FormCommandLinePassOff.resx">
       <DependentUpon>FormCommandLinePassOff.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -9942,10 +9347,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ReportingForRdl\FormReportForRdl.resx">
       <DependentUpon>FormReportForRdl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InternalTools\Phones\UserControlPhonePanel.resx">
-      <DependentUpon>UserControlPhonePanel.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Content Include="ReportingForRdl\Allocators\MyAllocator1\Images\SnuffLight1.gif" />

@@ -36,7 +36,7 @@ namespace OpenDentBusiness {
 		#endif
 		///<summary>Print margin of the default printer. only used in page break calulations, and only top and bottom are used.</summary>
 		private static Margins _printMargin=new Margins(0,0,40,60);//jordan static only because it's an unchanging val.
-		///<summary>If there is only one sheet, then this will stay 0.</Summary>
+		///<summary>If there is only one sheet, then this will stay 0.</summary>
 		private int _sheetsPrinted;
 		private Statement _stmt;
 		private int _yPosPrevious;
@@ -126,7 +126,7 @@ namespace OpenDentBusiness {
 			return document;
 		}
 
-		///<summary>Called for every page that is generated for a PDF document. Pages and yPos must be tracked outside of this function. See also pd_PrintPage.  DataSet should be prefilled with AccountModules.GetAccount() before calling this method if making a statement.</Summary>
+		///<summary>Called for every page that is generated for a PDF document. Pages and yPos must be tracked outside of this function. See also pd_PrintPage.  DataSet should be prefilled with AccountModules.GetAccount() before calling this method if making a statement.</summary>
 		public int CreatePdfPage(Sheet sheet,PdfPage page,DataSet dataSet,Patient pat,Patient patGuar,int yPos) {
 			page.Width=p(sheet.Width);//XUnit.FromInch((double)sheet.Width/100);  //new XUnit((double)sheet.Width/100,XGraphicsUnit.Inch);
 			page.Height=p(sheet.Height);//new XUnit((double)sheet.Height/100,XGraphicsUnit.Inch);

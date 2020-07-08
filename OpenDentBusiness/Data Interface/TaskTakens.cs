@@ -19,31 +19,33 @@ namespace OpenDentBusiness{
 			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
 				return Meth.GetBool(MethodBase.GetCurrentMethod(),taskNum,doRunOnPrimaryCustomers,doRetryOnLocal);
 			}
-			try {
-				if(doRunOnPrimaryCustomers) {
-					DataAction.RunCustomers(() => Crud.TaskTakenCrud.Insert(new TaskTaken { TaskNum=taskNum }));
-				}
-				else {
-					Crud.TaskTakenCrud.Insert(new TaskTaken { TaskNum=taskNum });
-				}
+			try
+			{
+				Crud.TaskTakenCrud.Insert(new TaskTaken { TaskNum = taskNum });
+
 				return true;
 			}
-			catch(Exception ex) {
-				MySqlException mysqlEx=null;
-				if(ex is MySqlException) {
-					mysqlEx=(MySqlException)ex;
+			catch (Exception ex)
+			{
+				MySqlException mysqlEx = null;
+				if (ex is MySqlException)
+				{
+					mysqlEx = (MySqlException)ex;
 				}
-				else if(ex.InnerException is MySqlException) {
-					mysqlEx=(MySqlException)ex.InnerException;
+				else if (ex.InnerException is MySqlException)
+				{
+					mysqlEx = (MySqlException)ex.InnerException;
 				}
-				if(mysqlEx!=null && mysqlEx.Number==1062 && mysqlEx.Message.ToLower().Contains("duplicate entry")) {
+				if (mysqlEx != null && mysqlEx.Number == 1062 && mysqlEx.Message.ToLower().Contains("duplicate entry"))
+				{
 					//Someone else has already taken this task so there is already a row in the tasktaken table for this task.
 					return false;
 				}
-				if(mysqlEx!=null && mysqlEx.Number==1042 && mysqlEx.Message.ToLower().Contains("unable to connect") && doRetryOnLocal) {
+				if (mysqlEx != null && mysqlEx.Number == 1042 && mysqlEx.Message.ToLower().Contains("unable to connect") && doRetryOnLocal)
+				{
 					//Unable to connect to the primary customers database. We will still allow them to claim the task, and we will record that the task was 
 					//taken in the local database.
-					return TryInsert(taskNum,false,false);
+					return TryInsert(taskNum, false, false);
 				}
 				throw;
 			}
@@ -59,26 +61,28 @@ namespace OpenDentBusiness{
 				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskNum,doRunOnPrimaryCustomers,doRetryOnLocal);
 				return;
 			}
-			string command="DELETE FROM tasktaken WHERE TaskNum="+POut.Long(taskNum);			
-			try {
-				if(doRunOnPrimaryCustomers) {
-					DataAction.RunCustomers(() => Db.NonQ(command));
-				}
-				else {
-					Db.NonQ(command);
-				}
+			string command="DELETE FROM tasktaken WHERE TaskNum="+POut.Long(taskNum);
+			try
+			{
+
+				Db.NonQ(command);
+
 			}
-			catch(Exception ex) {
-				MySqlException mysqlEx=null;
-				if(ex is MySqlException) {
-					mysqlEx=(MySqlException)ex;
+			catch (Exception ex)
+			{
+				MySqlException mysqlEx = null;
+				if (ex is MySqlException)
+				{
+					mysqlEx = (MySqlException)ex;
 				}
-				else if(ex.InnerException is MySqlException) {
-					mysqlEx=(MySqlException)ex.InnerException;
+				else if (ex.InnerException is MySqlException)
+				{
+					mysqlEx = (MySqlException)ex.InnerException;
 				}
-				if(mysqlEx!=null && mysqlEx.Number==1042 && mysqlEx.Message.ToLower().Contains("unable to connect") && doRetryOnLocal) {
+				if (mysqlEx != null && mysqlEx.Number == 1042 && mysqlEx.Message.ToLower().Contains("unable to connect") && doRetryOnLocal)
+				{
 					//Unable to connect to the primary customers database. We will still delete the tasktaken on the local database.
-					DeleteForTask(taskNum,false,false);
+					DeleteForTask(taskNum, false, false);
 					return;
 				}
 				throw;

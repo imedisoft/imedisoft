@@ -59,7 +59,7 @@ namespace OpenDental{
 		private UI.ComboBoxPlus comboSpecificProv;
 		private List<Def> _listBillingTypeDefs;
 		///<summary>Filtered list of providers based on the current clinic--used to populate the Combo Box Providers.</summary>
-		private List<Provider> _listCurClinicProviders;
+		//private List<Provider> _listCurClinicProviders;
 
 		///<summary></summary>
 		public FormFinanceCharges(){

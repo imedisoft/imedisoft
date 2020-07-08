@@ -595,8 +595,10 @@ namespace OpenDentBusiness {
 		///of the patient fields with gray text.</summary>
 		DisplayRenamedPatFields,
 		///<summary>Boolean.  Set to 1 to indicate that this database holds customers instead of patients.  Used by OD HQ.  Used for showing extra phone numbers, showing some extra buttons for tools that only we use, behavior of checkboxes in repeating charge window, etc.  But phone panel visibility is based on DockPhonePanelShow.</summary>
+		[Obsolete]
 		DistributorKey,
 		///<summary>If this is true, then PrefC.IsODHQ will return true.</summary>
+		[Obsolete]
 		DockPhonePanelShow,
 		///<summary>The AtoZ folder path.</summary>
 		DocPath,
@@ -1529,7 +1531,7 @@ namespace OpenDentBusiness {
 		/// <summary>Set to 0 by default.  ClinicPref, indicates which ApptReminderTypes should use Short Codes.</summary>
 		ShortCodeApptReminderTypes,
 		///<summary>ClinicPref.  Individual clinics can specify a Clinic Title to use in the Short Code Opt In Reply, substitutes [YourDentist]
-		///"You'll now receive appointment messages from [YourDentist] Reply HELP for Help, Reply STOP to cancel. Msg&data rates may apply."</summary>
+		///"You'll now receive appointment messages from [YourDentist] Reply HELP for Help, Reply STOP to cancel. Msg and data rates may apply."</summary>
 		ShortCodeOptInClinicTitle,
 		///<summary>Set to true by default.  Allows the office to turn off the automated Short Code script window when completing an appointment.
 		///</summary>

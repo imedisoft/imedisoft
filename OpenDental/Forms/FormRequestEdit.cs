@@ -99,9 +99,9 @@ namespace OpenDental {
 			textTotalCritical.BackColor=colorDisabled;
 			textTotalPledged.BackColor=colorDisabled;
 			textWeight.BackColor=colorDisabled;
-			if(PrefC.IsODHQ && !Security.IsAuthorized(Permissions.FeatureRequestEdit,true)) {
-				this.DisableAllExcept(butCancel,butAddDiscuss,textNote);
-			}
+			//if(PrefC.IsODHQ && !Security.IsAuthorized(Permissions.FeatureRequestEdit,true)) {
+			//	this.DisableAllExcept(butCancel,butAddDiscuss,textNote);
+			//}
 		}
 
 		private void GetOneFromServer(){

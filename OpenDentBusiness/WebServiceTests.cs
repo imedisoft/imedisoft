@@ -417,13 +417,6 @@ namespace OpenDentBusiness {
 			return new TimeSpan(1,0,0);
 		}
 
-		public static JobLog SendJobLog(JobLog jobLog) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<JobLog>(MethodBase.GetCurrentMethod(),jobLog);
-			}
-			return jobLog;
-		}
-
 		public static string GetStringContainingCR() {
 			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
 				return Meth.GetString(MethodBase.GetCurrentMethod());

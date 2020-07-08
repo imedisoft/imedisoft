@@ -272,7 +272,7 @@ namespace OpenDental {
 			if(nameOverride!="") {
 				name=nameOverride;
 			}
-			OpenDentalHelp.ODHelp.GetManualPage(name,PrefC.GetString(PrefName.ProgramVersion));
+			// TODO: OpenDentalHelp.ODHelp.GetManualPage(name,PrefC.GetString(PrefName.ProgramVersion));
 		}
 
 		///<summary>This method is used to hijack the form name being sent to ODHelp. If for some reason your form needs to send an alternative string as its name to ODHelp, override this method and set the return value as the name you want to send to ODHelp. See FormOpenDental as an example.</summary

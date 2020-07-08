@@ -103,9 +103,6 @@ namespace OpenDental {
 		private UI.Button butAudit;
 		private ComboBox comboJobs;
 		private Label labelJobs;
-		private List<JobLink> _jobLinks;
-		private List<Job> _listJobs;
-		private bool _isLoading;
 		private ComboBox comboReminderRepeat;
 		private Label labelReminderRepeat;
 		private ValidNumber textReminderRepeatFrequency;
@@ -1190,16 +1187,6 @@ namespace OpenDental {
 				textTaskNum.Visible=true;
 				textTaskNum.Text=_taskCur.TaskNum.ToString();
 			#endif
-			if(PrefC.IsODHQ) {//If HQ
-				labelTaskNum.Visible=true;
-				textTaskNum.Visible=true;
-				textTaskNum.Text=_taskCur.TaskNum.ToString();
-				if(!IsNew) {//to simplify the code, only allow jobs to be attached to existing tasks, not new tasks.
-					comboJobs.Visible=true;
-					labelJobs.Visible=true;
-					FillComboJobs();
-				}
-			}
 			if(IsNew) {
 				//butDelete.Enabled always stays true
 				//textDescript always editable
@@ -1269,15 +1256,6 @@ namespace OpenDental {
 			if(_priorityDefNumSelected==0 && !hasDefault) {//If no default has been set in the definitions, select the last item in the list.
 				comboTaskPriorities.SelectedIndex=comboTaskPriorities.Items.Count-1;
 				_priorityDefNumSelected=_listTaskPriorities[_listTaskPriorities.Count-1].DefNum;
-			}
-			if(_taskListCur!=null && IsNew && _taskListCur.TaskListNum==1697 && PrefC.GetBool(PrefName.DockPhonePanelShow)) {//Set to triage blue if HQ, triage list, and is new.
-				for(int i=0;i<_listTaskPriorities.Count;i++) {
-					if(_listTaskPriorities[i].DefNum==_triageBlueNum) {//Finding the option that is triageBlue to select it in the combobox (Combobox mirrors _listTaskPriorityDefs)
-						comboTaskPriorities.SelectedIndex=i;
-						break;
-					}
-				}
-				_priorityDefNumSelected=_triageBlueNum;
 			}
 			if(comboTaskPriorities.SelectedIndex==-1) {//Priority for task wasn't found in the non-hidden priorities list (and isn't triageBlue), so it must be a hidden priority.
 				List<Def> listTaskDefsLong=Defs.GetDefsForCategory(DefCat.TaskPriorities);//Get all priorities
@@ -1463,10 +1441,6 @@ namespace OpenDental {
 				}
 				labelReply.Text=Lan.g(this,"(Send to ")+Userods.GetName(_replyToUserNum)+")";
 			}
-			if(PrefC.GetBool(PrefName.DockPhonePanelShow)) {//Show red and blue buttons for HQ always
-				butRed.Visible=true;
-				butBlue.Visible=true;
-			}
 			if(!Security.IsAuthorized(Permissions.TaskEdit,true)){
 				butAudit.Visible=false;
 			}
@@ -1518,59 +1492,9 @@ namespace OpenDental {
 		}
 
 		private void FillComboJobs() {
-			if(_isTaskDeleted || !PrefC.IsODHQ) {
-				return;
-			}
-			_isLoading=true;
-			comboJobs.Items.Clear();
-			_jobLinks = JobLinks.GetForTask(this._taskCur.TaskNum);
-			_listJobs = Jobs.GetMany(_jobLinks.Select(x => x.JobNum).ToList());
-			foreach(Job job in _listJobs) {
-				comboJobs.Items.Add(job.ToString());
-			}
-			if(_listJobs.Count==0) {
-				comboJobs.Items.Add("None");
-				if(JobPermissions.IsAuthorized(JobPerm.Concept,true)) {
-					butCreateJob.Visible=true;
-				}
-			}
-			comboJobs.Items.Add("Attach");
-			comboJobs.SelectedIndex=0;
-			labelJobs.Text=Lan.g(this,"Jobs")+" ("+_listJobs.Count+")";
-			_isLoading=false;
 		}
 
 		private void comboJobs_SelectedIndexChanged(object sender,EventArgs e) {
-			if(_isLoading) {
-				return;
-			}
-			if(comboJobs.SelectedIndex<1 && _listJobs.Count==0) {
-				return;//selected none
-			}
-			if(comboJobs.SelectedIndex==comboJobs.Items.Count-1) {
-				if(Tasks.IsTaskDeleted(_taskCur.TaskNum)){
-					SetFormToDeletedMode();
-					MsgBox.Show(this,"This task was deleted from elsewhere.  Cannot attach to job.");
-					return;
-				}
-				//Atach new job
-				FormJobSearch FormJS = new FormJobSearch();
-				FormJS.ShowDialog();
-				if(FormJS.DialogResult!=DialogResult.OK || FormJS.SelectedJobNum==0) {
-					return;
-				}
-				JobLink jobLink = new JobLink();
-				jobLink.JobNum=FormJS.SelectedJobNum;
-				jobLink.FKey=_taskCur.TaskNum;
-				jobLink.LinkType=JobLinkType.Task;
-				JobLinks.Insert(jobLink);
-				Signalods.SetInvalid(InvalidType.Jobs,KeyType.Job,jobLink.JobNum);
-				FillComboJobs();
-				long signalNum=Signalods.SetInvalid(InvalidType.Task,KeyType.Task,_taskCur.TaskNum);
-				UserControlTasks.RefillLocalTaskGrids(_taskCur,_listTaskNotes,new List<long>() { signalNum });
-				return;
-			}
-			FormOpenDental.S_GoToJob(_listJobs[comboJobs.SelectedIndex].JobNum);
 		}
 
 		private void FillGrid() {
@@ -1588,29 +1512,6 @@ namespace OpenDental {
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			_listTaskNotes=TaskNotes.GetForTask(_taskCur.TaskNum);
-			//Only do weird logic when editing a task associated with the triage task list.
-			if(PrefC.GetBool(PrefName.DockPhonePanelShow)) {
-				if(_numNotes==-1) {//Only fill _numNotes here the first time FillGrid is called.  This is used for coloring triage tasks.
-					_numNotes=_listTaskNotes.Count;
-				}
-				if(_priorityDefNumSelected==_triageBlueNum && _numNotes==0 && _listTaskNotes.Count!=0) {//Blue triage task with an added note
-					_priorityDefNumSelected=_triageWhiteNum;//Change priority to white
-					for(int i=0;i<_listTaskPriorities.Count;i++) {
-						if(_listTaskPriorities[i].DefNum==_triageWhiteNum) {
-							comboTaskPriorities.SelectedIndex=i;//Change selection to the triage white
-						}
-					}
-				}
-				else if(_priorityDefNumSelected==_triageWhiteNum && _numNotes!=0 && _listTaskNotes.Count==0) {//White triage task with note that has been deleted, change it back to blue.
-					_priorityDefNumSelected=_triageBlueNum;
-					for(int i=0;i<_listTaskPriorities.Count;i++) {
-						if(_listTaskPriorities[i].DefNum==_triageBlueNum) {
-							comboTaskPriorities.SelectedIndex=i;//Change selection to the triage blue
-						}
-					}
-				}
-				_numNotes=_listTaskNotes.Count;
-			}
 			for(int i=0;i<_listTaskNotes.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(_listTaskNotes[i].DateTimeNote.ToShortDateString()+" "+_listTaskNotes[i].DateTimeNote.ToShortTimeString());
@@ -1875,14 +1776,6 @@ namespace OpenDental {
 		}
 
 		private void comboTaskPriorities_SelectionChangeCommitted(object sender,EventArgs e) {
-			if(PrefC.IsODHQ 
-				//Changing the priority to 'Red' from another priority for a Triage task
-				&& _listTaskPriorities[comboTaskPriorities.SelectedIndex].DefNum==_triageRedNum 
-				&& _taskCur.PriorityDefNum!=_triageRedNum
-				&& _taskListCur!=null && _taskListCur.TaskListNum==Tasks.TriageTaskListNum) 
-			{
-				textDateTimeEntry.Text=MiscData.GetNowDateTime().ToString();
-			}
 		}
 
 		private void listObjectType_MouseDown(object sender,System.Windows.Forms.MouseEventArgs e) {
@@ -1994,72 +1887,7 @@ namespace OpenDental {
 		}
 
 		private void butCreateJob_Click(object sender,EventArgs e) {
-			if(Tasks.IsTaskDeleted(_taskCur.TaskNum)){
-				SetFormToDeletedMode();
-				MsgBox.Show(this,"This task was deleted from elsewhere.  Cannot attach to job.");
-				return;
-			}
-			Job jobNew=new Job();
-			List<string> categoryList=Enum.GetNames(typeof(JobCategory)).ToList();
-			//Queries can't be created from here
-			categoryList.Remove(JobCategory.Query.ToString());	
-			categoryList.Remove(JobCategory.MarketingDesign.ToString());	
-			if(!JobPermissions.IsAuthorized(JobPerm.ProjectManager,true)) {
-				categoryList.Remove(JobCategory.NeedNoApproval.ToString());
-			}
-			if(!JobPermissions.IsAuthorized(JobPerm.SpecialProject,true)) {
-				categoryList.Remove(JobCategory.SpecialProject.ToString());
-			}
-			InputBox categoryChoose=new InputBox("Choose a job category",categoryList);
-			if(categoryChoose.ShowDialog()!=DialogResult.OK) {
-				return;
-			}
-			if(categoryChoose.comboSelection.SelectedIndex==-1) {
-				MsgBox.Show(this,"You must choose a category to create a job.");
-				return;
-			}
-			JobCategory category=(JobCategory)Enum.GetNames(typeof(JobCategory)).ToList().IndexOf(categoryChoose.comboSelection.GetSelected<string>());
-			jobNew.Category=category;
-			InputBox titleBox=new InputBox("Provide a brief title for the job.");
-			if(titleBox.ShowDialog()!=DialogResult.OK) {
-				return;
-			}
-			if(String.IsNullOrEmpty(titleBox.textResult.Text)) {
-				MsgBox.Show(this,"You must type a title to create a job.");
-				return;
-			}
-			List<Def> listJobPriorities=Defs.GetDefsForCategory(DefCat.JobPriorities,true);
-			if(listJobPriorities.Count==0) {
-				MsgBox.Show(this,"You have no priorities setup in definitions.");
-				return;
-			}
-			jobNew.Title=titleBox.textResult.Text;
-			long priorityNum=0;
-			priorityNum=listJobPriorities.FirstOrDefault(x => x.ItemValue.Contains("JobDefault")).DefNum;
-			if(jobNew.Category.In(JobCategory.Bug,JobCategory.Conversion)) {
-				priorityNum=listJobPriorities.FirstOrDefault(x => x.ItemValue.Contains("BugDefault")).DefNum;
-				jobNew.Requirements=CreateCopyTask();
-			}
-			else {
-				jobNew.Requirements=CreateCopyTask();
-			}
-			jobNew.Priority=priorityNum==0?listJobPriorities.First().DefNum:priorityNum;
-			jobNew.PhaseCur=JobPhase.Concept;
-			jobNew.UserNumConcept=Security.CurUser.UserNum;
-			jobNew.ProposedVersion=JobProposedVersion.Current;
-			JobLink jobLinkNew=new JobLink();
-			JobLink jobLinkTask=new JobLink();
-			jobLinkTask.LinkType=JobLinkType.Task;
-			jobLinkTask.FKey=_taskCur.TaskNum;
-			Jobs.Insert(jobNew);
-			jobLinkNew.JobNum=jobNew.JobNum;
-			jobLinkTask.JobNum=jobNew.JobNum;
-			JobLinks.Insert(jobLinkTask);
-			Signalods.SetInvalid(InvalidType.Jobs,KeyType.Job,jobNew.JobNum);
-			FillComboJobs();
-			FormOpenDental.S_GoToJob(jobNew.JobNum);
-			long signalNum=Signalods.SetInvalid(InvalidType.Task,KeyType.Task,_taskCur.TaskNum);
-			UserControlTasks.RefillLocalTaskGrids(_taskCur,_listTaskNotes,new List<long>() { signalNum });
+			
 		}
 
 		public void OnTaskEdited() {

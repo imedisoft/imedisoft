@@ -43,15 +43,15 @@ namespace OpenDental {
 				return;
 			}
 			try{
-				string helpKeyDecrypted=OpenDentalHelp.ODHelp.UpdateHelpKey();
-				string[] arrayHelpKeyValues=helpKeyDecrypted.Split(',');
-				bool onSupport=PIn.Bool(arrayHelpKeyValues[1]);
-				if(onSupport){
-					labelHelpKey.Text="Yes";
-				}
-				else{
-					labelHelpKey.Text="No";
-				}
+				//string helpKeyDecrypted=OpenDentalHelp.ODHelp.UpdateHelpKey();
+				//string[] arrayHelpKeyValues=helpKeyDecrypted.Split(',');
+				//bool onSupport=PIn.Bool(arrayHelpKeyValues[1]);
+				//if(onSupport){
+				//	labelHelpKey.Text="Yes";
+				//}
+				//else{
+				//	labelHelpKey.Text="No";
+				//}
 			}
 			catch(Exception ex){
 				labelHelpKey.Text="error:"+ex;

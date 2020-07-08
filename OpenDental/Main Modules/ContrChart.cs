@@ -74,7 +74,7 @@ namespace OpenDental {
 		private bool _initializedOnStartup;
 		[DllImport("wininet.dll",CharSet = CharSet.Auto,SetLastError = true)]
 		static extern bool InternetSetCookie(string lpszUrlName,string lbszCookieName,string lpszCookieData);
-		private bool _isDistributorKey;
+
 		///<summary>This keeps track of if the progress notes are being filled.</summary>
 		private bool _isFillingProgNotes;
 		///<summary>List of images that have been downloaded from Apteryx.</summary>
@@ -219,9 +219,6 @@ namespace OpenDental {
 			FillPtInfo();//Refresh registration key list in patient info grid.
 		}
 
-		private void butBig_Click(object sender,EventArgs e) {		
-		}
-
 		private void butChartViewAdd_Click(object sender,EventArgs e) {
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
@@ -279,9 +276,6 @@ namespace OpenDental {
 			formChartView.ChartViewCur.IsAudit=checkAudit.Checked;
 			formChartView.ShowDialog();
 			FillChartViewsGrid();
-			if(_isDistributorKey) {
-				FillCustomerViewsGrid();
-			}
 			int count2=gridChartViews.ListGridRows.Count;
 			if(count2==0) { 
 				return; 
@@ -289,9 +283,6 @@ namespace OpenDental {
 			if(count2==count) {
 				if(selectedIndex!=-1) {
 					gridChartViews.SetSelected(selectedIndex,true);
-					if(_isDistributorKey) {
-						gridCustomerViews.SetSelected(selectedIndex,true);
-					}
 					SetChartView(_listChartViews[selectedIndex]);
 				}
 			}
@@ -299,14 +290,8 @@ namespace OpenDental {
 				formChartView.ChartViewCur.ItemOrder=count;
 				ChartViews.Update(formChartView.ChartViewCur);
 				FillChartViewsGrid();
-				if(_isDistributorKey) {
-					FillCustomerViewsGrid();
-				}
 				SetChartView(_listChartViews[count]);
 				gridChartViews.SetSelected(count,true);
-				if(_isDistributorKey) {
-					gridCustomerViews.SetSelected(selectedIndex,true);
-				}
 			}
 		}
 
@@ -340,10 +325,6 @@ namespace OpenDental {
 				}
 				FillChartViewsGrid();
 				gridChartViews.SetSelected(newIdx,true);
-				if(_isDistributorKey) {
-					FillCustomerViewsGrid();
-					gridCustomerViews.SetSelected(newIdx,true);
-				}
 				SetChartView(_listChartViews[newIdx]);
 			}
 		}
@@ -378,10 +359,6 @@ namespace OpenDental {
 				}
 				FillChartViewsGrid();
 				gridChartViews.SetSelected(newIdx,true);
-				if(_isDistributorKey) {
-					FillCustomerViewsGrid();
-					gridCustomerViews.SetSelected(newIdx,true);
-				}
 				SetChartView(_listChartViews[newIdx]);
 			}
 		}
@@ -402,39 +379,41 @@ namespace OpenDental {
 			FillPtInfo();
 		}
 
-		private void butLoadDirectX_Click(object sender,EventArgs e) {
-			//toothChart.LoadDirectX();
-		}
-
-		private void butNewTP_Click(object sender,EventArgs e) {
-			FormTreatPlanCurEdit formTPCE=new FormTreatPlanCurEdit();
-			formTPCE.TreatPlanCur=new TreatPlan() {
-				Heading="Inactive Treatment Plan",
-				Note=PrefC.GetString(PrefName.TreatmentPlanNote),
-				PatNum=_patCur.PatNum,
-				TPStatus=TreatPlanStatus.Inactive,
+		private void butNewTP_Click(object sender, EventArgs e)
+		{
+			FormTreatPlanCurEdit formTPCE = new FormTreatPlanCurEdit();
+			formTPCE.TreatPlanCur = new TreatPlan()
+			{
+				Heading = "Inactive Treatment Plan",
+				Note = PrefC.GetString(PrefName.TreatmentPlanNote),
+				PatNum = _patCur.PatNum,
+				TPStatus = TreatPlanStatus.Inactive,
 			};
 			formTPCE.ShowDialog();
-			if(formTPCE.DialogResult!=DialogResult.OK) {
+			if (formTPCE.DialogResult != DialogResult.OK)
+			{
 				return;
 			}
 			FillTreatPlans();
-			_listTreatPlans.ForEach(x => gridTreatPlans.SetSelected(_listTreatPlans.IndexOf(_listTreatPlans.FirstOrDefault(y => y.TreatPlanNum==x.TreatPlanNum)),
-				formTPCE.TreatPlanCur.TreatPlanNum==x.TreatPlanNum));
-			if(gridTreatPlans.GetSelectedIndex()>-1) {
+			_listTreatPlans.ForEach(x => gridTreatPlans.SetSelected(_listTreatPlans.IndexOf(_listTreatPlans.FirstOrDefault(y => y.TreatPlanNum == x.TreatPlanNum)),
+				formTPCE.TreatPlanCur.TreatPlanNum == x.TreatPlanNum));
+			if (gridTreatPlans.GetSelectedIndex() > -1)
+			{
 				gridTreatPlans.ScrollToIndex(gridTreatPlans.GetSelectedIndex());
 			}
 			ModuleSelected(_patCur.PatNum);//refreshes TPs
 		}
 
-		private void butPhoneNums_Click(object sender,EventArgs e) {
-			if(FormOpenDental.CurPatNum==0) {
-				MsgBox.Show(this,"Please select a patient first.");
+		private void butPhoneNums_Click(object sender, EventArgs e)
+		{
+			if (FormOpenDental.CurPatNum == 0)
+			{
+				MsgBox.Show(this, "Please select a patient first.");
 				return;
 			}
-			FormPhoneNumbersManage formPNM=new FormPhoneNumbersManage();
-			formPNM.PatNum=FormOpenDental.CurPatNum;
-			formPNM.ShowDialog();			
+			FormPhoneNumbersManage formPNM = new FormPhoneNumbersManage();
+			formPNM.PatNum = FormOpenDental.CurPatNum;
+			formPNM.ShowDialog();
 		}
 
 		private void butShowDateRange_Click(object sender,EventArgs e) {
@@ -460,9 +439,6 @@ namespace OpenDental {
 		private void ChartViewsCellClicked(ODGridClickEventArgs e) {
 			SetChartView(_listChartViews[e.Row]);
 			gridChartViews.SetSelected(e.Row,true);
-			if(_isDistributorKey) {
-				gridCustomerViews.SetSelected(e.Row,true);
-			}
 			RefreshModuleScreen(false);//Update UI to reflect any changed dynamic SheetDefs.
 			ReloadSheetLayout();//Changes the progress notes grid. This changes the sheet layout.
 		}
@@ -476,9 +452,6 @@ namespace OpenDental {
 			formChartView.ChartViewCur=_listChartViews[e.Row];
 			formChartView.ShowDialog();
 			FillChartViewsGrid();
-			if(_isDistributorKey) {
-				FillCustomerViewsGrid();
-			}
 			if(gridChartViews.ListGridRows.Count==0) {
 				FillProgNotes();
 				return;//deleted last view, so display default
@@ -498,14 +471,8 @@ namespace OpenDental {
 				}
 				else {
 					gridChartViews.SetSelected(0,true);
-					if(_isDistributorKey) {
-
-					}
 					SetChartView(_listChartViews[0]);
 				}
-			}
-			if(_isDistributorKey) {
-				gridCustomerViews.SetSelected(gridChartViews.GetSelectedIndex(),true);
 			}
 			RefreshModuleScreen(false);//Update UI to reflect any changed dynamic SheetDefs.
 			ReloadSheetLayout();//Changes the progress notes grid. This changes the sheet layout.
@@ -2201,12 +2168,6 @@ namespace OpenDental {
 						}
 					}
 					break;
-				case ProgNotesRowType.WebChatSession:
-					long webChatSessionNum=PIn.Long(row["WebChatSessionNum"].ToString());
-					WebChatSession webChatSession=WebChatSessions.GetOne(webChatSessionNum);
-					FormWebChatSession formWebChatSession=new FormWebChatSession(webChatSession,() => { });//We don't usually refresh prognotes after a double click
-					formWebChatSession.ShowDialog();
-					break;
 				case ProgNotesRowType.Rx:
 					RxPat rx=RxPats.GetRx(rowPk);
 					if(rx==null) {
@@ -3389,9 +3350,6 @@ namespace OpenDental {
 		}
 
 		private void trackToothProcDates_ValueChanged(object sender,EventArgs e) {
-			if(PrefC.IsODHQ) {
-				return;//ODInternalCustomerGrid is filled instead
-			}
 			textToothProcDate.Text=_listProcDates[trackToothProcDates.Value].ToShortDateString();
 			FillToothChart(true,_listProcDates[trackToothProcDates.Value]);
 		}
@@ -3464,15 +3422,9 @@ namespace OpenDental {
 					SetDateRange();
 					FillDateRange();
 					gridChartViews.SetSelected(_chartViewCurDisplay.ItemOrder,true);
-					if(_isDistributorKey) {
-						gridCustomerViews.SetSelected(_chartViewCurDisplay.ItemOrder,true);
-					}
 				}
 				else {
 					gridChartViews.SetSelected(false);
-					if(_isDistributorKey) {
-						gridCustomerViews.SetSelected(false);
-					}
 				}
 			}
 			bool showSelectedTeeth=checkShowTeeth.Checked;
@@ -4258,17 +4210,11 @@ namespace OpenDental {
 						gridChartViews.SetSelected(0,true);
 						SetChartView(listChartViews[0]);
 					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>0) {
-						gridCustomerViews.SetSelected(0,true);
-					}
 					break;
 				case Keys.F2:
 					if(gridChartViews.ListGridRows.Count>1) {
 						gridChartViews.SetSelected(1,true);
 						SetChartView(listChartViews[1]);
-					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>1) {
-						gridCustomerViews.SetSelected(1,true);
 					}
 					break;
 				case Keys.F3:
@@ -4276,17 +4222,11 @@ namespace OpenDental {
 						gridChartViews.SetSelected(2,true);
 						SetChartView(listChartViews[2]);
 					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>2) {
-						gridCustomerViews.SetSelected(2,true);
-					}
 					break;
 				case Keys.F4:
 					if(gridChartViews.ListGridRows.Count>3) {
 						gridChartViews.SetSelected(3,true);
 						SetChartView(listChartViews[3]);
-					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>3) {
-						gridCustomerViews.SetSelected(3,true);
 					}
 					break;
 				case Keys.F5:
@@ -4294,17 +4234,11 @@ namespace OpenDental {
 						gridChartViews.SetSelected(4,true);
 						SetChartView(listChartViews[4]);
 					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>4) {
-						gridCustomerViews.SetSelected(4,true);
-					}
 					break;
 				case Keys.F6:
 					if(gridChartViews.ListGridRows.Count>5) {
 						gridChartViews.SetSelected(5,true);
 						SetChartView(listChartViews[5]);
-					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>5) {
-						gridCustomerViews.SetSelected(5,true);
 					}
 					break;
 				case Keys.F7:
@@ -4312,17 +4246,11 @@ namespace OpenDental {
 						gridChartViews.SetSelected(6,true);
 						SetChartView(listChartViews[6]);
 					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>6) {
-						gridCustomerViews.SetSelected(6,true);
-					}
 					break;
 				case Keys.F8:
 					if(gridChartViews.ListGridRows.Count>7) {
 						gridChartViews.SetSelected(7,true);
 						SetChartView(listChartViews[7]);
-					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>7) {
-						gridCustomerViews.SetSelected(7,true);
 					}
 					break;
 				case Keys.F9:
@@ -4330,17 +4258,11 @@ namespace OpenDental {
 						gridChartViews.SetSelected(8,true);
 						SetChartView(listChartViews[8]);
 					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>8) {
-						gridCustomerViews.SetSelected(8,true);
-					}
 					break;
 				case Keys.F10:
 					if(gridChartViews.ListGridRows.Count>9) {
 						gridChartViews.SetSelected(9,true);
 						SetChartView(listChartViews[9]);
-					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>9) {
-						gridCustomerViews.SetSelected(9,true);
 					}
 					break;
 				case Keys.F11:
@@ -4348,44 +4270,39 @@ namespace OpenDental {
 						gridChartViews.SetSelected(10,true);
 						SetChartView(listChartViews[10]);
 					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>10) {
-						gridCustomerViews.SetSelected(10,true);
-					}
 					break;
 				case Keys.F12:
 					if(gridChartViews.ListGridRows.Count>11) {
 						gridChartViews.SetSelected(11,true);
 						SetChartView(listChartViews[11]);
 					}
-					if(_isDistributorKey && gridCustomerViews.ListGridRows.Count>11) {
-						gridCustomerViews.SetSelected(11,true);
-					}
 					break;
 			}
 		}
 
 		///<summary>Called every time prefs are changed from any workstation.</summary>
-		public void InitializeLocalData() {
-			_isDistributorKey=PrefC.GetBool(PrefName.DistributorKey);
-			if(!_isDistributorKey) {
-				butAddKey.Visible=false;
-				butForeignKey.Visible=false;
-				butPhoneNums.Visible=false;
-				butErxAccess.Visible=false;
-				tabProc.TabPages.Remove(tabCustomer);
-			}
-			if(!ToothChartRelay.IsSparks3DPresent) {
+		public void InitializeLocalData()
+		{
+			butAddKey.Visible = false;
+			butForeignKey.Visible = false;
+			butPhoneNums.Visible = false;
+			butErxAccess.Visible = false;
+			tabProc.TabPages.Remove(tabCustomer);
+
+			if (!ToothChartRelay.IsSparks3DPresent)
+			{
 				//ComputerPref computerPref=ComputerPrefs.GetForLocalComputer();
-				toothChartWrapper.UseHardware=ComputerPrefs.LocalComputer.GraphicsUseHardware;
-				toothChartWrapper.PreferredPixelFormatNumber=ComputerPrefs.LocalComputer.PreferredPixelFormatNum;
-				toothChartWrapper.DeviceFormat=new ToothChartDirectX.DirectXDeviceFormat(ComputerPrefs.LocalComputer.DirectXFormat);
+				toothChartWrapper.UseHardware = ComputerPrefs.LocalComputer.GraphicsUseHardware;
+				toothChartWrapper.PreferredPixelFormatNumber = ComputerPrefs.LocalComputer.PreferredPixelFormatNum;
+				toothChartWrapper.DeviceFormat = new ToothChartDirectX.DirectXDeviceFormat(ComputerPrefs.LocalComputer.DirectXFormat);
 				//Must be last preference set here, because this causes the pixel format to be recreated.																											
-				toothChartWrapper.DrawMode=ComputerPrefs.LocalComputer.GraphicsSimple;
+				toothChartWrapper.DrawMode = ComputerPrefs.LocalComputer.GraphicsSimple;
 				//The preferred pixel format number changes to the selected pixel format number after a context is chosen.
-				ComputerPrefs.LocalComputer.PreferredPixelFormatNum=toothChartWrapper.PreferredPixelFormatNumber;
+				ComputerPrefs.LocalComputer.PreferredPixelFormatNum = toothChartWrapper.PreferredPixelFormatNumber;
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
 			}
-			if(_patCur!=null) {
+			if (_patCur != null)
+			{
 				FillToothChart(true);
 			}
 			//if(PrefC.GetBoolSilent(PrefName.ChartQuickAddHideAmalgam,true)){ //Preference is Deprecated.
@@ -4394,45 +4311,58 @@ namespace OpenDental {
 			//else{
 			//	panelQuickPasteAmalgam.Visible=true;
 			//}
-			if(!ToolButItems.GetCacheIsNull()) {
+			if (!ToolButItems.GetCacheIsNull())
+			{
 				LayoutToolBar();
-				if(_patCur==null) {
-					if(HasHideRxButtonsEcw()) {
+				if (_patCur == null)
+				{
+					if (HasHideRxButtonsEcw())
+					{
 						//Don't show the Rx and eRx buttons.
 					}
-					else {
-						if(UsingEcwTightOrFull()) {
-							if(!Environment.Is64BitOperatingSystem) {
-								ToolBarMain.Buttons["Rx"].Enabled=false;
+					else
+					{
+						if (UsingEcwTightOrFull())
+						{
+							if (!Environment.Is64BitOperatingSystem)
+							{
+								ToolBarMain.Buttons["Rx"].Enabled = false;
 							}
 							//eRx already disabled because it is never enabled for eCW Tight or Full
 						}
-						else {
-							ToolBarMain.Buttons["Rx"].Enabled=false;
-							ToolBarMain.Buttons["eRx"].Enabled=false;
+						else
+						{
+							ToolBarMain.Buttons["Rx"].Enabled = false;
+							ToolBarMain.Buttons["eRx"].Enabled = false;
 						}
 					}
-					ToolBarMain.Buttons["LabCase"].Enabled=false;
-					if(ToolBarMain.Buttons["Perio"]!=null) {
-						ToolBarMain.Buttons["Perio"].Enabled=false;
+					ToolBarMain.Buttons["LabCase"].Enabled = false;
+					if (ToolBarMain.Buttons["Perio"] != null)
+					{
+						ToolBarMain.Buttons["Perio"].Enabled = false;
 					}
-					if(ToolBarMain.Buttons["Ortho"]!=null) {
-						ToolBarMain.Buttons["Ortho"].Enabled=false;
+					if (ToolBarMain.Buttons["Ortho"] != null)
+					{
+						ToolBarMain.Buttons["Ortho"].Enabled = false;
 					}
-					ToolBarMain.Buttons["Consent"].Enabled=false;
-					if(ToolBarMain.Buttons["ToothChart"]!=null) {
-						ToolBarMain.Buttons["ToothChart"].Enabled=false;
+					ToolBarMain.Buttons["Consent"].Enabled = false;
+					if (ToolBarMain.Buttons["ToothChart"] != null)
+					{
+						ToolBarMain.Buttons["ToothChart"].Enabled = false;
 					}
-					ToolBarMain.Buttons["ExamSheet"].Enabled=false;
-					if(UsingEcwTight()) {
-						ToolBarMain.Buttons["Commlog"].Enabled=false;
-						webBrowserEcw.Url=null;
+					ToolBarMain.Buttons["ExamSheet"].Enabled = false;
+					if (UsingEcwTight())
+					{
+						ToolBarMain.Buttons["Commlog"].Enabled = false;
+						webBrowserEcw.Url = null;
 					}
-					if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {
-						ToolBarMain.Buttons["EHR"].Enabled=false;
+					if (PrefC.GetBool(PrefName.ShowFeatureEhr))
+					{
+						ToolBarMain.Buttons["EHR"].Enabled = false;
 					}
-					if(ToolBarMain.Buttons["HL7"]!=null) {
-						ToolBarMain.Buttons["HL7"].Enabled=false;
+					if (ToolBarMain.Buttons["HL7"] != null)
+					{
+						ToolBarMain.Buttons["HL7"].Enabled = false;
 					}
 				}
 			}
@@ -4537,7 +4467,6 @@ namespace OpenDental {
 				tabShow,
 				tabDraw,
 				gridChartViews,
-				gridCustomerViews,
 				gridPlanned,
 				gridProg,
 				gridPtInfo,
@@ -4672,11 +4601,6 @@ namespace OpenDental {
 		public void ModuleSelected(long patNum,bool isFullRefresh,bool isClinicRefresh) {
 			EasyHideClinicalData();
 			Logger.LogAction("RefreshModuleData",LogPath.ChartModule,() => RefreshModuleData(patNum,isFullRefresh));
-			if(PrefC.IsODHQ) {
-				odInternalCustomerGrids.Visible=true;
-				odInternalCustomerGrids.BringToFront();
-				odInternalCustomerGrids.PatCur=_patCur;
-			}
 			Logger.LogAction("RefreshModuleScreen",LogPath.ChartModule,() => RefreshModuleScreen(isClinicRefresh));//Update UI to reflect any changed dynamic SheetDefs.
 			ReloadSheetLayout();//Module selected
 			Plugins.HookAddCode(this,"ContrChart.ModuleSelected_end",patNum);
@@ -4701,9 +4625,6 @@ namespace OpenDental {
 			_listSubstitutionLinks=null;
 			_listInsSubs=null;
 			_patNumLast=0;//Clear out the last pat num so that a security log gets entered that the module was "visited" or "refreshed".
-			if(odInternalCustomerGrids.Visible) {
-				odInternalCustomerGrids.TryHideGrids();
-			}
 			gridPtInfo.ContextMenu=new ContextMenu();//This module is never really disposed. Get rid of any menu options we added, to avoid duplicates.
 			Plugins.HookAddCode(this,"ContrChart.ModuleUnselected_end");
 		}
@@ -4974,9 +4895,6 @@ namespace OpenDental {
 			ClearButtons();
 			FillMovementsAndHidden();
 			Logger.LogAction("FillChartViewsGrid",LogPath.ChartModule,() => FillChartViewsGrid(false));
-			if(_isDistributorKey) {
-				FillCustomerTab();
-			}
 			if(textSearch.Text!="") {
 				_listSearchResults?.Clear();
 				_listSearchResults=null;
@@ -6089,145 +6007,6 @@ namespace OpenDental {
 			gridChartViews.EndUpdate();
 		}
 
-		private void FillCustomerTab() {
-			FillCustomerViewsGrid();
-			if(_patCur==null) {
-				gridCustomerViews.Enabled=false;
-				listCommonProcs.Enabled=false;
-				labelMonth1.Text="";
-				labelMonth2.Text="";
-				labelMonth3.Text="";
-			}
-			else {
-				//Monthly call time breakdown.
-				DateTime startDate=new DateTime(1,1,1);
-				Procedure firstProc=Procedures.GetFirstCompletedProcForFamily(_patCur.Guarantor);
-				if(firstProc!=null) {
-					startDate=firstProc.ProcDate;
-				}
-				DateTime month0Date=DateTime.Now;
-				DateTime month1Date=DateTime.Now.AddMonths(-1);
-				DateTime month2Date=DateTime.Now.AddMonths(-2);
-				DateTime month3Date=DateTime.Now.AddMonths(-3);
-				//Set the month labels.
-				labelMonth0.Text=CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month0Date.Month);
-				labelMonth1.Text=CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month1Date.Month);
-				labelMonth2.Text=CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month2Date.Month);
-				labelMonth3.Text=CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month3Date.Month);
-				List<Commlog>	listCommlogs=Commlogs.GetTimedCommlogsForPat(_patCur.Guarantor);
-				TimeSpan month0Span=new TimeSpan();
-				TimeSpan month1Span=new TimeSpan();
-				TimeSpan month2Span=new TimeSpan();
-				TimeSpan month3Span=new TimeSpan();
-				TimeSpan totalSpan=new TimeSpan();
-				int avgCount=0;
-				bool addToAvg=true;
-				//Add up the length of time each call took within the corresponding month.
-				for(int i=0;i<listCommlogs.Count;i++) {
-					DateTime tempDateTime=listCommlogs[i].CommDateTime;
-					DateTime tempTimeEnd=listCommlogs[i].DateTimeEnd;
-					TimeSpan tempSpan=tempTimeEnd-tempDateTime;
-					if(tempDateTime.Year==month0Date.Year && tempDateTime.Month==month0Date.Month) {
-						month0Span=month0Span.Add(tempSpan);
-						addToAvg=false;//Avg should not include this months numbers.
-					}
-					else if(tempDateTime.Year==month1Date.Year && tempDateTime.Month==month1Date.Month) {
-						month1Span=month1Span.Add(tempSpan);
-					}
-					else if(tempDateTime.Year==month2Date.Year && tempDateTime.Month==month2Date.Month) {
-						month2Span=month2Span.Add(tempSpan);
-					}
-					else if(tempDateTime.Year==month3Date.Year && tempDateTime.Month==month3Date.Month) {
-						month3Span=month3Span.Add(tempSpan);
-					}
-					//Take current commlog and see if its greater than or equal to two months after first completed proc date.
-					if(new DateTime(tempDateTime.Year,tempDateTime.Month,1)>=new DateTime(startDate.AddMonths(2).Year,startDate.AddMonths(2).Month,1)
-						&& addToAvg) {
-						totalSpan=totalSpan.Add(tempSpan);
-						avgCount++;
-					}
-					addToAvg=true;
-				}
-				if(month0Span.Hours>=3) {
-					textMonth0.BackColor=Color.Red;
-					textMonth0.ForeColor=Color.White;
-					textMonth0.Font=new Font(textMonth1.Font,FontStyle.Bold);
-				}
-				else {
-					textMonth0.ForeColor=Color.Black;
-					textMonth0.BackColor=SystemColors.Control;
-					textMonth0.Font=new Font(textMonth1.Font,FontStyle.Regular);
-				}
-				if(month1Span.Hours>=3) {
-					textMonth1.BackColor=Color.Red;
-					textMonth1.ForeColor=Color.White;
-					textMonth1.Font=new Font(textMonth1.Font,FontStyle.Bold);
-				}
-				else {
-					textMonth1.ForeColor=Color.Black;
-					textMonth1.BackColor=SystemColors.Control;
-					textMonth1.Font=new Font(textMonth1.Font,FontStyle.Regular);
-				}
-				if(month2Span.Hours>=3) {
-					textMonth2.BackColor=Color.Red;
-					textMonth2.ForeColor=Color.White;
-					textMonth2.Font=new Font(textMonth2.Font,FontStyle.Bold);
-				}
-				else {
-					textMonth2.ForeColor=Color.Black;
-					textMonth2.BackColor=SystemColors.Control;
-					textMonth2.Font=new Font(textMonth2.Font,FontStyle.Regular);
-				}
-				if(month3Span.Hours>=3) {
-					textMonth3.BackColor=Color.Red;
-					textMonth3.ForeColor=Color.White;
-					textMonth3.Font=new Font(textMonth3.Font,FontStyle.Bold);
-				}
-				else {
-					textMonth3.ForeColor=Color.Black;
-					textMonth3.BackColor=SystemColors.Control;
-					textMonth3.Font=new Font(textMonth3.Font,FontStyle.Regular);
-				}
-				//Set the text of the boxes.
-				textMonth0.Text=month0Span.ToStringHmm();
-				textMonth1.Text=month1Span.ToStringHmm();
-				textMonth2.Text=month2Span.ToStringHmm();
-				textMonth3.Text=month3Span.ToStringHmm();
-				if(avgCount>0) {
-					int test=(int)totalSpan.TotalMinutes/avgCount;
-					textMonthAvg.Text=new TimeSpan(0,(int)totalSpan.TotalMinutes/avgCount,0).ToStringHmm();
-				}
-				else {
-					textMonthAvg.Text="";
-				}
-			}
-		}
-
-		///<summary>FillChartViewsGrid should be called first to synch the grids thus having the chart view cache already refreshed.</summary>
-		private void FillCustomerViewsGrid() {
-			if(_listChartViews==null) {
-				return;//There is no patient selected or FillChartViewsGrid was not correctly called before invoking this method.
-			}
-			gridCustomerViews.BeginUpdate();
-			gridCustomerViews.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableCustomerViews","F#"),25);
-			gridCustomerViews.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCustomerViews","View"),50){ IsWidthDynamic=true };
-			gridCustomerViews.ListGridColumns.Add(col);
-			gridCustomerViews.ListGridRows.Clear();
-			GridRow row;
-			for(int i=0;i<_listChartViews.Count;i++) {
-				row=new GridRow();
-				//assign hot keys F1-F12
-				if(i<11) {
-					row.Cells.Add("F"+(i+1));
-				}
-				row.Cells.Add(_listChartViews[i].Description);
-				gridCustomerViews.ListGridRows.Add(row);
-			}
-			gridCustomerViews.EndUpdate();
-		}
-
 		///<summary>This method is used to set the Date Range filter start and stop dates based on either a custom date range or DatesShowing property of chart view.</summary>
 		private void FillDateRange() {
 			textShowDateRange.Text="";
@@ -6439,9 +6218,6 @@ namespace OpenDental {
     }
 
 		private void FillToothChart(bool retainSelection) {
-			if(PrefC.IsODHQ) {
-				return;//ODInternalCustomerGrid is filled instead
-			}
 			if(_patCur==null) {
 				FillToothChart(retainSelection,DateTime.Today);
 			}
@@ -6452,9 +6228,6 @@ namespace OpenDental {
 
 		///<summary>This is, of course, called when module refreshed.  But it's also called when user sets missing teeth or tooth movements.  In that case, the Progress notes are not refreshed, so it's a little faster.  This also fills in the movement amounts.</summary>
 		private void FillToothChart(bool retainSelection,DateTime dateLimit) {
-			if(PrefC.IsODHQ) {
-				return;//ODInternalCustomerGrid is filled instead
-			}
 			Cursor=Cursors.WaitCursor;
 			_toothChartRelay.BeginUpdate();
 
@@ -6592,9 +6365,6 @@ namespace OpenDental {
 		}
 
 		private void FillTrackSlider() {
-			if(PrefC.IsODHQ) {
-				return;//ODInternalCustomerGrid is filled instead
-			}
 			//This method can be called from many places and it would be annoying to the user if their slider always reset to today's date, so allow retaining selection.
 			trackToothProcDates.Minimum=0;
 			//FillToothChart is called after FillTrackSlider.  We don't need to fire the ValueChanged event, otherwise it calls FillToothChart unnecessarily
@@ -6828,7 +6598,7 @@ namespace OpenDental {
 					continue;
 				}
 				Control control=null;
-				bool isHqOrDistibutorControl=false;
+				//bool isHqOrDistibutorControl=false;
 				switch(fieldDef.FieldName) {
 					#region Set control based on matching FieldName
 					case "PatientInfo":
@@ -6850,11 +6620,7 @@ namespace OpenDental {
 						control=panelToothTrackBar;
 						break;
 					case "toothChart":
-						if(odInternalCustomerGrids.Visible) {//Replace toothchart with HQ bug submission control
-							control=odInternalCustomerGrids;
-							isHqOrDistibutorControl=true;
-						}
-						else if(ToothChartRelay.IsSparks3DPresent) {
+						if(ToothChartRelay.IsSparks3DPresent) {
 							control=toothChart;
 						}
 						else {
@@ -6863,22 +6629,6 @@ namespace OpenDental {
 						break;
 					case "PanelEcw":
 						control=panelEcw;
-						break;
-					case "ButtonErxAccess":
-						control=butErxAccess;
-						isHqOrDistibutorControl=true;
-						break;
-					case "ButtonPhoneNums":
-						control=butPhoneNums;
-						isHqOrDistibutorControl=true;
-						break;
-					case "ButtonForeignKey":
-						control=butForeignKey;
-						isHqOrDistibutorControl=true;
-						break;
-					case "ButtonUSAKey":
-						control=butAddKey;
-						isHqOrDistibutorControl=true;
 						break;
 					case "ButtonNewTP":
 						control=butNewTP;
@@ -6897,9 +6647,7 @@ namespace OpenDental {
 						//Control not matched
 						break;
 				}
-				if(isHqOrDistibutorControl && !(PrefC.IsODHQ || PrefC.GetBool(PrefName.DistributorKey))) {
-					control=null;
-				}
+
 				dictControls.Add(fieldDef.FieldName,control);//Can add null
 			}
 			return dictControls;

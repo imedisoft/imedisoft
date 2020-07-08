@@ -663,88 +663,11 @@ namespace OpenDental{
 			}
 			textNote.Text=RepeatCur.Note;
 			_isErx=false;
-			if(PrefC.GetBool(PrefName.DistributorKey) && Regex.IsMatch(RepeatCur.ProcCode,"^Z[0-9]{3,}$")) {//Is eRx if HQ and a using an eRx Z code.
-				_isErx=true;
-				labelPatNum.Visible=true;
-				textPatNum.Visible=true;
-				butMoveTo.Visible=true;
-				labelNpi.Visible=true;
-				textNpi.Visible=true;
-				labelProviderName.Visible=true;
-				textProvName.Visible=true;
-				labelErxAccountId.Visible=true;
-				textErxAccountId.Visible=true;
-				if(IsNew && RepeatCur.ProcCode=="Z100") {//DoseSpot Procedure Code
-					List<string> listDoseSpotAccountIds=ClinicErxs.GetAccountIdsForPatNum(RepeatCur.PatNum)
-					.Union(ProviderErxs.GetAccountIdsForPatNum(RepeatCur.PatNum))
-					.Union(
-						RepeatCharges.GetForErx()
-						.FindAll(x => x.PatNum==RepeatCur.PatNum && x.ProcCode=="Z100")
-						.Select(x => x.ErxAccountId)
-						.ToList()
-					)
-					.Distinct()
-					.ToList()
-					.FindAll(x => DoseSpot.IsDoseSpotAccountId(x));
-					if(listDoseSpotAccountIds.Count==0) {
-						listDoseSpotAccountIds.Add(DoseSpot.GenerateAccountId(RepeatCur.PatNum));
-					}
-					if(listDoseSpotAccountIds.Count==1) {
-						textErxAccountId.Text=listDoseSpotAccountIds[0];
-					}
-					else if(listDoseSpotAccountIds.Count>1) {
-						InputBox inputAccountIds=new InputBox(Lans.g(this,"Multiple Account IDs found.  Select one to assign to this repeat charge."),listDoseSpotAccountIds,0);
-						inputAccountIds.ShowDialog();
-						if(inputAccountIds.DialogResult==DialogResult.OK) {
-							textErxAccountId.Text=listDoseSpotAccountIds[inputAccountIds.SelectedIndex];
-						}
-					}
-				}
-				else {//Existing eRx repeating charge.
-					textNpi.Text=RepeatCur.Npi;
-					textErxAccountId.Text=RepeatCur.ErxAccountId;
-					textProvName.Text=RepeatCur.ProviderName;
-					textNpi.ReadOnly=true;
-					textErxAccountId.ReadOnly=true;
-					textProvName.ReadOnly=true;
-				}
-			}
+
 			checkCopyNoteToProc.Checked=RepeatCur.CopyNoteToProc;
 			checkCreatesClaim.Checked=RepeatCur.CreatesClaim;
 			checkIsEnabled.Checked=RepeatCur.IsEnabled;
-			if(PrefC.GetBool(PrefName.DistributorKey)) {//OD HQ disable the IsEnabled and CreatesClaim checkboxes
-				checkCreatesClaim.Enabled=false;
-				checkIsEnabled.Enabled=false;
-			}
-			if(PrefC.IsODHQ && EServiceCodeLink.IsProcCodeAnEService(RepeatCur.ProcCode,out _eService)) {
-				if(IsNew) {
-					MsgBox.Show(this,"You cannot manually create any eService repeating charges.\r\n"
-						+"Use the Signup Portal instead.\r\n\r\n"
-						+"The Charge Amount can be manually edited after the Signup Portal has created the desired eService repeating charge.");
-					DialogResult=DialogResult.Abort;
-					return;
-				}
-				if(_isForZipwhip) {
-					textZipwhipChargeAmount.Visible=true;
-					labelZipwhipAmt.Visible=true;
-					if(RepeatCur.ChargeAmtAlt.IsGreaterThan(-1)) {
-						textZipwhipChargeAmount.Text=RepeatCur.ChargeAmtAlt.ToString("F");
-					}
-				}
-				//The only things that users should be able to do for eServices are:
-				//1. Change the repeating charge amount(s).
-				//2. Manipulate the Start Date.
-				//3. Manipulate the Note.
-				//4. Manipulate Billing Day because not all customers will have a non-eService repeating charge in order to manipulate.
-				//This is because legacy users (versions prior to 17.1) need the ability to manually set their monthly charge amount, etc.
-				SetFormReadOnly(this,butOK,butCancel
-					,textChargeAmt,labelChargeAmount
-					,textDateStart,labelDateStart
-					,textNote,labelNote
-					,textBillingDay,labelBillingCycleDay
-					,textZipwhipChargeAmount,labelZipwhipAmt
-					,checkUseUnearned,comboUnearnedTypes);
-			}
+
 			Patient pat=Patients.GetPat(RepeatCur.PatNum);//pat should never be null. If it is, this will fail.
 			//If this is a new repeat charge and no other active repeat charges exist, set the billing cycle day to today
 			if(IsNew && !RepeatCharges.ActiveRepeatChargeExists(RepeatCur.PatNum)) {
@@ -991,9 +914,6 @@ namespace OpenDental{
 					Patients.Update(patNew,patOld);
 				}
 				RepeatCharges.Insert(RepeatCur);
-				if(PrefC.IsODHQ) {
-					AddProcedureToCC();
-				}
 			}
 			else{ //not a new repeat charge
 				RepeatCharges.Update(RepeatCur);

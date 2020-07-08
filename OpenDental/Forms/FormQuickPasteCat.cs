@@ -155,8 +155,7 @@ namespace OpenDental{
 				if((i==(int)QuickPasteType.WebChat || 
 					i==(int)QuickPasteType.Office ||
 					i==(int)QuickPasteType.JobManager ||
-					i==(int)QuickPasteType.EmployeeStatus)
-					&& !PrefC.IsODHQ) 
+					i==(int)QuickPasteType.EmployeeStatus)) 
 				{
 					continue;
 				}

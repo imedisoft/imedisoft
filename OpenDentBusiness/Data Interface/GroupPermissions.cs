@@ -516,7 +516,6 @@ namespace OpenDentBusiness{
 				case Permissions.NewClaimsProcNotBilled:
 				//case Permissions.PatientPortalLogin:
 				//case Permissions.FAQEdit:
-				case Permissions.FeatureRequestEdit:
 				//case Permissions.SupplementalBackup:
 				//case Permissions.WebSchedRecallManualSend:
 				//case Permissions.PatientSSNView:
@@ -530,7 +529,8 @@ namespace OpenDentBusiness{
 				//case Permissions.ProcCompleteEdit:
 				return false;//Does not have audit Trail if uncommented.
 			}
-			if(!PrefC.IsODHQ && permType.In(
+
+			if(permType.In(
 					//These permissions are only used at OD HQ
 					Permissions.VerifyPhoneOwnership,
 					Permissions.HeadmasterSetup,
@@ -539,6 +539,7 @@ namespace OpenDentBusiness{
 			{
 				return false;
 			}
+
 			return true;
 		}
 

@@ -1732,9 +1732,8 @@ namespace OpenDentBusiness{
 			else {
 				listProvNums=Providers.GetDeepCopy(true).OrderBy(x => x.ItemOrder).Select(y => y.ProvNum).ToList();
 			}
-			bool isODHQ=PrefC.IsODHQ;//Saves making deep copy of Pref cache for every schedule in ListSchedulesForDate.
 			List<Schedule> ListSchedulesForDate=Schedules.GetAllForDateAndType(dateStart,ScheduleType.Provider);
-			List<Schedule> listScheds=ListSchedulesForDate.FindAll(x => listProvNums.Contains(x.ProvNum) && (isODHQ ? (x.StartTime!=x.StopTime) : true));
+			List<Schedule> listScheds=ListSchedulesForDate.FindAll(x => listProvNums.Contains(x.ProvNum));
 			listScheds=listScheds.OrderBy(x => listProvNums.IndexOf(x.ProvNum)).ToList();//Make list alphabetical.
 			Schedule schedCur;
 			DataRow row;

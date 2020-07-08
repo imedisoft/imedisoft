@@ -38,7 +38,7 @@ namespace OpenDental {
 		///<summary>In memory list of attached production for this payment plan</summary>
 		private List<PayPlanProductionEntry> _listPayPlanProductionEntries=new List<PayPlanProductionEntry>();
 		///<summary>Flag for when the user has modified terms but has not saved yet.</summary>
-		private bool _hasChanges=false;
+		//private bool _hasChanges=false;
 		private bool _isLoading=true;
 		private List<PaySplit> _listSplitsForCharges=new List<PaySplit>();
 		///<summary>List of procedures that should be attached to a pay plan if it is new.</summary>
@@ -460,7 +460,6 @@ namespace OpenDental {
 		private void LockTerms(bool isSaveData,bool isUiValid=true) {
 			if(isSaveData) {
 				if(SaveData(isUiValid:isUiValid)) {
-					_hasChanges=false;//Terms were saved
 					groupTerms.Enabled=false;
 					groupBoxFrequency.Enabled=false;
 				}
@@ -478,7 +477,6 @@ namespace OpenDental {
 
 		///<summary></summary>
 		private void UnlockTerms() {
-			_hasChanges=true;//general so we don't have to track every text box to see if something was modified.
 			groupTerms.Enabled=true;
 			groupBoxFrequency.Enabled=true;
 			butUnlock.Visible=false;

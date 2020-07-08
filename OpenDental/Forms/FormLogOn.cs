@@ -119,11 +119,7 @@ namespace OpenDental {
 			if(isEcw) {//ecw requires hash, but non-ecw requires actual password
 				passwordTyped=Authentication.HashPasswordMD5(passwordTyped,true);
 			}
-			if(userName=="Stay Open" && _isSimpleSwitch && PrefC.IsODHQ) {
-				// No need to check password when changing task users at HQ to user "Stay Open".
-				userCur=Userods.GetUserByNameNoCache(userName);
-			}
-			else {//Not HQ (most common scenario)
+
 				//Middle Tier sessions should not fire the CheckUserAndPasswordFailed exception code in FormLogOn.
 				//That event would cause a second login window to pop with strange behavior.
 				//Invoke the overload for CheckUserAndPassword that does not throw exceptions and give the user a generic error message if necessary.
@@ -143,7 +139,7 @@ namespace OpenDental {
 						return;
 					}
 				}
-			}
+			
 			//successful login.
 			if(_isSimpleSwitch) {
 				CurUserSimpleSwitch=userCur;

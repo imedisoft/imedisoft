@@ -61,7 +61,6 @@ namespace OpenDentBusiness.Crud{
 				adjustment.StatementNum   = PIn.Long  (row["StatementNum"].ToString());
 				adjustment.SecUserNumEntry= PIn.Long  (row["SecUserNumEntry"].ToString());
 				adjustment.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
-				adjustment.TaxTransID     = PIn.Long  (row["TaxTransID"].ToString());
 				retVal.Add(adjustment);
 			}
 			return retVal;
@@ -103,8 +102,7 @@ namespace OpenDentBusiness.Crud{
 					POut.Long  (adjustment.ClinicNum),
 					POut.Long  (adjustment.StatementNum),
 					POut.Long  (adjustment.SecUserNumEntry),
-					POut.DateT (adjustment.SecDateTEdit,false),
-					POut.Long  (adjustment.TaxTransID),
+					POut.DateT (adjustment.SecDateTEdit,false)
 				});
 			}
 			return table;
@@ -140,9 +138,7 @@ namespace OpenDentBusiness.Crud{
 				+    DbHelper.Now()+","
 				+    POut.Long  (adjustment.ClinicNum)+","
 				+    POut.Long  (adjustment.StatementNum)+","
-				+    POut.Long  (adjustment.SecUserNumEntry)+","
-				//SecDateTEdit can only be set by MySQL
-				+    POut.Long  (adjustment.TaxTransID)+")";
+				+    POut.Long  (adjustment.SecUserNumEntry)+")";
 			if(adjustment.AdjNote==null) {
 				adjustment.AdjNote="";
 			}
@@ -202,9 +198,7 @@ namespace OpenDentBusiness.Crud{
 					sbRow.Append(DbHelper.Now()); sbRow.Append(",");
 					sbRow.Append(POut.Long(adjustment.ClinicNum)); sbRow.Append(",");
 					sbRow.Append(POut.Long(adjustment.StatementNum)); sbRow.Append(",");
-					sbRow.Append(POut.Long(adjustment.SecUserNumEntry)); sbRow.Append(",");
-					//SecDateTEdit can only be set by MySQL
-					sbRow.Append(POut.Long(adjustment.TaxTransID)); sbRow.Append(")");
+					sbRow.Append(POut.Long(adjustment.SecUserNumEntry)); sbRow.Append(")");
 					if(sbCommands.Length+sbRow.Length+1 > TableBase.MaxAllowedPacketCount && countRows > 0) {
 						Db.NonQ(sbCommands.ToString());
 						sbCommands=null;
@@ -255,9 +249,7 @@ namespace OpenDentBusiness.Crud{
 				+    DbHelper.Now()+","
 				+    POut.Long  (adjustment.ClinicNum)+","
 				+    POut.Long  (adjustment.StatementNum)+","
-				+    POut.Long  (adjustment.SecUserNumEntry)+","
-				//SecDateTEdit can only be set by MySQL
-				+    POut.Long  (adjustment.TaxTransID)+")";
+				+    POut.Long  (adjustment.SecUserNumEntry)+")";
 			if(adjustment.AdjNote==null) {
 				adjustment.AdjNote="";
 			}
@@ -284,10 +276,7 @@ namespace OpenDentBusiness.Crud{
 				+"ProcNum        =  "+POut.Long  (adjustment.ProcNum)+", "
 				//DateEntry not allowed to change
 				+"ClinicNum      =  "+POut.Long  (adjustment.ClinicNum)+", "
-				+"StatementNum   =  "+POut.Long  (adjustment.StatementNum)+", "
-				//SecUserNumEntry excluded from update
-				//SecDateTEdit can only be set by MySQL
-				+"TaxTransID     =  "+POut.Long  (adjustment.TaxTransID)+" "
+				+"StatementNum   =  "+POut.Long  (adjustment.StatementNum)+" "
 				+"WHERE AdjNum = "+POut.Long(adjustment.AdjNum);
 			if(adjustment.AdjNote==null) {
 				adjustment.AdjNote="";
@@ -342,10 +331,6 @@ namespace OpenDentBusiness.Crud{
 			}
 			//SecUserNumEntry excluded from update
 			//SecDateTEdit can only be set by MySQL
-			if(adjustment.TaxTransID != oldAdjustment.TaxTransID) {
-				if(command!="") { command+=",";}
-				command+="TaxTransID = "+POut.Long(adjustment.TaxTransID)+"";
-			}
 			if(command=="") {
 				return false;
 			}
@@ -395,9 +380,6 @@ namespace OpenDentBusiness.Crud{
 			}
 			//SecUserNumEntry excluded from update
 			//SecDateTEdit can only be set by MySQL
-			if(adjustment.TaxTransID != oldAdjustment.TaxTransID) {
-				return true;
-			}
 			return false;
 		}
 

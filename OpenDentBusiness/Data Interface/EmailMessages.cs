@@ -804,7 +804,7 @@ namespace OpenDentBusiness{
 						}
 					}
 					else if(name.ToUpper()=="REPLY-TO") {
-						message.ReplyTo=new MailAddress(val.Trim());
+						message.ReplyToList.Add(val.Trim());
 					}
 					else if(name.ToUpper()=="REPLY-TO-LIST") {
 						string[] arrayReplyTo=val.Split(',');

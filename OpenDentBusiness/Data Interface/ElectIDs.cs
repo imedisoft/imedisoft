@@ -86,8 +86,6 @@ namespace OpenDentBusiness{
 
 		#endregion
 
-		private static ElectID[] list;
-
 		public static long Insert(ElectID electID) {
 			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
 				electID.ElectIDNum=Meth.GetLong(MethodBase.GetCurrentMethod(),electID);
