@@ -35,9 +35,7 @@ namespace OpenDentBusiness{
 			if(string.IsNullOrEmpty(listName)) {
 				return new List<WikiListHist>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<WikiListHist>>(MethodBase.GetCurrentMethod(),listName);
-			}
+
 			string command=$@"SELECT WikiListHistNum,UserNum,ListName,'' ListHeaders,'' ListContent,DateTimeSaved
 				FROM wikilisthist WHERE ListName='{POut.String(listName)}' ORDER BY DateTimeSaved";
 			return Crud.WikiListHistCrud.SelectMany(command);
@@ -47,18 +45,13 @@ namespace OpenDentBusiness{
 			if(wikiListHistNum<=0) {
 				return null;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<WikiListHist>(MethodBase.GetCurrentMethod(),wikiListHistNum);
-			}
+
 			return Crud.WikiListHistCrud.SelectOne(wikiListHistNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(WikiListHist wikiListHist) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				wikiListHist.WikiListHistNum=Meth.GetLong(MethodBase.GetCurrentMethod(),wikiListHist);
-				return wikiListHist.WikiListHistNum;
-			}
+
 			return Crud.WikiListHistCrud.Insert(wikiListHist);
 		}
 
@@ -66,9 +59,7 @@ namespace OpenDentBusiness{
 		///Pass in the userod.UserNum of the user that is making the change.  Typically Security.CurUser.UserNum.
 		///Security.CurUser cannot be used within this method due to the server side of middle tier.</summary>
 		public static WikiListHist GenerateFromName(string listName,long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<WikiListHist>(MethodBase.GetCurrentMethod(),listName,userNum);
-			}
+
 			if(!WikiLists.CheckExists(listName)) {
 				return null;
 			}
@@ -92,10 +83,7 @@ namespace OpenDentBusiness{
 		///<summary>Drops table in DB.  Recreates Table, then fills with Data.
 		///Pass in the userod.UserNum of the user that is making the change.  Typically Security.CurUser.UserNum.</summary>
 		public static void RevertFrom(WikiListHist wikiListHist,long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),wikiListHist,userNum);
-				return;
-			}
+
 			if(!WikiLists.CheckExists(wikiListHist.ListName)) {
 				return;//should never happen.
 			}
@@ -128,10 +116,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Checks remoting roles. Does not check permissions. Does not check for existing listname. If listname already exists it will "merge" the history.</summary>
 		public static void Rename(string WikiListCurName,string WikiListNewName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),WikiListCurName,WikiListNewName);
-				return;
-			}
+
 			string command="UPDATE wikilisthist SET ListName = '"+POut.String(WikiListNewName)+"' WHERE ListName='"+POut.String(WikiListCurName)+"'";
 			Db.NonQ(command);
 		}

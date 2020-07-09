@@ -47,9 +47,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all Saved TreatPlans for a given Patient, ordered by date.</summary>
 		public static List<TreatPlan> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TreatPlan>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM treatplan "
 			  +"WHERE PatNum="+POut.Long(patNum)+" "
 				+"AND TPStatus=0 "//Saved
@@ -58,9 +56,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<TreatPlan> GetAllForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TreatPlan>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM treatplan "
 				+"WHERE PatNum="+POut.Long(patNum)+" ";
 			return Crud.TreatPlanCrud.SelectMany(command);
@@ -74,46 +70,33 @@ namespace OpenDentBusiness{
 
 		///<summary>A single treatplan from the DB.</summary>
 		public static TreatPlan GetOne(long treatPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<TreatPlan>(MethodBase.GetCurrentMethod(),treatPlanNum);
-			}
+			
 			return Crud.TreatPlanCrud.SelectOne(treatPlanNum);
 		}
 
 		///<summary>Gets the first Active TP from the DB for the patient.  Returns null if no Active TP is found for this patient.</summary>
 		public static TreatPlan GetActiveForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<TreatPlan>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM treatplan WHERE PatNum="+POut.Long(patNum)+" AND TPStatus="+POut.Int((int)TreatPlanStatus.Active);
 			return Crud.TreatPlanCrud.SelectOne(command);
 		}
 
 		///<summary></summary>
 		public static void Update(TreatPlan tp){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),tp);
-				return;
-			}
+			
 			Crud.TreatPlanCrud.Update(tp);
 		}
 
 		///<summary></summary>
 		public static long Insert(TreatPlan tp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				tp.TreatPlanNum=Meth.GetLong(MethodBase.GetCurrentMethod(),tp);
-				return tp.TreatPlanNum;
-			}
+			
 			tp.SecUserNumEntry=Security.CurUser.UserNum;
 			return Crud.TreatPlanCrud.Insert(tp);
 		}
 
 		///<summary>Dependencies checked first and throws an exception if any found. So surround by try catch</summary>
 		public static void Delete(TreatPlan tp){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),tp);
-				return;
-			}
+			
 			//check proctp for dependencies
 			string command="SELECT * FROM proctp WHERE TreatPlanNum ="+POut.Long(tp.TreatPlanNum);
 			DataTable table=Db.GetTable(command);
@@ -172,10 +155,7 @@ namespace OpenDentBusiness{
 		///<para>Creates an unassigned treatplan if necessary and attaches any unassigned procedures to it.</para>
 		///<para>Also maintains priorities of treatplanattaches and procedures and updates the procstatus of TP and TPi procs if necessary.</para></summary>
 		public static void AuditPlans(long patNum,TreatPlanType tpType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum,tpType);
-				return;
-			}
+			
 			#region Pseudo Code
 			//Get all treatplans for the patient
 			//Find active TP if it already exists
@@ -320,9 +300,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static TreatPlan GetUnassigned(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<TreatPlan>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM treatplan "
 				+"WHERE PatNum="+POut.Long(patNum)+" "
 				+"AND TPStatus="+POut.Int((int)TreatPlanStatus.Inactive)+" "
@@ -334,10 +312,7 @@ namespace OpenDentBusiness{
 		///Updates the status of any other plan with Active status to Inactive.
 		///If the original heading of the other plan is "Active Treatment Plan" it will be updated to "Inactive Treatment Plan".</summary>
 		public static void SetOtherActiveTPsToInactive(TreatPlan treatPlanCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),treatPlanCur);
-				return;
-			}
+			
 			string command="SELECT * FROM treatplan "
 				+"WHERE PatNum="+POut.Long(treatPlanCur.PatNum)+" "
 				+"AND TPStatus="+POut.Int((int)TreatPlanStatus.Active)+" "
@@ -362,9 +337,7 @@ namespace OpenDentBusiness{
 
 		///<summary>May not return correct values if notes are stored with newline characters.</summary>
 		public static List<long> GetNumsByNote(string oldNote) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),oldNote);
-			}
+			
 			oldNote=oldNote.Replace("\r","");
 			//oldNote=oldNote.Replace("\r","").Replace("\n","\r\n");
 			//oldNote=oldNote.Replace("\r","").Replace("\n","*?");
@@ -377,10 +350,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>	Updates the default note on active/inactive treatment plans with new note</summary>
 		public static void UpdateNotes(string newNote, List<long> listTPNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),newNote,listTPNums);
-				return;
-			}
+			
 			if(listTPNums==null || listTPNums.Count==0) {
 				return;
 			}
@@ -390,9 +360,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<TreatPlan> GetFromProcTPs(List<ProcTP> listProcTPs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TreatPlan>>(MethodBase.GetCurrentMethod(),listProcTPs);
-			}
+			
 			List<TreatPlan> listTreatPlans = new List<TreatPlan>();
 			if(listProcTPs.Count == 0) {
 				return listTreatPlans;
@@ -407,9 +375,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns only 5 columns for all saved treatment plans.</summary>
 		public static List<TreatPlan> GetAllSavedLim() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TreatPlan>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command = "SELECT TreatPlanNum, PatNum, DateTP, SecUserNumEntry, UserNumPresenter "
 				+" FROM treatplan WHERE treatplan.TPStatus="+POut.Int((int)TreatPlanStatus.Saved);
 			DataTable table = Db.GetTable(command);

@@ -10,9 +10,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a good chunk of the data used in the TP Module.</summary>
 		public static TPModuleData GetModuleData(long patNum,bool doMakeSecLog) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//Remoting role check here to reduce round-trips to the server.
-				return Meth.GetObject<TPModuleData>(MethodBase.GetCurrentMethod(),patNum,doMakeSecLog);
-			}
 			TPModuleData tpData=new TPModuleData();
 			tpData.Fam=Patients.GetFamily(patNum);
 			tpData.Pat=tpData.Fam.GetPatient(patNum);
@@ -45,10 +42,6 @@ namespace OpenDentBusiness {
 			List<InsPlan> listInsPlans,DateTime dateTimeTP,List<InsSub> listInsSubs,bool doFillHistList,bool isTreatPlanSortByTooth,
 			List<SubstitutionLink> listSubstLinks) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//Remoting role check here to reduce round-trips to the server.
-				return Meth.GetObject<LoadActiveTPData>(MethodBase.GetCurrentMethod(),pat,treatPlanNum,listBenefits,listPatPlans,listInsPlans,dateTimeTP,
-					listInsSubs,doFillHistList,isTreatPlanSortByTooth,listSubstLinks);
-			}
 			LoadActiveTPData data=new LoadActiveTPData();
 			data.ListTreatPlanAttaches=TreatPlanAttaches.GetAllForTreatPlan(treatPlanNum);
 			List<Procedure> listProcs=Procedures.GetManyProc(data.ListTreatPlanAttaches.Select(x=>x.ProcNum).ToList(),false);

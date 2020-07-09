@@ -13,9 +13,6 @@ namespace OpenDentBusiness {
 		/// <param name="listClinics">The list of clinics to filter by. Pass in an empty list if this should not be filtered by clinic.</param>
 		/// <returns></returns>
 		public static DataTable GetLineItemUnearnedData(List<long> listClinics,DateTime date1Start,DateTime date2Start,bool showProvider) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listClinics,date1Start,date2Start,showProvider);
-			}
 			bool hasClinicsEnabled = ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
 			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
 				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
@@ -63,9 +60,6 @@ namespace OpenDentBusiness {
 		public static DataTable GetUnearnedAllocationData(List<long> listClinicNums,List<long> listProvNums,
 			List<long> listUnearnedTypeNums,bool isExcludeNetZeroUnearned,bool showProvider) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listClinicNums,listProvNums,listUnearnedTypeNums,isExcludeNetZeroUnearned,showProvider);
-			}
 			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
 				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
 			);
@@ -183,9 +177,6 @@ namespace OpenDentBusiness {
 		public static DataTable GetNetUnearnedData(List<long> listClinicNums,List<long> listProvNums,
 			List<long> listUnearnedTypeNums,bool isExcludeNetZero) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listClinicNums,listProvNums,listUnearnedTypeNums,isExcludeNetZero);
-			}
 			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
 				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
 			);
@@ -255,9 +246,6 @@ namespace OpenDentBusiness {
 		/// <param name="listClinics">The list of clinics to filter by. Pass in an empty list if this should not be filtered by clinic.</param>
 		/// <returns></returns>
 		public static DataTable GetUnearnedAccountData(List<long> listClinics) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listClinics);
-			}
 			bool hasClinicsEnabled = ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
 			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
 				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()

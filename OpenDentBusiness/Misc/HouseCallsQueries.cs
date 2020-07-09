@@ -4,13 +4,12 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 
-namespace OpenDentBusiness {
-	public class HouseCallsQueries {
-
-		public static DataTable GetHouseCalls(DateTime FromDate,DateTime ToDate){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),FromDate,ToDate);
-			}
+namespace OpenDentBusiness
+{
+	public class HouseCallsQueries
+	{
+		public static DataTable GetHouseCalls(DateTime FromDate, DateTime ToDate)
+		{
 			//now, the query--------------------------------------------------------------------------
 			//Appointment Reminder Fields- numbers are as they come back from db-----------------------
 			//0-LastName
@@ -32,7 +31,7 @@ namespace OpenDentBusiness {
 			//15-DoctorName
 			//16-IsNewPatient
 			//17-WirelessPhone
-			string command=@"SELECT patient.LName,patient.FName,patient.Preferred
+			string command = @"SELECT patient.LName,patient.FName,patient.Preferred
 				,patient.PatNum,patient.ChartNumber,patient.HmPhone,patient.WkPhone
 				,patient.Email,patient.Address,patient.Address2,patient.City,patient.State
 				,patient.Zip
@@ -42,11 +41,10 @@ namespace OpenDentBusiness {
 				patient.WirelessPhone
 				FROM patient,appointment 
 				WHERE patient.PatNum=appointment.PatNum "
-				+"AND (appointment.AptStatus=1 OR appointment.AptStatus=4) "//sched or ASAP
-				+"AND appointment.AptDateTime > "+POut.Date(FromDate)//> midnight
-				+" AND appointment.AptDateTime < "+POut.Date(ToDate.AddDays(1));//< midnight
+				+ "AND (appointment.AptStatus=1 OR appointment.AptStatus=4) "//sched or ASAP
+				+ "AND appointment.AptDateTime > " + POut.Date(FromDate)//> midnight
+				+ " AND appointment.AptDateTime < " + POut.Date(ToDate.AddDays(1));//< midnight
 			return Db.GetTable(command);
 		}
-
 	}
 }

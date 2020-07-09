@@ -10,9 +10,6 @@ using CodeBase;
 namespace OpenDentBusiness {
 	public class RpProcOverpaid {
 		public static DataTable GetOverPaidProcs(long patNum,List<long> listProvNums,List<long> listClinics,DateTime dateStart,DateTime dateEnd) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum,listProvNums,listClinics,dateStart,dateEnd);
-			}
 			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
 				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
 			);

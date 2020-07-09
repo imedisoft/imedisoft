@@ -28,9 +28,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<DashboardCell> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DashboardCell>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM dashboardcell";
 			return Crud.DashboardCellCrud.SelectMany(command);
 		}
@@ -40,37 +38,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(DashboardCell dashboardCell) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				dashboardCell.DashboardCellNum=Meth.GetLong(MethodBase.GetCurrentMethod(),dashboardCell);
-				return dashboardCell.DashboardCellNum;
-			}
+			
 			return Crud.DashboardCellCrud.Insert(dashboardCell);
 		}
 
 		///<summary></summary>
 		public static void Delete(long dashboardCellNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dashboardCellNum);
-				return;
-			}
+			
 			Crud.DashboardCellCrud.Delete(dashboardCellNum);
 		}
 
 		///<summary>Gets one DashboardCell from the db.</summary>
 		public static DashboardCell GetOne(long dashboardCellNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<DashboardCell>(MethodBase.GetCurrentMethod(),dashboardCellNum);
-			}
+			
 			return Crud.DashboardCellCrud.SelectOne(dashboardCellNum);
 		}
 
 
 		///<summary></summary>
 		public static void Update(DashboardCell dashboardCell){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dashboardCell);
-				return;
-			}
+			
 			Crud.DashboardCellCrud.Update(dashboardCell);
 		}
 

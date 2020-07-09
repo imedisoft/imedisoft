@@ -96,11 +96,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_SnomedCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _SnomedCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -109,9 +105,7 @@ namespace OpenDentBusiness{
 
 		///<summary>For FormSnomeds to get the list to be displayed in the ListBox. Only gets the first 10,000 in order to remain fast.</summary>		
 		public static List<Snomed> GetByCodeOrDescription(string searchTxt){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Snomed>>(MethodBase.GetCurrentMethod(),searchTxt);
-			}
+			
 			string command="SELECT * FROM snomed WHERE SnomedCode LIKE '%"+POut.String(searchTxt)+"%' "
 				+"OR Description LIKE '%"+POut.String(searchTxt)+"%' ORDER BY SnomedCode";
 			command=DbHelper.LimitOrderBy(command,10000);//Adds " LIMIT 10000" or similarly handles the MySQL or Oracle command.
@@ -120,9 +114,7 @@ namespace OpenDentBusiness{
 
 		///<summary>For FormSnomeds. Must be in the format "code,code,code,code" for it to work properly. Harmless if malformed. Gets exactly the list of codes provided.</summary>		
 		public static List<Snomed> GetByCodes(string searchTxt) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Snomed>>(MethodBase.GetCurrentMethod(),searchTxt);
-			}
+			
 			string[] codes=searchTxt.Split(',');
 			string command="SELECT * FROM snomed WHERE SnomedCode IN (";
 			for(int i=0;i<codes.Length;i++) {
@@ -138,17 +130,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one Snomed from the db.</summary>
 		public static Snomed GetOne(long snomedNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<Snomed>(MethodBase.GetCurrentMethod(),snomedNum);
-			}
+			
 			return Crud.SnomedCrud.SelectOne(snomedNum);
 		}
 
 		///<summary>Directly from db.</summary>
 		public static bool CodeExists(string snomedCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),snomedCode);
-			}
+			
 			string command="SELECT COUNT(*) FROM snomed WHERE SnomedCode = '"+POut.String(snomedCode)+"'";
 			string count=Db.GetCount(command);
 			if(count=="0") {
@@ -159,28 +147,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Snomed snomed){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				snomed.SnomedNum=Meth.GetLong(MethodBase.GetCurrentMethod(),snomed);
-				return snomed.SnomedNum;
-			}
+			
 			return Crud.SnomedCrud.Insert(snomed);
 		}
 
 		///<summary></summary>
 		public static void Update(Snomed snomed) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),snomed);
-				return;
-			}
+			
 			Crud.SnomedCrud.Update(snomed);
 		}
 
 		///<summary></summary>
 		public static void Delete(long snomedNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),snomedNum);
-				return;
-			}
+			
 			//No need to check FKs from other tables since there are none. Snomeds are copied into the DiseaseDef table when in use.
 			string command= "DELETE FROM snomed WHERE SnomedNum = "+POut.Long(snomedNum);
 			Db.NonQ(command);
@@ -188,10 +167,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Delete all for import. Before importing Snomed Codes, delete the existing list.</summary>
 		public static void DeleteAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			string command= "DELETE FROM snomed";
 			Db.NonQ(command);
 		}
@@ -210,9 +186,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the code and description of the snomed directly from the database by code value.  Re-written to not utilize the cache.</summary>
 		public static string GetCodeAndDescription(string snomedCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),snomedCode);
-			}
+			
 			string command="SELECT CONCAT(CONCAT(SnomedCode,'-'),Description) AS CodeAndDescription FROM snomed WHERE SnomedCode='"+POut.String(snomedCode)+"'";
 			return Db.GetScalar(command);
 		}
@@ -234,9 +208,7 @@ namespace OpenDentBusiness{
 			if(string.IsNullOrEmpty(snomedCode)) {
 				return null;
 			}
- 			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Snomed>(MethodBase.GetCurrentMethod(),snomedCode);
-			}
+ 			
 			string command="SELECT * FROM snomed WHERE SnomedCode='"+POut.String(snomedCode)+"'";
 			return Crud.SnomedCrud.SelectOne(command);
 		}
@@ -3580,18 +3552,14 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<Snomed> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Snomed>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM snomed";
 			return Crud.SnomedCrud.SelectMany(command);
 		}
 
 		///<summary>Returns a list of just the codes for use in update or insert logic.</summary>
 		public static List<string> GetAllCodes() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<string> retVal=new List<string>();
 			string command="SELECT SnomedCode FROM snomed";
 			DataTable table=DataCore.GetTable(command);
@@ -3602,9 +3570,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static long GetCodeCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM snomed";
 			return PIn.Long(Db.GetCount(command));
 		}

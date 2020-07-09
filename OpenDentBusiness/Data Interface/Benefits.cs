@@ -33,9 +33,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a list of all benefits for a given list of patplans for one patient.</summary>
 		public static List <Benefit> Refresh(List<PatPlan> listForPat,List<InsSub> subList) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Benefit>>(MethodBase.GetCurrentMethod(),listForPat,subList);
-			}
+			
 			//Only need to check listForPat for null / empty because InsSubs.GetSub() handles a null / empty subList.
 			if(listForPat==null || listForPat.Count==0) {
 				return new List<Benefit>();
@@ -55,9 +53,7 @@ namespace OpenDentBusiness {
 			if(listPatPlans.IsNullOrEmpty()) {
 				return new List<Benefit>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Benefit>>(MethodBase.GetCurrentMethod(),listPatPlans,listInsSubs);
-			}
+			
 			Dictionary<long,long> dictInsSubPlanNum=listInsSubs.GroupBy(x => x.InsSubNum).ToDictionary(x => x.Key,x => x.Last().PlanNum);
 			List<long> listPlanNums=listPatPlans.Select(x => x.InsSubNum).Distinct()
 				.Select(x => dictInsSubPlanNum.TryGetValue(x,out long planNum)?planNum:(InsSubs.GetOne(x)?.PlanNum??0)).Distinct().ToList();
@@ -74,9 +70,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Used in the PlanEdit and FormClaimProc to get a list of benefits for specified plan and patPlan.  patPlanNum can be 0.</summary>
 		public static List<Benefit> RefreshForPlan(long planNum,long patPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Benefit>>(MethodBase.GetCurrentMethod(),planNum,patPlanNum);
-			}
+			
 			string command="SELECT *"//,IFNULL(covcat.CovCatNum,0) AS covorder "
 				+" FROM benefit"
 				//+" LEFT JOIN covcat ON covcat.CovCatNum=benefit.CovCatNum"
@@ -91,10 +85,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(Benefit ben,Benefit benOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ben,benOld);
-				return;
-			}
+			
 			Crud.BenefitCrud.Update(ben,benOld);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			InsEditLogs.MakeLogEntry(ben,benOld,InsEditLogType.Benefit,Security.CurUser.UserNum);
@@ -102,10 +93,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long Insert(Benefit ben) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				ben.BenefitNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ben);
-				return ben.BenefitNum;
-			}
+			
 			long benNum=Crud.BenefitCrud.Insert(ben);
 			if(ben.PlanNum != 0) {//Does not log PatPlan benefits
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
@@ -116,10 +104,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Delete(Benefit ben) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ben);
-				return;
-			}
+			
 			string command="DELETE FROM benefit WHERE BenefitNum ="+POut.Long(ben.BenefitNum);
 			Db.NonQ(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
@@ -1443,9 +1428,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<Benefit> GetForPatPlansAndProcs(List<long> listPatPlanNums,List<long> listCodeNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Benefit>>(MethodBase.GetCurrentMethod(),listPatPlanNums,listCodeNums);
-			}
+			
 			if(listPatPlanNums.Count==0 || listCodeNums.Count==0) {
 				return new List<Benefit>();
 			}
@@ -1595,10 +1578,7 @@ namespace OpenDentBusiness {
 		///<summary>Deletes all benefits for a plan from the database.  Only used in FormInsPlan when picking a plan from the list.  
 		///Need to clear out benefits so that they won't be picked up when choosing benefits for all.</summary>
 		public static void DeleteForPlan(long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),planNum);
-				return;
-			}
+			
 			string command="SELECT * FROM benefit WHERE PlanNum="+POut.Long(planNum);
 			List<Benefit> listBenefits = Crud.BenefitCrud.SelectMany(command);
 			command ="DELETE FROM benefit WHERE PlanNum="+POut.Long(planNum);

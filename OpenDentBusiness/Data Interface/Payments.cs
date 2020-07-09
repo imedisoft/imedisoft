@@ -13,9 +13,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets all payments for the specified patient. This has NOTHING to do with pay splits.  Must use pay splits for accounting.  This is only for display in Account module.</summary>
 		public static List<Payment> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List <Payment>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command=
 				"SELECT * from payment"
 				+" WHERE PatNum="+patNum.ToString();
@@ -24,9 +22,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Get one specific payment from db.</summary>
 		public static Payment GetPayment(long payNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Payment>(MethodBase.GetCurrentMethod(),payNum);
-			}
+			
 			string command=
 				"SELECT * from payment"
 				+" WHERE PayNum = '"+payNum+"'";
@@ -35,9 +31,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Get all specified payments.</summary>
 		public static List<Payment> GetPayments(List<long> payNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List <Payment>>(MethodBase.GetCurrentMethod(),payNums);
-			}
+			
 			if(payNums.Count==0) {
 				return new List <Payment>();
 			}
@@ -55,9 +49,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all payments flagged as a transfer.  Optionally pass in PatNums to only get transfers for specific patients.</summary>
 		public static List<Payment> GetTransfers(params long[] arrayPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List <Payment>>(MethodBase.GetCurrentMethod(),arrayPatNums);
-			}
+			
 			string command="SELECT * FROM payment WHERE PayType=0";
 			if(!arrayPatNums.IsNullOrEmpty()) {
 				command+=$" AND PatNum IN({string.Join(",",arrayPatNums.Select(x => POut.Long(x)))})";
@@ -67,9 +59,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all payments for a family.</summary>
 		public static List<Payment> GetNonSplitForPats(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Payment>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command="SELECT * FROM payment "
 				+"LEFT JOIN paysplit ON paysplit.PayNum=payment.PayNum "
 				+"WHERE payment.PatNum IN("+String.Join(", ",listPatNums)+") "
@@ -79,9 +69,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all payments attached to a single deposit.</summary>
 		public static List<Payment> GetForDeposit(long depositNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List <Payment>>(MethodBase.GetCurrentMethod(),depositNum);
-			}
+			
 			string command=
 				"SELECT * FROM payment "
 				+"WHERE DepositNum = "+POut.Long(depositNum)+" "
@@ -94,9 +82,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all unattached payments for a new deposit slip.  Excludes payments before dateStart.  There is a chance payTypes might be of length 1 or even 0.</summary>
 		public static List<Payment> GetForDeposit(DateTime dateStart,long clinicNum,List<long> payTypes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List <Payment>>(MethodBase.GetCurrentMethod(),dateStart,clinicNum,payTypes);
-			}
+			
 			string command=
 				"SELECT * FROM payment "
 				+"WHERE DepositNum = 0 "
@@ -128,9 +114,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all payments that have a ProcessStatus of OnlinePending. Pass in an empty list to get payments for all clinics.</summary>
 		public static List<Payment> GetNeedingProcessed(List<long> clinicNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Payment>>(MethodBase.GetCurrentMethod(),clinicNums);
-			}
+			
 			string command="SELECT * FROM payment WHERE ProcessStatus="+POut.Int((int)ProcessStat.OnlinePending)+" ";
 			if(clinicNums.Count>0) {
 				command+="AND payment.ClinicNum IN ("+string.Join(",",clinicNums)+") ";
@@ -140,18 +124,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in OpenDentalWebApps to get the payment based off of paysimple's payment ID.</summary>
 		public static Payment GetForExternalId(string externalId) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Payment>(MethodBase.GetCurrentMethod(),externalId);
-			}
+			
 			string command="SELECT * FROM payment WHERE ExternalId='"+POut.String(externalId)+"'";
 			return Crud.PaymentCrud.SelectOne(command);
 		}
 
 		///<summary>Gets all payments that have a ProcessStatus of OnlinePending for the clinic. Pass in a clinicNum of 0 to see all payments.</summary>
 		public static int CountNeedingProcessed(long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),clinicNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM payment WHERE ProcessStatus="+POut.Int((int)ProcessStat.OnlinePending)+" ";
 			if(clinicNum!=0) {
 				command+="AND payment.ClinicNum="+POut.Long(clinicNum);
@@ -172,9 +152,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the number of payments from the passed in paynums that are attached to a deposit other than IgnoreDepositNum.</summary>
 		public static int GetCountAttachedToDeposit(List<long> listPayNums,long ignoreDepositNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),listPayNums,ignoreDepositNum);
-			}
+			
 			if(listPayNums.Count==0) {
 				return 0;
 			}
@@ -205,10 +183,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(Payment pay) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				pay.PayNum=Meth.GetLong(MethodBase.GetCurrentMethod(),pay);
-				return pay.PayNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			pay.SecUserNumEntry=Security.CurUser.UserNum;
 			return Crud.PaymentCrud.Insert(pay);
@@ -216,10 +191,7 @@ namespace OpenDentBusiness{
 
 		///<summary>There's only one place in the program where this is called from.  Date is today, so no need to validate the date.</summary>
 		public static long Insert(Payment pay,bool useExistingPK) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				pay.PayNum=Meth.GetLong(MethodBase.GetCurrentMethod(),pay,useExistingPK);
-				return pay.PayNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			pay.SecUserNumEntry=Security.CurUser.UserNum;
 			return Crud.PaymentCrud.Insert(pay,useExistingPK);
@@ -230,10 +202,7 @@ namespace OpenDentBusiness{
 			if(listPaySplits.IsNullOrEmpty()) {
 				return 0;//Never insert a payment without any payment splits.
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				pay.PayNum=Meth.GetLong(MethodBase.GetCurrentMethod(),pay,listPaySplits);
-				return pay.PayNum;
-			}
+			
 			Insert(pay);//The CRUD will set pay.PayNum accordingly.
 			PaySplits.InsertMany(pay.PayNum,listPaySplits);
 			return pay.PayNum;
@@ -244,10 +213,7 @@ namespace OpenDentBusiness{
 			if(listPaySplits.IsNullOrEmpty() || listAssociatedSplits==null) {
 				return 0;//Never insert a payment without any payment splits.
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				pay.PayNum=Meth.GetLong(MethodBase.GetCurrentMethod(),pay,listPaySplits,listAssociatedSplits);
-				return pay.PayNum;
-			}
+			
 			Insert(pay);//The CRUD will set pay.PayNum accordingly.
 			PaySplits.InsertManyWithAssociated(pay.PayNum,listPaySplits,listAssociatedSplits);
 			return pay.PayNum;
@@ -258,10 +224,7 @@ namespace OpenDentBusiness{
 			if(listPayments.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listPayments);
-				return;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listPayments.ForEach(x => x.SecUserNumEntry=Security.CurUser.UserNum);
 			Crud.PaymentCrud.InsertMany(listPayments);
@@ -331,10 +294,7 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary>Updates this payment.  Must make sure to update the datePay of all attached paysplits so that they are always in synch.  Also need to manually set IsSplit before here.  Will throw an exception if bad date, so surround by try-catch.  Set excludeDepositNum to true from FormPayment to prevent collision from another worksation that just deleted a deposit.</summary>
 		public static void Update(Payment pay,bool excludeDepositNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),pay,excludeDepositNum);
-				return;
-			}
+			
 			if(!PrefC.GetBool(PrefName.AccountAllowFutureDebits) && !PrefC.GetBool(PrefName.FutureTransDatesAllowed) && pay.PayDate.Date>DateTime.Today.Date) {
 				throw new ApplicationException(Lans.g("Payments","Payment Date must not be a future date."));
 			}
@@ -362,10 +322,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates a payment based upon the comparison of an old one versus a new one, ensuring less modification.</summary>
 		public static void Update(Payment payNew,Payment payOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),payNew,payOld);
-				return;
-			}
+			
 			Crud.PaymentCrud.Update(payNew,payOld);
 		}
 		#endregion
@@ -380,10 +337,7 @@ namespace OpenDentBusiness{
 		///<summary>Deletes the payment as well as all splits.
 		///Surround with try catch, throws an exception if trying to delete a payment attached to a deposit.</summary>
 		public static void Delete(long payNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),payNum);
-				return;
-			}
+			
 			string command="SELECT DepositNum,PayAmt FROM payment WHERE PayNum="+POut.Long(payNum);
 			DataTable table=Db.GetTable(command);
 			if(table.Rows.Count==0){
@@ -409,9 +363,7 @@ namespace OpenDentBusiness{
 		#region Misc Methods
 		///<summary>Called just before Allocate in FormPayment.butOK click.  If true, then it will prompt the user before allocating.</summary>
 		public static bool AllocationRequired(double payAmt,long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),payAmt,patNum);
-			}
+			
 			string command="SELECT EstBalance FROM patient "
 				+"WHERE PatNum = "+POut.Long(patNum);
 			DataTable table=Db.GetTable(command);
@@ -437,9 +389,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Only Called only from FormPayment.butOK click.  Only called if the user did not enter any splits.  Usually just adds one split for the current patient.  But if that would take the balance negative, then it loops through all other family members and creates splits for them.  It might still take the current patient negative once all other family members are zeroed out.</summary>
 		public static List<PaySplit> Allocate(Payment pay){//double amtTot,int patNum,Payment payNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),pay);
-			}
+			
 			string command= 
 				"SELECT Guarantor FROM patient "
 				+"WHERE PatNum = "+POut.Long(pay.PatNum);
@@ -725,18 +675,14 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetFamilyBalancePayDatesCounts() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT DateEntry,COUNT(*) FROM payment WHERE PayNote LIKE '"+"Auto-created by Family Balancer tool%"+"' GROUP BY DateEntry";
 			DataTable table=Db.GetTable(command);
 			return table;
 		}
 
 		public static DataTable GetFamilyBalanceTransferForDate(DateTime dateEntry) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateEntry);
-			}
+			
 			string command="SELECT PayNum,PatNum FROM payment WHERE DateEntry="+POut.Date(dateEntry)+" AND PayNote LIKE '"+"Auto-created by Family Balancer tool%"+"'";
 			return Db.GetTable(command);
 		}

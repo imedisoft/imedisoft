@@ -31,23 +31,6 @@ namespace OpenDentBusiness {
 		public string Description;
 		public PayPlanLinkType LinkType;
 
-		[XmlElement(nameof(ProductionTag))]
-		public DtoObject ProductionTagXml {
-			get {
-				if(ProductionTag==null) {
-					return null;
-				}
-				return new DtoObject(ProductionTag,ProductionTag.GetType());
-			}
-			set {
-				if(value==null) {
-					ProductionTag=null;
-					return;
-				}
-				ProductionTag=value.Obj;
-			}
-		}
-
 		///<summary>Construct a payplanproductionentry item for a procedure. Calculates pat portion.</summary>
 		public PayPlanProductionEntry(Procedure proc,PayPlanLink credit,List<ClaimProc> listClaimProcs,List<Adjustment> listAdjustments
 			,List<PaySplit> listPaySplits) 

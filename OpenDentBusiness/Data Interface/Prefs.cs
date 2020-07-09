@@ -120,13 +120,8 @@ namespace OpenDentBusiness{
 		public static void AddCache(ConnectionNames connName) {
 			DataAction.Run(() => {
 				PrefCache cache=new PrefCache();
-				if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-					DataTable table=GetTableFromCache(false);
-					cache.FillCacheFromTable(table);
-				}
-				else {
-					cache.GetTableFromCache(true);
-				}
+				cache.GetTableFromCache(true);
+				
 				_dictCachesForDbs[connName]=cache;
 			},connName);
 		}
@@ -173,11 +168,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_prefCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _prefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -189,19 +179,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a pref of type bool without using the cache.</summary>
 		public static bool GetBoolNoCache(PrefName prefName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),prefName);
-			}
+			
 			string command="SELECT ValueString FROM preference WHERE PrefName = '"+POut.String(prefName.ToString())+"'";
 			return PIn.Bool(Db.GetScalar(command));
 		}
 
 		///<summary></summary>
 		public static void Update(Pref pref) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),pref);
-				return;
-			}
+			
 			//Don't use CRUD here because we want to update based on PrefName instead of PrefNum.  Otherwise, it might fail the first time someone runs 7.6.
 			string command= "UPDATE preference SET "
 				+"ValueString = '"+POut.String(pref.ValueString)+"' "
@@ -238,10 +223,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates a pref of type int without using the cache.  Useful for multithreaded connections.</summary>
 		public static void UpdateIntNoCache(PrefName prefName,int newValue) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),prefName,newValue);
-				return;
-			}
+			
 			string command="UPDATE preference SET ValueString='"+POut.Long(newValue)+"' WHERE PrefName='"+POut.String(prefName.ToString())+"'";
 			Db.NonQ(command);
 		}
@@ -257,12 +239,8 @@ namespace OpenDentBusiness{
 				+"ValueString = '"+POut.Long(newValue)+"' "
 				+"WHERE PrefName = '"+POut.String(prefName.ToString())+"'";
 			bool retVal=true;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				retVal=Meth.GetBool(MethodBase.GetCurrentMethod(),prefName,newValue);
-			}
-			else{
-				Db.NonQ(command);
-			}
+			Db.NonQ(command);
+			
 			Pref pref=new Pref();
 			pref.PrefName=prefName.ToString();
 			pref.ValueString=newValue.ToString();
@@ -292,12 +270,8 @@ namespace OpenDentBusiness{
 				+"ValueString = '"+POut.Double(newValue,doRounding,doUseEnUSFormat)+"' "
 				+"WHERE PrefName = '"+POut.String(prefName.ToString())+"'";
 			bool retVal=true;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				retVal=Meth.GetBool(MethodBase.GetCurrentMethod(),prefName,newValue,doRounding,doUseEnUSFormat);
-			}
-			else {
-				Db.NonQ(command);
-			}
+			Db.NonQ(command);
+			
 			Pref pref=new Pref();
 			pref.PrefName=prefName.ToString();
 			pref.ValueString=newValue.ToString();
@@ -322,12 +296,8 @@ namespace OpenDentBusiness{
 				+"ValueString = '"+POut.Bool(newValue)+"' "
 				+"WHERE PrefName = '"+POut.String(prefName.ToString())+"'";
 			bool retVal=true;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				retVal=Meth.GetBool(MethodBase.GetCurrentMethod(),prefName,newValue,isForced);
-			}
-			else {
-				Db.NonQ(command);
-			}
+			Db.NonQ(command);
+			
 			Pref pref=new Pref();
 			pref.PrefName=prefName.ToString();
 			pref.ValueString=POut.Bool(newValue);
@@ -337,10 +307,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates a bool without using cache classes.  Useful for multithreaded connections.</summary>
 		public static void UpdateBoolNoCache(PrefName prefName,bool newValue) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),prefName,newValue);
-				return;
-			}
+			
 			string command="UPDATE preference SET ValueString='"+POut.Bool(newValue)+"' WHERE PrefName='"+POut.String(prefName.ToString())+"'";
 			Db.NonQ(command);
 		}
@@ -356,12 +323,9 @@ namespace OpenDentBusiness{
 				+"ValueString = '"+POut.String(newValue)+"' "
 				+"WHERE PrefName = '"+POut.String(prefName.ToString())+"'";
 			bool retVal=true;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				retVal=Meth.GetBool(MethodBase.GetCurrentMethod(),prefName,newValue);
-			}
-			else {
-				Db.NonQ(command);
-			}
+			
+			Db.NonQ(command);
+			
 			Pref pref=new Pref();
 			pref.PrefName=prefName.ToString();
 			pref.ValueString=newValue;
@@ -371,10 +335,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates a pref string without using the cache classes.  Useful for multithreaded connections.</summary>
 		public static void UpdateStringNoCache(PrefName prefName,string newValue) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),prefName,newValue);
-				return;
-			}
+			
 			string command="UPDATE preference SET ValueString='"+POut.String(newValue)+"' WHERE PrefName='"+POut.String(prefName.ToString())+"'";
 			Db.NonQ(command);
 		}
@@ -390,12 +351,9 @@ namespace OpenDentBusiness{
 				+"ValueString = '"+POut.String(newValue)+"' "
 				+"WHERE PrefName = '"+POut.String(prefName)+"'";
 			bool retVal=true;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				retVal=Meth.GetBool(MethodBase.GetCurrentMethod(),prefName,newValue);
-			}
-			else {
-				Db.NonQ(command);
-			}
+			
+			Db.NonQ(command);
+			
 			Pref pref=new Pref();
 			pref.PrefName=prefName;
 			pref.ValueString=newValue;
@@ -414,12 +372,9 @@ namespace OpenDentBusiness{
 				+"ValueString = '"+POut.DateT(newValue,false)+"' "
 				+"WHERE PrefName = '"+POut.String(prefName.ToString())+"'";
 			bool retVal=true;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				retVal=Meth.GetBool(MethodBase.GetCurrentMethod(),prefName,newValue);
-			}
-			else{
-				Db.NonQ(command);
-			}
+			
+			Db.NonQ(command);
+			
 			Pref pref=new Pref();
 			pref.PrefName=prefName.ToString();
 			pref.ValueString=POut.DateT(newValue,false);
@@ -429,10 +384,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Only run from PrefL.CheckMySqlVersion41().</summary>
 		public static void ConvertToMySqlVersion41() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			string command="SHOW FULL TABLES WHERE Table_type='BASE TABLE'";//Tables, not views.  Does not work in MySQL 4.1, however we test for MySQL version >= 5.0 in PrefL.
 			DataTable table=Db.GetTable(command);//not MySQL 4.1 compatible. Should not be a problem if following reccomended update process.
 			string[] tableNames=new string[table.Rows.Count];

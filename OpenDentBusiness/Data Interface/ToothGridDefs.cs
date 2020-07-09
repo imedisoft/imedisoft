@@ -94,20 +94,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_ToothGridDefCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _ToothGridDefCache.GetTableFromCache(doRefreshCache);
 		}
 
 		#endregion*/
 
 		public static List<ToothGridDef> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ToothGridDef>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM toothgriddef WHERE toothgriddefnum = "+POut.Long(patNum);
 			return Crud.ToothGridDefCrud.SelectMany(command);
 		}
@@ -117,45 +111,32 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ToothGridDef> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ToothGridDef>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM toothgriddef WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ToothGridDefCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one ToothGridDef from the db.</summary>
 		public static ToothGridDef GetOne(long toothGridDefNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ToothGridDef>(MethodBase.GetCurrentMethod(),toothGridDefNum);
-			}
+			
 			return Crud.ToothGridDefCrud.SelectOne(toothGridDefNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(ToothGridDef toothGridDef){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				toothGridDef.ToothGridDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),toothGridDef);
-				return toothGridDef.ToothGridDefNum;
-			}
+			
 			return Crud.ToothGridDefCrud.Insert(toothGridDef);
 		}
 
 		///<summary></summary>
 		public static void Update(ToothGridDef toothGridDef){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),toothGridDef);
-				return;
-			}
+			
 			Crud.ToothGridDefCrud.Update(toothGridDef);
 		}
 
 		///<summary></summary>
 		public static void Delete(long toothGridDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),toothGridDefNum);
-				return;
-			}
+			
 			string command= "DELETE FROM toothgriddef WHERE ToothGridDefNum = "+POut.Long(toothGridDefNum);
 			Db.NonQ(command);
 		}

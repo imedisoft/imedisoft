@@ -24,10 +24,7 @@ namespace OpenDentBusiness{
 			if(listProcNums.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),priority,treatPlanNum,listProcNums);
-				return;
-			}
+			
 			Db.NonQ($@"UPDATE proctp SET Priority = {POut.Long(priority)}
 				WHERE TreatPlanNum = {POut.Long(treatPlanNum)}
 				AND ProcNumOrig IN({string.Join(",",listProcNums.Select(x => POut.Long(x)))})");
@@ -45,9 +42,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all ProcTPs for a given Patient ordered by ItemOrder.</summary>
 		public static ProcTP[] Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ProcTP[]>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM proctp "
 				+"WHERE PatNum="+POut.Long(patNum)
 				+" ORDER BY ItemOrder";
@@ -56,9 +51,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Ordered by ItemOrder.</summary>
 		public static List<ProcTP> RefreshForTP(long tpNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcTP>>(MethodBase.GetCurrentMethod(),tpNum);
-			}
+			
 			string command="SELECT * FROM proctp "
 				+"WHERE TreatPlanNum="+POut.Long(tpNum)
 				+" ORDER BY ItemOrder";
@@ -68,19 +61,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(ProcTP proc){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),proc);
-				return;
-			}
+			
 			Crud.ProcTPCrud.Update(proc);
 		}
 
 		///<summary></summary>
 		public static long Insert(ProcTP proc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				proc.ProcTPNum=Meth.GetLong(MethodBase.GetCurrentMethod(),proc);
-				return proc.ProcTPNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			proc.SecUserNumEntry=Security.CurUser.UserNum;
 			return Crud.ProcTPCrud.Insert(proc);
@@ -99,10 +86,7 @@ namespace OpenDentBusiness{
 
 		///<summary>There are no dependencies.</summary>
 		public static void Delete(ProcTP proc){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),proc);
-				return;
-			}
+			
 			string command= "DELETE from proctp WHERE ProcTPNum = '"+POut.Long(proc.ProcTPNum)+"'";
  			Db.NonQ(command);
 		}
@@ -124,19 +108,14 @@ namespace OpenDentBusiness{
 
 		///<summary>No dependencies to worry about.</summary>
 		public static void DeleteForTP(long treatPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),treatPlanNum);
-				return;
-			}
+			
 			string command="DELETE FROM proctp "
 				+"WHERE TreatPlanNum="+POut.Long(treatPlanNum);
 			Db.NonQ(command);
 		}
 
 		public static List<ProcTP> GetForProcs(List<long> listProcNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcTP>>(MethodBase.GetCurrentMethod(),listProcNums);
-			}
+			
 			if(listProcNums.Count==0) {
 				return new List<ProcTP>();
 			}
@@ -147,9 +126,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns only three columns from all ProcTPs -- TreatPlanNum, PatNum, and ProcNumOrig.</summary>
 		public static List<ProcTP> GetAllLim() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcTP>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command = "SELECT TreatPlanNum,PatNum,ProcNumOrig FROM proctp";
 			DataTable table = Db.GetTable(command);
 			List<ProcTP> listProcTpsLim = new List<ProcTP>();

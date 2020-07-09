@@ -29,9 +29,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>returns all eServiceSignals for a given service within the date range, inclusive.</summary>
 		public static List<EServiceSignal> GetServiceHistory(eServiceCode serviceCode,DateTime dateStart,DateTime dateStop,int limit=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EServiceSignal>>(MethodBase.GetCurrentMethod(),serviceCode,dateStart,dateStop,limit);
-			}
+			
 			string command="SELECT * FROM eservicesignal "
 				+"WHERE ServiceCode="+POut.Int((int)serviceCode)+" "
 				+"AND SigDateTime BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateStop.Date.AddDays(1))+" "
@@ -44,9 +42,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the last known status for the given eService.</summary>
 		public static eServiceSignalSeverity GetServiceStatus(eServiceCode serviceCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<eServiceSignalSeverity>(MethodBase.GetCurrentMethod(),serviceCode);
-			}
+			
 			//The only statuses within the eServiceSignalSeverity enum are NotEnabled, Working, and Critical.
 			//All other statuses are used for logging purposes and should not be considered within this method.
 			string command="SELECT * FROM eservicesignal WHERE ServiceCode="+POut.Int((int)serviceCode)+" "
@@ -64,9 +60,7 @@ namespace OpenDentBusiness{
 		///Returns Critical if a signal has not been entered in the last 5 minutes.
 		///Returns Error if there are ANY error signals that have not been processed.</summary>
 		public static eServiceSignalSeverity GetListenerServiceStatus() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<eServiceSignalSeverity>(MethodBase.GetCurrentMethod());
-			}
+			
 			//Additionally, this query will run a subselect to get the count of all unprocessed errors.
 			//Running that query as a subselect here simply saves an extra call to the database.
 			//This subselect should be fine to run here since the query is limited to one result and the count of unprocessed errors should be small.
@@ -107,10 +101,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Also inserts an EConnectorError Alert where applicable.</summary>
 		public static long Insert(EServiceSignal eServiceSignal) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				eServiceSignal.EServiceSignalNum=Meth.GetLong(MethodBase.GetCurrentMethod(),eServiceSignal);
-				return eServiceSignal.EServiceSignalNum;
-			}
+			
 			//If this is an error and the EConnectorError alert is not already present, create it now.
 			if(eServiceSignal.Severity==eServiceSignalSeverity.Error && AlertItems.RefreshForType(AlertType.EConnectorError).Count==0) {
 				//Create an alert.
@@ -128,10 +119,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Inserts a healthy heartbeat.</summary>
 		public static void InsertHeartbeatForService(eServiceCode serviceCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),serviceCode);
-				return;
-			}
+			
 			AlertItems.DeleteFor(AlertType.EConnectorDown);
 			string command="SELECT * FROM eservicesignal WHERE ServiceCode="+POut.Int((int)serviceCode)
 				+" AND Severity IN ("
@@ -162,19 +150,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(EServiceSignal eServiceSignal) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),eServiceSignal);
-				return;
-			}
+			
 			Crud.EServiceSignalCrud.Update(eServiceSignal);
 		}
 
 		///<summary>Sets IsProcessed to true on all eService signals of the passed in severity.</summary>
 		public static void ProcessSignalsForSeverity(eServiceSignalSeverity severity) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),severity);
-				return;
-			}
+			
 			string command="UPDATE eservicesignal SET IsProcessed=1 WHERE Severity="+POut.Int((int)severity);
 			Db.NonQ(command);
 			if(severity==eServiceSignalSeverity.Error) { //Delete corresponding alert.
@@ -184,10 +166,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Sets IsProcessed to true on eService signals of Error severity that are within 15 minutes of the passed in DateTime.</summary>
 		public static void ProcessErrorSignalsAroundTime(DateTime dateTime) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dateTime);
-				return;
-			}
+			
 			if(dateTime.Year<1880) {
 				return;//Nothing to do.
 			}
@@ -202,45 +181,32 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EServiceSignal> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EServiceSignal>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM eservicesignal WHERE PatNum = "+POut.Long(patNum);
 			return Crud.EServiceSignalCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one EServiceSignal from the db.</summary>
 		public static EServiceSignal GetOne(long eServiceSignalNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EServiceSignal>(MethodBase.GetCurrentMethod(),eServiceSignalNum);
-			}
+			
 			return Crud.EServiceSignalCrud.SelectOne(eServiceSignalNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(EServiceSignal eServiceSignal){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				eServiceSignal.EServiceSignalNum=Meth.GetLong(MethodBase.GetCurrentMethod(),eServiceSignal);
-				return eServiceSignal.EServiceSignalNum;
-			}
+			
 			return Crud.EServiceSignalCrud.Insert(eServiceSignal);
 		}
 
 		///<summary></summary>
 		public static void Update(EServiceSignal eServiceSignal){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),eServiceSignal);
-				return;
-			}
+			
 			Crud.EServiceSignalCrud.Update(eServiceSignal);
 		}
 
 		///<summary></summary>
 		public static void Delete(long eServiceSignalNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),eServiceSignalNum);
-				return;
-			}
+			
 			string command= "DELETE FROM eservicesignal WHERE EServiceSignalNum = "+POut.Long(eServiceSignalNum);
 			Db.NonQ(command);
 		}

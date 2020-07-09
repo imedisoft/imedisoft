@@ -14,9 +14,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of clinics that are associated to any clones of the master patient passed in (patNumFrom).
 		///This method will include the clinic for the master patient passed in.</summary>
 		public static List<Clinic> GetClinicsForClones(long patNumFrom) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Clinic>>(MethodBase.GetCurrentMethod(),patNumFrom);
-			}
+			
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				throw new ApplicationException("GetClinicsForClones is not currently Oracle compatible.  Please call support.");
 			}
@@ -35,9 +33,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns a dicitonary such that the key is a clinicNum and the value is a count of patients whith a matching patient.ClinicNum.
 		///Excludes all patients with PatStatus of Deleted, Archived, Deceased, or NonPatient unless IsAllStatuses is set to true.</summary>
 		public static SerializableDictionary<long,int> GetClinicalPatientCount(bool IsAllStatuses=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,int>(MethodBase.GetCurrentMethod(),IsAllStatuses);
-			}
+			
 			string command="SELECT ClinicNum,COUNT(*) AS Count FROM patient ";
 			if(!IsAllStatuses) {
 				command+="WHERE PatStatus NOT IN ("+POut.Int((int)PatientStatus.Deleted)+","+POut.Int((int)PatientStatus.Archived)+","
@@ -66,9 +62,7 @@ namespace OpenDentBusiness{
 			if(arrPharmacyNums.Length==0) {
 				return dict;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SerializableDictionary<long,List<Clinic>>>(MethodBase.GetCurrentMethod(),arrPharmacyNums);
-			}
+			
 			string command="SELECT pharmclinic.PharmacyNum,clinic.* "
 				+"FROM clinic "
 				+"INNER JOIN pharmclinic ON pharmclinic.ClinicNum=clinic.ClinicNum "
@@ -180,11 +174,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_clinicCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _clinicCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -193,10 +183,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Clinic clinic,bool useExistingPK = false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				clinic.ClinicNum=Meth.GetLong(MethodBase.GetCurrentMethod(),clinic,useExistingPK);
-				return clinic.ClinicNum;
-			}
+			
 			return Crud.ClinicCrud.Insert(clinic,useExistingPK);
 		}
 
@@ -313,27 +300,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(Clinic clinic){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clinic);
-				return;
-			}
+			
 			Crud.ClinicCrud.Update(clinic);
 		}
 
 		///<summary>Only sync changed fields.</summary>
 		public static bool Update(Clinic clinic,Clinic oldClinic) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),clinic,oldClinic);
-			}
+			
 			return Crud.ClinicCrud.Update(clinic,oldClinic);
 		}
 
 		///<summary>Checks dependencies first.  Throws exception if can't delete.</summary>
 		public static void Delete(Clinic clinic) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clinic);
-				return;
-			}
+			
 			//Check FK dependencies.
 			#region Patients
 			string command="SELECT LName,FName FROM patient WHERE ClinicNum ="
@@ -522,9 +501,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns null if clinic not found.  Pulls from database.</summary>
 		public static Clinic GetClinicNoCache(long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Clinic>(MethodBase.GetCurrentMethod(),clinicNum);
-			}
+			
 			string command="SELECT * FROM clinic WHERE ClinicNum="+POut.Long(clinicNum);
 			return Crud.ClinicCrud.SelectOne(command);
 		}
@@ -544,9 +521,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Syncs two supplied lists of Clinics. Returns true if db changes were made.</summary>
 		public static bool Sync(List<Clinic> listNew,List<Clinic> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.ClinicCrud.Sync(listNew,listOld);
 		}
 
@@ -555,9 +530,7 @@ namespace OpenDentBusiness{
 		///  returns the clinic associated to the appointment (scheduled or completed) with the largest date.
 		///Returns null if the patient doesn't have a clinic or if the clinics feature is not activate.</summary>
 		public static Clinic GetClinicForRecall(long recallNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Clinic>(MethodBase.GetCurrentMethod(),recallNum);
-			}
+			
 			if(!PrefC.HasClinicsEnabled) {
 				return null;
 			}
@@ -585,9 +558,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of all clinics.  Doesn't use the cache.  Includes hidden clinics.</summary>
 		public static List<Clinic> GetClinicsNoCache() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Clinic>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM clinic";
 			return Crud.ClinicCrud.SelectMany(command);
 		}

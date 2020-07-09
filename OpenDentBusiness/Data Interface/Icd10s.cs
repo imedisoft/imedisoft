@@ -95,11 +95,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_Icd10Cache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _Icd10Cache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -108,35 +104,25 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Icd10 icd10){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				icd10.Icd10Num=Meth.GetLong(MethodBase.GetCurrentMethod(),icd10);
-				return icd10.Icd10Num;
-			}
+			
 			return Crud.Icd10Crud.Insert(icd10);
 		}
 
 		///<summary></summary>
 		public static void Update(Icd10 icd10) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),icd10);
-				return;
-			}
+			
 			Crud.Icd10Crud.Update(icd10);
 		}
 
 		public static List<Icd10> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Icd10>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM icd10";
 			return Crud.Icd10Crud.SelectMany(command);
 		}
 
 		///<summary>Returns a list of just the codes for use in update or insert logic.</summary>
 		public static List<string> GetAllCodes() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<string> retVal=new List<string>();
 			string command="SELECT Icd10Code FROM icd10";
 			DataTable table=DataCore.GetTable(command);
@@ -148,27 +134,21 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the total number of ICD10 codes.  Some rows in the ICD10 table based on the IsCode column.</summary>
 		public static long GetCodeCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM icd10 WHERE IsCode!=0";
 			return PIn.Long(Db.GetCount(command));
 		}
 		
 		///<summary>Gets one ICD10 object directly from the database by CodeValue.  If code does not exist, returns null.</summary>
 		public static Icd10 GetByCode(string Icd10Code) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Icd10>(MethodBase.GetCurrentMethod(),Icd10Code);
-			}
+			
 			string command="SELECT * FROM icd10 WHERE Icd10Code='"+POut.String(Icd10Code)+"'";
 			return Crud.Icd10Crud.SelectOne(command);
 		}
 
 		///<summary>Gets all ICD10 objects directly from the database by CodeValues.  If codes don't exist, it will return an empty list.</summary>
 		public static List<Icd10> GetByCodes(List<string> listIcd10Codes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Icd10>>(MethodBase.GetCurrentMethod(),listIcd10Codes);
-			}
+			
 			if(listIcd10Codes==null || listIcd10Codes.Count==0) {
 				return new List<Icd10>();
 			}
@@ -178,9 +158,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Directly from db.</summary>
 		public static bool CodeExists(string Icd10Code) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),Icd10Code);
-			}
+			
 			string command="SELECT COUNT(*) FROM icd10 WHERE Icd10Code='"+POut.String(Icd10Code)+"'";
 			string count=Db.GetCount(command);
 			if(count=="0") {
@@ -190,9 +168,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<Icd10> GetBySearchText(string searchText) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Icd10>>(MethodBase.GetCurrentMethod(),searchText);
-			}
+			
 			string[] searchTokens=searchText.Split(' ');
 			string command=@"SELECT * FROM icd10 ";
 			for(int i=0;i<searchTokens.Length;i++) {
@@ -203,9 +179,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one Icd10 from the db.</summary>
 		public static Icd10 GetOne(long icd10Num){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<Icd10>(MethodBase.GetCurrentMethod(),icd10Num);
-			}
+			
 			return Crud.Icd10Crud.SelectOne(icd10Num);
 		}
 
@@ -224,19 +198,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Icd10> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Icd10>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM icd10 WHERE PatNum = "+POut.Long(patNum);
 			return Crud.Icd10Crud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(long icd10Num) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),icd10Num);
-				return;
-			}
+			
 			string command= "DELETE FROM icd10 WHERE Icd10Num = "+POut.Long(icd10Num);
 			Db.NonQ(command);
 		}

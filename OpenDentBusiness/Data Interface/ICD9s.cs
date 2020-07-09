@@ -68,11 +68,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_ICD9Cache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _ICD9Cache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -80,9 +76,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ICD9> GetByCodeOrDescription(string searchTxt){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ICD9>>(MethodBase.GetCurrentMethod(),searchTxt);
-			}
+			
 			string command="SELECT * FROM icd9 WHERE ICD9Code LIKE '%"+POut.String(searchTxt)+"%' "
 				+"OR Description LIKE '%"+POut.String(searchTxt)+"%'";
 			return Crud.ICD9Crud.SelectMany(command);
@@ -90,35 +84,27 @@ namespace OpenDentBusiness{
 		
 		///<summary>Gets one ICD9 from the db.</summary>
 		public static ICD9 GetOne(long iCD9Num){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ICD9>(MethodBase.GetCurrentMethod(),iCD9Num);
-			}
+			
 			return Crud.ICD9Crud.SelectOne(iCD9Num);
 		}
 
 		///<summary></summary>
 		public static List<ICD9> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ICD9>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM icd9";
 			return Crud.ICD9Crud.SelectMany(command);
 		}
 
 		///<summary>Returns the total count of ICD9 codes.  ICD9 codes cannot be hidden.</summary>
 		public static long GetCodeCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM icd9";
 			return PIn.Long(Db.GetCount(command));
 		}
 
 		///<summary>Directly from db.</summary>
 		public static bool CodeExists(string iCD9Code) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),iCD9Code);
-			}
+			
 			string command="SELECT COUNT(*) FROM icd9 WHERE ICD9Code = '"+POut.String(iCD9Code)+"'";
 			string count=Db.GetCount(command);
 			if(count=="0") {
@@ -129,28 +115,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ICD9 icd9){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				icd9.ICD9Num=Meth.GetLong(MethodBase.GetCurrentMethod(),icd9);
-				return icd9.ICD9Num;
-			}
+			
 			return Crud.ICD9Crud.Insert(icd9);
 		}
 
 		///<summary></summary>
 		public static void Update(ICD9 icd9) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),icd9);
-				return;
-			}
+			
 			Crud.ICD9Crud.Update(icd9);
 		}
 
 		///<summary></summary>
 		public static void Delete(long icd9Num) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),icd9Num);
-				return;
-			}
+			
 			string command="SELECT LName,FName,patient.PatNum FROM patient,disease,diseasedef,icd9 WHERE "
 				+"patient.PatNum=disease.PatNum "
 				+"AND disease.DiseaseDefNum=diseasedef.DiseaseDefNum "
@@ -175,9 +152,7 @@ namespace OpenDentBusiness{
 
 		///<summary>This method uploads only the ICD9s that are used by the disease table. This is to reduce upload time.</summary>
 		public static List<long> GetChangedSinceICD9Nums(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			//string command="SELECT ICD9Num FROM icd9 WHERE DateTStamp > "+POut.DateT(changedSince);//Dennis: delete this line later
 			string command="SELECT ICD9Num FROM icd9 WHERE DateTStamp > "+POut.DateT(changedSince)
 				+" AND ICD9Num in (SELECT ICD9Num FROM disease)";
@@ -191,9 +166,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used along with GetChangedSinceICD9Nums</summary>
 		public static List<ICD9> GetMultICD9s(List<long> icd9Nums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ICD9>>(MethodBase.GetCurrentMethod(),icd9Nums);
-			}
+			
 			string strICD9Nums="";
 			DataTable table;
 			if(icd9Nums.Count>0) {
@@ -232,9 +205,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns true if descriptions have not been updated to non-Caps Lock.  Always returns false if not MySQL.</summary>
 		public static bool IsOldDescriptions() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod());
-			}
+			
 			if(DataConnection.DBtype!=DatabaseType.MySql) {
 				return false;
 			}
@@ -247,9 +218,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of just the codes for use in update or insert logic.</summary>
 		public static List<string> GetAllCodes() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<string> retVal=new List<string>();
 			string command="SELECT icd9code FROM icd9";
 			DataTable table=DataCore.GetTable(command);

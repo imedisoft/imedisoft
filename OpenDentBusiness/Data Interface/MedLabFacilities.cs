@@ -28,9 +28,7 @@ namespace OpenDentBusiness{
 		///If the facility doesn't exist, it's inserted.  Returns the MedLabFacilityNum for the facility inserted or found.
 		///Doesn't need any indexes, this runs in under a second with 100k worst case scenario rows (identical data).</summary>
 		public static long InsertIfNotInDb(MedLabFacility medLabFacility) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),medLabFacility);
-			}
+			
 			string command="SELECT * FROM medlabfacility "
 				+"WHERE FacilityName='"+POut.String(medLabFacility.FacilityName)+"' "
 				+"AND Address='"+POut.String(medLabFacility.Address)+"' "
@@ -50,9 +48,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one MedLabFacility from the db.</summary>
 		public static MedLabFacility GetOne(long medLabFacilityNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<MedLabFacility>(MethodBase.GetCurrentMethod(),medLabFacilityNum);
-			}
+			
 			return Crud.MedLabFacilityCrud.SelectOne(medLabFacilityNum);
 		}
 
@@ -95,37 +91,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<MedLabFacility> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedLabFacility>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM medlabfacility WHERE PatNum = "+POut.Long(patNum);
 			return Crud.MedLabFacilityCrud.SelectMany(command);
 		}
 		
 		///<summary></summary>
 		public static long Insert(MedLabFacility medLabFacility){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				medLabFacility.MedLabFacilityNum=Meth.GetLong(MethodBase.GetCurrentMethod(),medLabFacility);
-				return medLabFacility.MedLabFacilityNum;
-			}
+			
 			return Crud.MedLabFacilityCrud.Insert(medLabFacility);
 		}
 
 		///<summary></summary>
 		public static void Update(MedLabFacility medLabFacility){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medLabFacility);
-				return;
-			}
+			
 			Crud.MedLabFacilityCrud.Update(medLabFacility);
 		}
 
 		///<summary></summary>
 		public static void Delete(long medLabFacilityNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medLabFacilityNum);
-				return;
-			}
+			
 			string command= "DELETE FROM medlabfacility WHERE MedLabFacilityNum = "+POut.Long(medLabFacilityNum);
 			Db.NonQ(command);
 		}

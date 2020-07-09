@@ -69,9 +69,7 @@ namespace OpenDentBusiness{
     #region Database Calls
 		///<summary>Gets one email message from the database.</summary>
 		public static EmailMessage GetOne(long msgNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EmailMessage>(MethodBase.GetCurrentMethod(),msgNum);
-			}
+			
 			string command="SELECT * FROM emailmessage WHERE EmailMessageNum = "+POut.Long(msgNum);
 			EmailMessage emailMessage=Crud.EmailMessageCrud.SelectOne(msgNum);
 			if(emailMessage!=null) {
@@ -84,9 +82,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all inbox email messages where EmailMessage.RecipientAddress==emailAddressInbox, or returns webmail messages instead.  
 		///Pass in 0 for provNum to get email messages, pass in the current user's provNum to get webmail messages.</summary>
 		public static List<EmailMessage> GetMailboxForAddress(EmailAddress emailAddress,DateTime dateFrom,DateTime dateTo,params MailboxType[] arrayMailBoxTypes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EmailMessage>>(MethodBase.GetCurrentMethod(),emailAddress,dateFrom,dateTo,arrayMailBoxTypes);
-			}
+			
 			//Use Reflection to get all the fields of EmailMessage to construct the query.  We do this instead of SELECT * because we want to limit the
 			//amount of data loaded into memory from the BodyText and RawEmailIn columns.  Using Reflection allows us to add fields to the EmailMessage 
 			//class and not need to return to this method and manually alter it.
@@ -179,9 +175,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the list of historically used email addresses.</summary>
 		public static List<string> GetHistoricalEmailAddresses(EmailAddress emailAddress) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod(),emailAddress);
-			}
+			
 			string fromAddress=POut.String(EmailMessages.GetAddressSimple(emailAddress.EmailUsername).Trim());
 			string recipientAddress=POut.String(emailAddress.EmailUsername.Trim());
 			string command=@"SELECT 
@@ -236,9 +230,6 @@ namespace OpenDentBusiness{
     ///<summary>Goes to the db and returns messages that match the passed-in params.
     ///Does not search on fields that are passed-in blank, 0, or DateTime.MinVal (depending on type).</summary>
     public static List<EmailMessage> GetBySearch(long searchPatNum,string searchEmail,DateTime dateFrom,DateTime dateTo,string searchBody,bool hasAttach) {
-      if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-        return Meth.GetObject<List<EmailMessage>>(MethodBase.GetCurrentMethod(),searchPatNum,searchEmail,dateFrom,dateTo,searchBody,hasAttach);
-      }
       string command="SELECT * FROM emailmessage "
         +"WHERE TRUE ";
       if(searchPatNum!=0) {
@@ -272,9 +263,7 @@ namespace OpenDentBusiness{
     }
 
 		public static List<EmailMessage> GetWebMailForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EmailMessage>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			List<long> listPatNums=Patients.GetPatNumsForPhi(patNum);//Guaranteed to have at least one value (the patNum passed in).
 			string command="SELECT * FROM emailmessage "
 				+"WHERE PatNumSubj IN("+string.Join(",",listPatNums)+") "
@@ -289,9 +278,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Key: ProvNum. Value: # Unread Webmails. Returns how many webmails each provider has marked as unread (WebMailRecieved).</summary>
 		public static SerializableDictionary<long,long> GetProvUnreadWebMailCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SerializableDictionary<long,long>>(MethodBase.GetCurrentMethod());
-			}
+			
 			//Group by provnum 
 			string command="SELECT ProvNumWebMail,COUNT(*) CountWebMail FROM EmailMessage"
 				+" WHERE SentOrReceived="+POut.Int((int)EmailSentOrReceived.WebMailReceived) 
@@ -305,10 +292,7 @@ namespace OpenDentBusiness{
 		///<summary>If isAttachmentSyncNeeded is true, then it will automatically sync attachments.  Otherwise, attachments will not be modified.
 		///The Patient Portal will pass in an object with an empty attachment list, but that does not mean that the attachments should be deleted.</summary>
 		public static void Update(EmailMessage message,EmailMessage messageOld=null,bool isAttachmentSyncNeeded=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),message,messageOld,isAttachmentSyncNeeded);
-				return;
-			}
+			
 			if(messageOld==null) {
 				Crud.EmailMessageCrud.Update(message);
 			}
@@ -326,9 +310,6 @@ namespace OpenDentBusiness{
 		///<summary>Updates SentOrReceived and saves changes to db.  Better than using Update(), because does not delete and add attachments back into db.
     ///Returns the new EmailSentOrReceived Status.</summary>
 		public static EmailSentOrReceived UpdateSentOrReceivedRead(EmailMessage emailMessage) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-        return Meth.GetObject<EmailSentOrReceived>(MethodBase.GetCurrentMethod(),emailMessage);
-			}
 			EmailSentOrReceived sentOrReceived=emailMessage.SentOrReceived;
 			if(emailMessage.SentOrReceived==EmailSentOrReceived.Received) {
 				sentOrReceived=EmailSentOrReceived.Read;
@@ -350,9 +331,6 @@ namespace OpenDentBusiness{
 		///<summary>Updates SentOrReceived and saves changes to db.  Better than using Update(), because does not delete and add attachments back into db.
     ///Returns the new status.</summary>
 		public static EmailSentOrReceived UpdateSentOrReceivedUnread(EmailMessage emailMessage) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-        return Meth.GetObject<EmailSentOrReceived>(MethodBase.GetCurrentMethod(),emailMessage);
-			}
 			EmailSentOrReceived sentOrReceived=emailMessage.SentOrReceived;
 			if(emailMessage.SentOrReceived==EmailSentOrReceived.Read) {
 				sentOrReceived=EmailSentOrReceived.Received;
@@ -373,10 +351,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates SentOrReceived and saves changes to db.  Better than using Update(), because does not delete and add attachments back into db.</summary>
 		public static void UpdatePatNum(EmailMessage emailMessage) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),emailMessage);
-				return;
-			}
+			
 			string command="UPDATE emailmessage SET PatNum="+POut.Long(emailMessage.PatNum)+" WHERE EmailMessageNum="+POut.Long(emailMessage.EmailMessageNum);
 			Db.NonQ(command);
 			if(emailMessage.Attachments==null) {
@@ -393,10 +368,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(EmailMessage message) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				message.EmailMessageNum=Meth.GetLong(MethodBase.GetCurrentMethod(),message);
-				return message.EmailMessageNum;
-			}
+			
 			Crud.EmailMessageCrud.Insert(message);
 			//now, insert all the attaches.
 			for(int i=0;i<message.Attachments.Count;i++) {
@@ -408,10 +380,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(EmailMessage message){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),message);
-				return;
-			}
+			
 			if(message.EmailMessageNum==0){
 				return;//this prevents deletion of all commlog entries of something goes wrong.
 			}
@@ -603,10 +572,7 @@ namespace OpenDentBusiness{
 		///This function throttles the Ack responses to prevent the email host from flagging the emailAddressFrom as a spam account.  The throttle speed is one Ack per 60 seconds (to mimic human behavior).
 		///Throws exceptions.</summary>
 		public static void SendOldestUnsentAck(EmailAddress emailAddressFrom) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),emailAddressFrom);
-				return;
-			}
+			
 			string command;
 			//Get the time that the last Direct Ack was sent for the From address.
 			command=DbHelper.LimitOrderBy(
@@ -853,8 +819,7 @@ namespace OpenDentBusiness{
 		private static void WireEmailUnsecure(EmailMessage emailMessage,EmailAddress emailAddress,NameValueCollection nameValueCollectionHeaders,bool hasRetried=false,params AlternateView[] arrayAlternateViews) {
 			//No need to check RemotingRole; no call to db.
 			//When batch email operations are performed, we sometimes do this check further up in the UI.  This check is here to as a catch-all.
-			if(RemotingClient.RemotingRole!=RemotingRole.ServerWeb//server can send email without checking user
-				&& !Security.IsAuthorized(Permissions.EmailSend,true)) //we need to suppress the message
+			if(!Security.IsAuthorized(Permissions.EmailSend,true)) //we need to suppress the message
 			{
 				return;
 			}

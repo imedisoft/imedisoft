@@ -599,9 +599,6 @@ namespace OpenDentBusiness {
 		#endregion
 		#region PayPlanCredits
 		public static PayPlanCreditLoadData GetLoadDataForPayPlanCredits(long patCurNum,long payPlanCurNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<PayPlanCreditLoadData>(MethodBase.GetCurrentMethod(),patCurNum,payPlanCurNum);
-			}
 			PayPlanCreditLoadData creditData=new PayPlanCreditLoadData();
 			List<long> listPatNums=new List<long> { patCurNum };
 			creditData.ListAdjustments=Adjustments.GetAdjustForPats(listPatNums);

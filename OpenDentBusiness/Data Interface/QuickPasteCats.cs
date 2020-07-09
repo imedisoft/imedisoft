@@ -78,11 +78,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_quickPasteCatCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _quickPasteCatCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -90,28 +85,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(QuickPasteCat cat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				cat.QuickPasteCatNum=Meth.GetLong(MethodBase.GetCurrentMethod(),cat);
-				return cat.QuickPasteCatNum;
-			}
+			
 			return Crud.QuickPasteCatCrud.Insert(cat);
 		}
 
 		///<summary></summary>
 		public static void Update(QuickPasteCat cat){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cat);
-				return;
-			}
+			
 			Crud.QuickPasteCatCrud.Update(cat);
 		}
 
 		///<summary></summary>
 		public static void Delete(QuickPasteCat cat){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cat);
-				return;
-			}
+			
 			string command="DELETE from quickpastecat WHERE QuickPasteCatNum = '"
 				+POut.Long(cat.QuickPasteCatNum)+"'";
  			Db.NonQ(command);
@@ -159,9 +145,7 @@ namespace OpenDentBusiness{
 
 		///<summary>This should not be passing in two lists. Consider rewriting to only pass in one list and an identifier to get list from DB.</summary>
 		public static bool Sync(List<QuickPasteCat> listNew,List<QuickPasteCat> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.QuickPasteCatCrud.Sync(listNew.Select(x=>x.Copy()).ToList(),listOld.Select(x=>x.Copy()).ToList());
 		}
 	}

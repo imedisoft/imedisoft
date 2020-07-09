@@ -73,11 +73,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_procCodeNoteCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _procCodeNoteCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -85,36 +81,25 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ProcCodeNote> GetList(long codeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcCodeNote>>(MethodBase.GetCurrentMethod(),codeNum);
-			}
+			
 			string command="SELECT * FROM proccodenote WHERE CodeNum="+POut.Long(codeNum);
 			return Crud.ProcCodeNoteCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(ProcCodeNote note) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				note.ProcCodeNoteNum=Meth.GetLong(MethodBase.GetCurrentMethod(),note);
-				return note.ProcCodeNoteNum;
-			}
+			
 			return Crud.ProcCodeNoteCrud.Insert(note);
 		}
 
 		///<summary></summary>
 		public static void Update(ProcCodeNote note){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),note);
-				return;
-			}
+			
 			Crud.ProcCodeNoteCrud.Update(note);
 		}
 
 		public static void Delete(long procCodeNoteNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procCodeNoteNum);
-				return;
-			}
+			
 			string command="DELETE FROM proccodenote WHERE ProcCodeNoteNum = "+POut.Long(procCodeNoteNum);
 			Db.NonQ(command);
 		}

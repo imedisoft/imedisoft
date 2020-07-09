@@ -23,9 +23,6 @@ namespace OpenDentBusiness{
 			if(listRecallNums.IsNullOrEmpty()) {
 				return new List<WebSchedRecall>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<WebSchedRecall>>(MethodBase.GetCurrentMethod(),listRecallNums);
-			}
 			string command="SELECT * FROM webschedrecall WHERE RecallNum IN ("+string.Join(",",listRecallNums.Distinct().Select(x => POut.Long(x)))+") "
 				+" ORDER BY DateTimeEntry DESC";
 			return Crud.WebSchedRecallCrud.SelectMany(command);
@@ -53,9 +50,6 @@ namespace OpenDentBusiness{
 		///<summary>Gets all WebSchedRecalls for which a reminder has not been sent. To get for all clinics, don't include the listClinicNums or pass
 		///in an empty list.</summary>
 		public static List<WebSchedRecall> GetAllUnsent(List<long> listClinicNums=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<WebSchedRecall>>(MethodBase.GetCurrentMethod(),listClinicNums);
-			}
 			//We don't want to include rows that have a status of SendFailed or SendSuccess
 			string command="SELECT * FROM webschedrecall WHERE DateTimeReminderSent < '1880-01-01' "
 				+"AND EmailSendStatus IN("+POut.Int((int)AutoCommStatus.DoNotSend)+", "+POut.Int((int)AutoCommStatus.SendNotAttempted)+") "
@@ -70,35 +64,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(WebSchedRecall webSchedRecall) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				webSchedRecall.WebSchedRecallNum=Meth.GetLong(MethodBase.GetCurrentMethod(),webSchedRecall);
-				return webSchedRecall.WebSchedRecallNum;
-			}
 			return Crud.WebSchedRecallCrud.Insert(webSchedRecall);
 		}
 
 		///<summary></summary>
 		public static void Update(WebSchedRecall webSchedRecall) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),webSchedRecall);
-				return;
-			}
 			Crud.WebSchedRecallCrud.Update(webSchedRecall);
 		}
 
 		///<summary></summary>
 		public static void Delete(long webSchedRecallNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),webSchedRecallNum);
-				return;
-			}
 			Crud.WebSchedRecallCrud.Delete(webSchedRecallNum);
 		}
 
 		public static List<WebSchedRecall> GetByGuidMessageToMobile(string guidMessageToMobile) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<WebSchedRecall>>(MethodBase.GetCurrentMethod(),guidMessageToMobile);
-			}
 			string command=$"SELECT * FROM webschedrecall WHERE GuidMessageToMobile='{POut.String(guidMessageToMobile)}'";
 			return Crud.WebSchedRecallCrud.SelectMany(command);
 		}
@@ -106,10 +85,6 @@ namespace OpenDentBusiness{
 		///<summary>Updates DateTimeReminderSent and makes EmailSendStatus to SendSuccessful if IsForEmail is true and SmsSendStatus if IsForSms is
 		///true.</summary>
 		public static void MarkReminderSent(WebSchedRecall webSchedRecall,DateTime dateTimeReminderSent) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),webSchedRecall,dateTimeReminderSent);
-				return;
-			}
 			webSchedRecall.DateTimeReminderSent=dateTimeReminderSent;
 			if(webSchedRecall.IsForEmail) {
 				webSchedRecall.EmailSendStatus=AutoCommStatus.SendSuccessful;
@@ -175,9 +150,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<WebSchedRecall> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<WebSchedRecall>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM webschedrecall WHERE PatNum = "+POut.Long(patNum);
 			return Crud.WebSchedRecallCrud.SelectMany(command);
 		}

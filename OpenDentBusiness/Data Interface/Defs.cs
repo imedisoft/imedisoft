@@ -12,9 +12,7 @@ namespace OpenDentBusiness {
 		#region Get Methods
 		///<summary>Gets all definitions from the database.  The order mimics the cache.</summary>
 		public static Def[][] GetArrayLongNoCache() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Def[][]>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM definition ORDER BY Category,ItemOrder";
 			DataTable table=Db.GetTable(command);
 			List<Def> list=Crud.DefCrud.TableToList(table);
@@ -27,9 +25,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all non-hidden definitions from the database.  The order mimics the cache.</summary>
 		public static Def[][] GetArrayShortNoCache() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Def[][]>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM definition ORDER BY Category,ItemOrder";
 			DataTable table=Db.GetTable(command);
 			List<Def> list=Crud.DefCrud.TableToList(table);
@@ -58,9 +54,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets an array of definitions from the database.</summary>
 		public static Def[] GetCatList(int myCat){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Def[]>(MethodBase.GetCurrentMethod(),myCat);
-			}
+			
 			string command=
 				"SELECT * from definition"
 				+" WHERE category = '"+myCat+"'"
@@ -215,9 +209,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<Def> GetDefsNoCache(DefCat defCat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Def>>(MethodBase.GetCurrentMethod(),defCat);
-			}
+			
 			string command = "SELECT * FROM definition WHERE Category = "+POut.Int((int)defCat);
 			return Crud.DefCrud.SelectMany(command);
 		}
@@ -242,10 +234,7 @@ namespace OpenDentBusiness {
 		#region Insert
 		///<summary></summary>
 		public static long Insert(Def def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				def.DefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),def);
-				return def.DefNum;
-			}
+			
 			return Crud.DefCrud.Insert(def);
 		}
 		#endregion
@@ -253,10 +242,7 @@ namespace OpenDentBusiness {
 		#region Update
 		///<summary></summary>
 		public static void Update(Def def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			Crud.DefCrud.Update(def);
 		}
 
@@ -271,10 +257,7 @@ namespace OpenDentBusiness {
 		#region Delete
 		///<summary>CAUTION.  This does not perform all validations.  Throws exceptions.</summary>
 		public static void Delete(Def def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			string command;
 			List<string> listCommands=new List<string>();
 			switch(def.Category) {
@@ -387,9 +370,7 @@ namespace OpenDentBusiness {
 		///<summary>Returns true if this definition is in use within the program. Consider enhancing this method if you add a definition category.
 		///Does not check patient billing type or provider specialty since those are handled in their S-class.</summary>
 		public static bool IsDefinitionInUse(Def def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),def);
-			}
+			
 			List<string> listStrCommands=new List<string>();
 			switch(def.Category) {
 				case DefCat.AdjTypes:
@@ -487,10 +468,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Merges old document DocCategory(FK DefNum) into the new DocCategory(FK DefNum).</summary>
 		public static void MergeImageCatDefNums(long defNumFrom, long defNumTo) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),defNumFrom,defNumTo);
-				return;
-			}
+			
 			string command="UPDATE document"
 			+" SET DocCategory="+POut.Long(defNumTo)
 			+" WHERE DocCategory="+POut.Long(defNumFrom);
@@ -602,11 +580,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_defCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _defCache.GetTableFromCache(doRefreshCache);
 		}
 

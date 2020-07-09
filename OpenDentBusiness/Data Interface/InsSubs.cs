@@ -30,20 +30,14 @@ namespace OpenDentBusiness{
 		///<summary>Zeros securitylog FKey column for rows that are using the matching insSubNum as FKey and are related to InsSub.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the InsSub table type.</summary>
 		public static void ClearFkey(long insSubNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insSubNum);
-				return;
-			}
+			
 			Crud.InsSubCrud.ClearFkey(insSubNum);
 		}
 
 		///<summary>Zeros securitylog FKey column for rows that are using the matching insSubNums as FKey and are related to InsSub.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the InsSub table type.</summary>
 		public static void ClearFkey(List<long> listInsSubNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listInsSubNums);
-				return;
-			}
+			
 			Crud.InsSubCrud.ClearFkey(listInsSubNums);
 		}
 		#endregion
@@ -64,18 +58,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one InsSub from the db.</summary>
 		public static InsSub GetOne(long insSubNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<InsSub>(MethodBase.GetCurrentMethod(),insSubNum);
-			}
+			
 			return Crud.InsSubCrud.SelectOne(insSubNum);
 		}
 
 
 		///<summary>Gets a list of InsSubs from the db.</summary>
 		public static List<InsSub> GetMany(List<long> listInsSubNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsSub>>(MethodBase.GetCurrentMethod(),listInsSubNums);
-			}
+			
 			if(listInsSubNums==null || listInsSubNums.Count<1) {
 				return new List<InsSub>();
 			}
@@ -85,9 +75,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets new List for the specified family.  The only insSubs it misses are for claims with no current coverage.  These are handled as needed.</summary>
 		public static List<InsSub> RefreshForFam(Family Fam) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsSub>>(MethodBase.GetCurrentMethod(),Fam);
-			}
+			
 			//The command is written in a nested fashion in order to be compatible with both MySQL and Oracle.
 			string command=
 				"SELECT D.* FROM inssub D,"+
@@ -118,9 +106,7 @@ namespace OpenDentBusiness{
 			if(listPatNums.Count==0) {
 				return new List<InsSub>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsSub>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command="SELECT * FROM inssub WHERE inssub.Subscriber IN ("+string.Join(",",listPatNums.Select(x => POut.Long(x)))+")";
 			return Crud.InsSubCrud.SelectMany(command);
 		}
@@ -128,9 +114,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all of the families and their corresponding InsSubs for all families passed in (saves calling RefreshForFam() one by one).
 		///Returns a dictionary of key: family and all of their corresponding value: InsSubs</summary>
 		public static SerializableDictionary<Family, List<InsSub>> GetDictInsSubsForFams(List<Family> listFamilies) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<Family, List<InsSub>>(MethodBase.GetCurrentMethod(),listFamilies);
-			}
+			
 			SerializableDictionary<Family, List<InsSub>> dictFamilyInsSubs=new SerializableDictionary<Family, List<InsSub>>();
 			if(listFamilies==null || listFamilies.Count < 1) {
 				return dictFamilyInsSubs;
@@ -172,10 +156,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(InsSub insSub,bool useExistingPK) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				insSub.InsSubNum=Meth.GetLong(MethodBase.GetCurrentMethod(),insSub,useExistingPK);
-				return insSub.InsSubNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			insSub.SecUserNumEntry=Security.CurUser.UserNum;
 			insSub.InsSubNum=Crud.InsSubCrud.Insert(insSub,useExistingPK);
@@ -185,19 +166,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(InsSub insSub) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insSub);
-				return;
-			}
+			
 			Crud.InsSubCrud.Update(insSub);
 		}
 
 		///<summary>Throws exception if dependencies.  Also deletes PatPlans tied to the InsSub.</summary>
 		public static void Delete(long insSubNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insSubNum);
-				return;
-			}
+			
 			try {
 				ValidateNoKeys(insSubNum,true);
 			}
@@ -220,10 +195,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Will throw an exception if this InsSub is being used anywhere. Set strict true to test against every check.</summary>
 		public static void ValidateNoKeys(long subNum, bool strict){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),subNum,strict);
-				return;
-			}
+			
 			string command="SELECT 1 FROM claim WHERE InsSubNum="+POut.Long(subNum)+" OR InsSubNum2="+POut.Long(subNum)+" "+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Db.GetScalar(command))) {
 				throw new ApplicationException(Lans.g("FormInsPlan","Subscriber has existing claims and so the subscriber cannot be deleted."));
@@ -247,36 +219,27 @@ namespace OpenDentBusiness{
 		/* jsalmon (11/15/2013) Depricated because inssubs should not be blindly deleted.
 		///<summary>A quick delete that is only used when cancelling out of a new edit window.</summary>
 		public static void Delete(long insSubNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insSubNum);
-				return;
-			}
+			
 			Crud.InsSubCrud.Delete(insSubNum);
 		}
 		 */
 
 		///<summary>Used in FormInsSelectSubscr to get a list of insplans for one subscriber directly from the database.</summary>
 		public static List<InsSub> GetListForSubscriber(long subscriber) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsSub>>(MethodBase.GetCurrentMethod(),subscriber);
-			}
+			
 			string command="SELECT * FROM inssub WHERE Subscriber="+POut.Long(subscriber);
 			return Crud.InsSubCrud.SelectMany(command);
 		}
 
 		public static List<InsSub> GetListForPlanNum(long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsSub>>(MethodBase.GetCurrentMethod(),planNum);
-			}
+			
 			string command="SELECT * FROM inssub WHERE PlanNum="+POut.Long(planNum);
 			return Crud.InsSubCrud.SelectMany(command);
 		}
 
 		///<summary>Only used once.  Gets a count of subscribers from the database that have the specified plan. Used to display in the insplan window.  The returned count never includes the inssub that we're viewing.</summary>
 		public static int GetSubscriberCountForPlan(long planNum,bool excludeSub) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),planNum,excludeSub);
-			}
+			
 			string command="SELECT COUNT(inssub.InsSubNum) "
 				+"FROM inssub "
 				+"WHERE inssub.PlanNum="+POut.Long(planNum)+" ";
@@ -289,9 +252,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Only used once.  Gets a list of subscriber names from the database that have the specified plan. Used to display in the insplan window.  The returned list never includes the inssub that we're viewing.</summary>
 		public static List<string> GetSubscribersForPlan(long planNum,long excludeSub) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod(),planNum,excludeSub);
-			}
+			
 			string command="SELECT CONCAT(CONCAT(LName,', '),FName) "
 				+"FROM inssub LEFT JOIN patient ON patient.PatNum=inssub.Subscriber "
 				+"WHERE inssub.PlanNum="+POut.Long(planNum)+" "
@@ -307,9 +268,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Called from FormInsPlan when user wants to view a benefit note for other subscribers on a plan.  Should never include the current subscriber that the user is editing.  This function will get one note from the database, not including blank notes.  If no note can be found, then it returns empty string.</summary>
 		public static string GetBenefitNotes(long planNum,long subNumExclude) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),planNum,subNumExclude);
-			}
+			
 			string command="SELECT BenefitNotes FROM inssub WHERE BenefitNotes != '' AND PlanNum="+POut.Long(planNum)+" AND InsSubNum !="+POut.Long(subNumExclude)+" "+DbHelper.LimitAnd(1);
 			DataTable table=Db.GetTable(command);
 			if(table.Rows.Count==0) {
@@ -320,19 +279,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Sets all subs to the value passed in. Returns the number of subs affected.</summary>
 		public static long SetAllSubsAssignBen(bool isAssignBen) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),isAssignBen);
-			}
+			
 			string command="UPDATE inssub SET AssignBen="+POut.Bool(isAssignBen)+" WHERE AssignBen!="+POut.Bool(isAssignBen);
 			return Db.NonQ(command);
 		}
 
 		///<summary>This will assign all PlanNums to new value when Create New Plan If Needed is selected and there are multiple subscribers to a plan and an inssub object has been updated to point at a new PlanNum.  The PlanNum values need to be reflected in the claim, claimproc, payplan, and etrans tables, since those all both store inssub.InsSubNum and insplan.PlanNum.</summary>
 		public static void SynchPlanNumsForNewPlan(InsSub SubCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),SubCur);
-				return;
-			}
+			
 			//claim.PlanNum
 			string command="UPDATE claim SET claim.PlanNum="+POut.Long(SubCur.PlanNum)+" "
 				+"WHERE claim.InsSubNum="+POut.Long(SubCur.InsSubNum)+" AND claim.PlanNum!="+POut.Long(SubCur.PlanNum);
@@ -357,9 +311,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the number of subscribers moved.</summary>
 		public static long MoveSubscribers(long insPlanNumFrom,long insPlanNumTo) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),insPlanNumFrom,insPlanNumTo);
-			}
+			
 			List<InsSub> listInsSubsFrom=GetListForPlanNum(insPlanNumFrom);
 			List<long> listBlockedPatNums=new List<long>();
 			//Perform the same validation as when the user manually drops insplans from FormInsPlan using the Drop button.

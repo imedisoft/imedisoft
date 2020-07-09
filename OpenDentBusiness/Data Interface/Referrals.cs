@@ -84,11 +84,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_referralCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _referralCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -96,28 +91,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(Referral refer) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),refer);
-				return;
-			}
+			
 			Crud.ReferralCrud.Update(refer);
 		}
 
 		///<summary></summary>
 		public static long Insert(Referral refer) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				refer.ReferralNum=Meth.GetLong(MethodBase.GetCurrentMethod(),refer);
-				return refer.ReferralNum;
-			}
+			
 			return Crud.ReferralCrud.Insert(refer);
 		}
 
 		///<summary></summary>
 		public static void Delete(Referral refer) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),refer);
-				return;
-			}
+			
 			if(RefAttaches.IsReferralAttached(refer.ReferralNum)) {
 				throw new ApplicationException(Lans.g("FormReferralEdit","Cannot delete Referral because it is attached to patients"));
 			}
@@ -134,9 +120,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Get all matching rows where input email is found in the Email column.</summary>
 		public static List<Referral> GetEmailMatch(string email) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Referral>>(MethodBase.GetCurrentMethod(),email);
-			}
+			
 			string command= "SELECT * FROM referral "
 				+"WHERE IsDoctor=1 AND UPPER(EMail) LIKE '%"+email.ToUpper()+"%'";
 			return Crud.ReferralCrud.SelectMany(command);
@@ -307,9 +291,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Merges two referrals into a single referral. Returns false if both referrals are the same.</summary>
 		public static bool MergeReferrals(long refNumInto,long refNumFrom) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),refNumInto,refNumFrom);
-			}
+			
 			if(refNumInto==refNumFrom) {
 				//Do not merge the same referral onto itself.
 				return false;
@@ -328,9 +310,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the number of refattaches that this referral has.</summary>
 		public static int CountReferralAttach(long referralNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),referralNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM refattach "
 				+"WHERE ReferralNum="+POut.Long(referralNum);
 			return PIn.Int(Db.GetCount(command));
@@ -338,9 +318,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used to check if a specialty is in use when user is trying to hide it.</summary>
 		public static bool IsSpecialtyInUse(long defNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),defNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM referral WHERE Specialty="+POut.Long(defNum);
 			if(Db.GetCount(command)=="0") {
 				return false;

@@ -11,17 +11,13 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets one OrthoCase from the db.</summary>
 		public static OrthoCase GetOne(long orthoCaseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<OrthoCase>(MethodBase.GetCurrentMethod(),orthoCaseNum);
-			}
+			
 			return Crud.OrthoCaseCrud.SelectOne(orthoCaseNum);
 		}
 
 		///<summary>Gets all Ortho Cases for a patient.</summary>
 		public static List<OrthoCase> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoCase>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM orthocase WHERE orthocase.PatNum = "+POut.Long(patNum);
 			return Crud.OrthoCaseCrud.SelectMany(command);
 		}
@@ -31,9 +27,7 @@ namespace OpenDentBusiness{
 			if(listOrthoCaseNums.Count==0) {
 				return new List<OrthoCase>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoCase>>(MethodBase.GetCurrentMethod(),listOrthoCaseNums);
-			}
+			
 			string command=$"SELECT * FROM orthocase WHERE orthocase.OrthoCaseNum IN({string.Join(",",listOrthoCaseNums)})";
 			return Crud.OrthoCaseCrud.SelectMany(command);
 		}
@@ -43,18 +37,14 @@ namespace OpenDentBusiness{
 			if(listPatNums.Count==0) {
 				return new List<OrthoCase>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoCase>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command=$"SELECT * FROM orthocase WHERE orthocase.PatNum IN({string.Join(",",listPatNums)})";
 			return Crud.OrthoCaseCrud.SelectMany(command);
 		}
 
 		///<summary>Gets a Patients Active OrthoCase. Patient can only have one active OrthoCase so it is OK to return 1.</summary>
 		public static OrthoCase GetActiveForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<OrthoCase>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command=$"SELECT * FROM orthocase WHERE orthocase.PatNum={POut.Long(patNum)} AND orthocase.IsActive={POut.Bool(true)}";
 			return Crud.OrthoCaseCrud.SelectOne(command);
 		}
@@ -64,9 +54,7 @@ namespace OpenDentBusiness{
 			if(listPatNums.Count==0) {
 				return new List<OrthoCase>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoCase>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command=$"SELECT * FROM orthocase WHERE orthocase.IsActive={POut.Bool(true)} AND orthocase.PatNum IN({string.Join(",",listPatNums)})";
 			return Crud.OrthoCaseCrud.SelectMany(command);
 		}
@@ -76,10 +64,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary>Insert an OrthoCase into the database. Returns OrthoCaseNum.</summary>
 		public static long Insert(OrthoCase orthoCase) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				orthoCase.OrthoCaseNum=Meth.GetLong(MethodBase.GetCurrentMethod(),orthoCase);
-				return orthoCase.OrthoCaseNum;
-			}
+			
 			return Crud.OrthoCaseCrud.Insert(orthoCase);
 		}
 		#endregion Insert
@@ -87,10 +72,7 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary>Update only data that is different in newOrthoCase.</summary>
 		public static void Update(OrthoCase newOrthoCase,OrthoCase oldOrthoCase) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),newOrthoCase,oldOrthoCase);
-				return;
-			}
+			
 			Crud.OrthoCaseCrud.Update(newOrthoCase,oldOrthoCase);
 		}
 
@@ -107,10 +89,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Set all objects related to orthocases for a patient inactive besides the ones passed in.</summary>
 		public static void DeactivateOthersForPat(long activeOrthoCaseNum,long activeOrthoScheduleNum,long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),activeOrthoCaseNum,activeOrthoScheduleNum,patNum);
-				return;
-			}
+			
 			//Get all orthocase nums to deactivate.
 			List<long> listOrthoCaseNums=Refresh(patNum).Where(x => x.OrthoCaseNum!=activeOrthoCaseNum).Select(x => x.OrthoCaseNum).ToList();
 			if(listOrthoCaseNums.Count<=0) {
@@ -196,10 +175,6 @@ namespace OpenDentBusiness{
 		public static void Delete(long orthoCaseNum,OrthoSchedule orthoSchedule=null,OrthoPlanLink schedulePlanLink=null
 			,List<OrthoProcLink> listProcLinks=null, OrthoPlanLink orthoPlanLinkPatPayPlan=null) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//checked here to save time below
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),orthoCaseNum,orthoSchedule,schedulePlanLink,listProcLinks,orthoPlanLinkPatPayPlan);
-				return;
-			}
 			//Get associated objects if they were not passed in.
 			if(schedulePlanLink==null) {
 				schedulePlanLink=OrthoPlanLinks.GetOneForOrthoCaseByType(orthoCaseNum,OrthoPlanLinkType.OrthoSchedule);

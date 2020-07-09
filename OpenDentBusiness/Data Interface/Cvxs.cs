@@ -95,11 +95,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_CvxCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _CvxCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -108,35 +104,25 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Cvx cvx){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				cvx.CvxNum=Meth.GetLong(MethodBase.GetCurrentMethod(),cvx);
-				return cvx.CvxNum;
-			}
+			
 			return Crud.CvxCrud.Insert(cvx);
 		}
 
 		///<summary></summary>
 		public static void Update(Cvx cvx) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cvx);
-				return;
-			}
+			
 			Crud.CvxCrud.Update(cvx);
 		}
 
 		public static List<Cvx> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Cvx>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM cvx";			
 			return Crud.CvxCrud.SelectMany(command);
 		}
 
 		///<summary>Returns a list of just the codes for use in update or insert logic.</summary>
 		public static List<string> GetAllCodes() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<string> retVal=new List<string>();
 			string command="SELECT CvxCode FROM cvx";
 			DataTable table=DataCore.GetTable(command);
@@ -148,27 +134,21 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one Cvx object directly from the database by CodeValue.  If code does not exist, returns null.</summary>
 		public static Cvx GetByCode(string cvxCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Cvx>(MethodBase.GetCurrentMethod(),cvxCode);
-			}
+			
 			string command="SELECT * FROM Cvx WHERE CvxCode='"+POut.String(cvxCode)+"'";
 			return Crud.CvxCrud.SelectOne(command);
 		}
 
 		///<summary>Gets one Cvx by CvxNum directly from the db.</summary>
 		public static Cvx GetOneFromDb(string cvxCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Cvx>(MethodBase.GetCurrentMethod(),cvxCode);
-			}
+			
 			string command="SELECT * FROM cvx WHERE CvxCode='"+POut.String(cvxCode)+"'";
 			return Crud.CvxCrud.SelectOne(command);
 		}
 
 		///<summary>Directly from db.</summary>
 		public static bool CodeExists(string cvxCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),cvxCode);
-			}
+			
 			string command="SELECT COUNT(*) FROM cvx WHERE CvxCode='"+POut.String(cvxCode)+"'";
 			string count=Db.GetCount(command);
 			if(count=="0") {
@@ -179,17 +159,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the total count of CVX codes.  CVS codes cannot be hidden, but might in the future be set active/inactive using the IsActive flag.</summary>
 		public static long GetCodeCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM cvx";
 			return PIn.Long(Db.GetCount(command));
 		}
 
 		public static List<Cvx> GetBySearchText(string searchText) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Cvx>>(MethodBase.GetCurrentMethod(),searchText);
-			}
+			
 			string[] searchTokens=searchText.Split(' ');
 			string command=@"SELECT * FROM cvx ";
 			for(int i=0;i<searchTokens.Length;i++) {
@@ -204,27 +180,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Cvx> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Cvx>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM cvx WHERE PatNum = "+POut.Long(patNum);
 			return Crud.CvxCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one Cvx from the db.</summary>
 		public static Cvx GetOne(long cvxNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<Cvx>(MethodBase.GetCurrentMethod(),cvxNum);
-			}
+			
 			return Crud.CvxCrud.SelectOne(cvxNum);
 		}
 
 		///<summary></summary>
 		public static void Delete(long cvxNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cvxNum);
-				return;
-			}
+			
 			string command= "DELETE FROM cvx WHERE CvxNum = "+POut.Long(cvxNum);
 			Db.NonQ(command);
 		}

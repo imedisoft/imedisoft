@@ -27,9 +27,7 @@ namespace OpenDentBusiness{
 			if(listClinicNums.Count==0) {
 				return new List<Fee>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Fee>>(MethodBase.GetCurrentMethod(),listClinicNums);
-			}
+			
 			string command="SELECT * FROM fee WHERE ClinicNum IN ("+string.Join(",",listClinicNums.Select(x => POut.Long(x)))+")";
 			return Crud.FeeCrud.SelectMany(command);
 		}
@@ -45,16 +43,6 @@ namespace OpenDentBusiness{
 			if(listClinicNums==null || listClinicNums.Count==0) {
 				//Returning an empty list here would be detrimental to the FeeCache.
 				throw new ApplicationException("Invalid listClinicNums passed into GetByFeeSchedNumsClinicNums()");
-			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				//Unusual Middle Tier check. This method can cause out of memory exceptions when called over Middle Tier, so we are batching into multiple
-				//calls of 100 fee schedules at a time.
-				List<FeeLim> listFeeLims=new List<FeeLim>();
-				for(int i=0;i<listFeeSchedNums.Count;i+=100) {
-					List<long> listFeeSchedsNumsThisBatch=listFeeSchedNums.GetRange(i,Math.Min(100,listFeeSchedNums.Count-i));
-					listFeeLims.AddRange(Meth.GetObject<List<FeeLim>>(MethodBase.GetCurrentMethod(),listFeeSchedsNumsThisBatch,listClinicNums));
-				}
-				return listFeeLims;
 			}
 			string command="SELECT FeeNum,Amount,FeeSched,CodeNum,ClinicNum,ProvNum,SecDateTEdit FROM fee "
 				+"WHERE FeeSched IN ("+string.Join(",",listFeeSchedNums.Select(x => POut.Long(x)))+") "
@@ -73,9 +61,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Counts the number of fees in the db for this fee sched, including all clinic and prov overrides.</summary>
 		public static int GetCountByFeeSchedNum(long feeSchedNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),feeSchedNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM fee WHERE FeeSched ="+POut.Long(feeSchedNum);
 			return PIn.Int(Db.GetCount(command));
 		}
@@ -94,9 +80,7 @@ namespace OpenDentBusiness{
 		///The goal of this method is to have a way to check the database for "duplicate" fees before adding more fees to the db. Set doGetExactMatch to
 		///true to exactly match all passed in parameters.</summary>
 		public static Fee GetFeeFromDb(long codeNum,long feeSchedNum,long clinicNum=0,long provNum=0,bool doGetExactMatch=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Fee>(MethodBase.GetCurrentMethod(),codeNum,feeSchedNum,clinicNum,provNum,doGetExactMatch);
-			}
+			
 			if(FeeScheds.IsGlobal(feeSchedNum) && !doGetExactMatch) {
 				clinicNum=0;
 				provNum=0;
@@ -183,9 +167,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets fees for up to three feesched/clinic/prov combos. If filtering with a ClinicNum and/or ProvNum, it only includes fees that match that clinicNum/provnum or have zero.  This reduces the result set if there are clinic or provider overrides. This could easily scale to many thousands of clinics and providers.</summary>
 		public static List<Fee> GetListForScheds(long feeSched1,long clinic1=0,long prov1=0,long feeSched2=0,long clinic2=0,long prov2=0,long feeSched3=0,long clinic3=0,long prov3=0){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Fee>>(MethodBase.GetCurrentMethod(),feeSched1,clinic1,prov1,feeSched2,clinic2,prov2,feeSched3,clinic3,prov3);
-			}
+			
 			string command="SELECT * FROM fee WHERE "
 				+"(FeeSched="+POut.Long(feeSched1)+" AND (ClinicNum=0 OR ClinicNum="+POut.Long(clinic1)+") AND (ProvNum=0 OR ProvNum="+POut.Long(prov1)+"))";
 			if(feeSched2!=0){
@@ -214,10 +196,7 @@ namespace OpenDentBusiness{
 			//These objects will be cleaned up, so they can have duplicates, zeros, invalid keys, nulls, etc
 			//In some cases, we need to pass in a list of appointments to make sure we've included all possible providers, both ProvNum and ProvHyg
 			//In that case, it's common to leave listProvNumsTreat null because we clearly do not have any of those providers set yet.
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Fee>>(MethodBase.GetCurrentMethod(),listProcedureCodes,listMedicalCodes,listProvNumsTreat,patPriProv,
-					patSecProv,patFeeSched,listInsPlans,listClinicNums,listAppts,listSubstLinks,discountPlan);
-			}
+
 			if(listProcedureCodes==null){
 				return new List<Fee>();
 			}
@@ -366,9 +345,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets fees that exactly match criteria.</summary>
 		public static List<Fee> GetListExact(long feeSched,long clinicNum,long provNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Fee>>(MethodBase.GetCurrentMethod(),feeSched,clinicNum,provNum);
-			}
+			
 			string command="SELECT * FROM fee WHERE "
 				+"FeeSched="+POut.Long(feeSched)+" AND ClinicNum="+POut.Long(clinicNum)+" AND ProvNum="+POut.Long(provNum)+" "
 				+"GROUP BY CodeNum";//There should not be duplicates, but group by codeNum, just in case.
@@ -380,9 +357,7 @@ namespace OpenDentBusiness{
 			if(listClinicNums.IsNullOrEmpty()) {
 				return new List<Fee>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Fee>>(MethodBase.GetCurrentMethod(),feeSched,listClinicNums,provNum);
-			}
+			
 			string command="SELECT * FROM fee WHERE "
 				+"FeeSched="+POut.Long(feeSched)+" AND ClinicNum IN ("+string.Join(",",listClinicNums.Select(x => POut.Long(x)))
 				+") AND ProvNum="+POut.Long(provNum);
@@ -392,9 +367,7 @@ namespace OpenDentBusiness{
 		///<summary>Pass in new list and original list.  This will synch everything with Db.  Leave doCheckFeeSchedGroups set to true unless calling from 
 		///FeeSchedGroups.</summary>
 		public static bool SynchList(List<Fee> listNew,List<Fee> listDB,bool doCheckFeeSchedGroups=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listDB,doCheckFeeSchedGroups);
-			}
+			
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				FeeSchedGroups.SyncGroupFees(listNew,listDB);
 			}
@@ -403,9 +376,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets from Db.  Returns all fees associated to the procedure code passed in.</summary>
 		public static List<Fee> GetFeesForCode(long codeNum,List<long> listClinicNums=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Fee>>(MethodBase.GetCurrentMethod(),codeNum,listClinicNums);
-			}
+			
 			string command="SELECT * FROM fee WHERE CodeNum="+POut.Long(codeNum)+" ";
 			if(listClinicNums!=null && listClinicNums.Count>0) {
 				command+="AND ClinicNum IN("+string.Join(",",listClinicNums.Select(x => POut.Long(x)))+")";
@@ -417,9 +388,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets fees from Db, not including any prov or clinic overrides.</summary>
 		public static List<Fee> GetFeesForCodeNoOverrides(long codeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Fee>>(MethodBase.GetCurrentMethod(),codeNum);
-			}
+			
 			string command="SELECT * FROM fee WHERE CodeNum="+POut.Long(codeNum)+" "
 				+"AND ClinicNum=0 AND ProvNum=0";
 			return Crud.FeeCrud.SelectMany(command);
@@ -474,9 +443,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<Fee> GetManyByFeeNum(List<long> listFeeNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Fee>>(MethodBase.GetCurrentMethod(),listFeeNums);
-			}
+			
 			string command="SELECT * FROM fee WHERE FeeNum IN ("+string.Join(",",listFeeNums)+")";
 			return Crud.FeeCrud.SelectMany(command);
 		}
@@ -487,10 +454,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary>Set doCheckFeeSchedGroups to false when calling this method from FeeSchedGroups to prevent infinitely looping.</summary>
 		public static long Insert(Fee fee,bool doCheckFeeSchedGroups=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				fee.FeeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),fee,doCheckFeeSchedGroups);
-				return fee.FeeNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			fee.SecUserNumEntry=Security.CurUser.UserNum;
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
@@ -504,10 +468,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Bulk Insert.  Only set doCheckFeeSchedGroups to false from FeeSchedGroups.</summary>
 		public static void InsertMany(List<Fee> listFees,bool doCheckFeeSchedGroups=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listFees,doCheckFeeSchedGroups);
-				return;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listFees.ForEach(x => x.SecUserNumEntry=Security.CurUser.UserNum);
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
@@ -520,10 +481,7 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary>Only set doCheckFeeSchedGroups to false from FeeSchedGroups.</summary>
 		public static void Update(Fee fee,bool doCheckFeeSchedGroups=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),fee,doCheckFeeSchedGroups);
-				return;
-			}
+			
 			//Check if this fee is associated to a FeeSchedGroup and update the rest of the group as needed.
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				//If this fee isn't in a group don't bother checking.
@@ -539,10 +497,7 @@ namespace OpenDentBusiness{
 		///<summary>Only set doCheckFeeSchedGroups to false from FeeSchedGroups.</summary>
 		public static void Delete(Fee fee,bool doCheckFeeSchedGroups=true) {
 			//Even though we do not run a query in this method, there is a lot of back and forth and we should get to the server early to ensure less chattiness.
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),fee,doCheckFeeSchedGroups);
-				return;
-			}
+			
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				//If this fee isn't in a group don't bother checking.
 				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched,fee.ClinicNum)!=null) {
@@ -554,10 +509,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(long feeNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),feeNum);
-				return;
-			}
+			
 			ClearFkey(feeNum);
 			string command="DELETE FROM fee WHERE FeeNum="+feeNum;
 			Db.NonQ(command);
@@ -568,10 +520,7 @@ namespace OpenDentBusiness{
 			if(listFeeNums.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listFeeNums,doCheckFeeSchedGroups);
-				return;
-			}
+			
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				FeeSchedGroups.DeleteGroupFees(listFeeNums);
 			}
@@ -582,10 +531,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes all fees for the supplied FeeSched that aren't for the HQ clinic.</summary>
 		public static void DeleteNonHQFeesForSched(long feeSchedNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),feeSchedNum);
-				return;
-			}
+			
 			string command="SELECT FeeNum FROM fee WHERE FeeSched="+POut.Long(feeSchedNum)+" AND ClinicNum!=0";
 			List<long> listFeeNums=Db.GetListLong(command);
 			DeleteMany(listFeeNums);
@@ -593,10 +539,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Deletes all fees with the exact specified FeeSchedule, ClinicNum, and ProvNum combination.</summary>
 		public static void DeleteFees(long feeSched,long clinicNum,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),feeSched,clinicNum,provNum);
-				return;
-			}
+			
 			string command="DELETE FROM fee WHERE "
 				+"FeeSched="+POut.Long(feeSched)+" AND ClinicNum="+POut.Long(clinicNum)+" AND ProvNum="+POut.Long(provNum);
 			Db.NonQ(command);
@@ -637,20 +580,14 @@ namespace OpenDentBusiness{
 		///<summary>Zeros securitylog FKey column for rows that are using the matching feeNum as FKey and are related to Fee.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Fee table type.</summary>
 		public static void ClearFkey(long feeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),feeNum);
-				return;
-			}
+			
 			Crud.FeeCrud.ClearFkey(feeNum);
 		}
 
 		///<summary>Zeros securitylog FKey column for rows that are using the matching feeNums as FKey and are related to Fee.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Fee table type.</summary>
 		public static void ClearFkey(List<long> listFeeNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listFeeNums);
-				return;
-			}
+			
 			Crud.FeeCrud.ClearFkey(listFeeNums);
 		}
 

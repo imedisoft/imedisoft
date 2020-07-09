@@ -31,10 +31,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void SetDeleted(DeletedObjectType objType,long objectNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),objType,objectNum);
-				return;
-			}
+			
 			DeletedObject delObj=new DeletedObject();
 			delObj.ObjectNum=objectNum;
 			delObj.ObjectType=objType;
@@ -45,18 +42,13 @@ namespace OpenDentBusiness{
 			if(listObjectNums.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),objType,listObjectNums);
-				return;
-			}
+			
 			List<DeletedObject> listObjects=listObjectNums.Select(x => new DeletedObject { ObjectNum=x, ObjectType=objType }).ToList();
 			Crud.DeletedObjectCrud.InsertMany(listObjects);
 		}
 
 		public static List<DeletedObject> GetDeletedSince(DateTime changedSince){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DeletedObject>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT * FROM deletedobject WHERE DateTStamp > "+POut.DateT(changedSince);
 			return Crud.DeletedObjectCrud.SelectMany(command);
 		}
@@ -64,9 +56,7 @@ namespace OpenDentBusiness{
 		#region Used only on OD
 		///<summary>The values returned are sent to the webserver.</summary>
 		public static List<long> GetChangedSinceDeletedObjectNums(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT DeletedObjectNum FROM deletedobject WHERE DateTStamp > "+POut.DateT(changedSince);
 			DataTable dt=Db.GetTable(command);
 			List<long> deletedObjectnums = new List<long>(dt.Rows.Count);
@@ -77,9 +67,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<DeletedObject> GetMultDeletedObjects(List<long> deletedObjectNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DeletedObject>>(MethodBase.GetCurrentMethod(),deletedObjectNums);
-			}
+			
 			string strDeletedObjectNums="";
 			DataTable table;
 			if(deletedObjectNums.Count>0) {

@@ -28,9 +28,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Only call when EHR is enabled.  Creates the ehrpatient record for the patient if a record does not already exist.  Always returns a non-null EhrPatient.</summary>
 		public static EhrPatient Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EhrPatient>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM ehrpatient WHERE patnum='"+POut.Long(patNum)+"'";
 			if(Db.GetCount(command)=="0") {//A record does not exist for this patient yet.
 				Insert(patNum);//Create a new record.
@@ -41,10 +39,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(EhrPatient ehrPatient) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrPatient);
-				return;
-			}
+			
 			Crud.EhrPatientCrud.Update(ehrPatient);
 		}
 
@@ -79,9 +74,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one EhrPatient from the db.  Returns null if there is no entry.</summary>
 		public static EhrPatient GetOne(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EhrPatient>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			return Crud.EhrPatientCrud.SelectOne(patNum);
 		}
 	
@@ -90,19 +83,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EhrPatient> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrPatient>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ehrpatient WHERE PatNum = "+POut.Long(patNum);
 			return Crud.EhrPatientCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ehrpatient WHERE PatNum = "+POut.Long(patNum);
 			Db.NonQ(command);
 		}

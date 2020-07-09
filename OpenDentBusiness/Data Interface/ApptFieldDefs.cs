@@ -74,21 +74,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_apptFieldDefCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _apptFieldDefCache.GetTableFromCache(doRefreshCache);
 		}
 		#endregion
 
 		///<summary>Must supply the old field name so that the apptFields attached to appointments can be updated.  Will throw exception if new FieldName is already in use.</summary>
 		public static void Update(ApptFieldDef apptFieldDef,string oldFieldName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),apptFieldDef,oldFieldName);
-				return;
-			}
+			
 			string command="SELECT COUNT(*) FROM apptfielddef WHERE FieldName='"+POut.String(apptFieldDef.FieldName)+"' "
 				+"AND ApptFieldDefNum != "+POut.Long(apptFieldDef.ApptFieldDefNum);
 			if(Db.GetCount(command)!="0"){
@@ -102,10 +95,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Surround with try/catch in case field name already in use.</summary>
 		public static long Insert(ApptFieldDef apptFieldDef) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				apptFieldDef.ApptFieldDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),apptFieldDef);
-				return apptFieldDef.ApptFieldDefNum;
-			}
+			
 			string command="SELECT COUNT(*) FROM apptfielddef WHERE FieldName='"+POut.String(apptFieldDef.FieldName)+"'";
 			if(Db.GetCount(command)!="0") {
 				throw new ApplicationException(Lans.g("FormApptFieldDefEdit","Field name already in use."));
@@ -115,10 +105,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Surround with try/catch, because it will throw an exception if any appointment is using this def.</summary>
 		public static void Delete(ApptFieldDef apptFieldDef) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),apptFieldDef);
-				return;
-			}
+			
 			string command="SELECT LName,FName,AptDateTime "
 				+"FROM patient,apptfield,appointment WHERE "
 				+"patient.PatNum=appointment.PatNum "
@@ -147,18 +134,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ApptFieldDef> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptFieldDef>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM apptfielddef WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ApptFieldDefCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one ApptFieldDef from the db.</summary>
 		public static ApptFieldDef GetOne(long apptFieldDefNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ApptFieldDef>(MethodBase.GetCurrentMethod(),apptFieldDefNum);
-			}
+			
 			return Crud.ApptFieldDefCrud.SelectOne(apptFieldDefNum);
 		}
 		*/
@@ -178,9 +161,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns true if there are any duplicate field names in the entire apptfielddef table.</summary>
 		public static bool HasDuplicateFieldNames() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM apptfielddef GROUP BY FieldName HAVING COUNT(FieldName) > 1";
 			return (Db.GetScalar(command)!="");
 		}

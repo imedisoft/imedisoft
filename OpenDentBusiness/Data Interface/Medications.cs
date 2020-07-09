@@ -85,11 +85,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_medicationCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _medicationCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -103,9 +99,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Only public so that the remoting works.  Do not call this from anywhere except in this class.</summary>
 		public static List<Medication> GetListFromDb() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Medication>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command ="SELECT * FROM medication ORDER BY MedName";// WHERE MedName LIKE '%"+POut.String(str)+"%' ORDER BY MedName";
 			return Crud.MedicationCrud.SelectMany(command);
 		}
@@ -123,28 +117,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(Medication Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.MedicationCrud.Update(Cur);
 		}
 
 		///<summary></summary>
 		public static long Insert(Medication Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.MedicationNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.MedicationNum;
-			}
+			
 			return Crud.MedicationCrud.Insert(Cur);
 		}
 
 		///<summary>Dependent brands and patients will already be checked.  Be sure to surround with try-catch.</summary>
 		public static void Delete(Medication Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string s=IsInUse(Cur);
 			if(s!="") {
 				throw new ApplicationException(Lans.g("Medications",s));
@@ -155,9 +140,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a string if medication is in use in medicationpat, allergydef, eduresources, or preference.MedicationsIndicateNone. The string will explain where the medication is in use.</summary>
 		public static string IsInUse(Medication med) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),med);
-			}
+			
 			string[] brands;
 			if(med.MedicationNum==med.GenericNum) {
 				brands=GetBrands(med.MedicationNum);
@@ -192,9 +175,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<long> GetAllInUseMedicationNums() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod());
-			}
+			
 			//If any more tables are added here in the future, then also update IsInUse() to include the new table.
 			string command="SELECT MedicationNum FROM medicationpat WHERE MedicationNum!=0 "
 				+"UNION SELECT MedicationNum FROM allergydef WHERE MedicationNum!=0 "
@@ -209,9 +190,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns an array of all patient names who are using this medication.</summary>
 		public static string[] GetPatNamesForMed(long medicationNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<string[]>(MethodBase.GetCurrentMethod(),medicationNum);
-			}
+			
 			string command =
 				"SELECT CONCAT(CONCAT(CONCAT(CONCAT(LName,', '),FName),' '),Preferred) FROM medicationpat,patient "
 				+"WHERE medicationpat.PatNum=patient.PatNum "
@@ -226,9 +205,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of all brands dependend on this generic. Only gets run if this is a generic.</summary>
 		public static string[] GetBrands(long medicationNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<string[]>(MethodBase.GetCurrentMethod(),medicationNum);
-			}
+			
 			string command =
 				"SELECT MedName FROM medication "
 				+"WHERE GenericNum="+medicationNum.ToString()
@@ -252,18 +229,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Deprecated.  Use GetMedication instead.</summary>
 		public static Medication GetMedicationFromDb(long medicationNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Medication>(MethodBase.GetCurrentMethod(),medicationNum);
-			}
+			
 			string command="SELECT * FROM medication WHERE MedicationNum="+POut.Long(medicationNum);
 			return Crud.MedicationCrud.SelectOne(command);
 		}
 
 		///<summary>//Returns first medication with matching MedName, if not found returns null.</summary>
 		public static Medication GetMedicationFromDbByName(string medicationName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Medication>(MethodBase.GetCurrentMethod(),medicationName);
-			}
+			
 			string command="SELECT * FROM medication WHERE MedName='"+POut.String(medicationName)+"' ORDER BY MedicationNum";
 			List<Medication> retVal=Crud.MedicationCrud.SelectMany(command);
 			if(retVal.Count>0) {
@@ -328,9 +301,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<long> GetChangedSinceMedicationNums(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT MedicationNum FROM medication WHERE DateTStamp > "+POut.DateT(changedSince);
 			DataTable dt=Db.GetTable(command);
 			List<long> medicationNums = new List<long>(dt.Rows.Count);
@@ -342,9 +313,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used along with GetChangedSinceMedicationNums</summary>
 		public static List<Medication> GetMultMedications(List<long> medicationNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Medication>>(MethodBase.GetCurrentMethod(),medicationNums);
-			}
+			
 			string strMedicationNums="";
 			DataTable table;
 			if(medicationNums.Count>0) {
@@ -367,9 +336,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Deprecated.  Use MedicationPat.Refresh() instead.  Returns medication list for a specific patient.</summary>
 		public static List<Medication> GetMedicationsByPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Medication>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT medication.* "
 				+"FROM medication, medicationpat "
 				+"WHERE medication.MedicationNum=medicationpat.MedicationNum "
@@ -378,9 +345,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static Medication GetMedicationFromDbByRxCui(long rxcui) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Medication>(MethodBase.GetCurrentMethod(),rxcui);
-			}
+			
 			//an RxCui could be linked to multiple medications, the ORDER BY ensures we get the same medication every time we call this function
 			string command="SELECT * FROM medication WHERE RxCui="+POut.Long(rxcui)+" ORDER BY MedicationNum";
 			return Crud.MedicationCrud.SelectOne(command);
@@ -407,18 +372,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the number of patients associated with the passed-in medicationNum.</summary>
 		public static long CountPats(long medNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),medNum);
-			}
+			
 			string command="SELECT COUNT(DISTINCT medicationpat.PatNum) FROM medicationpat WHERE MedicationNum="+POut.Long(medNum);
 			return PIn.Long(Db.GetScalar(command));
 		}
 
 		///<summary>Medication merge tool.  Returns the number of rows changed.  Deletes the medication associated with medNumInto.</summary>
 		public static long Merge(long medNumFrom,long medNumInto) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),medNumFrom,medNumInto);
-			}
+			
 			string[] medNumForeignKeys=new string[] { //add any new FKs to this list.
 				"allergydef.MedicationNum",
 				"eduresource.MedicationNum",

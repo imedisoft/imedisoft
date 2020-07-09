@@ -43,9 +43,6 @@ namespace OpenDentBusiness{
 				if(_curUserT!=null) {
 					return _curUserT;
 				}
-				if(RemotingClient.RemotingRole==RemotingRole.ServerWeb) {
-					throw new ApplicationException("Security.Userod not accessible from RemotingRole.ServerWeb.");
-				}
 				return curUser;
 			}
 			set {
@@ -63,9 +60,6 @@ namespace OpenDentBusiness{
 				if(_curComputerNameT!=null) {//Allows an empty string.
 					return _curComputerNameT;
 				}
-				if(RemotingClient.RemotingRole==RemotingRole.ServerWeb) {
-					throw new ApplicationException("Security.CurComputerName not accessible from RemotingRole.ServerWeb.");
-				}
 				return curComputerName;
 			}
 			set {
@@ -81,9 +75,6 @@ namespace OpenDentBusiness{
 			get {
 				if(_passwordTypedT!=null) {
 					return _passwordTypedT;
-				}
-				if(RemotingClient.RemotingRole==RemotingRole.ServerWeb) {
-					throw new ApplicationException("Security.PasswordTyped not accessible from RemotingRole.ServerWeb.");
 				}
 				return _passwordTyped;
 			}
@@ -348,59 +339,47 @@ namespace OpenDentBusiness{
 			}
 		}
 
-		///<summary>Will throw an exception if server cannot validate username and password.
-		///configPath will be empty from a workstation and filled from the server.  If Ecw, odpass will actually be the hash.</summary>
-		public static Userod LogInWeb(string oduser,string odpass,string configPath,string clientVersionStr,bool usingEcw) {
-			//Unusual remoting role check designed for first time logging in via middle tier.
-			if(RemotingClient.RemotingRole==RemotingRole.ServerWeb) {
-				Userod user=Userods.CheckUserAndPassword(oduser,odpass,usingEcw);
-				if(string.IsNullOrEmpty(odpass)) {//All middle tier connections must pass in a password.
-					throw new Exception("Invalid username or password.");
-				}
-				string command="SELECT ValueString FROM preference WHERE PrefName='ProgramVersion'";
-				string dbVersionStr=Db.GetScalar(command);
-				string serverVersionStr=Assembly.GetAssembly(typeof(Db)).GetName().Version.ToString(4);
-				#if DEBUG
-					if(Assembly.GetAssembly(typeof(Db)).GetName().Version.Build==0) {
-						command="SELECT ValueString FROM preference WHERE PrefName='DataBaseVersion'";//Using this during debug in the head makes it open fast with less fiddling.
-						dbVersionStr=Db.GetScalar(command);
-					}
-				#endif
-				if(dbVersionStr!=serverVersionStr) {
-					throw new Exception("Version mismatch.  Server:"+serverVersionStr+"  Database:"+dbVersionStr);
-				}
-				if(!string.IsNullOrEmpty(clientVersionStr)) {
-					Version clientVersion=new Version(clientVersionStr);
-					Version serverVersion=new Version(serverVersionStr);
-					if(clientVersion > serverVersion) {
-						throw new Exception("Version mismatch.  Client:"+clientVersionStr+"  Server:"+serverVersionStr);
-					}
-				}
-				//if clientVersion == serverVersion, than we need do nothing.
-				//if clientVersion < serverVersion, than an update will later be triggered.
-				//Security.CurUser=user;//we're on the server, so this is meaningless
-				return user;
-				//return 0;//meaningless
-			}
-			else {
-				//Because RemotingRole has not been set, and because CurUser has not been set,
-				//this particular method is more verbose than most and does not use Meth.
-				//It's not a good example of the standard way of doing things.
-				DtoGetObject dto=new DtoGetObject();
-				dto.Credentials=new Credentials();
-				dto.Credentials.Username=oduser;
-				dto.Credentials.Password=odpass;//Userods.EncryptPassword(password);
-				dto.ComputerName=Security.CurComputerName;
-				dto.MethodName="OpenDentBusiness.Security.LogInWeb";
-				dto.ObjectType=typeof(Userod).FullName;
-				object[] parameters=new object[] { oduser,odpass,configPath,clientVersionStr,usingEcw };
-				dto.Params=DtoObject.ConstructArray(MethodBase.GetCurrentMethod(),parameters);
-				//Purposefully throws exceptions.  
-				//If hasConnectionLost was set to true then the user would be stuck in an infinite loop of trying to connect to a potentially invalid Middle Tier URI.
-				//Therefore, set hasConnectionLost false so that the user gets an error message immediately in the event that Middle Tier cannot be reached.
-				return RemotingClient.ProcessGetObject<Userod>(dto,false);
-			}
-		}
+//		///<summary>Will throw an exception if server cannot validate username and password.
+//		///configPath will be empty from a workstation and filled from the server.  If Ecw, odpass will actually be the hash.</summary>
+//		public static Userod LogInWeb(string oduser, string odpass, string configPath, string clientVersionStr, bool usingEcw)
+//		{
+//			//Unusual remoting role check designed for first time logging in via middle tier.
+
+//			Userod user = Userods.CheckUserAndPassword(oduser, odpass, usingEcw);
+//			if (string.IsNullOrEmpty(odpass))
+//			{//All middle tier connections must pass in a password.
+//				throw new Exception("Invalid username or password.");
+//			}
+//			string command = "SELECT ValueString FROM preference WHERE PrefName='ProgramVersion'";
+//			string dbVersionStr = Db.GetScalar(command);
+//			string serverVersionStr = Assembly.GetAssembly(typeof(Db)).GetName().Version.ToString(4);
+//#if DEBUG
+//			if (Assembly.GetAssembly(typeof(Db)).GetName().Version.Build == 0)
+//			{
+//				command = "SELECT ValueString FROM preference WHERE PrefName='DataBaseVersion'";//Using this during debug in the head makes it open fast with less fiddling.
+//				dbVersionStr = Db.GetScalar(command);
+//			}
+//#endif
+//			if (dbVersionStr != serverVersionStr)
+//			{
+//				throw new Exception("Version mismatch.  Server:" + serverVersionStr + "  Database:" + dbVersionStr);
+//			}
+//			if (!string.IsNullOrEmpty(clientVersionStr))
+//			{
+//				Version clientVersion = new Version(clientVersionStr);
+//				Version serverVersion = new Version(serverVersionStr);
+//				if (clientVersion > serverVersion)
+//				{
+//					throw new Exception("Version mismatch.  Client:" + clientVersionStr + "  Server:" + serverVersionStr);
+//				}
+//			}
+//			//if clientVersion == serverVersion, than we need do nothing.
+//			//if clientVersion < serverVersion, than an update will later be triggered.
+//			//Security.CurUser=user;//we're on the server, so this is meaningless
+//			return user;
+//			//return 0;//meaningless
+
+//		}
 
 		#region eServices
 

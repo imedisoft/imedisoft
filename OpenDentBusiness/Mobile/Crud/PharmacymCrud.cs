@@ -21,9 +21,7 @@ namespace OpenDentBusiness.Mobile.Crud{
 
 		///<summary>Gets one Pharmacym object from the database using a query.</summary>
 		internal static Pharmacym SelectOne(string command){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<Pharmacym> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -33,9 +31,7 @@ namespace OpenDentBusiness.Mobile.Crud{
 
 		///<summary>Gets a list of Pharmacym objects from the database using a query.</summary>
 		internal static List<Pharmacym> SelectMany(string command){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<Pharmacym> list=TableToList(Db.GetTable(command));
 			return list;
 		}

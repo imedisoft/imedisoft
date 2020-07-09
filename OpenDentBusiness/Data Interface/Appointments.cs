@@ -18,9 +18,6 @@ namespace OpenDentBusiness{
 
 		#region Get Methods
 		public static DataTable GetCommTable(string patNum,long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum,aptNum);
-			}
 			DataTable table=new DataTable("Comm");
 			DataRow row;
 			//columns that start with lowercase are altered for display rather than being raw data.
@@ -64,9 +61,6 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetMiscTable(string aptNum,bool isPlanned) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),aptNum,isPlanned);
-			}
 			DataTable table=new DataTable("Misc");
 			DataRow row;
 			table.Columns.Add("LabCaseNum");
@@ -138,9 +132,6 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of appointments that are scheduled between start date and end datetime. 
 		///The end of the appointment must also be in the period.</summary>
 		public static List<Appointment> GetAppointmentsForPeriod(DateTime start,DateTime end,params ApptStatus[] arrayIgnoreStatuses) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),start,end,arrayIgnoreStatuses);
-			}
 			//jsalmon - leaving start.Date even though this doesn't make much sense.
 			List<Appointment> retVal=GetAppointmentsStartingWithinPeriod(start.Date,end,arrayIgnoreStatuses);
 			//Now that we have all appointments that start within our period, make sure that the entire appointment fits within.
@@ -155,9 +146,6 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of appointments that are scheduled between start date and end date.
 		///This method only considers the AptDateTime and does not check to see if the appointment </summary>
 		public static List<Appointment> GetAppointmentsStartingWithinPeriod(DateTime start,DateTime end,params ApptStatus[] arrayIgnoreStatuses) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),start,end,arrayIgnoreStatuses);
-			}
 			string command="SELECT * FROM appointment "
 				+"WHERE AptDateTime >= "+POut.DateT(start)+" "
 				+"AND AptDateTime <= "+POut.DateT(end);
@@ -180,9 +168,6 @@ namespace OpenDentBusiness{
 		public static List<Appointment> GetAppointmentsForOpsByPeriod(List<long> opNums,DateTime dateStart,DateTime dateEnd=new DateTime(),
 			Logger.IWriteLine log=null,List<long> listProvNums=null) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),opNums,dateStart,dateEnd,log,listProvNums);
-			}
 			string command="SELECT * FROM appointment WHERE Op > 0 ";
 			if(opNums!=null && opNums.Count > 0) {
 				command+="AND Op IN("+String.Join(",",opNums)+") ";
@@ -208,9 +193,6 @@ namespace OpenDentBusiness{
 		///<summary>Gets the appointments for the dates and operatories passed in.</summary>
 		///<param name="listDateOps">DateTime is the AptDate, long is the OperatoryNum.</param>
 		public static List<Appointment> GetApptsForDatesOps(List<ODTuple<DateTime,long>> listDateOps) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),listDateOps);
-			}
 			if(listDateOps.Count==0) {
 				return new List<Appointment>();
 			}
@@ -225,18 +207,12 @@ namespace OpenDentBusiness{
 			if(arrPatNums.IsNullOrEmpty()) {
 				return new List<Appointment>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),arrPatNums);
-			}
 			string command="SELECT * FROM appointment WHERE PatNum IN("+string.Join(",",arrPatNums.Select(x => POut.Long(x)))+") ORDER BY AptDateTime";
 			return Crud.AppointmentCrud.TableToList(Db.GetTable(command));
 		}
 
 		///<summary>Returns a dictionary containing the last completed appointment date of each patient.</summary>
 		public static SerializableDictionary<long,DateTime> GetDateLastVisit() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,DateTime>(MethodBase.GetCurrentMethod());
-			}
 			SerializableDictionary<long,DateTime> retVal=new SerializableDictionary<long,DateTime>();
 			string command="SELECT PatNum,MAX(AptDateTime) DateLastAppt "
 					+"FROM appointment "
@@ -253,9 +229,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a dictionary containing all information of every scheduled, completed appointment made from all non-deleted patients.  Usually used for bridges.</summary>
 		public static SerializableDictionary<long,List<Appointment>> GetAptsForPats(DateTime dateFrom,DateTime dateTo) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,List<Appointment>>(MethodBase.GetCurrentMethod(),dateFrom,dateTo);
-			}
 			SerializableDictionary<long,List<Appointment>> retVal=new SerializableDictionary<long,List<Appointment>>();
 			string command="SELECT * "
 					+"FROM appointment "
@@ -275,9 +248,6 @@ namespace OpenDentBusiness{
 
 		/// <summary>Get a dictionary of all procedure codes for all scheduled, ASAP, and completed appointments</summary>
 		public static SerializableDictionary<long,List<long>> GetCodeNumsAllApts() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,List<long>>(MethodBase.GetCurrentMethod());
-			}
 			SerializableDictionary<long,List<long>> retVal=new SerializableDictionary<long,List<long>>();
 			string command="SELECT appointment.AptNum,procedurelog.CodeNum "
 				+"FROM appointment "
@@ -298,9 +268,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all appointments associated to the procedures passed in.  Returns an empty list if no procedure is linked to an appt.</summary>
 		public static List<Appointment> GetAppointmentsForProcs(List<Procedure> listProcs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),listProcs);
-			}
 			if(listProcs.Count < 1) {
 				return new List<Appointment>();
 			}
@@ -313,9 +280,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of appointments that are scheduled (have scheduled or ASAP status) to start between start date and end date.</summary>
 		public static List<Appointment> GetSchedApptsForPeriod(DateTime start,DateTime end) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),start,end);
-			}
 			string command="SELECT * FROM appointment "
 				+"WHERE AptDateTime >= "+POut.DateT(start)+" "
 				+"AND AptDateTime <= "+POut.DateT(end)+" "
@@ -439,9 +403,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the ProvNum for the last completed or scheduled appointment for a patient. If none, returns 0.</summary>
 		public static long GetProvNumFromLastApptForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),patNum);
-			}
 			string command="SELECT ProvNum FROM appointment WHERE AptStatus IN ("+(int)ApptStatus.Complete+","+(int)ApptStatus.Scheduled+")"
 				+" AND AptDateTime<="+POut.DateT(System.DateTime.Now)
 				+" AND PatNum="+POut.Long(patNum)
@@ -455,18 +416,12 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the appt confirmation status for a single appt.</summary>
 		public static long GetApptConfirmationStatus(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),aptNum);
-			}
 			string command="SELECT Confirmed FROM appointment WHERE AptNum="+POut.Long(aptNum);
 			return PIn.Long(Db.GetScalar(command));
 		}
 		
 		///<summary></summary>
 		public static DataSet GetApptEdit(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDS(MethodBase.GetCurrentMethod(),aptNum);
-			}
 			DataSet retVal=new DataSet();
 			retVal.Tables.Add(GetApptTable(aptNum));
 			retVal.Tables.Add(GetPatTable(retVal.Tables["Appointment"].Rows[0]["PatNum"].ToString()
@@ -487,9 +442,6 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static DataSet RefreshOneApt(long aptNum,bool isPlanned,List<long> listOpNums=null,List<long> listProvNums=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDS(MethodBase.GetCurrentMethod(),aptNum,isPlanned,listOpNums,listProvNums);
-			} 
 			DataSet retVal=new DataSet();
 			retVal.Tables.Add(GetPeriodApptsTable(DateTime.MinValue,DateTime.MinValue,aptNum,isPlanned,listOpNums,listProvNums));
 			return retVal;
@@ -505,9 +457,6 @@ namespace OpenDentBusiness{
 		public static DataTable GetPeriodApptsTable(DateTime dateStart,DateTime dateEnd,long aptNum,bool isPlanned,List<long> listPinApptNums=null,
 			List<long> listOpNums=null,List<long> listProvNums=null,bool doRunQueryOnNoOps=true) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,aptNum,isPlanned,listPinApptNums,listOpNums,listProvNums,doRunQueryOnNoOps);
-			} 
 			DataConnection dcon=new DataConnection();
 			DataTable table=new DataTable("Appointments");
 			//columns that start with lowercase are altered for display rather than being raw data.
@@ -1236,9 +1185,6 @@ namespace OpenDentBusiness{
 		///<summary>Gets a mini version of the PeriodApptsTable for all appointments on the passed in day for the given provider. This is specifically
 		///used by WebSched so that we don't have to get the full PeriodApptsTable when checking for double booked appointments.</summary>
 		public static DataTable GetPeriodApptsTableMini(DateTime dateTimeAppointmentStart,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateTimeAppointmentStart,provNum);
-			} 
 			DataConnection dcon=new DataConnection();
 			string command=@"SELECT 
 				appt.AptDateTime,
@@ -1266,9 +1212,6 @@ namespace OpenDentBusiness{
 
 		/// <summary>Returns a DataTable with all the ApptFields for the AptNums passed in.</summary>
 		public static DataTable GetApptFieldsByApptNums(List<long> aptNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),aptNums);
-			}
 			string command="SELECT AptNum,FieldName,FieldValue "
 				+"FROM apptfield "
 				+"WHERE AptNum IN (";
@@ -1291,9 +1234,6 @@ namespace OpenDentBusiness{
 		///<summary>Returns a DataTable with all the PatFields for the PatNums passed in.  Columns: PatNum, FieldName, FieldValue.
 		///It's in Appointments class because it used to get passed an entire TableAppointments.</summary>
 		public static DataTable GetPatFields(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listPatNums);
-			}
 			if(listPatNums.Count==0) {
 				listPatNums.Add(0);
 			}
@@ -1308,9 +1248,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns all the appointment fields that should show in the appointment edit window.</summary>
 		public static DataTable GetApptFields(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),aptNum);
-			}
 			string command="SELECT appointmentfield.ApptFieldNum,apptfielddef.FieldName,appointmentfield.FieldValue "
 				+"FROM apptfielddef "
 				+"LEFT JOIN fielddeflink ON apptfielddef.ApptFieldDefNum=fielddeflink.FieldDefNum "
@@ -1331,9 +1268,6 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetPeriodWaitingRoomTable() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod());
-			}
 			//DateTime dateStart=PIn.PDate(strDateStart);
 			//DateTime dateEnd=PIn.PDate(strDateEnd);
 			DataConnection dcon=new DataConnection();
@@ -1392,9 +1326,6 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetApptTable(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),aptNum);
-			}
 			string command="SELECT * FROM appointment WHERE AptNum="+aptNum.ToString();
 			DataTable table=Db.GetTable(command);
 			table.TableName="Appointment";
@@ -1402,9 +1333,6 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetPatTable(string patNum,Appointment appt) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum,appt);
-			}
 			DataTable table=new DataTable("Patient");
 			//columns that start with lowercase are altered for display rather than being raw data.
 			table.Columns.Add("field");
@@ -1503,9 +1431,6 @@ namespace OpenDentBusiness{
 			if(appt.AptNum==0) {//Appt hasn't been inserted into the database yet.
 				return 0;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<decimal>(MethodBase.GetCurrentMethod(),appt);
-			}
 			DateTime dateStart=appt.AptDateTime.Date;//Use the entire day.
 			DateTime dateEnd=appt.AptDateTime.Date.AddDays(1).AddMilliseconds(-1);//Use the entire day.
 			DataTable table=GetPeriodApptsTable(dateStart,dateEnd,appt.AptNum,appt.AptStatus==ApptStatus.Planned);
@@ -1516,9 +1441,6 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetProcTable(string patNum,string aptNum,string apptStatus,string aptDateTime) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum,aptNum,apptStatus,aptDateTime);
-			}
 			DataTable table=new DataTable("Procedure");
 			DataRow row;
 			//columns that start with lowercase are altered for display rather than being raw data.
@@ -1632,9 +1554,6 @@ namespace OpenDentBusiness{
 		///<summary>Used in FormConfirmList.  The assumption is made that showRecall and showNonRecall will not both be false. Pass in a clinicNum
 		///less than 0 to return results for all clinics.</summary>
 		public static DataTable GetConfirmList(DateTime dateFrom,DateTime dateTo,long provNum,long clinicNum,bool showRecall,bool showNonRecall,bool showHygPresched,long confirmStatusDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateFrom,dateTo,provNum,clinicNum,showRecall,showNonRecall,showHygPresched,confirmStatusDefNum);
-			}
 			DataTable table=new DataTable();
 			DataRow row;
 			//columns that start with lowercase are altered for display rather than being raw data.
@@ -1814,9 +1733,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in Confirm list to just get addresses.</summary>
 		public static DataTable GetAddrTable(List<long> aptNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),aptNums);
-			}
 			string command="SELECT patient.LName,patient.FName,patient.MiddleI,patient.Preferred,"
 				+"patient.Address,patient.Address2,patient.City,patient.State,patient.Zip,appointment.AptDateTime,appointment.ClinicNum,patient.PatNum,"
 				+"appointment.DateTimeAskedToArrive "
@@ -1896,9 +1812,6 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of special appointment objects that only contain information necessary to fill the OtherAppts window.
 		///The main purpose of this method is to significantly cut back on the amount of data sent back to the client.</summary>
 		public static List<ApptOther> GetApptOthersForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//Remoting role check in order to limit the amount of data sent back to the client.
-				return Meth.GetObject<List<ApptOther>>(MethodBase.GetCurrentMethod(),patNum);
-			}
 			Appointment[] listAppts=GetForPat(patNum);
 			return listAppts.Select(x => new ApptOther(x)).ToList();
 		}
@@ -1906,9 +1819,6 @@ namespace OpenDentBusiness{
 		///<summary>Returns all appointments for the given patient, ordered from earliest to latest.
 		///Used in statements, appt cards, OtherAppts window, etc.</summary>
 		public static Appointment[] GetForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Appointment[]>(MethodBase.GetCurrentMethod(),patNum);
-			}
 			string command=
 				"SELECT * FROM appointment "
 				+"WHERE PatNum = '"+POut.Long(patNum)+"' "
@@ -1919,9 +1829,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all appointments for a single patient ordered by AptDateTime.</summary>
 		public static List<Appointment> GetListForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),patNum);
-			}
 			string command=
 				"SELECT * FROM appointment "
 				+"WHERE patnum = '"+POut.Long(patNum)+"' "
@@ -1931,9 +1838,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one appointment from db.  Returns null if not found.</summary>
 		public static Appointment GetOneApt(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Appointment>(MethodBase.GetCurrentMethod(),aptNum);
-			}
 			if(aptNum==0) {
 				return null;
 			}
@@ -1944,9 +1848,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets an appointment (of any status) from the db with this NextAptNum (FK to the AptNum of a planned appt).</summary>
 		public static Appointment GetScheduledPlannedApt(long nextAptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Appointment>(MethodBase.GetCurrentMethod(),nextAptNum);
-			}
 			if(nextAptNum==0) {
 				return null;
 			}
@@ -1965,9 +1866,6 @@ namespace OpenDentBusiness{
 			if(listPatNums.Count==0) {
 				return new List<Appointment>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
 			string command="SELECT * FROM appointment "
 				+"WHERE PatNum IN ("+string.Join(",",listPatNums.Select(x => POut.Long(x)))+") "
 				+"AND AptDateTime > "+DbHelper.Now()+" "
@@ -1976,22 +1874,7 @@ namespace OpenDentBusiness{
 			return Crud.AppointmentCrud.SelectMany(command);
 		}
 
-		///<summary>Gets a list of all future appointments which are either sched or ASAP for all patients.  Ordered by dateTime</summary>
-		public static List<Appointment> GetFutureSchedApts() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod());
-			}
-			string command="SELECT * FROM appointment "
-				+"WHERE AptDateTime > "+DbHelper.Now()+" "
-				+"AND AptStatus = "+(int)ApptStatus.Scheduled+" "
-				+"ORDER BY AptDateTime";
-			return Crud.AppointmentCrud.SelectMany(command);
-		}
-
 		public static List<Appointment> GetChangedSince(DateTime changedSince,DateTime excludeOlderThan) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),changedSince,excludeOlderThan);
-			}
 			string command="SELECT * FROM appointment WHERE DateTStamp > "+POut.DateT(changedSince)
 				+" AND AptDateTime > "+POut.DateT(excludeOlderThan);
 			return Crud.AppointmentCrud.SelectMany(command);
@@ -1999,9 +1882,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Used if the number of records are very large, in which case using GetChangedSince is not the preffered route due to memory problems caused by large recordsets. </summary>
 		public static List<long> GetChangedSinceAptNums(DateTime changedSince,DateTime excludeOlderThan) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince,excludeOlderThan);
-			}
 			string command="SELECT AptNum FROM appointment WHERE DateTStamp > "+POut.DateT(changedSince)
 				+" AND AptDateTime > "+POut.DateT(excludeOlderThan);
 			DataTable dt=Db.GetTable(command);
@@ -2014,9 +1894,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Used along with GetChangedSinceAptNums</summary>
 		public static List<Appointment> GetMultApts(List<long> aptNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),aptNums);
-			}
 			if(aptNums.Count < 1) {
 				return new List<Appointment>();
 			}
@@ -2027,9 +1904,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets AptNums and AptDateTimes to use for task sorting with the TaskUseApptDate pref.</summary>
 		public static DataTable GetAptDateTimeForAptNums(List<long> listAptNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listAptNums);
-			}
 			if(listAptNums.Count==0) {
 				return new DataTable();
 			}
@@ -2039,9 +1913,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of appointments for a period of time in the schedule, whether hidden or not.</summary>
 		public static Appointment[] GetForPeriod(DateTime startDate,DateTime endDate){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Appointment[]>(MethodBase.GetCurrentMethod(),startDate,endDate);
-			}
 			//DateSelected = thisDay;
 			string command=
 				"SELECT * from appointment "
@@ -2054,9 +1925,6 @@ namespace OpenDentBusiness{
 		///<summary>Gets a List&lt;Appointment&gt; of appointments for a period of time in the schedule, whether hidden or not.
 		///Optionally pass in a clinic to only get appointments associated to that clinic.  clinicNum of 0 will get all appointments.</summary>
 		public static List<Appointment> GetForPeriodList(DateTime startDate,DateTime endDate,long clinicNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),startDate,endDate,clinicNum);
-			}
 			//DateSelected = thisDay;
 			string command=
 				"SELECT * FROM appointment "
@@ -2074,9 +1942,6 @@ namespace OpenDentBusiness{
 			if(listOpNums==null || listOpNums.Count < 1) {
 				return new List<Appointment>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),startDate,endDate,listOpNums,listClinicNums);
-			}
 			string command=
 				"SELECT * FROM appointment "
 				+"WHERE appointment.AptDateTime BETWEEN "+POut.Date(startDate)+" AND "+POut.Date(endDate.AddDays(1))+" "
@@ -2091,9 +1956,6 @@ namespace OpenDentBusiness{
 
 		///<summary>A list of strings.  Each string corresponds to one appointment in the supplied list.  Each string is a comma delimited list of codenums of the procedures attached to the appointment.</summary>
 		public static List<string> GetUAppointProcs(List<Appointment> appts){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod(),appts);
-			}
 			List<string> retVal=new List<string>();
 			if(appts.Count==0){
 				return retVal;
@@ -2127,9 +1989,6 @@ namespace OpenDentBusiness{
 		public static List<Appointment> RefreshASAP(long provNum,long siteNum,long clinicNum,List<ApptStatus> listStatuses,string codeRangeStart="",
 			string codeRangeEnd="") 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),provNum,siteNum,clinicNum,listStatuses,codeRangeStart,codeRangeEnd);
-			}
 			List<long> listCodeNums=new List<long>();
 			if(!string.IsNullOrEmpty(codeRangeStart)) {
 				//Get a list of CodeNums that meet the procedure code range passed in.
@@ -2203,9 +2062,6 @@ namespace OpenDentBusiness{
 		///If listOpNums and listProvNums are null then we do not filter the tableAppt based on visible ops and provs for the appt view.
 		///No longer being used by ContrAppt. Might be used in eServices?</summary>
 		public static DataSet RefreshPeriod(DateTime dateStart,DateTime dateEnd,long clinicNum,List<long> listPinApptNums=null,List<long> listOpNums=null,List<long> listProvNums=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDS(MethodBase.GetCurrentMethod(),dateStart,dateEnd,clinicNum,listPinApptNums,listOpNums,listProvNums);
-			} 
 			DataSet retVal=new DataSet();
 			DataTable tableAppt=GetPeriodApptsTable(dateStart,dateEnd,0,false,listPinApptNums,listOpNums,listProvNums);
 			retVal.Tables.Add(tableAppt);
@@ -2221,9 +2077,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Allowed orderby: status, alph, date. Pass in a clinicNum less than 0 to get all appointments regardless of clinic.</summary>
 		public static List<Appointment> RefreshPlannedTracker(string orderby,long provNum,long siteNum,long clinicNum,string codeStart,string codeEnd,DateTime dateStart,DateTime dateEnd) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),orderby,provNum,siteNum,clinicNum,codeStart,codeEnd,dateStart,dateEnd);
-			}
 			//We create a in-memory temporary table by joining the appointment and patient
 			//tables to get a list of planned appointments for active paients, then we
 			//perform a left join on that temporary table against the appointment table
@@ -2281,10 +2134,6 @@ namespace OpenDentBusiness{
 		public static List<Appointment> RefreshUnsched(string orderby,long provNum,long siteNum,bool includeBrokenAppts,long clinicNum,string codeStart,
 			string codeEnd,DateTime dateStart,DateTime dateEnd)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),orderby,provNum,siteNum,includeBrokenAppts,clinicNum,codeStart,codeEnd,
-					dateStart,dateEnd);
-			}
 			string command="SELECT * FROM appointment "
 				+"LEFT JOIN patient ON patient.PatNum=appointment.PatNum ";
 			if(!string.IsNullOrEmpty(codeStart)) {
@@ -2354,9 +2203,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns all of the appointments for a given patient that have a status of unscheduled.</summary>
 		public static List<Appointment> GetUnschedApptsForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),patNum);
-			}
 			string command=$"SELECT * FROM appointment WHERE AptStatus={POut.Int((int)ApptStatus.UnschedList)} AND PatNum={POut.Long(patNum)} ORDER BY AptDateTime";
 			return Crud.AppointmentCrud.SelectMany(command);
 		}
@@ -2366,9 +2212,6 @@ namespace OpenDentBusiness{
 		public static SerializableDictionary<long,int> GetProcCountForUnscheduledApts(List<long> listAptNums) {
 			if(listAptNums==null || listAptNums.Count < 1) {
 				return new SerializableDictionary<long, int>();
-			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,int>(MethodBase.GetCurrentMethod(),listAptNums);
 			}
 			string command=$@"SELECT appointment.AptNum, COUNT(procedurelog.AptNum) ProcCount
 											  FROM appointment 
@@ -2480,9 +2323,6 @@ namespace OpenDentBusiness{
 
 		public static List<Appointment> GetAppointmentsBatchCCInDateRange(DateTime dateFrom,DateTime dateTo,List<long> listPatNumsToExclude) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listPatNumsToExclude);
-			}
 			string command="SELECT * FROM appointment "
 				+$"WHERE {DbHelper.BetweenDates("AptDateTime",dateFrom,dateTo)} "
 				+$"AND AptStatus IN({string.Join(",",ListScheduledApptStatuses.Select(x => POut.Int((int)x)).ToList())}) ";
@@ -2646,10 +2486,6 @@ namespace OpenDentBusiness{
 		///<summary>Set includeAptNum to true only in rare situations.  Like when we are inserting for eCW. Inserts an invalid appointment signalod.
 		///Only include the secUserNum if a user is not available via Security.CurUser (e.g. MobileWeb calls). </summary>
 		public static long InsertIncludeAptNum(Appointment appt,bool useExistingPK,long secUserNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				appt.AptNum=Meth.GetLong(MethodBase.GetCurrentMethod(),appt,useExistingPK,secUserNum);
-				return appt.AptNum;
-			}
 			if(secUserNum!=0) {
 				appt.SecUserNumEntry=secUserNum;
 			}
@@ -2679,10 +2515,6 @@ namespace OpenDentBusiness{
 		#region Update Methods
 		///<summary>Use to send to unscheduled list, to set broken, etc.  Do not use to set complete.  Inserts an invalid appointment signalod.</summary>
 		public static void SetAptStatus(Appointment appt,ApptStatus newStatus,bool suppressHistory=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),appt,newStatus,suppressHistory);
-				return;
-			}
 			string command="UPDATE appointment SET AptStatus="+POut.Long((int)newStatus);
 			if(newStatus==ApptStatus.UnschedList) {
 				command+=",Op=0";//We do this so that this appointment does not stop an operatory from being hidden.
@@ -2705,10 +2537,6 @@ namespace OpenDentBusiness{
 		///<summary>The plan nums that are passed in are simply saved in columns in the appt.  Those two fields are used by approximately one office right now.
 		///Inserts an invalid appointment signalod.</summary>
 		public static void SetAptStatusComplete(Appointment appt,long planNum1,long planNum2) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),appt,planNum1,planNum2);
-				return;
-			}
 			string command="UPDATE appointment SET "
 				+"AptStatus="+POut.Long((int)ApptStatus.Complete)+", "
 				+"InsPlan1="+POut.Long(planNum1)+", "
@@ -2722,10 +2550,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Set the priority of the appointment.  Inserts an invalid appointment signalod.</summary>
 		public static void SetPriority(Appointment appt,ApptPriority priority) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),appt,priority);
-				return;
-			}
 			string command="UPDATE appointment SET Priority="+POut.Int((int)priority)
 				+" WHERE AptNum="+POut.Long(appt.AptNum);
 			Db.NonQ(command);
@@ -2734,10 +2558,6 @@ namespace OpenDentBusiness{
 		}
 
 		public static void SetAptTimeLocked() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
 			string command="UPDATE appointment SET TimeLocked="+POut.Bool(true);
 			Signalods.SetInvalid(InvalidType.Appointment);
 			Db.NonQ(command);
@@ -2745,10 +2565,6 @@ namespace OpenDentBusiness{
 
 		///<summary>The confirmStatus will be a DefNum or 0.  Inserts an invalid appointment signalod.</summary>
 		public static void SetConfirmed(Appointment appt,long confirmStatus,bool createSheetsForCheckin=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),appt,confirmStatus,createSheetsForCheckin);
-				return;
-			}
 			string command="UPDATE appointment SET Confirmed="+POut.Long(confirmStatus);
 			if(PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger)==confirmStatus) {
 				command+=",DateTimeArrived="+POut.DateT(DateTime.Now);
@@ -2775,10 +2591,6 @@ namespace OpenDentBusiness{
 		///<summary>Sets the new pattern for an appointment.  This is how resizing is done.  Must contain only / and X, with each char representing 5 minutes.
 		///Inserts an invalid appointment signalod.</summary>
 		public static void SetPattern(Appointment appt,string newPattern) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),appt,newPattern);
-				return;
-			}
 			string command="UPDATE appointment SET Pattern='"+POut.String(newPattern)+"' WHERE AptNum="+POut.Long(appt.AptNum);
 			Db.NonQ(command);
 			Signalods.SetInvalidAppt(appt);
@@ -2788,9 +2600,6 @@ namespace OpenDentBusiness{
 		///<summary>Updates only the changed columns and returns the number of rows affected.  Supply an oldApt for comparison.
 		///Insert an invalid appointment signalod.</summary>
 		public static bool Update(Appointment appointment,Appointment oldAppointment,bool suppressHistory=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),appointment,oldAppointment,suppressHistory);
-			}
 			bool retval=false;
 			//ApptComms.UpdateForAppt(appointment);
 			retval=Crud.AppointmentCrud.Update(appointment,oldAppointment);
@@ -2818,10 +2627,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates all appointments for the patient passed with the patients Primary and Secondary dental insurance plans.</summary>
 		public static void UpdateInsPlansForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
 			Family fam=Patients.GetFamily(patNum);
 			List<PatPlan> listPatPlans=PatPlans.Refresh(patNum);
 			List<InsSub> listInsSubs=InsSubs.RefreshForFam(fam);
@@ -2876,10 +2681,6 @@ namespace OpenDentBusiness{
 		///<summary>Updates the ProcDesript and ProcsColored to be current for every appointment passed in.
 		///Inserts an invalid appointment signalod.</summary>
 		public static void UpdateProcDescriptForAppts(List<Appointment> listAppointments) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listAppointments);
-				return;
-			}
 			foreach(Appointment apt in listAppointments) {
 				//In the event a null object makes its way in to the list
 				if(apt==null) {
@@ -2900,11 +2701,6 @@ namespace OpenDentBusiness{
 			List<InsPlan> listInsPlans,List<InsSub> listInsSubs,long selectedProvNum,long selectedProvHygNum,List<Procedure> listProcsSelected,bool isNew,
 			Patient pat,Family fam,bool doUpdateProcFees,bool doRemoveCompleteProcs,bool doCreateSecLog,bool doInsertHL7) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ApptSaveHelperResult>(MethodBase.GetCurrentMethod(),aptCur,aptOld,isInsertRequired,listProcsForAppt,listAppointments,
-					listSelectedIndices,listProcNumsAttachedStart,isPlanned,listInsPlans,listInsSubs,selectedProvNum,selectedProvHygNum,listProcsSelected,isNew,
-					pat,fam,doUpdateProcFees,doRemoveCompleteProcs,doCreateSecLog,doInsertHL7);
-			}
 			ApptSaveHelperResult retVal=new ApptSaveHelperResult();
 			DateTime datePrevious=aptCur.DateTStamp;
 			if(isInsertRequired) {
@@ -3040,10 +2836,6 @@ namespace OpenDentBusiness{
 		///Deletes ApptComm entries that were created for this appointment.
 		///Inserts an invalid appointment signalod if hasSignal.  The hasSignal defaults to false because this function is referenced from CRUD.</summary>
 		public static void Delete(long aptNum,bool hasSignal=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),aptNum,hasSignal);
-				return;
-			}
 			string command;
 			command="SELECT PatNum,IsNewPatient,AptStatus FROM appointment WHERE AptNum="+POut.Long(aptNum);
 			DataTable table=Db.GetTable(command);
@@ -3115,10 +2907,6 @@ namespace OpenDentBusiness{
 		///Makes an entry in the HistAppointment table.
 		///Deletes ApptComm entries that were created for this appointment.</summary>
 		public static void Delete(List<long> aptNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),aptNums);
-				return;
-			}
 			if(aptNums==null || aptNums.Count<1) {
 				return;
 			}
@@ -3195,9 +2983,6 @@ namespace OpenDentBusiness{
 		///the server if necessary.  Doesn't create ApptComm items, but will delete them.  If you use Sync, you must create new Apptcomm items.
 		///Returns true if a change was made, otherwise false.</summary>
 		public static bool Sync(List<Appointment> listNew,List<Appointment> listOld,long patNum,long userNum=0,bool isOpMerge=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld,patNum,userNum,isOpMerge);
-			}
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			userNum=Security.CurUser.UserNum;
 			bool isChanged=Crud.AppointmentCrud.Sync(listNew,listOld,userNum);
@@ -3268,29 +3053,18 @@ namespace OpenDentBusiness{
 		///<summary>Zeros securitylog FKey column for rows that are using the matching aptNum as FKey and are related to Appointment.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Appointment table type.</summary>
 		public static void ClearFkey(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),aptNum);
-				return;
-			}
 			Crud.AppointmentCrud.ClearFkey(aptNum);
 		}
 
 		///<summary>Zeros securitylog FKey column for rows that are using the matching aptNums as FKey and are related to Appointment.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Appointment table type.</summary>
 		public static void ClearFkey(List<long> listAptNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listAptNums);
-				return;
-			}
 			Crud.AppointmentCrud.ClearFkey(listAptNums);
 		}
 
 		///<summary>Returns true if no appointments are scheduled in the time slot for that operatory unless the appointment scheduled is the 
 		///appointment under consideration.</summary>
 		public static bool IsSlotAvailable(DateTime slotStart,DateTime slotEnd,long operatory,Appointment appt) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),slotStart,slotEnd,operatory,appt);
-			}
 			string command="SELECT COUNT(appointment.AptNum) "
 				+"FROM appointment "
 				+"WHERE appointment.Op="+POut.Long(operatory)+" "
@@ -3776,9 +3550,6 @@ namespace OpenDentBusiness{
 		///<summary>Creates a scheduled appointment from planned appointment passed in. listApptFields can be null. The fields will just be fetched from the database.
 		///Returns the newly scheduled appointment and a boolean indicating whether at least one attached procedure was already attached to another appointment.</summary>
 		public static ODTuple<Appointment,bool> SchedulePlannedApt(Appointment apptPlanned,Patient pat,List<ApptField> listApptFields,DateTime aptDateTime,long opNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ODTuple<Appointment,bool>>(MethodBase.GetCurrentMethod(),apptPlanned,pat,listApptFields,aptDateTime,opNum);
-			}
 			Appointment apptNew=apptPlanned.Copy();
 			apptNew.NextAptNum=apptPlanned.AptNum;
 			apptNew.AptStatus=ApptStatus.Scheduled;
@@ -3993,9 +3764,6 @@ namespace OpenDentBusiness{
 		///This adds intelligence when user attempts to schedule an appointment by only showing the appointments for the patient when needed rather than always.
 		///Setting exludePlannedAppts to true will remove them from the search.</summary>
 		public static bool HasOutstandingAppts(long patNum,bool excludePlannedAppts=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),patNum,excludePlannedAppts);
-			}
 			string command="SELECT COUNT(*) FROM appointment "
 				+"WHERE PatNum='"+POut.Long(patNum)+"' "
 				+"AND (AptStatus='"+POut.Long((int)ApptStatus.Broken)+"' "
@@ -4015,9 +3783,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns true if appt has at least 1 proc attached.</summary>
 		public static bool HasProcsAttached(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),aptNum);
-			}
 			string command="SELECT COUNT(*) FROM procedurelog WHERE AptNum="+POut.Long(aptNum);
 			if(PIn.Int(Db.GetScalar(command))>0) {
 				return true;
@@ -4029,9 +3794,6 @@ namespace OpenDentBusiness{
 		public static bool HasCompletedProcsAttached(long aptNum,List<Procedure> listProcsAttachToApt=null) {
 			if(listProcsAttachToApt!=null) { 
 				return listProcsAttachToApt.Any(x => x.AptNum==aptNum && x.ProcStatus==ProcStat.C);
-			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),aptNum,listProcsAttachToApt);
 			}
 			string command=$"SELECT COUNT(*) FROM procedurelog " +
 					$"WHERE AptNum={POut.Long(aptNum)} AND ProcStatus={POut.Int((int)ProcStat.C)}";
@@ -4075,9 +3837,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Only called from the mobile server, not from any workstation.  Pass in an apptViewNum of 0 for now.  We might use that parameter later.</summary>
 		public static string GetMobileBitmap(DateTime date,long apptViewNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),date,apptViewNum);
-			}
 			//For testing pass a resource image.
 			return POut.Bitmap(Properties.Resources.ApptBackTest,ImageFormat.Gif);
 		}
@@ -4480,9 +4239,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Used to set an appointment complete when it is right-clicked set complete.  Insert an invalid appointment signalod.</summary>
 		public static ODTuple<Appointment,List<Procedure>> CompleteClick(Appointment apt,List<Procedure> listProcsForAppt,bool removeCompletedProcs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ODTuple<Appointment,List<Procedure>>>(MethodBase.GetCurrentMethod(),apt,listProcsForAppt,removeCompletedProcs);
-			}
 			Family fam=Patients.GetFamily(apt.PatNum);
 			Patient pat=fam.GetPatient(apt.PatNum);
 			List<InsSub> SubList=InsSubs.RefreshForFam(fam);
@@ -4545,9 +4301,6 @@ namespace OpenDentBusiness{
 		public static bool IsRecallAppointment(Appointment appt,List<Procedure> listApptProcs=null) {
 			if(appt==null) {
 				return false;
-			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),appt,listApptProcs);
 			}
 			if(listApptProcs==null) {
 				listApptProcs=Procedures.GetProcsForSingle(appt.AptNum,appt.AptStatus==ApptStatus.Planned);//Get this appt's selected procs if not specified.

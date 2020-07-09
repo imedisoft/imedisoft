@@ -77,11 +77,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_procButtonCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _procButtonCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -89,28 +85,19 @@ namespace OpenDentBusiness{
 
 		///<summary>must have already checked procCode for nonduplicate.</summary>
 		public static long Insert(ProcButton but) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				but.ProcButtonNum=Meth.GetLong(MethodBase.GetCurrentMethod(),but);
-				return but.ProcButtonNum;
-			}
+			
 			return Crud.ProcButtonCrud.Insert(but);
 		}
 
 		///<summary></summary>
 		public static void Update(ProcButton but) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),but);
-				return;
-			}
+			
 			Crud.ProcButtonCrud.Update(but);
 		}
 
 		///<summary></summary>
 		public static void Delete(ProcButton but) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),but);
-				return;
-			}
+			
 			string command="DELETE FROM procbuttonitem WHERE ProcButtonNum = '"
 				+POut.Long(but.ProcButtonNum)+"'";
 			Db.NonQ(command);
@@ -132,10 +119,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes all current ProcButtons from the Chart module, and then adds the default ProcButtons.  Procedure codes must have already been entered or they cannot be added as a ProcButton.</summary>
 		public static void SetToDefault() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			string command="DELETE FROM procbutton";
 			Db.NonQ(command);
 			command="DELETE FROM procbuttonitem";

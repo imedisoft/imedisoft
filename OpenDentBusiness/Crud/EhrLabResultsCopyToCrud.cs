@@ -22,9 +22,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one EhrLabResultsCopyTo object from the database using a query.</summary>
 		public static EhrLabResultsCopyTo SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<EhrLabResultsCopyTo> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -34,9 +32,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of EhrLabResultsCopyTo objects from the database using a query.</summary>
 		public static List<EhrLabResultsCopyTo> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<EhrLabResultsCopyTo> list=TableToList(Db.GetTable(command));
 			return list;
 		}

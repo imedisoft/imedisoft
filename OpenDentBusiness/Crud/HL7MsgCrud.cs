@@ -21,9 +21,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one HL7Msg object from the database using a query.</summary>
 		public static HL7Msg SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<HL7Msg> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -33,9 +31,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of HL7Msg objects from the database using a query.</summary>
 		public static List<HL7Msg> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<HL7Msg> list=TableToList(Db.GetTable(command));
 			return list;
 		}

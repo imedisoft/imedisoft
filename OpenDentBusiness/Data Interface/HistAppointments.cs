@@ -10,43 +10,33 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary></summary>
 		public static List<HistAppointment> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HistAppointment>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM histappointment WHERE PatNum = "+POut.Long(patNum);
 			return Crud.HistAppointmentCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one HistAppointment from the db.</summary>
 		public static HistAppointment GetOne(long histApptNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<HistAppointment>(MethodBase.GetCurrentMethod(),histApptNum);
-			}
+			
 			return Crud.HistAppointmentCrud.SelectOne(histApptNum);
 		}
 
 		public static List<HistAppointment> GetForApt(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HistAppointment>>(MethodBase.GetCurrentMethod(),aptNum);
-			}
+			
 			string command="SELECT * FROM histappointment WHERE AptNum="+POut.Long(aptNum);
 			return Crud.HistAppointmentCrud.SelectMany(command);
 		}
 
 		///<summary>Gets all HistAppointments that have a DateTStamp after dateTimeSince.</summary>
 		public static List<HistAppointment> GetChangedSince(DateTime dateTimeSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HistAppointment>>(MethodBase.GetCurrentMethod(),dateTimeSince);
-			}
+			
 			string command="SELECT * FROM histappointment WHERE DateTStamp > "+POut.DateT(dateTimeSince);
 			return Crud.HistAppointmentCrud.SelectMany(command);
 		}
 
 		///<summary>Gets all AptNums for HistAppointments that have a DateTStamp after dateTimeSince.</summary>
 		public static List<long> GetAptNumsChangedSince(DateTime dateTimeSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),dateTimeSince);
-			}
+			
 			string command="SELECT AptNum FROM histappointment WHERE DateTStamp > "+POut.DateT(dateTimeSince);
 			return Db.GetListLong(command);
 		}
@@ -58,10 +48,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(HistAppointment histAppointment){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				histAppointment.HistApptNum=Meth.GetLong(MethodBase.GetCurrentMethod(),histAppointment);
-				return histAppointment.HistApptNum;
-			}
+			
 			return Crud.HistAppointmentCrud.Insert(histAppointment);
 		}
 		#endregion
@@ -72,10 +59,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary></summary>
 		public static void Delete(long histApptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),histApptNum);
-				return;
-			}
+			
 			Crud.HistAppointmentCrud.Delete(histApptNum);
 		}
 		#endregion

@@ -14,10 +14,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(PerioMeasure Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.PerioMeasureCrud.Update(Cur);
 			//3-10-10 A bug that only lasted for a few weeks has resulted in a number of duplicate entries for each tooth.
 			//So we need to clean up duplicates as we go.  Might put in db maint later.
@@ -31,19 +28,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(PerioMeasure Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.PerioMeasureNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.PerioMeasureNum;
-			}
+			
 			return Crud.PerioMeasureCrud.Insert(Cur);
 		}
 
 		///<summary></summary>
 		public static void Delete(PerioMeasure Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string command= "DELETE from periomeasure WHERE PerioMeasureNum = '"
 				+Cur.PerioMeasureNum.ToString()+"'";
 			Db.NonQ(command);
@@ -51,10 +42,7 @@ namespace OpenDentBusiness{
 
 		///<summary>For the current exam, clears existing skipped teeth and resets them to the specified skipped teeth. The ArrayList valid values are 1-32 int.</summary>
 		public static void SetSkipped(long perioExamNum,List<int> skippedTeeth) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),perioExamNum,skippedTeeth);
-				return;
-			}
+			
 			//for(int i=0;i<skippedTeeth.Count;i++){
 			//MessageBox.Show(skippedTeeth[i].ToString());
 			//}
@@ -83,9 +71,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in FormPerio.Add_Click. For the specified exam, gets a list of all skipped teeth. The ArrayList valid values are 1-32 int.</summary>
 		public static List<int> GetSkipped(long perioExamNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<int>>(MethodBase.GetCurrentMethod(),perioExamNum);
-			}
+			
 			string command = "SELECT IntTooth FROM periomeasure WHERE "
 				+"SequenceType = '"+POut.Int((int)PerioSequenceType.SkipTooth)+"' "
 				+"AND PerioExamNum = '"+perioExamNum.ToString()+"' "
@@ -118,9 +104,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetMeasurementTable(long patNum,List<PerioExam> listPerioExams) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum,listPerioExams);
-			}
+			
 			string command =
 				"SELECT periomeasure.*,perioexam.ExamDate"
 				+" FROM periomeasure,perioexam"
@@ -132,9 +116,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<PerioMeasure> GetAllForExam(long perioExamNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PerioMeasure>>(MethodBase.GetCurrentMethod(),perioExamNum);
-			}
+			
 			string command ="SELECT * FROM periomeasure "
 				+"WHERE PerioExamNum = "+POut.Long(perioExamNum);
 			return Crud.PerioMeasureCrud.SelectMany(command);

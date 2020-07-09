@@ -11,9 +11,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<CommOptOut> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CommOptOut>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM commoptout WHERE PatNum = "+POut.Long(patNum);
 			return Crud.CommOptOutCrud.SelectMany(command);
 		}
@@ -22,9 +20,7 @@ namespace OpenDentBusiness{
 			if(listPatNums.Count==0) {
 				return new List<CommOptOut>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CommOptOut>>(MethodBase.GetCurrentMethod(),listPatNums,optOutType);
-			}
+			
 			string command="SELECT * FROM commoptout WHERE PatNum IN("+string.Join(",",listPatNums.Select(x => POut.Long(x)))+") "
 				+"AND CommType="+POut.Int((int)optOutType);
 			return Crud.CommOptOutCrud.SelectMany(command);
@@ -36,10 +32,7 @@ namespace OpenDentBusiness{
 			if(listCommOptOuts.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listCommOptOuts);
-				return;
-			}
+			
 			Crud.CommOptOutCrud.InsertMany(listCommOptOuts);
 		}
 
@@ -47,10 +40,7 @@ namespace OpenDentBusiness{
 			if(listCommOptOuts.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listCommOptOuts);
-				return;
-			}
+			
 			string command="DELETE FROM commoptout WHERE CommOptOutNum IN("+string.Join(",",
 				listCommOptOuts.Select(x => POut.Long(x.CommOptOutNum)))+")";
 			Db.NonQ(command);
@@ -62,9 +52,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Gets one CommOptOut from the db.</summary>
 		public static CommOptOut GetOne(long communicationOptOutNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<CommOptOut>(MethodBase.GetCurrentMethod(),communicationOptOutNum);
-			}
+			
 			return Crud.CommOptOutCrud.SelectOne(communicationOptOutNum);
 		}
 		#endregion
@@ -74,10 +62,7 @@ namespace OpenDentBusiness{
 			#region Update
 		///<summary></summary>
 		public static void Update(CommOptOut communicationOptOut){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),communicationOptOut);
-				return;
-			}
+			
 			Crud.CommOptOutCrud.Update(communicationOptOut);
 		}
 			#endregion

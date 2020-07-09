@@ -16,10 +16,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void InsertMany(List<EhrMeasureEvent> listEhrMeasureEvents) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listEhrMeasureEvents);
-				return;
-			}
+			
 			Crud.EhrMeasureEventCrud.InsertMany(listEhrMeasureEvents);
 		}
 
@@ -39,9 +36,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of MeasureEvents.  Primarily used in FormEhrMeasureEvents.  Pass in true to get all EhrMeasureEvents for the date range.  Passing in true will ignore the specified measure event type.</summary>
 		public static List<EhrMeasureEvent> GetAllByTypeFromDB(DateTime dateStart,DateTime dateEnd,EhrMeasureEventType measureEventType,bool isAll) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrMeasureEvent>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,measureEventType,isAll);
-			}
+			
 			string command="SELECT * FROM ehrmeasureevent "
 				+"WHERE DateTEvent >= "+POut.DateT(dateStart)+" "
 				+"AND DateTEvent <= "+POut.DateT(dateEnd)+" ";
@@ -54,9 +49,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the MoreInfo column from the most recent event of the specified type. Returns blank if none exists.</summary>
 		public static string GetLatestInfoByType(EhrMeasureEventType measureEventType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),measureEventType);
-			}
+			
 			string command="SELECT * FROM ehrmeasureevent WHERE EventType="+POut.Int((int)measureEventType)
 			+" ORDER BY DateTEvent DESC LIMIT 1";
 			EhrMeasureEvent measureEvent=Crud.EhrMeasureEventCrud.SelectOne(command);
@@ -70,9 +63,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Ordered by dateT</summary>
 		public static List<EhrMeasureEvent> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrMeasureEvent>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ehrmeasureevent WHERE PatNum = "+POut.Long(patNum)+" "
 				+"ORDER BY DateTEvent";
 			return Crud.EhrMeasureEventCrud.SelectMany(command);
@@ -80,9 +71,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Ordered by dateT</summary>
 		public static List<EhrMeasureEvent> RefreshByType(long patNum,params EhrMeasureEventType[] ehrMeasureEventTypes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrMeasureEvent>>(MethodBase.GetCurrentMethod(),patNum,ehrMeasureEventTypes);
-			}
+			
 			string command="SELECT * FROM ehrmeasureevent WHERE (";
 			for(int i=0;i<ehrMeasureEventTypes.Length;i++) {
 				if(i>0) {
@@ -108,28 +97,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(EhrMeasureEvent ehrMeasureEvent){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				ehrMeasureEvent.EhrMeasureEventNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrMeasureEvent);
-				return ehrMeasureEvent.EhrMeasureEventNum;
-			}
+			
 			return Crud.EhrMeasureEventCrud.Insert(ehrMeasureEvent);
 		}
 
 		///<summary></summary>
 		public static void Update(EhrMeasureEvent ehrMeasureEvent) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrMeasureEvent);
-				return;
-			}
+			
 			Crud.EhrMeasureEventCrud.Update(ehrMeasureEvent);
 		}
 
 		///<summary></summary>
 		public static void Delete(long ehrMeasureEventNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrMeasureEventNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ehrmeasureevent WHERE EhrMeasureEventNum = "+POut.Long(ehrMeasureEventNum);
 			Db.NonQ(command);
 		}
@@ -149,9 +129,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets codes (SNOMEDCT) from CodeValueResult for EhrMeasureEvents with DateTEvent within the last year for the given EhrMeasureEventType.
 		///Result list is grouped by code.</summary>
 		public static List<string> GetListCodesUsedForType(EhrMeasureEventType eventType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod(),eventType);
-			}
+			
 			string command="SELECT CodeValueResult FROM ehrmeasureevent "
 				+"WHERE EventType="+POut.Int((int)eventType)+" "
 				+"AND CodeValueResult!='' "
@@ -164,9 +142,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Gets one EhrMeasureEvent from the db.</summary>
 		public static EhrMeasureEvent GetOne(long ehrMeasureEventNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EhrMeasureEvent>(MethodBase.GetCurrentMethod(),ehrMeasureEventNum);
-			}
+			
 			return Crud.EhrMeasureEventCrud.SelectOne(ehrMeasureEventNum);
 		}
 

@@ -67,11 +67,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_letterMergeFieldCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _letterMergeFieldCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -79,10 +75,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Inserts this lettermergefield into database.</summary>
 		public static long Insert(LetterMergeField lmf) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				lmf.FieldNum=Meth.GetLong(MethodBase.GetCurrentMethod(),lmf);
-				return lmf.FieldNum;
-			}
+			
 			return Crud.LetterMergeFieldCrud.Insert(lmf);
 		}
 
@@ -114,10 +107,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes all lettermergefields for the given letter.  This is then followed by adding them all back, which is simpler than just updating.</summary>
 		public static void DeleteForLetter(long letterMergeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),letterMergeNum);
-				return;
-			}
+			
 			string command="DELETE FROM lettermergefield "
 				+"WHERE LetterMergeNum = "+POut.Long(letterMergeNum);
 			Db.NonQ(command);

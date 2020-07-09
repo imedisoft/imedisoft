@@ -21,9 +21,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one EServiceSignal object from the database using a query.</summary>
 		public static EServiceSignal SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<EServiceSignal> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -33,9 +31,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of EServiceSignal objects from the database using a query.</summary>
 		public static List<EServiceSignal> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<EServiceSignal> list=TableToList(Db.GetTable(command));
 			return list;
 		}

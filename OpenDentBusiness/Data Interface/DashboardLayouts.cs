@@ -28,9 +28,7 @@ namespace OpenDentBusiness{
 		#endregion
 
 		public static List<DashboardLayout> GetDashboardLayout(string dashboardGroupName = "") {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DashboardLayout>>(MethodBase.GetCurrentMethod(),dashboardGroupName);
-			}
+			
 			string command="SELECT * FROM dashboardlayout";
 			List<DashboardLayout> layouts=Crud.DashboardLayoutCrud.SelectMany(command);
 			if(!string.IsNullOrEmpty(dashboardGroupName)) { //Limit to a single group.
@@ -46,10 +44,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Inserts the given dashboard layouts and cells into the database.</summary>
 		public static void SetDashboardLayout(List<DashboardLayout> layouts,string dashboardGroupName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),layouts,dashboardGroupName);
-				return;
-			}
+			
 			//Get all old layouts.
 			List<DashboardLayout> layoutsDbAll=GetDashboardLayout();
 			//Get all old layouts for this group.

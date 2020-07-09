@@ -12,18 +12,14 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets list of all DefLinks by defLinkType .</summary>
 		public static List<DefLink> GetDefLinksByType(DefLinkType defType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DefLink>>(MethodBase.GetCurrentMethod(),defType);
-			}
+			
 			string command="SELECT * FROM deflink WHERE LinkType="+POut.Int((int)defType);
 			return Crud.DefLinkCrud.SelectMany(command);
 		}
 
 		///<summary>Gets list of all DefLinks for the definition and defLinkType passed in.</summary>
 		public static List<DefLink> GetDefLinksByType(DefLinkType defType,long defNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DefLink>>(MethodBase.GetCurrentMethod(),defType,defNum);
-			}
+			
 			string command="SELECT * FROM deflink "
 				+"WHERE LinkType="+POut.Int((int)defType)+" "
 				+"AND DefNum="+POut.Long(defNum);
@@ -32,9 +28,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets list of all DefLinks for the definitions and defLinkType passed in.</summary>
 		public static List<DefLink> GetDefLinksByTypeAndDefs(DefLinkType defType,List<long> listDefNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DefLink>>(MethodBase.GetCurrentMethod(),defType,listDefNums);
-			}
+			
 			if(listDefNums==null || listDefNums.Count < 1) {
 				return new List<DefLink>();
 			}
@@ -76,9 +70,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets list of DefLinks by FKeys. Must provide DefLinkType.</summary>
 		public static List<DefLink> GetListByFKeys(List<long> listFKeys,DefLinkType defType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DefLink>>(MethodBase.GetCurrentMethod(),listFKeys,defType);
-			}
+			
 			if(listFKeys.Count==0) {
 				return new List<DefLink>();
 			}
@@ -89,9 +81,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one DefLink from the db.</summary>
 		public static DefLink GetOne(long defLinkNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<DefLink>(MethodBase.GetCurrentMethod(),defLinkNum);
-			}
+			
 			return Crud.DefLinkCrud.SelectOne(defLinkNum);
 		}
 		#endregion
@@ -100,10 +90,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(DefLink defLink) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				defLink.DefLinkNum=Meth.GetLong(MethodBase.GetCurrentMethod(),defLink);
-				return defLink.DefLinkNum;
-			}
+			
 			return Crud.DefLinkCrud.Insert(defLink);
 		}
 
@@ -150,10 +137,6 @@ namespace OpenDentBusiness{
 			if(listDefNums==null || listDefNums.Count < 1) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//Remoting role check to save on middle tier calls due to loop.
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listDefNums,fKey,linkType);
-				return;
-			}
 			foreach(long defNum in listDefNums) {
 				Insert(new DefLink() {
 					DefNum=defNum,
@@ -168,10 +151,7 @@ namespace OpenDentBusiness{
 			if(listFKeys.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),defNum,listFKeys,linkType);
-				return;
-			}
+			
 			Crud.DefLinkCrud.InsertMany(listFKeys.Select(x => new DefLink() { DefNum=defNum,FKey=x,LinkType=linkType }).ToList());
 		}
 
@@ -179,19 +159,13 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary></summary>
 		public static void Update(DefLink defLink) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),defLink);
-				return;
-			}
+			
 			Crud.DefLinkCrud.Update(defLink);
 		}
 
 		///<summary>Updates the FKey column on all deflink rows for the corresponding definition and type.</summary>
 		public static void UpdateDefWithFKey(long defNum,long fKey,DefLinkType defType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),defNum,fKey,defType);
-				return;
-			}
+			
 			string command="UPDATE deflink SET FKey="+POut.Long(fKey)+" "
 				+"WHERE LinkType="+POut.Int((int)defType)+" "
 				+"AND DefNum="+POut.Long(defNum);
@@ -200,19 +174,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Syncs two supplied lists of DefLink.</summary>
 		public static bool Sync(List<DefLink> listNew,List<DefLink> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.DefLinkCrud.Sync(listNew,listOld);
 		}
 		#endregion
 		#region Delete
 		///<summary></summary>
 		public static void Delete(long defLinkNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),defLinkNum);
-				return;
-			}
+			
 			Crud.DefLinkCrud.Delete(defLinkNum);
 		}
 
@@ -221,10 +190,7 @@ namespace OpenDentBusiness{
 			if(listFKeys==null || listFKeys.Count < 1) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listFKeys,defType);
-				return;
-			}
+			
 			string command="DELETE FROM deflink "
 				+"WHERE LinkType="+POut.Int((int)defType)+" "
 				+"AND FKey IN("+string.Join(",",listFKeys.Select(x => POut.Long(x)))+")";
@@ -233,10 +199,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes all links for the specified definition and link type.</summary>
 		public static void DeleteAllForDef(long defNum,DefLinkType defType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),defNum,defType);
-				return;
-			}
+			
 			string command="DELETE FROM deflink "
 				+"WHERE LinkType="+POut.Int((int)defType)+" "
 				+"AND DefNum="+POut.Long(defNum);
@@ -247,10 +210,7 @@ namespace OpenDentBusiness{
 			if(listDefLinkNums==null || listDefLinkNums.Count < 1) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listDefLinkNums);
-				return;
-			}
+			
 			string command="DELETE FROM deflink WHERE DefLinkNum IN ("+string.Join(",",listDefLinkNums)+")";
 			Db.NonQ(command);
 		}

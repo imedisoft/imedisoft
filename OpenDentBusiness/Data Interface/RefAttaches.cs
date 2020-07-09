@@ -16,9 +16,7 @@ namespace OpenDentBusiness{
 
 		///<summary>For the ReferralsPatient window.  showAll is only used for the referred procs view.</summary>
 		public static List<RefAttach> RefreshFiltered(long patNum,bool showAll,long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RefAttach>>(MethodBase.GetCurrentMethod(),patNum,showAll,procNum);
-			}
+			
 			//Inner join with referral table on ReferralNum to ignore invalid RefAttaches.  DBM removes these invalid rows anyway.
 			string command="SELECT refattach.* FROM refattach "
 				+"INNER JOIN referral ON refattach.ReferralNum=referral.ReferralNum "
@@ -34,9 +32,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>For FormReferralProckTrack.</summary>
 		public static List<RefAttach> RefreshForReferralProcTrack(DateTime dateFrom,DateTime dateTo,bool complete) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RefAttach>>(MethodBase.GetCurrentMethod(),dateFrom,dateTo,complete);
-			}
+			
 			//Inner join with referral table on ReferralNum to ignore invalid RefAttaches.  DBM removes these invalid rows anyway.
 			string command="SELECT refattach.* FROM refattach "
 				+"INNER JOIN referral ON refattach.ReferralNum=referral.ReferralNum "
@@ -52,9 +48,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of patient names that are attached to this referral. Used to display in the referral edit window.</summary>
 		public static string[] GetPats(long refNum,ReferralType refType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<string[]>(MethodBase.GetCurrentMethod(),refNum,refType);
-			}
+			
 			string command="SELECT CONCAT(CONCAT(patient.LName,', '),patient.FName) "
 				+"FROM patient,refattach,referral " 
 				+"WHERE patient.PatNum=refattach.PatNum "
@@ -71,9 +65,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Gets the referral number for this patient.  If multiple, it returns the first one.  If none, it returns 0.  Does not consider referred To.</summary>
 		public static long GetReferralNum(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT ReferralNum "
 				+"FROM refattach " 
 				+"WHERE refattach.PatNum ="+POut.Long(patNum)+" "
@@ -85,9 +77,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all RefAttaches for the patients in the list of PatNums.  Returns an empty list if no matches.</summary>
 		public static List<RefAttach> GetRefAttaches(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RefAttach>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			if(listPatNums.Count==0) {
 				return new List<RefAttach>();
 			}
@@ -100,9 +90,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all the possible RefAttaches, for the patient, that are in the denominator of the summary of care measure.</summary>
 		public static List<RefAttach> GetRefAttachesForSummaryOfCareForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RefAttach>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM refattach "
 				+"WHERE PatNum = "+POut.Long(patNum)+" "
 				+"AND RefType="+POut.Int((int)ReferralType.RefTo)+" "
@@ -117,10 +105,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(RefAttach attach) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				attach.RefAttachNum=Meth.GetLong(MethodBase.GetCurrentMethod(),attach);
-				return attach.RefAttachNum;
-			}
+			
 			return Crud.RefAttachCrud.Insert(attach);
 		}
 		#endregion
@@ -128,19 +113,13 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary></summary>
 		public static void Update(RefAttach attach){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),attach);
-				return;
-			}
+			
 			Crud.RefAttachCrud.Update(attach);
 		}
 		
 		///<summary></summary>
 		public static void Update(RefAttach attach,RefAttach attachOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),attach,attachOld);
-				return;
-			}
+			
 			Crud.RefAttachCrud.Update(attach,attachOld);
 		}
 		#endregion
@@ -148,10 +127,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary></summary>
 		public static void Delete(RefAttach attach){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),attach);
-				return;
-			}
+			
 			string command="UPDATE refattach SET ItemOrder=ItemOrder-1 WHERE PatNum="+POut.Long(attach.PatNum)
 				+" AND ItemOrder > "+POut.Int(attach.ItemOrder);
 			Db.NonQ(command);
@@ -166,9 +142,7 @@ namespace OpenDentBusiness{
 		#region Misc Methods
 		///<summary></summary>
 		public static bool IsReferralAttached(long referralNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),referralNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM refattach WHERE ReferralNum = '"+POut.Long(referralNum)+"'";
 			return (Db.GetCount(command)!="0");
 		}

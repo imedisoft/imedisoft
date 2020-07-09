@@ -29,45 +29,32 @@ namespace OpenDentBusiness{
 
 
 		public static List<ReqStudent> GetForAppt(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ReqStudent>>(MethodBase.GetCurrentMethod(),aptNum);
-			}
+			
 			string command="SELECT * FROM reqstudent WHERE AptNum="+POut.Long(aptNum)+" ORDER BY ProvNum,Descript";
 			return Crud.ReqStudentCrud.SelectMany(command);
 		}
 
 		public static ReqStudent GetOne(long ReqStudentNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ReqStudent>(MethodBase.GetCurrentMethod(),ReqStudentNum);
-			}
+			
 			string command="SELECT * FROM reqstudent WHERE ReqStudentNum="+POut.Long(ReqStudentNum);
 			return Crud.ReqStudentCrud.SelectOne(ReqStudentNum);
 		}
 
 		///<summary></summary>
 		public static void Update(ReqStudent req) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),req);
-				return;
-			}
+			
 			Crud.ReqStudentCrud.Update(req);
 		}
 
 		///<summary></summary>
 		public static long Insert(ReqStudent req) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				req.ReqStudentNum=Meth.GetLong(MethodBase.GetCurrentMethod(),req);
-				return req.ReqStudentNum;
-			}
+			
 			return Crud.ReqStudentCrud.Insert(req);
 		}
 
 		///<summary>Surround with try/catch.</summary>
 		public static void Delete(long reqStudentNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),reqStudentNum);
-				return;
-			}
+			
 			ReqStudent req=GetOne(reqStudentNum);
 			//if a reqneeded exists, then disallow deletion.
 			if(ReqNeededs.GetReq(req.ReqNeededNum)==null) {
@@ -78,9 +65,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable RefreshOneStudent(long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),provNum);
-			}
+			
 			DataTable table=new DataTable();
 			DataRow row;
 			//columns that start with lowercase are altered for display rather than being raw data.
@@ -124,9 +109,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable RefreshManyStudents(long classNum,long courseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),classNum,courseNum);
-			}
+			
 			DataTable table=new DataTable();
 			DataRow row;
 			//columns that start with lowercase are altered for display rather than being raw data.
@@ -164,9 +147,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Provider(student) is required.</summary>
 		public static DataTable GetForCourseClass(long schoolCourse,long schoolClass) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),schoolCourse,schoolClass);
-			}
+			
 			string command="SELECT Descript,ReqNeededNum "
 				+"FROM reqneeded ";
 			//if(schoolCourse==0){
@@ -184,10 +165,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>All fields for all reqs will have already been set.  All except for reqstudent.ReqStudentNum if new.  Now, they just have to be persisted to the database.</summary>
 		public static void SynchApt(List<ReqStudent> listReqsAttached,List<ReqStudent> listReqsRemoved,long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listReqsAttached,listReqsRemoved,aptNum);
-				return;
-			}
+			
 			string command;
 			//first, delete all that were removed from this appt
 			if(listReqsRemoved.Count(x => x.ReqStudentNum != 0) > 0) {
@@ -213,9 +191,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Before reqneeded.Delete, this checks to make sure that req is not in use by students.  Used to prompt user.</summary>
 		public static string InUseBy(long reqNeededNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),reqNeededNum);
-			}
+			
 			string command="SELECT LName,FName FROM provider,reqstudent "
 				+"WHERE provider.ProvNum=reqstudent.ProvNum "
 				+"AND reqstudent.ReqNeededNum="+POut.Long(reqNeededNum)

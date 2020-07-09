@@ -139,28 +139,21 @@ namespace OpenDentBusiness{
 		
 		///<summary>Gets one InsVerify from the db that has the given fkey and verify type.</summary>
 		public static InsVerify GetOneByFKey(long fkey,VerifyTypes verifyType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<InsVerify>(MethodBase.GetCurrentMethod(),fkey,verifyType);
-			}
+			
 			string command="SELECT * FROM insverify WHERE FKey="+POut.Long(fkey)+" AND VerifyType="+POut.Int((int)verifyType)+"";
 			return Crud.InsVerifyCrud.SelectOne(command);
 		}
 
 		///<summary></summary>
 		public static void Update(InsVerify insVerify) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insVerify);
-				return;
-			}
+			
 			Crud.InsVerifyCrud.Update(insVerify);
 		}
 		
 		///<summary>Inserts a default InsVerify into the database based on the passed in patplan.  Used when inserting a new patplan.
 		///Returns the primary key of the new InsVerify.</summary>
 		public static long InsertForPatPlanNum(long patPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),patPlanNum);
-			}
+			
 			InsVerify insVerify=new InsVerify();
 			insVerify.VerifyType=VerifyTypes.PatientEnrollment;
 			insVerify.FKey=patPlanNum;
@@ -170,9 +163,7 @@ namespace OpenDentBusiness{
 		///<summary>Inserts a default InsVerify into the database based on the passed in insplan.  Used when inserting a new insplan.
 		///Returns the primary key of the new InsVerify.</summary>
 		public static long InsertForPlanNum(long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),planNum);
-			}
+			
 			InsVerify insVerify=new InsVerify();
 			insVerify.VerifyType=VerifyTypes.InsuranceBenefit;
 			insVerify.FKey=planNum;
@@ -181,26 +172,19 @@ namespace OpenDentBusiness{
 		
 		///<summary>Deletes an InsVerify with the passed in FKey and VerifyType.</summary>
 		public static void DeleteByFKey(long fkey,VerifyTypes verifyType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),fkey,verifyType);
-				return;
-			}
+			
 			string command="DELETE FROM insverify WHERE FKey="+POut.Long(fkey)+" AND VerifyType="+POut.Int((int)verifyType);
 			Db.NonQ(command);
 		}
 
 		public static List<InsVerify> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsVerify>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM insverify";
 			return Crud.InsVerifyCrud.SelectMany(command);
 		}
 
 		public static List<long> GetAllInsVerifyUserNums() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT DISTINCT UserNum FROM insverify";
 			return Db.GetListLong(command);
 		}
@@ -213,10 +197,6 @@ namespace OpenDentBusiness{
 			,DateTime datePlanBenefitsLastVerified,List<long> listClinicNums,List<long> listRegionDefNums,long statusDefNum
 			,long userNum,string carrierName,bool excludePatVerifyWhenNoIns,bool excludePatClones) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsVerifyGridObject>>(MethodBase.GetCurrentMethod(),startDate,endDate,datePatEligibilityLastVerified
-					,datePlanBenefitsLastVerified,listClinicNums,listRegionDefNums,statusDefNum,userNum,carrierName,excludePatVerifyWhenNoIns,excludePatClones);
-			}
 			//clinicJoin should only be used if the passed in clinicNum is a value other than 0 (Unassigned).
 			string whereClinic="";
 			if(listClinicNums.Contains(-1)) {//All clinics
@@ -351,10 +331,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static void CleanupInsVerifyRows(DateTime startDate, DateTime endDate) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),startDate,endDate);
-				return;
-			}
+			
 			//Nathan OK'd the necessity for a complex update query like this to avoid looping through update statements.  This will be changed to a crud update method sometime in the future.
 			string command="";
 			List<long> listInsVerifyNums=Db.GetListLong(GetInsVerifyCleanupQuery(startDate,endDate));
@@ -808,11 +785,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_InsVerifyCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _InsVerifyCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -823,9 +796,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<InsVerify> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsVerify>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM insverify WHERE PatNum = "+POut.Long(patNum);
 			return Crud.InsVerifyCrud.SelectMany(command);
 		}

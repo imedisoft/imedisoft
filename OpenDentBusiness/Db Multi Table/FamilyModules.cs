@@ -10,9 +10,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets the data necessary to load the Family Module.</summary>
 		public static LoadData GetLoadData(long patNum,bool doCreateSecLog) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<LoadData>(MethodBase.GetCurrentMethod(),patNum,doCreateSecLog);
-			}
 			LoadData data=new LoadData();
 			data.Fam=Patients.GetFamily(patNum);
 			data.Pat=data.Fam.GetPatient(patNum);

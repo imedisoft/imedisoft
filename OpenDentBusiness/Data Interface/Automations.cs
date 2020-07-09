@@ -71,11 +71,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_automationCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _automationCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -83,28 +79,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Automation auto) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				auto.AutomationNum=Meth.GetLong(MethodBase.GetCurrentMethod(),auto);
-				return auto.AutomationNum;
-			}
+			
 			return Crud.AutomationCrud.Insert(auto);
 		}
 
 		///<summary></summary>
 		public static void Update(Automation auto) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),auto);
-				return;
-			}
+			
 			Crud.AutomationCrud.Update(auto);
 		}
 
 		///<summary></summary>
 		public static void Delete(Automation auto) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),auto);
-				return;
-			}
+			
 			string command="DELETE FROM automation" 
 				+" WHERE AutomationNum = "+POut.Long(auto.AutomationNum);
  			Db.NonQ(command);

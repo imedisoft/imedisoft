@@ -67,11 +67,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_letterMergeCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _letterMergeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -103,28 +99,19 @@ namespace OpenDentBusiness{
 
 		///<summary>Inserts this lettermerge into database.</summary>
 		public static long Insert(LetterMerge merge) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				merge.LetterMergeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),merge);
-				return merge.LetterMergeNum;
-			}
+			
 			return Crud.LetterMergeCrud.Insert(merge);
 		}
 
 		///<summary></summary>
 		public static void Update(LetterMerge merge){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),merge);
-				return;
-			}
+			
 			Crud.LetterMergeCrud.Update(merge);
 		}
 
 		///<summary></summary>
 		public static void Delete(LetterMerge merge){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),merge);
-				return;
-			}
+			
 			string command="DELETE FROM lettermerge "
 				+"WHERE LetterMergeNum = "+POut.Long(merge.LetterMergeNum);
 			Db.NonQ(command);

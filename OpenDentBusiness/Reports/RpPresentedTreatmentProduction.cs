@@ -10,10 +10,6 @@ namespace OpenDentBusiness {
 		public static DataTable GetPresentedTreatmentProductionTable(DateTime dateStart,DateTime dateEnd,List<long> listClinicNums,
 			bool hasAllClinics,bool hasClinicsEnabled,bool isPresenter,bool isFirstPresenter,List<long> listUserNums,bool isDetailed) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listClinicNums,hasAllClinics
-					,hasClinicsEnabled,isPresenter,isFirstPresenter,listUserNums,isDetailed);
-			}
 			List<TreatPlanPresenterEntry> listTreatPlanPresenterEntries=new List<TreatPlanPresenterEntry>();
 			listTreatPlanPresenterEntries=GetListTreatPlanPresenterEntries(listClinicNums,isFirstPresenter,isPresenter,dateStart,dateEnd);
 			//-------------------------------------------------------Run Detailed

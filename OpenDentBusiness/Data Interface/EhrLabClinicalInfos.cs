@@ -29,29 +29,21 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EhrLabClinicalInfo> GetForLab(long ehrLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrLabClinicalInfo>>(MethodBase.GetCurrentMethod(),ehrLabNum);
-			}
+			
 			string command="SELECT * FROM ehrlabclinicalinfo WHERE EhrLabNum = "+POut.Long(ehrLabNum);
 			return Crud.EhrLabClinicalInfoCrud.SelectMany(command);
 		}
 
 		///<summary>Deletes notes for lab results too.</summary>
 		public static void DeleteForLab(long ehrLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabNum);
-				return;
-			}
+			
 			string command="DELETE FROM ehrlabclinicalinfo WHERE EhrLabNum = "+POut.Long(ehrLabNum);
 			Db.NonQ(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(EhrLabClinicalInfo ehrLabClinicalInfo) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				ehrLabClinicalInfo.EhrLabClinicalInfoNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrLabClinicalInfo);
-				return ehrLabClinicalInfo.EhrLabClinicalInfoNum;
-			}
+			
 			return Crud.EhrLabClinicalInfoCrud.Insert(ehrLabClinicalInfo);
 		}
 
@@ -124,11 +116,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_EhrLabClinicalInfoCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _EhrLabClinicalInfoCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -139,36 +127,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EhrLabClinicalInfo> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrLabClinicalInfo>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ehrlabclinicalinfo WHERE PatNum = "+POut.Long(patNum);
 			return Crud.EhrLabClinicalInfoCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one EhrLabClinicalInfo from the db.</summary>
 		public static EhrLabClinicalInfo GetOne(long ehrLabClinicalInfoNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EhrLabClinicalInfo>(MethodBase.GetCurrentMethod(),ehrLabClinicalInfoNum);
-			}
+			
 			return Crud.EhrLabClinicalInfoCrud.SelectOne(ehrLabClinicalInfoNum);
 		}
 
 		///<summary></summary>
 		public static void Update(EhrLabClinicalInfo ehrLabClinicalInfo){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabClinicalInfo);
-				return;
-			}
+			
 			Crud.EhrLabClinicalInfoCrud.Update(ehrLabClinicalInfo);
 		}
 
 		///<summary></summary>
 		public static void Delete(long ehrLabClinicalInfoNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabClinicalInfoNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ehrlabclinicalinfo WHERE EhrLabClinicalInfoNum = "+POut.Long(ehrLabClinicalInfoNum);
 			Db.NonQ(command);
 		}

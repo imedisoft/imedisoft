@@ -26,9 +26,7 @@ namespace OpenDentBusiness{
 		///Set isSimple to false to run a simpiler query and if attach.DateTimeTrans is not needed.
 		///Returned list is ordered by Etrans835Attach.DateTimeEntry, this is very important when identifying claims split from an ERA.</summary>
 		public static List<Etrans835Attach> GetForEtransNumOrClaimNums(bool isSimple,List<long> listEtransNum=null,params long[] listClaimNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Etrans835Attach>>(MethodBase.GetCurrentMethod(),isSimple,listEtransNum,listClaimNums);
-			}
+			
 			if((listEtransNum==null || listEtransNum.Count==0) && (listClaimNums==null || listClaimNums.Length==0)) {
 				return new List<Etrans835Attach>();//Both are either not defined or contain no information, there would be no WHERE clause.
 			}
@@ -71,9 +69,7 @@ namespace OpenDentBusiness{
 		///Set isSimple to false to run a simpiler query and if attach.DateTimeTrans is not needed.
 		///Returned list is ordered by Etrans835Attach.DateTimeEntry, this is very important when identifying claims split from an ERA.</summary>
 		public static List<Etrans835Attach> GetForEtrans(bool isSimple,params long[] listEtrans835Nums){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Etrans835Attach>>(MethodBase.GetCurrentMethod(),isSimple,listEtrans835Nums);
-			}
+			
 			if(listEtrans835Nums.Length==0) {
 				return new List<Etrans835Attach>();
 			}
@@ -98,10 +94,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Create a single attachment for a claim to an 835.</summary>
 		public static long Insert(Etrans835Attach etrans835Attach){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				etrans835Attach.Etrans835AttachNum=Meth.GetLong(MethodBase.GetCurrentMethod(),etrans835Attach);
-				return etrans835Attach.Etrans835AttachNum;
-			}
+			
 			return Crud.Etrans835AttachCrud.Insert(etrans835Attach);
 		}
 
@@ -112,10 +105,7 @@ namespace OpenDentBusiness{
 			if(arrayEtranNums.Length==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clpSegmentIndex,arrayEtranNums);
-				return;
-			}
+			
 			string command="DELETE FROM etrans835attach "
 				+"WHERE EtransNum IN ("+string.Join(",",arrayEtranNums.Select(x => POut.Long(x)))+")";
 			if(clpSegmentIndex >= 0) {
@@ -129,10 +119,7 @@ namespace OpenDentBusiness{
 			if(listEtrans835AttachNums==null || listEtrans835AttachNums.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listEtrans835AttachNums);
-				return;
-			}
+			
 			Db.NonQ("DELETE FROM etrans835attach WHERE Etrans835AttachNum IN ("+string.Join(",",listEtrans835AttachNums.Select(x => POut.Long(x)))+")");
 		}
 
@@ -152,18 +139,14 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary></summary>
 		public static List<Etrans835Attach> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Etrans835Attach>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM etrans835attach WHERE PatNum = "+POut.Long(patNum);
 			return Crud.Etrans835AttachCrud.SelectMany(command);
 		}
 		
 		///<summary>Gets one Etrans835Attach from the db.</summary>
 		public static Etrans835Attach GetOne(long etrans835AttachNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<Etrans835Attach>(MethodBase.GetCurrentMethod(),etrans835AttachNum);
-			}
+			
 			return Crud.Etrans835AttachCrud.SelectOne(etrans835AttachNum);
 		}
 		#endregion
@@ -171,20 +154,14 @@ namespace OpenDentBusiness{
 			#region Update
 			///<summary></summary>
 		public static void Update(Etrans835Attach etrans835Attach){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),etrans835Attach);
-				return;
-			}
+			
 			Crud.Etrans835AttachCrud.Update(etrans835Attach);
 		}
 			#endregion
 			#region Delete
 		///<summary></summary>
 		public static void Delete(long etrans835AttachNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),etrans835AttachNum);
-				return;
-			}
+			
 			Crud.Etrans835AttachCrud.Delete(etrans835AttachNum);
 		}
 			#endregion

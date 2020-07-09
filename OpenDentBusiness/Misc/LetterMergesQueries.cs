@@ -20,9 +20,6 @@ namespace OpenDentBusiness {
 			if(letter.Fields==null) {
 				throw new ArgumentException("Invalid letter fields","letter.Fields");
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),PatCur,letter);
-			}
 			//jsparks- This is messy and prone to bugs.  It needs to be reworked to work just like
 			//in SheetFiller.FillFieldsInStaticText.  Just grab a bunch of separate objects
 			//instead of one result row.

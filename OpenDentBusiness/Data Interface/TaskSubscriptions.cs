@@ -14,9 +14,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of TaskSubscriptions for the TaskLists userNum is directly subscribed to. Does not include any children/grandchildren 
 		///of the TaskLists in TaskSubscription.</summary>
 		public static List<TaskSubscription> GetTaskSubscriptionsForUser(long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskSubscription>>(MethodBase.GetCurrentMethod(),userNum);
-			}
+			
 			string command="SELECT * FROM tasksubscription WHERE UserNum="+POut.Long(userNum);
 			return Crud.TaskSubscriptionCrud.SelectMany(command);
 		}
@@ -41,20 +39,14 @@ namespace OpenDentBusiness{
 	
 		///<summary></summary>
 		public static long Insert(TaskSubscription subsc){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				subsc.TaskSubscriptionNum=Meth.GetLong(MethodBase.GetCurrentMethod(),subsc);
-				return subsc.TaskSubscriptionNum;
-			}
+			
 			return Crud.TaskSubscriptionCrud.Insert(subsc);
 		}
 
 		/*
 		///<summary></summary>
 		public static void Update(TaskSubscription subsc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),subsc);
-				return;
-			}
+			
 			Crud.TaskSubscriptionCrud.Update(subsc);
 		}*/
 
@@ -121,10 +113,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Removes a subscription to a list.</summary>
 		public static void UnsubscList(long taskListNum,long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskListNum,userNum);
-				return;
-			}
+			
 			//Get all future unread reminders
 			List<Task> listFutureUnreadReminders=Tasks.GetNewTasksThisUser(userNum,0)//Use clinicnum=0 to get all tasks, no task clinic filtering.
 				.Where(x => Tasks.IsReminderTask(x) && x.DateTimeEntry>=DateTime.Now)
@@ -142,10 +131,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Moves all subscriptions from taskListOld to taskListNew. Used when cutting and pasting a tasklist. Can also be used when deleting a tasklist to remove all subscriptions from the tasklist by sending in 0 as taskListNumNew.</summary>
 		public static void UpdateTaskListSubs(long taskListNumOld,long taskListNumNew) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskListNumOld,taskListNumNew);
-				return;
-			}
+			
 			string command="";
 			if(taskListNumNew==0) {
 				command="DELETE FROM tasksubscription WHERE TaskListNum="+POut.Long(taskListNumOld);
@@ -158,10 +144,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Deletes rows for given PK tasksubscription.TaskSubscriptionNums.</summary>
 		public static void DeleteMany(List<long> listTaskSubscriptionNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listTaskSubscriptionNums);
-				return;
-			}
+			
 			if(listTaskSubscriptionNums.Count==0) {
 				return;
 			}

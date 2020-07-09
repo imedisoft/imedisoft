@@ -67,11 +67,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_claimFormItemCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _claimFormItemCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -79,28 +75,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ClaimFormItem item) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				item.ClaimFormItemNum=Meth.GetLong(MethodBase.GetCurrentMethod(),item);
-				return item.ClaimFormItemNum;
-			}
+			
 			return Crud.ClaimFormItemCrud.Insert(item);
 		}
 
 		///<summary></summary>
 		public static void Update(ClaimFormItem item){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),item);
-				return;
-			}
+			
 			Crud.ClaimFormItemCrud.Update(item);
 		}
 
 		///<summary></summary>
 		public static void Delete(ClaimFormItem item){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),item);
-				return;
-			}
+			
 			string command = "DELETE FROM claimformitem "
 				+"WHERE ClaimFormItemNum = '"+POut.Long(item.ClaimFormItemNum)+"'";
  			Db.NonQ(command);
@@ -108,10 +95,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void DeleteAllForClaimForm(long claimFormNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),claimFormNum);
-				return;
-			}
+			
 			string command="DELETE FROM claimformitem WHERE ClaimFormNum = '"+POut.Long(claimFormNum)+"'";
 			Db.NonQ(command);
 		}

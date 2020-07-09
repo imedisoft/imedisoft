@@ -28,9 +28,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Pass in a guarantor of 0 when not using from OD tech station.</summary>
 		public static List<EhrQuarterlyKey> Refresh(long guarantor){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrQuarterlyKey>>(MethodBase.GetCurrentMethod(),guarantor);
-			}
+			
 			string command;
 			if(guarantor==0){//customer looking at their own quarterly keys
 				command="SELECT * FROM ehrquarterlykey WHERE PatNum=0";
@@ -46,9 +44,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static EhrQuarterlyKey GetKeyThisQuarter() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EhrQuarterlyKey>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command;
 			int quarter=MonthToQuarter(DateTime.Today.Month);
 			command="SELECT * FROM ehrquarterlykey WHERE YearValue="+(DateTime.Today.Year-2000).ToString()+" "
@@ -59,9 +55,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EhrQuarterlyKey> GetAllKeys() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrQuarterlyKey>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command;
 			command="SELECT * FROM ehrquarterlykey WHERE PatNum=0 ORDER BY YearValue,QuarterValue";
 			List<EhrQuarterlyKey> ehrKeys=Crud.EhrQuarterlyKeyCrud.SelectMany(command);
@@ -70,9 +64,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns all keys in the given years.</summary>
 		public static List<EhrQuarterlyKey> GetAllKeys(DateTime startDate,DateTime endDate) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrQuarterlyKey>>(MethodBase.GetCurrentMethod(),startDate,endDate);
-			}
+			
 			int startYear=startDate.Year-2000;
 			int endYear=endDate.Year-2000;
 			string command;
@@ -197,28 +189,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(EhrQuarterlyKey ehrQuarterlyKey){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				ehrQuarterlyKey.EhrQuarterlyKeyNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrQuarterlyKey);
-				return ehrQuarterlyKey.EhrQuarterlyKeyNum;
-			}
+			
 			return Crud.EhrQuarterlyKeyCrud.Insert(ehrQuarterlyKey);
 		}
 
 		///<summary></summary>
 		public static void Update(EhrQuarterlyKey ehrQuarterlyKey){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrQuarterlyKey);
-				return;
-			}
+			
 			Crud.EhrQuarterlyKeyCrud.Update(ehrQuarterlyKey);
 		}
 
 		///<summary></summary>
 		public static void Delete(long ehrQuarterlyKeyNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrQuarterlyKeyNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ehrquarterlykey WHERE EhrQuarterlyKeyNum = "+POut.Long(ehrQuarterlyKeyNum);
 			Db.NonQ(command);
 		}
@@ -230,9 +213,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one EhrQuarterlyKey from the db.</summary>
 		public static EhrQuarterlyKey GetOne(long ehrQuarterlyKeyNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EhrQuarterlyKey>(MethodBase.GetCurrentMethod(),ehrQuarterlyKeyNum);
-			}
+			
 			return Crud.EhrQuarterlyKeyCrud.SelectOne(ehrQuarterlyKeyNum);
 		}
 

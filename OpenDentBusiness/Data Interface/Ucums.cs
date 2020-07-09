@@ -96,11 +96,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_UcumCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _UcumCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -109,43 +105,31 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Ucum ucum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				ucum.UcumNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ucum);
-				return ucum.UcumNum;
-			}
+			
 			return Crud.UcumCrud.Insert(ucum);
 		}
 
 		///<summary></summary>
 		public static void Update(Ucum ucum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ucum);
-				return;
-			}
+			
 			Crud.UcumCrud.Update(ucum);
 		}
 
 		public static List<Ucum> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Ucum>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM ucum ORDER BY UcumCode";
 			return Crud.UcumCrud.SelectMany(command);
 		}
 
 		public static long GetCodeCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM ucum";
 			return PIn.Long(Db.GetCount(command));
 		}
 
 		///<summary>Returns a list of just the codes for use in update or insert logic.</summary>
 		public static List<string> GetAllCodes() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<string> retVal=new List<string>();
 			string command="SELECT UcumCode FROM ucum";
 			DataTable table=DataCore.GetTable(command);
@@ -156,9 +140,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static Ucum GetByCode(string ucumCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Ucum>(MethodBase.GetCurrentMethod(),ucumCode);
-			}
+			
 			string command;
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				command="SELECT * FROM ucum WHERE UcumCode='"+POut.String(ucumCode)+"'";
@@ -172,9 +154,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<Ucum> GetBySearchText(string searchText) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Ucum>>(MethodBase.GetCurrentMethod(),searchText);
-			}
+			
 			string[] searchTokens=searchText.Split(' ');
 			string command=@"SELECT * FROM ucum ";
 			for(int i=0;i<searchTokens.Length;i++) {
@@ -188,27 +168,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<UCUM> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<UCUM>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ucum WHERE PatNum = "+POut.Long(patNum);
 			return Crud.UCUMCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one UCUM from the db.</summary>
 		public static UCUM GetOne(long uCUMNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<UCUM>(MethodBase.GetCurrentMethod(),uCUMNum);
-			}
+			
 			return Crud.UCUMCrud.SelectOne(uCUMNum);
 		}
 
 		///<summary></summary>
 		public static void Delete(long uCUMNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),uCUMNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ucum WHERE UCUMNum = "+POut.Long(uCUMNum);
 			Db.NonQ(command);
 		}

@@ -13,9 +13,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of promotion analytics for the given date range.</summary>
 		///<param name="clinicNum">The clinic to get analytics for. If negative, will return all regardless of clinicnum.</param>
 		public static List<PromotionAnalytic> GetAnalytics(DateTime lowerBound,DateTime upperBound,long clinicNum=-1) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PromotionAnalytic>>(MethodBase.GetCurrentMethod(),lowerBound,upperBound,clinicNum);
-			}
+			
 			string query=$@"
 				SELECT 
 					promotionlog.PromotionStatus AS Status,
@@ -60,9 +58,7 @@ namespace OpenDentBusiness{
 			if(listDestinations.IsNullOrEmpty()) {
 				return "";
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),templateCur,listDestinations,senderName,replyToAddress,promotionName,type);
-			}
+			
 			List<long> listPatNums=new List<long>();
 			List<long> listAptNums=new List<long>();
 			foreach(MassEmailDestination destination in listDestinations) {
@@ -214,10 +210,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static long Insert(Promotion promotion) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				promotion.PromotionNum=Meth.GetLong(MethodBase.GetCurrentMethod(),promotion);
-				return promotion.PromotionNum;
-			}
+			
 			return PromotionCrud.Insert(promotion);
 		}
 	}

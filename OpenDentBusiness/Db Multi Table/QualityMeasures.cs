@@ -498,9 +498,6 @@ namespace OpenDentBusiness {
 		}
 
 		public static DataTable GetTable(QualityType qtype,DateTime dateStart,DateTime dateEnd,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),qtype,dateStart,dateEnd,provNum);
-			}
 			//these queries only work for mysql
 			Random rnd=new Random();
 			string rndStr=rnd.Next(1000000).ToString();
@@ -2331,9 +2328,6 @@ namespace OpenDentBusiness {
 		
 		///<summary>Only called from GetAll2014.  Once the EhrCqmData object is created, all of the data relevant to the measure and required by the QRDA category 1 and category 3 reporting is part of the object.</summary>
 		public static QualityMeasure GetEhrCqmData(QualityType2014 qtype,DateTime dateStart,DateTime dateEnd,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<QualityMeasure>(MethodBase.GetCurrentMethod(),qtype,dateStart,dateEnd,provNum);
-			}
 			//these queries only work for mysql
 			string command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider "
 				+"WHERE provider.LName=(SELECT pv.LName FROM provider pv WHERE pv.ProvNum="+POut.Long(provNum)+")"

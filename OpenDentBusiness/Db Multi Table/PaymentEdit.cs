@@ -13,9 +13,6 @@ namespace OpenDentBusiness {
 		#region FormPayment
 		///<summary>Gets most all the data needed to load FormPayment.</summary>
 		public static LoadData GetLoadData(Patient patCur,Payment paymentCur,bool isNew,bool isIncomeTxfr) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<LoadData>(MethodBase.GetCurrentMethod(),patCur,paymentCur,isNew,isIncomeTxfr);
-			}
 			LoadData data=new LoadData();
 			data.PatCur=patCur;
 			data.Fam=Patients.GetFamily(patCur.PatNum);
@@ -101,9 +98,6 @@ namespace OpenDentBusiness {
 		public static ConstructChargesData GetConstructChargesData(List<long> listPatNums,long patNum,List<PaySplit> listSplitsCur,long payCurNum
 			,bool isIncomeTransfer) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ConstructChargesData>(MethodBase.GetCurrentMethod(),listPatNums,patNum,listSplitsCur,payCurNum,isIncomeTransfer);
-			}
 			ConstructChargesData data=new ConstructChargesData();
 			data.ListPaySplits=PaySplits.GetForPats(listPatNums);//Might contain payplan payments.
 			data.ListProcs=Procedures.GetCompleteForPats(listPatNums);//will also contain TP procs if pref is set to ON

@@ -11,9 +11,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets one OrthoSchedule from the database.</summary>
 		public static OrthoSchedule GetOne(long orthoScheduleNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<OrthoSchedule>(MethodBase.GetCurrentMethod(),orthoScheduleNum);
-			}
+			
 			return Crud.OrthoScheduleCrud.SelectOne(orthoScheduleNum);
 		}
 
@@ -22,9 +20,7 @@ namespace OpenDentBusiness{
 			if(listOrthoScheduleNums.Count==0) {
 				return new List<OrthoSchedule>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoSchedule>>(MethodBase.GetCurrentMethod(),listOrthoScheduleNums);
-			}
+			
 			string command=$"SELECT * FROM orthoschedule WHERE orthoschedule.OrthoScheduleNum IN({string.Join(",",listOrthoScheduleNums)})";
 			return Crud.OrthoScheduleCrud.SelectMany(command);
 		}
@@ -34,10 +30,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary>Insert a OrthoSchedule into the database.</summary>
 		public static long Insert(OrthoSchedule orthoSchedule) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				orthoSchedule.OrthoScheduleNum=Meth.GetLong(MethodBase.GetCurrentMethod(),orthoSchedule);
-				return orthoSchedule.OrthoScheduleNum;
-			}
+			
 			return Crud.OrthoScheduleCrud.Insert(orthoSchedule);
 		}
 		#endregion Insert
@@ -45,10 +38,7 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary>Update only data that is different in newOrthoSchedule</summary>
 		public static void Update(OrthoSchedule newOrthoSchedule,OrthoSchedule oldOrthoSchedule) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),newOrthoSchedule,oldOrthoSchedule);
-				return;
-			}
+			
 			Crud.OrthoScheduleCrud.Update(newOrthoSchedule,oldOrthoSchedule);
 		}
 		#endregion Update
@@ -84,26 +74,18 @@ namespace OpenDentBusiness{
 		Only pull out the methods below as you need them.  Otherwise, leave them commented out.
 		///<summary></summary>
 		public static List<OrthoSchedule> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoSchedule>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM orthoschedule WHERE PatNum = "+POut.Long(patNum);
 			return Crud.OrthoScheduleCrud.SelectMany(command);
 		}
 		///<summary></summary>
 		public static long Insert(OrthoSchedule orthoSchedule){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				orthoSchedule.OrthoScheduleNum=Meth.GetLong(MethodBase.GetCurrentMethod(),orthoSchedule);
-				return orthoSchedule.OrthoScheduleNum;
-			}
+			
 			return Crud.OrthoScheduleCrud.Insert(orthoSchedule);
 		}
 		///<summary></summary>
 		public static void Update(OrthoSchedule orthoSchedule){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),orthoSchedule);
-				return;
-			}
+			
 			Crud.OrthoScheduleCrud.Update(orthoSchedule);
 		}
 		*/

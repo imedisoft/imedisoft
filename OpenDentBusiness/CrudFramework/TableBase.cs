@@ -25,23 +25,6 @@ namespace OpenDentBusiness {
 			set{ _tagOD = value;}
 		}
 
-		[XmlElement(nameof(TagOD))]
-		public DtoObject TagODXml {
-			get {
-				if(TagOD==null) {
-					return null;
-				}
-				return new DtoObject(TagOD,TagOD.GetType());
-			}
-			set {
-				if(value==null) {
-					TagOD=null;
-					return;
-				}
-				TagOD=value.Obj;
-			}
-		}
-
 		private static int _maxAllowedPacket=0;
 		///<summary>We cannot make the returned value too large, because we want to allow the server to process information from the previous packet while
 		///downloading the next packet in parallel.</summary>

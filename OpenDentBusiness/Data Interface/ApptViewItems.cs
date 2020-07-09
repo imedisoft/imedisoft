@@ -70,11 +70,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_apptViewItemCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _apptViewItemCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -82,28 +78,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ApptViewItem apptViewItem){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				apptViewItem.ApptViewItemNum=Meth.GetLong(MethodBase.GetCurrentMethod(),apptViewItem);
-				return apptViewItem.ApptViewItemNum;
-			}
+			
 			return Crud.ApptViewItemCrud.Insert(apptViewItem);
 		}
 
 		///<summary></summary>
 		public static void Update(ApptViewItem apptViewItem) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),apptViewItem);
-				return;
-			}
+			
 			Crud.ApptViewItemCrud.Update(apptViewItem);
 		}
 
 		///<summary></summary>
 		public static void Delete(ApptViewItem apptViewItem) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),apptViewItem);
-				return;
-			}
+			
 			string command="DELETE from apptviewitem WHERE ApptViewItemNum = '"
 				+POut.Long(apptViewItem.ApptViewItemNum)+"'";
 			Db.NonQ(command);
@@ -111,10 +98,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes all apptviewitems for the current apptView.</summary>
 		public static void DeleteAllForView(ApptView view){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),view);
-				return;
-			}
+			
 			string command="DELETE from apptviewitem WHERE ApptViewNum = '"
 				+POut.Long(view.ApptViewNum)+"'";
 			Db.NonQ(command);

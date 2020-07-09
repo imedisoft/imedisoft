@@ -75,11 +75,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_zipCodeCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _zipCodeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -87,28 +82,16 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ZipCode Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.ZipCodeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.ZipCodeNum;
-			}
 			return Crud.ZipCodeCrud.Insert(Cur);
 		}
 
 		///<summary></summary>
 		public static void Update(ZipCode Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
 			Crud.ZipCodeCrud.Update(Cur);
 		}
 
 		///<summary></summary>
 		public static void Delete(ZipCode Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
 			string command = "DELETE from zipcode WHERE zipcodenum = '"+POut.Long(Cur.ZipCodeNum)+"'";
 			Db.NonQ(command);
 		}

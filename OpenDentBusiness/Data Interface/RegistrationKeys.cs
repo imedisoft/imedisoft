@@ -35,9 +35,7 @@ namespace OpenDentBusiness {
 		///<summary>Retrieves all registration keys for a particular customer's family. There can be multiple keys assigned to a single customer, or keys
 		///assigned to individual family members, since the customer may have multiple physical locations of business.</summary>
 		public static RegistrationKey[] GetForPatient(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<RegistrationKey[]>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			Family fam=Patients.GetFamily(patNum);
 			string command=$"SELECT * FROM registrationkey WHERE PatNum IN ({string.Join(",",fam.GetPatNums())})";
 			return Crud.RegistrationKeyCrud.SelectMany(command).ToArray();
@@ -45,19 +43,13 @@ namespace OpenDentBusiness {
 
 		///<summary>Updates the given key data to the database.</summary>
 		public static void Update(RegistrationKey registrationKey){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),registrationKey);
-				return;
-			}
+			
 			Crud.RegistrationKeyCrud.Update(registrationKey);
 		}
 
 		///<summary>Inserts a new and unique registration key into the database.</summary>
 		public static long Insert(RegistrationKey registrationKey){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				registrationKey.RegistrationKeyNum=Meth.GetLong(MethodBase.GetCurrentMethod(),registrationKey);
-				return registrationKey.RegistrationKeyNum;
-			}
+			
 			do{
 				if(registrationKey.IsForeign){
 					Random rand=new Random();
@@ -86,10 +78,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void Delete(long registrationKeyNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),registrationKeyNum);
-				return;
-			}
+			
 			string command="DELETE FROM registrationkey WHERE RegistrationKeyNum='"
 				+POut.Long(registrationKeyNum)+"'";
 			Db.NonQ(command);
@@ -97,9 +86,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns true if the given registration key is currently in use by a customer, false otherwise.</summary>
 		public static bool KeyIsInUse(string regKey) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),regKey);
-			}
+			
 			string command="SELECT RegKey FROM registrationkey WHERE RegKey='"+POut.String(regKey)+"'";
 			DataTable table=Db.GetTable(command);
 			return (table.Rows.Count>0);
@@ -119,9 +106,7 @@ namespace OpenDentBusiness {
 
 		///<Summary>Returns any active registration keys that have no repeating charges on any corresponding family members.  Columns include PatNum, LName, FName, and RegKey.</Summary>
 		public static DataTable GetAllWithoutCharges() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod());
-			}
+			
 			#region Old Code
 			/*
 			DataTable table=new DataTable();
@@ -227,9 +212,7 @@ namespace OpenDentBusiness {
 		///<summary>Does not validate regkey like GetByKey().
 		///Returns a dictionary such that the key is a registration key and the value is the patient.</summary>
 		public static SerializableDictionary<string,Patient> GetPatientsByKeys(List<string> listRegKeyStrs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SerializableDictionary<string,Patient>>(MethodBase.GetCurrentMethod(),listRegKeyStrs);
-			}
+			
 			if(listRegKeyStrs==null || listRegKeyStrs.Count==0) {
 				return new SerializableDictionary<string, Patient>();
 			}
@@ -242,9 +225,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Throws exceptions.</summary>
 		public static RegistrationKey GetByKey(string regKey) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<RegistrationKey>(MethodBase.GetCurrentMethod(),regKey);
-			}
+			
 			if(!Regex.IsMatch(regKey,@"^[A-Z0-9]{16}$")) {
 				throw new ApplicationException("Invalid registration key format.");
 			}
@@ -258,18 +239,14 @@ namespace OpenDentBusiness {
 		
 		///<summary>Get the list of all RegistrationKey rows. DO NOT REMOVE! Used by OD WebApps solution.</summary>
 		public static List<RegistrationKey> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RegistrationKey>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM registrationkey";
 			return Crud.RegistrationKeyCrud.SelectMany(command);
 		}
 
 		///<summary>Get the list of all RegistrationKey rows that have DateTBackupScheduled set in the future and a BackupPassCode set as well.</summary>
 		public static List<RegistrationKey> GetScheduledSupplementalBackups() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RegistrationKey>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command=$"SELECT * FROM registrationkey WHERE DateTBackupScheduled > {DbHelper.Now()}";
 			//Use C# to filter by BackupPassCode because we don't currently have an index for BackupPassCode in the database.
 			return Crud.RegistrationKeyCrud.SelectMany(command).FindAll(x => !string.IsNullOrWhiteSpace(x.BackupPassCode));
@@ -280,9 +257,7 @@ namespace OpenDentBusiness {
 			if(listRegKeyNums.IsNullOrEmpty()) {
 				return new List<RegistrationKey>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RegistrationKey>>(MethodBase.GetCurrentMethod(),listRegKeyNums);
-			}
+			
 			string command=$"SELECT * FROM registrationkey WHERE RegistrationKeyNum IN({string.Join(",",listRegKeyNums.Select(x => POut.Long(x)))})";
 			return Crud.RegistrationKeyCrud.SelectMany(command);
 		}

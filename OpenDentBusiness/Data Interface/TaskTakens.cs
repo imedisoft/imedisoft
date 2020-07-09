@@ -16,9 +16,7 @@ namespace OpenDentBusiness{
 		///<param name="doRetryOnLocal">If true and a connection to the primary customers database cannot be established, the insert will be attempted
 		///on the local database.</param>
 		public static bool TryInsert(long taskNum,bool doRunOnPrimaryCustomers=true,bool doRetryOnLocal=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),taskNum,doRunOnPrimaryCustomers,doRetryOnLocal);
-			}
+			
 			try
 			{
 				Crud.TaskTakenCrud.Insert(new TaskTaken { TaskNum = taskNum });
@@ -57,10 +55,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary>Deletes any TaskTaken for the given taskNum. Runs on the primary customers database.</summary>
 		public static void DeleteForTask(long taskNum,bool doRunOnPrimaryCustomers=true,bool doRetryOnLocal=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskNum,doRunOnPrimaryCustomers,doRetryOnLocal);
-				return;
-			}
+			
 			string command="DELETE FROM tasktaken WHERE TaskNum="+POut.Long(taskNum);
 			try
 			{
@@ -100,9 +95,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Gets one TaskTaken from the db.</summary>
 		public static TaskTaken GetOne(long taskTakenNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<TaskTaken>(MethodBase.GetCurrentMethod(),taskTakenNum);
-			}
+			
 			return Crud.TaskTakenCrud.SelectOne(taskTakenNum);
 		}
 		#endregion
@@ -110,10 +103,7 @@ namespace OpenDentBusiness{
 			#region Update
 		///<summary></summary>
 		public static void Update(TaskTaken taskTaken){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskTaken);
-				return;
-			}
+			
 			Crud.TaskTakenCrud.Update(taskTaken);
 		}
 			#endregion

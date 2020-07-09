@@ -21,9 +21,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one WebSchedRecall object from the database using a query.</summary>
 		public static WebSchedRecall SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<WebSchedRecall> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -33,9 +31,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of WebSchedRecall objects from the database using a query.</summary>
 		public static List<WebSchedRecall> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<WebSchedRecall> list=TableToList(Db.GetTable(command));
 			return list;
 		}

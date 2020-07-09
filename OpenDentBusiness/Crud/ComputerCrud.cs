@@ -21,9 +21,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one Computer object from the database using a query.</summary>
 		public static Computer SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<Computer> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -33,9 +31,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of Computer objects from the database using a query.</summary>
 		public static List<Computer> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<Computer> list=TableToList(Db.GetTable(command));
 			return list;
 		}

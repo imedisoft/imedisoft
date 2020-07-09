@@ -78,11 +78,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_patFieldDefCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _patFieldDefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -90,10 +86,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Must supply the old field name so that the patient lists can be updated.</summary>
 		public static void Update(PatFieldDef patFieldDef, string oldFieldName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patFieldDef,oldFieldName);
-				return;
-			}
+			
 			Crud.PatFieldDefCrud.Update(patFieldDef);
 			string command="UPDATE patfield SET FieldName='"+POut.String(patFieldDef.FieldName)+"' "
 				+"WHERE FieldName='"+POut.String(oldFieldName)+"'";
@@ -102,19 +95,13 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long Insert(PatFieldDef patFieldDef) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				patFieldDef.PatFieldDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),patFieldDef);
-				return patFieldDef.PatFieldDefNum;
-			}
+			
 			return Crud.PatFieldDefCrud.Insert(patFieldDef);
 		}
 
 		///<summary>Surround with try/catch, because it will throw an exception if any patient is using this def.</summary>
 		public static void Delete(PatFieldDef patFieldDef) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patFieldDef);
-				return;
-			}
+			
 			string command="SELECT LName,FName FROM patient,patfield WHERE "
 				+"patient.PatNum=patfield.PatNum "
 				+"AND FieldName='"+POut.String(patFieldDef.FieldName)+"'";
@@ -150,10 +137,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Sync pattern, must sync entire table. Probably only to be used in the master problem list window.</summary>
 		public static void Sync(List<PatFieldDef> listDefs,List<PatFieldDef> listDefsOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listDefs,listDefsOld);
-				return;
-			}
+			
 			Crud.PatFieldDefCrud.Sync(listDefs,listDefsOld);
 		}
 	}

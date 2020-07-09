@@ -201,9 +201,6 @@ namespace OpenDentBusiness.Eclaims
 
 		///<summary>Fills the missing data field on the queueItem that was passed in.  This contains all missing data on this claim.  Claim will not be allowed to be sent electronically unless this string comes back empty.</summary>
 		public static ClaimSendQueueItem GetMissingData(Clearinghouse clearinghouseClin,ClaimSendQueueItem queueItem) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ClaimSendQueueItem>(MethodBase.GetCurrentMethod(),clearinghouseClin,queueItem);
-			}
 			if(queueItem==null) {
 				return new ClaimSendQueueItem() { MissingData=Lans.g("Eclaims","Unable to fill claim data. Please recreate claim.") };
 			}

@@ -11,9 +11,7 @@ namespace OpenDentBusiness{
 	public class SecurityLogHashes{
 		#region Get Methods
 		public static SecurityLogHash GetOne(long securityLogHashNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SecurityLogHash>(MethodBase.GetCurrentMethod(),securityLogHashNum);
-			}
+			
 			return Crud.SecurityLogHashCrud.SelectOne(securityLogHashNum);
 		}
 		#endregion
@@ -28,10 +26,7 @@ namespace OpenDentBusiness{
 
 		#region Delete
 		public static void DeleteWithMaxPriKey(long maxSecurityLogHashNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),maxSecurityLogHashNum);
-				return;
-			}
+			
 			if(maxSecurityLogHashNum==0) {
 				return;
 			}
@@ -43,10 +38,7 @@ namespace OpenDentBusiness{
 			if(listSecurityLogNums.Count<1) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSecurityLogNums);
-				return;
-			}
+			
 			string command=$"DELETE FROM securityloghash WHERE SecurityLogNum IN ({string.Join(",",listSecurityLogNums)})";
 			Db.NonQ(command);
 		}
@@ -61,27 +53,19 @@ namespace OpenDentBusiness{
 
 		///<summary>Inserts securityloghash into Db.</summary>
 		public static long Insert(SecurityLogHash securityLogHash) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				securityLogHash.SecurityLogHashNum=Meth.GetLong(MethodBase.GetCurrentMethod(),securityLogHash);
-				return securityLogHash.SecurityLogHashNum;
-			}
+			
 			return Crud.SecurityLogHashCrud.Insert(securityLogHash);
 		}
 
 		///<summary>Insertion logic that doesn't use the cache. Has special cases for generating random PK's and handling Oracle insertions.</summary>
 		public static long InsertNoCache(SecurityLogHash securityLogHash) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),securityLogHash);
-			}
+			
 			return Crud.SecurityLogHashCrud.InsertNoCache(securityLogHash);
 		}
 
 		///<summary>Creates a new SecurityLogHash entry in the Db.</summary>
 		public static void InsertSecurityLogHash(long securityLogNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),securityLogNum);
-				return;
-			}
+			
 			SecurityLog securityLog=SecurityLogs.GetOne(securityLogNum); //need a fresh copy because of time stamps, etc.
 			//Attempted fix for NADG problems with SecurityLogHash Insert attempts throwing null reference UEs. Job #695
 			if(securityLog==null) {
@@ -103,9 +87,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used for inserting without using the cache.  Usually used when multithreading connections.</summary>
 		public static long InsertSecurityLogHashNoCache(long securityLogNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),securityLogNum);
-			}
+			
 			SecurityLog securityLog=Crud.SecurityLogCrud.SelectOne(securityLogNum);
 			SecurityLogHash securityLogHash=new SecurityLogHash();
 			securityLogHash.SecurityLogNum=securityLog.SecurityLogNum;
@@ -115,10 +97,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void InsertMany(List<SecurityLogHash> listSecurityLogHashes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSecurityLogHashes);
-				return;
-			}
+			
 			Crud.SecurityLogHashCrud.InsertMany(listSecurityLogHashes);
 		}
 
@@ -149,36 +128,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<SecurityLogHash> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SecurityLogHash>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM securityloghash WHERE PatNum = "+POut.Long(patNum);
 			return Crud.SecurityLogHashCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one SecurityLogHash from the db.</summary>
 		public static SecurityLogHash GetOne(long securityLogHashNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<SecurityLogHash>(MethodBase.GetCurrentMethod(),securityLogHashNum);
-			}
+			
 			return Crud.SecurityLogHashCrud.SelectOne(securityLogHashNum);
 		}
 
 		///<summary></summary>
 		public static void Update(SecurityLogHash securityLogHash){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),securityLogHash);
-				return;
-			}
+			
 			Crud.SecurityLogHashCrud.Update(securityLogHash);
 		}
 
 		///<summary></summary>
 		public static void Delete(long securityLogHashNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),securityLogHashNum);
-				return;
-			}
+			
 			string command= "DELETE FROM securityloghash WHERE SecurityLogHashNum = "+POut.Long(securityLogHashNum);
 			Db.NonQ(command);
 		}

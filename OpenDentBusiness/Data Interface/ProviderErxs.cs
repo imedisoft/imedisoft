@@ -83,11 +83,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_providerErxCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _providerErxCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -96,27 +92,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(long providerErxNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),providerErxNum);
-				return;
-			}
+			
 			Crud.ProviderErxCrud.Delete(providerErxNum);
 		}
 
 		///<summary>Gets from db.  Used from FormErxAccess at HQ only.</summary>
 		public static List<ProviderErx> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProviderErx>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM providererx WHERE PatNum = "+POut.Long(patNum)+" ORDER BY NationalProviderID";
 			return Crud.ProviderErxCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static ProviderErx GetOne(long provErxNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ProviderErx>(MethodBase.GetCurrentMethod(),provErxNum);
-			}
+			
 			string command="SELECT * FROM providererx WHERE ProviderErxNum = "+POut.Long(provErxNum);
 			return Crud.ProviderErxCrud.SelectOne(command);
 		}
@@ -142,60 +131,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ProviderErx providerErx) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				providerErx.ProviderErxNum=Meth.GetLong(MethodBase.GetCurrentMethod(),providerErx);
-				return providerErx.ProviderErxNum;
-			}
+			
 			return Crud.ProviderErxCrud.Insert(providerErx);
 		}
 
 		///<summary></summary>
 		public static void Update(ProviderErx providerErx) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),providerErx);
-				return;
-			}
+			
 			Crud.ProviderErxCrud.Update(providerErx);
 		}
 
 		///<summary></summary>
 		public static bool Update(ProviderErx providerErx,ProviderErx oldProviderErx) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),providerErx,oldProviderErx);
-			}
+			
 			return Crud.ProviderErxCrud.Update(providerErx,oldProviderErx);
 		}
 
 		///<summary>Inserts, updates, or deletes the passed in list verses the old list.  Returns true if db changes were made.</summary>
 		public static bool Sync(List<ProviderErx> listNew,List<ProviderErx> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-					return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
 			return Crud.ProviderErxCrud.Sync(listNew,listOld);
 		}
-
-		/*
-		Only pull out the methods below as you need them.  Otherwise, leave them commented out.
-		 
-		///<summary></summary>
-		public static void Update(ProviderErx providerErx) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),providerErx);
-				return;
-			}
-			Crud.ProviderErxCrud.Update(providerErx);
-		}
-
-		///<summary>Gets one ProviderErx from the db.</summary>
-		public static ProviderErx GetOne(long providerErxNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ProviderErx>(MethodBase.GetCurrentMethod(),providerErxNum);
-			}
-			return Crud.ProviderErxCrud.SelectOne(providerErxNum);
-		}
-		*/
-
-
 
 	}
 }

@@ -35,9 +35,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets data for the history grid in the SendClaims window.  The listEtransType must contain as least one item.</summary>
 		public static DataTable RefreshHistory(DateTime dateFrom,DateTime dateTo,List<EtransType> listEtransType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listEtransType);
-			}
+			
 			string command="SELECT (CASE WHEN etrans.PatNum=0 THEN etrans.PatientNameRaw "
 				+"ELSE CONCAT(CONCAT(patient.LName,', '),patient.FName) END) AS PatName,"
 				+"(CASE WHEN etrans.carrierNum=0 THEN etrans.CarrierNameRaw ELSE carrier.CarrierName END) AS CarrierName,"
@@ -119,9 +117,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Etrans> GetHistoryOneClaim(long claimNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Etrans>>(MethodBase.GetCurrentMethod(),claimNum);
-			}
+			
 			string command="SELECT * FROM etrans WHERE ClaimNum="+POut.Long(claimNum)+" "
 				+"AND (Etype="+POut.Int((int)EtransType.Claim_CA)+" "
 				+"OR Etype="+POut.Int((int)EtransType.ClaimCOB_CA)+" "
@@ -136,27 +132,21 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all types of transactions for the given claim number.</summary>
 		public static List<Etrans> GetAllForOneClaim(long claimNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Etrans>>(MethodBase.GetCurrentMethod(),claimNum);
-			}
+			
 			string command="SELECT * FROM etrans WHERE ClaimNum="+POut.Long(claimNum);
 			return Crud.EtransCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static Etrans GetEtrans(long etransNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Etrans>(MethodBase.GetCurrentMethod(),etransNum);
-			}
+			
 			string command="SELECT * FROM etrans WHERE EtransNum="+POut.Long(etransNum);
 			return Crud.EtransCrud.SelectOne(command);
 		}
 
 		///<summary></summary>
 		public static List<Etrans> GetMany(params long[] listEtransNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Etrans>>(MethodBase.GetCurrentMethod(),listEtransNums);
-			}
+			
 			if(listEtransNums.Length==0) {
 				return new List<Etrans>();
 			}
@@ -171,9 +161,7 @@ namespace OpenDentBusiness{
 			if(string.IsNullOrEmpty(claimIdentifier)) {
 				return new List<Etrans>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Etrans>>(MethodBase.GetCurrentMethod(),claimIdentifier,dateClaimService);
-			}
+			
 			string claimId=claimIdentifier;
 			if(claimId.Length>16) {
 				//Our claim identifiers in the database can be longer than 20 characters (mostly when using replication).
@@ -210,9 +198,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of all 270's and Canadian eligibilities for this plan.</summary>
 		public static List<Etrans> GetList270ForPlan(long planNum,long insSubNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Etrans>>(MethodBase.GetCurrentMethod(),planNum,insSubNum);
-			}
+			
 			string command="SELECT * FROM etrans WHERE PlanNum="+POut.Long(planNum)
 				+" AND InsSubNum="+POut.Long(insSubNum)
 				+" AND (Etype="+POut.Long((int)EtransType.BenefitInquiry270)
@@ -222,9 +208,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Use for Canadian claims only. Finds the most recent etrans record which matches the unique officeSequenceNumber specified. The officeSequenceNumber corresponds to field A02.</summary>
 		public static Etrans GetForSequenceNumberCanada(string officeSequenceNumber) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Etrans>(MethodBase.GetCurrentMethod(),officeSequenceNumber);
-			}
+			
 			string command="SELECT * FROM etrans WHERE OfficeSequenceNumber="+POut.String(officeSequenceNumber)+" ORDER BY EtransNum DESC LIMIT 1";
 			return Crud.EtransCrud.SelectOne(command);
 
@@ -233,9 +217,7 @@ namespace OpenDentBusiness{
 		/*
 		///<summary></summary>
 		public static Etrans GetAckForTrans(int etransNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Etrans>(MethodBase.GetCurrentMethod(),etransNum);
-			}
+			
 			//first, get the actual trans.
 			string command="SELECT * FROM etrans WHERE EtransNum="+POut.PInt(etransNum);
 			DataTable table=Db.GetTable(command);
@@ -285,19 +267,13 @@ namespace OpenDentBusiness{
 
 		///<summary>DateTimeTrans handled automatically here.</summary>
 		public static long Insert(Etrans etrans) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				etrans.EtransNum=Meth.GetLong(MethodBase.GetCurrentMethod(),etrans);
-				return etrans.EtransNum;
-			}
+			
 			return Crud.EtransCrud.Insert(etrans);
 		}
 
 		///<summary></summary>
 		public static void Update(Etrans etrans) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),etrans);
-				return;
-			}
+			
 			Crud.EtransCrud.Update(etrans);
 		}
 
@@ -305,9 +281,7 @@ namespace OpenDentBusiness{
 		public static Etrans CreateCanadianOutput(long patNum,long carrierNum,long canadianNetworkNum
 			,long clearinghouseNum,EtransType etype,long planNum,long insSubNum,long userNum,bool hasSecondary=false)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Etrans>(MethodBase.GetCurrentMethod(),patNum,carrierNum,canadianNetworkNum,clearinghouseNum,etype,planNum,insSubNum,userNum,hasSecondary);
-			}
+			
 			//validation of carrier vs network
 			if(etype==EtransType.Eligibility_CA){
 				//only carrierNum is allowed (and required)
@@ -344,9 +318,7 @@ namespace OpenDentBusiness{
 			if(!etrans.Etype.GetAttributeOrDefault<EtransTypeAttr>().IsCanadaType || !etrans.Etype.GetAttributeOrDefault<EtransTypeAttr>().IsRequestType) {
 				return etrans;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Etrans>(MethodBase.GetCurrentMethod(),etrans,hasSecondary);
-			}
+			
 			etrans.OfficeSequenceNumber=0;
 			//find the next officeSequenceNumber
 			string command="SELECT MAX(OfficeSequenceNumber) FROM etrans";
@@ -421,9 +393,7 @@ namespace OpenDentBusiness{
 		///CAUTION: This does not update the EtransMessageTextNum field of an object in memory.
 		///Instead it returns the inserted EtransMessageTextNum, this should be used to update the in memory object if needed.</summary>
 		public static long SetMessage(long etransNum,string messageText) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),etransNum,messageText);
-			}
+			
 			EtransMessageText msg=new EtransMessageText();
 			msg.MessageText=messageText;
 			EtransMessageTexts.Insert(msg);
@@ -436,10 +406,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes the etrans entry and changes the status of the claim back to W.  If it encounters an entry that's not a claim, it skips it for now.  Later, it will handle all types of undo.  It will also check Canadian claims to prevent alteration if an ack or EOB has been received.</summary>
 		public static void Undo(long etransNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),etransNum);
-				return;
-			}
+			
 			//see if it's a claim.
 			string command="SELECT ClaimNum FROM etrans WHERE EtransNum="+POut.Long(etransNum);
 			DataTable table=Db.GetTable(command);
@@ -470,10 +437,7 @@ namespace OpenDentBusiness{
 		///<summary>Deletes the etrans entry.  Mostly used when the etrans entry was created, but then the communication with the clearinghouse failed.
 		///So this is just a rollback function.  Will not delete the message associated with the etrans.  That must be done separately.</summary>		
 		public static void Delete(long etransNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),etransNum);
-				return;
-			}
+			
 			string command="DELETE FROM etrans WHERE EtransNum="+POut.Long(etransNum);
 			Db.NonQ(command);
 		}
@@ -486,9 +450,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Sets the status of the claim to sent, usually as part of printing.  Also makes an entry in etrans.  If this is Canadian eclaims, then this function gets run first.  If the claim is to be sent elecronically, then the messagetext is created after this method and an attempt is made to send the claim.  Finally, the messagetext is added to the etrans.  This is necessary because the transaction numbers must be incremented and assigned to each claim before creating the message and attempting to send.  For Canadians, it will always record the attempt as an etrans even if claim is not set to status of sent.</summary>
 		public static Etrans SetClaimSentOrPrinted(long claimNum,long patNum,long clearinghouseNum,EtransType etype,int batchNumber,long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Etrans>(MethodBase.GetCurrentMethod(),claimNum,patNum,clearinghouseNum,etype,batchNumber,userNum);
-			}
+			
 			Etrans etrans=CreateEtransForClaim(claimNum,patNum,clearinghouseNum,etype,batchNumber,userNum);
 			etrans=SetCanadianEtransFields(etrans);//etrans.CarrierNum, etrans.CarrierNum2 and etrans.EType all set prior to calling this.
 			Claims.SetClaimSent(claimNum);
@@ -499,9 +461,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns an etrans that has not been inserted into the DB.
 		///Should only be called with etrans is related an EtransType that is of claim type, currently no validation is done in this function to ensure this.</summary>
 		public static Etrans CreateEtransForClaim(long claimNum,long patNum,long clearinghouseNum,EtransType etype,int batchNumber,long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Etrans>(MethodBase.GetCurrentMethod(),claimNum,patNum,clearinghouseNum,etype,batchNumber,userNum);
-			}
+			
 			Etrans etrans=new Etrans();
 			//etrans.DateTimeTrans handled automatically
 			etrans.ClearingHouseNum=clearinghouseNum;
@@ -531,10 +491,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Etrans type will be figured out by this class.  Either TextReport, Acknowledge_997, Acknowledge_999, or StatusNotify_277.</summary>
 		public static void ProcessIncomingReport(DateTime dateTimeTrans,long hqClearinghouseNum,string messageText,long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dateTimeTrans,hqClearinghouseNum,messageText,userNum);
-				return;
-			}
+			
 			Etrans etrans=CreateEtrans(dateTimeTrans,hqClearinghouseNum,messageText,userNum);
 			string command;
 			X12object Xobj=X12object.ToX12object(messageText);
@@ -737,9 +694,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Or Canadian elig.</summary>
 		public static DateTime GetLastDate270(long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<DateTime>(MethodBase.GetCurrentMethod(),planNum);
-			}
+			
 			string command="SELECT MAX(DateTimeTrans) FROM etrans "
 				+"WHERE (Etype="+POut.Int((int)EtransType.BenefitInquiry270)+" "
 				+"OR Etype="+POut.Int((int)EtransType.Eligibility_CA)+") "

@@ -72,11 +72,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_clinicPrefCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _clinicPrefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -84,61 +79,36 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one ClinicPref from the db.</summary>
 		public static ClinicPref GetOne(long clinicPrefNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ClinicPref>(MethodBase.GetCurrentMethod(),clinicPrefNum);
-			}
 			return Crud.ClinicPrefCrud.SelectOne(clinicPrefNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(ClinicPref clinicPref){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				clinicPref.ClinicPrefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),clinicPref);
-				return clinicPref.ClinicPrefNum;
-			}
 			return Crud.ClinicPrefCrud.Insert(clinicPref);
 		}
 
 		///<summary></summary>
 		public static void Update(ClinicPref clinicPref){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clinicPref);
-				return;
-			}
 			Crud.ClinicPrefCrud.Update(clinicPref);
 		}
 
 		public static void Update(ClinicPref newPref, ClinicPref oldPref) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),newPref,oldPref);
-				return;
-			}
 			Crud.ClinicPrefCrud.Update(newPref,oldPref);
 		}
 
 		///<summary></summary>
 		public static void Delete(long clinicPrefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clinicPrefNum);
-				return;
-			}
 			Crud.ClinicPrefCrud.Delete(clinicPrefNum);
 		}
 
 		///<summary>Inserts, updates, or deletes db rows to match listNew.  No need to pass in userNum, it's set before remoting role check and passed to
 		///the server if necessary.  Doesn't create ApptComm items, but will delete them.  If you use Sync, you must create new Apptcomm items.</summary>
 		public static bool Sync(List<ClinicPref> listNew,List<ClinicPref> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
 			return Crud.ClinicPrefCrud.Sync(listNew,listOld);
 		}
 
 		///<summary></summary>
 		public static List<ClinicPref> GetAllPrefs(long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClinicPref>>(MethodBase.GetCurrentMethod(),clinicNum);
-			}
 			string command="SELECT * FROM clinicpref WHERE ClinicNum="+POut.Long(clinicNum);
 			return Crud.ClinicPrefCrud.SelectMany(command);
 		}
@@ -245,12 +215,9 @@ namespace OpenDentBusiness{
 				+"WHERE PrefName='"+POut.String(prefName.ToString())+"' "
 				+"AND ClinicNum='"+POut.Long(clinicNum)+"'";
 			bool retVal=true;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				retVal=Meth.GetBool(MethodBase.GetCurrentMethod(),prefName,clinicNum,newValue);
-			}
-			else {
-				Db.NonQ(command);
-			}
+			
+			Db.NonQ(command);
+			
 			//Update local cache even though we should be invalidating the cache outside of this method.
 			ClinicPref cachedClinicPref=clinicPref;
 			cachedClinicPref.PrefName=prefName;
@@ -278,9 +245,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes the prefs for this clinic. If any pref does not exist, then nothing will be done with that pref.</summary>
 		public static long DeletePrefs(long clinicNum,List<PrefName> listPrefs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),clinicNum,listPrefs);
-			}
 			List<ClinicPref> listClinicPrefs=new List<ClinicPref>();
 			foreach(PrefName pref in listPrefs) {
 				ClinicPref clinicPref=GetPref(pref,clinicNum);

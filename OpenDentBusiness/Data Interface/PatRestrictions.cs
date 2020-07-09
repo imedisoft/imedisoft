@@ -96,11 +96,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_PatRestrictionCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _PatRestrictionCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -109,9 +105,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all patrestrictions for the specified patient.</summary>
 		public static List<PatRestriction> GetAllForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PatRestriction>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM patrestriction WHERE PatNum="+POut.Long(patNum);
 			return Crud.PatRestrictionCrud.SelectMany(command);
 		}
@@ -119,9 +113,7 @@ namespace OpenDentBusiness {
 		///<summary>This will only insert a new PatRestriction if there is not already an existing PatRestriction in the db for this patient and type.
 		///If exists, returns the PatRestrictionNum of the first one found.  Otherwise returns the PatRestrictionNum of the newly inserted one.</summary>
 		public static long Upsert(long patNum,PatRestrict patRestrictType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),patNum,patRestrictType);
-			}
+			
 			List<PatRestriction> listPatRestricts=GetAllForPat(patNum).FindAll(x => x.PatRestrictType==patRestrictType);
 			if(listPatRestricts.Count>0) {
 				return listPatRestricts[0].PatRestrictionNum;
@@ -132,9 +124,7 @@ namespace OpenDentBusiness {
 		///<summary>Checks for an existing patrestriction for the specified patient and PatRestrictType.
 		///If one exists, returns true (IsRestricted).  If none exist, returns false (!IsRestricted).</summary>
 		public static bool IsRestricted(long patNum,PatRestrict patRestrictType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),patNum,patRestrictType);
-			}
+			
 			string command="SELECT COUNT(*) FROM patrestriction WHERE PatNum="+POut.Long(patNum)+" AND PatRestrictType="+POut.Int((int)patRestrictType);
 			if(PIn.Int(Db.GetCount(command))>0) {
 				return true;
@@ -146,9 +136,7 @@ namespace OpenDentBusiness {
 
 		/// <summary>Get a list of all PatNums that are associated with a given restriction type</summary>
 		public static List<long> GetAllRestrictedForType(PatRestrict patRestrictType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),patRestrictType);
-			}
+			
 			string command="SELECT * FROM patrestriction WHERE PatRestrictType="+POut.Int((int)patRestrictType);
 			return Crud.PatRestrictionCrud.SelectMany(command).Select(x => x.PatNum).ToList();
 		}
@@ -167,10 +155,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Deletes any patrestrictions for the specified patient and type.</summary>
 		public static void RemovePatRestriction(long patNum,PatRestrict patRestrictType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum,patRestrictType);
-				return;
-			}
+			
 			string command="DELETE FROM patrestriction WHERE PatNum="+POut.Long(patNum)+" AND PatRestrictType="+POut.Int((int)patRestrictType);
 			Db.NonQ(command);
 			return;
@@ -180,27 +165,19 @@ namespace OpenDentBusiness {
 		/*
 		///<summary>Gets one PatRestriction from the db.</summary>
 		public static PatRestriction GetOne(long patRestrictionNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<PatRestriction>(MethodBase.GetCurrentMethod(),patRestrictionNum);
-			}
+			
 			return Crud.PatRestrictionCrud.SelectOne(patRestrictionNum);
 		}
 
 		///<summary></summary>
 		public static void Update(PatRestrict patRestrict){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patRestrict);
-				return;
-			}
+			
 			Crud.PatRestrictionCrud.Update(patRestrict);
 		}
 
 		///<summary></summary>
 		public static void Delete(long patRestrictionNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patRestrictionNum);
-				return;
-			}
+			
 			Crud.PatRestrictionCrud.Delete(patRestrictionNum);
 		}		
 		*/

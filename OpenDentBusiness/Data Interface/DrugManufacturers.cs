@@ -74,11 +74,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_drugManufacturerCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _drugManufacturerCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -86,36 +82,25 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one DrugManufacturer from the db.</summary>
 		public static DrugManufacturer GetOne(long drugManufacturerNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<DrugManufacturer>(MethodBase.GetCurrentMethod(),drugManufacturerNum);
-			}
+			
 			return Crud.DrugManufacturerCrud.SelectOne(drugManufacturerNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(DrugManufacturer drugManufacturer){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				drugManufacturer.DrugManufacturerNum=Meth.GetLong(MethodBase.GetCurrentMethod(),drugManufacturer);
-				return drugManufacturer.DrugManufacturerNum;
-			}
+			
 			return Crud.DrugManufacturerCrud.Insert(drugManufacturer);
 		}
 
 		///<summary></summary>
 		public static void Update(DrugManufacturer drugManufacturer){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),drugManufacturer);
-				return;
-			}
+			
 			Crud.DrugManufacturerCrud.Update(drugManufacturer);
 		}
 
 		///<summary></summary>
 		public static void Delete(long drugManufacturerNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),drugManufacturerNum);
-				return;
-			}
+			
 			//validation
 			string command;
 			command="SELECT COUNT(*) FROM VaccineDef WHERE drugManufacturerNum="+POut.Long(drugManufacturerNum);
@@ -131,9 +116,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<DrugManufacturer> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DrugManufacturer>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM drugmanufacturer WHERE PatNum = "+POut.Long(patNum);
 			return Crud.DrugManufacturerCrud.SelectMany(command);
 		}

@@ -16,10 +16,6 @@ namespace OpenDentBusiness {
 		public static SerializableDictionary<long,PatAgingData> GetAgingData(bool isSinglePatient,bool includeChanged,bool excludeInsPending,
 			bool excludeIfUnsentProcs,bool isSuperBills,List<long> listClinicNums)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SerializableDictionary<long,PatAgingData>>(MethodBase.GetCurrentMethod(),isSinglePatient,includeChanged,
-					excludeInsPending,excludeIfUnsentProcs,isSuperBills,listClinicNums);
-			}
 			SerializableDictionary<long,PatAgingData> dictPatAgingData=new SerializableDictionary<long,PatAgingData>();
 			string command="";
 			string guarOrPat="guar";

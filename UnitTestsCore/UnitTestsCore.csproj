@@ -105,7 +105,6 @@
     <Compile Include="TableTypes\ClearinghouseT.cs" />
     <Compile Include="TableTypes\ClinicPrefT.cs" />
     <Compile Include="TableTypes\CommlogT.cs" />
-    <Compile Include="TableTypes\EServiceBillingT.cs" />
     <Compile Include="TableTypes\MedicationPatT.cs" />
     <Compile Include="TableTypes\MedicationT.cs" />
     <Compile Include="TableTypes\Icd10T.cs" />
@@ -146,7 +145,6 @@
     <Compile Include="TableTypes\RepeatChargeT.cs" />
     <Compile Include="TableTypes\PharmacyT.cs" />
     <Compile Include="TableTypes\SiteT.cs" />
-    <Compile Include="TableTypes\SiteLinkT.cs" />
     <Compile Include="TableTypes\SmsFromMobileT.cs" />
     <Compile Include="TableTypes\StatementT.cs" />
     <Compile Include="TableTypes\SheetDefT.cs" />

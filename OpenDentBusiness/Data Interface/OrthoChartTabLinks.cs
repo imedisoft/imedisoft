@@ -74,11 +74,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_orthoChartTabLinkCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _orthoChartTabLinkCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -86,9 +82,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Inserts, updates, or deletes the passed in list against the stale list listOld.  Returns true if db changes were made.</summary>
 		public static bool Sync(List<OrthoChartTabLink> listNew,List<OrthoChartTabLink> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.OrthoChartTabLinkCrud.Sync(listNew,listOld);
 		}
 
@@ -97,45 +91,32 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<OrthoChartTabLink> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoChartTabLink>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM orthocharttablink WHERE PatNum = "+POut.Long(patNum);
 			return Crud.OrthoChartTabLinkCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one OrthoChartTabLink from the db.</summary>
 		public static OrthoChartTabLink GetOne(long orthoChartTabLinkNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<OrthoChartTabLink>(MethodBase.GetCurrentMethod(),orthoChartTabLinkNum);
-			}
+			
 			return Crud.OrthoChartTabLinkCrud.SelectOne(orthoChartTabLinkNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(OrthoChartTabLink orthoChartTabLink){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				orthoChartTabLink.OrthoChartTabLinkNum=Meth.GetLong(MethodBase.GetCurrentMethod(),orthoChartTabLink);
-				return orthoChartTabLink.OrthoChartTabLinkNum;
-			}
+			
 			return Crud.OrthoChartTabLinkCrud.Insert(orthoChartTabLink);
 		}
 
 		///<summary></summary>
 		public static void Update(OrthoChartTabLink orthoChartTabLink){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),orthoChartTabLink);
-				return;
-			}
+			
 			Crud.OrthoChartTabLinkCrud.Update(orthoChartTabLink);
 		}
 
 		///<summary></summary>
 		public static void Delete(long orthoChartTabLinkNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),orthoChartTabLinkNum);
-				return;
-			}
+			
 			Crud.OrthoChartTabLinkCrud.Delete(orthoChartTabLinkNum);
 		}
 

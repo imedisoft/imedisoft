@@ -31,9 +31,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all PatientRace entries from the db for the specified patient and includes the non-db fields Description, IsEthnicity, and
 		///HiearchicalCode.</summary>
 		public static List<PatientRace> GetForPatient(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PatientRace>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command=@"SELECT patientrace.*,COALESCE(cdcrec.Description,'') Description,
 				(CASE WHEN cdcrec.HeirarchicalCode LIKE 'E%' THEN 1 ELSE 0 END) IsEthnicity,
 				COALESCE(cdcrec.HeirarchicalCode,'') HeirarchicalCode
@@ -166,10 +164,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Inserts or Deletes neccesary PatientRace entries for the specified patient given the list of PatientRaces provided.</summary>
 		public static void Reconcile(long patNum,List<PatientRace> listPatRaces) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum,listPatRaces);
-				return;
-			}
+			
 			string command;
 			if(listPatRaces.Count==0) { //DELETE all for the patient if listPatRaces is empty.
 				command="DELETE FROM patientrace WHERE PatNum = "+POut.Long(patNum);//Can't use CRUD layer here because there might be multiple races for one patient.
@@ -218,28 +213,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<PatientRace> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PatientRace>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM patientrace WHERE PatNum = "+POut.Long(patNum);
 			return Crud.PatientRaceCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(PatientRace patientRace){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				patientRace.PatientRaceNum=Meth.GetLong(MethodBase.GetCurrentMethod(),patientRace);
-				return patientRace.PatientRaceNum;
-			}
+			
 			return Crud.PatientRaceCrud.Insert(patientRace);
 		}
 
 		///<summary></summary>
 		public static void Delete(long patientRaceNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patientRaceNum);
-				return;
-			}
+			
 			string command= "DELETE FROM patientrace WHERE PatientRaceNum = "+POut.Long(patientRaceNum);
 			Db.NonQ(command);
 		}

@@ -105,7 +105,7 @@ namespace OpenDentBusiness
 						cn.MySqlUser = PrefC.ReportingServer.Server == "" ? DataConnection.GetMysqlUser() : PrefC.ReportingServer.MySqlUser;
 						cn.MySqlPassword = PrefC.ReportingServer.Server == "" ? DataConnection.GetMysqlPass() : PrefC.ReportingServer.MySqlPass;
 						//no ternary operator because URI will be blank if they're not using a middle tier reporting server.
-						cn.ServiceURI = PrefC.ReportingServer.URI;
+						//cn.ServiceURI = PrefC.ReportingServer.URI;
 						//Connection string is not currently supported for report servers.
 						//If ServerName is null or empty, then the current instance of Open Dental is utilizing a connection string.
 						//The connection string should be preserved in order for reports to continue to work for non-report server queries.
@@ -220,9 +220,7 @@ namespace OpenDentBusiness
 					Note = conn.Note,
 					OdPassword = "",
 					OdUser = "",
-					ServerName = conn.ComputerName,
-					ServiceURI = "",
-					WebServiceIsEcw = false
+					ServerName = conn.ComputerName
 				};
 			}));
 		}
@@ -292,14 +290,9 @@ namespace OpenDentBusiness
 		{
 			CentralConnection conn = GetConnection(dbName);
 			_currentConnection = dbName;
-			if (!string.IsNullOrEmpty(conn.ServiceURI))
-			{
-				RemotingClient.ServerURI = conn.ServiceURI;
-			}
-			else
-			{
-				new DataConnection().SetDb(conn.ServerName, conn.DatabaseName, conn.MySqlUser, conn.MySqlPassword, "", "", DatabaseType.MySql, skipValidation);
-			}
+			
+			new DataConnection().SetDb(conn.ServerName, conn.DatabaseName, conn.MySqlUser, conn.MySqlPassword, "", "", DatabaseType.MySql, skipValidation);
+			
 			return conn;
 		}
 
@@ -309,11 +302,7 @@ namespace OpenDentBusiness
 			dataConn = dataConn ?? new DataConnection();
 			OpenDentBusiness.CentralConnection conn = GetConnection(dbName);
 			_currentConnectionT = dbName;
-			if (!string.IsNullOrEmpty(conn.ServiceURI))
-			{
-				RemotingClient.SetRemotingT(conn.ServiceURI, RemotingRole.ClientWeb, (dbName == ConnectionNames.DentalOfficeReportServer));
-			}
-			else if (!string.IsNullOrEmpty(conn.ConnectionString))
+			if (!string.IsNullOrEmpty(conn.ConnectionString))
 			{
 				dataConn.SetDbT(conn.ConnectionString, "", DatabaseType.MySql);
 			}

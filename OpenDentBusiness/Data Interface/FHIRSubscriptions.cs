@@ -29,18 +29,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one FHIRSubscription from the db.</summary>
 		public static FHIRSubscription GetOne(long fHIRSubscriptionNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<FHIRSubscription>(MethodBase.GetCurrentMethod(),fHIRSubscriptionNum);
-			}
+			
 			return Crud.FHIRSubscriptionCrud.SelectOne(fHIRSubscriptionNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(FHIRSubscription fHIRSubscription) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				fHIRSubscription.FHIRSubscriptionNum=Meth.GetLong(MethodBase.GetCurrentMethod(),fHIRSubscription);
-				return fHIRSubscription.FHIRSubscriptionNum;
-			}
+			
 			long fHIRSubscriptionNum=Crud.FHIRSubscriptionCrud.Insert(fHIRSubscription);
 			foreach(FHIRContactPoint fHIRContactPoint in fHIRSubscription.ListContactPoints) {
 				fHIRContactPoint.FHIRSubscriptionNum=fHIRSubscriptionNum;
@@ -51,10 +46,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(FHIRSubscription fHIRSubscription) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),fHIRSubscription);
-				return;
-			}
+			
 			string command="SELECT * FROM fhircontactpoint WHERE FHIRSubscriptionNum="+POut.Long(fHIRSubscription.FHIRSubscriptionNum);
 			List<FHIRContactPoint> listDbOld=Crud.FHIRContactPointCrud.SelectMany(command);
 			foreach(FHIRContactPoint contactPoint in fHIRSubscription.ListContactPoints) {
@@ -76,19 +68,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(FHIRSubscription fHIRSubscription,FHIRSubscription fHIRSubscriptionOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),fHIRSubscription,fHIRSubscriptionOld);
-				return;
-			}
+			
 			Crud.FHIRSubscriptionCrud.Update(fHIRSubscription,fHIRSubscriptionOld);
 		}
 
 			///<summary></summary>
 		public static void Delete(long fHIRSubscriptionNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),fHIRSubscriptionNum);
-				return;
-			}
+			
 			Crud.FHIRSubscriptionCrud.Delete(fHIRSubscriptionNum);
 			string command="DELETE FROM fhircontactpoint WHERE FHIRSubscriptionNum="+POut.Long(fHIRSubscriptionNum);
 			Db.NonQ(command);

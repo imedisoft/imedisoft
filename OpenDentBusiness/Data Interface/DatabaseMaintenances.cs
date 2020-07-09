@@ -20,9 +20,6 @@ namespace OpenDentBusiness {
 
 		#region Get Methods
 		public static List<DatabaseMaintenance> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DatabaseMaintenance>>(MethodBase.GetCurrentMethod());
-			}
 			string command="SELECT * FROM databasemaintenance";
 			return Crud.DatabaseMaintenanceCrud.SelectMany(command);
 		}
@@ -31,10 +28,6 @@ namespace OpenDentBusiness {
 		#region Insert
 		///<summary>Compares all DBM methods in the database to the entire list of methods passed in.</summary>
 		public static void InsertMissingDBMs(List<string> listDbmMethods) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listDbmMethods);
-				return;
-			}
 			List<string> listDbmMethodNames=GetAll().Select(x => x.MethodName).ToList();
 			foreach(string methodName in listDbmMethods) {
 				if(listDbmMethodNames.Contains(methodName)) {
@@ -48,19 +41,11 @@ namespace OpenDentBusiness {
 		#endregion
 		#region Update
 		public static void Update(DatabaseMaintenance dbm) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dbm);
-				return;
-			}
 			Crud.DatabaseMaintenanceCrud.Update(dbm);
 		}
 
 		///<summary>Moves a DBM from the 'Checks' to the 'Old' tab by updating DatabaseMaintenance.IsOld=true</summary>
 		public static void MoveToOld(string methodName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),methodName);
-				return;
-			}
 			string command="UPDATE databasemaintenance SET IsOld=1 "
 				+"WHERE MethodName='"+POut.String(methodName)+"'";
 			Db.NonQ(command);
@@ -68,10 +53,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Updates the DateLastRun column to NOW for any DBM method that matches the method name passed in.</summary>
 		public static void UpdateDateLastRun(string methodName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),methodName);
-				return;
-			}
 			string command="UPDATE databasemaintenance SET DateLastRun="+DbHelper.Now()+" "
 				+"WHERE MethodName='"+POut.String(methodName)+"'";
 			Db.NonQ(command);
@@ -151,9 +132,6 @@ namespace OpenDentBusiness {
 			if(PrefC.IsCloudMode) {
 				return "";//Cloud hosted Open Dental databases don't have permission to call SET GLOBAL, also the MySQL variables can be assumed to be correct, since we host it.
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -203,9 +181,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns a Tuple with Item1=log string and Item2=whether the table checks were successful.</summary>
 		public static ODTuple<string,bool> MySQLTables(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ODTuple<string,bool>>(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			bool success=true;
 			if(DataConnection.DBtype!=DatabaseType.MySql) {
@@ -266,9 +241,6 @@ namespace OpenDentBusiness {
 		///Developers must make a backup prior to calling this method because repairs have a tendency to delete data.
 		///Currently called whenever MySQL is upgraded and when users click Optimize in database maintenance.</summary>
 		public static string RepairAndOptimize(bool isLogged=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),isLogged);
-			}
 			StringBuilder retVal=new StringBuilder();
 			DataTable tableLog=null;
 			if(DataConnection.DBtype!=DatabaseType.MySql) {
@@ -314,9 +286,6 @@ namespace OpenDentBusiness {
 		///As documented online, https://dev.mysql.com/doc/refman/5.6/en/optimize-table.html, MySQL 5.6 supports the optimize
 		///command for MyISAM, InnoDB and Archive tables only.</summary>
 		public static string OptimizeTable(string tableName,bool hasResult = false,bool canOptimizeInnodb=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),tableName,hasResult,canOptimizeInnodb);
-			}
 			if(DataConnection.DBtype!=DatabaseType.MySql) {
 				return "";
 			}
@@ -358,120 +327,9 @@ namespace OpenDentBusiness {
 			return retVal;
 		}
 
-		[DbmMethodAttr(HasBreakDown=true)]
-		public static string DatesNoZeros(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				//This check is not valid for Oracle, because each of the following fields are defined as non-null, and 0000-00-00 is not a valid Oracle date.
-				return "";
-			}
-			//dynamically get every single date, datetime, and timestamp column from all tables in the db.
-			string command = @"
-				SELECT cols.TABLE_NAME, cols.COLUMN_NAME, cols.COLUMN_DEFAULT
-				FROM information_schema.COLUMNS cols
-				WHERE cols.DATA_TYPE IN ('datetime','date','timestamp')
-				AND TABLE_SCHEMA = '"+DataConnection.GetDatabaseName()+"'";
-			DataTable table = Db.GetTable(command);
-			int countTotal=0;
-			List<string> listInvalidColNames = new List<string>();
-			List<string> listErrors=new List<string>();
-			//for each of those columns
-			List<string> listDbCommands = new List<string>();
-			foreach(DataRow row in table.Rows) {
-				string tableName = PIn.String(row["TABLE_NAME"].ToString());
-				string columnName = PIn.String(row["COLUMN_NAME"].ToString());
-				try {
-					//get the primary key of that column's table
-					command = "SHOW KEYS FROM "+tableName+" WHERE Key_name='PRIMARY'";
-					DataTable tablePKs=Db.GetTable(command);
-					if(tablePKs.Rows.Count==0) {
-						continue;//Should never happen but there might be tables without a primary key.
-					}
-					string priKeyCol = tablePKs.Rows[0]["Column_name"].ToString();
-					//check to see if there are any invalid dates
-					command = "SELECT "+priKeyCol+" FROM "+tableName+" WHERE "+columnName+" = '0000-00-00'";//works for invalid dates, datetimes, and timestamps.
-					DataTable tableInvalid = Db.GetTable(command);
-					//and count them up.
-					countTotal+=tableInvalid.Rows.Count;
-					//if there are some that are invalid, then fix them by setting them to the default value.
-					//default value is usually 0001-01-01 for most dates, but can be the current timestamp for DateTStamp columns.
-					if(tableInvalid.Rows.Count > 0) {
-						string priKeys = String.Join(",",tableInvalid.Rows.Cast<DataRow>().Select(x => x[0]).ToList());
-						listInvalidColNames.Add(tableName+"."+columnName+": Keys ("+priKeys+")");
-						listDbCommands.Add("UPDATE "+tableName+" SET "+columnName+" = DEFAULT WHERE "+priKeyCol+" IN ("+priKeys+")");
-					}
-				}
-				catch(Exception ex) {
-					//This could happen if we're trying to inspect a temp table that has since been deleted.
-					listErrors.Add(tableName+"."+columnName+": "+ex.Message);
-				}
-			}
-			string log="";
-			if(listErrors.Count > 0) {
-				log+=Lans.g("FormDatabaseMaintenance","Unable to check the following columns:")+"\r\n";
-				log+=String.Join("\r\n",listErrors)+"\r\n";
-			}
-			switch(modeCur) {
-				case DbmMode.Check:
-					if(countTotal > 0 || verbose) {
-						log+=Lans.g("FormDatabaseMaintenance","Number of rows with invalid dates found:")+" "+countTotal;
-						log+="\r\n   "+Lans.g("FormDatabaseMaintenance","Double click to see a break down.")+"\r\n";
-					}
-					break;
-				case DbmMode.Breakdown:
-					if(countTotal > 0 || verbose) {
-						log+=Lans.g("FormDatabaseMaintenance","Number of rows with invalid dates found:")+" "+countTotal+"\r\n";
-						log+=Lans.g("FormDatabaseMaintenance","The following table.Column(s) have rows with invalid dates:")+"\r\n";
-						log+=String.Join("\r\n",listInvalidColNames);
-					}
-					break;
-				case DbmMode.Fix:
-					if(countTotal > 0 || verbose) {
-						listDbCommands.ForEach(x => Db.NonQ(x));
-						log+=Lans.g("FormDatabaseMaintenance","Number of rows with invalid dates fixed:")+" "+countTotal+"\r\n";
-					}
-					break;
-			}
-			return log;
-		}
-
-		///<summary>Deprecated.</summary>
-		public static string DecimalValues(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
-			string log="";
-			//This specific fix is no longer needed, since we are using ROUND(EstBalance,2) in the aging calculation now.
-			//However, it is still a problem in many columns that we will eventually need to deal with.
-			//Maybe add this back when users can control which fixes they make.
-			//One problem is the foreign users do not necessarily use 2 decimal places (Kuwait uses 3).
-			////Holds columns to be checked. Strings are in pairs in the following order: table-name,column-name
-			//string[] decimalCols=new string[] {
-			//  "patient","EstBalance"
-			//};
-			//int decimalPlacessToRoundTo=8;
-			//long numberFixed=0;
-			//for(int i=0;i<decimalCols.Length;i+=2) {
-			//  string tablename=decimalCols[i];
-			//  string colname=decimalCols[i+1];
-			//  string command="UPDATE "+tablename+" SET "+colname+"=ROUND("+colname+","+decimalPlacessToRoundTo
-			//    +") WHERE "+colname+"!=ROUND("+colname+","+decimalPlacessToRoundTo+")";
-			//  numberFixed+=Db.NonQ(command);
-			//}
-			//if(numberFixed>0 || verbose) {
-			//  log+=Lans.g("FormDatabaseMaintenance","Decimal values fixed: ")+numberFixed.ToString()+"\r\n";
-			//}
-			return log;
-		}
-
 		///<summary>also checks patient.AddrNote</summary>
 		[DbmMethodAttr]
 		public static string SpecialCharactersInNotes(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -549,9 +407,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string NotesWithTooMuchWhiteSpace(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command;
 			string logBreakdown="";
 			long countTotal=0;
@@ -684,9 +539,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string TablesWithClinicNumNegative(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			List<string> listTablesToCheck=new List<string> {
 				//"alertitem",//Not including this because we intentionally set ClinicNum to -1 to indicate the alert's for all clinics.
 				"appointment",
@@ -726,9 +578,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string TransactionsWithFutureDates(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			bool isFutureTransAllowed=PrefC.GetBool(PrefName.FutureTransDatesAllowed);
 			bool isFuturePaymentsAllowed=PrefC.GetBool(PrefName.AccountAllowFutureDebits);
@@ -794,9 +643,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string AppointmentCompleteWithTpAttached(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -838,9 +684,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string AppointmentsEndingOnDifferentDay(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//This pulls appointments that extend past the end of the day. CHAR_LENGTH(Pattern)-1 as if the appointment goes to midnight, it does
 			//not need to be fixed.
 			string command="SELECT AptNum FROM appointment WHERE DATE(AptDateTime) != DATE(AptDateTime + INTERVAL (CHAR_LENGTH(Pattern)-1)*5 MINUTE)";
@@ -871,9 +714,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string AppointmentsNoPattern(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT AptNum FROM appointment WHERE Pattern=''";
 			DataTable table=Db.GetTable(command);
 			string log="";
@@ -946,9 +786,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string AppointmentsNoDateOrProcs(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -1010,9 +847,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string AppointmentsNoPatients(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT Count(*) FROM appointment WHERE PatNum NOT IN (SELECT PatNum FROM patient)";
 			int count=PIn.Int(Db.GetCount(command));
 			string log="";
@@ -1093,9 +927,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string AppointmentPlannedNoPlannedApt(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -1132,9 +963,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string AppointmentScheduledWithCompletedProcs(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT DISTINCT appointment.PatNum, "+DbHelper.Concat("LName","\', \'","FName")+" AS PatName, appointment.AptDateTime "
 				+"FROM appointment "
 				+"INNER JOIN patient ON patient.PatNum=appointment.PatNum "
@@ -1177,9 +1005,6 @@ namespace OpenDentBusiness {
 		///<summary>For appointments that have more than one AppointmentCreate audit entry, deletes all but the newest.</summary>
 		[DbmMethodAttr]
 		public static string AuditTrailDeleteDuplicateApptCreate(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -1227,9 +1052,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string AutoCodeItemsWithNoAutoCode(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			DataTable table;
@@ -1272,9 +1094,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string AutoCodesDeleteWithNoItems(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -1310,9 +1129,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string AutomationTriggersWithNoSheetDefs(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -1351,9 +1167,6 @@ namespace OpenDentBusiness {
 		///<summary>Remove duplicates where all benefit columns match except for BenefitNum.</summary>
 		[DbmMethodAttr]
 		public static string BenefitsWithExactDuplicatesForInsPlan(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			DataTable table;
@@ -1414,9 +1227,6 @@ namespace OpenDentBusiness {
 		///<summary>Identify duplicates where all benefit columns match except for BenefitNum, Percent, and MonetaryAmt.</summary>
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string BenefitsWithPartialDuplicatesForInsPlan(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT DISTINCT employer.EmpName,carrier.CarrierName,carrier.Phone,carrier.Address,carrier.City,carrier.State,carrier.Zip, "
 				+"insplan.GroupNum,insplan.GroupName, carrier.NoSendElect,carrier.ElectID, "
 				+"(SELECT COUNT(DISTINCT Subscriber) FROM inssub WHERE insplan.PlanNum=inssub.PlanNum) subscribers, insplan.PlanNum "
@@ -1484,9 +1294,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string BillingTypesInvalid(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT ValueString FROM preference WHERE PrefName='PracticeDefaultBillType'";
 			long billingType=PIn.Long(Db.GetScalar(command));
 			command="SELECT COUNT(*) FROM definition WHERE Category=4 AND definition.DefNum="+billingType;
@@ -1538,9 +1345,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(IsCanada=true)]
 		public static string CanadaCarriersCdaMissingInfo(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				return Lans.g("FormDatabaseMaintenance","Skipped. Local computer region must be set to Canada to run.");
 			}
@@ -1778,9 +1582,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimDeleteWithNoClaimProcs(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -1827,9 +1628,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ClaimWithInvalidInsSubNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -1939,9 +1737,6 @@ namespace OpenDentBusiness {
 		///<summary>Also fixes situations where PatNum=0</summary>
 		[DbmMethodAttr]
 		public static string ClaimWithInvalidPatNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT claim.ClaimNum, procedurelog.PatNum patNumCorrect
 				FROM claim, claimproc, procedurelog
 				WHERE claim.PatNum NOT IN (SELECT PatNum FROM patient)
@@ -1981,9 +1776,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimWithInvalidProvTreat(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -2016,9 +1808,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimWriteoffSum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -2066,9 +1855,6 @@ namespace OpenDentBusiness {
 		///<summary>Finds claimpayments where the CheckAmt!=SUM(InsPayAmt) for the claimprocs attached to the claimpayment.  Manual fix.</summary>
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ClaimPaymentCheckAmt(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -2158,9 +1944,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimPaymentDetachMissingDeposit(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT * FROM claimpayment "
 				+"WHERE DepositNum != 0 "
@@ -2194,9 +1977,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ClaimPaymentsNotPartialWithNoClaimProcs(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT claimpayment.CheckDate, definition.ItemName, claimpayment.CheckAmt, "+
 				"claimpayment.CarrierName, clinic.Description, claimpayment.Note "+
 				"FROM claimpayment "+
@@ -2252,9 +2032,6 @@ namespace OpenDentBusiness {
 		/// <summary>Shows patients that have claim payments attached to patient payment plans.</summary>
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string ClaimProcAttachedToPatientPaymentPlans(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			DataTable table=GetClaimProcsAttachedToPatientPaymentPlans();
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
@@ -2286,9 +2063,6 @@ namespace OpenDentBusiness {
 		///<summary>Deletes claimprocs that are attached to group notes.</summary>
 		[DbmMethodAttr]
 		public static string ClaimProcEstimateAttachedToGroupNote(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//It is impossible to attach a group note to a claim, because group notes always have status EC, but status C is required to attach to a claim, or status TP for a preauth.
 			//Since the group note cannot be attached to a claim, it also cannot be attached to a claim payment.
 			//Claimproc estimates attached to group notes cannot be viewed anywhere in the UI.
@@ -2326,9 +2100,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcDateNotMatchCapComplete(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT * FROM claimproc WHERE Status=7 AND DateCP != ProcDate";
 			List<ClaimProc> listClaimProcs=Crud.ClaimProcCrud.SelectMany(command);
@@ -2358,9 +2129,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string ClaimProcDateNotMatchPayment(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			DataTable table;
@@ -2442,9 +2210,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcDeleteDuplicateEstimateForSameInsPlan(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command;
 			if(DataConnection.DBtype==DatabaseType.MySql) {
 				//Get all the claimproc estimates that already have a claimproc marked as received from the same InsPlan.
@@ -2499,9 +2264,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcDeleteInvalidAdjustments(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ClaimProcNum FROM claimproc WHERE claimproc.ClaimNum=0 "
 				+"AND NOT EXISTS(SELECT PlanNum FROM insplan WHERE insplan.PlanNum=claimproc.PlanNum) "
@@ -2534,9 +2296,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasPatNum = true)]
 		public static string ClaimProcDeleteWithInvalidClaimNum(bool verbose,DbmMode modeCur,long patNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur,patNum);
-			}
 			string log="";
 			string patWhere=(patNum>0 ? "AND claimproc.PatNum="+POut.Long(patNum)+" " : "");
 			string command="SELECT ClaimProcNum FROM claimproc WHERE claimproc.ClaimNum!=0 "
@@ -2572,9 +2331,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcDeleteMismatchPatNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT ClaimProcNum FROM claimproc "
 				+"INNER JOIN procedurelog ON procedurelog.ProcNum=claimproc.ProcNum "
 				+"WHERE claimproc.ProcNum>0 "
@@ -2613,9 +2369,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcDeleteEstimateWithInvalidProcNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ClaimProcNum FROM claimproc WHERE ProcNum>0 "
 				+"AND Status="+POut.Int((int)ClaimProcStatus.Estimate)+" "
@@ -2651,9 +2404,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcDeleteCapEstimateWithProcComplete(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ClaimProcNum FROM claimproc WHERE ProcNum>0 "
 				+"AND Status="+POut.Int((int)ClaimProcStatus.CapEstimate)+" "
@@ -2694,9 +2444,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcEstNoBillIns(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT * FROM claimproc WHERE NoBillIns=1 AND InsPayEst !=0";
 			List<ClaimProc> listClaimProcs=Crud.ClaimProcCrud.SelectMany(command);
@@ -2726,9 +2473,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcEstWithInsPaidAmt(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command=@"SELECT * FROM claimproc WHERE InsPayAmt > 0 AND ClaimNum=0 AND Status=6";
 			List<ClaimProc> listClaimProcs=Crud.ClaimProcCrud.SelectMany(command);
@@ -2758,9 +2502,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcPatNumMissing(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ClaimProcNum FROM claimproc WHERE PatNum=0 AND InsPayAmt=0 AND WriteOff=0";
 			switch(modeCur) {
@@ -2789,9 +2530,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcProvNumMissing(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ClaimProcNum FROM claimproc WHERE ProvNum=0 AND Status="+POut.Int((int)ClaimProcStatus.Estimate);
 			List<long> listClaimProcNums=Db.GetListLong(command);
@@ -2829,9 +2567,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ClaimProcPreauthNotMatchClaim(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT claim.PatNum,claim.DateService,claimproc.ProcDate,claimproc.CodeSent,claimproc.FeeBilled 
 				FROM claimproc,claim 
 				WHERE claimproc.ClaimNum=claim.ClaimNum
@@ -2869,9 +2604,6 @@ namespace OpenDentBusiness {
 		///<summary>We are only checking mismatched statuses if claim is marked as received.</summary>
 		[DbmMethodAttr(HasBreakDown = true,HasPatNum = true)]
 		public static string ClaimProcStatusNotMatchClaim(bool verbose,DbmMode modeCur,long patNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur,patNum);
-			}
 			string patWhere=(patNum>0 ? "AND claimproc.PatNum="+POut.Long(patNum)+" " : "");
 			string command=@"SELECT claim.PatNum,claim.DateService,claimproc.ProcDate,claimproc.CodeSent,claimproc.FeeBilled
 					FROM claimproc,claim
@@ -2915,9 +2647,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcTotalPaymentWithInvalidDate(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT claimproc.ClaimProcNum,claimproc.ProcDate,claim.DateService FROM claimproc,claim"
 				+" WHERE claimproc.ProcNum=0"//Total payments
 				+" AND claimproc.ProcDate < "+POut.Date(new DateTime(1880,1,1))//which have invalid dates
@@ -2957,9 +2686,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcUpdateStatusWithInvalidClaim(bool verbose,DbmMode modeCur)  {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@$"SELECT ClaimProcNum 
 				FROM claimproc 
 				WHERE Status={POut.Int((int)ClaimProcStatus.NotReceived)}
@@ -3000,9 +2726,6 @@ namespace OpenDentBusiness {
 		
 		[DbmMethodAttr(HasBreakDown=true,HasPatNum=true)]
 		public static string ClaimProcWithInvalidClaimNum(bool verbose,DbmMode modeCur,long patNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur,patNum);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -3081,9 +2804,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasPatNum = true)]
 		public static string ClaimProcWithInvalidClaimPaymentNum(bool verbose,DbmMode modeCur,long patNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur,patNum);
-			}
 			string log="";
 			string patWhere=(patNum>0 ? "AND claimproc.PatNum="+POut.Long(patNum)+" " : "");
 			string command=@"SELECT * FROM claimproc WHERE claimpaymentnum !=0 "
@@ -3119,9 +2839,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcWithInvalidPayPlanNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command=@"SELECT * FROM claimproc WHERE PayPlanNum>0 AND PayPlanNum NOT IN(SELECT PayPlanNum FROM payplan)";
 			List<ClaimProc> listClaimProcs=Crud.ClaimProcCrud.SelectMany(command);
@@ -3151,9 +2868,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcWithInvalidProvNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT * FROM claimproc WHERE ProvNum > 0 AND ProvNum NOT IN (SELECT ProvNum FROM provider)";
 			List<ClaimProc> listClaimProcs=Crud.ClaimProcCrud.SelectMany(command);
@@ -3184,9 +2898,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimProcWithInvalidSubNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ClaimProcNum FROM claimproc WHERE claimproc.InsSubNum > 0 AND claimproc.Status="+POut.Int((int)ClaimProcStatus.Estimate)
 				+" AND claimproc.InsSubNum NOT IN (SELECT inssub.InsSubNum FROM inssub)";
@@ -3217,9 +2928,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ClaimProcWriteOffNegative(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT patient.LName,patient.FName,patient.MiddleI,claimproc.CodeSent,procedurelog.ProcFee,procedurelog.ProcDate,claimproc.WriteOff
 					FROM claimproc 
 					LEFT JOIN patient ON claimproc.PatNum=patient.PatNum
@@ -3263,9 +2971,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(IsCanada=true)]
 		public static string CanadaClaimProcForWrongPatient(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {
 				return Lans.g("FormDatabaseMaintenance","Skipped. Local computer region must be set to Canada to run.");
 			}
@@ -3307,9 +3012,6 @@ namespace OpenDentBusiness {
 		#region Clearinghouse---------------------------------------------------------------------------------------------------------------------------
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ClearinghouseInvalidFormat(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			int formatEnumCount=Enum.GetNames(typeof(ElectronicClaimFormat)).Length-1;
 			string command="SELECT clearinghouse.Description,COALESCE(clinic.Abbr,'"+POut.String(Lans.g("FormDatabaseMaintenance","Unassigned"))+"') Abbr "
 				+"FROM clearinghouse "
@@ -3347,9 +3049,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ClearinghouseInvalidCommBridge(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			int commBridgeEnumCount=Enum.GetNames(typeof(EclaimsCommBridge)).Length - 1;
 			string command="SELECT clearinghouse.Description,COALESCE(clinic.Abbr,'"+POut.String(Lans.g("FormDatabaseMaintenance","Unassigned"))+"') Abbr "
 				+"FROM clearinghouse "
@@ -3390,9 +3089,6 @@ namespace OpenDentBusiness {
 		///<summary>Inserts missing/invalid clinics.</summary>
 		[DbmMethodAttr]
 		public static string ClinicNumMissingInvalid(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//look at the procedurelog and patient table because they will most likely have all possible clinics.
 			string command=@"
 				SELECT procedurelog.ClinicNum 
@@ -3444,9 +3140,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClockEventInFuture(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -3477,9 +3170,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ComputerPrefDuplicates(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//Min may not be the oldest when using random primary keys, but we have to pick one.
 			string command="SELECT MIN(ComputerPrefNum) ComputerPrefNum, ComputerName "
 				+"FROM computerpref "
@@ -3510,60 +3200,9 @@ namespace OpenDentBusiness {
 			return log;
 		}
 
-		/*Deprecated per Nathan 4/18/2017.
-		 * These do not show in the UI, so there is no way to manually fix them (aside from running a query to manually delete them).  Since they have no
-		 * payments attached, they should not affect any reports or any other area of the program.  And since there is no fix Nathan decided we just
-		 * wouldn't report them.  The only possible downside is if the table filled up with thousands or hundreds of thousands of these "bad" deposits,
-		 * but we don't believe this will happen.  We believe we have fixed the bug that was creating this as of 4/18/2017.  FormDepositEdit was allowing
-		 * empty deposits to be created as well as an issue with the Print/CreatePDF/Email buttons and the Refresh button causing transactions to be saved
-		 * attached to the deposit, then when refreshed they were removed from the list and when OK was pressed the transactions were removed from the
-		 * deposit but the deposit was left in the db with the amount but nothing attached.
-		[DbmMethodAttr(HasBreakDown=true)]
-		public static string DepositsWithNoPayments(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
-			//Gets all deposits that have a positive amount with no payments attached. This was caused by a bug in 16.2.1-16.2.8.
-			command=@"SELECT deposit.DepositNum,deposit.DateDeposit,deposit.Amount
-				FROM deposit 
-				LEFT JOIN payment ON payment.DepositNum=deposit.DepositNum
-				LEFT JOIN claimpayment ON claimpayment.DepositNum=deposit.DepositNum			
-				WHERE payment.PayNum IS NULL AND claimpayment.ClaimPaymentNum IS NULL
-				AND deposit.Amount>0.005
-				ORDER BY deposit.DateDeposit,deposit.DepositNum";
-			table=Db.GetTable(command);
-			if(table.Rows.Count==0 && !verbose) {
-				return "";
-			}
-			int numFound=table.Rows.Count;
-			string log=Lans.g("FormDatabaseMaintenance","Deposits found with no payments attached: ")+numFound;
-			switch(modeCur) {
-				case DbmMode.Check:
-					if(numFound>0) {//Only the fix should show the entire list of items.
-						log+="\r\n   "+Lans.g("FormDatabaseMaintenance","Manual fix needed.  Double click to see a break down.")+"\r\n";
-					}
-					break;
-				case DbmMode.Breakdown:
-				case DbmMode.Fix:
-					if(numFound>0) {//Running the fix and there are items to show.
-						log+=", "+Lans.g("FormDatabaseMaintenance","including")+":\r\n";
-						foreach(DataRow row in table.Rows) {
-							log+="   "+PIn.Date(row["DateDeposit"].ToString()).ToShortDateString()
-								+"    "+PIn.Double(row["Amount"].ToString()).ToString("f")+"\r\n";
-						}
-						log+="   "+Lans.g("FormDatabaseMaintenance","They need to be deleted manually.")+"\r\n";
-					}
-					break;
-			}
-			return log;
-		}*/
-
 		///<summary>Finds deposits where there are attached payments and the deposit amount does not equal the sum of the attached payment amounts.</summary>
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string DepositsWithIncorrectAmount(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -3614,9 +3253,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string DiseaseWithInvalidDiseaseDef(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -3658,9 +3294,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string DocumentWithInvalidDate(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//Gets a list of documents with dates that are invalid (0001-01-01). The list should be blank. If not, then the document's date will be set to 001-01-02 which will allow deletion.
 			string command="SELECT COUNT(*) FROM document WHERE DateCreated="+POut.Date(new DateTime(1,1,1));
 			int numFound=PIn.Int(Db.GetCount(command));
@@ -3686,9 +3319,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string DocumentWithNoCategory(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT DocNum FROM document WHERE DocCategory=0";
 			DataTable table=Db.GetTable(command);
 			string log="";
@@ -3719,9 +3349,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string EbillDuplicates(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//Min may not be the oldest when using random primary keys, but we have to pick one.  In most cases they're identical anyway.
 			string command="SELECT MIN(EbillNum) EbillNum,COUNT(*) Count "
 				+"FROM ebill "
@@ -3755,9 +3382,6 @@ namespace OpenDentBusiness {
 		///<summary>Inserts an ebill for ClinicNum 0 if it does not exist.</summary>
 		[DbmMethodAttr]
 		public static string EbillMissingDefaultEntry(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT COUNT(*) FROM ebill WHERE ClinicNum=0";
 			int numFound=PIn.Int(Db.GetCount(command));
@@ -3789,9 +3413,6 @@ namespace OpenDentBusiness {
 		///<summary>Deletes orphaned sheetdefs from eClipboard.</summary>
 		[DbmMethodAttr]
 		public static string EClipboardOrphanedSheetDefRow(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//MySQL error without nested select
 			string command=$@"
 				SELECT EClipboardSheetDefNum 
@@ -3826,9 +3447,6 @@ namespace OpenDentBusiness {
 		///<summary>This could be enhanced to validate all foreign keys on the eduresource.</summary>
 		[DbmMethodAttr]
 		public static string EduResourceInvalidDiseaseDefNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT EduResourceNum FROM eduresource WHERE DiseaseDefNum != 0 AND DiseaseDefNum NOT IN (SELECT DiseaseDefNum FROM diseasedef)";
 			DataTable table=Db.GetTable(command);
 			string log="";
@@ -3856,9 +3474,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string EmailAttachWithTemplateNumAndMessageNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -3882,9 +3497,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string Etrans835AttachWithInvalidClaimNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			List<long> listIssueEtrans835Attaches=Db.GetListLong(
 				@"SELECT etrans835attach.Etrans835AttachNum
@@ -3914,9 +3526,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string FeeDeleteDuplicates(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -3973,9 +3582,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string FeeDeleteForInvalidProc(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -4014,9 +3620,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string GroupNoteWithInvalidAptNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT * FROM procedurelog "
 				+"INNER JOIN procedurecode ON procedurelog.CodeNum=procedurecode.CodeNum "
@@ -4048,9 +3651,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string GroupNoteWithInvalidProcStatus(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT * FROM procedurelog "
 				+"INNER JOIN procedurecode ON procedurelog.CodeNum=procedurecode.CodeNum "
@@ -4085,9 +3685,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string FeeScheduleHiddenWithPatient(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -4121,9 +3718,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string GroupPermissionInvalidNewerDays(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -4152,9 +3746,6 @@ namespace OpenDentBusiness {
 		#region Icd9
 		[DbmMethodAttr]
 		public static string Icd9InvalidCodes(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			List<long> listIcd9Nums=Db.GetListLong("SELECT ICD9Num FROM icd9 WHERE ICD9Code=''");
 			string log="";
 			switch(modeCur) {
@@ -4180,9 +3771,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string InsPayPlanWithPatientPayments(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//Gets a list of payplans of type insurance that have patient payments attached to them and no insurance payments attached
 			string command=@"SELECT payplan.PayPlanNum 
 								FROM payplan
@@ -4225,9 +3813,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string InsPlanInvalidCarrier(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//Gets a list of insurance plans that do not have a carrier attached. The list should be blank. If not, then you need to go to the plan listed and add a carrier. Missing carriers will cause the send claims function to give an error.
 			string log="";
 			string command;
@@ -4300,10 +3885,6 @@ namespace OpenDentBusiness {
 		
 		[DbmMethodAttr(HasBreakDown = true,HasPatNum = true)]
 		public static string InsPlanInvalidNum(bool verbose,DbmMode modeCur,long patNum = 0) {
-			//Many sections removed because they are now fixed in InsSubNumMismatchPlanNum.
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur,patNum);
-			}
 			string log="";
 			bool isPatSpecific=false;
 			List<long> listPatPlanNums=new List<long>();
@@ -4639,9 +4220,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string InsPlanNoClaimForm(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -4673,9 +4251,6 @@ namespace OpenDentBusiness {
 		
 		[DbmMethodAttr]
 		public static string InsSubInvalidSubscriber(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT inssub.Subscriber,COALESCE(patient.PatStatus,-1) PatStatus FROM inssub 
 				LEFT JOIN patient ON patient.PatNum=inssub.Subscriber
 				WHERE (patient.PatNum IS NULL OR patient.PatStatus="+POut.Int((int)PatientStatus.Deleted)+@")
@@ -4737,9 +4312,6 @@ namespace OpenDentBusiness {
 		///<summary>Checks for situations where there are valid InsSubNums, but mismatched PlanNums.</summary>
 		[DbmMethodAttr(HasBreakDown=true,HasPatNum=true)]
 		public static string InsSubNumMismatchPlanNum(bool verbose,DbmMode modeCur,long patNumSpecific=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur,patNumSpecific);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -5148,9 +4720,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string JournalEntryInvalidAccountNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT COUNT(*) FROM journalentry WHERE AccountNum NOT IN(SELECT AccountNum FROM account)";
 			int numFound=PIn.Int(Db.GetCount(command));
 			string log="";
@@ -5189,9 +4758,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string LabCaseWithInvalidLaboratory(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -5230,9 +4796,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string LaboratoryWithInvalidSlip(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -5259,9 +4822,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string MedicationPatDeleteWithInvalidMedNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -5287,9 +4847,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string MedicationWithInvalidGenericNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -5320,9 +4877,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string MessageButtonDuplicateButtonIndex(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -5362,9 +4916,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string OperatoryInvalidReference(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//Get distinct operatory nums that have been orphaned from appointment, scheduleop, and apptviewitems.  
 			//We use a UNION instead of UNION ALL because we want MySQL or Oracle to group duplicate OpNums together.
 			string command=@"SELECT appointment.Op AS OpNum FROM appointment WHERE appointment.Op!=0 AND NOT EXISTS(SELECT * FROM operatory WHERE operatory.OperatoryNum=appointment.Op)
@@ -5401,9 +4952,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string OrthoChartDeleteDuplicates(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command = @"SELECT SUM(duplicates.CountDup) 
 					FROM (
@@ -5458,9 +5006,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string OrthoChartFieldsWithoutValues(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string queryStr="SELECT COUNT(*) FROM orthochart WHERE FieldValue=''";
 			int numFound=PIn.Int(Db.GetCount(queryStr));
 			string log="";
@@ -5483,9 +5028,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string PatFieldsDeleteDuplicates(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -5552,9 +5094,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PatientBadGuarantor(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT p.PatNum,p.Guarantor FROM patient p LEFT JOIN patient p2 ON p.Guarantor=p2.PatNum WHERE p2.PatNum IS NULL";
 			DataTable table=Db.GetTable(command);
 			string log="";
@@ -5587,9 +5126,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PatientBadGuarantorWithAnotherGuarantor(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT p.PatNum,p2.Guarantor FROM patient p LEFT JOIN patient p2 ON p.Guarantor=p2.PatNum WHERE p2.PatNum!=p2.Guarantor";
 			DataTable table=Db.GetTable(command);
 			string log="";
@@ -5622,9 +5158,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PatientDeletedWithClinicNumSet(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -5658,9 +5191,6 @@ namespace OpenDentBusiness {
 		///billing type in definitions table.</summary>
 		[DbmMethodAttr]
 		public static string PatientInvalidBillingType(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -5702,9 +5232,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PatientInvalidGradeLevel(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -5741,9 +5268,6 @@ namespace OpenDentBusiness {
 		///new Family/SuperFamily where the previous SuperHead now resides.</summary>
 		[DbmMethodAttr]
 		public static string PatientInvalidSuperFamilyHead(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT p1.PatNum, p2.PatNum AS OldHead, IF(p2.SuperFamily=0,p2.Guarantor,p2.SuperFamily) AS NewHead "
 				+"FROM patient p1 "
@@ -5843,9 +5367,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PatientsNoClinicSet(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(!PrefC.HasClinicsEnabled) {
 				return "";
 			}
@@ -5884,9 +5405,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PatientPriProvHidden(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -5936,9 +5454,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PatientPriProvMissing(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -5971,9 +5486,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string PatientUnDeleteWithBalance(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT PatNum FROM patient "
 				+"WHERE PatStatus=4 "
 				+"AND (Bal_0_30 !=0 "
@@ -6027,9 +5539,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PatPlanDeleteWithInvalidInsSubNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -6060,9 +5569,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PatPlanDeleteWithInvalidPatNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -6093,9 +5599,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PatPlanOrdinalDuplicates(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -6131,9 +5634,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PatPlanOrdinalZeroToOne(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT PatPlanNum,PatNum FROM patplan WHERE Ordinal=0";
 			DataTable table=Db.GetTable(command);
 			string log="";
@@ -6167,9 +5667,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PatPlanOrdinalTwoToOne(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT PatPlanNum,PatNum FROM patplan patplan1 WHERE Ordinal=2 AND NOT EXISTS("
 				+"SELECT * FROM patplan patplan2 WHERE patplan1.PatNum=patplan2.PatNum AND patplan2.Ordinal=1)";
 			DataTable table=Db.GetTable(command);
@@ -6206,9 +5703,6 @@ namespace OpenDentBusiness {
 		///Payments with no PaySplits are dealt with in PaymentMissingPaySplit()</summary>
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PaymentAmtNotMatchPaySplitTotal(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//Note that this just returns info for a (seemingly) random patient that has a paysplit for the payment.
 			//This is because the payment only shows in the ledger for the patient with the paysplit, not the patient on the payment.
 			string command="SELECT patient.PatNum, patient.LName, patient.FName, payment.PayDate "
@@ -6252,9 +5746,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PaymentDetachMissingDeposit(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -6289,9 +5780,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PaymentMissingPaySplit(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -6377,9 +5865,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PayPlanChargeProvNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -6419,9 +5904,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PayPlanChargeWithInvalidPayPlanNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT COUNT(DISTINCT PayPlanNum) FROM (SELECT PayPlanNum FROM payplancharge WHERE PayPlanNum NOT IN(SELECT PayPlanNum FROM payplan) "
 				+"UNION SELECT PayPlanNum FROM creditcard WHERE PayPlanNum>0 AND PayPlanNum NOT IN(SELECT PayPlanNum FROM payplan)) A";
 			string count=Db.GetCount(command);
@@ -6461,9 +5943,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PayPlanSetGuarantorToPatForIns(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT COUNT(*) FROM payplan WHERE PlanNum>0 AND Guarantor != PatNum";
 			int numFound=PIn.Int(Db.GetCount(command));
 			string log="";
@@ -6487,9 +5966,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PaySplitAttachedToDeletedProc(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -6538,9 +6014,6 @@ namespace OpenDentBusiness {
 		/// <summary>Shows patients that have paysplits attached to insurance payment plans.</summary>
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string PaySplitAttachedToInsurancePaymentPlan(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			DataTable table=GetPaySplitsAttachedToInsurancePaymentPlan();
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
@@ -6571,9 +6044,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = false)]
 		public static string PaySplitAttachedToItself(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT * FROM paysplit WHERE FSplitNum=SplitNum";
 			DataTable table=Db.GetTable(command);
 			if(table.Rows.Count==0 && !verbose) {
@@ -6603,9 +6073,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PaySplitTransfersWithNoUnearnedType(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string methodName=MethodBase.GetCurrentMethod().Name;
 			//If the parent is an unearned split (has a prepayment type) then update the unearned type on the current split to match the unearned type of the parent.
@@ -6651,9 +6118,6 @@ namespace OpenDentBusiness {
 		
 		[DbmMethodAttr(HasPatNum = true)]
 		public static string PaySplitWithInvalidPayNum(bool verbose,DbmMode modeCur,long patNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur,patNum);
-			}
 			string log="";
 			string command;
 			string patWhere=(patNum>0 ? ("paysplit.PatNum="+POut.Long(patNum)+" AND ") : "");
@@ -6751,9 +6215,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PaySplitWithInvalidPayPlanNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -6785,9 +6246,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PaySplitWithInvalidPrePayNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT ps1.* FROM paysplit ps1 LEFT JOIN paysplit ps2 ON ps1.FSplitNum=ps2.SplitNum WHERE ps1.FSplitNum!=0 AND ps2.SplitNum IS NULL";
 			DataTable table=Db.GetTable(command);
 			if(table.Rows.Count==0 && !verbose) {
@@ -6822,9 +6280,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PerioMeasureWithInvalidIntTooth(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -6848,9 +6303,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PlannedApptsWithInvalidAptNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -6881,9 +6333,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PreferenceAllergiesIndicateNone(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -6913,9 +6362,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PreferenceDateDepositsStarted(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			DateTime date=PrefC.GetDate(PrefName.DateDepositsStarted);
 			string log="";
 			string command;
@@ -6947,9 +6393,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PreferenceInsBillingProv(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(modeCur==DbmMode.Breakdown) {
 				return "";
 			}
@@ -6973,9 +6416,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PreferenceMedicationsIndicateNone(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -7005,9 +6445,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PreferenceProblemsIndicateNone(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -7037,9 +6474,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PreferenceTimeCardOvertimeFirstDayOfWeek(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -7066,9 +6500,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string PreferencePracticeProv(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(modeCur==DbmMode.Breakdown) {
 				return "";
 			}
@@ -7103,9 +6534,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcButtonItemsDeleteWithInvalidAutoCode(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -7134,9 +6562,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurecodeCategoryNotSet(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			List<Def> listProcCodeCats=Defs.GetDefsForCategory(DefCat.ProcCodeCats,true);
 			string log="";
 			string command;
@@ -7176,9 +6601,6 @@ namespace OpenDentBusiness {
 		/// a hiphen to the duplicate proc code with a numerical count for each duplicate. Example U0001, U0001-1, U0001-2, etc.///</summary>
 		[DbmMethodAttr]
 		public static string ProcedurecodeFixDuplicateProcedureCodes(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command=@"SELECT ProcCode FROM procedurecode GROUP BY ProcCode HAVING COUNT(*) > 1";
 			List<string> listProcCodes=Db.GetListString(command);
@@ -7230,9 +6652,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurecodeInvalidProvNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT procedurecode.CodeNum FROM procedurecode 
 				LEFT JOIN provider ON procedurecode.ProvNumDefault=provider.ProvNum 
 				WHERE provider.ProvNum IS NULL 
@@ -7263,9 +6682,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogAttachedToApptWithProcStatusDeleted(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ProcNum FROM procedurelog "
 						+"WHERE ProcStatus=6 AND (AptNum!=0 OR PlannedAptNum!=0)";
@@ -7297,9 +6713,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogAttachedToWrongAppts(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT procedurelog.ProcNum FROM appointment,procedurelog "
 							+"WHERE procedurelog.AptNum=appointment.AptNum AND procedurelog.PatNum != appointment.PatNum";
@@ -7334,9 +6747,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogAttachedToWrongApptDate(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command=@"SELECT procedurelog.ProcNum FROM procedurelog,appointment
 							WHERE procedurelog.AptNum=appointment.AptNum
@@ -7377,9 +6787,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogBaseUnitsZero(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -7432,9 +6839,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogCodeNumInvalid(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command=@"SELECT ProcNum FROM procedurelog WHERE NOT EXISTS(SELECT * FROM procedurecode WHERE procedurecode.CodeNum=procedurelog.CodeNum)";
 			switch(modeCur) {
@@ -7481,9 +6885,6 @@ namespace OpenDentBusiness {
 		///in US nomenclature (predictable numbers).</summary>
 		[DbmMethodAttr(HasPatNum = true)]
 		public static string ProcedurelogFixInvalidToothranges(bool verbose, DbmMode modeCur, long patNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur, patNum);
-			}
 			string patWhere=(patNum>0 ? " AND PatNum="+POut.Long(patNum) : "");
 			string log="";
 			string command;
@@ -7574,9 +6975,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown=true, IsCanada=true)]
 		public static string ProcedurelogLabAttachedToDeletedProc(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				return Lans.g("FormDatabaseMaintenance","Skipped. Local computer region must be set to Canada to run.");
 			}
@@ -7626,9 +7024,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ProcedurelogMultipleClaimProcForInsSub(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT patient.PatNum,patient.LName,patient.FName,procedurelog.ProcDate,procedurecode.ProcCode "
 				+"FROM claimproc "
 				+"INNER JOIN procedurelog ON procedurelog.ProcNum=claimproc.ProcNum "
@@ -7671,9 +7066,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogProvNumMissing(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT COUNT(*) FROM procedurelog WHERE ProvNum=0";
 			int numFound=PIn.Int(Db.GetCount(command));
 			string log="";
@@ -7691,9 +7083,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogToothNums(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -7753,9 +7142,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ProcedurelogTpAttachedToClaim(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT procedurelog.ProcNum,claim.ClaimNum,claim.DateService,patient.PatNum,patient.LName,patient.FName,procedurecode.ProcCode "
 				+"FROM procedurelog,claim,claimproc,patient,procedurecode "
 				+"WHERE procedurelog.ProcNum=claimproc.ProcNum "
@@ -7797,9 +7183,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true, IsCanada = true)]
 		public static string ProcedurelogNotComplAttachedToComplLabCanada(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				return Lans.g("FormDatabaseMaintenance","Skipped. Local computer region must be set to Canada to run.");
 			}
@@ -7839,9 +7222,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogUnitQtyZero(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ProcNum FROM procedurelog WHERE UnitQty=0";
 			switch(modeCur) {
@@ -7872,9 +7252,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogWithInvalidProvNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT ProcNum FROM procedurelog WHERE ProvNum > 0 AND ProvNum NOT IN (SELECT ProvNum FROM provider)";
 			string log="";
 			switch(modeCur) {
@@ -7904,9 +7281,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogWithInvalidAptNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ProcNum "
 						+"FROM procedurelog "
@@ -7942,9 +7316,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogWithInvalidClinicNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command="SELECT ProcNum "
 						+"FROM procedurelog "
@@ -7978,9 +7349,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProgramPropertiesDuplicateLocalPath(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//Min may not be the oldest when using random primary keys, but we have to pick one.  In most all cases theyre identical anyway.
 			string command="SELECT MIN(ProgramPropertyNum) ProgramPropertyNum,COUNT(*) CountDup "
 					+"FROM programproperty "
@@ -8016,9 +7384,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProgramPropertiesDuplicatesForHQ(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string progNumStr=POut.Long(Programs.GetProgramNum(ProgramName.Xcharge))+","+POut.Long(Programs.GetProgramNum(ProgramName.PayConnect));
 			//Min may not be the oldest when using random primary keys, but we have to pick one.  In most all cases theyre identical anyway.
 			string command="SELECT MIN(ProgramPropertyNum) ProgramPropertyNum,COUNT(*) Count "
@@ -8051,9 +7416,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProgramPropertiesMissingForClinic(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -8097,9 +7459,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ProviderHiddenWithClaimPayments(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT MAX(claimproc.ProcDate) ProcDate,provider.ProvNum
 				FROM claimproc,provider
 				WHERE claimproc.ProvNum=provider.ProvNum
@@ -8136,9 +7495,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProviderWithInvalidFeeSched(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8164,9 +7520,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string QuickPasteNoteWithInvalidCatNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT COUNT(*) FROM quickpastenote WHERE QuickPasteCatNum=0";
 			int numFound=PIn.Int(Db.GetCount(command));
 			string log="";
@@ -8198,9 +7551,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string RecallDuplicatesWarn(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -8241,9 +7591,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string RecallsWithInvalidRecallType(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT recall.RecallTypeNum 
 				FROM recall 
 				LEFT JOIN recalltype ON recalltype.RecallTypeNum=recall.RecallTypeNum 
@@ -8283,9 +7630,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string RecallTriggerDeleteBadCodeNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8313,9 +7657,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string RefAttachDeleteWithInvalidReferral(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8340,9 +7681,6 @@ namespace OpenDentBusiness {
 		///<summary>Finds patients that have a more than 1 from referral with the same order.</summary>
 		[DbmMethodAttr]
 		public static string RefAttachesWithDuplicateOrder(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8386,9 +7724,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string RxAlertBadAllergyDefNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8417,9 +7752,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ScheduleOpsInvalidScheduleNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8443,9 +7775,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string SchedulesBlockoutStopBeforeStart(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8469,9 +7798,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string SchedulesDeleteHiddenProviders(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8500,9 +7826,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string SchedulesDeleteShort(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command=@"SELECT schedule.ScheduleNum
 				FROM schedule
@@ -8534,9 +7857,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string SchedulesDeleteProvClosed(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8558,95 +7878,8 @@ namespace OpenDentBusiness {
 			return log;
 		}
 
-		///<summary>This function will fix any FKey entries in securitylog that point to entries in other tables that have been deleted (orphaned FKeys).
-		///It uses reflection to find all tables using audit trail Fkey columns and their respective permissions.
-		///This method does not need to change even if more permissions are added.</summary>
-		//No longer needed, removed per Nathan.
-		//public static string SecurityLogInvalidFKey(bool verbose,DbmMode modeCur) {
-		//	if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-		//		return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-		//	}
-		//	if(modeCur==DbmMode.Breakdown) {
-		//		return "";
-		//	}
-		//	string log="";
-		//	long numFoundOrFixed=0;
-		//	Assembly assembly=Assembly.GetExecutingAssembly();
-		//	Type[] arrTypes;
-		//	try {
-		//		arrTypes=assembly.GetTypes();
-		//	}
-		//	catch(ReflectionTypeLoadException ex) {//Some dependencies were probably not able to be loaded
-		//		log+="Error: Unable to load types from OpenDentBusiness. Try running the method on a different computer.\r\n";
-		//		if(verbose) {
-		//			log+="Types successfully loaded:\r\n"+string.Join("\r\n",ex.Types.Where(x => x!=null))+"\r\n";
-		//		}
-		//		return log;
-		//	}
-		//	foreach(Type type in arrTypes) {
-		//		if(type.Namespace!="OpenDentBusiness" || !type.IsClass) {
-		//			continue;
-		//		}
-		//		string tableName=type.Name.ToLower();
-		//		List<CrudTableAttribute> listCrudTableAttributes=type.GetCustomAttributes(typeof(CrudTableAttribute),true)
-		//			.Select(x => (CrudTableAttribute)x).ToList();
-		//		//Get audit trail permissions
-		//		if(listCrudTableAttributes.Count!=1 || listCrudTableAttributes[0].AuditPerms==CrudAuditPerm.None) {
-		//			continue;
-		//		}
-		//		List<Permissions> listPermissions=GroupPermissions.GetPermsFromCrudAuditPerm(listCrudTableAttributes[0].AuditPerms);
-		//		if(listPermissions.Count==0) {
-		//			//This error log is explicitly for Open Dental engineers and is purposefully not translated.
-		//			log+="Error: Permission not found in GetPermsFromCrudAuditPerm() for "+tableName+" \r\n";
-		//			continue;
-		//		}
-		//		//Make a comma delimited string of the int values of each permission for this class.
-		//		string permsCommaDelimStr=String.Join(",",listPermissions.Select(x => (int)x).ToList());
-		//		//Get the table type name from the type.
-		//		if(listCrudTableAttributes[0].TableName!="") {
-		//			tableName=listCrudTableAttributes[0].TableName;
-		//		}
-		//		//Get primary key column name
-		//		string priKeyColumnName="";
-		//		foreach(FieldInfo field in type.GetFields()) {
-		//			List<CrudColumnAttribute> listCrudColumnAttributes=field.GetCustomAttributes(typeof(CrudColumnAttribute),true)
-		//				.Select(x => (CrudColumnAttribute)x).ToList();
-		//			if(listCrudColumnAttributes.Count!=1 || !listCrudColumnAttributes[0].IsPriKey) {
-		//				continue;
-		//			}
-		//			priKeyColumnName=field.Name;
-		//			break;
-		//		}
-		//		if(priKeyColumnName=="") {
-		//			//This error log is explicitly for Open Dental engineers and is purposefully not translated.
-		//			log+="Error: Primary key attribute not found for table "+tableName+"\r\n";
-		//			continue;
-		//		}
-		//		if(modeCur==DbmMode.Check) {
-		//			numFoundOrFixed+=GetCountForSecuritylogInvalidFKeys(permsCommaDelimStr,tableName,priKeyColumnName);
-		//		}
-		//		else {
-		//			numFoundOrFixed+=UpdateOrphanedSecuritylogInvalidKeys(permsCommaDelimStr,tableName,priKeyColumnName);
-		//		}
-		//	}
-		//	if(modeCur==DbmMode.Check) {
-		//		if(numFoundOrFixed>0 || verbose) {
-		//			log+=Lans.g("FormDatabaseMaintenance","Audit trail entries with invalid FKeys found")+": "+numFoundOrFixed.ToString()+"\r\n";
-		//		}
-		//	}
-		//	else {
-		//		if(numFoundOrFixed>0 || verbose) {
-		//			log+=Lans.g("FormDatabaseMaintenance","Audit trail entries with invalid FKeys fixed")+": "+numFoundOrFixed.ToString()+"\r\n";
-		//		}
-		//	}
-		//	return log;
-		//}
-
 		[DbmMethodAttr]
 		public static string SheetDepositSlips(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT SheetNum FROM sheet WHERE SheetType="+POut.Int((int)SheetTypeEnum.DepositSlip);
 			DataTable table=Db.GetTable(command);
 			string log="";
@@ -8677,9 +7910,6 @@ namespace OpenDentBusiness {
 		///<summary>At one point, we had an issue on our Web Forms server that possibly caused offices to import 1000's of blank Web Forms.</summary>
 		[DbmMethodAttr]
 		public static string SheetsWithNoSheetFields(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT sheet.SheetNum 
 				FROM sheet 
 				LEFT JOIN sheetfield ON sheetfield.SheetNum=sheet.SheetNum
@@ -8711,9 +7941,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string SignalInFuture(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8737,9 +7964,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string SigMessageInFuture(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8763,9 +7987,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string StatementDateRangeMax(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8789,9 +8010,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string StatementsWithInvalidDocNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8815,9 +8033,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string SummaryOfCaresWithoutReferralsAttached(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(modeCur==DbmMode.Breakdown) {
 				return "";
 			}
@@ -8867,9 +8082,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string TaskListsWithCircularParentChild(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			//In order to figure out a cyclical chain of task lists we need to:
 			//1. Get all TaskLists
 			//2. For each TaskList whose Parent is 0...
@@ -8921,9 +8133,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string TasksCompletedWithInvalidFinishDateTime(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -8961,9 +8170,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string TaskSubscriptionsInvalid(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -8989,9 +8195,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string TaskUnreadsWithoutTasksAttached(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -9017,9 +8220,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string TimeCardRuleEmployeeNumInvalid(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -9048,9 +8248,6 @@ namespace OpenDentBusiness {
 		
 		[DbmMethodAttr]
 		public static string TreatPlansInvalid(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT treatplan.PatNum FROM procedurelog	"//procs for 1 pat attached to a treatplan for another
 					+"INNER JOIN treatplanattach ON treatplanattach.ProcNum=procedurelog.ProcNum "
 					+"INNER JOIN treatplan ON treatplan.TreatPlanNum=treatplanattach.TreatPlanNum AND procedurelog.PatNum!=treatplan.PatNum "
@@ -9079,9 +8276,6 @@ namespace OpenDentBusiness {
 		///<summary>Finds treatplanattaches with the same treatplannum and procnum.</summary>
 		[DbmMethodAttr]
 		public static string TreatPlanAttachDuplicateProc(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT treatplanattach.TreatPlanNum, MIN(treatplanattach.TreatPlanAttachNum) AS OriginalTPANum, "
 			+ " ProcNum, "
 			+ " COUNT(ProcNum) NumDupes "
@@ -9114,9 +8308,6 @@ namespace OpenDentBusiness {
 		///<summary>Finds proctps that have been orphaned and creates dummy treatment plans for DateTime.MinValue so that the orphaned proctps can be viewed.</summary>
 		[DbmMethodAttr]
 		public static string TreatPlanOrphanedProcTps(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command=@"SELECT proctp.PatNum,proctp.TreatPlanNum 
 				FROM proctp
 				LEFT JOIN treatplan ON treatplan.TreatPlanNum = proctp.TreatPlanNum 
@@ -9156,9 +8347,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string UnscheduledApptsWithInvalidOpNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string command="SELECT AptNum FROM appointment WHERE Op != 0 AND AptStatus=3";//UnschedList
 			DataTable table=Db.GetTable(command);
 			string log="";
@@ -9187,9 +8375,6 @@ namespace OpenDentBusiness {
 		/// <summary>Only one user of a given UserName may be unhidden at a time. Warn the user and instruct them to hide extras.</summary>
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string UserodDuplicateUser(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
@@ -9221,9 +8406,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string UserodInvalidClinicNum(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -9245,51 +8427,9 @@ namespace OpenDentBusiness {
 			return log;
 		}
 
-		///// <summary>Deprecated as of 17.4 since we began using the usergroupattach table. userod has an invalid FK to usergroup</summary>
-		//[DbmMethodAttr]
-		//public static string UserodInvalidUserGroupNum(bool verbose,DbmMode modeCur) {
-		//	if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-		//		return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-		//	}
-		//	string log="";
-		//	switch(modeCur) {
-		//		case DbmMode.Check:
-		//			command="SELECT Count(*) FROM userod WHERE UserGroupNum NOT IN (SELECT UserGroupNum FROM usergroup) ";
-		//			long numFound=PIn.Long(Db.GetCount(command));
-		//			if(numFound>0 || verbose) {
-		//				log+=Lans.g("FormDatabaseMaintenance","Users found with invalid UserGroupNum: ")+numFound+"\r\n";
-		//			}
-		//			break;
-		//		case DbmMode.Fix:
-		//			command="SELECT * FROM userod WHERE UserGroupNum NOT IN (SELECT UserGroupNum FROM usergroup) ";
-		//			table=Db.GetTable(command);
-		//			long userNum;
-		//			string userName;
-		//			long userGroupNum;
-		//			long numberFixed=0;
-		//			for(int i=0;i<table.Rows.Count;i++) {//Create a usergroup with the same name as the userod+"Group"
-		//				userNum=PIn.Long(table.Rows[i]["UserNum"].ToString());
-		//				userName=PIn.String(table.Rows[i]["UserName"].ToString());
-		//				command="INSERT INTO usergroup (Description) VALUES('"+POut.String(userName+" Group")+"')";
-		//				userGroupNum=Db.NonQ(command,true);
-		//				command="UPDATE userod SET UserGroupNum="+POut.Long(userGroupNum)+" WHERE UserNum="+POut.Long(userNum);
-		//				Db.NonQ(command);
-		//				numberFixed++;
-		//			}
-		//			if(numberFixed>0 || verbose) {
-		//				log+=Lans.g("FormDatabaseMaintenance","Users fixed with invalid UserGroupNum: ")+numberFixed.ToString()+"\r\n";
-		//			}
-		//			break;
-		//	}
-		//	return log;
-		//}
-
 		/// <summary>userod is restricted to ClinicNum 0 - All.  Restricted to All clinics doesn't make sense.  This will set the ClinicIsRestricted bool to false if ClinicNum=0.</summary>
 		[DbmMethodAttr]
 		public static string UserodInvalidRestrictedClinic(bool verbose,DbmMode modeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),verbose,modeCur);
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -9317,9 +8457,6 @@ namespace OpenDentBusiness {
 		#region Tool Button and Helper Methods--------------------------------------------------------------------------------------------------------------
 
 		public static List<string> GetDatabaseNames() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod());
-			}
 			List<string> retVal=new List<string>();
 			string command="SHOW DATABASES";
 			//if this next step fails, table will simply have 0 rows
@@ -9332,9 +8469,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Will return empty string if no problems.</summary>
 		public static string GetDuplicateClaimProcs() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
 			string retVal="";
 			string command=@"SELECT LName,FName,patient.PatNum,ClaimNum,FeeBilled,Status,ProcNum,ProcDate,ClaimProcNum,InsPayAmt,LineNumber, COUNT(*) cnt
 FROM claimproc
@@ -9368,9 +8502,6 @@ HAVING cnt>1";
 
 		///<summary>Will return empty string if no problems.</summary>
 		public static string GetDuplicateSupplementalPayments() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
 			string retVal="";
 			string command=@"SELECT LName,FName,patient.PatNum,ClaimNum,FeeBilled,Status,ProcNum,ProcDate,ClaimProcNum,InsPayAmt,LineNumber, COUNT(*) cnt
 FROM claimproc
@@ -9404,9 +8535,6 @@ HAVING cnt>1";
 
 		///<summary></summary>
 		public static string GetMissingClaimProcs(string olddb) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),olddb);
-			}
 			string retVal="";
 			string command="SELECT LName,FName,patient.PatNum,ClaimNum,FeeBilled,Status,ProcNum,ProcDate,ClaimProcNum,InsPayAmt,LineNumber "
 				+"FROM "+olddb+".claimproc "
@@ -9444,110 +8572,15 @@ HAVING cnt>1";
 			return retVal;
 		}
 
-		//public static bool DatabaseIsOlderThanMarchSeventeenth(string olddb) {
-		//  if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-		//    return Meth.GetBool(MethodBase.GetCurrentMethod(),olddb);
-		//  }
-		//  command="SELECT COUNT(*) FROM "+olddb+".claimproc WHERE DateEntry > '2010-03-16'";
-		//  if(Db.GetCount(command)=="0") {
-		//    return true;
-		//  }
-		//  return false;
-		//}
-
 		/// <summary></summary>
 		public static string FixClaimProcDeleteDuplicates() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
 			string log="";
-			//command=@"SELECT LName,FName,patient.PatNum,ClaimNum,FeeBilled,Status,ProcNum,ProcDate,ClaimProcNum,InsPayAmt,LineNumber, COUNT(*) cnt
-			//	FROM claimproc
-			//	LEFT JOIN patient ON patient.PatNum=claimproc.PatNum
-			//	WHERE ClaimNum > 0
-			//	AND ProcNum>0
-			//	AND Status!=4/*exclude supplemental*/
-			//	GROUP BY ClaimNum,ProcNum,Status,InsPayAmt,FeeBilled,LineNumber
-			//	HAVING cnt>1";
-			//table=Db.GetTable(command);
-			//long numberFixed=0;
-			//double insPayAmt;
-			//double feeBilled;
-			//for(int i=0;i<table.Rows.Count;i++) {
-			//  insPayAmt=PIn.Double(table.Rows[i]["InsPayAmt"].ToString());
-			//  feeBilled=PIn.Double(table.Rows[i]["FeeBilled"].ToString());
-			//  command="DELETE FROM claimproc "
-			//    +"WHERE ClaimNum= "+table.Rows[i]["ClaimNum"].ToString()+" "
-			//    +"AND ProcNum= "+table.Rows[i]["ProcNum"].ToString()+" "
-			//    +"AND Status= "+table.Rows[i]["Status"].ToString()+" "
-			//    +"AND InsPayAmt= '"+POut.Double(insPayAmt)+"' "
-			//    +"AND FeeBilled= '"+POut.Double(feeBilled)+"' "
-			//    +"AND LineNumber= "+table.Rows[i]["LineNumber"].ToString()+" "
-			//    +"AND ClaimProcNum != "+table.Rows[i]["ClaimProcNum"].ToString();
-			//  numberFixed+=Db.NonQ(command);
-			//}
-			//log+="Claimprocs deleted due duplicate entries: "+numberFixed.ToString()+".\r\n";
 			return log;
 		}
 
 		/// <summary></summary>
 		public static string FixMissingClaimProcs(string olddb) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),olddb);
-			}
 			string log="";
-			//command="SELECT LName,FName,patient.PatNum,ClaimNum,FeeBilled,Status,ProcNum,ProcDate,ClaimProcNum,InsPayAmt,LineNumber "
-			//  +"FROM "+olddb+".claimproc "
-			//  +"LEFT JOIN "+olddb+".patient ON "+olddb+".patient.PatNum="+olddb+".claimproc.PatNum "
-			//  +"WHERE NOT EXISTS(SELECT * FROM claimproc WHERE claimproc.ClaimProcNum="+olddb+".claimproc.ClaimProcNum) "
-			//  +"AND ClaimNum > 0 AND ProcNum>0";
-			//table=Db.GetTable(command);
-			//long numberFixed=0;
-			//command="SELECT ValueString FROM "+olddb+".preference WHERE PrefName='DataBaseVersion'";
-			//string oldVersString=Db.GetScalar(command);
-			//Version oldVersion=new Version(oldVersString);
-			//if(oldVersion < new Version("6.7.1.0")) {
-			//  return "Version of old database is too old to use with the automated tool: "+oldVersString;
-			//}
-			//double insPayAmt;
-			//double feeBilled;
-			//for(int i=0;i<table.Rows.Count;i++) {
-			//  insPayAmt=PIn.Double(table.Rows[i]["InsPayAmt"].ToString());
-			//  feeBilled=PIn.Double(table.Rows[i]["FeeBilled"].ToString());
-			//  command="SELECT COUNT(*) FROM "+olddb+".claimproc "
-			//    +"WHERE ClaimNum= "+table.Rows[i]["ClaimNum"].ToString()+" "
-			//    +"AND ProcNum= "+table.Rows[i]["ProcNum"].ToString()+" "
-			//    +"AND Status= "+table.Rows[i]["Status"].ToString()+" "
-			//    +"AND InsPayAmt= '"+POut.Double(insPayAmt)+"' "
-			//    +"AND FeeBilled= '"+POut.Double(feeBilled)+"' "
-			//    +"AND LineNumber= "+table.Rows[i]["LineNumber"].ToString();
-			//  string result=Db.GetCount(command);
-			//  if(result=="1") {//only include in result if there are duplicates in old db.
-			//    continue;
-			//  }
-			//  command="INSERT INTO claimproc SELECT *";
-			//  if(oldVersion < new Version("6.8.1.0")) {
-			//    command+=",-1,-1,0";
-			//  }
-			//  else if(oldVersion < new Version("6.9.1.0")) {
-			//    command+=",0";
-			//  }
-			//  command+=" FROM "+olddb+".claimproc "
-			//    +"WHERE "+olddb+".claimproc.ClaimProcNum="+table.Rows[i]["ClaimProcNum"].ToString();
-			//  numberFixed+=Db.NonQ(command);
-			//}
-			//command="SELECT ClaimPaymentNum "
-			//  +"FROM "+olddb+".claimpayment "
-			//  +"WHERE NOT EXISTS(SELECT * FROM claimpayment WHERE claimpayment.ClaimPaymentNum="+olddb+".claimpayment.ClaimPaymentNum) ";
-			//table=Db.GetTable(command);
-			//long numberFixed2=0;
-			//for(int i=0;i<table.Rows.Count;i++) {
-			//  command="INSERT INTO claimpayment SELECT * FROM "+olddb+".claimpayment "
-			//    +"WHERE "+olddb+".claimpayment.ClaimPaymentNum="+table.Rows[i]["ClaimPaymentNum"].ToString();
-			//  numberFixed2+=Db.NonQ(command);
-			//}
-			//log+="Missing claimprocs added back: "+numberFixed.ToString()+".\r\n";
-			//log+="Missing claimpayments added back: "+numberFixed2.ToString()+".\r\n";
 			return log;
 		}
 
@@ -9556,10 +8589,6 @@ HAVING cnt>1";
 		///These null characters were causing the middle tier deserialization to fail as they are not UTF-16 supported characters.
 		///They are, however, allowed in UTF-8.</summary>
 		public static void FixSpecialCharacters() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
 			string command="SELECT * FROM appointment WHERE (ProcDescript REGEXP '[^[:alnum:]^[:space:]^[:punct:]]+') OR (Note REGEXP '[^[:alnum:]^[:space:]^[:punct:]]+')";
 			List<Appointment> apts=OpenDentBusiness.Crud.AppointmentCrud.SelectMany(command);
 			List<char> specialCharsFound=new List<char>();
@@ -9641,9 +8670,6 @@ HAVING cnt>1";
 
 		///<summary>Replaces null strings with empty strings and returns the number of rows changed.</summary>
 		public static long MySqlRemoveNullStrings() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
 			string command=@"SELECT table_name,column_name 
 				FROM information_schema.columns 
 				WHERE table_schema=(SELECT DATABASE()) 
@@ -9666,10 +8692,6 @@ HAVING cnt>1";
 
 		///<summary>Makes a backup of the database, clears out etransmessagetext entries over a year old, and then runs optimize on just the etransmessagetext table.  Customers were calling in with the complaint that their etransmessagetext table is too big so we added this tool.</summary>
 		public static void ClearOldEtransMessageText() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
 			//Make a backup of DB before we change anything, especially because we will be running optimize at the end.
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				return; //Several issues need to be addressed before supporting Oracle.  E.g. backing up, creating temporary tables with globally unique identifiers, etc.
@@ -9702,120 +8724,8 @@ HAVING cnt>1";
 			OptimizeTable("etrans",canOptimizeInnodb:true);
 		}
 
-		///<summary>Return values look like 'MyISAM' or 'InnoDB'. Will return empty string on error.</summary>
-		public static string GetStorageEngineDefaultName() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
-			string retVal="";
-			try {
-				retVal=Db.GetScalar("SELECT @@default_storage_engine");//Mysql 5.5.3+
-			}
-			catch {
-				//using SHOW GLOBAL VARIABLES will return an empty string if not supported.
-				DataTable dtEngine;
-				dtEngine=Db.GetTable("SHOW GLOBAL VARIABLES LIKE 'storage_engine'");//MySQL 5.5.2-
-				if(dtEngine.Rows.Count>0) {
-					retVal=PIn.String(dtEngine.Rows[0]["Value"].ToString());
-				}
-			}
-			return retVal;
-		}
-
-		///<summary>Gets the number of tables in MyISAM format.</summary>
-		public static int GetMyisamTableCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod());
-			}
-			string command="SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables "
-				+"WHERE TABLE_SCHEMA='"+POut.String(DataConnection.GetDatabaseName())+"' "
-				+"AND ENGINE LIKE 'MyISAM'";
-			return Db.GetTable(command).Rows.Count;
-		}
-
-		///<summary>Returns true if the conversion was successfull or no conversion was necessary. The goal is to convert InnoDB tables (excluding the 'phone' table) to MyISAM format when there are a mixture of InnoDB and MyISAM tables but no conversion will be performed when all of the tables are already in the same format.</summary>
-		public static bool ConvertTablesToMyisam() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod());
-			}
-			if(DataConnection.DBtype==DatabaseType.Oracle) { //Does not apply to Oracle.
-				return true;
-			}
-			string command="SELECT TABLE_NAME,ENGINE FROM INFORMATION_SCHEMA.tables "
-				+"WHERE TABLE_SCHEMA='"+POut.String(DataConnection.GetDatabaseName())+"' "
-				+"AND TABLE_NAME!='phone'";//this table is used internally at OD HQ, and is always innodb.
-			DataTable dtTableTypes=Db.GetTable(command);
-			int numInnodb=0;//Or possibly some other format.
-			int numMyisam=0;
-			for(int i = 0;i<dtTableTypes.Rows.Count;i++) {
-				if(PIn.String(dtTableTypes.Rows[i]["ENGINE"].ToString()).ToUpper()=="MYISAM") {
-					numMyisam++;
-				}
-				else {
-					numInnodb++;
-				}
-			}
-			if(numInnodb>0 && numMyisam>0) {//Fix tables by converting them to MyISAM when there is a mixture of different table types.
-				for(int i = 0;i<dtTableTypes.Rows.Count;i++) {
-					if(PIn.String(dtTableTypes.Rows[i]["ENGINE"].ToString()).ToUpper()=="MYISAM") {
-						continue;
-					}
-					string tableName=PIn.String(dtTableTypes.Rows[i]["TABLE_NAME"].ToString());
-					command="ALTER TABLE `"+tableName+"` ENGINE='MyISAM'";
-					try {
-						Db.NonQ(command);
-					}
-					catch {
-						return false;
-					}
-				}
-				command="SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables "
-					+"WHERE TABLE_SCHEMA='"+POut.String(DataConnection.GetDatabaseName())+"' "
-					+"AND TABLE_NAME!='phone' "
-					+"AND ENGINE NOT LIKE 'MyISAM'";
-				if(Db.GetTable(command).Rows.Count!=0) { //If any tables are still InnoDB.
-					return false;
-				}
-			}
-			return true;
-		}
-
-		///<summary>Returns the number of invalid FKey entries for specified tableName, permissions, and primary key column.
-		///You MUST check remoting role before calling this method.  It is purposefully private and must remain so.</summary>
-		private static long GetCountForSecuritylogInvalidFKeys(string permsCommaDelimStr,string tableName,string priKeyColumnName) {
-			//No remoting role check; This is a private static method and those cannot be called from the middle tier.
-			string command="SELECT COUNT(securitylog.SecurityLogNum) "
-					+"FROM securitylog "
-					+"WHERE securitylog.PermType IN ("+POut.String(permsCommaDelimStr)+") "
-					+"AND securitylog.FKey!=0 "
-					+"AND NOT EXISTS ( "
-						+"SELECT "+tableName+"."+priKeyColumnName+" "
-						+"FROM "+tableName+" "
-						+"WHERE "+tableName+"."+priKeyColumnName+"=securitylog.FKey "
-					+")";
-			return PIn.Long(Db.GetCount(command));
-		}
-
-		///<summary>Fixes orphaned FKey entries for specific tableName, permissions, and primary key column.
-		///Returns number of rows fixed.
-		///You MUST check remoting role before calling this method.  It is purposefully private and must remain so.</summary>
-		private static long UpdateOrphanedSecuritylogInvalidKeys(string permsCommaDelimStr,string tableName,string priKeyColumnName) {
-			string command="UPDATE securitylog SET FKey=0 "
-					+"WHERE securitylog.PermType IN ("+POut.String(permsCommaDelimStr)+") "
-					+"AND securitylog.FKey!=0 "
-					+"AND NOT EXISTS ( "
-						+"SELECT "+tableName+"."+priKeyColumnName+" "
-						+"FROM "+tableName+" "
-						+"WHERE "+tableName+"."+priKeyColumnName+"=securitylog.FKey "
-					+")";
-			return Db.NonQ(command);
-		}
-
 		///<summary>Used to estimate the time that CreateMissingActiveTPs will take to run.</summary>
 		public static List<Procedure> GetProcsNoActiveTp() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod());
-			}
 			//pats with TP'd procs and no active treatplan OR pats with TPi'd procs that are attached to a sched or planned appt and no active treatplan
 			string command="SELECT * FROM procedurelog WHERE (ProcStatus="+(int)ProcStat.TP+" "//TP proc exists
 				+"OR (ProcStatus="+(int)ProcStat.TPi+" AND (AptNum>0 OR PlannedAptNum>0))) "//TPi proc exists that is attached to a sched or planned appt
@@ -9824,9 +8734,6 @@ HAVING cnt>1";
 		}
 		
 		public static string CreateMissingActiveTPs(List<Procedure> listTpTpiProcs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),listTpTpiProcs);
-			}
 			if(listTpTpiProcs.Count==0) {//should never happen, won't get called if the list is empty, but just in case
 				return "";
 			}
@@ -9859,9 +8766,6 @@ HAVING cnt>1";
 		///<summary>This method is designed to help save hard drive space due to the RawEmailIn column containing Base64 attachments. This method
 		///should be run on a separate thread and this thread should be passed in to update the progress window.</summary>
 		public static string CleanUpRawEmails() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
 			//Get all clear text emailmessages that can have their RawEmailIn columns safely manipulated from the inbox.
 			//These emails are safe to remove attachments from the RawEmailIn because they have already been digested and attchments extracted.
 			string command="SELECT EmailMessageNum FROM emailmessage "
@@ -10005,9 +8909,6 @@ HAVING cnt>1";
 		///<summary>Detaches all patient payments attached to insurance payment plans and all insurance payments attached to patient payment plans.
 		///Returns a description of the changes that were made so that the user can go make manual changes if necessary.</summary>
 		public static string DetachInvalidPaymentPlanPayments() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
 			string resultsMsg="";
 			DataTable table=GetPaySplitsAttachedToInsurancePaymentPlan();
 			if(table.Rows.Count > 0) {
@@ -10079,9 +8980,6 @@ HAVING cnt>1";
 		}
 
 		public static DataTable GetRedundantIndexesTable() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod());
-			}
 			string dbName=MiscData.GetCurrentDatabase();
 			string command=$@"SELECT table1.TABLE_NAME,
 				REPLACE(
@@ -10193,9 +9091,6 @@ HAVING cnt>1";
 		}
 
 		public static string DropRedundantIndexes(List<DataRow> listRows) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),listRows);
-			}
 			bool hasInnoDbFilePerTable=false;
 			using(DataTable table=Db.GetTable("SHOW GLOBAL VARIABLES LIKE 'INNODB_FILE_PER_TABLE'")) {
 				if(table.Rows.Count>0 && table.Columns.Count>1) {

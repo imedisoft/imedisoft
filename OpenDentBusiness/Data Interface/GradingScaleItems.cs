@@ -95,11 +95,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_GradingScaleItemCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _GradingScaleItemCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -108,9 +104,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all grading scale items ordered by GradeNumber descending.</summary>
 		public static List<GradingScaleItem> Refresh(long gradingScaleNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<GradingScaleItem>>(MethodBase.GetCurrentMethod(),gradingScaleNum);
-			}
+			
 			string command="SELECT * FROM gradingscaleitem WHERE GradingScaleNum = "+POut.Long(gradingScaleNum)
 				+" ORDER BY GradeNumber DESC";
 			return Crud.GradingScaleItemCrud.SelectMany(command);
@@ -118,46 +112,32 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one GradingScaleItem from the db.</summary>
 		public static GradingScaleItem GetOne(long gradingScaleItemNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<GradingScaleItem>(MethodBase.GetCurrentMethod(),gradingScaleItemNum);
-			}
+			
 			return Crud.GradingScaleItemCrud.SelectOne(gradingScaleItemNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(GradingScaleItem gradingScaleItem){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				gradingScaleItem.GradingScaleItemNum=Meth.GetLong(MethodBase.GetCurrentMethod(),gradingScaleItem);
-				return gradingScaleItem.GradingScaleItemNum;
-			}
+			
 			return Crud.GradingScaleItemCrud.Insert(gradingScaleItem);
 		}
 
 		///<summary></summary>
 		public static void Update(GradingScaleItem gradingScaleItem){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),gradingScaleItem);
-				return;
-			}
+			
 			Crud.GradingScaleItemCrud.Update(gradingScaleItem);
 		}
 
 		///<summary></summary>
 		public static void DeleteAllByGradingScale(long gradingScaleNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),gradingScaleNum);
-				return;
-			}
+			
 			string command= "DELETE FROM gradingscaleitem WHERE GradingScaleNum = "+POut.Long(gradingScaleNum);
 			Db.NonQ(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(long gradingScaleItemNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),gradingScaleItemNum);
-				return;
-			}
+			
 			string command= "DELETE FROM gradingscaleitem WHERE GradingScaleItemNum = "+POut.Long(gradingScaleItemNum);
 			Db.NonQ(command);
 		}

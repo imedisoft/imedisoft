@@ -17,9 +17,7 @@ namespace OpenDentBusiness{
 			if(listTaskListNums.Count==0) {
 				return new List<TaskList>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod(),listTaskListNums);
-			}
+			
 			string command="SELECT * FROM tasklist WHERE TaskListNum IN("+string.Join(",",listTaskListNums.Select(x => POut.Long(x)))+")";
 			return Crud.TaskListCrud.SelectMany(command);
 		}
@@ -46,9 +44,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all task lists for the trunk of the user tab.  filterClinicFkey and filterRegionFkey are only used for NewTaskCount and do not 
 		///affect which TaskLists are returned by this method.  Pass filterClinicFkey=0 and filterRegionFkey=0 to intentionally bypass filters.</summary>
 		public static List<TaskList> RefreshUserTrunk(long userNum,long filterClinicFkey=0,long filterRegionFkey=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod(),userNum,filterClinicFkey,filterRegionFkey);
-			}
+			
 			string command=@"SELECT tasklist.*,COALESCE(unreadtasks.Count,0) 'NewTaskCount',t2.Descript 'ParentDesc1',t3.Descript 'ParentDesc2'
 					FROM tasklist
 					LEFT JOIN tasksubscription ON tasksubscription.TaskListNum=tasklist.TaskListNum
@@ -83,9 +79,7 @@ namespace OpenDentBusiness{
 		///NewTaskCount and do not affect which TaskLists are returned by this method.  Pass filterClinicFkey=0 and filterRegionFkey=0  to intentionally
 		///bypass filtering.</summary>
 		public static List<TaskList> RefreshMainTrunk(long userNum,TaskType taskType,long filterClinicFkey=0,long filterRegionFkey=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod(),userNum,taskType,filterClinicFkey,filterRegionFkey);
-			}
+			
 			string command=@"SELECT tasklist.*,COALESCE(unreadtasks.Count,0) 'NewTaskCount' 
 				FROM tasklist 
 				LEFT JOIN (SELECT tasklist.TaskListNum,COUNT(*) Count 
@@ -133,9 +127,7 @@ namespace OpenDentBusiness{
 		///which TaskLists are returned by this method.  Pass filterClinicFkey=0 and filterRegionFkey=0 to intentionally bypass filtering.</summary>
 		public static List<TaskList> RefreshRepeatingTrunk(long userNum,long filterClinicFkey=0,long filterRegionFkey=0) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod(),userNum,filterClinicFkey,filterRegionFkey);
-			}
+			
 			string command="SELECT tasklist.*,"
 				+"(SELECT COUNT(*) FROM taskancestor,task ";
 			command+=BuildFilterJoins(filterClinicFkey);
@@ -161,9 +153,7 @@ namespace OpenDentBusiness{
 		public static List<TaskList> RefreshChildren(long parent,long userNum,long userNumInbox,TaskType taskType,long filterClinicFkey=0
 			,long filterRegionFkey=0) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod(),parent,userNum,userNumInbox,taskType,filterClinicFkey,filterRegionFkey);
-			}
+			
 			string command=
 				"SELECT tasklist.*,"
 				+"(SELECT COUNT(*) FROM taskancestor INNER JOIN task ON task.TaskNum=taskancestor.TaskNum ";
@@ -208,9 +198,7 @@ namespace OpenDentBusiness{
 		///not affect which TaskLists are returned by this method.  Pass filterClinicFkey=0 and filterRegionFkey=0 to intentionally bypass filtering.</summary>
 		public static List<TaskList> RefreshRepeating(TaskDateType dateType,long userNum,long filterClinicFkey=0,long filterRegionFkey=0)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod(),dateType,userNum,filterClinicFkey,filterRegionFkey);
-			}
+			
 			string command=
 				"SELECT tasklist.*,"
 				+"(SELECT COUNT(*) FROM taskancestor,task ";
@@ -232,9 +220,7 @@ namespace OpenDentBusiness{
 		///affect which TaskLists are returned by this method.  Pass filterClinicFkey=0 and filterRegionFkey=0 to intentionally bypass filtering.</summary>
 		public static List<TaskList> RefreshDatedTrunk(DateTime date,TaskDateType dateType,long userNum,long filterClinicFkey=0,long filterRegionFkey=0)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod(),date,dateType,userNum,filterClinicFkey,filterRegionFkey);
-			}
+			
 			DateTime dateFrom=DateTime.MinValue;
 			DateTime dateTo=DateTime.MaxValue;
 			if(dateType==TaskDateType.Day) {
@@ -347,9 +333,7 @@ namespace OpenDentBusiness{
 		
 		///<summary></summary>
 		public static TaskList GetOne(long taskListNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<TaskList>(MethodBase.GetCurrentMethod(),taskListNum);
-			}
+			
 			if(taskListNum==0){
 				return null;
 			}
@@ -359,9 +343,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all task lists from the database.</summary>
 		public static List<TaskList> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM tasklist";
 			return Crud.TaskListCrud.SelectMany(command);
 		}
@@ -369,9 +351,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all task lists from the database for a certain DateType.
 		///If doIncludeArchived is false, also excludes child lists of archived lists.</summary>
 		public static List<TaskList> GetForDateType(TaskDateType dateType,bool doIncludeArchived) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod(),dateType,doIncludeArchived);
-			}
+			
 			List<TaskList> listTaskLists=GetAll();
 			Dictionary<long,TaskList> dictAllTaskLists=listTaskLists.ToDictionary(x => x.TaskListNum);
 			listTaskLists.RemoveAll(x => x.DateType!=dateType ||
@@ -382,9 +362,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Get TaskListNums based on description.</summary>
 		public static List<long> GetNumsByDescription(string descript,bool doRunOnReportServer) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),descript,doRunOnReportServer);
-			}
+			
 			string command="SELECT TaskListNum FROM tasklist WHERE Descript LIKE '%"+POut.String(descript)+"%'";
 			return ReportsComplex.RunFuncOnReportServer(() => Db.GetListLong(command),doRunOnReportServer);
 		}
@@ -437,9 +415,7 @@ namespace OpenDentBusiness{
 		/// Used in TaskListSelect when assigning an object to a task list. If doIncludeArchived is false, also excludes child lists of archived lists.
 		/// </summary>
 		public static List<TaskList> GetForObjectType(TaskObjectType objectType,bool doIncludeArchived) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskList>>(MethodBase.GetCurrentMethod(),objectType,doIncludeArchived);
-			}
+			
 			List<TaskList> listTaskLists=GetAll();
 			Dictionary<long,TaskList> dictAllTaskLists=listTaskLists.ToDictionary(x => x.TaskListNum);
 			listTaskLists.RemoveAll(x => x.ObjectType!=objectType ||
@@ -462,39 +438,27 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(TaskList tlist){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),tlist);
-				return;
-			}
+			
 			ValidateTaskList(tlist);
 			Crud.TaskListCrud.Update(tlist);
 		}
 
 		public static void Update(TaskList taskList,TaskList taskListOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskList,taskListOld);
-				return;
-			}
+			
 			ValidateTaskList(taskList);
 			Crud.TaskListCrud.Update(taskList,taskListOld);
 		}
 
 		///<summary></summary>
 		public static long Insert(TaskList tlist) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				tlist.TaskListNum=Meth.GetLong(MethodBase.GetCurrentMethod(),tlist);
-				return tlist.TaskListNum;
-			}
+			
 			ValidateTaskList(tlist);
 			return Crud.TaskListCrud.Insert(tlist);
 		}
 
 		///<summary>Throws exception if any child tasklists or tasks.</summary>
 		public static void Delete(TaskList tlist){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),tlist);
-				return;
-			}
+			
 			string command="SELECT COUNT(*) FROM tasklist WHERE Parent="+POut.Long(tlist.TaskListNum);
 			DataTable table=Db.GetTable(command);
 			if(table.Rows[0][0].ToString()!="0"){
@@ -517,9 +481,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns true if the first TaskListNum passed in has a child list with the second TaskListNum passed in.</summary>
 		public static bool IsAncestor(long taskListNum,long taskListNumChild) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),taskListNum,taskListNumChild);
-			}
+			
 			long parentNum=taskListNumChild;
 			while(true) {
 				parentNum=PIn.Long(Db.GetScalar("SELECT parent FROM TaskList WHERE TaskListNum="+POut.Long(parentNum)));
@@ -546,18 +508,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Will return 0 if not anyone's inbox.</summary>
 		public static long GetMailboxUserNum(long taskListNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),taskListNum);
-			}
+			
 			string command="SELECT UserNum FROM userod WHERE TaskListInBox="+POut.Long(taskListNum);
 			return PIn.Long(Db.GetScalar(command));
 		}
 
 		///<summary>Checks all ancestors of a task.  Will return 0 if no ancestor is anyone's inbox.</summary>
 		public static long GetMailboxUserNumByAncestor(long taskNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),taskNum);
-			}
+			
 			string command="SELECT UserNum FROM taskancestor,userod "
 				+"WHERE taskancestor.TaskListNum=userod.TaskListInBox "
 				+"AND taskancestor.TaskNum="+POut.Long(taskNum);

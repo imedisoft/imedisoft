@@ -12,9 +12,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary></summary>
 		public static List<ScheduledProcess> Refresh(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ScheduledProcess>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM scheduledprocess";
 			return Crud.ScheduledProcessCrud.SelectMany(command);
 		}
@@ -25,10 +23,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(ScheduledProcess scheduledProcess){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				scheduledProcess.ScheduledProcessNum=Meth.GetLong(MethodBase.GetCurrentMethod(),scheduledProcess);
-				return scheduledProcess.ScheduledProcessNum;
-			}
+			
 			return Crud.ScheduledProcessCrud.Insert(scheduledProcess);
 		}
 		#endregion Insert
@@ -36,10 +31,7 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary></summary>
 		public static void Update(ScheduledProcess scheduledProcess,ScheduledProcess oldScheduledProcess){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),scheduledProcess,oldScheduledProcess);
-				return;
-			}
+			
 			Crud.ScheduledProcessCrud.Update(scheduledProcess,oldScheduledProcess);
 		}
 		#endregion Update
@@ -47,10 +39,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary></summary>
 		public static void Delete(long scheduledProcessNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),scheduledProcessNum);
-				return;
-			}
+			
 			Crud.ScheduledProcessCrud.Delete(scheduledProcessNum);
 		}
 		#endregion Delete
@@ -61,9 +50,6 @@ namespace OpenDentBusiness{
 		public static List<ScheduledProcess> CheckAlreadyScheduled(ScheduledActionEnum schedActionEnum, FrequencyToRunEnum freqToRunEnum, 
 			DateTime timeToRun) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ScheduledProcess>>(MethodBase.GetCurrentMethod(),schedActionEnum,freqToRunEnum,timeToRun);				
-			}
 			string command=$@"SELECT * FROM scheduledprocess 
 				WHERE ScheduledAction='{POut.String(schedActionEnum.ToString())}' AND 
 				FrequencyToRun='{POut.String(freqToRunEnum.ToString())}' AND 
@@ -72,15 +58,5 @@ namespace OpenDentBusiness{
 		}
 
 		#endregion Misc Methods
-
-		/*
-		///<summary>Gets one ScheduledProcess from the db.</summary>
-		public static ScheduledProcess GetOne(long scheduledProcessNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ScheduledProcess>(MethodBase.GetCurrentMethod(),scheduledProcessNum);
-			}
-			return Crud.ScheduledProcessCrud.SelectOne(scheduledProcessNum);
-		}
-		*/
 	}
 }

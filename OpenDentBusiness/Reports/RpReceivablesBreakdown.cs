@@ -10,9 +10,6 @@ namespace OpenDentBusiness {
 		public static DataTable GetRecvBreakdownTable(DateTime dateStart,List<long> listProvNums,bool isWriteoffPay,bool isPayPlan2,string wDate
 			,string eDate,string bDate,string tableName) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,listProvNums,isWriteoffPay,isPayPlan2,wDate,eDate,bDate,tableName);
-			}
 			//-------------------------------------------------------------------------------------//
 			// Create temperary tables for sorting data
 			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 

@@ -16,9 +16,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the pending ConfirmationRequest row for the passed in patnum.  Will return null if the patnum with a pending row isn't found.</summary>
 		public static List<ConfirmationRequest> GetPendingForPatNum(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ConfirmationRequest>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM confirmationrequest WHERE PatNum="+POut.Long(patNum)+" AND RSVPStatus="+POut.Int((int)RSVPStatusCodes.PendingRsvp);
 			return Crud.ConfirmationRequestCrud.SelectMany(command);
 		}
@@ -26,9 +24,7 @@ namespace OpenDentBusiness{
 		///<summary>Get the list of ConfirmationRequests for confirmation requests where the appointment was rescheduled or deleted after sending the 
 		///request.</summary>
 		public static List<ConfirmationRequest> GetForApptChanged() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ConfirmationRequest>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<ApptStatus> listStatus=new List<ApptStatus>() { ApptStatus.UnschedList, ApptStatus.Broken };
 			string command=@"SELECT confirmationrequest.*
 				FROM confirmationrequest
@@ -43,9 +39,7 @@ namespace OpenDentBusiness{
 			if(listAptNums.Count==0) {
 				return new List<ConfirmationRequest>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ConfirmationRequest>>(MethodBase.GetCurrentMethod(),listAptNums);
-			}
+			
 			string command="SELECT * FROM confirmationrequest WHERE ApptNum IN("+string.Join(",",listAptNums.Select(x => POut.Long(x)))+")";
 			return Crud.ConfirmationRequestCrud.SelectMany(command);
 		}
@@ -71,18 +65,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Get all rows where RSVPStatus==AwaitingTransmit.</summary>
 		public static List<ConfirmationRequest> GetAllOutstandingForSend() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ConfirmationRequest>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM confirmationrequest WHERE RSVPStatus = "+POut.Int((int)RSVPStatusCodes.AwaitingTransmit);
 			return Crud.ConfirmationRequestCrud.SelectMany(command);
 		}
 
 		///<summary>Get all rows where RSVPStatus==PendingRsvp that match the apptReminderRule.</summary>
 		public static List<ConfirmationRequest> GetPendingForRule(long apptReminderRule) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ConfirmationRequest>>(MethodBase.GetCurrentMethod(),apptReminderRule);
-			}
+			
 			string command="SELECT * FROM confirmationrequest WHERE RSVPStatus = "+POut.Int((int)RSVPStatusCodes.PendingRsvp)
 				+" AND ApptReminderRuleNum="+POut.Long(apptReminderRule);
 			return Crud.ConfirmationRequestCrud.SelectMany(command);
@@ -91,42 +81,29 @@ namespace OpenDentBusiness{
 		///<summary>HQ only knows about the ShortGUID field. It treats both ShortGUIDEmail and ShortGuid as ShortGuid. 
 		///Returns any client side ConfirmationRequest(s) where either ShortGUIDEmail or ShortGuid matches the server side ShortGuid field.</summary>
 		public static List<ConfirmationRequest> GetConfirmationsByShortGuid(string shortGuid) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ConfirmationRequest>>(MethodBase.GetCurrentMethod(),shortGuid);
-			}
+			
 			string command="SELECT * FROM confirmationrequest WHERE ShortGUID = '"+POut.String(shortGuid)+"' OR ShortGuidEmail = '"+POut.String(shortGuid)+"'";
 			return Crud.ConfirmationRequestCrud.SelectMany(command);
 		}
 
 		public static ConfirmationRequest GetConfirmationByGuidMessageToMobile(string guidMessageToMobile) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ConfirmationRequest>(MethodBase.GetCurrentMethod(),guidMessageToMobile);
-			}
+			
 			string command="SELECT * FROM confirmationrequest WHERE GuidMessageToMobile = '"+POut.String(guidMessageToMobile)+"'";
 			return Crud.ConfirmationRequestCrud.SelectOne(command);
 		}
 		
 		public static long Insert(ConfirmationRequest confirmationRequest) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				confirmationRequest.ConfirmationRequestNum=Meth.GetLong(MethodBase.GetCurrentMethod(),confirmationRequest);
-				return confirmationRequest.ConfirmationRequestNum;
-			}
+			
 			return Crud.ConfirmationRequestCrud.Insert(confirmationRequest);
 		}
 
 		public static void InsertMany(List<ConfirmationRequest> listConfirmationRequests) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listConfirmationRequests);
-				return;
-			}
+			
 			Crud.ConfirmationRequestCrud.InsertMany(listConfirmationRequests);
 		}
 
 		public static void Update(ConfirmationRequest confirmationRequest) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),confirmationRequest);
-				return;
-			}
+			
 			Crud.ConfirmationRequestCrud.Update(confirmationRequest);
 		}
 
@@ -155,10 +132,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Update the RSVPStatusCode for the list of ConfirmationRequests matching the provided shortGuids</summary>
 		public static void DeleteShortGuids(List<string> listShortGuids) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listShortGuids);
-				return;
-			}
+			
 			listShortGuids=listShortGuids.FindAll(x => !string.IsNullOrWhiteSpace(x));
 			if(listShortGuids.Count==0) {
 				return;
@@ -238,11 +212,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_ConfirmationRequestCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _ConfirmationRequestCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -253,27 +223,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ConfirmationRequest> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ConfirmationRequest>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM confirmationrequest WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ConfirmationRequestCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one ConfirmationRequest from the db.</summary>
 		public static ConfirmationRequest GetOne(long confirmationRequestNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ConfirmationRequest>(MethodBase.GetCurrentMethod(),confirmationRequestNum);
-			}
+			
 			return Crud.ConfirmationRequestCrud.SelectOne(confirmationRequestNum);
 		}
 
 		///<summary></summary>
 		public static void Delete(long confirmationRequestNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),confirmationRequestNum);
-				return;
-			}
+			
 			Crud.ConfirmationRequestCrud.Delete(confirmationRequestNum);
 		}
 

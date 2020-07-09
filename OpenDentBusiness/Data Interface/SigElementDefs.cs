@@ -73,11 +73,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_sigElementDefCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _sigElementDefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -85,28 +80,19 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(SigElementDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			Crud.SigElementDefCrud.Update(def);
 		}
 
 		///<summary></summary>
 		public static long Insert(SigElementDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				def.SigElementDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),def);
-				return def.SigElementDefNum;
-			}
+			
 			return Crud.SigElementDefCrud.Insert(def);
 		}
 
 		///<summary></summary>
 		public static void Delete(SigElementDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			string command="DELETE FROM sigelementdef WHERE SigElementDefNum ="+POut.Long(def.SigElementDefNum);
 			Db.NonQ(command);
 		}

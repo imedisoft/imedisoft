@@ -74,11 +74,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_vaccineDefCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _vaccineDefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -86,36 +81,24 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one VaccineDef from the db.</summary>
 		public static VaccineDef GetOne(long vaccineDefNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<VaccineDef>(MethodBase.GetCurrentMethod(),vaccineDefNum);
-			}
+			
 			return Crud.VaccineDefCrud.SelectOne(vaccineDefNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(VaccineDef vaccineDef){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				vaccineDef.VaccineDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),vaccineDef);
-				return vaccineDef.VaccineDefNum;
-			}
 			return Crud.VaccineDefCrud.Insert(vaccineDef);
 		}
 
 		///<summary></summary>
 		public static void Update(VaccineDef vaccineDef){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),vaccineDef);
-				return;
-			}
+			
 			Crud.VaccineDefCrud.Update(vaccineDef);
 		}
 
 		///<summary></summary>
 		public static void Delete(long vaccineDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),vaccineDefNum);
-				return;
-			}
+			
 			//validation
 			string command;
 			command="SELECT COUNT(*) FROM VaccinePat WHERE VaccineDefNum="+POut.Long(vaccineDefNum);
@@ -131,9 +114,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<VaccineDef> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<VaccineDef>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM vaccinedef WHERE PatNum = "+POut.Long(patNum);
 			return Crud.VaccineDefCrud.SelectMany(command);
 		}

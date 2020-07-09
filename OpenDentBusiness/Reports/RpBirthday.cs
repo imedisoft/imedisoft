@@ -7,9 +7,6 @@ namespace OpenDentBusiness {
 	public class RpBirthday {
 
 		public static DataTable GetBirthdayTable(DateTime dateFrom,DateTime dateTo) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateFrom,dateTo);
-			}
 			string dateWhereClause;
 			string orderByClause;
 			if(dateFrom.Year==dateTo.Year) {

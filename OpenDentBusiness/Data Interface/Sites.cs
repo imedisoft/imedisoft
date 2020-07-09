@@ -89,11 +89,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_siteCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _siteCache.GetTableFromCache(doRefreshCache);
 		}
 		
@@ -101,36 +96,25 @@ namespace OpenDentBusiness{
 
 		///<Summary>Gets one Site from the database.</Summary>
 		public static Site CreateObject(long siteNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Site>(MethodBase.GetCurrentMethod(),siteNum);
-			}
+			
 			return Crud.SiteCrud.SelectOne(siteNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(Site site) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				site.SiteNum=Meth.GetLong(MethodBase.GetCurrentMethod(),site);
-				return site.SiteNum;
-			}
+			
 			return Crud.SiteCrud.Insert(site);
 		}
 
 		///<summary></summary>
 		public static void Update(Site site) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),site);
-				return;
-			}
+			
 			Crud.SiteCrud.Update(site);
 		}
 
 		///<summary></summary>
 		public static void DeleteObject(long siteNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),siteNum);
-				return;
-			}
+			
 			//validate that not already in use.
 			string command="SELECT LName,FName FROM patient WHERE SiteNum="+POut.Long(siteNum);
 			DataTable table=Db.GetTable(command);

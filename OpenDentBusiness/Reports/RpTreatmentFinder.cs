@@ -189,9 +189,6 @@ namespace OpenDentBusiness {
 		public static DataTable GetDictAmtPlanned(bool patsWithAppts,DateTime dateSince,List<long> listProvNums,List<long> listBillTypes,
 			string code1,string code2,List<long> listClinicNums)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patsWithAppts,dateSince,listProvNums,listBillTypes,code1,code2,listClinicNums);
-			}
 			string command=$@"SELECT procedurelog.PatNum,SUM(procedurelog.ProcFee*(procedurelog.UnitQty+procedurelog.BaseUnits)) AmtPlanned
 				FROM procedurelog
 				INNER JOIN patient ON patient.PatNum=procedurelog.PatNum{(string.IsNullOrEmpty(code1)?"":$@"
@@ -215,9 +212,6 @@ namespace OpenDentBusiness {
 		}
 
 		public static DataTable GetPatInfo(bool isProcsGeneral,DateTime renewDate,string patNumStr) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),isProcsGeneral,renewDate,patNumStr);
-			}
 			string commandIndInfo=$@"SELECT patplan.PatPlanNum,
 				{GetSelectCoverageStr()}
 				INNER JOIN patplan ON patplan.PatNum=claimproc.PatNum
@@ -229,9 +223,6 @@ namespace OpenDentBusiness {
 		}
 
 		public static DataTable GetFamInfo(bool isProcsGeneral,DateTime renewDate,string patNumStr) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),isProcsGeneral,renewDate,patNumStr);
-			}
 			string commandFamInfo=$@"SELECT claimproc.InsSubNum,
 				{GetSelectCoverageStr()}
 				{GetWhereCoverageStr(isProcsGeneral,renewDate,patNumStr)}
@@ -276,9 +267,6 @@ namespace OpenDentBusiness {
 		
 		///<summary>It is known that patNumStr is not empty</summary>
 		public static DataTable GetAnnualMaxInfo(string patNumStr) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNumStr);
-			}
 			string commandAnnualMax=$@"SELECT benefit.PlanNum,
 				MAX(CASE WHEN CoverageLevel!={POut.Int((int)BenefitCoverageLevel.Family)} THEN MonetaryAmt ELSE -1 END) AnnualMaxInd, 
 				MAX(CASE WHEN CoverageLevel={POut.Int((int)BenefitCoverageLevel.Family)} THEN MonetaryAmt ELSE -1 END) AnnualMaxFam
@@ -298,9 +286,6 @@ namespace OpenDentBusiness {
 		
 		///<summary>It is known that patNumStr is not empty</summary>
 		public static DataTable GetTableRaw(bool noIns,int monthStart,string patNumStr) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),noIns,monthStart,patNumStr);
-			}
 			string command=$@"SELECT patient.PatNum,patient.LName,patient.FName,patient.Email,patient.HmPhone,patient.WirelessPhone,patient.WkPhone,
 				patient.PreferRecallMethod,patient.Address,patient.Address2,patient.City,patient.State,patient.Zip,patient.PriProv,patient.BillingType,
 				patplan.PatPlanNum,inssub.InsSubNum,inssub.PlanNum,COALESCE(carrier.CarrierName,'') carrierName,COALESCE(clinic.Abbr,'Unassigned') clinicAbbr

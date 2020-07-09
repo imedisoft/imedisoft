@@ -36,9 +36,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of code systems in the code system table.  This query will change from version to version depending on what code systems we have available.</summary>
 		public static List<CodeSystem> GetForCurrentVersion(bool IsMemberNation) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CodeSystem>>(MethodBase.GetCurrentMethod(),IsMemberNation);
-			}
+			
 #if DEBUG
 			string command="SELECT * FROM codesystem";// WHERE CodeSystemName IN ('ICD9CM','RXNORM','SNOMEDCT','CPT')";
 #else
@@ -62,29 +60,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(CodeSystem codeSystem){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),codeSystem);
-				return;
-			}
+			
 			Crud.CodeSystemCrud.Update(codeSystem);
 		}
 
 		///<summary>Updates VersionCurrent to the VersionAvail of the codeSystem object passed in. Used by code system importer after successful import.</summary>
 		public static void UpdateCurrentVersion(CodeSystem codeSystem) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),codeSystem);
-				return;
-			}
+			
 			codeSystem.VersionCur=codeSystem.VersionAvail;
 			Crud.CodeSystemCrud.Update(codeSystem);
 		}
 
 		///<summary>Updates VersionCurrent to the versionID passed in. Used by code system importer after successful import.  Currently only used for CPT.</summary>
 		public static void UpdateCurrentVersion(CodeSystem codeSystem, string versionID) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),codeSystem,versionID);
-				return;
-			}
+			
 			if(string.Compare(codeSystem.VersionCur,versionID)>0) {  //If versionCur is newer than the version you just imported, don't update it.
 				return;
 			}
@@ -638,27 +627,19 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one CodeSystem from the db.</summary>
 		public static CodeSystem GetOne(long codeSystemNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<CodeSystem>(MethodBase.GetCurrentMethod(),codeSystemNum);
-			}
+			
 			return Crud.CodeSystemCrud.SelectOne(codeSystemNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(CodeSystem codeSystem){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				codeSystem.CodeSystemNum=Meth.GetLong(MethodBase.GetCurrentMethod(),codeSystem);
-				return codeSystem.CodeSystemNum;
-			}
+			
 			return Crud.CodeSystemCrud.Insert(codeSystem);
 		}
 
 		///<summary></summary>
 		public static void Delete(long codeSystemNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),codeSystemNum);
-				return;
-			}
+			
 			string command= "DELETE FROM codesystem WHERE CodeSystemNum = "+POut.Long(codeSystemNum);
 			Db.NonQ(command);
 		}

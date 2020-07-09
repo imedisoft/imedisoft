@@ -146,11 +146,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_providerCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _providerCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -158,36 +153,26 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets list of all providers from the database.  Returns an empty list if none are found.</summary>
 		public static List<Provider> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Provider>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command = "SELECT * FROM provider";
 			return Crud.ProviderCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void Update(Provider provider){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),provider);
-				return;
-			}
+			
 			Crud.ProviderCrud.Update(provider);
 		}
 
 		///<summary></summary>
 		public static long Insert(Provider provider){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				provider.ProvNum=Meth.GetLong(MethodBase.GetCurrentMethod(),provider);
-				return provider.ProvNum;
-			}
+			
 			return Crud.ProviderCrud.Insert(provider);
 		}
 
 		/// <summary>This checks for the maximum number of provnum in the database and then returns the one directly after.  Not guaranteed to be a unique primary key.</summary>
 		public static long GetNextAvailableProvNum() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT MAX(provNum) FROM provider";
 			return PIn.Long(Db.GetScalar(command))+1;
 		}
@@ -195,10 +180,7 @@ namespace OpenDentBusiness{
 		///<summary>Increments all (privider.ItemOrder)s that are >= the ItemOrder of the provider passed in 
 		///but does not change the item order of the provider passed in.</summary>
 		public static void MoveDownBelow(Provider provider) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),provider);
-				return;
-			}
+			
 			//Add 1 to all item orders equal to or greater than new provider's item order
 			Db.NonQ("UPDATE provider SET ItemOrder=ItemOrder+1"
 				+" WHERE ProvNum!="+provider.ProvNum
@@ -207,19 +189,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Only used from FormProvEdit if user clicks cancel before finishing entering a new provider.</summary>
 		public static void Delete(Provider prov){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),prov);
-				return;
-			}
+			
 			string command="DELETE from provider WHERE provnum = '"+prov.ProvNum.ToString()+"'";
  			Db.NonQ(command);
 		}
 
 		///<summary>Gets table for the FormProviderSetup window.  Always orders by ItemOrder.</summary>
 		public static DataTable RefreshStandard(bool canShowPatCount){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),canShowPatCount);
-			}
+			
 			//Max function used because some providers may have multiple user names.
 			string command="SELECT Abbr,LName,FName,provider.IsHidden,provider.ItemOrder,provider.ProvNum,MAX(UserName) UserName,ProvStatus,IsHiddenReport ";
 			if(canShowPatCount) {
@@ -245,9 +222,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets table for main provider edit list when in dental school mode.  Always orders alphabetically, but there will be lots of filters to get the list shorter.  Must be very fast because refreshes while typing.  selectAll will trump selectInstructors and always return all providers.</summary>
 		public static DataTable RefreshForDentalSchool(long schoolClassNum,string lastName,string firstName,string provNum,bool selectInstructors,bool selectAll) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),schoolClassNum,lastName,firstName,provNum,selectInstructors,selectAll);
-			}
+			
 			string command="SELECT Abbr,LName,FName,provider.IsHidden,provider.ItemOrder,provider.ProvNum,GradYear,IsInstructor,Descript,"
 				+"MAX(UserName) UserName,"//Max function used for Oracle compatability (some providers may have multiple user names).
 				+"PatCountPri,PatCountSec,ProvStatus,IsHiddenReport "
@@ -290,9 +265,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<Provider> GetChangedSince(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Provider>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT * FROM provider WHERE DateTStamp > "+POut.DateT(changedSince);
 			//DataTable table=Db.GetTable(command);
 			//return TableToList(table);
@@ -467,9 +440,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all providers from the database.  Doesn't use the cache.</summary>
 		public static List<Provider> GetProvsNoCache() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Provider>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM provider";
 			return Crud.ProviderCrud.SelectMany(command);
 
@@ -516,9 +487,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<Userod> GetAttachedUsers(long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Userod>>(MethodBase.GetCurrentMethod(),provNum);
-			}
+			
 			string command="SELECT userod.* FROM userod,provider "
 					+"WHERE userod.ProvNum=provider.ProvNum "
 					+"AND provider.provNum="+POut.Long(provNum);
@@ -558,9 +527,7 @@ namespace OpenDentBusiness{
 		/*
 		///<summary>Used when adding a provider to get the next available itemOrder.</summary>
 		public static int GetNextItemOrder(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod());
-			}
+			
 			//Is this valid in Oracle??
 			string command="SELECT MAX(ItemOrder) FROM provider";
 			DataTable table=Db.GetTable(command);
@@ -593,9 +560,7 @@ namespace OpenDentBusiness{
 
 		///<Summary>Used once in the Provider Select window to warn user of duplicate Abbrs.</Summary>
 		public static string GetDuplicateAbbrs(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT Abbr FROM provider WHERE ProvStatus!="+POut.Int((int)ProviderStatus.Deleted);
 			List<string> listDuplicates = Db.GetListString(command).GroupBy(x => x).Where(x => x.Count()>1).Select(x => x.Key).ToList();
 			return string.Join(",",listDuplicates);//returns empty string when listDuplicates is empty
@@ -623,9 +588,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetDefaultPracticeProvider(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod());
-			}
+			
 			string command=@"SELECT FName,LName,Suffix,StateLicense
 				FROM provider
         WHERE provnum="+PrefC.GetString(PrefName.PracticeDefaultProv);
@@ -636,9 +599,7 @@ namespace OpenDentBusiness{
 		///that would require restructuring indexes in different places in the code and this is
 		///faster to do as we are just moving the queries down in to the business layer for now.</summary>
 		public static DataTable GetDefaultPracticeProvider2() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod());
-			}
+			
 			string command=@"SELECT FName,LName,Specialty "+
 				"FROM provider WHERE provnum="+
 				POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv));
@@ -650,9 +611,7 @@ namespace OpenDentBusiness{
 		///that would require restructuring indexes in different places in the code and this is
 		///faster to do as we are just moving the queries down in to the business layer for now.</summary>
 		public static DataTable GetDefaultPracticeProvider3() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod());
-			}
+			
 			string command=@"SELECT NationalProvID "+
 				"FROM provider WHERE provnum="+
 				POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv));
@@ -660,9 +619,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetPrimaryProviders(long PatNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),PatNum);
-			}
+			
 			string command=@"SELECT Fname,Lname from provider
                         WHERE provnum in (select priprov from 
                         patient where patnum = "+PatNum+")";
@@ -671,9 +628,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the patient's last seen hygienist.  Returns null if no hygienist has been seen.</summary>
 		public static Provider GetLastSeenHygienistForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Provider>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			//Look at all completed appointments and get the most recent secondary provider on it.
 			string command=@"SELECT appointment.ProvHyg
 				FROM appointment
@@ -732,9 +687,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<long> GetChangedSinceProvNums(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT ProvNum FROM provider WHERE DateTStamp > "+POut.DateT(changedSince);
 			DataTable dt=Db.GetTable(command);
 			List<long> provnums = new List<long>(dt.Rows.Count);
@@ -746,9 +699,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used along with GetChangedSinceProvNums</summary>
 		public static List<Provider> GetMultProviders(List<long> provNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Provider>>(MethodBase.GetCurrentMethod(),provNums);
-			}
+			
 			string strProvNums="";
 			DataTable table;
 			if(provNums.Count>0) {
@@ -824,10 +775,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Removes the providers from the future schedule.  Currently called from DBM to clean up hidden providers still on the schedule.</summary>
 		public static void RemoveProvsFromFutureSchedule(List<long> provNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),provNums);
-				return;
-			}
+			
 			string provs="";
 			for(int i=0;i<provNums.Count;i++) {
 				if(provNums[i]<1) {//Invalid provNum, nothing to do.
@@ -858,9 +806,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static bool IsAttachedToUser(long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),provNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM userod,provider "
 					+"WHERE userod.ProvNum=provider.ProvNum "
 					+"AND provider.provNum="+POut.Long(provNum);
@@ -873,9 +819,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used to check if a specialty is in use when user is trying to hide it.</summary>
 		public static bool IsSpecialtyInUse(long defNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),defNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM provider WHERE Specialty="+POut.Long(defNum);
 			if(Db.GetCount(command)=="0") {
 				return false;
@@ -886,9 +830,7 @@ namespace OpenDentBusiness{
 		///<summary>Used to get a list of providers that are scheduled for today.  
 		///Pass in specific clinicNum for providers scheduled in specific clinic, clinicNum of -1 for all clinics</summary>
 		public static List<Provider> GetProvsScheduledToday(long clinicNum=-1) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Provider>>(MethodBase.GetCurrentMethod(),clinicNum);
-			}
+			
 			List<Schedule> listSchedulesForDate=Schedules.GetAllForDateAndType(DateTime.Today,ScheduleType.Provider);
 			if(PrefC.HasClinicsEnabled && clinicNum>=0) {
 				listSchedulesForDate.FindAll(x => x.ClinicNum==clinicNum);
@@ -899,9 +841,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Provider merge tool.  Returns the number of rows changed when the tool is used.</summary>
 		public static long Merge(long provNumFrom, long provNumInto) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),provNumFrom,provNumInto);
-			}
+			
 			string[] provNumForeignKeys=new string[] { //add any new FKs to this list.
 				"adjustment.ProvNum",
 				"anestheticrecord.ProvNum",
@@ -980,9 +920,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static long CountPats(long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),provNum);
-			}
+			
 			string command="SELECT COUNT(DISTINCT patient.PatNum) FROM patient WHERE (patient.PriProv="+POut.Long(provNum)
 				+" OR patient.SecProv="+POut.Long(provNum)+")"
 				+" AND patient.PatStatus=0";
@@ -991,9 +929,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static long CountClaims(long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),provNum);
-			}
+			
 			string command="SELECT COUNT(DISTINCT claim.ClaimNum) FROM claim WHERE claim.ProvBill="+POut.Long(provNum)
 				+" OR claim.ProvTreat="+POut.Long(provNum);
 			string retVal=Db.GetScalar(command);

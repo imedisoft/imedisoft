@@ -12,28 +12,20 @@ namespace OpenDentBusiness{
 		public const string ADD_TO_CALENDAR="[AddToCalendar]";
 
 		public static List<ApptThankYouSent> GetForApt(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptThankYouSent>>(MethodBase.GetCurrentMethod(),aptNum);
-			}
+			
 			string command="SELECT * FROM apptthankyousent WHERE ApptNum="+POut.Long(aptNum);
 			return Crud.ApptThankYouSentCrud.SelectMany(command);
 		}
 
 		public static void InsertMany(List<ApptThankYouSent> listApptThankYouSents) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listApptThankYouSents);
-				return;
-			}
+			
 			Crud.ApptThankYouSentCrud.InsertMany(listApptThankYouSents);
 		}
 
 		#region Update
 		///<summary></summary>
 		public static void Update(ApptThankYouSent apptThankYouSent){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),apptThankYouSent);
-				return;
-			}
+			
 			Crud.ApptThankYouSentCrud.Update(apptThankYouSent);
 		}
 		#endregion Update
@@ -61,9 +53,7 @@ namespace OpenDentBusiness{
 
 		//<summary>Get the list of ApptThankYouSents where the appointment was rescheduled or cancelled after sending the thank you.</summary>
 		public static List<ApptThankYouSent> GetForApptChanged() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptThankYouSent>>(MethodBase.GetCurrentMethod());
-			}
+			
 			//Do not include UnscheduledList or Broken appointments
 			List<ApptStatus> listStatus=new List<ApptStatus>() { ApptStatus.UnschedList, ApptStatus.Broken };
 			string command=@"SELECT apptthankyousent.* 
@@ -78,10 +68,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary></summary>
 		public static void Delete(params long[] arrApptThankYouSentNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),arrApptThankYouSentNums);
-				return;
-			}
+			
 			if(arrApptThankYouSentNums.IsNullOrEmpty()) {
 				return;
 			}
@@ -172,11 +159,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_apptThankYouSentCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _apptThankYouSentCache.GetTableFromCache(doRefreshCache);
 		}
 		#endregion Cache Pattern
@@ -186,18 +169,14 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary></summary>
 		public static List<ApptThankYouSent> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptThankYouSent>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM apptthankyousent WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ApptThankYouSentCrud.SelectMany(command);
 		}
 		
 		///<summary>Gets one ApptThankYouSent from the db.</summary>
 		public static ApptThankYouSent GetOne(long apptThankYouSentNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ApptThankYouSent>(MethodBase.GetCurrentMethod(),apptThankYouSentNum);
-			}
+			
 			return Crud.ApptThankYouSentCrud.SelectOne(apptThankYouSentNum);
 		}
 		#endregion Get Methods
@@ -205,10 +184,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(ApptThankYouSent apptThankYouSent){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				apptThankYouSent.ApptThankYouSentNum=Meth.GetLong(MethodBase.GetCurrentMethod(),apptThankYouSent);
-				return apptThankYouSent.ApptThankYouSentNum;
-			}
+			
 			return Crud.ApptThankYouSentCrud.Insert(apptThankYouSent);
 		}
 		#endregion Insert

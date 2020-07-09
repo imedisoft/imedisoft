@@ -21,9 +21,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one Screen object from the database using a query.</summary>
 		public static Screen SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<Screen> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -33,9 +31,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of Screen objects from the database using a query.</summary>
 		public static List<Screen> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<Screen> list=TableToList(Db.GetTable(command));
 			return list;
 		}

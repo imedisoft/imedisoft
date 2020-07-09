@@ -30,45 +30,32 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all Suppliers.</summary>
 		public static List<Supplier> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Supplier>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM supplier ORDER BY Name";
 			return Crud.SupplierCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one Supplier by num.</summary>
 		public static Supplier GetOne(long supplierNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Supplier>(MethodBase.GetCurrentMethod(),supplierNum);
-			}
+			
 			return Crud.SupplierCrud.SelectOne(supplierNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(Supplier supp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				supp.SupplierNum=Meth.GetLong(MethodBase.GetCurrentMethod(),supp);
-				return supp.SupplierNum;
-			}
+			
 			return Crud.SupplierCrud.Insert(supp);
 		}
 
 		///<summary></summary>
 		public static void Update(Supplier supp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),supp);
-				return;
-			}
+			
 			Crud.SupplierCrud.Update(supp);
 		}
 
 		///<summary>Surround with try-catch.</summary>
 		public static void DeleteObject(Supplier supp){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),supp);
-				return;
-			}
+			
 			//validate that not already in use.
 			string command="SELECT COUNT(*) FROM supplyorder WHERE SupplierNum="+POut.Long(supp.SupplierNum);
 			int count=PIn.Int(Db.GetCount(command));

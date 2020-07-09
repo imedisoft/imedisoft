@@ -30,36 +30,25 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one CustReference from the db.</summary>
 		public static CustReference GetOne(long custReferenceNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<CustReference>(MethodBase.GetCurrentMethod(),custReferenceNum);
-			}
+			
 			return Crud.CustReferenceCrud.SelectOne(custReferenceNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(CustReference custReference){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				custReference.CustReferenceNum=Meth.GetLong(MethodBase.GetCurrentMethod(),custReference);
-				return custReference.CustReferenceNum;
-			}
+			
 			return Crud.CustReferenceCrud.Insert(custReference);
 		}
 
 		///<summary></summary>
 		public static void Update(CustReference custReference){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),custReference);
-				return;
-			}
+			
 			Crud.CustReferenceCrud.Update(custReference);
 		}
 
 		///<summary>Might not be used.  Might implement when a patient is deleted but doesn't happen often if ever.</summary>
 		public static void Delete(long custReferenceNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),custReferenceNum);
-				return;
-			}
+			
 			string command= "DELETE FROM custreference WHERE CustReferenceNum = "+POut.Long(custReferenceNum);
 			Db.NonQ(command);
 		}
@@ -68,9 +57,7 @@ namespace OpenDentBusiness{
 		public static DataTable GetReferenceTable(bool limit,long[] billingTypes,bool showBadRefs,bool showUsed,bool showGuarOnly,string city,string state,string zip,
 			string areaCode,string specialty,int superFam,string lname,string fname,string patnum,int age,string country) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),limit,billingTypes,showBadRefs,showUsed,showGuarOnly,city,state,zip,areaCode,specialty,superFam,lname,fname,patnum,age,country);
-			}
+			
 			string billingSnippet="";
 			if(billingTypes.Length!=0){
 				for(int i=0;i<billingTypes.Length;i++) {
@@ -192,9 +179,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the most recent CustReference entry for that patient.  Returns null if none found.  There should be only one entry for each patient, but there was a bug before 14.3 that could have created multiple so we only get the more relevant entry.</summary>
 		public static CustReference GetOneByPatNum(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<CustReference>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * "
 						+"FROM custreference "
 						+"WHERE PatNum="+POut.Long(patNum)+" "

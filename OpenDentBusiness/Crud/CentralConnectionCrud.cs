@@ -21,9 +21,6 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one CentralConnection object from the database using a query.</summary>
 		public static CentralConnection SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
 			List<CentralConnection> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -33,9 +30,6 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of CentralConnection objects from the database using a query.</summary>
 		public static List<CentralConnection> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
 			List<CentralConnection> list=TableToList(Db.GetTable(command));
 			return list;
 		}
@@ -51,12 +45,10 @@ namespace OpenDentBusiness.Crud{
 				centralConnection.DatabaseName             = PIn.String(row["DatabaseName"].ToString());
 				centralConnection.MySqlUser                = PIn.String(row["MySqlUser"].ToString());
 				centralConnection.MySqlPassword            = PIn.String(row["MySqlPassword"].ToString());
-				centralConnection.ServiceURI               = PIn.String(row["ServiceURI"].ToString());
 				centralConnection.OdUser                   = PIn.String(row["OdUser"].ToString());
 				centralConnection.OdPassword               = PIn.String(row["OdPassword"].ToString());
 				centralConnection.Note                     = PIn.String(row["Note"].ToString());
 				centralConnection.ItemOrder                = PIn.Int   (row["ItemOrder"].ToString());
-				centralConnection.WebServiceIsEcw          = PIn.Bool  (row["WebServiceIsEcw"].ToString());
 				centralConnection.ConnectionStatus         = PIn.String(row["ConnectionStatus"].ToString());
 				centralConnection.HasClinicBreakdownReports= PIn.Bool  (row["HasClinicBreakdownReports"].ToString());
 				retVal.Add(centralConnection);
@@ -75,12 +67,10 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("DatabaseName");
 			table.Columns.Add("MySqlUser");
 			table.Columns.Add("MySqlPassword");
-			table.Columns.Add("ServiceURI");
 			table.Columns.Add("OdUser");
 			table.Columns.Add("OdPassword");
 			table.Columns.Add("Note");
 			table.Columns.Add("ItemOrder");
-			table.Columns.Add("WebServiceIsEcw");
 			table.Columns.Add("ConnectionStatus");
 			table.Columns.Add("HasClinicBreakdownReports");
 			foreach(CentralConnection centralConnection in listCentralConnections) {
@@ -90,12 +80,10 @@ namespace OpenDentBusiness.Crud{
 					            centralConnection.DatabaseName,
 					            centralConnection.MySqlUser,
 					            centralConnection.MySqlPassword,
-					            centralConnection.ServiceURI,
 					            centralConnection.OdUser,
 					            centralConnection.OdPassword,
 					            centralConnection.Note,
 					POut.Int   (centralConnection.ItemOrder),
-					POut.Bool  (centralConnection.WebServiceIsEcw),
 					            centralConnection.ConnectionStatus,
 					POut.Bool  (centralConnection.HasClinicBreakdownReports),
 				});
@@ -117,7 +105,7 @@ namespace OpenDentBusiness.Crud{
 			if(useExistingPK || PrefC.RandomKeys) {
 				command+="CentralConnectionNum,";
 			}
-			command+="ServerName,DatabaseName,MySqlUser,MySqlPassword,ServiceURI,OdUser,OdPassword,Note,ItemOrder,WebServiceIsEcw,ConnectionStatus,HasClinicBreakdownReports) VALUES(";
+			command+="ServerName,DatabaseName,MySqlUser,MySqlPassword,OdUser,OdPassword,Note,ItemOrder,ConnectionStatus,HasClinicBreakdownReports) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
 				command+=POut.Long(centralConnection.CentralConnectionNum)+",";
 			}
@@ -126,12 +114,10 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(centralConnection.DatabaseName)+"',"
 				+"'"+POut.String(centralConnection.MySqlUser)+"',"
 				+"'"+POut.String(centralConnection.MySqlPassword)+"',"
-				+"'"+POut.String(centralConnection.ServiceURI)+"',"
 				+"'"+POut.String(centralConnection.OdUser)+"',"
 				+"'"+POut.String(centralConnection.OdPassword)+"',"
 				+    DbHelper.ParamChar+"paramNote,"
 				+    POut.Int   (centralConnection.ItemOrder)+","
-				+    POut.Bool  (centralConnection.WebServiceIsEcw)+","
 				+"'"+POut.String(centralConnection.ConnectionStatus)+"',"
 				+    POut.Bool  (centralConnection.HasClinicBreakdownReports)+")";
 			if(centralConnection.Note==null) {
@@ -162,7 +148,7 @@ namespace OpenDentBusiness.Crud{
 			if(isRandomKeys || useExistingPK) {
 				command+="CentralConnectionNum,";
 			}
-			command+="ServerName,DatabaseName,MySqlUser,MySqlPassword,ServiceURI,OdUser,OdPassword,Note,ItemOrder,WebServiceIsEcw,ConnectionStatus,HasClinicBreakdownReports) VALUES(";
+			command+="ServerName,DatabaseName,MySqlUser,MySqlPassword,OdUser,OdPassword,Note,ItemOrder,ConnectionStatus,HasClinicBreakdownReports) VALUES(";
 			if(isRandomKeys || useExistingPK) {
 				command+=POut.Long(centralConnection.CentralConnectionNum)+",";
 			}
@@ -171,12 +157,10 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(centralConnection.DatabaseName)+"',"
 				+"'"+POut.String(centralConnection.MySqlUser)+"',"
 				+"'"+POut.String(centralConnection.MySqlPassword)+"',"
-				+"'"+POut.String(centralConnection.ServiceURI)+"',"
 				+"'"+POut.String(centralConnection.OdUser)+"',"
 				+"'"+POut.String(centralConnection.OdPassword)+"',"
 				+    DbHelper.ParamChar+"paramNote,"
 				+    POut.Int   (centralConnection.ItemOrder)+","
-				+    POut.Bool  (centralConnection.WebServiceIsEcw)+","
 				+"'"+POut.String(centralConnection.ConnectionStatus)+"',"
 				+    POut.Bool  (centralConnection.HasClinicBreakdownReports)+")";
 			if(centralConnection.Note==null) {
@@ -199,12 +183,10 @@ namespace OpenDentBusiness.Crud{
 				+"DatabaseName             = '"+POut.String(centralConnection.DatabaseName)+"', "
 				+"MySqlUser                = '"+POut.String(centralConnection.MySqlUser)+"', "
 				+"MySqlPassword            = '"+POut.String(centralConnection.MySqlPassword)+"', "
-				+"ServiceURI               = '"+POut.String(centralConnection.ServiceURI)+"', "
 				+"OdUser                   = '"+POut.String(centralConnection.OdUser)+"', "
 				+"OdPassword               = '"+POut.String(centralConnection.OdPassword)+"', "
 				+"Note                     =  "+DbHelper.ParamChar+"paramNote, "
 				+"ItemOrder                =  "+POut.Int   (centralConnection.ItemOrder)+", "
-				+"WebServiceIsEcw          =  "+POut.Bool  (centralConnection.WebServiceIsEcw)+", "
 				+"ConnectionStatus         = '"+POut.String(centralConnection.ConnectionStatus)+"', "
 				+"HasClinicBreakdownReports=  "+POut.Bool  (centralConnection.HasClinicBreakdownReports)+" "
 				+"WHERE CentralConnectionNum = "+POut.Long(centralConnection.CentralConnectionNum);
@@ -234,10 +216,6 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="MySqlPassword = '"+POut.String(centralConnection.MySqlPassword)+"'";
 			}
-			if(centralConnection.ServiceURI != oldCentralConnection.ServiceURI) {
-				if(command!="") { command+=",";}
-				command+="ServiceURI = '"+POut.String(centralConnection.ServiceURI)+"'";
-			}
 			if(centralConnection.OdUser != oldCentralConnection.OdUser) {
 				if(command!="") { command+=",";}
 				command+="OdUser = '"+POut.String(centralConnection.OdUser)+"'";
@@ -253,10 +231,6 @@ namespace OpenDentBusiness.Crud{
 			if(centralConnection.ItemOrder != oldCentralConnection.ItemOrder) {
 				if(command!="") { command+=",";}
 				command+="ItemOrder = "+POut.Int(centralConnection.ItemOrder)+"";
-			}
-			if(centralConnection.WebServiceIsEcw != oldCentralConnection.WebServiceIsEcw) {
-				if(command!="") { command+=",";}
-				command+="WebServiceIsEcw = "+POut.Bool(centralConnection.WebServiceIsEcw)+"";
 			}
 			if(centralConnection.ConnectionStatus != oldCentralConnection.ConnectionStatus) {
 				if(command!="") { command+=",";}
@@ -294,9 +268,6 @@ namespace OpenDentBusiness.Crud{
 			if(centralConnection.MySqlPassword != oldCentralConnection.MySqlPassword) {
 				return true;
 			}
-			if(centralConnection.ServiceURI != oldCentralConnection.ServiceURI) {
-				return true;
-			}
 			if(centralConnection.OdUser != oldCentralConnection.OdUser) {
 				return true;
 			}
@@ -307,9 +278,6 @@ namespace OpenDentBusiness.Crud{
 				return true;
 			}
 			if(centralConnection.ItemOrder != oldCentralConnection.ItemOrder) {
-				return true;
-			}
-			if(centralConnection.WebServiceIsEcw != oldCentralConnection.WebServiceIsEcw) {
 				return true;
 			}
 			if(centralConnection.ConnectionStatus != oldCentralConnection.ConnectionStatus) {

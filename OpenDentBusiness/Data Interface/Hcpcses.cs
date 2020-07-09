@@ -95,11 +95,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_HcpcsCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _HcpcsCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -108,35 +104,25 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Hcpcs hcpcs){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				hcpcs.HcpcsNum=Meth.GetLong(MethodBase.GetCurrentMethod(),hcpcs);
-				return hcpcs.HcpcsNum;
-			}
+			
 			return Crud.HcpcsCrud.Insert(hcpcs);
 		}
 
 		///<summary></summary>
 		public static void Update(Hcpcs hcpcs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),hcpcs);
-				return;
-			}
+			
 			Crud.HcpcsCrud.Update(hcpcs);
 		}
 
 		public static List<Hcpcs> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Hcpcs>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM hcpcs";
 			return Crud.HcpcsCrud.SelectMany(command);
 		}
 
 		///<summary>Returns a list of just the codes for use in update or insert logic.</summary>
 		public static List<string> GetAllCodes() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<string> retVal=new List<string>();
 			string command="SELECT HcpcsCode FROM hcpcs";
 			DataTable table=DataCore.GetTable(command);
@@ -148,27 +134,21 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the total count of HCPCS codes.  HCPCS codes cannot be hidden.</summary>
 		public static long GetCodeCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM hcpcs";
 			return PIn.Long(Db.GetCount(command));
 		}
 
 		///<summary>Returns the Hcpcs of the code passed in by looking in cache.  If code does not exist, returns null.</summary>
 		public static Hcpcs GetByCode(string hcpcsCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Hcpcs>(MethodBase.GetCurrentMethod(),hcpcsCode);
-			}
+			
 			string command="SELECT * FROM hcpcs WHERE HcpcsCode='"+POut.String(hcpcsCode)+"'";
 			return Crud.HcpcsCrud.SelectOne(command);
 		}
 
 		///<summary>Directly from db.</summary>
 		public static bool CodeExists(string hcpcsCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),hcpcsCode);
-			}
+			
 			string command="SELECT COUNT(*) FROM hcpcs WHERE HcpcsCode='"+POut.String(hcpcsCode)+"'";
 			string count=Db.GetCount(command);
 			if(count=="0") {
@@ -178,9 +158,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<Hcpcs> GetBySearchText(string searchText) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Hcpcs>>(MethodBase.GetCurrentMethod(),searchText);
-			}
+			
 			string[] searchTokens=searchText.Split(' ');
 			string command=@"SELECT * FROM hcpcs ";
 			for(int i=0;i<searchTokens.Length;i++) {
@@ -194,19 +172,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Hcpcs> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Hcpcs>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM hcpcs WHERE PatNum = "+POut.Long(patNum);
 			return Crud.HcpcsCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(long hcpcsNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),hcpcsNum);
-				return;
-			}
+			
 			string command= "DELETE FROM hcpcs WHERE HcpcsNum = "+POut.Long(hcpcsNum);
 			Db.NonQ(command);
 		}

@@ -17,10 +17,7 @@ namespace OpenDentBusiness {
 		///<summary>Inserts many into the FamAging table.  Uses the existing pri key since these are basically copies of the patient table data and should
 		///always be inserted using the patient.PatNum as the pri key value in order to join on the patient table for update later.</summary>
 		public static void InsertMany(List<FamAging> listFamAgings) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listFamAgings);
-				return;
-			}
+			
 			Crud.FamAgingCrud.InsertMany(listFamAgings,true);//true to use existing pri key so these will match the patient.PatNums for joining later
 		}
 
@@ -106,11 +103,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_FamAgingCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _FamAgingCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -121,45 +114,32 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static List<FamAging> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<FamAging>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM famaging WHERE PatNum = "+POut.Long(patNum);
 			return Crud.FamAgingCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one FamAging from the db.</summary>
 		public static FamAging GetOne(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<FamAging>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			return Crud.FamAgingCrud.SelectOne(patNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(FamAging famAging){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				famAging.PatNum=Meth.GetLong(MethodBase.GetCurrentMethod(),famAging);
-				return famAging.PatNum;
-			}
+			
 			return Crud.FamAgingCrud.Insert(famAging);
 		}
 
 		///<summary></summary>
 		public static void Update(FamAging famAging){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),famAging);
-				return;
-			}
+			
 			Crud.FamAgingCrud.Update(famAging);
 		}
 
 		///<summary></summary>
 		public static void Delete(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			Crud.FamAgingCrud.Delete(patNum);
 		}
 

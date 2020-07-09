@@ -32,18 +32,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(EtransMessageText etransMessageText) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				etransMessageText.EtransMessageTextNum=Meth.GetLong(MethodBase.GetCurrentMethod(),etransMessageText);
-				return etransMessageText.EtransMessageTextNum;
-			}
+			
 			return Crud.EtransMessageTextCrud.Insert(etransMessageText);
 		}
 
 		///<summary>If the message text is X12, then it always normalizes it to include carriage returns for better readability.</summary>
 		public static string GetMessageText(long etransMessageTextNum,bool isFormattingNeededX12=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),etransMessageTextNum,isFormattingNeededX12);
-			}
+			
 			if(etransMessageTextNum==0) {
 				return "";
 			}
@@ -72,9 +67,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns dictionary such that the key is an etransMessageTextNum and the value is the MessageText.
 		///If the message text is X12, then it always normalizes it to include carriage returns for better readability.</summary>
 		public static SerializableDictionary<long,string> GetMessageTexts(List<long> listEtransMessageTextNums,bool isFormattingNeededX12=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SerializableDictionary<long,string>>(MethodBase.GetCurrentMethod(),listEtransMessageTextNums,isFormattingNeededX12);
-			}
+			
 			SerializableDictionary<long,string> retVal=new SerializableDictionary<long, string>();
 			if(listEtransMessageTextNums==null || listEtransMessageTextNums.Count==0) {
 				return retVal;
@@ -95,9 +88,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns any EtransMessageText where the MessageText is identical to the given messageText.
 		///Otherwise if none returns null.</summary>
 		public static EtransMessageText GetMostRecentForType(EtransType type) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EtransMessageText>(MethodBase.GetCurrentMethod(),type);
-			}
+			
 			string command="SELECT etransmessagetext.* FROM etransmessagetext "
 			+"INNER JOIN etrans ON etrans.EtransMessageTextNum=etransmessagetext.EtransMessageTextNum "
 			+"WHERE Etype="+POut.Int((int)type)+" "
@@ -109,10 +100,7 @@ namespace OpenDentBusiness{
 		/*
 		///<summary></summary>
 		public static void Update(EtransMessageText EtransMessageText) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),EtransMessageText);
-				return;
-			}
+			
 			string command= "UPDATE EtransMessageText SET "
 				+"ClearingHouseNum = '"   +POut.PInt   (EtransMessageText.ClearingHouseNum)+"', "
 				+"Etype= '"               +POut.PInt   ((int)EtransMessageText.Etype)+"', "
@@ -125,10 +113,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(long etransMessageTextNum,long etransNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),etransMessageTextNum,etransNum);
-				return;
-			}
+			
 			if(etransMessageTextNum==0) {
 				return;
 			}

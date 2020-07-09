@@ -71,11 +71,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_insFilingCodeCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _insFilingCodeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -110,37 +106,26 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<InsFilingCode> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsFilingCode>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM insfilingcode ORDER BY ItemOrder";
 			return Crud.InsFilingCodeCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(InsFilingCode insFilingCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				insFilingCode.InsFilingCodeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),insFilingCode);
-				return insFilingCode.InsFilingCodeNum;
-			}
+			
 			return Crud.InsFilingCodeCrud.Insert(insFilingCode);
 		}
 
 		///<summary></summary>
 		public static void Update(InsFilingCode insFilingCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insFilingCode);
-				return;
-			}
+			
 			Crud.InsFilingCodeCrud.Update(insFilingCode);
 		}
 
 		///<summary>Surround with try/catch</summary>
 		public static void Delete(long insFilingCodeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insFilingCodeNum);
-				return;
-			}
+			
 			string command="SELECT COUNT(*) FROM insplan WHERE FilingCode="+POut.Long(insFilingCodeNum);
 			if(Db.GetScalar(command) != "0") {
 				throw new ApplicationException(Lans.g("InsFilingCode","Already in use by insplans."));

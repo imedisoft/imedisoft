@@ -70,45 +70,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_wikiListHeaderWidthCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _wikiListHeaderWidthCache.GetTableFromCache(doRefreshCache);
 		}
 
 		#endregion
 
-		/*///<summary>Returns header widths for list sorted in the same order as the columns appear in the DB. Can be more efficient than using cache.</summary>
-		public static List<WikiListHeaderWidth> GetForListNoCache(string listName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<WikiListHeaderWidth>>(MethodBase.GetCurrentMethod(),listName);
-			}
-			List<WikiListHeaderWidth> retVal = new List<WikiListHeaderWidth>();
-			List<WikiListHeaderWidth> tempList = new List<WikiListHeaderWidth>();
-			string command="DESCRIBE wikilist_"+POut.String(listName);
-			DataTable listDescription=Db.GetTable(command);
-			command="SELECT * FROM wikilistheaderwidth WHERE ListName='"+POut.String(listName)+"'";
-			tempList=Crud.WikiListHeaderWidthCrud.SelectMany(command);
-			for(int i=0;i<listDescription.Rows.Count;i++) {
-				for(int j=0;j<tempList.Count;j++) {
-					//Add WikiListHeaderWidth from tempList to retVal if it is the next row in listDescription.
-					if(listDescription.Rows[i][0].ToString()==tempList[j].ColName) {
-						retVal.Add(tempList[j]);
-						break;
-					}
-				}
-				//next description row.
-			}
-			return retVal;
-		}*/
-
 		///<summary>Returns header widths for list sorted in the same order as the columns appear in the DB.  Uses cache.</summary>
 		public static List<WikiListHeaderWidth> GetForList(string listName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<WikiListHeaderWidth>>(MethodBase.GetCurrentMethod(),listName);
-			}
 			List<WikiListHeaderWidth> retVal = new List<WikiListHeaderWidth>();
 			string command = "DESCRIBE wikilist_"+POut.String(listName);//TODO: Oracle compatible?
 			DataTable tableDescripts = Db.GetTable(command);
@@ -124,10 +92,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Also alters the db table for the list itself.  Throws exception if number of columns does not match.</summary>
 		public static void UpdateNamesAndWidths(string listName,List<WikiListHeaderWidth> columnDefs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listName,columnDefs);
-				return;
-			}
 			string command="DESCRIBE wikilist_"+POut.String(listName);
 			DataTable tableListDescription=Db.GetTable(command);
 			if(tableListDescription.Rows.Count!=columnDefs.Count) {
@@ -168,39 +132,23 @@ namespace OpenDentBusiness{
 
 		///<summary>No error checking. Only called from WikiLists.</summary>
 		public static void InsertNew(WikiListHeaderWidth newWidth) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),newWidth);
-				return;
-			}
 			Crud.WikiListHeaderWidthCrud.Insert(newWidth);
 			RefreshCache();
 		}
 
 		public static void InsertMany(List<WikiListHeaderWidth> listNewWidths) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listNewWidths);
-				return;
-			}
 			Crud.WikiListHeaderWidthCrud.InsertMany(listNewWidths);
 			RefreshCache();
 		}
 
 		///<summary>No error checking. Only called from WikiLists after the corresponding column has been dropped from its respective table.</summary>
 		public static void Delete(string listName,string colName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listName,colName);
-				return;
-			}
 			string command = "DELETE FROM wikilistheaderwidth WHERE ListName='"+POut.String(listName)+"' AND ColName='"+POut.String(colName)+"'";
 			Db.NonQ(command);
 			RefreshCache();
 		}
 
 		public static void DeleteForList(string listName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listName);
-				return;
-			}
 			string command = "DELETE FROM wikilistheaderwidth WHERE ListName='"+POut.String(listName)+"'";
 			Db.NonQ(command);
 			RefreshCache();

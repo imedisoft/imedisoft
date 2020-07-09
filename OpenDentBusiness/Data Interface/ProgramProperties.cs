@@ -75,11 +75,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_programPropertyCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _programPropertyCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -87,18 +83,13 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(ProgramProperty programProp){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),programProp);
-				return;
-			}
+			
 			Crud.ProgramPropertyCrud.Update(programProp);
 		}
 
 		///<summary></summary>
 		public static bool Update(ProgramProperty programProp,ProgramProperty programPropOld){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),programProp,programPropOld);
-			}
+			
 			return Crud.ProgramPropertyCrud.Update(programProp,programPropOld);
 		}
 
@@ -117,27 +108,19 @@ namespace OpenDentBusiness {
 		///so the ProgramProperties for PayConnect are duplicated for each clinic.  The properties duplicated are Username, Password, and PaymentType.
 		///There's also a 'Headquarters' or no clinic set of these props with ClinicNum 0, which is the set of props inserted with each new clinic.</summary>
 		public static long Insert(ProgramProperty programProp){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				programProp.ProgramPropertyNum=Meth.GetLong(MethodBase.GetCurrentMethod(),programProp);
-				return programProp.ProgramPropertyNum;
-			}
+			
 			return Crud.ProgramPropertyCrud.Insert(programProp);
 		}
 
 		///<summary></summary>
 		public static void InsertMany(List<ProgramProperty> listProgramProps) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listProgramProps);
-				return;
-			}
+			
 			Crud.ProgramPropertyCrud.InsertMany(listProgramProps);
 		}
 
 		///<summary>Copies rows for a given programNum for each clinic in listClinicNums.  Returns true if changes were made to the db.</summary>
 		public static bool InsertForClinic(long programNum,List<long> listClinicNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),programNum,listClinicNums);
-			}
+			
 			if(listClinicNums==null || listClinicNums.Count==0) {
 				return false;
 			}
@@ -244,9 +227,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Sets the program property for all clinics.  Returns the number of rows changed.</summary>
 		public static long SetProperty(long programNum,string desc,string propval) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),programNum,desc,propval);
-			}
+			
 			string command=$@"UPDATE programproperty SET PropertyValue='{POut.String(propval)}'
 				WHERE ProgramNum={POut.Long(programNum)}
 				AND PropertyDesc='{POut.String(desc)}'";
@@ -320,9 +301,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Used in FormUAppoint to get frequent and current data.</summary>
 		public static string GetValFromDb(long programNum,string desc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),programNum,desc);
-			}
+			
 			string command="SELECT PropertyValue FROM programproperty WHERE ProgramNum="+POut.Long(programNum)
 				+" AND PropertyDesc='"+POut.String(desc)+"'";
 			DataTable table=Db.GetTable(command);
@@ -364,9 +343,7 @@ namespace OpenDentBusiness {
 		///This sync uses the cache copy of program properties rather than a stale list because we want to make sure we never have duplicate properties
 		///and concurrency isn't really an issue.</summary>
 		public static bool Sync(List<ProgramProperty> listProgPropsNew,long programNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listProgPropsNew,programNum);
-			}
+			
 			//prevents delete of program properties for clinics added while editing program properties.
 			List<long> listClinicNums = listProgPropsNew.Select(x => x.ClinicNum).Distinct().ToList();
 			List<ProgramProperty> listProgPropsDb=ProgramProperties.GetWhere(x => x.ProgramNum==programNum 
@@ -380,10 +357,7 @@ namespace OpenDentBusiness {
 		///and concurrency isn't really an issue. This WILL delete program properties from the database if missing from listProgPropsNew for the specified
 		///clinics.  Only include clinics to which the current user is allowed access.</summary>
 		public static void Sync(List<ProgramProperty> listProgPropsNew,long programNum,List<long> listClinicNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listProgPropsNew,programNum,listClinicNums);
-				return;
-			}
+			
 			List<ProgramProperty> listProgPropsDb=GetWhere(x => x.ProgramNum==programNum && x.PropertyDesc!="" && listClinicNums.Contains(x.ClinicNum));
 			Crud.ProgramPropertyCrud.Sync(listProgPropsNew,listProgPropsDb);
 		}
@@ -452,10 +426,7 @@ namespace OpenDentBusiness {
 		///<summary>Deletes a given programproperty from the table based upon its programPropertyNum.
 		///Must have a property description in the GetDeletablePropertyDescriptions() list to delete</summary>
 		public static void Delete(ProgramProperty prop) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),prop);
-				return;
-			}
+			
 			if(!GetDeletablePropertyDescriptions().Contains(prop.PropertyDesc)) {
 				throw new Exception("Not allowed to delete the ProgramProperty with a description of: "+prop.PropertyDesc);
 			}

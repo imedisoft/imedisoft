@@ -62,11 +62,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_ehrSummaryCcdCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _ehrSummaryCcdCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -74,37 +70,27 @@ namespace OpenDentBusiness{
 		
 		///<summary></summary>
 		public static List<EhrSummaryCcd> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrSummaryCcd>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ehrsummaryccd WHERE PatNum = "+POut.Long(patNum)+" ORDER BY DateSummary";
 			return Crud.EhrSummaryCcdCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(EhrSummaryCcd ehrSummaryCcd){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				ehrSummaryCcd.EhrSummaryCcdNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrSummaryCcd);
-				return ehrSummaryCcd.EhrSummaryCcdNum;
-			}
+			
 			return Crud.EhrSummaryCcdCrud.Insert(ehrSummaryCcd);
 		}
 
 		///<summary>Returns null if no record is found.</summary>
 		public static EhrSummaryCcd GetOneForEmailAttach(long emailAttachNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EhrSummaryCcd>(MethodBase.GetCurrentMethod(),emailAttachNum);
-			}
+			
 			string command="SELECT * FROM ehrsummaryccd WHERE EmailAttachNum="+POut.Long(emailAttachNum)+" LIMIT 1";
 			return Crud.EhrSummaryCcdCrud.SelectOne(command);
 		}
 
 		///<summary></summary>
 		public static void Update(EhrSummaryCcd ehrSummaryCcd) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrSummaryCcd);
-				return;
-			}
+			
 			Crud.EhrSummaryCcdCrud.Update(ehrSummaryCcd);
 		}
 
@@ -114,18 +100,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one EhrSummaryCcd from the db.</summary>
 		public static EhrSummaryCcd GetOne(long ehrSummaryCcdNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EhrSummaryCcd>(MethodBase.GetCurrentMethod(),ehrSummaryCcdNum);
-			}
+			
 			return Crud.EhrSummaryCcdCrud.SelectOne(ehrSummaryCcdNum);
 		}
 
 		///<summary></summary>
 		public static void Delete(long ehrSummaryCcdNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrSummaryCcdNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ehrsummaryccd WHERE EhrSummaryCcdNum = "+POut.Long(ehrSummaryCcdNum);
 			Db.NonQ(command);
 		}

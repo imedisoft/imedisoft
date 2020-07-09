@@ -67,11 +67,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_InsFilingCodeSubtypeCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _InsFilingCodeSubtypeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -79,36 +75,25 @@ namespace OpenDentBusiness {
 
 		///<Summary>Gets one InsFilingCodeSubtype from the database.</Summary>
 		public static InsFilingCodeSubtype GetOne(long insFilingCodeSubtypeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<InsFilingCodeSubtype>(MethodBase.GetCurrentMethod(),insFilingCodeSubtypeNum);
-			}
+			
 			return Crud.InsFilingCodeSubtypeCrud.SelectOne(insFilingCodeSubtypeNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(InsFilingCodeSubtype insFilingCodeSubtype) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				insFilingCodeSubtype.InsFilingCodeSubtypeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),insFilingCodeSubtype);
-				return insFilingCodeSubtype.InsFilingCodeSubtypeNum;
-			}
+			
 			return Crud.InsFilingCodeSubtypeCrud.Insert(insFilingCodeSubtype);
 		}
 
 		///<summary></summary>
 		public static void Update(InsFilingCodeSubtype insFilingCodeSubtype) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insFilingCodeSubtype);
-				return;
-			}
+			
 			Crud.InsFilingCodeSubtypeCrud.Update(insFilingCodeSubtype);
 		}
 
 		///<summary>Surround with try/catch</summary>
 		public static void Delete(long insFilingCodeSubtypeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insFilingCodeSubtypeNum);
-				return;
-			}
+			
 			string command="SELECT COUNT(*) FROM insplan WHERE FilingCodeSubtype="+POut.Long(insFilingCodeSubtypeNum);
 			if(Db.GetScalar(command) != "0") {
 				throw new ApplicationException(Lans.g("InsFilingCodeSubtype","Already in use by insplans."));
@@ -122,10 +107,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void DeleteForInsFilingCode(long insFilingCodeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),insFilingCodeNum);
-				return;
-			}
+			
 			string command="DELETE FROM insfilingcodesubtype "+
 				"WHERE InsFilingCodeNum="+POut.Long(insFilingCodeNum);
 			Db.NonQ(command);

@@ -97,11 +97,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_EhrTriggerCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _EhrTriggerCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -109,9 +105,7 @@ namespace OpenDentBusiness{
 		*/
 
 		public static List<EhrTrigger> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrTrigger>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM ehrtrigger";
 			return Crud.EhrTriggerCrud.SelectMany(command);
 		}
@@ -120,89 +114,67 @@ namespace OpenDentBusiness{
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(DiseaseDef diseaseDef,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),diseaseDef,patCur);
-			}
+			
 			return TriggerMatch((object)diseaseDef,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(ICD9 icd9,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),icd9,patCur);
-			}
+			
 			return TriggerMatch((object)icd9,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(Icd10 icd10,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),icd10,patCur);
-			}
+			
 			return TriggerMatch((object)icd10,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(Snomed snomed,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),snomed,patCur);
-			}
+			
 			return TriggerMatch((object)snomed,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(Medication medication,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),medication,patCur);
-			}
+			
 			return TriggerMatch((object)medication,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(RxNorm rxNorm,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),rxNorm,patCur);
-			}
+			
 			return TriggerMatch((object)rxNorm,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(Cvx cvx,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),cvx,patCur);
-			}
+			
 			return TriggerMatch((object)cvx,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(AllergyDef allergyDef,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),allergyDef,patCur);
-			}
+			
 			return TriggerMatch((object)allergyDef,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(EhrLabResult ehrLabResult,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),ehrLabResult,patCur);
-			}
+			
 			return TriggerMatch((object)ehrLabResult,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(Patient patientTrigger,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),patientTrigger,patCur);
-			}
+			
 			return TriggerMatch((object)patientTrigger,patCur);
 		}
 
 		///<summary>This is the first step of automation, this checks to see if the passed in object matches any related trigger conditions.</summary>
 		public static List<CDSIntervention> TriggerMatch(Vitalsign vitalsign,Patient patCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CDSIntervention>>(MethodBase.GetCurrentMethod(),vitalsign,patCur);
-			}
+			
 			return TriggerMatch((object)vitalsign,patCur);
 		}
 
@@ -1232,28 +1204,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(EhrTrigger ehrTrigger) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				ehrTrigger.EhrTriggerNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrTrigger);
-				return ehrTrigger.EhrTriggerNum;
-			}
+			
 			return Crud.EhrTriggerCrud.Insert(ehrTrigger);
 		}
 
 		///<summary></summary>
 		public static void Update(EhrTrigger ehrTrigger) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrTrigger);
-				return;
-			}
+			
 			Crud.EhrTriggerCrud.Update(ehrTrigger);
 		}
 
 		///<summary></summary>
 		public static void Delete(long ehrTriggerNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrTriggerNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ehrtrigger WHERE EhrTriggerNum = "+POut.Long(ehrTriggerNum);
 			Db.NonQ(command);
 		}
@@ -1263,36 +1226,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<AutoTrigger> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<AutoTrigger>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM autotrigger WHERE PatNum = "+POut.Long(patNum);
 			return Crud.AutoTriggerCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one AutoTrigger from the db.</summary>
 		public static AutoTrigger GetOne(long automationTriggerNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<AutoTrigger>(MethodBase.GetCurrentMethod(),automationTriggerNum);
-			}
+			
 			return Crud.AutoTriggerCrud.SelectOne(automationTriggerNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(AutoTrigger autoTrigger){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				autoTrigger.AutomationTriggerNum=Meth.GetLong(MethodBase.GetCurrentMethod(),autoTrigger);
-				return autoTrigger.AutomationTriggerNum;
-			}
+			
 			return Crud.AutoTriggerCrud.Insert(autoTrigger);
 		}
 
 		///<summary></summary>
 		public static void Update(AutoTrigger autoTrigger){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),autoTrigger);
-				return;
-			}
+			
 			Crud.AutoTriggerCrud.Update(autoTrigger);
 		}
 		*/

@@ -6,9 +6,6 @@ using System.Reflection;
 namespace OpenDentBusiness {
 	public class RpDentalSealantMeasure {
 		public static DataTable GetDentalSealantMeasureTable(string year) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),year);
-			}
 			string command=@"SET @ReportingDateStart = CONCAT("+year+@",'-','01','-','01'), @ReportingDateEnd = CONCAT("+year+@",'-','12','-','31');
 				SET @PatientDOBStart = @ReportingDateStart - INTERVAL 9 YEAR, @PatientDOBEnd = @ReportingDateEnd - INTERVAL 6 YEAR;
 				SELECT provider.LName AS 'Provider', 

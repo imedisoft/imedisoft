@@ -11,18 +11,14 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets all orthoproclinks from DB.</summary>
 		public static List<OrthoProcLink> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoProcLink>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT orthoproclink.* FROM orthoproclink";
 			return Crud.OrthoProcLinkCrud.SelectMany(command);
 		}
 
 		///<summary>Get a list of all OrthoProcLinks for an OrthoCase.</summary>
 		public static List<OrthoProcLink> GetManyByOrthoCase(long orthoCaseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoProcLink>>(MethodBase.GetCurrentMethod(),orthoCaseNum);
-			}
+			
 			string command="SELECT * FROM orthoproclink WHERE orthoproclink.OrthoCaseNum = "+POut.Long(orthoCaseNum);
 			return Crud.OrthoProcLinkCrud.SelectMany(command);
 		}
@@ -30,9 +26,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets one OrthoProcLink of the specified OrthoProcType for an OrthoCase. This should only be used to get procedures of the 
 		///Banding or Debond types as only one of each can be linked to an Orthocase.</summary>
 		public static OrthoProcLink GetByType(long orthoCaseNum,OrthoProcType linkType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<OrthoProcLink>(MethodBase.GetCurrentMethod(),orthoCaseNum,linkType);
-			}
+			
 			string command=$@"SELECT * FROM orthoproclink WHERE orthoproclink.OrthoCaseNum={POut.Long(orthoCaseNum)}
 				AND orthoproclink.ProcLinkType={POut.Int((int)linkType)}";
 			return Crud.OrthoProcLinkCrud.SelectOne(command);
@@ -43,9 +37,7 @@ namespace OpenDentBusiness{
 			if(listOrthoCaseNums.Count<=0) {
 				return new List<OrthoProcLink>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoProcLink>>(MethodBase.GetCurrentMethod(),listOrthoCaseNums);
-			}
+			
 			string command=$"SELECT * FROM orthoproclink WHERE orthoproclink.OrthoCaseNum IN({string.Join(",",listOrthoCaseNums)})";
 			return Crud.OrthoProcLinkCrud.SelectMany(command);
 		}
@@ -55,9 +47,7 @@ namespace OpenDentBusiness{
 			if(listProcNums.Count<=0) {
 				return new List<OrthoProcLink>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoProcLink>>(MethodBase.GetCurrentMethod(),listProcNums);
-			}
+			
 			string command=$@"SELECT * FROM orthoproclink
 				WHERE orthoproclink.ProcNum IN({string.Join(",",listProcNums)})";
 			return Crud.OrthoProcLinkCrud.SelectMany(command);
@@ -65,18 +55,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a single OrthoProcLink for the procNum. There should only be one in db per procedure.</summary>
 		public static OrthoProcLink GetByProcNum(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<OrthoProcLink>(MethodBase.GetCurrentMethod(),procNum);
-			}
+			
 			string command="SELECT * FROM orthoproclink WHERE ProcNum="+POut.Long(procNum);
 			return Crud.OrthoProcLinkCrud.SelectOne(command);
 		}
 
 		///<summary>Returns a list of all ProcLinks of the visit type associated to an OrthoCase.</summary>
 		public static List<OrthoProcLink> GetVisitLinksForOrthoCase(long orthoCaseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoProcLink>>(MethodBase.GetCurrentMethod(),orthoCaseNum);
-			}
+			
 			string command=$@"SELECT * FROM orthoproclink WHERE orthoproclink.OrthoCaseNum={POut.Long(orthoCaseNum)}
 			AND orthoproclink.ProcLinkType={POut.Int((int)OrthoProcType.Visit)}";
 			return Crud.OrthoProcLinkCrud.SelectMany(command);
@@ -87,10 +73,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary>Inserts an OrthoProcLink into the database. Returns the OrthoProcLinkNum.</summary>
 		public static long Insert(OrthoProcLink orthoProcLink) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				orthoProcLink.OrthoProcLinkNum=Meth.GetLong(MethodBase.GetCurrentMethod(),orthoProcLink);
-				return orthoProcLink.OrthoProcLinkNum;
-			}
+			
 			return Crud.OrthoProcLinkCrud.Insert(orthoProcLink);
 		}
 
@@ -155,10 +138,7 @@ namespace OpenDentBusiness{
 		#region Update
 		/// <summary>Update only data that is different in newOrthoProcLink</summary>
 		public static void Update(OrthoProcLink newOrthoProcLink,OrthoProcLink oldOrthoProcLink) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),newOrthoProcLink,oldOrthoProcLink);
-				return;
-			}
+			
 			Crud.OrthoProcLinkCrud.Update(newOrthoProcLink,oldOrthoProcLink);
 		}
 		#endregion Update
@@ -166,10 +146,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary>Delete an OrthoProcLink from the database.</summary>
 		public static void Delete(long orthoProcLinkNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),orthoProcLinkNum);
-				return;
-			}
+			
 			Crud.OrthoProcLinkCrud.Delete(orthoProcLinkNum);
 		}
 
@@ -178,10 +155,7 @@ namespace OpenDentBusiness{
 			if(listOrthoProcLinkNums.Count<=0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listOrthoProcLinkNums);
-				return;
-			}
+			
 			string command=$"DELETE FROM orthoproclink WHERE OrthoProcLinkNum IN({string.Join(",",listOrthoProcLinkNums)})";
 			Db.NonQ(command);
 		}
@@ -239,9 +213,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns true if the procNum is contained in at least one OrthoProcLink.</summary>
 		public static bool IsProcLinked(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),procNum);
-			}
+			
 			string command="SELECT * FROM orthoproclink WHERE orthoproclink.ProcNum="+POut.Long(procNum);
 			return Crud.OrthoProcLinkCrud.SelectMany(command).Count>0;
 		}
@@ -251,17 +223,12 @@ namespace OpenDentBusiness{
 		Only pull out the methods below as you need them.  Otherwise, leave them commented out.
 		///<summary>Gets one OrthoProcLink from the db.</summary>
 		public static OrthoProcLink GetOne(long orthoProcLinkNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<OrthoProcLink>(MethodBase.GetCurrentMethod(),orthoProcLinkNum);
-			}
+			
 			return Crud.OrthoProcLinkCrud.SelectOne(orthoProcLinkNum);
 		}
 		///<summary></summary>
 		public static void Update(OrthoProcLink orthoProcLink){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),orthoProcLink);
-				return;
-			}
+			
 			Crud.OrthoProcLinkCrud.Update(orthoProcLink);
 		}
 		*/

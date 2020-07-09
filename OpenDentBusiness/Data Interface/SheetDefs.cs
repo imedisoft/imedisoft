@@ -113,11 +113,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_sheetDefCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _sheetDefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -135,10 +130,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates the SheetDef only.  Does not included attached fields.</summary>
 		public static long Update(SheetDef sheetDef){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				sheetDef.SheetDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sheetDef);
-				return sheetDef.SheetDefNum;
-			}
+			
 			Crud.SheetDefCrud.Update(sheetDef);
 			return sheetDef.SheetDefNum;
 		}
@@ -147,10 +139,7 @@ namespace OpenDentBusiness{
 		///<param name="isOldSheetDuplicate">True if the sheetDef being created is a copy of a custom sheet that has a DateTCreated of 0001-01-01.
 		///DateTCreated determines whether or not text fields will be shifted up 5 pixels when PDF is created from sheet to fix bug job B16020.</param>
 		public static long InsertOrUpdate(SheetDef sheetDef,bool isOldSheetDuplicate=false){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				sheetDef.SheetDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sheetDef,isOldSheetDuplicate);
-				return sheetDef.SheetDefNum;
-			}
+			
 			if(sheetDef.IsNew){
 				if(!isOldSheetDuplicate) {
 					sheetDef.DateTCreated=MiscData.GetNowDateTime();
@@ -169,10 +158,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void DeleteObject(long sheetDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sheetDefNum);
-				return;
-			}
+			
 			//validate that not already in use by a refferral.
 			string command="SELECT LName,FName FROM referral WHERE Slip="+POut.Long(sheetDefNum);
 			DataTable table=Db.GetTable(command);

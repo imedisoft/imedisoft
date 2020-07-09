@@ -13,9 +13,7 @@ namespace OpenDentBusiness{
 	
 		///<summary>Gets all toothinitial entries for the current patient.</summary>
 		public static List<ToothInitial> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ToothInitial>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command=
 				"SELECT * FROM toothinitial"
 				+" WHERE PatNum = "+POut.Long(patNum);
@@ -25,28 +23,18 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ToothInitial init) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				init.ToothInitialNum=Meth.GetLong(MethodBase.GetCurrentMethod(),init);
-				return init.ToothInitialNum;
-			}
 			return Crud.ToothInitialCrud.Insert(init);
 		}
 
 		///<summary></summary>
 		public static void Update(ToothInitial init) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),init);
-				return;
-			}
+			
 			Crud.ToothInitialCrud.Update(init);
 		}
 
 		///<summary></summary>
 		public static void Delete(ToothInitial init) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),init);
-				return;
-			}
+			
 			string command= "DELETE FROM toothinitial WHERE ToothInitialNum="+POut.Long(init.ToothInitialNum);
 			Db.NonQ(command);
 		}
@@ -109,10 +97,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Sets teeth not missing, or sets to perm, or clears movement values.</summary>
 		public static void ClearValue(long patNum,string tooth_id,ToothInitialType initialType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum,tooth_id,initialType);
-				return;
-			}
+			
 			string command="DELETE FROM toothinitial WHERE PatNum="+POut.Long(patNum)
 				+" AND ToothNum='"+POut.String(tooth_id)
 				+"' AND InitialType="+POut.Long((int)initialType);
@@ -121,10 +106,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Sets teeth not missing, or sets to perm, or clears movement values.  Clears all the values of one type for all teeth in the mouth.</summary>
 		public static void ClearAllValuesForType(long patNum,ToothInitialType initialType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum,initialType);
-				return;
-			}
+			
 			string command="DELETE FROM toothinitial WHERE PatNum="+POut.Long(patNum)
 				+" AND InitialType="+POut.Long((int)initialType);
 			Db.NonQ(command);

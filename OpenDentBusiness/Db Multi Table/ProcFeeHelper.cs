@@ -49,10 +49,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns the data needed for ProcFeeHelper. Does not get ListFees.</summary>
 		public static ProcFeeHelper GetData(long patNum,ProcFeeHelper procFeeHelper) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				//Not passing procFeeHelper because the null lists will get turned into empty lists which messes things up.
-				return Meth.GetObject<ProcFeeHelper>(MethodBase.GetCurrentMethod(),patNum,null);
-			}
 			procFeeHelper=procFeeHelper??new ProcFeeHelper(patNum);
 			procFeeHelper.Pat=procFeeHelper.Pat??Patients.GetPat(patNum);
 			procFeeHelper.ListPatPlans=procFeeHelper.ListPatPlans??PatPlans.GetPatPlansForPat(patNum);

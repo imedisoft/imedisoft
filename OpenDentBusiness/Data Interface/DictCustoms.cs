@@ -70,11 +70,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_dictCustomCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _dictCustomCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -82,28 +78,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(DictCustom dictCustom){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				dictCustom.DictCustomNum=Meth.GetLong(MethodBase.GetCurrentMethod(),dictCustom);
-				return dictCustom.DictCustomNum;
-			}
+			
 			return Crud.DictCustomCrud.Insert(dictCustom);
 		}
 
 		///<summary></summary>
 		public static void Update(DictCustom dictCustom){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dictCustom);
-				return;
-			}
+			
 			Crud.DictCustomCrud.Update(dictCustom);
 		}
 
 		///<summary></summary>
 		public static void Delete(long dictCustomNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dictCustomNum);
-				return;
-			}
+			
 			Crud.DictCustomCrud.Delete(dictCustomNum);
 		}
 
@@ -113,18 +100,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<DictCustom> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DictCustom>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM dictcustom WHERE PatNum = "+POut.Long(patNum);
 			return Crud.DictCustomCrud.SelectMany(command);
 		}
 		
 		///<summary>Gets one DictCustom from the db.</summary>
 		public static DictCustom GetOne(long dictCustomNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<DictCustom>(MethodBase.GetCurrentMethod(),dictCustomNum);
-			}
+			
 			return Crud.DictCustomCrud.SelectOne(dictCustomNum);
 		}
 		 

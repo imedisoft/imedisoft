@@ -82,11 +82,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_diseaseDefCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _diseaseDefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -113,28 +109,20 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(DiseaseDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			Crud.DiseaseDefCrud.Update(def);
 		}
 
 		///<summary></summary>
 		public static long Insert(DiseaseDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				def.DiseaseDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),def);
-				return def.DiseaseDefNum;
-			}
+			
 			long retVal=Crud.DiseaseDefCrud.Insert(def);
 			return retVal;
 		}
 
 		///<summary>Returns a list of valid diseasedefnums to delete from the passed in list.</summary>
 		public static List<long> ValidateDeleteList(List<long> listDiseaseDefNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),listDiseaseDefNums);
-			}
+			
 			List<long> listDiseaseDefNumsNotDeletable=new List<long>();
 			if(listDiseaseDefNums==null || listDiseaseDefNums.Count < 1) {
 				return listDiseaseDefNumsNotDeletable;
@@ -245,9 +233,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<long> GetChangedSinceDiseaseDefNums(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT DiseaseDefNum FROM diseasedef WHERE DateTStamp > "+POut.DateT(changedSince);
 			DataTable dt=Db.GetTable(command);
 			List<long> diseaseDefNums = new List<long>(dt.Rows.Count);
@@ -259,9 +245,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Used along with GetChangedSinceDiseaseDefNums</summary>
 		public static List<DiseaseDef> GetMultDiseaseDefs(List<long> diseaseDefNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DiseaseDef>>(MethodBase.GetCurrentMethod(),diseaseDefNums);
-			}
+			
 			string strDiseaseDefNums="";
 			DataTable table;
 			if(diseaseDefNums.Count>0) {
@@ -302,18 +286,13 @@ namespace OpenDentBusiness {
 
 		///<summary>Sync pattern, must sync entire table. Probably only to be used in the master problem list window.</summary>
 		public static void Sync(List<DiseaseDef> listDefs,List<DiseaseDef> listDefsOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listDefs,listDefsOld);
-				return;
-			}
+			
 			Crud.DiseaseDefCrud.Sync(listDefs,listDefsOld);
 		}
 
 		///<summary>Get all diseasedefs that have a pregnancy code that applies to the three CQM measures with pregnancy as an exclusion condition.</summary>
 		public static List<DiseaseDef> GetAllPregDiseaseDefs() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DiseaseDef>>(MethodBase.GetCurrentMethod());
-			}
+			
 			Dictionary<string,string> listAllPregCodesForCQMs=EhrCodes.GetCodesExistingInAllSets(new List<string> { "2.16.840.1.113883.3.600.1.1623","2.16.840.1.113883.3.526.3.378" });
 			List<DiseaseDef> retval=new List<DiseaseDef>();
 			List<DiseaseDef> listDiseaseDefs=GetDeepCopy();

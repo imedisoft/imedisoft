@@ -40,10 +40,6 @@ namespace OpenDentBusiness{
 		///<summary>Returns true if there are any rows that have a Note with char length greater than 65,535</summary>
 		public static bool HasAnyLongNotes()
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetBool(MethodBase.GetCurrentMethod());
-			}
 			string command = "SELECT COUNT(*) FROM commlog WHERE CHAR_LENGTH(commlog.Note)>65535";
 			return (Db.GetCount(command) != "0");
 		}
@@ -52,10 +48,6 @@ namespace OpenDentBusiness{
 		///Returns DateTime.MinValue if no entry found.</summary>
 		public static DateTime GetDateTimeOfLastEntryForPat(long patNum)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetObject<DateTime>(MethodBase.GetCurrentMethod(), patNum);
-			}
 			//no need for Oracle compatibility
 			string command = "SELECT CommDateTime "
 				+ "FROM commlog "
@@ -72,10 +64,6 @@ namespace OpenDentBusiness{
 		///<summary>Gets all items for the current patient ordered by date.</summary>
 		public static List<Commlog> Refresh(long patNum)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetObject<List<Commlog>>(MethodBase.GetCurrentMethod(), patNum);
-			}
 			string command =
 				"SELECT * FROM commlog"
 				+ " WHERE PatNum = '" + patNum + "'"
@@ -86,20 +74,12 @@ namespace OpenDentBusiness{
 		///<summary>Gets one commlog item from database.</summary>
 		public static Commlog GetOne(long commlogNum)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetObject<Commlog>(MethodBase.GetCurrentMethod(), commlogNum);
-			}
 			return Crud.CommlogCrud.SelectOne(commlogNum);
 		}
 
 		///<summary>If a commlog exists with today's date for the current user and has no stop time, then that commlog is returned so it can be reopened.  Otherwise, return null.</summary>
 		public static Commlog GetIncompleteEntry(long userNum, long patNum)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetObject<Commlog>(MethodBase.GetCurrentMethod(), userNum, patNum);
-			}
 			//no need for Oracle compatibility
 			string command = "SELECT * FROM commlog WHERE DATE(CommDateTime)=CURDATE() "
 				+ "AND UserNum=" + POut.Long(userNum) + " "
@@ -113,43 +93,24 @@ namespace OpenDentBusiness{
 		///<summary></summary>
 		public static long Insert(Commlog comm)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				comm.CommlogNum = Meth.GetLong(MethodBase.GetCurrentMethod(), comm);
-				return comm.CommlogNum;
-			}
 			return Crud.CommlogCrud.Insert(comm);
 		}
 
 		///<summary></summary>
 		public static void Update(Commlog comm)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				Meth.GetVoid(MethodBase.GetCurrentMethod(), comm);
-				return;
-			}
 			Crud.CommlogCrud.Update(comm);
 		}
 
 		///<summary>Updates only the changed fields (if any).</summary>
 		public static bool Update(Commlog comm, Commlog oldCommlog)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetBool(MethodBase.GetCurrentMethod(), comm, oldCommlog);
-			}
 			return Crud.CommlogCrud.Update(comm, oldCommlog);
 		}
 
 		///<summary></summary>
 		public static void Delete(Commlog comm)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				Meth.GetVoid(MethodBase.GetCurrentMethod(), comm);
-				return;
-			}
 			string command = "SELECT COUNT(*) FROM smsfrommobile WHERE CommlogNum=" + POut.Long(comm.CommlogNum);
 			if (Db.GetCount(command) != "0")
 			{
@@ -171,11 +132,7 @@ namespace OpenDentBusiness{
 		///If the commSource is a 3rd party, set it to ProgramLink and make an overload that accepts the ProgramNum.</summary>
 		public static Commlog InsertForRecallOrReactivation(long patNum, CommItemMode _mode, int numberOfReminders, long defNumNewStatus, CommItemSource commSource, long userNum, DateTime dateTimeNow, CommItemTypeAuto type = CommItemTypeAuto.RECALL)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetObject<Commlog>(MethodBase.GetCurrentMethod(), patNum, _mode, numberOfReminders, defNumNewStatus, commSource, userNum,
-					dateTimeNow, type);
-			}
+
 			long commType = Commlogs.GetTypeAuto(type);
 			string commTypeStr = type == CommItemTypeAuto.RECALL ? "Recall" : "Reactivation";
 			Commlog com = GetTodayCommlog(patNum, _mode, type);
@@ -229,10 +186,6 @@ namespace OpenDentBusiness{
 		///<summary>Gets an existing Commlog sent today for patNum, _mode, and type.  Returns null if not found or no defs are setup for type.</summary>
 		public static Commlog GetTodayCommlog(long patNum, CommItemMode _mode, CommItemTypeAuto type)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetObject<Commlog>(MethodBase.GetCurrentMethod(), patNum, _mode, type);
-			}
 			long commType = Commlogs.GetTypeAuto(type);
 			string command;
 			string datesql = "CURDATE()";
@@ -269,10 +222,6 @@ namespace OpenDentBusiness{
 
 		public static int GetRecallUndoCount(DateTime date)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetInt(MethodBase.GetCurrentMethod(), date);
-			}
 			string command = "SELECT COUNT(*) FROM commlog "
 				+ "WHERE " + DbHelper.DtimeToDate("CommDateTime") + " = " + POut.Date(date) + " "
 				+ "AND (SELECT ItemValue FROM definition WHERE definition.DefNum=commlog.CommType) ='" + CommItemTypeAuto.RECALL.ToString() + "'";
@@ -281,11 +230,6 @@ namespace OpenDentBusiness{
 
 		public static void RecallUndo(DateTime date)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				Meth.GetVoid(MethodBase.GetCurrentMethod(), date);
-				return;
-			}
 			string command = "DELETE FROM commlog "
 				+ "WHERE " + DbHelper.DtimeToDate("CommDateTime") + " = " + POut.Date(date) + " "
 				+ "AND (SELECT ItemValue FROM definition WHERE definition.DefNum=commlog.CommType) ='" + CommItemTypeAuto.RECALL.ToString() + "'";
@@ -317,10 +261,6 @@ namespace OpenDentBusiness{
 		///<summary>Gets all commlogs for family that contain a DateTimeEnd entry.  Used internally to keep track of how long calls lasted.</summary>
 		public static List<Commlog> GetTimedCommlogsForPat(long guarantor)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetObject<List<Commlog>>(MethodBase.GetCurrentMethod(), guarantor);
-			}
 			string command = "SELECT commlog.* FROM commlog "
 				+ "INNER JOIN patient ON commlog.PatNum=patient.PatNum AND patient.Guarantor=" + POut.Long(guarantor) + " "
 				+ "WHERE " + DbHelper.Year("commlog.DateTimeEnd") + ">1";

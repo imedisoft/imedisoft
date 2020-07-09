@@ -34,9 +34,7 @@ namespace OpenDentBusiness{
 		///The PatientNote returned always has the guarantor's FamFinancial value which should always override all family member's value.</summary>
 		public static PatientNote Refresh(long patNum,long guarantor) {
 			//RemotingRole check is needed here even though this method does not run methods, it does however call multiple private methods.
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<PatientNote>(MethodBase.GetCurrentMethod(),patNum,guarantor);
-			}
+			
 			PatientNote patientNote=GetOne(patNum);
 			if(patientNote==null) {
 				InsertRow(patNum);
@@ -69,10 +67,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(PatientNote Cur,long guarantor) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur,guarantor);
-				return;
-			}
+			
 			Crud.PatientNoteCrud.Update(Cur);//FamFinancial gets skipped
 			string command = "UPDATE patientnote SET "
 				+ "FamFinancial = '"+POut.String(Cur.FamFinancial)+"'"

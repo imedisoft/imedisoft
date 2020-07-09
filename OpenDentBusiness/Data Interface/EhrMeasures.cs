@@ -34,9 +34,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Select All EHRMeasures from combination of db, static data, and complex calculations.</summary>
 		public static List<EhrMeasure> SelectAll(DateTime dateStart, DateTime dateEnd,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrMeasure>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,provNum);
-			}
 			string command="SELECT * FROM ehrmeasure "
 			+"WHERE MeasureType IN ("
 			+POut.Int((int)EhrMeasureType.ProblemList)+","
@@ -92,9 +89,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Select All EHRMeasures from combination of db, static data, and complex calculations.</summary>
 		public static List<EhrMeasure> SelectAllMu2(DateTime dateStart,DateTime dateEnd,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrMeasure>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,provNum);
-			}
 			List<EhrMeasure> retVal=GetMU2List();
 			retVal.RemoveAll(x => 
 				x.MeasureType.In(
@@ -134,9 +128,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Select All EHRMeasures from combination of db, static data, and complex calculations.</summary>
 		public static List<EhrMeasure> SelectAllMu2Mod(DateTime dateStart,DateTime dateEnd,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrMeasure>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,provNum);
-			}
 			List<EhrMeasure> retVal=GetMU2ModList();
 			retVal.RemoveAll(x => 
 				x.MeasureType.In(
@@ -178,10 +169,6 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(EhrMeasure ehrMeasure){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrMeasure);
-				return;
-			}
 			Crud.EhrMeasureCrud.Update(ehrMeasure);
 		}
 
@@ -345,9 +332,6 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetTable(EhrMeasureType mtype,DateTime dateStart,DateTime dateEnd,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),mtype,dateStart,dateEnd,provNum);
-			}
 			string command="";
 			DataTable tableRaw=new DataTable();
 			Provider provCur=Providers.GetProv(provNum);
@@ -1800,9 +1784,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Only called from FormEHR to load the patient specific MU data and tell the user what action to take to get closer to meeting MU.</summary>
 		public static List<EhrMu> GetMu(Patient pat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrMu>>(MethodBase.GetCurrentMethod(),pat);
-			}
 			List<EhrMu> list=new List<EhrMu>();
 			//add one of each type
 			EhrMu mu;
@@ -2851,9 +2832,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetTableMu2(EhrMeasureType mtype,DateTime dateStart,DateTime dateEnd,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),mtype,dateStart,dateEnd,provNum);
-			}
+			
 			string command="";
 			DataTable tableRaw=new DataTable();
 			Provider provCur=Providers.GetProv(provNum);
@@ -4306,9 +4285,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Only called from FormEHR to load the patient specific MU data and tell the user what action to take to get closer to meeting MU.</summary>
 		public static List<EhrMu> GetMu2(Patient pat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrMu>>(MethodBase.GetCurrentMethod(),pat);
-			}
+			
 			List<EhrMu> list=new List<EhrMu>();
 			//add one of each type
 			EhrMu mu;
@@ -5189,9 +5166,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Only called from FormEHR to load the patient specific MU data and tell the user what action to take to get closer to meeting MU.</summary>
 		public static List<EhrMu> GetMu2Mod(Patient pat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrMu>>(MethodBase.GetCurrentMethod(),pat);
-			}
+			
 			List<EhrMu> list=new List<EhrMu>();
 			//add one of each type
 			EhrMu mu;
@@ -5861,9 +5836,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetTableMu2Mod(EhrMeasureType mtype,DateTime dateStart,DateTime dateEnd,long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),mtype,dateStart,dateEnd,provNum);
-			}
+			
 			string command="";
 			DataTable tableRaw=new DataTable();
 			Provider provCur=Providers.GetProv(provNum);

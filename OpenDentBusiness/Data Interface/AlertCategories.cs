@@ -46,11 +46,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_alertCategoryCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _alertCategoryCache.GetTableFromCache(doRefreshCache);
 		}
 		#endregion Cache Pattern
@@ -58,9 +54,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Gets one AlertCategory from the db.</summary>
 		public static AlertCategory GetOne(long alertCategoryNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<AlertCategory>(MethodBase.GetCurrentMethod(),alertCategoryNum);
-			}
+			
 			return Crud.AlertCategoryCrud.SelectOne(alertCategoryNum);
 		}
 		#endregion
@@ -68,30 +62,21 @@ namespace OpenDentBusiness{
 			#region Insert
 		///<summary></summary>
 		public static long Insert(AlertCategory alertCategory){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				alertCategory.AlertCategoryNum=Meth.GetLong(MethodBase.GetCurrentMethod(),alertCategory);
-				return alertCategory.AlertCategoryNum;
-			}
+			
 			return Crud.AlertCategoryCrud.Insert(alertCategory);
 		}
 			#endregion
 			#region Update
 		///<summary></summary>
 		public static void Update(AlertCategory alertCategory){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),alertCategory);
-				return;
-			}
+			
 			Crud.AlertCategoryCrud.Update(alertCategory);
 		}
 			#endregion
 			#region Delete
 		///<summary></summary>
 		public static void Delete(long alertCategoryNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),alertCategoryNum);
-				return;
-			}
+			
 			Crud.AlertCategoryCrud.Delete(alertCategoryNum);
 		}
 			#endregion
@@ -101,9 +86,7 @@ namespace OpenDentBusiness{
 		///<summary>Inserts, updates, or deletes db rows to match listNew.  No need to pass in userNum, it's set before remoting role check and passed to
 		///the server if necessary.  Doesn't create ApptComm items, but will delete them.  If you use Sync, you must create new AlertCategories items.</summary>
 		public static bool Sync(List<AlertCategory> listNew,List<AlertCategory> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.AlertCategoryCrud.Sync(listNew,listOld);
 		}
 

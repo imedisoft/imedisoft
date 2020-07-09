@@ -76,29 +76,19 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_electIDCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _electIDCache.GetTableFromCache(doRefreshCache);
 		}
 
 		#endregion
 
 		public static long Insert(ElectID electID) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				electID.ElectIDNum=Meth.GetLong(MethodBase.GetCurrentMethod(),electID);
-				return electID.ElectIDNum;
-			}
+			
 			return Crud.ElectIDCrud.Insert(electID);
 		}
 
 		public static void Update(ElectID electID) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),electID);
-				return;
-			}
+			
 			Crud.ElectIDCrud.Update(electID);
 		}
 

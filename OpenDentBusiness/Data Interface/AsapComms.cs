@@ -17,9 +17,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one AsapComm from the db.</summary>
 		public static AsapComm GetOne(long asapCommNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<AsapComm>(MethodBase.GetCurrentMethod(),asapCommNum);
-			}
+			
 			return Crud.AsapCommCrud.SelectOne(asapCommNum);
 		}
 
@@ -36,9 +34,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of all AsapComms for the given patients.</summary>
 		public static List<AsapComm> GetForPats(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<AsapComm>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			return GetMany(new List<SQLWhere> {
 				SQLWhere.CreateIn(nameof(AsapComm.PatNum),listPatNums)
 			});
@@ -46,9 +42,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of all AsapComms that have not been attempted to send.</summary>
 		public static List<AsapComm> GetReadyToSend(DateTime dtNow) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<AsapComm>>(MethodBase.GetCurrentMethod(),dtNow);
-			}
+			
 			//Using a UNION in order to use the indexes on SmsSendStatus and EmailSendStatus.
 			string command=@"SELECT * 
 				FROM asapcomm 
@@ -64,9 +58,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets a list of AsapComms (along with a few more fields) for use in the Web Sched History window. To view for all patients or clinics, 
 		///pass in null for those parameters.</summary>
 		public static List<AsapCommHist> GetHist(DateTime dateFrom,DateTime dateTo,List<long> listPatNums=null,List<long> listClinicNums=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<AsapCommHist>>(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listPatNums,listClinicNums);
-			}
+			
 			string command=@"
 				SELECT asapcomm.*,"+DbHelper.Concat("patient.LName","', '","patient.FName")+@" PatientName,COALESCE(schedule.StartTime,'00:00:00') StartTime,
 				COALESCE(schedule.StopTime,'00:00:00') StopTime,COALESCE(schedule.SchedDate,'0001-01-01') SchedDate,
@@ -107,19 +99,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(AsapComm asapComm) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				asapComm.AsapCommNum=Meth.GetLong(MethodBase.GetCurrentMethod(),asapComm);
-				return asapComm.AsapCommNum;
-			}
+			
 			return Crud.AsapCommCrud.Insert(asapComm);
 		}
 
 		///<summary></summary>
 		public static void InsertMany(List<AsapComm> listAsapComms) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listAsapComms);
-				return;
-			}
+			
 			Crud.AsapCommCrud.InsertMany(listAsapComms);
 		}
 
@@ -151,26 +137,17 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary></summary>
 		public static void Update(AsapComm asapComm) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),asapComm);
-				return;
-			}
+			
 			Crud.AsapCommCrud.Update(asapComm);
 		}
 
 		public static void Update(AsapComm asapComm,AsapComm asapCommOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),asapComm,asapCommOld);
-				return;
-			}
+			
 			Crud.AsapCommCrud.Update(asapComm,asapCommOld);
 		}
 
 		public static void SetRsvpStatus(AsapRSVPStatus rsvpStatus,List<string> listShortGuids) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),rsvpStatus,listShortGuids);
-				return;
-			}
+			
 			if(listShortGuids.Count==0) {
 				return;
 			}
@@ -309,10 +286,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates the Schedule note with the number of sent and waiting to send AsapComms.</summary>
 		public static void UpdateSchedule(long scheduleNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),scheduleNum);
-				return;
-			}
+			
 			List<Schedule> listSchedules=Schedules.GetByScheduleNum(new List<long> { scheduleNum });
 			if(listSchedules.Count==0) {
 				return;
@@ -334,9 +308,7 @@ namespace OpenDentBusiness{
 		}
 		
 		public static AsapComm GetByShortGuid(string shortGuid) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<AsapComm>(MethodBase.GetCurrentMethod(),shortGuid);
-			}
+			
 			string command=@"SELECT *
 				FROM asapcomm
 				WHERE asapcomm.ShortGUID='"+POut.String(shortGuid)+@"'
@@ -680,9 +652,7 @@ Only pull out the methods below as you need them.  Otherwise, leave them comment
 
 		///<summary></summary>
 		public static List<AsapComm> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<AsapComm>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM asapcomm WHERE PatNum = "+POut.Long(patNum);
 			return Crud.AsapCommCrud.SelectMany(command);
 		}

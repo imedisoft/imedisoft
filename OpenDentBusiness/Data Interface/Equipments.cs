@@ -30,9 +30,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Equipment> GetList(DateTime fromDate,DateTime toDate,EnumEquipmentDisplayMode display,string snDesc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Equipment>>(MethodBase.GetCurrentMethod(),fromDate,toDate,display,snDesc);
-			}
+			
 			string command="";
 			if(display==EnumEquipmentDisplayMode.Purchased){
 				command="SELECT * FROM equipment "
@@ -60,28 +58,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Equipment equip) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				equip.EquipmentNum=Meth.GetLong(MethodBase.GetCurrentMethod(),equip);
-				return equip.EquipmentNum;
-			}
+			
 			return Crud.EquipmentCrud.Insert(equip);
 		}
 
 		///<summary></summary>
 		public static void Update(Equipment equip) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),equip);
-				return;
-			}
+			
 			Crud.EquipmentCrud.Update(equip);
 		}
 
 		///<summary></summary>
 		public static void Delete(Equipment equip) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),equip);
-				return;
-			}
+			
 			string command="DELETE FROM equipment" 
 				+" WHERE EquipmentNum = "+POut.Long(equip.EquipmentNum);
  			Db.NonQ(command);
@@ -89,9 +78,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Generates a unique 3 char alphanumeric serialnumber.  Checks to make sure it's not already in use.</summary>
 		public static string GenerateSerialNum() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
+			
 			string retVal="";
 			bool isDuplicate=true;
 			Random rand=new Random();
@@ -116,9 +103,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Checks the database for equipment that has the supplied serial number.</summary>
 		public static bool HasExisting(Equipment equip) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),equip);
-			}
+			
 			string command="SELECT COUNT(*) FROM equipment WHERE SerialNumber = '"+POut.String(equip.SerialNumber)+"' AND EquipmentNum != "+POut.Long(equip.EquipmentNum);
 			if(Db.GetScalar(command)=="0") {
 				return false;

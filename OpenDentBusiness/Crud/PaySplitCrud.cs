@@ -22,9 +22,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one PaySplit object from the database using a query.</summary>
 		public static PaySplit SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<PaySplit> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -34,9 +32,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of PaySplit objects from the database using a query.</summary>
 		public static List<PaySplit> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<PaySplit> list=TableToList(Db.GetTable(command));
 			return list;
 		}

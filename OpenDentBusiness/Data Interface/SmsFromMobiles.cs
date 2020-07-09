@@ -36,18 +36,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<SmsFromMobile> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SmsFromMobile>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM smsfrommobile WHERE PatNum = "+POut.Long(patNum);
 			return Crud.SmsFromMobileCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one SmsFromMobile from the db.</summary>
 		public static SmsFromMobile GetOne(long smsFromMobileNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<SmsFromMobile>(MethodBase.GetCurrentMethod(),smsFromMobileNum);
-			}
+			
 			return Crud.SmsFromMobileCrud.SelectOne(smsFromMobileNum);
 		}
 		
@@ -55,19 +51,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(SmsFromMobile smsFromMobile){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),smsFromMobile);
-				return;
-			}
+			
 			Crud.SmsFromMobileCrud.Update(smsFromMobile);
 		}
 
 		///<summary></summary>
 		public static void Delete(long smsFromMobileNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),smsFromMobileNum);
-				return;
-			}
+			
 			string command= "DELETE FROM smsfrommobile WHERE SmsFromMobileNum = "+POut.Long(smsFromMobileNum);
 			Db.NonQ(command);
 		}
@@ -93,9 +83,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the number of messages which have not yet been read.  If there are no unread messages, then empty string is returned.  If more than 99 messages are unread, then "99" is returned.  The count limit is 99, because only 2 digits can fit in the SMS notification text.</summary>
 		public static string GetSmsNotification() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM smsfrommobile WHERE SmsStatus="+POut.Int((int)SmsFromStatus.ReceivedUnread);
 			int smsUnreadCount=PIn.Int(Db.GetCount(command));
 			if(smsUnreadCount==0) {
@@ -109,18 +97,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Call ProcessInboundSms instead.</summary>
 		public static long Insert(SmsFromMobile smsFromMobile) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				smsFromMobile.SmsFromMobileNum=Meth.GetLong(MethodBase.GetCurrentMethod(),smsFromMobile);
-				return smsFromMobile.SmsFromMobileNum;
-			}
+			
 			return Crud.SmsFromMobileCrud.Insert(smsFromMobile);
 		}
 
 		///<summary>Gets all SmsFromMobile entries that have been inserted or updated since dateStart, which should be in server time.</summary>
 		public static List<SmsFromMobile> GetAllChangedSince(DateTime dateStart) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SmsFromMobile>>(MethodBase.GetCurrentMethod(),dateStart);
-			}
+			
 			string command="SELECT * from smsfrommobile WHERE SecDateTEdit >= "+POut.DateT(dateStart);
 			return Crud.SmsFromMobileCrud.SelectMany(command);
 		}
@@ -137,10 +120,6 @@ namespace OpenDentBusiness{
 		public static List<SmsFromMobile> GetMessages(DateTime dateStart,DateTime dateEnd,List<long> listClinicNums,long patNum,
 			bool isMessageThread,string phoneNumber,params SmsFromStatus[] arrayStatuses) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SmsFromMobile>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listClinicNums,patNum,isMessageThread,
-					phoneNumber,arrayStatuses);
-			}
 			List<SmsFromStatus> statusFilters=new List<SmsFromStatus>(arrayStatuses);
 			List <string> listCommandFilters=new List<string>();
 			if(dateStart>DateTime.MinValue) {
@@ -259,17 +238,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates only the changed fields of the SMS text message (if any).</summary>
 		public static bool Update(SmsFromMobile smsFromMobile,SmsFromMobile oldSmsFromMobile) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),smsFromMobile,oldSmsFromMobile);
-			}
+			
 			return Crud.SmsFromMobileCrud.Update(smsFromMobile,oldSmsFromMobile);
 		}
 
 		///<summary>Used to link SmsFromMobiles to the patients that they came from. Returns list of patnum,garantorNum combos.</summary>
 		public static List<long[]> FindPatNums(string phonePat,string countryCode,List<long> listClinicNums=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long[]>>(MethodBase.GetCurrentMethod(),phonePat,countryCode,listClinicNums);
-			}
+			
 			List<long[]> retVal=new List<long[]>();
 			try {
 				string phoneRegexp=ConvertPhoneToRegexp(phonePat,countryCode);

@@ -66,11 +66,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_HL7DefFieldCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _HL7DefFieldCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -78,9 +74,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Gets it straight from the database instead of from cache.</summary>
 		public static List<HL7DefField> GetFromDb(long hl7DefSegmentNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HL7DefField>>(MethodBase.GetCurrentMethod(),hl7DefSegmentNum);
-			}
+			
 			string command="SELECT * FROM hl7deffield WHERE HL7DefSegmentNum='"+POut.Long(hl7DefSegmentNum)+"' ORDER BY OrdinalPos";
 			return Crud.HL7DefFieldCrud.SelectMany(command);
 		}
@@ -93,28 +87,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(HL7DefField hL7DefField) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				hL7DefField.HL7DefFieldNum=Meth.GetLong(MethodBase.GetCurrentMethod(),hL7DefField);
-				return hL7DefField.HL7DefFieldNum;
-			}
+			
 			return Crud.HL7DefFieldCrud.Insert(hL7DefField);
 		}
 
 		///<summary></summary>
 		public static void Update(HL7DefField hL7DefField) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),hL7DefField);
-				return;
-			}
+			
 			Crud.HL7DefFieldCrud.Update(hL7DefField);
 		}
 
 		///<summary></summary>
 		public static void Delete(long hL7DefFieldNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),hL7DefFieldNum);
-				return;
-			}
+			
 			string command= "DELETE FROM hl7deffield WHERE HL7DefFieldNum = "+POut.Long(hL7DefFieldNum);
 			Db.NonQ(command);
 		}
@@ -124,18 +109,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<HL7DefField> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HL7DefField>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM hl7deffield WHERE PatNum = "+POut.Long(patNum);
 			return Crud.HL7DefFieldCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one HL7DefField from the db.</summary>
 		public static HL7DefField GetOne(long hL7DefFieldNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<HL7DefField>(MethodBase.GetCurrentMethod(),hL7DefFieldNum);
-			}
+			
 			return Crud.HL7DefFieldCrud.SelectOne(hL7DefFieldNum);
 		}
 

@@ -75,11 +75,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_emailAddressCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _emailAddressCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -118,9 +114,7 @@ namespace OpenDentBusiness{
 		///<summary>Executes a query to the database to get the email address associated to the passed-in user.  
 		///Does not use the cache.  Returns null if no email address in the database matches the passed-in user.</summary>
 		public static EmailAddress GetForUser(long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EmailAddress>(MethodBase.GetCurrentMethod(),userNum);
-			}
+			
 			string command="SELECT * FROM emailaddress WHERE emailaddress.UserNum = "+userNum;
 			return Crud.EmailAddressCrud.SelectOne(command);
 		}
@@ -150,9 +144,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all email addresses, including those email addresses which are not in the cache.</summary>
 		public static List<EmailAddress> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EmailAddress>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM emailaddress";
 			return Crud.EmailAddressCrud.SelectMany(command);
 		}
@@ -174,28 +166,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(EmailAddress emailAddress) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				emailAddress.EmailAddressNum=Meth.GetLong(MethodBase.GetCurrentMethod(),emailAddress);
-				return emailAddress.EmailAddressNum;
-			}
+			
 			return Crud.EmailAddressCrud.Insert(emailAddress);
 		}
 
 		///<summary></summary>
 		public static void Update(EmailAddress emailAddress){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),emailAddress);
-				return;
-			}
+			
 			Crud.EmailAddressCrud.Update(emailAddress);
 		}
 
 		///<summary></summary>
 		public static void Delete(long emailAddressNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),emailAddressNum);
-				return;
-			}
+			
 			string command= "DELETE FROM emailaddress WHERE EmailAddressNum = "+POut.Long(emailAddressNum);
 			Db.NonQ(command);
 		}

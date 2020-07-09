@@ -239,11 +239,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_procedureCodeCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _procedureCodeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -407,19 +403,14 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<ProcedureCode> GetChangedSince(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcedureCode>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT * FROM procedurecode WHERE DateTStamp > "+POut.DateT(changedSince);
 			return Crud.ProcedureCodeCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(ProcedureCode code) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				code.CodeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),code);
-				return code.CodeNum;
-			}
+			
 			//must have already checked procCode for nonduplicate.
 			return Crud.ProcedureCodeCrud.Insert(code);
 		}
@@ -429,36 +420,26 @@ namespace OpenDentBusiness{
 			if(listCodes.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listCodes);
-				return;
-			}
+			
 			//must have already checked procCode for nonduplicate.
 			Crud.ProcedureCodeCrud.InsertMany(listCodes);
 		}
 
 		///<summary></summary>
 		public static void Update(ProcedureCode code){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),code);
-				return;
-			}
+			
 			Crud.ProcedureCodeCrud.Update(code);
 		}
 
 		///<summary></summary>
 		public static bool Update(ProcedureCode procCode,ProcedureCode procCodeOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),procCode,procCodeOld);
-			}
+			
 			return Crud.ProcedureCodeCrud.Update(procCode,procCodeOld);
 		}
 
 		///<summary>Counts all procedure codes, including hidden codes.</summary>
 		public static long GetCodeCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM procedurecode";
 			return PIn.Long(Db.GetCount(command));
 		}
@@ -503,9 +484,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets code from db to avoid having to constantly refresh in FormProcCodes</summary>
 		public static ProcedureCode GetProcCodeFromDb(long codeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ProcedureCode>(MethodBase.GetCurrentMethod(),codeNum);
-			}
+			
 			ProcedureCode retval=Crud.ProcedureCodeCrud.SelectOne(codeNum);
 			if(retval==null) {
 				//We clasically return an empty procedurecode object here instead of null.
@@ -694,9 +673,7 @@ namespace OpenDentBusiness{
 		public static DataTable GetProcTable(string abbr,string desc,string code,List<long> categories,long feeSchedNum,
 			long feeSched2Num,long feeSched3Num)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),abbr,desc,code,categories,feeSchedNum,feeSched2Num,feeSched3Num);
-			}
+			
 			string whereCat;
 			if(categories.Count==0){
 				whereCat="1";
@@ -806,10 +783,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used to check whether codes starting with T exist and are in a visible category.  If so, it moves them to the Obsolete category.  If the T code has never been used, then it deletes it.</summary>
 		public static void TcodesClear() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			//first delete any unused T codes
 			string command=@"SELECT CodeNum,ProcCode FROM procedurecode
 				WHERE CodeNum NOT IN(SELECT CodeNum FROM procedurelog)
@@ -886,10 +860,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static void ResetApptProcsQuickAdd() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			string command= "DELETE FROM definition WHERE Category=3";
 			Db.NonQ(command);
 			string[] array=new string[] {
@@ -997,18 +968,14 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<ProcedureCode> GetAllCodes() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcedureCode>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * from procedurecode ORDER BY ProcCode";
 			return Crud.ProcedureCodeCrud.SelectMany(command);
 		}
 
 		///<summary>Gets all procedurecodes from the database ordered by cat then code.  This is how the cache is ordered.</summary>
 		public static List<ProcedureCode> GetAllCodesOrderedCatCode() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcedureCode>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM procedurecode ORDER BY ProcCat,ProcCode";
 			return Crud.ProcedureCodeCrud.SelectMany(command);
 		}
@@ -1016,20 +983,14 @@ namespace OpenDentBusiness{
 		///<summary>Zeros securitylog FKey column for rows that are using the matching codeNum as FKey and are related to ProcedureCode.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the ProcedureCode table type.</summary>
 		public static void ClearFkey(long codeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),codeNum);
-				return;
-			}
+			
 			Crud.ProcedureCodeCrud.ClearFkey(codeNum);
 		}
 
 		///<summary>Zeros securitylog FKey column for rows that are using the matching codeNums as FKey and are related to ProcedureCode.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the ProcedureCode table type.</summary>
 		public static void ClearFkey(List<long> listCodeNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listCodeNums);
-				return;
-			}
+			
 			Crud.ProcedureCodeCrud.ClearFkey(listCodeNums);
 		}
 

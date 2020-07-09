@@ -103,11 +103,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_requiredFieldCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _requiredFieldCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -115,28 +110,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(RequiredField requiredField){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				requiredField.RequiredFieldNum=Meth.GetLong(MethodBase.GetCurrentMethod(),requiredField);
-				return requiredField.RequiredFieldNum;
-			}
+			
 			return Crud.RequiredFieldCrud.Insert(requiredField);
 		}
 		
 		///<summary></summary>
 		public static void Update(RequiredField requiredField){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),requiredField);
-				return;
-			}
+			
 			Crud.RequiredFieldCrud.Update(requiredField);
 		}
 
 		///<summary></summary>
 		public static void Delete(long requiredFieldNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),requiredFieldNum);
-				return;
-			}
+			
 			string command="DELETE FROM requiredfieldcondition WHERE RequiredFieldNum="+POut.Long(requiredFieldNum);
 			Db.NonQ(command);
 			Crud.RequiredFieldCrud.Delete(requiredFieldNum);
@@ -147,18 +133,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<RequiredField> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RequiredField>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM requiredfield WHERE PatNum = "+POut.Long(patNum);
 			return Crud.RequiredFieldCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one RequiredField from the db.</summary>
 		public static RequiredField GetOne(long requiredFieldNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<RequiredField>(MethodBase.GetCurrentMethod(),requiredFieldNum);
-			}
+			
 			return Crud.RequiredFieldCrud.SelectOne(requiredFieldNum);
 		}
 		*/

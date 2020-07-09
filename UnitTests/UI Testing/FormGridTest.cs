@@ -21,7 +21,7 @@ namespace UnitTests{
 		private void FormGridTest_Load(object sender, EventArgs e){
 			FillPatients();
 			FillGrid();
-			pictureBox1.Image=OpenDental.PhoneTile.GetHouse16();
+			//pictureBox1.Image=OpenDental.PhoneTile.GetHouse16();
 		}
 
 		private void FillPatients(){

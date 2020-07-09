@@ -35,23 +35,6 @@ namespace OpenDentBusiness {
 		public decimal AmountEnd;
 		public SplitCollection SplitCollection=new SplitCollection();
 
-		[XmlElement(nameof(Tag))]
-		public DtoObject TagXml {
-			get {
-				if(Tag==null) {
-					return null;
-				}
-				return new DtoObject(Tag,Tag.GetType());
-			}
-			set {
-				if(value==null) {
-					Tag=null;
-					return;
-				}
-				Tag=value.Obj;
-			}
-		}
-
 		///<summary>Returns a brief description of the current AccountEntry.  E.g:
 		///"Adjustment #718410 on 01/22/2020 PatNum #1389, ProvNum #15441 (DOC1), ClinicNum #97653 (Roch) [AmtOrig: $50.00 AmountEnd: $5.55]"</summary>
 		[XmlIgnore,JsonIgnore]

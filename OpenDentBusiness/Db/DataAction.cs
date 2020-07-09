@@ -119,54 +119,6 @@ namespace OpenDentBusiness
 			Run(a, ConnectionNames.DentalOffice);
 		}
 
-		///<summary>Perform the given action in the context of the old mobile web db.</summary>
-		public static void RunMobileWebOld(Action a)
-		{
-			Run(a, ConnectionNames.MobileWebOld);
-		}
-
-		///<summary>Perform the given action in the context of the webforms db.</summary>
-		public static void RunMobileWebForms(Action a)
-		{
-			Run(a, ConnectionNames.WebForms);
-		}
-
-		///<summary>Perform the given action as a Middle Tier client using OpenDentalServerMockIIS.</summary>
-		public static void RunMiddleTierMock(Action a)
-		{
-			RemotingRole remotingRolePrevious = RemotingClient.RemotingRole;
-			OpenDentBusiness.WebServices.OpenDentalServerMockIIS mockPrevious = OpenDentBusiness.WebServices.OpenDentalServerProxy.MockOpenDentalServerCur;
-			if (mockPrevious == null)
-			{
-				OpenDentBusiness.WebServices.OpenDentalServerProxy.MockOpenDentalServerCur = new OpenDentBusiness.WebServices.OpenDentalServerMockIIS();
-			}
-			RemotingClient.RemotingRole = RemotingRole.ClientWeb;
-			try
-			{
-				a();
-			}
-			finally
-			{
-				OpenDentBusiness.WebServices.OpenDentalServerProxy.MockOpenDentalServerCur = mockPrevious;
-				RemotingClient.RemotingRole = remotingRolePrevious;
-			}
-		}
-
-		///<summary>HQ only.  Perform the given action in the context of the webchat db.
-		///Set useConnectionStore false to use the ConnectionSettingsHQ preference or the sitelink override for ConnectionNames.WebChat.</summary>
-		public static void RunWebChat(Action a, bool useConnectionStore = false)
-		{
-			if (useConnectionStore)
-			{
-				Run(a, ConnectionNames.WebChat);
-			}
-			else
-			{
-				CentralConnection con = GetHqConnection(ConnectionNames.WebChat);
-				Run(a, con.ServerName, con.DatabaseName, con.MySqlUser, con.MySqlPassword, "", "", DatabaseType.MySql);
-			}
-		}
-
 		///<summary>Perform the given function in the context of the dental office db.</summary>
 		public static T GetPractice<T>(Func<T> fn)
 		{
@@ -183,21 +135,6 @@ namespace OpenDentBusiness
 		public static T GetCustomers<T>(Func<T> fn)
 		{
 			return GetT(fn, ConnectionNames.CustomersHQ);
-		}
-
-		///<summary>Perform the given action in the context of the bugs db.
-		///Set useConnectionStore false to use the ConnectionSettingsHQ preference or the sitelink override for ConnectionNames.BugsHQ.</summary>
-		public static void RunBugsHQ(Action a, bool useConnectionStore = true)
-		{
-			if (useConnectionStore)
-			{
-				Run(a, ConnectionNames.BugsHQ);
-			}
-			else
-			{
-				CentralConnection con = GetHqConnection(ConnectionNames.BugsHQ);
-				Run(a, con.ServerName, con.DatabaseName, con.MySqlUser, con.MySqlPassword, "", "");
-			}
 		}
 
 		///<summary>Perform the given action in the context of the manual publisher db.

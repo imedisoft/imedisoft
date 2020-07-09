@@ -14,10 +14,7 @@ namespace OpenDentBusiness{
 		#region Insert
 
 		public static void InsertMany(List<SheetField> listSheetFields) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSheetFields);
-				return;
-			}
+			
 			Crud.SheetFieldCrud.InsertMany(listSheetFields);
 		}
 
@@ -37,16 +34,12 @@ namespace OpenDentBusiness{
 
 		///<Summary>Gets one SheetField from the database.</Summary>
 		public static SheetField CreateObject(long sheetFieldNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SheetField>(MethodBase.GetCurrentMethod(),sheetFieldNum);
-			}
+			
 			return Crud.SheetFieldCrud.SelectOne(sheetFieldNum);
 		}
 
 		public static List<SheetField> GetListForSheet(long sheetNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SheetField>>(MethodBase.GetCurrentMethod(),sheetNum);
-			}
+			
 			string command="SELECT * FROM sheetfield WHERE SheetNum="+POut.Long(sheetNum)
 				+" ORDER BY SheetFieldNum";//the ordering is CRITICAL because the signature key is based on order.
 			return Crud.SheetFieldCrud.SelectMany(command);
@@ -71,9 +64,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in SheetFiller to fill patient letter with exam sheet information.  Will return null if no exam sheet matching the description exists for the patient.  Usually just returns one field, but will return a list of fields if it's for a RadioButtonGroup.</summary>
 		public static List<SheetField> GetFieldFromExamSheet(long patNum,string examDescript,string fieldName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SheetField>>(MethodBase.GetCurrentMethod(),patNum,examDescript,fieldName);
-			}
+			
 			Sheet sheet=Sheets.GetMostRecentExamSheet(patNum,examDescript);
 			if(sheet==null) {
 				return null;
@@ -86,37 +77,25 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(SheetField sheetField) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				sheetField.SheetFieldNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sheetField);
-				return sheetField.SheetFieldNum;
-			}
+			
 			return Crud.SheetFieldCrud.Insert(sheetField);
 		}
 
 		///<summary></summary>
 		public static void Update(SheetField sheetField) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sheetField);
-				return;
-			}
+			
 			Crud.SheetFieldCrud.Update(sheetField);
 		}
 
 		///<summary></summary>
 		public static void DeleteObject(long sheetFieldNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sheetFieldNum);
-				return;
-			}
+			
 			Crud.SheetFieldCrud.Delete(sheetFieldNum);
 		}
 
 		///<summary>Deletes all existing drawing fields for a sheet from the database and then adds back the list supplied.</summary>
 		public static void SetDrawings(List<SheetField> drawingList,long sheetNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),drawingList,sheetNum);
-				return;
-			}
+			
 			string command="DELETE FROM sheetfield WHERE SheetNum="+POut.Long(sheetNum)
 				+" AND FieldType="+POut.Long((int)SheetFieldType.Drawing);
 			Db.NonQ(command);
@@ -187,10 +166,7 @@ namespace OpenDentBusiness{
 		///This function uses a DB comparison rather than a stale list because we are not worried about concurrency of a single sheet and enhancing the
 		///functions that call this would take a lot of restructuring.</summary>
 		public static void Sync(List<SheetField> listSheetFieldsNew,long sheetNum,bool isSigBoxOnly) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSheetFieldsNew,sheetNum,isSigBoxOnly);
-				return;
-			}
+			
 			List<SheetField> listSheetFieldsDB=SheetFields.GetListForSheet(sheetNum);
 			if(!isSigBoxOnly) {
 				List<SheetField> listNoSigNew=listSheetFieldsNew.FindAll(x => x.FieldType!=SheetFieldType.Parameter && !x.FieldType.In(SheetFieldType.SigBox,SheetFieldType.SigBoxPractice));

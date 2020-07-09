@@ -87,11 +87,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_autoCodeItemCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _autoCodeItemCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -99,28 +95,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(AutoCodeItem Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.AutoCodeItemNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.AutoCodeItemNum;
-			}
+			
 			return Crud.AutoCodeItemCrud.Insert(Cur);
 		}
 
 		///<summary></summary>
 		public static void Update(AutoCodeItem Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.AutoCodeItemCrud.Update(Cur);
 		}
 
 		///<summary></summary>
 		public static void Delete(AutoCodeItem Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string command= "DELETE FROM autocodeitem WHERE AutoCodeItemNum = '"
 				+POut.Long(Cur.AutoCodeItemNum)+"'";
 			Db.NonQ(command);
@@ -128,10 +115,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(long autoCodeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),autoCodeNum);
-				return;
-			}
+			
 			string command= "DELETE FROM autocodeitem WHERE AutoCodeNum = '"
 				+POut.Long(autoCodeNum)+"'";
 			Db.NonQ(command);

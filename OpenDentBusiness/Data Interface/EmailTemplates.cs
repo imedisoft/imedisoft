@@ -67,11 +67,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_emailTemplateCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _emailTemplateCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -79,28 +75,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(EmailTemplate template) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				template.EmailTemplateNum=Meth.GetLong(MethodBase.GetCurrentMethod(),template);
-				return template.EmailTemplateNum;
-			}
+			
 			return Crud.EmailTemplateCrud.Insert(template);
 		}
 
 		///<summary></summary>
 		public static void Update(EmailTemplate template){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),template);
-				return;
-			}
+			
 			Crud.EmailTemplateCrud.Update(template);
 		}
 
 		///<summary></summary>
 		public static void Delete(EmailTemplate template){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),template);
-				return;
-			}
+			
 			string command= "DELETE from emailtemplate WHERE EmailTemplateNum = '"
 				+template.EmailTemplateNum.ToString()+"'";
  			Db.NonQ(command);

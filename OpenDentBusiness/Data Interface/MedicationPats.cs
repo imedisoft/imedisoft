@@ -30,9 +30,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Normally, includeDiscontinued is false.  User needs to check a box to include discontinued.</summary>
 		public static List<MedicationPat> Refresh(long patNum,bool includeDiscontinued) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedicationPat>>(MethodBase.GetCurrentMethod(),patNum,includeDiscontinued);
-			}
+			
 			string command ="SELECT * FROM medicationpat WHERE PatNum = "+POut.Long(patNum);
 			if(includeDiscontinued) {//this only happens when user checks box to show discontinued or for MU.
 				//no restriction on DateStop
@@ -47,9 +45,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all active medications for the patient.  Exactly like Refresh() except this does not return medications when DateStop has today's date.  Currently only called from FormReconcileMedication.</summary>
 		public static List<MedicationPat> GetMedPatsForReconcile(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedicationPat>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command ="SELECT * FROM medicationpat WHERE PatNum = "+POut.Long(patNum)
 					+" AND (DateStop < "+POut.Date(new DateTime(1880,1,1))//include all the meds that are not discontinued.
 					+" OR DateStop > CURDATE())";//Show medications that are a future stopdate.
@@ -58,19 +54,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static MedicationPat GetOne(long medicationPatNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<MedicationPat>(MethodBase.GetCurrentMethod(),medicationPatNum);
-			}
+			
 			string command ="SELECT * FROM medicationpat WHERE MedicationPatNum = "+POut.Long(medicationPatNum);
 			return Crud.MedicationPatCrud.SelectOne(command);
 		}
 
 		///<summary></summary>
 		public static void Update(MedicationPat Cur,bool canClearGuid=true){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur,canClearGuid);
-				return;
-			}
+			
 			if(canClearGuid && Erx.IsTwoWayIntegrated(Cur.ErxGuid)) {//Reset two way integrated medications so they are resent to the eRx solution.
 				Cur.ErxGuid="";
 			}
@@ -79,10 +70,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(MedicationPat Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.MedicationPatNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.MedicationPatNum;
-			}
+			
 			return Crud.MedicationPatCrud.Insert(Cur);
 		}
 
@@ -157,19 +145,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(MedicationPat Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string command = "DELETE from medicationpat WHERE medicationpatNum = '"
 				+Cur.MedicationPatNum.ToString()+"'";
 			Db.NonQ(command);
 		}
 
 		public static List<long> GetChangedSinceMedicationPatNums(DateTime changedSince,List<long> eligibleForUploadPatNumList) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince,eligibleForUploadPatNumList);
-			}
+			
 			string strEligibleForUploadPatNums="";
 			DataTable table;
 			if(eligibleForUploadPatNumList.Count>0) {
@@ -194,9 +177,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used along with GetChangedSinceMedicationPatNums</summary>
 		public static List<MedicationPat> GetMultMedicationPats(List<long> medicationPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedicationPat>>(MethodBase.GetCurrentMethod(),medicationPatNums);
-			}
+			
 			string strMedicationPatNums="";
 			DataTable table;
 			if(medicationPatNums.Count>0) {
@@ -219,9 +200,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Get list of MedicationPats by MedicationNum for a particular patient.</summary>
 		public static List<MedicationPat> GetMedicationPatsByMedicationNum(long medicationNum,long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedicationPat>>(MethodBase.GetCurrentMethod(),medicationNum,patNum);
-			}
+			
 			string command="SELECT * FROM medicationpat WHERE PatNum="+POut.Long(patNum)+" AND MedicationNum="+POut.Long(medicationNum);
 			return Crud.MedicationPatCrud.SelectMany(command);
 		}
@@ -229,20 +208,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all medicationpats of a patient</summary>
 		public static void ResetTimeStamps(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			string command="UPDATE medicationpat SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum ="+POut.Long(patNum);
 			Db.NonQ(command);
 		}
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all medicationpats of a patient that are the status specified.</summary>
 		public static void ResetTimeStamps(long patNum,bool onlyActive) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum,onlyActive);
-				return;
-			}
+			
 			string command="UPDATE medicationpat SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum = "+POut.Long(patNum);
 				if(onlyActive) {
 					command+=" AND (DateStop > 1880 OR DateStop <= CURDATE())";
@@ -252,9 +225,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used for NewCrop medication orders only.</summary>
 		public static MedicationPat GetMedicationOrderByErxIdAndPat(string erxGuid,long patNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<MedicationPat>(MethodBase.GetCurrentMethod(),erxGuid,patNum);
-			}
+			
 			string command="SELECT * FROM medicationpat WHERE ErxGuid='"+POut.String(erxGuid)+"'";
 			if(patNum!=0) {
 				command+=" AND PatNum="+POut.Long(patNum);
@@ -268,10 +239,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used to synch medication.RxCui with medicationpat.RxCui.  Updates all medicationpat.RxCui to the given value for those medication pats linked to the given medication num.</summary>
 		public static void UpdateRxCuiForMedication(long medicationNum,long rxCui) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medicationNum,rxCui);
-				return;
-			}
+			
 			string command="UPDATE medicationpat SET RxCui="+POut.Long(rxCui)+" WHERE MedicationNum="+POut.Long(medicationNum);
 			Db.NonQ(command);
 		}
@@ -286,9 +254,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets list of RxCui code strings for medications with RxCui in the supplied list ordered for patients in the last year.
 		///"Ordered" is based on there being a DateStart.  Result list is grouped by RxCui.</summary>
 		public static List<string> GetAllForRxCuis(List<string> listRxCuis) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod(),listRxCuis);
-			}
+			
 			if(listRxCuis==null || listRxCuis.Count==0) {
 				return new List<string>();
 			}
@@ -299,9 +265,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<MedicationPat> GetForRxCuis(List<string> listRxCuis) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedicationPat>>(MethodBase.GetCurrentMethod(),listRxCuis);
-			}
+			
 			if(listRxCuis==null || listRxCuis.Count==0) {
 				return new List<MedicationPat>();
 			}
@@ -311,18 +275,13 @@ namespace OpenDentBusiness{
 
 		///<summary>These can currently only exist if the MedicationPats were created when importing from NewCrop.</summary>
 		public static List<MedicationPat> GetAllMissingMedications() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedicationPat>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM medicationpat WHERE MedicationNum=0";
 			return Crud.MedicationPatCrud.SelectMany(command);
 		}
 
 		public static void UpdateMedicationNumForMany(long medicationNum,List<long> listMedicationPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medicationNum,listMedicationPatNums);
-				return;
-			}
+			
 			if(listMedicationPatNums==null || listMedicationPatNums.Count < 1) {
 				return;
 			}

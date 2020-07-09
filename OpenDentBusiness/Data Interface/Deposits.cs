@@ -30,9 +30,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all Deposits, ordered by DateDeposit, DepositNum.  </summary>
 		public static Deposit[] Refresh() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Deposit[]>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM deposit "
 				+"ORDER BY DateDeposit";
 			return Crud.DepositCrud.SelectMany(command).ToArray();
@@ -40,9 +38,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all Deposits, as well as the clinic(s) associated to the deposit.  The listClinicNums cannot be null.  If listClinicNums is empty, then will return the deposits for all clinics.</summary>
 		public static Deposit[] GetForClinics(List<long> listClinicNums,bool isUnattached) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Deposit[]>(MethodBase.GetCurrentMethod(),listClinicNums,isUnattached);
-			}
+			
 			string command=
 			"SELECT deposit.*,"
 			+"(CASE COUNT(DISTINCT COALESCE(clinic.ClinicNum,0)) WHEN 1 THEN COALESCE(clinic.Abbr,'(None)') ELSE CONCAT('(',COUNT(DISTINCT COALESCE(clinic.ClinicNum,0)),')') END) AS ClinicAbbr "
@@ -84,9 +80,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets only Deposits which are not attached to transactions.</summary>
 		public static Deposit[] GetUnattached() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Deposit[]>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM deposit "
 				+"WHERE NOT EXISTS(SELECT * FROM transaction WHERE deposit.DepositNum=transaction.DepositNum) "
 				+"ORDER BY DateDeposit";
@@ -95,36 +89,25 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a single deposit directly from the database.</summary>
 		public static Deposit GetOne(long depositNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Deposit>(MethodBase.GetCurrentMethod(),depositNum);
-			}
+			
 			return Crud.DepositCrud.SelectOne(depositNum);
 		}
 
 		///<summary></summary>
 		public static void Update(Deposit dep){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dep);
-				return;
-			}
+			
 			Crud.DepositCrud.Update(dep);
 		}
 
 		///<summary></summary>
 		public static void Update(Deposit dep, Deposit depOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dep,depOld);
-				return;
-			}
+			
 			Crud.DepositCrud.Update(dep,depOld);
 		}
 
 		///<summary></summary>
 		public static long Insert(Deposit dep) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				dep.DepositNum=Meth.GetLong(MethodBase.GetCurrentMethod(),dep);
-				return dep.DepositNum;
-			}
+			
 			return Crud.DepositCrud.Insert(dep);
 		}
 
@@ -132,10 +115,7 @@ namespace OpenDentBusiness{
 		///deposit is attached as a source document to a transaction.  The program should have detached the deposit from the transaction ahead of time, so
 		///I would never expect the program to throw this exception unless there was a bug.</summary>
 		public static void Delete(Deposit dep){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dep);
-				return;
-			}
+			
 			if(dep.DepositNum==0) {
 				return;
 			}
@@ -154,10 +134,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Detach specific payments and claimpayments from passed in deposit.</summary>
 		public static void DetachFromDeposit(long depositNum,List<long> listPayNums,List<long> listClaimPaymentNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),depositNum,listPayNums,listClaimPaymentNums);
-				return;
-			}
+			
 			string command="";
 			if(listPayNums.Count>0) {
 				command="UPDATE payment SET DepositNum=0 WHERE DepositNum="+POut.Long(depositNum)

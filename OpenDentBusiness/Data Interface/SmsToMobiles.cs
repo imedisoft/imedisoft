@@ -23,10 +23,7 @@ namespace OpenDentBusiness{
 		#region Insert
 
 		public static void InsertMany(List<SmsToMobile> listSmsToMobiles) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSmsToMobiles);
-				return;
-			}
+			
 			Crud.SmsToMobileCrud.InsertMany(listSmsToMobiles);
 		}
 
@@ -45,36 +42,26 @@ namespace OpenDentBusiness{
 		
 		///<summary></summary>
 		public static void Update(SmsToMobile smsToMobile) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),smsToMobile);
-				return;
-			}
+			
 			Crud.SmsToMobileCrud.Update(smsToMobile);
 		}
 
 		///<summary>Gets one SmsToMobile from the db.</summary>
 		public static SmsToMobile GetMessageByGuid(string guid) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SmsToMobile>(MethodBase.GetCurrentMethod(),guid);
-			}
+			
 			string command="SELECT * FROM smstomobile WHERE GuidMessage='"+guid+"'";
 			return Crud.SmsToMobileCrud.SelectOne(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(SmsToMobile smsToMobile) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				smsToMobile.SmsToMobileNum=Meth.GetLong(MethodBase.GetCurrentMethod(),smsToMobile);
-				return smsToMobile.SmsToMobileNum;
-			}
+			
 			return Crud.SmsToMobileCrud.Insert(smsToMobile);
 		}
 
 		///<summary>Gets all SmsToMobile entries that have been inserted or updated since dateStart, which should be in server time.</summary>
 		public static List<SmsToMobile> GetAllChangedSince(DateTime dateStart) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SmsToMobile>>(MethodBase.GetCurrentMethod(),dateStart);
-			}
+			
 			string command="SELECT * from smstomobile WHERE SecDateTEdit >= "+POut.DateT(dateStart);
 			return Crud.SmsToMobileCrud.SelectMany(command);
 		}
@@ -87,9 +74,7 @@ namespace OpenDentBusiness{
 		///patients will be returned.</param>
 		///<param name="phoneNumber">The phone number to search by. Should be just the digits, no formatting.</param>
 		public static List<SmsToMobile> GetMessages(DateTime dateStart,DateTime dateEnd,List<long> listClinicNums,long patNum=-1,string phoneNumber="") {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SmsToMobile>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listClinicNums,patNum,phoneNumber);
-			}
+			
 			List<string> listCommandFilters=new List<string>();
 			if(dateStart>DateTime.MinValue) {
 				listCommandFilters.Add(DbHelper.DtimeToDate("DateTimeSent")+">="+POut.Date(dateStart));
@@ -215,10 +200,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(SmsToMobile smsToMobile,SmsToMobile oldSmsToMobile) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),smsToMobile,oldSmsToMobile);
-				return;
-			}
+			
 			Crud.SmsToMobileCrud.Update(smsToMobile,oldSmsToMobile);
 		}
 

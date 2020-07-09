@@ -17,9 +17,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets one RecurringCharge from the db.</summary>
 		public static RecurringCharge GetOne(long recurringChargeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<RecurringCharge>(MethodBase.GetCurrentMethod(),recurringChargeNum);
-			}
+			
 			return Crud.RecurringChargeCrud.SelectOne(recurringChargeNum);
 		}
 
@@ -35,9 +33,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a list of all RecurringCharges matching the passed in parameters.</summary>
 		public static List<RecurringCharge> GetMany(List<SQLWhere> listWheres) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RecurringCharge>>(MethodBase.GetCurrentMethod(),listWheres);
-			}
+			
 			string command="SELECT * FROM recurringcharge ";
 			if(listWheres!=null && listWheres.Count > 0) {
 				command+="WHERE "+string.Join(" AND ",listWheres);
@@ -47,28 +43,19 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long Insert(RecurringCharge recurringCharge) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				recurringCharge.RecurringChargeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),recurringCharge);
-				return recurringCharge.RecurringChargeNum;
-			}
+			
 			return Crud.RecurringChargeCrud.Insert(recurringCharge);
 		}
 
 		///<summary></summary>
 		public static void Update(RecurringCharge recurringCharge) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),recurringCharge);
-				return;
-			}
+			
 			Crud.RecurringChargeCrud.Update(recurringCharge);
 		}
 
 		///<summary></summary>
 		public static void Delete(long recurringChargeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),recurringChargeNum);
-				return;
-			}
+			
 			Crud.RecurringChargeCrud.Delete(recurringChargeNum);
 		}
 
@@ -77,10 +64,7 @@ namespace OpenDentBusiness {
 			if(listRecurringCharges.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listRecurringCharges);
-				return;
-			}
+			
 			string command=@"DELETE FROM recurringcharge
 				WHERE RecurringChargeNum IN("+string.Join(",",listRecurringCharges.Select(x => POut.Long(x.RecurringChargeNum)))+")";
 			Db.NonQ(command);
@@ -98,9 +82,7 @@ namespace OpenDentBusiness {
 		#region Get Methods
 		///<summary></summary>
 		public static List<RecurringCharge> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RecurringCharge>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM recurringcharge WHERE PatNum = "+POut.Long(patNum);
 			return Crud.RecurringChargeCrud.SelectMany(command);
 		}

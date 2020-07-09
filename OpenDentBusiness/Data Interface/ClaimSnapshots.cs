@@ -12,9 +12,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets one ClaimSnapshot from the db.</summary>
 		public static ClaimSnapshot GetOne(long claimSnapshotNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ClaimSnapshot>(MethodBase.GetCurrentMethod(),claimSnapshotNum);
-			}
+			
 			return Crud.ClaimSnapshotCrud.SelectOne(claimSnapshotNum);
 		}
 
@@ -23,9 +21,7 @@ namespace OpenDentBusiness{
 			if(listClaimProcNums==null || listClaimProcNums.Count==0) {
 				return new List<ClaimSnapshot>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClaimSnapshot>>(MethodBase.GetCurrentMethod(),listClaimProcNums);
-			}
+			
 			string command="SELECT * FROM claimsnapshot WHERE ClaimProcNum IN("+string.Join(",",listClaimProcNums.Select(x => POut.Long(x)))+")";
 			return Crud.ClaimSnapshotCrud.SelectMany(command);
 		}
@@ -148,10 +144,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ClaimSnapshot claimSnapshot) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				claimSnapshot.ClaimSnapshotNum=Meth.GetLong(MethodBase.GetCurrentMethod(),claimSnapshot);
-				return claimSnapshot.ClaimSnapshotNum;
-			}
+			
 			string command="SELECT COUNT(*) FROM claimsnapshot WHERE ProcNum="+POut.Long(claimSnapshot.ProcNum)+" AND ClaimProcNum='"+claimSnapshot.ClaimProcNum+"'";
 			if(Db.GetCount(command)!="0") {
 				return 0;//Do nothing.
@@ -163,10 +156,7 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary></summary>
 		public static void Update(ClaimSnapshot claimSnapshot) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),claimSnapshot);
-				return;
-			}
+			
 			Crud.ClaimSnapshotCrud.Update(claimSnapshot);
 		}
 		#endregion
@@ -174,18 +164,12 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary></summary>
 		public static void Delete(long claimSnapshotNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),claimSnapshotNum);
-				return;
-			}
+			
 			Crud.ClaimSnapshotCrud.Delete(claimSnapshotNum);
 		}
 
 		public static void DeleteForClaimProcs(List<long> listClaimProcNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listClaimProcNums);
-				return;
-			}
+			
 			if(listClaimProcNums==null || listClaimProcNums.Count < 1) {
 				return;
 			}

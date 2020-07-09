@@ -73,11 +73,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_schoolCourseCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _schoolCourseCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -85,19 +80,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(SchoolCourse sc){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sc);
-				return;
-			}
+			
 			Crud.SchoolCourseCrud.Update(sc);
 		}
 
 		///<summary></summary>
 		public static long Insert(SchoolCourse sc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				sc.SchoolCourseNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sc);
-				return sc.SchoolCourseNum;
-			}
+			
 			return Crud.SchoolCourseCrud.Insert(sc);
 		}
 
@@ -117,10 +106,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(long courseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),courseNum);
-				return;
-			}
+			
 			//check for attached reqneededs---------------------------------------------------------------------
 			string command="SELECT COUNT(*) FROM reqneeded WHERE SchoolCourseNum = '"
 				+POut.Long(courseNum)+"'";

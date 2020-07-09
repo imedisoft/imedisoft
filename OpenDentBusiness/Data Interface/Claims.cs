@@ -19,9 +19,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of outstanding ClaimPaySplits for a given provider. 
 		///It will only get outstanding claims with a date of service past dateTerm.</summary>
 		public static List<ClaimPaySplit> GetOutstandingClaimsByProvider(long provNum,DateTime dateTerm) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClaimPaySplit>>(MethodBase.GetCurrentMethod(),provNum,dateTerm);
-			}
+			
 			string command="SELECT claim.ClaimNum,claim.PatNum,claim.ClaimStatus,claim.ClinicNum,claim.DateService,claim.ProvTreat,"
 					+"claim.ClaimFee feeBilled_,"+DbHelper.Concat("patient.LName","', '","patient.FName")+" patName_,carrier.CarrierName,clinic.Description, "
 					+"0 ClaimPaymentNum,0 insPayAmt_,claim.ClaimIdentifier,0 PaymentRow "//These values are not used in the consuming method.
@@ -61,9 +59,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Gets claimpaysplits attached to a claimpayment with the associated patient, insplan, and carrier. If showUnattached it also shows all claimpaysplits that have not been attached to a claimpayment. Pass (0,true) to just get all unattached (outstanding) claimpaysplits.</summary>
 		public static List<ClaimPaySplit> RefreshByCheckOld(long claimPaymentNum,bool showUnattached) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClaimPaySplit>>(MethodBase.GetCurrentMethod(),claimPaymentNum,showUnattached);
-			}
+			
 			string command=
 				"SELECT claim.DateService,claim.ProvTreat,CONCAT(CONCAT(patient.LName,', '),patient.FName) patName_"//Changed from \"_patName\" to patName_ for MySQL 5.5. Also added checks for #<table> and $<table>
 				+",carrier.CarrierName,SUM(claimproc.FeeBilled) feeBilled_,SUM(claimproc.InsPayAmt) insPayAmt_,claim.ClaimNum"
@@ -90,9 +86,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Claim> GetClaimsByCheck(long claimPaymentNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Claim>>(MethodBase.GetCurrentMethod(),claimPaymentNum);
-			}
+			
 			string command=
 				"SELECT * "
 				+"FROM claim "
@@ -107,9 +101,7 @@ namespace OpenDentBusiness{
 		///<param name="carrierName">If not empty, will return claims with matching or partially matching carrier name.</param>
 		///<param name="claimPayDate">DateClaimReceivedAfter preference. Only considers claims after this day.</param>
 		public static List<ClaimPaySplit> GetOutstandingClaims(string carrierName,DateTime claimPayDate) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClaimPaySplit>>(MethodBase.GetCurrentMethod(),carrierName,claimPayDate);
-			}
+			
 			//Per Nathan, it is OK to return the DateService in the query result to display in the batch insurance window,
 			//because that is the date which will be displayed in the Account module when you use the GoTo feature from batch insurance window.
 			string command="SELECT outstanding.*,CONCAT(patient.LName,', ',patient.FName) AS patName_,";
@@ -162,9 +154,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Gets all 'claims' attached to the claimpayment.</summary>
 		public static List<ClaimPaySplit> GetAttachedToPayment(long claimPaymentNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClaimPaySplit>>(MethodBase.GetCurrentMethod(),claimPaymentNum);
-			}
+			
 			string command=
 				"SELECT claim.DateService,claim.ProvTreat,"+DbHelper.Concat("patient.LName","', '","patient.FName")+" patName_,"
 				+"carrier.CarrierName,ClaimFee feeBilled_,SUM(claimproc.InsPayAmt) insPayAmt_,claim.ClaimNum,claim.ClaimStatus,"
@@ -190,9 +180,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Gets all secondary claims for the related ClaimPaySplits. Called after a payment has been received.</summary>
 		public static DataTable GetSecondaryClaims(List<ClaimPaySplit> claimsAttached) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),claimsAttached);
-			}
+			
 			string command="SELECT DISTINCT ProcNum FROM claimproc WHERE ClaimNum IN (";
 			string claimNums="";//used twice
 			for(int i=0;i<claimsAttached.Count;i++) {
@@ -226,9 +214,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ClaimPaySplit> GetInsPayNotAttachedForFixTool() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClaimPaySplit>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command=
 				"SELECT claim.DateService,claim.ProvTreat,CONCAT(CONCAT(patient.LName,', '),patient.FName) patName_"
 				+",carrier.CarrierName,SUM(claimproc.FeeBilled) feeBilled_,SUM(claimproc.InsPayAmt) insPayAmt_,claim.ClaimNum,claim.ClaimStatus"
@@ -276,9 +262,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the specified claim from the database.  Can be null.</summary>
 		public static Claim GetClaim(long claimNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Claim>(MethodBase.GetCurrentMethod(),claimNum);
-			}
+			
 			string command="SELECT * FROM claim"
 				+" WHERE ClaimNum = "+claimNum.ToString();
 			Claim retClaim=Crud.ClaimCrud.SelectOne(command);
@@ -294,9 +278,7 @@ namespace OpenDentBusiness{
 			if(listClaimNums.IsNullOrEmpty()) {
 				return new List<Claim>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Claim>>(MethodBase.GetCurrentMethod(),listClaimNums);
-			}
+			
 			string command=$"SELECT * FROM claim WHERE ClaimNum IN ({string.Join(",",listClaimNums)})";
 			return ClaimCrud.SelectMany(command);
 		}
@@ -306,9 +288,7 @@ namespace OpenDentBusiness{
 			if(patNum==0) {
 				return new List<Claim>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Claim>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command=
 				"SELECT * FROM claim"
 				+" WHERE PatNum = "+patNum.ToString()
@@ -328,10 +308,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Claim claim) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				claim.ClaimNum=Meth.GetLong(MethodBase.GetCurrentMethod(),claim);
-				return claim.ClaimNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			claim.SecUserNumEntry=Security.CurUser.UserNum;
 			return Crud.ClaimCrud.Insert(claim);
@@ -339,10 +316,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(Claim claim){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),claim);
-				return;
-			}
+			
 			Crud.ClaimCrud.Update(claim);
 			//now, delete all attachments and recreate.
 			string command="DELETE FROM claimattach WHERE ClaimNum="+POut.Long(claim.ClaimNum);
@@ -355,10 +329,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes the claim and also deletes any Etrans835Attaches when specified.</summary>
 		public static void Delete(Claim claim,List<long> listEtrans835AttachNums=null){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),claim,listEtrans835AttachNums);
-				return;
-			}
+			
 			Etrans835Attaches.DeleteMany(listEtrans835AttachNums);
 			Crud.ClaimCrud.Delete(claim.ClaimNum);
 		}
@@ -374,9 +345,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Called from claimsend window and from Claim edit window.  Use an empty listClaimNums to get all waiting claims.</summary>
 		public static ClaimSendQueueItem[] GetQueueList(List<long> listClaimNums,long clinicNum,long customTracking) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ClaimSendQueueItem[]>(MethodBase.GetCurrentMethod(),listClaimNums,clinicNum,customTracking);
-			}
+			
 			List<string> listWhereAnds=new List<string>();
 			if(listClaimNums.Count==0) {
 				listWhereAnds.Add("claim.ClaimStatus IN ('W','P') ");
@@ -447,9 +416,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Supply claimnums. Called from X12 to begin the sorting process on claims going to one clearinghouse.</summary>
 		public static List<X12TransactionItem> GetX12TransactionInfo(List<long> claimNums) {//ArrayList queueItemss){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<X12TransactionItem>>(MethodBase.GetCurrentMethod(),claimNums);
-			}
+			
 			List<X12TransactionItem> retVal=new List<X12TransactionItem>();
 			if(claimNums.Count<1) {
 				return retVal;
@@ -480,10 +447,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Also sets the DateSent to today.</summary>
 		public static void SetClaimSent(long claimNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),claimNum);
-				return;
-			}
+			
 			DateTime dateT=MiscData.GetNowDateTime();
 			string command="UPDATE claim SET ClaimStatus = 'S',"
 				+"DateSent="+POut.Date(dateT)+", "
@@ -493,9 +457,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static bool IsClaimIdentifierInUse(string claimIdentifier,long claimNumExclude,string claimType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),claimIdentifier,claimNumExclude,claimType);
-			}
+			
 			string command="SELECT COUNT(*) FROM claim WHERE ClaimIdentifier='"+POut.String(claimIdentifier)+"' AND ClaimNum<>"+POut.Long(claimNumExclude);
 			if(claimType=="PreAuth") {
 				command+=" AND ClaimType='PreAuth'";
@@ -507,9 +469,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static bool IsReferralAttached(long referralNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),referralNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM claim WHERE OrderingReferralNum="+POut.Long(referralNum);
  			if(Db.GetCount(command)=="0") {
 				return false;
@@ -855,9 +815,7 @@ namespace OpenDentBusiness{
 		///of claims.  The list of claims with matching fee and date of service should be very short.  Worst case, the list would contain all of the
 		///claims for a few days if every claim had the same fee (rare).</summary>
 		public static DataTable GetClaimTable(DateTime dateMin,DateTime dateMax,double feeMin,double feeMax) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateMin,dateMax,feeMin,feeMax);
-			}
+			
 			string command=$@"SELECT claim.ClaimNum,claim.ClaimIdentifier,claim.ClaimStatus,ROUND(ClaimFee,2) ClaimFee,claim.DateService,patient.LName,
 				patient.FName,inssub.SubscriberID
 				FROM claim
@@ -876,9 +834,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the number of received claims attached to specified subscriber with specified insplan.  Set insSubNum to zero to check all claims for all patients for the plan.</summary>
 		public static int GetCountReceived(long planNum,long insSubNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),planNum,insSubNum);
-			}
+			
 			string command;
 			command="SELECT COUNT(*) "
 				+"FROM claim "
@@ -918,10 +874,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Updates ClaimIdentifier for specified claim.</summary>
 		public static void UpdateClaimIdentifier(long claimNum,string claimIdentifier) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),claimNum,claimIdentifier);
-				return;
-			}
+			
 			string command="UPDATE claim SET ClaimIdentifier='"+POut.String(claimIdentifier)+"' WHERE ClaimNum="+POut.Long(claimNum);
 			Db.NonQ(command);
 		}
@@ -1357,27 +1310,19 @@ namespace OpenDentBusiness{
 		///<summary>Zeros securitylog FKey column for rows that are using the matching claimNum as FKey and are related to Claim.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Claim table type.</summary>
 		public static void ClearFkey(long claimNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),claimNum);
-				return;
-			}
+			
 			Crud.ClaimCrud.ClearFkey(claimNum);
 		}
 
 		///<summary>Zeros securitylog FKey column for rows that are using the matching claimNums as FKey and are related to Claim.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Claim table type.</summary>
 		public static void ClearFkey(List<long> listClaimNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listClaimNums);
-				return;
-			}
+			
 			Crud.ClaimCrud.ClearFkey(listClaimNums);
 		}
 
 		public static DateTime GetDateLastOrthoClaim(PatPlan patPlanCur,OrthoClaimType claimType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<DateTime>(MethodBase.GetCurrentMethod(),patPlanCur,claimType);
-			}
+			
 			long orthoDefaultAutoCodeNum=PrefC.GetLong(PrefName.OrthoAutoProcCodeNum);
 			string command="";
 			if(claimType == OrthoClaimType.InitialPlusPeriodic) {
@@ -1414,18 +1359,14 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<Claim> GetForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Claim>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			return Crud.ClaimCrud.SelectMany("SELECT * FROM claim WHERE PatNum = "+patNum);
 		}
 
 		///<summary>Gets the most recent ortho claim with a banding code attached.
 		///Returns null if no ortho banding code nums found or no corresponding claim found.</summary>
 		public static Claim GetOrthoBandingClaim(long patNum,long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Claim>(MethodBase.GetCurrentMethod(),patNum,planNum);
-			}
+			
 			List<long> listProcCodeNums=ProcedureCodes.GetOrthoBandingCodeNums();
 			if(listProcCodeNums==null || listProcCodeNums.Count < 1) {
 				return null;

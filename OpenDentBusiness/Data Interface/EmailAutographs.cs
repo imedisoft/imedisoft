@@ -66,11 +66,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_emailAutographCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _emailAutographCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -86,28 +82,19 @@ namespace OpenDentBusiness{
 		
 		///<summary>Insert one EmailAutograph in the database.</summary>
 		public static long Insert(EmailAutograph emailAutograph){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				emailAutograph.EmailAutographNum=Meth.GetLong(MethodBase.GetCurrentMethod(),emailAutograph);
-				return emailAutograph.EmailAutographNum;
-			}
+			
 			return Crud.EmailAutographCrud.Insert(emailAutograph);
 		}
 		
 		///<summary>Updates an existing EmailAutograph in the database.</summary>
 		public static void Update(EmailAutograph emailAutograph){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),emailAutograph);
-				return;
-			}
+			
 			Crud.EmailAutographCrud.Update(emailAutograph);
 		}
 
 		///<summary>Delete on EmailAutograph from the database.</summary>
 		public static void Delete(long emailAutographNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),emailAutographNum);
-				return;
-			}
+			
 			Crud.EmailAutographCrud.Delete(emailAutographNum);
 		}
 	}

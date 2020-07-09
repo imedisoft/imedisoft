@@ -37,10 +37,7 @@ namespace OpenDentBusiness {
 		
 		///<summary>Also fills PlanNum from db.</summary>
 		public static long Insert(InsPlan plan,bool useExistingPK) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				plan.PlanNum=Meth.GetLong(MethodBase.GetCurrentMethod(),plan,useExistingPK);
-				return plan.PlanNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			plan.SecUserNumEntry=Security.CurUser.UserNum;
 			long planNum=0;
@@ -63,10 +60,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Pass in the old InsPlan to avoid querying the db for it.</summary>
 		public static void Update(InsPlan plan,InsPlan planOld=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),plan,planOld);
-				return;
-			}
+			
 			if(planOld==null) {
 				planOld=InsPlans.RefreshOne(plan.PlanNum);
 			}
@@ -94,9 +88,7 @@ namespace OpenDentBusiness {
 			if(listPlanNums==null || listPlanNums.Count==0) {
 				return new List<InsPlan>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsPlan>>(MethodBase.GetCurrentMethod(),listPlanNums);
-			}
+			
 			string command="SELECT * FROM insplan WHERE PlanNum IN ("+string.Join(",",listPlanNums)+")";
 			return Crud.InsPlanCrud.SelectMany(command);
 		}
@@ -112,18 +104,14 @@ namespace OpenDentBusiness {
 		}*/
 
 		public static InsPlan[] GetByTrojanID(string trojanID) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<InsPlan[]>(MethodBase.GetCurrentMethod(),trojanID);
-			} 
+			 
 			string command="SELECT * FROM insplan WHERE TrojanID = '"+POut.String(trojanID)+"'";
 			return Crud.InsPlanCrud.SelectMany(command).ToArray();
 		}
 
 		///<summary>Only loads one plan from db. Can return null.</summary>
 		public static InsPlan RefreshOne(long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<InsPlan>(MethodBase.GetCurrentMethod(),planNum);
-			} 
+			 
 			if(planNum==0){
 				return null;
 			}
@@ -138,9 +126,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets List of plans based on the subList.  The list won't be in the same order.</summary>
 		public static List<InsPlan> RefreshForSubList(List<InsSub> listInsSubs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsPlan>>(MethodBase.GetCurrentMethod(),listInsSubs);
-			}
+			
 			if(listInsSubs==null || listInsSubs.Count==0) {
 				return new List<InsPlan>();
 			}
@@ -193,9 +179,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<InsPlan> GetForFeeSchedNum(long feeSchedNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsPlan>>(MethodBase.GetCurrentMethod(),feeSchedNum);
-			}
+			
 			List<InsPlan> listPlanWithFeeSched = new List<InsPlan>();
 			string command = "SELECT * FROM insplan WHERE insplan.FeeSched = " + POut.Long(feeSchedNum);
 			return Crud.InsPlanCrud.SelectMany(command);
@@ -204,10 +188,7 @@ namespace OpenDentBusiness {
 		/*
 		///<summary>Called from FormInsPlan when applying changes to all identical insurance plans. This updates the synchronized fields for all plans like the specified insPlan.  Current InsPlan must be set to the new values that we want.  BenefitNotes and SubscNote are specific to subscriber and are not changed.  PlanNotes are handled separately in a different function after this one is complete.</summary>
 		public static void UpdateForLike(InsPlan like, InsPlan plan) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),like,plan);
-				return;
-			}
+			
 			string command= "UPDATE insplan SET "
 				+"EmployerNum = '"     +POut.Long   (plan.EmployerNum)+"'"
 				+",GroupName = '"      +POut.String(plan.GroupName)+"'"
@@ -297,9 +278,7 @@ namespace OpenDentBusiness {
 
 		/// <summary>Returns a DataTable containing the PlanNum, CarrierNum, and CarrierName for a list of PlanNums.</summary>
 		public static DataTable GetCarrierNames(List<long> listPlanNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listPlanNums);
-			}
+			
 			if(listPlanNums.Count==0) {
 				return new DataTable();
 			}
@@ -518,9 +497,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static DataTable GetCarrierTable() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT insplan.PlanNum,carrier.CarrierName "
 				+"FROM insplan,carrier "
 				+"WHERE insplan.CarrierNum=carrier.CarrierNum";
@@ -529,9 +506,7 @@ namespace OpenDentBusiness {
 		/*
 		///<summary>Used by Trojan.  Gets all distinct notes for the planNums supplied.  Includes blank notes.</summary>
 		public static string[] GetNotesForPlans(List<long> planNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<string[]>(MethodBase.GetCurrentMethod(),planNums,excludePlanNum);
-			}
+			
 			if(planNums.Count==0) {//this should never happen, but just in case...
 				return new string[0];
 			}
@@ -559,10 +534,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Used by Trojan.  Sets the PlanNote for multiple plans at once.</summary>
 		public static void UpdateNoteForPlans(List<long> planNums,string newNote) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),planNums,newNote);
-				return;
-			}
+			
 			if(planNums.Count==0){
 				return;
 			}
@@ -581,9 +553,7 @@ namespace OpenDentBusiness {
 		/*
 		///<summary>Called from FormInsPlan when user wants to view a benefit note for similar plans.  Should never include the current plan that the user is editing.  This function will get one note from the database, not including blank notes.  If no note can be found, then it returns empty string.</summary>
 		public static string GetBenefitNotes(List<long> planNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),planNums);
-			}
+			
 			if(planNums.Count==0){
 				return "";
 			}
@@ -607,9 +577,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets a list of PlanNums from the database of plans that have identical info as this one. Used to perform updates to benefits, etc.  Note that you have the option to include the current plan in the list.</summary>
 		public static List<long> GetPlanNumsOfSamePlans(string employerName,string groupName,string groupNum,
 				string divisionNo,string carrierName,bool isMedical,long planNum,bool includePlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),employerName,groupName,groupNum,divisionNo,carrierName,isMedical,planNum,includePlanNum);
-			}
+			
 			string command="SELECT PlanNum FROM insplan "
 				+"LEFT JOIN carrier ON carrier.CarrierNum = insplan.CarrierNum "
 				+"LEFT JOIN employer ON employer.EmployerNum = insplan.EmployerNum ";
@@ -646,9 +614,7 @@ namespace OpenDentBusiness {
 		public static DataTable GetBigList(bool byEmployer,string empName,string carrierName,string groupName,string groupNum,string planNum,
 			string trojanID,bool showHidden,bool isIncludeAll)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),byEmployer,empName,carrierName,groupName,groupNum,planNum,trojanID,showHidden,isIncludeAll);
-			}
+			
 			DataTable table=new DataTable();
 			DataRow row;
 			table.Columns.Add("Address");
@@ -732,9 +698,7 @@ namespace OpenDentBusiness {
 		public static DataTable GetListFeeCheck(string carrierName,string carrierNameNot,long feeSchedWithout,long feeSchedWith,
 			FeeScheduleType feeSchedType)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),carrierName,carrierNameNot,feeSchedWithout,feeSchedWith,feeSchedType);
-			}
+			
 			string pFeeSched="FeeSched";
 			if(feeSchedType==FeeScheduleType.OutNetwork){
 				pFeeSched="AllowedFeeSched";//This is the name of a column in the insplan table and cannot be changed to OutNetworkFeeSched
@@ -768,9 +732,7 @@ namespace OpenDentBusiness {
 		public static long SetFeeSched(long employerNum,string carrierName,string groupNum,
 			string groupName,long feeSchedNum, FeeScheduleType feeSchedType)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),employerNum,carrierName,groupNum,groupName,feeSchedNum,feeSchedType);
-			}
+			
 			//Code rewritten so that it is not only MySQL compatible, but Oracle compatible as well.
 			string command="SELECT insplan.PlanNum, ";
 			switch(feeSchedType) {
@@ -834,9 +796,7 @@ namespace OpenDentBusiness {
 		///<summary>Returns the number of fee schedules added.  It doesn't inform the user of how many plans were affected, but there will obviously be a
 		///certain number of plans for every new fee schedule.</summary>
 		public static long GenerateAllowedFeeSchedules() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			//get carrier names for all plans without an allowed fee schedule that are also not hidden.
 			string command="SELECT carrier.CarrierName "
 				+"FROM insplan,carrier "
@@ -899,9 +859,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static int UnusedGetCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM insplan WHERE IsHidden=0 "
 				+"AND NOT EXISTS (SELECT * FROM inssub WHERE inssub.PlanNum=insplan.PlanNum)";
 			int count=PIn.Int(Db.GetCount(command));
@@ -909,10 +867,7 @@ namespace OpenDentBusiness {
 		}
 		
 		public static void UnusedHideAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			string command="SELECT * FROM insplan "
 				+"WHERE IsHidden=0 "
 				+"AND NOT EXISTS (SELECT * FROM inssub WHERE inssub.PlanNum=insplan.PlanNum)";
@@ -1059,9 +1014,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<InsPlan> GetByInsSubs(List<long> insSubNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsPlan>>(MethodBase.GetCurrentMethod(),insSubNums);
-			}
+			
 			if(insSubNums==null || insSubNums.Count < 1) {
 				return new List<InsPlan>();
 			}
@@ -1073,10 +1026,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Used when closing the edit plan window to find all patients using this plan and to update all claimProcs for each patient.  This keeps estimates correct.</summary>
 		public static void ComputeEstimatesForTrojanPlan(long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),planNum);
-				return;
-			}
+			
 			//string command="SELECT PatNum FROM patplan WHERE PlanNum="+POut.Long(planNum);
 			//The left join will get extra info about each plan, namely the PlanNum.  No need for a GROUP BY.  The PlanNum is used to filter.
 			string command=@"SELECT PatNum FROM patplan 
@@ -1092,10 +1042,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Used when closing the edit plan window to find all patients using this subscriber and to update all claimProcs for each patient.  This keeps estimates correct.</summary>
 		public static void ComputeEstimatesForSubscriber(long subscriber) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),subscriber);
-				return;
-			}
+			
 			string command="SELECT PatNum FROM patplan,inssub WHERE Subscriber="+POut.Long(subscriber)+" AND patplan.InsSubNum=inssub.InsSubNum";
 			DataTable table=Db.GetTable(command);
 			List<long> patnums=new List<long>();
@@ -1144,10 +1091,7 @@ namespace OpenDentBusiness {
 		///If canDeleteInsSub is true and there is only one inssub associated to the plan, it will also delete inssubs. 
 		///This should only really happen when an existing plan is being deleted.</summary>
 		public static void Delete(InsPlan plan,bool canDeleteInsSub=true,bool doInsertInsEditLogs=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),plan,canDeleteInsSub,doInsertInsEditLogs);
-				return;
-			}
+			
 			#region Validation
 			//Claims
 			string command="SELECT 1 FROM claim WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(1);
@@ -1212,10 +1156,7 @@ namespace OpenDentBusiness {
 
 		/// <summary>This changes PlanNum in every place in database where it's used.  It also deletes benefits for the old planNum.</summary>
 		public static void ChangeReferences(long planNum,long planNumTo) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),planNum,planNumTo);
-				return;
-			}
+			
 			string command;
 			//change all references to the old plan to point to the new plan.
 			//appointment.InsPlan1/2
@@ -1254,9 +1195,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns the number of plans affected.</summary>
 		public static long SetAllPlansToShowUCR() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM insplan WHERE ClaimsUseUCR = 0";
 			List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
 			command="UPDATE insplan SET ClaimsUseUCR=1";
@@ -1270,17 +1209,13 @@ namespace OpenDentBusiness {
 		}
 		
 		public static List<InsPlan> GetByCarrierName(string carrierName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsPlan>>(MethodBase.GetCurrentMethod(),carrierName);
-			}
+			
 			string command="SELECT * FROM insplan WHERE CarrierNum IN (SELECT CarrierNum FROM carrier WHERE CarrierName='"+POut.String(carrierName)+"')";
 			return Crud.InsPlanCrud.SelectMany(command);
 		}
 
 		public static List<long> GetPlanNumsByCarrierNum(long carrierNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),carrierNum);
-			}
+			
 			string command="SELECT PlanNum FROM insplan WHERE CarrierNum="+POut.Long(carrierNum);
 			DataTable table=Db.GetTable(command);
 			List<long> planNums=new List<long>();
@@ -1291,18 +1226,13 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<InsPlan> GetAllByCarrierNum(long carrierNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsPlan>>(MethodBase.GetCurrentMethod(),carrierNum);
-			}
+			
 			string command="SELECT * FROM insplan WHERE CarrierNum="+POut.Long(carrierNum);
 			return Crud.InsPlanCrud.SelectMany(command);
 		}
 		
 		public static void UpdateCobRuleForAll(EnumCobRule cobRule) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cobRule);
-				return;
-			}
+			
 			string command = "SELECT * FROM insplan WHERE CobRule != "+POut.Int((int)cobRule);
 			List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
 			command="UPDATE insplan SET CobRule="+POut.Int((int)cobRule);
@@ -1330,20 +1260,14 @@ namespace OpenDentBusiness {
 		///<summary>Zeros securitylog FKey column for rows that are using the matching planNum as FKey and are related to InsPlan.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the InsPlan table type.</summary>
 		public static void ClearFkey(long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),planNum);
-				return;
-			}
+			
 			Crud.InsPlanCrud.ClearFkey(planNum);
 		}
 
 		///<summary>Zeros securitylog FKey column for rows that are using the matching planNums as FKey and are related to InsPlan.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the InsPlan table type.</summary>
 		public static void ClearFkey(List<long> listPlanNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listPlanNums);
-				return;
-			}
+			
 			Crud.InsPlanCrud.ClearFkey(listPlanNums);
 		}
 
@@ -1361,10 +1285,7 @@ namespace OpenDentBusiness {
 		///<summary>Searches all appointments for the given invalid InsPlanNum. Sets appointment.Insplan1=0 and appointment.Insplan2=0.
 		///This method assumes the planNum is invalid (does not exist in insplan table).</summary>
 		public static void ResetAppointmentInsplanNum(long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),planNum);
-				return;
-			}
+			
 			string command=$"SELECT * FROM appointment WHERE appointment.InsPlan1={planNum} OR appointment.InsPlan2={planNum}";
 			List<Appointment> listAppts=Crud.AppointmentCrud.SelectMany(command);
 			if(listAppts.Count==0) {

@@ -25,9 +25,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Inserts the Document and retrieves it immediately from the database.</summary>
 		public static Document InsertAndGet(Document doc,Patient pat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Document>(MethodBase.GetCurrentMethod(),doc,pat);
-			}
+			
 			Insert(doc,pat);
 			return GetByNum(doc.DocNum);
 		}
@@ -48,9 +46,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static Document[] GetAllWithPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Document[]>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM document WHERE PatNum="+POut.Long(patNum)+" ORDER BY DateCreated";
 			DataTable table=Db.GetTable(command);
 			return Crud.DocumentCrud.TableToList(table).ToArray();
@@ -59,9 +55,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets the document with the specified document number.</summary>
 		///<param name="doReturnNullIfNotFound">If false and there is no document with that docNum, will return a new Document.</param>
 		public static Document GetByNum(long docNum,bool doReturnNullIfNotFound=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Document>(MethodBase.GetCurrentMethod(),docNum,doReturnNullIfNotFound);
-			}
+			
 			Document doc=Crud.DocumentCrud.SelectOne(docNum);
 			if(doc==null && !doReturnNullIfNotFound) {
 				return new Document();
@@ -70,9 +64,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<Document> GetByNums(List<long> listDocNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Document>>(MethodBase.GetCurrentMethod(),listDocNums);
-			}
+			
 			if(listDocNums.Count<1) {
 				return new List<Document>();
 			}
@@ -108,10 +100,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Usually, set just the extension before passing in the doc.  Inserts a new document into db, creates a filename based on Cur.DocNum, and then updates the db with this filename.  Should always refresh the document after calling this method in order to get the correct filename for RemotingRole.ClientWeb.</summary>
 		public static long Insert(Document doc,Patient pat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				doc.DocNum=Meth.GetLong(MethodBase.GetCurrentMethod(),doc,pat);
-				return doc.DocNum;
-			}
+			
 			doc.DocNum=Crud.DocumentCrud.Insert(doc);
 			//If the current filename is just an extension, then assign it a unique name.
 			if(doc.FileName==Path.GetExtension(doc.FileName)) {
@@ -145,44 +134,31 @@ namespace OpenDentBusiness {
 
 		///<summary>This is a generic insert statement used to insert documents with custom file names.</summary>
 		public static long Insert(Document doc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				doc.DocNum=Meth.GetLong(MethodBase.GetCurrentMethod(),doc);
-				return doc.DocNum;
-			}
+			
 			return Crud.DocumentCrud.Insert(doc);
 		}
 
 		///<summary></summary>
 		public static void Update(Document doc){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),doc);
-				return;
-			}
+			
 			Crud.DocumentCrud.Update(doc);
 		}
 
 		///<summary></summary>
 		public static bool Update(Document doc,Document docOld){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),doc,docOld);
-			}
+			
 			return Crud.DocumentCrud.Update(doc,docOld);
 		}
 
 		///<summary></summary>
 		public static void Delete(Document doc){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),doc);
-				return;
-			}
+			
 			Crud.DocumentCrud.Delete(doc.DocNum);
 		}
 
 		///<summary>This is used by FormImageViewer to get a list of paths based on supplied list of DocNums. The reason is that later we will allow sharing of documents, so the paths may not be in the current patient folder. Rewritten by Ryan on 10/26/2011 to use List&lt;&gt; instead of ArrayList.</summary>
 		public static List<string> GetPaths(List<long> docNums,string atoZPath) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod(),docNums,atoZPath);
-			}
+			
 			if(docNums.Count==0) {
 				return new List<string>();
 			}
@@ -217,9 +193,7 @@ namespace OpenDentBusiness {
 		
 		///<summary>Will return null if no picture for this patient.</summary>
 		public static Document GetPatPictFromDb(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Document>(MethodBase.GetCurrentMethod(),patNum);
-			} 
+			 
 			//first establish which category pat pics are in
 			long defNumPicts=0;
 			Def[] defs=Defs.GetDefsForCategory(DefCat.ImageCats,true).ToArray();
@@ -249,9 +223,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets all documents within the doc category designated as the "S"tatements directory via definitions.
 		///Also gets dependents' statements if this patient is a guarantor (needed by the patient portal).</summary>
 		public static List<Document> GetStatementsForPat(long patNum,List<long> listDependents) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Document>>(MethodBase.GetCurrentMethod(),patNum,listDependents);
-			}
+			
 			string command="SELECT def.DefNum FROM  definition def "
 					+"WHERE def.Category="+POut.Int((int)DefCat.ImageCats)+" "
 					+"AND def.IsHidden=0  "
@@ -273,9 +245,7 @@ namespace OpenDentBusiness {
 		///<summary>Get document info for all images linked to this patient.
 		///Also gets dependents' images if this patient is a guarantor (needed by the patient portal).</summary>
 		public static List<Document> GetPatientPortalDocsForPat(long patNum,List<long> listDependents) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Document>>(MethodBase.GetCurrentMethod(),patNum,listDependents);
-			}
+			
 			string command="SELECT def.DefNum FROM  definition def "
 					+"WHERE def.Category="+POut.Int((int)DefCat.ImageCats)+" "
 					+"AND def.IsHidden=0  "
@@ -410,9 +380,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns the documents which correspond to the given mountitems. They should already be ordered by ItemOrder.</summary>
 		public static Document[] GetDocumentsForMountItems(List<MountItem> mountItems) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Document[]>(MethodBase.GetCurrentMethod(),mountItems);
-			}
+			
 			if(mountItems==null || mountItems.Count<1){
 				return new Document[0];
 			}
@@ -432,9 +400,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Used for displaying images attached to DXC claims.  Returns null if the document was not foundd.</summary>
 		public static Document GetDocumentForDXC(ClaimAttach claimAttach) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Document>(MethodBase.GetCurrentMethod(),claimAttach);
-			}
+			
 			string command=$"SELECT * FROM document WHERE FileName='{claimAttach.ActualFileName}'";
 			return Crud.DocumentCrud.SelectOne(command);
 		}
@@ -478,9 +444,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns a datatable containing all filenames of the documents for the supplied patnum.</summary>
 		public static DataTable GetFileNamesForPatient(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT FileName FROM document WHERE PatNum='"+patNum+"' ORDER BY FileName";
 			return Db.GetTable(command);
 		}
@@ -495,9 +459,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static DataTable GetTreeListTableForPatient(string patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			DataConnection dcon=new DataConnection();
 			DataTable table=new DataTable("DocumentList");
 			DataRow row;
@@ -640,9 +602,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Only documents listed in the corresponding rows of the statement table are uploaded</summary>
 		public static List<long> GetChangedSinceDocumentNums(DateTime changedSince,List<long> statementNumList) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince,statementNumList);
-			}
+			
 			string strStatementNums="";
 			DataTable table;
 			if(statementNumList.Count>0) {
@@ -667,9 +627,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Used along with GetChangedSinceDocumentNums</summary>
 		public static List<Document> GetMultDocuments(List<long> documentNums,string AtoZpath) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Document>>(MethodBase.GetCurrentMethod(),documentNums,AtoZpath);
-			}
+			
 			string strDocumentNums="";
 			DataTable table;
 			if(documentNums.Count>0) {
@@ -705,10 +663,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all documents of a patient</summary>
 		public static void ResetTimeStamps(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			string command="UPDATE document SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum ="+POut.Long(patNum);
 			Db.NonQ(command);
 		}
@@ -716,10 +671,7 @@ namespace OpenDentBusiness {
 		///<summary>Moves one document from one patient to another and updates the file name accordingly.
 		///Only call when physically storing images in a folder share and after the physical images have been successfully copied over to the "to patient" folder.</summary>
 		public static void MergePatientDocument(long patFrom,long patTo,string oldFileName,string newFileName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patFrom,patTo,oldFileName,newFileName);
-				return;
-			}
+			
 			string command="UPDATE document"
 				+" SET PatNum="+POut.Long(patTo)+","
 				+" FileName='"+POut.String(newFileName)+"'"
@@ -731,10 +683,7 @@ namespace OpenDentBusiness {
 		///<summary>Moves all documents from one patient to another.
 		///Only call when physically storing images in a folder share and only if every document.Filename matches a file in patTo's folder.</summary>
 		public static void MergePatientDocuments(long patFrom,long patTo) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patFrom,patTo);
-				return;
-			}
+			
 			string command="UPDATE document"
 				+" SET PatNum="+POut.Long(patTo)
 				+" WHERE PatNum="+POut.Long(patFrom);
@@ -795,9 +744,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns true if a Document with the external GUID is found in the database.</summary>
 		public static bool DocExternalExists(string externalGUID,ExternalSourceType externalSource) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),externalGUID,externalSource);
-			}
+			
 			string command="SELECT COUNT(*) FROM document"
 				+" WHERE document.ExternalGUID='"+POut.String(externalGUID)+"'"
 				+" AND document.ExternalSource='"+POut.String(externalSource.ToString())+"'";
@@ -840,20 +787,14 @@ namespace OpenDentBusiness {
 		///<summary>Zeros securitylog FKey column for rows that are using the matching docNum as FKey and are related to Document.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Document table type.</summary>
 		public static void ClearFkey(long docNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),docNum);
-				return;
-			}
+			
 			Crud.DocumentCrud.ClearFkey(docNum);
 		}
 
 		///<summary>Zeros securitylog FKey column for rows that are using the matching docNums as FKey and are related to Document.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Document table type.</summary>
 		public static void ClearFkey(List<long> listDocNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listDocNums);
-				return;
-			}
+			
 			Crud.DocumentCrud.ClearFkey(listDocNums);
 		}
 	}	

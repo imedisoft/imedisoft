@@ -26,9 +26,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns all tsitranslogs for the patients in listPatNums.  Returns empty list if listPatNums is empty or null.</summary>
 		public static List<TsiTransLog> SelectMany(List<long> listPatNums){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TsiTransLog>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			if(listPatNums==null || listPatNums.Count<1) {
 				return new List<TsiTransLog>();
 			}
@@ -39,9 +37,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns all tsitranslogs for all patients.  Used in FormTsiHistory only.</summary>
 		public static List<TsiTransLog> GetAll(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TsiTransLog>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM tsitranslog ORDER BY TransDateTime DESC";
 			return Crud.TsiTransLogCrud.SelectMany(command);
 		}
@@ -50,9 +46,7 @@ namespace OpenDentBusiness{
 		///with type CN (cancel), PF (paid in full), PT (paid in full, thank you), or PL (placement) with a more recent date, since this would change the
 		///account status from suspended to either closed/canceled or if the more recent message had type PL (placement) back to active.</summary>
 		public static List<long> GetSuspendedGuarNums() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod());
-			}
+			
 			int[] arrayStatusTransTypes=new[] { (int)TsiTransType.SS,(int)TsiTransType.CN,(int)TsiTransType.RI,(int)TsiTransType.PF,(int)TsiTransType.PT,(int)TsiTransType.PL };
 			string command="SELECT DISTINCT tsitranslog.PatNum "
 				+"FROM tsitranslog "
@@ -69,9 +63,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static bool IsGuarSuspended(long guarNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),guarNum);
-			}
+			
 			int[] arrayStatusTransTypes=new[] { (int)TsiTransType.SS,(int)TsiTransType.CN,(int)TsiTransType.RI,(int)TsiTransType.PF,(int)TsiTransType.PT,(int)TsiTransType.PL };
 			string command="SELECT (CASE WHEN tsitranslog.TransType="+(int)TsiTransType.SS+" THEN 1 ELSE 0 END) isGuarSuspended "
 				+"FROM tsitranslog "
@@ -91,18 +83,12 @@ namespace OpenDentBusiness{
 		#region Insert
 
 		public static long Insert(TsiTransLog tsiTransLog) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				tsiTransLog.TsiTransLogNum=Meth.GetLong(MethodBase.GetCurrentMethod(),tsiTransLog);
-				return tsiTransLog.TsiTransLogNum;
-			}
+			
 			return Crud.TsiTransLogCrud.Insert(tsiTransLog);
 		}
 
 		public static void InsertMany(List<TsiTransLog> listTsiTransLogs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listTsiTransLogs);
-				return;
-			}
+			
 			Crud.TsiTransLogCrud.InsertMany(listTsiTransLogs);
 		}
 
@@ -175,10 +161,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(TsiTransLog tsiTransLog,TsiTransLog tsiTransLogOld){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),tsiTransLog,tsiTransLogOld);
-				return;
-			}
+			
 			Crud.TsiTransLogCrud.Update(tsiTransLog,tsiTransLogOld);
 		}
 
@@ -191,10 +174,7 @@ namespace OpenDentBusiness{
 			if(listLogNums.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listLogNums);
-				return;
-			}
+			
 			string command="DELETE FROM tsitranslog WHERE TsiTransLogNum IN("+string.Join(",",listLogNums)+")";
 			Db.NonQ(command);
 		}

@@ -11,9 +11,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		/// <summary>There will be at most one result for a FeeSched/Clinic combination.  Can return NULL.</summary>
 		public static FeeSchedGroup GetOneForFeeSchedAndClinic(long feeSchedNum, long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<FeeSchedGroup>(MethodBase.GetCurrentMethod(),feeSchedNum,clinicNum);
-			}
+			
 			//ClinicNums are stored as a comma delimited list requiring a LIKE condition.
 			string command=$"SELECT * FROM feeschedgroup WHERE FeeSchedNum={feeSchedNum} AND FIND_IN_SET('{clinicNum}',ClinicNums)";
 			return Crud.FeeSchedGroupCrud.SelectOne(command);
@@ -21,18 +19,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of every single FeeSchedGroup in the database.</summary>
 		public static List<FeeSchedGroup> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<FeeSchedGroup>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM feeschedgroup";
 			return Crud.FeeSchedGroupCrud.SelectMany(command);
 		}
 
 		///<summary>Returns a list of all FeeSchedGroups for a given FeeSched.  A feeSchedNum of 0 will return all feeschedgroups.</summary>
 		public static List<FeeSchedGroup> GetAllForFeeSched(long feeSchedNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<FeeSchedGroup>>(MethodBase.GetCurrentMethod(),feeSchedNum);
-			}
+			
 			string command=$"SELECT * FROM feeschedgroup {(feeSchedNum>0? $"WHERE FeeSchedNum={feeSchedNum}":"")}";
 			return Crud.FeeSchedGroupCrud.SelectMany(command);
 		}
@@ -45,10 +39,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(FeeSchedGroup feeSchedGroup) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				feeSchedGroup.FeeSchedGroupNum=Meth.GetLong(MethodBase.GetCurrentMethod(),feeSchedGroup);
-				return feeSchedGroup.FeeSchedGroupNum;
-			}
+			
 			return Crud.FeeSchedGroupCrud.Insert(feeSchedGroup);
 		}
 		#endregion
@@ -57,10 +48,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(FeeSchedGroup feeSchedGroup) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),feeSchedGroup);
-				return;
-			}
+			
 			Crud.FeeSchedGroupCrud.Update(feeSchedGroup);
 		}
 
@@ -70,10 +58,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(long feeSchedGroupNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),feeSchedGroupNum);
-				return;
-			}
+			
 			Crud.FeeSchedGroupCrud.Delete(feeSchedGroupNum);
 		}
 		#endregion
@@ -236,18 +221,14 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary></summary>
 		public static List<FeeSchedGroup> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<FeeSchedGroup>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM feeschedgroup WHERE PatNum = "+POut.Long(patNum);
 			return Crud.FeeSchedGroupCrud.SelectMany(command);
 		}
 		
 		///<summary>Gets one FeeSchedGroup from the db.</summary>
 		public static FeeSchedGroup GetOne(long feeSchedGroupNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<FeeSchedGroup>(MethodBase.GetCurrentMethod(),feeSchedGroupNum);
-			}
+			
 			return Crud.FeeSchedGroupCrud.SelectOne(feeSchedGroupNum);
 		}
 		#endregion Get Methods
@@ -255,10 +236,7 @@ namespace OpenDentBusiness{
 		
 		///<summary></summary>
 		public static void Update(FeeSchedGroup feeSchedGroup){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),feeSchedGroup);
-				return;
-			}
+			
 			Crud.FeeSchedGroupCrud.Update(feeSchedGroup);
 		}
 		

@@ -13,27 +13,19 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one SubstitutionLink from the db.</summary>
 		public static SubstitutionLink GetOne(long substitutionLinkNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<SubstitutionLink>(MethodBase.GetCurrentMethod(),substitutionLinkNum);
-			}
+			
 			return Crud.SubstitutionLinkCrud.SelectOne(substitutionLinkNum);
 		}
 
 		///<summary></summary>
 		public static void Update(SubstitutionLink substitutionLink){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),substitutionLink);
-				return;
-			}
+			
 			Crud.SubstitutionLinkCrud.Update(substitutionLink);
 		}
 
 		///<summary></summary>
 		public static void Delete(long substitutionLinkNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),substitutionLinkNum);
-				return;
-			}
+			
 			Crud.SubstitutionLinkCrud.Delete(substitutionLinkNum);
 		}
 
@@ -50,9 +42,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<SubstitutionLink> GetAllForPlans(params long[] arrayPlanNums){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SubstitutionLink>>(MethodBase.GetCurrentMethod(),arrayPlanNums);
-			}
+			
 			if(arrayPlanNums.Length==0) {
 				return new List<SubstitutionLink>();
 			}
@@ -63,9 +53,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Inserts, updates, or deletes the passed in list against the stale list listOld.  Returns true if db changes were made.</summary>
 		public static bool Sync(List<SubstitutionLink> listNew,List<SubstitutionLink> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.SubstitutionLinkCrud.Sync(listNew,listOld);
 		}
 
@@ -109,18 +97,12 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(SubstitutionLink substitutionLink) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				substitutionLink.SubstitutionLinkNum=Meth.GetLong(MethodBase.GetCurrentMethod(),substitutionLink);
-				return substitutionLink.SubstitutionLinkNum;
-			}
+			
 			return Crud.SubstitutionLinkCrud.Insert(substitutionLink);
 		}
 
 		public static void InsertMany(List<SubstitutionLink> listSubstitutionLinks) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSubstitutionLinks);
-				return;
-			}
+			
 			Crud.SubstitutionLinkCrud.InsertMany(listSubstitutionLinks);
 		}
 	}

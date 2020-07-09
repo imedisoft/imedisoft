@@ -25,9 +25,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets the most recent UserodApptView from the db for the user and clinic.  clinicNum can be 0.  Returns null if no match found.</summary>
 		public static UserodApptView GetOneForUserAndClinic(long userNum,long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<UserodApptView>(MethodBase.GetCurrentMethod(),userNum,clinicNum);
-			}
+			
 			string command="SELECT * FROM userodapptview "
 				+"WHERE UserNum = "+POut.Long(userNum)+" "
 				+"AND ClinicNum = "+POut.Long(clinicNum)+" ";//If clinicNum of 0 passed in, we MUST filter by 0 because that is a valid entry in the db.
@@ -53,19 +51,13 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long Insert(UserodApptView userodApptView) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				userodApptView.UserodApptViewNum=Meth.GetLong(MethodBase.GetCurrentMethod(),userodApptView);
-				return userodApptView.UserodApptViewNum;
-			}
+			
 			return Crud.UserodApptViewCrud.Insert(userodApptView);
 		}
 
 		///<summary></summary>
 		public static void Update(UserodApptView userodApptView) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userodApptView);
-				return;
-			}
+			
 			Crud.UserodApptViewCrud.Update(userodApptView);
 		}
 
@@ -138,11 +130,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_UserodApptViewCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _UserodApptViewCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -153,27 +141,20 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets one UserodApptView from the db.</summary>
 		public static UserodApptView GetOne(long userodApptViewNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<UserodApptView>(MethodBase.GetCurrentMethod(),userodApptViewNum);
-			}
+			
 			return Crud.UserodApptViewCrud.SelectOne(userodApptViewNum);
 		}
 
 		///<summary>Gets all recent userodapptviews for the user passed in.  Multiple userodapptviews can be returned when using clinics.</summary>
 		public static List<UserodApptView> GetForUser(long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<UserodApptView>>(MethodBase.GetCurrentMethod(),userNum);
-			}
+			
 			string command="SELECT * FROM userodapptview WHERE UserNum = "+POut.Long(userNum);
 			return Crud.UserodApptViewCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(long userodApptViewNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userodApptViewNum);
-				return;
-			}
+			
 			string command= "DELETE FROM userodapptview WHERE UserodApptViewNum = "+POut.Long(userodApptViewNum);
 			Db.NonQ(command);
 		}

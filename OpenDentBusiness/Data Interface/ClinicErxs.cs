@@ -84,11 +84,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_clinicErxCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _clinicErxCache.GetTableFromCache(doRefreshCache);
 		}
 		#endregion Cache Pattern
@@ -97,18 +93,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static ClinicErx GetOne(long clinicErxNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ClinicErx>(MethodBase.GetCurrentMethod(),clinicErxNum);
-			}
+			
 			string command="SELECT * FROM clinicerx WHERE ClinicErxNum = "+POut.Long(clinicErxNum);
 			return Crud.ClinicErxCrud.SelectOne(command);
 		}
 
 		///<summary></summary>
 		public static List<ClinicErx> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClinicErx>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM clinicerx WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ClinicErxCrud.SelectMany(command);
 		}
@@ -139,10 +131,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(ClinicErx clinicErx){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				clinicErx.ClinicErxNum=Meth.GetLong(MethodBase.GetCurrentMethod(),clinicErx);
-				return clinicErx.ClinicErxNum;
-			}
+			
 			return Crud.ClinicErxCrud.Insert(clinicErx);
 		}
 			#endregion
@@ -150,18 +139,13 @@ namespace OpenDentBusiness{
 			#region Update
 		///<summary></summary>
 		public static void Update(ClinicErx clinicErx){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clinicErx);
-				return;
-			}
+			
 			Crud.ClinicErxCrud.Update(clinicErx);
 		}
 
 		///<summary></summary>
 		public static bool Update(ClinicErx clinicErx,ClinicErx oldClinicErx) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),clinicErx,oldClinicErx);
-			}
+			
 			return Crud.ClinicErxCrud.Update(clinicErx,oldClinicErx);
 		}
 		#endregion
@@ -169,10 +153,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary></summary>
 		public static void Delete(long clinicErxNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clinicErxNum);
-				return;
-			}
+			
 			Crud.ClinicErxCrud.Delete(clinicErxNum);
 		}
 			#endregion

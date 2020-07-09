@@ -10,9 +10,6 @@ using CodeBase;
 namespace OpenDentBusiness {
 	public class RpInsAging {
 		public static DataTable GetInsAgingTable(RpAgingParamObject rpo) {			
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),rpo);
-			}
 			#region Insurance Aging
 			string asOfDateStr=POut.Date(rpo.AsOfDate);
 			string thirtyDaysAgo=POut.Date(rpo.AsOfDate.AddDays(-30));

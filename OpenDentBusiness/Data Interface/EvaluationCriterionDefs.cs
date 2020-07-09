@@ -95,11 +95,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_EvaluationCriterionDefCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _EvaluationCriterionDefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -109,18 +105,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of all possible EvaluationCriterionDefs.  Defs attached to an EvaluationDef are copies and will not be shown.</summary>
 		public static List<EvaluationCriterionDef> GetAvailableCriterionDefs() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EvaluationCriterionDef>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM evaluationcriteriondef where EvaluationDefNum=0";
 			return Crud.EvaluationCriterionDefCrud.SelectMany(command);
 		}
 
 		///<summary>Gets a list of all EvaluationCriterion attached to an EvaluationDef.  Ordered by ItemOrder.</summary>
 		public static List<EvaluationCriterionDef> GetAllForEvaluationDef(long evaluationDefNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EvaluationCriterionDef>>(MethodBase.GetCurrentMethod(),evaluationDefNum);
-			}
+			
 			string command="SELECT * FROM evaluationcriteriondef WHERE EvaluationDefNum = "+POut.Long(evaluationDefNum)+" "
 				+"ORDER BY ItemOrder";
 			return Crud.EvaluationCriterionDefCrud.SelectMany(command);
@@ -128,36 +120,25 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one EvaluationCriterionDef from the db.</summary>
 		public static EvaluationCriterionDef GetOne(long evaluationCriterionDefNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EvaluationCriterionDef>(MethodBase.GetCurrentMethod(),evaluationCriterionDefNum);
-			}
+			
 			return Crud.EvaluationCriterionDefCrud.SelectOne(evaluationCriterionDefNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(EvaluationCriterionDef evaluationCriterionDef){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				evaluationCriterionDef.EvaluationCriterionDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),evaluationCriterionDef);
-				return evaluationCriterionDef.EvaluationCriterionDefNum;
-			}
+			
 			return Crud.EvaluationCriterionDefCrud.Insert(evaluationCriterionDef);
 		}
 
 		///<summary></summary>
 		public static void Update(EvaluationCriterionDef evaluationCriterionDef){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),evaluationCriterionDef);
-				return;
-			}
+			
 			Crud.EvaluationCriterionDefCrud.Update(evaluationCriterionDef);
 		}
 
 		///<summary></summary>
 		public static void Delete(long evaluationCriterionDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),evaluationCriterionDefNum);
-				return;
-			}
+			
 			string command= "DELETE FROM evaluationcriteriondef WHERE EvaluationCriterionDefNum = "+POut.Long(evaluationCriterionDefNum);
 			Db.NonQ(command);
 		}

@@ -30,9 +30,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a list of all RepeatCharges for a given patient.  Supply 0 to get a list for all patients.</summary>
 		public static RepeatCharge[] Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<RepeatCharge[]>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM repeatcharge";
 			if(patNum!=0) {
 				command+=" WHERE PatNum = "+POut.Long(patNum);
@@ -43,18 +41,12 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(RepeatCharge charge){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),charge);
-				return;
-			}
+			
 			Crud.RepeatChargeCrud.Update(charge);
 		}
 
 		public static void UpdateChargeAmt(long repeatChargeNum,double chargeAmt) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),repeatChargeNum,chargeAmt);
-				return;
-			}
+			
 			string command="UPDATE repeatcharge SET ChargeAmt="+POut.Double(chargeAmt)+" "
 				+"WHERE RepeatChargeNum="+POut.Long(repeatChargeNum);
 			Db.NonQ(command);
@@ -62,28 +54,20 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long Insert(RepeatCharge charge) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				charge.RepeatChargeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),charge);
-				return charge.RepeatChargeNum;
-			}
+			
 			return Crud.RepeatChargeCrud.Insert(charge);
 		}
 
 		///<summary>Called from FormRepeatCharge.</summary>
 		public static void Delete(RepeatCharge charge){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),charge);
-				return;
-			}
+			
 			string command="DELETE FROM repeatcharge WHERE RepeatChargeNum ="+POut.Long(charge.RepeatChargeNum);
 			Db.NonQ(command);
 		}
 
 		///<summary>For internal use only.  Returns all eRx repeating charges for all customers.</summary>
 		public static List<RepeatCharge> GetForErx() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RepeatCharge>>(MethodBase.GetCurrentMethod());
-			}
+			
 			//Does not need to be Oracle compatible because this is an internal tool only.
 			string command="SELECT * FROM repeatcharge WHERE ProcCode REGEXP '^Z[0-9]{3,}$'";
 			return Crud.RepeatChargeCrud.SelectMany(command);
@@ -100,9 +84,7 @@ namespace OpenDentBusiness {
 		///associated to the same super family.  This is used by the Reseller Portal to get all repeat charges linked to the given reseller.
 		///Optionally pass in a super family in order to broaden the family tree by also including accounts in the same super family.</summary>
 		public static List<RepeatCharge> GetByGuarantorOrSuperFamily(long guarantor,long superFamily=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RepeatCharge>>(MethodBase.GetCurrentMethod(),guarantor,superFamily);
-			}
+			
 			string command="SELECT rc.* FROM repeatcharge rc "
 				+"INNER JOIN patient p ON p.PatNum=rc.PatNum "
 				+"WHERE p.Guarantor="+POut.Long(guarantor)+" ";
@@ -114,9 +96,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns true if there are any active repeating charges on the patient's account, false if there are not.</summary>
 		public static bool ActiveRepeatChargeExists(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			//Counts the number of repeat charges that a patient has with a valid start date in the past and no stop date or a stop date in the future
 			string command="SELECT COUNT(*) FROM repeatcharge "
 				+"WHERE PatNum="+POut.Long(patNum)+" AND DateStart BETWEEN '1880-01-01' AND "+DbHelper.Curdate()+" "
@@ -142,9 +122,7 @@ namespace OpenDentBusiness {
 		/// <summary>Runs repeating charges for the date passed in, usually today. Can't use 'out' variables because this runs over Middle Tier.
 		/// When doComputeAging=true, aging calculations will run for the families that had a repeating charge procedure added to the account.</summary>
 		public static RepeatChargeResult RunRepeatingCharges(DateTime dateRun,bool doComputeAging=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<RepeatChargeResult>(MethodBase.GetCurrentMethod(),dateRun,doComputeAging);
-			}
+			
 			RepeatChargeResult result=new RepeatChargeResult();
 			Prefs.UpdateDateT(PrefName.RepeatingChargesBeginDateTime,dateRun);
 			try {

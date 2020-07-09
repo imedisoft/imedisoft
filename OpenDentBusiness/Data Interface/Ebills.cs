@@ -71,11 +71,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_EbillCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _EbillCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -85,45 +81,32 @@ namespace OpenDentBusiness{
 		 
 		///<summary></summary>
 		public static List<Ebill> GetForPat(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Ebill>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ebill WHERE PatNum = "+POut.Long(patNum);
 			return Crud.EbillCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one Ebill from the db.</summary>
 		public static Ebill GetOne(long ebillNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<Ebill>(MethodBase.GetCurrentMethod(),ebillNum);
-			}
+			
 			return Crud.EbillCrud.SelectOne(ebillNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(Ebill ebill){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				ebill.EbillNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ebill);
-				return ebill.EbillNum;
-			}
+			
 			return Crud.EbillCrud.Insert(ebill);
 		}
 
 		///<summary></summary>
 		public static void Update(Ebill ebill){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ebill);
-				return;
-			}
+			
 			Crud.EbillCrud.Update(ebill);
 		}
 		
 		 ///<summary></summary>
 		public static void Delete(long ebillNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ebillNum);
-				return;
-			}
+			
 			Crud.EbillCrud.Delete(ebillNum);
 		} 
 		 
@@ -136,9 +119,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static bool Sync(List<Ebill> listNew,List<Ebill> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.EbillCrud.Sync(listNew,listOld);
 		}
 

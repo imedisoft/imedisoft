@@ -108,11 +108,6 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_smsPhoneCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _smsPhoneCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -124,37 +119,26 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one SmsPhone from the db. Returns null if not found.</summary>
 		public static SmsPhone GetByPhone(string phoneNumber) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SmsPhone>(MethodBase.GetCurrentMethod(),phoneNumber);
-			}
+			
 			string command="SELECT * FROM smsphone WHERE PhoneNumber='"+POut.String(phoneNumber)+"'";
 			return Crud.SmsPhoneCrud.SelectOne(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(SmsPhone smsPhone) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				smsPhone.SmsPhoneNum=Meth.GetLong(MethodBase.GetCurrentMethod(),smsPhone);
-				return smsPhone.SmsPhoneNum;
-			}
+			
 			return Crud.SmsPhoneCrud.Insert(smsPhone);
 		}
 
 		///<summary></summary>
 		public static void Update(SmsPhone smsPhone) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),smsPhone);
-				return;
-			}
+			
 			Crud.SmsPhoneCrud.Update(smsPhone);
 		}
 
 		///<summary>This will only be called by HQ via the listener in the event that this number has been cancelled.</summary>
 		public static void UpdateToInactive(string phoneNumber) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),phoneNumber);
-				return;
-			}
+			
 			SmsPhone smsPhone=GetByPhone(phoneNumber);
 			if(smsPhone==null) {
 				return;
@@ -175,25 +159,19 @@ namespace OpenDentBusiness{
 			if(listClinicNums.Count==0) {
 				return new List<SmsPhone>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SmsPhone>>(MethodBase.GetCurrentMethod(),listClinicNums);
-			}
+			
 			string command= "SELECT * FROM smsphone WHERE ClinicNum IN ("+String.Join(",",listClinicNums)+")";
 			return Crud.SmsPhoneCrud.SelectMany(command);
 		}
 
 		public static List<SmsPhone> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SmsPhone>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command= "SELECT * FROM smsphone";
 			return Crud.SmsPhoneCrud.SelectMany(command);
 		}
 
 		public static DataTable GetSmsUsageLocal(List<long> listClinicNums, DateTime dateMonth,List<SmsPhone> listPhones) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listClinicNums,dateMonth,listPhones);
-			}
+			
 			#region Initialize retVal DataTable
 			string strNoActivePhones="No Active Phones";
 			List<SmsPhone> listSmsPhones=listPhones.Where(x => x.ClinicNum.In(listClinicNums)).ToList();
@@ -290,9 +268,7 @@ namespace OpenDentBusiness{
 		///If a given PhoneNumber exists in the local db but does not exist in the HQ-provided listPhoneSync, then deacitvate that phone locallly.
 		///Return true if a change has been made to the database.</summary>
 		public static bool UpdateOrInsertFromList(List<SmsPhone> listPhonesSync) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listPhonesSync);
-			}
+			
 			//Get all phones so we can filter as needed below.
 			string command="SELECT * FROM smsphone";
 			List<SmsPhone> listPhonesDb=Crud.SmsPhoneCrud.SelectMany(command);
@@ -327,9 +303,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns current clinic limit minus message usage for current calendar month.</summary>
 		public static double GetClinicBalance(long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDouble(MethodBase.GetCurrentMethod(),clinicNum);
-			}
+			
 			double limit=0;
 			if(!PrefC.HasClinicsEnabled) {
 				if(PrefC.GetDate(PrefName.SmsContractDate).Year>1880) {
@@ -383,9 +357,7 @@ namespace OpenDentBusiness{
 			if(countryCodes==null || countryCodes.Length==0) {
 				return false;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),countryCodes);
-			}
+			
 			string command = "SELECT COUNT(*) FROM smsphone WHERE CountryCode IN ("+string.Join(",",countryCodes.Select(x=>"'"+POut.String(x)+"'"))+") AND "+DbHelper.Year("DateTimeInactive")+"<1880";
 			return Db.GetScalar(command)!="0";
 		}
@@ -395,27 +367,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<SmsPhone> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SmsPhone>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM smsvln WHERE PatNum = "+POut.Long(patNum);
 			return Crud.SmsVlnCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one SmsPhone from the db.</summary>
 		public static SmsPhone GetOne(long smsVlnNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<SmsPhone>(MethodBase.GetCurrentMethod(),smsVlnNum);
-			}
+			
 			return Crud.SmsVlnCrud.SelectOne(smsVlnNum);
 		}
 
 		///<summary></summary>
 		public static void Delete(long smsVlnNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),smsVlnNum);
-				return;
-			}
+			
 			string command= "DELETE FROM smsvln WHERE SmsVlnNum = "+POut.Long(smsVlnNum);
 			Db.NonQ(command);
 		}

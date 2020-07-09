@@ -28,9 +28,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static DataTable GetOrderTable(long patNum,bool includeDiscontinued){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum,includeDiscontinued);
-			}
+			
 			DataTable table=new DataTable("orders");
 			DataRow row;
 			table.Columns.Add("date");
@@ -133,9 +131,7 @@ namespace OpenDentBusiness{
 		/*
 		///<summary></summary>
 		public static int GetCountMedical(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM medicalorder WHERE MedOrderType="+POut.Int((int)MedicalOrderType.Medication)+" "
 				+"AND PatNUm="+POut.Long(patNum);
 			return PIn.Int(Db.GetCount(command));
@@ -143,9 +139,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<MedicalOrder> GetAllLabs(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedicalOrder>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM medicalorder WHERE MedOrderType="+POut.Int((int)MedicalOrderType.Laboratory)+" "
 				+"AND PatNum="+POut.Long(patNum);
 			//NOT EXISTS(SELECT * FROM labpanel WHERE labpanel.MedicalOrderNum=medicalorder.MedicalOrderNum)";
@@ -154,9 +148,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<MedicalOrder> GetLabsByDate(long patNum,DateTime dateStart,DateTime dateStop) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedicalOrder>>(MethodBase.GetCurrentMethod(),patNum,dateStart,dateStop);
-			}
+			
 			string command="SELECT * FROM medicalorder WHERE MedOrderType="+POut.Int((int)MedicalOrderType.Laboratory)+" "
 				+"AND PatNum="+POut.Long(patNum)+" "
 				+"AND DATE(DateTimeOrder) >= "+POut.Date(dateStart)+" "
@@ -167,9 +159,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static bool LabHasResultsAttached(long medicalOrderNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),medicalOrderNum);
-			}
+			
 			string command= "SELECT COUNT(*) FROM labpanel WHERE MedicalOrderNum = "+POut.Long(medicalOrderNum);
 			if(Db.GetCount(command)=="0") {
 				return false;
@@ -181,36 +171,25 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one MedicalOrder from the db.</summary>
 		public static MedicalOrder GetOne(long medicalOrderNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<MedicalOrder>(MethodBase.GetCurrentMethod(),medicalOrderNum);
-			}
+			
 			return Crud.MedicalOrderCrud.SelectOne(medicalOrderNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(MedicalOrder medicalOrder){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				medicalOrder.MedicalOrderNum=Meth.GetLong(MethodBase.GetCurrentMethod(),medicalOrder);
-				return medicalOrder.MedicalOrderNum;
-			}
+			
 			return Crud.MedicalOrderCrud.Insert(medicalOrder);
 		}
 
 		///<summary></summary>
 		public static void Update(MedicalOrder medicalOrder){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medicalOrder);
-				return;
-			}
+			
 			Crud.MedicalOrderCrud.Update(medicalOrder);
 		}
 
 		///<summary></summary>
 		public static void Delete(long medicalOrderNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medicalOrderNum);
-				return;
-			}
+			
 			string command;
 			//validation
 			command="SELECT COUNT(*) FROM labpanel WHERE MedicalOrderNum="+POut.Long(medicalOrderNum);

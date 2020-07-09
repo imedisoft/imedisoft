@@ -26,9 +26,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static EhrLabResult InsertItem(EhrLabResult ehrLabResult) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EhrLabResult>(MethodBase.GetCurrentMethod(),ehrLabResult);
-			}
+			
 			ehrLabResult.EhrLabResultNum=Crud.EhrLabResultCrud.Insert(ehrLabResult);
 			for(int i=0;i<ehrLabResult.ListEhrLabResultNotes.Count;i++) {//save attached notes.
 				ehrLabResult.ListEhrLabResultNotes[i].EhrLabNum=ehrLabResult.EhrLabNum;
@@ -40,37 +38,27 @@ namespace OpenDentBusiness{
 
 		///<summary>Does not insert lab result notes if attached.  Use InsertItem instead.</summary>
 		public static long Insert(EhrLabResult ehrLabResult) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				ehrLabResult.EhrLabResultNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrLabResult);
-				return ehrLabResult.EhrLabResultNum;
-			}
+			
 			return Crud.EhrLabResultCrud.Insert(ehrLabResult);
 		}
 
 		///<summary>Get all lab results for one patient.</summary>
 		public static List<EhrLabResult> GetAllForPatient(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrLabResult>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ehrlabresult WHERE EhrLabNum IN (SELECT EhrLabNum FROM ehrlab WHERE PatNum="+POut.Long(patNum)+")";
 			return Crud.EhrLabResultCrud.SelectMany(command);
 		}
 
 		///<summary>Returns all EhrLabResults for a given EhrLab.</summary>
 		public static List<EhrLabResult> GetForLab(long ehrLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrLabResult>>(MethodBase.GetCurrentMethod(),ehrLabNum);
-			}
+			
 			string command="SELECT * FROM ehrlabresult WHERE EhrLabNum = "+POut.Long(ehrLabNum);
 			return Crud.EhrLabResultCrud.SelectMany(command);
 		}
 
 		///<summary>Only deletes the notes for the Lab, there may still be notes attached to LabResults, that are attached to the lab.  Those notes are taken care of by DeleteForLabResults().</summary>
 		public static void DeleteForLab(long ehrLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabNum);
-				return;
-			}
+			
 			string command="DELETE FROM ehrlabresult WHERE EhrLabNum = "+POut.Long(ehrLabNum);
 			Db.NonQ(command);
 		}
@@ -319,11 +307,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_EhrLabResultCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _EhrLabResultCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -334,36 +318,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EhrLabResult> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrLabResult>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ehrlabresult WHERE PatNum = "+POut.Long(patNum);
 			return Crud.EhrLabResultCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one EhrLabResult from the db.</summary>
 		public static EhrLabResult GetOne(long ehrLabResultNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EhrLabResult>(MethodBase.GetCurrentMethod(),ehrLabResultNum);
-			}
+			
 			return Crud.EhrLabResultCrud.SelectOne(ehrLabResultNum);
 		}
 
 		///<summary></summary>
 		public static void Update(EhrLabResult ehrLabResult){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabResult);
-				return;
-			}
+			
 			Crud.EhrLabResultCrud.Update(ehrLabResult);
 		}
 
 		///<summary></summary>
 		public static void Delete(long ehrLabResultNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabResultNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ehrlabresult WHERE EhrLabResultNum = "+POut.Long(ehrLabResultNum);
 			Db.NonQ(command);
 		}

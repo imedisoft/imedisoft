@@ -76,11 +76,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_userGroupCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _userGroupCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -99,20 +94,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(UserGroup group){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),group);
-				return;
-			}
+			
 			Crud.UserGroupCrud.Update(group);
 		}
 
 		///<summary>Only called from the CEMT in order to update a remote database with changes.  
 		///This method will update rows based on the UserGroupNumCEMT instead of the typical UserGroupNum column.</summary>
 		public static void UpdateCEMTNoCache(UserGroup userGroupCEMT) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userGroupCEMT);
-				return;
-			}
+			
 			if(userGroupCEMT.UserGroupNum == 0) {
 				throw new Exception(userGroupCEMT.Description+" has a UserGroupNum of 0 and cannot be synced.");
 			}
@@ -129,9 +118,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of CEMT usergroups without using the cache.  Useful for multithreaded connections.</summary>
 		public static List<UserGroup> GetCEMTGroupsNoCache() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<UserGroup>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<UserGroup> retVal=new List<UserGroup>();
 			string command="SELECT * FROM usergroup WHERE UserGroupNumCEMT!=0";
 			DataTable tableUserGroups=Db.GetTable(command);
@@ -141,27 +128,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(UserGroup group) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				group.UserGroupNum=Meth.GetLong(MethodBase.GetCurrentMethod(),group);
-				return group.UserGroupNum;
-			}
+			
 			return Crud.UserGroupCrud.Insert(group);
 		}
 
 		///<summary>Insertion logic that doesn't use the cache. Has special cases for generating random PK's and handling Oracle insertions.</summary>
 		public static long InsertNoCache(UserGroup group) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),group);
-			}
+			
 			return Crud.UserGroupCrud.InsertNoCache(group);
 		}
 
 		///<summary>Checks for dependencies first</summary>
 		public static void Delete(UserGroup group){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),group);
-				return;
-			}
+			
 			string command="SELECT COUNT(*) FROM usergroupattach WHERE UserGroupNum='"
 				+POut.Long(group.UserGroupNum)+"'";
 			DataTable table=Db.GetTable(command);
@@ -184,10 +163,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Deletes without using the cache.  Doesn't check dependencies.  Useful for multithreaded connections.</summary>
 		public static void DeleteNoCache(UserGroup group) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),group);
-				return;
-			}
+			
 			string command="DELETE FROM usergroup WHERE UserGroupNum="+POut.Long(group.UserGroupNum);
 			Db.NonQ(command);
 			command="DELETE FROM grouppermission WHERE UserGroupNum="+POut.Long(group.UserGroupNum);

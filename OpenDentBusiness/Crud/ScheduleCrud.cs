@@ -22,9 +22,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one Schedule object from the database using a query.</summary>
 		public static Schedule SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<Schedule> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -34,9 +32,7 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of Schedule objects from the database using a query.</summary>
 		public static List<Schedule> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
+
 			List<Schedule> list=TableToList(Db.GetTable(command));
 			return list;
 		}

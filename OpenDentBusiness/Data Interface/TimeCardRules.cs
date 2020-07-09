@@ -77,69 +77,32 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_timeCardRuleCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _timeCardRuleCache.GetTableFromCache(doRefreshCache);
 		}
 
 		#endregion
 
-		/*
-		Only pull out the methods below as you need them.  Otherwise, leave them commented out.
-
-		///<summary></summary>
-		public static List<TimeCardRule> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TimeCardRule>>(MethodBase.GetCurrentMethod(),patNum);
-			}
-			string command="SELECT * FROM timecardrule WHERE PatNum = "+POut.Long(patNum);
-			return Crud.TimeCardRuleCrud.SelectMany(command);
-		}
-
-		///<summary>Gets one TimeCardRule from the db.</summary>
-		public static TimeCardRule GetOne(long timeCardRuleNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<TimeCardRule>(MethodBase.GetCurrentMethod(),timeCardRuleNum);
-			}
-			return Crud.TimeCardRuleCrud.SelectOne(timeCardRuleNum);
-		}*/
-
 		///<summary></summary>
 		public static long Insert(TimeCardRule timeCardRule){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				timeCardRule.TimeCardRuleNum=Meth.GetLong(MethodBase.GetCurrentMethod(),timeCardRule);
-				return timeCardRule.TimeCardRuleNum;
-			}
+			
 			return Crud.TimeCardRuleCrud.Insert(timeCardRule);
 		}
 		
 		///<summary></summary>
 		public static void InsertMany(List<TimeCardRule> listTimeCardRules){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listTimeCardRules);
-				return;
-			}
+			
 			Crud.TimeCardRuleCrud.InsertMany(listTimeCardRules);
 		}
 
 		///<summary></summary>
 		public static void Update(TimeCardRule timeCardRule){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),timeCardRule);
-				return;
-			}
+			
 			Crud.TimeCardRuleCrud.Update(timeCardRule);
 		}
 
 		///<summary></summary>
 		public static void Delete(long timeCardRuleNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),timeCardRuleNum);
-				return;
-			}
+			
 			string command= "DELETE FROM timecardrule WHERE TimeCardRuleNum = "+POut.Long(timeCardRuleNum);
 			Db.NonQ(command);
 		}
@@ -150,10 +113,7 @@ namespace OpenDentBusiness{
 			if(listTimeCardRuleNums==null || listTimeCardRuleNums.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listTimeCardRuleNums);
-				return;
-			}
+			
 			string command="DELETE FROM timecardrule WHERE TimeCardRuleNum IN ("+string.Join(",",listTimeCardRuleNums.Select(x => POut.Long(x)))+")";
 			Db.NonQ(command);
 		}
@@ -161,9 +121,6 @@ namespace OpenDentBusiness{
 		///<summary>Validates pay period before making any adjustments.
 		///If today falls before the stopDate passed in, stopDate will be set to today's date.</summary>
 		public static string ValidatePayPeriod(Employee employeeCur,DateTime startDate,DateTime stopDate) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//Middle tier check here just to save trips.  No call to the db.
-				return Meth.GetString(MethodBase.GetCurrentMethod(),employeeCur,startDate,stopDate);
-			}
 			//If calculating breaks before the end date of the pay period, only calculate breaks and validate clock in and out events for days
 			//before today.  Use the server time just because we are dealing with time cards.
 			DateTime dateTimeNow=MiscData.GetNowDateTime();
@@ -246,10 +203,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Clears automatic adjustment/adjustOT values and deletes automatic TimeAdjusts for period.</summary>
 		public static void ClearAuto(long employeeNum,DateTime dateStart,DateTime dateStop) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),employeeNum,dateStart,dateStop);
-				return;
-			}
+			
 			List<ClockEvent> ListCE=ClockEvents.GetSimpleList(employeeNum,dateStart,dateStop);
 			for(int i=0;i<ListCE.Count;i++) {
 				ListCE[i].AdjustAuto=TimeSpan.Zero;
@@ -265,10 +219,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Clears all manual adjustments/Adjust OT values from clock events. Does not alter adjustments to clockevent.TimeDisplayed1/2 nor does it delete or alter any TimeAdjusts.</summary>
 		public static void ClearManual(long employeeNum,DateTime dateStart,DateTime dateStop) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),employeeNum,dateStart,dateStop);
-				return;
-			}
+			
 			List<ClockEvent> ListCE=ClockEvents.GetSimpleList(employeeNum,dateStart,dateStop);
 			for(int i=0;i<ListCE.Count;i++) {
 				ListCE[i].Adjust=TimeSpan.Zero;
@@ -281,9 +232,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Validates list and throws exceptions. Always returns a value. Creates a timecard rule based on all applicable timecard rules for a given employee.</summary>
 		public static TimeCardRule GetTimeCardRule(Employee employeeCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<TimeCardRule>(MethodBase.GetCurrentMethod(),employeeCur);
-			}
+			
 			//Validate Rules---------------------------------------------------------------------------------------------------------------
 			string errors=TimeCardRules.ValidateOvertimeRules(new List<long> {employeeCur.EmployeeNum});
 			if(errors.Length>0) {
@@ -476,10 +425,6 @@ namespace OpenDentBusiness{
 		///All manually entered time adjust events are assumed to be entered correctly and should not be used in calculating automatic totals.
 		///Throws exceptions when encountering errors.</summary>
 		public static void CalculateDailyOvertime(Employee employee,DateTime dateStart,DateTime dateStop) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//Middle tier check here just to save trips.  No call to the db.
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),employee,dateStart,dateStop);
-				return;
-			}
 			#region Fill Lists, validate data sets, generate error messages.
 			List<ClockEvent> listClockEvent=new List<ClockEvent>();
 			List<ClockEvent> listClockEventBreak=new List<ClockEvent>();

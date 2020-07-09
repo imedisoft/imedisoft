@@ -31,10 +31,7 @@ namespace OpenDentBusiness{
 
 
 		public static long Insert(EmailAttach attach) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				attach.EmailAttachNum=Meth.GetLong(MethodBase.GetCurrentMethod(),attach);
-				return attach.EmailAttachNum;
-			}
+			
 			return Crud.EmailAttachCrud.Insert(attach);
 		}
 
@@ -43,9 +40,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<EmailAttach> GetForEmails(List<long> listEmailMessageNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EmailAttach>>(MethodBase.GetCurrentMethod(),listEmailMessageNums);
-			}
+			
 			List<EmailAttach> listAttaches=new List<EmailAttach>();
 			if(listEmailMessageNums==null || listEmailMessageNums.Count==0) {
 				return listAttaches;
@@ -62,9 +57,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one EmailAttach from the db. Used by Patient Portal.</summary>
 		public static EmailAttach GetOne(long emailAttachNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EmailAttach>(MethodBase.GetCurrentMethod(),emailAttachNum);
-			}
+			
 			return Crud.EmailAttachCrud.SelectOne(emailAttachNum);
 		}
 
@@ -157,9 +150,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns all EmailAttaches assocaited to a specific EmailTemplateNum.</summary>
 		public static List<EmailAttach> GetForTemplate(long emailTemplateNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EmailAttach>>(MethodBase.GetCurrentMethod(),emailTemplateNum);
-			}
+			
 			string command="SELECT * FROM emailattach WHERE EmailTemplateNum="+POut.Long(emailTemplateNum);
 			return Crud.EmailAttachCrud.SelectMany(command);
 		}
@@ -167,10 +158,7 @@ namespace OpenDentBusiness{
 		///<summary>Syncs a given list of EmailAttaches to a list of old EmailAttaches.
 		///If emailAttachOld is not provided, it will use the emailMessageNum passed in to get the "old" attachments from the database.</summary>
 		public static void Sync(long emailMessageNum,List<EmailAttach> emailAttachNew,List<EmailAttach> emailAttachOld=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),emailMessageNum,emailAttachNew,emailAttachOld);
-				return;
-			}
+			
 			if(emailAttachOld==null) {
 				emailAttachOld=GetForEmail(emailMessageNum);//Get attachments from the database.
 			}

@@ -118,11 +118,6 @@ namespace OpenDentBusiness {
 				serializer = new XmlSerializer(typeof(long));
 				retVal=(T)((object)TimeSpan.FromTicks((long)serializer.Deserialize(reader)));
 			}
-			else if(type.IsInterface) {
-				//For methods that return an interface, we serialize the return object as a DtoObject.
-				serializer=new XmlSerializer(typeof(DtoObject));
-				retVal=(T)((DtoObject)serializer.Deserialize(reader)).Obj;
-			}
 			else {
 				serializer = new XmlSerializer(type);
 				retVal=(T)serializer.Deserialize(reader);

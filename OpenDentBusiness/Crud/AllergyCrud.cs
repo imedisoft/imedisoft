@@ -21,9 +21,6 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets one Allergy object from the database using a query.</summary>
 		public static Allergy SelectOne(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
 			List<Allergy> list=TableToList(Db.GetTable(command));
 			if(list.Count==0) {
 				return null;
@@ -33,9 +30,6 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Gets a list of Allergy objects from the database using a query.</summary>
 		public static List<Allergy> SelectMany(string command) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n"+command);
-			}
 			List<Allergy> list=TableToList(Db.GetTable(command));
 			return list;
 		}

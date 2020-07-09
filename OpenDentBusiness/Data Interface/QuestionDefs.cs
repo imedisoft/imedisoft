@@ -29,37 +29,26 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a list of all QuestionDefs.</summary>
 		public static QuestionDef[] Refresh() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<QuestionDef[]>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM questiondef ORDER BY ItemOrder";
 			return Crud.QuestionDefCrud.SelectMany(command).ToArray();
 		}
 
 		///<summary></summary>
 		public static void Update(QuestionDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			Crud.QuestionDefCrud.Update(def);
 		}
 
 		///<summary></summary>
 		public static long Insert(QuestionDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				def.QuestionDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),def);
-				return def.QuestionDefNum;
-			}
+			
 			return Crud.QuestionDefCrud.Insert(def);
 		}
 
 		///<summary>Ok to delete whenever, because no patients are tied to this table by any dependencies.</summary>
 		public static void Delete(QuestionDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			string command="DELETE FROM questiondef WHERE QuestionDefNum ="+POut.Long(def.QuestionDefNum);
 			Db.NonQ(command);
 		}

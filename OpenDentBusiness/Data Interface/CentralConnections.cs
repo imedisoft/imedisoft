@@ -21,18 +21,14 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets all the central connections from the database ordered by ItemOrder.</summary>
 		public static List<CentralConnection> GetConnections(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CentralConnection>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM centralconnection ORDER BY ItemOrder";
 			return Crud.CentralConnectionCrud.SelectMany(command);
 		}
 
 		///<summary>Gets all the central connections from the database for one group, ordered by ItemOrder.</summary>
 		public static List<CentralConnection> GetForGroup(long connectionGroupNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CentralConnection>>(MethodBase.GetCurrentMethod(),connectionGroupNum);
-			}
+			
 			string command="SELECT centralconnection.* "
 				+"FROM conngroupattach "
 				+"LEFT JOIN centralconnection ON conngroupattach.CentralConnectionNum=centralconnection.CentralConnectionNum "
@@ -43,9 +39,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all the central connections from the database that are not in the specificed group, ordered by ItemOrder.</summary>
 		public static List<CentralConnection> GetNotForGroup(long connectionGroupNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<CentralConnection>>(MethodBase.GetCurrentMethod(),connectionGroupNum);
-			}
+			
 			string command="SELECT centralconnection.* "
 				+"FROM centralconnection "
 				+"LEFT JOIN conngroupattach ON conngroupattach.CentralConnectionNum=centralconnection.CentralConnectionNum "
@@ -59,28 +53,19 @@ namespace OpenDentBusiness{
 		#region Modification Methods
 		///<summary></summary>
 		public static long Insert(CentralConnection centralConnection){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				centralConnection.CentralConnectionNum=Meth.GetLong(MethodBase.GetCurrentMethod(),centralConnection);
-				return centralConnection.CentralConnectionNum;
-			}
+			
 			return Crud.CentralConnectionCrud.Insert(centralConnection);
 		}
 
 		///<summary></summary>
 		public static void Update(CentralConnection centralConnection){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),centralConnection);
-				return;
-			}
+			
 			Crud.CentralConnectionCrud.Update(centralConnection);
 		}
 
 		///<summary>Updates Status of the provided CentralConnection</summary>
 		public static void UpdateStatus(CentralConnection centralConnection) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),centralConnection);
-				return;
-			}
+			
 			string command="UPDATE centralconnection SET ConnectionStatus='"+POut.String(centralConnection.ConnectionStatus)
 				+"' WHERE CentralConnectionNum="+POut.Long(centralConnection.CentralConnectionNum);
 			Db.NonQ(command);
@@ -88,10 +73,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(long centralConnectionNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),centralConnectionNum);
-				return;
-			}
+			
 			string command= "DELETE FROM centralconnection WHERE CentralConnectionNum = "+POut.Long(centralConnectionNum);
 			Db.NonQ(command);
 		}
@@ -189,61 +171,28 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Throws an exception to display to the user if anything goes wrong.</summary>
-		public static void TryToConnect(CentralConnection centralConnection,DatabaseType dbType,string connectionString="",bool noShowOnStartup=false,
-			List<string> listAdminCompNames=null,bool isCommandLineArgs=false,bool useDynamicMode=false,bool allowAutoLogin=true) 
+		public static void TryToConnect(CentralConnection centralConnection, DatabaseType dbType, string connectionString = "", bool noShowOnStartup = false,
+			List<string> listAdminCompNames = null, bool isCommandLineArgs = false, bool useDynamicMode = false, bool allowAutoLogin = true)
 		{
-			if(!string.IsNullOrEmpty(centralConnection.ServiceURI)) {
-				LoadMiddleTierProxySettings();
-				string originalURI=RemotingClient.ServerURI;
-				RemotingClient.ServerURI=centralConnection.ServiceURI;
-				bool useEcwAlgorithm=centralConnection.WebServiceIsEcw;
-				RemotingRole originalRole=RemotingClient.RemotingRole;
-				RemotingClient.RemotingRole=RemotingRole.ClientWeb;
-				try {
-					string password=centralConnection.OdPassword;
-					if(useEcwAlgorithm) {
-						//It doesn't matter what Security.CurUser is when it is null because we are technically trying to set it for the first time.
-						//It cannot be null before invoking HashPassword for Middle Tier for creating credentials for DTOs.
-						if(Security.CurUser==null) {
-							Security.CurUser=new Userod();
-						}
-						//Utilize the custom eCW MD5 hashing algorithm if no password hash was passed in via command line arguments.
-						if(string.IsNullOrEmpty(centralConnection.OdPassHash)) {
-							password=Authentication.HashPasswordMD5(password,true);
-						}
-						else {//eCW gave us the password already hashed via command line arguments, simply use it.
-							password=centralConnection.OdPassHash;
-						}
-					}
-					string username=centralConnection.OdUser;
-					//ecw requires hash, but non-ecw requires actual password
-					Security.CurUser=Security.LogInWeb(username,password,"",Application.ProductVersion,useEcwAlgorithm);
-					Security.PasswordTyped=password;//for ecw, this is already encrypted.
-				}
-				catch(Exception ex) {
-					RemotingClient.ServerURI=originalURI;
-					RemotingClient.RemotingRole=originalRole;
-					throw ex;
-				}
+
+
+			DataConnection.DBtype = dbType;
+			DataConnection dcon = new DataConnection();
+			if (connectionString.Length > 0)
+			{
+				dcon.SetDb(connectionString, "", DataConnection.DBtype);
 			}
-			else {
-				DataConnection.DBtype=dbType;
-				DataConnection dcon=new DataConnection();
-				if(connectionString.Length > 0) {
-					dcon.SetDb(connectionString,"",DataConnection.DBtype);
-				}
-				else {
-					//Password could be plain text password from the Password field of the config file, the decrypted password from the MySQLPassHash field
-					//of the config file, or password entered by the user and can be blank (empty string) in all cases
-					dcon.SetDb(centralConnection.ServerName,centralConnection.DatabaseName,centralConnection.MySqlUser
-						,centralConnection.MySqlPassword,"","",DataConnection.DBtype);
-				}
-				//a direct connection does not utilize lower privileges.
-				RemotingClient.RemotingRole=RemotingRole.ClientDirect;
+			else
+			{
+				//Password could be plain text password from the Password field of the config file, the decrypted password from the MySQLPassHash field
+				//of the config file, or password entered by the user and can be blank (empty string) in all cases
+				dcon.SetDb(centralConnection.ServerName, centralConnection.DatabaseName, centralConnection.MySqlUser
+					, centralConnection.MySqlPassword, "", "", DataConnection.DBtype);
 			}
+
 			//Only gets this far if we have successfully connected, thus, saving connection settings is appropriate.
-			TrySaveConnectionSettings(centralConnection,dbType,connectionString,noShowOnStartup:noShowOnStartup,listAdminCompNames,
-				isCommandLineArgs:isCommandLineArgs,useDynamicMode:useDynamicMode,allowAutoLogin:allowAutoLogin);
+			TrySaveConnectionSettings(centralConnection, dbType, connectionString, noShowOnStartup: noShowOnStartup, listAdminCompNames,
+				isCommandLineArgs: isCommandLineArgs, useDynamicMode: useDynamicMode, allowAutoLogin: allowAutoLogin);
 		}
 
 		///<summary>If MiddleTierProxyConfix.xml is present, this loads the three variables from that file into memory.
@@ -255,9 +204,6 @@ namespace OpenDentBusiness{
 			}
 			XmlDocument doc=new XmlDocument();
 			doc.Load(xmlPath);
-			RemotingClient.MidTierProxyAddress=doc.SelectSingleNode("//Address").InnerText;
-			RemotingClient.MidTierProxyUserName=doc.SelectSingleNode("//UserName").InnerText;
-			RemotingClient.MidTierProxyPassword=doc.SelectSingleNode("//Password").InnerText;
 		}
 
 		///<summary>Returns true if the connection settings were successfully saved to the FreeDentalConfig file and/or Windows PasswordVault.  
@@ -316,7 +262,7 @@ namespace OpenDentBusiness{
 						writer.WriteString(connectionString);
 						writer.WriteEndElement();
 					}
-					else if(RemotingClient.RemotingRole==RemotingRole.ClientDirect) {
+					else {
 						writer.WriteStartElement("DatabaseConnection");
 						writer.WriteStartElement("ComputerName");
 						writer.WriteString(centralConnection.ServerName);
@@ -346,29 +292,6 @@ namespace OpenDentBusiness{
 						writer.WriteEndElement();
 						writer.WriteEndElement();
 					}
-					else if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-						writer.WriteStartElement("ServerConnection");
-						writer.WriteStartElement("URI");
-						writer.WriteString(centralConnection.ServiceURI);
-						writer.WriteEndElement();//end URI
-						if(centralConnection.IsAutomaticLogin) {
-							writer.WriteStartElement("User");
-							writer.WriteString(centralConnection.OdUser);
-							writer.WriteEndElement();//end Username
-							writer.WriteStartElement("UsingAutoLogin");
-							writer.WriteString("True");
-							writer.WriteEndElement();//end UsingAutoLogin
-						}
-						writer.WriteStartElement("UsingEcw");
-						if(centralConnection.WebServiceIsEcw) {
-							writer.WriteString("True");
-						}
-						else {
-							writer.WriteString("False");
-						}
-						writer.WriteEndElement();//end UsingEcw
-						writer.WriteEndElement();//end ServerConnection
-					}
 					writer.WriteStartElement("DatabaseType");
 					if(dbType==DatabaseType.MySql) {
 						writer.WriteString("MySql");
@@ -397,36 +320,6 @@ namespace OpenDentBusiness{
 					writer.WriteEndElement();
 					writer.Flush();
 				}//using writer
-				//Input the user's credentials to WCM (Windows Credential Manager) if necessary.
-				if(RemotingClient.RemotingRole==RemotingRole.ClientWeb 
-					&& !string.IsNullOrWhiteSpace(centralConnection.ServiceURI) 
-					&& centralConnection.IsAutomaticLogin) 
-				{
-					bool isCredentialSaveRequired=true;//Assume credentials are not saved yet.
-					if(PasswordVaultWrapper.TryRetrieveUserName(centralConnection.ServiceURI,out string userName)) {//Found a saved OD MT UserName
-						//Update the credentials if the user or password is different.
-						if(centralConnection.OdUser!=userName 
-							|| PasswordVaultWrapper.RetrievePassword(centralConnection.ServiceURI,userName)!=centralConnection.OdPassword) 
-						{
-							//UserName or Password in the saved credentials does not match current password.  Delete the saved credentials and save the new 
-							//credentials.  This will clear all the saved credentials from the PasswordVault for the currently logged in Windows User, which is 
-							//desired behavior as each Windows User should only have one set of OpenDental Middle Tier credentials.
-							PasswordVaultWrapper.ClearCredentials(centralConnection.ServiceURI);
-						}
-						else {
-							isCredentialSaveRequired=false;//Username and Password already saved and match current credentials.
-						}
-					}
-					if(isCredentialSaveRequired) { 
-						if(!string.IsNullOrWhiteSpace(centralConnection.OdUser) && !string.IsNullOrWhiteSpace(centralConnection.OdPassword)) {
-							//Save the new credentials.
-							PasswordVaultWrapper.WritePassword(centralConnection.ServiceURI,centralConnection.OdUser,centralConnection.OdPassword);
-						}
-						else {
-							return false;//Invalid username/password.
-						}
-					}
-				}
 			}
 			catch(Exception ex) {
 				ex.DoNothing();
@@ -550,45 +443,6 @@ namespace OpenDentBusiness{
 					}
 				}
 				#endregion
-				#region Connect to Middle Tier Group Box
-				nav=Navigator.SelectSingleNode("//ServerConnection");
-				/* example:
-				<ServerConnection>
-					<URI>http://server/OpenDentalServer/ServiceMain.asmx</URI>
-					<UsingEcw>True</UsingEcw>
-				</ServerConnection>
-				*/
-				if(nav!=null) {
-					//If there is a ServerConnection, then use it.
-					centralConnection.ServiceURI=nav.SelectSingleNode("URI").Value;
-					XPathNavigator ecwnav=nav.SelectSingleNode("UsingEcw");
-					if(ecwnav!=null && ecwnav.Value=="True") {
-						noShow=YN.Yes;
-						centralConnection.WebServiceIsEcw=true;
-					}
-					XPathNavigator autoLoginNav=nav.SelectSingleNode("UsingAutoLogin");
-					//Retrieve the user from the Windows password vault for the current ServiceURI that was last to successfully single sign on.
-					//If credentials are found then log the user in.  This is safe to do because the password vault is unique per Windows user and workstation.
-					//There is code elsewhere that will handle password vault management (only storing the last valid single sign on per ServiceURI).
-					//allowAutoLogin defaults to true unless the office specifically set it to false.
-					if(autoLoginNav!=null && autoLoginNav.Value=="True" && allowAutoLogin) {
-						if(!PasswordVaultWrapper.TryRetrieveUserName(centralConnection.ServiceURI,out centralConnection.OdUser)) {
-							centralConnection.OdUser=nav.SelectSingleNode("User").Value;//No username found.  Use the User in FreeDentalConfig (preserve old behavior).
-						}
-						//Get the user's password from Windows Credential Manager
-						try {
-							centralConnection.OdPassword=
-								PasswordVaultWrapper.RetrievePassword(centralConnection.ServiceURI,centralConnection.OdUser);
-							//Must set this so FormChooseDatabase() does not launch
-							noShow=YN.Yes;
-							centralConnection.IsAutomaticLogin=true;
-						}
-						catch(Exception ex) {
-							ex.DoNothing();//We still want to display the server URI and the user name if getting the password fails.
-						}
-					}
-				}
-				#endregion
 				#endregion
 			}
 			catch(Exception) {
@@ -616,8 +470,7 @@ namespace OpenDentBusiness{
 			}
 			//Find all central connections that meet the filterText criteria
 			retVal=retVal.FindAll(x => x.DatabaseName.ToLower().Contains(filterText.ToLower()) 
-																 || x.ServerName.ToLower().Contains(filterText.ToLower()) 
-																 || x.ServiceURI.ToLower().Contains(filterText.ToLower()));
+																 || x.ServerName.ToLower().Contains(filterText.ToLower()));
 			return retVal;
 		}
 
@@ -716,9 +569,6 @@ namespace OpenDentBusiness{
 				connString=conn.ServerName;
 				connString+=", "+conn.DatabaseName;
 			}
-			else if(conn.ServiceURI!="") {
-				connString=conn.ServiceURI;
-			}
 			return connString;
 		}
 
@@ -748,9 +598,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Gets one CentralConnection from the db.</summary>
 		public static CentralConnection GetOne(long centralConnectionNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<CentralConnection>(MethodBase.GetCurrentMethod(),centralConnectionNum);
-			}
+			
 			return Crud.CentralConnectionCrud.SelectOne(centralConnectionNum);
 		}
 

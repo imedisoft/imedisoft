@@ -29,9 +29,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used when displaying the splits for a transaction.</summary>
 		public static List<JournalEntry> GetForTrans(long transactionNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<JournalEntry>>(MethodBase.GetCurrentMethod(),transactionNum);
-			}
+			
 			string command=
 				"SELECT * FROM journalentry "
 				+"WHERE TransactionNum="+POut.Long(transactionNum);
@@ -40,9 +38,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used to display a list of entries for one account.</summary>
 		public static List <JournalEntry> GetForAccount(long accountNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List <JournalEntry>>(MethodBase.GetCurrentMethod(),accountNum);
-			}
+			
 			string command=
 				"SELECT * FROM journalentry "
 				+"WHERE AccountNum="+POut.Long(accountNum)
@@ -52,9 +48,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in reconcile window.</summary>
 		public static List <JournalEntry> GetForReconcile(long accountNum,bool includeUncleared,long reconcileNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List <JournalEntry>>(MethodBase.GetCurrentMethod(),accountNum,includeUncleared,reconcileNum);
-			}
+			
 			string command=
 				"SELECT * FROM journalentry "
 				+"WHERE AccountNum="+POut.Long(accountNum)
@@ -73,10 +67,7 @@ namespace OpenDentBusiness{
 		public static long Insert(JournalEntry je) {
 			je.SecUserNumEntry=Security.CurUser.UserNum;//Before middle tier check to catch user at workstation
 			je.SecUserNumEdit=Security.CurUser.UserNum;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				je.JournalEntryNum=Meth.GetLong(MethodBase.GetCurrentMethod(),je);
-				return je.JournalEntryNum;
-			}
+			
 			if(je.DebitAmt<0 || je.CreditAmt<0){
 				throw new ApplicationException(Lans.g("JournalEntries","Error. Credit and debit must both be positive."));
 			}
@@ -86,10 +77,7 @@ namespace OpenDentBusiness{
 		///<summary></summary>
 		public static void Update(JournalEntry je) {
 			je.SecUserNumEdit=Security.CurUser.UserNum;//Before middle tier check to catch user at workstation
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),je);
-				return;
-			}
+			
 			if(je.DebitAmt<0 || je.CreditAmt<0) {
 				throw new ApplicationException(Lans.g("JournalEntries","Error. Credit and debit must both be positive."));
 			}
@@ -98,10 +86,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(JournalEntry je) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),je);
-				return;
-			}
+			
 			//This method is only used once in synch below.  Validation needs to be done, but doing it inside the loop would be dangerous.
 			//So validation is done in the UI as follows:
 			//1. Deleting an entire transaction is validated in business layer.
@@ -185,10 +170,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Called once from FormReconcileEdit when closing.  Saves the reconcileNum for every item in the list.</summary>
 		public static void SaveList(List <JournalEntry> journalList,long reconcileNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),journalList,reconcileNum);
-				return;
-			}
+			
 			string command="UPDATE journalentry SET ReconcileNum=0 WHERE";
 			string str="";
 			for(int i=0;i<journalList.Count;i++){

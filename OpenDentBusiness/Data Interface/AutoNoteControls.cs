@@ -75,21 +75,14 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_autoNoteControlCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _autoNoteControlCache.GetTableFromCache(doRefreshCache);
 		}
 
 		#endregion Cache Pattern
 
 		public static long Insert(AutoNoteControl autoNoteControl) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				autoNoteControl.AutoNoteControlNum=Meth.GetLong(MethodBase.GetCurrentMethod(),autoNoteControl);
-				return autoNoteControl.AutoNoteControlNum;
-			}
+			
 			return Crud.AutoNoteControlCrud.Insert(autoNoteControl);
 		}
 
@@ -97,10 +90,7 @@ namespace OpenDentBusiness {
 			if(listSerializableAutoNoteControls==null || listSerializableAutoNoteControls.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSerializableAutoNoteControls);
-				return;
-			}
+			
 			List<AutoNoteControl> listAutoNoteControls=new List<AutoNoteControl>();
 			foreach(SerializableAutoNoteControl control in listSerializableAutoNoteControls) {
 				AutoNoteControl newControl=new AutoNoteControl();
@@ -114,18 +104,12 @@ namespace OpenDentBusiness {
 		}
 
 		public static void Update(AutoNoteControl autoNoteControl) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),autoNoteControl);
-				return;
-			}
+			
 			Crud.AutoNoteControlCrud.Update(autoNoteControl);
 		}
 
 		public static void Delete(long autoNoteControlNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),autoNoteControlNum);
-				return;
-			}
+			
 			//no validation for now.
 			string command="DELETE FROM autonotecontrol WHERE AutoNoteControlNum="+POut.Long(autoNoteControlNum);
 			Db.NonQ(command);

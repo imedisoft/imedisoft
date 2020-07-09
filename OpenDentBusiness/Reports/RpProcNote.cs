@@ -10,10 +10,6 @@ namespace OpenDentBusiness {
 			
 		public static DataTable GetData(List<long> listProvNums,List<long> listClinicNums,DateTime dateStart,DateTime dateEnd,bool includeNoNotes,
 			bool includeUnsignedNotes,ToothNumberingNomenclature toothNumberFormat,ProcNoteGroupBy groupBy) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listProvNums,listClinicNums,dateStart,dateEnd,includeNoNotes,includeUnsignedNotes,
-					toothNumberFormat,groupBy);
-			}
 			string whereNoNote="";
 			string whereUnsignedNote="";
 			string whereNotesClause="";

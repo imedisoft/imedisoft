@@ -79,11 +79,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_displayReportCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _displayReportCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -109,9 +105,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Must pass in a list of all current display reports, even hidden ones.</summary>
 		public static bool Sync(List<DisplayReport> listDisplayReport) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listDisplayReport);
-			}
+			
 			return Crud.DisplayReportCrud.Sync(listDisplayReport,GetAll(true));
 		}
 

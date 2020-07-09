@@ -71,11 +71,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_ProviderIdentCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _ProviderIdentCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -83,28 +78,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(ProviderIdent pi){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),pi);
-				return;
-			}
+			
 			Crud.ProviderIdentCrud.Update(pi);
 		}
 
 		///<summary></summary>
 		public static long Insert(ProviderIdent pi){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				pi.ProviderIdentNum=Meth.GetLong(MethodBase.GetCurrentMethod(),pi);
-				return pi.ProviderIdentNum;
-			}
+			
 			return Crud.ProviderIdentCrud.Insert(pi);
 		}
 
 		///<summary></summary>
 		public static void Delete(ProviderIdent pi){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),pi);
-				return;
-			}
+			
 			string command= "DELETE FROM providerident "
 				+"WHERE ProviderIdentNum = "+POut.Long(pi.ProviderIdentNum);
  			Db.NonQ(command);
@@ -124,10 +110,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Called from FormProvEdit if cancel on a new provider.</summary>
 		public static void DeleteAllForProv(long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),provNum);
-				return;
-			}
+			
 			string command= "DELETE from providerident WHERE provnum = '"+POut.Long(provNum)+"'";
  			Db.NonQ(command);
 		}

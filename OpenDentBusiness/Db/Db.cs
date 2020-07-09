@@ -47,19 +47,16 @@ namespace OpenDentBusiness
 			}
 		}
 
-		///<summary>Returns false if mysql variable "AUTO_INCREMENT_INCREMENT" equals 1, otherwise true.</summary>
-		public static bool IsAutoIncrementIncrementSetForReplication()
-		{
-			return (!GetAutoIncrementIncrement().In(1, -1));//auto_increment_increment is default value or not found (not found shouldn't happen, but for safety's sake).
-		}
+		/// <summary>
+		/// Returns false if mysql variable "AUTO_INCREMENT_INCREMENT" equals 1, otherwise true.
+		/// </summary>
+		public static bool IsAutoIncrementIncrementSetForReplication() => !GetAutoIncrementIncrement().In(1, -1);
 
-		/// <summary>Returns mysql variable "AUTO_INCREMENT_INCREMENT", or -1 if variable not found.</summary>
+		/// <summary>
+		/// Returns mysql variable "AUTO_INCREMENT_INCREMENT", or -1 if variable not found.
+		/// </summary>
 		public static int GetAutoIncrementIncrement()
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				return Meth.GetInt(MethodBase.GetCurrentMethod());
-			}
 			string command = "SHOW VARIABLES LIKE 'auto_increment_increment'";
 			DataTable table = GetTable(command);
 			if (table.Rows.Count > 0)
@@ -68,22 +65,19 @@ namespace OpenDentBusiness
 				{
 					if ((string)row["Variable_name"] == "auto_increment_increment")
 					{
-						return PIn.Int((string)table.Rows[0]["Value"]);
+						return SIn.Int((string)table.Rows[0]["Value"]);
 					}
 				}
 			}
 			return -1;//auto_increment_increment variable not found, just in case.
 		}
 
-		///<summary>Throws Exception.
-		///Checks to see if the query is safe for replication and if the user has permission to run a command query if it is a command query.
-		///Use isRunningOnReportServer to indicate if the connection is made directly to the Report Server.</summary>
+		/// <summary>
+		/// Checks to see if the query is safe for replication and if the user has permission to run a command query if it is a command query.
+		/// Use isRunningOnReportServer to indicate if the connection is made directly to the Report Server.
+		/// </summary>
 		public static bool IsSqlAllowed(string command, bool suppressMessage = false, bool isRunningOnReportServer = false)
 		{
-			if (!IsSafeSqlForReplication(command, isRunningOnReportServer))
-			{
-				return false;
-			}
 			bool isCommand;
 			try
 			{
@@ -93,10 +87,12 @@ namespace OpenDentBusiness
 			{
 				throw new ApplicationException("Validation failed. Please remove mid-query comments and try again.");
 			}
+
 			if (isCommand && !Security.IsAuthorized(Permissions.CommandQuery, suppressMessage))
 			{
 				return false;
 			}
+
 			if (isCommand)
 			{
 				SecurityLogs.MakeLogEntry(Permissions.CommandQuery, 0, "Command query run.");
@@ -104,51 +100,9 @@ namespace OpenDentBusiness
 			return true;
 		}
 
-		///<summary>Throws Exception.
-		///Checks to see if the computer is allowed to use create table or drop table syntax queries.
-		///Will return false if using replication and the computer OD is running on is not the ReplicationUserQueryServer set in replication setup.
-		///Use isRunningOnReportServer to indicate if the connection is made directly to the Report Server(ReplicationUserQueryServer) such that the
-		///query will be executed on the Report Server, even if the connection is initiated from a different computer.
-		///Otherwise true.</summary>
-		private static bool IsSafeSqlForReplication(string command, bool isRunningOnReportServer)
-		{
-			if (!PrefC.RandomKeys && !Db.IsAutoIncrementIncrementSetForReplication())
-			{//If replication is disabled, then any command is safe.
-			 //Previously users could set PrefName.RandomPrimaryKeys but there is no longer a UI for this.
-			 //PrefName.RandomPrimaryKeys use to be required for replication but this has since changed so we can not rely on this due to replication setup changes.
-				return true;
-			}
-			bool isSafe = true;
-			if (Regex.IsMatch(command, ".*CREATE[\\s]+TABLE.*", RegexOptions.IgnoreCase))
-			{
-				isSafe = false;
-			}
-			if (Regex.IsMatch(command, ".*CREATE[\\s]+TEMPORARY[\\s]+TABLE.*", RegexOptions.IgnoreCase))
-			{
-				isSafe = false;
-			}
-			if (Regex.IsMatch(command, ".*DROP[\\s]+TABLE.*", RegexOptions.IgnoreCase))
-			{
-				isSafe = false;
-			}
-			if (isSafe)
-			{
-				return true;
-			}
-			//At this point we know that replication is enabled and the command is potentially unsafe.
-			if (PrefC.GetLong(PrefName.ReplicationUserQueryServer) == 0)
-			{//if no allowed ReplicationUserQueryServer set in replication setup
-				throw new ApplicationException("This query contains unsafe syntax that can crash replication.  There is currently no computer set that is allowed to run these types of queries.  This can be set in the replication setup window.");
-			}
-			//If not known to be connected to the Report Server and if not running query from the ReplicationUserQueryServer set in replication setup 
-			else if (!isRunningOnReportServer && !ReplicationServers.IsConnectedReportServer())
-			{
-				throw new ApplicationException("This query contains unsafe syntax that can crash replication.  Only computers connected to the report server are allowed to run these queries.  The current report server can be found in the replication setup window.");
-			}
-			return true;
-		}
-
-		///<summary>Returns true if the given SQL script in strSql contains any commands (INSERT, UPDATE, DELETE, etc.). Surround with a try/catch.</summary>
+		/// <summary>
+		/// Returns true if the given SQL script in strSql contains any commands (INSERT, UPDATE, DELETE, etc.). Surround with a try/catch.
+		/// </summary>
 		private static bool IsCommandSql(string strSql)
 		{
 			string trimmedSql = strSql.Trim();//If a line is completely a comment it may have only a trailing \n to make a subquery on. We need to keep it there.
@@ -295,7 +249,9 @@ namespace OpenDentBusiness
 			return false;
 		}
 
-		///<summary>The keywords must be listed in the order they are required to appear within the query.</summary>
+		/// <summary>
+		/// The keywords must be listed in the order they are required to appear within the query.
+		/// </summary>
 		private static bool HasNonTempTable(string keyword, string command)
 		{
 			int keywordEndIndex = command.IndexOf(keyword) + keyword.Length;
@@ -315,25 +271,22 @@ namespace OpenDentBusiness
 			return false;
 		}
 
-		///<summary></summary>
 		internal static DataTable GetTable(string command)
 		{
 			DataTable retVal = GetTableWithRemotingRoleCheck(command);
-			retVal.TableName = "";//this is needed for FormQuery dataGrid
+			retVal.TableName = "";
 			return retVal;
 		}
 
 		internal static List<T> GetList<T>(string command, Func<IDataRecord, T> rowToObjMethod)
 		{
 			LastCommand = command;
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				throw new ApplicationException("Not allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n" + command);
-			}
 			return DataCore.GetList(command, rowToObjMethod);
 		}
 
-		///<summary>Performs PIn.Long on first column of table returned. Surround with try/catch. Returns empty list if nothing found.</summary>
+		/// <summary>
+		/// Performs PIn.Long on first column of table returned. Surround with try/catch. Returns empty list if nothing found.
+		/// </summary>
 		internal static List<long> GetListLong(string command, bool hasExceptions = true)
 		{
 			List<long> retVal = new List<long>();
@@ -345,7 +298,9 @@ namespace OpenDentBusiness
 			return retVal;
 		}
 
-		///<summary>Performs PIn.String on first column of table returned. Returns empty list if nothing found.</summary>
+		/// <summary>
+		/// Performs PIn.String on first column of table returned. Returns empty list if nothing found.
+		/// </summary>
 		internal static List<string> GetListString(string command)
 		{
 			List<string> retVal = new List<string>();
@@ -357,51 +312,38 @@ namespace OpenDentBusiness
 			return retVal;
 		}
 
-		///<summary>Gets the table after checking remoting role.</summary>
+		/// <summary>
+		/// Gets the table after checking remoting role.
+		/// </summary>
 		private static DataTable GetTableWithRemotingRoleCheck(string command)
 		{
 			LastCommand = command;
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				if (RemotingClient.IsReportServer)
-				{
-					return Reports.GetTable(command);
-				}
-				throw new ApplicationException("No longer allowed to send sql directly.  For user sql, use GetTableLow.  Othewise, rewrite the calling "
-					+ "class to not use this query:\r\n" + command);
-			}
 			return DataCore.GetTable(command);
 		}
 
-		///<summary>This is used for queries written by the user.  If using direct connection, it gets a table in the ordinary way.  If ServerWeb, it uses the user with lower privileges to prevent injection attack.</summary>
+		/// <summary>
+		/// This is used for queries written by the user.
+		/// If using direct connection, it gets a table in the ordinary way.
+		/// If ServerWeb, it uses the user with lower privileges to prevent injection attack.
+		/// </summary>
 		internal static DataTable GetTableLow(string command)
 		{
 			LastCommand = command;
 			DataTable retVal;
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				throw new ApplicationException("Rewrite the calling class to pass this query off to the server:\r\n" + command);
-			}
-			if (RemotingClient.RemotingRole == RemotingRole.ClientDirect)
-			{
-				retVal = DataCore.GetTable(command);
-			}
-			else
-			{//ServerWeb because ClientWeb was considered prior to this func.
-				retVal = DataCore.GetTableLow(command);
-			}
+			retVal = DataCore.GetTable(command);
 			retVal.TableName = "";//this is needed for FormQuery dataGrid
 			return retVal;
 		}
 
-		///<summary>This query is run with full privileges.  This is for commands generated by the main program, and the user will not have access for injection attacks.  Result is usually number of rows changed, or can be insert id if requested.  WILL NOT RETURN CORRECT PRIMARY KEY if the query specifies the primary key.</summary>
+		/// <summary>
+		/// This query is run with full privileges.
+		/// This is for commands generated by the main program, and the user will not have access for injection attacks.
+		/// Result is usually number of rows changed, or can be insert id if requested.
+		/// WILL NOT RETURN CORRECT PRIMARY KEY if the query specifies the primary key.
+		/// </summary>
 		internal static long NonQ(string command, bool getInsertID, string columnNamePK, string tableName, params OdSqlParameter[] parameters)
 		{
 			LastCommand = command;
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				throw new ApplicationException("No longer allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n" + command);
-			}
 			return DataCore.NonQ(command, getInsertID, columnNamePK, tableName, parameters);
 		}
 
@@ -426,10 +368,6 @@ namespace OpenDentBusiness
 		///<summary>We need to get away from this due to poor support from databases.  For now, each command will be sent entirely separately.  This never returns number of rows affected.</summary>
 		internal static long NonQ(string[] commands)
 		{
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				throw new ApplicationException("No longer allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n" + commands[0]);
-			}
 			foreach (string command in commands)
 			{
 				LastCommand = command;
@@ -442,10 +380,6 @@ namespace OpenDentBusiness
 		internal static int NonQ32(string command, bool getInsertID)
 		{
 			LastCommand = command;
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				throw new ApplicationException("No longer allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n" + command);
-			}
 			return (int)DataCore.NonQ(command, getInsertID);
 		}
 
@@ -453,12 +387,6 @@ namespace OpenDentBusiness
 		internal static int NonQ32(string command)
 		{
 			return NonQ32(command, false);
-		}
-
-		///<summary>This is used only for historical commands in ConvertDatabase.</summary>
-		internal static int NonQ32(string[] commands)
-		{
-			return (int)NonQ(commands);
 		}
 
 		///<summary>We use this for queries that return a single value that is an int.  If there are no results, it will return 0.</summary>
@@ -471,10 +399,6 @@ namespace OpenDentBusiness
 		internal static long GetLong(string command)
 		{
 			LastCommand = command;
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				throw new ApplicationException("No longer allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n" + command);
-			}
 			DataTable table = DataCore.GetTable(command);
 			if (table.Rows.Count == 0)
 			{
@@ -487,10 +411,6 @@ namespace OpenDentBusiness
 		internal static string GetCount(string command)
 		{
 			LastCommand = command;
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				throw new ApplicationException("No longer allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n" + command);
-			}
 			return DataCore.GetTable(command).Rows[0][0].ToString();
 		}
 
@@ -498,10 +418,6 @@ namespace OpenDentBusiness
 		internal static string GetScalar(string command)
 		{
 			LastCommand = command;
-			if (RemotingClient.RemotingRole == RemotingRole.ClientWeb)
-			{
-				throw new ApplicationException("No longer allowed to send sql directly.  Rewrite the calling class to not use this query:\r\n" + command);
-			}
 			return DataCore.GetScalar(command);
 		}
 

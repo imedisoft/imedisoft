@@ -29,19 +29,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EhrLabSpecimen> GetForLab(long ehrLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrLabSpecimen>>(MethodBase.GetCurrentMethod(),ehrLabNum);
-			}
+			
 			string command="SELECT * FROM ehrlabspecimen WHERE EhrLabNum = "+POut.Long(ehrLabNum);
 			return Crud.EhrLabSpecimenCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void DeleteForLab(long ehrLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabNum);
-				return;
-			}
+			
 			EhrLabSpecimenConditions.DeleteForLab(ehrLabNum);
 			EhrLabSpecimenRejectReasons.DeleteForLab(ehrLabNum);
 			string command="DELETE FROM ehrlabspecimen WHERE EhrLabNum = "+POut.Long(ehrLabNum);
@@ -50,9 +45,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static EhrLabSpecimen InsertItem(EhrLabSpecimen ehrLabSpecimen) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EhrLabSpecimen>(MethodBase.GetCurrentMethod(),ehrLabSpecimen);
-			}
+			
 			ehrLabSpecimen.EhrLabNum=Crud.EhrLabSpecimenCrud.Insert(ehrLabSpecimen);
 			for(int i=0;i<ehrLabSpecimen.ListEhrLabSpecimenCondition.Count;i++) {
 				ehrLabSpecimen.ListEhrLabSpecimenCondition[i].EhrLabSpecimenNum=ehrLabSpecimen.EhrLabSpecimenNum;
@@ -134,11 +127,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_EhrLabSpecimenCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _EhrLabSpecimenCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -149,54 +138,38 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EhrLabSpecimen> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrLabSpecimen>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ehrlabspecimen WHERE PatNum = "+POut.Long(patNum);
 			return Crud.EhrLabSpecimenCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(EhrLabSpecimen ehrLabSpecimen) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				ehrLabSpecimen.EhrLabSpecimenNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrLabSpecimen);
-				return ehrLabSpecimen.EhrLabSpecimenNum;
-			}
+			
 			return Crud.EhrLabSpecimenCrud.Insert(ehrLabSpecimen);
 		}
 
 		///<summary>Gets one EhrLabSpecimen from the db.</summary>
 		public static EhrLabSpecimen GetOne(long ehrLabSpecimenNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EhrLabSpecimen>(MethodBase.GetCurrentMethod(),ehrLabSpecimenNum);
-			}
+			
 			return Crud.EhrLabSpecimenCrud.SelectOne(ehrLabSpecimenNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(EhrLabSpecimen ehrLabSpecimen){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				ehrLabSpecimen.EhrLabSpecimenNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrLabSpecimen);
-				return ehrLabSpecimen.EhrLabSpecimenNum;
-			}
+			
 			return Crud.EhrLabSpecimenCrud.Insert(ehrLabSpecimen);
 		}
 
 		///<summary></summary>
 		public static void Update(EhrLabSpecimen ehrLabSpecimen){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabSpecimen);
-				return;
-			}
+			
 			Crud.EhrLabSpecimenCrud.Update(ehrLabSpecimen);
 		}
 
 		///<summary></summary>
 		public static void Delete(long ehrLabSpecimenNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabSpecimenNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ehrlabspecimen WHERE EhrLabSpecimenNum = "+POut.Long(ehrLabSpecimenNum);
 			Db.NonQ(command);
 		}

@@ -29,18 +29,14 @@ namespace OpenDentBusiness{
 		#region Misc Methods
 		///<summary>Returns true if there are any rows that have a Descript with char length greater than 65,535</summary>
 		public static bool HasAnyLongDescripts() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM task WHERE CHAR_LENGTH(task.Descript)>65535";
 			return (Db.GetCount(command)!="0");
 		}
 
 		///<summary>Returns true if task does not exist in the database.</summary>
 		public static bool IsTaskDeleted(long taskNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),taskNum);
-			}
+			
 			string command = "SELECT COUNT(*) FROM task WHERE TaskNum="+POut.Long(taskNum)+"";
 			return Db.GetCount(command)=="0";
 		}
@@ -115,9 +111,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one Task from database.</summary>
 		public static Task GetOne(long TaskNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Task>(MethodBase.GetCurrentMethod(),TaskNum);
-			}
+			
 			string command="SELECT * FROM task WHERE TaskNum = "+POut.Long(TaskNum);
 			return Crud.TaskCrud.SelectOne(command);
 		}
@@ -127,11 +121,6 @@ namespace OpenDentBusiness{
 			string taskDateCompletedFrom,string taskDateCompletedTo,string taskDescription,long taskPriorityNum,long patNum,bool doIncludeTaskNote,
 			bool doIncludeCompleted,bool limit,bool doRunOnReportServer) 
 		{			
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),userNum,listTaskListNums,listTaskNums,taskDateCreatedFrom,taskDateCreatedTo,
-					taskDateCompletedFrom,taskDateCompletedTo,taskDescription,taskPriorityNum,patNum,doIncludeTaskNote,doIncludeCompleted,limit,
-					doRunOnReportServer);
-			}
 			DateTime dateCreatedFrom=PIn.Date(taskDateCreatedFrom);//will be DateTime.MinValue if not set, i.e. if " "
 			DateTime dateCreatedTo=PIn.Date(taskDateCreatedTo);//will be DateTime.MinValue if not set, i.e. if " "
 			DateTime dateCompletedFrom=PIn.Date(taskDateCompletedFrom);//will be DateTime.MinValue if not set, i.e. if " "
@@ -230,10 +219,6 @@ namespace OpenDentBusiness{
 			DateTime dateCreatedTo,DateTime dateCompletedFrom,DateTime dateCompletedTo,string taskDescription,long taskPriorityNum,long patNum,
 			bool doIncludeTaskNote,bool doIncludeCompleted,bool limit) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),userNum,listTaskListNums,listTaskNums,dateCreatedFrom,dateCreatedTo,
-					dateCompletedFrom,dateCompletedTo,taskDescription,taskPriorityNum,patNum,doIncludeTaskNote,doIncludeCompleted,limit);
-			}
 			List<string> listWhereClauses=new List<string>();
 			List<string> listWhereNoteClauses=new List<string>();
 			bool doJoinTaskOnTaskNote=false;
@@ -331,9 +316,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all tasks for a supplied list of task nums.</summary>
 		public static List<Task> GetMany(List<long> listTaskNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),listTaskNums);
-			}
+			
 			if(listTaskNums==null || listTaskNums.Count==0) {
 				return new List<Task>();
 			}
@@ -343,9 +326,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the count of reminder tasks on or after the specified dateTimeAsOf.</summary>
 		public static int GetCountReminderTasks(string reminderGroupId,DateTime dateTimeAsOf) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),reminderGroupId,dateTimeAsOf);
-			}
+			
 			string command="SELECT COUNT(*) FROM task "
 				+"WHERE task.ReminderGroupId='"+POut.String(reminderGroupId)+"' AND DateTimeEntry > "+POut.DateT(dateTimeAsOf);
 			return PIn.Int(Db.GetCount(command));
@@ -355,9 +336,7 @@ namespace OpenDentBusiness{
 		///Must supply the current usernum.  If the listTaskNums is null, then all subscribed tasks for the user will be returned.
 		///The signal list will include any task changes including status changes and deletions.</summary>
 		public static List<Task> GetNewTasksThisUser(long userNum,long clinicNum,List<long> listTaskNums=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),userNum,clinicNum,listTaskNums);
-			}
+			
 			Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 			if(userNum==0) {
 				return new List<Task>();//Return early because userNum is invalid.
@@ -389,9 +368,7 @@ namespace OpenDentBusiness{
 			if(listPatApts.Count==0) {
 				return new SerializableDictionary<long,string>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,string>(MethodBase.GetCurrentMethod(),listPatApts);
-			}
+			
 			string command=@"SELECT patient.LName,patient.FName,patient.Preferred,patient.MiddleI,appointment.AptNum,appointment.AptDateTime,
 				appointment.ProcDescript,appointment.Note 
 				FROM appointment 
@@ -425,9 +402,7 @@ namespace OpenDentBusiness{
 		public static List<Task> RefreshMainTrunk(bool showDone,DateTime startDate,long currentUserNum,TaskType taskType
 			,GlobalTaskFilterType globalFilterType,List<long> listFilterFkeys=null) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),showDone,startDate,currentUserNum,taskType,globalFilterType,listFilterFkeys);
-			}
+			
 			//startDate only applies if showing Done tasks.
 			string command="SELECT task.*,"
 					+"(SELECT COUNT(*) FROM taskunread WHERE task.TaskNum=taskunread.TaskNum AND taskunread.UserNum="+POut.Long(currentUserNum)+") IsUnread, "
@@ -462,9 +437,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all 'new' tasks for a user.</summary>
 		public static List<Task> RefreshUserNew(long userNum,GlobalTaskFilterType globalFilterType,List<long> listFilterFkey=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),userNum,globalFilterType,listFilterFkey);
-			}
+			
 			string command="";
 			if(DataConnection.DBtype==DatabaseType.MySql) {
 				command="SELECT task.*,1 AS IsUnread,";//we fill the IsUnread column with 1's because we already know that they are all unread
@@ -525,9 +498,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all 'open ticket' tasks for a user.  An open ticket is a task that was created by this user, is attached to a patient, and is not done.</summary>
 		public static List<Task> RefreshOpenTickets(long userNum,GlobalTaskFilterType globalFilterType,List<long> listFilterFkeys=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),userNum,globalFilterType,listFilterFkeys);
-			}
+			
 			string command="SELECT task.*, "
 				+"(SELECT COUNT(*) FROM taskunread WHERE task.TaskNum=taskunread.TaskNum "
 				+"AND taskunread.UserNum="+POut.Long(userNum)+") AS IsUnread, "
@@ -559,9 +530,7 @@ namespace OpenDentBusiness{
 		public static List<Task> RefreshPatientTickets(long patNum,long currentUserNum=0,
 			GlobalTaskFilterType globalFilterType=GlobalTaskFilterType.None,List<long> listFilterFkeys=null)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),patNum,currentUserNum,globalFilterType,listFilterFkeys);
-			}
+			
 			string command="SELECT task.*, "
 				+"(SELECT COUNT(*) FROM taskunread WHERE task.TaskNum=taskunread.TaskNum "
 				+"AND taskunread.UserNum="+POut.Long(Security.CurUser.UserNum)+") AS IsUnread, "
@@ -580,9 +549,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all tasks for the repeating trunk.  Always includes "done".</summary>
 		public static List<Task> RefreshRepeatingTrunk(long currentUserNum,GlobalTaskFilterType globalFilterType,List<long> listFilterFkeys=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),currentUserNum,globalFilterType,listFilterFkeys);
-			}
+			
 			string command="SELECT task.*, "
 				+"patient.LName,patient.FName,patient.Preferred "
 				+"FROM task "
@@ -613,10 +580,6 @@ namespace OpenDentBusiness{
 		public static List<Task> RefreshChildren(long listNum,bool showDone,DateTime startDate,long currentUserNum,long userNumInbox,TaskType taskType,
 			bool isTaskSortApptDateTime,GlobalTaskFilterType globalFilterType,List<long> listFilterFkey=null)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),listNum,showDone,startDate,currentUserNum,userNumInbox,taskType,
-					isTaskSortApptDateTime,globalFilterType,listFilterFkey);
-			}
 			//startDate only applies if showing Done tasks.
 			string command="SELECT task.*, "
 				+"(SELECT COUNT(*) FROM taskunread WHERE task.TaskNum=taskunread.TaskNum ";//the count turns into a bool
@@ -717,9 +680,7 @@ namespace OpenDentBusiness{
 		public static List<Task> RefreshRepeating(TaskDateType dateType,long currentUserNum,GlobalTaskFilterType globalFilterType,
 			List<long> listFilterFkeys=null) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),dateType,currentUserNum,globalFilterType,listFilterFkeys);
-			}
+			
 			string command=
 				"SELECT task.*, "
 				+"(SELECT COUNT(*) FROM taskunread WHERE task.TaskNum=taskunread.TaskNum "
@@ -741,9 +702,7 @@ namespace OpenDentBusiness{
 		public static List<Task> RefreshDatedTrunk(DateTime date,TaskDateType dateType,bool showDone,DateTime startDate,long currentUserNum
 			,GlobalTaskFilterType globalFilterType,List<long> listFilterFkeys=null) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod(),date,dateType,showDone,startDate,currentUserNum,globalFilterType,listFilterFkeys);
-			}
+			
 			DateTime dateFrom=DateTime.MinValue;
 			DateTime dateTo=DateTime.MaxValue;
 			if(dateType==TaskDateType.Day) {
@@ -834,9 +793,7 @@ namespace OpenDentBusiness{
 
 		///<summary>The full refresh is only used once when first synching all the tasks for taskAncestors.</summary>
 		public static List<Task> RefreshAll(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM task WHERE TaskListNum != 0";
 			return Crud.TaskCrud.SelectMany(command);
 		}
@@ -1072,19 +1029,13 @@ namespace OpenDentBusiness{
 
 		///<summary>This update method doesn't do any of the typical checks for the Task update.Do not use this method. Instead use Update(Task task,Task oldTask).</summary>
 		public static void Update(Task task) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),task);
-				return;
-			}
+			
 			Crud.TaskCrud.Update(task);
 		}
 
 		///<summary></summary>
 		public static long Insert(Task task) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				task.TaskNum=Meth.GetLong(MethodBase.GetCurrentMethod(),task);
-				return task.TaskNum;
-			}
+			
 			if(task.IsRepeating && task.DateTask.Year>1880) {
 				throw new Exception(Lans.g("Tasks","Task cannot be tagged repeating and also have a date."));
 			}
@@ -1101,9 +1052,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static bool WasTaskAltered(Task task){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),task);
-			}
+			
 			string command="SELECT * FROM task WHERE TaskNum="+POut.Long(task.TaskNum);
 			Task oldtask=Crud.TaskCrud.SelectOne(command);
 			if(oldtask==null
@@ -1127,10 +1076,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deleting a task never causes a problem, so no dependencies are checked.</summary>
 		public static void Delete(long taskNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskNum);
-				return;
-			}
+			
 			Tasks.ClearFkey(taskNum);//Zero securitylog FKey column for rows to be deleted.
 			string command= "DELETE FROM task WHERE TaskNum = "+POut.Long(taskNum);
  			Db.NonQ(command);
@@ -1151,10 +1097,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Appends a carriage return as well as the text to any task.  If a taskListNum is specified, then it also changes the taskList.    Must call TaskAncestors.Synch after this.</summary>
 		public static void Append(long taskNum,string text,long taskListNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskNum,text,taskListNum);
-				return;
-			}
+			
 			string command;
 			if(taskListNum==-1) {
 				command="UPDATE task SET Descript=CONCAT(Descript,'"+POut.String("\r\n"+text)+"') WHERE TaskNum="+POut.Long(taskNum);
@@ -1168,9 +1111,7 @@ namespace OpenDentBusiness{
 		}*/
 
 		public static int GetCountOpenTickets(long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),userNum);
-			}
+			
 			string command="SELECT COUNT(*) "
 				+"FROM task "
 				+"WHERE NOT EXISTS(SELECT * FROM taskancestor,tasklist "
@@ -1187,9 +1128,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static int GetCountPatientTickets(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT COUNT(*) "
 				+"FROM task "
 				+"WHERE task.ObjectType="+POut.Int((int)TaskObjectType.Patient)+" "
@@ -1202,9 +1141,7 @@ namespace OpenDentBusiness{
 		///<summary>Only called for ODHQ. Gets the tasks that are in the Office Down task list. This method only returns the Task table row, not the
 		///extra non-DB columns.</summary>
 		public static List<Task> GetOfficeDowns() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Task>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * "
 				+"FROM task "
 				+"WHERE TaskListNum="+OfficeDownTaskListNum+" "
@@ -1309,20 +1246,14 @@ namespace OpenDentBusiness{
 		///<summary>Zeros securitylog FKey column for rows that are using the matching taskNum as FKey and are related to Task.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Task table type.</summary>
 		public static void ClearFkey(long taskNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskNum);
-				return;
-			}
+			
 			Crud.TaskCrud.ClearFkey(taskNum);
 		}
 
 		///<summary>Zeros securitylog FKey column for rows that are using the matching taskNums as FKey and are related to Task.
 		///Permtypes are generated from the AuditPerms property of the CrudTableAttribute within the Task table type.</summary>
 		public static void ClearFkey(List<long> listTaskNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listTaskNums);
-				return;
-			}
+			
 			Crud.TaskCrud.ClearFkey(listTaskNums);
 		}
 

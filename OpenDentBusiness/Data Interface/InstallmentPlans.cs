@@ -27,9 +27,7 @@ namespace OpenDentBusiness{
 			if(listGuarNums.Count==0) {
 				return new SerializableDictionary<long,InstallmentPlan>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SerializableDictionary<long,InstallmentPlan>>(MethodBase.GetCurrentMethod(),listGuarNums);
-			}
+			
 			string command="SELECT * FROM installmentplan WHERE PatNum IN("+string.Join(",",listGuarNums.Select(x => POut.Long(x)))+") ";
 			return Crud.InstallmentPlanCrud.SelectMany(command)
 				.GroupBy(x => x.PatNum)
@@ -53,9 +51,7 @@ namespace OpenDentBusiness{
 			if(listSuperFamNums.Count==0) {
 				return new SerializableDictionary<long,List<InstallmentPlan>>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SerializableDictionary<long,List<InstallmentPlan>>>(MethodBase.GetCurrentMethod(),listSuperFamNums);
-			}
+			
 			string command="SELECT installmentplan.*,patient.SuperFamily FROM installmentplan "
 				+"INNER JOIN patient ON installmentplan.PatNum=patient.PatNum "
 				+"WHERE patient.SuperFamily IN("+string.Join(",",listSuperFamNums.Select(x => POut.Long(x)))+") "
@@ -99,36 +95,25 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one InstallmentPlan from the db.</summary>
 		public static InstallmentPlan GetOne(long installmentPlanNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<InstallmentPlan>(MethodBase.GetCurrentMethod(),installmentPlanNum);
-			}
+			
 			return Crud.InstallmentPlanCrud.SelectOne(installmentPlanNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(InstallmentPlan installmentPlan){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				installmentPlan.InstallmentPlanNum=Meth.GetLong(MethodBase.GetCurrentMethod(),installmentPlan);
-				return installmentPlan.InstallmentPlanNum;
-			}
+			
 			return Crud.InstallmentPlanCrud.Insert(installmentPlan);
 		}
 
 		///<summary></summary>
 		public static void Update(InstallmentPlan installmentPlan){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),installmentPlan);
-				return;
-			}
+			
 			Crud.InstallmentPlanCrud.Update(installmentPlan);
 		}
 
 		///<summary></summary>
 		public static void Delete(long installmentPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),installmentPlanNum);
-				return;
-			}
+			
 			string command= "DELETE FROM installmentplan WHERE InstallmentPlanNum = "+POut.Long(installmentPlanNum);
 			Db.NonQ(command);
 		}

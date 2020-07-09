@@ -10,9 +10,6 @@ namespace OpenDentBusiness {
 	public class EhrPatListElements {
 
 		public static DataTable GetListOrderBy2014(List<EhrPatListElement2014> elementList) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),elementList);
-			}
 			DataTable table=new DataTable();
 			string select="SELECT patient.PatNum,patient.LName,patient.FName";
 			string from="FROM patient";
@@ -153,9 +150,6 @@ namespace OpenDentBusiness {
 
 		///<summary>This is a potential fix to be backported to 13.2 so that patient lists can be used for MU1 2013. on large databases these queries take way to long to run. (At least several minutes).</summary>
 		public static DataTable GetListOrderBy2014Retro(List<EhrPatListElement> elementList) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),elementList);
-			}
 			DataTable table=new DataTable();
 			string select="SELECT patient.PatNum,patient.LName,patient.FName";
 			string from="FROM patient";

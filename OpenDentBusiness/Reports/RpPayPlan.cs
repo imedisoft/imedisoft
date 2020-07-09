@@ -11,10 +11,6 @@ namespace OpenDentBusiness {
 		///<summary>If not using clinics then supply an empty list of clinicNums.</summary>
 		public static DataSet GetPayPlanTable(DateTime dateStart,DateTime dateEnd,List<long> listProvNums,List<long> listClinicNums,
 			bool hasAllProvs,DisplayPayPlanType displayPayPlanType,bool hideCompletedPlans,bool showFamilyBalance,bool hasDateRange,bool isPayPlanV2) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDS(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listProvNums,listClinicNums,hasAllProvs,displayPayPlanType,
-					hideCompletedPlans,showFamilyBalance,hasDateRange,isPayPlanV2);
-			}
 			string whereProv="";
 			if(!hasAllProvs) {
 				whereProv+=" AND payplancharge.ProvNum IN(";

@@ -13,9 +13,6 @@ namespace OpenDentBusiness {
 		public static DataTable GetProcsNotBilled(List<long> listClinicNums,bool includeMedProcs,DateTime dateStart,DateTime dateEnd,
 			bool showProcsBeforeIns,bool hasMultiVisitProcs)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listClinicNums,includeMedProcs,dateStart,dateEnd,showProcsBeforeIns,hasMultiVisitProcs);
-			}
 			string query="SELECT ";
 			if(PrefC.GetBool(PrefName.ReportsShowPatNum)) {
 				query+=DbHelper.Concat("CAST(patient.PatNum AS CHAR)","'-'","patient.LName","', '","patient.FName","' '","patient.MiddleI");

@@ -82,11 +82,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_employerCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _employerCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -108,20 +104,14 @@ namespace OpenDentBusiness{
 		}*/
 		
 		public static void Update(Employer empCur, Employer empOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),empCur,empOld);
-				return;
-			}
+			
 			Crud.EmployerCrud.Update(empCur,empOld);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			InsEditLogs.MakeLogEntry(empCur,empOld,InsEditLogType.Employer,Security.CurUser.UserNum);
 		}
 		
 		public static long Insert(Employer Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.EmployerNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.EmployerNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			InsEditLogs.MakeLogEntry(Cur,null,InsEditLogType.Employer,Security.CurUser.UserNum);
 			return Crud.EmployerCrud.Insert(Cur);
@@ -130,10 +120,7 @@ namespace OpenDentBusiness{
 		///<summary>There MUST not be any dependencies before calling this or there will be invalid foreign keys.  
 		///This is only called from FormEmployers after proper validation.</summary>
 		public static void Delete(Employer Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string command="DELETE from employer WHERE EmployerNum = '"+Cur.EmployerNum.ToString()+"'";
 			Db.NonQ(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
@@ -142,9 +129,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of patients that are dependent on the Cur employer. The list includes carriage returns for easy display.  Used before deleting an employer to make sure employer is not in use.</summary>
 		public static string DependentPatients(Employer Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),Cur);
-			}
+			
 			string command="SELECT CONCAT(CONCAT(LName,', '),FName) FROM patient" 
 				+" WHERE EmployerNum = '"+POut.Long(Cur.EmployerNum)+"'";
 			DataTable table=Db.GetTable(command);
@@ -160,9 +145,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of insplans that are dependent on the Cur employer. The list includes carriage returns for easy display.  Used before deleting an employer to make sure employer is not in use.</summary>
 		public static string DependentInsPlans(Employer Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),Cur);
-			}
+			
 			string command="SELECT carrier.CarrierName,CONCAT(CONCAT(patient.LName,', '),patient.FName) "
 				+"FROM insplan "
 				+"LEFT JOIN inssub ON insplan.PlanNum=inssub.PlanNum "
@@ -212,17 +195,13 @@ namespace OpenDentBusiness{
 			if(employerNum==0) {
 				return null;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Employer>(MethodBase.GetCurrentMethod(),employerNum);
-			}
+			
 			return Crud.EmployerCrud.SelectOne(employerNum);
 		}
 
 		///<summary>Gets an employerNum from the database based on the supplied name.  If that empName does not exist, then a new employer is created, and the employerNum for the new employer is returned.</summary>
 		public static long GetEmployerNum(string empName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),empName);
-			}
+			
 			if(empName==""){
 				return 0;
 			}
@@ -241,9 +220,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns an employer if an exact match is found for the text supplied in the database.  Returns null if nothing found.</summary>
 		public static Employer GetByName(string empName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Employer>(MethodBase.GetCurrentMethod(),empName);
-			}
+			
 			string command="SELECT * FROM employer WHERE EmpName = '"+POut.String(empName)+"'";
 			return Crud.EmployerCrud.SelectOne(command);
 		}
@@ -256,10 +233,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Combines all the given employers into one. Updates patient and insplan. Then deletes all the others.</summary>
 		public static void Combine(List<long> employerNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),employerNums);
-				return;
-			}
+			
 			long newNum=employerNums[0];
 			for(int i=1;i<employerNums.Count;i++) {
 				string command="UPDATE patient SET EmployerNum = "+POut.Long(newNum)

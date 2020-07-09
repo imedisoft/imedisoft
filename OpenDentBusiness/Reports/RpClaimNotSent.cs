@@ -10,10 +10,6 @@ namespace OpenDentBusiness {
 		public static DataTable GetClaimsNotSent(DateTime fromDate,DateTime toDate,List<long> listClinicNums
 			,bool hasClaimTypeExpanded,ClaimNotSentStatuses claimStatusFilter) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),fromDate,toDate,listClinicNums
-					,hasClaimTypeExpanded,claimStatusFilter);
-			}
 			bool hasClinicsEnabled=ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
 			string command="";
 			string whereClin="";

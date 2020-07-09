@@ -15,26 +15,20 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all UserWebs from the db for the passed in type.</summary>
 		public static List<UserWeb> GetAllByType(UserWebFKeyType fkeyType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<UserWeb>>(MethodBase.GetCurrentMethod(),fkeyType);
-			}
+			
 			string command=$"SELECT * FROM userweb WHERE FKeyType={POut.Int((int)fkeyType)}";
 			return Crud.UserWebCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one UserWeb from the db.</summary>
 		public static UserWeb GetOne(long userWebNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<UserWeb>(MethodBase.GetCurrentMethod(),userWebNum);
-			}
+			
 			return Crud.UserWebCrud.SelectOne(userWebNum);
 		}
 
 		///<summary>Gets the UserWeb associated to the passed in username and hashed password.  Must provide the FKeyType.  Returns null if not found.</summary>
 		public static UserWeb GetByUserNameAndPassword(string userName,string passwordHashed,UserWebFKeyType fkeyType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<UserWeb>(MethodBase.GetCurrentMethod(),userName,passwordHashed,fkeyType);
-			}
+			
 			string command="SELECT * "
 				+"FROM userweb "
 				+"WHERE Password='"+passwordHashed+"' "
@@ -45,9 +39,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the UserWeb associated to the passed in username.  Must provide the FKeyType.  Returns null if not found.</summary>
 		public static UserWeb GetByUserName(string userName,UserWebFKeyType fkeyType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<UserWeb>(MethodBase.GetCurrentMethod(),userName,fkeyType);
-			}
+			
 			string command="SELECT * "
 				+"FROM userweb "
 				+"WHERE UserName='"+OpenDentBusiness.POut.String(userName)+"' "
@@ -57,9 +49,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the UserWeb associated to the passed in username and reset code.  Must provide the FKeyType.  Returns null if not found.</summary>
 		public static UserWeb GetByUserNameAndResetCode(string userName,string resetCode,UserWebFKeyType fkeyType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<UserWeb>(MethodBase.GetCurrentMethod(),userName,resetCode,fkeyType);
-			}
+			
 			string command="SELECT * "
 				+"FROM userweb "
 				+"WHERE userweb.FKeyType="+POut.Int((int)UserWebFKeyType.PatientPortal)+" "
@@ -69,9 +59,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static UserWeb GetByFKeyAndType(long fkey,UserWebFKeyType fkeyType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<UserWeb>(MethodBase.GetCurrentMethod(),fkey,fkeyType);
-			}
+			
 			string command="SELECT * FROM userweb WHERE FKey="+POut.Long(fkey)+" AND FKeyType="+POut.Int((int)fkeyType)+" ";
 			return Crud.UserWebCrud.SelectOne(command);
 		}
@@ -84,19 +72,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(UserWeb userWeb) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				userWeb.UserWebNum=Meth.GetLong(MethodBase.GetCurrentMethod(),userWeb);
-				return userWeb.UserWebNum;
-			}
+			
 			return Crud.UserWebCrud.Insert(userWeb);
 		}
 
 		///<summary></summary>
 		public static void InsertMany(List<UserWeb> listUserWebs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listUserWebs);
-				return;
-			}
+			
 			Crud.UserWebCrud.InsertMany(listUserWebs);
 		}
 
@@ -106,19 +88,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(UserWeb userWeb) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userWeb);
-				return;
-			}
+			
 			Crud.UserWebCrud.Update(userWeb);
 		}
 
 		///<summary></summary>
 		public static void Update(UserWeb userWeb,UserWeb userWebOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userWeb,userWebOld);
-				return;
-			}
+			
 			Crud.UserWebCrud.Update(userWeb,userWebOld);
 		}
 
@@ -128,10 +104,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(long userWebNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userWebNum);
-				return;
-			}
+			
 			Crud.UserWebCrud.Delete(userWebNum);
 		}
 
@@ -425,9 +398,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static int GetUserNameCount(string userName,UserWebFKeyType fkeyType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),userName,fkeyType);
-			}
+			
 			string command="SELECT COUNT(*) FROM userweb WHERE UserName='"+POut.String(userName)+"' AND FKeyType="+POut.Int((int)fkeyType);
 			return PIn.Int(Db.GetCount(command));
 		}

@@ -33,18 +33,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<OrthoChart> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoChart>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM orthochart";
 			return Crud.OrthoChartCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static List<OrthoChart> GetAllForPatient(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoChart>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM orthochart WHERE PatNum ="+POut.Long(patNum);
 			//FieldValue='' were stored as a result of a bug. DBM now removes those rows from the DB. This prevents them from being seen until DBM is run.
 			if(DataConnection.DBtype==DatabaseType.MySql) {
@@ -58,37 +54,26 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all distinct field names used by any ortho chart.  Useful for displaying the "available" display fields.</summary>
 		public static List<string> GetDistinctFieldNames() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT FieldName FROM orthochart GROUP BY FieldName";
 			return Db.GetListString(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(OrthoChart orthoChart) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				orthoChart.OrthoChartNum=Meth.GetLong(MethodBase.GetCurrentMethod(),orthoChart);
-				return orthoChart.OrthoChartNum;
-			}
+			
 			return Crud.OrthoChartCrud.Insert(orthoChart);
 		}
 
 		///<summary></summary>
 		public static void Update(OrthoChart orthoChart) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),orthoChart);
-				return;
-			}
+			
 			Crud.OrthoChartCrud.Update(orthoChart);
 		}
 
 		///<summary></summary>
 		public static void Update(OrthoChart orthoChart,OrthoChart oldOrthoChart) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),orthoChart,oldOrthoChart);
-				return;
-			}
+			
 			string command="";
 			if(orthoChart.PatNum != oldOrthoChart.PatNum) {
 				if(command!=""){ command+=",";}
@@ -121,10 +106,7 @@ namespace OpenDentBusiness{
 		  
 		///<summary>Ortho charts were briefly not deleted between 05/06/2014 and 01/02/2015.  Deleting occurs regularly when FieldValue="".</summary>
 		public static void Delete(long orthoChartNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),orthoChartNum);
-				return;
-			}
+			
 			string command= "DELETE FROM orthochart WHERE OrthoChartNum = "+POut.Long(orthoChartNum);
 			Db.NonQ(command);
 		}
@@ -132,10 +114,7 @@ namespace OpenDentBusiness{
 		///<summary>Modified Sync pattern for the OrthoChart.  We cannot use the standard Sync pattern because we have to perform logging when updating 
 		///or deleting.</summary>
 		public static void Sync(Patient patCur,List<OrthoChart> listNew,List<DisplayField> listOrthDisplayFields,DisplayField displayFieldSignature) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patCur,listNew,listOrthDisplayFields,displayFieldSignature);
-				return;
-			}
+			
 			List<OrthoChart> listDB=GetAllForPatient(patCur.PatNum);
 			//Inserts, updates, or deletes database rows to match supplied list.
 			//Adding items to lists changes the order of operation. All inserts are completed first, then updates, then deletes.
@@ -352,18 +331,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<OrthoChart> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<OrthoChart>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM orthochart WHERE PatNum = "+POut.Long(patNum);
 			return Crud.OrthoChartCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one OrthoChart from the db.</summary>
 		public static OrthoChart GetOne(long orthoChartNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<OrthoChart>(MethodBase.GetCurrentMethod(),orthoChartNum);
-			}
+			
 			return Crud.OrthoChartCrud.SelectOne(orthoChartNum);
 		}
 

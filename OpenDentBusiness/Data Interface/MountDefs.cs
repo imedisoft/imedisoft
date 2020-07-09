@@ -50,11 +50,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_mountDefCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _mountDefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -62,28 +58,19 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(MountDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			Crud.MountDefCrud.Update(def);
 		}
 
 		///<summary></summary>
 		public static long Insert(MountDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				def.MountDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),def);
-				return def.MountDefNum;
-			}
+			
 			return Crud.MountDefCrud.Insert(def);
 		}
 
 		///<summary>No need to surround with try/catch, because all deletions are allowed.</summary>
 		public static void Delete(long mountDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),mountDefNum);
-				return;
-			}
+			
 			string command="DELETE FROM mountdef WHERE MountDefNum="+POut.Long(mountDefNum);
 			Db.NonQ(command);
 			command="DELETE FROM mountitemdef WHERE MountDefNum ="+POut.Long(mountDefNum);

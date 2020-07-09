@@ -73,11 +73,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_sigButDefCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _sigButDefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -85,28 +80,19 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(SigButDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			Crud.SigButDefCrud.Update(def);
 		}
 
 		///<summary></summary>
 		public static long Insert(SigButDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				def.SigButDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),def);
-				return def.SigButDefNum;
-			}
+			
 			return Crud.SigButDefCrud.Insert(def);
 		}
 
 		///<summary>No need to surround with try/catch, because all deletions are allowed.</summary>
 		public static void Delete(SigButDef def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),def);
-				return;
-			}
+			
 			string command="DELETE FROM sigbutdef WHERE SigButDefNum ="+POut.Long(def.SigButDefNum);
 			Db.NonQ(command);
 		}

@@ -132,9 +132,7 @@ namespace OpenDentBusiness {
 			if(listPatNums==null || listPatNums.Count<=0) {
 				return new List<Recall>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Recall>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command="SELECT * FROM recall WHERE recall.PatNum IN ("+string.Join(",",listPatNums)+")";
 			return Crud.RecallCrud.SelectMany(command);
 		}
@@ -157,9 +155,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static Recall GetRecall(long recallNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Recall>(MethodBase.GetCurrentMethod(),recallNum);
-			}
+			
 			return Crud.RecallCrud.SelectOne(recallNum);
 		}
 
@@ -169,9 +165,7 @@ namespace OpenDentBusiness {
 			if(listPatNums==null || listPatNums.Count<=0) {
 				return new List<Recall>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Recall>>(MethodBase.GetCurrentMethod(),dateStart,listPatNums);
-			}
+			
 			DateTime dateMin=new DateTime(1880,1,1);
 			string command="SELECT * FROM recall "+
 				"WHERE PatNum IN ("+string.Join(",",listPatNums)+") "+
@@ -274,9 +268,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<Recall> GetChangedSince(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Recall>>(MethodBase.GetCurrentMethod(),changedSince);
-			} 
+			 
 			string command="SELECT * FROM recall WHERE DateTStamp > "+POut.DateT(changedSince);
 			return Crud.RecallCrud.SelectMany(command);
 		}
@@ -291,10 +283,6 @@ namespace OpenDentBusiness {
 			RecallListSort sortBy,RecallListShowNumberReminders showReminders,bool isAsap=false,string codeRangeStart="",string codeRangeEnd="",
 			bool doShowReminded=false,List<RecallType> listRecallTypes=null) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),fromDate,toDate,groupByFamilies,provNum,clinicNum,siteNum,
-					sortBy,showReminders,isAsap,codeRangeStart,codeRangeEnd,doShowReminded,listRecallTypes);
-			}
 			#region Logging
 			Stopwatch sw=new Stopwatch();
 			Stopwatch swTotal=new Stopwatch();
@@ -773,36 +761,25 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long Insert(Recall recall) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				recall.RecallNum=Meth.GetLong(MethodBase.GetCurrentMethod(),recall);
-				return recall.RecallNum;
-			}
+			
 			return Crud.RecallCrud.Insert(recall);
 		}
 
 		///<summary></summary>
 		public static void Update(Recall recall) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),recall);
-				return;
-			}
+			
 			Crud.RecallCrud.Update(recall);
 		}
 
 		///<summary>Returns true if it was updated</summary>
 		public static bool Update(Recall recall,Recall recallOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),recall,recallOld);
-			}
+			
 			return Crud.RecallCrud.Update(recall,recallOld);
 		}
 
 		///<summary></summary>
 		public static void Delete(Recall recall) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),recall);
-				return;
-			}
+			
 			string command= "DELETE from recall WHERE RecallNum = "+POut.Long(recall.RecallNum);
 			Db.NonQ(command);
 			DeletedObjects.SetDeleted(DeletedObjectType.RecallPatNum,recall.PatNum);
@@ -810,9 +787,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns false if the synch is in the process of running.</summary>
 		public static bool SynchAllPatients(bool doThrowException=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),doThrowException);
-			}
+			
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				throw new ApplicationException("SynchAllPatients is not Oracle compatible, please call support.");
 			}
@@ -1175,10 +1150,7 @@ namespace OpenDentBusiness {
 		///Also updates dateDue to match dateDueCalc if not disabled.  Creates any recalls as necessary.  
 		///Recalls will never get automatically deleted except when all triggers are removed.  Otherwise, the dateDueCalc just gets cleared.</summary>
 		public static void Synch(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			Patient pat=Patients.GetPat(patNum);
 			if(pat.PatStatus==PatientStatus.Archived) {//do not calculate recall if patient is archived.
 				return;
@@ -1393,10 +1365,7 @@ namespace OpenDentBusiness {
 		///This must be used instead of lazy synch in RecallsForPatient, when deleting an appointment, when sending to unscheduled list, setting an appointment complete, etc.  
 		///This is fast, but it would be inefficient to call it too much.</summary>
 		public static void SynchScheduledApptFull(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			Patient pat=Patients.GetPat(patNum);
 			if(pat.PatStatus==PatientStatus.Archived) {//do not calculate recall if patient is archived.
 				return;
@@ -1433,10 +1402,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Updates RecallInterval and DueDate for all patients that have the recallTypeNum and defaultIntervalOld to use the defaultIntervalNew.</summary>
 		public static void UpdateDefaultIntervalForPatients(long recallTypeNum,Interval defaultIntervalOld,Interval defaultIntervalNew) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),recallTypeNum,defaultIntervalOld,defaultIntervalNew);
-				return;
-			}
+			
 			string command="SELECT * FROM recall WHERE IsDisabled=0 AND RecallTypeNum="+POut.Long(recallTypeNum)+" AND RecallInterval="+POut.Int(defaultIntervalOld.ToInt());
 			List<Recall> recallList=Crud.RecallCrud.SelectMany(command);
 			for(int i=0;i<recallList.Count;i++) {
@@ -1454,10 +1420,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void DeleteAllOfType(long recallTypeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),recallTypeNum);
-				return;
-			}
+			
 			string command="DELETE FROM recall WHERE RecallTypeNum= "+POut.Long(recallTypeNum);
 			Db.NonQ(command);
 		}
@@ -1694,9 +1657,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a base table used for creating </summary>
 		public static DataTable GetAddrTableRaw(List<long> recallNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),recallNums);
-			}
+			
 			//get maxDateDue for each family.
 			string command=@"DROP TABLE IF EXISTS temprecallmaxdate;
 				CREATE table temprecallmaxdate(
@@ -1761,19 +1722,14 @@ namespace OpenDentBusiness {
 
 		/// <summary></summary>
 		public static void UpdateStatus(long recallNum,long newStatus) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),recallNum,newStatus);
-				return;
-			}
+			
 			string command="UPDATE recall SET RecallStatus="+newStatus.ToString()
 				+" WHERE RecallNum="+recallNum.ToString();
 			Db.NonQ(command);
 		}
 
 		public static int GetCountForType(long recallTypeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),recallTypeNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM recall "
 				+"JOIN recalltype ON recall.RecallTypeNum=recalltype.RecallTypeNum "
 				+"WHERE recalltype.recallTypeNum="+POut.Long(recallTypeNum);
@@ -1782,9 +1738,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Return RecallNums that have changed since a paticular time. </summary>
 		public static List<long> GetChangedSinceRecallNums(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT RecallNum FROM recall WHERE DateTStamp > "+POut.DateT(changedSince);
 			DataTable dt=Db.GetTable(command);
 			List<long> recallnums = new List<long>(dt.Rows.Count);
@@ -1799,9 +1753,7 @@ namespace OpenDentBusiness {
 			if(listRecallNums.IsNullOrEmpty()) {
 				return new List<Recall>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Recall>>(MethodBase.GetCurrentMethod(),listRecallNums);
-			}
+			
 			string command=$"SELECT * FROM recall WHERE RecallNum IN ({string.Join(",",listRecallNums)})";
 			return Crud.RecallCrud.SelectMany(command);
 		}
@@ -1809,9 +1761,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets the patients that have had a recall reminder sent to them in the date range. If a recall reminder was recorded as a commlog
 		///without a row in the webschedrecall table, some fields will be blank.</summary>
 		public static List<RecallRecent> GetRecentRecalls(DateTime dateTimeFrom,DateTime dateTimeTo,List<long> listClinicNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RecallRecent>>(MethodBase.GetCurrentMethod(),dateTimeFrom,dateTimeTo,listClinicNums);
-			}
+			
 			const string lanThis="FormRecallList";
 			string command=@"
 				SELECT "+DbHelper.Concat("patient.LName","', '","patient.FName")+@" PatientName,patient.PatNum,recallreminder.DateSent,

@@ -63,11 +63,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_clearinghouseCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _clearinghouseCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -78,9 +74,6 @@ namespace OpenDentBusiness {
 		///<summary>Gets all clearinghouses for the specified clinic.  Returns an empty list if clinicNum=0.  
 		///Use the cache if you want all HQ Clearinghouses.</summary>
 		public static List<Clearinghouse> GetAllNonHq() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Clearinghouse>>(MethodBase.GetCurrentMethod());
-			}
 			string command="SELECT * FROM clearinghouse WHERE ClinicNum!=0 ORDER BY Description";
 			List<Clearinghouse> clearinghouseRetVal=Crud.ClearinghouseCrud.SelectMany(command);
 			clearinghouseRetVal.ForEach(x => x.Password=GetRevealPassword(x.Password));
@@ -97,9 +90,6 @@ namespace OpenDentBusiness {
 		///Then saves the new value to db and returns it.  So even if the new value is not used for some reason, it will have already been incremented.
 		///Remember that LastBatchNumber is never accurate with local data in memory.</summary>
 		public static int GetNextBatchNumber(Clearinghouse clearinghouseClin){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),clearinghouseClin);
-			}
 			//get last batch number
 			string command="SELECT LastBatchNumber FROM clearinghouse "
 				+"WHERE ClearinghouseNum = "+POut.Long(clearinghouseClin.HqClearinghouseNum);
@@ -219,9 +209,6 @@ namespace OpenDentBusiness {
 		///<summary>Returns the clinic-level clearinghouse for the passed in Clearinghouse.  Usually used in conjunction with ReplaceFields().
 		///Can return null.</summary>
 		public static Clearinghouse GetForClinic(Clearinghouse clearinghouseHq,long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Clearinghouse>(MethodBase.GetCurrentMethod(),clearinghouseHq,clinicNum);
-			}
 			if(clinicNum==0) { //HQ
 				return null;
 			}
@@ -239,11 +226,6 @@ namespace OpenDentBusiness {
 		#region Insert
 		///<summary>Inserts one clearinghouse into the database.  Use this if you know that your clearinghouse will be inserted at the HQ-level.</summary>
 		public static long Insert(Clearinghouse clearinghouse) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				clearinghouse.ClearinghouseNum=Meth.GetLong(MethodBase.GetCurrentMethod(),clearinghouse);
-				clearinghouse.HqClearinghouseNum=clearinghouse.ClearinghouseNum;
-				return clearinghouse.ClearinghouseNum;
-			}
 			long clearinghouseNum=Crud.ClearinghouseCrud.Insert(clearinghouse);
 			clearinghouse.HqClearinghouseNum=clearinghouseNum;
 			Crud.ClearinghouseCrud.Update(clearinghouse);
@@ -257,27 +239,15 @@ namespace OpenDentBusiness {
 		///Use this if you know that your clearinghouse will be updated at the HQ-level, 
 		///or if you already have a well-defined clinic-level clearinghouse.  For lists of clearinghouses, use the Sync method instead.</summary>
 		public static void Update(Clearinghouse clearinghouse) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clearinghouse);
-				return;
-			}
 			Crud.ClearinghouseCrud.Update(clearinghouse);
 		}
 
 		public static void Update(Clearinghouse clearinghouse,Clearinghouse oldClearinghouse) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clearinghouse,oldClearinghouse);
-				return;
-			}
 			Crud.ClearinghouseCrud.Update(clearinghouse,oldClearinghouse);
 		}
 
 		///<summary>Syncs a given list of clinic-level clearinghouses to a list of old clinic-level clearinghouses.</summary>
 		public static void Sync(List<Clearinghouse> listClearinghouseNew,List<Clearinghouse> listClearinghouseOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listClearinghouseNew,listClearinghouseOld);
-				return;
-			}
 			Crud.ClearinghouseCrud.Sync(listClearinghouseNew,listClearinghouseOld);
 		}
 		#endregion
@@ -285,10 +255,6 @@ namespace OpenDentBusiness {
 		#region Delete
 		///<summary>Deletes the passed-in Hq clearinghouse for all clinics.  Only pass in clearinghouses with ClinicNum==0.</summary>
 		public static void Delete(Clearinghouse clearinghouseHq) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clearinghouseHq);
-				return;
-			}
 			string command="DELETE FROM clearinghouse WHERE ClearinghouseNum = '"+POut.Long(clearinghouseHq.ClearinghouseNum)+"'";
 			Db.NonQ(command);
 			command="DELETE FROM clearinghouse WHERE HqClearinghouseNum='"+POut.Long(clearinghouseHq.ClearinghouseNum)+"'";

@@ -95,11 +95,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_autoCodeCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _autoCodeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -107,28 +103,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(AutoCode Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.AutoCodeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.AutoCodeNum;
-			}
+			
 			return Crud.AutoCodeCrud.Insert(Cur);
 		}
 
 		///<summary></summary>
 		public static void Update(AutoCode Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.AutoCodeCrud.Update(Cur);
 		}
 
 		///<summary>Surround with try/catch.  Currently only called from FormAutoCode and FormAutoCodeEdit.</summary>
 		public static void Delete(AutoCode autoCodeCur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),autoCodeCur);
-				return;
-			}
+			
 			//look for dependencies in ProcButton table.
 			string strInUse="";
 			List<ProcButton> listProcButtons=ProcButtons.GetDeepCopy();
@@ -170,10 +157,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes all current autocodes and then adds the default autocodes.  Procedure codes must have already been entered or they cannot be added as an autocode.</summary>
 		public static void SetToDefault() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			string command="DELETE FROM autocode";
 			Db.NonQ(command);
 			command="DELETE FROM autocodecond";
@@ -931,10 +915,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes all current autocodes and then adds the default autocodes.  Procedure codes must have already been entered or they cannot be added as an autocode.</summary>
 		public static void SetToDefaultCanada() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
 				throw new ApplicationException("SetToDefaultCanada is not Oracle compatible.  Please call support.");
 			}

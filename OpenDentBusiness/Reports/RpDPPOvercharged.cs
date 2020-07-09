@@ -10,9 +10,6 @@ namespace OpenDentBusiness {
 	public class RpDPPOvercharged {
 
 		public static DataTable GetDPPOvercharged(DateTime dateStart,DateTime dateEnd,List<long> listClinicNums,List<long> listProvNums,long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listClinicNums,listProvNums,patNum);
-			}
 			List<int> listClaimProcStatForInsEst=ClaimProcs.GetEstimatedStatuses().Select(x => (int)x).ToList();
 			List<int> listClaimProcStatForInsPaid=ClaimProcs.GetInsPaidStatuses().Select(x => (int)x).ToList();
 			string query="SELECT payplan.DatePayPlanStart,"

@@ -84,11 +84,7 @@ namespace OpenDentBusiness {
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_providerClinicLinkCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _providerClinicLinkCache.GetTableFromCache(doRefreshCache);
 		}
 		#endregion Cache Pattern
@@ -113,9 +109,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static bool Sync(List<ProviderClinicLink> listNew,List<ProviderClinicLink> listDB) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listDB);
-			}
+			
 			return Crud.ProviderClinicLinkCrud.Sync(listNew,listDB);
 		}
 
@@ -124,18 +118,14 @@ namespace OpenDentBusiness {
 		#region Get Methods
 		///<summary></summary>
 		public static List<ProviderClinicLink> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProviderClinicLink>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM providercliniclink WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ProviderClinicLinkCrud.SelectMany(command);
 		}
 		
 		///<summary>Gets one ProviderClinicLink from the db.</summary>
 		public static ProviderClinicLink GetOne(long providerClinicLinkcNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ProviderClinicLink>(MethodBase.GetCurrentMethod(),providerClinicLinkcNum);
-			}
+			
 			return Crud.ProviderClinicLinkCrud.SelectOne(providerClinicLinkcNum);
 		}
 		#endregion Get Methods
@@ -143,30 +133,21 @@ namespace OpenDentBusiness {
 		#region Insert
 		///<summary></summary>
 		public static long Insert(ProviderClinicLink providerClinicLink){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				providerClinicLink.ProviderClinicLinkcNum=Meth.GetLong(MethodBase.GetCurrentMethod(),providerClinicLink);
-				return providerClinicLink.ProviderClinicLinkcNum;
-			}
+			
 			return Crud.ProviderClinicLinkCrud.Insert(providerClinicLink);
 		}
 		#endregion Insert
 		#region Update
 		///<summary></summary>
 		public static void Update(ProviderClinicLink providerClinicLink){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),providerClinicLink);
-				return;
-			}
+			
 			Crud.ProviderClinicLinkCrud.Update(providerClinicLink);
 		}
 		#endregion Update
 		#region Delete
 		///<summary></summary>
 		public static void Delete(long providerClinicLinkcNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),providerClinicLinkcNum);
-				return;
-			}
+			
 			Crud.ProviderClinicLinkCrud.Delete(providerClinicLinkcNum);
 		}
 		#endregion Delete

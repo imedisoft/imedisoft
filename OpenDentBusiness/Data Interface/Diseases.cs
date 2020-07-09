@@ -29,9 +29,7 @@ namespace OpenDentBusiness {
 
 		///<summary>This returns a single disease, but a patient may have multiple instances of the same disease.  For example, they may have multiple pregnancy instances with the same DiseaseDefNum.  This will return a single instance of the disease, chosen at random by MySQL.  Would be better to use GetDiseasesForPatient below which returns a list of diseases with this DiseaseDefNum for the patient.</summary>
 		public static Disease GetSpecificDiseaseForPatient(long patNum,long diseaseDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Disease>(MethodBase.GetCurrentMethod(),patNum,diseaseDefNum);
-			}
+			
 			string command="SELECT * FROM disease WHERE PatNum="+POut.Long(patNum)
 				+" AND DiseaseDefNum="+POut.Long(diseaseDefNum);
 			return Crud.DiseaseCrud.SelectOne(command);
@@ -39,9 +37,7 @@ namespace OpenDentBusiness {
 		
 		///<summary>Gets a list of every disease for the patient that has the specified DiseaseDefNum.  Set showActiveOnly true to only show active Diseases based on status (i.e. it could have a stop date but still be active, or marked inactive with no stop date).</summary>
 		public static List<Disease> GetDiseasesForPatient(long patNum,long diseaseDefNum,bool showActiveOnly) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Disease>>(MethodBase.GetCurrentMethod(),patNum,diseaseDefNum,showActiveOnly);
-			}
+			
 			string command="SELECT * FROM disease WHERE PatNum="+POut.Long(patNum)
 				+" AND DiseaseDefNum="+POut.Long(diseaseDefNum);
 			if(showActiveOnly) {
@@ -52,9 +48,7 @@ namespace OpenDentBusiness {
 		
 		///<summary>Returns a list of PatNums that have a disease from the PatNums that are passed in.</summary>
 		public static List<long> GetPatientsWithDisease(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			if(listPatNums.Count==0) {
 				return new List<long>();
 			}
@@ -65,9 +59,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets one disease by DiseaseNum from the db.</summary>
 		public static Disease GetOne(long diseaseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Disease>(MethodBase.GetCurrentMethod(),diseaseNum);
-			}
+			
 			return Crud.DiseaseCrud.SelectOne(diseaseNum);
 		}
 
@@ -79,9 +71,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a list of all Diseases for a given patient. Set showActive true to only show active Diseases.</summary>
 		public static List<Disease> Refresh(long patNum,bool showActiveOnly) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Disease>>(MethodBase.GetCurrentMethod(),patNum,showActiveOnly);
-			}
+			
 			string command="SELECT disease.* FROM disease "
 				+"WHERE PatNum="+POut.Long(patNum);
 			if(showActiveOnly) {
@@ -92,9 +82,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a list of all Diseases for a given patient. Show innactive returns all, otherwise only resolved and active problems.</summary>
 		public static List<Disease> Refresh(bool showInnactive,long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Disease>>(MethodBase.GetCurrentMethod(),showInnactive,patNum);
-			}
+			
 			string command="SELECT disease.* FROM disease "
 				+"WHERE PatNum="+POut.Long(patNum);
 			if(!showInnactive) {
@@ -105,55 +93,38 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(Disease disease) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),disease);
-				return;
-			}
+			
 			Crud.DiseaseCrud.Update(disease);
 		}
 
 		///<summary></summary>
 		public static void Update(Disease disease,Disease oldDisease) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),disease,oldDisease);
-				return;
-			}
+			
 			Crud.DiseaseCrud.Update(disease,oldDisease);
 		}
 
 		///<summary></summary>
 		public static long Insert(Disease disease) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				disease.DiseaseNum=Meth.GetLong(MethodBase.GetCurrentMethod(),disease);
-				return disease.DiseaseNum;
-			}
+			
 			return Crud.DiseaseCrud.Insert(disease);
 		}
 
 		///<summary></summary>
 		public static void Delete(Disease disease) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),disease);
-				return;
-			}
+			
 			string command="DELETE FROM disease WHERE DiseaseNum ="+POut.Long(disease.DiseaseNum);
 			Db.NonQ(command);
 		}
 
 		///<summary>Deletes all diseases for one patient.</summary>
 		public static void DeleteAllForPt(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			string command="DELETE FROM disease WHERE PatNum ="+POut.Long(patNum);
 			Db.NonQ(command);
 		}
 
 		public static List<long> GetChangedSinceDiseaseNums(DateTime changedSince,List<long> eligibleForUploadPatNumList) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince,eligibleForUploadPatNumList);
-			}
+			
 			string strEligibleForUploadPatNums="";
 			DataTable table;
 			if(eligibleForUploadPatNumList.Count>0) {
@@ -178,9 +149,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Used along with GetChangedSinceDiseaseNums</summary>
 		public static List<Disease> GetMultDiseases(List<long> diseaseNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Disease>>(MethodBase.GetCurrentMethod(),diseaseNums);
-			}
+			
 			string strDiseaseNums="";
 			DataTable table;
 			if(diseaseNums.Count>0) {
@@ -203,20 +172,14 @@ namespace OpenDentBusiness {
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all diseases of a patient</summary>
 		public static void ResetTimeStamps(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			string command="UPDATE disease SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum ="+POut.Long(patNum);
 			Db.NonQ(command);
 		}
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all diseases of a patient that are the status specified.</summary>
 		public static void ResetTimeStamps(long patNum,ProblemStatus status) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum,status);
-				return;
-			}
+			
 			string command="UPDATE disease SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum ="+POut.Long(patNum);
 				command+=" AND ProbStatus = "+POut.Int((int)status);
 			Db.NonQ(command);

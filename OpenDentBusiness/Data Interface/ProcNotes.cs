@@ -11,9 +11,7 @@ namespace OpenDentBusiness {
 		#region Get Methods
 		///<summary>Returns all procedure notes for the procedure passed in.  Returned list is not sorted.</summary>
 		public static List<ProcNote> GetProcNotesForProc(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcNote>>(MethodBase.GetCurrentMethod(),procNum);
-			}
+			
 			string command="SELECT * FROM procnote WHERE ProcNum="+POut.Long(procNum);
 			return Crud.ProcNoteCrud.SelectMany(command);
 		}
@@ -37,17 +35,12 @@ namespace OpenDentBusiness {
 
 
 		public static long Insert(ProcNote procNote){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				procNote.ProcNoteNum=Meth.GetLong(MethodBase.GetCurrentMethod(),procNote);
-				return procNote.ProcNoteNum;
-			}
+			
 			return Crud.ProcNoteCrud.Insert(procNote);
 		}
 
 		public static ProcNote GetProcNotesForPat(long patNum, DateTime dateStart, DateTime dateEnd) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ProcNote>(MethodBase.GetCurrentMethod(),patNum,dateStart,dateEnd);
-			}
+			
 			string query="SELECT procnote.* FROM procnote "
 				+"INNER JOIN procedurelog ON procedurelog.ProcNum=procnote.ProcNum "
 				+"WHERE procnote.PatNum="+POut.Long(patNum)+" "
@@ -60,9 +53,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns a list of ProcNums from listProcNums where the most recent ProcNote for the proc is signed.</summary>
 		public static List<long> GetIsProcNoteSigned(List<long> listProcNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),listProcNums);
-			}
+			
 			if(listProcNums.Count==0) {
 				return new List<long>();
 			}

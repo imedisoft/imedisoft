@@ -67,11 +67,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_recallTriggerCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _recallTriggerCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -79,20 +74,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(RecallTrigger trigger) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				trigger.RecallTriggerNum=Meth.GetLong(MethodBase.GetCurrentMethod(),trigger);
-				return trigger.RecallTriggerNum;
-			}
+			
 			return Crud.RecallTriggerCrud.Insert(trigger);
 		}
 
 		/*
 		///<summary></summary>
 		public static void Update(RecallTrigger trigger) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),trigger);
-				return;
-			}
+			
 			Crud.RecallTriggerCrud.Update(trigger);
 		}*/
 
@@ -102,10 +91,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static void SetForType(long recallTypeNum,List<RecallTrigger> triggerList) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),recallTypeNum,triggerList);
-				return;
-			}
+			
 			string command="DELETE FROM recalltrigger WHERE RecallTypeNum="+POut.Long(recallTypeNum);
 			Db.NonQ(command);
 			for(int i=0;i<triggerList.Count;i++){

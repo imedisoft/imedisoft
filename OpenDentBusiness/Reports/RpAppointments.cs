@@ -11,10 +11,6 @@ namespace OpenDentBusiness {
 			bool hasClinicsEnabled,bool isShowRecall,bool isShowNewPat,bool isShowASAP,SortAndFilterBy sortBy,List<ApptStatus> listApptStatusesToExclude,
 			List<long> listConfirmationStatuses,string formSender) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listProvNums,listClinicNums,hasClinicsEnabled,
-					isShowRecall,isShowNewPat,isShowASAP,sortBy,listApptStatusesToExclude,listConfirmationStatuses,formSender);
-			}
 			//Appointment status conditions
 			string whereApptStatus="";
 			if(listApptStatusesToExclude.Count > 0) {

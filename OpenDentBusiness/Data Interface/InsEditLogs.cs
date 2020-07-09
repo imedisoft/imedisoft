@@ -11,9 +11,7 @@ namespace OpenDentBusiness {
 	public class InsEditLogs {
 		///<summary>Gets logs from the passed in datetime and before.</summary>
 		public static List<InsEditLog> GetLogsForPlan(long planNum,long carrierNum,long employerNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsEditLog>>(MethodBase.GetCurrentMethod(),planNum,carrierNum,employerNum);
-			}
+			
 			List<long> listCarrierNums=InsEditLogs.GetAssociatedCarrierNums(planNum);
 			listCarrierNums.Add(carrierNum);
 			List<InsEditLog> retVal=new List<InsEditLog>();
@@ -122,9 +120,7 @@ namespace OpenDentBusiness {
 		/// <summary>Gets a list of carrierNums that can all be linked to the passed in carrierNum via Insurance Edit Log entries for
 		/// carrierNum changes.</summary>
 		public static List<long> GetAssociatedCarrierNums(long insPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),insPlanNum);
-			}
+			
 			//Get carrierNums associated to this insPlanNum, using carrierNum as a starting point.
 			string command=@"SELECT inseditlog.OldValue,inseditlog.NewValue
 				FROM inseditlog
@@ -234,19 +230,13 @@ namespace OpenDentBusiness {
 		}
 
 		public static void InsertMany(List<InsEditLog> listLogs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listLogs);
-				return;
-			}
+			
 			Crud.InsEditLogCrud.InsertMany(listLogs);
 			return;
 		}
 
 		public static long Insert(InsEditLog logCur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				logCur.InsEditLogNum=Meth.GetLong(MethodBase.GetCurrentMethod(),logCur);
-				return logCur.InsEditLogNum;
-			}
+			
 			return Crud.InsEditLogCrud.Insert(logCur);
 		}
 
@@ -268,10 +258,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void DeletePreInsertedLogsForPlanNum(long planNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),planNum);
-				return;
-			}
+			
 			string command="DELETE FROM inseditlog "
 				+"WHERE LogType="+POut.Int((int)InsEditLogType.Benefit)+" AND ParentKey="+POut.Long(planNum);
 			Db.NonQ(command);

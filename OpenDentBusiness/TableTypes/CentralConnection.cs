@@ -19,8 +19,6 @@ namespace OpenDentBusiness{
 		public string MySqlUser;
 		///<summary>If direct db connection.  Symmetrically encrypted.</summary>
 		public string MySqlPassword;
-		///<summary>If connecting to the web service. Can be on VPN, or can be over https.</summary>
-		public string ServiceURI;
 		///<summary>Deprecated.  If connecting to the web service.</summary>
 		public string OdUser;
 		///<summary>Deprecated.  If connecting to the web service.  Symmetrically encrypted.</summary>
@@ -30,8 +28,6 @@ namespace OpenDentBusiness{
 		public string Note;
 		///<summary>0-based.</summary>
 		public int ItemOrder;
-		///<summary>If set to true, the password hash is calculated differently.</summary>
-		public bool WebServiceIsEcw;
 		///<summary>Contains the most recent information about this connection.  OK if no problems, version information if version mismatch, nothing for not checked, and OFFLINE if previously couldn't connect.</summary>
 		public string ConnectionStatus;
 		///<summary>If set to True, display clinic breakdown in reports, else only show practice totals.</summary>

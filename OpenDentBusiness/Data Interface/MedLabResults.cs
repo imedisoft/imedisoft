@@ -93,11 +93,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_MedLabResultCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _MedLabResultCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -111,9 +107,7 @@ namespace OpenDentBusiness{
 		///Then ordered by DateTimeObs DESC, most recent of each status comes first in the list.
 		///If there are no results for the lab (or medLabNum=0), this will return an empty list.</summary>
 		public static List<MedLabResult> GetForLab(long medLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedLabResult>>(MethodBase.GetCurrentMethod(),medLabNum);
-			}
+			
 			string command="SELECT * FROM medlabresult WHERE MedLabNum="+POut.Long(medLabNum)+" ORDER BY ObsID,ObsIDSub,ResultStatus,DateTimeObs DESC";
 			return Crud.MedLabResultCrud.SelectMany(command);
 		}
@@ -124,9 +118,7 @@ namespace OpenDentBusiness{
 		///Corrected will be first in the list for each ObsID/ObsIDSub, then Final, etc.
 		///If there is more than one result with the same ObsID/ObsIDSub and status, the most recent DateTimeObs will be first.</summary>
 		public static List<MedLabResult> GetAllForLabs(List<MedLab> listMedLabs) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedLabResult>>(MethodBase.GetCurrentMethod(),listMedLabs);
-			}
+			
 			List<MedLabResult> retval=new List<MedLabResult>();
 			if(listMedLabs.Count==0) {
 				return retval;
@@ -144,9 +136,7 @@ namespace OpenDentBusiness{
 		///and for the same SpecimenID and SpecimenIDFiller.  Ordered by ResultStatus,DateTimeObs descending, MedLabResultNum descending.
 		///Used to display the history of a result as many statuses may be received.</summary>
 		public static List<MedLabResult> GetResultHist(MedLabResult medLabResult,long patNum,string specimenID,string specimenIDFiller) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedLabResult>>(MethodBase.GetCurrentMethod(),medLabResult,patNum,specimenID,specimenIDFiller);
-			}
+			
 			List<MedLabResult> retval=new List<MedLabResult>();
 			if(medLabResult==null) {
 				return retval;
@@ -164,38 +154,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(MedLabResult medLabResult) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				medLabResult.MedLabResultNum=Meth.GetLong(MethodBase.GetCurrentMethod(),medLabResult);
-				return medLabResult.MedLabResultNum;
-			}
+			
 			return Crud.MedLabResultCrud.Insert(medLabResult);
 		}
 
 		///<summary></summary>
 		public static void Update(MedLabResult medLabResult) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medLabResult);
-				return;
-			}
+			
 			Crud.MedLabResultCrud.Update(medLabResult);
 		}
 
 		///<summary>Delete all of the MedLabResult objects by MedLabResultNum.</summary>
 		public static void DeleteAll(List<long> listResultNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listResultNums);
-				return;
-			}
+			
 			string command= "DELETE FROM medlabresult WHERE MedLabResultNum IN("+String.Join(",",listResultNums)+")";
 			Db.NonQ(command);
 		}
 
 		///<summary>Delete all of the MedLabResult objects by MedLabNum.</summary>
 		public static void DeleteAllForMedLabs(List<long> listMedLabNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listMedLabNums);
-				return;
-			}
+			
 			if(listMedLabNums==null || listMedLabNums.Count<1) {
 				return;
 			}
@@ -243,27 +221,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<MedLabResult> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedLabResult>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM medlabresult WHERE PatNum = "+POut.Long(patNum);
 			return Crud.MedLabResultCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one MedLabResult from the db.</summary>
 		public static MedLabResult GetOne(long medLabResultNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<MedLabResult>(MethodBase.GetCurrentMethod(),medLabResultNum);
-			}
+			
 			return Crud.MedLabResultCrud.SelectOne(medLabResultNum);
 		}
 
 		///<summary></summary>
 		public static void Delete(long medLabResultNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medLabResultNum);
-				return;
-			}
+			
 			string command= "DELETE FROM medlabresult WHERE MedLabResultNum = "+POut.Long(medLabResultNum);
 			Db.NonQ(command);
 		}

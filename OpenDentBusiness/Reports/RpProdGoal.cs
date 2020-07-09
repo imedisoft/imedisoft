@@ -292,9 +292,6 @@ namespace OpenDentBusiness {
 		public static DataSet GetMonthlyGoalDataSet(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics,bool hasAllProvs
 			,bool hasAllClinics,PPOWriteoffDateCalc writeoffPayType,bool isCEMT=false) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDS(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listProvs,listClinics,hasAllProvs,hasAllClinics,writeoffPayType,isCEMT);
-			}
 			List<long> listClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
 			List<long> listProvNums=listProvs.Select(x => x.ProvNum).ToList();
 			#region Procedures

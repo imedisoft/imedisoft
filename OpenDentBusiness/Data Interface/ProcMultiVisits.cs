@@ -87,11 +87,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_procMultiVisitCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _procMultiVisitCache.GetTableFromCache(doRefreshCache);
 		}
 		#endregion Cache Pattern
@@ -100,10 +96,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary>Does not send cache refresh signal.  Send the signal from calling code.</summary>
 		public static long Insert(ProcMultiVisit procMultiVisit){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				procMultiVisit.ProcMultiVisitNum=Meth.GetLong(MethodBase.GetCurrentMethod(),procMultiVisit);
-				return procMultiVisit.ProcMultiVisitNum;
-			}
+			
 			return Crud.ProcMultiVisitCrud.Insert(procMultiVisit);
 		}
 
@@ -147,58 +140,59 @@ namespace OpenDentBusiness{
 			if(!Crud.ProcMultiVisitCrud.UpdateComparison(procMultiVisit,oldProcMultiVisit)) {
 				return;//No changes.  Save middle tier call.
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procMultiVisit,oldProcMultiVisit);
-				return;
-			}
+			
 			Crud.ProcMultiVisitCrud.Update(procMultiVisit,oldProcMultiVisit);
 		}
 
 		///<summary>Responsible for updating procedures in the group to "In Process" or "Not In Process", depending on the stat passed in.
 		///Also sends signal to cause cache refresh.  Refreshes local cache for clients directly connected.</summary>
-		public static void UpdateGroupForProc(long procNum,ProcStat stat) {
+		public static void UpdateGroupForProc(long procNum, ProcStat stat)
+		{
 			//No need to check RemotingRole; no call to db.
-			List<ProcMultiVisit> listPmvs=GetGroupsForProcsFromDb(procNum);
-			ProcMultiVisit pmv=listPmvs.FirstOrDefault(x => x.ProcNum==procNum);
-			if(pmv==null) {
+			List<ProcMultiVisit> listPmvs = GetGroupsForProcsFromDb(procNum);
+			ProcMultiVisit pmv = listPmvs.FirstOrDefault(x => x.ProcNum == procNum);
+			if (pmv == null)
+			{
 				return;//Rare edge case.  Might happen is someone deletes the procedure at the same time another person is updating it.
 			}
-			bool isGroupInProcessOld=IsGroupInProcess(listPmvs);
-			if(stat==ProcStat.D) {
+			bool isGroupInProcessOld = IsGroupInProcess(listPmvs);
+			if (stat == ProcStat.D)
+			{
 				//If the procedure is deleted, also delete the procvisitmulti to reduce clutter.
 				listPmvs.Remove(pmv);//Remove pmv from listpmvs.
-				if(pmv.ProcMultiVisitNum==pmv.GroupProcMultiVisitNum && !listPmvs.IsNullOrEmpty()) {//If the group points to the pmv to be removed and the group still exists.
-					long replacementGPMVNum=listPmvs.First().ProcMultiVisitNum;
-					UpdateGroupProcMultiVisitNumForGroup(pmv.ProcMultiVisitNum,replacementGPMVNum);
-					foreach(ProcMultiVisit procMulti in listPmvs) {//Replace all group numbers.
-						procMulti.GroupProcMultiVisitNum=replacementGPMVNum;
+				if (pmv.ProcMultiVisitNum == pmv.GroupProcMultiVisitNum && !listPmvs.IsNullOrEmpty())
+				{//If the group points to the pmv to be removed and the group still exists.
+					long replacementGPMVNum = listPmvs.First().ProcMultiVisitNum;
+					UpdateGroupProcMultiVisitNumForGroup(pmv.ProcMultiVisitNum, replacementGPMVNum);
+					foreach (ProcMultiVisit procMulti in listPmvs)
+					{//Replace all group numbers.
+						procMulti.GroupProcMultiVisitNum = replacementGPMVNum;
 					}
 				}
 				Delete(pmv.ProcMultiVisitNum);
 			}
-			else {
-				ProcMultiVisit oldPmv=pmv.Copy();
-				pmv.ProcStatus=stat;
-				Update(pmv,oldPmv);
+			else
+			{
+				ProcMultiVisit oldPmv = pmv.Copy();
+				pmv.ProcStatus = stat;
+				Update(pmv, oldPmv);
 			}
-			bool isGroupInProcess=IsGroupInProcess(listPmvs);
-			if(isGroupInProcess!=isGroupInProcessOld) {
-				UpdateInProcessForGroup(pmv.GroupProcMultiVisitNum,isGroupInProcess);
+			bool isGroupInProcess = IsGroupInProcess(listPmvs);
+			if (isGroupInProcess != isGroupInProcessOld)
+			{
+				UpdateInProcessForGroup(pmv.GroupProcMultiVisitNum, isGroupInProcess);
 			}
 			//Always send a signal and refresh the cache in case someone else is going to edit the group soon.
 			Signalods.SetInvalid(InvalidType.ProcMultiVisits);
-			if(RemotingClient.RemotingRole==RemotingRole.ClientDirect) {
-				RefreshCache();
-			}
+
+			RefreshCache();
+
 		}
 
 		///<summary>Updates the group IsInProcess values for all procedures to the specified bool value.
 		///Does not send cache refresh signal.  Send the signal from calling code.</summary>
 		public static void UpdateInProcessForGroup(long groupProcMultiVisitNum,bool isGroupInProcess) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),groupProcMultiVisitNum,isGroupInProcess);
-				return;
-			}
+			
 			string command="UPDATE procmultivisit "
 				+"SET IsInProcess="+POut.Bool(isGroupInProcess)+" "
 				+"WHERE GroupProcMultiVisitNum="+POut.Long(groupProcMultiVisitNum);
@@ -208,10 +202,7 @@ namespace OpenDentBusiness{
 		///<summary>Update the parameter GroupProcMultiVisitNum to a new value.
 		///Does not send cache refresh signal.  Send the signal from calling code.</summary>
 		public static void UpdateGroupProcMultiVisitNumForGroup(long groupProcMultiVisitNumOld,long groupProcMultiVisitNumNew) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),groupProcMultiVisitNumOld,groupProcMultiVisitNumNew);
-				return;
-			}
+			
 			string command="UPDATE procmultivisit "
 				+"SET GroupProcMultiVisitNum="+POut.Long(groupProcMultiVisitNumNew)+" "
 				+"WHERE GroupProcMultiVisitNum="+POut.Long(groupProcMultiVisitNumOld);
@@ -222,10 +213,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary>Does not send cache refresh signal.  Send the signal from calling code.</summary>
 		public static void Delete(long procMultiVisitNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procMultiVisitNum);
-				return;
-			}
+			
 			Crud.ProcMultiVisitCrud.Delete(procMultiVisitNum);
 		}
 		#endregion Delete
@@ -238,9 +226,7 @@ namespace OpenDentBusiness{
 			if(arrayProcNums.IsNullOrEmpty()) {
 				return new List<ProcMultiVisit>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<List<ProcMultiVisit>>(MethodBase.GetCurrentMethod(),arrayProcNums);
-			}
+			
 			string command="SELECT * FROM procmultivisit "
 				+"WHERE GroupProcMultiVisitNum IN (SELECT GroupProcMultiVisitNum FROM procmultivisit p2 WHERE p2.ProcNum IN ("+String.Join(",",arrayProcNums)+"))";
 			return Crud.ProcMultiVisitCrud.SelectMany(command);

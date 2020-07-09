@@ -767,9 +767,6 @@ namespace OpenDentBusiness {
 		public static DataSet GetDailyProdIncDataSet(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics
 			,bool hasAllProvs,bool hasAllClinics,bool isUnearnedIncluded,PPOWriteoffDateCalc writeoffType,bool isCEMT=false) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDS(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listProvs,listClinics,hasAllProvs,hasAllClinics,isUnearnedIncluded,writeoffType,isCEMT);
-			}
 			List<long> listProvNums=listProvs.Select(x => x.ProvNum).ToList();
 			List<long> listClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
 			List<long> listHiddenUnearnedDefNums=GetHiddenUnearnedDefNums(isCEMT);
@@ -1087,9 +1084,6 @@ namespace OpenDentBusiness {
 		public static DataSet GetProviderPayrollDataSet(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics
 			,bool hasAllProvs,bool hasAllClinics) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDS(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listProvs,listClinics,hasAllProvs,hasAllClinics);
-			}
 			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
 				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
 			);
@@ -1292,9 +1286,6 @@ namespace OpenDentBusiness {
 		///which will have slightly different logic to calculate due to claimsnapshot eConnector trigger timing issues.
 		///If not using clinics then simply supply an empty list of clinicNums.</summary>
 		public static DataTable GetNetProductionDetailDataSet(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics,bool hasAllProvs,bool hasAllClinics,bool useSnapshotForToday) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listProvs,listClinics,hasAllProvs,hasAllClinics,useSnapshotForToday);
-			}
 			List<long> listProvNums=new List<long>();
 			for(int i=0;i<listProvs.Count;i++) {
 				listProvNums.Add(listProvs[i].ProvNum);
@@ -1805,9 +1796,6 @@ namespace OpenDentBusiness {
 		public static DataSet GetMonthlyProdIncDataSet(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics,bool writeOffPay,
 			bool hasAllProvs,bool hasAllClinics,bool hasChangeInWriteoff,bool isUnearnedIncluded,bool isCEMT=false) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDS(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listProvs,listClinics,writeOffPay,hasAllProvs,hasAllClinics,hasChangeInWriteoff,isUnearnedIncluded,isCEMT);
-			}
 			List<long> listClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
 			List<long> listProvNums=listProvs.Select(x => x.ProvNum).ToList();
 			List<long> listHiddenUnearnedDefNums=GetHiddenUnearnedDefNums(isCEMT);
@@ -2377,9 +2365,6 @@ namespace OpenDentBusiness {
 		public static DataSet GetAnnualProdIncDataSet(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics,bool writeOffPay,
 			bool hasAllProvs,bool hasAllClinics,bool hasChangeInWriteoff,bool isUnearnedIncluded,bool isCEMT=false) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetDS(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listProvs,listClinics,writeOffPay,hasAllProvs,hasAllClinics,hasChangeInWriteoff,isUnearnedIncluded,isCEMT);
-			}
 			List<long> listClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
 			List<long> listProvNums=listProvs.Select(x => x.ProvNum).ToList();
 			List<long> listHiddenUnearnedDefNums=GetHiddenUnearnedDefNums(isCEMT);

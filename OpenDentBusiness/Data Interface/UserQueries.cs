@@ -205,11 +205,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_userQueryCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _userQueryCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -217,29 +212,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(UserQuery Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.QueryNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.QueryNum;
-			}
 			return Crud.UserQueryCrud.Insert(Cur);
 		}
 		
 		///<summary></summary>
 		public static void Delete(UserQuery Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string command = "DELETE from userquery WHERE querynum = '"+POut.Long(Cur.QueryNum)+"'";
 			Db.NonQ(command);
 		}
 
 		///<summary></summary>
 		public static void Update(UserQuery Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.UserQueryCrud.Update(Cur);
 		}
 	}

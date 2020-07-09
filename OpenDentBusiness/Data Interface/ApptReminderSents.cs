@@ -16,9 +16,7 @@ namespace OpenDentBusiness{
 			if(arrApptNums.IsNullOrEmpty()) {
 				return new List<ApptReminderSent>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptReminderSent>>(MethodBase.GetCurrentMethod(),arrApptNums);
-			}
+			
 			string command="SELECT * FROM apptremindersent WHERE ApptNum IN ("+string.Join(",",arrApptNums.Select(x => POut.Long(x)))+") ";
 			return Crud.ApptReminderSentCrud.SelectMany(command);
 		}
@@ -43,37 +41,25 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ApptReminderSent apptReminderSent) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				apptReminderSent.ApptReminderSentNum=Meth.GetLong(MethodBase.GetCurrentMethod(),apptReminderSent);
-				return apptReminderSent.ApptReminderSentNum;
-			}
+			
 			return Crud.ApptReminderSentCrud.Insert(apptReminderSent);
 		}
 
 		///<summary></summary>
 		public static void InsertMany(List<ApptReminderSent> listApptReminderSents) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listApptReminderSents);
-				return;
-			}
+			
 			Crud.ApptReminderSentCrud.InsertMany(listApptReminderSents);
 		}
 
 		///<summary></summary>
 		public static void Update(ApptReminderSent apptReminderSent) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),apptReminderSent);
-				return;
-			}
+			
 			Crud.ApptReminderSentCrud.Update(apptReminderSent);
 		}
 
 		///<summary></summary>
 		public static void Delete(long apptReminderSentNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),apptReminderSentNum);
-				return;
-			}
+			
 			Crud.ApptReminderSentCrud.Delete(apptReminderSentNum);
 		}
 
@@ -83,18 +69,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ApptReminderSent> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptReminderSent>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command = "SELECT * FROM apptremindersent WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ApptReminderSentCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one ApptReminderSent from the db.</summary>
 		public static ApptReminderSent GetOne(long apptReminderSentNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ApptReminderSent>(MethodBase.GetCurrentMethod(),apptReminderSentNum);
-			}
+			
 			return Crud.ApptReminderSentCrud.SelectOne(apptReminderSentNum);
 		}
 

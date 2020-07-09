@@ -85,11 +85,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_providerClinicCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _providerClinicCache.GetTableFromCache(doRefreshCache);
 		}
 		#endregion Cache Pattern
@@ -97,16 +93,12 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets one ProviderClinic from the db. Can be null.</summary>
 		public static ProviderClinic GetOne(long providerClinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ProviderClinic>(MethodBase.GetCurrentMethod(),providerClinicNum);
-			}
+			
 			return Crud.ProviderClinicCrud.SelectOne(providerClinicNum);
 		}
 
 		public static List<ProviderClinic> GetByProvNums(List<long> listProvNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProviderClinic>>(MethodBase.GetCurrentMethod(),listProvNums);
-			}
+			
 			if(listProvNums==null || listProvNums.Count==0) {
 				return new List<ProviderClinic>();
 			}
@@ -123,18 +115,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one ProviderClinic from the db. Can be null.</summary>
 		public static ProviderClinic GetOne(long provNum, long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ProviderClinic>(MethodBase.GetCurrentMethod(),provNum,clinicNum);
-			}
+			
 			string command="SELECT * FROM providerclinic WHERE ProvNum = "+POut.Long(provNum)+" AND ClinicNum = "+POut.Long(clinicNum);
 			return Crud.ProviderClinicCrud.SelectOne(command);
 		}
 
 		///<summary>Gets one DEANum from the db. If the DEANum for the specified clinic is not set, will return the default DEANum(clinicNum=0). Returns empty string if none set.</summary>
 		public static string GetDEANum(long provNum,long clinicNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<string>(MethodBase.GetCurrentMethod(),provNum,clinicNum);
-			}
+			
 			string command="SELECT DEANum FROM providerclinic WHERE ProvNum = "+POut.Long(provNum)+" AND ClinicNum = "+POut.Long(clinicNum);
 			string retVal=Db.GetScalar(command);
 			if(clinicNum!=0 && string.IsNullOrWhiteSpace(retVal)) {
@@ -146,9 +134,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets one StateWhereLicensed from the db. If the StateWhereLicensed for the specified clinic is not set, will return the default 
 		///GetStateWhereLicensed(clinicNum=0). Returns empty string if none set.</summary>
 		public static string GetStateWhereLicensed(long provNum,long clinicNum=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<string>(MethodBase.GetCurrentMethod(),provNum,clinicNum);
-			}
+			
 			string command="SELECT StateWhereLicensed FROM providerclinic WHERE ProvNum = "+POut.Long(provNum)+" AND ClinicNum = "+POut.Long(clinicNum);
 			string retVal=Db.GetScalar(command);
 			if(clinicNum!=0 && string.IsNullOrWhiteSpace(retVal)) {
@@ -159,9 +145,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of ProviderClinics from the db.</summary>
 		public static List<ProviderClinic> GetListForProvider(long provNum,List<long> listClinicNums=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProviderClinic>>(MethodBase.GetCurrentMethod(),provNum,listClinicNums);
-			}
+			
 			string command="SELECT * FROM providerclinic WHERE ProvNum = "+POut.Long(provNum);
 			if(listClinicNums!=null && listClinicNums.Count>0) {
 				command+=" AND ClinicNum IN("+String.Join(", ",listClinicNums)+") ";
@@ -183,9 +167,7 @@ namespace OpenDentBusiness{
 		///<summary>Inserts, updates, or deletes db rows to match listNew.  No need to pass in userNum, it's set before remoting role check and passed to
 		///the server if necessary.  Doesn't create ApptComm items, but will delete them.  If you use Sync, you must create new AlertCategories items.</summary>
 		public static bool Sync(List<ProviderClinic> listNew,List<ProviderClinic> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.ProviderClinicCrud.Sync(listNew,listOld);
 		}
 		/*
@@ -193,9 +175,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary></summary>
 		public static List<ProviderClinic> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProviderClinic>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM providerclinic WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ProviderClinicCrud.SelectMany(command);
 		}
@@ -206,30 +186,21 @@ namespace OpenDentBusiness{
 			#region Insert
 		///<summary></summary>
 		public static long Insert(ProviderClinic providerClinic){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				providerClinic.ProviderClinicNum=Meth.GetLong(MethodBase.GetCurrentMethod(),providerClinic);
-				return providerClinic.ProviderClinicNum;
-			}
+			
 			return Crud.ProviderClinicCrud.Insert(providerClinic);
 		}
 			#endregion
 			#region Update
 		///<summary></summary>
 		public static void Update(ProviderClinic providerClinic){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),providerClinic);
-				return;
-			}
+			
 			Crud.ProviderClinicCrud.Update(providerClinic);
 		}
 			#endregion
 			#region Delete
 		///<summary></summary>
 		public static void Delete(long providerClinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),providerClinicNum);
-				return;
-			}
+			
 			Crud.ProviderClinicCrud.Delete(providerClinicNum);
 		}
 			#endregion

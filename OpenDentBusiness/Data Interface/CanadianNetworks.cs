@@ -72,11 +72,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_canadianNetworkCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _canadianNetworkCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -84,19 +80,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(CanadianNetwork canadianNetwork) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				canadianNetwork.CanadianNetworkNum=Meth.GetLong(MethodBase.GetCurrentMethod(),canadianNetwork);
-				return canadianNetwork.CanadianNetworkNum;
-			}
+			
 			return Crud.CanadianNetworkCrud.Insert(canadianNetwork);
 		}
 
 		///<summary></summary>
 		public static void Update(CanadianNetwork canadianNetwork){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),canadianNetwork);
-				return;
-			}
+			
 			Crud.CanadianNetworkCrud.Update(canadianNetwork);
 		}
 

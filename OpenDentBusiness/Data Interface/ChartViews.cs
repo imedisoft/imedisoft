@@ -70,11 +70,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_chartViewCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _chartViewCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -82,28 +78,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ChartView chartView) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				chartView.ChartViewNum=Meth.GetLong(MethodBase.GetCurrentMethod(),chartView);
-				return chartView.ChartViewNum;
-			}
+			
 			return Crud.ChartViewCrud.Insert(chartView);
 		}
 
 		///<summary></summary>
 		public static void Update(ChartView chartView) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),chartView);
-				return;
-			}
+			
 			Crud.ChartViewCrud.Update(chartView);
 		}
 
 		///<summary></summary>
 		public static void Delete(long chartViewNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),chartViewNum);
-				return;
-			}
+			
 			string command= "DELETE FROM chartview WHERE ChartViewNum = "+POut.Long(chartViewNum);
 			Db.NonQ(command);
 		}
@@ -113,18 +100,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ChartView> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ChartView>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM chartview WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ChartViewCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one ChartView from the db.</summary>
 		public static ChartView GetOne(long chartViewNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ChartView>(MethodBase.GetCurrentMethod(),chartViewNum);
-			}
+			
 			return Crud.ChartViewCrud.SelectOne(chartViewNum);
 		}
 

@@ -31,18 +31,12 @@ namespace OpenDentBusiness{
 		///<summary>Ordered by dateTimeSaved.  Objects will not have the PageContent field populated.  Use GetPageContent to get the content for a
 		///specific revision.</summary>
 		public static List<WikiPageHist> GetByTitleNoPageContent(string pageTitle){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<WikiPageHist>>(MethodBase.GetCurrentMethod(),pageTitle);
-			}
 			string command="SELECT WikiPageNum,UserNum,PageTitle,'' PageContent,DateTimeSaved,IsDeleted "
 				+"FROM wikipagehist WHERE PageTitle='"+POut.String(pageTitle)+"' ORDER BY DateTimeSaved";
 			return Crud.WikiPageHistCrud.SelectMany(command);
 		}
 
 		public static string GetPageContent(long wikiPageNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),wikiPageNum);
-			}
 			if(wikiPageNum<1) {
 				return "";
 			}
@@ -52,9 +46,6 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<string> GetDeletedPages(string searchText,bool ignoreContent) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod(),searchText,ignoreContent);
-			}
 			List<string> retVal=new List<string>();
 			DataTable tableResults=new DataTable();
 			DataTable tableNewestDateTimes=new DataTable();
@@ -132,9 +123,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Only returns the most recently deleted version of the page. Returns null if not found.</summary>
 		public static WikiPageHist GetDeletedByTitle(string pageTitle) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<WikiPageHist>(MethodBase.GetCurrentMethod(),pageTitle);
-			}
 			string command="SELECT * FROM wikipagehist "
 										+"WHERE PageTitle = '"+POut.String(pageTitle)+"' "
 										+"AND IsDeleted=1 "
@@ -149,10 +137,6 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(WikiPageHist wikiPageHist){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				wikiPageHist.WikiPageNum=Meth.GetLong(MethodBase.GetCurrentMethod(),wikiPageHist);
-				return wikiPageHist.WikiPageNum;
-			}
 			return Crud.WikiPageHistCrud.Insert(wikiPageHist);
 		}
 
@@ -183,27 +167,19 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one WikiPageHist from the db.</summary>
 		public static WikiPageHist GetOne(long wikiPageNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<WikiPageHist>(MethodBase.GetCurrentMethod(),wikiPageNum);
-			}
+			
 			return Crud.WikiPageHistCrud.SelectOne(wikiPageNum);
 		}
 
 		///<summary></summary>
 		public static void Update(WikiPageHist wikiPageHist){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),wikiPageHist);
-				return;
-			}
+			
 			Crud.WikiPageHistCrud.Update(wikiPageHist);
 		}
 
 		///<summary></summary>
 		public static void Delete(long wikiPageNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),wikiPageNum);
-				return;
-			}
+			
 			string command= "DELETE FROM wikipagehist WHERE WikiPageNum = "+POut.Long(wikiPageNum);
 			Db.NonQ(command);
 		}

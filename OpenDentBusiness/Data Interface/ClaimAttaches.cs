@@ -25,10 +25,7 @@ namespace OpenDentBusiness{
 		#region Misc Methods
 		#endregion
 		public static long Insert(ClaimAttach attach) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				attach.ClaimAttachNum=Meth.GetLong(MethodBase.GetCurrentMethod(),attach);
-				return attach.ClaimAttachNum;
-			}
+			
 			return Crud.ClaimAttachCrud.Insert(attach);
 		}
 

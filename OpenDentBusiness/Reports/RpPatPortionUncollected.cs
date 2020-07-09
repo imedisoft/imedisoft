@@ -13,9 +13,6 @@ namespace OpenDentBusiness {
 	public class RpPatPortionUncollected {
 		///<summary></summary>
 		public static DataTable GetPatUncollected(DateTime dateFrom,DateTime dateTo,List<long> listClinicNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listClinicNums);
-			}
 			#if DEBUG
 			Stopwatch s=new Stopwatch();
 			s.Start();

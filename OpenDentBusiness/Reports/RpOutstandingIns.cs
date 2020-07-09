@@ -13,10 +13,6 @@ namespace OpenDentBusiness {
 		public static List<OutstandingInsClaim> GetOutInsClaims(List<long> listProvNums,DateTime dateFrom,DateTime dateTo,
 			PreauthOptions preauthOption,List<long> listClinicNums,string carrierName,List<long> listUserNums, DateFilterBy dateFilterBy)
 		{ 
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) { 
-				return Meth.GetObject<List<OutstandingInsClaim>>(MethodBase.GetCurrentMethod(),listProvNums,dateFrom,
-					dateTo,preauthOption,listClinicNums,carrierName,listUserNums,dateFilterBy);
-			} 
 			string command = @"
 				SELECT carrier.CarrierName, 
 				carrier.Phone carrierPhone, 

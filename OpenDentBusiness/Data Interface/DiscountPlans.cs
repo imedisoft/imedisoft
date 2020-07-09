@@ -31,9 +31,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<DiscountPlan> GetAll(bool getHidden){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DiscountPlan>>(MethodBase.GetCurrentMethod(),getHidden);
-			}
+			
 			string command="SELECT * FROM discountplan";
 			if(!getHidden) {
 				command+=" WHERE IsHidden=0";
@@ -46,9 +44,7 @@ namespace OpenDentBusiness{
 			if(listPatNums.IsNullOrEmpty()) {
 				return new SerializableDictionary<long,long>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,long>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command="SELECT patient.PatNum,discountplan.FeeSchedNum "
 				+ "FROM patient "
 				+ "LEFT JOIN discountplan ON discountplan.DiscountPlanNum=patient.DiscountPlanNum "
@@ -59,46 +55,32 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one DiscountPlan from the db.</summary>
 		public static DiscountPlan GetPlan(long discountPlanNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<DiscountPlan>(MethodBase.GetCurrentMethod(),discountPlanNum);
-			}
+			
 			return Crud.DiscountPlanCrud.SelectOne(discountPlanNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(DiscountPlan discountPlan){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				discountPlan.DiscountPlanNum=Meth.GetLong(MethodBase.GetCurrentMethod(),discountPlan);
-				return discountPlan.DiscountPlanNum;
-			}
+			
 			return Crud.DiscountPlanCrud.Insert(discountPlan);
 		}
 
 		///<summary></summary>
 		public static void Update(DiscountPlan discountPlan){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),discountPlan);
-				return;
-			}
+			
 			Crud.DiscountPlanCrud.Update(discountPlan);
 		}
 
 		///<summary>Sets DiscountPlanNum to 0 for specified PatNum.</summary>
 		public static void DropForPatient(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			string command="UPDATE patient SET DiscountPlanNum=0 WHERE PatNum="+POut.Long(patNum);
 			Db.NonQ(command);
 		}
 
 		///<summary>Changes the DiscountPlanNum of all patients that have _planFrom.DiscountPlanNum to _planInto.DiscountPlanNum</summary>
 		public static void MergeTwoPlans(DiscountPlan planInto,DiscountPlan planFrom) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),planInto,planFrom);
-				return;
-			}
+			
 			string command="UPDATE patient SET DiscountPlanNum="+POut.Long(planInto.DiscountPlanNum)
 				+" WHERE DiscountPlanNum="+POut.Long(planFrom.DiscountPlanNum);
 			Db.NonQ(command);
@@ -111,9 +93,7 @@ namespace OpenDentBusiness{
 			if(planNum==0) {
 				return new List<string>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod(),planNum);
-			}
+			
 			string command="SELECT LName,FName FROM patient WHERE DiscountPlanNum="+POut.Long(planNum)+" "+
 				"AND PatStatus NOT IN("+POut.Int((int)PatientStatus.Deleted)+","+POut.Int((int)PatientStatus.Deceased)+") ";
 			//No Preferred or MiddleI needed because this logic needs to match FormInsPlan.
@@ -125,9 +105,7 @@ namespace OpenDentBusiness{
 			if(planNum==0) {
 				return 0;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),planNum);
-			}
+			
 			string command="SELECT COUNT(PatNum) FROM patient WHERE DiscountPlanNum="+POut.Long(planNum)+" "+
 				"AND PatStatus NOT IN("+POut.Int((int)PatientStatus.Deleted)+","+POut.Int((int)PatientStatus.Deceased)+") ";
 			return PIn.Int(Db.GetCount(command));
@@ -139,9 +117,7 @@ namespace OpenDentBusiness{
 			if(listPlanNums.Count==0) {
 				return new SerializableDictionary<long,int>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,int>(MethodBase.GetCurrentMethod(),listPlanNums);
-			}
+			
 			string command="SELECT DiscountPlanNum,COUNT(PatNum) PatCount FROM patient " +
 				"WHERE DiscountPlanNum IN ("+string.Join(",",listPlanNums)+") " +
 				"AND PatStatus NOT IN("+POut.Int((int)PatientStatus.Deleted)+","+POut.Int((int)PatientStatus.Deceased)+") "+

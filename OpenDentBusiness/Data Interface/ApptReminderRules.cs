@@ -18,9 +18,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all, sorts by TSPrior Desc, Should never be more than 3 (per clinic if this is implemented for clinics.)</summary>
 		public static List<ApptReminderRule> GetForTypes(params ApptReminderType[] arrTypes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptReminderRule>>(MethodBase.GetCurrentMethod(),arrTypes);
-			}
+			
 			if(arrTypes.Length==0) {
 				return new List<ApptReminderRule>();
 			}
@@ -30,9 +28,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all from the DB for the given clinic and types.</summary>
 		public static List<ApptReminderRule> GetForClinicAndTypes(long clinicNum,params ApptReminderType[] arrTypes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptReminderRule>>(MethodBase.GetCurrentMethod(),clinicNum,arrTypes);
-			}
+			
 			if(arrTypes.Length==0) {
 				return new List<ApptReminderRule>();
 			}
@@ -63,9 +59,7 @@ namespace OpenDentBusiness{
 			if(!isEnabled) {
 				return false;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod());
-			}
+			
 			return Db.GetLong("SELECT count(*) FROM ApptReminderRule WHERE TSPrior>0")>0;
 		}
 
@@ -73,9 +67,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all, sorts by TSPrior Desc, Should never be more than 3 (per clinic if this is implemented for clinics.)</summary>
 		public static List<ApptReminderRule> GetAll(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptReminderRule>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM apptreminderrule ";
 			return Crud.ApptReminderRuleCrud.SelectMany(command).OrderByDescending(x => new[] { 1,2,0 }.ToList().IndexOf((int)x.TypeCur)).ToList();
 		}
@@ -85,9 +77,7 @@ namespace OpenDentBusiness{
 		///[0] indicates if any single clinic/practice has more than 1 same day reminder. 
 		///[1] indicates if any single clinic/practice has more than 1 future day reminder.</summary>
 		public static List<bool> Get_16_3_29_ConversionFlags() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<bool>>(System.Reflection.MethodBase.GetCurrentMethod());
-			}
+			
 			//We can't use CRUD here as we may be in between versions so use DataTable directly.
 			string command="SELECT ApptReminderRuleNum, TypeCur, TSPrior, ClinicNum FROM apptreminderrule WHERE TypeCur=0";
 			var groups=Db.GetTable(command).Select().Select(x => new {
@@ -112,17 +102,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all from the DB, sorts by TSPrior Desc.</summary>
 		public static List<ApptReminderRule> GetForClinic(long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ApptReminderRule>>(MethodBase.GetCurrentMethod(),clinicNum);
-			}
+			
 			string command = "SELECT * FROM apptreminderrule WHERE ClinicNum="+POut.Long(clinicNum);
 			return Crud.ApptReminderRuleCrud.SelectMany(command).OrderByDescending(x => x.TSPrior.TotalMinutes).ToList();
 		}
 		
 		public static bool SyncByClinicAndTypes(List<ApptReminderRule> listNew,long clinicNum,params ApptReminderType[] arrTypes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,clinicNum,arrTypes);
-			}
+			
 			if(arrTypes.Length==0) {
 				return false;
 			}
@@ -137,36 +123,25 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one ApptReminderRule from the db.</summary>
 		public static ApptReminderRule GetOne(long apptReminderRuleNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ApptReminderRule>(MethodBase.GetCurrentMethod(),apptReminderRuleNum);
-			}
+			
 			return Crud.ApptReminderRuleCrud.SelectOne(apptReminderRuleNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(ApptReminderRule apptReminderRule){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				apptReminderRule.ApptReminderRuleNum=Meth.GetLong(MethodBase.GetCurrentMethod(),apptReminderRule);
-				return apptReminderRule.ApptReminderRuleNum;
-			}
+			
 			return Crud.ApptReminderRuleCrud.Insert(apptReminderRule);
 		}
 
 		///<summary></summary>
 		public static void Update(ApptReminderRule apptReminderRule){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),apptReminderRule);
-				return;
-			}
+			
 			Crud.ApptReminderRuleCrud.Update(apptReminderRule);
 		}
 
 		///<summary></summary>
 		public static void Delete(long apptReminderRuleNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),apptReminderRuleNum);
-				return;
-			}
+			
 			Crud.ApptReminderRuleCrud.Delete(apptReminderRuleNum);
 		}
 

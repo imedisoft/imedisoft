@@ -235,9 +235,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a pref of type string without using the cache.</summary>
 		public static string GetStringNoCache(PrefName prefName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),prefName);
-			}
 			string command="SELECT ValueString FROM preference WHERE PrefName='"+POut.String(prefName.ToString())+"'";
 			return Db.GetScalar(command);
 		}

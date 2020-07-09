@@ -90,11 +90,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_reactivationCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _reactivationCache.GetTableFromCache(doRefreshCache);
 		}
 		#endregion Cache Pattern
@@ -104,25 +100,19 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary></summary>
 		public static List<Reactivation> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Reactivation>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM reactivation WHERE PatNum = "+POut.Long(patNum);
 			return Crud.ReactivationCrud.SelectMany(command);
 		}
 		
 		///<summary>Gets one Reactivation from the db.</summary>
 		public static Reactivation GetOne(long reactivationNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<Reactivation>(MethodBase.GetCurrentMethod(),reactivationNum);
-			}
+			
 			return Crud.ReactivationCrud.SelectOne(reactivationNum);
 		}
 
 		public static int GetNumReminders(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			long commType=Commlogs.GetTypeAuto(CommItemTypeAuto.REACT);
 			if(commType==0) {
 				return 0;
@@ -137,9 +127,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DateTime GetDateLastContacted(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<DateTime>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			long commType=Commlogs.GetTypeAuto(CommItemTypeAuto.REACT);
 			if(commType==0) {
 				return DateTime.MinValue;
@@ -158,10 +146,6 @@ namespace OpenDentBusiness{
 		public static DataTable GetReactivationList(DateTime dateSince,DateTime dateStop,bool groupFamilies,bool showDoNotContact,bool isInactiveIncluded
 			,long provNum,long clinicNum,long siteNum,long billingType,ReactivationListSort sortBy,RecallListShowNumberReminders showReactivations) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateSince,dateStop,groupFamilies,showDoNotContact,isInactiveIncluded,provNum,clinicNum
-					,siteNum,billingType,sortBy,showReactivations);
-			}
 			//Get information we will need to do the query
 			List<long> listReactCommLogTypeDefNums=Defs.GetDefsForCategory(DefCat.CommLogTypes,isShort:true)
 				.FindAll(x => CommItemTypeAuto.REACT.GetDescription(useShortVersionIfAvailable:true).Equals(x.ItemValue)).Select(x => x.DefNum).ToList();
@@ -313,28 +297,19 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(Reactivation reactivation){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				reactivation.ReactivationNum=Meth.GetLong(MethodBase.GetCurrentMethod(),reactivation);
-				return reactivation.ReactivationNum;
-			}
+			
 			return Crud.ReactivationCrud.Insert(reactivation);
 		}
 		#endregion Insert
 		#region Update
 		///<summary></summary>
 		public static void Update(Reactivation reactivation){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),reactivation);
-				return;
-			}
+			
 			Crud.ReactivationCrud.Update(reactivation);
 		}
 
 		public static void UpdateStatus(long reactivationNum,long statusDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),reactivationNum,statusDefNum);
-				return;
-			}
+			
 			string cmd="UPDATE reactivation SET ReactivationStatus="+POut.Long(statusDefNum) +" WHERE ReactivationNum="+POut.Long(reactivationNum);
 			Db.NonQ(cmd);
 		}
@@ -343,10 +318,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary></summary>
 		public static void Delete(long reactivationNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),reactivationNum);
-				return;
-			}
+			
 			Crud.ReactivationCrud.Delete(reactivationNum);
 		}
 		#endregion Delete

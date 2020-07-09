@@ -31,9 +31,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets one SigMessage from the db.</summary>
 		public static List<SigMessage> GetSigMessages(List<long> listSigMessageNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SigMessage>>(MethodBase.GetCurrentMethod(),listSigMessageNums);
-			}
+			
 			if(listSigMessageNums==null || listSigMessageNums.Count < 1) {
 				return new List<SigMessage>();
 			}
@@ -43,9 +41,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets one SigMessage from the db.</summary>
 		public static List<SigMessage> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SigMessage>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM sigmessage";
 			return Crud.SigMessageCrud.SelectMany(command);
 		}
@@ -53,9 +49,7 @@ namespace OpenDentBusiness {
 		///<summary>Only used when starting up to get the current button state.  Only gets unacked messages.
 		///There may well be extra and useless messages included.  But only the lights will be used anyway, so it doesn't matter.</summary>
 		public static List<SigMessage> RefreshCurrentButState() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SigMessage>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<SigMessage> listSigMessages=new List<SigMessage>();
 			string command=@"SELECT * FROM sigmessage "
 				+"WHERE AckDateTime < "+POut.DateT(new DateTime(1880,1,1))+" "
@@ -67,9 +61,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Includes all messages, whether acked or not.  It's up to the UI to filter out acked if necessary.</summary>
 		public static List<SigMessage> GetSigMessagesSinceDateTime(DateTime dateTimeSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SigMessage>>(MethodBase.GetCurrentMethod(),dateTimeSince);
-			}
+			
 			List<SigMessage> listSigMessages=new List<SigMessage>();
 			string command="SELECT * FROM sigmessage "
 				+"WHERE (MessageDateTime > "+POut.DateT(dateTimeSince)+" "
@@ -88,10 +80,7 @@ namespace OpenDentBusiness {
 		///A newer sigmessage would not get acked. If this seems slow, then I will need to check to make sure all these tables are properly indexed.
 		///Inserts a signal for every SigMessageNum that was updated.</summary>
 		public static void AckButton(int buttonIndex,DateTime time) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),buttonIndex,time);
-				return;
-			}
+			
 			List<long> listSigMessageNums=new List<long>();
 			string command= "SELECT DISTINCT sigmessage.SigMessageNum FROM sigmessage "
 				+"INNER JOIN sigelementdef ON (sigmessage.SigElementDefNumUser=sigelementdef.SigElementDefNum "
@@ -113,10 +102,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Acknowledge one sig message from the manage module grid.</summary>
 		public static void AckSigMessage(SigMessage sigMessage) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sigMessage);
-				return;
-			}
+			
 			//To ack a message, simply update the AckDateTime on the original row.
 			sigMessage.AckDateTime=MiscData.GetNowDateTime();
 			Update(sigMessage);
@@ -124,28 +110,19 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long Insert(SigMessage sigMessage) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				sigMessage.SigMessageNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sigMessage);
-				return sigMessage.SigMessageNum;
-			}
+			
 			return Crud.SigMessageCrud.Insert(sigMessage);
 		}
 
 		///<summary></summary>
 		public static void Update(SigMessage sigMessage) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sigMessage);
-				return;
-			}
+			
 			Crud.SigMessageCrud.Update(sigMessage);
 		}
 
 		///<summary>Deletes all sigmessages older than 2 days.  Will fail silently if anything goes wrong.</summary>
 		public static void ClearOldSigMessages() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			try {
 				//Get all ack'd messages older than two days.
 				string command="";
@@ -247,11 +224,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_SigMessageCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _SigMessageCache.GetTableFromCache(doRefreshCache);
 		}
 

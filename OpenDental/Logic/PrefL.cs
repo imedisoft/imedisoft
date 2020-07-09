@@ -670,7 +670,6 @@ namespace OpenDental {
 				return "";
 			}
 			string arguments="UserName="+model.CentralConnectionCur.OdUser+" "
-				+"WebServiceUri="+model.CentralConnectionCur.ServiceURI+" "
 				+"OdPassword="+model.CentralConnectionCur.OdPassword+" "
 				+"ServerName="+model.CentralConnectionCur.ServerName+" "
 				+"DatabaseName="+model.CentralConnectionCur.DatabaseName+" "

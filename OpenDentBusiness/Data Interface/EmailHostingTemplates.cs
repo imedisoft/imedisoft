@@ -29,18 +29,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EmailHostingTemplate> Refresh(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EmailHostingTemplate>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM emailhostingtemplate";
 			return Crud.EmailHostingTemplateCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one EmailHostingTemplate from the db.</summary>
 		public static EmailHostingTemplate GetOne(long emailHostingTemplateNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EmailHostingTemplate>(MethodBase.GetCurrentMethod(),emailHostingTemplateNum);
-			}
+			
 			return Crud.EmailHostingTemplateCrud.SelectOne(emailHostingTemplateNum);
 		}
 		#endregion Get Methods
@@ -48,28 +44,19 @@ namespace OpenDentBusiness{
 		#region Modification Methods
 		///<summary></summary>
 		public static long Insert(EmailHostingTemplate emailHostingTemplate){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				emailHostingTemplate.EmailHostingTemplateNum=Meth.GetLong(MethodBase.GetCurrentMethod(),emailHostingTemplate);
-				return emailHostingTemplate.EmailHostingTemplateNum;
-			}
+			
 			return Crud.EmailHostingTemplateCrud.Insert(emailHostingTemplate);
 		}
 
 		///<summary></summary>
 		public static void Update(EmailHostingTemplate emailHostingTemplate){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),emailHostingTemplate);
-				return;
-			}
+			
 			Crud.EmailHostingTemplateCrud.Update(emailHostingTemplate);
 		}
 
 		///<summary></summary>
 		public static void Delete(long emailHostingTemplateNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),emailHostingTemplateNum);
-				return;
-			}
+			
 			Crud.EmailHostingTemplateCrud.Delete(emailHostingTemplateNum);
 		}
 		#endregion Modification Methods
@@ -193,11 +180,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_emailHostingTemplateCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _emailHostingTemplateCache.GetTableFromCache(doRefreshCache);
 		}
 		*/

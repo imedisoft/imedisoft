@@ -86,11 +86,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_autoNoteCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _autoNoteCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -98,10 +94,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long Insert(AutoNote autonote) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				autonote.AutoNoteNum=Meth.GetLong(MethodBase.GetCurrentMethod(),autonote);
-				return autonote.AutoNoteNum;
-			}
+			
 			return Crud.AutoNoteCrud.Insert(autonote);
 		}
 
@@ -109,10 +102,7 @@ namespace OpenDentBusiness {
 			if(listSerializableAutoNotes==null || listSerializableAutoNotes.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSerializableAutoNotes);
-				return;
-			}
+			
 			List<AutoNote> listAutoNotes=new List<AutoNote>();
 			foreach(SerializableAutoNote autoNote in listSerializableAutoNotes) {
 				AutoNote newNote=new AutoNote();
@@ -126,19 +116,13 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(AutoNote autonote) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),autonote);
-				return;
-			}
+			
 			Crud.AutoNoteCrud.Update(autonote);
 		}
 
 		///<summary></summary>
 		public static void Delete(long autoNoteNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),autoNoteNum);
-				return;
-			}
+			
 			string command="DELETE FROM autonote "
 				+"WHERE AutoNoteNum = "+POut.Long(autoNoteNum);
 			Db.NonQ(command);
@@ -166,9 +150,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Sets the autonote.Category=0 for the autonote category DefNum provided.  Returns the number of rows updated.</summary>
 		public static long RemoveFromCategory(long autoNoteCatDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),autoNoteCatDefNum);
-			}
+			
 			string command="UPDATE autonote SET Category=0 WHERE Category="+POut.Long(autoNoteCatDefNum);
 			return Db.NonQ(command);
 		}

@@ -105,11 +105,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_recallTypeCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _recallTypeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -117,19 +112,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(RecallType recallType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				recallType.RecallTypeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),recallType);
-				return recallType.RecallTypeNum;
-			}
+			
 			return Crud.RecallTypeCrud.Insert(recallType);
 		}
 
 		///<summary></summary>
 		public static void Update(RecallType recallType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),recallType);
-				return;
-			}
+			
 			Crud.RecallTypeCrud.Update(recallType);
 		}
 
@@ -285,10 +274,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Deletes the current recalltype and recalltrigger tables and fills them with our default.  Typically ran to switch T codes to D codes.</summary>
 		public static void SetToDefault() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			string command="DELETE FROM recalltype WHERE RecallTypeNum >= 1 AND RecallTypeNum <= 7";//Don't delete manually added recall types
 			Db.NonQ(command);
 			command="INSERT INTO recalltype (RecallTypeNum,Description,DefaultInterval,TimePattern,Procedures) VALUES (1,'Prophy',393217,'/XXXX/','D1110')";
@@ -346,9 +332,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns true if any recall types that are not the default types are in use in patient recalls.</summary>
 		public static bool IsUsingManuallyAddedTypes() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) "
 				+"FROM recall "
 				+"WHERE RecallTypeNum < 1 OR RecallTypeNum > 6";//1 through 6 are the default recall types

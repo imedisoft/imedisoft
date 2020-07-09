@@ -9,9 +9,6 @@ namespace OpenDentBusiness {
 		public static DataTable GetAdjTable(DateTime dateStart,DateTime dateEnd,List<long> listProvNums,List<long> listClinicNums,
 			List<string> listAdjType,bool hasAllClinics,bool hasClinicsEnabled) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listProvNums,listClinicNums,listAdjType,hasAllClinics,hasClinicsEnabled);
-			}
 			string whereProv="";
 			if(listProvNums.Count > 0) {
 				whereProv+=" AND adjustment.ProvNum IN("+string.Join(",",listProvNums)+") ";

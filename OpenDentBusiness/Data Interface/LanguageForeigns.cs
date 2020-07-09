@@ -97,11 +97,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_languageForeignCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _languageForeignCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -109,36 +105,25 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(LanguageForeign lanf){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				lanf.LanguageForeignNum=Meth.GetLong(MethodBase.GetCurrentMethod(),lanf);
-				return lanf.LanguageForeignNum;
-			}
+			
 			return Crud.LanguageForeignCrud.Insert(lanf);
 		}
 
 		///<summary></summary>
 		public static void Update(LanguageForeign lanf) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),lanf);
-				return;
-			}
+			
 			Crud.LanguageForeignCrud.Update(lanf);
 		}
 
 		///<summary></summary>
 		public static void Delete(LanguageForeign lanf){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),lanf);
-				return;
-			}
+			
 			Crud.LanguageForeignCrud.Delete(lanf.LanguageForeignNum);
 		}
 
 		///<summary>Only used during export to get a list of all translations for specified culture only.</summary>
 		public static LanguageForeign[] GetListForCurrentCulture(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<LanguageForeign[]>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command=
 				"SELECT * FROM languageforeign "
 				+"WHERE Culture='"+CultureInfo.CurrentCulture.Name+"'";
@@ -147,9 +132,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in FormTranslation to get all translations for all cultures for one classtype</summary>
 		public static LanguageForeign[] GetListForType(string classType){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<LanguageForeign[]>(MethodBase.GetCurrentMethod(),classType);
-			}
+			
 			string command=
 				"SELECT * FROM languageforeign "
 				+"WHERE ClassType='"+POut.String(classType)+"'";

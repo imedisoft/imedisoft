@@ -192,11 +192,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_operatoryCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _operatoryCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -207,10 +203,6 @@ namespace OpenDentBusiness{
 		///<summary>Inserts, updates, or deletes database rows to match supplied list.
 		///Also syncs each operatory's deflink entries if the operatory.ListWSNPAOperatoryDefNums is not null.</summary>
 		public static void Sync(List<Operatory> listNew,List<Operatory> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listNew,listOld);//never pass DB list through the web service
-				return;
-			}
 			Crud.OperatoryCrud.Sync(listNew,listOld);
 			//Regardless if changes were made during the sync, we need to make sure to sync the DefLinks for WSNPA appointment types.
 			//This needs to happen after the sync call so that the PKs have been correctly set for listNew.
@@ -230,19 +222,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Operatory operatory) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				operatory.OperatoryNum=Meth.GetLong(MethodBase.GetCurrentMethod(),operatory);
-				return operatory.OperatoryNum;
-			}
+			
 			return Crud.OperatoryCrud.Insert(operatory);
 		}
 
 		///<summary></summary>
 		public static void Update(Operatory operatory) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),operatory);
-				return;
-			}
+			
 			Crud.OperatoryCrud.Update(operatory);
 		}
 
@@ -251,18 +237,14 @@ namespace OpenDentBusiness{
 		//}
 
 		public static List<Operatory> GetChangedSince(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Operatory>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT * FROM operatory WHERE DateTStamp > "+POut.DateT(changedSince);
 			return Crud.OperatoryCrud.SelectMany(command);
 		}
 
 		///<summary>Gets a list of all future appointments for a given Operatory.  Ordered by dateTime</summary>
 		public static bool HasFutureApts(long operatoryNum,params ApptStatus[] arrayIgnoreStatuses) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),operatoryNum,arrayIgnoreStatuses);
-			}
+			
 			string command="SELECT COUNT(*) FROM appointment "
 				+"WHERE Op = "+POut.Long(operatoryNum)+" ";
 			if(arrayIgnoreStatuses.Length > 0) {
@@ -284,9 +266,7 @@ namespace OpenDentBusiness{
 		///If an appointment from one of the give child ops has a confilict with the master op, then the appointment.Tag will be true.
 		///Throws exceptions.</summary>
 		public static List<ODTuple<Appointment,bool>> MergeApptCheck(long masterOpNum,List<long> listChildOpNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ODTuple<Appointment,bool>>>(MethodBase.GetCurrentMethod(),masterOpNum,listChildOpNums);
-			}
+			
 			if(listChildOpNums==null || listChildOpNums.Count==0) {
 				return new List<ODTuple<Appointment,bool>>();
 			}

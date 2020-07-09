@@ -54,11 +54,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_schoolClassCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _schoolClassCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -85,19 +80,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(SchoolClass sc){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sc);
-				return;
-			}
+			
 			Crud.SchoolClassCrud.Update(sc);
 		}
 
 		///<summary></summary>
 		public static long Insert(SchoolClass sc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				sc.SchoolClassNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sc);
-				return sc.SchoolClassNum;
-			}
+			
 			return Crud.SchoolClassCrud.Insert(sc);
 		}
 
@@ -117,10 +106,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Surround by a try/catch in case there are dependencies.</summary>
 		public static void Delete(long classNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),classNum);
-				return;
-			}
+			
 			//check for attached providers
 			string  command="SELECT COUNT(*) FROM provider WHERE SchoolClassNum = '"
 				+POut.Long(classNum)+"'";

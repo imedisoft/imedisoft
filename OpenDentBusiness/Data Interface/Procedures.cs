@@ -38,9 +38,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all procedures for a single planned appointment.  Does not include deleted procedures.</summary>
 		public static List<Procedure> GetForPlanned(long patNum,long plannedAptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),patNum,plannedAptNum);
-			}
+			
 			if(patNum==0 || plannedAptNum==0) {
 				return new List<Procedure>();
 			}
@@ -53,9 +51,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets a list of all tp'd procedures for a specified clinic.  Uses a MySqlDataReader to get the by converting one
 		///row to a procedure object at a time to reduce memory load.  Only used in the global update writeoff estimates fee .</summary>
 		public static List<Procedure> GetAllTp(long clinicNum=-1) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),clinicNum);
-			}
+			
 			string command="SELECT * FROM procedurelog WHERE procedurelog.ProcStatus="+POut.Int((int)ProcStat.TP);
 			if(clinicNum >= 0) {
 				command+=" AND procedurelog.ClinicNum="+clinicNum;
@@ -65,9 +61,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all procedures for a single patient, without notes.  Does not include deleted procedures.</summary>
 		public static List<Procedure> Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM procedurelog WHERE PatNum="+POut.Long(patNum)
 				+" AND ProcStatus !="+POut.Int((int)ProcStat.D)//don't include deleted
 				+" ORDER BY ProcDate";
@@ -76,9 +70,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all procedures for a single patient, without notes.  Does not include deleted procedures.</summary>
 		public static List<Procedure> RefreshForStatus(long patNum,ProcStat procStatus,bool isNotOnApt=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),patNum,procStatus,isNotOnApt);
-			}
+			
 			string command="SELECT * FROM procedurelog WHERE PatNum="+POut.Long(patNum)+" "
 				+"AND ProcStatus ="+POut.Int((int)procStatus)+" "
 				+(isNotOnApt?"AND AptNum=0":"");
@@ -87,9 +79,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all procedures with a code num in listProcCodeNums for a single patient, without notes.  Does not include deleted procedures.</summary>
 		public static List<Procedure> RefreshForProcCodeNums(long patNum,List<long> listProcCodeNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),patNum,listProcCodeNums);
-			}
+			
 			if(listProcCodeNums==null || listProcCodeNums.Count==0) {
 				return new List<Procedure>();
 			}
@@ -103,9 +93,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets all completed procedures without notes for a list of patients.  Used when making auto splits.
 		///Also returns any procedures attached to payplans that the current patient is responsible for.</summary>
 		public static List<Procedure> GetCompleteForPats(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			if(listPatNums==null || listPatNums.Count < 1) {
 				return new List<Procedure>();
 			}
@@ -113,9 +101,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<Procedure> GetTpForPats(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			if(listPatNums==null || listPatNums.Count<1) {
 				return new List<Procedure>();
 			}
@@ -163,9 +149,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a limited procedure list.</summary>
 		public static List<Procedure> GetForProcTPs(List<ProcTP> listProcTP,params ProcStat[] procStats) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),listProcTP,procStats);
-			}
+			
 			if(listProcTP.Count == 0) {
 				return new List<Procedure>();
 			}
@@ -196,9 +180,7 @@ namespace OpenDentBusiness {
 			if(listGuarantorNums.Count == 0) {
 				return new List<RpUnearnedIncome.UnearnedProc>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<RpUnearnedIncome.UnearnedProc>>(MethodBase.GetCurrentMethod(),listGuarantorNums);
-			}
+			
 			List<long> listAllFamilyPatNums = Patients.GetAllFamilyPatNums(listGuarantorNums);
 			/*given a list of families, get all procedures with a remaining pat port for those families.*/
 			string command = @"
@@ -262,9 +244,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all completed and TP procedures for a family.</summary>
 		public static List<Procedure> GetCompAndTpForPats(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command="SELECT * from procedurelog WHERE PatNum IN("+String.Join(", ",listPatNums)+") "
 				+"AND ProcStatus IN("+(int)ProcStat.C+","+(int)ProcStat.TP+") "
 				+"ORDER BY ProcDate";
@@ -280,9 +260,7 @@ namespace OpenDentBusiness {
 			if(procNum==0) {
 				return new Procedure();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Procedure>(MethodBase.GetCurrentMethod(),procNum,includeNote);
-			}
+			
 			Procedure proc=Crud.ProcedureCrud.SelectOne(procNum);
 			if(proc==null) {
 				return new Procedure();//This will throw if Middle Tier. Haven't come up with a good solution yet.
@@ -311,9 +289,7 @@ namespace OpenDentBusiness {
 			if(listProcNums==null || listProcNums.Count==0) {
 				return new List<Procedure>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),listProcNums,includeNote);
-			}
+			
 			string command="";
 			if(!includeNote) {
 				command="SELECT * FROM procedurelog WHERE ProcNum IN ("+string.Join(",",listProcNums)+")";
@@ -342,9 +318,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets Procedures for a single appointment directly from the database</summary>
 		public static List<Procedure> GetProcsForSingle(long aptNum,bool isPlanned) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),aptNum,isPlanned);
-			}
+			
 			string command;
 			if(isPlanned) {
 				command = "SELECT * from procedurelog WHERE PlannedAptNum = '"+POut.Long(aptNum)+"'";
@@ -357,9 +331,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all Procedures that need to be displayed in FormApptEdit.</summary>
 		public static List<Procedure> GetProcsForApptEdit(Appointment appt) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),appt);
-			}
+			
 			string command="SELECT procedurelog.* FROM procedurelog "
 				+"LEFT JOIN procedurecode ON procedurelog.CodeNum=procedurecode.CodeNum "
 				+"WHERE procedurelog.PatNum="+POut.Long(appt.PatNum)+" "
@@ -399,9 +371,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all Procedures for a single date for the specified patient directly from the database.  Excludes deleted procs.</summary>
 		public static List<Procedure> GetProcsForPatByDate(long patNum,DateTime date) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),patNum,date);
-			}
+			
 			string command="SELECT * FROM procedurelog "
 				+"WHERE PatNum="+POut.Long(patNum)+" "
 				+"AND (ProcDate="+POut.Date(date)+" OR DateEntryC="+POut.Date(date)+") "
@@ -424,9 +394,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all procedures associated with corresponding claimprocs. Returns empty procedure list if an empty list was passed in.</summary>
 		public static List<Procedure> GetProcsFromClaimProcs(List<ClaimProc> listClaimProc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),listClaimProc);
-			}
+			
 			if(listClaimProc.Count==0) {
 				return new List<Procedure>();
 			}
@@ -443,9 +411,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a list of TP procedures that are attached to scheduled appointments that are not flagged as CPOE.</summary>
 		public static List<Procedure> GetProcsNonCpoeAttachedToApptsForProv(long provNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),provNum);
-			}
+			
 			if(provNum==0) {
 				return new List<Procedure>();
 			}
@@ -466,9 +432,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets count of non-CPOE radiology procedures that are TP'd and attached to scheduled appointments for every provider who has ever had
 		///an ehrprovkey.  Only used by the OpenDentalService AlertRadiologyProceduresThread.</summary>
 		public static SerializableDictionary<long,long> GetCountNonCpoeProcsAttachedToAppts() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,long>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT procedurelog.ProvNum,COUNT(*) procCount "
 				+"FROM procedurelog USE INDEX (RadiologyProcs) "
 				+"INNER JOIN procedurecode ON procedurelog.CodeNum=procedurecode.CodeNum AND procedurecode.IsRadiology=1 "
@@ -492,9 +456,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets a list of TP or C procedures starting a year into the past that are flagged as IsRadiology and IsCpoe for the specified patient.
 		///Primarily used for showing patient specific MU data in the EHR dashboard.</summary>
 		public static List<Procedure> GetProcsRadiologyCpoeForPat(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			//Since this is used for the dashboard and not directly used in any reporting calculations, we do not need to worry about the date that the
 			// office updated past v15.4.1.
 			DateTime dateStart=new DateTime(DateTime.Now.Year,1,1);//January first of this year.
@@ -510,9 +472,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static List<Procedure> GetProcsByStatusForPat(long patNum,params ProcStat[] procStatuses) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),patNum,procStatuses);
-			}
+			
 			if(procStatuses==null || procStatuses.Length==0) {
 				return new List<Procedure>();
 			}
@@ -522,9 +482,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a string in M/yy format for the most recent completed procedure in the specified code range.  Gets directly from the database.</summary>
 		public static string GetRecentProcDateString(long patNum,DateTime aptDate,string procCodeRange) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),patNum,aptDate,procCodeRange);
-			}
+			
 			if(aptDate.Year<1880) {
 				aptDate=DateTime.Today;
 			}
@@ -558,9 +516,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets the first completed procedure within the family.  Used to determine the earliest date the family became a customer.</summary>
 		public static Procedure GetFirstCompletedProcForFamily(long guarantor) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Procedure>(MethodBase.GetCurrentMethod(),guarantor);
-			}
+			
 			string command="SELECT procedurelog.* FROM procedurelog "
 				+"LEFT JOIN patient ON procedurelog.PatNum=patient.PatNum AND patient.Guarantor="+POut.Long(guarantor)+" "
 				+"WHERE "+DbHelper.Year("procedurelog.ProcDate")+">1 "
@@ -572,9 +528,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a list (procsMultApts is a struct of type ProcDesc(aptNum, string[], and production) of all the procedures attached to the specified appointments.  Then, use GetProcsOneApt to pull procedures for one appointment from this list or GetProductionOneApt.  This process requires only one call to the database.  "myAptNums" is the list of appointments to get procedures for.  isForNext gets procedures for a list of next appointments rather than regular appointments.</summary>
 		public static List<Procedure> GetProcsMultApts(List<long> myAptNums,bool isForPlanned=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),myAptNums,isForPlanned);
-			}
+			
 			if(myAptNums.Count==0) {
 				return new List<Procedure>();
 			}
@@ -610,9 +564,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets list of TP procedures for patient with codes included in Ortho Setup's Banding procedure list.</summary>
 		public static List<Procedure> GetProcsForFormProcBandingSelect(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			if(PrefC.GetString(PrefName.OrthoBandingCodes)=="") {
 				return new List<Procedure>();
 			}
@@ -640,10 +592,6 @@ namespace OpenDentBusiness {
 		public static List<Procedure> GetCompletedForDateRange(DateTime dateStart,DateTime dateStop,List<long> listProcCodeNums=null
 			,List<long> listPatNums=null,bool includeNote=false,bool includeGroupNote=false) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),dateStart,dateStop,listProcCodeNums,listPatNums,includeNote
-					,includeGroupNote);
-			}
 			string command="";
 			string whereClause="WHERE procedurelog.ProcStatus IN("+POut.Int((int)ProcStat.C);
 			if(includeGroupNote) {
@@ -689,9 +637,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all completed procedures having procedurelog.DateComplete within the date range. Date range is inclusive.</summary>
 		public static List<Procedure> GetCompletedByDateCompleteForDateRange(DateTime dateStart,DateTime dateStop) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),dateStart,dateStop);
-			}
+			
 			string command="SELECT * FROM procedurelog WHERE ProcStatus="+POut.Int((int)ProcStat.C)
 				+" AND DateComplete>="+POut.Date(dateStart)
 				+" AND DateComplete<="+POut.Date(dateStop);
@@ -748,9 +694,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static Procedure GetProcForPatByToothSurfStat(long patNum,int toothNum,string surf,ProcStat procStat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Procedure>(MethodBase.GetCurrentMethod(),patNum,toothNum,surf,procStat);
-			}
+			
 			string command="SELECT * FROM procedurelog "
 				+"WHERE PatNum="+POut.Long(patNum)+" "
 				+"AND Surf='"+POut.String(surf)+"' "
@@ -762,9 +706,7 @@ namespace OpenDentBusiness {
 		///<summary>Returns table of patients with completed procedure count and most recent completed procedure ProcDate for each provider.  Used for
 		///reassigning patients PriProv to their most used provider with most recent ProcDate as a tie-breaker.  Excludes hidding providers.</summary>
 		public static DataTable GetTablePatProvUsed(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command="SELECT PatNum,procedurelog.ProvNum,MAX(ProcDate) maxProcDate,COUNT(ProcNum) procCount "
 				+"FROM procedurelog "
 				+"INNER JOIN provider ON procedurelog.ProvNum=provider.ProvNum AND provider.IsHidden=0 "
@@ -847,9 +789,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Pulls the lab fees for the given procnums directly from the database.</summary>
 		public static List<Procedure> GetCanadianLabFees(List<long> listProcNums){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),listProcNums);
-			}
+			
 			if(listProcNums.Count==0) {
 				return new List<Procedure>();
 			}
@@ -858,9 +798,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Pulls the lab fees for the given procnum directly from the database.</summary>
 		public static List<Procedure> GetCanadianLabFees(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),procNum);
-			}
+			
 			if(procNum==0) {//By Total payment rows do not have labs.
 				return new List<Procedure>();
 			}
@@ -870,9 +808,7 @@ namespace OpenDentBusiness {
 		
 		///<summary>Uses similar logic to ComputeEstimates() to find old estimates which need to be recomputed.</summary>
 		public static List<Procedure> GetProcsWithOldEstimates() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod());
-			}
+			
 			//only claimprocs which are estimate or capestimate for all procedures which are not Canadian labs.
 			string command=@"SELECT procedurelog.*
 				FROM procedurelog
@@ -888,9 +824,7 @@ namespace OpenDentBusiness {
 		///<summary>Gets patients treatment planned procedures associated to future scheduled appointments including today.
 		///Returns an empty list if listPatNum or listCodeNums is empty.</summary>
 		public static List<Procedure> GetProcsAttachedToFutureAppt(List<long> listPatNums,List<long> listCodeNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),listPatNums,listCodeNums);
-			}
+			
 			if(listPatNums.Count==0 || listCodeNums.Count==0) {
 				return new List<Procedure>();
 			}
@@ -912,9 +846,7 @@ namespace OpenDentBusiness {
 		///ProcNum greater than the previous entry (or greater than 0 if it is the first entry) and less than or equal to the current entry you would get
 		///at most numPerGroup procedures (the last group could, of course, have fewer in it).</summary>
 		public static List<long> GetProcNumMaxForGroups(int numPerGroup,List<ProcStat> listProcStatuses,long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),numPerGroup,listProcStatuses,clinicNum);
-			}
+			
 			_totCount=0;
 			List<long> retval=new List<long>();
 			if(numPerGroup<1) {
@@ -977,9 +909,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long GetClinicNum(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),procNum);
-			}
+			
 			string command="SELECT ClinicNum FROM procedurelog WHERE ProcNum="+POut.Long(procNum);
 			return PIn.Long(Db.GetScalar(command));
 		}
@@ -1041,9 +971,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets a list of procedures for </summary>
 		public static DataTable GetReferred(DateTime dateFrom, DateTime dateTo, bool complete) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateFrom,dateTo,complete);
-			}
+			
 			string command=
 				"SELECT procedurelog.CodeNum,procedurelog.PatNum,LName,FName,MName,RefDate,DateProcComplete,refattach.Note,RefToStatus "
 				+"FROM procedurelog "
@@ -1060,9 +988,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all completed procedures within a date range with optional ProcCodeNum and PatientNum filters. Date range is inclusive.</summary>
 		public static List<Procedure> GetCompletedForDateRangeLimited(DateTime dateStart,DateTime dateStop,List<long> listClinicNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),dateStart,dateStop,listClinicNums);
-			}
+			
 			string command = "SELECT ProcNum,ProcFee,UnitQty,BaseUnits,ClinicNum,CodeNum,ProcDate "
 				+"FROM procedurelog WHERE ProcStatus="+POut.Int((int)ProcStat.C)+" "
 				+"AND ProcDate>="+POut.Date(dateStart)+" AND ProcDate<="+POut.Date(dateStop);
@@ -1116,10 +1042,7 @@ namespace OpenDentBusiness {
 		///isSilent indicates if the procedure is being inserted by the repeat charge tool, currently only used to supress error messages
 		///in the Avatax API.</summary>
 		public static long Insert(Procedure procedure,bool doCalcTax=true,bool isRepeatCharge=false,bool skipDiscountPlanAdjustment=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				procedure.ProcNum=Meth.GetLong(MethodBase.GetCurrentMethod(),procedure,doCalcTax,isRepeatCharge,skipDiscountPlanAdjustment);
-				return procedure.ProcNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			procedure.SecUserNumEntry=Security.CurUser.UserNum;
 			if(procedure.ProcStatus==ProcStat.C) {
@@ -1210,13 +1133,6 @@ namespace OpenDentBusiness {
 		public static bool Update(Procedure procedure,Procedure oldProcedure,bool isPaySplit=false,bool isSilent=false
 			,bool isProcLinkedToOrthoCase=false) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				bool retVal=Meth.GetBool(MethodBase.GetCurrentMethod(),procedure,oldProcedure,isPaySplit,isSilent,isProcLinkedToOrthoCase);
-				if(procedure.ProcStatus!=oldProcedure.ProcStatus) {//This conditional must match below where we call ProcMultiVisits.UpdateGroupForProc().
-					ProcMultiVisits.RefreshCache();//This refresh must be run on the client to be useful.
-				}
-				return retVal;
-			}
 			//Setting any procedure to TP, get a tax estimate only if the procedure amount is changing and the procedure is taxable
 			if(procedure.ProcStatus==ProcStat.TP) {
 				//Status changed and is attached to appointment (do not care about planned appointments since that is what treatment planning is for).
@@ -1304,10 +1220,7 @@ namespace OpenDentBusiness {
 			if(listProcNums==null || listProcNums.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listProcNums,newAptNum,isPlannedAptNum);
-				return;
-			}
+			
 			string command="UPDATE procedurelog "
 				+"SET "+(isPlannedAptNum?"PlannedAptNum =":"AptNum =")+POut.Long(newAptNum)+" "
 				+"WHERE ProcNum IN ("+string.Join(",",listProcNums.Select(x => POut.Long(x)))+")";
@@ -1315,10 +1228,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void UpdatePriority(long procNum,long newPriority) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procNum,newPriority);
-				return;
-			}
+			
 			string command="UPDATE procedurelog SET Priority = "+POut.Long(newPriority)
 				+" WHERE ProcNum = "+POut.Long(procNum);
 			Db.NonQ(command);
@@ -1336,10 +1246,7 @@ namespace OpenDentBusiness {
 		///This method explicitly used instead of the generic Update method because this (and only this) field can get updated when a user cancels out
 		///of the Procedure Edit window and no other changes should accidentally make their way to the database.</summary>
 		public static void UpdateCpoeForProcs(List<long> listProcNums,bool isCpoe) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listProcNums,isCpoe);
-				return;
-			}
+			
 			if(listProcNums==null || listProcNums.Count < 1) {
 				return;
 			}
@@ -1357,10 +1264,7 @@ namespace OpenDentBusiness {
 		///4. Changing an appt date of type IsNewPatient. If no C procs, change visit date.
 		///Old: when setting a procedure complete in the Chart module or the ProcEdit window.  Also when saving an appointment that is marked IsNewPat.</summary>
 		public static void SetDateFirstVisit(DateTime visitDate,int situation,Patient pat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),visitDate,situation,pat);
-				return;
-			}
+			
 			if(situation==1) {
 				if(pat.DateFirstVisit.Year>1880) {
 					return;//a date has already been set.
@@ -1406,10 +1310,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void AttachToApt(List<long> procNums,long aptNum,bool isPlanned) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procNums,aptNum,isPlanned);
-				return;
-			}
+			
 			if(procNums.Count==0) {
 				return;
 			}
@@ -1431,10 +1332,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void DetachFromApt(List<long> procNums,bool isPlanned) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procNums,isPlanned);
-				return;
-			}
+			
 			if(procNums.Count==0) {
 				return;
 			}
@@ -1456,19 +1354,13 @@ namespace OpenDentBusiness {
 		}
 
 		public static void DetachFromInvoice(long statementNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),statementNum);
-				return;
-			}
+			
 			string command="UPDATE procedurelog SET StatementNum=0 WHERE StatementNum="+POut.Long(statementNum);
 			Db.NonQ(command);
 		}
 
 		public static void DetachAllFromInvoices(List<long> listStatementNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listStatementNums);
-				return;
-			}
+			
 			if(listStatementNums==null || listStatementNums.Count==0) {
 				return;
 			}
@@ -1514,10 +1406,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void SetCanadianLabFeesCompleteForProc(Procedure proc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),proc);
-				return;
-			}
+			
 			//If this gets run on a lab fee itself, nothing will happen because result will be zero procs.
 			string command="SELECT * FROM procedurelog WHERE ProcNumLab="+proc.ProcNum+" AND ProcStatus!="+POut.Int((int)ProcStat.D);
 			List<Procedure> labFeesForProc=Crud.ProcedureCrud.SelectMany(command);
@@ -1550,10 +1439,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void SetCanadianLabFeesStatusForProc(Procedure proc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),proc);
-				return;
-			}
+			
 			//If this gets run on a lab fee itself, nothing will happen because result will be zero procs.
 			string command="SELECT * FROM procedurelog WHERE ProcNumLab="+proc.ProcNum+" AND ProcStatus!="+POut.Int((int)ProcStat.D);
 			List<Procedure> labFeesForProc=Crud.ProcedureCrud.SelectMany(command);
@@ -1578,10 +1464,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Lock(DateTime date1, DateTime date2) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),date1,date2);
-				return;
-			}
+			
 			string command="UPDATE procedurelog SET IsLocked=1 "
 				+"WHERE (ProcStatus="+POut.Int((int)ProcStat.C)+" "//completed
 				+"OR CodeNum="+POut.Long(ProcedureCodes.GetCodeNum(ProcedureCodes.GroupProcCode))+") "//or group note
@@ -1592,19 +1475,12 @@ namespace OpenDentBusiness {
 
 		///<summary>Inserts, updates, or deletes database rows to match supplied list.  Must always pass in two lists.</summary>
 		public static void Sync(List<Procedure> listNew,List<Procedure> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listNew,listOld);
-				return;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			Crud.ProcedureCrud.Sync(listNew,listOld,Security.CurUser.UserNum);
 		}
 
 		public static void SetTPActive(long patNum,List<long> listProcNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum,listProcNums); //Never pass DB list through the web service (Note: Why?  Our proc list is special, it doesn't contain all procs so we shouldn't code this method to always use our limited list of procs........)
-				return;
-			}
 			string command="UPDATE procedurelog SET ProcStatus="+POut.Int((int)ProcStat.TPi)+" WHERE PatNum="+POut.Long(patNum)+" "+
 			  "AND ProcStatus="+POut.Int((int)ProcStat.TP)+" ";
 			if(listProcNums.Count==0) {
@@ -1683,11 +1559,6 @@ namespace OpenDentBusiness {
 		///This does not actually delete the procedure, but just changes the status to deleted.</summary>
 		///<param name="forceDelete">If true, forcefully deletes all objects attached to the procedure.</param>
 		public static void Delete(long procNum,bool forceDelete=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procNum,forceDelete);
-				ProcMultiVisits.RefreshCache();//This refresh must be run on the client to be useful.
-				return;
-			}
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {
 				DeleteCanadianLabFeesForProcCode(procNum);//Deletes lab fees attached to current procedures.
 			}
@@ -1763,10 +1634,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static void DeleteCanadianLabFeesForProcCode(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procNum);
-				return;
-			}
+			
 			string command="SELECT * FROM procedurelog WHERE ProcNumLab="+procNum+" AND ProcStatus!="+POut.Int((int)ProcStat.D);
 			List<Procedure> labFeeProcs=Crud.ProcedureCrud.SelectMany(command);
 			for(int i=0;i<labFeeProcs.Count;i++) {
@@ -1838,9 +1706,7 @@ namespace OpenDentBusiness {
 		///<summary>Counts the number of patients who have had completed procedures in the date range. D9986 and D9987 are not counted in this query.
 		///</summary>
 		public static int GetCountPatsComplete(DateTime dateStart,DateTime dateEnd) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),dateStart,dateEnd);
-			}
+			
 			string command=@"SELECT COUNT(DISTINCT PatNum) 
 				FROM procedurelog 
 				INNER JOIN procedurecode ON procedurecode.CodeNum=procedurelog.CodeNum
@@ -1852,9 +1718,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets all procedures with a specific StatementNum.  Currently, procedurelog.StatementNum is only used for invoices.</summary>
 		public static List<long> GetForInvoice(long statementNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),statementNum);
-			}
+			
 			if(statementNum==0) {
 				return new List<long>();
 			}
@@ -1864,10 +1728,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Throws an exception if the given procedure cannot be deleted safely.</summary>
 		public static void ValidateDelete(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procNum);
-				return;
-			}
+			
 			//Test to see if the procedure is attached to a claim (excluding pre-auths)
 			string command="SELECT COUNT(*) FROM claimproc WHERE ProcNum="+POut.Long(procNum)
 				+" AND ClaimNum > 0 AND Status!="+POut.Int((int)ClaimProcStatus.Preauth);
@@ -2042,9 +1903,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Called from FormApptsOther when creating a new appointment.  Returns true if there are any procedures marked complete for this patient.  The result is that the NewPt box on the appointment won't be checked.</summary>
 		public static bool AreAnyComplete(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM procedurelog "
 				+"INNER JOIN procedurecode on procedurecode.CodeNum = procedurelog.CodeNum "
 					+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
@@ -2059,9 +1918,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Called from AutoCodeItems.  Makes a call to the database to determine whether the specified tooth has been extracted or will be extracted. This could then trigger a pontic code.</summary>
 		public static bool WillBeMissing(string toothNum,long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),toothNum,patNum);
-			}
+			
 			//first, check for missing teeth
 			string command="SELECT COUNT(*) FROM toothinitial "
 				+"WHERE ToothNum='"+toothNum+"' "
@@ -2162,9 +2019,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Queries the database to determine if this procedure is attached to a claim already.</summary>
 		public static bool IsAttachedToClaim(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),procNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM claimproc "
 				+"WHERE ProcNum="+POut.Long(procNum)+" "
 				+"AND ClaimNum>0";
@@ -2190,9 +2045,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static bool IsReferralAttached(long referralNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),referralNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM procedurelog WHERE OrderingReferralNum="+POut.Long(referralNum);
  			if(Db.GetCount(command)=="0") {
 				return false;
@@ -2377,9 +2230,7 @@ namespace OpenDentBusiness {
 		///Only updates the TP proc fee, does not compute estimates.  Returns number of fees changed.
 		///Pass in a valid clinic num, or zero for HQ.  Pass in listFees for the HQ fees, and get individual clinic fees inside here.</summary>
 		public static long GlobalUpdateFees(List<Fee> listFeesHQ,long clinicNumGlobal,string progressText) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),listFeesHQ,clinicNumGlobal,progressText);
-			}
+			
 			//There are three parts to this:
 			//1. Spawn multiple threads to queue up DataTables, each with 10,000 procedures.
 			//2. In the main thread, process the DataTables and calculate new fees.
@@ -2783,9 +2634,7 @@ namespace OpenDentBusiness {
 		///<summary>Checks for frequency conflicts with the passed-in list of procedures.
 		///Returns empty string if there are no conflicts, new line delimited list of proc codes if there are.  Throws exceptions.</summary>
 		public static string CheckFrequency(List<Procedure> procList,long patNum,DateTime aptDateTime) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),procList,patNum,aptDateTime);
-			}
+			
 			if(procList==null) {
 				throw new ArgumentException("Invalid procedure list passed in.","procList");
 			}
@@ -3565,9 +3414,7 @@ namespace OpenDentBusiness {
 		public static List<Procedure> SetCompleteInApptInList(Appointment apt,List<InsPlan> planList,List<PatPlan> patPlans,Patient patient,
 			List<Procedure> listProcsForAppt,List<InsSub> subList,Userod curUser)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Procedure>>(MethodBase.GetCurrentMethod(),apt,planList,patPlans,patient,listProcsForAppt,subList,curUser);
-			}
+			
 			if(listProcsForAppt.Count==0) {
 				return listProcsForAppt;//Nothing to do.
 			}

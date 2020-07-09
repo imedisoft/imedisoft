@@ -29,9 +29,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EduResource> GenerateForPatient(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EduResource>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			List<Disease> diseaseList = Diseases.Refresh(patNum);
 			List<MedicationPat> medicationPatList = MedicationPats.Refresh(patNum,false);
 			List<LabResult> labResultList = LabResults.GetAllForPatient(patNum);
@@ -82,38 +80,27 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EduResource> SelectAll(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EduResource>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM eduresource";
 			return Crud.EduResourceCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(long eduResourceNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),eduResourceNum);
-				return;
-			}
+			
 			string command= "DELETE FROM eduresource WHERE EduResourceNum = "+POut.Long(eduResourceNum);
 			Db.NonQ(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(EduResource eduResource) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				eduResource.EduResourceNum=Meth.GetLong(MethodBase.GetCurrentMethod(),eduResource);
-				return eduResource.EduResourceNum;
-			}
+			
 			return Crud.EduResourceCrud.Insert(eduResource);
 		}
 
 		///<summary></summary>
 		public static void Update(EduResource eduResource) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),eduResource);
-				return;
-			}
+			
 			Crud.EduResourceCrud.Update(eduResource);
 		}
 
@@ -122,18 +109,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EduResource> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EduResource>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM eduresource WHERE PatNum = "+POut.Long(patNum);
 			return Crud.EduResourceCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one EduResource from the db.</summary>
 		public static EduResource GetOne(long eduResourceNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EduResource>(MethodBase.GetCurrentMethod(),eduResourceNum);
-			}
+			
 			return Crud.EduResourceCrud.SelectOne(eduResourceNum);
 		}
 

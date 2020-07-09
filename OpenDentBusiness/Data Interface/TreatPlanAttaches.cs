@@ -24,10 +24,7 @@ namespace OpenDentBusiness{
 			if(listProcNums.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),priority,treatPlanNum,listProcNums);
-				return;
-			}
+			
 			Db.NonQ($@"UPDATE treatplanattach SET Priority = {POut.Long(priority)}
 				WHERE TreatPlanNum = {POut.Long(treatPlanNum)}
 				AND ProcNum IN({string.Join(",",listProcNums.Select(x => POut.Long(x)))})");
@@ -46,36 +43,25 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(TreatPlanAttach treatPlanAttach){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				treatPlanAttach.TreatPlanAttachNum=Meth.GetLong(MethodBase.GetCurrentMethod(),treatPlanAttach);
-				return treatPlanAttach.TreatPlanAttachNum;
-			}
+			
 			return Crud.TreatPlanAttachCrud.Insert(treatPlanAttach);
 		}
 
 		///<summary></summary>
 		public static void Update(TreatPlanAttach treatPlanAttach){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),treatPlanAttach);
-				return;
-			}
+			
 			Crud.TreatPlanAttachCrud.Update(treatPlanAttach);
 		}
 
 		///<summary></summary>
 		public static void Delete(long treatPlanAttachNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),treatPlanAttachNum);
-				return;
-			}
+			
 			Crud.TreatPlanAttachCrud.Delete(treatPlanAttachNum);
 		}
 
 		///<summary></summary>
 		public static List<TreatPlanAttach> GetAllForPatNum(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TreatPlanAttach>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			List<TreatPlan> listTreatPlans=TreatPlans.GetAllForPat(patNum);
 			if(listTreatPlans.Count==0) {
 				return new List<TreatPlanAttach>();
@@ -88,28 +74,21 @@ namespace OpenDentBusiness{
 			if(listTpNums.Count==0) {
 				return new List<TreatPlanAttach>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TreatPlanAttach>>(MethodBase.GetCurrentMethod(),listTpNums);
-			}
+			
 			string command="SELECT * FROM treatplanattach WHERE TreatPlanNum IN ("+string.Join(",",listTpNums)+")";
 			return Crud.TreatPlanAttachCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static List<TreatPlanAttach> GetAllForTreatPlan(long treatPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TreatPlanAttach>>(MethodBase.GetCurrentMethod(),treatPlanNum);
-			}
+			
 			string command="SELECT * FROM treatplanattach WHERE TreatPlanNum="+POut.Long(treatPlanNum);
 			return Crud.TreatPlanAttachCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void DeleteOrphaned() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			//Orphaned TreatPlanAttaches due to missing treatment plans
 			string command="DELETE FROM treatplanattach WHERE TreatPlanNum NOT IN (SELECT TreatPlanNum FROM treatplan)";
 			Db.NonQ(command);
@@ -121,20 +100,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Sync(List<TreatPlanAttach> listTreatPlanAttachNew,long treatPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listTreatPlanAttachNew,treatPlanNum);
-				return;
-			}
+			
 			List<TreatPlanAttach> listTreatPlanAttachDB=TreatPlanAttaches.GetAllForTreatPlan(treatPlanNum);
 			Crud.TreatPlanAttachCrud.Sync(listTreatPlanAttachNew,listTreatPlanAttachDB);
 		}
 
 		///<summary></summary>
 		public static void DeleteMany(List<TreatPlanAttach> listTreatPlanAttaches) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listTreatPlanAttaches);
-				return;
-			}
+			
 			foreach(TreatPlanAttach treatPlanAttach in listTreatPlanAttaches) {
 				Crud.TreatPlanAttachCrud.Delete(treatPlanAttach.TreatPlanAttachNum);
 			}
@@ -145,18 +118,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<TreatPlanAttach> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TreatPlanAttach>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM treatplanattach WHERE PatNum = "+POut.Long(patNum);
 			return Crud.TreatPlanAttachCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one TreatPlanAttach from the db.</summary>
 		public static TreatPlanAttach GetOne(long treatPlanAttachNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<TreatPlanAttach>(MethodBase.GetCurrentMethod(),treatPlanAttachNum);
-			}
+			
 			return Crud.TreatPlanAttachCrud.SelectOne(treatPlanAttachNum);
 		}
 

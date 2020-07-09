@@ -100,11 +100,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_replicationServerCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _replicationServerCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -112,35 +107,24 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ReplicationServer serv) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				serv.ReplicationServerNum=Meth.GetLong(MethodBase.GetCurrentMethod(),serv);
-				return serv.ReplicationServerNum;
-			}
+			
 			return Crud.ReplicationServerCrud.Insert(serv);
 		}
 
 		///<summary></summary>
 		public static void Update(ReplicationServer serv) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),serv);
-				return;
-			}
+			
 			Crud.ReplicationServerCrud.Update(serv);
 		}
 
 		public static void DeleteObject(long replicationServerNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),replicationServerNum);
-				return;
-			}
+			
 			Crud.ReplicationServerCrud.Delete(replicationServerNum);
 		}
 
 		///<summary>Gets the MySQL server_id variable for the current connection.</summary>
 		public static long GetServer_id() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			if(DataConnection.DBtype!=DatabaseType.MySql) {
 				return 0;
 			}
@@ -203,17 +187,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a single ReplicationServer based on server_id.  Used to avoid cache issues.</summary>
 		public static ReplicationServer GetServer(long server_id) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ReplicationServer>(MethodBase.GetCurrentMethod(),server_id);
-			}
+			
 			string command="SELECT * FROM replicationserver WHERE ServerId="+POut.Long(server_id);
 			return Crud.ReplicationServerCrud.SelectOne(command);
 		}
 
 		public static bool KeyInUse(string tablename,string field,long keynum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),tablename,field,keynum);
-			}
+			
 			string command="SELECT COUNT(*) FROM "+tablename+" WHERE "+field+"="+keynum.ToString();
 			if(Db.GetCount(command)=="0") {
 				return false;
@@ -236,10 +216,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Used during database maint and from update window. We cannot use objects.</summary>
 		public static bool ServerIsBlocked() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				//even though we are supposed to be guaranteed to not be a web client
-				return true;
-			}
 			string command="SELECT COUNT(*) FROM replicationserver WHERE ServerId="+POut.Long(Server_id)//does trigger another query if during startup
 				+" AND UpdateBlocked=1";
 			try {
@@ -270,9 +246,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Get the status of the replication server.</summary>
 		public static DataTable GetSlaveStatus() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SHOW SLAVE STATUS";
 			return Db.GetTable(command);
 		}

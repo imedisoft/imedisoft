@@ -68,11 +68,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_LetterCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _LetterCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -80,28 +76,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(Letter Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.LetterCrud.Update(Cur);
 		}
 
 		///<summary></summary>
 		public static long Insert(Letter Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.LetterNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.LetterNum;
-			}
+			
 			return Crud.LetterCrud.Insert(Cur);
 		}
 
 		///<summary></summary>
 		public static void Delete(Letter Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string command="DELETE from letter WHERE LetterNum = '"+Cur.LetterNum.ToString()+"'";
 			Db.NonQ(command);
 		}

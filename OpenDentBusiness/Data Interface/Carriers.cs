@@ -96,11 +96,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_carrierCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _carrierCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -108,9 +104,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used to get a list of carriers to display in the FormCarriers window.</summary>
 		public static DataTable GetBigList(bool isCanadian,bool showHidden,string carrierName,string carrierPhone){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),isCanadian,showHidden,carrierName,carrierPhone);
-			}
+			
 			DataTable tableRaw;
 			DataTable table;
 			string command;
@@ -225,10 +219,7 @@ namespace OpenDentBusiness{
 		///<summary>Surround with try/catch.
 		///No need to pass in usernum, it is set before the remoting role and passed in for logging.</summary>
 		public static void Update(Carrier carrier,Carrier oldCarrier,long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),carrier,oldCarrier,userNum);
-				return;
-			}
+			
 			string command;
 			DataTable table;
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
@@ -260,10 +251,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Surround with try/catch if possibly adding a Canadian carrier.</summary>
 		public static long Insert(Carrier carrier, Carrier carrierOld=null,bool useExistingPriKey=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				carrier.CarrierNum=Meth.GetLong(MethodBase.GetCurrentMethod(),carrier,carrierOld,useExistingPriKey);
-				return carrier.CarrierNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			carrier.SecUserNumEntry=Security.CurUser.UserNum;
 			//string command;
@@ -293,10 +281,7 @@ namespace OpenDentBusiness{
 		///<summary>Surround with try/catch.  If there are any dependencies, then this will throw an exception.  
 		///This is currently only called from FormCarrierEdit.</summary>
 		public static void Delete(Carrier Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			//look for dependencies in insplan table.
 			string command="SELECT insplan.PlanNum,CONCAT(CONCAT(LName,', '),FName) FROM insplan "
 				+"LEFT JOIN inssub ON insplan.PlanNum=inssub.PlanNum "
@@ -337,9 +322,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of insplans that are dependent on the Cur carrier. Used to display in carrier edit.</summary>
 		public static List<string> DependentPlans(Carrier Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod(),Cur);
-			}
+			
 			string command="SELECT CONCAT(CONCAT(LName,', '),FName) FROM patient,insplan,inssub" 
 				+" WHERE patient.PatNum=inssub.Subscriber"
 				+" AND insplan.PlanNum=inssub.PlanNum"
@@ -370,9 +353,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static Carrier GetCarrierDB(long carrierNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Carrier>(MethodBase.GetCurrentMethod(),carrierNum);
-			}
+			
 			string command="SELECT * FROM carrier WHERE CarrierNum="+POut.Long(carrierNum);
 			return Crud.CarrierCrud.SelectOne(command);
 		}
@@ -400,9 +381,7 @@ namespace OpenDentBusiness{
 			if(carrier.CarrierName=="") {
 				return new Carrier();//should probably be null instead
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Carrier>(MethodBase.GetCurrentMethod(),carrier,carrierOld);
-			}
+			
 			Carrier retVal=carrier.Copy();
 			string command="SELECT CarrierNum,Phone FROM carrier WHERE " 
 				+"CarrierName = '"    +POut.String(carrier.CarrierName)+"' "
@@ -469,10 +448,7 @@ namespace OpenDentBusiness{
 		///The carrier that will be used as the basis of the combination is specified in the pickedCarrier argument. 
 		///Updates insplan and etrans, then deletes all the other carriers.</summary>
 		public static void Combine(List<long> carrierNums,long pickedCarrierNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),carrierNums,pickedCarrierNum);
-				return;
-			}
+			
 			if(carrierNums.Count==1){
 				return;//nothing to do
 			}
@@ -567,9 +543,7 @@ namespace OpenDentBusiness{
 		/*
 		///<summary>Gets a dictionary of carrier names for the supplied patient list.</summary>
 		public static Dictionary<long,string> GetCarrierNames(List<Patient> patients){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Dictionary<long,string>>(MethodBase.GetCurrentMethod(),patients);
-			}
+			
 			if(patients.Count==0){
 				return new Dictionary<long,string>();
 			}
@@ -607,9 +581,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Will return null if carrier does not exist with that name.</summary>
 		public static Carrier GetCarrierByNameNoCache(string carrierName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Carrier>(MethodBase.GetCurrentMethod(),carrierName);
-			}
+			
 			string command="SELECT * FROM carrier WHERE CarrierName='"+POut.String(carrierName)+"'";
 			return Crud.CarrierCrud.SelectOne(command);
 		}

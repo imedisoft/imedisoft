@@ -32,25 +32,19 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one MedLab from the db.</summary>
 		public static MedLab GetOne(long medLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<MedLab>(MethodBase.GetCurrentMethod(),medLabNum);
-			}
+			
 			return Crud.MedLabCrud.SelectOne(medLabNum);
 		}
 
 		///<summary>Get all MedLab objects for a specific patient from the database.  Can return an empty list.</summary>
 		public static List<MedLab> GetForPatient(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedLab>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM medlab WHERE PatNum="+POut.Long(patNum);
 			return Crud.MedLabCrud.SelectMany(command);
 		}
 
 		public static int GetCountForPatient(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM medlab WHERE PatNum="+POut.Long(patNum);
 			return PIn.Int(Db.GetCount(command));
 		}
@@ -64,10 +58,6 @@ namespace OpenDentBusiness{
 		public static List<MedLab> GetOrdersForPatient(Patient pat,bool includeNoPat,bool onlyNoPat,DateTime dateReportedStart,DateTime dateReportedEnd,
 			List<Clinic> listSelectedClinics)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedLab>>(MethodBase.GetCurrentMethod(),pat,includeNoPat,onlyNoPat,dateReportedStart,dateReportedEnd,
-					listSelectedClinics);
-			}
 			//include all patients unless a patient is specified.
 			string patNumClause="medlab.PatNum>0";
 			if(pat!=null) {
@@ -119,9 +109,7 @@ namespace OpenDentBusiness{
 		///Ordered by DateTimeReported descending, MedLabNum descending so the most recently reported/processed message is first in the list.
 		///If using random primary keys, this information may be incorectly ordered, but that is only an annoyance and this function should still work.</summary>
 		public static List<MedLab> GetForPatAndSpecimen(long patNum,string specimenID,string specimenIDFiller) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedLab>>(MethodBase.GetCurrentMethod(),patNum,specimenID,specimenIDFiller);
-			}
+			
 			string command="SELECT * FROM medlab WHERE PatNum="+POut.Long(patNum)+" "
 				+"AND SpecimenID='"+POut.String(specimenID)+"' "
 				+"AND SpecimenIDFiller='"+POut.String(specimenIDFiller)+"' "
@@ -130,38 +118,26 @@ namespace OpenDentBusiness{
 		}
 
 		public static void UpdateFileNames(List<long> medLabNumList,string fileNameNew) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medLabNumList,fileNameNew);
-				return;
-			}
+			
 			string command="UPDATE medlab SET FileName='"+POut.String(fileNameNew)+"' WHERE MedLabNum IN("+string.Join(",",medLabNumList)+")";
 			Db.NonQ(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(MedLab medLab){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				medLab.MedLabNum=Meth.GetLong(MethodBase.GetCurrentMethod(),medLab);
-				return medLab.MedLabNum;
-			}
+			
 			return Crud.MedLabCrud.Insert(medLab);
 		}
 
 		///<summary></summary>
 		public static void Update(MedLab medLab){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medLab);
-				return;
-			}
+			
 			Crud.MedLabCrud.Update(medLab);
 		}
 
 		///<summary>Sets the PatNum column on MedLabs with MedLabNum in list.  Used when manually assigning/moving MedLabs to a patient.</summary>
 		public static void UpdateAllPatNums(List<long> listMedLabNums,long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listMedLabNums,patNum);
-				return;
-			}
+			
 			if(listMedLabNums.Count<1) {
 				return;
 			}
@@ -187,9 +163,7 @@ namespace OpenDentBusiness{
 		///with the correct PatNum once associated.  The FileName will be just the extension ".pdf" until it is associated with a patient at which time it
 		///will be updated to something like PatientAustin375.pdf.</para></summary>
 		public static int Reconcile() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM medlab WHERE PatNum=0";
 			List<MedLab> listMedLabs=Crud.MedLabCrud.SelectMany(command);
 			if(listMedLabs.Count<1) {
@@ -231,9 +205,7 @@ namespace OpenDentBusiness{
 		///The MedLabs and all associated results, specimens, and FacAttaches referenced by the MedLabNums in listExcludeMedLabNums will not be deleted.
 		///Used for deleting old entries and keeping new ones.  The list may be empty and then all will be deleted.</summary>
 		public static int DeleteLabsAndResults(MedLab medLab,List<long> listExcludeMedLabNums=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),medLab,listExcludeMedLabNums);
-			}
+			
 			List<MedLab> listLabsOld=MedLabs.GetForPatAndSpecimen(medLab.PatNum,medLab.SpecimenID,medLab.SpecimenIDFiller);//patNum could be 0
 			if(listExcludeMedLabNums!=null) {
 				listLabsOld=listLabsOld.FindAll(x => !listExcludeMedLabNums.Contains(x.MedLabNum));
@@ -286,10 +258,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Delete all of the MedLab objects by MedLabNum.</summary>
 		public static void DeleteAll(List<long> listLabNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listLabNums);
-				return;
-			}
+			
 			string command= "DELETE FROM medlab WHERE MedLabNum IN("+String.Join(",",listLabNums)+")";
 			Db.NonQ(command);
 		}

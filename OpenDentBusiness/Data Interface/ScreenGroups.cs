@@ -29,9 +29,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ScreenGroup> Refresh(DateTime fromDate,DateTime toDate){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ScreenGroup>>(MethodBase.GetCurrentMethod(),fromDate,toDate);
-			}
+			
 			string command =
 				"SELECT * from screengroup "
 				+"WHERE SGDate >= "+POut.DateT(fromDate)+" "
@@ -42,9 +40,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static ScreenGroup GetScreenGroup(long screenGroupNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ScreenGroup>(MethodBase.GetCurrentMethod(),screenGroupNum);
-			}
+			
 			string command=
 				"SELECT * FROM screengroup WHERE ScreenGroupNum="+POut.Long(screenGroupNum);
 			return Crud.ScreenGroupCrud.SelectOne(command);
@@ -52,28 +48,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ScreenGroup Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.ScreenGroupNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.ScreenGroupNum;
-			}
+			
 			return Crud.ScreenGroupCrud.Insert(Cur);
 		}
 
 		///<summary></summary>
 		public static void Update(ScreenGroup Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.ScreenGroupCrud.Update(Cur);
 		}
 
 		///<summary>This will also delete all screen items, so may need to ask user first.</summary>
 		public static void Delete(ScreenGroup Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string command="SELECT SheetNum FROM screen WHERE ScreenGroupNum="+POut.Long(Cur.ScreenGroupNum)+" AND SheetNum!=0";
 			DataTable table=Db.GetTable(command);
 			foreach(DataRow row in table.Rows) {//Delete any attached sheets if the screen gets deleted.

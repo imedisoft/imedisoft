@@ -66,11 +66,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_HL7DefMessageCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _HL7DefMessageCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -78,9 +74,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of all Messages for this def from the database. No child objects included.</summary>
 		public static List<HL7DefMessage> GetShallowFromDb(long hl7DefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HL7DefMessage>>(MethodBase.GetCurrentMethod(),hl7DefNum);
-			}
+			
 			string command="SELECT * FROM hl7defmessage WHERE HL7DefNum='"+POut.Long(hl7DefNum)+"' ORDER BY ItemOrder";
 			return Crud.HL7DefMessageCrud.SelectMany(command);
 		}
@@ -110,28 +104,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(HL7DefMessage hL7DefMessage) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				hL7DefMessage.HL7DefMessageNum=Meth.GetLong(MethodBase.GetCurrentMethod(),hL7DefMessage);
-				return hL7DefMessage.HL7DefMessageNum;
-			}
+			
 			return Crud.HL7DefMessageCrud.Insert(hL7DefMessage);
 		}
 
 		///<summary></summary>
 		public static void Update(HL7DefMessage hL7DefMessage) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),hL7DefMessage);
-				return;
-			}
+			
 			Crud.HL7DefMessageCrud.Update(hL7DefMessage);
 		}
 
 		///<summary></summary>
 		public static void Delete(long hL7DefMessageNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),hL7DefMessageNum);
-				return;
-			}
+			
 			string command= "DELETE FROM hl7defmessage WHERE HL7DefMessageNum = "+POut.Long(hL7DefMessageNum);
 			Db.NonQ(command);
 		}
@@ -141,18 +126,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<HL7DefMessage> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HL7DefMessage>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM hl7defmessage WHERE PatNum = "+POut.Long(patNum);
 			return Crud.HL7DefMessageCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one HL7DefMessage from the db.</summary>
 		public static HL7DefMessage GetOne(long hL7DefMessageNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<HL7DefMessage>(MethodBase.GetCurrentMethod(),hL7DefMessageNum);
-			}
+			
 			return Crud.HL7DefMessageCrud.SelectOne(hL7DefMessageNum);
 		}
 

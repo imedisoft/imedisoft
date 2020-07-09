@@ -15,9 +15,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets a list of all payplans for a given patient, whether they are the patient or the guarantor.  This is only used in one place, when deleting a patient to check dependencies.</summary>
 		public static int GetDependencyCount(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM payplan"
 				+" WHERE PatNum = "+POut.Long(patNum)
 				+" OR Guarantor = "+POut.Long(patNum);
@@ -25,9 +23,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static PayPlan GetOne(long payPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<PayPlan>(MethodBase.GetCurrentMethod(),payPlanNum);
-			}
+			
 			return Crud.PayPlanCrud.SelectOne(payPlanNum);
 		}
 
@@ -35,9 +31,7 @@ namespace OpenDentBusiness{
 			if(arrayPayPlanNums.IsNullOrEmpty()) {
 				return new List<PayPlan>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod(),arrayPayPlanNums);
-			}
+			
 			string command=$"SELECT * FROM payplan WHERE PayPlanNum IN ({string.Join(",",arrayPayPlanNums.Select(x => POut.Long(x)))})";
 			return Crud.PayPlanCrud.SelectMany(command);
 		}
@@ -45,9 +39,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of payment plans where the patient of the payment plan matches ANY in listPatNums OR the guarantor matches patNum.
 		///patNum will typically be the current patient.</summary>
 		public static List<PayPlan> GetForPats(List<long> listPatNums,long guarantor) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod(),listPatNums,guarantor);
-			}
+			
 			//We have to check for guarantor separately in case the payment plan belongs to a patient in another family.
 			string command="SELECT * FROM payplan WHERE Guarantor="+POut.Long(guarantor);
 			if(!listPatNums.IsNullOrEmpty()) {
@@ -61,9 +53,7 @@ namespace OpenDentBusiness{
 			if(listPatNums.Count==0) {
 				return new List<PayPlan>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command=$"SELECT * FROM payplan WHERE payplan.PatNum IN({string.Join(",",listPatNums)}) AND payplan.InsSubNum=0";
 			return Crud.PayPlanCrud.SelectMany(command);
 		}
@@ -71,9 +61,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all payment plans that this patient is associated to.  
 		///Will return payment plans that this pat is the patient or guarantor of.</summary>
 		public static List<PayPlan> GetForPatNum(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM payplan "
 				+"WHERE PatNum = "+POut.Long(patNum)+ " "
 				+"OR Guarantor = "+POut.Long(patNum);
@@ -83,9 +71,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of overcharged payplans from the listPayPlanNums. Only necessary for Dynamic Payment Plans. 
 		///Returns an empty list if none are overcharged.</summary>
 		public static List<PayPlan> GetOverChargedPayPlans(List<long> listPayPlanNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod(),listPayPlanNums);
-			}
+			
 			#region Get Data
 			List<PayPlanLink> listPayPlanLinksAll=PayPlanLinks.GetForPayPlans(listPayPlanNums);
 			List<long> listProcedureLinkFKeys=listPayPlanLinksAll.Where(x => x.LinkType==PayPlanLinkType.Procedure).Select(x => x.FKey).ToList();
@@ -140,9 +126,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Determines if there are any valid plans with that patient as the guarantor.</summary>
 		public static List<PayPlan> GetValidPlansNoIns(long guarNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod(),guarNum);
-			}
+			
 			string command="SELECT * FROM payplan"
 				+" WHERE Guarantor = "+POut.Long(guarNum)
 				+" AND PlanNum = 0"
@@ -152,18 +136,14 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<PayPlan> GetAllOpenInsPayPlans() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM payplan WHERE payplan.PlanNum != 0 AND IsClosed = 0";
 			return Crud.PayPlanCrud.SelectMany(command);
 		}
 
 		///<summary>Get all payment plans for this patient with the insurance plan identified by PlanNum and InsSubNum attached (marked used for tracking expected insurance payments) that have not been paid in full.  Only returns plans with no claimprocs currently attached or claimprocs from the claim identified by the claimNum sent in attached.  If claimNum is 0 all payment plans with planNum, insSubNum, and patNum not paid in full will be returned.</summary>
 		public static List<PayPlan> GetValidInsPayPlans(long patNum,long planNum,long insSubNum,long claimNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod(),patNum,planNum,insSubNum,claimNum);
-			}
+			
 			string command="";
 			if(DataConnection.DBtype==DatabaseType.MySql) {
 				command+="SELECT payplan.*,MAX(claimproc.ClaimNum) ClaimNum";
@@ -231,9 +211,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Gets info directly from database. Used from PayPlan and Account windows to get the amount paid so far on one payment plan.</summary>
 		public static double GetAmtPaid(PayPlan payPlan) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<double>(MethodBase.GetCurrentMethod(),payPlan);
-			}
+			
 			string command;
 			if(payPlan.PlanNum==0) {//Patient payment plan
 				command="SELECT SUM(paysplit.SplitAmt) FROM paysplit "
@@ -353,9 +331,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<PayPlan> GetAllForCharges(List<PayPlanCharge> listCharge) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod(),listCharge);
-			}
+			
 			if(listCharge.Count==0) {
 				return new List<PayPlan>();
 			}
@@ -427,9 +403,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Get all open, dynamic payment plans.</summary>
 		public static List<PayPlan> GetDynamic() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PayPlan>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM payplan WHERE payplan.IsDynamic=1 AND payplan.IsClosed=0";
 			return Crud.PayPlanCrud.SelectMany(command);
 		}
@@ -440,10 +414,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(PayPlan payPlan) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				payPlan.PayPlanNum=Meth.GetLong(MethodBase.GetCurrentMethod(),payPlan);
-				return payPlan.PayPlanNum;
-			}
+			
 			return Crud.PayPlanCrud.Insert(payPlan);
 		}
 
@@ -451,10 +422,7 @@ namespace OpenDentBusiness{
 			if(listPayPlans.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listPayPlans);
-				return;
-			}
+			
 			Crud.PayPlanCrud.InsertMany(listPayPlans);
 		}
 
@@ -467,10 +435,7 @@ namespace OpenDentBusiness{
 		///The treatment completed amount only takes into account payplancharge credits that have already occurred
 		///(no charges attached to TP'd procs).</summary>
 		public static void UpdateTreatmentCompletedAmt(List<PayPlan> listPayPlans) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listPayPlans);
-				return;
-			}
+			
 			foreach(PayPlan payPlanCur in listPayPlans) {
 				double completedAmt=0;
 				List<PayPlanCharge> listCharges=PayPlanCharges.GetForPayPlan(payPlanCur.PayPlanNum);
@@ -485,10 +450,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(PayPlan payPlan) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),payPlan);
-				return;
-			}
+			
 			Crud.PayPlanCrud.Update(payPlan);
 		}
 		#endregion
@@ -496,10 +458,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary>Called from FormPayPlan.  Also deletes all attached payplancharges.  Throws exception if there are any paysplits attached.</summary>
 		public static void Delete(PayPlan plan){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),plan);
-				return;
-			}
+			
 			string command;
 			if(plan.PlanNum==0 || plan.IsDynamic) {  //Patient payment plan
 				command="SELECT COUNT(*) FROM paysplit WHERE PayPlanNum="+POut.Long(plan.PayPlanNum);
@@ -540,9 +499,7 @@ namespace OpenDentBusiness{
 		#region Misc Methods
 		///<summary>Returns true if the patient passed in has any outstanding non-ins payment plans with them as the guarantor.</summary>
 		public static bool HasOutstandingPayPlansNoIns(long guarNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),guarNum);
-			}
+			
 			string command="SELECT SUM(paysplit.SplitAmt) FROM paysplit "
 				+"INNER JOIN payplan ON paysplit.PayPlanNum=payplan.PayPlanNum "
 				+"WHERE payplan.PlanNum=0 "
@@ -561,9 +518,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Gets info directly from database. Used when adding a payment.</summary>
 		public static bool PlanIsPaidOff(long payPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),payPlanNum);
-			}
+			
 			string command="SELECT SUM(paysplit.SplitAmt) FROM paysplit "
 				+"WHERE PayPlanNum = "+POut.Long(payPlanNum);// +"' "
 				//+" GROUP BY paysplit.PayPlanNum";
@@ -581,9 +536,7 @@ namespace OpenDentBusiness{
 		///Not really a problem if it fails because the UPDATE statement happens all at once, so at worst, no changes are made to their database.
 		///Returns the number of payment plans that were closed.</summary>
 		public static long AutoClose() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="";
 			DataTable table;
 			command="SELECT payplan.PayPlanNum,SUM(payplancharge.Principal) AS Princ,SUM(payplancharge.Interest) AS Interest,"

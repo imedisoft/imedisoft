@@ -12,9 +12,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary></summary>
 		public static List<InsEditPatLog> GetLogsForPatPlan(long patPlanNum,long insSubNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<InsEditPatLog>>(MethodBase.GetCurrentMethod(),patPlanNum,insSubNum);
-			}
+			
 			List<string> listWhereOrs=new List<string>();
 			if(patPlanNum>0) {
 				listWhereOrs.Add($"(LogType={POut.Int((int)InsEditPatLogType.PatPlan)} AND FKey = {POut.Long(patPlanNum)})");
@@ -67,10 +65,7 @@ namespace OpenDentBusiness{
 			if(listLogs.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listLogs);
-				return;
-			}
+			
 			Crud.InsEditPatLogCrud.InsertMany(listLogs);
 			return;
 		}

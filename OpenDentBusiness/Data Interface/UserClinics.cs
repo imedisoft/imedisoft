@@ -71,11 +71,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_userClinicCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _userClinicCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -101,55 +97,38 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(UserClinic userClinic){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				userClinic.UserClinicNum=Meth.GetLong(MethodBase.GetCurrentMethod(),userClinic);
-				return userClinic.UserClinicNum;
-			}
+			
 			return Crud.UserClinicCrud.Insert(userClinic);
 		}
 
 		///<summary></summary>
 		public static void Update(UserClinic userClinic){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userClinic);
-				return;
-			}
+			
 			Crud.UserClinicCrud.Update(userClinic);
 		}
 
 		///<summary></summary>
 		public static void Delete(long userClinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userClinicNum);
-				return;
-			}
+			
 			Crud.UserClinicCrud.Delete(userClinicNum);
 		}
 
 		public static bool Sync(List<UserClinic> listNew,long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,userNum);
-			}
+			
 			List<UserClinic> listOld=UserClinics.GetForUser(userNum);
 			return Crud.UserClinicCrud.Sync(listNew,listOld);
 		}
 
 		///<summary>Deletes all User to Clinic associations for a specific user.</summary>
 		public static void DeleteForUser(long userNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userNum);
-				return;
-			}
+			
 			string command="DELETE FROM userclinic WHERE UserNum="+POut.Long(userNum);
 			Db.NonQ(command);
 		}
 
 		///<summary>Deletes all User to Clinic associations for a specific clinic.</summary>
 		public static void DeleteForClinic(long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clinicNum);
-				return;
-			}
+			
 			string command="DELETE FROM userclinic WHERE ClinicNum="+POut.Long(clinicNum);
 			Db.NonQ(command);
 		}

@@ -71,11 +71,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_ToolButItemCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _ToolButItemCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -83,28 +78,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ToolButItem Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.ToolButItemNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.ToolButItemNum;
-			}
+			
 			return Crud.ToolButItemCrud.Insert(Cur);
 		}
 
 		///<summary>This in not currently being used.</summary>
 		public static void Update(ToolButItem Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.ToolButItemCrud.Update(Cur);
 		}
 
 		///<summary>This is not currently being used.</summary>
 		public static void Delete(ToolButItem Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string command = "DELETE from toolbutitem WHERE ToolButItemNum = '"
 				+POut.Long(Cur.ToolButItemNum)+"'";
 			Db.NonQ(command);
@@ -112,10 +98,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes all ToolButItems for the Programs.Cur.  This is used regularly when saving a Program link because of the way the user interface works.</summary>
 		public static void DeleteAllForProgram(long programNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),programNum);
-				return;
-			}
+			
 			string command = "DELETE from toolbutitem WHERE ProgramNum = '"
 				+POut.Long(programNum)+"'";
 			Db.NonQ(command);

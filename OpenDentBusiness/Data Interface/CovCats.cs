@@ -52,10 +52,7 @@ namespace OpenDentBusiness {
 
 		#region Delete
 		public static void Delete(CovCat covCat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),covCat);
-				return;
-			}
+			
 			string command="DELETE FROM covcat "
 				+"WHERE CovCatNum = '"+POut.Long(covCat.CovCatNum)+"'";
 			Db.NonQ(command);
@@ -134,11 +131,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_CovCatsache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _CovCatsache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -146,19 +139,13 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static void Update(CovCat covcat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),covcat);
-				return;
-			}
+			
 			Crud.CovCatCrud.Update(covcat);
 		}
 
 		///<summary></summary>
 		public static long Insert(CovCat covcat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				covcat.CovCatNum=Meth.GetLong(MethodBase.GetCurrentMethod(),covcat);
-				return covcat.CovCatNum;
-			}
+			
 			return Crud.CovCatCrud.Insert(covcat);
 		}
 

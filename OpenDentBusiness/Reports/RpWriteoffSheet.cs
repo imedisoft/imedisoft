@@ -10,10 +10,6 @@ namespace OpenDentBusiness {
 		public static DataTable GetWriteoffTable(DateTime dateStart,DateTime dateEnd,List<long> listProvNums,List<long> listClinicNums
 			,bool hasAllClinics,bool hasClinicsEnabled,PPOWriteoffDateCalc writeoffPayType) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listProvNums,listClinicNums,hasAllClinics
-					,hasClinicsEnabled,writeoffPayType);
-			}
 			string whereProv="";
 			if(listProvNums.Count > 0) {
 				whereProv+=" AND claimproc.ProvNum IN("+string.Join(",",listProvNums)+") ";

@@ -29,9 +29,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<LabTurnaround> GetForLab(long laboratoryNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<LabTurnaround>>(MethodBase.GetCurrentMethod(),laboratoryNum);
-			}
+			
 			string command="SELECT * FROM labturnaround WHERE LaboratoryNum="+POut.Long(laboratoryNum);
 			DataTable table=Db.GetTable(command);
 			List<LabTurnaround> retVal=new List<LabTurnaround>();
@@ -50,10 +48,7 @@ namespace OpenDentBusiness{
 
 		///<summary>This is used when saving a laboratory.  All labturnarounds for the lab are deleted and recreated.  So the list that's passed in will not have the correct keys set.  The key columns will be ignored.</summary>
 		public static void SetForLab(long labNum,List<LabTurnaround> lablist) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),labNum,lablist);
-				return;
-			}
+			
 			string command="DELETE FROM labturnaround WHERE LaboratoryNum="+POut.Long(labNum);
 			Db.NonQ(command);
 			for(int i=0;i<lablist.Count;i++){
@@ -64,10 +59,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(LabTurnaround lab) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				lab.LabTurnaroundNum=Meth.GetLong(MethodBase.GetCurrentMethod(),lab);
-				return lab.LabTurnaroundNum;
-			}
+			
 			return Crud.LabTurnaroundCrud.Insert(lab);
 		}
 

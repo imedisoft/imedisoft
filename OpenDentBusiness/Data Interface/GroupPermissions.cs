@@ -124,11 +124,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_GroupPermissionCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _GroupPermissionCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -136,10 +132,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(GroupPermission gp){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),gp);
-				return;
-			}
+			
 			if(gp.NewerDate.Year>1880 && gp.NewerDays>0) {
 				throw new Exception(Lans.g("GroupPermissions","Date or days can be set, but not both."));
 			}
@@ -153,10 +146,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Update that doesnt use the local cache.  Useful for multithreaded connections.</summary>
 		public static void UpdateNoCache(GroupPermission gp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),gp);
-				return;
-			}
+			
 			string command="UPDATE grouppermission SET "
 				+"NewerDate   =  "+POut.Date  (gp.NewerDate)+", "
 				+"NewerDays   =  "+POut.Int   (gp.NewerDays)+", "
@@ -168,30 +158,21 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes GroupPermissions based on primary key.  Do not call this method unless you have checked specific dependencies first.  E.g. after deleting this permission, there will still be a security admin user.  This method is only called from the CEMT sync.  RemovePermission should probably be used instead.</summary>
 		public static void Delete(GroupPermission gp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),gp);
-				return;
-			}
+			
 			string command="DELETE FROM grouppermission WHERE GroupPermNum = "+POut.Long(gp.GroupPermNum);
 			Db.NonQ(command);
 		}
 
 		///<summary>Deletes without using the cache.  Useful for multithreaded connections.</summary>
 		public static void DeleteNoCache(GroupPermission gp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),gp);
-				return;
-			}
+			
 			string command="DELETE FROM grouppermission WHERE GroupPermNum="+POut.Long(gp.GroupPermNum);
 			Db.NonQ(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(GroupPermission gp){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				gp.GroupPermNum=Meth.GetLong(MethodBase.GetCurrentMethod(),gp);
-				return gp.GroupPermNum;
-			}
+			
 			if(gp.NewerDate.Year>1880 && gp.NewerDays>0) {
 				throw new Exception(Lans.g("GroupPermissions","Date or days can be set, but not both."));
 			}
@@ -216,18 +197,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Insertion logic that doesn't use the cache. Has special cases for generating random PK's and handling Oracle insertions.</summary>
 		public static long InsertNoCache(GroupPermission gp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),gp);
-			}
+			
 			return Crud.GroupPermissionCrud.InsertNoCache(gp);
 		}
 
 		///<summary></summary>
 		public static void RemovePermission(long groupNum,Permissions permType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),groupNum,permType);
-				return;
-			}
+			
 			string command;
 			if(permType==Permissions.SecurityAdmin){
 				//need to make sure that at least one other user has this permission
@@ -255,9 +231,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static bool Sync(List<GroupPermission> listNew,List<GroupPermission> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.GroupPermissionCrud.Sync(listNew,listOld);
 		}
 
@@ -275,9 +249,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of GroupPermissions for the supplied UserGroupNum without using the local cache.  Useful for multithreaded connections.</summary>
 		public static List<GroupPermission> GetPermsNoCache(long userGroupNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<GroupPermission>>(MethodBase.GetCurrentMethod(),userGroupNum);
-			}
+			
 			List<GroupPermission> retVal=new List<GroupPermission>();
 			string command="SELECT * FROM grouppermission WHERE UserGroupNum="+POut.Long(userGroupNum);
 			DataTable tableGroupPerms=Db.GetTable(command);

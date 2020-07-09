@@ -255,9 +255,6 @@ namespace OpenDentBusiness {
 		public static StaticTextData GetStaticTextData(StaticTextFieldDependency staticTextDependencies,Patient pat,Family fam
 			,List<long> listProcCodeNums,StaticTextData data=null)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<StaticTextData>(MethodBase.GetCurrentMethod(),staticTextDependencies,pat,fam,listProcCodeNums,data);
-			}
 			data=data??new StaticTextData();
 			data.LoadData(staticTextDependencies,pat,fam,listProcCodeNums);
 			return data;
@@ -265,7 +262,6 @@ namespace OpenDentBusiness {
 
 		///<summary>Runs the required queries to populate the necessary StaticTextData fields corresponding to staticTextDependencies.</summary>
 		private void LoadData(StaticTextFieldDependency staticTextDependencies,Patient pat,Family fam,List<long> listProcCodeNums) {
-			bool isMiddleTier=(RemotingClient.RemotingRole==RemotingRole.ServerWeb);
 			System.Diagnostics.Stopwatch timer=null;
 			if(ODBuild.IsDebug()) {
 				timer=new System.Diagnostics.Stopwatch();
@@ -286,7 +282,7 @@ namespace OpenDentBusiness {
 				}
 			}
 			bool IsQueryNeeded<T>(ref List<T> list,StaticTextFieldDependency dependency) {
-				if(list==null || (isMiddleTier && list.Count==0)) {//Middle Tier deserializes null lists to empty lists.
+				if(list==null) {//Middle Tier deserializes null lists to empty lists.
 					if(staticTextDependencies.HasFlag(dependency)) {
 						return true;
 					}

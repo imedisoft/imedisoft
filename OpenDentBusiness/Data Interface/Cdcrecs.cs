@@ -76,11 +76,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_CdcrecCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _CdcrecCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -108,35 +104,25 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Cdcrec cdcrec){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				cdcrec.CdcrecNum=Meth.GetLong(MethodBase.GetCurrentMethod(),cdcrec);
-				return cdcrec.CdcrecNum;
-			}
+			
 			return Crud.CdcrecCrud.Insert(cdcrec);
 		}
 
 		///<summary></summary>
 		public static void Update(Cdcrec cdcrec){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cdcrec);
-				return;
-			}
+			
 			Crud.CdcrecCrud.Update(cdcrec);
 		}
 		
 		public static List<Cdcrec> GetAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Cdcrec>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM cdcrec";
 			return Crud.CdcrecCrud.SelectMany(command);
 		}
 
 		///<summary>Returns a list of just the codes for use in update or insert logic.</summary>
 		public static List<string> GetAllCodes() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<string>>(MethodBase.GetCurrentMethod());
-			}
+			
 			List<string> retVal=new List<string>();
 			string command="SELECT CdcRecCode FROM cdcrec";
 			DataTable table=DataCore.GetTable(command);
@@ -148,9 +134,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the total count of CDCREC codes.  CDCREC codes cannot be hidden.</summary>
 		public static long GetCodeCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM cdcrec";
 			return PIn.Long(Db.GetCount(command));
 		}
@@ -160,27 +144,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Cdcrec> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Cdcrec>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM cdcrec WHERE PatNum = "+POut.Long(patNum);
 			return Crud.CdcrecCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one Cdcrec from the db.</summary>
 		public static Cdcrec GetOne(long cdcrecNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<Cdcrec>(MethodBase.GetCurrentMethod(),cdcrecNum);
-			}
+			
 			return Crud.CdcrecCrud.SelectOne(cdcrecNum);
 		}
 
 		///<summary></summary>
 		public static void Delete(long cdcrecNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cdcrecNum);
-				return;
-			}
+			
 			string command= "DELETE FROM cdcrec WHERE CdcrecNum = "+POut.Long(cdcrecNum);
 			Db.NonQ(command);
 		}

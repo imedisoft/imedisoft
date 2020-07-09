@@ -53,11 +53,6 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_userGroupAttachCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _userGroupAttachCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -80,9 +75,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all UserGroupAttaches from the database where the associated users or usergroups' CEMTNums are not 0.</summary>
 		public static List<UserGroupAttach> GetForCEMTUsersAndUserGroups() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<UserGroupAttach>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command = @"
 				SELECT usergroupattach.* 
 				FROM usergroupattach
@@ -116,10 +109,6 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(UserGroupAttach userGroupAttach) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				userGroupAttach.UserGroupAttachNum=Meth.GetLong(MethodBase.GetCurrentMethod(),userGroupAttach);
-				return userGroupAttach.UserGroupAttachNum;
-			}
 			return Crud.UserGroupAttachCrud.Insert(userGroupAttach);
 		}
 		#endregion
@@ -129,9 +118,7 @@ namespace OpenDentBusiness{
 		///Returns the number of rows that were changed. Currently only used in the CEMT tool.</summary>
 		public static long SyncCEMT(List<UserGroupAttach> listNew,List<UserGroupAttach> listOld) {
 			//This remoting role check isn't necessary but will save on network traffic
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			//the users and usergroups in listNew correspond to UserNumCEMTs and UserGroupNumCEMTs.
 
 			// - If a row with the same UserGroupNum and UserNum exists in ListNew that does not exist in list Old, add it to listAdd.
@@ -176,19 +163,13 @@ namespace OpenDentBusiness{
 		#endregion
 		#region Delete
 		public static void Delete(UserGroupAttach userGroupAttach) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userGroupAttach);
-				return;
-			}
+			
 			Crud.UserGroupAttachCrud.Delete(userGroupAttach.UserGroupAttachNum);
 		}
 
 		///<summary>Does not add a new usergroupattach if the passed-in userCur is already attached to userGroup.</summary>
 		public static void AddForUser(Userod userCur,long userGroupNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userCur,userGroupNum);
-				return;
-			}
+			
 			if(!userCur.IsInUserGroup(userGroupNum)) {
 				UserGroupAttach userGroupAttach = new UserGroupAttach();
 				userGroupAttach.UserGroupNum = userGroupNum;
@@ -201,9 +182,7 @@ namespace OpenDentBusiness{
 		///Detaches the userCur from any usergroups that are not in the given list.
 		///Returns a count of how many user group attaches were affected.</summary>
 		public static long SyncForUser(Userod userCur,List<long> listUserGroupNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),userCur,listUserGroupNums);
-			}
+			
 			long rowsChanged=0;
 			foreach(long userGroupNum in listUserGroupNums) {
 				if(!userCur.IsInUserGroup(userGroupNum)) {

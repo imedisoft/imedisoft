@@ -87,11 +87,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_payPeriodCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _payPeriodCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -99,28 +95,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(PayPeriod pp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				pp.PayPeriodNum=Meth.GetLong(MethodBase.GetCurrentMethod(),pp);
-				return pp.PayPeriodNum;
-			}
+			
 			return Crud.PayPeriodCrud.Insert(pp);
 		}
 
 		///<summary></summary>
 		public static void Update(PayPeriod pp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),pp);
-				return;
-			}
+			
 			Crud.PayPeriodCrud.Update(pp);
 		}
 
 		///<summary></summary>
 		public static void Delete(PayPeriod pp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),pp);
-				return;
-			}
+			
 			string command= "DELETE FROM payperiod WHERE PayPeriodNum = "+POut.Long(pp.PayPeriodNum);
 			Db.NonQ(command);
 		}
@@ -159,9 +146,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the most recent payperiod object or null if none were found.</summary>
 		public static PayPeriod GetMostRecent() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<PayPeriod>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM payperiod WHERE DateStop=(SELECT MAX(DateStop) FROM payperiod)";
 			return Crud.PayPeriodCrud.SelectOne(command);
 		}

@@ -13,9 +13,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Gets clockevents between a date range for a given employee. Datatable return type to allow easy binding in WPF.</summary>
 		public static DataTable GetEmployeeClockEventsForDateRange(long empNum,DateTime startDate,DateTime stopDate) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),empNum,startDate,stopDate);
-			}
+			
 			string command="SELECT (CASE WHEN ClockStatus=0 THEN 'Home' WHEN ClockStatus=1 THEN 'Lunch' ELSE 'Break' END) AS 'Status',"
 				+" TimeEntered1 AS 'In',TimeEntered2 AS 'Out'"
 				+" FROM clockevent WHERE EmployeeNum="+empNum+" AND TimeEntered1 BETWEEN "+POut.Date(startDate)+" AND "+POut.Date(stopDate)
@@ -25,9 +23,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the time a given employee clocked in for a given date. Datatable return type to allow easy binding in WPF.</summary>
 		public static DataTable GetTimeClockedInOnDate(long empNum,DateTime date){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),empNum,date);
-			}
+			
 			string command="SELECT TimeEntered1, TimeEntered2 FROM clockevent"
 				+" WHERE EmployeeNum="+empNum+" AND TimeEntered1 BETWEEN "+POut.Date(date)+" AND "+POut.Date(date.AddDays(1))
 				+" GROUP BY EmployeeNum ORDER BY TimeEntered1 ASC";
@@ -53,9 +49,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ClockEvent> Refresh(long empNum,DateTime fromDate,DateTime toDate,bool isBreaks){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClockEvent>>(MethodBase.GetCurrentMethod(),empNum,fromDate,toDate,isBreaks);
-			}
+			
 			string command=
 				"SELECT * FROM clockevent WHERE"
 				+" EmployeeNum = '"+POut.Long(empNum)+"'"
@@ -78,9 +72,7 @@ namespace OpenDentBusiness{
 		///<param name="toDate">The end date of the clock events we are validating for an employee.</param>
 		///<param name="isBreaks">Indicates whether we are validating break events as opposed to clock in and out events.</param>
 		public static List<ClockEvent> GetValidList(long empNum,DateTime fromDate,DateTime toDate,bool isBreaks) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClockEvent>>(MethodBase.GetCurrentMethod(),empNum,fromDate,toDate,isBreaks);
-			}
+			
 			List<ClockEvent> retVal=new List<ClockEvent>();
 			string errors="";
 			//Fill list-----------------------------------------------------------------------------------------------------------------------------
@@ -117,9 +109,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns all clock events (Breaks and Non-Breaks) for all employees across all clinics. Currently only used internally for
 		///payroll benefits report.</summary>
 		public static List<ClockEvent> GetAllForPeriod(DateTime fromDate,DateTime toDate) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClockEvent>>(MethodBase.GetCurrentMethod(),fromDate,toDate);
-			}
+			
 			string command = "SELECT * FROM clockevent WHERE TimeDisplayed1 >= "+POut.Date(fromDate)+" AND TimeDisplayed1 < "+POut.Date(toDate.AddDays(1));
 			return Crud.ClockEventCrud.SelectMany(command);
 		}
@@ -142,9 +132,7 @@ namespace OpenDentBusiness{
 			if(listEmpNums.IsNullOrEmpty()) {
 				return new List<ClockEvent>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClockEvent>>(MethodBase.GetCurrentMethod(),listEmpNums,clinicNum,fromDate,toDate,isAll);
-			}
+			
 			string command="SELECT * FROM clockevent WHERE"
 				+" EmployeeNum IN ("+string.Join(",",listEmpNums.Select(x => POut.Long(x)))+")"
 				+" AND TimeDisplayed1 >= "+POut.Date(fromDate)
@@ -181,18 +169,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one ClockEvent from the db.</summary>
 		public static ClockEvent GetOne(long clockEventNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ClockEvent>(MethodBase.GetCurrentMethod(),clockEventNum);
-			}
+			
 			return Crud.ClockEventCrud.SelectOne(clockEventNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(ClockEvent clockEvent){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				clockEvent.ClockEventNum=Meth.GetLong(MethodBase.GetCurrentMethod(),clockEvent);
-				return clockEvent.ClockEventNum;
-			}
+			
       long clockEventNum=0;
 			clockEventNum=Crud.ClockEventCrud.Insert(clockEvent);
       if(PrefC.GetBool(PrefName.LocalTimeOverridesServerTime)) {
@@ -205,19 +188,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(ClockEvent clockEvent){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clockEvent);
-				return;
-			}
+			
 			Crud.ClockEventCrud.Update(clockEvent);
 		}
 
 		///<summary></summary>
 		public static void Delete(long clockEventNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clockEventNum);
-				return;
-			}
+			
 			string command= "DELETE FROM clockevent WHERE ClockEventNum = "+POut.Long(clockEventNum);
 			Db.NonQ(command);
 		}
@@ -230,9 +207,7 @@ namespace OpenDentBusiness{
 			if(employeeNum==0) {//Every clockevent should be associated to an employee.  Do not waste time looking through the entire table.
 				return null;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ClockEvent>(MethodBase.GetCurrentMethod(),employeeNum);
-			}
+			
 			string command="SELECT * FROM clockevent WHERE EmployeeNum="+POut.Long(employeeNum)
 				+" ORDER BY TimeDisplayed1 DESC";
 			command=DbHelper.LimitOrderBy(command,1);
@@ -508,9 +483,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns clockevent information for all non-hidden employees.  Used only in the time card manage window.
 		///Set isAll to true to return all employee time cards (used for clinics).</summary>
 		public static DataTable GetTimeCardManage(DateTime startDate,DateTime stopDate,long clinicNum,bool isAll) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),startDate,stopDate,clinicNum,isAll);
-			}
+			
 			//Construct empty table------------------------------------------------------------------------------------------------------------------------
 			DataTable retVal=new DataTable("TimeCardManage");
 			retVal.Columns.Add("PayrollID");
@@ -799,9 +772,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns all clock events, of all statuses, for a given employee between the date range (inclusive).</summary>
 		public static List<ClockEvent> GetSimpleList(long employeeNum,DateTime StartDate,DateTime StopDate) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClockEvent>>(MethodBase.GetCurrentMethod(),employeeNum,StartDate,StopDate);
-			}
+			
 			//Fill list-----------------------------------------------------------------------------------------------------------------------------
 			string command=
 				"SELECT * FROM clockevent WHERE"

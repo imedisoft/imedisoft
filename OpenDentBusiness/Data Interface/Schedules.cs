@@ -13,9 +13,7 @@ namespace OpenDentBusiness{
 	public class Schedules {
 		#region Get Methods
 		public static List<Schedule> GetSchedListForDateRange(long empNum, DateTime startDate, DateTime endDate) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),empNum,startDate,endDate);
-			}
+			
 			string command="SELECT * FROM schedule where schedule.EmployeeNum="+empNum
 				+" AND schedule.SchedDate BETWEEN "+POut.Date(startDate)+" AND "+POut.Date(endDate)
 				+" ORDER BY schedule.SchedDate ASC";
@@ -24,9 +22,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of Schedule items for one date.</summary>
 		public static List<Schedule> GetDayList(DateTime date) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),date);
-			}
+			
 			string command="SELECT * FROM schedule "
 				+"WHERE SchedDate = "+POut.Date(date)+" "
 				+"ORDER BY StartTime";
@@ -331,9 +327,7 @@ namespace OpenDentBusiness{
 		public static List<Schedule> RefreshPeriod(DateTime dateStart,DateTime dateEnd,List<long> provNums,List<long> empNums,bool includePNotes,
 			bool includeCNotes,long clinicNum)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,provNums,empNums,includePNotes,includeCNotes,clinicNum);
-			}
+			
 			if(provNums.Count==0 && empNums.Count==0 && !includeCNotes && !includePNotes) {
 				return new List<Schedule>();
 			}
@@ -361,9 +355,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Schedule> RefreshPeriodBlockouts(DateTime dateStart,DateTime dateEnd,List<long> opNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,opNums);
-			}
+			
 			if(opNums.Count==0){
 				return new List<Schedule>();
 			}
@@ -377,9 +369,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Schedule> RefreshDayEdit(DateTime dateSched){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),dateSched);
-			}
+			
 			string command="SELECT schedule.* "
 				+"FROM schedule "
 				+"WHERE SchedDate="+POut.Date(dateSched)+" "
@@ -390,9 +380,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets a list of Schedule items for one date filtered by providers and employees.
 		///Also option to include practice and clinic holidays and practice notes.</summary>
 		public static List<Schedule> RefreshDayEditForPracticeProvsEmps(DateTime dateSched,List<long> listProvNums,List<long> listEmpNums,long clinicNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),dateSched,listProvNums,listEmpNums,clinicNum);
-			}
+			
 			List<string> listOrClauses=new List<string>();
 			if(listProvNums.Count>0) {
 				listOrClauses.Add("(SchedType="+POut.Int((int)ScheduleType.Provider)+" "
@@ -419,9 +407,7 @@ namespace OpenDentBusiness{
 			if(listEmpNums.IsNullOrEmpty()) {
 				return new List<Schedule>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listEmpNums);
-			}
+			
 			string command="SELECT schedule.* "
 				+"FROM schedule "
 				+"WHERE SchedType="+POut.Int((int)ScheduleType.Employee)+" "
@@ -473,9 +459,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns a table of schedules with their clinic (gotten from operatory if a link exists) for the providers specified, for the date 
 		///range specified, and for the clinics specified.</summary>
 		public static DataTable GetPeriodSchedsForProvsAndClinics(DateTime dateFrom,DateTime dateTo,List<long> listProvNums,List<long> listClinicNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listProvNums,listClinicNums);
-			}
+			
 			string whereClinic="";
 			if(listClinicNums.Count>0) {
 				whereClinic=" AND COALESCE(operatory.ClinicNum,0) IN ("+string.Join(",",listClinicNums)+") ";
@@ -497,9 +481,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<Schedule> GetByScheduleNum(List<long> listScheduleNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),listScheduleNums);
-			}
+			
 			if(listScheduleNums.Count==0) {
 				return new List<Schedule>();
 			}
@@ -511,9 +493,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<Schedule> GetTwoYearPeriod(DateTime startDate) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),startDate);
-			}
+			
 			string command="SELECT schedule.* "
 				+"FROM schedule "
 				+"WHERE SchedDate BETWEEN "+POut.Date(startDate)+" AND "+POut.Date(startDate.AddYears(2))+" "
@@ -525,9 +505,7 @@ namespace OpenDentBusiness{
 		public static List<Schedule> GetSchedulesForAppointmentSearch(DateTime dateStart,DateTime dateEnd,List<long> listClinicNums,
 			List<long> listOpNums,List<long> listProvNums,long blockoutType)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listClinicNums,listOpNums,listProvNums,blockoutType);
-			}
+			
 			if(!listProvNums.Contains(0)) {
 				listProvNums.Add(0); //add 0 so blockouts can be returned.
 			}
@@ -547,17 +525,13 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in the check database integrity tool.  Does NOT fill the list of operatories per schedule.</summary>
 		public static Schedule[] RefreshAll() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Schedule[]>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM schedule";
 			return RefreshAndFill(command,true).ToArray();
 		}
 
 		public static List<Schedule> GetChangedSince(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT * schedule WHERE DateTStamp>"+POut.DateT(changedSince)+" AND SchedType="+POut.Int((int)ScheduleType.Provider);
 			return RefreshAndFill(command);
 		}
@@ -599,10 +573,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Update a schedule.  Insert an invalid schedule signalod.</summary>
 		public static void Update(Schedule sched){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sched);
-				return;
-			}
+			
 			Validate(sched);
 			Crud.ScheduleCrud.Update(sched);
 			string command="DELETE FROM scheduleop WHERE ScheduleNum="+POut.Long(sched.ScheduleNum);
@@ -613,10 +584,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Similar to Crud.ScheduleCrud.Update except this also handles ScheduleOps.  Insert an invalid schedule signalod when hasSignal=true.</summary>
 		public static void Update(Schedule schedNew,Schedule schedOld,bool validate,bool hasSignal=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),schedNew,schedOld,validate,hasSignal);
-				return;
-			}
+			
 			if(validate) {
 				Validate(schedNew);
 			}
@@ -638,10 +606,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Set validate to true to throw an exception if start and stop times need to be validated.  If validate is set to false, then the calling code is responsible for the validation.  Also inserts necessary scheduleop enteries.  Insert an invalid schedule signalod when hasSignal=true.</summary>
 		public static long Insert(Schedule sched,bool validate,bool hasSignal=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//Remoting role check so that the PK can be returned to the client.
-				sched.ScheduleNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sched,validate,hasSignal);
-				return sched.ScheduleNum;
-			}
 			Insert(validate,hasSignal,sched);
 			return sched.ScheduleNum;
 		}
@@ -650,15 +614,6 @@ namespace OpenDentBusiness{
 		///If validate is set to false, then the calling code is responsible for the validation.  Also inserts necessary scheduleop enteries.
 		///Inserts an invalid schedule signalod for each schedule passed in when hasSignal=true.</summary>
 		public static void Insert(bool validate,bool hasSignal,params Schedule[] arraySchedules) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				List<Schedule> listSchedules=arraySchedules.ToList();
-				//Unusual middle tier check. Break up into trips of 100.
-				for(int i=0;i<listSchedules.Count;i+=100) {
-					List<Schedule> listSchedulesToSend=listSchedules.GetRange(i,Math.Min(100,listSchedules.Count-i));
-					Meth.GetVoid(MethodBase.GetCurrentMethod(),validate,hasSignal,listSchedulesToSend.ToArray());
-				}
-				return;
-			}
 			if(validate) {
 				foreach(Schedule schedule in arraySchedules) {
 					Validate(schedule);
@@ -733,10 +688,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Delete an invalid schedule.  Insert an invalid schedule signalod when hasSignal=true.</summary>
 		public static void Delete(Schedule sched,bool hasSignal=false){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sched,hasSignal);
-				return;
-			}
+			
 			string command= "DELETE from schedule WHERE schedulenum='"+POut.Long(sched.ScheduleNum)+"'";
  			Db.NonQ(command);
 			command="DELETE FROM scheduleop WHERE ScheduleNum="+POut.Long(sched.ScheduleNum);
@@ -754,10 +706,7 @@ namespace OpenDentBusiness{
 			if(listSchedNums.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSchedNums);
-				return;
-			}
+			
 			//make deleted entries for synch purposes
 			DeletedObjects.SetDeleted(DeletedObjectType.ScheduleProv,listSchedNums);
 			//We need to query the database to get the list of schedules being deleted so we can run our logic to determine which signal refreshes need to be sent.
@@ -789,9 +738,7 @@ namespace OpenDentBusiness{
 		}
 		
 		public static List<Schedule> GetSchedsForOp(Operatory op,List<DateTime> listApptDates) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),op,listApptDates);
-			}
+			
 			if(listApptDates.Count==0) {//Should never happen.  If it does, the query will throw a UE for invalid syntax.
 				listApptDates.Add(DateTime.Today);
 			}
@@ -909,9 +856,7 @@ namespace OpenDentBusiness{
 		public static SerializableDictionary<long,double> GetHoursSchedForProvsInRange(List<long> listProvNums,List<long> listOpNums,
 			DateTime start,DateTime end) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetSerializableDictionary<long,double>(MethodBase.GetCurrentMethod(),listProvNums,listOpNums,start,end);
-			}
+			
 			string command="SELECT * FROM schedule ";
 			if(listOpNums!=null && listOpNums.Count!=0) {
 				command+="INNER JOIN scheduleop ON scheduleop.ScheduleNum=schedule.ScheduleNum AND OperatoryNum IN("+string.Join(",",listOpNums)+") ";
@@ -990,10 +935,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Clears all blockouts for day.</summary>
 		public static void ClearBlockoutsForDay(DateTime date){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),date);
-				return;
-			}
+			
 			//Get ScheduleNums that are to be deleted so we can delete scheduleops
 			string command="SELECT ScheduleNum FROM schedule WHERE SchedDate="+POut.Date(date)+" AND SchedType="+POut.Int((int)ScheduleType.Blockout);
 			List<long> listSchedNums=Db.GetListLong(command);
@@ -1011,10 +953,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static void ClearBlockoutsForOp(long opNum, DateTime dateClear) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),opNum,dateClear);
-				return;
-			}
+			
 			//A schedule may be attached to more than one operatory.
 			List<Schedule> listSchedules = Schedules.GetForDate(dateClear);
 			listSchedules.RemoveAll(x => x.SchedType!=ScheduleType.Blockout);
@@ -1030,10 +969,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static void ClearBlockoutsForClinic(long clinicNum,DateTime dateClear) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),clinicNum,dateClear);
-				return;
-			}
+			
 			//A schedule may be attached to more than one operatory.
 			List<Schedule> listSchedules = Schedules.GetForDate(dateClear);
 			listSchedules.RemoveAll(x => x.SchedType!=ScheduleType.Blockout);
@@ -1074,9 +1010,7 @@ namespace OpenDentBusiness{
 		}
 		
 		public static bool DateIsHoliday(DateTime date){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),date);
-			}
+			
 			string command="SELECT COUNT(*) FROM schedule "
 				//only count holiday schedules for the entire practice or for the currently selected clinic
 				+"WHERE (ClinicNum=0 OR ClinicNum="+POut.Long(Clinics.ClinicNum)+") "
@@ -1099,10 +1033,6 @@ namespace OpenDentBusiness{
 		public static List<Schedule> GetAllForDateRangeAndType(DateTime dateSelectedStart,DateTime dateSelectedEnd,ScheduleType schedType
 			,bool skipSchedOps=false,List<long> listOpNums=null)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),dateSelectedStart,dateSelectedEnd,schedType,skipSchedOps,
-					listOpNums);
-			}
 			string command="SELECT schedule.* FROM schedule ";
 			if(!listOpNums.IsNullOrEmpty()) {
 				command+="INNER JOIN scheduleop ON schedule.ScheduleNum=scheduleop.ScheduleNum AND scheduleop.OperatoryNum IN ("
@@ -1118,9 +1048,7 @@ namespace OpenDentBusiness{
 		public static DataTable GetPeriod(DateTime dateStart,DateTime dateEnd,List<long> provNums,List<long> empNums,bool includePNotes,
 			bool includeCNotes,long clinicNum,bool showClinicSchedule,bool includeEmpNotes)
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,provNums,empNums,includePNotes,includeCNotes,clinicNum,showClinicSchedule,includeEmpNotes);
-			}
+			
 			DataTable table=new DataTable();
 			table.Columns.Add("sun");
 			table.Columns.Add("mon");
@@ -1298,10 +1226,6 @@ namespace OpenDentBusiness{
 		public static List<Schedule> GetSchedulesAndBlockoutsForWebSched(List<long> listProvNums,DateTime dateStart,DateTime dateEnd,bool isRecall
 			,long clinicNum,Logger.IWriteLine log=null, List<Schedule> listRestrictedToBlockouts=null) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),listProvNums,dateStart,dateEnd,isRecall,clinicNum,log,
-					listRestrictedToBlockouts);
-			}
 			List<long> listProvNumsWithZero=new List<long>();
 			if(listProvNums!=null) {
 				listProvNumsWithZero=listProvNums.Distinct().ToList();
@@ -1527,9 +1451,7 @@ namespace OpenDentBusiness{
 		///<summary>Inserts, updates, or deletes database rows sepcified in the supplied lists.  Returns true if db changes were made.
 		///This was split from the list building logic to limit the payload that needed to be sent over middle tier.</summary>
 		public static bool SyncToDbHelper(List<Schedule> listIns,List<Schedule> listUpdNew,List<Schedule> listUpdDB,List<Schedule> listDel) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listIns,listUpdNew,listUpdDB,listDel);
-			}
+			
 			//Commit changes to DB 
 			//to foreach loops
 			for(int i = 0;i<listIns.Count;i++) {
@@ -1552,10 +1474,7 @@ namespace OpenDentBusiness{
 		///<summary>Clears all schedule entries for the given date range and the given providers, employees, and practice. 
 		///Insert an invalid schedule signalod.</summary>
 		public static void Clear(DateTime dateStart,DateTime dateEnd,List<long> provNums,List<long> empNums,bool includePNotes,bool includeCNotes,long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dateStart,dateEnd,provNums,empNums,includePNotes,includeCNotes,clinicNum);
-				return;
-			}
+			
 			DeleteMany(GetSchedulesToDelete(dateStart,dateEnd,provNums,empNums,includePNotes,includeCNotes,clinicNum).Select(x => x.ScheduleNum).ToList());
 		}
 
@@ -1566,9 +1485,7 @@ namespace OpenDentBusiness{
 			if(provNums.Count==0 && empNums.Count==0 && !includeCNotes && !includePNotes) {
 				return new List<Schedule>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),dateStart,dateEnd,provNums,empNums,includePNotes,includeCNotes,clinicNum);
-			}
+			
 			List<string> listOrClauses=new List<string>();
 			//Only notes with clinicNum==0
 			if(includePNotes) {
@@ -1592,10 +1509,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Clears all Blockout schedule entries for the given date ranges and the given ops.</summary>
 		public static void ClearBlockouts(DateTime dateStart,DateTime dateEnd,List<long> listOpNums,bool includeWeekend) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listOpNums,includeWeekend);
-				return;
-			}
+			
 			string command=$@"SELECT schedule.ScheduleNum,scheduleop.ScheduleOpNum,schedule.SchedDate,scheduleop.OperatoryNum
 				FROM schedule 
 				INNER JOIN scheduleop ON schedule.ScheduleNum=scheduleop.ScheduleNum
@@ -1618,9 +1532,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static int GetDuplicateBlockoutCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM schedule WHERE SchedType="+POut.Int((int)ScheduleType.Blockout);
 			int retval=RefreshAndFill(command)
 				.GroupBy(x=> new { x.SchedDate,x.StartTime,x.StopTime,ops=string.Join(",",x.Ops.OrderBy(y=>y)) })//group by duplicates
@@ -1630,10 +1542,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Clear duplicate schedule entries.  Insert an invalid schedule signalod.</summary>
 		public static void ClearDuplicates() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			string command="SELECT * FROM schedule WHERE SchedType="+POut.Int((int)ScheduleType.Blockout);
 			List<long> listDupSchedNums=RefreshAndFill(command)
 				.GroupBy(x => new { x.SchedDate,x.StartTime,x.StopTime,ops=string.Join(",",x.Ops.OrderBy(y=>y)) })//group by duplicates
@@ -1652,9 +1561,7 @@ namespace OpenDentBusiness{
 		///<summary>Set clinicNum to 0 to return 'unassigned' clinics.  Otherwise, filters the data set on the clinic num passed in.
 		///Added to the DataSet in Appointments.RefreshPeriod.</summary>
 		public static DataTable GetPeriodEmployeeSchedTable(DateTime dateStart,DateTime dateEnd,long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,clinicNum);
-			}
+			
 			DataTable table=new DataTable("EmpSched");
 			//columns that start with lowercase are altered for display rather than being raw data.
 			table.Columns.Add("EmployeeNum");//only used to compare rows when there are multiple rows for one employee
@@ -1711,9 +1618,7 @@ namespace OpenDentBusiness{
 		///<summary>Set clinicNum to 0 to return 'unassigned' clinics.  Otherwise, filters the data set on the clinic num passed in.
 		///Added to the DataSet in Appointments.RefreshPeriod.</summary>
 		public static DataTable GetPeriodProviderSchedTable(DateTime dateStart,DateTime dateEnd,long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,clinicNum);
-			}
+			
 			DataTable table=new DataTable("ProvSched");
 			//columns that start with lowercase are altered for display rather than being raw data.
 			table.Columns.Add("ProvAbbr");
@@ -1756,9 +1661,7 @@ namespace OpenDentBusiness{
 		/// <param name="doRunQueryOnNoOps">Set to false if an empty DataTable should be returned when listOpNums is null or empty.</param>
 		/// <returns></returns>
 		public static DataTable GetPeriodSchedule(DateTime dateStart,DateTime dateEnd,List<long> listOpNums=null,bool doRunQueryOnNoOps=true) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listOpNums,doRunQueryOnNoOps);
-			}
+			
 			DataTable table=new DataTable("Schedule");
 			table.Columns.Add("ScheduleNum");
 			table.Columns.Add("SchedDate");
@@ -1835,9 +1738,7 @@ namespace OpenDentBusiness{
 		public static List<Schedule> GetRestrictedToBlockoutsByReason(long defNumReason,DateTime dateStart,DateTime dateStop,long clinicNum,
 			List<long> listOpNums,List<DefLink> listRestrictedBlockouts=null) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Schedule>>(MethodBase.GetCurrentMethod(),defNumReason,dateStart,dateStop,clinicNum,listOpNums,listRestrictedBlockouts);
-			}
+			
 			if(listOpNums==null || listOpNums.Count<1) {
 				return new List<Schedule>();
 			}

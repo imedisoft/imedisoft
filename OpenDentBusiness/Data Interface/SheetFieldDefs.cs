@@ -68,11 +68,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_sheetFieldDefCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _sheetFieldDefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -80,9 +76,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all internal SheetFieldDefs from the database for a specific sheet, used in FormSheetFieldExam.</summary>
 		public static List<SheetFieldDef> GetForExamSheet(long sheetDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SheetFieldDef>>(MethodBase.GetCurrentMethod(),sheetDefNum);
-			}
+			
 			string command="SELECT * FROM sheetfielddef WHERE SheetDefNum="+POut.Long(sheetDefNum)+" "
 				+"AND ((FieldName!='misc' AND FieldName!='') OR (ReportableName!='')) "
 				+"GROUP BY FieldName,ReportableName";
@@ -91,9 +85,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all SheetFieldDefs from the database for a specific sheet, used in FormSheetFieldExam.</summary>
 		public static List<SheetFieldDef> GetForSheetDef(long sheetDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SheetFieldDef>>(MethodBase.GetCurrentMethod(),sheetDefNum);
-			}
+			
 			string command="SELECT * FROM sheetfielddef WHERE SheetDefNum="+POut.Long(sheetDefNum);
 			return Crud.SheetFieldDefCrud.SelectMany(command);
 		}
@@ -119,36 +111,25 @@ namespace OpenDentBusiness{
 
 		///<Summary>Gets one SheetFieldDef from the database.</Summary>
 		public static SheetFieldDef CreateObject(long sheetFieldDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SheetFieldDef>(MethodBase.GetCurrentMethod(),sheetFieldDefNum);
-			}
+			
 			return Crud.SheetFieldDefCrud.SelectOne(sheetFieldDefNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(SheetFieldDef sheetFieldDef) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				sheetFieldDef.SheetFieldDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sheetFieldDef);
-				return sheetFieldDef.SheetFieldDefNum;
-			}
+			
 			return Crud.SheetFieldDefCrud.Insert(sheetFieldDef);
 		}
 
 		///<summary></summary>
 		public static void Update(SheetFieldDef sheetFieldDef) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sheetFieldDef);
-				return;
-			}
+			
 			Crud.SheetFieldDefCrud.Update(sheetFieldDef);
 		}
 
 		///<summary></summary>
 		public static void Delete(long sheetFieldDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sheetFieldDefNum);
-				return;
-			}
+			
 			Crud.SheetFieldDefCrud.Delete(sheetFieldDefNum);
 		}
 
@@ -156,10 +137,6 @@ namespace OpenDentBusiness{
 		///This function uses a DB comparison rather than a stale list because we are not worried about concurrency of a single sheet and enhancing the
 		///functions that call this would take a lot of restructuring.</summary>
 		public static void Sync(List<SheetFieldDef> listNew,long sheetDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listNew,sheetDefNum);//never pass DB list through the web service
-				return;
-			}
 			List<SheetFieldDef> listDB=SheetFieldDefs.GetForSheetDef(sheetDefNum);
 			Crud.SheetFieldDefCrud.Sync(listNew,listDB);
 		}

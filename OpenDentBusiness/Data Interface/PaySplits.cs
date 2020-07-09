@@ -12,9 +12,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Returns all paySplits for the given patNum, organized by DatePay.  WARNING! Also includes related paysplits that aren't actually attached to patient.  Includes any split where payment is for this patient.</summary>
 		public static PaySplit[] Refresh(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<PaySplit[]>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			/*This query was too slow
 			string command=
 				"SELECT DISTINCT paysplit.* FROM paysplit,payment "
@@ -34,9 +32,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of paysplits that have AdjNum of any of the passed in adjustments.</summary>
 		public static List<PaySplit> GetForAdjustments(List<long> listAdjustNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),listAdjustNums);
-			}
+			
 			if(listAdjustNums==null || listAdjustNums.Count==0) {
 				return new List<PaySplit>();
 			}
@@ -48,18 +44,14 @@ namespace OpenDentBusiness{
 			if(listPayPlanChargeNums.IsNullOrEmpty()) {
 				return new List<PaySplit>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),listPayPlanChargeNums);
-			}
+			
 			string command=$"SELECT * FROM paysplit WHERE PayPlanChargeNum IN ({string.Join(",",listPayPlanChargeNums)})";
 			return Crud.PaySplitCrud.SelectMany(command);
 		}
 
 		///<summary>Used from payment window to get all paysplits for the payment.</summary>
 		public static List<PaySplit> GetForPayment(long payNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),payNum);
-			}
+			
 			string command=
 				"SELECT * FROM paysplit "
 				+"WHERE PayNum="+POut.Long(payNum);
@@ -71,9 +63,7 @@ namespace OpenDentBusiness{
 			if(listPayNums.IsNullOrEmpty()) {
 				return new List<PaySplit>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),listPayNums);
-			}
+			
 			string command=
 				"SELECT * FROM paysplit "
 				+"WHERE PayNum IN("+string.Join(",",listPayNums.Select( x=> POut.Long(x)))+")";
@@ -90,10 +80,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static void InsertMany(List<PaySplit> listSplits) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSplits);
-				return;
-			}
+			
 			foreach(PaySplit split in listSplits) {
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				split.SecUserNumEntry=Security.CurUser.UserNum;
@@ -103,18 +90,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one paysplit using the specified SplitNum.</summary>
 		public static PaySplit GetOne(long splitNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<PaySplit>(MethodBase.GetCurrentMethod(),splitNum);
-			}
+			
 			string command="SELECT * FROM paysplit WHERE SplitNum="+POut.Long(splitNum);
 			return Crud.PaySplitCrud.SelectOne(command);
 		}
 
 		///<summary>Used from FormPayment to return the total payments for a procedure without requiring a supplied list.</summary>
 		public static string GetTotForProc(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),procNum);
-			}
+			
 			string command="SELECT SUM(paysplit.SplitAmt) FROM paysplit "
 				+"WHERE paysplit.ProcNum="+POut.Long(procNum);
 			return Db.GetScalar(command);
@@ -188,9 +171,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in Payment window to get all paysplits for a single patient without using a supplied list.</summary>
 		public static List<PaySplit> GetForPats(List<long> listPatNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),listPatNums);
-			}
+			
 			string command="SELECT * FROM paysplit "
 				+"WHERE PatNum IN("+String.Join(", ",listPatNums)+")";
 			return Crud.PaySplitCrud.SelectMany(command);
@@ -213,9 +194,7 @@ namespace OpenDentBusiness{
 		///<summary>For a given PayPlan, returns a table of PaySplits with additional payment information.
 		///The additional information from the payment table will be columns titled "CheckNum", "PayAmt", and "PayType"</summary>
 		public static DataTable GetForPayPlan(long payPlanNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),payPlanNum);
-			}
+			
 			string command="SELECT paysplit.*,payment.CheckNum,payment.PayAmt,payment.PayType "
 					+"FROM paysplit "
 					+"LEFT JOIN payment ON paysplit.PayNum=payment.PayNum "
@@ -230,9 +209,7 @@ namespace OpenDentBusiness{
 			if(listPayPlanNums.Count==0) {
 				return new List<PaySplit>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),listPayPlanNums);
-			}
+			
 			string command="SELECT paysplit.* "
 					+"FROM paysplit "
 					+"WHERE paysplit.PayPlanNum IN ("+POut.String(String.Join(",",listPayPlanNums))+") "
@@ -278,9 +255,7 @@ namespace OpenDentBusiness{
 		///to this method originates from the Account Module and is being used for display of the resulting paysplits in the account grid, at all other 
 		///times it should remain false.</summary>
 		public static List<PaySplit> GetPrepayForFam(Family fam,bool onlyUnallocated=true,bool doExcludeTpPrepay=false,bool isAccountModule=false) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),fam,onlyUnallocated,doExcludeTpPrepay,isAccountModule);
-			}
+			
 			List<long> listFamPatNums=fam.ListPats.Select(x => x.PatNum).Distinct().ToList();
 			string command="SELECT * FROM paysplit WHERE PatNum IN ("+String.Join(",",listFamPatNums)+") "
 				+UnearnedQueryHelper(onlyUnallocated,doExcludeTpPrepay);
@@ -327,9 +302,7 @@ namespace OpenDentBusiness{
 			if(listPrepaymentSplits==null || listPrepaymentSplits.Count(x => x.SplitNum!=0) < 1) {
 				return new List<PaySplit>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),listPrepaymentSplits);
-			}
+			
 			List<long> listSplitNums=listPrepaymentSplits.Where(x => x.SplitNum!=0).Select(x => x.SplitNum).Distinct().ToList();
 			string command="SELECT * FROM paysplit WHERE FSplitNum IN ("+String.Join(",",listSplitNums)+")";
 			return Crud.PaySplitCrud.SelectMany(command);
@@ -337,9 +310,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the original prepayment.</summary>
 		public static PaySplit GetOriginalPrepayment(PaySplit paySplit) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<PaySplit>(MethodBase.GetCurrentMethod(),paySplit);
-			}
+			
 			long fSplitNum=paySplit.FSplitNum;
 			if(paySplit.UnearnedType==0) {//paySplit is pos allocation split, find negative income transfer split first
 				fSplitNum=Db.GetLong("SELECT FSplitNum FROM paysplit WHERE paysplit.SplitNum="+POut.Long(paySplit.FSplitNum));
@@ -350,9 +321,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of all PaySplits allocated to the SplitNum passed in.</summary>
 		public static List<PaySplit> GetAllocatedElseWhere(long splitNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),splitNum);
-			}
+			
 			string command=@"
 				SELECT * 
 				FROM paysplit
@@ -362,9 +331,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<PaySplit> GetSplitsLinked(List<PaySplit> listPaySplits) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),listPaySplits);
-			}
+			
 			if(listPaySplits==null || listPaySplits.Count < 1) {
 				return new List<PaySplit>();
 			}
@@ -420,9 +387,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Takes a list of procNums and returns a list of all paysplits associated to the procedures.  Returns an empty list if there are none.</summary>
 		public static List<PaySplit> GetPaySplitsFromProcs(List<long> listProcNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PaySplit>>(MethodBase.GetCurrentMethod(),listProcNums);
-			}
+			
 			if(listProcNums==null || listProcNums.Count<1) {
 				return new List<PaySplit>();
 			}
@@ -436,10 +401,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(PaySplit split) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				split.SplitNum=Meth.GetLong(MethodBase.GetCurrentMethod(),split);
-				return split.SplitNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			split.SecUserNumEntry=Security.CurUser.UserNum;
 			return Crud.PaySplitCrud.Insert(split);
@@ -450,10 +412,7 @@ namespace OpenDentBusiness{
 			if(listSplits==null || listAssociatedSplits==null) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),payNum,listSplits,listAssociatedSplits);
-				return;
-			}
+			
 			foreach(PaySplit split in listSplits) {
 				split.PayNum=payNum;
 				Insert(split);
@@ -470,19 +429,13 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary></summary>
 		public static void Update(PaySplit split){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),split);
-				return;
-			}
+			
 			Crud.PaySplitCrud.Update(split);
 		}
 
 		///<summary></summary>
 		public static void Update(PaySplit paySplit,PaySplit oldPaySplit) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),paySplit,oldPaySplit);
-				return;
-			}
+			
 			Crud.PaySplitCrud.Update(paySplit,oldPaySplit);
 		}
 
@@ -492,10 +445,7 @@ namespace OpenDentBusiness{
 				//There are reports of this query running a lot at HQ which is making replication fall behind (probably due to MyISAM table level locking).
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),paySplitNumOrig,paySplitNumLinked);
-				return;
-			}
+			
 			string command="UPDATE paysplit SET FSplitNum="+POut.Long(paySplitNumOrig)
 				+" WHERE SplitNum="+POut.Long(paySplitNumLinked);
 			Db.NonQ(command);
@@ -504,19 +454,13 @@ namespace OpenDentBusiness{
 		///<summary>Takes a procedure and updates the provnum of each of the paysplits attached.
 		///Does nothing if there are no paysplits attached to the passed-in procedure.</summary>
 		public static void UpdateAttachedPaySplits(Procedure proc) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),proc);
-				return;
-			}
+			
 			Db.NonQ($@"UPDATE paysplit SET ProvNum = {POut.Long(proc.ProvNum)} WHERE ProcNum = {POut.Long(proc.ProcNum)}");
 		}
 
 		///<summary>Unlinks all paysplits that are currently linked to the passed-in adjustment. (Sets paysplit.AdjNum to 0)</summary>
 		public static void UnlinkForAdjust(Adjustment adj) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),adj);
-				return;
-			}
+			
 			Db.NonQ($@"UPDATE paysplit SET AdjNum = 0 WHERE AdjNum = {POut.Long(adj.AdjNum)}");
 		}
 
@@ -525,10 +469,7 @@ namespace OpenDentBusiness{
 			if(listSplits!=null && listSplits.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),adj,listSplits);
-				return;
-			}
+			
 			if(listSplits==null) {
 				Db.NonQ($@"UPDATE paysplit SET ProvNum = {POut.Long(adj.ProvNum)} WHERE AdjNum = {POut.Long(adj.AdjNum)}");
 			}
@@ -540,9 +481,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Inserts, updates, or deletes db rows to match listNew.</summary>
 		public static bool Sync(List<PaySplit> listNew,List<PaySplit> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			return Crud.PaySplitCrud.Sync(listNew,listOld,Security.CurUser.UserNum);
 		}
@@ -551,20 +490,14 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary>Deletes the paysplit.</summary>
 		public static void Delete(PaySplit split){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),split);
-				return;
-			}
+			
 			string command= "DELETE from paysplit WHERE SplitNum = "+POut.Long(split.SplitNum);
  			Db.NonQ(command);
 		}
 
 		///<summary>Used from payment window AutoSplit button to delete paysplits when clicking AutoSplit more than once.</summary>
 		public static void DeleteForPayment(long payNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),payNum);
-				return;
-			}
+			
 			string command="DELETE FROM paysplit"
 				+" WHERE PayNum="+POut.Long(payNum);
 			Db.NonQ(command);
@@ -576,9 +509,7 @@ namespace OpenDentBusiness{
 		#region Misc Methods
 		///<summary>Returns true if a paysplit is attached to the associated procnum. Returns false otherwise.</summary>
 		public static bool IsPaySplitAttached(long procNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),procNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM paysplit WHERE ProcNum="+POut.Long(procNum);
 			if(Db.GetCount(command)=="0") {
 				return false;

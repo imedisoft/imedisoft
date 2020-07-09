@@ -10,9 +10,6 @@ namespace OpenDentBusiness {
 
 		///<summary>If not using clinics then supply an empty list of clinicNums. dateStart and dateEnd can be MinVal/MaxVal to indicate "forever".</summary>
 		public static DataTable GetActivePatientTable(DateTime dateStart,DateTime dateEnd,List<long> listProvNums,List<long> listClinicNums,List<long> listBillingTypes,bool hasAllProvs,bool hasAllClinics,bool hasAllBilling) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateStart,dateEnd,listProvNums,listClinicNums,listBillingTypes,hasAllProvs,hasAllClinics,hasAllBilling);
-			}
 			bool hasClinicsEnabled=ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
 			List<Provider> listProvs=ReportsComplex.RunFuncOnReportServer(() => Providers.GetAll());
 			List<Def> listDefs=ReportsComplex.RunFuncOnReportServer(() => Defs.GetDefsNoCache(DefCat.BillingTypes));

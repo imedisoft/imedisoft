@@ -60,9 +60,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns true if the heartbeat is less than 6 minutes old.</summary>
 		public static bool IsODServiceRunning() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT ValueString,NOW() FROM preference WHERE PrefName='OpenDentalServiceHeartbeat'";
 			DataTable table=DataCore.GetTable(command);
 			DateTime lastHeartbeat=PIn.DateT(table.Rows[0][0].ToString());
@@ -75,9 +73,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns true if the heartbeat is less than 5 seconds old. Also returns the date time of the heartbeat.</summary>
 		public static ODTuple<bool,DateTime> IsPhoneTrackingServerHeartbeatValid(DateTime dateTimeLastHeartbeat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ODTuple<bool,DateTime>>(MethodBase.GetCurrentMethod(),dateTimeLastHeartbeat);
-			}
+			
 			//Default to using our local time just in case we can't query MySQL every second (lessens false positives due to query / network failure).
 			DateTime dateTimeNow=DateTime.Now;
 			DateTime dateTimeRecentHeartbeat=dateTimeLastHeartbeat;
@@ -219,9 +215,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of AlertItems for the given clinicNum.  Doesn't include alerts that are assigned to other users.</summary>
 		public static List<AlertItem> RefreshForClinicAndTypes(long clinicNum,List<AlertType> listAlertTypes=null){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<AlertItem>>(MethodBase.GetCurrentMethod(),clinicNum,listAlertTypes);
-			}
+			
 			if(listAlertTypes==null || listAlertTypes.Count==0) {
 				return new List<AlertItem>();
 			}
@@ -254,45 +248,32 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns a list of AlertItems for the given alertType.</summary>
 		public static List<AlertItem> RefreshForType(AlertType alertType){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<AlertItem>>(MethodBase.GetCurrentMethod(),alertType);
-			}
+			
 			string command="SELECT * FROM alertitem WHERE Type="+POut.Int((int)alertType)+";";
 			return Crud.AlertItemCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one AlertItem from the db.</summary>
 		public static AlertItem GetOne(long alertItemNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<AlertItem>(MethodBase.GetCurrentMethod(),alertItemNum);
-			}
+			
 			return Crud.AlertItemCrud.SelectOne(alertItemNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(AlertItem alertItem){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				alertItem.AlertItemNum=Meth.GetLong(MethodBase.GetCurrentMethod(),alertItem);
-				return alertItem.AlertItemNum;
-			}
+			
 			return Crud.AlertItemCrud.Insert(alertItem);
 		}
 
 		///<summary></summary>
 		public static void Update(AlertItem alertItem){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),alertItem);
-				return;
-			}
+			
 			Crud.AlertItemCrud.Update(alertItem);
 		}
 
 		///<summary>Inserts if it doesn't exist, otherwise updates.</summary>
 		public static long Upsert(AlertItem alertItem) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				alertItem.AlertItemNum=Meth.GetLong(MethodBase.GetCurrentMethod(),alertItem);
-				return alertItem.AlertItemNum;
-			}
+			
 			if(alertItem.AlertItemNum==0) {
 				Insert(alertItem);
 			}
@@ -324,10 +305,7 @@ namespace OpenDentBusiness{
 			if(listAlertItemNums.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listAlertItemNums);
-				return;
-			}
+			
 			AlertReads.DeleteForAlertItems(listAlertItemNums);
 			string command="DELETE FROM alertitem WHERE AlertItemNum IN("+string.Join(",",listAlertItemNums.Select(POut.Long))+")";
 			Db.NonQ(command);
@@ -336,10 +314,7 @@ namespace OpenDentBusiness{
 		///<summary>Inserts, updates, or deletes db rows to match listNew.  No need to pass in userNum, it's set before remoting role check and passed to
 		///the server if necessary.  Doesn't create ApptComm items, but will delete them.  If you use Sync, you must create new Apptcomm items.</summary>
 		public static void Sync(List<AlertItem> listNew,List<AlertItem> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listNew,listOld);
-				return;
-			}
+			
 			Crud.AlertItemCrud.Sync(listNew,listOld);
 		}
 

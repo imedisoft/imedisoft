@@ -20,10 +20,7 @@ namespace OpenDentBusiness{
 			if(listGroupItems.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listGroupItems);
-				return;
-			}
+			
 			Crud.ProcGroupItemCrud.InsertMany(listGroupItems);
 		}
 
@@ -43,9 +40,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<ProcGroupItem> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcGroupItem>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT procgroupitem.* FROM procgroupitem "
 					+"INNER JOIN procedurelog ON procedurelog.ProcNum=procgroupitem.GroupNum AND procedurelog.PatNum="+POut.Long(patNum);
 			return Crud.ProcGroupItemCrud.SelectMany(command);
@@ -53,28 +48,20 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all the ProcGroupItems for a Procedure Group.</summary>
 		public static List<ProcGroupItem> GetForGroup(long groupNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ProcGroupItem>>(MethodBase.GetCurrentMethod(),groupNum);
-			}
+			
 			string command="SELECT * FROM procgroupitem WHERE GroupNum = "+POut.Long(groupNum)+" ORDER BY ProcNum ASC";//Order is important for creating signature key in FormProcGroup.cs.
 			return Crud.ProcGroupItemCrud.SelectMany(command);
 		}
 
 		///<summary>Adds a procedure to a group.</summary>
 		public static long Insert(ProcGroupItem procGroupItem){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				procGroupItem.ProcGroupItemNum=Meth.GetLong(MethodBase.GetCurrentMethod(),procGroupItem);
-				return procGroupItem.ProcGroupItemNum;
-			}
+			
 			return Crud.ProcGroupItemCrud.Insert(procGroupItem);
 		}
 
 		///<summary>Deletes a ProcGroupItem based on its procGroupItemNum.</summary>
 		public static void Delete(long procGroupItemNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procGroupItemNum);
-				return;
-			}
+			
 			DeleteMany(new List<long> { procGroupItemNum });
 		}
 
@@ -83,10 +70,7 @@ namespace OpenDentBusiness{
 			if(listProcGroupItemNums.IsNullOrEmpty()) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listProcGroupItemNums);
-				return;
-			}
+			
 			string command=$@"
 					DELETE
 					FROM procgroupitem
@@ -98,9 +82,7 @@ namespace OpenDentBusiness{
 		///Used when deleting group notes to determine which permission to check. If a list of complete statuses is not included, will default to
 		///C, EO, and EC.</summary>
 		public static int GetCountCompletedProcsForGroup(long groupNum,List<ProcStat> listStatusComplete=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),groupNum,listStatusComplete);
-			}
+			
 			if(listStatusComplete==null) {
 				listStatusComplete=new List<ProcStat>{ProcStat.C,ProcStat.EO,ProcStat.EC};
 			}
@@ -120,9 +102,7 @@ namespace OpenDentBusiness{
 			if(listProcNums.IsNullOrEmpty() || listStatusComplete.IsNullOrEmpty()) {
 				return new SerializableDictionary<long,List<Procedure>>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SerializableDictionary<long,List<Procedure>>>(MethodBase.GetCurrentMethod(),listProcNums,listStatusComplete);
-			}
+			
 			string command=$@"
 				SELECT procedurelog.*,procgroupitem.GroupNum ProcGroupItemGroupNum
 				FROM procgroupitem 
@@ -211,11 +191,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_appointmentTypeCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _appointmentTypeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -229,27 +205,19 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one ProcGroupItem from the db.</summary>
 		public static ProcGroupItem GetOne(long procGroupItemNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<ProcGroupItem>(MethodBase.GetCurrentMethod(),procGroupItemNum);
-			}
+			
 			return Crud.ProcGroupItemCrud.SelectOne(procGroupItemNum);
 		}
 
 		///<summary></summary>
 		public static void Update(ProcGroupItem procGroupItem){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procGroupItem);
-				return;
-			}
+			
 			Crud.ProcGroupItemCrud.Update(procGroupItem);
 		}
 
 		///<summary></summary>
 		public static void Delete(long procGroupItemNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),procGroupItemNum);
-				return;
-			}
+			
 			string command= "DELETE FROM procgroupitem WHERE ProcGroupItemNum = "+POut.Long(procGroupItemNum);
 			Db.NonQ(command);
 		}

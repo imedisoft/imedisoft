@@ -28,9 +28,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a filtered list of all labcases.</summary>
 		public static DataTable Refresh(DateTime aptStartDate,DateTime aptEndDate,bool showCompleted,bool ShowUnattached) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),aptStartDate,aptEndDate,showCompleted,ShowUnattached);
-			}
+			
 			DataTable table=new DataTable();
 			DataRow row;
 			//columns that start with lowercase are altered for display rather than being raw data.
@@ -153,9 +151,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used when drawing the appointments for a day. Send in operatory nums to limit selection, null for all, useful for clinic filtering.</summary>
 		public static List<LabCase> GetForPeriod(DateTime startDate,DateTime endDate,List<long> opNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<LabCase>>(MethodBase.GetCurrentMethod(),startDate,endDate,opNums);
-			} 
+			 
 			if(opNums!=null && opNums.Count==0) {
 				return new List<LabCase>();
 			}
@@ -172,9 +168,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used when drawing the planned appointment.</summary>
 		public static LabCase GetForPlanned(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<LabCase>(MethodBase.GetCurrentMethod(),aptNum);
-			}
+			
 			string command="SELECT * FROM labcase "
 				+"WHERE labcase.PlannedAptNum="+POut.Long(aptNum);
 			return Crud.LabCaseCrud.SelectOne(command);
@@ -182,18 +176,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one labcase from database.</summary>
 		public static LabCase GetOne(long labCaseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<LabCase>(MethodBase.GetCurrentMethod(),labCaseNum);
-			}
+			
 			string command="SELECT * FROM labcase WHERE LabCaseNum="+POut.Long(labCaseNum);
 			return Crud.LabCaseCrud.SelectOne(command);
 		}
 
 		///<summary>Gets all labcases for a patient which have not been attached to an appointment.  Usually one or none.  Only used when attaching a labcase from within an appointment.</summary>
 		public static List<LabCase> GetForPat(long patNum,bool isPlanned) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<LabCase>>(MethodBase.GetCurrentMethod(),patNum,isPlanned);
-			}
+			
 			string command="SELECT * FROM labcase WHERE PatNum="+POut.Long(patNum)+" AND ";
 			if(isPlanned){
 				command+="PlannedAptNum=0 AND AptNum=0";//We only show lab cases that have not been attached to any kind of appt.
@@ -206,28 +196,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(LabCase labCase) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				labCase.LabCaseNum=Meth.GetLong(MethodBase.GetCurrentMethod(),labCase);
-				return labCase.LabCaseNum;
-			}
+			
 			return Crud.LabCaseCrud.Insert(labCase);
 		}
 
 		///<summary></summary>
 		public static void Update(LabCase labCase) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),labCase);
-				return;
-			}
+			
 			Crud.LabCaseCrud.Update(labCase);
 		}
 
 		///<summary>Surround with try/catch.  Checks dependencies first.  Throws exception if can't delete.</summary>
 		public static void Delete(long labCaseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),labCaseNum);
-				return;
-			}
+			
 			//check for dependencies
 			string command="SELECT count(*) FROM sheet,sheetfield "
 				+"WHERE sheet.SheetNum=sheetfield.SheetNum"
@@ -247,20 +228,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Attaches a labcase to an appointment.</summary>
 		public static void AttachToAppt(long labCaseNum,long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),labCaseNum,aptNum);
-				return;
-			}
+			
 			string command="UPDATE labcase SET AptNum="+POut.Long(aptNum)+" WHERE LabCaseNum="+POut.Long(labCaseNum);
 			Db.NonQ(command);
 		}
 
 		///<summary>Attaches a labcase to a planned appointment.</summary>
 		public static void AttachToPlannedAppt(long labCaseNum,long plannedAptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),labCaseNum,plannedAptNum);
-				return;
-			}
+			
 			string command="UPDATE labcase SET PlannedAptNum="+POut.Long(plannedAptNum)+" WHERE LabCaseNum="+POut.Long(labCaseNum);
 			Db.NonQ(command);
 		}
@@ -278,9 +253,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the labcase for an appointment. Used when creating routing slips.</summary>
 		public static LabCase GetForApt(long aptNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<LabCase>(MethodBase.GetCurrentMethod(),aptNum);
-			}
+			
 			string command="SELECT * FROM labcase "
 				+"WHERE AptNum="+POut.Long(aptNum);
 			return Crud.LabCaseCrud.SelectOne(command);
@@ -288,9 +261,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the labcase for an appointment.  Used in the Appointment Edit window.</summary>
 		public static LabCase GetForApt(Appointment appt) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<LabCase>(MethodBase.GetCurrentMethod(),appt);
-			}
+			
 			string command="SELECT * FROM labcase ";
 			if(appt.AptStatus==ApptStatus.Planned) {
 				command+="WHERE PlannedAptNum="+POut.Long(appt.AptNum);
@@ -303,9 +274,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the last time the labcase was changed.</summary>
 		public static List<LabCase> GetChangedSince(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<LabCase>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT * FROM labcase WHERE DateTStamp > "+POut.DateT(changedSince);
 			return Crud.LabCaseCrud.SelectMany(command);
 		}

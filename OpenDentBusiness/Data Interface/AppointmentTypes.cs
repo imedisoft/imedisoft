@@ -54,19 +54,6 @@ namespace OpenDentBusiness{
 
 		#endregion
 
-		#region Modification Methods
-
-		#region Insert
-		#endregion
-
-		#region Update
-		#endregion
-
-		#region Delete
-		#endregion
-
-		#endregion
-
 		#region Misc Methods
 		#endregion
 
@@ -121,11 +108,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_appointmentTypeCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _appointmentTypeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -135,10 +117,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Inserts, updates, or deletes database rows to match supplied list.</summary>
 		public static void Sync(List<AppointmentType> listNew,List<AppointmentType> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listNew,listOld);//never pass DB list through the web service
-				return;
-			}
 			Crud.AppointmentTypeCrud.Sync(listNew,listOld);
 		}
 
@@ -152,28 +130,16 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(AppointmentType appointmentType){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				appointmentType.AppointmentTypeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),appointmentType);
-				return appointmentType.AppointmentTypeNum;
-			}
 			return Crud.AppointmentTypeCrud.Insert(appointmentType);
 		}
 
 		///<summary></summary>
 		public static void Update(AppointmentType appointmentType){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),appointmentType);
-				return;
-			}
 			Crud.AppointmentTypeCrud.Update(appointmentType);
 		}
 
 		///<summary>Surround with try catch.</summary>
 		public static void Delete(long appointmentTypeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),appointmentTypeNum);
-				return;
-			}
 			string s=AppointmentTypes.CheckInUse(appointmentTypeNum);
 			if(s!="") {
 				throw new ApplicationException(Lans.g("AppointmentTypes",s));
@@ -184,9 +150,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Used when attempting to delete.  Returns empty string if not in use and an untranslated string if in use.</summary>
 		public static string CheckInUse(long appointmentTypeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod(),appointmentTypeNum);
-			}
 			string command="SELECT COUNT(*) FROM appointment WHERE AppointmentTypeNum = "+POut.Long(appointmentTypeNum);
 			if(PIn.Int(Db.GetCount(command))>0) {
 				return "Not allowed to delete appointment types that are in use on an appointment.";

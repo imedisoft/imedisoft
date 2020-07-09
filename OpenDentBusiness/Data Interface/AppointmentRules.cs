@@ -74,11 +74,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_appointmentRuleCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _appointmentRuleCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -86,28 +82,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(AppointmentRule appointmentRule) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				appointmentRule.AppointmentRuleNum=Meth.GetLong(MethodBase.GetCurrentMethod(),appointmentRule);
-				return appointmentRule.AppointmentRuleNum;
-			}
+			
 			return Crud.AppointmentRuleCrud.Insert(appointmentRule);
 		}
 
 		///<summary></summary>
 		public static void Update(AppointmentRule appointmentRule){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),appointmentRule);
-				return;
-			}
+			
 			Crud.AppointmentRuleCrud.Update(appointmentRule);
 		}
 
 		///<summary></summary>
 		public static void Delete(AppointmentRule rule){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),rule);
-				return;
-			}
+			
 			string command="DELETE FROM appointmentrule" 
 				+" WHERE AppointmentRuleNum = "+POut.Long(rule.AppointmentRuleNum);
  			Db.NonQ(command);

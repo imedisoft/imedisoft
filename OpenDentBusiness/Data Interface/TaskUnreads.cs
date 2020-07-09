@@ -31,10 +31,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(TaskUnread taskUnread){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				taskUnread.TaskUnreadNum=Meth.GetLong(MethodBase.GetCurrentMethod(),taskUnread);
-				return taskUnread.TaskUnreadNum;
-			}
+			
 			return Crud.TaskUnreadCrud.Insert(taskUnread);
 		}
 
@@ -46,10 +43,7 @@ namespace OpenDentBusiness{
 				//Do not insert any TaskUnreads if none given or invalid usernum.
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listTasks,currUserNum);
-				return;
-			}
+			
 			List<TaskUnread> listUnreads=new List<TaskUnread>();
 			foreach(Task task in listTasks) {
 				listUnreads.Add(new TaskUnread(){ 
@@ -69,20 +63,14 @@ namespace OpenDentBusiness{
 			foreach(Task task in arrayTasks) {
 				task.IsUnread=false;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),userNum,arrayTasks);
-				return;
-			}
+			
 			string command="DELETE FROM taskunread WHERE UserNum = "+POut.Long(userNum)+" "
 				+"AND TaskNum IN ("+string.Join(",",arrayTasks.Select(x => POut.Long(x.TaskNum)))+")";
 			Db.NonQ(command);
 		}
 
 		public static bool AddUnreads(Task task,long curUserNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				task.IsUnread=Meth.GetBool(MethodBase.GetCurrentMethod(),task,curUserNum);
-				return task.IsUnread;
-			}
+			
 			//if the task is done, don't add unreads
 			string command = "SELECT TaskStatus,UserNum,ReminderGroupId,DateTimeEntry,"+DbHelper.Now()+" DbTime "
 				+"FROM task WHERE TaskNum = "+POut.Long(task.TaskNum);
@@ -138,10 +126,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static bool IsUnread(long userNum,Task task) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				task.IsUnread=Meth.GetBool(MethodBase.GetCurrentMethod(),userNum,task);
-				return task.IsUnread;
-			}
+			
 			task.IsUnread=true;
 			string command="SELECT COUNT(*) FROM taskunread WHERE UserNum = "+POut.Long(userNum)+" "
 				+"AND TaskNum = "+POut.Long(task.TaskNum);
@@ -165,10 +150,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Sets unread for a list of users.  This assumes that the list passed in has already checked for duplicate task unreads.</summary>
 		public static bool SetUnreadMany(List<long> listUserNums,Task task) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				task.IsUnread=Meth.GetBool(MethodBase.GetCurrentMethod(),listUserNums,task);
-				return task.IsUnread;
-			}
+			
 			List<TaskUnread> listUnreadsToInsert=new List<TaskUnread>();
 			foreach(long userNum in listUserNums) {
 				TaskUnread taskUnread=new TaskUnread();
@@ -184,10 +166,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static void DeleteForTask(Task task) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),task);
-				return;
-			}
+			
 			string command="DELETE FROM taskunread WHERE TaskNum = "+POut.Long(task.TaskNum);
 			Db.NonQ(command);
 		}

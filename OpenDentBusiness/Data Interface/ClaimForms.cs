@@ -87,11 +87,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_claimFormCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _claimFormCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -100,10 +96,7 @@ namespace OpenDentBusiness{
 		///<summary>Inserts this claimform into database and retrieves the new primary key.
 		///Assigns all claimformitems to the claimform and inserts them if the bool is true.</summary>
 		public static long Insert(ClaimForm cf,bool includeClaimFormItems) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				cf.ClaimFormNum=Meth.GetLong(MethodBase.GetCurrentMethod(),cf,includeClaimFormItems);
-				return cf.ClaimFormNum;
-			}
+			
 			long retVal=Crud.ClaimFormCrud.Insert(cf);
 			if(includeClaimFormItems) {
 				foreach(ClaimFormItem claimFormItemCur in cf.Items) {
@@ -149,10 +142,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(ClaimForm cf){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cf);
-				return;
-			}
+			
 			//Synch the claim form items associated to this claim form first.
 			ClaimFormItems.DeleteAllForClaimForm(cf.ClaimFormNum);
 			foreach(ClaimFormItem item in cf.Items) {
@@ -164,9 +154,7 @@ namespace OpenDentBusiness{
 
 		///<summary> Called when cancelling out of creating a new claimform, and from the claimform window when clicking delete. Returns true if successful or false if dependencies found.</summary>
 		public static bool Delete(ClaimForm cf){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),cf);
-			}
+			
 			//first, do dependency testing
 			string command="SELECT * FROM insplan WHERE claimformnum = '"
 				+cf.ClaimFormNum.ToString()+"' ";
@@ -210,9 +198,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns number of insplans affected.</summary>
 		public static long Reassign(long oldClaimFormNum,long newClaimFormNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),oldClaimFormNum,newClaimFormNum);
-			}
+			
 			string command="UPDATE insplan SET ClaimFormNum="+POut.Long(newClaimFormNum)
 				+" WHERE ClaimFormNum="+POut.Long(oldClaimFormNum);
 			return Db.NonQ(command);

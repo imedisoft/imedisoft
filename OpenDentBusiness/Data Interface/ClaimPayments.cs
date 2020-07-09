@@ -31,9 +31,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static DataTable GetForClaim(long claimNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),claimNum);
-			}
+			
 			DataTable table=new DataTable();
 			DataRow row;
 			table.Columns.Add("amount");
@@ -72,9 +70,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns dictionary such that every given claim num is a key and the value is a bool indicating if their is a claimpayment associated to it.</summary>
 		public static SerializableDictionary<long,bool> HasClaimPayment(List<long> listClaimNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SerializableDictionary<long,bool>>(MethodBase.GetCurrentMethod(),listClaimNums);
-			}
+			
 			SerializableDictionary<long,bool> retVal=new SerializableDictionary<long,bool>();
 			listClaimNums=listClaimNums.Distinct().ToList();
 			if(listClaimNums==null || listClaimNums.Count==0) {
@@ -95,9 +91,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all claimpayments of the specified claimpayment type, within the specified date range and from the specified clinic. 
 		///0 for clinics means all clinics, 0 for claimpaytype means all types.</summary>
 		public static DataTable GetForDateRange(DateTime dateFrom,DateTime dateTo,long clinicNum,long claimpayGroup) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateFrom,dateTo,clinicNum,claimpayGroup);
-			}
+			
 			string command="SELECT claimpayment.*,"
 				+"(CASE WHEN (SELECT COUNT(*) FROM eobattach WHERE eobattach.ClaimPaymentNum=claimpayment.ClaimPaymentNum)>0 THEN 1 ELSE 0 END) hasEobAttach "
 				+"FROM claimpayment "
@@ -117,9 +111,7 @@ namespace OpenDentBusiness{
 			if(listClaimPaymentNums.Count==0) {
 				return new List<ClaimPayment>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClaimPayment>>(MethodBase.GetCurrentMethod(),listClaimPaymentNums);
-			}
+			
 			string command="SELECT * "
 				+"FROM claimpayment "
 				+"INNER JOIN eobattach ON eobattach.ClaimPaymentNum=claimpayment.ClaimPaymentNum "
@@ -129,9 +121,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<ClaimPayment> GetByClaimPaymentNums(List<long> listClaimPaymentNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<ClaimPayment>>(MethodBase.GetCurrentMethod(),listClaimPaymentNums);
-			}
+			
 			if(listClaimPaymentNums.Count==0) {
 				return new List<ClaimPayment>();
 			}
@@ -143,9 +133,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all unattached claimpayments for display in a new deposit.  Excludes payments before dateStart and partials.</summary>
 		public static ClaimPayment[] GetForDeposit(DateTime dateStart,long clinicNum,List<long> insPayTypes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ClaimPayment[]>(MethodBase.GetCurrentMethod(),dateStart,clinicNum,insPayTypes);
-			}
+			
 			string command=
 				"SELECT * FROM claimpayment "
 				+"INNER JOIN definition ON claimpayment.PayType=definition.DefNum "
@@ -177,9 +165,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all claimpayments for one specific deposit.</summary>
 		public static ClaimPayment[] GetForDeposit(long depositNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ClaimPayment[]>(MethodBase.GetCurrentMethod(),depositNum);
-			}
+			
 			string command=
 				"SELECT * FROM claimpayment "
 				+"INNER JOIN definition ON claimpayment.PayType=definition.DefNum "
@@ -194,9 +180,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one claimpayment directly from database.</summary>
 		public static ClaimPayment GetOne(long claimPaymentNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<ClaimPayment>(MethodBase.GetCurrentMethod(),claimPaymentNum);
-			}
+			
 			string command=
 				"SELECT * FROM claimpayment "
 				+"WHERE ClaimPaymentNum = "+POut.Long(claimPaymentNum);
@@ -206,9 +190,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns the number of partial batch insurance payments or if there are any claimprocs with status Received that have InsPayAmts but 
 		///are not associated to a claim payment. Used to warn users that reports will be inaccurate until insurance payments are finalized.</summary>
 		public static int GetPartialPaymentsCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod());
-			}
+			
 			//Union together two queries that look for incomplete insurance payments.
 			//The first query will look for any partial batch insurance payments.
 			//The second query will look for any claim payments (InsPayAmt > 0) that do not have a claim payment (no check / not finalized).
@@ -236,10 +218,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(ClaimPayment cp) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				cp.ClaimPaymentNum=Meth.GetLong(MethodBase.GetCurrentMethod(),cp);
-				return cp.ClaimPaymentNum;
-			}
+			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			cp.SecUserNumEntry=Security.CurUser.UserNum;
 			return Crud.ClaimPaymentCrud.Insert(cp);
@@ -247,10 +226,7 @@ namespace OpenDentBusiness{
 
 		///<summary>If trying to change the amount and attached to a deposit, it will throw an error, so surround with try catch.</summary>
 		public static void Update(ClaimPayment cp,bool isDepNew=false){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cp,isDepNew);
-				return;
-			}
+			
 			if(!isDepNew && cp.DepositNum!=0 && PrefC.GetBool(PrefName.ShowAutoDeposit)) {
 				string cmd="SELECT deposit.Amount,SUM(COALESCE(claimpayment.CheckAmt,0))+SUM(COALESCE(payment.PayAmt,0)) depAmtOthers "
 					+"FROM deposit "
@@ -283,10 +259,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Surround by try catch, because it will throw an exception if trying to delete a claimpayment attached to a deposit or if there are eobs attached.</summary>
 		public static void Delete(ClaimPayment cp){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),cp);
-				return;
-			}
+			
 			//validate deposits
 			string command="SELECT DepositNum FROM claimpayment "
 				+"WHERE ClaimPaymentNum="+POut.Long(cp.ClaimPaymentNum);
@@ -328,9 +301,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns the number of payments from the passed in claimpaymentnums that are attached to a deposit other than IgnoreDepositNum.</summary>
 		public static int GetCountAttachedToDeposit(List<long> listClaimPaymentNums,long ignoreDepositNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),listClaimPaymentNums,ignoreDepositNum);
-			}
+			
 			if(listClaimPaymentNums.Count==0) {
 				return 0;
 			}
@@ -346,9 +317,7 @@ namespace OpenDentBusiness{
 			if(cp==null || cp.DepositNum==0 || !PrefC.GetBool(PrefName.ShowAutoDeposit)) {
 				return false;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),cp);
-			}
+			
 			//Per Mark on 07/16/2018
 			//A deposit is consided an "Auto Deposit" if the ShowAutoDeposit preference is turned on
 			//and only one claimpayment is attached to the deposit passed in. 

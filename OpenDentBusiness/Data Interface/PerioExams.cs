@@ -33,9 +33,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetExamsTable(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command=
 				"SELECT * from perioexam"
 				+" WHERE PatNum = '"+patNum.ToString()+"'"
@@ -51,28 +49,20 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(PerioExam Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.PerioExamCrud.Update(Cur);
 		}
 
 		///<summary></summary>
 		public static long Insert(PerioExam Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.PerioExamNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.PerioExamNum;
-			}
+			
 			return Crud.PerioExamCrud.Insert(Cur);
 		}
 
 
 		///<summary>Creates a new perio exam for the given patient. Returns that perio exam. Handles setting default skipped teeth/implants. Does not create a security log entry.</summary>
 		public static PerioExam CreateNewExam(Patient pat) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<PerioExam>(MethodBase.GetCurrentMethod(),pat);
-			}
+			
 			PerioExam newExam=new PerioExam {
 				PatNum=pat.PatNum,
 				ExamDate=DateTimeOD.Today,
@@ -136,10 +126,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Delete(PerioExam Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			string command= "DELETE from perioexam WHERE PerioExamNum = '"+Cur.PerioExamNum.ToString()+"'";
 			Db.NonQ(command);
 			command= "DELETE from periomeasure WHERE PerioExamNum = '"+Cur.PerioExamNum.ToString()+"'";
@@ -160,9 +147,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used by ContrPerio to get a perio exam.</summary>
 		public static PerioExam GetOnePerioExam(long perioExamNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<PerioExam>(MethodBase.GetCurrentMethod(),perioExamNum);
-			}
+			
 			return Crud.PerioExamCrud.SelectOne(perioExamNum);
 		}
 

@@ -13,9 +13,7 @@ namespace OpenDentBusiness{
 		///Does not recursively look up additional patient links.
 		///The list returned will NOT include the patient passed in unless there is an entry in the database linking them to... themselves.</summary>
 		public static List<long> GetPatNumsLinkedFrom(long patNumFrom,PatientLinkType patLinkType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),patNumFrom,patLinkType);
-			}
+			
 			string command="SELECT PatNumTo FROM patientlink "
 				+"WHERE PatNumFrom="+POut.Long(patNumFrom)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
@@ -25,9 +23,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all of the 'PatNumFroms's linked to the passed-in patNumTo.   Does not recursively look up additional patient links.
 		///The list returned will NOT include the patient passed in unless there is an entry in the database linking them to... themselves.</summary>
 		public static List<long> GetPatNumsLinkedTo(long patNumTo,PatientLinkType patLinkType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),patNumTo,patLinkType);
-			}
+			
 			string command="SELECT PatNumFrom FROM patientlink "
 				+"WHERE PatNumTo="+POut.Long(patNumTo)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
@@ -44,9 +40,7 @@ namespace OpenDentBusiness{
 			if(listPatNums.Count==0) {
 				return new List<PatientLink>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PatientLink>>(MethodBase.GetCurrentMethod(),listPatNums,patLinkType);
-			}
+			
 			string command="SELECT * FROM patientlink "
 				+"WHERE (PatNumTo IN("+string.Join(",",listPatNums.Select(x => POut.Long(x)))+") "
 					+"OR PatNumFrom IN("+string.Join(",",listPatNums.Select(x => POut.Long(x)))+")) "
@@ -57,9 +51,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all the PatNums that are linked to this PatNum and all the PatNums that are linked to those PatNums, etc. Always returns a list
 		///that contains at least the PatNum passed in.</summary>
 		public static List<long> GetPatNumsLinkedFromRecursive(long patNumFrom,PatientLinkType patLinkType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),patNumFrom,patLinkType);
-			}
+			
 			List<long> listPatNums=new List<long> { patNumFrom };
 			AddPatNumsLinkedFromRecursive(patNumFrom,patLinkType,listPatNums);
 			return listPatNums;
@@ -87,9 +79,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all the PatNums that are linked to this PatNum and all the PatNums that are linked to those PatNums, etc. Always returns a list
 		///that contains at least the PatNum passed in.</summary>
 		public static List<long> GetPatNumsLinkedToRecursive(long patNumTo,PatientLinkType patLinkType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),patNumTo,patLinkType);
-			}
+			
 			List<long> listPatNums=new List<long> { patNumTo };
 			AddPatNumsLinkedToRecursive(patNumTo,patLinkType,listPatNums);
 			return listPatNums;
@@ -120,10 +110,7 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(PatientLink patientLink) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				patientLink.PatientLinkNum=Meth.GetLong(MethodBase.GetCurrentMethod(),patientLink);
-				return patientLink.PatientLinkNum;
-			}
+			
 			return Crud.PatientLinkCrud.Insert(patientLink);
 		}
 		#endregion
@@ -134,10 +121,7 @@ namespace OpenDentBusiness{
 		#region Delete
 		///<summary>Deletes all of the entries for the patNumFrom passed in of the specified type.</summary>
 		public static void DeletePatNumFroms(long patNumFrom,PatientLinkType patLinkType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNumFrom,patLinkType);
-				return;
-			}
+			
 			string command="DELETE FROM patientlink "
 				+"WHERE PatNumFrom="+POut.Long(patNumFrom)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
@@ -146,10 +130,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deletes all of the entries for the patNumTo passed in of the specified type.</summary>
 		public static void DeletePatNumTos(long patNumTo,PatientLinkType patLinkType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNumTo,patLinkType);
-				return;
-			}
+			
 			string command="DELETE FROM patientlink "
 				+"WHERE PatNumTo="+POut.Long(patNumTo)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
@@ -244,36 +225,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<PatientLink> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<PatientLink>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM patientlink WHERE PatNum = "+POut.Long(patNum);
 			return Crud.PatientLinkCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one PatientLink from the db.</summary>
 		public static PatientLink GetOne(long patientLinkNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<PatientLink>(MethodBase.GetCurrentMethod(),patientLinkNum);
-			}
+			
 			return Crud.PatientLinkCrud.SelectOne(patientLinkNum);
 		}
 
 		///<summary></summary>
 		public static void Update(PatientLink patientLink){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patientLink);
-				return;
-			}
+			
 			Crud.PatientLinkCrud.Update(patientLink);
 		}
 
 		///<summary></summary>
 		public static void Delete(long patientLinkNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patientLinkNum);
-				return;
-			}
+			
 			Crud.PatientLinkCrud.Delete(patientLinkNum);
 		}
 

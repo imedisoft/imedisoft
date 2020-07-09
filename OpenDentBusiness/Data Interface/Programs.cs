@@ -68,11 +68,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_programCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _programCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -80,28 +76,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(Program Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			Crud.ProgramCrud.Update(Cur);
 		}
 
 		///<summary></summary>
 		public static long Insert(Program Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.ProgramNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.ProgramNum;
-			}
+			
 			return Crud.ProgramCrud.Insert(Cur);
 		}
 
 		///<summary>This can only be called by the user if it is a program link that they created.  Included program links cannot be deleted.  If doing something similar from ClassConversion, must delete any dependent ProgramProperties first.  It will delete ToolButItems for you.</summary>
 		public static void Delete(Program prog){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),prog);
-				return;
-			}
+			
 			string command = "DELETE from toolbutitem WHERE ProgramNum = "+POut.Long(prog.ProgramNum);
 			Db.NonQ(command);
 			command = "DELETE from program WHERE ProgramNum = '"+prog.ProgramNum.ToString()+"'";

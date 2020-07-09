@@ -55,9 +55,7 @@ namespace OpenDentBusiness {
 		///Remeber that the supplied dateTime is server time.  This has to be accounted for.
 		///ListITypes is an optional parameter for querying specific signal types.</summary>
 		public static List<Signalod> RefreshTimed(DateTime sinceDateT,List<InvalidType> listITypes=null) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Signalod>>(MethodBase.GetCurrentMethod(),sinceDateT,listITypes);
-			}
+			
 			//This command was written to take into account the fact that MySQL truncates seconds to the the whole second on DateTime columns. (newer versions support fractional seconds)
 			//By selecting signals less than Now() we avoid missing signals the next time this function is called. Without the addition of Now() it was possible
 			//to miss up to ((N-1)/N)% of the signals generated in the worst case scenario.
@@ -121,16 +119,6 @@ namespace OpenDentBusiness {
 		public static long Insert(params Signalod[] arraySignals) {
 			if(arraySignals==null || arraySignals.Length < 1) {
 				return 0;
-			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				long signalNum=Meth.GetLong(MethodBase.GetCurrentMethod(),arraySignals);
-				if(arraySignals.Length==1) {
-					arraySignals[0].SignalNum=signalNum;
-				}
-				return signalNum;
-			}
-			foreach(Signalod signal in arraySignals) {
-				signal.RemoteRole=RemotingClient.RemotingRole;
 			}
 			if(arraySignals.Length==1) {
 				return Crud.SignalodCrud.Insert(arraySignals[0]);
@@ -333,9 +321,7 @@ namespace OpenDentBusiness {
 		///<summary>Upserts the InvalidType.SmsTextMsgReceivedUnreadCount signal which tells all client machines to update the received unread SMS 
 		///message count.  There should only be max one of this signal IType in the database.</summary>
 		public static List<SmsFromMobiles.SmsNotification> UpsertSmsNotification() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SmsFromMobiles.SmsNotification>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT ClinicNum,COUNT(*) AS CountUnread FROM smsfrommobile WHERE SmsStatus=0 AND IsHidden=0 GROUP BY ClinicNum "
 				+"ORDER BY ClinicNum";
 			List<SmsFromMobiles.SmsNotification> ret=Db.GetTable(command).AsEnumerable()
@@ -356,8 +342,7 @@ namespace OpenDentBusiness {
 			Signalods.Insert(new Signalod() {
 				IType=InvalidType.SmsTextMsgReceivedUnreadCount,
 				FKeyType=KeyType.SmsMsgUnreadCount,
-				MsgValue=json,
-				RemoteRole=RemotingClient.RemotingRole
+				MsgValue=json
 			});
 			return ret;
 		}
@@ -463,10 +448,7 @@ namespace OpenDentBusiness {
 
 		/// <summary>Won't work with InvalidType.Date, InvalidType.Task, or InvalidType.TaskPopup  yet.</summary>
 		public static void SetInvalid(params InvalidType[] arrayITypes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),arrayITypes);
-				return;
-			}
+			
 			foreach(InvalidType iType in arrayITypes) {
 				Signalod sig=new Signalod();
 				sig.IType=iType;
@@ -477,15 +459,11 @@ namespace OpenDentBusiness {
 
 		///<summary>Insertion logic that doesn't use the cache. Has special cases for generating random PK's and handling Oracle insertions.</summary>
 		public static void SetInvalidNoCache(params InvalidType[] itypes) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),itypes);
-				return;
-			}
+			
 			foreach(InvalidType iType in itypes) {
 				Signalod sig=new Signalod();
 				sig.IType=iType;
 				sig.DateViewing=DateTime.MinValue;
-				sig.RemoteRole=RemotingClient.RemotingRole;
 				Crud.SignalodCrud.InsertNoCache(sig);
 			}
 		}
@@ -493,10 +471,7 @@ namespace OpenDentBusiness {
 		///<summary>Must be called after Preference cache has been filled.
 		///Deletes all signals older than 2 days if this has not been run within the last week.  Will fail silently if anything goes wrong.</summary>
 		public static void ClearOldSignals() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			try {
 				if(Prefs.GetContainsKey(PrefName.SignalLastClearedDate.ToString())
 					&& PrefC.GetDateT(PrefName.SignalLastClearedDate)>MiscData.GetNowDateTime().AddDays(-7)) //Has already been run in the past week. This is all server based time.

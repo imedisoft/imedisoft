@@ -31,28 +31,19 @@ namespace OpenDentBusiness{
 	
 		///<summary></summary>
 		public static long Insert(TaskAncestor ancestor) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				ancestor.TaskAncestorNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ancestor);
-				return ancestor.TaskAncestorNum;
-			}
+			
 			return Crud.TaskAncestorCrud.Insert(ancestor);
 		}
 
 		/*
 		///<summary></summary>
 		public static void Update(TaskAncestor ancestor) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ancestor);
-				return;
-			}
+			
 			Crud.TaskAncestorCrud.Update(ancestor);
 		}*/
 
 		public static void Synch(Task task){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),task);
-				return;
-			}
+			
 			string command="DELETE FROM taskancestor WHERE TaskNum="+POut.Long(task.TaskNum);
 			Db.NonQ(command);
 			long taskListNum=0;
@@ -85,10 +76,7 @@ namespace OpenDentBusiness{
 			if(listTasks==null || listTasks.Count < 1 || taskListNum==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listTasks,taskListNum,taskListParent);
-				return;
-			}
+			
 			string command="DELETE FROM taskancestor WHERE TaskNum IN ("+string.Join(",",listTasks.Select(x => POut.Long(x.TaskNum)))+")";
 			Db.NonQ(command);
 			DataTable table;

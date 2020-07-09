@@ -33,9 +33,7 @@ namespace OpenDentBusiness{
 
 		///<Summary>Gets one Sheet from the database.</Summary>
 		public static Sheet GetOne(long sheetNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Sheet>(MethodBase.GetCurrentMethod(),sheetNum);
-			}
+			
 			return Crud.SheetCrud.SelectOne(sheetNum);
 		}
 
@@ -57,10 +55,7 @@ namespace OpenDentBusiness{
 		///need to be inserted as-is into the user's db.</Summary>
 		public static void SaveNewSheet(Sheet sheet) {
 			//This remoting role check is technically unnecessary but it significantly speeds up the retrieval process for Middle Tier users due to looping.
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sheet);
-				return;
-			}
+			
 			if(!sheet.IsNew) {
 				throw new ApplicationException("Only new sheets allowed");
 			}
@@ -85,9 +80,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets sheets with PatNum=0 and IsDeleted=0. Sheets with no PatNums were most likely transferred from CEMT tool.
 		///Also sets the sheet's SheetFields.</summary>
 		public static List<Sheet> GetTransferSheets() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Sheet>>(MethodBase.GetCurrentMethod());
-			}
+			
 			//Sheets with patnum=0 and the sheet has a sheetfield. 
 			string command="SELECT * FROM sheet "
 				+"INNER JOIN sheetfield ON sheetfield.SheetNum=sheet.SheetNum "
@@ -104,10 +97,7 @@ namespace OpenDentBusiness{
 
 		///<Summary>Saves a list of sheets to the Database. Only saves new sheets, ignores sheets that are not new.</Summary>
 		public static void SaveNewSheetList(List<Sheet> listSheets) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listSheets);
-				return;
-			}
+			
 			for(int i=0;i<listSheets.Count;i++) {
 				if(!listSheets[i].IsNew) {
 					continue;
@@ -122,9 +112,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in FormRefAttachEdit to show all referral slips for the patient/referral combo.  Usually 0 or 1 results.</summary>
 		public static List<Sheet> GetReferralSlips(long patNum,long referralNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Sheet>>(MethodBase.GetCurrentMethod(),patNum,referralNum);
-			}
+			
 			string command="SELECT * FROM sheet WHERE PatNum="+POut.Long(patNum)
 				+" AND EXISTS(SELECT * FROM sheetfield "
 				+"WHERE sheet.SheetNum=sheetfield.SheetNum "
@@ -138,9 +126,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in FormLabCaseEdit to view an existing lab slip.  Will return null if none exist.</summary>
 		public static Sheet GetLabSlip(long patNum,long labCaseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Sheet>(MethodBase.GetCurrentMethod(),patNum,labCaseNum);
-			}
+			
 			string command="SELECT sheet.* FROM sheet,sheetfield "
 				+"WHERE sheet.SheetNum=sheetfield.SheetNum"
 				+" AND sheet.PatNum="+POut.Long(patNum)
@@ -154,9 +140,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used in FormRxEdit to view an existing rx.  Will return null if none exist.</summary>
 		public static Sheet GetRx(long patNum,long rxNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Sheet>(MethodBase.GetCurrentMethod(),patNum,rxNum);
-			}
+			
 			string command="SELECT sheet.* FROM sheet,sheetfield "
 				+"WHERE sheet.PatNum="+POut.Long(patNum)
 				+" AND sheet.SheetType="+POut.Long((int)SheetTypeEnum.Rx)
@@ -169,9 +153,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all sheets for a patient that have the terminal flag set.  Shallow list, no fields or parameters.</summary>
 		public static List<Sheet> GetForTerminal(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Sheet>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM sheet WHERE PatNum="+POut.Long(patNum)
 				+" AND ShowInTerminal > 0 AND IsDeleted=0"
 				+" ORDER BY ShowInTerminal,DateTimeSheet";
@@ -180,9 +162,7 @@ namespace OpenDentBusiness{
 
 		/// <summary>Gets the maximum Terminal Num for the selected patient.  Returns 0 if there's no sheets marked to show in terminal.</summary>
 		public static int GetMaxTerminalNum(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT MAX(ShowInTerminal) FROM sheet WHERE PatNum="+POut.Long(patNum)
 				+" AND IsDeleted=0";
 			return Db.GetInt(command);
@@ -253,9 +233,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Get all sheets for a patient for today.</summary>
 		public static List<Sheet> GetForPatientForToday(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Sheet>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string datesql="CURDATE()";
 			if(DataConnection.DBtype==DatabaseType.Oracle){
 				datesql="(SELECT CURRENT_DATE FROM dual)";
@@ -268,9 +246,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Get all sheets for a patient.</summary>
 		public static List<Sheet> GetForPatient(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Sheet>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM sheet WHERE IsDeleted=0 AND PatNum="+POut.Long(patNum);
 			return Crud.SheetCrud.SelectMany(command);
 		}
@@ -278,9 +254,7 @@ namespace OpenDentBusiness{
 		///<summary>Get all sheets that reference a given document. Primarily used to prevent deleting an in use document.</summary>
 		/// <returns>List of sheets that have fields that reference the given DocNum. Returns empty list if document is not referenced.</returns>
 		public static List<Sheet> GetForDocument(long docNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Sheet>>(MethodBase.GetCurrentMethod(),docNum);
-			}
+			
 			string command="";
 			if(DataConnection.DBtype==DatabaseType.MySql) {
 				command="SELECT sheet.* FROM sheetfield "
@@ -312,9 +286,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the most recent Exam Sheet based on description to fill a patient letter.</summary>
 		public static Sheet GetMostRecentExamSheet(long patNum,string examDescript) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Sheet>(MethodBase.GetCurrentMethod(),patNum,examDescript);
-			}
+			
 			string command="SELECT * FROM sheet WHERE DateTimeSheet="
 				+"(SELECT MAX(DateTimeSheet) FROM sheet WHERE PatNum="+POut.Long(patNum)+" "
 				+"AND Description='"+POut.String(examDescript)+"' AND IsDeleted=0) "
@@ -328,9 +300,7 @@ namespace OpenDentBusiness{
 		///<summary>Called by eClipboard check-in once an appointment has been moved to the waiting room and the patient is ready to fill out forms.
 		///Returns number of new sheets created and inserted into Sheet table.</summary>
 		public static int CreateSheetsForCheckIn(Appointment appt) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetInt(MethodBase.GetCurrentMethod(),appt);
-			}
+			
 			if(!MobileAppDevices.IsClinicSignedUpForEClipboard(PrefC.HasClinicsEnabled?appt.ClinicNum:0)) { //this clinic isn't signed up for this feature
 				return 0;
 			}
@@ -462,28 +432,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Sheet sheet) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				sheet.SheetNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sheet);
-				return sheet.SheetNum;
-			}
+			
 			return Crud.SheetCrud.Insert(sheet);
 		}
 
 		///<summary></summary>
 		public static void Update(Sheet sheet) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sheet);
-				return;
-			}
+			
 			Crud.SheetCrud.Update(sheet);
 		}
 
 		///<summary>Sets the IsDeleted flag to true (1) for the specified sheetNum.  The sheet and associated sheetfields are not deleted.</summary>
 		public static void Delete(long sheetNum,long patNum=0,byte showInTerminal=0) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sheetNum,patNum,showInTerminal);
-				return;
-			}
+			
 			string command="UPDATE sheet SET IsDeleted=1,ShowInTerminal=0 WHERE SheetNum="+POut.Long(sheetNum);
 			Db.NonQ(command);
 			if(patNum>0 && showInTerminal>0) {//showInTerminal must be at least 1, so decrementing those that are at least 2
@@ -549,9 +510,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static DataTable GetPatientFormsTable(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			//DataConnection dcon=new DataConnection();
 			DataTable table=new DataTable("");
 			DataRow row;
@@ -641,9 +600,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns all sheets for the given patient in the given date range which have a description matching the examDescript in a case insensitive manner. If examDescript is blank, then sheets with any description are returned.</summary>
 		public static List<Sheet> GetExamSheetsTable(long patNum,DateTime startDate,DateTime endDate,long sheetDefNum=-1) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Sheet>>(MethodBase.GetCurrentMethod(),patNum,startDate,endDate,sheetDefNum);
-			}
+			
 			string command="SELECT * "
 				+"FROM sheet WHERE IsDeleted=0 "
 				+"AND PatNum="+POut.Long(patNum)+" "
@@ -658,9 +615,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used to get sheets filled via the web.  Passing in a null or empty list of clinic nums will only return sheets that are not assigned to a clinic.</summary>
 		public static DataTable GetWebFormSheetsTable(DateTime dateFrom,DateTime dateTo,List<long> listClinicNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),dateFrom,dateTo,listClinicNums);
-			}
+			
 			if(listClinicNums==null || listClinicNums.Count==0) {
 				listClinicNums=new List<long>() { 0 };//To ensure we filter on at least one clinic (HQ).
 			}
@@ -727,19 +682,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static byte GetBiggestShowInTerminal(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<byte>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT MAX(ShowInTerminal) FROM sheet WHERE IsDeleted=0 AND PatNum="+POut.Long(patNum);
 			return PIn.Byte(Db.GetScalar(command));
 		}
 
 		///<summary></summary>
 		public static void ClearFromTerminal(long patNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),patNum);
-				return;
-			}
+			
 			string command="UPDATE sheet SET ShowInTerminal=0 WHERE PatNum="+POut.Long(patNum);
 			Db.NonQ(command);
 		}

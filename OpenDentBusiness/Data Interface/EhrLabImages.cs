@@ -29,27 +29,21 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<EhrLabImage> Refresh(long ehrLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrLabImage>>(MethodBase.GetCurrentMethod(),ehrLabNum);
-			}
+			
 			string command="SELECT * FROM ehrlabimage WHERE EhrLabNum = "+POut.Long(ehrLabNum)+" AND DocNum > 0";
 			return Crud.EhrLabImageCrud.SelectMany(command);
 		}
 
 		///<summary>Returns true if a row containing the given EhrLabNum and DocNum==-1 is found.  Otherwise returns false.</summary>
 		public static bool IsWaitingForImages(long ehrLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),ehrLabNum);
-			}
+			
 			string command="SELECT * FROM ehrlabimage WHERE EhrLabNum = "+POut.Long(ehrLabNum)+" AND DocNum = -1";
 			return Crud.EhrLabImageCrud.SelectOne(command)!=null;
 		}
 
 		///<summary>EhrLab first EhrLab which this docNum is attached to. Or returns null if docNum is not attached to any EhrLabs.</summary>
 		public static EhrLab GetFirstLabForDocNum(long docNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<EhrLab>(MethodBase.GetCurrentMethod(),docNum);
-			}
+			
 			//Get first EhrLabImage that has this docNum attached.
 			string command="SELECT * FROM ehrlabimage WHERE DocNum = "+POut.Long(docNum)+" LIMIT 1";
 			EhrLabImage labImage=Crud.EhrLabImageCrud.SelectOne(command);
@@ -63,10 +57,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Create an entry per each docNum in the list. If setting isWaiting flag to true then create a row containing the given EhrLabNum and DocNum==-1.  Otherwise omit such a row.</summary>
 		public static void InsertAllForLabNum(long ehrLabNum,bool isWaiting,List<long> docNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabNum,isWaiting,docNums);
-				return;
-			}
+			
 			//Delete existing rows for this EhrLabNum.
 			DeleteForLab(ehrLabNum);
 			//Create the waiting flag if necessary
@@ -87,10 +78,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Delete all rows for a given EhrLabNum.</summary>
 		public static void DeleteForLab(long ehrLabNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabNum);
-				return;
-			}
+			
 			//Delete existing rows for this EhrLabNum.
 			string cmd="DELETE FROM ehrlabimage WHERE EhrLabNum = "+POut.Long(ehrLabNum);
 			Db.NonQ(cmd);			
@@ -115,10 +103,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(EhrLabImage ehrLabImage) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				ehrLabImage.EhrLabImageNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrLabImage);
-				return ehrLabImage.EhrLabImageNum;
-			}
+			
 			return Crud.EhrLabImageCrud.Insert(ehrLabImage);
 		}
 
@@ -127,9 +112,7 @@ namespace OpenDentBusiness{
 
 		 * ///<summary>Gets one EhrLabImage from the db.</summary>
 		public static EhrLabImage GetOne(long ehrLabImageNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EhrLabImage>(MethodBase.GetCurrentMethod(),ehrLabImageNum);
-			}
+			
 			return Crud.EhrLabImageCrud.SelectOne(ehrLabImageNum);
 		}
 
@@ -137,10 +120,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(EhrLabImage ehrLabImage){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrLabImage);
-				return;
-			}
+			
 			Crud.EhrLabImageCrud.Update(ehrLabImage);
 		}
 

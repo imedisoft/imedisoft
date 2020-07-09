@@ -66,11 +66,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_HL7DefCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _HL7DefCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -78,18 +74,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets an internal HL7Def from the database of the specified type.</summary>
 		public static HL7Def GetInternalFromDb(HL7InternalType internalType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<HL7Def>(MethodBase.GetCurrentMethod(),internalType);
-			}
+			
 			string command="SELECT * FROM hl7def WHERE IsInternal=1 "
 				+"AND InternalType='"+POut.String(internalType.ToString())+"'";
 			return Crud.HL7DefCrud.SelectOne(command);
 		}
 
 		public static List<HL7Def> GetListInternalFromDb() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HL7Def>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM hl7def WHERE IsInternal=1";
 			return Crud.HL7DefCrud.SelectMany(command);
 		}
@@ -180,9 +172,7 @@ namespace OpenDentBusiness{
 		///If isMedLabHL7 is true, this will only check to see if a def of type HL7InternalType.MedLabv2_3 is enabled.
 		///Otherwise, only defs not of that type will be checked.</summary>
 		public static bool IsExistingHL7Enabled(long excludeHL7DefNum,bool isMedLabHL7) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),excludeHL7DefNum,isMedLabHL7);
-			}
+			
 			string command="SELECT COUNT(*) FROM hl7def WHERE IsEnabled=1 AND HL7DefNum != "+POut.Long(excludeHL7DefNum);
 			if(isMedLabHL7) {
 				command+=" AND InternalType='"+POut.String(HL7InternalType.MedLabv2_3.ToString())+"'";
@@ -212,19 +202,14 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets shallow list of all defs that are not internal from the database</summary>
 		public static List<HL7Def> GetShallowFromDb() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HL7Def>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM hl7def WHERE IsInternal=0";
 			return Crud.HL7DefCrud.SelectMany(command);
 		}
 
 		///<summary>Only used from Unit Tests.  Since we clear the db of hl7Defs we have to insert this internal def not update it.</summary>
 		public static void EnableInternalForTests(HL7InternalType internalType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),internalType);
-				return;
-			}
+			
 			HL7Def hl7Def=null;
 			List<HL7Def> defList=GetDeepInternalList();
 			for(int i=0;i<defList.Count;i++){
@@ -242,28 +227,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(HL7Def hL7Def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				hL7Def.HL7DefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),hL7Def);
-				return hL7Def.HL7DefNum;
-			}
+			
 			return Crud.HL7DefCrud.Insert(hL7Def);
 		}
 
 		///<summary></summary>
 		public static void Update(HL7Def hL7Def) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),hL7Def);
-				return;
-			}
+			
 			Crud.HL7DefCrud.Update(hL7Def);
 		}
 
 		///<summary></summary>
 		public static void Delete(long hL7DefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),hL7DefNum);
-				return;
-			}
+			
 			string command= "DELETE FROM hl7def WHERE HL7DefNum = "+POut.Long(hL7DefNum);
 			Db.NonQ(command);
 		}
@@ -273,18 +249,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<HL7Def> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<HL7Def>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM hl7def WHERE PatNum = "+POut.Long(patNum);
 			return Crud.HL7DefCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one HL7Def from the db.</summary>
 		public static HL7Def GetOne(long hL7DefNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<HL7Def>(MethodBase.GetCurrentMethod(),hL7DefNum);
-			}
+			
 			return Crud.HL7DefCrud.SelectOne(hL7DefNum);
 		}
 

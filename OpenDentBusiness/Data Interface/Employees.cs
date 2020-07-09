@@ -12,10 +12,7 @@ namespace OpenDentBusiness{
 		#region Update
 		///<summary>Will throw exception if the employee has no name.</summary>
 		public static void Update(Employee Cur) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),Cur);
-				return;
-			}
+			
 			if(Cur.LName=="" && Cur.FName=="") {
 				throw new ApplicationException(Lans.g("FormEmployeeEdit","Must include either first name or last name"));
 			}
@@ -24,10 +21,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Will throw exception if the employee has no name.</summary>
 		public static void UpdateChanged(Employee employee,Employee employeeOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),employee,employeeOld);
-				return;
-			}
+			
 			if(employee.LName=="" && employee.FName=="") {
 				throw new ApplicationException(Lans.g("FormEmployeeEdit","Must include either first name or last name"));
 			}
@@ -37,10 +31,7 @@ namespace OpenDentBusiness{
 		///<summary>Updates the employee's ClockStatus if necessary based on their clock events. This method handles future clock events as having
 		///already occurred. Ex: If I clock out for home at 6:00 but edit my time card to say 7:00, at 6:30 my status will say Home.</summary>
 		public static void UpdateClockStatus(long employeeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),employeeNum);
-				return;
-			}
+			
 			//Get the last clockevent for the employee. Will include clockevent with "in" before NOW, and "out" anytime before 23:59:59 of TODAY.
 			string command = @"SELECT * FROM clockevent 
 				WHERE TimeDisplayed2<="+DbHelper.DateAddSecond(DbHelper.DateAddDay(DbHelper.Curdate(),"1"),"-1")+" AND TimeDisplayed1<="+DbHelper.Now()+@"
@@ -124,11 +115,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_employeeCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _employeeCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -136,9 +123,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Instead of using the cache, which sorts by FName, LName.</summary>
 		public static List<Employee> GetForTimeCard() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Employee>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM employee WHERE IsHidden=0 ORDER BY LName,Fname";
 			return Crud.EmployeeCrud.SelectMany(command);
 		}
@@ -161,10 +146,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Employee Cur){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Cur.EmployeeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),Cur);
-				return Cur.EmployeeNum;
-			}if(Cur.LName=="" && Cur.FName=="") {
+			if(Cur.LName=="" && Cur.FName=="") {
 				throw new ApplicationException(Lans.g("FormEmployeeEdit","Must include either first name or last name"));
 			}
 			return Crud.EmployeeCrud.Insert(Cur);
@@ -172,10 +154,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Surround with try-catch</summary>
 		public static void Delete(long employeeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),employeeNum);
-				return;
-			}
+			
 			//appointment.Assistant will not block deletion
 			//schedule.EmployeeNum will not block deletion
 			string command="SELECT COUNT(*) FROM clockevent WHERE EmployeeNum="+POut.Long(employeeNum);

@@ -30,17 +30,11 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one XWebResponse from the db.</summary>
 		public static XWebResponse GetOne(long xWebResponseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<XWebResponse>(MethodBase.GetCurrentMethod(),xWebResponseNum);
-			}
 			return Crud.XWebResponseCrud.SelectOne(xWebResponseNum);
 		}
 
 		///<summary>Gets the XWeb transactions for approved transactions. To get for all clinics, pass in a list of empty clinicNums.</summary>
 		public static DataTable GetApprovedTransactions(List<long> listClinicNums,DateTime dateFrom,DateTime dateTo) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),listClinicNums,dateFrom,dateTo);
-			}
 			string command="SELECT "+DbHelper.Concat("patient.LName","', '","patient.FName")+" Patient,xwebresponse.DateTUpdate,xwebresponse.TransactionID,"
 				+"xwebresponse.MaskedAcctNum,DATE_FORMAT(xwebresponse.AccountExpirationDate,'%m/%y') ExpDate,xwebresponse.Amount,xwebresponse.PaymentNum,xwebresponse.TransactionStatus,"
 				+"(CASE WHEN payment.PayNum IS NULL THEN 0 ELSE 1 END) doesPaymentExist,COALESCE(clinic.Abbr,'Unassigned') Clinic,xwebresponse.PatNum, "
@@ -87,18 +81,12 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the XWebResponse that is associated with this payNum. Returns null if the XWebResponse does not exist.</summary>
 		public static XWebResponse GetOneByPaymentNum(long payNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<XWebResponse>(MethodBase.GetCurrentMethod(),payNum);
-			}
 			string command="SELECT * FROM xwebresponse WHERE PaymentNum="+POut.Long(payNum);
 			return Crud.XWebResponseCrud.SelectOne(command);
 		}
 
 		///<summary>Gets all XWebResponses where TransactionStatus==XWebTransactionStatus.HpfPending or EdgeExpressPending from the db.</summary>
 		public static List<XWebResponse> GetPendingHostedPay() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<XWebResponse>>(MethodBase.GetCurrentMethod());
-			}
 			return Crud.XWebResponseCrud.SelectMany("SELECT * FROM xwebresponse "
 				+"WHERE TransactionStatus IN("+POut.Int((int)XWebTransactionStatus.HpfPending)+", "+POut.Int((int)XWebTransactionStatus.EdgeExpressPending)+") "
 				+"AND TransactionType IN('"+POut.String(XWebTransactionType.AliasCreateTransaction.ToString())+"', '"
@@ -108,27 +96,16 @@ namespace OpenDentBusiness{
 		
 		///<summary></summary>
 		public static long Insert(XWebResponse xWebResponse) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				xWebResponse.XWebResponseNum=Meth.GetLong(MethodBase.GetCurrentMethod(),xWebResponse);
-				return xWebResponse.XWebResponseNum;
-			}
 			return Crud.XWebResponseCrud.Insert(xWebResponse);
 		}
 
 		///<summary></summary>
 		public static void Update(XWebResponse xWebResponse) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),xWebResponse);
-				return;
-			}
 			Crud.XWebResponseCrud.Update(xWebResponse);
 		}
 
 		///<summary>Generates an order id that is not in use by any other xwebresponses.</summary>
 		public static string CreateOrderId() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetString(MethodBase.GetCurrentMethod());
-			}
 			int attempts=0;
 			while(++attempts<1000) {
 				string orderId=MiscUtils.CreateRandomNumericString(10);
@@ -209,11 +186,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_XWebResponseCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _XWebResponseCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -224,19 +197,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<XWebResponse> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<XWebResponse>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM xwebresponse WHERE PatNum = "+POut.Long(patNum);
 			return Crud.XWebResponseCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(long xWebResponseNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),xWebResponseNum);
-				return;
-			}
+			
 			Crud.XWebResponseCrud.Delete(xWebResponseNum);
 		}
 

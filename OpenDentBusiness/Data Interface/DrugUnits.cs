@@ -74,11 +74,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_drugUnitCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _drugUnitCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -86,36 +82,25 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one DrugUnit from the db.</summary>
 		public static DrugUnit GetOne(long drugUnitNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<DrugUnit>(MethodBase.GetCurrentMethod(),drugUnitNum);
-			}
+			
 			return Crud.DrugUnitCrud.SelectOne(drugUnitNum);
 		}
 
 		///<summary></summary>
 		public static long Insert(DrugUnit drugUnit){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				drugUnit.DrugUnitNum=Meth.GetLong(MethodBase.GetCurrentMethod(),drugUnit);
-				return drugUnit.DrugUnitNum;
-			}
+			
 			return Crud.DrugUnitCrud.Insert(drugUnit);
 		}
 
 		///<summary></summary>
 		public static void Update(DrugUnit drugUnit){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),drugUnit);
-				return;
-			}
+			
 			Crud.DrugUnitCrud.Update(drugUnit);
 		}
 
 		///<summary>Surround with a try/catch.  Will fail if drug unit is in use.</summary>
 		public static void Delete(long drugUnitNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),drugUnitNum);
-				return;
-			}
+			
 			//validation
 			string command;
 			//no longer used in labresult
@@ -145,9 +130,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used along with GetChangedSinceDrugUnitNums</summary>
 		public static List<DrugUnit> GetMultDrugUnits(List<long> drugUnitNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<DrugUnit>>(MethodBase.GetCurrentMethod(),drugUnitNums);
-			}
+			
 			if(drugUnitNums.Count==0) {
 				return new List<DrugUnit>();
 			}

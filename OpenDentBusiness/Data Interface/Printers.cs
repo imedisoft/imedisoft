@@ -69,11 +69,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_PrinterCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _PrinterCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -81,9 +77,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets directly from database</summary>
 		public static Printer GetOnePrinter(PrintSituation sit,long compNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Printer>(MethodBase.GetCurrentMethod(),sit,compNum);
-			}
+			
 			string command="SELECT * FROM printer WHERE "
 				+"PrintSit = '"      +POut.Long((int)sit)+"' "
 				+"AND ComputerNum ='"+POut.Long(compNum)+"'";
@@ -132,10 +126,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Either does an insert or an update to the database if need to create a Printer object.  Or it also deletes a printer object if needed.</summary>
 		public static void PutForSit(PrintSituation sit,string computerName, string printerName,bool displayPrompt){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sit,computerName,printerName,displayPrompt);
-				return;
-			}
+			
 			//Computer[] compList=Computers.Refresh();
 			//Computer compCur=Computers.GetCur();
 			string command="SELECT ComputerNum FROM computer "
@@ -169,10 +160,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Called from FormPrinterSetup if user selects the easy option.  Since the other options will be hidden, we have to clear them.  User should be sternly warned before this happens.</summary>
 		public static void ClearAll(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod());
-				return;
-			}
+			
 			//first, delete all entries
 			string command="DELETE FROM printer";
  			Db.NonQ(command);

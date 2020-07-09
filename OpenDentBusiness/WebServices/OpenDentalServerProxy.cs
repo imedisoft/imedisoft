@@ -18,13 +18,7 @@ namespace OpenDentBusiness.WebServices {
 				return MockOpenDentalServerCur;
 			}
 			OpenDentalServerReal service=new OpenDentalServerReal();
-			service.Url=RemotingClient.ServerURI;
-			if(RemotingClient.MidTierProxyAddress!=null && RemotingClient.MidTierProxyAddress!="") {
-				IWebProxy proxy=new WebProxy(RemotingClient.MidTierProxyAddress);
-				ICredentials cred=new NetworkCredential(RemotingClient.MidTierProxyUserName,RemotingClient.MidTierProxyPassword);
-				proxy.Credentials=cred;
-				service.Proxy=proxy;
-			}
+
 			//5/12/2020 - Cameron made the following change to the service timeout so long processes could finish using the middle tier.  This was
 			//discussed with Jordan, Nathan, and Allen and was reviewed by Jason.  Changes were also made in the OpenDentalServer/Web.config file to
 			//increase the ASP.NET maxRequestLength and executionTimeout as well as the IIS maxAllowedContentLength.  The max request lengths were

@@ -93,11 +93,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_MedLabSpecimenCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _MedLabSpecimenCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -106,19 +102,13 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(MedLabSpecimen medLabSpecimen) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				medLabSpecimen.MedLabSpecimenNum=Meth.GetLong(MethodBase.GetCurrentMethod(),medLabSpecimen);
-				return medLabSpecimen.MedLabSpecimenNum;
-			}
+			
 			return Crud.MedLabSpecimenCrud.Insert(medLabSpecimen);
 		}
 		
 		///<summary>Deletes all MedLabSpecimen objects from the db for a list of MedLabNums.</summary>
 		public static void DeleteAllForLabs(List<long> listLabNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),listLabNums);
-				return;
-			}
+			
 			string command="DELETE FROM medlabspecimen WHERE MedLabNum IN("+String.Join(",",listLabNums)+")";
 			Db.NonQ(command);
 		}
@@ -128,36 +118,26 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static List<MedLabSpecimen> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<MedLabSpecimen>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM medlabspecimen WHERE PatNum = "+POut.Long(patNum);
 			return Crud.MedLabSpecimenCrud.SelectMany(command);
 		}
 
 		///<summary>Gets one MedLabSpecimen from the db.</summary>
 		public static MedLabSpecimen GetOne(long medLabSpecimenNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<MedLabSpecimen>(MethodBase.GetCurrentMethod(),medLabSpecimenNum);
-			}
+			
 			return Crud.MedLabSpecimenCrud.SelectOne(medLabSpecimenNum);
 		}
 
 		///<summary></summary>
 		public static void Update(MedLabSpecimen medLabSpecimen){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medLabSpecimen);
-				return;
-			}
+			
 			Crud.MedLabSpecimenCrud.Update(medLabSpecimen);
 		}
 
 		///<summary></summary>
 		public static void Delete(long medLabSpecimenNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),medLabSpecimenNum);
-				return;
-			}
+			
 			string command= "DELETE FROM medlabspecimen WHERE MedLabSpecimenNum = "+POut.Long(medLabSpecimenNum);
 			Db.NonQ(command);
 		}

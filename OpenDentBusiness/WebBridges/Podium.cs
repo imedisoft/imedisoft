@@ -53,9 +53,6 @@ namespace OpenDentBusiness {
 		}
 
 		private static List<Appointment> GetAppointmentsToSendReview(ReviewInvitationTrigger trigger,long programNum,bool isNewPatient) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Appointment>>(MethodBase.GetCurrentMethod(),trigger,programNum,isNewPatient);
-			}
 			string minsWaitComplete=ProgramProperties.GetPropVal(programNum,PropertyDescs.ApptSetCompletedMinutes);
 			string minsWaitArriveOrDismiss=ProgramProperties.GetPropVal(programNum,PropertyDescs.ApptTimeDismissedMinutes);
 			bool isArriveTrigger=false;

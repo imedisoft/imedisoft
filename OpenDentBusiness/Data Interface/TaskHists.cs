@@ -29,9 +29,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets one TaskHist from the db.</summary>
 		public static TaskHist GetOne(long taskHistNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<TaskHist>(MethodBase.GetCurrentMethod(),taskHistNum);
-			}
+			
 			return Crud.TaskHistCrud.SelectOne(taskHistNum);
 		}
 
@@ -107,38 +105,27 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(TaskHist taskHist){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				taskHist.TaskHistNum=Meth.GetLong(MethodBase.GetCurrentMethod(),taskHist);
-				return taskHist.TaskHistNum;
-			}
+			
 			return Crud.TaskHistCrud.Insert(taskHist);
 		}
 
 		///<summary>Updates TaskHist references when an old task is cut (not copied) and pasted somewhere so history is continuous.</summary>
 		public static void UpdateTaskNums(Task oldTask,Task newTask) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),oldTask,newTask);
-				return;
-			}
+			
 			string command="UPDATE taskhist SET TaskNum="+POut.Long(newTask.TaskNum)+" WHERE TaskNum="+POut.Long(oldTask.TaskNum);
 			Db.NonQ(command);
 		}
 
 		///<summary>Gets a list of task histories for a given taskNum.</summary>
 		public static List<TaskHist> GetArchivesForTask(long taskNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<TaskHist>>(MethodBase.GetCurrentMethod(),taskNum);
-			}
+			
 			string command="SELECT * FROM taskhist WHERE TaskNum="+POut.Long(taskNum)+" ORDER BY DateTStamp";
 			return Crud.TaskHistCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(long taskHistNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),taskHistNum);
-				return;
-			}
+			
 			Crud.TaskHistCrud.Delete(taskHistNum);
 		}
 

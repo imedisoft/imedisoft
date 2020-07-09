@@ -91,11 +91,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_languageCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _languageCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -159,10 +155,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static long Insert(Language language) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				language.LanguageNum=Meth.GetLong(MethodBase.GetCurrentMethod(),language);
-				return language.LanguageNum;
-			}
+			
 			return Crud.LanguageCrud.Insert(language);
 		}
 
@@ -179,10 +172,7 @@ namespace OpenDentBusiness {
 
 		///<summary>No need to refresh after this.</summary>
 		public static void DeleteItems(string classType,List<string> englishList) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),classType,englishList);
-				return;
-			}
+			
 			string command="DELETE FROM language WHERE ClassType='"+POut.String(classType)+"' AND (";
 			for(int i=0;i<englishList.Count;i++) {
 				if(i>0) {
@@ -197,9 +187,7 @@ namespace OpenDentBusiness {
 
 		///<summary></summary>
 		public static string[] GetListCat() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<string[]>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT Distinct ClassType FROM language ORDER BY ClassType ";
 			DataTable table=Db.GetTable(command);
 			string[] ListCat=new string[table.Rows.Count];
@@ -211,9 +199,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Only used in translation tool to get list for one category</summary>
 		public static Language[] GetListForCat(string classType) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Language[]>(MethodBase.GetCurrentMethod(),classType);
-			}
+			
 			string command="SELECT * FROM language "
 				+"WHERE ClassType = BINARY '"+POut.String(classType)+"' ORDER BY English";
 			return Crud.LanguageCrud.SelectMany(command).ToArray();
@@ -263,9 +249,6 @@ namespace OpenDentBusiness {
 
 		///<summary>This is one rare situation where queries can be passed.  But it will always fail for client web and server web.</summary>
 		public static void LoadTranslationsFromTextFile(string content) {
-			if(RemotingClient.RemotingRole!=RemotingRole.ClientDirect) {
-				throw new ApplicationException("Not allowed.");
-			}
 			Db.NonQ(content);
 		}
 
@@ -279,12 +262,4 @@ namespace OpenDentBusiness {
 
 		
 	}
-
-	//<summary>Implements the ITranslate interface by calling Lans.g().</summary>
-	//public class LansTranslate:ITranslate {
-		//<summary>Calls Lans.g().</summary>
-		//public string Translate(object sender,string text) {
-		//	return Lans.g(sender,text);
-		//}
-	//}
 }

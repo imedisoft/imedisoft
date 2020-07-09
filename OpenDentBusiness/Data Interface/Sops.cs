@@ -70,11 +70,6 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_sopCache.FillCacheFromTable(table);
-				return table;
-			}
 			return _sopCache.GetTableFromCache(doRefreshCache);
 		}
 
@@ -82,27 +77,19 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Sop sop){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				sop.SopNum=Meth.GetLong(MethodBase.GetCurrentMethod(),sop);
-				return sop.SopNum;
-			}
+			
 			return Crud.SopCrud.Insert(sop);
 		}
 
 		///<summary></summary>
 		public static void Update(Sop sop) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sop);
-				return;
-			}
+			
 			Crud.SopCrud.Update(sop);
 		}
 
 		///<summary>Returns the count of all SOP codes.  SOP codes cannot be hidden.</summary>
 		public static long GetCodeCount() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetLong(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT COUNT(*) FROM sop";
 			return PIn.Long(Db.GetCount(command));
 		}
@@ -112,39 +99,5 @@ namespace OpenDentBusiness{
 			Sop sop=GetFirstOrDefault(x => x.SopCode==sopCode);
 			return (sop==null ? "" : sop.Description);
 		}
-
-		/*
-		Only pull out the methods below as you need them.  Otherwise, leave them commented out.
-
-		///<summary></summary>
-		public static List<Sop> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Sop>>(MethodBase.GetCurrentMethod(),patNum);
-			}
-			string command="SELECT * FROM sop WHERE PatNum = "+POut.Long(patNum);
-			return Crud.SopCrud.SelectMany(command);
-		}
-
-		///<summary>Gets one Sop from the db.</summary>
-		public static Sop GetOne(long sopNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<Sop>(MethodBase.GetCurrentMethod(),sopNum);
-			}
-			return Crud.SopCrud.SelectOne(sopNum);
-		}
-
-		///<summary></summary>
-		public static void Delete(long sopNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),sopNum);
-				return;
-			}
-			string command= "DELETE FROM sop WHERE SopNum = "+POut.Long(sopNum);
-			Db.NonQ(command);
-		}
-		*/
-
-
-
 	}
 }

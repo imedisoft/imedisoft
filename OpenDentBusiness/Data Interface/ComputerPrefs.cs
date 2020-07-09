@@ -101,9 +101,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Should not be called by external classes.</summary>
 		public static DataTable GetPrefsForComputer(string computerName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetTable(MethodBase.GetCurrentMethod(),computerName);
-			}
+			
 			string command="SELECT * FROM computerpref WHERE ComputerName='"+POut.String(computerName)+"'";
 			try {
 				return Db.GetTable(command);
@@ -115,10 +113,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Should not be called by external classes.</summary>
 		public static long Insert(ComputerPref computerPref) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				computerPref.ComputerPrefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),computerPref);
-				return computerPref.ComputerPrefNum;
-			}
+			
 			return Crud.ComputerPrefCrud.Insert(computerPref);
 		}
 
@@ -132,15 +127,6 @@ namespace OpenDentBusiness {
 		///<summary>Updates the database with computerPrefNew.  Returns true if changes were needed or if computerPrefOld is null.
 		///Automatically clears out class-wide variables if any changes were needed.</summary>
 		public static bool Update(ComputerPref computerPrefNew,ComputerPref computerPrefOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				bool wasUpdateNeeded=Meth.GetBool(MethodBase.GetCurrentMethod(),computerPrefNew,computerPrefOld);
-				if(wasUpdateNeeded) {
-					//If we are running Middle Tier, we need to make sure these variables are reset on the client.
-					_localComputer=null;
-					_localComputerOld=null;
-				}
-				return wasUpdateNeeded;
-			}
 			bool hadChanges=false;
 			if(computerPrefOld==null) {
 				Crud.ComputerPrefCrud.Update(computerPrefNew);
@@ -160,10 +146,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Sets the GraphicsSimple column to 1.  Added to fix machines (lately tablets) that are having graphics problems and cannot start OpenDental.</summary>
 		public static void SetToSimpleGraphics(string computerName) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),computerName);
-				return;
-			}
+			
 			string command="UPDATE computerpref SET GraphicsSimple=1 WHERE ComputerName='"+POut.String(computerName)+"'";
 			Db.NonQ(command);
 		}
@@ -181,10 +164,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Updates the ComputerOS for the computerPrefNum passed in.</summary>
 		public static void UpdateComputerOS(string platformId,long computerPrefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),platformId,computerPrefNum);
-				return;
-			}
+			
 			//We have to use a query and not the normal Update(computerPref) method because the 
 			//Environment.OSVersion.Platform enum is different than the computerpref.ComputerOS enum.
 			string command="UPDATE computerpref SET ComputerOS = '"+platformId+"' "

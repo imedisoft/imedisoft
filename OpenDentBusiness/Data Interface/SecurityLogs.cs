@@ -14,9 +14,7 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary>Returns one SecurityLog from the db.  Called from SecurityLogHashs.CreateSecurityLogHash()</summary>
 		public static SecurityLog GetOne(long securityLogNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SecurityLog>(MethodBase.GetCurrentMethod(),securityLogNum);
-			}
+			
 			return Crud.SecurityLogCrud.SelectOne(securityLogNum);
 		}
 
@@ -31,9 +29,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of all securitylogs matching the passed in parameters.</summary>
 		public static List<SecurityLog> GetMany(List<SQLWhere> listWheres) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SecurityLog>>(MethodBase.GetCurrentMethod(),listWheres);
-			}
+			
 			string command="SELECT * FROM securitylog ";
 			if(listWheres!=null && listWheres.Count > 0) {
 				command+="WHERE "+string.Join(" AND ",listWheres);
@@ -53,10 +49,7 @@ namespace OpenDentBusiness{
 
 		#region Delete
 		public static void DeleteWithMaxPriKey(long securityLogMaxPriKey) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),securityLogMaxPriKey);
-				return;
-			}
+			
 			if(securityLogMaxPriKey==0) {
 				return;
 			}
@@ -65,10 +58,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static void DeleteBeforeDateInclusive(DateTime date) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),date);
-				return;
-			}
+			
 			int countDeleted=0;
 			List<long> listSecurityLogNums;
 			do {
@@ -104,9 +94,7 @@ namespace OpenDentBusiness{
 		public static SecurityLog[] Refresh(DateTime dateFrom,DateTime dateTo,Permissions permType,long patNum,long userNum,
 			DateTime datePreviousFrom,DateTime datePreviousTo,int limit=0) 
 		{
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SecurityLog[]>(MethodBase.GetCurrentMethod(),dateFrom,dateTo,permType,patNum,userNum,datePreviousFrom,datePreviousTo,limit);
-			}
+			
 			string command="SELECT securitylog.*,LName,FName,Preferred,MiddleI,LogHash FROM securitylog "
 				+"LEFT JOIN patient ON patient.PatNum=securitylog.PatNum "
 				+"LEFT JOIN securityloghash ON securityloghash.SecurityLogNum=securitylog.SecurityLogNum "
@@ -148,10 +136,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(SecurityLog log){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				log.SecurityLogNum=Meth.GetLong(MethodBase.GetCurrentMethod(),log);
-				return log.SecurityLogNum;
-			}
+			
 			return Crud.SecurityLogCrud.Insert(log);
 		}
 
@@ -170,9 +155,7 @@ namespace OpenDentBusiness{
 		///comprise the larger object (what the user sees).  Only implemented with ortho chart so far.  FKeys can be null.
 		///Throws exceptions.</summary>
 		public static SecurityLog[] Refresh(long patNum,List<Permissions> permTypes,List<long> fKeys) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<SecurityLog[]>(MethodBase.GetCurrentMethod(),patNum,permTypes,fKeys);
-			}
+			
 			string types="";
 			for(int i=0;i<permTypes.Count;i++) {
 				if(i>0) {
@@ -199,9 +182,7 @@ namespace OpenDentBusiness{
 			if(listFKeys==null || listFKeys.FindAll(x => x != 0).Count==0) {
 				return new List<SecurityLog>();
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<SecurityLog>>(MethodBase.GetCurrentMethod(),listFKeys,permTypes);
-			}
+			
 			string command="SELECT * FROM securitylog WHERE FKey IN("+string.Join(",",listFKeys.FindAll(x => x != 0))+") AND PermType IN"+
 				"("+string.Join(",",permTypes.Select(x => POut.Int((int)x)))+")";
 			return Crud.SecurityLogCrud.SelectMany(command);
@@ -215,10 +196,7 @@ namespace OpenDentBusiness{
 			if(listSecurityLogs==null || listSecurityLogs.Count==0) {
 				return;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),permType,patNum,listSecurityLogs);
-				return;
-			}
+			
 			foreach(string securityLogEntry in listSecurityLogs) {
 				MakeLogEntry(permType,patNum,securityLogEntry);
 			}
@@ -277,10 +255,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Take a SecurityLog object to save to the database. Creates a SecurityLogHash object as well.</summary>
 		public static void MakeLogEntry(SecurityLog secLog) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),secLog);
-				return;
-			}
+			
 			secLog.SecurityLogNum=SecurityLogs.Insert(secLog);
 			SecurityLogHashes.InsertSecurityLogHash(secLog.SecurityLogNum);//uses db date/time
 			if(secLog.PermType==Permissions.AppointmentCreate) {
@@ -290,10 +265,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Creates security log entries for all that PatNums passed in.</summary>
 		public static void MakeLogEntry(Permissions permType,List<long> listPatNums,string logText) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),permType,listPatNums,logText);
-				return;
-			}
+			
 			List<SecurityLog> listSecLogs=new List<SecurityLog>();
 			foreach(long patNum in listPatNums) {
 				SecurityLog secLog=MakeLogEntryNoInsert(permType,patNum,logText,0,LogSource);
@@ -357,9 +329,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Insertion logic that doesn't use the cache. Has special cases for generating random PK's and handling Oracle insertions.</summary>
 		public static long InsertNoCache(SecurityLog securityLog) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetLong(MethodBase.GetCurrentMethod(),securityLog);
-			}
+			
 			return Crud.SecurityLogCrud.InsertNoCache(securityLog);
 		}
 

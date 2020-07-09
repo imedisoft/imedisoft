@@ -42,12 +42,9 @@ namespace OpenDentBusiness {
 						object ObjEhrCodeList;
 						Assembly AssemblyEHR;
 						string dllPathEHR;
-						if(RemotingClient.RemotingRole==RemotingRole.ServerWeb) {
-							dllPathEHR=CodeBase.ODFileUtils.CombinePaths(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath,@"bin\EHR.dll");
-						}
-						else {
-							dllPathEHR=CodeBase.ODFileUtils.CombinePaths(System.Windows.Forms.Application.StartupPath,"EHR.dll");
-						}
+
+						dllPathEHR = CodeBase.ODFileUtils.CombinePaths(System.Windows.Forms.Application.StartupPath, "EHR.dll");
+						
 						ObjEhrCodeList=null;
 						AssemblyEHR=null;
 						if(System.IO.File.Exists(dllPathEHR)) {//EHR.dll is available, so load it up
@@ -398,45 +395,32 @@ namespace OpenDentBusiness {
 		 * 
 		///<summary></summary>
 		public static List<EhrCode> Refresh(long patNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EhrCode>>(MethodBase.GetCurrentMethod(),patNum);
-			}
+			
 			string command="SELECT * FROM ehrcode WHERE PatNum = "+POut.Long(patNum);
 			return Crud.EhrCodeCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
 		public static long Insert(EhrCode ehrCode) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				ehrCode.EhrCodeNum=Meth.GetLong(MethodBase.GetCurrentMethod(),ehrCode);
-				return ehrCode.EhrCodeNum;
-			}
+			
 			return Crud.EhrCodeCrud.Insert(ehrCode);
 		}
 
 		///<summary>Gets one EhrCode from the db.</summary>
 		public static EhrCode GetOne(long ehrCodeNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EhrCode>(MethodBase.GetCurrentMethod(),ehrCodeNum);
-			}
+			
 			return Crud.EhrCodeCrud.SelectOne(ehrCodeNum);
 		}
 
 		///<summary></summary>
 		public static void Update(EhrCode ehrCode){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrCode);
-				return;
-			}
+			
 			Crud.EhrCodeCrud.Update(ehrCode);
 		}
 
 		///<summary></summary>
 		public static void Delete(long ehrCodeNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),ehrCodeNum);
-				return;
-			}
+			
 			string command= "DELETE FROM ehrcode WHERE EhrCodeNum = "+POut.Long(ehrCodeNum);
 			Db.NonQ(command);
 		}

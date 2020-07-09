@@ -89,11 +89,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
 		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_eClipboardSheetDefCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _eClipboardSheetDefCache.GetTableFromCache(doRefreshCache);
 		}
 		#endregion Cache Pattern
@@ -102,33 +98,25 @@ namespace OpenDentBusiness{
 		#region Get Methods
 		///<summary></summary>
 		public static List<EClipboardSheetDef> Refresh(){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<EClipboardSheetDef>>(MethodBase.GetCurrentMethod());
-			}
+			
 			string command="SELECT * FROM eclipboardsheetdef";
 			return Crud.EClipboardSheetDefCrud.SelectMany(command);
 		}
 		
 		///<summary>Gets one EClipboardSheetDef from the db.</summary>
 		public static EClipboardSheetDef GetOne(long eClipboardSheetDefNum){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<EClipboardSheetDef>(MethodBase.GetCurrentMethod(),eClipboardSheetDefNum);
-			}
+			
 			return Crud.EClipboardSheetDefCrud.SelectOne(eClipboardSheetDefNum);
 		}
 
 		public static List<EClipboardSheetDef> GetForClinic(long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetObject<List<EClipboardSheetDef>>(MethodBase.GetCurrentMethod(),clinicNum);
-			}
+			
 			string command="SELECT * FROM eclipboardsheetdef WHERE ClinicNum="+POut.Long(clinicNum);
 			return Crud.EClipboardSheetDefCrud.SelectMany(command);
 		}
 
 		public static bool IsSheetDefInUse(long sheetDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),sheetDefNum);
-			}
+			
 			string command="SELECT COUNT(*) FROM eclipboardsheetdef WHERE SheetDefNum="+POut.Long(sheetDefNum);
 			return PIn.Int(Db.GetCount(command))>0;
 		}
@@ -138,30 +126,21 @@ namespace OpenDentBusiness{
 		#region Insert
 		///<summary></summary>
 		public static long Insert(EClipboardSheetDef eClipboardSheetDef){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				eClipboardSheetDef.EClipboardSheetDefNum=Meth.GetLong(MethodBase.GetCurrentMethod(),eClipboardSheetDef);
-				return eClipboardSheetDef.EClipboardSheetDefNum;
-			}
+			
 			return Crud.EClipboardSheetDefCrud.Insert(eClipboardSheetDef);
 		}
 		#endregion Insert
 		#region Update
 		///<summary></summary>
 		public static void Update(EClipboardSheetDef eClipboardSheetDef){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb){
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),eClipboardSheetDef);
-				return;
-			}
+			
 			Crud.EClipboardSheetDefCrud.Update(eClipboardSheetDef);
 		}
 		#endregion Update
 		#region Delete
 		///<summary></summary>
 		public static void Delete(long eClipboardSheetDefNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),eClipboardSheetDefNum);
-				return;
-			}
+			
 			Crud.EClipboardSheetDefCrud.Delete(eClipboardSheetDefNum);
 		}
 		#endregion Delete
@@ -171,9 +150,7 @@ namespace OpenDentBusiness{
 		///<summary>Inserts, updates, or deletes db rows to match listNew.  No need to pass in userNum, it's set before remoting role check and passed to
 		///the server if necessary.</summary>
 		public static bool Sync(List<EClipboardSheetDef> listNew,List<EClipboardSheetDef> listOld) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetBool(MethodBase.GetCurrentMethod(),listNew,listOld);
-			}
+			
 			return Crud.EClipboardSheetDefCrud.Sync(listNew,listOld);
 		}
 		

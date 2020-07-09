@@ -77,11 +77,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				DataTable table=Meth.GetTable(MethodBase.GetCurrentMethod(),doRefreshCache);
-				_pharmacyCache.FillCacheFromTable(table);
-				return table;
-			}
+			
 			return _pharmacyCache.GetTableFromCache(doRefreshCache);
 		}		
 
@@ -89,44 +85,31 @@ namespace OpenDentBusiness{
 		
 		///<Summary>Gets one Pharmacy from the database.</Summary>
 		public static Pharmacy GetOne(long pharmacyNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<Pharmacy>(MethodBase.GetCurrentMethod(),pharmacyNum);
-			}
+			
 			return Crud.PharmacyCrud.SelectOne(pharmacyNum);
 		}
 
 		///<summary>Gets all pharmacies ordered by StoreName from the database.</summary>
 		public static List<Pharmacy> GetAllNoCache() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Pharmacy>>(MethodBase.GetCurrentMethod());
-			}
+			
 			return Crud.PharmacyCrud.SelectMany("SELECT * FROM pharmacy ORDER BY StoreName");
 		}
 
 		///<summary></summary>
 		public static long Insert(Pharmacy pharmacy){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				pharmacy.PharmacyNum=Meth.GetLong(MethodBase.GetCurrentMethod(),pharmacy);
-				return pharmacy.PharmacyNum;
-			}
+			
 			return Crud.PharmacyCrud.Insert(pharmacy);
 		}
 
 		///<summary></summary>
 		public static void Update(Pharmacy pharmacy){
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),pharmacy);
-				return;
-			}
+			
 			Crud.PharmacyCrud.Update(pharmacy);
 		}
 
 		///<summary></summary>
 		public static void DeleteObject(long pharmacyNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Meth.GetVoid(MethodBase.GetCurrentMethod(),pharmacyNum);
-				return;
-			}
+			
 			Crud.PharmacyCrud.Delete(pharmacyNum);
 		}
 
@@ -137,9 +120,7 @@ namespace OpenDentBusiness{
 		}
 
 		public static List<long> GetChangedSincePharmacyNums(DateTime changedSince) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<long>>(MethodBase.GetCurrentMethod(),changedSince);
-			}
+			
 			string command="SELECT PharmacyNum FROM pharmacy WHERE DateTStamp > "+POut.DateT(changedSince);
 			DataTable dt=Db.GetTable(command);
 			List<long> provnums = new List<long>(dt.Rows.Count);
@@ -151,9 +132,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Used along with GetChangedSincePharmacyNums</summary>
 		public static List<Pharmacy> GetMultPharmacies(List<long> pharmacyNums) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Pharmacy>>(MethodBase.GetCurrentMethod(),pharmacyNums);
-			}
+			
 			string strPharmacyNums="";
 			DataTable table;
 			if(pharmacyNums.Count>0) {
@@ -177,9 +156,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets a list of Pharmacies for a given clinic based on PharmClinic links.</summary>
 		///<param name="clinicNum">The primary key of the clinic.</param>
 		public static List<Pharmacy> GetPharmaciesForClinic(long clinicNum) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				return Meth.GetObject<List<Pharmacy>>(MethodBase.GetCurrentMethod(),clinicNum);
-			}
+			
 			string command="SELECT * "
 				+"FROM pharmacy "
 				+"WHERE PharmacyNum IN ("
