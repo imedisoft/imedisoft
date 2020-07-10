@@ -584,52 +584,6 @@ namespace OpenDental {
 		}
 
 		#endregion
-		#region MiddleTierConnectionMonitorThread
-
-		private void BeginMiddleTierConnectionMonitorThread(MiddleTierConnectionEventArgs e) {
-			if(_odThreadMiddleTierConnectionLost!=null) {
-				return;
-			}
-			RemotingClient.HasMiddleTierConnectionFailed=true;
-			_odThreadMiddleTierConnectionLost=new ODThread((o) => {
-				//Stop all appropriate threads and open the Connection Lost window.
-				//It is not safe to stop timers at this point because we would need to invoke back over to the main thread which is waiting in a Join().
-				SetThreads(false);//Only stop threads because the main thread is locked waiting for this thread to finish, which means ticks cannot fire.
-				string errorMessage=(string)e.Tag;
-				Func<bool> funcShouldWindowClose=() => {
-					//Very simple MiddleTier communication, small payload.
-					if(RemotingClient.IsMiddleTierAvailable()) {
-						//Tell everyone that the Middle Tier is back online.
-						RemotingClient.HasMiddleTierConnectionFailed=false;
-						MiddleTierConnectionEvent.Fire(new MiddleTierConnectionEventArgs(true));
-						return true;//Middle Tier is back online so close the Connection Lost window.
-					}
-					else {
-						return false;//Middle Tier is not back online yet so don't close the Connection Lost window.
-					}
-				};
-				FormConnectionLost FormCL=new FormConnectionLost(funcShouldWindowClose,ODEventType.MiddleTierConnection,errorMessage
-					,typeof(MiddleTierConnectionEvent));
-				//Halt the thread here until clicking 'Retry' is successful, clicking 'Exit Program', or an event fires indicating connection is back.
-				if(FormCL.ShowDialog()==DialogResult.Cancel) {
-					//This is problematic because it causes DirectX to cause a UE but there doesn't seem to be a better way to close without using the database.
-					ExitCode=107;//Connection to the Middle Tier has failed
-					Environment.Exit(ExitCode);
-					return;
-				}
-			});
-			_odThreadMiddleTierConnectionLost.AddExceptionHandler((ex) => ex.DoNothing());
-			_odThreadMiddleTierConnectionLost.AddExitHandler((ex) => {
-				_odThreadMiddleTierConnectionLost=null;
-				//Restart our threads no matter what happened.  If we're killing the program this won't matter anyway.
-				SetThreads(true);//Start the threads because they were the only ones stopped, the timers were locked up via a Join() on the main thread.
-			});
-			_odThreadMiddleTierConnectionLost.GroupName=FormODThreadNames.MiddleTierConnectionLost.GetDescription();
-			_odThreadMiddleTierConnectionLost.Name=FormODThreadNames.MiddleTierConnectionLost.GetDescription();
-			_odThreadMiddleTierConnectionLost.Start();
-		}
-
-		#endregion
 		#region ODServiceMonitorThread
 
 		///<summary>Begins a thread that monitor's the Open Dental Service heartbeat and alerts the user if the service is not running.</summary>

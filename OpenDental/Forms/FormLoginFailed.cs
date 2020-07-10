@@ -52,17 +52,7 @@ namespace OpenDental {
 			//successful login.
 			Security.CurUser=userEntered;
 			Security.IsUserLoggedIn=true;
-			RemotingClient.HasLoginFailed=false;
 			UserOdPrefL.SetThemeForUserIfNeeded();
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb 
-				&& string.IsNullOrEmpty(userEntered.PasswordHash) 
-				&& string.IsNullOrEmpty(textPassword.Text)) 
-			{
-				MsgBox.Show(this,"When using the web service, not allowed to log in with no password.  A password should be added for this user.");
-				if(!SecurityL.ChangePassword(true)) {//Failed password update.
-					return;
-				}
-			}
 			if(PrefC.GetBool(PrefName.PasswordsMustBeStrong)
 				&& PrefC.GetBool(PrefName.PasswordsWeakChangeToStrong)
 				&& Userods.IsPasswordStrong(textPassword.Text)!="") //Password is not strong

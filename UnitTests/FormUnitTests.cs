@@ -66,16 +66,7 @@ namespace UnitTests {
 		#region Middle Tier
 
 		private void butWebServiceParamCheck_Click(object sender,EventArgs e) {
-			Cursor=Cursors.WaitCursor;
-			if(!WebServiceT.ConnectToMiddleTier(textMiddleTierURI.Text,textMiddleTierUser.Text,textMiddleTierPassword.Text,Application.ProductVersion,_isOracle)) {
-				Cursor=Cursors.Default;
-				textResults.Text="Error connecting to Middle Tier.";
-				return;
-			}
-			textResults.Text="";
-			Application.DoEvents();
 			textResults.Text="This unit test has been deprecated.  Use Microsoft.VisualStudio.TestTools.UnitTesting instead.";
-			Cursor=Cursors.Default;
 		}
 
 		private void butWebService_Click(object sender,EventArgs e) {

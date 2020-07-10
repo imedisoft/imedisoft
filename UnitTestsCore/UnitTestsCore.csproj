@@ -142,7 +142,6 @@
     <Compile Include="TableTypes\ReferralT.cs" />
     <Compile Include="TableTypes\ResellerT.cs" />
     <Compile Include="TableTypes\RegistrationKeyT.cs" />
-    <Compile Include="TableTypes\RepeatChargeT.cs" />
     <Compile Include="TableTypes\PharmacyT.cs" />
     <Compile Include="TableTypes\SiteT.cs" />
     <Compile Include="TableTypes\SmsFromMobileT.cs" />

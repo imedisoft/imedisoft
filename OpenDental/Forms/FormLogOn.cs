@@ -111,26 +111,13 @@ namespace OpenDental {
 				return;
 			}
 			string passwordTyped=textPassword.Text;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb && string.IsNullOrEmpty(passwordTyped)) {
-				MsgBox.Show(this,"When using the web service, not allowed to log in with no password.  A password should be added for this user.");
-				return;
-			}
+
 			Userod userCur=null;
 			if(isEcw) {//ecw requires hash, but non-ecw requires actual password
 				passwordTyped=Authentication.HashPasswordMD5(passwordTyped,true);
 			}
 
-				//Middle Tier sessions should not fire the CheckUserAndPasswordFailed exception code in FormLogOn.
-				//That event would cause a second login window to pop with strange behavior.
-				//Invoke the overload for CheckUserAndPassword that does not throw exceptions and give the user a generic error message if necessary.
-				if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-					userCur=Userods.CheckUserAndPassword(userName,passwordTyped,isEcw,false);
-					if(userCur==null) {
-						MsgBox.Show("Userods","Invalid username, password, or the account has been locked due to failed log in attempts.");
-						return;
-					}
-				}
-				else {//Directly connected to the database.  This code will give a more accurate error message to the user when failing to log in.
+
 					try {
 						userCur=Userods.CheckUserAndPassword(userName,passwordTyped,isEcw);
 					}
@@ -138,7 +125,7 @@ namespace OpenDental {
 						MessageBox.Show(ex.Message);
 						return;
 					}
-				}
+				
 			
 			//successful login.
 			if(_isSimpleSwitch) {

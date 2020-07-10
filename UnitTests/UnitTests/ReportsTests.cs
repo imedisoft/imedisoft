@@ -74,18 +74,18 @@ namespace UnitTests.Reports_Tests {
 				Assert.AreEqual(1,DataCore.GetTable(tempTableShowQuery).Rows.Count,"'root' user was not able to create a new table.");
 				DataCore.NonQ(tempTableDropQuery);
 				//Next, make sure that user low cannot create the new table.  Required to use the Middle Tier otherwise user low is ignored.
-				DataAction.RunMiddleTierMock(() => {
-					//User low should be able to run SELECT and SHOW commands.
-					if(Reports.GetTable(tempTableShowQuery).Rows.Count!=0) {//Should have been dropped via root user above.
-						throw new ApplicationException("Temporary table was not dropped correctly.");
-					}
-					//Reports.GetTable() should throw an exception due to the lack of the CREATE permission.  Swallow it.
-					ODException.SwallowAnyException(() => Reports.GetTable(tempTableCreateQuery));
-					//User low should not have been able to create the table.
-					if(Reports.GetTable(tempTableShowQuery).Rows.Count!=0) {
-						throw new ApplicationException("User low was able to create a table.");
-					}
-				});
+				//DataAction.RunMiddleTierMock(() => {
+				//	//User low should be able to run SELECT and SHOW commands.
+				//	if(Reports.GetTable(tempTableShowQuery).Rows.Count!=0) {//Should have been dropped via root user above.
+				//		throw new ApplicationException("Temporary table was not dropped correctly.");
+				//	}
+				//	//Reports.GetTable() should throw an exception due to the lack of the CREATE permission.  Swallow it.
+				//	ODException.SwallowAnyException(() => Reports.GetTable(tempTableCreateQuery));
+				//	//User low should not have been able to create the table.
+				//	if(Reports.GetTable(tempTableShowQuery).Rows.Count!=0) {
+				//		throw new ApplicationException("User low was able to create a table.");
+				//	}
+				//});
 			});
 			thread.AddExceptionHandler(e => { ex=e; });//This will cause the unit test to fail.
 			thread.Name="thread"+MethodBase.GetCurrentMethod().Name;

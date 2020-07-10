@@ -29,11 +29,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceManager", "ServiceMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateFileCopier", "UpdateFileCopier\UpdateFileCopier.csproj", "{814E9B5F-DBFA-4506-BAF2-B47112F3FC81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenDentalServer", "OpenDentalServer\OpenDentalServer.csproj", "{712C6A2B-88E1-49E9-AC67-F6372F0047BC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imedisoft.CEMT", "CentralManager\Imedisoft.CEMT.csproj", "{10BFA78E-E5FE-4209-8347-AD0EC8B3F064}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xCrudGenerator", "xCrudGenerator\xCrudGenerator.csproj", "{76227E95-B261-4B6A-A97C-3764E7EDDF97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imedisoft.Data.CrudGenerator", "xCrudGenerator\Imedisoft.Data.CrudGenerator.csproj", "{76227E95-B261-4B6A-A97C-3764E7EDDF97}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenDentalGraph", "OpenDentalGraph\OpenDentalGraph.csproj", "{015E240B-23FB-4D91-B20C-CE221DDCCB0F}"
 EndProject
@@ -48,6 +46,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imedisoft.Data", "Imedisoft.Data\Imedisoft.Data.csproj", "{063ECCEE-21C7-4300-B616-2F256FF12FCE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{13BA95A9-FFEF-4806-8D75-5A994CCCC7EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{19AC6140-DD3E-42F4-8722-B83A8A399741}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -281,30 +281,6 @@ Global
 		{814E9B5F-DBFA-4506-BAF2-B47112F3FC81}.Release|Mixed Platforms.Build.0 = Release|x86
 		{814E9B5F-DBFA-4506-BAF2-B47112F3FC81}.Release|x86.ActiveCfg = Release|x86
 		{814E9B5F-DBFA-4506-BAF2-B47112F3FC81}.Release|x86.Build.0 = Release|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug_Web|Any CPU.ActiveCfg = Debug|Any CPU
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug_Web|Any CPU.Build.0 = Debug|Any CPU
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug_Web|Mixed Platforms.ActiveCfg = Debug|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug_Web|Mixed Platforms.Build.0 = Debug|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug_Web|x86.ActiveCfg = Debug|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug_Web|x86.Build.0 = Debug|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug|x86.ActiveCfg = Debug|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Debug|x86.Build.0 = Debug|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.LinuxRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.LinuxRelease|Any CPU.Build.0 = Release|Any CPU
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.LinuxRelease|Mixed Platforms.ActiveCfg = Release|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.LinuxRelease|Mixed Platforms.Build.0 = Release|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.LinuxRelease|x86.ActiveCfg = Release|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.LinuxRelease|x86.Build.0 = Release|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Release|Mixed Platforms.Build.0 = Release|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Release|x86.ActiveCfg = Release|x86
-		{712C6A2B-88E1-49E9-AC67-F6372F0047BC}.Release|x86.Build.0 = Release|x86
 		{10BFA78E-E5FE-4209-8347-AD0EC8B3F064}.Debug_Web|Any CPU.ActiveCfg = Release|x86
 		{10BFA78E-E5FE-4209-8347-AD0EC8B3F064}.Debug_Web|Any CPU.Build.0 = Release|x86
 		{10BFA78E-E5FE-4209-8347-AD0EC8B3F064}.Debug_Web|Mixed Platforms.ActiveCfg = Debug|x86
@@ -500,7 +476,9 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7069E361-5105-4A13-8D66-5D528B582BA6} = {13BA95A9-FFEF-4806-8D75-5A994CCCC7EF}
+		{76227E95-B261-4B6A-A97C-3764E7EDDF97} = {19AC6140-DD3E-42F4-8722-B83A8A399741}
 		{7BBDDEDF-C015-43C0-A532-FED224993281} = {13BA95A9-FFEF-4806-8D75-5A994CCCC7EF}
+		{063ECCEE-21C7-4300-B616-2F256FF12FCE} = {19AC6140-DD3E-42F4-8722-B83A8A399741}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2FE365F0-87EA-409E-A755-8AEF80638404}

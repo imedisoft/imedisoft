@@ -94,10 +94,6 @@ namespace OpenDental {
 		}
 
 		private void butCheckForUpdates_Click(object sender,EventArgs e) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				MsgBox.Show(this,"Updates are only allowed from the web server");
-				return;
-			}
 			if(PrefC.GetString(PrefName.WebServiceServerName)!="" //using web service
 				&&!ODEnvironment.IdIsThisComputer(PrefC.GetString(PrefName.WebServiceServerName).ToLower()))//and not on web server 
 			{

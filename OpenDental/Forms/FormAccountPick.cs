@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenDental.Bridges;
 using OpenDental.UI;
 using OpenDentBusiness;
+using System.Linq;
 
 namespace OpenDental{
 	/// <summary>
@@ -162,7 +163,7 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
-			List<Account> listAccounts=Accounts.GetDeepCopy(false);
+			List<Account> listAccounts = Accounts.All.ToList();
 			for(int i=0;i<listAccounts.Count;i++){
 				if(!checkInactive.Checked && listAccounts[i].Inactive){
 					continue;

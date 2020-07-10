@@ -29,11 +29,6 @@ namespace OpenDental {
 		}
 
 		private void FormBackup_Load(object sender, System.EventArgs e) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//Archive not supported over MT connection. Show warning if Middle Tier is in use.
-				butArchive.Enabled=false;
-				labelWarning.Text=Lan.g(this,"Not available when using a Middle Tier connection. You may only remove old data when directly connected to the server.");
-				labelWarning.Visible=true;
-			}
 			#region Backup Tab
 			//usesInternalImages=(PrefC.GetString(PrefName.ImageStore)=="OpenDental.Imaging.SqlStore");
 			checkExcludeImages.Checked=PrefC.GetBool(PrefName.BackupExcludeImageFolder);

@@ -24,14 +24,12 @@ namespace UnitTestsCore {
 					DataConnection.DBtype=DatabaseType.MySql;
 					//Create a database connection and make sure to set the MySQL UserLow and PassLow for Middle Tier unit tests.
 					new DataConnection().SetDb(serverAddr,dbName,userName,password,userName,password,DataConnection.DBtype,true);
-					RemotingClient.RemotingRole=RemotingRole.ClientDirect;
 					return true;
 				}
 				else {
 					DataConnection.DBtype=DatabaseType.Oracle;
 					dcon=new DataConnection(DataConnection.DBtype);
 					dcon.SetDb("Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST="+serverAddr+")(PORT="+port+"))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=XE)));User Id="+userName+";Password="+password+";","",DataConnection.DBtype,true);
-					RemotingClient.RemotingRole=RemotingRole.ClientDirect;
 					return true;
 				}
 			}

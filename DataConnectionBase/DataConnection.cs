@@ -367,6 +367,10 @@ namespace DataConnectionBase {
 		///<summary>Instantiates a new MySQL database connection utilizing the current static connection variables.</summary>
 		public DataConnection() : this(false) { }
 
+
+
+
+
 		///<summary>Instantiates a new MySQL database connection utilizing the current static connection variables.
 		///Uses MysqlUserLow and MysqlPassLow if isLow is set to true as to connect with the user with less permissions.</summary>
 		public DataConnection(bool isLow) 
@@ -439,6 +443,49 @@ namespace DataConnectionBase {
 			_cmd.Connection=_con;
 		}
 		#endregion Constructors
+
+
+
+
+
+
+		
+
+		public T SelectOne<T>(string command, DatabaseRecordBuilder<T> recordBuilder)
+        {
+			if (recordBuilder == null) return default;
+
+			_cmd.CommandText = command;
+
+			using (var dataReader = _cmd.ExecuteReader())
+            {
+				if (dataReader.Read())
+                {
+					return recordBuilder(dataReader);
+                }
+            }
+
+			return default;
+        }
+
+		public IEnumerable<T> SelectMany<T>(string command, DatabaseRecordBuilder<T> recordBuilder)
+        {
+			if (recordBuilder == null) yield break;
+
+			_cmd.CommandText = command;
+
+			using (var dataReader = _cmd.ExecuteReader())
+			{
+				while (dataReader.Read())
+				{
+					yield return recordBuilder(dataReader);
+				}
+			}
+		}
+
+
+
+
 
 		#region ConnectionString
 

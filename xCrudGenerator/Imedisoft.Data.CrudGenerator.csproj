@@ -8,7 +8,7 @@
     <ProjectGuid>{76227E95-B261-4B6A-A97C-3764E7EDDF97}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>xCrudGenerator</RootNamespace>
+    <RootNamespace>Imedisoft.Data.CrudGenerator</RootNamespace>
     <AssemblyName>CrudGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -92,21 +92,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CrudGenDataInterface.cs" />
-    <Compile Include="CrudGenHelper.cs" />
-    <Compile Include="CrudQueries.cs" />
-    <Compile Include="CrudSchemaForUnitTest.cs" />
-    <Compile Include="CrudSchemaRaw.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generator\EntityClassGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Schema\Column.cs" />
+    <Compile Include="Schema\Table.cs" />
+    <Compile Include="TextBoxExtensions.cs" />
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -119,7 +118,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -129,8 +127,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SchemaTable.cs" />
-    <Compile Include="SnippetType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeBase\xCodeBase.csproj">
@@ -140,6 +136,10 @@
     <ProjectReference Include="..\DataConnectionBase\xDataConnectionBase.csproj">
       <Project>{29c41020-4411-41f2-9061-9b71b5b32b5d}</Project>
       <Name>xDataConnectionBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">
+      <Project>{063eccee-21c7-4300-b616-2f256ff12fce}</Project>
+      <Name>Imedisoft.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenDentBusiness\OpenDentBusiness.csproj">
       <Project>{3D0FC76E-803C-4DE2-BDB1-47D63A4E2357}</Project>
@@ -168,9 +168,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Validate\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

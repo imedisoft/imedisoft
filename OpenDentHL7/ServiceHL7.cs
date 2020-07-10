@@ -94,8 +94,6 @@ namespace OpenDentHL7 {
 			//Try to connect to the database directly
 			try {
 				dcon.SetDb(computerName,database,user,password,"","",DataConnection.DBtype);
-				//a direct connection does not utilize lower privileges.
-				RemotingClient.RemotingRole=RemotingRole.ClientDirect;
 			}
 			catch {//(Exception ex){
 				throw new ApplicationException("Connection to database failed.");

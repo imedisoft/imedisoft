@@ -450,8 +450,6 @@ namespace OpenDental{
 				Environment.Exit(ExitCode);
 				return;
 			}
-			//Hook up MT connection lost event. Nothing prior to this point fires LostConnection events.
-			MiddleTierConnectionEvent.Fired+=MiddleTierConnection_ConnectionLost;
 			FormSplash formSplash=new FormSplash();
 			FormChooseDatabase FormCD=new FormChooseDatabase(chooseDatabaseInfo);
 			ChooseDatabaseInfo modelFromForm=null;
@@ -609,7 +607,7 @@ namespace OpenDental{
 				menuItemProcLockTool.Visible=false;
 			}
 			//Query Monitor does not capture queries from a Middle Tier client, only show Query Monitor menu item when directly connected to the database.
-			menuItemQueryMonitor.Visible=(RemotingClient.RemotingRole==RemotingRole.ClientDirect);
+			menuItemQueryMonitor.Visible=true;
 			if(Security.IsAuthorized(Permissions.ProcCodeEdit,true) && !PrefC.GetBool(PrefName.ADAdescriptionsReset)) {
 				ProcedureCodes.ResetADAdescriptions();
 				Prefs.UpdateBool(PrefName.ADAdescriptionsReset,true);
@@ -2895,13 +2893,7 @@ namespace OpenDental{
 					});
 				},
 				() => {
-					//For Middle Tier users, it is possible that the processing of signals just failed due to a credential validation failure.
-					//E.g. When a user has two instances of Open Dental open and they change the password in one of them.
-					//Therefore, we do not want to start up the signal timer if there was a login failure.
-					//The signal timer will start back up once RemotingClient.HasLoginFailed has been set back to false (valid log in attempt).
-					if(!RemotingClient.HasLoginFailed) {
-						this.Invoke(timerSignals.Start);//Either not a ClientWeb instance or the credentials are still valid, continue processing signals.
-					}
+					this.Invoke(timerSignals.Start);
 				}
 			);
 			//Be careful about doing anything that takes a long amount of computation time after the SignalsTick.
@@ -3133,9 +3125,6 @@ namespace OpenDental{
 							return;
 						}
 					}
-				}
-				if(RemotingClient.RemotingRole==RemotingRole.ClientWeb && !Security.IsUserLoggedIn) {//User isn't actually logged in, so don't popup a task on their computer.
-					return;
 				}
 				List<TaskList> listUserTaskListSubsTrunk=TaskLists.RefreshUserTrunk(Security.CurUser.UserNum);//Get the list of directly subscribed tasklists.
 				List<long> listUserTaskListSubNums=listUserTaskListSubsTrunk.Select(x => x.TaskListNum).ToList();
@@ -3715,8 +3704,6 @@ namespace OpenDental{
 					dcon.SetDb(dconnStr,"",DatabaseType.Oracle);
 #endif
 				}
-				//a direct connection does not utilize lower privileges.
-				RemotingClient.RemotingRole=RemotingRole.ClientDirect;
 				return true;
 			}
 			catch(Exception ex) {
@@ -3733,9 +3720,6 @@ namespace OpenDental{
 				this.BeginInvoke(() => DataConnection_ConnectionLost(e));
 				return;
 			}
-			if(RemotingClient.RemotingRole!=RemotingRole.ClientDirect) {
-				return;
-			}
 			if(e==null || e.EventType!=ODEventType.DataConnection || e.IsConnectionRestored) {
 				return;
 			}
@@ -3748,29 +3732,10 @@ namespace OpenDental{
 				this.BeginInvoke(() => CrashedTable_Detected(e));
 				return;
 			}
-			if(RemotingClient.RemotingRole!=RemotingRole.ClientDirect) {
-				return;
-			}
 			if(e==null || e.EventType!=ODEventType.CrashedTable || !e.IsTableCrashed) {
 				return;
 			}
 			BeginCrashedTableMonitorThread(e);
-		}
-
-		///At any time during the lifespan of the application connection to the Middle Tier server can be lost for unknown reasons.
-		///When anything spawned by FormOpenDental (main thread) tries to connect to the MiddleTier server and fails, this event will fire.</summary>
-		private void MiddleTierConnection_ConnectionLost(MiddleTierConnectionEventArgs e) {
-			if(InvokeRequired) {
-				this.BeginInvoke(() => MiddleTierConnection_ConnectionLost(e));
-				return;
-			}
-			if(RemotingClient.RemotingRole!=RemotingRole.ClientWeb) {
-				return;
-			}
-			if(e==null || e.EventType!=ODEventType.MiddleTierConnection || e.IsConnectionRestored) {
-				return;
-			}
-			BeginMiddleTierConnectionMonitorThread(e);
 		}
 
 		///<summary>This method stops all (local) timers and displays a bad credentials window that will let users attempt to login again.  This is to
@@ -3782,19 +3747,15 @@ namespace OpenDental{
 				this.BeginInvoke(() => DataConnection_CredentialsFailedAfterLogin(e));
 				return;
 			}
-			if(RemotingClient.RemotingRole!=RemotingRole.ClientWeb) {
-				return;
-			}
 			if(e!=null && e.EventType!=ODEventType.ServiceCredentials) {
 				return;
 			}
 			if(Security.CurUser==null) {
 				Environment.Exit(0);//shouldn't be possible, would have to have a user logged in to get here, but just in case, exit the program
 			}
-			if(RemotingClient.HasLoginFailed || (_formLoginFailed!=null && !_formLoginFailed.IsDisposed)) {//_formLoginFailed already displayed, wait for _formLoginFailed to close
+			if(_formLoginFailed!=null && !_formLoginFailed.IsDisposed) {//_formLoginFailed already displayed, wait for _formLoginFailed to close
 				return;
 			}
-			RemotingClient.HasLoginFailed=true;//first thread to get the lock (or invoke this method so the main thread gets the lock) will display the login form
 			try {
 				SetTimersAndThreads(false);//Safe to stop timers since this method was invoked on the main thread if required.
 				Security.IsUserLoggedIn=false;
@@ -3812,16 +3773,12 @@ namespace OpenDental{
 				throw;
 			}
 			finally {
-				RemotingClient.HasLoginFailed=false;
 				_formLoginFailed=null;
 			}
 		}
 
 		///<summary></summary>
 		private void DataReaderNull_Detected(DataReaderNullEventArgs e) {
-			if(RemotingClient.RemotingRole!=RemotingRole.ClientDirect) {
-				return;
-			}
 			if(e==null || e.IsQuerySuccessful) {
 				return;
 			}
@@ -6352,7 +6309,7 @@ namespace OpenDental{
 			#region UserName and PassHash
 			//Only consider username and password here when not in Middle Tier mode.
 			//If credentials were passed in the command line arguments for Middle Tier, they were already considered in the Choose Database window.
-			if(RemotingClient.RemotingRole==RemotingRole.ClientDirect) {
+
 				//Users are allowed to use eCW tight integration without command line.  They can manually launch Open Dental.
 				//We always want to trigger login window for eCW tight, even if no username was passed in.
 				if((Programs.UsingEcwTightOrFullMode() && Security.CurUser==null)
@@ -6404,7 +6361,7 @@ namespace OpenDental{
 						MsgBox.Show(this,"You do not have permission to use any modules.");
 					}
 				}
-			}
+			
 			#endregion
 			#region Module
 			if(startingModule!=EnumModuleType.None && moduleBar.IndexOf(startingModule)==Security.GetModule(moduleBar.IndexOf(startingModule))) {
@@ -6512,13 +6469,6 @@ namespace OpenDental{
 					bool isEcwTightOrFullMode=Programs.UsingEcwTightOrFullMode();
 					Security.CurUser=Userods.CheckUserAndPassword(odUser,odPassword,isEcwTightOrFullMode);
 					UserOdPrefL.SetThemeForUserIfNeeded();
-					if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-						string pw=odPassword;
-						if(isEcwTightOrFullMode) {//ecw requires hash, but non-ecw requires actual password
-							pw=Authentication.HashPasswordMD5(pw,true);
-						}
-						Security.PasswordTyped=pw;
-					}
 				}
 				catch(Exception ex) {
 					MessageBox.Show(ex.Message);
@@ -6868,9 +6818,6 @@ namespace OpenDental{
 			RefreshTasksNotification();
 			Security.IsUserLoggedIn=false;
 			Text=PatientL.GetMainTitle(null,0);
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				Security.CurUser=oldUser;//so that the queries in FormLogOn() will work for the web service, since the web service requires a valid user to run queries.
-			}
 			SetTimersAndThreads(false);//Safe to stop timers since this method was invoked on the main thread if required.
 			userControlPatientDashboard.CloseDashboard(true);
 			ShowLogOn();

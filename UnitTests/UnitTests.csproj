@@ -389,9 +389,9 @@
       <Project>{7bbddedf-c015-43c0-a532-fed224993281}</Project>
       <Name>UnitTestsCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\xCrudGenerator\xCrudGenerator.csproj">
+    <ProjectReference Include="..\xCrudGenerator\Imedisoft.Data.CrudGenerator.csproj">
       <Project>{76227E95-B261-4B6A-A97C-3764E7EDDF97}</Project>
-      <Name>xCrudGenerator</Name>
+      <Name>Imedisoft.Data.CrudGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

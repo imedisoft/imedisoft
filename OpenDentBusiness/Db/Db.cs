@@ -271,6 +271,12 @@ namespace OpenDentBusiness
 			return false;
 		}
 
+
+
+
+
+
+
 		internal static DataTable GetTable(string command)
 		{
 			DataTable retVal = GetTableWithRemotingRoleCheck(command);
@@ -319,6 +325,30 @@ namespace OpenDentBusiness
 		{
 			LastCommand = command;
 			return DataCore.GetTable(command);
+		}
+
+		public static T SelectOne<T>(string command, DatabaseRecordBuilder<T> recordBuilder)
+		{
+			LastCommand = command;
+
+			if (recordBuilder == null) return default;
+
+			using (var dataConnection = new DataConnection())
+            {
+				return dataConnection.SelectOne(command, recordBuilder);
+            }
+		}
+
+		public static IEnumerable<T> SelectMany<T>(string command, DatabaseRecordBuilder<T> recordBuilder)
+		{
+			LastCommand = command;
+
+			if (recordBuilder == null) return default;
+
+			using (var dataConnection = new DataConnection())
+			{
+				return dataConnection.SelectMany(command, recordBuilder);
+			}
 		}
 
 		/// <summary>

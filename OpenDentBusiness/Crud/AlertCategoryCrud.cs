@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 
-namespace OpenDentBusiness.Crud{
-	public class AlertCategoryCrud {
+namespace OpenDentBusiness.Crud
+{
+    public class AlertCategoryCrud {
 		///<summary>Gets one AlertCategory object from the database using the primary key.  Returns null if not found.</summary>
 		public static AlertCategory SelectOne(long alertCategoryNum) {
 			string command="SELECT * FROM alertcategory "

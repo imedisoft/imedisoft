@@ -233,11 +233,6 @@ namespace OpenDental {
 				//Always process signals for ClientDirect users regardless of where the RemoteRole source on the signal is from.
 				//The middle tier server will have refreshed its cache already.
 				bool getCacheFromDb=true;
-				if(RemotingClient.RemotingRole==RemotingRole.ClientWeb
-					&& !listSignals.Any(x => x.RemoteRole==RemotingRole.ClientDirect)) {
-					//ClientWebs do not need to tell the middle tier to go to the database unless a ClientDirect has inserted a signal.
-					getCacheFromDb=false;
-				}
 				Cache.Refresh(getCacheFromDb,cacheRefreshArray);
 				onProcess(_listSubscribedForms,listSignals);
 			});

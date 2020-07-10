@@ -364,6 +364,7 @@
     <Compile Include="Data Interface\EmailHostingTemplates.cs" />
     <Compile Include="Data Interface\PromotionLogs.cs" />
     <Compile Include="Data Interface\Promotions.cs" />
+    <Compile Include="Db\DatabaseRecordBuilder.cs" />
     <Compile Include="Email\EmailHosting\Account\AccountApi.cs" />
     <Compile Include="Email\EmailHosting\Account\AccountApiMock.cs" />
     <Compile Include="Email\EmailHosting\Account\IAccountApi.cs" />
@@ -1929,6 +1930,10 @@
     <ProjectReference Include="..\DataConnectionBase\xDataConnectionBase.csproj">
       <Project>{29c41020-4411-41f2-9061-9b71b5b32b5d}</Project>
       <Name>xDataConnectionBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">
+      <Project>{063eccee-21c7-4300-b616-2f256ff12fce}</Project>
+      <Name>Imedisoft.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenDentalCloud\OpenDentalCloud.csproj">
       <Project>{f90d0481-3d97-4c72-af6e-dd81177e3de1}</Project>

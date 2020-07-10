@@ -741,8 +741,7 @@ namespace OpenDental {
 		///Otherwise, a full refresh will only be run when certain types of signals corresonding to the current selected tabs are found in listSignals.
 		///</summary>
 		private void FillGrid(List<Signalod> listSignals=null){
-			if(Security.CurUser==null 
-				|| (RemotingClient.RemotingRole==RemotingRole.ClientWeb && !Security.IsUserLoggedIn)) 
+			if(Security.CurUser==null) 
 			{
 				gridMain.BeginUpdate();
 				gridMain.ListGridRows.Clear();

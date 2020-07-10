@@ -1185,12 +1185,6 @@ namespace OpenDental {
 		///False if more than one CustListener service is present or the eConnector service could not install.</returns>
 		public static bool UpgradeOrInstallEConnector(bool isSilent,out bool isListening) {
 			isListening=false;
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				if(!isSilent) {
-					MsgBox.Show("ServicesHelper","Not allowed to install services when using the middle tier.");
-				}
-				return false;
-			}
 			try {
 				if(ODEnvironment.IsCloudServer) {
 					//We do not want to install in case this is a pre-test cloud database.
@@ -1255,12 +1249,6 @@ namespace OpenDental {
 		///<summary>Tries to install the OpenDentalService if needed.  Returns false if failed.
 		///Set isSilent to false to show meaningful error messages, otherwise fails silently.</summary>
 		public static bool TryInstallOpenDentalService(bool isSilent) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				if(!isSilent) {
-					MsgBox.Show("ServicesHelper","Not allowed to install services when using the middle tier.");
-				}
-				return false;
-			}
 			try {
 				if(ODEnvironment.IsCloudServer) {
 					return true;//We do not want to install now in case this is a pre-test cloud database.

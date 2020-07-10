@@ -7,77 +7,29 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Linq;
+using Imedisoft.Data.Cache;
 
 namespace OpenDentBusiness
 {
-
 	public class Accounts
 	{
 		#region Cache Pattern
 
-		private class AccountCache : CacheListAbs<Account>
+		private class AccountCache : CacheBase<Account>
 		{
-			protected override Account Copy(Account account)
-			{
-				return account.Clone();
-			}
-
-			protected override void FillCacheIfNeeded()
-			{
-				Accounts.GetTableFromCache(false);
-			}
-
-			protected override List<Account> GetCacheFromDb()
-			{
-				string command = "SELECT * FROM account ORDER BY AcctType,Description";
-				return Crud.AccountCrud.SelectMany(command);
-			}
-
-			protected override DataTable ListToTable(List<Account> listAccounts)
-			{
-				return Crud.AccountCrud.ListToTable(listAccounts, "Account");
-			}
-
-			protected override List<Account> TableToList(DataTable table)
-			{
-				return Crud.AccountCrud.TableToList(table);
-			}
-
-			protected override bool IsInListShort(Account account)
-			{
-				return !account.Inactive;
-			}
+			protected override IEnumerable<Account> Load()
+				=> Crud.AccountCrud.SelectMany("SELECT * FROM account ORDER BY AcctType, Description");
 		}
 
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static AccountCache _accountCache = new AccountCache();
+		private static readonly AccountCache cache = new AccountCache();
 
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache()
-		{
-			return GetTableFromCache(true);
-		}
+		public static List<Account> RefreshCache() => cache.Refresh();
 
-		public static List<Account> GetDeepCopy(bool isShort = false)
-		{
-			return _accountCache.GetDeepCopy(isShort);
-		}
+		public static IEnumerable<Account> All => cache.All;
 
-		public static Account GetFirstOrDefault(Func<Account, bool> match, bool isShort = false)
+		public static Account GetFirstOrDefault(Func<Account, bool> predicate)
 		{
-			return _accountCache.GetFirstOrDefault(match, isShort);
-		}
-
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table)
-		{
-			_accountCache.FillCacheFromTable(table);
-		}
-
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache)
-		{
-			return _accountCache.GetTableFromCache(doRefreshCache);
+			return cache.FirstOrDefault(predicate);
 		}
 
 		#endregion Cache Pattern

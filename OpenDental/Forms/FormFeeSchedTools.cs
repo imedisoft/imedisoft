@@ -706,9 +706,6 @@ namespace OpenDental {
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				butImportCanada.Visible=false;
 			}
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				groupGlobalUpdateFees.Enabled=false;
-			}
 		}
 
 		private void FillComboBoxes() {

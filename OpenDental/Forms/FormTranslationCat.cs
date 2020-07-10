@@ -188,10 +188,6 @@ namespace OpenDental{
 		}
 
 		private void butDownload_Click(object sender, System.EventArgs e) {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {
-				MessageBox.Show("Not allowed when using client web.");
-				return;
-			}
 			string remoteUri = "http://www.opendental.com/cultures/";
 			string fileName = CultureInfo.CurrentCulture.Name+".txt";//eg. en-US.txt
 			string myStringWebResource = null;

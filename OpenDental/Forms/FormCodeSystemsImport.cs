@@ -125,10 +125,6 @@ namespace OpenDental {
 		}
 
 		private void Download() {
-			if(RemotingClient.RemotingRole==RemotingRole.ClientWeb) {//Do not let users download code systems when using the middle tier.
-				MsgBox.Show("CodeSystemImporter","Cannot download code systems when using the middle tier.");
-				return;
-			}
 			if(gridMain.GetSelectedIndex()==-1) {
 				MsgBox.Show("CodeSystemImporter","No code systems selected.");
 				return;

@@ -78,12 +78,9 @@ namespace UnitTests {
 		}
 
 		protected static void RunTestsAgainstMiddleTier(OpenDentBusiness.WebServices.OpenDentalServerMockIIS mockServer) {
-			RemotingClient.RemotingRole=RemotingRole.ClientWeb;
-			OpenDentBusiness.WebServices.OpenDentalServerProxy.MockOpenDentalServerCur=mockServer;
 		}
 
 		protected static void RunTestsAgainstDirectConnection() {
-			RemotingClient.RemotingRole=RemotingRole.ClientDirect;
 			OpenDentBusiness.WebServices.OpenDentalServerProxy.MockOpenDentalServerCur=null;
 		}
 
