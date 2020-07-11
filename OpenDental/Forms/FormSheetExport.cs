@@ -53,7 +53,7 @@ namespace OpenDental {
 
 		private void butExport_Click(object sender,EventArgs e) {
 			if(gridCustomSheet.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a sheet from the list first.");
+				MessageBox.Show("Please select a sheet from the list first.");
 				return;
 			}
 			SheetDef sheetdef=SheetDefs.GetSheetDef(_listSheetDefs[gridCustomSheet.GetSelectedIndex()].SheetDefNum);
@@ -75,14 +75,7 @@ namespace OpenDental {
 			}
 			XmlSerializer serializer=new XmlSerializer(typeof(SheetDef));
 			string filename="SheetDefCustom.xml";
-			if(ODBuild.IsWeb()) {
-				StringBuilder strbuild=new StringBuilder();
-				using(XmlWriter writer=XmlWriter.Create(strbuild)) {
-					serializer.Serialize(writer,sheetdef);
-				}
-				ThinfinityUtils.ExportForDownload(filename,strbuild.ToString());
-			}
-			else {
+
 				SaveFileDialog saveDlg=new SaveFileDialog();
 				saveDlg.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
 				saveDlg.FileName=filename;
@@ -92,8 +85,8 @@ namespace OpenDental {
 				using(TextWriter writer=new StreamWriter(saveDlg.FileName)) {
 					serializer.Serialize(writer,sheetdef);
 				}
-			}
-			MsgBox.Show(this,"Exported");
+			
+			MessageBox.Show("Exported");
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

@@ -221,37 +221,37 @@ namespace OpenDental {
 		private bool IsValid(int numberEntriesSelected) {
 			//No procedures selected AND (rigorous adjustments are fully enforced OR the Fixed Amount option is not selected).
 			if(numberEntriesSelected==0 && (_rigorousAdjustment==RigorousAdjustments.EnforceFully || !radioFixedAmt.Checked)) {
-				MsgBox.Show(this,"You must select a procedure to add the adjustment to.");
+				MessageBox.Show("You must select a procedure to add the adjustment to.");
 				return false;
 			}
 			if(listTypePos.SelectedIndex==-1 && listTypeNeg.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please pick an adjustment type.");
+				MessageBox.Show("Please pick an adjustment type.");
 				return false;
 			}
 			if(comboProv.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please pick a provider.");
+				MessageBox.Show("Please pick a provider.");
 				return false;
 			}
 			if(PrefC.HasClinicsEnabled && comboClinic.SelectedClinicNum==-1) {
-				MsgBox.Show(this,"Please pick a clinic.");
+				MessageBox.Show("Please pick a clinic.");
 				return false;
 			}
 			if(string.IsNullOrWhiteSpace(dateAdjustment.Text) || dateAdjustment.errorProvider1.GetError(dateAdjustment)!="") {
-				MsgBox.Show(this,"Please enter a valid date.");
+				MessageBox.Show("Please enter a valid date.");
 				return false;
 			}
 			if(PIn.Date(dateAdjustment.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Adjustments cannot be made for future dates");
+				MessageBox.Show("Adjustments cannot be made for future dates");
 				return false;
 			}
 			if(string.IsNullOrWhiteSpace(textAmt.Text) || textAmt.errorProvider1.GetError(textAmt)!="") {
-				MsgBox.Show(this,"Please enter a valid amount.");
+				MessageBox.Show("Please enter a valid amount.");
 				return false;
 			}
 			List<long> listSelectedProcNums=gridMain.SelectedTags<MultiAdjEntry>().Where(x => x.Proc!=null).Select(x => x.Proc.ProcNum).ToList();
 			List<OrthoProcLink> listOrthoProcLinks=OrthoProcLinks.GetManyForProcs(listSelectedProcNums);
 			if(listOrthoProcLinks.Count>0) {
-				MsgBox.Show(this,"One or more of the selected procedures cannot be adjusted because it is attached to an ortho case." +
+				MessageBox.Show("One or more of the selected procedures cannot be adjusted because it is attached to an ortho case." +
 					" Please deselect these items and try again.");
 				return false;
 			}
@@ -450,7 +450,7 @@ namespace OpenDental {
 			List<MultiAdjEntry> listProcs=FillListGridEntries(selectedType);
 			if(_listGridEntries.Where(x => x.Adj!=null)//They have made an adjustment row for this procedure
 				.Any(x => x.Proc!=null && !x.Proc.ProcNum.In(listProcs.Where(y => y.Proc!=null).Select(y => y.Proc.ProcNum)))//The procedure is no longer in the list
-				&& !MsgBox.Show(this,true,"This will clear out any adjustments you have added. Are you sure you want to continue?")) 
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"This will clear out any adjustments you have added. Are you sure you want to continue?")) 
 			{
 				//When going from ExplicitOnly to FIFO we may lose procedures that currently exist in _listGridEntries.
 				//This becomes problematic when the user has entered adjustments that have not been entered in the DB yet.
@@ -504,13 +504,23 @@ namespace OpenDental {
 					break;
 				}
 			}
-			if(hasNegAmt && !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Remaining amount on a procedure is negative. Continue?","Overpaid Procedure Warning")) {
-				return;
+
+			if (hasNegAmt)
+			{
+				var result = MessageBox.Show(this,
+					"Remaining amount on a procedure is negative. Continue?", "Overpaid Procedure Warning",
+					MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+				if (result == DialogResult.No)
+				{
+					return;
+				}
 			}
+
 			if(!Security.IsAuthorized(Permissions.AdjustmentCreate,true)) {//User does not have full edit permission.
 				//Therefore the user only has the ability to edit $0 adjustments (see Load()).
 				if(listAdjRows.Any(x => !x.Adj.AdjAmt.IsZero())) {
-					MsgBox.Show(this,"Amount has to be 0.00 due to security permission.");
+					MessageBox.Show("Amount has to be 0.00 due to security permission.");
 					return;
 				}
 			}

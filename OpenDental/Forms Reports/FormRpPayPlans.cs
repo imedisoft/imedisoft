@@ -385,17 +385,17 @@ namespace OpenDental
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(listProv.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"Please select at least one provider.");
+				MessageBox.Show("Please select at least one provider.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled) {//Using clinics
 				if(listClin.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"Please select at least one clinic.");
+					MessageBox.Show("Please select at least one clinic.");
 					return;
 				}
 			}
 			if(dateStart.Value>dateEnd.Value) {
-				MsgBox.Show(this,"Start date cannot be greater than the end date.");
+				MessageBox.Show("Start date cannot be greater than the end date.");
 				return;
 			}
 			ReportComplex report=new ReportComplex(true,true);

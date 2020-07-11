@@ -22,7 +22,7 @@ namespace OpenDental {
 			int allergyIndex=0;
 			allergyDefList=AllergyDefs.GetAll(false);
 			if(allergyDefList.Count<1) {
-				MsgBox.Show(this,"Need to set up at least one Allergy from EHR setup window.");
+				MessageBox.Show("Need to set up at least one Allergy from EHR setup window.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -71,7 +71,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
 				return;
 			}
 			Allergies.Delete(AllergyCur.AllergyNum);

@@ -27,9 +27,6 @@ namespace OpenDental {
 			catch(Exception ex) {
 				ex.DoNothing();//Suppress unhandled exceptions from hidden preferences, since they are read only.
 			}
-			if(ODBuild.IsWeb()) {
-				tabControlMain.TabPages.Remove(tabReport);//Not supported in OD Cloud
-			}
 		}
 
 		/// <summary>Sets UI for preferences that we know for sure will exist.</summary>
@@ -423,19 +420,19 @@ namespace OpenDental {
 				errorMsg+="The patient select number of milliseconds to wait before filling the grid must be a valid number.\r\n";
 			}
 			if(errorMsg!="") {
-				MsgBox.Show(this,"Please fix the following errors:\r\n"+errorMsg);
+				MessageBox.Show("Please fix the following errors:\r\n"+errorMsg);
 				return false;
 			}
 			if(_usePhonenumTable!=YN.Yes && checkUsePhoneNumTable.CheckState==CheckState.Checked) {//use CheckState since it can be indeterminate
 				string msgText="When enabling the use of the phonenumber table a one-time sync of patient phone numbers needs to take place.  This could "+
 					"take a couple minutes.  Continue?";
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,msgText)) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,msgText)) {
 					return false;
 				}
 				if(!SyncPhoneNums()) {
 					return false;
 				}
-				MsgBox.Show(this,"Done");
+				MessageBox.Show("Done");
 			}
 			return true;
 
@@ -524,7 +521,7 @@ namespace OpenDental {
 
 		private void butSyncPhNums_Click(object sender,EventArgs e) {
 			if(SyncPhoneNums()) {
-				MsgBox.Show(this,"Done");
+				MessageBox.Show("Done");
 			}
 		}
 

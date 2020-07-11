@@ -117,7 +117,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(date2.SelectionStart<date1.SelectionStart) {
-				MsgBox.Show(this,"End date cannot be before start date.");
+				MessageBox.Show("End date cannot be before start date.");
 				return;
 			}
 			ReportSimpleGrid report=new ReportSimpleGrid();

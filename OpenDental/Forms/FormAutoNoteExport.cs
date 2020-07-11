@@ -78,29 +78,25 @@ namespace OpenDental {
 		private void butExport_Click(object sender,System.EventArgs e) {
 			List<AutoNote> listCheckedAutoNotes=GetCheckedAutoNotes(treeNotes.Nodes);
 			if(listCheckedAutoNotes.Count==0) {
-				MsgBox.Show(this,"You must select at least one Auto Note to export.");
+				MessageBox.Show("You must select at least one Auto Note to export.");
 				return;
 			}
 			try {
 				string fileName;
-				if(ODBuild.IsWeb()) {
-					//file download dialog will come up later, after file is created.
-					fileName="autonotes.json";
-				}
-				else {
+
 					using(SaveFileDialog saveDialog=ExportDialogSetup()) {
 						if(saveDialog.ShowDialog()!=DialogResult.OK) {
 							return;//user canceled out of SaveFileDialog
 						}
 						fileName=saveDialog.FileName;
 					}
-				}
+				
 				List<SerializableAutoNote> serializableAutoNotes=AutoNotes.GetSerializableAutoNotes(listCheckedAutoNotes);
 				List<AutoNoteControl> listAutoNoteControls=AutoNoteControls.GetListByParsingAutoNoteText(serializableAutoNotes);
 				List<SerializableAutoNoteControl> serializableAutoNoteControls=AutoNoteControls.GetSerializableAutoNoteControls(listAutoNoteControls);
 				AutoNotes.WriteAutoNotesToJson(serializableAutoNotes,serializableAutoNoteControls,fileName);
 				SecurityLogs.MakeLogEntry(Permissions.AutoNoteQuickNoteEdit,0,"Auto Note Export");
-				MsgBox.Show(this,"Auto Note(s) successfully exported.");
+				MessageBox.Show("Auto Note(s) successfully exported.");
 			}
 			catch(Exception err) {
 				FriendlyException.Show("AutoNote(s) failed to export.",err);

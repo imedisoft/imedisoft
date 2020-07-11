@@ -83,7 +83,7 @@ namespace OpenDental {
 				//no need to ask them
 			}
 			else {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete Amendment?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete Amendment?")) {
 					return;
 				}
 			}
@@ -106,7 +106,7 @@ namespace OpenDental {
 				}
 			}
 			catch {
-				MsgBox.Show(this,"The date entered does not match the required format.");
+				MessageBox.Show("The date entered does not match the required format.");
 				return;
 			}
 			if(comboSource.SelectedIndex==-1) {

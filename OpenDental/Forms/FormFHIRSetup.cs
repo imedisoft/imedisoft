@@ -176,11 +176,11 @@ namespace OpenDental {
 
 		private void butClose_Click(object sender,EventArgs e) {
 			if(!textSubInterval.IsValid) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(comboPayType.SelectedIndex < 0) {
-				MsgBox.Show(this,"Please select a payment type.");
+				MessageBox.Show("Please select a payment type.");
 				return;
 			}
 			Program prog=Programs.GetCur(ProgramName.FHIR);

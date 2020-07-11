@@ -146,23 +146,23 @@ namespace OpenDental {
 				return;
 			}
 			if(textFieldValue.Text==""){
-				MsgBox.Show(this,"Please set a field value first.");
+				MessageBox.Show("Please set a field value first.");
 				return;
 			}
 			if(comboFontName.Text==""){
 				//not going to bother testing for validity unless it will cause a crash.
-				MsgBox.Show(this,"Please select a font name first.");
+				MessageBox.Show("Please select a font name first.");
 				return;
 			}
 			float fontSize=(float)numFontSize.Value;
 			if(fontSize<2){
-				MsgBox.Show(this,"Font size is invalid.");
+				MessageBox.Show("Font size is invalid.");
 				return;
 			}
 			if(SheetDefs.IsDashboardType(_sheetDefCur) 
 				&& textFieldValue.Text.ToLower().Contains($"[{StaticTextField.patientPortalCredentials.ToString().ToLower()}]")) 
 			{
-				MsgBox.Show(this,"The [patientPortalCredentials] tag is not allowed in Dashboards.");
+				MessageBox.Show("The [patientPortalCredentials] tag is not allowed in Dashboards.");
 				return;
 			}
 			SheetFieldDefCur.FieldValue=textFieldValue.Text;

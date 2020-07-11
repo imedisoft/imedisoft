@@ -288,7 +288,7 @@ namespace OpenDental {
 
 		private void checkIsCritical_Click(object sender,EventArgs e) {
 			if(checkIsCritical.Checked){
-				if(!MsgBox.Show(this,true,"Are you sure this is really critical?  To qualify as critical, there would be no possible workarounds.  The missing feature would probably be seriously impacting the financial status of the office.  It would be serious enough that you might be considering using another software.")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure this is really critical?  To qualify as critical, there would be no possible workarounds.  The missing feature would probably be seriously impacting the financial status of the office.  It would be serious enough that you might be considering using another software.")){
 					checkIsCritical.Checked=false;
 					return;
 				}
@@ -298,7 +298,7 @@ namespace OpenDental {
 		private void butAddDiscuss_Click(object sender,EventArgs e) {
 			//button is not even visible if New
 			if(textNote.Text==""){
-				MsgBox.Show(this,"Please enter some text first.");
+				MessageBox.Show("Please enter some text first.");
 				return;
 			}
 			if(!SaveDiscuss()){
@@ -443,7 +443,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			//only visible if New,NeedsClarification,NotARequest,Redundant,or TooBroad
-			if(!MsgBox.Show(this,true,"Delete this entire request?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this entire request?")){
 				return;
 			}
 			if(!SaveChangesToDb(true)){
@@ -463,18 +463,18 @@ namespace OpenDental {
 			double bounty=0;
 			if(!doDelete){
 				if(textDescription.Text==""){
-					MsgBox.Show(this,"Description cannot be blank.");
+					MessageBox.Show("Description cannot be blank.");
 					return false;
 				}
 				try{
 					difficulty=int.Parse(textDifficulty.Text);
 				}
 				catch{
-					MsgBox.Show(this,"Difficulty is invalid.");
+					MessageBox.Show("Difficulty is invalid.");
 					return false;
 				}
 				if(difficulty<0 || difficulty>10){
-					MsgBox.Show(this,"Difficulty is invalid.");
+					MessageBox.Show("Difficulty is invalid.");
 					return false;
 				}
 				if(IsAdminMode) {
@@ -482,7 +482,7 @@ namespace OpenDental {
 						bounty=PIn.Int(textBounty.Text);
 					}
 					catch {
-						MsgBox.Show(this,"Bounty is invalid.");
+						MessageBox.Show("Bounty is invalid.");
 						return false;
 					}
 				}
@@ -491,11 +491,11 @@ namespace OpenDental {
 						myPoints=PIn.Int(textMyPoints.Text);//handles "" gracefully
 					}
 					catch{
-						MsgBox.Show(this,"Points is invalid.");
+						MessageBox.Show("Points is invalid.");
 						return false;
 					}
 					if(difficulty<0 || difficulty>100){
-						MsgBox.Show(this,"Points is invalid.");
+						MessageBox.Show("Points is invalid.");
 						return false;
 					}
 					//still need to validate that they have enough points.
@@ -507,18 +507,18 @@ namespace OpenDental {
 							myPledge=double.Parse(textMyPledge.Text);
 						}
 						catch{
-							MsgBox.Show(this,"Pledge is invalid.");
+							MessageBox.Show("Pledge is invalid.");
 							return false;
 						}
 					}
 					if(myPledge<0){
-						MsgBox.Show(this,"Pledge is invalid.");
+						MessageBox.Show("Pledge is invalid.");
 						return false;
 					}
 				}
 				double myPointsRemain=PIn.Double(textMyPointsRemain.Text);
 				if(myPointsRemain<0){
-					MsgBox.Show(this,"You have gone over your allotted points.");
+					MessageBox.Show("You have gone over your allotted points.");
 					return false;
 				}
 			}
@@ -675,11 +675,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textNote.Text!=""){
-				MsgBox.Show(this,"You need to save your note first.");
+				MessageBox.Show("You need to save your note first.");
 				return;
 			}
 			if(_canResubmit) {
-				if(!MsgBox.Show(this,true,"Only continue if you have added notes to the original request to comply better with submission guidelines.")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Only continue if you have added notes to the original request to comply better with submission guidelines.")) {
 					return;
 				}
 				comboApproval.SelectedIndex=0;

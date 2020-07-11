@@ -119,7 +119,7 @@ namespace OpenDental {
 		}
 
 		private void butSendEmail_Click(object sender,EventArgs e) {
-			MsgBox.Show(this,
+			MessageBox.Show(
 				"Electronic copies cannot be emailed to patients due to security concerns.\r\n"+
 				"Instruct the patient to access their information in the patient portal.\r\n"+
 				"If you are trying to send the patient information directly to another provider, then go to Chart | EHR | Send/Receive summary of care.");

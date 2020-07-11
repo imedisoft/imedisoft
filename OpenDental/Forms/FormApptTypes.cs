@@ -112,7 +112,7 @@ namespace OpenDental {
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			if(gridMain.GetSelectedIndex()==0) {
@@ -130,7 +130,7 @@ namespace OpenDental {
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			if(gridMain.GetSelectedIndex()==_listApptTypes.Count-1) {

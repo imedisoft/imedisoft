@@ -457,7 +457,7 @@ namespace OpenDental {
 		private void OnVerify(PlanToVerify planToVerifyEnum) {
 			ODGrid grid=GetVisibleGrid();
 			if(grid.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"Please select an insurance to verify.");
+				MessageBox.Show("Please select an insurance to verify.");
 				return;
 			}
 			InsVerifyGridObject selectedRowObject=((InsVerifyGridObject)grid.ListGridRows[grid.GetSelectedIndex()].Tag);
@@ -466,7 +466,7 @@ namespace OpenDental {
 				|| (planToVerifyEnum==PlanToVerify.InsuranceBenefits && selectedRowObject.PlanInsVerify==null)) 
 			{
 				//This will only happen if somehow the selected grid row differed from the passed in PlanToVerify.
-				MsgBox.Show(this,"Something went wrong with your selection.  Click on the refresh button and try again.");
+				MessageBox.Show("Something went wrong with your selection.  Click on the refresh button and try again.");
 				return;
 			}
 			string verifyType="";
@@ -479,7 +479,7 @@ namespace OpenDental {
 			else if(planToVerifyEnum==PlanToVerify.InsuranceBenefits) {
 				verifyType="insurance benefits";
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Are you sure you want to verify the selected "+verifyType+"?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Are you sure you want to verify the selected "+verifyType+"?")) {
 				return;
 			}
 			if(planToVerifyEnum==PlanToVerify.Both || planToVerifyEnum==PlanToVerify.PatientEligibility) {
@@ -567,14 +567,14 @@ namespace OpenDental {
 			if(_gridRowSelected.PatInsVerify!=null) {				
 				pp=PatPlans.GetByPatPlanNum(patPlanNum);
 				if(pp==null) {
-					MsgBox.Show(this,"The selected patient plan cannot be found.");
+					MessageBox.Show("The selected patient plan cannot be found.");
 					//Refresh grids so we have more up to date data.
 					FillGrids();
 					return;
 				}
 				insSub=InsSubs.GetOne(pp.InsSubNum);
 				if(insSub==null) {
-					MsgBox.Show(this,"The selected patient's subscriber cannot be found.");
+					MessageBox.Show("The selected patient's subscriber cannot be found.");
 					//Refresh grids so we have more up to date data.
 					FillGrids();
 					return;
@@ -585,7 +585,7 @@ namespace OpenDental {
 				ip=InsPlans.GetPlan(_gridRowSelected.PlanInsVerify.FKey,new List<InsPlan>());				
 			}
 			if(ip==null) {
-				MsgBox.Show(this,"The selected insurance plan cannot be found.");
+				MessageBox.Show("The selected insurance plan cannot be found.");
 				//Refresh grids so we have more up to date data.
 				FillGrids();
 				return;
@@ -683,11 +683,11 @@ namespace OpenDental {
 		#region Assigning Logic
 		private void butAssignUser_Click(object sender,EventArgs e) {
 			if(gridAssign.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an insurance to assign.");
+				MessageBox.Show("Please select an insurance to assign.");
 				return;
 			}
 			if(_assignUserNum==0) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you want to unassign the selected plan?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to unassign the selected plan?")) {
 					return;
 				}
 			}
@@ -732,7 +732,7 @@ namespace OpenDental {
 			switch(menuRightClick.MenuItems.IndexOf((MenuItem)sender)) {
 				case 0:
 					if(_assignUserNum==0) {
-						if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you want to unassign the selected plan?")) {
+						if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to unassign the selected plan?")) {
 							return;
 						}
 					}

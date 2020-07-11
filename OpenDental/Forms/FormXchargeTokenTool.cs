@@ -25,13 +25,13 @@ namespace OpenDental {
 		private void FormXchargeTokenTool_Load(object sender,EventArgs e) {
 			Program prog=Programs.GetCur(ProgramName.Xcharge);
 			if(prog==null || !prog.Enabled) {
-				MsgBox.Show(this,"X-Charge program link is not set up.");
+				MessageBox.Show("X-Charge program link is not set up.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			string path=Programs.GetProgramPath(prog);
 			if(!File.Exists(path)) {
-				MsgBox.Show(this,"X-Charge path is not valid.");
+				MessageBox.Show("X-Charge path is not valid.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -43,7 +43,7 @@ namespace OpenDental {
 			_xUsername=ProgramProperties.GetPropVal(prog.ProgramNum,"Username",Clinics.ClinicNum);
 			_xPassword=ProgramProperties.GetPropVal(prog.ProgramNum,"Password",Clinics.ClinicNum);
 			if(string.IsNullOrEmpty(_xUsername) || string.IsNullOrEmpty(_xPassword) || _listPayTypeDefs.Count<1) {
-				MsgBox.Show(this,"X-Charge username, password, or payment type for this clinic is invalid.");
+				MessageBox.Show("X-Charge username, password, or payment type for this clinic is invalid.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -53,7 +53,7 @@ namespace OpenDental {
 			textVerified.Text="0";
 			textInvalid.Text="0";
 			if(_listCreditCards.Count==0) {
-				MsgBox.Show(this,"There are no credit cards with stored X-Charge tokens in the database.");
+				MessageBox.Show("There are no credit cards with stored X-Charge tokens in the database.");
 				return;
 			}
 		}
@@ -63,7 +63,7 @@ namespace OpenDental {
 			FilterCardList();
 			Cursor=Cursors.Default;
 			if(_listCreditCards.Count==0) {
-				MsgBox.Show(this,"There are no invalid tokens in the database.");
+				MessageBox.Show("There are no invalid tokens in the database.");
 				return;
 			}
 			gridMain.BeginUpdate();
@@ -116,7 +116,7 @@ namespace OpenDental {
 					File.Delete(resultfile);//delete the old result file.
 				}
 				catch {
-					MsgBox.Show(this,"Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have sufficient permissions.");
+					MessageBox.Show("Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have sufficient permissions.");
 					break;
 				}
 				info.Arguments+="/TRANSACTIONTYPE:ARCHIVEVAULTQUERY ";
@@ -169,7 +169,7 @@ namespace OpenDental {
 					}
 				}
 				catch {
-					MsgBox.Show(this,"Something went wrong validating X-Charge tokens.  Please try again.");
+					MessageBox.Show("Something went wrong validating X-Charge tokens.  Please try again.");
 					break;
 				}
 				textVerified.Text=verified.ToString();
@@ -215,7 +215,7 @@ namespace OpenDental {
 			textVerified.Text="0";
 			textInvalid.Text="0";
 			if(_listCreditCards.Count==0) {
-				MsgBox.Show(this,"There are no credit cards with stored X-Charge tokens in the database.");
+				MessageBox.Show("There are no credit cards with stored X-Charge tokens in the database.");
 				return;
 			}
 			FillGrid();

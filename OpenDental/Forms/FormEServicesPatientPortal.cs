@@ -172,7 +172,7 @@ namespace OpenDental {
 
 		private void butActivateInvites_Click(object sender,EventArgs e) {
 			if(!WebServiceMainHQProxy.IsEServiceActive(_signupOut,eServiceCode.PatientPortal)) { //Not yet activated with HQ.
-				MsgBox.Show(this,"You must first signup for Patient Portal via the Signup tab before activating Patient Portal Invites.");
+				MessageBox.Show("You must first signup for Patient Portal via the Signup tab before activating Patient Portal Invites.");
 				return;
 			}
 			bool isPatPortalInvitesEnabled=PrefC.GetBool(PrefName.PatientPortalInviteEnabled);
@@ -303,7 +303,7 @@ namespace OpenDental {
 				return false;//somehow editing default clinic anyways, no need to switch.
 			}
 			if(_listPatPortalInviteRules.Count(x => x.ClinicNum==_clinicCurPPInvite.ClinicNum) > 0 
-				&& !MsgBox.Show(this,true,"Delete custom rules for this clinic and switch to using defaults? This cannot be undone.")) 
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"Delete custom rules for this clinic and switch to using defaults? This cannot be undone.")) 
 			{
 				checkUseDefaultsPPInvites.Checked=false;//undo checking of box.
 				return false;
@@ -388,24 +388,24 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			if(!ODBuild.IsDebug()) {
-				if(!textPatientFacingUrlPortal.Text.ToUpper().StartsWith("HTTPS")) {
-					MsgBox.Show(this,"Patient Facing URL must start with HTTPS.");
-					return;
-				}
+#if !DEBUG
+			if(!textPatientFacingUrlPortal.Text.ToUpper().StartsWith("HTTPS")) {
+				MessageBox.Show("Patient Facing URL must start with HTTPS.");
+				return;
 			}
+#endif
 			if(textBoxNotificationSubject.Text=="") {
-				MsgBox.Show(this,"Notification Subject is empty");
+				MessageBox.Show("Notification Subject is empty");
 				textBoxNotificationSubject.Focus();
 				return;
 			}
 			if(string.IsNullOrEmpty(_webMailNotificationBody)) {
-				MsgBox.Show(this,"Notification Body is empty");
+				MessageBox.Show("Notification Body is empty");
 				butEditWebMailNotificationBody.Focus();
 				return;
 			}
 			if(!_webMailNotificationBody.Contains("[URL]")) { //prompt user that they omitted the URL field but don't prevent them from continuing
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"[URL] not included in notification body. Continue without setting the [URL] field?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"[URL] not included in notification body. Continue without setting the [URL] field?")) {
 					butEditWebMailNotificationBody.Focus();
 					return;
 				}

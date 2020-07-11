@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using CodeBase;
 
 namespace OpenDentBusiness {
-	public class StaticTextData {
+	public class StaticTextData
+	{
 		//Any new fields/lists added to this object must also be implemented in UserControlDashboard.PatientDashboardDataEventArgs.CreateStaticTextData()
 		public PatientNote PatNote;
 		public List<RefAttach> ListRefAttaches;
@@ -32,8 +33,8 @@ namespace OpenDentBusiness {
 		public List<PlannedAppt> ListPlannedAppts;
 		///<summary>Dictionary linking static text field names to the data fields in StaticTextData that are required to determine the value for
 		///the static text field in a Sheet.</summary>
-		private static readonly Dictionary<StaticTextField,StaticTextFieldDependency> _dictDependencies
-			=new Dictionary<StaticTextField,StaticTextFieldDependency>() 
+		private static readonly Dictionary<StaticTextField, StaticTextFieldDependency> _dictDependencies
+			= new Dictionary<StaticTextField, StaticTextFieldDependency>()
 		{
 			{StaticTextField.activeAllergies,StaticTextFieldDependency.ListAllergies},
 			{StaticTextField.activeProblems,StaticTextFieldDependency.ListDiseases},
@@ -50,20 +51,20 @@ namespace OpenDentBusiness {
 			{StaticTextField.balTotalMinusInsEst,StaticTextFieldDependency.Fam},
 			{StaticTextField.BillingType,StaticTextFieldDependency.Pat},
 			{StaticTextField.Birthdate,StaticTextFieldDependency.Pat},
-			{StaticTextField.carrierName,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs 
+			{StaticTextField.carrierName,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs
 				| StaticTextFieldDependency.ListInsPlans},
-			{StaticTextField.carrier2Name,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs 
+			{StaticTextField.carrier2Name,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs
 				| StaticTextFieldDependency.ListInsPlans},
 			{StaticTextField.ChartNumber,StaticTextFieldDependency.Pat},
-			{StaticTextField.carrierAddress,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs 
+			{StaticTextField.carrierAddress,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs
 				| StaticTextFieldDependency.ListInsPlans},
-			{StaticTextField.carrier2Address,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs 
+			{StaticTextField.carrier2Address,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs
 				| StaticTextFieldDependency.ListInsPlans},
-			{StaticTextField.carrierCityStZip,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs 
+			{StaticTextField.carrierCityStZip,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs
 				| StaticTextFieldDependency.ListInsPlans},
-			{StaticTextField.carrier2CityStZip,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs 
+			{StaticTextField.carrier2CityStZip,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs
 				| StaticTextFieldDependency.ListInsPlans},
-			{StaticTextField.cityStateZip,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs 
+			{StaticTextField.cityStateZip,StaticTextFieldDependency.ListPatPlans | StaticTextFieldDependency.ListInsSubs
 				| StaticTextFieldDependency.ListInsPlans},
 			{StaticTextField.clinicDescription,StaticTextFieldDependency.Pat},
 			{StaticTextField.clinicAddress,StaticTextFieldDependency.Pat},
@@ -114,67 +115,67 @@ namespace OpenDentBusiness {
 			{StaticTextField.genderHisHers,StaticTextFieldDependency.Pat},
 			{StaticTextField.genderhishers,StaticTextFieldDependency.Pat},
 			{StaticTextField.HmPhone,StaticTextFieldDependency.Pat},
-			{StaticTextField.insAnnualMax,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits 
+			{StaticTextField.insAnnualMax,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits
 				| StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insDeductible,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits 
+			{StaticTextField.insDeductible,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits
 				| StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
 			{StaticTextField.insDeductibleUsed,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insEmployer,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits 
+			{StaticTextField.insEmployer,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits
 				| StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insFeeSchedule,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits 
+			{StaticTextField.insFeeSchedule,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits
 				| StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insFreqBW,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits 
+			{StaticTextField.insFreqBW,StaticTextFieldDependency.ListInsPlans | StaticTextFieldDependency.ListBenefits
 				| StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insFreqExams,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.insFreqExams,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insFreqPanoFMX,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.insFreqPanoFMX,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
 			{StaticTextField.insPending,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
 			{StaticTextField.insPercentages,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insPlanGroupNumber,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.insPlanGroupNumber,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insPlanGroupName,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.insPlanGroupName,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insPlanNote,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.insPlanNote,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insType,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.insType,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insSubBirthDate,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.insSubBirthDate,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.insSubNote,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.insSubNote,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
 			{StaticTextField.insRemaining,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
 			{StaticTextField.insUsed,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2AnnualMax,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2AnnualMax,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2Deductible,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2Deductible,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2DeductibleUsed,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2DeductibleUsed,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2Employer,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2Employer,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2FreqBW,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2FreqBW,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2FreqExams,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2FreqExams,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2FreqPanoFMX,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2FreqPanoFMX,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2PlanGroupNumber,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2PlanGroupNumber,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2PlanGroupName,StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2PlanGroupName,StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2Pending,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2Pending,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2Percentages,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2Percentages,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2Remaining,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2Remaining,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
-			{StaticTextField.ins2Used,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans | 
+			{StaticTextField.ins2Used,StaticTextFieldDependency.HistList | StaticTextFieldDependency.ListInsPlans |
 				StaticTextFieldDependency.ListBenefits | StaticTextFieldDependency.ListInsSubs | StaticTextFieldDependency.ListPatPlans},
 			{StaticTextField.medicalSummary,StaticTextFieldDependency.PatNote},
 			{StaticTextField.MedUrgNote,StaticTextFieldDependency.Pat},
@@ -191,7 +192,7 @@ namespace OpenDentBusiness {
 			{StaticTextField.PatNum,StaticTextFieldDependency.Pat},
 			{StaticTextField.famPopups,StaticTextFieldDependency.ListFamPopups},
 			{StaticTextField.patientPortalCredentials,StaticTextFieldDependency.Pat},
-			{StaticTextField.plannedAppointmentInfo,StaticTextFieldDependency.ListProceduresPat | StaticTextFieldDependency.ListPlannedAppts 
+			{StaticTextField.plannedAppointmentInfo,StaticTextFieldDependency.ListProceduresPat | StaticTextFieldDependency.ListPlannedAppts
 				| StaticTextFieldDependency.ListAppts},
 			{StaticTextField.premedicateYN,StaticTextFieldDependency.Pat},
 			{StaticTextField.priProvNameFormal,StaticTextFieldDependency.Pat},
@@ -223,28 +224,35 @@ namespace OpenDentBusiness {
 			{StaticTextField.practiceTitle,StaticTextFieldDependency.None},
 		};
 
-			
-		public static StaticTextFieldDependency GetStaticTextDependencies(List<SheetField> listSheetFields) 
+
+		public static StaticTextFieldDependency GetStaticTextDependencies(List<SheetField> listSheetFields)
 		{
-			StaticTextFieldDependency staticTextDependencies=StaticTextFieldDependency.None;
-			foreach(SheetField sheetField in listSheetFields.FindAll(x => x.FieldType==SheetFieldType.StaticText)) {
-				Regex staticTextPattern=new Regex(@"(?<=)\[.+?\](?=)");//Matches on static text field replacement strings. e.g. [PatLName]
-				var matches=staticTextPattern.Matches(sheetField.FieldValue);
-				foreach(Match match in matches) {
-					string strMatch=match.ToString().Replace("[","").Replace("]","");//Pull out just the replacement string.
-					if(!Enum.TryParse(strMatch,out StaticTextField enumStaticText)) {
+			StaticTextFieldDependency staticTextDependencies = StaticTextFieldDependency.None;
+			foreach (SheetField sheetField in listSheetFields.FindAll(x => x.FieldType == SheetFieldType.StaticText))
+			{
+				Regex staticTextPattern = new Regex(@"(?<=)\[.+?\](?=)");//Matches on static text field replacement strings. e.g. [PatLName]
+				var matches = staticTextPattern.Matches(sheetField.FieldValue);
+				foreach (Match match in matches)
+				{
+					string strMatch = match.ToString().Replace("[", "").Replace("]", "");//Pull out just the replacement string.
+					if (!Enum.TryParse(strMatch, out StaticTextField enumStaticText))
+					{
 						continue;
 					}
-					if(_dictDependencies.TryGetValue(enumStaticText,out StaticTextFieldDependency sheetFieldDependencies)) {
-						staticTextDependencies|=sheetFieldDependencies;
+					if (_dictDependencies.TryGetValue(enumStaticText, out StaticTextFieldDependency sheetFieldDependencies))
+					{
+						staticTextDependencies |= sheetFieldDependencies;
 					}
-					else if(ODBuild.IsDebug()){
+#if DEBUG
+					else
+					{
 						//Programmer must add [staticTextFieldValue] to the dictionary linking these text fields to the data in StaticTextData.
 						//Only throwing in Debug in case a customer has some other [notAnActualStaticTextField] type string entered in their sheet.
 						//We don't want to crash Sheets for an otherwise perfectly valid Sheet, this exception is intended to force a programmer to implement
 						//the proper StaticTextFieldDependency for a new StaticTextField.
-						throw new NotImplementedException("StaticTextFieldDependencies not implemented for "+match.Value+".");
+						throw new NotImplementedException("StaticTextFieldDependencies not implemented for " + match.Value + ".");
 					}
+#endif
 				}
 			}
 			return staticTextDependencies;
@@ -252,107 +260,134 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets the data necessary for Static Text Field string replacements.  Returns a StaticTextData object so that 
 		///references are preserved across Middle Tier.</summary>
-		public static StaticTextData GetStaticTextData(StaticTextFieldDependency staticTextDependencies,Patient pat,Family fam
-			,List<long> listProcCodeNums,StaticTextData data=null)
+		public static StaticTextData GetStaticTextData(StaticTextFieldDependency staticTextDependencies, Patient pat, Family fam
+			, List<long> listProcCodeNums, StaticTextData data = null)
 		{
-			data=data??new StaticTextData();
-			data.LoadData(staticTextDependencies,pat,fam,listProcCodeNums);
+			data = data ?? new StaticTextData();
+			data.LoadData(staticTextDependencies, pat, fam, listProcCodeNums);
 			return data;
 		}
 
 		///<summary>Runs the required queries to populate the necessary StaticTextData fields corresponding to staticTextDependencies.</summary>
-		private void LoadData(StaticTextFieldDependency staticTextDependencies,Patient pat,Family fam,List<long> listProcCodeNums) {
-			System.Diagnostics.Stopwatch timer=null;
-			if(ODBuild.IsDebug()) {
-				timer=new System.Diagnostics.Stopwatch();
-				timer.Start();
-			}
-			if(staticTextDependencies.HasFlag(StaticTextFieldDependency.Pat)) {
+		private void LoadData(StaticTextFieldDependency staticTextDependencies, Patient pat, Family fam, List<long> listProcCodeNums)
+		{
+			System.Diagnostics.Stopwatch timer = null;
+#if DEBUG
+			timer = new System.Diagnostics.Stopwatch();
+			timer.Start();
+#endif
+			if (staticTextDependencies.HasFlag(StaticTextFieldDependency.Pat))
+			{
 				//patient should already be loaded.  
 			}
-			if(fam==null && staticTextDependencies.HasFlag(StaticTextFieldDependency.Fam)) {
-				fam=Patients.GetFamily(pat.PatNum);
+			if (fam == null && staticTextDependencies.HasFlag(StaticTextFieldDependency.Fam))
+			{
+				fam = Patients.GetFamily(pat.PatNum);
 			}
-			if(PatNote==null) {
-				if(staticTextDependencies.HasFlag(StaticTextFieldDependency.PatNote)) {
-					PatNote=PatientNotes.Refresh(pat.PatNum,pat.Guarantor);
+			if (PatNote == null)
+			{
+				if (staticTextDependencies.HasFlag(StaticTextFieldDependency.PatNote))
+				{
+					PatNote = PatientNotes.Refresh(pat.PatNum, pat.Guarantor);
 				}
-				else {
-					PatNote=new PatientNote();
+				else
+				{
+					PatNote = new PatientNote();
 				}
 			}
-			bool IsQueryNeeded<T>(ref List<T> list,StaticTextFieldDependency dependency) {
-				if(list==null) {//Middle Tier deserializes null lists to empty lists.
-					if(staticTextDependencies.HasFlag(dependency)) {
+			bool IsQueryNeeded<T>(ref List<T> list, StaticTextFieldDependency dependency)
+			{
+				if (list == null)
+				{//Middle Tier deserializes null lists to empty lists.
+					if (staticTextDependencies.HasFlag(dependency))
+					{
 						return true;
 					}
-					else {
-						list=new List<T>();
+					else
+					{
+						list = new List<T>();
 					}
 				}
 				return false;
 			}
-			if(IsQueryNeeded(ref ListRefAttaches,StaticTextFieldDependency.ListRefAttaches)) {
-				ListRefAttaches=RefAttaches.Refresh(pat.PatNum);
+			if (IsQueryNeeded(ref ListRefAttaches, StaticTextFieldDependency.ListRefAttaches))
+			{
+				ListRefAttaches = RefAttaches.Refresh(pat.PatNum);
 			}
-			if(IsQueryNeeded(ref ListInsSubs,StaticTextFieldDependency.ListInsSubs)) {
-				ListInsSubs=InsSubs.RefreshForFam(fam);
+			if (IsQueryNeeded(ref ListInsSubs, StaticTextFieldDependency.ListInsSubs))
+			{
+				ListInsSubs = InsSubs.RefreshForFam(fam);
 			}
-			if(IsQueryNeeded(ref ListInsPlans,StaticTextFieldDependency.ListInsPlans)) {
-				ListInsPlans=InsPlans.RefreshForSubList(ListInsSubs);
+			if (IsQueryNeeded(ref ListInsPlans, StaticTextFieldDependency.ListInsPlans))
+			{
+				ListInsPlans = InsPlans.RefreshForSubList(ListInsSubs);
 			}
-			if(IsQueryNeeded(ref ListPatPlans,StaticTextFieldDependency.ListPatPlans)) {
-				ListPatPlans=PatPlans.Refresh(pat.PatNum);
+			if (IsQueryNeeded(ref ListPatPlans, StaticTextFieldDependency.ListPatPlans))
+			{
+				ListPatPlans = PatPlans.Refresh(pat.PatNum);
 			}
-			if(IsQueryNeeded(ref ListBenefits,StaticTextFieldDependency.ListBenefits)) {
-				ListBenefits=Benefits.Refresh(ListPatPlans,ListInsSubs);
+			if (IsQueryNeeded(ref ListBenefits, StaticTextFieldDependency.ListBenefits))
+			{
+				ListBenefits = Benefits.Refresh(ListPatPlans, ListInsSubs);
 			}
-			if(IsQueryNeeded(ref HistList,StaticTextFieldDependency.HistList)) {
-				HistList=ClaimProcs.GetHistList(pat.PatNum,ListBenefits,ListPatPlans,ListInsPlans,DateTime.Today,ListInsSubs);
+			if (IsQueryNeeded(ref HistList, StaticTextFieldDependency.HistList))
+			{
+				HistList = ClaimProcs.GetHistList(pat.PatNum, ListBenefits, ListPatPlans, ListInsPlans, DateTime.Today, ListInsSubs);
 			}
-			if(IsQueryNeeded(ref ListTreatPlans,StaticTextFieldDependency.ListTreatPlans)) {
-				ListTreatPlans=TreatPlans.Refresh(pat.PatNum);
+			if (IsQueryNeeded(ref ListTreatPlans, StaticTextFieldDependency.ListTreatPlans))
+			{
+				ListTreatPlans = TreatPlans.Refresh(pat.PatNum);
 			}
-			if(IsQueryNeeded(ref ListRecallsForFam,StaticTextFieldDependency.ListRecallsForFam)) {
-				ListRecallsForFam=Recalls.GetList(fam.ListPats.Select(x => x.PatNum).ToList());
+			if (IsQueryNeeded(ref ListRecallsForFam, StaticTextFieldDependency.ListRecallsForFam))
+			{
+				ListRecallsForFam = Recalls.GetList(fam.ListPats.Select(x => x.PatNum).ToList());
 			}
-			if(IsQueryNeeded(ref ListAppts,StaticTextFieldDependency.ListAppts)) {
-				ListAppts=Appointments.GetListForPat(pat.PatNum);
+			if (IsQueryNeeded(ref ListAppts, StaticTextFieldDependency.ListAppts))
+			{
+				ListAppts = Appointments.GetListForPat(pat.PatNum);
 			}
-			if(IsQueryNeeded(ref ListFutureApptsForFam,StaticTextFieldDependency.ListFutureApptsForFam)) {
-				ListFutureApptsForFam=Appointments.GetFutureSchedApts(fam.ListPats.Select(x => x.PatNum).ToList());
+			if (IsQueryNeeded(ref ListFutureApptsForFam, StaticTextFieldDependency.ListFutureApptsForFam))
+			{
+				ListFutureApptsForFam = Appointments.GetFutureSchedApts(fam.ListPats.Select(x => x.PatNum).ToList());
 			}
-			if(IsQueryNeeded(ref ListDiseases,StaticTextFieldDependency.ListDiseases)) {
-				ListDiseases=Diseases.Refresh(pat.PatNum,true);
+			if (IsQueryNeeded(ref ListDiseases, StaticTextFieldDependency.ListDiseases))
+			{
+				ListDiseases = Diseases.Refresh(pat.PatNum, true);
 			}
-			if(IsQueryNeeded(ref ListAllergies,StaticTextFieldDependency.ListAllergies)) {
-				ListAllergies=Allergies.GetAll(pat.PatNum,false);
+			if (IsQueryNeeded(ref ListAllergies, StaticTextFieldDependency.ListAllergies))
+			{
+				ListAllergies = Allergies.GetAll(pat.PatNum, false);
 			}
-			if(IsQueryNeeded(ref ListMedicationPats,StaticTextFieldDependency.ListMedicationPats)) {
-				ListMedicationPats=MedicationPats.Refresh(pat.PatNum,false);
+			if (IsQueryNeeded(ref ListMedicationPats, StaticTextFieldDependency.ListMedicationPats))
+			{
+				ListMedicationPats = MedicationPats.Refresh(pat.PatNum, false);
 			}
-			if(IsQueryNeeded(ref ListFamPopups,StaticTextFieldDependency.ListFamPopups)) {
-				ListFamPopups=Popups.GetForFamily(pat);
+			if (IsQueryNeeded(ref ListFamPopups, StaticTextFieldDependency.ListFamPopups))
+			{
+				ListFamPopups = Popups.GetForFamily(pat);
 			}
-			if(IsQueryNeeded(ref ListProceduresSome,StaticTextFieldDependency.ListProceduresSome)) {
-				ListProceduresSome=Procedures.RefreshForProcCodeNums(pat.PatNum,listProcCodeNums);
+			if (IsQueryNeeded(ref ListProceduresSome, StaticTextFieldDependency.ListProceduresSome))
+			{
+				ListProceduresSome = Procedures.RefreshForProcCodeNums(pat.PatNum, listProcCodeNums);
 			}
-			if(IsQueryNeeded(ref ListProceduresPat,StaticTextFieldDependency.ListProceduresPat)) {
-				ListProceduresPat=Procedures.Refresh(pat.PatNum);
+			if (IsQueryNeeded(ref ListProceduresPat, StaticTextFieldDependency.ListProceduresPat))
+			{
+				ListProceduresPat = Procedures.Refresh(pat.PatNum);
 			}
-			if(IsQueryNeeded(ref ListPlannedAppts,StaticTextFieldDependency.ListPlannedAppts)) {
-				ListPlannedAppts=new List<PlannedAppt>();
-				PlannedAppt plannedAppt=PlannedAppts.GetOneOrderedByItemOrder(pat.PatNum);
-				if(plannedAppt!=null) {
+			if (IsQueryNeeded(ref ListPlannedAppts, StaticTextFieldDependency.ListPlannedAppts))
+			{
+				ListPlannedAppts = new List<PlannedAppt>();
+				PlannedAppt plannedAppt = PlannedAppts.GetOneOrderedByItemOrder(pat.PatNum);
+				if (plannedAppt != null)
+				{
 					ListPlannedAppts.Add(plannedAppt);
 				}
 			}
-			if(ODBuild.IsDebug()) {
-				timer.Stop();
-				Console.WriteLine("Static text field query time (ms): "+timer.ElapsedMilliseconds);
-			}
+#if DEBUG
+			timer.Stop();
+			Console.WriteLine("Static text field query time (ms): " + timer.ElapsedMilliseconds);
+#endif
 		}
-
 	}
 
 	///<summary>Bitwise flag indicating a dependency upon a certain StaticTextData field.</summary>

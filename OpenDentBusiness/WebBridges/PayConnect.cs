@@ -681,18 +681,30 @@ namespace OpenDentBusiness {
 
 		///<summary>These headers use the credentials PayConnect needs to get an accountToken from Open Dental as a merchant.</summary>
 		private static List<string> GetClientRequestHeaders() {
+#if DEBUG
+			var serviceId = "002778";
+#else
+			var serviceId = Introspection.IsTestingMode ? "002778" : "006328";
+#endif
+
 			return new List<string>() {
 				"Client: OpenDental2",
-				$"ServiceID: DCI Web Service ID: {(ODBuild.IsDebug() || Introspection.IsTestingMode ? "002778" : "006328")}",
+				$"ServiceID: DCI Web Service ID: {serviceId}",
 				"Version: 0310",
 			};
 		}
 
 		///<summary>These headers use the credentials PayConnect gave us specifically for the URL endpoints (/paymentRequest and /paymentStatus, NOT accountToken)</summary>
 		private static List<string> GetClientRequestHeadersForWebURL() {
+#if DEBUG
+			var serviceId = "72yHWxY8:m15TJn!6yTw";
+#else
+			var serviceId = Introspection.IsTestingMode ? "72yHWxY8:m15TJn!6yTw" : "z7fohsdUAs287mQh6516";
+#endif
+
 			return new List<string>() {
 				"Client: OpenDentalPortalMS",
-				$"ServiceID: {(ODBuild.IsDebug() || Introspection.IsTestingMode ? "72yHWxY8:m15TJn!6yTw" : "z7fohsdUAs287mQh6516")}",
+				$"ServiceID: {serviceId}",
 				"Version: 0310",
 			};
 		}

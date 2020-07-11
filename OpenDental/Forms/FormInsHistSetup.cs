@@ -102,7 +102,7 @@ namespace OpenDental {
 				}
 				if(!DateTime.TryParse(textBox.Text,out dateEntry)) {
 					//Invalid date entered.
-					MsgBox.Show(this,"Invalid date");
+					MessageBox.Show("Invalid date");
 					return false;
 				}
 				if(dateEntry.Year<1880 || dateEntry.Year>2100) {
@@ -148,7 +148,7 @@ namespace OpenDental {
 			catch(Exception ex) {
 				//We don't want a full exception, just a popup.  OK_Click will block them from putting invalid data in the db.
 				ex.DoNothing();
-				MsgBox.Show(this,"Invalid date.");
+				MessageBox.Show("Invalid date.");
 			}
 		}
 
@@ -178,7 +178,7 @@ namespace OpenDental {
 				Procedures.InsertOrUpdateInsHistProcedure(_patCur,prefName,dateEntered,_insSubCur.PlanNum,_insSubCur.InsSubNum,proc,listClaimProcsForProc);
 			}
 			if(listProcsForDelete.Count>0
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"Deleting the last procedure date for a category will delete the Existing Other procedure with that date for this patient.  Continue?"))
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"Deleting the last procedure date for a category will delete the Existing Other procedure with that date for this patient.  Continue?"))
 			{
 				return;
 			}

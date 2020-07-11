@@ -224,21 +224,6 @@ namespace OpenDental{
 		#endregion
 
 		private void FormProcTools_Load(object sender,EventArgs e) {
-			if(ODBuild.IsTrial()) {
-				checkTcodes.Checked=false;
-				checkNcodes.Checked=false;
-				checkDcodes.Checked=false;
-				checkAutocodes.Checked=false;
-				checkProcButtons.Checked=false;
-				checkApptProcsQuickAdd.Checked=false;
-				checkTcodes.Enabled=false;
-				//checkNcodes.Enabled=false;
-				checkDcodes.Enabled=false;
-				checkAutocodes.Enabled=false;
-				checkProcButtons.Enabled=false;
-				checkApptProcsQuickAdd.Enabled=false;
-				checkRecallTypes.Enabled=false;
-			}
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				//Tcodes remain enabled
 				//Ncodes remain enabled
@@ -327,7 +312,7 @@ namespace OpenDental{
 			if(!checkTcodes.Checked && !checkNcodes.Checked && !checkDcodes.Checked && !checkAutocodes.Checked 
 				&& !checkProcButtons.Checked && !checkApptProcsQuickAdd.Checked && !checkRecallTypes.Checked)
 			{
-				MsgBox.Show(this,"Please select at least one tool first.");
+				MessageBox.Show("Please select at least one tool first.");
 				return;
 			}
 			Changed=false;
@@ -376,7 +361,7 @@ namespace OpenDental{
 						msgText+=Lan.g(this,"Any procedure buttons associated with the current autocodes will be dissociated and will need to be reassociated manually.")+"\r\n";
 					}
 					msgText+=Lan.g(this,"Continue?");
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,msgText)) {
+					if(MsgBox.Show(MsgBoxButtons.YesNo,msgText)) {
 						AutoCodes.SetToDefault();
 						Changed=true;
 						DataValid.SetInvalid(InvalidType.AutoCodes);
@@ -397,7 +382,7 @@ namespace OpenDental{
 			if(checkProcButtons.Checked) {
 				//checking for any custom proc button categories and prompting the user if they exist
 				if(Defs.HasCustomCategories()) {
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,"This tool will delete all current ProcButtons from the Chart Module and add in the defaults. Continue?")) {
+					if(MsgBox.Show(MsgBoxButtons.YesNo,"This tool will delete all current ProcButtons from the Chart Module and add in the defaults. Continue?")) {
 						ProcButtons.SetToDefault();
 						Changed=true;
 						DataValid.SetInvalid(InvalidType.ProcButtons,InvalidType.Defs);
@@ -418,7 +403,7 @@ namespace OpenDental{
 			if(checkApptProcsQuickAdd.Checked) {
 				//checking for any ApptProcsQuickAdd and prompting the user if they exist
 				if(Defs.GetDefsForCategory(DefCat.ApptProcsQuickAdd).Count>0) {
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,"This tool will reset the list of procedures in the appointment edit window to the defaults. Continue?")) {
+					if(MsgBox.Show(MsgBoxButtons.YesNo,"This tool will reset the list of procedures in the appointment edit window to the defaults. Continue?")) {
 						ProcedureCodes.ResetApptProcsQuickAdd();
 						Changed=true;
 						DataValid.SetInvalid(InvalidType.Defs);
@@ -438,7 +423,7 @@ namespace OpenDental{
 			#region Recall Types
 			if(checkRecallTypes.Checked 
 				&& (!RecallTypes.IsUsingManuallyAddedTypes() //If they have any manually added types, ask them if they are sure they want to delete them.
-				|| MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will delete all patient recalls for recall types which were manually added.  Continue?")))
+				|| MsgBox.Show(MsgBoxButtons.OKCancel,"This will delete all patient recalls for recall types which were manually added.  Continue?")))
 			{
 				RecallTypes.SetToDefault();
 				Changed=true;

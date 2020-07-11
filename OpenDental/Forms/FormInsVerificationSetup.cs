@@ -29,19 +29,19 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textInsBenefitEligibilityDays.errorProvider1.GetError(textInsBenefitEligibilityDays)!="") {
-				MsgBox.Show(this,"The number entered for insurance benefit eligibility was not a valid number.  Please enter a valid number to continue.");
+				MessageBox.Show("The number entered for insurance benefit eligibility was not a valid number.  Please enter a valid number to continue.");
 				return;
 			}
 			if(textPatientEnrollmentDays.errorProvider1.GetError(textPatientEnrollmentDays)!="") {
-				MsgBox.Show(this,"The number entered for patient enrollment was not a valid number.  Please enter a valid number to continue.");
+				MessageBox.Show("The number entered for patient enrollment was not a valid number.  Please enter a valid number to continue.");
 				return;
 			}
 			if(textScheduledAppointmentDays.errorProvider1.GetError(textScheduledAppointmentDays)!="") {
-				MsgBox.Show(this,"The number entered for scheduled appointments was not a valid number.  Please enter a valid number to continue.");
+				MessageBox.Show("The number entered for scheduled appointments was not a valid number.  Please enter a valid number to continue.");
 				return;
 			}
 			if(textPastDueDays.errorProvider1.GetError(textPastDueDays)!="") {
-				MsgBox.Show(this,"The number entered for appointment days past due was not a valid number.  Please enter a valid number to continue.");
+				MessageBox.Show("The number entered for appointment days past due was not a valid number.  Please enter a valid number to continue.");
 				return;
 			}
 			int insBenefitEligibilityDays=PIn.Int(textInsBenefitEligibilityDays.Text);

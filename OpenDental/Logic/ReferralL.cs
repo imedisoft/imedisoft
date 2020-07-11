@@ -14,7 +14,7 @@ namespace OpenDental {
 		}
 
 		public static void ShowReferralErrorMsg() {
-			MsgBox.Show("Referrals","Could not retrieve referral. Please run Database Maintenance or call support.");
+			MsgBox.Show("Could not retrieve referral. Please run Database Maintenance or call support.");
 		}
 	}
 }

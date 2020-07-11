@@ -86,19 +86,19 @@ namespace OpenDental {
 			if(textProcDate.errorProvider1.GetError(textProcDate)!=""
 				|| textAmount.errorProvider1.GetError(textAmount)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textProcDate.Text=="") {
-				MsgBox.Show(this,"Please enter a date first.");
+				MessageBox.Show("Please enter a date first.");
 				return;
 			}
 			if(_procCur.ProcStatus==ProcStat.C && PIn.Date(textProcDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Completed procedures cannot be set for future dates.");
+				MessageBox.Show("Completed procedures cannot be set for future dates.");
 				return;
 			}
 			if(textAmount.Text=="") {
-				MsgBox.Show(this,"Please enter an amount.");
+				MessageBox.Show("Please enter an amount.");
 				return;
 			}
 			if(comboProv.GetSelectedProvNum()!=_procOld.ProvNum && PrefC.GetBool(PrefName.ProcProvChangesClaimProcWithClaim)) {
@@ -107,7 +107,7 @@ namespace OpenDental {
 					|| x.Status==ClaimProcStatus.Supplemental
 					|| x.Status==ClaimProcStatus.CapClaim)) 
 				{
-					MsgBox.Show(this,"The provider cannot be changed when this procedure is attached to a claim.");
+					MessageBox.Show("The provider cannot be changed when this procedure is attached to a claim.");
 					return;
 				}
 			}

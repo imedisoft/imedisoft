@@ -319,12 +319,12 @@ namespace OpenDental{
 
 		private void butAdd_Click(object sender,EventArgs e) {
 			if(listAvailable.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a language first");
+				MessageBox.Show("Please select a language first");
 				return;
 			}
 			string lang=AllCultures[listAvailable.SelectedIndex].ThreeLetterISOLanguageName;//eng,spa etc
 			if(LangsUsed.Contains(lang)) {
-				MsgBox.Show(this,"Language already added.");
+				MessageBox.Show("Language already added.");
 				return;
 			}
 			LangsUsed.Add(lang);
@@ -333,12 +333,12 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(listUsed.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a language first");
+				MessageBox.Show("Please select a language first");
 				return;
 			}
 			List<string> listLangRules=ApptReminderRules.GetAll().FindAll(x => x.Language!=string.Empty).Select(x => x.Language).ToList();
 			if(listLangRules.Contains(LangsUsed[listUsed.SelectedIndex])) {
-				MsgBox.Show(this,"Language is in use by:\r\n - eService reminders or confirmations");
+				MessageBox.Show("Language is in use by:\r\n - eService reminders or confirmations");
 				return;
 			}
 			LangsUsed.RemoveAt(listUsed.SelectedIndex);
@@ -347,7 +347,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(listUsed.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a language first");
+				MessageBox.Show("Please select a language first");
 				return;
 			}
 			if(listUsed.SelectedIndex==0) {
@@ -361,7 +361,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(listUsed.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a language first");
+				MessageBox.Show("Please select a language first");
 				return;
 			}
 			if(listUsed.SelectedIndex==listUsed.Items.Count-1) {
@@ -375,12 +375,12 @@ namespace OpenDental{
 
 		private void butAddCustom_Click(object sender,EventArgs e) {
 			if(textCustom.Text=="") {
-				MsgBox.Show(this,"Please enter a custom language first");
+				MessageBox.Show("Please enter a custom language first");
 				return;
 			}
 			string lang=textCustom.Text;
 			if(LangsUsed.Contains(lang)) {
-				MsgBox.Show(this,"Language already added.");
+				MessageBox.Show("Language already added.");
 				return;
 			}
 			LangsUsed.Add(lang);

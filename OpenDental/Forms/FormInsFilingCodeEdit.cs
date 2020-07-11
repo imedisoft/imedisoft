@@ -281,7 +281,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this code?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this code?")) {
 				return;
 			}
 			try{
@@ -304,7 +304,7 @@ namespace OpenDental {
 				return;
 			}
 			if(comboGroup.GetSelectedDefNum()==0) {
-				MsgBox.Show(this,"Please select a group.");
+				MessageBox.Show("Please select a group.");
 				return;
 			}
 			SaveFilingCode();

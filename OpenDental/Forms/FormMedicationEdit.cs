@@ -343,7 +343,7 @@ namespace OpenDental{
 			if(MedicationCur.GenericNum==0) {
 				//Probably occurred from a previous bug.  This makes sure we have a generic num that is not 0. 
 				MedicationCur.GenericNum=MedicationCur.MedicationNum;
-				MsgBox.Show(this, "This medication had a missing generic name.  The generic name has been set to the medication name.");
+				MessageBox.Show( "This medication had a missing generic name.  The generic name has been set to the medication name.");
 			}
 			if(MedicationCur.MedicationNum==MedicationCur.GenericNum) {
 				textGenericName.Text=MedicationCur.MedName;
@@ -413,7 +413,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(!IsNew) {//Only ask user if they want to delete if not new.
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete this medication?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this medication?")) {
 					return;
 				}
 			}
@@ -432,11 +432,11 @@ namespace OpenDental{
 			//generic num already handled
 			MedicationCur.MedName=textMedName.Text;
 			if(MedicationCur.MedName=="") {
-				MsgBox.Show(this,"Not allowed to save a medication without a Drug Name.");
+				MessageBox.Show("Not allowed to save a medication without a Drug Name.");
 				return;
 			}
 			if(CultureInfo.CurrentCulture.Name.EndsWith("US")) {//United States
-				if(MedicationCur.RxCui==0 && !MsgBox.Show(this,true,"Warning: RxNorm was not picked.  "
+				if(MedicationCur.RxCui==0 && !MsgBox.Show(MsgBoxButtons.YesNo,"Warning: RxNorm was not picked.  "
 					+"RxNorm uniquely identifies drugs in the United States and helps you keep your medications organized.  "
 					+"RxNorm is used to send information to and from eRx if you are using or plan to use eRx.\r\n"
 					+"Click OK to continue without an RxNorm, or click Cancel to stay in this window."))
@@ -446,7 +446,7 @@ namespace OpenDental{
 				else if(MedicationCur.RxCui!=0) {
 					List <Medication> listExistingMeds=Medications.GetAllMedsByRxCui(MedicationCur.RxCui);
 					if(listExistingMeds.FindAll(x => x.MedicationNum!=MedicationCur.MedicationNum).Count > 0) {
-						MsgBox.Show(this,"A medication in the medication list is already using the selected RxNorm.\r\n"
+						MessageBox.Show("A medication in the medication list is already using the selected RxNorm.\r\n"
 							+"Please select a different RxNorm or use the other medication instead.");
 						return;
 					}
@@ -478,7 +478,7 @@ namespace OpenDental{
 					Medications.Delete(MedicationCur);
 				}
 				catch {
-					MsgBox.Show(this,"The medication failed to delete due to existing dependencies.");
+					MessageBox.Show("The medication failed to delete due to existing dependencies.");
 				}
 			}
 		}

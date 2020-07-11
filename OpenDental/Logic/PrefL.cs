@@ -53,7 +53,7 @@ namespace OpenDental {
 					FormP.IsStartingUp=true;
 					FormP.ShowDialog();
 					if(FormP.DialogResult!=DialogResult.OK) {
-						MsgBox.Show("Prefs","Invalid A to Z path.  Closing program.");
+						MsgBox.Show("Invalid A to Z path.  Closing program.");
 						FormOpenDental.ExitCode=300;//AtoZ folder not found (Warning)
 						return false;
 					}
@@ -88,7 +88,7 @@ namespace OpenDental {
 				FormOpenDental.ExitCode=301;//UpdateFiles folder cannot be deleted (Warning)
 				if(!isSilent) {
 					currentForm.InvokeIfRequired(() => {
-						MsgBox.Show("Prefs","Unable to delete old UpdateFiles folder.  Go manually delete the UpdateFiles folder then retry.");
+						MsgBox.Show("Unable to delete old UpdateFiles folder.  Go manually delete the UpdateFiles folder then retry.");
 					});
 				}
 				return false;
@@ -103,7 +103,7 @@ namespace OpenDental {
 				FormOpenDental.ExitCode=302;//Installation files could not be copied.
 				if(!isSilent) {
 					currentForm.InvokeIfRequired(() => {
-						MsgBox.Show("Prefs","Failed to copy the current installation files on this computer.\r\n"
+						MsgBox.Show("Failed to copy the current installation files on this computer.\r\n"
 							+"This could be due to a lack of permissions, or file(s) in the installation directory are still in use.");
 					});
 				}
@@ -390,9 +390,6 @@ namespace OpenDental {
 		///<param name="isSilent">Whether this is a silent update. A silent update will have no UI elements appear.</param>
 		///<param name="model">May be null. The model for the choose database window. Stores all information entered within the window.</param>
 		public static bool CheckProgramVersion(Form currentForm,bool isSilent,ChooseDatabaseInfo model) {
-			if(ODBuild.IsDebug()) {
-				return true;//Development mode never needs to check versions or copy files to other directories.  Simply return true at this point.
-			}
 			if(PrefC.GetBool(PrefName.UpdateWindowShowsClassicView)) {
 				if(isSilent) {
 					FormOpenDental.ExitCode=399;//Classic View is not supported with Silent Update
@@ -459,12 +456,6 @@ namespace OpenDental {
 			//At this point we know 100% it's going to be an upgrade
 			else if(storedVersion<currentVersion 
 				&& (updateServerName=="" || ODEnvironment.IdIsThisComputer(updateServerName.ToLower()))) {
-				if(ODBuild.IsTrial() && PrefC.GetString(PrefName.RegistrationKey)!="") {//Allow databases with no reg key to continue.  Needed by our conversion department.
-					//Trial users should never be able to update a database, not even the ProgramVersion preference.
-					MsgBox.Show("PrefL","Trial versions cannot connect to live databases.  Please run the Setup.exe in the AtoZ folder to reinstall your original version.");
-					FormOpenDental.ExitCode=398;//Trial versions does not support updating databases.
-					return false;//Should not get to this line.  Just in case.
-				}
 				//This has been commented out because it was deemed unnecessary: 10/10/14 per Jason and Derek
 				//There are two different situations where this might happen.
 				//if(PrefC.GetString(PrefName.UpdateInProgressOnComputerName)==""){//1. Just performed an update from this workstation on another database.
@@ -538,7 +529,7 @@ namespace OpenDental {
 							//Warn the user that their eServices will go down if there are any entries in the eservicesignal table within the last month.
 							List<EServiceSignal> listSignals=EServiceSignals.GetServiceHistory(eServiceCode.ListenerService,DateTime.Now.AddMonths(-1),DateTime.Now);
 							if(listSignals.Count > 0 && !isSilent) {
-								MsgBox.Show("PrefL","eServices will not work until the eConnector service is installed on the computer that is running the Listener Service.  Please contact us for help installing the eConnector service or see our online manual for more information.");
+								MsgBox.Show("eServices will not work until the eConnector service is installed on the computer that is running the Listener Service.  Please contact us for help installing the eConnector service or see our online manual for more information.");
 							}
 						}
 					}
@@ -558,7 +549,7 @@ namespace OpenDental {
 							catch(Exception) {
 								if(!isSilent) {
 									//Notify the user that HQ was not updated regarding the status of the eConnector (important).
-									MsgBox.Show("PrefL","Could not update the eConnector communication status.  Please contact us to enable eServices.");
+									MsgBox.Show("Could not update the eConnector communication status.  Please contact us to enable eServices.");
 								}
 							}
 						}
@@ -975,7 +966,7 @@ namespace OpenDental {
 			}
 			catch{
 				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName,"");//unlock workstations, since nothing was actually done.
-				MsgBox.Show(FormP,"Could not launch setup");
+				MsgBox.Show("Could not launch setup");
 			}
 		}
 
@@ -1072,7 +1063,7 @@ namespace OpenDental {
 				return true;//already converted
 			}
 			if(!isSilent) {
-				if(!MsgBox.Show("Prefs",true,"Your database will now be converted for use with MySQL 4.1.")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Your database will now be converted for use with MySQL 4.1.")) {
 					FormOpenDental.ExitCode=0;
 					return false;
 				}
@@ -1085,11 +1076,11 @@ namespace OpenDental {
 				}
 			}
 			if(!isSilent) {
-				MsgBox.Show("Prefs","Backup performed");
+				MsgBox.Show("Backup performed");
 			}
 			Prefs.ConvertToMySqlVersion41();
 			if(!isSilent) {
-				MsgBox.Show("Prefs","Converted");
+				MsgBox.Show("Converted");
 			}
 			return true;
 		}
@@ -1102,7 +1093,7 @@ namespace OpenDental {
 			string thisVersion=MiscData.GetMySqlVersion();
 			Version versionMySQL=new Version(thisVersion);
 			if(versionMySQL < new Version(5,5) && !Programs.IsEnabled(ProgramName.eClinicalWorks)) {//Do not show msg if MySQL version is 5.5 or greater or eCW is enabled
-				MsgBox.Show("Prefs","You should upgrade to MySQL 5.5 using the installer posted on our website.  It's not urgent, but until you upgrade, you are likely to get a few errors each day which will require restarting the MySQL service.");
+				MsgBox.Show("You should upgrade to MySQL 5.5 using the installer posted on our website.  It's not urgent, but until you upgrade, you are likely to get a few errors each day which will require restarting the MySQL service.");
 			}
 		}
 
@@ -1186,13 +1177,6 @@ namespace OpenDental {
 		public static bool UpgradeOrInstallEConnector(bool isSilent,out bool isListening) {
 			isListening=false;
 			try {
-				if(ODEnvironment.IsCloudServer) {
-					//We do not want to install in case this is a pre-test cloud database.
-					if(!isSilent) {
-						throw new ApplicationException(Lans.g("ServicesHelper","Not allowed to install the OpenDentalEConnector service in cloud mode."));
-					}
-					return false;
-				}
 				//Check to see if CustListener service is installed and needs to be uninstalled.
 				List<ServiceController> listCustListenerServices=ServicesHelper.GetServicesByExe("OpenDentalCustListener.exe");
 				if(listCustListenerServices.Count>0) {
@@ -1250,9 +1234,6 @@ namespace OpenDental {
 		///Set isSilent to false to show meaningful error messages, otherwise fails silently.</summary>
 		public static bool TryInstallOpenDentalService(bool isSilent) {
 			try {
-				if(ODEnvironment.IsCloudServer) {
-					return true;//We do not want to install now in case this is a pre-test cloud database.
-				}
 				List<ServiceController> listOpenDentalServices=ServicesHelper.GetServicesByExe("OpenDentalService.exe");
 				if(listOpenDentalServices.Count>0) {
 					return true;//An Open Dental Service is already installed.

@@ -74,7 +74,7 @@ namespace OpenDental {
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Invalid PatNum");
+				MessageBox.Show("Invalid PatNum");
 				return;
 			}
 			long provNum=0;

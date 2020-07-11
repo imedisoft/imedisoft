@@ -334,7 +334,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!PrefC.GetBool(PrefName.TaskAncestorsAllSetInVersion55)) {
-				if(!MsgBox.Show(this,true,"A one-time routine needs to be run.  It will take a few minutes.  Do you have time right now?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"A one-time routine needs to be run.  It will take a few minutes.  Do you have time right now?")){
 					return;
 				}
 				Cursor=Cursors.WaitCursor;
@@ -1394,15 +1394,15 @@ namespace OpenDental {
 				return;
 			}
 			if(tabContr.SelectedTab==tabUser && _listTaskListTreeHistory.Count==0) {//trunk of user tab
-				MsgBox.Show(this,"Not allowed to add a task list to the trunk of the user tab.  Either use the subscription feature, or add it to a child list.");
+				MessageBox.Show("Not allowed to add a task list to the trunk of the user tab.  Either use the subscription feature, or add it to a child list.");
 				return;
 			}
 			if(tabContr.SelectedTab==tabNew) {//new tab
-				MsgBox.Show(this,"Not allowed to add items to the 'New' tab.");
+				MessageBox.Show("Not allowed to add items to the 'New' tab.");
 				return;
 			}
 			if(tabContr.SelectedTab==tabPatientTickets) {
-				MsgBox.Show(this,"Not allowed to add a task list to the 'Patient Tasks' tab.");
+				MessageBox.Show("Not allowed to add a task list to the 'Patient Tasks' tab.");
 				return;
 			}
 			TaskList taskList=new TaskList();
@@ -1442,11 +1442,11 @@ namespace OpenDental {
 				return;
 			}
 			//if(tabContr.SelectedTab==tabUser && TreeHistory.Count==0) {//trunk of user tab
-			//	MsgBox.Show(this,"Not allowed to add a task to the trunk of the user tab.  Add it to a child list instead.");
+			//	MessageBox.Show("Not allowed to add a task to the trunk of the user tab.  Add it to a child list instead.");
 			//	return;
 			//}
 			//if(tabContr.SelectedTab==tabNew) {//new tab
-			//	MsgBox.Show(this,"Not allowed to add items to the 'New' tab.");
+			//	MessageBox.Show("Not allowed to add items to the 'New' tab.");
 			//	return;
 			//}
 			Task task=new Task();
@@ -1663,7 +1663,7 @@ namespace OpenDental {
 					newTL.Parent=0;
 					if(tabContr.SelectedTab==tabUser) {
 						//maybe we should treat this like a subscription rather than a paste.  Implement later.  For now:
-						MsgBox.Show(this,"Not allowed to paste directly to the trunk of this tab.  Try using the subscription feature instead.");
+						MessageBox.Show("Not allowed to paste directly to the trunk of this tab.  Try using the subscription feature instead.");
 						return;
 					}
 					else if(tabContr.SelectedTab==tabMain) {
@@ -1699,7 +1699,7 @@ namespace OpenDental {
 				}
 				newTL.FromNum=0;//always
 				if(_clipTaskList.TaskListNum==newTL.Parent && _wasCut) {
-					MsgBox.Show(this,"Cannot cut and paste a task list into itself.  Please move it into a different task list.");
+					MessageBox.Show("Cannot cut and paste a task list into itself.  Please move it into a different task list.");
 					return;
 				}
 				if(TaskLists.IsAncestor(_clipTaskList.TaskListNum,newTL.Parent)) {
@@ -1713,7 +1713,7 @@ namespace OpenDental {
 					if((GlobalTaskFilterType)PrefC.GetInt(PrefName.TasksGlobalFilterType)!=GlobalTaskFilterType.Disabled &&
 						(_globalFilterType!=GlobalTaskFilterType.None || TaskLists.HasGlobalFilterTypeInTree(newTL)) && !ODInitialize.IsRunningInUnitTest)
 					{
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel
 							,"Task filters are turned on in this task list or one of its sub lists.  Pasting will cause filtered tasks to move as "
 							+"well.  Affects all users.  Continue?")) 
 						{
@@ -1767,7 +1767,7 @@ namespace OpenDental {
 					newT.TaskListNum=0;
 					if(tabContr.SelectedTab==tabUser) {
 						//never allowed to have a task on the user trunk.
-						MsgBox.Show(this,"Tasks may not be pasted directly to the trunk of this tab.  Try pasting within a list instead.");
+						MessageBox.Show("Tasks may not be pasted directly to the trunk of this tab.  Try pasting within a list instead.");
 						return;
 					}
 					else if(tabContr.SelectedTab==tabMain) {
@@ -1808,7 +1808,7 @@ namespace OpenDental {
 					Tasks.SetReminderGroupId(newT);
 				}
 				if(_wasCut && Tasks.WasTaskAltered(_clipTask)){
-					MsgBox.Show("Tasks","Not allowed to move because the task has been altered by someone else.");
+					MessageBox.Show("Not allowed to move because the task has been altered by someone else.");
 					FillGrid();
 					return;
 				}
@@ -1852,7 +1852,7 @@ namespace OpenDental {
 		/// <summary>Return the FormTaskEdit that was created from showing the task.  Can return null.</summary>
 		private FormTaskEdit SendToMe_Clicked(bool doOpenTask=true) {
 			if(Security.CurUser.TaskListInBox==0) {
-				MsgBox.Show(this,"You do not have an inbox.");
+				MessageBox.Show("You do not have an inbox.");
 				return null;
 			}
 			Task task=_clickedTask;
@@ -1914,7 +1914,7 @@ namespace OpenDental {
 		///<summary>Marks the selected task as read and updates the grid.</summary>
 		private void MarkRead(Task markedTask) {
 			if(markedTask==null) {
-				MsgBox.Show(this,"Please select a valid task.");
+				MessageBox.Show("Please select a valid task.");
 				return;
 			}
 			markedTask.IsUnread=TaskUnreads.IsUnread(Security.CurUser.UserNum,markedTask);
@@ -1937,18 +1937,18 @@ namespace OpenDental {
 							userNumInbox=TaskLists.GetMailboxUserNum(_listTaskListTreeHistory[0].TaskListNum);
 						}
 						else {
-							MsgBox.Show(this,"Please setup task lists before marking tasks as read.");
+							MessageBox.Show("Please setup task lists before marking tasks as read.");
 							return;
 						}
 					}
 					if(userNumInbox != 0 && userNumInbox != Security.CurUser.UserNum) {
-						MsgBox.Show(this,"Not allowed to mark off tasks in someone else's inbox.");
+						MessageBox.Show("Not allowed to mark off tasks in someone else's inbox.");
 						return;
 					}
 				}
 				if(markedTask.IsUnread) {
 					if(Tasks.IsReminderTask(markedTask) && markedTask.DateTimeEntry>DateTime.Now){
-						MsgBox.Show(this,"Not allowed to mark future Reminders as read.");
+						MessageBox.Show("Not allowed to mark future Reminders as read.");
 					}
 					else{
 						TaskUnreads.SetRead(Security.CurUser.UserNum,markedTask);//Takes care of Db.
@@ -2102,10 +2102,10 @@ namespace OpenDental {
 					return;
 				}
 				if(TaskLists.GetMailboxUserNum(taskListToDelete.TaskListNum)!=0) {
-					MsgBox.Show(this,"Not allowed to delete task list because it is attached to a user inbox.");
+					MessageBox.Show("Not allowed to delete task list because it is attached to a user inbox.");
 					return;
 				}
-				if(!MsgBox.Show(this,true,"Delete this empty list?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this empty list?")) {
 					return;
 				}
 				TaskSubscriptions.UpdateTaskListSubs(taskListToDelete.TaskListNum,0);
@@ -2136,11 +2136,11 @@ namespace OpenDental {
 					return;
 				}
 				//This logic should match FormTaskEdit.butDelete_Click()
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete Task?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete Task?")) {
 					return;
 				}
 				if(Tasks.GetOne(_clickedTask.TaskNum)==null) {
-					MsgBox.Show(this,"Task already deleted.");
+					MessageBox.Show("Task already deleted.");
 					return;
 				}
 				if(_clickedTask.TaskListNum==0) {
@@ -2464,10 +2464,10 @@ namespace OpenDental {
 				}
 			}
 			else { //already subscribed.
-				MsgBox.Show(this,"User already subscribed.");
+				MessageBox.Show("User already subscribed.");
 				return;
 			}
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 			RefillLocalTaskGrids(_listTaskLists[_clickedI],null);
 		}
 
@@ -2531,7 +2531,7 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			TaskTakens.DeleteForTask(_clickedTask.TaskNum);
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Task taken deleted");
+			MessageBox.Show("Task taken deleted");
 		}
 
 		private void menuTaskPriority_Click(Task task,Def priorityDef) {

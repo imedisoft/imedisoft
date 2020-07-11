@@ -174,7 +174,7 @@ namespace OpenDental {
 					isValidFormat=false;
 				}
 				if(!isValidFormat) {
-					MsgBox.Show(this,"Please enter a valid format in the Custom date format text box.");
+					MessageBox.Show("Please enter a valid format in the Custom date format text box.");
 					return;
 				}
 			}

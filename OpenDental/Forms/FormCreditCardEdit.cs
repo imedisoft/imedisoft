@@ -151,7 +151,7 @@ namespace OpenDental {
 
 		private bool VerifyData() {
 			if(textCardNumber.Text.Trim().Length<5) {
-				MsgBox.Show(this,"Invalid Card Number.");
+				MessageBox.Show("Invalid Card Number.");
 				return false;
 			}
 			try {
@@ -162,16 +162,16 @@ namespace OpenDental {
 					CreditCardCur.CCExpiration=new DateTime(Convert.ToInt32("20"+textExpDate.Text.Substring(2,2)),Convert.ToInt32(textExpDate.Text.Substring(0,2)),1);
 				}
 				else if(CreditCardCur.CCSource!=CreditCardSource.PaySimpleACH) {
-					MsgBox.Show(this,"Expiration format invalid.");
+					MessageBox.Show("Expiration format invalid.");
 					return false;
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Expiration format invalid.");
+				MessageBox.Show("Expiration format invalid.");
 				return false;
 			}
 			if(textDateStop.Text.Trim()!="" && PIn.Date(textDateStart.Text)>PIn.Date(textDateStop.Text)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"The recurring charge start date is after the stop date.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The recurring charge start date is after the stop date.  Continue?")) {
 					return false;
 				}
 			}
@@ -180,21 +180,21 @@ namespace OpenDental {
 					|| textDateStop.errorProvider1.GetError(textDateStop)!=""
 					|| textChargeAmt.errorProvider1.GetError(textChargeAmt)!="")
 				{
-					MsgBox.Show(this,"Please fix data entry errors first.");
+					MessageBox.Show("Please fix data entry errors first.");
 					return false;
 				}
 				if((textChargeAmt.Text=="" && comboPaymentPlans.SelectedIndex>0)
 					|| (textChargeAmt.Text=="" && textDateStart.Text.Trim()!=""))
 				{
-					MsgBox.Show(this,"You need a charge amount for recurring charges.");
+					MessageBox.Show("You need a charge amount for recurring charges.");
 					return false;
 				}
 				if(textChargeAmt.Text!="" && textDateStart.Text.Trim()=="") {
-					MsgBox.Show(this,"You need a start date for recurring charges.");
+					MessageBox.Show("You need a start date for recurring charges.");
 					return false;
 				}
 				if(radioDayOfMonth.Checked && textDayOfMonth.Text=="" && textDateStart.Text!="") {
-					MsgBox.Show(this,"You must select at least one date for recurring charges when Fixed day(s) of month is checked.");
+					MessageBox.Show("You must select at least one date for recurring charges when Fixed day(s) of month is checked.");
 					return false;
 				}
 			}
@@ -274,7 +274,7 @@ namespace OpenDental {
 			List<int> currentDays=textDayOfMonth.Text.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => PIn.Int(x.Trim())).ToList();
 			if(currentDays.Contains(selectedDay)) {
-				MsgBox.Show(this,"The selected date has already been added.");
+				MessageBox.Show("The selected date has already been added.");
 				return;
 			}
 			currentDays.Add(selectedDay);
@@ -344,7 +344,7 @@ namespace OpenDental {
 			}
 			//Warn if attached to a different active card for this patient
 			if(CreditCards.ProcLinkedToCard(CreditCardCur.PatNum,procCode,CreditCardCur.CreditCardNum)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"This procedure is already linked with another credit card on this patient's "
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"This procedure is already linked with another credit card on this patient's "
 					+"account. Adding the procedure to this card will result in the patient being charged twice for this procedure. Add this procedure?")) {
 					return;
 				}
@@ -358,7 +358,7 @@ namespace OpenDental {
 
 		private void butRemoveProc_Click(object sender,EventArgs e) {
 			if(listProcs.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a procedure first.");
+				MessageBox.Show("Please select a procedure first.");
 				return;
 			}
 			List<string> strList=new List<string>(CreditCardCur.Procedures.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries));
@@ -371,7 +371,7 @@ namespace OpenDental {
 			if(CreditCardCur.IsNew) {
 				DialogResult=DialogResult.Cancel;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Are you sure you want to delete this credit card?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Are you sure you want to delete this credit card?")) {
 				return;
 			}
 			#region X-Charge
@@ -401,7 +401,7 @@ namespace OpenDental {
 			Program prog=Programs.GetCur(ProgramName.Xcharge);
 			string path=Programs.GetProgramPath(prog);
 			if(prog==null) {
-				MsgBox.Show(this,"X-Charge entry is missing from the database.");//should never happen
+				MessageBox.Show("X-Charge entry is missing from the database.");//should never happen
 				return;
 			}
 			if(!prog.Enabled) {
@@ -412,7 +412,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!File.Exists(path)) {
-				MsgBox.Show(this,"Path is not valid.");
+				MessageBox.Show("Path is not valid.");
 				if(Security.IsAuthorized(Permissions.Setup)) {
 					FormXchargeSetup FormX=new FormXchargeSetup();
 					FormX.ShowDialog();
@@ -425,7 +425,7 @@ namespace OpenDental {
 				File.Delete(resultfile);//delete the old result file.
 			}
 			catch {
-				MsgBox.Show(this,"Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have "
+				MessageBox.Show("Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have "
 					+"sufficient permissions.");
 				return;
 			}
@@ -457,7 +457,7 @@ namespace OpenDental {
 							break;
 						}
 						if(line.StartsWith("DESCRIPTION") && !line.Contains("Alias does not exist")) {//If token doesn't exist in X-Charge, still delete from OD
-							MsgBox.Show(this,"There was a problem deleting this card within X-Charge.  Please try again.");
+							MessageBox.Show("There was a problem deleting this card within X-Charge.  Please try again.");
 							return;//Don't delete the card from OD
 						}
 						line=reader.ReadLine();
@@ -465,7 +465,7 @@ namespace OpenDental {
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Could not read XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have "
+				MessageBox.Show("Could not read XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have "
 					+"sufficient permissions.");
 				return;
 			}
@@ -485,7 +485,7 @@ namespace OpenDental {
 				}
 				catch(PaySimpleException ex) {
 					MessageBox.Show(ex.Message);
-					if(ex.ErrorType==PaySimpleError.CustomerDoesNotExist && MsgBox.Show(this,MsgBoxButtons.OKCancel,
+					if(ex.ErrorType==PaySimpleError.CustomerDoesNotExist && MsgBox.Show(MsgBoxButtons.OKCancel,
 						"Delete the link to the customer id for this patient?")) 
 					{
 						PatientLinks.DeletePatNumTos(ex.CustomerId,PatientLinkType.PaySimple);
@@ -552,7 +552,7 @@ namespace OpenDental {
 					Program prog=Programs.GetCur(ProgramName.Xcharge);
 					string path=Programs.GetProgramPath(prog);
 					if(prog==null){
-						MsgBox.Show(this,"X-Charge entry is missing from the database.");//should never happen
+						MessageBox.Show("X-Charge entry is missing from the database.");//should never happen
 						return;
 					}
 					if(!prog.Enabled){
@@ -563,7 +563,7 @@ namespace OpenDental {
 						return;
 					}
 					if(!File.Exists(path)){
-						MsgBox.Show(this,"Path is not valid.");
+						MessageBox.Show("Path is not valid.");
 						if(Security.IsAuthorized(Permissions.Setup)){
 							FormXchargeSetup FormX=new FormXchargeSetup();
 							FormX.ShowDialog();
@@ -577,7 +577,7 @@ namespace OpenDental {
 						File.Delete(resultfile);//delete the old result file.
 					}
 					catch {
-						MsgBox.Show(this,"Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have sufficient permissions.");
+						MessageBox.Show("Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have sufficient permissions.");
 						return;
 					}
 					string xUsername=ProgramProperties.GetPropVal(prog.ProgramNum,"Username",Clinics.ClinicNum);
@@ -625,7 +625,7 @@ namespace OpenDental {
 						}
 					}
 					catch {
-						MsgBox.Show(this,"There was a problem creating or editing this card with X-Charge.  Please try again.");
+						MessageBox.Show("There was a problem creating or editing this card with X-Charge.  Please try again.");
 						return;
 					}
 				}//End of special token logic

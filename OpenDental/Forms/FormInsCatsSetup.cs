@@ -290,11 +290,11 @@ namespace OpenDental {
 
 		private void butAddSpan_Click(object sender, System.EventArgs e){
 			if(gridMain.SelectedIndices.Length<1){
-				MsgBox.Show(this,"Please select a category first.");
+				MessageBox.Show("Please select a category first.");
 				return;
 			}
 			if(gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag.GetType()!=typeof(CovCat)){
-				MsgBox.Show(this,"Please select a category first.");
+				MessageBox.Show("Please select a category first.");
 				return;
 			}
 			CovSpan covspan=new CovSpan();
@@ -311,11 +311,11 @@ namespace OpenDental {
 
 		private void butUp_Click(object sender, System.EventArgs e) {
 			if(gridMain.SelectedIndices.Length<1){
-				MsgBox.Show(this,"Please select a category first.");
+				MessageBox.Show("Please select a category first.");
 				return;
 			}
 			if(gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag.GetType()!=typeof(CovCat)){
-				MsgBox.Show(this,"Please select a category first.");
+				MessageBox.Show("Please select a category first.");
 				return;
 			}
 			long catNum=((CovCat)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).CovCatNum;
@@ -331,11 +331,11 @@ namespace OpenDental {
 
 		private void butDown_Click(object sender, System.EventArgs e){
 			if(gridMain.SelectedIndices.Length<1){
-				MsgBox.Show(this,"Please select a category first.");
+				MessageBox.Show("Please select a category first.");
 				return;
 			}
 			if(gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag.GetType()!=typeof(CovCat)){
-				MsgBox.Show(this,"Please select a category first.");
+				MessageBox.Show("Please select a category first.");
 				return;
 			}
 			long catNum=((CovCat)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).CovCatNum;
@@ -366,7 +366,7 @@ namespace OpenDental {
 		private void butDefaultsCheck_Click(object sender,EventArgs e) {
 			string retVal=CheckDefaults();
 			if(retVal=="") {
-				MsgBox.Show(this,"Categories are set up correctly.  Spans have not been checked.  Push the Reset button to automatically reset the spans to default.");
+				MessageBox.Show("Categories are set up correctly.  Spans have not been checked.  Push the Reset button to automatically reset the spans to default.");
 			}
 			else {
 				MessageBox.Show(retVal);
@@ -399,13 +399,13 @@ namespace OpenDental {
 				MessageBox.Show(retVal);
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Reset orders and spans to default?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Reset orders and spans to default?")) {
 				return;
 			}
 			CovCats.SetOrdersToDefault();
 			CovCats.SetSpansToDefault();
 			FillSpans();
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {

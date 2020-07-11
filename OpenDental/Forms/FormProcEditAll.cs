@@ -192,7 +192,7 @@ namespace OpenDental {
 			//Get a new recent list of claimprocs for pat to be able to validate for provider and procedure status change.
 			if(textDate.Text!="" && textDate.errorProvider1.GetError(textDate)!="") {
 				//Either loaded blank or user deleted date. Either way blank will not make it to DB.
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			DateTime procDate=PIn.Date(textDate.Text);
@@ -204,7 +204,7 @@ namespace OpenDental {
 				foreach(Procedure proc in ProcList){//first validate for all dates. 
 					#region Future dating completed procedures validation.
 					if(!PrefC.GetBool(PrefName.FutureTransDatesAllowed) && proc.ProcStatus==ProcStat.C && procDate>DateTime.Today) {
-						MsgBox.Show(this,"Completed procedures cannot have future dates.");
+						MessageBox.Show("Completed procedures cannot have future dates.");
 						return false;
 					}
 					#endregion
@@ -227,7 +227,7 @@ namespace OpenDental {
 			List<ClaimProc> listClaimProcsForPat=ClaimProcs.RefreshForProcs(ProcList.Select(x => x.ProcNum).ToList());
 			foreach(Procedure proc in ProcList) {
 				if(proc.IsLocked) {
-					MsgBox.Show(this,"Locked procedures cannot be edited.");
+					MessageBox.Show("Locked procedures cannot be edited.");
 					return false;
 				}
 				#region Provider change validation.

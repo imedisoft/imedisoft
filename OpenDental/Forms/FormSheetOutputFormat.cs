@@ -57,16 +57,16 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textPaperCopies.errorProvider1.GetError(textPaperCopies)!=""){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(checkEmailPat.Checked && textEmailPat.Text==""){
-				MsgBox.Show(this,"Please enter an email address or uncheck the email box.");
+				MessageBox.Show("Please enter an email address or uncheck the email box.");
 				return;
 			}
 			if(Email2Visible){
 				if(checkEmail2.Checked && textEmail2.Text==""){
-					MsgBox.Show(this,"Please enter an email address or uncheck the email box.");
+					MessageBox.Show("Please enter an email address or uncheck the email box.");
 					return;
 				}
 			}
@@ -74,7 +74,7 @@ namespace OpenDental {
 				&& !checkEmailPat.Checked
 				&& !checkEmail2.Checked)
 			{
-				MsgBox.Show(this,"There are no output methods selected.");
+				MessageBox.Show("There are no output methods selected.");
 				return;
 			}
 			PaperCopies=PIn.Int(textPaperCopies.Text);

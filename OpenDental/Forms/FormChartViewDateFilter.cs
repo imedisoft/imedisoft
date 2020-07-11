@@ -74,7 +74,7 @@ namespace OpenDental {
 			if(textDateStart.errorProvider1.GetError(textDateStart)!=""//validate the date boxes.
 				|| textDateEnd.errorProvider1.GetError(textDateEnd)!="") 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateStart=PIn.Date(textDateStart.Text);

@@ -31,17 +31,17 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(labelCount.Text=="0") {
-				MsgBox.Show(this,"There are no duplicates to clear.");
+				MessageBox.Show("There are no duplicates to clear.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Clear all duplicates?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Clear all duplicates?")){
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
 			Schedules.ClearDuplicates();
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Clear duplicate blockouts.");
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 			FillLabels();
 		}
 

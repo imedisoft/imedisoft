@@ -464,7 +464,7 @@ namespace OpenDental{
 					catch {
 						//We are just trying to be helpful so it doesn't really matter if something failed above. 
 						//They can simply go to the EHR dashboard and send the summary of care manually like they always have.  They will get detailed validation errors there.
-						MsgBox.Show(this,"There was a problem automatically sending a summary of care.  Please go to the EHR dashboard to send a summary of care to meet the summary of care core measure.");
+						MessageBox.Show("There was a problem automatically sending a summary of care.  Please go to the EHR dashboard to send a summary of care to meet the summary of care core measure.");
 					}
 				}
 			}
@@ -508,7 +508,7 @@ namespace OpenDental{
 		private void butSlip_Click(object sender,EventArgs e) {
 			int idx=gridMain.GetSelectedIndex();
 			if(idx==-1){
-				MsgBox.Show(this,"Please select a referral first");
+				MessageBox.Show("Please select a referral first");
 				return;
 			}
 			Referral referral=ReferralL.GetReferral(((RefAttach)gridMain.ListGridRows[idx].Tag).ReferralNum);
@@ -532,7 +532,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select exactly one referral first.");
+				MessageBox.Show("Please select exactly one referral first.");
 				return;
 			}
 			int selectedIdx=gridMain.GetSelectedIndex();
@@ -547,7 +547,7 @@ namespace OpenDental{
 			destAttach.ItemOrder=sourceIdx;
 			RefAttaches.Update(destAttach);
 			if(!gridMain.SwapRows(selectedIdx,selectedIdx-1)) {
-				MsgBox.Show(this,"Unable to change order.");
+				MessageBox.Show("Unable to change order.");
 				return;
 			}
 			gridMain.SetSelected(selectedIdx-1,true);
@@ -555,7 +555,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select exactly one referral first.");
+				MessageBox.Show("Please select exactly one referral first.");
 				return;
 			}
 			int selectedIdx=gridMain.GetSelectedIndex();
@@ -570,7 +570,7 @@ namespace OpenDental{
 			destAttach.ItemOrder=sourceIdx;
 			RefAttaches.Update(destAttach);
 			if(!gridMain.SwapRows(selectedIdx,selectedIdx+1)) {
-				MsgBox.Show(this,"Unable to change order.");
+				MessageBox.Show("Unable to change order.");
 				return;
 			}			
 			gridMain.SetSelected(selectedIdx+1,true);
@@ -578,7 +578,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex() < 0) {
-				MsgBox.Show(this,"Please select a referral first");
+				MessageBox.Show("Please select a referral first");
 				return;
 			}
 			if(IsSelectionMode && PrefC.GetBool(PrefName.ShowFeatureEhr)) {

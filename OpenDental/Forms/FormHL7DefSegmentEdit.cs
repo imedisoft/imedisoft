@@ -85,7 +85,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete Segment?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete Segment?")) {
 				return;
 			}
 			for(int f=0;f<HL7DefSegCur.hl7DefFields.Count;f++) {
@@ -113,7 +113,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//not enabled if internal
 			if(textItemOrder.errorProvider1.GetError(textItemOrder)!="") {
-				MsgBox.Show(this,"Please fix data entry error first.");
+				MessageBox.Show("Please fix data entry error first.");
 				return;
 			}
 			HL7DefSegCur.SegmentName=(SegmentNameHL7)comboSegmentName.SelectedIndex;
@@ -124,11 +124,11 @@ namespace OpenDental {
 			if(HL7DefSegCur.ItemOrder==0 && HL7DefSegCur.SegmentName==SegmentNameHL7.MSH) {
 				for(int i=0;i<HL7DefSegCur.hl7DefFields.Count;i++) {
 					if(HL7DefSegCur.hl7DefFields[i].FieldName=="separators^~\\&" && HL7DefSegCur.hl7DefFields[i].OrdinalPos!=1) {//we force the separators^~\\& to be in field 1 of the message header segment or we will not know how to split the messageType field (usually messageType^eventType, but the '^' is defined in the separator segment) to get the message type
-						MsgBox.Show(this,"The separators^~\\& field must be in position 1 of the message header segment.");
+						MessageBox.Show("The separators^~\\& field must be in position 1 of the message header segment.");
 						return;
 					}
 					if(HL7DefSegCur.hl7DefFields[i].FieldName=="messageType" && HL7DefSegCur.hl7DefFields[i].OrdinalPos!=8) {//we force messageType to be in field 8 of the message header segment or we will not be able to retrieve a definition for this type of message when processing
-						MsgBox.Show(this,"The messageType field must be in position 8 of the message header segment.");
+						MessageBox.Show("The messageType field must be in position 8 of the message header segment.");
 						return;
 					}
 				}

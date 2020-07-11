@@ -44,7 +44,7 @@ namespace OpenDental {
 				return;
 			}		
 			if(!Userods.TryGetUniqueUsername(user.UserName+"(Copy)",0,false,false,out string newUserName)){//This should really never fail.
-				MsgBox.Show(this,"Could not generate a unique username.");
+				MessageBox.Show("Could not generate a unique username.");
 				return;
 			}
 			//New username format; user.UserName(copy)(X)

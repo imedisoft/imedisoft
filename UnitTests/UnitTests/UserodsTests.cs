@@ -143,7 +143,7 @@ namespace UnitTests.Userods_Tests
 					{
 						Userods.CheckUserAndPassword(myUser.UserName, "passwordguess#" + i, false);
 					}
-					catch (Exception e)
+					catch
 					{
 
 					}

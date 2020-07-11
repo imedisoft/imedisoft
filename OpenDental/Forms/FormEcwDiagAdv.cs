@@ -108,7 +108,7 @@ namespace OpenDental {
 				dbTables=MySqlHelper.ExecuteDataset(connString,"SHOW TABLES").Tables[0];
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,ex.Message);
+				MessageBox.Show(ex.Message);
 			}
 			gridTables.BeginUpdate();
 			gridTables.ListGridColumns.Clear();
@@ -243,7 +243,7 @@ namespace OpenDental {
 				FillGrid();
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,ex.Message);
+				MessageBox.Show(ex.Message);
 			}
 			Cursor=Cursors.Default;
 			Application.DoEvents();
@@ -264,7 +264,7 @@ namespace OpenDental {
 				FillGrid();
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,ex.Message);
+				MessageBox.Show(ex.Message);
 			}
 			Cursor=Cursors.Default;
 			Application.DoEvents();

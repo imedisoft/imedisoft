@@ -801,7 +801,7 @@ namespace OpenDental{
 						return;
 					}
 					if(comboClass.SelectedIndex==0) {
-						MsgBox.Show(this,"A class must be selected from the drop down box before a new student can be created");
+						MessageBox.Show("A class must be selected from the drop down box before a new student can be created");
 						return;
 					}
 					FormPSE.ProvStudent.SchoolClassNum=_listSchoolClasses[comboClass.SelectedIndex-1].SchoolClassNum;
@@ -828,7 +828,7 @@ namespace OpenDental{
 			}
 			if(!radioStudents.Checked) {
 				if(radioInstructors.Checked && PrefC.GetLong(PrefName.SecurityGroupForInstructors)==0) {
-					MsgBox.Show(this,"Security Group for Instructors must be set from the Dental School Setup window before adding instructors.");
+					MessageBox.Show("Security Group for Instructors must be set from the Dental School Setup window before adding instructors.");
 					return;
 				}
 				FormPE.IsNew=true;
@@ -840,7 +840,7 @@ namespace OpenDental{
 			}
 			else {
 				if(radioStudents.Checked && PrefC.GetLong(PrefName.SecurityGroupForStudents)==0) {
-					MsgBox.Show(this,"Security Group for Students must be set from the Dental School Setup window before adding students.");
+					MessageBox.Show("Security Group for Students must be set from the Dental School Setup window before adding students.");
 					return;
 				}
 				FormPSE.ShowDialog();
@@ -875,7 +875,7 @@ namespace OpenDental{
 		///<summary>Won't be visible if using Dental Schools.  So list will be unfiltered and ItemOrders won't get messed up.</summary>
 		private void butUp_Click(object sender, System.EventArgs e) {
 			if(gridMain.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select exactly one provider first.");
+				MessageBox.Show("Please select exactly one provider first.");
 				return;
 			}
 			if(gridMain.SelectedIndices[0]==0) {//already at top
@@ -900,7 +900,7 @@ namespace OpenDental{
 		///<summary>Won't be visible if using Dental Schools.  So list will be unfiltered and ItemOrders won't get messed up.</summary>
 		private void butDown_Click(object sender, System.EventArgs e) {
 			if(gridMain.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select exactly one provider first.");
+				MessageBox.Show("Please select exactly one provider first.");
 				return;
 			}
 			if(gridMain.SelectedIndices[0]==gridMain.ListGridRows.Count-1) {//already at bottom
@@ -999,21 +999,21 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"You must select at least one provider to move patients from.");
+				MessageBox.Show("You must select at least one provider to move patients from.");
 				return;
 			}
 			List<Provider> listProvsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => (Provider)gridMain.ListGridRows[x].Tag).ToList();
 			if(_provNumMoveTo==-1){
-				MsgBox.Show(this,"You must pick a 'To' provider in the box above to move patients to.");
+				MessageBox.Show("You must pick a 'To' provider in the box above to move patients to.");
 				return;
 			}
 			if(_provNumMoveTo==0) {
-				MsgBox.Show(this,"'None' is not a valid primary provider.");
+				MessageBox.Show("'None' is not a valid primary provider.");
 				return;
 			}
 			Provider provTo=_listProvs.FirstOrDefault(x => x.ProvNum==_provNumMoveTo);
 			if(provTo==null) {
-				MsgBox.Show(this,"The provider could not be found.");
+				MessageBox.Show("The provider could not be found.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -1028,7 +1028,7 @@ namespace OpenDental{
 			Cursor=Cursors.Default;
 			int totalPatCount=dictPriProvPats.Sum(x => x.Value.Count);
 			if(totalPatCount==0) {
-				MsgBox.Show(this,"The selected providers are not primary providers for any patients.");
+				MessageBox.Show("The selected providers are not primary providers for any patients.");
 				return;
 			}
 			string strProvFromDesc=string.Join(", ",listProvsFrom.FindAll(x => dictPriProvPats.ContainsKey(x.ProvNum)).Select(x => x.Abbr));
@@ -1060,12 +1060,12 @@ namespace OpenDental{
 		///<summary>Not possible if no security admin.</summary>
 		private void butMoveSec_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"You must select at least one provider to move patients from.");
+				MessageBox.Show("You must select at least one provider to move patients from.");
 				return;
 			}
 			List<Provider> listProvsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => (Provider)gridMain.ListGridRows[x].Tag).ToList();
 			if(_provNumMoveTo==-1) {
-				MsgBox.Show(this,"You must pick a 'To' provider in the box above to move patients to.");
+				MessageBox.Show("You must pick a 'To' provider in the box above to move patients to.");
 				return;
 			}
 			Provider provTo=_listProvs.FirstOrDefault(x => x.ProvNum==_provNumMoveTo);
@@ -1096,7 +1096,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.PatPriProvEdit)) {//shouldn't be possible, button should be disabled if not authorized, just in case
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Ready to look for possible reassignments.  This will take a few minutes, and may make the program "
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Ready to look for possible reassignments.  This will take a few minutes, and may make the program "
 				+"unresponsive on other computers during that time.  You will be given one more chance after this to cancel before changes are made to the "
 				+"database.  Continue?"))
 			{
@@ -1109,7 +1109,7 @@ namespace OpenDental{
 			if(tablePatNums.Rows.Count==0 || gridMain.ListGridRows.Count==0 || listProvNumsFrom.Count==0) {
 				actionCloseProgress?.Invoke();
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"No patients to reassign.");
+				MessageBox.Show("No patients to reassign.");
 				return;
 			}
 			//Convert DataTable to a var that is a list of objects with PatNum and ProvNum properties.  var is temporary, used to create a list of actions
@@ -1159,17 +1159,17 @@ namespace OpenDental{
 		///<summary>Not possible if no security admin.</summary>
 		private void butCreateUsers_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select one or more providers first.");
+				MessageBox.Show("Please select one or more providers first.");
 				return;
 			}
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++){
 				if(Providers.IsAttachedToUser(((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).ProvNum)) {
-					MsgBox.Show(this,"Not allowed to create users on providers which already have users.");
+					MessageBox.Show("Not allowed to create users on providers which already have users.");
 					return;
 				}
 			}
 			if(comboUserGroup.ListSelectedItems.Count == 0){
-				MsgBox.Show(this,"Please select at least one User Group first.");
+				MessageBox.Show("Please select at least one User Group first.");
 				return;
 			}
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++){
@@ -1227,7 +1227,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.ProviderAlphabetize,false)) {
 				return;//should not be possible, button should be disabled. This is just in case.
 			}
-			if(!MsgBox.Show(this,true,"Alphabetize all providers (by Abbrev) and move hidden providers to the bottom, followed by all non-person providers? This cannot be undone.")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Alphabetize all providers (by Abbrev) and move hidden providers to the bottom, followed by all non-person providers? This cannot be undone.")) {
 				return;
 			}
 			//According to original task the form should display providers in the following order:

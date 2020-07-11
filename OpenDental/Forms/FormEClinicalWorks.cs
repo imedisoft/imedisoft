@@ -699,7 +699,7 @@ namespace OpenDental{
 		private void checkEnabled_Click(object sender,EventArgs e) {
 			bool isHL7Enabled=HL7Defs.IsExistingHL7Enabled();
 			if(isHL7Enabled && checkEnabled.Checked) {
-				MsgBox.Show(this,"An HL7Def is enabled.  The enabled HL7 definition will control the HL7 messages not this program link.");
+				MessageBox.Show("An HL7Def is enabled.  The enabled HL7 definition will control the HL7 messages not this program link.");
 				textHL7Server.ReadOnly=true;
 				textHL7ServiceName.ReadOnly=true;
 				textHL7FolderIn.ReadOnly=true;
@@ -707,15 +707,15 @@ namespace OpenDental{
 				labelDefEnabledWarning.Visible=true;
 				checkQuadAsToothNum.Enabled=false;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Warning!  Read the manual carefully before turning this bridge on or off.  Make sure you understand the difference between the bridging modes and how it will affect patient accounts.  Continue anyway?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning!  Read the manual carefully before turning this bridge on or off.  Make sure you understand the difference between the bridging modes and how it will affect patient accounts.  Continue anyway?")) {
 				checkEnabled.Checked=!checkEnabled.Checked;
 				return;
 			}
-			MsgBox.Show(this,"You will need to restart Open Dental to see the effects.");
+			MessageBox.Show("You will need to restart Open Dental to see the effects.");
 		}
 
 		private void radioModeTight_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Warning!  Read the manual carefully before changing this option.  Make sure you understand the difference between the bridging modes and how it will affect patient accounts.  Continue anyway?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning!  Read the manual carefully before changing this option.  Make sure you understand the difference between the bridging modes and how it will affect patient accounts.  Continue anyway?")) {
 				//set radio buttons according to what they already are in the db
 				SetModeRadioButtons(GetProp("eClinicalWorksMode"));
 				SetModeVisibilities();
@@ -725,7 +725,7 @@ namespace OpenDental{
 		}
 
 		private void radioModeStandalone_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Warning!  Read the manual carefully before changing this option.  Make sure you understand the difference between the bridging modes and how it will affect patient accounts.  Continue anyway?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning!  Read the manual carefully before changing this option.  Make sure you understand the difference between the bridging modes and how it will affect patient accounts.  Continue anyway?")) {
 				//set radio buttons according to what they already are in the db
 				SetModeRadioButtons(GetProp("eClinicalWorksMode"));
 				SetModeVisibilities();
@@ -735,7 +735,7 @@ namespace OpenDental{
 		}
 
 		private void radioModeFull_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Warning!  Read the manual carefully before changing this option.  Make sure you understand the difference between the bridging modes and how it will affect patient accounts.  Continue anyway?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning!  Read the manual carefully before changing this option.  Make sure you understand the difference between the bridging modes and how it will affect patient accounts.  Continue anyway?")) {
 				//set radio buttons according to what they already are in the db
 				SetModeRadioButtons(GetProp("eClinicalWorksMode"));
 				SetModeVisibilities();
@@ -784,34 +784,34 @@ namespace OpenDental{
 		}
 
 		private void checkShowImages_Click(object sender,EventArgs e) {
-			MsgBox.Show(this,"You will need to restart Open Dental to see the effects.");
+			MessageBox.Show("You will need to restart Open Dental to see the effects.");
 		}
 
 		private bool SaveToDb() {
 			if((radioModeTight.Checked || radioModeFull.Checked) && comboDefaultUserGroup.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a default user group first.");
+				MessageBox.Show("Please select a default user group first.");
 				return false;
 			}
 			if(checkEnabled.Checked) {
 				if(textProgDesc.Text=="") {
-					MsgBox.Show(this,"Description may not be blank.");
+					MessageBox.Show("Description may not be blank.");
 					return false;
 				}
 				if(!HL7Defs.IsExistingHL7Enabled()) {
 					if((radioModeTight.Checked || radioModeFull.Checked) && textHL7FolderIn.Text=="") {
-						MsgBox.Show(this,"HL7 in folder may not be blank.");
+						MessageBox.Show("HL7 in folder may not be blank.");
 						return false;
 					}
 					if(textHL7FolderOut.Text=="") {
-						MsgBox.Show(this,"HL7 out folder may not be blank.");
+						MessageBox.Show("HL7 out folder may not be blank.");
 						return false;
 					}
 					if(textHL7Server.Text=="") {
-						MsgBox.Show(this,"HL7 Server may not be blank.");
+						MessageBox.Show("HL7 Server may not be blank.");
 						return false;
 					}
 					if(textHL7ServiceName.Text=="") {
-						MsgBox.Show(this,"HL7 Service Name may not be blank.");
+						MessageBox.Show("HL7 Service Name may not be blank.");
 						return false;
 					}
 				}

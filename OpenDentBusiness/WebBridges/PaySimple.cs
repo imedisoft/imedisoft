@@ -1300,9 +1300,9 @@ namespace OpenDentBusiness {
 			///<summary>Returns the full URL according to the route/route id given.</summary>
 			private static string GetApiUrl(ApiRoute route,string routeId="") {
 				string apiUrl=Introspection.GetOverride(Introspection.IntrospectionEntity.PaySimpleApiURL,"https://api.paysimple.com");
-				if(ODBuild.IsDebug()) {
-					apiUrl="https://sandbox-api.paysimple.com";
-				}
+#if DEBUG
+				apiUrl="https://sandbox-api.paysimple.com";
+#endif
 				if(!(route==ApiRoute.Webhook || route==ApiRoute.AllWebhooks)) {
 					apiUrl+="/v4";
 				}

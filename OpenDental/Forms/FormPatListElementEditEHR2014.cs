@@ -37,7 +37,7 @@ namespace OpenDental {
 					textSNOMED.Text=Element.CompareString;
 				}
 				else {
-					MsgBox.Show(this,"Problem code provided is not an existing ICD9 or SNOMED code.");
+					MessageBox.Show("Problem code provided is not an existing ICD9 or SNOMED code.");
 					//no harm in continuing since this form is error checked on OK click.
 				}
 			}
@@ -60,7 +60,7 @@ namespace OpenDental {
 			//Units of measure----------------------------------------
 			_listUCUM=Ucums.GetAll();
 			if(_listUCUM.Count==0) {
-				MsgBox.Show(this,"Units of measure have not been imported. Go to the code system importer window to import UCUM codes to continue.");
+				MessageBox.Show("Units of measure have not been imported. Go to the code system importer window to import UCUM codes to continue.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -322,63 +322,63 @@ namespace OpenDental {
 						Convert.ToInt32(textCompareString.Text);//used intead of PIn so that an empty string is not evaluated as 0
 					}
 					catch {
-						MsgBox.Show(this,"Please enter a valid age.");
+						MessageBox.Show("Please enter a valid age.");
 						return false;
 					}
 					break;
 				case 1: //Disease--------------------------------------------------------------------------------------------------------------
 					if(textCompareString.Text=="" && textSNOMED.Text=="") {
-						MsgBox.Show(this,"Please enter a valid SNOMED CT or ICD9 code.");
+						MessageBox.Show("Please enter a valid SNOMED CT or ICD9 code.");
 						return false;
 					}
 					if(textCompareString.Text!="") {
 						if(!ICD9s.CodeExists(textCompareString.Text)) {
-							MsgBox.Show(this,"ICD9 code does not exist in database, pick from list.");
+							MessageBox.Show("ICD9 code does not exist in database, pick from list.");
 							return false;
 						}
 					}
 					if(textSNOMED.Text!=""){
 						if(!Snomeds.CodeExists(textSNOMED.Text)) {
-							MsgBox.Show(this,"SNOMED CT code does not exist in database, pick from list.");
+							MessageBox.Show("SNOMED CT code does not exist in database, pick from list.");
 							return false;
 						}
 					}
 					if(textDateStart.errorProvider1.GetError(textDateStart)!=""
 						|| textDateStop.errorProvider1.GetError(textDateStop)!=""
 						) {
-						MsgBox.Show(this,"Please fix date entry errors.");
+						MessageBox.Show("Please fix date entry errors.");
 						return false;
 					}
 					break;
 				case 2: //Medication-----------------------------------------------------------------------------------------------------------
 					if(textCompareString.Text=="") {
-						MsgBox.Show(this,"Please enter a valid medication.");
+						MessageBox.Show("Please enter a valid medication.");
 						return false;
 					}
 					if(Medications.GetMedicationFromDbByName(textCompareString.Text)==null) {
-						MsgBox.Show(this,"Medication does not exist in database, pick from list.");
+						MessageBox.Show("Medication does not exist in database, pick from list.");
 						return false;
 					}
 					if(textDateStart.errorProvider1.GetError(textDateStart)!=""
 						|| textDateStop.errorProvider1.GetError(textDateStop)!=""
 						) {
-						MsgBox.Show(this,"Please fix date entry errors.");
+						MessageBox.Show("Please fix date entry errors.");
 						return false;
 					}
 					break;
 				case 3: //LabResult------------------------------------------------------------------------------------------------------------
 					if(textCompareString.Text=="") {
-						MsgBox.Show(this,"Please select a valid Loinc Code.");
+						MessageBox.Show("Please select a valid Loinc Code.");
 						return false;
 					}
 					//if(Loincs.GetByCode(textCompareString.Text)==null) {
-					//	MsgBox.Show(this,"Loinc code does not exist in database, pick from list.");
+					//	MessageBox.Show("Loinc code does not exist in database, pick from list.");
 					//	return false;
 					//}
 					if(textDateStart.errorProvider1.GetError(textDateStart)!=""
 						|| textDateStop.errorProvider1.GetError(textDateStop)!=""
 						) {
-						MsgBox.Show(this,"Please fix date entry errors.");
+						MessageBox.Show("Please fix date entry errors.");
 						return false;
 					}
 					break;
@@ -387,27 +387,27 @@ namespace OpenDental {
 					break;
 				case 5: //CommPref-------------------------------------------------------------------------------------------------------------
 					if(textCompareString.Text=="") {
-						MsgBox.Show(this,"Please enter a communication preference.");
+						MessageBox.Show("Please enter a communication preference.");
 						return false;
 					}
 					if(!isContactMethod(textCompareString.Text)){
-						MsgBox.Show(this,"Communication preference not defined, pick from list.");
+						MessageBox.Show("Communication preference not defined, pick from list.");
 						return false;
 					}
 					break;
 				case 6: //Allergy--------------------------------------------------------------------------------------------------------------
 					if(textCompareString.Text=="") {
-						MsgBox.Show(this,"Please enter a valid allergy.");
+						MessageBox.Show("Please enter a valid allergy.");
 						return false;
 					}
 					if(AllergyDefs.GetByDescription(textCompareString.Text)==null) {
-						MsgBox.Show(this,"Allergy does not exist in database, pick from list.");
+						MessageBox.Show("Allergy does not exist in database, pick from list.");
 						return false;
 					}
 					if(textDateStart.errorProvider1.GetError(textDateStart)!=""
 						|| textDateStop.errorProvider1.GetError(textDateStop)!=""
 						){
-						MsgBox.Show(this,"Please fix date entry errors.");
+						MessageBox.Show("Please fix date entry errors.");
 						return false;
 					}
 					break;
@@ -531,10 +531,10 @@ namespace OpenDental {
 			}
 			else if(dis.ICD9Code!="") {
 				textCompareString.Text=dis.ICD9Code;
-				MsgBox.Show(this,"Selected problem does not have a valid SNOMED CT code.");
+				MessageBox.Show("Selected problem does not have a valid SNOMED CT code.");
 			}
 			else {
-				MsgBox.Show(this,"Selected problem does not have a valid SNOMED CT code.");
+				MessageBox.Show("Selected problem does not have a valid SNOMED CT code.");
 			}
 		}
 

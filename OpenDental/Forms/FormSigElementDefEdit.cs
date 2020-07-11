@@ -365,12 +365,12 @@ namespace OpenDental{
 				simpleSound.Play();
 			}
 			catch {
-				MsgBox.Show(this,"Invalid sound");
+				MessageBox.Show("Invalid sound");
 			}
 		}
 
 		private void butDeleteSound_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,true,"Delete sound?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete sound?")){
 				return;
 			}
 			ElementCur.Sound="";
@@ -406,7 +406,7 @@ namespace OpenDental{
 					}
 					catch {
 						//Windows 10 does not have this sound recorder program anymore.
-						MsgBox.Show(this,"Cannot find Windows Sound Recorder. Use the 'Record New' button to record a message sound.");
+						MessageBox.Show("Cannot find Windows Sound Recorder. Use the 'Record New' button to record a message sound.");
 					}
 				}
 			}
@@ -429,21 +429,6 @@ namespace OpenDental{
 		}
 
 		private void butExport_Click(object sender,EventArgs e) {
-			#region Web Build
-			if(ODBuild.IsWeb()) {
-				string fileName=ElementCur.SigText+".wav";
-				string tempPath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
-				try {
-					PIn.Sound(ElementCur.Sound,tempPath);
-				}
-				catch(ApplicationException ex) {
-					MessageBox.Show(ex.Message);
-					return;
-				}
-				ThinfinityUtils.ExportForDownload(tempPath);
-				return;
-			}
-			#endregion Web Build
 			saveFileDialog1.FileName="";
 			saveFileDialog1.DefaultExt="wav";
 			if(saveFileDialog1.ShowDialog() !=DialogResult.OK) {
@@ -469,7 +454,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 			}
 			else {
-				if(!MsgBox.Show(this,true,"Delete?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete?")) {
 					return;
 				}
 				SigElementDefs.Delete(ElementCur);
@@ -488,11 +473,11 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textLightRow.errorProvider1.GetError(textLightRow)!=""
 				) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textSigText.Text==""){
-				MsgBox.Show(this,"Please enter a text description first.");
+				MessageBox.Show("Please enter a text description first.");
 				return;
 			}
 			ElementCur.SigElementType=(SignalElementType)listType.SelectedIndex;

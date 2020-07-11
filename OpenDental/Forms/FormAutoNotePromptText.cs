@@ -61,7 +61,7 @@ namespace OpenDental {
 		}
 
 		private void butCancel_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Abort autonote entry?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Abort autonote entry?")) {
 				return;
 			}
 			DialogResult=DialogResult.Cancel;

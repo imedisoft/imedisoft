@@ -147,10 +147,8 @@ namespace OpenDental {
 				labelShowInTerminal.Visible=false;
 				textShowInTerminal.Visible=false;
 				butToKiosk.Visible=false;
-				if(!ODBuild.IsDebug()) {
-					butPrint.Visible=false;
-					butPDF.Visible=false;
-				}
+				butPrint.Visible=false;
+				butPDF.Visible=false;
 				butDelete.Visible=false;
 				butOK.Visible=false;
 				butChangePat.Visible=false;
@@ -179,7 +177,7 @@ namespace OpenDental {
 			try {
 				string strErr=LayoutFields();
 				if(!string.IsNullOrWhiteSpace(strErr)) {
-					MsgBox.Show(this,strErr);//An invalid SheetField was repaired.
+					MessageBox.Show(strErr);//An invalid SheetField was repaired.
 				}
 			}
 			catch(Exception ex) {
@@ -188,7 +186,7 @@ namespace OpenDental {
 				string message="The sheet that you are trying to edit is invalid. ";
 				if(Security.IsAuthorized(Permissions.SheetDelete,true) && !IsReadOnly) {
 					message+="Would you like to delete this sheet?";
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,message)) {
+					if(MsgBox.Show(MsgBoxButtons.YesNo,message)) {
 						DeleteSheet(false);
 						return;
 					}
@@ -424,7 +422,7 @@ namespace OpenDental {
 				if(SheetCur.SheetType==SheetTypeEnum.TreatmentPlan) {
 					//==TG 01/12/2016: Removed helper function here after conversation with Ryan.  We never fill any signature boxes for treatment plans in this
 					//form.  It is done in FormTPsign, or printed in SheetPrinting.
-					MsgBox.Show(this,"Treatment Plan Signatures not currently supported in FormSheetFillEdit.  Contact Support.");
+					MessageBox.Show("Treatment Plan Signatures not currently supported in FormSheetFillEdit.  Contact Support.");
 					break;
 				}
 				OpenDental.UI.SignatureBoxWrapper sigBox=new OpenDental.UI.SignatureBoxWrapper();
@@ -1076,7 +1074,7 @@ namespace OpenDental {
 			}
 			if(SheetCur==null) {
 				//sheet was deleted.
-				MsgBox.Show(this,"The sheet has been deleted.");
+				MessageBox.Show("The sheet has been deleted.");
 				CancelClose();
 				return;
 			}
@@ -1257,16 +1255,13 @@ namespace OpenDental {
 				}
 			}
 			//g.Dispose();
-			try {
-				if(ODBuild.IsWeb()) {
-					ThinfinityUtils.HandleFile(filePathAndName);
-				}
-				else {
-					Process.Start(filePathAndName);
-				}				
+			try
+			{
+				Process.Start(filePathAndName);
 			}
-			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"Unable to open the file."),ex);
+			catch (Exception ex)
+			{
+				FriendlyException.Show(Lan.g(this, "Unable to open the file."), ex);
 				return;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,SheetCur.Description+" from "+SheetCur.DateTimeSheet.ToShortDateString()+" pdf was created");
@@ -1329,7 +1324,7 @@ namespace OpenDental {
 				return true;
 			}
 			if(textShowInTerminal.errorProvider1.GetError(textShowInTerminal)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			DateTime dateTimeSheet=DateTime.MinValue;
@@ -1337,7 +1332,7 @@ namespace OpenDental {
 				dateTimeSheet=DateTime.Parse(textDateTime.Text);
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			SheetCur.DateTimeSheet=dateTimeSheet;
@@ -1588,7 +1583,7 @@ namespace OpenDental {
 					}
 					OpenDental.UI.SignatureBoxWrapper sigBox=(OpenDental.UI.SignatureBoxWrapper)control;
 					if(field.IsRequired && (!sigBox.IsValid || sigBox.SigIsBlank)){
-						MsgBox.Show(this,"Signature required");
+						MessageBox.Show("Signature required");
 						return false;
 					}
 				}
@@ -1694,7 +1689,7 @@ namespace OpenDental {
 						category=listImageCatDefsLong[0].DefNum;//put it in the first category.
 					}
 					else {
-						MsgBox.Show(this,"Error saving document. Unable to find image category.");
+						MessageBox.Show("Error saving document. Unable to find image category.");
 						return;
 					}
 				}
@@ -1706,7 +1701,7 @@ namespace OpenDental {
 					docc=ImageStore.Import(filePathAndName,category,Patients.GetPat(payPlan.PatNum));
 				}
 				catch {
-					MsgBox.Show(this,"Error saving document.");
+					MessageBox.Show("Error saving document.");
 					return;
 				}
 				docc.Description="PPArchive"+docc.DocNum+"_"+DateTime.Now.ToShortDateString();
@@ -1783,7 +1778,7 @@ namespace OpenDental {
 
 		private void butToKiosk_Click(object sender,EventArgs e) {
 			if(IsNewReferralLetter()) {
-				MsgBox.Show(this,"This sheet type cannot be sent to the kiosk.");
+				MessageBox.Show("This sheet type cannot be sent to the kiosk.");
 				return;//Since we're saving this as a PDF, there wouldn't be anything to show in the kiosk.
 			}
 			//Sets terminal view number to max(ViewNumber)+1
@@ -1811,13 +1806,13 @@ namespace OpenDental {
 				CancelClose();
 				return;
 			}
-			if(doPromptForDelete && !MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete?")) {
+			if(doPromptForDelete && !MsgBox.Show(MsgBoxButtons.YesNo,"Delete?")) {
 				return;
 			}
 			if(SheetCur.ShowInTerminal > 0) {
 				string message="This form has been sent to be filled on a kiosk.  If you continue, the patient will lose any information that is "
 					+"on their screen.\r\nContinue anyway?";
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,message)) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,message)) {
 					return;
 				}
 			}
@@ -1906,7 +1901,7 @@ namespace OpenDental {
 			if(!SheetCur.IsNew
 				&& SheetCur.SheetNum!=0
 				&& (Sheets.GetOne(SheetCur.SheetNum)?.DateTSheetEdited??DateTime.MinValue)>SheetCur.DateTSheetEdited
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,
 					"There have been changes to this sheet since it was loaded.  If you continue those changes will be overwritten.  Continue anyway?")) {
 				return false;
 			}

@@ -99,7 +99,7 @@ namespace OpenDental {
 				error+="Cannot send Web Mail until there is at least one User associated to a Provider. ";
 			}
 			if(error!="") {
-				MsgBox.Show(this,error);
+				MessageBox.Show(error);
 				DialogResult=DialogResult.Abort;
 				return;
 			}
@@ -263,17 +263,17 @@ namespace OpenDental {
 		///<summary></summary>
 		private bool VerifyOutputs() {
 			if(textSubject.Text=="") {
-				MsgBox.Show(this,"Enter a subject");
+				MessageBox.Show("Enter a subject");
 				textSubject.Focus();
 				return false;
 			}
 			if(textBody.Text=="") {
-				MsgBox.Show(this,"Email body is empty");
+				MessageBox.Show("Email body is empty");
 				textBody.Focus();
 				return false;
 			}
 			if(GetPatNumSubj()<=0) {
-				MsgBox.Show(this,"Select a valid patient");
+				MessageBox.Show("Select a valid patient");
 				comboRegardingPatient.Focus();
 				return false;
 			}
@@ -285,7 +285,7 @@ namespace OpenDental {
 		///Loops through all users associated to the From provider until the credentials typed in match.</summary>
 		private bool VerifyFromProvider() {
 			if(_provCur==null) {
-				MsgBox.Show(this,"Invalid From provider.");
+				MessageBox.Show("Invalid From provider.");
 				return false;
 			}
 			//Don't require validating credentials if the user currently logged in is associated to the selected provider.
@@ -306,7 +306,7 @@ namespace OpenDental {
 							return true;
 						}
 					}
-					MsgBox.Show(this,"Invalid password.  Please try again or Cancel.");
+					MessageBox.Show("Invalid password.  Please try again or Cancel.");
 				}
 				else {//User canceled
 					return false;
@@ -411,7 +411,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Abort;//Nothing to do the message doesn't exist.
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Are you sure you want to delete this webmail?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to delete this webmail?")) {
 				return;
 			}
 			EmailMessages.Delete(_emailMessage);
@@ -500,7 +500,7 @@ namespace OpenDental {
 			_secureMessage.Attachments=_listAttachments;
 			EmailMessages.Insert(_secureMessage);
 			SecurityLogs.MakeLogEntry(Permissions.WebMailSend,0,Lan.g(this,"Web Mail sent"));
-			MsgBox.Show(this,"Message Sent");
+			MessageBox.Show("Message Sent");
 			DialogResult=DialogResult.OK;
 		}
 

@@ -167,7 +167,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 			}
 			else{
-				if(!MsgBox.Show(this,true,"Delete this Course?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this Course?")){
 					return;
 				}
 				try{

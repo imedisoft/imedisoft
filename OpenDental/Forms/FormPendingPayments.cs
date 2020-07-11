@@ -138,7 +138,7 @@ namespace OpenDental {
 
 		private void menuItemGoTo_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select one payment first.");
+				MessageBox.Show("Please select one payment first.");
 				return;
 			}
 			long patNum=((Payment)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).PatNum;

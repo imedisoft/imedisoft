@@ -31,7 +31,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			EhrQuarterlyKeys.Delete(KeyCur.EhrQuarterlyKeyNum);
@@ -40,7 +40,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!PrefC.GetBool(PrefName.ShowFeatureEhr)) {
-				MsgBox.Show(this,"You must go to Setup, Show Features, and activate EHR before entering keys.");
+				MessageBox.Show("You must go to Setup, Show Features, and activate EHR before entering keys.");
 				return;
 			}
 			if(textYear.Text==""){
@@ -58,7 +58,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!FormEHR.QuarterlyKeyIsValid(textYear.Text,textQuarter.Text,PrefC.GetString(PrefName.PracticeTitle),textKey.Text)) {
-				MsgBox.Show(this,"Invalid quarterly key");
+				MessageBox.Show("Invalid quarterly key");
 				return;
 			}
 			KeyCur.YearValue=PIn.Int(textYear.Text);

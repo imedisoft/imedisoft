@@ -252,13 +252,13 @@ namespace OpenDental {
 			if(textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!="") 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime dateFrom=PIn.Date(textDateFrom.Text);
 			DateTime dateTo=PIn.Date(textDateTo.Text);
 			if(dateTo<dateFrom) {
-				MsgBox.Show(this,"To date cannot be before From date.");
+				MessageBox.Show("To date cannot be before From date.");
 				return;
 			}
 			ReportComplex report=new ReportComplex(true,false);

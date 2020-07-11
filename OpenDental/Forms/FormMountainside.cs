@@ -226,16 +226,16 @@ namespace OpenDental{
 		}
 
 		private void checkEnabled_Click(object sender,EventArgs e) {
-			MsgBox.Show(this,"You will need to restart Open Dental to see the effects.");
+			MessageBox.Show("You will need to restart Open Dental to see the effects.");
 		}
 
 		private bool SaveToDb(){
 			if(textProgDesc.Text==""){
-				MsgBox.Show(this,"Description may not be blank.");
+				MessageBox.Show("Description may not be blank.");
 				return false;
 			}
 			if(textHL7FolderOut.Text=="") {
-				MsgBox.Show(this,"HL7 out folder may not be blank.");
+				MessageBox.Show("HL7 out folder may not be blank.");
 				return false;
 			}
 			ProgramCur.ProgDesc=textProgDesc.Text;

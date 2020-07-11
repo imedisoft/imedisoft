@@ -29,7 +29,7 @@ namespace OpenDental {
 				Prefs.UpdateLong(PrefName.EHREmailPort,PIn.Long(textPort.Text));
 			}
 			catch{
-				MsgBox.Show(this,"invalid port number.");
+				MessageBox.Show("invalid port number.");
 			}
 			DataValid.SetInvalid(InvalidType.Prefs);
 			DialogResult=DialogResult.OK;

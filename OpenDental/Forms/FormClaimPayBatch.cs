@@ -716,7 +716,7 @@ namespace OpenDental{
 		private void FormClaimPayEdit_Load(object sender, System.EventArgs e) {
 			SetFilterControlsAndAction(() => FillGrids(false),textName,textClaimID);
 			if(ClaimPaymentCur==null) {
-				MsgBox.Show(this,"Claim payment does not exist.");
+				MessageBox.Show("Claim payment does not exist.");
 				DialogResult=DialogResult.Abort;
 				if(!this.Modal) {
 					Close();
@@ -944,7 +944,7 @@ namespace OpenDental{
 
 		private void butAttach_Click(object sender,EventArgs e) {
 			if(gridOut.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select at least one paid claim from the Outstanding Claims grid below.");
+				MessageBox.Show("Please select at least one paid claim from the Outstanding Claims grid below.");
 				return;
 			}
 			bool hasClaimNoValidReceivedPayments=false;
@@ -958,17 +958,17 @@ namespace OpenDental{
 				}
 			}
 			if(hasClaimNoValidReceivedPayments) {
-				MsgBox.Show(this,"There was at least one outstanding claim selected with no valid received payments.");
+				MessageBox.Show("There was at least one outstanding claim selected with no valid received payments.");
 			}
 			FillGrids();//Always refresh the outstanding claims grid just in case there were non-received claimprocs attached to the claim (e.g. pre-auth).
 		}
 
 		private void butDetach_Click(object sender,EventArgs e) {
 			if(gridAttached.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a claim from the attached claims grid above.");
+				MessageBox.Show("Please select a claim from the attached claims grid above.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Remove selected claims from this check?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Remove selected claims from this check?")) {
 				return;
 			}
 			List<ClaimPaySplit> listDetachedClaims=gridAttached.SelectedTags<ClaimPaySplit>();
@@ -1000,7 +1000,7 @@ namespace OpenDental{
 			ClaimPaySplit claimPS=(ClaimPaySplit)gridAttached.ListGridRows[e.Row].Tag;
 			Claim claimCur=Claims.GetClaim(claimPS.ClaimNum);
 			if(claimCur==null) {
-				MsgBox.Show(this,"The claim has been deleted.");
+				MessageBox.Show("The claim has been deleted.");
 				FillGrids();
 				return;
 			}
@@ -1012,7 +1012,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridAttached.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			int[] selected=new int[gridAttached.SelectedIndices.Length];//remember the selected rows so that we can reselect them
@@ -1038,7 +1038,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridAttached.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			int[] selected=new int[gridAttached.SelectedIndices.Length];
@@ -1076,7 +1076,7 @@ namespace OpenDental{
 			ClaimPaySplit claimPS=(ClaimPaySplit)gridOut.ListGridRows[e.Row].Tag;
 			Claim claimCur=Claims.GetClaim(claimPS.ClaimNum);
 			if(claimCur==null) {
-				MsgBox.Show(this,"The claim has been deleted.");
+				MessageBox.Show("The claim has been deleted.");
 				FillGrids();
 				return;
 			}
@@ -1087,7 +1087,7 @@ namespace OpenDental{
 				return;
 			}
 			if(ClaimProcs.AttachToPayment(claimCur.ClaimNum,ClaimPaymentCur.ClaimPaymentNum,ClaimPaymentCur.CheckDate,gridAttached.ListGridRows.Count+1)==0) {
-				MsgBox.Show(this,"There are no valid received payments for this claim.");
+				MessageBox.Show("There are no valid received payments for this claim.");
 			}
 			FillGrids(false);
 		}
@@ -1214,7 +1214,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(!MsgBox.Show(this,true,"Delete this insurance check?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this insurance check?")){
 				return;
 			}
 			if(ClaimPaymentCur.IsPartial) {//probably new
@@ -1239,14 +1239,14 @@ namespace OpenDental{
 				return;
 			}
 			if(gridAttached.ListGridRows.Count==0) {
-				MsgBox.Show(this,"At least one claim must be attached to this insurance payment.");
+				MessageBox.Show("At least one claim must be attached to this insurance payment.");
 				return;
 			}
 			if(!PrefC.GetBool(PrefName.AllowFutureInsPayments)
 				&& !PrefC.GetBool(PrefName.FutureTransDatesAllowed)
 				&& ClaimPaymentCur.CheckDate.Date>MiscData.GetNowDateTime().Date)
 			{
-				MsgBox.Show(this,"Insurance Payment Date must not be a future date.");
+				MessageBox.Show("Insurance Payment Date must not be a future date.");
 				return;
 			}
 			//No need to prompt user about secondary claims because they already went into each Account individually.
@@ -1261,7 +1261,7 @@ namespace OpenDental{
 
 		private void FormClaimPayBatch_FormClosing(object sender,FormClosingEventArgs e) {
 			if(DialogResult==DialogResult.Cancel && IsFromClaim && IsNew) {//This acts as a Cancel button. Happens when butClose or the red x is clicked.
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete this payment?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this payment?")) {
 					e.Cancel=true;
 					return;
 				}
@@ -1300,7 +1300,7 @@ namespace OpenDental{
 			else {//locked
 				if(!IsAmountAndTotalEqual()) {
 					//Someone edited a locked payment
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Amounts do not match.  Continue anyway?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Amounts do not match.  Continue anyway?")) {
 						e.Cancel=true;
 						return;
 					}

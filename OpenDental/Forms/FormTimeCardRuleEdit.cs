@@ -84,7 +84,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Are you sure you want to delete this time card rule?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Are you sure you want to delete this time card rule?")){
 				return;
 			}
 			TimeCardRules.Delete(_timeCardRule.TimeCardRuleNum);
@@ -94,7 +94,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//Verify Data.
 			if(listEmp.SelectedIndex<0){
-				MsgBox.Show(this,"Please select an employee.");
+				MessageBox.Show("Please select an employee.");
 				return;
 			}
 			TimeSpan overHoursPerDay=TimeSpan.Zero;
@@ -108,11 +108,11 @@ namespace OpenDental {
 					}
 				}
 				catch {
-					MsgBox.Show(this,"Over hours per day invalid.");
+					MessageBox.Show("Over hours per day invalid.");
 					return;
 				}
 				if(overHoursPerDay==TimeSpan.Zero || overHoursPerDay.Days>0) {
-					MsgBox.Show(this,"Over hours per day invalid.");
+					MessageBox.Show("Over hours per day invalid.");
 					return;
 				}
 			}
@@ -122,11 +122,11 @@ namespace OpenDental {
 					afterTimeOfDay=DateTime.Parse(textAfterTimeOfDay.Text).TimeOfDay;
 				}
 				catch {
-					MsgBox.Show(this,"After time of day invalid.");
+					MessageBox.Show("After time of day invalid.");
 					return;
 				}
 				if(afterTimeOfDay==TimeSpan.Zero || afterTimeOfDay.Days>0) {
-					MsgBox.Show(this,"After time of day invalid.");
+					MessageBox.Show("After time of day invalid.");
 					return;
 				}
 			}
@@ -136,11 +136,11 @@ namespace OpenDental {
 					beforeTimeOfDay=DateTime.Parse(textBeforeTimeOfDay.Text).TimeOfDay;
 				}
 				catch {
-					MsgBox.Show(this,"Before time of day invalid.");
+					MessageBox.Show("Before time of day invalid.");
 					return;
 				}
 				if(beforeTimeOfDay==TimeSpan.Zero || beforeTimeOfDay.Days>0) {
-					MsgBox.Show(this,"Before time of day invalid.");
+					MessageBox.Show("Before time of day invalid.");
 					return;
 				}
 			}
@@ -150,11 +150,11 @@ namespace OpenDental {
 					minClockIn=DateTime.Parse(textClockInMin.Text).TimeOfDay;
 				}
 				catch {
-					MsgBox.Show(this,"Earliest Clock in Time invalid.");
+					MessageBox.Show("Earliest Clock in Time invalid.");
 					return;
 				}
 				if(minClockIn==TimeSpan.Zero || minClockIn.Days>0) {
-					MsgBox.Show(this,"Earliest Clock in Time invalid.");
+					MessageBox.Show("Earliest Clock in Time invalid.");
 					return;
 				}
 			}
@@ -164,7 +164,7 @@ namespace OpenDental {
 				&& beforeTimeOfDay==TimeSpan.Zero 
 				&& minClockIn==TimeSpan.Zero)
 			{
-				MsgBox.Show(this,"Either is overtime exempt, over hours, after or before time of day or Clock In Min must be entered.");
+				MessageBox.Show("Either is overtime exempt, over hours, after or before time of day or Clock In Min must be entered.");
 				return;
 			}
 			//save-------------------------------------------------

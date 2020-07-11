@@ -66,7 +66,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete Field?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete Field?")) {
 				return;
 			}
 			HL7DefFields.Delete(HL7DefFieldCur.HL7DefFieldNum);
@@ -76,7 +76,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//This button is disabled if IsHL7DefInternal
 			if(textItemOrder.errorProvider1.GetError(textItemOrder)!="") {
-				MsgBox.Show(this,"Please fix data entry error first.");
+				MessageBox.Show("Please fix data entry error first.");
 				return;
 			}
 			HL7DefFieldCur.DataType=(DataTypeHL7)comboDataType.SelectedIndex;

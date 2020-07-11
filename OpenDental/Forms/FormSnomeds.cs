@@ -83,7 +83,7 @@ namespace OpenDental {
 				SnomedList=Snomeds.GetByCodeOrDescription(textCode.Text);
 			}
 			if(SnomedList.Count>=10000) {//Max number of results returned.
-				MsgBox.Show(this,"Too many results. Only the first 10,000 results will be shown.");
+				MessageBox.Show("Too many results. Only the first 10,000 results will be shown.");
 			}
 			List<GridRow> listAll=new List<GridRow>();
 			for(int i=0;i<SnomedList.Count;i++) {
@@ -149,7 +149,7 @@ namespace OpenDental {
 		}
 
 		private void butMapToSnomed_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Will add SNOMED CT code to existing problems list only if the ICD9 code correlates to exactly one SNOMED CT code. If there is any ambiguity at all the code will not be added.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Will add SNOMED CT code to existing problems list only if the ICD9 code correlates to exactly one SNOMED CT code. If there is any ambiguity at all the code will not be added.")) {
 				return;
 			}
 			int changeCount=0;
@@ -167,7 +167,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//not even visible unless IsSelectionMode
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			SelectedSnomed=(Snomed)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;

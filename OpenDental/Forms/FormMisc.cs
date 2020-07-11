@@ -890,7 +890,7 @@ namespace OpenDental {
 				}
 				if(iBox.textResult.Text!="abracadabra"){//to keep non-enterprise customers from unwittingly enabling this feature 
 					checkAgingIsEnterprise.Checked=false;
-					MsgBox.Show(this,"Incorrect password.  Refer to the online manual or contact Open Dental support for assistance.");
+					MessageBox.Show("Incorrect password.  Refer to the online manual or contact Open Dental support for assistance.");
 					return;
 				}
 			}
@@ -904,7 +904,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.SecurityAdmin) || PrefC.GetDateT(PrefName.AgingBeginDateTime)==DateTime.MinValue) {//blank=DateTime.MinValue
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"This will override the lock on the famaging table, potentially allowing a second connection to start "
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will override the lock on the famaging table, potentially allowing a second connection to start "
 				+"the aging calculations which could cause both calculations to fail.  If this happens, this flag will need to be cleared again and aging "
 				+"started by a single connection.\r\nAre you sure you want to clear this value?"))
 			{
@@ -941,7 +941,7 @@ namespace OpenDental {
 				&& !PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)
 				&& !DateTime.TryParse(textAutoAgingRunTime.Text,out autoAgingRunTime))
 			{
-				MsgBox.Show(this,"Automated Aging Run Time must be blank or a valid time of day.");
+				MessageBox.Show("Automated Aging Run Time must be blank or a valid time of day.");
 				return;
 			}
 			if(comboTrackClinic.SelectedIndex<0) {

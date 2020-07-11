@@ -78,7 +78,7 @@ namespace OpenDental{
  			}
 			catch(MySql.Data.Types.MySqlConversionException){
 				//MessageBox.Show(ex.Message);
-				MsgBox.Show(this,"Invalid date found. Please fix dates by running the Database Maintenance tool.  Include the initial check.");
+				MessageBox.Show("Invalid date found. Please fix dates by running the Database Maintenance tool.  Include the initial check.");
 			}
 			catch(MySqlException e){
 				MsgBoxCopyPaste MB=new MsgBoxCopyPaste(Lan.g("DataConnection","Error in query:")+"\r\n"

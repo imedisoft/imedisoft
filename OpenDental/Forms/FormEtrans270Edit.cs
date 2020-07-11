@@ -304,7 +304,7 @@ namespace OpenDental {
 		private void butImport_Click(object sender,EventArgs e) {
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
 				if(listEB[gridMain.SelectedIndices[i]].Benefitt==null){
-					MsgBox.Show(this,"All selected rows must contain benefits to import.");
+					MessageBox.Show("All selected rows must contain benefits to import.");
 					return;
 				}
 			}
@@ -412,7 +412,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			//This button is not visible if IsNew
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete entire request and response?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete entire request and response?")) {
 				return;
 			}
 			if(EtransAck271!=null) {

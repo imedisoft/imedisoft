@@ -77,7 +77,7 @@ namespace OpenDental {
 					if(ex.Message!="") {
 						MessageBox.Show(ex.Message);
 					}
-					MsgBox.Show("FormDatabaseMaintenance","Optimize and Repair failed.");
+					MsgBox.Show("Optimize and Repair failed.");
 				}
 				return false;
 			}
@@ -122,7 +122,7 @@ namespace OpenDental {
 						MessageBox.Show(ex.Message);
 					}
 					//Reusing translation in ClassConvertDatabase, since it is most likely the only place a translation would have been performed previously.
-					MsgBox.Show("ClassConvertDatabase","Backup failed. Your database has not been altered.");
+					MsgBox.Show("Backup failed. Your database has not been altered.");
 				}
 				return false;
 			}

@@ -166,7 +166,7 @@ namespace OpenDental{
 						return;
 					}
 				}
-				if(!MsgBox.Show(this,true,"Delete this Requirement?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this Requirement?")){
 					return;
 				}
 			}
@@ -176,7 +176,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescript.Text==""){
-				MsgBox.Show(this,"Please enter a description first.");
+				MessageBox.Show("Please enter a description first.");
 				return;
 			}
 			ReqCur.Descript=textDescript.Text;

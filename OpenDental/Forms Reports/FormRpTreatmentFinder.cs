@@ -1,3 +1,7 @@
+using CodeBase;
+using OpenDental.UI;
+using OpenDentBusiness;
+using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,16 +11,11 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using CodeBase;
-using OpenDental.Thinfinity;
-using OpenDental.UI;
-using OpenDentBusiness;
-using PdfSharp.Pdf;
 
 namespace OpenDental
 {
-	///<summary></summary>
-	public class FormRpTreatmentFinder : ODForm
+    ///<summary></summary>
+    public class FormRpTreatmentFinder : ODForm
 	{
 		private OpenDental.UI.Button butCancel;
 		private System.ComponentModel.Container components = null;
@@ -625,7 +624,7 @@ namespace OpenDental
 			//take all the sheets and add to one giant pdf for preview.
 			if (gridMain.SelectedIndices.Length == 0)
 			{
-				MsgBox.Show(this, "Please select patient(s) first.");
+				MessageBox.Show("Please select patient(s) first.");
 				return;
 			}
 			FormSheetPicker FormS = new FormSheetPicker();
@@ -663,17 +662,12 @@ namespace OpenDental
 				}
 				filePathAndName = PrefC.GetRandomTempFile(".pdf");
 				document.Save(filePathAndName);
-				if (ODBuild.IsWeb())
-				{
-					ThinfinityUtils.HandleFile(filePathAndName);
-				}
-				else
-				{
-					Process.Start(filePathAndName);
-				}
+
+				Process.Start(filePathAndName);
+
 				DialogResult = DialogResult.OK;
 			}
-			if (MsgBox.Show(this, MsgBoxButtons.YesNo, "Would you like to save the sheets for the selected patients?"))
+			if (MsgBox.Show(MsgBoxButtons.YesNo, "Would you like to save the sheets for the selected patients?"))
 			{
 				Sheets.SaveNewSheetList(listSheets);
 			}
@@ -683,7 +677,7 @@ namespace OpenDental
 		{
 			if (gridMain.SelectedIndices.Length == 0)
 			{
-				MsgBox.Show(this, "Please select patient(s) first.");
+				MessageBox.Show( "Please select patient(s) first.");
 				return;
 			}
 			int patientsPrinted = 0;
@@ -705,7 +699,7 @@ namespace OpenDental
 		{
 			if (gridMain.SelectedIndices.Length == 0)
 			{
-				MsgBox.Show(this, "Please select patient(s) first.");
+				MessageBox.Show( "Please select patient(s) first.");
 				return;
 			}
 			pagesPrinted = 0;
@@ -766,7 +760,7 @@ namespace OpenDental
 			}
 			if (gridMain.SelectedIndices.Length == 0)
 			{
-				MsgBox.Show(this, "Please select a patient first.");
+				MessageBox.Show( "Please select a patient first.");
 				return;
 			}
 			long patNum = PIn.Long(gridMain.SelectedTag<DataRow>()["PatNum"].ToString());
@@ -781,7 +775,7 @@ namespace OpenDental
 			}
 			if (gridMain.SelectedIndices.Length == 0)
 			{
-				MsgBox.Show(this, "Please select a patient first.");
+				MessageBox.Show( "Please select a patient first.");
 				return;
 			}
 			long patNum = PIn.Long(gridMain.SelectedTag<DataRow>()["PatNum"].ToString());
@@ -796,7 +790,7 @@ namespace OpenDental
 			}
 			if (gridMain.SelectedIndices.Length == 0)
 			{
-				MsgBox.Show(this, "Please select a patient first.");
+				MessageBox.Show( "Please select a patient first.");
 				return;
 			}
 			WindowState = FormWindowState.Minimized;
@@ -812,7 +806,7 @@ namespace OpenDental
 			}
 			if (gridMain.SelectedIndices.Length == 0)
 			{
-				MsgBox.Show(this, "Please select a patient first.");
+				MessageBox.Show( "Please select a patient first.");
 				return;
 			}
 			WindowState = FormWindowState.Minimized;
@@ -824,38 +818,32 @@ namespace OpenDental
 		{
 			string fileName = Lan.g(this, "Treatment Finder");
 			string filePath = ODFileUtils.CombinePaths(Path.GetTempPath(), fileName);
-			if (ODBuild.IsWeb())
+
+			SaveFileDialog saveFileDialog2 = new SaveFileDialog();
+			saveFileDialog2.AddExtension = true;
+			saveFileDialog2.Title = Lan.g(this, "Treatment Finder");
+			saveFileDialog2.FileName = Lan.g(this, "Treatment Finder");
+			if (!Directory.Exists(PrefC.GetString(PrefName.ExportPath)))
 			{
-				//file download dialog will come up later, after file is created.
-				filePath += ".txt";//Provide the filepath an extension so that Thinfinity can offer as a download.
+				try
+				{
+					Directory.CreateDirectory(PrefC.GetString(PrefName.ExportPath));
+					saveFileDialog2.InitialDirectory = PrefC.GetString(PrefName.ExportPath);
+				}
+				catch
+				{
+					//initialDirectory will be blank
+				}
 			}
-			else
+			else saveFileDialog2.InitialDirectory = PrefC.GetString(PrefName.ExportPath);
+			saveFileDialog2.Filter = "Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
+			saveFileDialog2.FilterIndex = 0;
+			if (saveFileDialog2.ShowDialog() != DialogResult.OK)
 			{
-				SaveFileDialog saveFileDialog2 = new SaveFileDialog();
-				saveFileDialog2.AddExtension = true;
-				saveFileDialog2.Title = Lan.g(this, "Treatment Finder");
-				saveFileDialog2.FileName = Lan.g(this, "Treatment Finder");
-				if (!Directory.Exists(PrefC.GetString(PrefName.ExportPath)))
-				{
-					try
-					{
-						Directory.CreateDirectory(PrefC.GetString(PrefName.ExportPath));
-						saveFileDialog2.InitialDirectory = PrefC.GetString(PrefName.ExportPath);
-					}
-					catch
-					{
-						//initialDirectory will be blank
-					}
-				}
-				else saveFileDialog2.InitialDirectory = PrefC.GetString(PrefName.ExportPath);
-				saveFileDialog2.Filter = "Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
-				saveFileDialog2.FilterIndex = 0;
-				if (saveFileDialog2.ShowDialog() != DialogResult.OK)
-				{
-					return;
-				}
-				filePath = saveFileDialog2.FileName;
+				return;
 			}
+			filePath = saveFileDialog2.FileName;
+
 			try
 			{
 				using (StreamWriter sw = new StreamWriter(filePath, false))
@@ -870,14 +858,9 @@ namespace OpenDental
 				MessageBox.Show(Lan.g(this, "File in use by another program.  Close and try again."));
 				return;
 			}
-			if (ODBuild.IsWeb())
-			{
-				ThinfinityUtils.ExportForDownload(filePath);
-			}
-			else
-			{
-				MessageBox.Show(Lan.g(this, "File created successfully"));
-			}
+
+			MessageBox.Show(Lan.g(this, "File created successfully"));
+
 		}
 
 		private void butPrint_Click(object sender, EventArgs e)

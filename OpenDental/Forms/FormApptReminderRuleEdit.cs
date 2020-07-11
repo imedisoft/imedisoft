@@ -346,7 +346,7 @@ namespace OpenDental {
 				listLanguagesData.Add(language);
 			}
 			if(listLanguagesDisplay.Count==0) {
-				MsgBox.Show(this,"No additional languages available.");
+				MessageBox.Show("No additional languages available.");
 				return;
 			}
 			InputBox languageSelect=new InputBox(Lan.g(this,"Select language for template: "),listLanguagesDisplay,0);
@@ -373,10 +373,10 @@ namespace OpenDental {
 		private void butRemove_Click(object sender,EventArgs e) {
 			//Don't delete the default.
 			if(((ApptReminderRule)tabControl.SelectedTab.Tag).Language=="") {
-				MsgBox.Show(this,"Cannot remove the default template.");
+				MessageBox.Show("Cannot remove the default template.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete the currently selected language?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete the currently selected language?")) {
 				return;
 			}
 			ApptReminderRule ruleRemoving=(ApptReminderRule)tabControl.SelectedTab.Tag;
@@ -389,20 +389,20 @@ namespace OpenDental {
 
 		private void butOk_Click(object sender,EventArgs e) {
 			if(!textHours.IsValid	|| !textDays.IsValid || !textHoursWithin.IsValid || !textDaysWithin.IsValid) {
-				MsgBox.Show(this,"Fix data entry errors first.");
+				MessageBox.Show("Fix data entry errors first.");
 				return;
 			}
 			if(!ValidateRule()) {
 				return;
 			}
 			if(_listRulesClinic.Any(x => x.TypeCur!=ApptReminderRuleCur.TypeCur && x.TSPrior==_tsPriorFromUI && x.IsEnabled)
-				&& !MsgBox.Show(this,MsgBoxButtons.OKCancel,"There are multiple rules for sending at this send time. Are you sure you want to send multiple "
+				&& !MsgBox.Show(MsgBoxButtons.OKCancel,"There are multiple rules for sending at this send time. Are you sure you want to send multiple "
 				+"messages at the same time?")) 
 			{
 				return;
 			}
 			if(_doesDuplicateExist) {
-				MsgBox.Show(this,"Not allowed to create a duplicate rule for the same send time.");
+				MessageBox.Show("Not allowed to create a duplicate rule for the same send time.");
 				return;
 			}
 			CheckMultipleEConfirms();
@@ -489,7 +489,7 @@ namespace OpenDental {
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(ApptReminderRuleCur.IsAutoReplyEnabled 
 				&& ConfirmationRequests.GetPendingForRule(ApptReminderRuleCur.ApptReminderRuleNum).Count > 0
-				&& !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Outstanding confirmation text messages associated to this appointment rule were found.  " +
+				&& !MsgBox.Show(MsgBoxButtons.OKCancel,"Outstanding confirmation text messages associated to this appointment rule were found.  " +
 					"Auto reply text messages will no longer be sent.  Continue?")) 
 			{
 				return;

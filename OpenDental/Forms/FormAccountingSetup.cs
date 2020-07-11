@@ -694,7 +694,7 @@ namespace OpenDental{
 
 		private void butRemove_Click(object sender,EventArgs e) {
 			if(listAccountsDep.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			depAL.RemoveAt(listAccountsDep.SelectedIndex);
@@ -712,10 +712,6 @@ namespace OpenDental{
 		}
 
 		private void butBrowseQB_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-				return;
-			}
 			OpenFileDialog fdlg=new OpenFileDialog();
 			fdlg.Title="QuickBooks Company File";
 			fdlg.InitialDirectory=@"C:\";
@@ -727,12 +723,8 @@ namespace OpenDental{
 		}
 
 		private void butConnectQB_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-				return;
-			}
 			if(textCompanyFileQB.Text.Trim()=="") {
-				MsgBox.Show(this,"Browse to your QuickBooks company file first.");
+				MessageBox.Show("Browse to your QuickBooks company file first.");
 				return;
 			}
 			Cursor.Current=Cursors.WaitCursor;
@@ -742,10 +734,6 @@ namespace OpenDental{
 		}
 
 		private void butAddDepositQB_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-				return;
-			}
 			List<string> depositList=GetAccountsQB();
 			if(depositList!=null) {
 			  listDepositAccountsQB.AddRange(depositList);
@@ -754,12 +742,8 @@ namespace OpenDental{
 		}
 
 		private void butRemoveDepositQB_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-				return;
-			}
 			if(listBoxDepositAccountsQB.SelectedIndex==-1){
-			  MsgBox.Show(this,"Please select an item first.");
+			  MessageBox.Show("Please select an item first.");
 			  return;
 			}
 			listDepositAccountsQB.RemoveAt(listBoxDepositAccountsQB.SelectedIndex);
@@ -767,10 +751,6 @@ namespace OpenDental{
 		}
 
 		private void butAddIncomeQB_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-				return;
-			}
 			List<string> incomeList=GetAccountsQB();
 			if(incomeList!=null) {
 			  listIncomeAccountsQB.AddRange(incomeList);
@@ -779,12 +759,8 @@ namespace OpenDental{
 		}
 
 		private void butRemoveIncomeQB_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-				return;
-			}
 			if(listBoxIncomeAccountsQB.SelectedIndex==-1){
-			  MsgBox.Show(this,"Please select an item first.");
+			  MessageBox.Show("Please select an item first.");
 			  return;
 			}
 			listIncomeAccountsQB.RemoveAt(listBoxIncomeAccountsQB.SelectedIndex);
@@ -792,12 +768,8 @@ namespace OpenDental{
 		}
 		
 		private void buttonAddClassRefQB_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-				return;
-			}
 			if(textCompanyFileQB.Text.Trim()=="") {
-				MsgBox.Show(this,"Browse to your QuickBooks company file first.");
+				MessageBox.Show("Browse to your QuickBooks company file first.");
 				return;
 			}
 			if(Prefs.UpdateString(PrefName.QuickBooksCompanyFile,textCompanyFileQB.Text)) {
@@ -817,7 +789,7 @@ namespace OpenDental{
 				return;
 			}
 			if(FormChooseClasses.SelectedIndices.Count < 1) {
-				MsgBox.Show(this,"You must choose a class.");
+				MessageBox.Show("You must choose a class.");
 				return;
 			}
 			foreach(int i in FormChooseClasses.SelectedIndices) {
@@ -831,12 +803,8 @@ namespace OpenDental{
 		}
 
 		private void buttonRemoveClassRefQB_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-				return;
-			}
 			if(listBoxClassRefsQB.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			_listClassRefsQB.RemoveAt(listBoxClassRefsQB.SelectedIndex);
@@ -846,7 +814,7 @@ namespace OpenDental{
 		///<summary>Launches the account pick window and lets user choose several accounts.  Returns null if anything went wrong or user canceled out.</summary>
 		private List<string> GetAccountsQB() {
 			if(textCompanyFileQB.Text.Trim()=="") {
-				MsgBox.Show(this,"Browse to your QuickBooks company file first.");
+				MessageBox.Show("Browse to your QuickBooks company file first.");
 				return null;
 			}
 			if(Prefs.UpdateString(PrefName.QuickBooksCompanyFile,textCompanyFileQB.Text)) {
@@ -884,11 +852,6 @@ namespace OpenDental{
 				return;
 			}
 			else {//QuickBooks
-				if(ODBuild.IsWeb()) {
-					MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-					listSoftware.SelectedIndex=0;
-					return;
-				}
 				PanelLayoutQB();
 				return;
 			}
@@ -1001,7 +964,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(listSoftware.SelectedIndex==-1) {
-				MsgBox.Show(this,"Must select an accounting software.");
+				MessageBox.Show("Must select an accounting software.");
 				return;
 			}
 			if(listSoftware.SelectedIndex==0) {//Open Dental

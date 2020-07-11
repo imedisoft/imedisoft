@@ -485,7 +485,7 @@ namespace OpenDental{
 			//};
 			gridMain.Export(gridMain.Title);//listOtherDetails:listOtherDetails);
 			//if(!string.IsNullOrEmpty(msg)) {
-			//	MsgBox.Show(this,msg);
+			//	MessageBox.Show(msg);
 			//}
 		}
 
@@ -555,7 +555,7 @@ namespace OpenDental{
 				|| textAmt.errorProvider1.GetError(textAmt)!=""
 				)
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			calendarFrom.Visible=false;

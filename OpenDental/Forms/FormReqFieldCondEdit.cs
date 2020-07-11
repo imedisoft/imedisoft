@@ -340,7 +340,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(listConditionType.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a condition type.");
+				MessageBox.Show("Please select a condition type.");
 				return;
 			}
 			RequiredFieldName selectedField=_listIndexFieldNames[listConditionType.SelectedIndex];
@@ -351,11 +351,11 @@ namespace OpenDental {
 				case RequiredFieldName.AdmitDate:
 				case RequiredFieldName.DateTimeDeceased:
 					if(textConditionValue1.Text=="") {
-						MsgBox.Show(this,"Please enter a condition value.");
+						MessageBox.Show("Please enter a condition value.");
 						return;
 					}
 					if(comboOperator1.SelectedIndex==-1) {
-						MsgBox.Show(this,"Please select an operator from the drop down list.");
+						MessageBox.Show("Please select an operator from the drop down list.");
 						return;
 					}
 					//Construct the first condition
@@ -365,13 +365,13 @@ namespace OpenDental {
 					int agePlaceholder;
 					DateTime datePlaceholder;
 					if(selectedField==RequiredFieldName.Birthdate && !Int32.TryParse(textConditionValue1.Text,out agePlaceholder)) {
-						MsgBox.Show(this,"Please enter a valid integer.");
+						MessageBox.Show("Please enter a valid integer.");
 						return;
 					}
 					else if((selectedField==RequiredFieldName.AdmitDate || selectedField==RequiredFieldName.DateTimeDeceased)
 						&& !DateTime.TryParse(textConditionValue1.Text,out datePlaceholder))
 					{
-						MsgBox.Show(this,"Please enter a valid date.");
+						MessageBox.Show("Please enter a valid date.");
 						return;
 					}
 					condition1.ConditionValue=textConditionValue1.Text;
@@ -383,24 +383,24 @@ namespace OpenDental {
 					}
 					//Construct the second condition if it is not blank
 					if(comboOperator2.SelectedIndex==-1) {
-						MsgBox.Show(this,"Please select an operator from the drop down list.");
+						MessageBox.Show("Please select an operator from the drop down list.");
 						return;
 					}
 					if(listRelationships.SelectedIndex==-1) {
-						MsgBox.Show(this,"Please select 'And' or 'Or'.");
+						MessageBox.Show("Please select 'And' or 'Or'.");
 						return;
 					}
 					RequiredFieldCondition condition2=new RequiredFieldCondition();
 					condition2.RequiredFieldNum=_reqField.RequiredFieldNum;
 					condition2.ConditionType=selectedField;
 					if(selectedField==RequiredFieldName.Birthdate && !Int32.TryParse(textConditionValue2.Text,out agePlaceholder)) {
-						MsgBox.Show(this,"Please enter a valid integer.");
+						MessageBox.Show("Please enter a valid integer.");
 						return;
 					}
 					else if((selectedField==RequiredFieldName.AdmitDate || selectedField==RequiredFieldName.DateTimeDeceased)
 						&& !DateTime.TryParse(textConditionValue2.Text,out datePlaceholder))
 					{
-						MsgBox.Show(this,"Please enter a valid date.");
+						MessageBox.Show("Please enter a valid date.");
 						return;
 					}
 					condition2.ConditionValue=textConditionValue2.Text;
@@ -421,11 +421,11 @@ namespace OpenDental {
 				case RequiredFieldName.Clinic:
 				case RequiredFieldName.PrimaryProvider:
 					if(listRelationships.SelectedIndex==-1) {
-						MsgBox.Show(this,"Please select 'Is' or 'Is not'.");
+						MessageBox.Show("Please select 'Is' or 'Is not'.");
 						return;
 					}
 					if(listConditionValues.SelectedIndices.Count==0) {
-						MsgBox.Show(this,"Please select a condition value.");
+						MessageBox.Show("Please select a condition value.");
 						return;
 					}
 					List<long> listFkNums=new List<long>();
@@ -475,11 +475,11 @@ namespace OpenDental {
 				case RequiredFieldName.MedicaidID:
 				case RequiredFieldName.MedicaidState:
 					if(listRelationships.SelectedIndex==-1) {
-						MsgBox.Show(this,"Please select 'Is' or 'Is not'.");
+						MessageBox.Show("Please select 'Is' or 'Is not'.");
 						return;
 					}
 					if(listConditionValues.SelectedIndices.Count==0) {
-						MsgBox.Show(this,"Please select a value.");
+						MessageBox.Show("Please select a value.");
 						return;
 					}
 					//Delete the original conditions

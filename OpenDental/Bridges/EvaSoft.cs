@@ -17,12 +17,12 @@ namespace OpenDental {
 
 		public static void SendData(Program ProgramCur,Patient pat) {
 			if(pat==null) {
-				MsgBox.Show("EvaSoft","You must select a patient first.");
+				MsgBox.Show("You must select a patient first.");
 				return;
 			}
 			Process[] evaSoftInstances=Process.GetProcessesByName("EvaSoft");
 			if(evaSoftInstances.Length==0) {
-				MsgBox.Show("EvaSoft","EvaSoft is not running. EvaSoft must be running before the bridge will work.");
+				MsgBox.Show("EvaSoft is not running. EvaSoft must be running before the bridge will work.");
 				return;
 			}
 			List<ProgramProperty> ForProgram =ProgramProperties.GetForProgram(ProgramCur.ProgramNum);

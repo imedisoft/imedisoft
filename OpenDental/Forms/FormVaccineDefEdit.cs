@@ -46,7 +46,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			try {
@@ -61,11 +61,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textCVXCode.Text=="" || textVaccineName.Text=="") {
-				MsgBox.Show(this,"Blank fields are not allowed.");
+				MessageBox.Show("Blank fields are not allowed.");
 				return;
 			}
 			if(comboManufacturer.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a manufacturer.");
+				MessageBox.Show("Please select a manufacturer.");
 				return;
 			}
 			VaccineDefCur.CVXCode=textCVXCode.Text;
@@ -75,7 +75,7 @@ namespace OpenDental {
 				if(VaccineDefs.GetExists(x => x.CVXCode==textCVXCode.Text
 					&& x.DrugManufacturerNum==VaccineDefCur.DrugManufacturerNum)) 
 				{
-					MsgBox.Show(this,"CVX Code already exists for the chosen manufacturer.");
+					MessageBox.Show("CVX Code already exists for the chosen manufacturer.");
 					return;
 				}
 				VaccineDefs.Insert(VaccineDefCur);

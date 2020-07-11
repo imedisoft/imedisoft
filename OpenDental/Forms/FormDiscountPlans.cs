@@ -103,7 +103,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			if(IsSelectionMode) {
 				if(gridMain.GetSelectedIndex()==-1) {
-					MsgBox.Show(this,"Please select an entry.");
+					MessageBox.Show("Please select an entry.");
 					return;
 				}
 				SelectedPlan=(DiscountPlan)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;

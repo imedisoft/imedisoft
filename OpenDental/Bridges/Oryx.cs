@@ -23,7 +23,7 @@ namespace OpenDental.Bridges {
 					return;
 				}
 				if(!progOryx.Enabled) {
-					MsgBox.Show("Oryx","Oryx must be enabled in Program Links.");
+					MsgBox.Show("Oryx must be enabled in Program Links.");
 					return;
 				}
 				if(!clientUrl.ToLower().StartsWith("http")) {
@@ -41,7 +41,7 @@ namespace OpenDental.Bridges {
 				string apiUrl=clientUrl.TrimEnd('/')+"/api/auth/opendental/v1/login";
 				string passwordPlain;
 				if(!CDT.Class1.Decrypt(passwordPref.ValueString,out passwordPlain)) {
-					MsgBox.Show("Oryx","Unable to decrypt password");
+					MsgBox.Show("Unable to decrypt password");
 					return;
 				}
 				var content=new {

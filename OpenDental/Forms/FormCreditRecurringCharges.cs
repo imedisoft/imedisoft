@@ -72,7 +72,7 @@ namespace OpenDental {
 				{//program path is invalid
 				 //if user has setup permission and they want to edit the program path, show the X-Charge setup window
 					if (Security.IsAuthorized(Permissions.Setup)
-						&& MsgBox.Show(this, MsgBoxButtons.YesNo, "The X-Charge path is not valid.  Would you like to edit the path?"))
+						&& MsgBox.Show(MsgBoxButtons.YesNo, "The X-Charge path is not valid.  Would you like to edit the path?"))
 					{
 						FormXchargeSetup FormX = new FormXchargeSetup();
 						FormX.ShowDialog();
@@ -86,7 +86,7 @@ namespace OpenDental {
 					//if the program path still does not exist, whether or not they attempted to edit the program link, tell them to edit and close the form
 					if (!File.Exists(xPath))
 					{
-						MsgBox.Show(this, "The X-Charge program path is not valid.  Edit the program link in order to use the CC Recurring Charges feature.");
+						MessageBox.Show( "The X-Charge program path is not valid.  Edit the program link in order to use the CC Recurring Charges feature.");
 						Close();
 						return;
 					}
@@ -94,7 +94,7 @@ namespace OpenDental {
 			}
 			if (progCur == null)
 			{
-				MsgBox.Show(this, "The PayConnect, PaySimple, or X-Charge program link must be enabled in order to use the CC Recurring Charges feature.");
+				MessageBox.Show( "The PayConnect, PaySimple, or X-Charge program link must be enabled in order to use the CC Recurring Charges feature.");
 				Close();
 				return;
 			}
@@ -279,7 +279,7 @@ namespace OpenDental {
 				return;
 			}
 			if(e.Row<0) {
-				MsgBox.Show(this,"Must select at least one recurring charge.");
+				MessageBox.Show("Must select at least one recurring charge.");
 				return;
 			}
 			long patNum=((RecurringChargeData)gridMain.ListGridRows[e.Row].Tag).RecurringCharge.PatNum;
@@ -385,7 +385,7 @@ namespace OpenDental {
 			}
 			RefreshRecurringCharges(false,true);
 			if(gridMain.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"Must select at least one recurring charge.");
+				MessageBox.Show("Must select at least one recurring charge.");
 				return;
 			}
 			//Security.IsAuthorized will default to the minimum DateTime if none is set so we need to specify that the charge is being run today
@@ -406,7 +406,7 @@ namespace OpenDental {
 					this.Invoke(() => {
 						FillGrid(true);
 						Cursor=Cursors.Default;
-						MsgBox.Show(this,"Done charging cards.\r\nIf there are any patients remaining in list, print the list and handle each one manually.");
+						MessageBox.Show("Done charging cards.\r\nIf there are any patients remaining in list, print the list and handle each one manually.");
 					});
 				}
 				catch(ObjectDisposedException) {

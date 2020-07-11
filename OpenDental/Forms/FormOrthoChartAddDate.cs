@@ -30,7 +30,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!DateTime.TryParse(textNewDate.Text,out SelectedDate)) {
-				MsgBox.Show(this,"Please fix date entry.");
+				MessageBox.Show("Please fix date entry.");
 				return;
 			}
 			DialogResult=DialogResult.OK;

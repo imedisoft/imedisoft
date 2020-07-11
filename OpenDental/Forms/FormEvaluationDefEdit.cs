@@ -105,7 +105,7 @@ namespace OpenDental {
 
 		private void butCriterionAdd_Click(object sender,EventArgs e) {
 			if(_evalDefCur.GradingScaleNum==0) {
-				MsgBox.Show(this,"Please select a grading scale before adding criterion.");
+				MessageBox.Show("Please select a grading scale before adding criterion.");
 				return;
 			}
 			EvaluationCriterionDef evalCritDef=new EvaluationCriterionDef();
@@ -171,7 +171,7 @@ namespace OpenDental {
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			int[] selected=new int[gridMain.SelectedIndices.Length];
@@ -193,7 +193,7 @@ namespace OpenDental {
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			int[] selected=new int[gridMain.SelectedIndices.Length];
@@ -214,7 +214,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(_evalDefCur.IsNew || MsgBox.Show(this,MsgBoxButtons.YesNo,"This will delete the evaluation def.  Continue?")) {
+			if(_evalDefCur.IsNew || MsgBox.Show(MsgBoxButtons.YesNo,"This will delete the evaluation def.  Continue?")) {
 				EvaluationDefs.Delete(_evalDefCur.EvaluationDefNum);
 				DialogResult=DialogResult.Cancel;
 			}
@@ -222,16 +222,16 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(_evalDefCur.SchoolCourseNum==0) {
-				MsgBox.Show(this,"A school course must be selected for this evaluation def before it can be saved.");
+				MessageBox.Show("A school course must be selected for this evaluation def before it can be saved.");
 				return;
 			}
 			if(_evalDefCur.GradingScaleNum==0) {
-				MsgBox.Show(this,"A grading scale must be selected for this evaluation def before it can be saved.");
+				MessageBox.Show("A grading scale must be selected for this evaluation def before it can be saved.");
 				return;
 			}
 			if(!String.IsNullOrWhiteSpace(_evalDefCur.EvalTitle) 
 				&& _evalDefCur.EvalTitle!=textTitle.Text 
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"Changing the EvaluationDef titles during a term could interfere with grading reports.  Continue?")) 
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"Changing the EvaluationDef titles during a term could interfere with grading reports.  Continue?")) 
 			{
 				return;
 			}

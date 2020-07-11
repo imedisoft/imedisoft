@@ -249,7 +249,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 
 			//if(textWidth.errorProvider1.GetError(textWidth)!="") {
-			//  MsgBox.Show(this,"Please fix data entry errors first.");
+			//  MessageBox.Show("Please fix data entry errors first.");
 			//  return;
 			//}
 			//FieldCur.Description=textDescription.Text;

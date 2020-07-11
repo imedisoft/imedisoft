@@ -42,7 +42,7 @@ namespace OpenDental {
 			//Make sure that this patient is not already a clone of another patient.  We don't allow clones of clones.
 			//PatientLink.PatNumFrom is the master and PatientLink.PatNumTo is the actual clone.  We care if this patient has ever been a "PatNumTo".
 			if(PatientLinks.IsPatientAClone(_patientMaster.PatNum)) {
-				MsgBox.Show(this,"Cannot create a clone of a clone.  Please select the original patient in order to create another clone.");
+				MessageBox.Show("Cannot create a clone of a clone.  Please select the original patient in order to create another clone.");
 				return;
 			}
 			textLName.Text=_patientMaster.LName;
@@ -124,7 +124,7 @@ namespace OpenDental {
 			}
 			//If there are no specialties to show, we need to let the user know that they need to associate at least one clinic to a specialty.
 			if(_dictSpecialtyClinics.Count < 1) {
-				MsgBox.Show(this,"This patient already has a clone for every Clinic Specialty available.\r\n"
+				MessageBox.Show("This patient already has a clone for every Clinic Specialty available.\r\n"
 					+"In the main menu, click Setup, Definitions, Clinic Specialties category to add new specialties.\r\n"
 					+"In the main menu, click Lists, Clinics, and double click a clinic to set a Specialty.");
 				DialogResult=DialogResult.Abort;
@@ -199,21 +199,21 @@ namespace OpenDental {
 		///<summary>Validates the form and will show a message to the user if something is invalid and then will return false, otherwise true.</summary>
 		private bool IsValid() {
 			if(_provNumSelected < 1) {
-				MsgBox.Show(this,"Invalid Primary Provider selected.");
+				MessageBox.Show("Invalid Primary Provider selected.");
 				return false;
 			}
 			if(PrefC.HasClinicsEnabled) {
 				#region Clinic Specific Validation
 				if(comboSpecialty.SelectedItem!=null && comboSpecialty.SelectedItem.GetType()!=typeof(ODBoxItem<Def>)) {
-					MsgBox.Show(this,"Invalid Specialty selected.");
+					MessageBox.Show("Invalid Specialty selected.");
 					return false;
 				}
 				if(comboSpecialty.SelectedIndex < 0) {
-					MsgBox.Show(this,"A Specialty is required in order to create a clone.");
+					MessageBox.Show("A Specialty is required in order to create a clone.");
 					return false;
 				}
 				if(comboClinic.SelectedIndex < 0) {
-					MsgBox.Show(this,"A Clinic is required in order to create a clone.");
+					MessageBox.Show("A Clinic is required in order to create a clone.");
 					return false;
 				}
 				#endregion

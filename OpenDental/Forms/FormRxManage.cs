@@ -98,11 +98,11 @@ namespace OpenDental {
 				listSelectRx.Add(_listRx[gridMain.SelectedIndices[i]]);
 			}
 			if(listSelectRx.Count==0) {
-				MsgBox.Show(this,"At least one prescription must be selected");
+				MessageBox.Show("At least one prescription must be selected");
 				return;
 			}
 			if(PrinterSettings.InstalledPrinters.Count==0) {
-				MsgBox.Show(this,"Error: No Printers Installed\r\n"+
+				MessageBox.Show("Error: No Printers Installed\r\n"+
 									"If you do have a printer installed, restarting the workstation may solve the problem."
 				);
 				return;

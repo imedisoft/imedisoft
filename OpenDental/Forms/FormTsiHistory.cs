@@ -171,7 +171,7 @@ namespace OpenDental {
 			#region Validate Filters
 			ValidateChildren(ValidationConstraints.Enabled|ValidationConstraints.Visible|ValidationConstraints.Selectable);
 			if(!datePicker.IsValid) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return retval;//return empty list, filter inputs cannot be applied since there are errors
 			}
 			#endregion Validate Filters
@@ -474,7 +474,7 @@ namespace OpenDental {
 
 		private void menuItemGoTo_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedGridRows.Count!=1) {
-				MsgBox.Show(this,"Please select one TSI transaction log first.");
+				MessageBox.Show("Please select one TSI transaction log first.");
 				return;
 			}
 			object logIndex=gridMain.SelectedGridRows[0].Tag;//Index is original location in _listTsiTransLogsAll

@@ -123,7 +123,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!=""){
-				MsgBox.Show(this,"Please fix error first.");
+				MessageBox.Show("Please fix error first.");
 				return;
 			}
 			if(Prefs.UpdateString(PrefName.AccountingLockDate,POut.Date(PIn.Date(textDate.Text),false))){

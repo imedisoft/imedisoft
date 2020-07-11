@@ -33,7 +33,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.OK;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Shutdown this program on all workstations except this one?  Users will be given a 15 second warning to save data.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Shutdown this program on all workstations except this one?  Users will be given a 15 second warning to save data.")) {
 				return;
 			}
 			//happens outside this form

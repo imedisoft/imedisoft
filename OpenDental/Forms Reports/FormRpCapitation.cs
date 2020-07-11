@@ -182,15 +182,15 @@ namespace OpenDental{
 			DateTime dateEnd;
 			bool isMedOrClinic;
 			if(!DateTime.TryParse(textDateStart.Text,out dateStart)) {
-				MsgBox.Show(this,"Please input a valid date.");
+				MessageBox.Show("Please input a valid date.");
 				return;
 			}
 			if(!DateTime.TryParse(textDateEnd.Text,out dateEnd)) {
-				MsgBox.Show(this,"Please input a valid date.");
+				MessageBox.Show("Please input a valid date.");
 				return;
 			}
 			if(String.IsNullOrWhiteSpace(textCarrier.Text)) {
-				MsgBox.Show(this,"Carrier can not be blank. Please input a value for carrier.");
+				MessageBox.Show("Carrier can not be blank. Please input a value for carrier.");
 				return;
 			}
 			ReportComplex report=new ReportComplex(true,true);

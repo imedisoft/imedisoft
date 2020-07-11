@@ -771,7 +771,7 @@ namespace OpenDental {
 			}
 			//If row is bandingProc prompt for deletion of orthocase
 			if(_bandingProc!=null && ((Procedure)gridOrthoSchedule.SelectedGridRows[0].Tag).ProcNum==_bandingProc.ProcNum) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Detaching the banding procedure requires that the ortho case be deleted. " +
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Detaching the banding procedure requires that the ortho case be deleted. " +
 					"Do you want to delete this ortho case?")) 
 				{
 					return;
@@ -788,7 +788,7 @@ namespace OpenDental {
 				}
 			}
 			//Else detach all procedures for selected rows.
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,$"Detach all procedures for the selected rows?")) 
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,$"Detach all procedures for the selected rows?")) 
 			{
 				return;
 			}
@@ -816,27 +816,27 @@ namespace OpenDental {
 
 		private bool HasErrors() {
 			if(PIn.Date(textBandingDate.Text) > PIn.Date(textExpectedDebondDate.Text) && (textBandingDate.Enabled || textExpectedDebondDate.Enabled)) {
-				MsgBox.Show(this,"Expected Debond Date cannot be earlier than Banding Date.");
+				MessageBox.Show("Expected Debond Date cannot be earlier than Banding Date.");
 				return true;
 			}
 			double sumFeeFields=PIn.Double(textPrimaryInsuranceFee.Text)+PIn.Double(textSecondaryInsuranceFee.Text)+PIn.Double(textPatientFee.Text);
 			if(!sumFeeFields.IsEqual(PIn.Double(textTotalFee.Text))) {
-				MsgBox.Show(this,"Sum of Patient Portion and insurance fees must equal Total Fee.");
+				MessageBox.Show("Sum of Patient Portion and insurance fees must equal Total Fee.");
 				return true;
 			}
 			double amountFieldsTotal=PIn.Double(textBandingAmount.Text)+PIn.Double(textDebondAmount.Text)+PIn.Double(textAllVisitsAmount.Text);
 			if(!(amountFieldsTotal.IsEqual(PIn.Double(textTotalFee.Text)))) {
-				MsgBox.Show(this,"Sum of Banding, Debond, and All Visits amounts must equal the Total Fee.");
+				MessageBox.Show("Sum of Banding, Debond, and All Visits amounts must equal the Total Fee.");
 				return true;
 			}
 			if(PIn.Double(textVisitAmount.Text).IsGreaterThan(PIn.Double(textAllVisitsAmount.Text)) 
 				|| PIn.Double(textVisitPercent.Text)>PIn.Double(textAllVisitsPercent.Text)) 
 			{
-				MsgBox.Show(this,"Percent or amount per visit cannot exceed percent or amount for all visits.");
+				MessageBox.Show("Percent or amount per visit cannot exceed percent or amount for all visits.");
 				return true;
 			}
 			if(_bandingProc!=null && checkIsTransfer.Checked) {
-				MsgBox.Show(this,"Transfers cannot have a banding procedure.");
+				MessageBox.Show("Transfers cannot have a banding procedure.");
 				return true;
 			}
 			if(textTotalFee.errorProvider1.GetError(textTotalFee)!="" 
@@ -855,11 +855,11 @@ namespace OpenDental {
 				|| textVisitPercent.errorProvider1.GetError(textVisitPercent)!="" 
 				|| textVisitAmount.errorProvider1.GetError(textVisitAmount)!="") 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return true;
 			}
 			if(PIn.Int(textVisitCountPlanned.Text,false)<1 && PIn.Double(textAllVisitsAmount.Text)!=0) {
-				MsgBox.Show(this,"Number of Visits cannot be zero if an amount is entered for All Visits.");
+				MessageBox.Show("Number of Visits cannot be zero if an amount is entered for All Visits.");
 				return true;
 			}
 			if(textTotalFee.Text=="" 
@@ -878,7 +878,7 @@ namespace OpenDental {
 				|| textVisitPercent.Text=="" 
 				|| textVisitAmount.Text=="") 
 			{
-				MsgBox.Show(this,"All fields must be completed.");
+				MessageBox.Show("All fields must be completed.");
 				return true;
 			}
 			return false;
@@ -944,7 +944,7 @@ namespace OpenDental {
 		}
 
 		private void ButDeleteOrthoCase_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Do you want to delete this ortho case?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Do you want to delete this ortho case?")) {
 				return;
 			}
 			try {
@@ -1056,7 +1056,7 @@ namespace OpenDental {
 		private void ButCancel_Click(object sender,EventArgs e) {
 			if(_isNew && _patPayPlan!=null) {
 				try {
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,"You are canceling a new ortho case. Do you want to delete the payment plan associated to it?")) {
+					if(MsgBox.Show(MsgBoxButtons.YesNo,"You are canceling a new ortho case. Do you want to delete the payment plan associated to it?")) {
 						PayPlans.Delete(_patPayPlan);
 					}
 				}

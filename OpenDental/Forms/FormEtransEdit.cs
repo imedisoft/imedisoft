@@ -496,7 +496,7 @@ namespace OpenDental{
 		}
 
 		//private void butDelete_Click(object sender,EventArgs e) {
-			//if(!MsgBox.Show(this,true,"Permanently delete the data for this transaction?  This does not alter actual claims.")){
+			//if(!MsgBox.Show(MsgBoxButtons.YesNo,"Permanently delete the data for this transaction?  This does not alter actual claims.")){
 			//	return;
 			//}
 			//Etranss.Delete(

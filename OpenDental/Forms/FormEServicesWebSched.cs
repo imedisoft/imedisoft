@@ -307,7 +307,7 @@ namespace OpenDental {
 				Process.Start(URL);
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"There was a problem launching the URL with a web browser.  Make sure a default browser has been set.");
+				MessageBox.Show("There was a problem launching the URL with a web browser.  Make sure a default browser has been set.");
 			}
 		}
 
@@ -359,7 +359,7 @@ namespace OpenDental {
 			}
 			if(comboWSNPADefApptType.GetSelected<Def>()==null) {
 				if(tabControlWebSched.SelectedTab==tabWebSchedNewPatAppts) {
-					MsgBox.Show(this,"Set a Web Sched New Pat Appt Type in Definitions to show appointment time slots.");
+					MessageBox.Show("Set a Web Sched New Pat Appt Type in Definitions to show appointment time slots.");
 				}
 				return;
 			}
@@ -1252,7 +1252,7 @@ namespace OpenDental {
 
 		/// <summary>All the user to undo all changes they have made to the currently selected clinic.</summary>
 		private void WebSchedVerify_butUndoClick(object sender,EventArgs e) {
-			bool isAccepted=MsgBox.Show(this,MsgBoxButtons.YesNo,"Undo all changes to templates in this clinic?");
+			bool isAccepted=MsgBox.Show(MsgBoxButtons.YesNo,"Undo all changes to templates in this clinic?");
 			if(isAccepted) {
 				foreach(PrefName prefName in _listWebSchedVerifyPrefNames) {
 					WebSchedVerify_TryRestoreClinicPrefOld(prefName);
@@ -1359,15 +1359,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(Patients.DoesContainPHIField(textRecallTextTemplate.Text)) {
-				MsgBox.Show(this,"Web Sched Verify Recall Text Template is not allowed to contain Protected Health Information.");
+				MessageBox.Show("Web Sched Verify Recall Text Template is not allowed to contain Protected Health Information.");
 				return;
 			}
 			if(Patients.DoesContainPHIField(textNewPatTextTemplate.Text)) {
-				MsgBox.Show(this,"Web Sched Verify New Patient Text Template is not allowed to contain Protected Health Information.");
+				MessageBox.Show("Web Sched Verify New Patient Text Template is not allowed to contain Protected Health Information.");
 				return;
 			}
 			if(Patients.DoesContainPHIField(textASAPTextTemplate.Text)) {
-				MsgBox.Show(this,"Web Sched Verify ASAP Text Template is not allowed to contain Protected Health Information.");
+				MessageBox.Show("Web Sched Verify ASAP Text Template is not allowed to contain Protected Health Information.");
 				return;
 			}
 			SaveTabWebSchedNewPat();

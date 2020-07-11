@@ -82,10 +82,10 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void butImport_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedGridRows.Count==0) {
-				MsgBox.Show(this,"Please select a fee schedule to import fees into.");
+				MessageBox.Show("Please select a fee schedule to import fees into.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"If you want a clean slate, the current fee schedule should be cleared first.  "
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"If you want a clean slate, the current fee schedule should be cleared first.  "
 				+"When imported, any fees found in the text file will overwrite values of the selected fee schedule.  Are you sure you want to continue?")) 
 			{
 				return;
@@ -106,7 +106,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				return;
 			}
 			if(!File.Exists(Dlg.FileName)){
-				MsgBox.Show(this,"File not found");
+				MessageBox.Show("File not found");
 				Cursor=Cursors.Default;
 				return;
 			}
@@ -124,7 +124,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void butEditFee_Click(object sender,EventArgs e) {
 			//only allow once user has at least one valid fee schedule. 
 			if(_listFeeScheds.Count(x => x.Description.ToLower()!="default")==0) {
-				MsgBox.Show(this,"At least one fee schedule is required before moving on to entering and editing fees.");
+				MessageBox.Show("At least one fee schedule is required before moving on to entering and editing fees.");
 			}
 			FeeScheds.Sync(_listFeeScheds,_listFeeSchedsOld);
 			DataValid.SetInvalid(InvalidType.FeeScheds);
@@ -151,15 +151,15 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void labelAdd_Click(object sender,EventArgs e) {
-			MsgBox.Show("FormSetupWizard","Add a new blank fee schedule for importing or manually entering fees.");
+			MessageBox.Show("Add a new blank fee schedule for importing or manually entering fees.");
 		}
 
 		private void labelEdit_Click(object sender,EventArgs e) {
-			MsgBox.Show("FormSetupWizard","Manually edit and input fees that are necessary to your practice.");
+			MessageBox.Show("Manually edit and input fees that are necessary to your practice.");
 		}
 
 		private void labelImport_Click(object sender,EventArgs e) {
-			MsgBox.Show("FormSetupWizard","Format for fee import requires a column for the procedure code, followed by a column with the amount "
+			MessageBox.Show("Format for fee import requires a column for the procedure code, followed by a column with the amount "
 				+"for that code. These columns need to be separated with a tab delimiter.");
 		}
 

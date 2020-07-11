@@ -257,11 +257,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Description is required.");
+				MessageBox.Show("Description is required.");
 				return;
 			}
 			if(_accountCur.Description != textDescription.Text 
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"This will update the Splits column for all Transactions attached to this account that have a date "
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"This will update the Splits column for all Transactions attached to this account that have a date "
 				+"after the Accounting Lock Date. Are you sure you want to continue?")) 
 			{
 				return;

@@ -101,7 +101,7 @@ namespace OpenDental {
 				PrefName.WebSchedAsapTextLimit,
 			};
 			if(checkUseDefaults.Checked) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete custom templates for this clinic and switch to using defaults? This cannot be undone.")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Delete custom templates for this clinic and switch to using defaults? This cannot be undone.")) {
 					ClinicPrefs.DeletePrefs(comboClinic.SelectedClinicNum,listPrefs);
 					DataValid.SetInvalid(InvalidType.ClinicPrefs);
 				}

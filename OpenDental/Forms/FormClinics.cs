@@ -497,27 +497,27 @@ namespace OpenDental {
 
 		private void butMovePats_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"You must select at least one clinic to move patients from.");
+				MessageBox.Show("You must select at least one clinic to move patients from.");
 				return;
 			}
 			if(_clinicNumTo==-1){
-				MsgBox.Show(this,"You must pick a 'To' clinic in the box above to move patients to.");
+				MessageBox.Show("You must pick a 'To' clinic in the box above to move patients to.");
 				return;
 			}
 			Dictionary<long,Clinic> dictClinicsFrom=gridMain.SelectedTags<Clinic>().ToDictionary(x => x.ClinicNum);
 			Clinic clinicTo=gridMain.GetTags<Clinic>().FirstOrDefault(x => x.ClinicNum==_clinicNumTo);
 			if(clinicTo==null) {
-				MsgBox.Show(this,"The clinic could not be found.");
+				MessageBox.Show("The clinic could not be found.");
 				return;
 			}
 			if(dictClinicsFrom.ContainsKey(clinicTo.ClinicNum)) {
-				MsgBox.Show(this,"The 'To' clinic should not also be one of the 'From' clinics.");
+				MessageBox.Show("The 'To' clinic should not also be one of the 'From' clinics.");
 				return;
 			}
 			Dictionary<long,int> dictClinFromCounts=Clinics.GetClinicalPatientCount(true)
 				.Where(x => dictClinicsFrom.ContainsKey(x.Key)).ToDictionary(x => x.Key,x => x.Value);
 			if(dictClinFromCounts.Sum(x => x.Value)==0) {
-				MsgBox.Show(this,"There are no patients assigned to the selected clinics.");
+				MessageBox.Show("There are no patients assigned to the selected clinics.");
 				return;
 			}
 			string msg=Lan.g(this,"This will move all patients to")+" "+clinicTo.Abbr+" "+Lan.g(this,"from the following clinics")+":\r\n"
@@ -543,12 +543,12 @@ namespace OpenDental {
 				odEventType:ODEventType.Clinic);
 			_dictClinicalCounts=Clinics.GetClinicalPatientCount();
 			FillGrid();
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 		}
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a clinic first.");
+				MessageBox.Show("Please select a clinic first.");
 				return;
 			}
 			int selectedIdx=gridMain.GetSelectedIndex();
@@ -574,7 +574,7 @@ namespace OpenDental {
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a clinic first.");
+				MessageBox.Show("Please select a clinic first.");
 				return;
 			}
 			int selectedIdx=gridMain.GetSelectedIndex();

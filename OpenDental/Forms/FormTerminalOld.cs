@@ -1357,7 +1357,7 @@ namespace OpenDental{
 				return;
 			}
 			if(input.textResult.Text!=PrefC.GetString(PrefName.TerminalClosePassword)){
-				MsgBox.Show(this,"Invalid password.");
+				MessageBox.Show("Invalid password.");
 				return;
 			}
 			TerminalActives.DeleteAllForComputer(Environment.MachineName);

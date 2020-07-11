@@ -162,7 +162,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			Interventions.Delete(InterventionCur.InterventionNum);
@@ -173,20 +173,20 @@ namespace OpenDental {
 			//validate--------------------------------------
 			DateTime date;
 			if(textDate.Text=="") {
-				MsgBox.Show(this,"Please enter a date.");
+				MessageBox.Show("Please enter a date.");
 				return;
 			}
 			try {
 				date=DateTime.Parse(textDate.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Please fix date first.");
+				MessageBox.Show("Please fix date first.");
 				return;
 			}
 			string codeVal="";
 			string codeSys="";
 			if(gridMain.GetSelectedIndex()==-1) {//no intervention code selected
-				MsgBox.Show(this,"You must select a code for this intervention.");
+				MessageBox.Show("You must select a code for this intervention.");
 				return;
 			}
 			else {
@@ -221,7 +221,7 @@ namespace OpenDental {
 					return;
 				}
 				if(FormMP.MedicationPatCur.DateStart.Date<InterventionCur.DateEntry.AddMonths(-6).Date || FormMP.MedicationPatCur.DateStart.Date>InterventionCur.DateEntry.Date) {
-					MsgBox.Show(this,"The medication order just entered is not within the 6 months prior to the date of this intervention.  You can modify the date of the medication order in the patient's medical history section.");
+					MessageBox.Show("The medication order just entered is not within the 6 months prior to the date of this intervention.  You can modify the date of the medication order in the patient's medical history section.");
 				}
 				DialogResult=DialogResult.OK;
 				return;
@@ -250,7 +250,7 @@ namespace OpenDental {
 							return;
 						}
 						if(chooseSet.comboSelection.SelectedIndex==-1) {
-							MsgBox.Show(this,"You must select an intervention code set for the selected code.");
+							MessageBox.Show("You must select an intervention code set for the selected code.");
 							return;
 						}
 						selectedCodeSet=chooseSet.comboSelection.GetSelected<string>().Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries)[0];

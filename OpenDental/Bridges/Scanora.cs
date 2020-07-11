@@ -22,7 +22,7 @@ namespace OpenDental.Bridges{
 			string path=Programs.GetProgramPath(ProgramCur);
 			string iniFile=ProgramProperties.GetPropVal(ProgramCur.ProgramNum,"Import.ini path");
 			if(pat==null) {
-				MsgBox.Show("Scanora","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			//Start with a blank line per Scanora's example ini file, and then another blank line following the Header.

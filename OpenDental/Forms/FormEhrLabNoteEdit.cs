@@ -66,7 +66,7 @@ namespace OpenDental {
 			result=result.Replace("#","");//reserved character
 			result=result.Replace("\\","");//reserved character
 			if(result!=ipb.textResult.Text) {
-				MsgBox.Show(this, "Special characters were removed from comment. The characters |,^,~,\\,&, and # cannot be used in a comment.");
+				MessageBox.Show( "Special characters were removed from comment. The characters |,^,~,\\,&, and # cannot be used in a comment.");
 			}
 			LabNoteCur.Comments+=(LabNoteCur.Comments==""?"":"^")+result;
 			FillGrid();

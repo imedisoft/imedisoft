@@ -90,7 +90,7 @@ namespace OpenDental {
 				textClinicKey.Text=clinicKey;
 			}
 			catch(ODException ex) {
-				MsgBox.Show(this,ex.Message);
+				MessageBox.Show(ex.Message);
 				return;
 			}
 			catch(Exception ex) {
@@ -100,7 +100,7 @@ namespace OpenDental {
 			finally {
 				Cursor=Cursors.Default;
 			}
-			MsgBox.Show(this,"This clinic has successfully been registered with DoseSpot.\r\n"
+			MessageBox.Show("This clinic has successfully been registered with DoseSpot.\r\n"
 				+"If patients in this clinic can be shared with other clinics, contact DoseSpot to link this clinic before using.");
 		}
 

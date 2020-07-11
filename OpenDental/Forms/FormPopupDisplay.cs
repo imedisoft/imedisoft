@@ -311,7 +311,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(PopupCur.Description.Replace("\r","")!=textDescription.Text.Replace("\r","")) {//if user changed the note. remove "\r" to homogenize line returns because "\r\n" is the same as "\n"
-				if(MsgBox.Show(this,true,"Save changes to note?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Save changes to note?")) {
 					Popup popupArchive=PopupCur.Copy();
 					popupArchive.IsArchived=true;
 					popupArchive.PopupNumArchive=PopupCur.PopupNum;

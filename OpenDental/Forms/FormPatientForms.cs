@@ -158,39 +158,30 @@ namespace OpenDental {
 		private void butTerminal_Click(object sender,EventArgs e) {
 			//<List>.All() returns true for an empty list.
 			if(table.Select().All(x => x["showInTerminal"].ToString()=="")) {
-				MsgBox.Show(this,"No forms for this patient are set to show in the kiosk.");
+				MessageBox.Show("No forms for this patient are set to show in the kiosk.");
 				return;
 			}
 			if(PrefC.GetLong(PrefName.ProcessSigsIntervalInSecs)==0) {
-				MsgBox.Show(this,"Cannot open kiosk unless process signal interval is set. To set it, go to Setup > Miscellaneous.");
+				MessageBox.Show("Cannot open kiosk unless process signal interval is set. To set it, go to Setup > Miscellaneous.");
 				return;
 			}
-			if(ODBuild.IsWeb()) {
-				//Thinfinity messes up window ordering so sometimes FormOpenDental is visible in Kiosk mode.
-				foreach(Form form in Application.OpenForms) {
-					form.Visible=false;
-				}
-			}
+
 			FormTerminal formT=new FormTerminal();
 			formT.IsSimpleMode=true;
 			formT.PatNum=PatNum;
 			formT.ShowDialog();
-			if(ODBuild.IsWeb()) {
-				foreach(Form form in Application.OpenForms) {
-					form.Visible=true;
-				}
-			}
+
 			FillGrid();
 		}
 
 		private void butCopy_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length !=1) {
-				MsgBox.Show(this,"Please select one completed sheet from the list above first.");
+				MessageBox.Show("Please select one completed sheet from the list above first.");
 				return;
 			}
 			long sheetNum=PIn.Long(table.Rows[gridMain.SelectedIndices[0]]["SheetNum"].ToString());
 			if(sheetNum==0) {
-				MsgBox.Show(this,"Must select a sheet.");
+				MessageBox.Show("Must select a sheet.");
 				return;
 			}
 			Sheet sheet=Sheets.GetSheet(sheetNum);
@@ -220,7 +211,7 @@ namespace OpenDental {
 		
 		private void butImport_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length !=1) {
-				MsgBox.Show(this,"Please select one completed form from the list above first.");
+				MessageBox.Show("Please select one completed form from the list above first.");
 				return;
 			}
 			long sheetNum=PIn.Long(table.Rows[gridMain.SelectedIndices[0]]["SheetNum"].ToString());
@@ -232,7 +223,7 @@ namespace OpenDental {
 				//See FormSheetImport.Load() region Acro 
 				//string extens=Path.GetExtension(doc.FileName);
 				//if(extens.ToLower()!=".pdf") {
-				//	MsgBox.Show(this,"Only pdf's and sheets can be imported into the database.");
+				//	MessageBox.Show("Only pdf's and sheets can be imported into the database.");
 				//	return;
 				//}
 			}
@@ -240,12 +231,12 @@ namespace OpenDental {
 			if(sheetNum!=0) {
 				sheet=Sheets.GetSheet(sheetNum);
 				if(!SheetDefs.IsWebFormAllowed(sheet.SheetType)) {
-					MsgBox.Show(this,"For now, only sheets of type 'PatientForm' and 'MedicalHistory' can be imported.");
+					MessageBox.Show("For now, only sheets of type 'PatientForm' and 'MedicalHistory' can be imported.");
 					return;
 				}
 			}
 			if(sheet==null) {
-				MsgBox.Show(this,"Only sheets can be imported into the database.");
+				MessageBox.Show("Only sheets can be imported into the database.");
 				return;
 			}
 			FormSheetImport formSI=new FormSheetImport();

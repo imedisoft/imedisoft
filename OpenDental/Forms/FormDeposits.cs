@@ -238,7 +238,7 @@ namespace OpenDental{
 		///<summary>Only available in selection mode.</summary>
 		private void butOK_Click(object sender,EventArgs e) {
 			if(grid.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a deposit first.");
+				MessageBox.Show("Please select a deposit first.");
 				return;
 			}
 			SelectedDeposit=DList[grid.GetSelectedIndex()];

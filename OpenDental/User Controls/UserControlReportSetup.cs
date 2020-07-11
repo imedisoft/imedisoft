@@ -376,7 +376,7 @@ namespace OpenDental.User_Controls {
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(_selectedCell.Y == -1 || _selectedGrid == null) {
-				MsgBox.Show(this,"Please select a report first.");
+				MessageBox.Show("Please select a report first.");
 				return;
 			}
 			DisplayReportCategory selectedCat = (DisplayReportCategory)_selectedGrid.Tag;
@@ -393,7 +393,7 @@ namespace OpenDental.User_Controls {
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(_selectedCell.Y == -1 || _selectedGrid == null) {
-				MsgBox.Show(this,"Please select a report first.");
+				MessageBox.Show("Please select a report first.");
 				return;
 			}
 			DisplayReportCategory selectedCat = (DisplayReportCategory)_selectedGrid.Tag;

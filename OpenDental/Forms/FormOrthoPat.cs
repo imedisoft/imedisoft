@@ -66,11 +66,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textFee.errorProvider1.GetError(textFee)!="") {
-				MsgBox.Show(this,"Please enter a valid fee.");
+				MessageBox.Show("Please enter a valid fee.");
 				return;
 			}
 			if(textDateNextClaim.errorProvider1.GetError(textDateNextClaim)!="") {
-				MsgBox.Show(this,"Please enter a valid date.");
+				MessageBox.Show("Please enter a valid date.");
 				return;
 			}
 			if(checkUseDefaultFee.Checked) {

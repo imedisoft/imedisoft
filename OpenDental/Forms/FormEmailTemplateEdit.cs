@@ -506,11 +506,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textSubject.Text=="" && textBodyText.Text==""){
-				MsgBox.Show(this,"Both the subject and body of the template cannot be left blank.");
+				MessageBox.Show("Both the subject and body of the template cannot be left blank.");
 				return;
 			}
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Please enter a description.");
+				MessageBox.Show("Please enter a description.");
 				return;
 			}
 			ETcur.Subject=textSubject.Text;

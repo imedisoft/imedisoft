@@ -509,7 +509,7 @@ namespace OpenDental{
 			if(nodeObjTag.NodeType==EnumNodeType.Document){
 				_documentShowing=Documents.GetByNum(nodeObjTag.DocNum,doReturnNullIfNotFound:true);
 				if(_documentShowing==null) {
-					MsgBox.Show(this,"Document was previously deleted.");
+					MessageBox.Show("Document was previously deleted.");
 					FillTree(false);
 					return;
 				}
@@ -548,7 +548,7 @@ namespace OpenDental{
 				}
 				SetWindowingSlider();
 				//In Web mode the buttons do not appear when hovering over the PDF, so we need to enable the print toolbar button.
-				bool doShowPrint=panelMain.Visible || (_webBrowser.Visible && ODBuild.IsWeb());
+				bool doShowPrint=panelMain.Visible;
 				EnableToolBarButtons(print:doShowPrint, delete:true, info:true, sign:true, export:isExportable, copy:panelMain.Visible, brightAndContrast:panelMain.Visible, zoom:panelMain.Visible, zoomOne:false, crop:panelMain.Visible, pan:panelMain.Visible, adj:false, size:false, remove:false, add:false, flip:panelMain.Visible, rotateL:panelMain.Visible, rotateR:panelMain.Visible, rotate180:panelMain.Visible);
 				SetCropPanEditAdj(EnumCropPanAdj.Pan);
 			}
@@ -896,7 +896,7 @@ namespace OpenDental{
 					panelMain.Invalidate();
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Crop to Rectangle?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Crop to Rectangle?")) {
 					_rectangleCrop=new Rectangle();
 					panelMain.Invalidate();
 					return;
@@ -1080,10 +1080,10 @@ namespace OpenDental{
 					ToolBarPaste_Click();
 					break;
 				case TB.Forms:
-					MsgBox.Show(this,"Use the dropdown list.  Add forms to the list by copying image files into your A-Z folder, Forms.  Restart the program to see newly added forms.");
+					MessageBox.Show("Use the dropdown list.  Add forms to the list by copying image files into your A-Z folder, Forms.  Restart the program to see newly added forms.");
 					break;
 				case TB.Mounts:
-					MsgBox.Show(this,"Use the dropdown list.  Manage Mounts from the Setup/Images menu.");
+					MessageBox.Show("Use the dropdown list.  Manage Mounts from the Setup/Images menu.");
 					break;
 			}
 		}
@@ -1185,7 +1185,7 @@ namespace OpenDental{
 			FillTree(true);
 			SelectTreeNode(nodeObjTagNew);
 			if(errorMsg!="") {
-				MsgBox.Show(this,"The following items are directories and were not copied into the images folder for this patient."+errorMsg);
+				MessageBox.Show("The following items are directories and were not copied into the images folder for this patient."+errorMsg);
 			}
 		}
 
@@ -1219,7 +1219,7 @@ namespace OpenDental{
 				return;
 			}
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MsgBox.Show(this,"Images stored directly in database. Export file in order to open with external program.");
+				MessageBox.Show("Images stored directly in database. Export file in order to open with external program.");
 				return;//Documents must be stored in the A to Z Folder to open them outside of Open Dental.  Users can use the export button for now.
 			}
 			if(nodeObjTag.NodeType==EnumNodeType.Mount) {
@@ -1241,11 +1241,7 @@ namespace OpenDental{
 				//We allow anything which ends with a different extention to be viewed in the windows fax viewer.
 				//Specifically, multi-page faxes can be viewed more easily by one of our customers using the fax viewer.
 				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-					if(ODBuild.IsWeb()) {
-						string tempFile=ImageStore.GetFilePath(_documentShowing,_patFolder);
-						ThinfinityUtils.HandleFile(tempFile);
-					}
-					else {
+
 						try {
 							string filePath=ImageStore.GetFilePath(_documentShowing,_patFolder);
 							Process.Start(filePath);
@@ -1253,7 +1249,7 @@ namespace OpenDental{
 						catch(Exception ex) {
 							MessageBox.Show(ex.Message);
 						}
-					}
+					
 				}
 				else {//Cloud
 					//Download document into temp directory for displaying.
@@ -1273,12 +1269,9 @@ namespace OpenDental{
 					else {
 						string tempFile=PrefC.GetRandomTempFile(Path.GetExtension(_documentShowing.FileName));
 						File.WriteAllBytes(tempFile,state.FileContent);
-						if(ODBuild.IsWeb()) {
-							ThinfinityUtils.HandleFile(tempFile);
-						}
-						else {
+
 							Process.Start(tempFile);
-						}
+						
 					}
 				}
 			}
@@ -1545,12 +1538,12 @@ namespace OpenDental{
 			//EnableAllToolBarButtons(false);
 			if(isVerbose) {
 				if(document.ImgType.In(ImageType.Document,ImageType.File)){
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete document?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete document?")) {
 						return;
 					}
 				}
 				else{
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete image?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete image?")) {
 						return;
 					}
 				}
@@ -2275,7 +2268,7 @@ namespace OpenDental{
 				return;
 			}
 			if(_idxSelectedInMount==-1 || _arrayDocumentsShowing[_idxSelectedInMount]!=null){
-				MsgBox.Show(this,"Please select an empty mount item, first.");
+				MessageBox.Show("Please select an empty mount item, first.");
 				return;
 			}
 			FormImageSelect formImageSelect=new FormImageSelect();
@@ -2298,7 +2291,7 @@ namespace OpenDental{
 			bitmapOrig=ImageStore.OpenImage(documentOrig,_patFolder);//PDF files will always return null.
 			actionCloseDownloadProgress?.Invoke();
 			if(bitmapOrig==null) {
-				MsgBox.Show(this,"Error opening file.");
+				MessageBox.Show("Error opening file.");
 				return;
 			}
 			Document documentNew=null;
@@ -2306,7 +2299,7 @@ namespace OpenDental{
 				documentNew=ImageStore.Import(bitmapOrig,GetCurrentCategory(),ImageType.Photo,_patCur);//Makes log entry
 			}
 			catch {
-				MsgBox.Show(this,"Error saving image.");
+				MessageBox.Show("Error saving image.");
 				bitmapOrig.Dispose();
 				return;
 			}
@@ -2347,12 +2340,12 @@ namespace OpenDental{
 			}
 			else{
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Please select an image before copying");
+				MessageBox.Show("Please select an image before copying");
 				return;
 			}
 			if(bitmapCopy==null) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Error.");
+				MessageBox.Show("Error.");
 				return;
 			}
 			try {
@@ -2367,7 +2360,7 @@ namespace OpenDental{
 				Clipboard.SetDataObject(dataObject);
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Could not copy contents to the clipboard.  Please try again.");
+				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
 				ex.DoNothing();
 				return;
 			}
@@ -2392,7 +2385,7 @@ namespace OpenDental{
 
 		private void ToolBarDelete_Click(){
 			if(treeMain.SelectedNode==null) {
-				MsgBox.Show(this,"No item is currently selected");
+				MessageBox.Show("No item is currently selected");
 				return;
 			}
 			if(IsDocumentShowing()){
@@ -2411,7 +2404,7 @@ namespace OpenDental{
 					}
 				}
 				if(!isEmpty){
-					MsgBox.Show(this,"Not allowed to delete entire mount.  Delete images one at a time.");
+					MessageBox.Show("Not allowed to delete entire mount.  Delete images one at a time.");
 					return;
 				}
 				Mounts.Delete(_mountShowing);
@@ -2421,10 +2414,6 @@ namespace OpenDental{
 		}
 
 		private void ToolBarExport_Click(){
-			if(ODBuild.IsWeb()) {
-				ToolBarExport_ClickWeb();
-				return;
-			}
 			if(IsDocumentShowing()){
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
 				saveFileDialog.Title="Export a Document";
@@ -2440,7 +2429,7 @@ namespace OpenDental{
 					MessageBox.Show(Lan.g(this,"Unable to export file, May be in use")+": " + ex.Message);
 					return;
 				}
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 				return;
 			}
 			if(IsMountItemShowing()){
@@ -2458,7 +2447,7 @@ namespace OpenDental{
 					MessageBox.Show(Lan.g(this,"Unable to export file, May be in use")+": " + ex.Message);
 					return;
 				}
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 				return;
 			}
 			if(IsMountShowing()){
@@ -2482,7 +2471,7 @@ namespace OpenDental{
 					return;
 				}
 				bitmapExport.Dispose();
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 				return;
 			}
 		}
@@ -2493,7 +2482,7 @@ namespace OpenDental{
 				string docPath=FileAtoZ.CombinePaths(ImageStore.GetPatientFolder(_patCur,ImageStore.GetPreferredAtoZpath()),_documentShowing.FileName);
 				FileAtoZ.Copy(docPath,tempFilePath,FileAtoZSourceDestination.AtoZToLocal,"Exporting file...");
 				ThinfinityUtils.ExportForDownload(tempFilePath);
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 				return;
 			}
 			if(IsMountItemShowing()){
@@ -2501,7 +2490,7 @@ namespace OpenDental{
 				string docPath=FileAtoZ.CombinePaths(ImageStore.GetPatientFolder(_patCur,ImageStore.GetPreferredAtoZpath()),_arrayDocumentsShowing[_idxSelectedInMount].FileName);
 				FileAtoZ.Copy(docPath,tempFilePath,FileAtoZSourceDestination.AtoZToLocal,"Exporting file...");
 				ThinfinityUtils.ExportForDownload(tempFilePath);
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 				return;
 			}
 			if(IsMountShowing()){
@@ -2514,7 +2503,7 @@ namespace OpenDental{
 				bitmapExport.Save(tempFilePath);
 				ThinfinityUtils.ExportForDownload(tempFilePath);
 				bitmapExport.Dispose();
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 				return;
 			}
 		}
@@ -2752,7 +2741,7 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Could not paste contents from the clipboard.  Please try again.");
+				MessageBox.Show("Could not paste contents from the clipboard.  Please try again.");
 				ex.DoNothing();
 				return;
 			}
@@ -2841,18 +2830,15 @@ namespace OpenDental{
 
 		private void ToolBarPrint_Click(){
 			if(!IsDocumentShowing() && !IsMountShowing()){
-				MsgBox.Show(this,"Cannot print. No document currently selected.");
+				MessageBox.Show("Cannot print. No document currently selected.");
 				return;
 			}
 			if(IsDocumentShowing()){
 				if(Path.GetExtension(_documentShowing.FileName).ToLower()==".pdf") {//Selected document is PDF, we handle differently than documents that aren't pdf.
-					if(ODBuild.IsWeb()) {
-						ThinfinityUtils.HandleFile(_webBrowserFilePath);//This will do a PDF preview. _webBrowserDocument.ShowPrintPreviewDialog() doesn't work.
-					}
-					else {
+
 						//This line will not work if _webBrowser.ReadyState==Uninitialized.
 						_webBrowser.ShowPrintPreviewDialog();
-					}
+					
 					SecurityLogs.MakeLogEntry(Permissions.Printing,_patCur.PatNum,"Patient PDF "+_documentShowing.FileName+" "+_documentShowing.Description+" printed");
 					return;
 				}
@@ -2871,7 +2857,7 @@ namespace OpenDental{
 				return;
 			}
 			if(_idxSelectedInMount==-1 || _arrayDocumentsShowing[_idxSelectedInMount]==null){
-				MsgBox.Show(this,"Please select a mount item, first.");
+				MessageBox.Show("Please select a mount item, first.");
 				return;
 			}
 			//Database shows file, but missing in OpenDentImages
@@ -2880,7 +2866,7 @@ namespace OpenDental{
 					+Lan.g(this,"Return the file to the A-Z folder or click Delete to remove this mount item."));
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Remove this image from the mount and place it in the documents folder as a standalone image?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Remove this image from the mount and place it in the documents folder as a standalone image?")){
 				return;
 			}
 			Document documentOld=_arrayDocumentsShowing[_idxSelectedInMount].Copy();
@@ -2999,10 +2985,6 @@ namespace OpenDental{
 
 		///<summary>Valid values for scanType are "doc","xray",and "photo"</summary>
 		private void ToolBarScan_Click(string scanType){
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Scanning is not supported in web mode. Please scan outside of the program and import.");
-				return;
-			}
 			Cursor=Cursors.WaitCursor;
 			Bitmap bitmapScanned=null;
 			IntPtr hdib=IntPtr.Zero;
@@ -3011,7 +2993,7 @@ namespace OpenDental{
 			}
 			catch {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"EzTwain4.dll not found.  Please run the setup file in your images folder.");
+				MessageBox.Show("EzTwain4.dll not found.  Please run the setup file in your images folder.");
 				return;
 			}
 			if(IsDisposed) {
@@ -3026,7 +3008,7 @@ namespace OpenDental{
 			EZTwain.SetHideUI(!ComputerPrefs.LocalComputer.ScanDocShowOptions);
 			if(!EZTwain.OpenDefaultSource()) {//if it can't open the scanner successfully
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Default scanner could not be opened.  Check that the default scanner works from Windows Control Panel and from Windows Fax and Scan.");
+				MessageBox.Show("Default scanner could not be opened.  Check that the default scanner works from Windows Control Panel and from Windows Fax and Scan.");
 				return;
 			}
 			EZTwain.SetResolution(ComputerPrefs.LocalComputer.ScanDocResolution);
@@ -3129,17 +3111,13 @@ namespace OpenDental{
 		}
 
 		private void ToolBarScanMulti_Click() {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Scanning is not supported in web mode. Please scan outside of the program and import.");
-				return;
-			}
 			string tempFile=PrefC.GetRandomTempFile(".pdf");
 			try {
 				xImageDeviceManager.Obfuscator.ActivateEZTwain();
 			}
 			catch {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"EzTwain4.dll not found.  Please run the setup file in your images folder.");
+				MessageBox.Show("EzTwain4.dll not found.  Please run the setup file in your images folder.");
 				return;
 			}
 			if(IsDisposed) {
@@ -3154,7 +3132,7 @@ namespace OpenDental{
 			EZTwain.SetHideUI(!ComputerPrefs.LocalComputer.ScanDocShowOptions);
 			EZTwain.PDF_SetCompression((int)this.Handle,(int)ComputerPrefs.LocalComputer.ScanDocQuality);
 			if(!EZTwain.OpenDefaultSource()) {//if it can't open the scanner successfully
-				MsgBox.Show(this,"Default scanner could not be opened.  Check that the default scanner works from Windows Control Panel and from Windows Fax and Scan.");
+				MessageBox.Show("Default scanner could not be opened.  Check that the default scanner works from Windows Control Panel and from Windows Fax and Scan.");
 				Cursor=Cursors.Default;
 				return;
 			}

@@ -387,7 +387,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!Regex.IsMatch(IB.textResult.Text,@"^(<|<=|>|>=|=)\d+$")) {//Starts with <,>,=,<=, or >= followed by numbers, and nothing else.
-				MsgBox.Show(this,"Invalid format.");
+				MessageBox.Show("Invalid format.");
 				return;
 			}
 			EhrTriggerCur.DemographicsList+= " age,"+IB.textResult.Text.Trim()+" ";
@@ -410,7 +410,7 @@ namespace OpenDental {
 			}//end if gender
 			IB.ShowDialog();
 			if(IB.textResult.Text!="" && !Regex.IsMatch(IB.textResult.Text,@"^(male|female|unknown)(,(male|female|unknown)){0,2}$")) {//m,f,u optionally followed by a comma delimited list with optional white space after comma.
-				MsgBox.Show(this,"Invalid format.");
+				MessageBox.Show("Invalid format.");
 				return;
 			}
 			//remove current gender codes-------------------
@@ -449,7 +449,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!Regex.IsMatch(IB.textResult.Text,@"^^(<|<=|>|>=|=)(\d)+(.(\d)+)*$")) {//Starts with <,>,=,<=, or >= followed by a float, and nothing else.
-				MsgBox.Show(this,"Invalid format.");
+				MessageBox.Show("Invalid format.");
 				return;
 			}
 			EhrTriggerCur.VitalLoincList+= " height,"+IB.textResult.Text.Trim()+" ";
@@ -463,7 +463,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!Regex.IsMatch(IB.textResult.Text,@"^(<|<=|>|>=|=)(\d)+(.(\d)+)*$")) {//Starts with <,>,=,<=, or >= followed by a float, and nothing else.
-				MsgBox.Show(this,"Invalid format.");
+				MessageBox.Show("Invalid format.");
 				return;
 			}
 			EhrTriggerCur.VitalLoincList+= " weight,"+IB.textResult.Text.Trim()+" ";
@@ -475,7 +475,7 @@ namespace OpenDental {
 			//InputBox IB=new InputBox(Lan.g(this,"Input BP criterion."));
 			//IB.ShowDialog();
 			//if(false && !Regex.IsMatch(IB.textResult.Text,@"^(<|<=|>|>=|=)\d+$")) {//Starts with <,>,=,<=, or >= followed by numbers, and nothing else.
-			//	MsgBox.Show(this,"Invalid format.");
+			//	MessageBox.Show("Invalid format.");
 			//	return;
 			//}
 			//EhrTriggerCur.VitalLoincList+= " BP???,"+IB.textResult.Text.Trim()+" ";
@@ -489,7 +489,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!Regex.IsMatch(IB.textResult.Text,@"^(<|<=|>|>=|=)(\d)+(.(\d)+)*(%){0,1}$")) {//operand followed by valid float followed by an optional percent sign.
-				MsgBox.Show(this,"Invalid format.");
+				MessageBox.Show("Invalid format.");
 				return;
 			}
 			EhrTriggerCur.VitalLoincList+= " BMI,"+IB.textResult.Text.Trim()+" ";

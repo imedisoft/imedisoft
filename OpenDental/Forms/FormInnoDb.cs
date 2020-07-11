@@ -36,7 +36,7 @@ namespace OpenDental {
 
 		/// <summary>Will only convert to MyISAM if default storage engine set to MyISAM.</summary>
 		private void butToMyIsam_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will convert all tables in the database to the MyISAM storage engine.  This may take several minutes.\r\nContinue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will convert all tables in the database to the MyISAM storage engine.  This may take several minutes.\r\nContinue?")) {
 				return;
 			}
 			if(InnoDb.GetDefaultEngine()=="InnoDB") {
@@ -63,7 +63,7 @@ namespace OpenDental {
 
 		/// <summary>Will only convert to InnoDB if default storage engine set to InnoDB and skip-innodb is not in my.ini file, which disables InnoDB engine.</summary>
 		private void butToInnoDb_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will convert all tables in the database to the InnoDB storage engine.  This may take several minutes.\r\nContinue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will convert all tables in the database to the InnoDB storage engine.  This may take several minutes.\r\nContinue?")) {
 				return;
 			}
 			if(!InnoDb.IsInnodbAvail()) {

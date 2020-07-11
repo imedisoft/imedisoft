@@ -259,15 +259,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(_listPatRaces.Count>1 && _listPatRaces.Any(x => x.CdcrecCode==PatientRace.DECLINE_SPECIFY_RACE_CODE)) {
-				MsgBox.Show(this,"Cannot select 'DECLINED TO SPECIFY' and any other race.");
+				MessageBox.Show("Cannot select 'DECLINED TO SPECIFY' and any other race.");
 				return;
 			}
 			if(_listPatEthnicities.Count>1 && _listPatEthnicities.Any(x => x.CdcrecCode==PatientRace.DECLINE_SPECIFY_ETHNICITY_CODE)) {
-				MsgBox.Show(this,"Cannot select 'DECLINED TO SPECIFY' and any other ethnicity.");
+				MessageBox.Show("Cannot select 'DECLINED TO SPECIFY' and any other ethnicity.");
 				return;
 			}
 			if(_listPatEthnicities.Count>1 && _listPatEthnicities.Any(x => x.CdcrecCode=="2186-5")) {
-				MsgBox.Show(this,"Cannot select 'NOT HISPANIC OR LATINO' and a Hispanic or Latino ethnicity.");
+				MessageBox.Show("Cannot select 'NOT HISPANIC OR LATINO' and a Hispanic or Latino ethnicity.");
 				return;
 			}
 			//Data is not saved to the database in this form.

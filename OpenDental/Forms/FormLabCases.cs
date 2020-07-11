@@ -245,7 +245,7 @@ namespace OpenDental{
 		private void FillGrid() {
 			if(textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateFrom.errorProvider1.GetError(textDateFrom)!="") {
-				//MsgBox.Show(this,"Please fix errors first.");
+				//MessageBox.Show("Please fix errors first.");
 				return;
 			}
 			DateTime dateMax = new DateTime(2100,1,1);
@@ -339,7 +339,7 @@ namespace OpenDental{
 			if(textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateFrom.errorProvider1.GetError(textDateFrom)!="")
 			{
-				MsgBox.Show(this,"Please fix errors first.");
+				MessageBox.Show("Please fix errors first.");
 				return;
 			}
 			FillGrid();
@@ -347,17 +347,17 @@ namespace OpenDental{
 
 		private void menuItemGoTo_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a lab case first.");
+				MessageBox.Show("Please select a lab case first.");
 				return;
 			}
 			DataRow row=gridMain.SelectedTag<DataRow>();
 			if(row["AptNum"].ToString()=="0") {
-				MsgBox.Show(this,"There are no appointments for unattached lab cases.");
+				MessageBox.Show("There are no appointments for unattached lab cases.");
 				return;
 			}
 			Appointment apt=Appointments.GetOneApt(PIn.Long(row["AptNum"].ToString()));
 			if(apt.AptStatus==ApptStatus.UnschedList){
-				MsgBox.Show(this,"Cannot go to an unscheduled appointment");
+				MessageBox.Show("Cannot go to an unscheduled appointment");
 				return;
 			}
 			GoToAptNum=apt.AptNum;
@@ -395,7 +395,7 @@ namespace OpenDental{
 
 		private void butPrint_Click(object sender,EventArgs e) {
 			if(gridMain.ListGridRows.Count<1) {
-				MsgBox.Show(this,"Nothing to print.");
+				MessageBox.Show("Nothing to print.");
 				return;
 			}
 			pagesPrinted=0;

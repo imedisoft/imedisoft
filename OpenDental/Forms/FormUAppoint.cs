@@ -441,10 +441,6 @@ namespace OpenDental{
 		}
 
 		private void butStart_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Bridge is not available while viewing through the web.");
-				return;
-			}
 			if(!SaveToDb()){
 				return;
 			}
@@ -458,7 +454,7 @@ namespace OpenDental{
 			propVal=ProgramProperties.GetPropVal(ProgramCur.ProgramNum,"DateTimeLastUploaded");
 			DateTime datet=PIn.DateT(propVal);
 			if(datet.Year<1880){
-				if(!MsgBox.Show(this,true,"This is an initial synchronization.  It could take a while.  You can probably continue to work on this computer, but you will need to leave the program running on this workstation until the synch is done.  Begin initial synchronization?"))
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"This is an initial synchronization.  It could take a while.  You can probably continue to work on this computer, but you will need to leave the program running on this workstation until the synch is done.  Begin initial synchronization?"))
 				{
 					return;
 				}
@@ -469,10 +465,6 @@ namespace OpenDental{
 		}
 
 		private void butViewLog_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Bridge is not available while viewing through the web.");
-				return;
-			}
 			Process.Start(logfile);
 		}
 
@@ -485,7 +477,7 @@ namespace OpenDental{
 			if(prog==null){
 				return;
 			}
-			if(!prog.Enabled || ODBuild.IsWeb()){
+			if(!prog.Enabled){
 				return;
 			}
 			//get current time and use delta from now on?
@@ -1040,10 +1032,6 @@ namespace OpenDental{
 		}
 
 		private bool SaveToDb(){
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Bridge is not available while viewing through the web.");
-				return false;
-			}
 			if(textProgDesc.Text==""){
 				MessageBox.Show("Description may not be blank.");
 				return false;

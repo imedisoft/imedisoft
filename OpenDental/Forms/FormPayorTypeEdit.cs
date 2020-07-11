@@ -70,7 +70,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete entry?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete entry?")) {
 				return;
 			}
 			PayorTypes.Delete(PayorTypeCur.PayorTypeNum);
@@ -79,15 +79,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDate.Text=="") {
-				MsgBox.Show(this,"Please enter a date.");
+				MessageBox.Show("Please enter a date.");
 				return;
 			}
 			if(comboSopCode.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an Sop Code.");
+				MessageBox.Show("Please select an Sop Code.");
 				return;
 			}
 			//Make sure there is not already a payor type entered with the selected date.
@@ -99,7 +99,7 @@ namespace OpenDental {
 					continue;
 				}
 				if(listPayorTypes[i].DateStart==PIn.Date(textDate.Text)) {
-					MsgBox.Show(this,"There is already a payor type with the selected start date.  Either change the date of this payor type or edit the existing payor type with this date.");
+					MessageBox.Show("There is already a payor type with the selected start date.  Either change the date of this payor type or edit the existing payor type with this date.");
 					return;
 				}
 			}

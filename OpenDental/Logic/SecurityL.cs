@@ -15,7 +15,7 @@ namespace OpenDental {
 		public static bool ChangePassword(bool isForcedLogOff,bool doRefreshSecurityCache=true) {
 			//no security blocking because everyone is allowed to change their own password.
 			if(Security.CurUser.UserNumCEMT!=0) {
-				MsgBox.Show("FormOpenDental","Use the CEMT tool to change your password.");
+				MsgBox.Show("Use the CEMT tool to change your password.");
 				return false;
 			}
 			FormUserPassword FormU=new FormUserPassword(false,Security.CurUser.UserName);

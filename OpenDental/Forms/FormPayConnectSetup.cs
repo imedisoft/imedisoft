@@ -407,7 +407,7 @@ namespace OpenDental{
 		private void FormPayConnectSetup_Load(object sender,EventArgs e) {
 			_progCur=Programs.GetCur(ProgramName.PayConnect);
 			if(_progCur==null) {
-				MsgBox.Show(this,"The PayConnect entry is missing from the database.");//should never happen
+				MessageBox.Show("The PayConnect entry is missing from the database.");//should never happen
 				return;
 			}
 			checkEnabled.Checked=_progCur.Enabled;
@@ -493,7 +493,7 @@ namespace OpenDental{
 			//make the user select a payment type before switching clinics
 			if(checkEnabled.Checked && textUsername.Text!="" && textPassword.Text!="" && comboPaymentType.SelectedIndex==-1) {
 				comboClinic.SelectedIndex=_indexClinicRevert;
-				MsgBox.Show(this,"Please select a payment type first.");
+				MessageBox.Show("Please select a payment type first.");
 				return;
 			}
 			SynchWithHQ();//if the user just modified the HQ credentials, change any credentials that were the same as HQ to keep them synched
@@ -630,10 +630,6 @@ namespace OpenDental{
 		}
 
 		private void butDownloadDriver_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Terminal payments are not available while viewing through the web.");
-				return;
-			}
 			Cursor=Cursors.WaitCursor;
 			WebClient client=new WebClient();
 			//The VeriFone driver is necessary for PayConnect users to process payments on the VeriFone terminal.
@@ -659,7 +655,7 @@ namespace OpenDental{
 			}
 			Cursor=Cursors.Default;
 			if(setupFileName=="") {
-				MsgBox.Show(this,"Unable to install driver. Setup.exe file not found.");
+				MessageBox.Show("Unable to install driver. Setup.exe file not found.");
 				return;
 			}
 			//Run the setup.exe file
@@ -677,7 +673,7 @@ namespace OpenDental{
 			if(checkEnabled.Checked && !checkTerminal.Checked && !PrefC.HasClinicsEnabled && 
 				(textUsername.Text=="" || textPassword.Text=="")) 
 			{
-				MsgBox.Show(this,"Please enter a username and password first.");
+				MessageBox.Show("Please enter a username and password first.");
 				return;
 			}
 			if(checkEnabled.Checked //if PayConnect is enabled
@@ -685,13 +681,13 @@ namespace OpenDental{
 				&& (!PrefC.HasClinicsEnabled  //and either clinics are not enabled (meaning this is the only set of username, password, payment type values)
 				|| (textUsername.Text!="" && textPassword.Text!=""))) //or clinics are enabled and this clinic's link has a username and password set
 			{
-				MsgBox.Show(this,"Please select a payment type first.");
+				MessageBox.Show("Please select a payment type first.");
 				return;
 			}
 			if(checkEnabled.Checked //if PayConnect is enabled
 				&& comboDefaultProcessing.SelectedIndex < 0)
 			{
-				MsgBox.Show(this,"Please select a default processing method type first.");
+				MessageBox.Show("Please select a default processing method type first.");
 				return;
 			}
 			SynchWithHQ();//if the user changes the HQ credentials, any clinic that had the same credentials will be kept in synch with HQ
@@ -714,7 +710,7 @@ namespace OpenDental{
 					|| ProgramProperties.GetPropValFromList(_listProgProps,"TerminalProcessingEnabled",_listUserClinicNums[i])=="1")//or terminal enabled
 					&& !_listPaymentTypeDefs.Any(x => x.DefNum.ToString()==payTypeCur)) //and paytype is not a valid DefNum
 				{
-					MsgBox.Show(this,"Please select the payment type for all clinics with PayConnect username and password set.");
+					MessageBox.Show("Please select the payment type for all clinics with PayConnect username and password set.");
 					return;
 				}
 			}

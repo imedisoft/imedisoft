@@ -63,7 +63,7 @@ namespace OpenDental {
 				}
 			}
 			if(countNotInSnomedTable>0) {
-				MsgBox.Show(this,"The snomed table does not contain one or more codes from the list of recommended pregnancy codes.  The snomed table should be updated by running the Code System Importer tool found in Setup | Chart | EHR.");
+				MessageBox.Show("The snomed table does not contain one or more codes from the list of recommended pregnancy codes.  The snomed table should be updated by running the Code System Importer tool found in Setup | Chart | EHR.");
 			}
 			if(comboPregCodes.SelectedIndex==-1) {//default preg code set to code not in recommended list and not 'none'
 				switch(defaultPregCodeSystem) {
@@ -160,7 +160,7 @@ namespace OpenDental {
 				}
 			}
 			if(countNotInSnomedTable>0) {
-				MsgBox.Show(this,"The snomed table does not contain one or more codes from the list of recommended encounter codes.  The snomed table should be updated by running the Code System Importer tool found in Setup | Chart | EHR.");
+				MessageBox.Show("The snomed table does not contain one or more codes from the list of recommended encounter codes.  The snomed table should be updated by running the Code System Importer tool found in Setup | Chart | EHR.");
 			}
 			if(comboEncCodes.SelectedIndex==-1) {//default enc code set to code not in recommended list and not 'none'
 				switch(defaultEncCodeSystem) {
@@ -213,7 +213,7 @@ namespace OpenDental {
 			else {
 				Snomed sEnc=Snomeds.GetByCode(comboEncCodes.SelectedItem.ToString());
 				if(sEnc==null) {//this check may not be necessary now that we are not adding the code to the list to be selected if they do not have it in the snomed table.  Harmelss and safe.
-					MsgBox.Show(this,"The snomed table does not contain this code.  The code should be added to the snomed table by running the Code System Importer tool.");
+					MessageBox.Show("The snomed table does not contain this code.  The code should be added to the snomed table by running the Code System Importer tool.");
 				}
 				else {
 					textEncCodeDescript.Text=sEnc.Description;
@@ -236,7 +236,7 @@ namespace OpenDental {
 			else {
 				Snomed sPreg=Snomeds.GetByCode(comboPregCodes.SelectedItem.ToString());
 				if(sPreg==null) {
-					MsgBox.Show(this,"The snomed table does not contain this code.  The code should be added to the snomed table by running the Code System Importer tool.");
+					MessageBox.Show("The snomed table does not contain this code.  The code should be added to the snomed table by running the Code System Importer tool.");
 				}
 				else {
 					textPregCodeDescript.Text=sPreg.Description;

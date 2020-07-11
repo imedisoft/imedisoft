@@ -1403,11 +1403,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textMedicalCode.Text!="" && !ProcedureCodes.GetContainsKey(textMedicalCode.Text)){
-				MsgBox.Show(this,"Invalid medical code.  It must refer to an existing procedure code entered separately");
+				MessageBox.Show("Invalid medical code.  It must refer to an existing procedure code entered separately");
 				return;
 			}
 			if(textSubstitutionCode.Text!="" && !ProcedureCodes.GetContainsKey(textSubstitutionCode.Text)) {
-				MsgBox.Show(this,"Invalid substitution code.  It must refer to an existing procedure code entered separately");
+				MessageBox.Show("Invalid substitution code.  It must refer to an existing procedure code entered separately");
 				return;
 			}
 			/*bool DoSynchRecall=false;
@@ -1418,12 +1418,12 @@ namespace OpenDental{
 				DoSynchRecall=true;
 			}
 			if(DoSynchRecall){
-				if(!MsgBox.Show(this,true,"Because you have changed the recall setting for this procedure code, all your patient recalls will be resynchronized, which can take a minute or two.  Do you want to continue?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Because you have changed the recall setting for this procedure code, all your patient recalls will be resynchronized, which can take a minute or two.  Do you want to continue?")){
 					return;
 				}
 			}*/
 			if(!textBaseUnits.IsValid || (CultureInfo.CurrentCulture.Name.EndsWith("CA") && !textTimeUnits.IsValid)) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			ProcCode.AlternateCode1=textAlternateCode1.Text;

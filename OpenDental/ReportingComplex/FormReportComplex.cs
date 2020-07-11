@@ -1133,11 +1133,7 @@ namespace OpenDental.ReportingComplex {
 
 		private void OnExport_Click(){
 			string filePath;
-			if(ODBuild.IsWeb()) {
-				string fileName=_myReport.ReportName+".txt";
-				filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
-			}
-			else {
+
 				SaveFileDialog saveFileDialog2=new SaveFileDialog();
 				saveFileDialog2.AddExtension=true;
 				//saveFileDialog2.Title=Lan.g(this,"Select Folder to Save File To");
@@ -1161,7 +1157,7 @@ namespace OpenDental.ReportingComplex {
 					return;
 				}
 				filePath=saveFileDialog2.FileName;
-			}
+			
 			try {
 				using(StreamWriter sw=new StreamWriter(filePath,false)) {
 					String line="";
@@ -1236,12 +1232,9 @@ namespace OpenDental.ReportingComplex {
 				MessageBox.Show(Lan.g(this,"File in use by another program.  Close and try again."));
 				return;
 			}
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(filePath);
-			}
-			else {
+
 				MessageBox.Show(Lan.g(this,"File created successfully"));
-			}
+			
 		}
 
     private void OnWrapText_Click() {

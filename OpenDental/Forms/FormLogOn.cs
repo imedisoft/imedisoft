@@ -107,7 +107,7 @@ namespace OpenDental {
 				userName=listUser.SelectedItem?.ToString();
 			}
 			if(string.IsNullOrEmpty(userName)) {
-				MsgBox.Show(this,"Login failed");
+				MessageBox.Show("Login failed");
 				return;
 			}
 			string passwordTyped=textPassword.Text;
@@ -135,7 +135,7 @@ namespace OpenDental {
 				Security.CurUser=userCur;//Need to set for SecurityL.ChangePassword and calls.
 				if(PrefC.GetBool(PrefName.PasswordsMustBeStrong) && PrefC.GetBool(PrefName.PasswordsWeakChangeToStrong)){
 					if(Userods.IsPasswordStrong(passwordTyped)!="") {//Password is not strong
-						MsgBox.Show(this,"You must change your password to a strong password due to the current Security settings.");
+						MessageBox.Show("You must change your password to a strong password due to the current Security settings.");
 						if(!SecurityL.ChangePassword(true,_doRefreshSecurityCache)) {
 							return;//Failed password update.
 						}

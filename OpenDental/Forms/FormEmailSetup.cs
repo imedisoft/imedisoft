@@ -285,7 +285,7 @@ namespace OpenDental{
 				Prefs.UpdateLong(PrefName.EmailPort,PIn.Long(textPort.Text));
 			}
 			catch{
-				MsgBox.Show(this,"invalid port number.");
+				MessageBox.Show("invalid port number.");
 			}
 			Prefs.UpdateBool(PrefName.EmailUseSSL,checkSSL.Checked);
 			Prefs.UpdateString(PrefName.EmailSenderAddress,textSender.Text);

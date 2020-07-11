@@ -550,18 +550,12 @@ namespace OpenDental{
 			SetAdvertising();
 			if(checkEnabled.Checked && !CanEnableProgram() && !_isLoading) {
 				checkEnabled.Checked=false;
-				MsgBox.Show(this,"Web users cannot currently enable this bridge");
+				MessageBox.Show("Web users cannot currently enable this bridge");
 			}
 		}
 
 		private bool CanEnableProgram() {
-			if(!ODBuild.IsWeb()) {
-				return true;
-			}
-			if(ProgramCur.ProgName.In(Programs.GetListDisabledForWeb().Select(x => x.ToString()))) {
-				return false;//these programs are not currently allowed for web users
-			}
-			return true;//it was not one of the programs listed
+			return true;
 		}
 
 		private void FillForm(){
@@ -721,7 +715,7 @@ namespace OpenDental{
 				pictureBox.Image=importedImg;
 			}
 			catch {
-				MsgBox.Show(this,"Error loading file.");
+				MessageBox.Show("Error loading file.");
 			}
 		}
 
@@ -783,7 +777,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(ProgramCur.ProgName!=""){//prevent users from deleting program links that we included.
-				MsgBox.Show(this,"Not allowed to delete a program link with an internal name.");
+				MessageBox.Show("Not allowed to delete a program link with an internal name.");
 				return;
 			}
 			if(MessageBox.Show(Lan.g(this,"Delete this program link?"),"",MessageBoxButtons.OKCancel)
@@ -815,10 +809,6 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(checkEnabled.Checked && textPluginDllName.Text!="") {
-				if(ODBuild.IsWeb()) {
-					MessageBox.Show(Lan.g(this,"Plugins are not allowed in Cloud mode."));
-					return;
-				}
 				string dllPath=ODFileUtils.CombinePaths(Application.StartupPath,textPluginDllName.Text);
 				if(dllPath.Contains("[VersionMajMin]")) {
 					Version vers = new Version(Application.ProductVersion);
@@ -830,7 +820,7 @@ namespace OpenDental{
 				}
 			}
 			if(textPluginDllName.Text!="" && textPath.Text!="") {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"If both a path and a plug-in are specified, the path will be ignored.  Continue anyway?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"If both a path and a plug-in are specified, the path will be ignored.  Continue anyway?")) {
 					return;
 				}
 			}
@@ -842,7 +832,7 @@ namespace OpenDental{
 				&& (ProgramCur.ProgName==ProgramName.XVWeb.ToString()
 				|| textProgDesc.Text=="Suni"))//not a built-in bridge.  Instructions in manual to manually add this bridge.
 			{
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"The entire program will now need to close to reset imaging.")){
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The entire program will now need to close to reset imaging.")){
 					return;
 				}
 			}

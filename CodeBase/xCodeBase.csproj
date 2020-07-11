@@ -247,7 +247,6 @@
     <Compile Include="Utilities\EmailUtils.cs" />
     <Compile Include="Progress\IODProgress.cs" />
     <Compile Include="Utilities\LoggerOld.cs" />
-    <Compile Include="Utilities\ODBuild.cs" />
     <Compile Include="Utilities\ODClassExtensions.cs" />
     <Compile Include="Utilities\ODInitialize.cs" />
     <Compile Include="Utilities\ODInvokeExtensions.cs" />

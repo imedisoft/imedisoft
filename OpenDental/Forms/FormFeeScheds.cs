@@ -505,7 +505,7 @@ namespace OpenDental{
 		private void butUp_Click(object sender,EventArgs e) {
 			int idx=gridMain.GetSelectedIndex();
 			if(idx==-1){
-				MsgBox.Show(this,"Please select a fee schedule first.");
+				MessageBox.Show("Please select a fee schedule first.");
 				return;
 			}
 			if(idx==0){
@@ -525,7 +525,7 @@ namespace OpenDental{
 		private void butDown_Click(object sender,EventArgs e) {
 			int idx=gridMain.GetSelectedIndex();
 			if(idx==-1){
-				MsgBox.Show(this,"Please select a fee schedule first.");
+				MessageBox.Show("Please select a fee schedule first.");
 				return;
 			}
 			if(idx==_listFeeSchedsForType.Count-1){
@@ -544,7 +544,7 @@ namespace OpenDental{
 		private void butSetOrder_Click(object sender,EventArgs e) {
 			int idx=gridMain.GetSelectedIndex();
 			if(idx==-1) {
-				MsgBox.Show(this,"Please select a fee schedule first.");
+				MessageBox.Show("Please select a fee schedule first.");
 				return;
 			}
 			butSetOrder.BackColor=Color.Red;
@@ -591,7 +591,7 @@ namespace OpenDental{
 		}
 
 		private void butCleanUp_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete allowed fee schedules that are not in use or that are attached to hidden insurance plans?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete allowed fee schedules that are not in use or that are attached to hidden insurance plans?")) {
 				return;
 			}
 			long changed=FeeScheds.CleanupAllowedScheds();
@@ -607,7 +607,7 @@ namespace OpenDental{
 		}
 
 		private void butHideUnused_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Hide fee schedules that are not in use by insurance plans, patients, or providers?\r\n"
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Hide fee schedules that are not in use by insurance plans, patients, or providers?\r\n"
 				+"A backup of the database will be made first.")) 
 			{
 				return;
@@ -637,7 +637,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender,EventArgs e) {
 			//only visible in selection mode
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a row first.");
+				MessageBox.Show("Please select a row first.");
 				return;
 			}
 			SelectedFeeSchedNum=((FeeSched)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).FeeSchedNum;

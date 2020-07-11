@@ -27,7 +27,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
 				return;
 			}
 			MountItemDefs.Delete(MountItemDefCur.MountItemDefNum);
@@ -40,7 +40,7 @@ namespace OpenDental {
 				|| textWidth.errorProvider1.GetError(textWidth)!=""
 				|| textHeight.errorProvider1.GetError(textHeight)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			MountItemDefCur.Xpos=PIn.Int(textXpos.Text);

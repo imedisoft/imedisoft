@@ -25,15 +25,15 @@ namespace OpenDental {
 		private void butChange_Click(object sender,EventArgs e) {
 			string newPass=textNewPass.Text;
 			if(newPass.Length < 8) {
-				MsgBox.Show(this,"Password must be at least 8 characters long.");
+				MessageBox.Show("Password must be at least 8 characters long.");
 				return;
 			}
 			if(!newPass.Any(x => char.IsNumber(x))) {
-				MsgBox.Show(this,"Password must contain at least one number.");
+				MessageBox.Show("Password must contain at least one number.");
 				return;
 			}
 			if(newPass.All(x => char.IsLetterOrDigit(x) || char.IsWhiteSpace(x))) {
-				MsgBox.Show(this,"Password must contain at least one special character.");
+				MessageBox.Show("Password must contain at least one special character.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -52,7 +52,7 @@ namespace OpenDental {
 			}
 			SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Changed Cloud office password.");
 			Prefs.UpdateInt(PrefName.CloudPasswordNeedsReset,(int)YN.No);//No refresh needed because this is only checked on startup.
-			MsgBox.Show(this,"Password changed.");
+			MessageBox.Show("Password changed.");
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

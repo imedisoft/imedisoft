@@ -56,12 +56,12 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!checkGetForAllCarriers.Checked) {
 				if(listCarriers.SelectedIndex<0 && listNetworks.SelectedIndex<0) {
-					MsgBox.Show(this,"You must first choose one carrier or one network.");
+					MessageBox.Show("You must first choose one carrier or one network.");
 					return;
 				}
 			}
 			if(listTreatingProvider.SelectedIndex<0) {
-				MsgBox.Show(this,"You must first choose a treating provider.");
+				MessageBox.Show("You must first choose a treating provider.");
 				return;
 			}
 			DateTime reconciliationDate;
@@ -69,7 +69,7 @@ namespace OpenDental {
 				reconciliationDate=DateTime.Parse(textDateReconciliation.Text).Date;
 			}
 			catch {
-				MsgBox.Show(this,"Reconciliation date invalid.");
+				MessageBox.Show("Reconciliation date invalid.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -100,7 +100,7 @@ namespace OpenDental {
 					}
 				}
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;

@@ -57,7 +57,7 @@ namespace OpenDental {
 			List<string[]> listPats=new List<string[]>();
 			HL7Def hl7DefCur=HL7Defs.GetOneDeepEnabled(true);
 			if(hl7DefCur==null) {
-				MsgBox.Show(this,"There must be an enabled MedLab HL7 interface in order to parse the message details.");
+				MessageBox.Show("There must be an enabled MedLab HL7 interface in order to parse the message details.");
 				return null;
 			}
 			HL7DefMessage hl7defmsg=null;
@@ -69,17 +69,17 @@ namespace OpenDental {
 				}
 			}
 			if(hl7defmsg==null) {
-				MsgBox.Show(this,"There must be a message definition for an inbound ORU message in order to parse this message.");
+				MessageBox.Show("There must be a message definition for an inbound ORU message in order to parse this message.");
 				return null;
 			}
 			//for MedLab interfaces, we limit the ability to rearrange the message structure, so the PID segment is always in position 1
 			if(hl7defmsg.hl7DefSegments.Count<2) {
-				MsgBox.Show(this,"The message definition for an inbound ORU message does not have the correct number of segments.");
+				MessageBox.Show("The message definition for an inbound ORU message does not have the correct number of segments.");
 				return null;
 			}
 			HL7DefSegment pidSegDef=hl7defmsg.hl7DefSegments[1];
 			if(pidSegDef.SegmentName!=SegmentNameHL7.PID) {
-				MsgBox.Show(this,"The message definition for an inbound ORU message does not have the PID segment as the second segment.");
+				MessageBox.Show("The message definition for an inbound ORU message does not have the PID segment as the second segment.");
 				return null;
 			}
 			for(int i=0;i<ListMedLabs.Count;i++) {
@@ -191,7 +191,7 @@ namespace OpenDental {
 
 		private void butSave_Click(object sender,EventArgs e) {
 			if(PatCur==null) {
-				MsgBox.Show(this,"Please attach to patient first.");
+				MessageBox.Show("Please attach to patient first.");
 				return;
 			}
 			DialogResult=DialogResult.OK;

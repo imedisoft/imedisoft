@@ -114,7 +114,7 @@ namespace OpenDental {
 					WebServiceMainHQProxy.SetEConnectorOn();
 				}
 				catch {
-					MsgBox.Show(this,"The eConnector was disabled.  Please contact support.");
+					MessageBox.Show("The eConnector was disabled.  Please contact support.");
 					return;
 				}
 			}
@@ -126,7 +126,7 @@ namespace OpenDental {
 			}
 			//The eConnector service was successfully installed and is running, set the EConnectorEnabled flag true if false.
 			Prefs.UpdateBool(PrefName.EConnectorEnabled,true);
-			MsgBox.Show(this,"eConnector successfully installed");
+			MessageBox.Show("eConnector successfully installed");
 			butInstallEConnector.Enabled=false;
 			FillTextListenerServiceStatus();
 			FillGridListenerService();
@@ -164,7 +164,7 @@ namespace OpenDental {
 			//Check to see if the service started up on its own while we were in this window.
 			if(FillTextListenerServiceStatus()==eServiceSignalSeverity.Working) {
 				//Use a slightly different message than below so that we can easily tell which part of this method customers reached.
-				MsgBox.Show(this,"Listener Service already started.  Please call us for support if eServices are still not working.");
+				MessageBox.Show("Listener Service already started.  Please call us for support if eServices are still not working.");
 				return;
 			}
 			//Check to see if the listener service is installed on this computer.
@@ -179,7 +179,7 @@ namespace OpenDental {
 				return;
 			}
 			if(listEConnectorServices.Count==0) {
-				MsgBox.Show(this,"eConnector Service not found on this computer.  The service can only be started from the computer that is hosting eServices.");
+				MessageBox.Show("eConnector Service not found on this computer.  The service can only be started from the computer that is hosting eServices.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -191,7 +191,7 @@ namespace OpenDental {
 				MessageBox.Show(error);
 			}
 			else {
-				MsgBox.Show(this,"eConnector Services Started.");
+				MessageBox.Show("eConnector Services Started.");
 			}
 			FillTextListenerServiceStatus();
 			FillGridListenerService();
@@ -206,7 +206,7 @@ namespace OpenDental {
 			EServiceSignals.ProcessSignalsForSeverity(eServiceSignalSeverity.Error);
 			FillTextListenerServiceStatus();
 			FillGridListenerService();
-			MsgBox.Show(this,"Errors successfully acknowledged.");
+			MessageBox.Show("Errors successfully acknowledged.");
 		}
 
 		private void butListenerAlertsOff_Click(object sender,EventArgs e) {
@@ -225,7 +225,7 @@ namespace OpenDental {
 			signalDisable.SigDateTime=MiscData.GetNowDateTime();
 			EServiceSignals.Insert(signalDisable);
 			SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Listener Service monitoring manually stopped via eServices Setup window.");
-			MsgBox.Show(this,"Monitoring shutdown signal sent.  This will take up to one minute.");
+			MessageBox.Show("Monitoring shutdown signal sent.  This will take up to one minute.");
 			FillGridListenerService();
 			FillTextListenerServiceStatus();
 		}

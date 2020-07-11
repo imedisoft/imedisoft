@@ -106,7 +106,7 @@ namespace OpenDental {
 					Appointment aptOld=apt.Copy(); //this needs to happen before TryAdjustAppointmentPattern.
 					if(!PrefC.GetYN(PrefName.ApptsAllowOverlap)){
 						if(TryAdjustAppointmentPattern(apt,contrApptPanel.ListOpsVisible)) {
-							MsgBox.Show(this,"Appointment is too long and would overlap another appointment.  Automatically shortened to fit.");
+							MessageBox.Show("Appointment is too long and would overlap another appointment.  Automatically shortened to fit.");
 							try {
 								Appointments.Update(apt,aptOld);//Appointments S-Class handles Signalods
 							}
@@ -167,7 +167,7 @@ namespace OpenDental {
 				appt=Appointments.CreateApptForNewPatient(_patCur,curOp,e.DateT,dateTimeAskedToArrive,null,contrApptPanel.ListSchedules);
 				//New patient. Set to prospective if operatory is set to set prospective.
 				if(curOp.SetProspective) {
-					if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Patient's status will be set to Prospective.")) {
+					if(MsgBox.Show(MsgBoxButtons.OKCancel,"Patient's status will be set to Prospective.")) {
 						Patient patOld=_patCur.Copy();
 						_patCur.PatStatus=PatientStatus.Prospective;
 						Patients.Update(_patCur,patOld);
@@ -185,7 +185,7 @@ namespace OpenDental {
 					FormOpenDental.S_Contr_PatientSelected(_patCur,true,false);
 					if(!HasValidStartTime(appt)) {
 						Appointment apptOld=appt.Copy();
-						MsgBox.Show(this,"Appointment start time would overlap another appointment.  Moving appointment to pinboard.");
+						MessageBox.Show("Appointment start time would overlap another appointment.  Moving appointment to pinboard.");
 						DataTable dataTable=Appointments.GetPeriodApptsTable(contrApptPanel.DateStart,contrApptPanel.DateStart,appt.AptNum,false);
 						if(dataTable.Rows.Count==0){
 							return;//silently fail
@@ -240,7 +240,7 @@ namespace OpenDental {
 				Appointment aptOld=appt.Copy();
 				if(!PrefC.GetYN(PrefName.ApptsAllowOverlap)){
 					if(TryAdjustAppointmentPattern(appt,contrApptPanel.ListOpsVisible)) {
-						MsgBox.Show(this,"Appointment is too long and would overlap another appointment.  Automatically shortened to fit.");
+						MessageBox.Show("Appointment is too long and would overlap another appointment.  Automatically shortened to fit.");
 					}
 					try {
 						Appointments.Update(appt,aptOld);//Appointments S-Class handles Signalods
@@ -404,7 +404,7 @@ namespace OpenDental {
 				string promptText = "";
 				isUpdatingFees=Procedures.ShouldFeesChange(listProcsNew,listProcsOld,ref promptText,procFeeHelper);
 				if(isUpdatingFees) {//Made it pass the pref check.
-					if(promptText!="" && !MsgBox.Show(this,MsgBoxButtons.YesNo,promptText)) {//prompt is fixed text
+					if(promptText!="" && !MsgBox.Show(MsgBoxButtons.YesNo,promptText)) {//prompt is fixed text
 						isUpdatingFees=false;
 					}
 				}
@@ -431,7 +431,7 @@ namespace OpenDental {
 		}
 
 		private void contrApptPanel_ApptNullFound(object sender,EventArgs e) {
-			MsgBox.Show(this,"Selected appointment no longer exists.");
+			MessageBox.Show("Selected appointment no longer exists.");
 			RefreshPeriod();
 		}
 
@@ -682,11 +682,11 @@ namespace OpenDental {
 
 		private void toolBarPrint_Click() {
 			if(contrApptPanel.ListOpsVisible.Count==0) {//no ops visible.
-				MsgBox.Show(this,"There must be at least one operatory showing in order to Print Appointments.");
+				MessageBox.Show("There must be at least one operatory showing in order to Print Appointments.");
 				return;
 			}
 			if(PrinterSettings.InstalledPrinters.Count==0) {
-				MsgBox.Show(this,"Printer not installed.");
+				MessageBox.Show("Printer not installed.");
 				return;
 			}
 			List<long> listVisOpNums=contrApptPanel.ListOpsVisible.Select(x => x.OperatoryNum).ToList();
@@ -787,11 +787,11 @@ namespace OpenDental {
 				&& PrefC.GetLong(PrefName.BrokenAppointmentAdjustmentType)==0) 
 			{
 				//They want broken appointment adjustments but don't have it set up.
-				MsgBox.Show(this,"Broken appointment adjustment type is not setup yet.  Please go to Setup | Appointment | Appts Preferences to fix this.");
+				MessageBox.Show("Broken appointment adjustment type is not setup yet.  Please go to Setup | Appointment | Appts Preferences to fix this.");
 				return;
 			}
 			if(contrApptPanel.SelectedAptNum==-1) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			Appointment appt = Appointments.GetOneApt(contrApptPanel.SelectedAptNum);
@@ -805,7 +805,7 @@ namespace OpenDental {
 				return;
 			}
 			if(appt.AptStatus == ApptStatus.PtNote || appt.AptStatus == ApptStatus.PtNoteCompleted) {
-				MsgBox.Show(this,"Only appointments may be broken, not notes.");
+				MessageBox.Show("Only appointments may be broken, not notes.");
 				return;
 			}
 			ProcedureCode procCodeBroke=null;//Will not chart if it stays null.
@@ -823,7 +823,7 @@ namespace OpenDental {
 				procCodeBroke=formApptBreak.SelectedProcCode;
 				postBreakSelection=formApptBreak.FormApptBreakSelection;
 			}
-			else if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Break appointment?")) {
+			else if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Break appointment?")) {
 				return;
 			}
 			//This hook is specifically called after we know a valid appointment has been identified.
@@ -855,7 +855,7 @@ namespace OpenDental {
 				return;
 			}
 			if(contrApptPanel.SelectedAptNum==-1) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			Appointment appt = Appointments.GetOneApt(contrApptPanel.SelectedAptNum);
@@ -865,7 +865,7 @@ namespace OpenDental {
 			Patient pat=Patients.GetPat(appt.PatNum);
 			if(appt.AptDateTime.Date>DateTime.Today) {
 				if(!PrefC.GetBool(PrefName.ApptAllowFutureComplete)){
-					MsgBox.Show(this,"Not allowed to set future appointments complete.");
+					MessageBox.Show("Not allowed to set future appointments complete.");
 					return;
 				}
 			}
@@ -874,7 +874,7 @@ namespace OpenDental {
 				&& !PrefC.GetBool(PrefName.ApptAllowEmptyComplete)//Appointments must have at least 1 proc
 				&& listProcs.Count==0)
 			{
-				MsgBox.Show(this,"Appointments without procedures attached cannot be set complete.");
+				MessageBox.Show("Appointments without procedures attached cannot be set complete.");
 				return;
 			}
 			if(appt.AptStatus == ApptStatus.PtNoteCompleted) {
@@ -891,7 +891,7 @@ namespace OpenDental {
 				return;
 			}
 			if(listProcs.Count>0 && appt.AptDateTime.Date>DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Not allowed to set procedures complete with future dates.");
+				MessageBox.Show("Not allowed to set procedures complete with future dates.");
 				return;
 			}
 			#region Provider Term Date Check
@@ -918,7 +918,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,System.EventArgs e) {
 			if(contrApptPanel.SelectedAptNum==-1){
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			Appointment appt = Appointments.GetOneApt(contrApptPanel.SelectedAptNum);
@@ -930,7 +930,7 @@ namespace OpenDental {
 			}
 			DataRow dataRow=contrApptPanel.GetDataRowForSelected();
 			if(dataRow==null){
-				MsgBox.Show(this,"Appointment not found.");
+				MessageBox.Show("Appointment not found.");
 				return;
 			}
 			if(AppointmentL.DoPreventChangesToCompletedAppt(appt,PreventChangesApptAction.Delete)) {
@@ -942,7 +942,7 @@ namespace OpenDental {
 				showDeletePrompt=false;
 			}
 			if(appt.AptStatus == ApptStatus.PtNote | appt.AptStatus == ApptStatus.PtNoteCompleted) {
-				if(showDeletePrompt && !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete Patient Note?")) {
+				if(showDeletePrompt && !MsgBox.Show(MsgBoxButtons.OKCancel,"Delete Patient Note?")) {
 					return;
 				}
 				if(appt.Note != "") {
@@ -963,7 +963,7 @@ namespace OpenDental {
 					appt.AptNum,appt.DateTStamp);
 			}
 			else {
-				if(showDeletePrompt && !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete Appointment?")) {
+				if(showDeletePrompt && !MsgBox.Show(MsgBoxButtons.OKCancel,"Delete Appointment?")) {
 					return;
 				}
 				if(appt.Note != "") {
@@ -1035,7 +1035,7 @@ namespace OpenDental {
 		///<summary>Sends current appointment to unscheduled list.</summary>
 		private void butUnsched_Click(object sender,System.EventArgs e) {
 			if(contrApptPanel.SelectedAptNum==-1) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			Appointment appt = Appointments.GetOneApt(contrApptPanel.SelectedAptNum);
@@ -1046,12 +1046,12 @@ namespace OpenDental {
 				return;
 			}
 			if(PrefC.GetBool(PrefName.UnscheduledListNoRecalls) && Appointments.IsRecallAppointment(appt)) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?")) {
 					butDelete_Click(this,new EventArgs());//using "this" hides the normal prompt.
 				}
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Send Appointment to Unscheduled List?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Send Appointment to Unscheduled List?")) {
 				return;
 			}	
 			Patient pat=Patients.GetPat(appt.PatNum);
@@ -1073,7 +1073,7 @@ namespace OpenDental {
 			}
 			Appointment aptOld=Appointments.GetOneApt(contrApptPanel.SelectedAptNum);
 			if(aptOld==null) {
-				MsgBox.Show(this,"Patient appointment was removed.");
+				MessageBox.Show("Patient appointment was removed.");
 				contrApptPanel.SelectedAptNum=-1;
 				ModuleSelected(_patCur.PatNum);//keep same pat
 				return;
@@ -1197,7 +1197,7 @@ namespace OpenDental {
 		#region Methods - Event Handlers PinBoard
 		private void butClearPin_Click(object sender,EventArgs e) {
 			if(pinBoard.ListPinBoardItems.Count==0) {
-				MsgBox.Show(this,"There are no appointments on the pinboard to clear.");
+				MessageBox.Show("There are no appointments on the pinboard to clear.");
 				return;
 			}
 			DataRow dataRow;
@@ -1208,7 +1208,7 @@ namespace OpenDental {
 			}
 			else{//multiple items on pinboard
 				if(pinBoard.SelectedIndex==-1) {
-					MsgBox.Show(this,"Please select an appointment first.");
+					MessageBox.Show("Please select an appointment first.");
 					return;
 				}
 				dataRow=pinBoard.ListPinBoardItems[pinBoard.SelectedIndex].DataRowAppt;
@@ -1279,7 +1279,7 @@ namespace OpenDental {
 				//convert loc to new time
 				Appointment apptCur=Appointments.GetOneApt(PIn.Long(e.DataRowAppt["AptNum"].ToString()));
 				if(apptCur==null) {
-					MsgBox.Show(this,"This appointment has been deleted since it was moved to the pinboard. It will now be cleared from the pinboard.");
+					MessageBox.Show("This appointment has been deleted since it was moved to the pinboard. It will now be cleared from the pinboard.");
 					pinBoard.ClearAt(pinBoard.SelectedIndex);
 					return;
 				}
@@ -1301,13 +1301,13 @@ namespace OpenDental {
 					out DateTime dateNew,
 					out int opIdx,e.BitmapAppt.Width);
 				if(opIdx<0){
-					MsgBox.Show(this,"Invalid operatory");
+					MessageBox.Show("Invalid operatory");
 					return;
 				}
 				apptCur.AptDateTime=dateNew+timeSpanNewRounded;
 				//Compare beginning of new appointment against end to see if the appointment spans two days
 				if(apptCur.AptDateTime.Day!=apptCur.AptDateTime.AddMinutes(apptCur.Pattern.Length*5).Day) {
-					MsgBox.Show(this,"You cannot have an appointment that starts and ends on different days.");
+					MessageBox.Show("You cannot have an appointment that starts and ends on different days.");
 					return;
 				}
 				//Prevent double-booking
@@ -1335,7 +1335,7 @@ namespace OpenDental {
 					#region Update Appt's Update Appt's ProvNum, ProvHyg, IsHygiene, Pattern
 					//if no dentist/hygienist is assigned to spot, then keep the original dentist/hygienist without prompt.  All appts must have prov.
 					if((assignedDent!=0&&assignedDent!=apptCur.ProvNum)||(assignedHyg!=0&&assignedHyg!=apptCur.ProvHyg)) {
-						if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Change provider?")) {
+						if(MsgBox.Show(MsgBoxButtons.YesNo,"Change provider?")) {
 							if(assignedDent!=0) {//the dentist will only be changed if the spot has a dentist.
 								apptCur.ProvNum=assignedDent;
 							}
@@ -1371,12 +1371,12 @@ namespace OpenDental {
 							string calcPattern=Appointments.CalculatePattern(apptCur.ProvNum,apptCur.ProvHyg,codeNums,true);
 							if(apptCur.Pattern!=calcPattern && !PrefC.GetBool(PrefName.AppointmentTimeIsLocked)) {
 								if(apptCur.TimeLocked) {
-									if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Appointment length is locked.  Change length for new provider anyway?")) {
+									if(MsgBox.Show(MsgBoxButtons.YesNo,"Appointment length is locked.  Change length for new provider anyway?")) {
 										apptCur.Pattern=calcPattern;
 									}
 								}
 								else {//appt time not locked
-									if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Change length for new provider?")) {
+									if(MsgBox.Show(MsgBoxButtons.YesNo,"Change length for new provider?")) {
 										apptCur.Pattern=calcPattern;
 									}
 								}
@@ -1397,13 +1397,13 @@ namespace OpenDental {
 				//Check for any blockout collisions when overlapping appointments are allowed.
 				if(PrefC.GetYN(PrefName.ApptsAllowOverlap)) {
 					if(Appointments.CheckForBlockoutOverlap(apptCur)) {
-						MsgBox.Show(this,"Appointment overlaps existing blockout.");
+						MessageBox.Show("Appointment overlaps existing blockout.");
 						return;
 					}
 				}
 				else {//Appointments are not allowed to overlap so check for both appointment and blockout collisions.
 					if(!Appointments.TryAdjustAppointmentOp(apptCur,contrApptPanel.ListOpsVisible)) {
-						MsgBox.Show(this,"Appointment overlaps existing appointment or blockout.");
+						MessageBox.Show("Appointment overlaps existing appointment or blockout.");
 						return;
 					}
 				}
@@ -1434,7 +1434,7 @@ namespace OpenDental {
 				Operatory opOld=Operatories.GetOperatory(apptOld.Op);
 				if(opOld==null||opCur.SetProspective!=opOld.SetProspective) {
 					if(opCur.SetProspective && _patCur.PatStatus!=PatientStatus.Prospective) { //Don't need to prompt if patient is already prospective.
-						if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Patient's status will be set to Prospective.")) {
+						if(MsgBox.Show(MsgBoxButtons.OKCancel,"Patient's status will be set to Prospective.")) {
 							Patient patOld=_patCur.Copy();
 							_patCur.PatStatus=PatientStatus.Prospective;
 							Patients.Update(_patCur,patOld);
@@ -1442,7 +1442,7 @@ namespace OpenDental {
 					}
 					else if(!opCur.SetProspective && _patCur.PatStatus==PatientStatus.Prospective) {
 						//Do we need to warn about changing FROM prospective? Assume so for now.
-						if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Patient's status will change from Prospective to Patient.")) {
+						if(MsgBox.Show(MsgBoxButtons.OKCancel,"Patient's status will change from Prospective to Patient.")) {
 							Patient patOld=_patCur.Copy();
 							_patCur.PatStatus=PatientStatus.Patient;
 							Patients.Update(_patCur,patOld);
@@ -1496,7 +1496,7 @@ namespace OpenDental {
 						return;
 					}
 					if(procAlreadyAttached) {
-						MsgBox.Show(this,"One or more procedures could not be scheduled because they were already attached to another appointment. Someone probably forgot to update the Next appointment in the Chart module.");
+						MessageBox.Show("One or more procedures could not be scheduled because they were already attached to another appointment. Someone probably forgot to update the Next appointment in the Chart module.");
 						FormApptEdit formApptEdit=new FormApptEdit(apptCur.AptNum);
 						CheckStatus();
 						formApptEdit.IsNew=true;
@@ -1583,7 +1583,7 @@ namespace OpenDental {
 					string promptText="";
 					isUpdatingFees=Procedures.ShouldFeesChange(listProcsNew,procsForSingleApt,ref promptText,procFeeHelper);
 					if(isUpdatingFees) {//Made it pass the pref check.
-						if(promptText!="" && !MsgBox.Show(this,MsgBoxButtons.YesNo,promptText)) {
+						if(promptText!="" && !MsgBox.Show(MsgBoxButtons.YesNo,promptText)) {
 								isUpdatingFees=false;
 						}
 					}
@@ -1655,7 +1655,7 @@ namespace OpenDental {
 		#region Methods - Event Handlers LR Tabs
 		private void GridEmpOrProv_DoubleClick(object sender, EventArgs e){
 			if(contrApptPanel.IsWeeklyView) {
-				MsgBox.Show(this,"Not available in weekly view");
+				MessageBox.Show("Not available in weekly view");
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.Schedules)) {
@@ -1703,7 +1703,7 @@ namespace OpenDental {
 				if(PrefC.GetBool(PrefName.TasksNewTrackedByUser)) {
 					long userNumInbox=TaskLists.GetMailboxUserNum(reminderTask.TaskListNum);
 					if(userNumInbox != 0 && userNumInbox != Security.CurUser.UserNum) {
-						MsgBox.Show(this,"Not allowed to mark off tasks in someone else's inbox.");
+						MessageBox.Show("Not allowed to mark off tasks in someone else's inbox.");
 						return;
 					}
 					//might not need to go to db to get this info 
@@ -1795,7 +1795,7 @@ namespace OpenDental {
 			MenuItem parentMenuItem=(MenuItem)item.Parent;
 			Appointment appt=Appointments.GetOneApt((long)parentMenuItem.Tag);//Refresh since they could of waited to interact with menu.
 			if(appt==null) {//This can happen if another user deleted the appt just after the current user right clicked on the appt.
-				MsgBox.Show(this,"Appointment not found.");
+				MessageBox.Show("Appointment not found.");
 				return null;
 			}
 			if(AppointmentL.DoPreventChangesToCompletedAppt(appt,PreventChangesApptAction.Break)) {
@@ -1890,7 +1890,7 @@ namespace OpenDental {
 
 		private void PromptTextASAPList(Appointment appt) {
 			if(!PrefC.GetBool(PrefName.WebSchedAsapEnabled) || Appointments.RefreshASAP(0,0,appt.ClinicNum, new List<ApptStatus>()).Count==0
-				|| !MsgBox.Show(this,MsgBoxButtons.YesNo,"Text patients on the ASAP List and offer them this opening?")) 
+				|| !MsgBox.Show(MsgBoxButtons.YesNo,"Text patients on the ASAP List and offer them this opening?")) 
 			{
 				return;
 			}
@@ -2005,7 +2005,7 @@ namespace OpenDental {
 					appt=Appointments.GetOneApt(contrApptPanel.SelectedAptNum);
 					if(ApptIsNull(appt)) { return; }
 					if(!_arrivals.TryGetComeInMsg(appt,out message)) {
-						MsgBox.Show(this,$"Unable to {MenuItemNames.SendComeInText} ");
+						MessageBox.Show($"Unable to {MenuItemNames.SendComeInText} ");
 						return;
 					}
 					FormOpenDental.S_OnTxtMsg_Click(appt.PatNum,message);
@@ -2062,7 +2062,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Blockouts)) {
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Clear all blockouts for day for this clinic?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Clear all blockouts for day for this clinic?")) {
 				return;
 			}
 			Operatory operatory=Operatories.GetOperatory(_blockoutClickedOnOp);
@@ -2075,7 +2075,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Blockouts)) {
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Clear all blockouts for day? (This may include blockouts not shown in the current appointment view)")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Clear all blockouts for day? (This may include blockouts not shown in the current appointment view)")) {
 				return;
 			}
 			Schedules.ClearBlockoutsForDay(_dateTimeClickedBlockout.Date);
@@ -2087,7 +2087,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Blockouts)) {
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Clear all blockouts for day in this operatory?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Clear all blockouts for day in this operatory?")) {
 				return;
 			}
 			Schedules.ClearBlockoutsForOp(_blockoutClickedOnOp,_dateTimeClickedBlockout.Date);
@@ -2102,7 +2102,7 @@ namespace OpenDental {
 			//not even enabled if not right click on a blockout
 			Schedule SchedCur=GetClickedBlockout();
 			if(SchedCur==null) {
-				MsgBox.Show(this,"Blockout not found.");
+				MessageBox.Show("Blockout not found.");
 				return;//should never happen
 			}
 			_scheduleBlockoutClipboard=SchedCur.Copy();
@@ -2115,7 +2115,7 @@ namespace OpenDental {
 			//not even enabled if not right click on a blockout
 			Schedule SchedCur=GetClickedBlockout();
 			if(SchedCur==null) {
-				MsgBox.Show(this,"Blockout not found.");
+				MessageBox.Show("Blockout not found.");
 				return;//should never happen
 			}
 			_scheduleBlockoutClipboard=SchedCur.Copy();
@@ -2145,7 +2145,7 @@ namespace OpenDental {
 			//If the user doesn't have permission to delete, the menu option will not be enabled.
 			Schedule SchedCur=GetClickedBlockout();
 			if(SchedCur==null) {
-				MsgBox.Show(this,"Blockout not found.");
+				MessageBox.Show("Blockout not found.");
 				return;//should never happen
 			}
 			Schedules.Delete(SchedCur,true);
@@ -2164,7 +2164,7 @@ namespace OpenDental {
 			//not even enabled if not right click on a blockout
 			Schedule scheduleClicked=GetClickedBlockout();
 			if(scheduleClicked==null) {
-				MsgBox.Show(this,"Blockout not found.");
+				MessageBox.Show("Blockout not found.");
 				return;//should never happen
 			}
 			FormScheduleBlockEdit FormSB=new FormScheduleBlockEdit(scheduleClicked,Clinics.ClinicNum,listUserBlockoutDefs);
@@ -2184,17 +2184,17 @@ namespace OpenDental {
 			sched.StartTime=ContrApptPanel.RoundTimeDown(_dateTimeClickedBlockout.TimeOfDay,contrApptPanel.MinPerIncr);
 			sched.StopTime=sched.StartTime+timeSpanOriginalLength;
 			if(sched.StopTime >= TimeSpan.FromDays(1)) {//long span that spills over to next day
-				MsgBox.Show(this,"This Blockout would go past midnight.");
+				MessageBox.Show("This Blockout would go past midnight.");
 				return;
 			}
 			sched.ScheduleNum=0;//Because Schedules.Overlaps() ignores matching ScheduleNums and we used the Copy() function above. Also, we insert below, so a new key will be created anyway.
 			List<Schedule> listOverlapSchedules;
 			if(Schedules.Overlaps(sched,out listOverlapSchedules)) {
 				if(!PrefC.GetBool(PrefName.ReplaceExistingBlockout) || !Schedules.IsAppointmentBlocking(sched.BlockoutType)) {
-					MsgBox.Show(this,"Blockouts not allowed to overlap.");
+					MessageBox.Show("Blockouts not allowed to overlap.");
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Creating this blockout will cause blockouts to overlap. Continuing will delete the existing blockout(s). Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Creating this blockout will cause blockouts to overlap. Continuing will delete the existing blockout(s). Continue?")) {
 					return;
 				}
 				Schedules.DeleteMany(listOverlapSchedules.Select(x => x.ScheduleNum).ToList());
@@ -2312,7 +2312,7 @@ namespace OpenDental {
 		private void ButAdvSearch_Click(object sender, EventArgs e){
 			if(pinBoard.SelectedIndex==-1) {
 				if(pinBoard.ListPinBoardItems.Count==0){
-					MsgBox.Show(this,"There is no appointment on the pinboard.");
+					MessageBox.Show("There is no appointment on the pinboard.");
 					return;
 				}
 				pinBoard.SelectedIndex=0;
@@ -2362,7 +2362,7 @@ namespace OpenDental {
 				}
 			}
 			if(pinBoard.SelectedIndex==-1) {
-				MsgBox.Show(this,"There is no appointment on the pinboard.");
+				MessageBox.Show("There is no appointment on the pinboard.");
 				return;
 			}
 			DoSearch();
@@ -2381,7 +2381,7 @@ namespace OpenDental {
 				}
 			}
 			if(pinBoard.SelectedIndex==-1) {
-				MsgBox.Show(this,"There is no appointment on the pinboard.");
+				MessageBox.Show("There is no appointment on the pinboard.");
 				return;
 			}
 			DoSearch();
@@ -2400,7 +2400,7 @@ namespace OpenDental {
 			}
 			_listProvidersSearch=formProvidersMultiPick.SelectedProviders;
 			if(pinBoard.SelectedIndex==-1) {
-				MsgBox.Show(this,"There is no appointment on the pinboard.");
+				MessageBox.Show("There is no appointment on the pinboard.");
 				return;
 			}
 			DoSearch();
@@ -2412,7 +2412,7 @@ namespace OpenDental {
 					pinBoard.SelectedIndex=pinBoard.ListPinBoardItems.Count-1;//select last appt
 				}
 				else {
-					MsgBox.Show(this,"There are no appointments on the pinboard.");
+					MessageBox.Show("There are no appointments on the pinboard.");
 					return;
 				}
 			}
@@ -2421,7 +2421,7 @@ namespace OpenDental {
 
 		private void butSearch_Click(object sender,System.EventArgs e) {
 			if(pinBoard.ListPinBoardItems.Count==0) {
-				MsgBox.Show(this,"An appointment must be placed on the pinboard before a search can be done.");
+				MessageBox.Show("An appointment must be placed on the pinboard before a search can be done.");
 				return;
 			}
 			if(pinBoard.SelectedIndex==-1) {
@@ -2429,7 +2429,7 @@ namespace OpenDental {
 					pinBoard.SelectedIndex=0;
 				}
 				else {
-					MsgBox.Show(this,"An appointment on the pinboard must be selected before a search can be done.");
+					MessageBox.Show("An appointment on the pinboard must be selected before a search can be done.");
 					return;
 				}
 			}
@@ -2450,7 +2450,7 @@ namespace OpenDental {
 
 		private void butSearchMore_Click(object sender,System.EventArgs e) {
 			if(pinBoard.SelectedIndex==-1) {
-				MsgBox.Show(this,"There is no appointment on the pinboard.");
+				MessageBox.Show("There is no appointment on the pinboard.");
 				return;
 			}
 			if(_listScheduleOpenings==null || _listScheduleOpenings.Count<1) {
@@ -3276,7 +3276,7 @@ namespace OpenDental {
 			}
 			catch {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Invalid date.");
+				MessageBox.Show("Invalid date.");
 				return;
 			}
 			TimeSpan beforeTime=new TimeSpan(0);
@@ -3299,7 +3299,7 @@ namespace OpenDental {
 				}
 				catch {
 					Cursor=Cursors.Default;
-					MsgBox.Show(this,"Invalid time.");
+					MessageBox.Show("Invalid time.");
 					return;
 				}
 			}
@@ -3323,13 +3323,13 @@ namespace OpenDental {
 				}
 				catch {
 					Cursor=Cursors.Default;
-					MsgBox.Show(this,"Invalid time.");
+					MessageBox.Show("Invalid time.");
 					return;
 				}
 			}
 			if(_listBoxProviders.Items.Count==0) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Please pick a provider.");
+				MessageBox.Show("Please pick a provider.");
 				return;
 			}
 			long[] providers=new long[_listBoxProviders.Items.Count];
@@ -3349,7 +3349,7 @@ namespace OpenDental {
 				else {//HQ
 					ApptView viewCur=GetApptViewCur();
 					if(ApptViews.IsNoneView(viewCur)) {//none view
-						MsgBox.Show(this,"Must have a view selected to search for appointment.");//this should never get hit. Just in case.
+						MessageBox.Show("Must have a view selected to search for appointment.");//this should never get hit. Just in case.
 						return;
 					}
 					//get the disctinct clinic nums for the operatories in the current appointment view
@@ -3365,7 +3365,7 @@ namespace OpenDental {
 			//the result might be empty
 			if(pinBoard.SelectedIndex==-1){
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Please select an item on the pinboard.");//shouldn't happen
+				MessageBox.Show("Please select an item on the pinboard.");//shouldn't happen
 				return;
 			}
 			long aptNum=pinBoard.ListPinBoardItems[pinBoard.SelectedIndex].AptNum;
@@ -3423,7 +3423,7 @@ namespace OpenDental {
 		///<summary>Handles the display and refresh when the appointment we are trying to operate on is null.</summary>
 		private bool ApptIsNull(Appointment appt) {
 			if(appt==null) {
-				MsgBox.Show(this,"Selected appointment no longer exists.");
+				MessageBox.Show("Selected appointment no longer exists.");
 				RefreshPeriod();
 				return true;
 			}
@@ -3439,11 +3439,11 @@ namespace OpenDental {
 				return;
 			}		
 			if(apt.Priority==ApptPriority.ASAP) {
-				MsgBox.Show(this,"Already ASAP");
+				MessageBox.Show("Already ASAP");
 				return;
 			}
 			Appointments.SetPriority(apt,ApptPriority.ASAP);
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 			Plugins.HookAddCode(this,"ContrAppt.OnASAP_Click_end",apt,_patCur);
 		}
 
@@ -3467,10 +3467,10 @@ namespace OpenDental {
 			if(_patCur.PatStatus == PatientStatus.Inactive
 				|| _patCur.PatStatus == PatientStatus.Archived
 				|| _patCur.PatStatus == PatientStatus.Prospective) {
-				MsgBox.Show(this,"Warning. Patient is not active.");
+				MessageBox.Show("Warning. Patient is not active.");
 			}
 			if(_patCur.PatStatus == PatientStatus.Deceased) {
-				MsgBox.Show(this,"Warning. Patient is deceased.");
+				MessageBox.Show("Warning. Patient is deceased.");
 			}
 		}
 
@@ -3505,11 +3505,11 @@ namespace OpenDental {
 			//ContrApptSingle3[thisIndex].DataRoww;
 			Appointment appt=Appointments.GetOneApt(contrApptPanel.SelectedAptNum);
 			if(appt==null) {
-				MsgBox.Show(this,"Appointment not found.");
+				MessageBox.Show("Appointment not found.");
 				return;
 			}
 			if(appt.AptStatus==ApptStatus.Complete) {
-				MsgBox.Show(this,"Not allowed to move completed appointments.");
+				MessageBox.Show("Not allowed to move completed appointments.");
 				return;
 			}
 			if(PatRestrictionL.IsRestricted(appt.PatNum,PatRestrict.ApptSchedule)) {
@@ -3568,7 +3568,7 @@ namespace OpenDental {
 					dateTimeSlotEnd=dateTimeBlockoutStart;
 				}
 				if(dateTimeClicked.Between(dateTimeBlockoutStart,dateTimeBlockoutStop,isUpperBoundInclusive: false)) {
-					MsgBox.Show(this,"Unable to schedule appointments on blockouts marked 'Block appointments scheduling'.");
+					MessageBox.Show("Unable to schedule appointments on blockouts marked 'Block appointments scheduling'.");
 					return;
 				}
 			}
@@ -3852,7 +3852,7 @@ namespace OpenDental {
 						assignedDent=(long)parameters3[2];
 						goto PluginApptProvChangeQuestionEnd;
 					}
-					if(isOpUpdate || MsgBox.Show(this,MsgBoxButtons.YesNo,"Change provider?")) {//Short circuit logic.  If we're updating op through right click, never ask.
+					if(isOpUpdate || MsgBox.Show(MsgBoxButtons.YesNo,"Change provider?")) {//Short circuit logic.  If we're updating op through right click, never ask.
 						if(assignedDent!=0) {//the dentist will only be changed if the spot has a dentist.
 							appt.ProvNum=assignedDent;
 							provChanged=true;
@@ -3890,12 +3890,12 @@ namespace OpenDental {
 							string calcPattern=Appointments.CalculatePattern(appt.ProvNum,appt.ProvHyg,codeNums,true);
 							if(appt.Pattern!=calcPattern && !PrefC.GetBool(PrefName.AppointmentTimeIsLocked)) {//Updating op provs will not change apt lengths.
 								if(appt.TimeLocked) {
-									if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Appointment length is locked.  Change length for new provider anyway?")) {
+									if(MsgBox.Show(MsgBoxButtons.YesNo,"Appointment length is locked.  Change length for new provider anyway?")) {
 										appt.Pattern=calcPattern;
 									}
 								}
 								else {//appt time not locked
-									if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Change length for new provider?")) {
+									if(MsgBox.Show(MsgBoxButtons.YesNo,"Change length for new provider?")) {
 										appt.Pattern=calcPattern;
 									}
 								}
@@ -3918,13 +3918,13 @@ namespace OpenDental {
 			//Check for any blockout collisions when overlapping appointments are allowed.
 			if(PrefC.GetYN(PrefName.ApptsAllowOverlap)) {
 				if(!isOpUpdate && Appointments.CheckForBlockoutOverlap(appt)) {
-					MsgBox.Show(this,"Appointment overlaps existing blockout.");
+					MessageBox.Show("Appointment overlaps existing blockout.");
 					return;
 				}
 			}
 			else {//Appointments are not allowed to overlap so check for both appointment and blockout collisions.
 				if(!isOpUpdate && !Appointments.TryAdjustAppointmentOp(appt,listOpsForClinic)) {
-					MsgBox.Show(this,"Appointment overlaps existing appointment or blockout.");
+					MessageBox.Show("Appointment overlaps existing appointment or blockout.");
 					return;
 				}
 			}
@@ -3955,7 +3955,7 @@ namespace OpenDental {
 				Operatory opOld=Operatories.GetOperatory(apptOld.Op);
 				if(opOld==null||opCur.SetProspective!=opOld.SetProspective) {
 					if(opCur.SetProspective&&patCur.PatStatus!=PatientStatus.Prospective) { //Don't need to prompt if patient is already prospective.
-						if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Patient's status will be set to Prospective.")) {
+						if(MsgBox.Show(MsgBoxButtons.OKCancel,"Patient's status will be set to Prospective.")) {
 							Patient patOld=patCur.Copy();
 							patCur.PatStatus=PatientStatus.Prospective;
 							Patients.Update(patCur,patOld);
@@ -3963,7 +3963,7 @@ namespace OpenDental {
 					}
 					else if(!opCur.SetProspective&&patCur.PatStatus==PatientStatus.Prospective) {
 						//Do we need to warn about changing FROM prospective? Assume so for now.
-						if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Patient's status will change from Prospective to Patient.")) {
+						if(MsgBox.Show(MsgBoxButtons.OKCancel,"Patient's status will change from Prospective to Patient.")) {
 							Patient patOld=patCur.Copy();
 							patCur.PatStatus=PatientStatus.Patient;
 							Patients.Update(patCur,patOld);
@@ -4007,7 +4007,7 @@ namespace OpenDental {
 				else{
 					prompt=Lan.g(this,"Reset Confirmation Status?");
 				}
-				bool doResetConf=MsgBox.Show(this,MsgBoxButtons.YesNo,prompt);
+				bool doResetConf=MsgBox.Show(MsgBoxButtons.YesNo,prompt);
 				if(doResetConf) {
 					appt.Confirmed=Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum;//Causes the confirmation status to be reset.
 				}
@@ -4044,7 +4044,7 @@ namespace OpenDental {
 				}
 			}
 			catch(Exception e) {
-				MsgBox.Show(this,e.Message);
+				MessageBox.Show(e.Message);
 			}
 		}
 
@@ -4196,7 +4196,7 @@ namespace OpenDental {
 					}
 					Appointment aptOld=apt.Copy();
 					if(!HasValidStartTime(apt)) {
-						MsgBox.Show(this,"Appointment start time would overlap another appointment.  Moving appointment to pinboard.");
+						MessageBox.Show("Appointment start time would overlap another appointment.  Moving appointment to pinboard.");
 						DataRow dataRow=contrApptPanel.GetDataRowForSelected();
 						if(dataRow==null){
 							return;//silently fail
@@ -4214,7 +4214,7 @@ namespace OpenDental {
 					}
 					if(!PrefC.GetYN(PrefName.ApptsAllowOverlap)){
 						if(TryAdjustAppointmentPattern(apt,contrApptPanel.ListOpsVisible)) {
-							MsgBox.Show(this,"Appointment is too long and would overlap another appointment.  Automatically shortened to fit.");						
+							MessageBox.Show("Appointment is too long and would overlap another appointment.  Automatically shortened to fit.");						
 							try {
 								Appointments.Update(apt,aptOld);//Appointments S-Class handles Signalods
 							}
@@ -4240,7 +4240,7 @@ namespace OpenDental {
 		///<summary>Brings up the window to send text messagse to the patients.</summary>
 		private void SendTextMessages(List<long> listPatNums) {
 			if(listPatNums.Count==0) {
-				MsgBox.Show(this,"No appointments this day to send text messages to.");
+				MessageBox.Show("No appointments this day to send text messages to.");
 				return;
 			}
 			Clinic curClinic=Clinics.GetClinic(Clinics.ClinicNum)??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
@@ -4276,7 +4276,7 @@ namespace OpenDental {
 		///<summary>Used to send one or more appontments to the pinboard.  The other way to do it is SendToPinboardDataRow.</summary>
 		private void SendToPinBoardAptNums(List<long> aptNums) {
 			if(IsHqNoneView()) {
-				MsgBox.Show(this,"Appointments can't be sent to the pinboard when an appointment view or clinic hasn't been selected.");
+				MessageBox.Show("Appointments can't be sent to the pinboard when an appointment view or clinic hasn't been selected.");
 				return;
 			}
 			if(aptNums.Count==0) {
@@ -4305,7 +4305,7 @@ namespace OpenDental {
 					//This won't happen very frequently, and it's faster to do it again than to intelligently figure out how to do it once.
 					DataTable table=Appointments.RefreshOneApt(aptNums[i],true).Tables["Appointments"];
 					if(table.Rows.Count==0) {
-						MsgBox.Show(this,"Planned appointment no longer exists.");
+						MessageBox.Show("Planned appointment no longer exists.");
 						continue;
 					}
 					dataRow=table.Rows[0];
@@ -4336,7 +4336,7 @@ namespace OpenDental {
 		///<summary>Used when dragging an appt to the pinboard.  Another way to do it would be SendToPinBoardAptNums.</summary>
 		private void SendToPinboardDataRow(DataRow dataRow) {
 			if(IsHqNoneView()) {
-				MsgBox.Show(this,"Appointments can't be sent to the pinboard when an appointment view or clinic hasn't been selected.");
+				MessageBox.Show("Appointments can't be sent to the pinboard when an appointment view or clinic hasn't been selected.");
 				return;
 			}
 			long aptNum=PIn.Long(dataRow["AptNum"].ToString());

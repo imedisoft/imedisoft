@@ -942,7 +942,7 @@ namespace OpenDental {
 				//
 				case 0:
 					if(!checkActiveOnly.Checked && listStatus.SelectedIndices.Count==0) {
-						MsgBox.Show(this,"At least one patient status must be selected.");
+						MessageBox.Show("At least one patient status must be selected.");
 						return;
 					}
 					if(checkAllProviders.Checked == true) {
@@ -997,13 +997,13 @@ namespace OpenDental {
 					command = "SELECT carrier.CarrierName,carrier.Address,carrier.Address2,carrier.City,carrier.State,carrier.Zip FROM carrier";
 					if(radioButSingle.Checked == true) {
 						if(labInsCoStartAddr.Text=="") {
-							MsgBox.Show(this,"Please use the selection button first.");
+							MessageBox.Show("Please use the selection button first.");
 							return;
 						}
 						command += " WHERE " + DbHelper.Concat("carrier.CarrierName","carrier.Address") + " = '" + textInsCoStart.Text + labInsCoStartAddr.Text + "'";
 						RptAddrTable = Reports.GetTable(command);
 						if(RptAddrTable.Rows.Count==0) {
-							MsgBox.Show(this,"No matching carriers found.");
+							MessageBox.Show("No matching carriers found.");
 							return;
 						}
 						AddrTable = RptAddrTable.Clone();
@@ -1059,13 +1059,13 @@ namespace OpenDental {
 				//
 				case 3:
 					if(!checkBirthdayActive.Checked && listStatus.SelectedIndices.Count==0) {
-						MsgBox.Show(this,"At least one patient status must be selected.");
+						MessageBox.Show("At least one patient status must be selected.");
 						return;
 					}
 					DateTime dateBirthdayFrom = PIn.Date(textBirthdayFrom.Text);
 					DateTime dateBirthdayTo = PIn.Date(textBirthdayTo.Text);
 					if(dateBirthdayTo < dateBirthdayFrom) {
-						MsgBox.Show(this,"To date cannot be before From date.");
+						MessageBox.Show("To date cannot be before From date.");
 						return;
 					}
 					patStat = BuildPatStatList(checkBirthdayActive.Checked);

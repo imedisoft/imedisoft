@@ -646,19 +646,19 @@ namespace OpenDental{
 
 		private bool Validation() {
 			if(!checkBillTypesAll.Checked && listBillType.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one billing type must be selected.");
+				MessageBox.Show("At least one billing type must be selected.");
 				return false;
 			}
 			if(!checkProvAll.Checked && listProv.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return false;
 			}
 			if(PrefC.HasClinicsEnabled && !checkAllClin.Checked && listClin.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one clinic must be selected.");
+				MessageBox.Show("At least one clinic must be selected.");
 				return false;
 			}
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Invalid date.");
+				MessageBox.Show("Invalid date.");
 				return false;
 			}
 			return true;

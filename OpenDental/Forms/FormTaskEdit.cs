@@ -93,7 +93,7 @@ namespace OpenDental {
 		private List<Def> _listTaskPriorities;
 		private long _priorityDefNumSelected;
 		///<summary>Keeps track of the number of notes that were associated to this task on load and after refilling the task note grid.  Only used for HQ in order to keep track of task note manipulation.</summary>
-		private int _numNotes=-1;
+		//private int _numNotes=-1;
 		///<summary>FK to the definition.DefNum at HQ for the triage priority color for red.</summary>
 		private const long _triageRedNum=501;
 		///<summary>FK to the definition.DefNum at HQ for the triage priority color for blue.</summary>
@@ -1222,7 +1222,7 @@ namespace OpenDental {
 			_listTaskPriorities=Defs.GetDefsForCategory(DefCat.TaskPriorities,true);//Fill list with non-hidden priorities.
 			//There must be at least one priority in Setup | Definitions.  Do not let them load the task edit window without at least one priority.
 			if(_listTaskPriorities.Count < 1) {
-				MsgBox.Show(this,"There are no task priorities in Setup | Definitions.  There must be at least one in order to use the task system.");
+				MessageBox.Show("There are no task priorities in Setup | Definitions.  There must be at least one in order to use the task system.");
 				DialogResult=DialogResult.Cancel;
 				Close();
 			}
@@ -1403,7 +1403,7 @@ namespace OpenDental {
 			_listTaskPriorities=Defs.GetDefsForCategory(DefCat.TaskPriorities,true);//Fill list with non-hidden priorities.
 			//There must be at least one priority in Setup | Definitions.  Do not let them load the task edit window without at least one priority.
 			if(_listTaskPriorities.Count < 1) {
-				MsgBox.Show(this,"There are no task priorities in Setup | Definitions.  There must be at least one in order to use the task system.");
+				MessageBox.Show("There are no task priorities in Setup | Definitions.  There must be at least one in order to use the task system.");
 				DialogResult=DialogResult.Cancel;
 				Close();
 			}
@@ -1528,7 +1528,7 @@ namespace OpenDental {
 				return;//The user can copy text with right click, or copy button.
 			}
 			if(TaskNoteEditExists) {
-				MsgBox.Show(this,"One or more task note edit windows are open and must be closed.");
+				MessageBox.Show("One or more task note edit windows are open and must be closed.");
 				return;
 			}
 			FormTaskNoteEdit form=new FormTaskNoteEdit();
@@ -1570,7 +1570,7 @@ namespace OpenDental {
 
 		private void butAddNote_Click(object sender,EventArgs e) {
 			if(TaskNoteEditExists) {
-				MsgBox.Show(this,"One or more task note edit windows are open and must be closed.");
+				MessageBox.Show("One or more task note edit windows are open and must be closed.");
 				return;
 			}
 			AddNoteToTaskAndEdit();
@@ -1780,7 +1780,7 @@ namespace OpenDental {
 
 		private void listObjectType_MouseDown(object sender,System.Windows.Forms.MouseEventArgs e) {
 			if(_taskCur.KeyNum>0) {
-				if(!MsgBox.Show(this,true,"The linked object will no longer be attached.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"The linked object will no longer be attached.  Continue?")) {
 					FillObject();
 					return;
 				}
@@ -1793,7 +1793,7 @@ namespace OpenDental {
 		private void butAudit_Click(object sender,EventArgs e) {
 			if(Tasks.IsTaskDeleted(_taskCur.TaskNum)){
 				SetFormToDeletedMode();
-				MsgBox.Show(this,"Task has been deleted, no history can be retrieved.");
+				MessageBox.Show("Task has been deleted, no history can be retrieved.");
 				return;
 			}
 			FormTaskHist FormTH=new FormTaskHist();
@@ -1825,7 +1825,7 @@ namespace OpenDental {
 
 		private void butGoto_Click(object sender,System.EventArgs e) {
 			if(TaskNoteEditExists) {
-				MsgBox.Show(this,"One or more task note edit windows are open and must be closed.");
+				MessageBox.Show("One or more task note edit windows are open and must be closed.");
 				return;
 			}
 			if(!SaveCur()) {
@@ -1863,7 +1863,7 @@ namespace OpenDental {
 				ODClipboard.SetClipboard(CreateCopyTask());
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Could not copy contents to the clipboard.  Please try again.");
+				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
 				ex.DoNothing();
 				return;
 			}
@@ -1914,7 +1914,7 @@ namespace OpenDental {
 		///<summary>Does validation and then updates the _taskCur object with the current content of the TaskEdit window.</summary>
 		private bool SaveCur() {
 			if(textDateTask.errorProvider1.GetError(textDateTask)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			DateTime dateTimeEntry=DateTime.MinValue;
@@ -1924,7 +1924,7 @@ namespace OpenDental {
 					dateTimeEntry=DateTime.Parse(textDateTimeEntry.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Please fix Date/Time Entry.");
+					MessageBox.Show("Please fix Date/Time Entry.");
 					return false;
 				}
 			}
@@ -1933,30 +1933,30 @@ namespace OpenDental {
 					DateTime.Parse(textDateTimeFinished.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Please fix Date/Time Finished.");
+					MessageBox.Show("Please fix Date/Time Finished.");
 					return false;
 				}
 			}
 			if(_taskCur.TaskListNum==-1) {
-				MsgBox.Show(this,"Since no task list is selected, the Send To button must be used.");
+				MessageBox.Show("Since no task list is selected, the Send To button must be used.");
 				return false;
 			}
 			if(textDescript.Text=="") {
-				MsgBox.Show(this,"Please enter a description.");
+				MessageBox.Show("Please enter a description.");
 				return false;
 			}
 			if(taskReminderType!=TaskReminderType.NoReminder && !PrefC.GetBool(PrefName.TasksUseRepeating)) {//Is a reminder and not using legacy task system
 				if(taskReminderType!=TaskReminderType.Once &&
 					(textReminderRepeatFrequency.errorProvider1.GetError(textReminderRepeatFrequency)!="" || PIn.Int(textReminderRepeatFrequency.Text) < 1))
 				{
-					MsgBox.Show(this,"Reminder frequency must be a positive number.");
+					MessageBox.Show("Reminder frequency must be a positive number.");
 					return false;
 				}
 				if(taskReminderType==TaskReminderType.Weekly && ! checkReminderRepeatMonday.Checked && !checkReminderRepeatTuesday.Checked
 					&& !checkReminderRepeatWednesday.Checked && !checkReminderRepeatThursday.Checked && !checkReminderRepeatFriday.Checked
 					&& !checkReminderRepeatSaturday.Checked && !checkReminderRepeatSunday.Checked)
 				{
-					MsgBox.Show(this,"Since the weekly reminder repeat option is selected, at least one day option must be chosen.");
+					MessageBox.Show("Since the weekly reminder repeat option is selected, at least one day option must be chosen.");
 					return false;
 				}
 				if(checkReminderRepeatMonday.Checked) {
@@ -2078,7 +2078,7 @@ namespace OpenDental {
 				else {
 					if(butRefresh.Visible) {	
 						//force them to refresh before pressing ok.
-						if(MsgBox.Show(this,MsgBoxButtons.YesNo,"There have been changes to the task since it has been loaded. "+
+						if(MsgBox.Show(MsgBoxButtons.YesNo,"There have been changes to the task since it has been loaded. "+
 						" You must refresh before saving. Would you like to refresh now?")) 
 						{
 							RefreshTask();
@@ -2112,14 +2112,14 @@ namespace OpenDental {
 
 		private void RefreshTask() {
 			if(_taskCur==null) {
-				MsgBox.Show(this,"This task is in an invalid state. The task will now be closed so it can be opened again in a valid state.");
+				MessageBox.Show("This task is in an invalid state. The task will now be closed so it can be opened again in a valid state.");
 				DialogResult=DialogResult.Abort;
 				Close();
 				return;
 			}
 			_taskCur=Tasks.GetOne(_taskCur.TaskNum);
 			if(_taskCur==null) {
-				MsgBox.Show(this,"This task has been deleted and must be closed.");
+				MessageBox.Show("This task has been deleted and must be closed.");
 				DialogResult=DialogResult.Abort;
 				Close();
 				return;
@@ -2133,15 +2133,15 @@ namespace OpenDental {
 		private void butDelete_Click(object sender,EventArgs e) {
 			//NOTE: Any changes here need to be made to UserControlTasks.Delete_Clicked() as well.
 			if(TaskNoteEditExists) {
-				MsgBox.Show(this,"One or more task note edit windows are open and must be closed.");
+				MessageBox.Show("One or more task note edit windows are open and must be closed.");
 				return;
 			}
 			if(!IsNew) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 					return;
 				}
 				if(Tasks.GetOne(_taskCur.TaskNum)==null) {
-					MsgBox.Show(this,"Task already deleted.");//if task has remained open and has become stale on a workstation.
+					MessageBox.Show("Task already deleted.");//if task has remained open and has become stale on a workstation.
 					butDelete.Enabled=false;
 					butOK.Enabled=false;
 					butSend.Enabled=false;
@@ -2182,13 +2182,13 @@ namespace OpenDental {
 			//This also can't happen if the task is mine with no replies.
 			//Button not visible unless a ReplyToUserNum has been calculated successfully.
 			if(TaskNoteEditExists) {
-				MsgBox.Show(this,"One or more task note edit windows are open and must be closed.");
+				MessageBox.Show("One or more task note edit windows are open and must be closed.");
 				return;
 			}
 			long taskListNumCur=_taskCur.TaskListNum;
 			long inbox=Userods.GetInbox(_replyToUserNum);
 			if(inbox==0) {
-				MsgBox.Show(this,"No inbox has been set up for this user yet.");
+				MessageBox.Show("No inbox has been set up for this user yet.");
 				return;
 			}
 			if(!NotesChanged && textDescript.Text==_taskCur.Descript) {//nothing changed
@@ -2237,7 +2237,7 @@ namespace OpenDental {
 		private void butSend_Click(object sender,EventArgs e) {
 			//This button is always present.
 			if(TaskNoteEditExists) {
-				MsgBox.Show(this,"One or more task note edit windows are open and must be closed.");
+				MessageBox.Show("One or more task note edit windows are open and must be closed.");
 				return;
 			}
 			long taskListNumCur=_taskCur.TaskListNum;
@@ -2327,7 +2327,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(TaskNoteEditExists) {
-				MsgBox.Show(this,"One or more task note edit windows are open and must be closed.");
+				MessageBox.Show("One or more task note edit windows are open and must be closed.");
 				return;
 			}
 			if(!SaveCur()) {//If user clicked OK without changing anything, then this will have no effect.
@@ -2379,7 +2379,7 @@ namespace OpenDental {
 
 		private void butCancel_Click(object sender,System.EventArgs e) {
 			if(TaskNoteEditExists) {
-				MsgBox.Show(this,"One or more task note edit windows are open and must be closed.");
+				MessageBox.Show("One or more task note edit windows are open and must be closed.");
 				return;
 			}
 			DialogResult=DialogResult.Cancel;
@@ -2391,7 +2391,7 @@ namespace OpenDental {
 				return;
 			}
 			if(DialogResult==DialogResult.None && TaskNoteEditExists) {//This can only happen if the user closes the window using the X in the upper right.
-				MsgBox.Show(this,"One or more task note edit windows are open and must be closed.");
+				MessageBox.Show("One or more task note edit windows are open and must be closed.");
 				e.Cancel=true;
 				return;
 			}

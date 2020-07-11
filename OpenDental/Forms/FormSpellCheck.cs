@@ -50,13 +50,13 @@ namespace OpenDental {
 
 		private void butAdd_Click(object sender,EventArgs e) {
 			if(textCustom.Text=="") {
-				MsgBox.Show(this,"Please enter a custom word first.");
+				MessageBox.Show("Please enter a custom word first.");
 				return;
 			}
 			string newWord=Regex.Replace(textCustom.Text,"[\\s]|[\\p{P}\\p{S}-['-]]","");//don't allow words with spaces or punctuation except ' and - in them
 			for(int i=0;i<_listDictCustom.Count;i++) {//Make sure it's not already in the custom list
 				if(_listDictCustom[i].WordText.ToLower()==newWord.ToLower()) {
-					MsgBox.Show(this,"The word "+newWord+" is already in the custom word list.");
+					MessageBox.Show("The word "+newWord+" is already in the custom word list.");
 					textCustom.Clear();
 					return;
 				}
@@ -88,7 +88,7 @@ namespace OpenDental {
 			string newWord=Regex.Replace(editWord.textResult.Text,"[\\s]|[\\p{P}\\p{S}-['-]]","");//don't allow words with spaces or punctuation except ' and - in them
 			for(int i=0;i<_listDictCustom.Count;i++) {//Make sure it's not already in the custom list
 				if(_listDictCustom[i].WordText==newWord) {
-					MsgBox.Show(this,"The word "+newWord+" is already in the custom word list.");
+					MessageBox.Show("The word "+newWord+" is already in the custom word list.");
 					editWord.textResult.Text=origWord.WordText;
 					return;
 				}
@@ -101,7 +101,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Select a word to delete first.");
+				MessageBox.Show("Select a word to delete first.");
 				return;
 			}
 			DictCustoms.Delete(_listDictCustom[gridMain.GetSelectedIndex()].DictCustomNum);

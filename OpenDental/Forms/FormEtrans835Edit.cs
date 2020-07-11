@@ -39,7 +39,7 @@ namespace OpenDental {
 
 		private void FormEtrans835Edit_Load(object sender,EventArgs e) {
 			if(_form835!=null && !_form835.IsDisposed) {
-				if(!MsgBox.Show(this,true,"Opening another ERA will close the current ERA you already have open.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Opening another ERA will close the current ERA you already have open.  Continue?")) {
 					//Form already exists and user wants to keep current instance.
 					TranSetId835=_form835.TranSetId835;
 					EtransCur=_form835.EtransCur;
@@ -406,13 +406,13 @@ namespace OpenDental {
 					"","","","","",0,false,false,DateTime.MinValue,0,"","","","","","","");
 				DataTable ptTable=Patients.GetPtDataTable(ptTableSearchParams);//Mimics FormPatientSelect.cs
 				if(ptTable.Rows.Count==0) {
-					MsgBox.Show(this,"Patient could not be found.  Please manually attach to a claim and try again.");
+					MessageBox.Show("Patient could not be found.  Please manually attach to a claim and try again.");
 				}
 				else if(ptTable.Rows.Count==1) {
 					GotoModule.GotoAccount(PIn.Long(ptTable.Rows[0]["PatNum"].ToString()));
 				}
 				else {
-					MsgBox.Show(this,"Multiple patients with same name found.  Please manually attach to a claim and try again.");
+					MessageBox.Show("Multiple patients with same name found.  Please manually attach to a claim and try again.");
 				}
 			}
 #endregion
@@ -440,7 +440,7 @@ namespace OpenDental {
 
 		private void butDetachClaim_Click(object sender,EventArgs e) {
 			if(gridClaimDetails.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a claim from the claims paid grid and try again.");
+				MessageBox.Show("Please select a claim from the claims paid grid and try again.");
 				return;
 			}
 			List<Hx835_Claim> listSelectedEraClaims=gridClaimDetails.SelectedTags<Hx835_Claim>();//See SetClaimDetailRows(...)
@@ -481,11 +481,11 @@ namespace OpenDental {
 				.Select(x => (Hx835_Claim)gridClaimDetails.ListGridRows[x].Tag)
 				.ToList();
 			if(listDetachedPaidClaims.Any(x => x.IsAttachedToClaim && x.ClaimNum!=0)) {
-				MsgBox.Show(this,"Only manually detached rows can be selected.");
+				MessageBox.Show("Only manually detached rows can be selected.");
 				return;
 			}
 			if(listDetachedPaidClaims.Count==0) {
-				MsgBox.Show(this,"Select at least one manually detached row and try again.");
+				MessageBox.Show("Select at least one manually detached row and try again.");
 				return;
 			}
 			List<X12ClaimMatch> listMatches=_x835.GetClaimMatches(listDetachedPaidClaims);
@@ -503,12 +503,12 @@ namespace OpenDental {
 				SetClaimDetailRows(listGridRows,listGridRows.Select(x => ((Hx835_Claim)x.Tag)).ToList(),true);
 				gridClaimDetails.EndUpdate();
 			}
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 		}
 
 		private void butClaimDetails_Click(object sender,EventArgs e) {
 			if(gridClaimDetails.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Choose a claim paid before viewing details.");
+				MessageBox.Show("Choose a claim paid before viewing details.");
 				return;
 			}
 			Hx835_Claim claimPaid=(Hx835_Claim)gridClaimDetails.ListGridRows[gridClaimDetails.SelectedIndices[0]].Tag;

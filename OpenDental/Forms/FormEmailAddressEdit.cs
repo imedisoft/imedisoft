@@ -616,11 +616,11 @@ namespace OpenDental{
 				return;
 			}
 			if(_emailAddressCur.EmailAddressNum==PrefC.GetLong(PrefName.EmailDefaultAddressNum)) {
-				MsgBox.Show(this,"Cannot delete the default email address.");
+				MessageBox.Show("Cannot delete the default email address.");
 				return;
 			}
 			if(_emailAddressCur.EmailAddressNum==PrefC.GetLong(PrefName.EmailNotifyAddressNum)) {
-				MsgBox.Show(this,"Cannot delete the notify email address.");
+				MessageBox.Show("Cannot delete the notify email address.");
 				return;
 			}
 			Clinic clinic=Clinics.GetFirstOrDefault(x => x.EmailAddressNum==_emailAddressCur.EmailAddressNum);
@@ -628,7 +628,7 @@ namespace OpenDental{
 				MessageBox.Show(Lan.g(this,"Cannot delete the email address because it is used by clinic")+" "+clinic.Description);
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this email address?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this email address?")) {
 				return;
 			}
 			EmailAddresses.Delete(_emailAddressCur.EmailAddressNum);
@@ -650,7 +650,7 @@ namespace OpenDental{
 				}
 				EmailAddress emailUserExisting=EmailAddresses.GetForUser(user.UserNum);
 				if(emailUserExisting!=null) {
-					MsgBox.Show(this,"User email already exists for "+user.UserName);
+					MessageBox.Show("User email already exists for "+user.UserName);
 					return;
 				}
 				textUserod.Tag=user;
@@ -715,27 +715,27 @@ namespace OpenDental{
 				PIn.Int(textPort.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Invalid outgoing port number.");
+				MessageBox.Show("Invalid outgoing port number.");
 				return;
 			}
 			try {
 				PIn.Int(textPortIncoming.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Invalid incoming port number.");
+				MessageBox.Show("Invalid incoming port number.");
 				return;
 			}
 			if(string.IsNullOrWhiteSpace(textUsername.Text)) {
-				MsgBox.Show(this,"Please enter a valid email address.");
+				MessageBox.Show("Please enter a valid email address.");
 				return;
 			}
 			//Only checks against non-user email addresses.
 			if(EmailAddresses.AddressExists(textUsername.Text,_emailAddressCur.EmailAddressNum)) {
-				MsgBox.Show(this,"This email address already exists.");
+				MessageBox.Show("This email address already exists.");
 				return;
 			}
 			if(!textPassword.Text.IsNullOrEmpty() && !textAccessToken.Text.IsNullOrEmpty()) {
-				MsgBox.Show(this,"There is an email password and access token entered.  Please clear one and try again.");
+				MessageBox.Show("There is an email password and access token entered.  Please clear one and try again.");
 				return;
 			}
 			_emailAddressCur.AccessToken=textAccessToken.Text;

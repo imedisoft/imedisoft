@@ -50,7 +50,7 @@ namespace OpenDental {
 			string differentFields="";
 			if(textProvNumFrom.Text==textProvNumInto.Text) { 
 				//do not attempt a merge if the same provider was selected twice, or if one of the fields is blank.
-				MsgBox.Show(this,"You must select two different providers to merge.");
+				MessageBox.Show("You must select two different providers to merge.");
 				return;
 			}
 			if(textNpiFrom.Text!=textNpiInto.Text) {
@@ -61,7 +61,7 @@ namespace OpenDental {
 			}
 			long numPats=Providers.CountPats(PIn.Long(textProvNumFrom.Text));
 			long numClaims=Providers.CountClaims(PIn.Long(textProvNumFrom.Text));
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure?  The results are permanent and cannot be undone.")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure?  The results are permanent and cannot be undone.")) {
 				return;
 			}
 			string msgText="";
@@ -83,7 +83,7 @@ namespace OpenDental {
 			textNpiFrom.Clear();
 			textFullNameFrom.Clear();
 			CheckUIState();
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 			DataValid.SetInvalid(InvalidType.Providers);
 			_listActiveProvs=Providers.GetWhere(x => x.ProvStatus != ProviderStatus.Deleted,true);
 		}

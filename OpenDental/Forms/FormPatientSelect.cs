@@ -902,11 +902,6 @@ namespace OpenDental{
 			//Set the Textbox Enter Event Handler to keep track of which TextBox had focus last.  
 			//This helps dictate the desired text box for input after opening up the On Screen Keyboard.
 			SetAllTextBoxEnterEventListeners();
-			if (ODBuild.IsWeb())
-			{
-				//Keyboard does not currently work with WEB users. 
-				butOnScreenKeyboard.Visible = false;
-			}
 		}
 
 		///<summary>This used to be called all the time, now only needs to be called on load.</summary>
@@ -1373,13 +1368,6 @@ namespace OpenDental{
 
 		///<summary>Remember, this button is not even visible if SelectionModeOnly.</summary>
 		private void butAddPt_Click(object sender, System.EventArgs e){
-			if(ODBuild.IsTrial()) { 
-				MsgBox.Show(this,"Trial version.  Maximum 30 patients");
-				if(Patients.GetNumberPatients()>30){
-					MsgBox.Show(this,"Maximum reached");
-					return;
-				}
-			}
 			if(textLName.Text=="" && textFName.Text=="" && textChartNumber.Text==""){
 				MessageBox.Show(Lan.g(this,"Not allowed to add a new patient until you have done a search to see if that patient already exists. "
 					+"Hint: just type a few letters into the Last Name box above.")); 
@@ -1420,13 +1408,6 @@ namespace OpenDental{
 		}
 
 		private void butAddAll_Click(object sender,EventArgs e) {
-			if(ODBuild.IsTrial()) { 
-				MsgBox.Show(this,"Trial version.  Maximum 30 patients");
-				if(Patients.GetNumberPatients()>30){
-					MsgBox.Show(this,"Maximum reached");
-					return;
-				}
-			}
 			if(textLName.Text=="" && textFName.Text=="" && textChartNumber.Text==""){
 				MessageBox.Show(Lan.g(this,"Not allowed to add a new patient until you have done a search to see if that patient already exists. Hint: just type a few letters into the Last Name box above.")); 
 				return;
@@ -1472,7 +1453,7 @@ namespace OpenDental{
 					DialogResult=DialogResult.OK;
 				}
 				else {//Otherwise, present the error message explainign why they cannot select the patient.
-					MsgBox.Show(this,"This patient is assigned to a clinic that you are not authorized for. Contact an Administrator to grant you access or to " +
+					MessageBox.Show("This patient is assigned to a clinic that you are not authorized for. Contact an Administrator to grant you access or to " +
 						"create an appointment in your clinic to avoid patient duplication.");
 				}
 			}
@@ -1570,7 +1551,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e){
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a patient first.");
+				MessageBox.Show("Please select a patient first.");
 				return;
 			}
 			PatSelected();

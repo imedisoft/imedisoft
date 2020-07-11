@@ -798,7 +798,7 @@ namespace OpenDental{
 			//Prevents prescriptions from being added that have a provider selected that is past their term date
 			List<long> listInvalidProvNums=Providers.GetInvalidProvsByTermDate(new List<long> { selectedProvNum },DateTime.Now);
 			if(listInvalidProvNums.Count > 0) {
-				MsgBox.Show(this,"The provider selected has a Term Date prior to today. Please select another provider.");
+				MessageBox.Show("The provider selected has a Term Date prior to today. Please select another provider.");
 				return false;
 			}
 			RxPatCur.ProvNum=selectedProvNum;
@@ -885,7 +885,7 @@ namespace OpenDental{
 		///<summary>Prints the prescription.  Returns true if printing was successful.  Otherwise; displays an error message and returns false.</summary>
 		private bool PrintRx(bool isInstructions) {
 			if(PrinterSettings.InstalledPrinters.Count==0) {
-				MsgBox.Show(this,"Error: No Printers Installed\r\n"+
+				MessageBox.Show("Error: No Printers Installed\r\n"+
 									"If you do have a printer installed, restarting the workstation may solve the problem."
 				);
 				return false;

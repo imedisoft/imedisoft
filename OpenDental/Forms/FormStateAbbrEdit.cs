@@ -32,7 +32,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete State Abbr?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete State Abbr?")) {
 				return;
 			}
 			StateAbbrs.Delete(_stateAbbrCur.StateAbbrNum);
@@ -41,15 +41,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDescription.Text=="") {
-				MsgBox.Show(this,"Description cannot be blank.");
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			if(textAbbr.Text=="") {
-				MsgBox.Show(this,"Abbrevation cannot be blank.");
+				MessageBox.Show("Abbrevation cannot be blank.");
 				return;
 			}
 			if(textMedIDLength.errorProvider1.GetError(textMedIDLength)!="") {
-				MsgBox.Show(this,"Medicaid ID length is invalid.");
+				MessageBox.Show("Medicaid ID length is invalid.");
 				return;
 			}
 			_stateAbbrCur.Description=textDescription.Text;

@@ -78,7 +78,7 @@ namespace OpenDental {
 			}
 			//Update settings as necessary
 			UpdateBencoSettings();
-			MsgBox.Show(this,"You will need to restart Open Dental for these changes to take effect.");
+			MessageBox.Show("You will need to restart Open Dental for these changes to take effect.");
 			DialogResult=DialogResult.OK;
 		}
 

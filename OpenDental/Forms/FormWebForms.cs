@@ -60,7 +60,7 @@ namespace OpenDental {
 				}
 			}
 			catch{
-				MsgBox.Show(this,"Invalid date");
+				MessageBox.Show("Invalid date");
 				return;
 			}
 			gridMain.ListGridColumns.Clear();
@@ -179,7 +179,7 @@ namespace OpenDental {
 			if(textDateStart.errorProvider1.GetError(textDateStart)!=""
 				|| textDateEnd.errorProvider1.GetError(textDateEnd)!=""
 				) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;

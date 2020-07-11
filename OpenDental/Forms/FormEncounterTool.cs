@@ -30,7 +30,7 @@ namespace OpenDental {
 				comboEncCodes.Items.Add(_listRecEncCodes[i]);
 			}
 			if(countNotInSnomedTable>0) {
-				MsgBox.Show(this,"The snomed table does not contain one or more codes from the list of recommended encounter codes.  The snomed table should "
+				MessageBox.Show("The snomed table does not contain one or more codes from the list of recommended encounter codes.  The snomed table should "
 					+"be updated by running the Code System Importer tool found in Setup | Chart | EHR.");
 			}
 			comboEncCodes.SelectedIndex=EncListSelectedIdx;
@@ -129,12 +129,12 @@ namespace OpenDental {
 				|| textDateStart.Text==""
 				|| textDateEnd.Text==""
 				) {
-				MsgBox.Show(this,"Please enter a valid date range.");
+				MessageBox.Show("Please enter a valid date range.");
 				return;
 			}
 			if(comboEncCodes.SelectedIndex==-1
 				&& textEncCodeValue.Text=="") {
-				MsgBox.Show(this,"Please select a code.");
+				MessageBox.Show("Please select a code.");
 				return;
 			}
 			string codeValue;
@@ -147,7 +147,7 @@ namespace OpenDental {
 			long encInserted=Encounters.InsertEncsFromProcDates(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),codeValue,EncCodeSystem);
 			MessageBox.Show(Lan.g("FormEncounterTool","Number of encounters inserted:")+" "+encInserted.ToString());
 			if(PrefC.GetString(PrefName.CQMDefaultEncounterCodeValue)=="none") {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Do you want to set this code as the default encounter code?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Do you want to set this code as the default encounter code?")) {
 					Prefs.UpdateString(PrefName.CQMDefaultEncounterCodeValue,codeValue);
 					Prefs.UpdateString(PrefName.CQMDefaultEncounterCodeSystem,EncCodeSystem);
 				}

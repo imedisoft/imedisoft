@@ -19,12 +19,12 @@ namespace OpenDental.Bridges{
 		public static void SendData(Program ProgramCur,Patient pat) {
 			string path=Programs.GetProgramPath(ProgramCur);
 			if(pat==null) {
-				MsgBox.Show("Carestream","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			string infoFile=ProgramProperties.GetPropVal(ProgramCur.ProgramNum,"Patient.ini path");
 			if(infoFile.Length>150) {
-				MsgBox.Show("Carestream","Patient.ini file folder path too long.  Must be 150 characters or less.");
+				MsgBox.Show("Patient.ini file folder path too long.  Must be 150 characters or less.");
 				return;
 			}
 			string id="";

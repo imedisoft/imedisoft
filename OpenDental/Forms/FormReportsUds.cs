@@ -111,7 +111,7 @@ namespace OpenDental {
 			DateFrom=PIn.Date(textFrom.Text);
 			DateTo=PIn.Date(textTo.Text);
 			if(DateFrom==DateTime.MinValue || DateTo==DateTime.MinValue) {
-				MsgBox.Show(this,"Please enter valid To and From dates.");
+				MessageBox.Show("Please enter valid To and From dates.");
 				return false;
 			}
 			return true;

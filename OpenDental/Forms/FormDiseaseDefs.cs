@@ -551,7 +551,7 @@ namespace OpenDental{
 			#region Selection Mode. Close the Form
 			if(IsSelectionMode) {//selection mode.
 				if(!IsMultiSelect && Snomeds.GetByCode(selectedDiseaseDef.SnomedCode)==null) {
-					MsgBox.Show(this,"You have selected a problem with an unofficial SNOMED CT code.  Please correct the problem definition by going to "
+					MessageBox.Show("You have selected a problem with an unofficial SNOMED CT code.  Please correct the problem definition by going to "
 						+"Lists | Problems and choosing an official code from the SNOMED CT list.");
 					return;
 				}
@@ -626,7 +626,7 @@ namespace OpenDental{
 		///<summary>Only visible when !IsSelectionMode, and disabled if any filtering has been done via the search boxes. 
 		///Resets ALL the DiseaseDefs' ItemOrders to be in alphabetical order. Not reversible once done.</summary>
 		private void butAlphabetize_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Problems will be ordered alphabetically by description.  This cannot be undone.  Continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Problems will be ordered alphabetically by description.  This cannot be undone.  Continue?")) {
 				return;
 			}
 			_listDiseaseDefs.Sort(DiseaseDefs.SortAlphabetically);
@@ -640,7 +640,7 @@ namespace OpenDental{
 		///<summary>Only visible when !IsSelectionMode, and disabled if any filtering has been done via the search boxes. </summary>
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			List<int> listSelectedIndexes=gridMain.SelectedIndices.ToList();
@@ -659,7 +659,7 @@ namespace OpenDental{
 		///<summary>Only visible when !IsSelectionMode, and disabled if any filtering has been done via the search boxes. </summary>
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			List<int> listSelectedIndexes=gridMain.SelectedIndices.ToList();
@@ -683,12 +683,12 @@ namespace OpenDental{
 		private void butOK_Click(object sender,EventArgs e) {
 			//not even visible unless IsSelectionMode
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(IsSelectionMode && !IsMultiSelect) {
 				if(Snomeds.GetByCode(_listDiseaseDefs[gridMain.GetSelectedIndex()].SnomedCode)==null) {
-					MsgBox.Show(this,"You have selected a problem containing an invalid SNOMED CT.");
+					MessageBox.Show("You have selected a problem containing an invalid SNOMED CT.");
 					return;
 				}
 			}

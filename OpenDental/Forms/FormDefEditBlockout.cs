@@ -219,7 +219,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textName.Text==""){
-				MsgBox.Show(this,"Name required.");
+				MessageBox.Show("Name required.");
 				return;
 			}
 			DefCur.ItemName=textName.Text;

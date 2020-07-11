@@ -93,10 +93,10 @@ namespace OpenDental {
 			if(wpage==null) {
 				string errorMsg="";
 				if(!WikiPages.IsWikiPageTitleValid(pageTitle,out errorMsg)) {
-					MsgBox.Show(this,"That page does not exist and cannot be made because the page title contains invalid characters.");
+					MessageBox.Show("That page does not exist and cannot be made because the page title contains invalid characters.");
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"That page does not exist. Would you like to create it?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"That page does not exist. Would you like to create it?")) {
 					return;
 				}
 				Action<string> onWikiSaved=new Action<string>((pageTitleNew) => {
@@ -239,13 +239,13 @@ namespace OpenDental {
 			if(Security.IsAuthorized(Permissions.WikiAdmin,true) || !WikiPageCur.IsLocked) {
 				return false;
 			}
-			MsgBox.Show(this,"This wiki page is locked and cannot be edited without the Wiki Admin security permission.");
+			MessageBox.Show("This wiki page is locked and cannot be edited without the Wiki Admin security permission.");
 			return true;
 		}
 
 		private void menuItemHomePageSave_Click(object sender,EventArgs e) {
 			if(WikiPageCur==null) {
-				MsgBox.Show(this,"Invalid wiki page selected.");
+				MessageBox.Show("Invalid wiki page selected.");
 				return;
 			}
 			List<UserOdPref> listUserOdPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.WikiHomePage);
@@ -262,7 +262,7 @@ namespace OpenDental {
 				userOdPref.FkeyType=UserOdFkeyType.WikiHomePage;
 				UserOdPrefs.Insert(userOdPref);
 			}
-			MsgBox.Show(this,"Home page saved.");
+			MessageBox.Show("Home page saved.");
 		}
 
 		private void Back_Click() {
@@ -271,7 +271,7 @@ namespace OpenDental {
 			}
 			NavToHistory();
 			//if(historyNav.Count<2) {//should always be 1 or greater
-			//  MsgBox.Show(this,"No more history");
+			//  MessageBox.Show("No more history");
 			//  return;
 			//}
 			//string pageName=historyNav[historyNav.Count-2];//-1 is the last/current page.
@@ -306,7 +306,7 @@ namespace OpenDental {
 		private void NavToHistory() {
 			if(historyNavBack<0 || historyNavBack>historyNav.Count-1) {
 				//This should never happen.
-				MsgBox.Show(this,"Invalid history index.");
+				MessageBox.Show("Invalid history index.");
 				return;
 			}
 			string pageName=historyNav[historyNav.Count-(1+historyNavBack)];//-1 is the last/current page.
@@ -353,7 +353,7 @@ namespace OpenDental {
 			if(WikiPageCur==null) {
 				return;
 			}
-			if(WikiPages.GetDraftsByTitle(WikiPageCur.PageTitle).Count > 0 && MsgBox.Show(this,MsgBoxButtons.YesNo,
+			if(WikiPages.GetDraftsByTitle(WikiPageCur.PageTitle).Count > 0 && MsgBox.Show(MsgBoxButtons.YesNo,
 				"This page has one or more drafts associated with it.  Would you like to open a draft instead of the current Wiki page?"))
 			{
 				FormWikiDrafts FormWD=new FormWikiDrafts();
@@ -395,10 +395,10 @@ namespace OpenDental {
 				return;
 			}
 			if(WikiPageCur.PageTitle=="Home") {
-				MsgBox.Show(this,"Cannot archive homepage."); 
+				MessageBox.Show("Cannot archive homepage."); 
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Archive this wiki page?  It will still be available from the Search window if needed.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Archive this wiki page?  It will still be available from the Search window if needed.")) {
 				return;
 			}
 			WikiPages.Archive(WikiPageCur.PageTitle,Security.CurUser.UserNum);
@@ -427,7 +427,7 @@ namespace OpenDental {
 				return;
 			}
 			if(WikiPages.GetDraftsByTitle(WikiPageCur.PageTitle).Count==0) {
-				MsgBox.Show(this,"There are no drafts for this Wiki Page.");
+				MessageBox.Show("There are no drafts for this Wiki Page.");
 				return;
 			}
 			FormWikiDrafts FormWD=new FormWikiDrafts();
@@ -553,7 +553,7 @@ namespace OpenDental {
 				e.Cancel=true;
 				return;
 			}
-			else if(e.Url.ToString().Contains("wikifile:") && !ODBuild.IsWeb()) {
+			else if(e.Url.ToString().Contains("wikifile:")) {
 				string fileName=e.Url.ToString().Substring(e.Url.ToString().LastIndexOf("wikifile:")+9).Replace("/","\\");
 				if(!File.Exists(fileName)) {
 					MessageBox.Show(Lan.g(this,"File does not exist: ")+fileName);
@@ -569,7 +569,7 @@ namespace OpenDental {
 				e.Cancel=true;
 				return;
 			}
-			else if(e.Url.ToString().Contains("folder:") && !ODBuild.IsWeb()) {
+			else if(e.Url.ToString().Contains("folder:")) {
 				string folderName=e.Url.ToString().Substring(e.Url.ToString().LastIndexOf("folder:")+7).Replace("/","\\");
 				if(!Directory.Exists(folderName)) {
 					MessageBox.Show(Lan.g(this,"Folder does not exist: ")+folderName);

@@ -30,21 +30,12 @@ namespace OpenDental
 		private void FormChooseDatabase_Load(object sender, EventArgs e)
 		{
 			FillForm();
-			if (ODBuild.IsWeb())
-			{
-				//Don't let the user choose another office's database (this window should never show anyway because NoShowOnStartup should be true)
-				DisableAllExcept(butOK, butCancel);
-			}
 		}
 
 		private void FillForm()
 		{
 			if (Model.IsAccessedFromMainMenu)
 			{
-				if (ODBuild.IsWeb())
-				{
-					textUser.UseSystemPasswordChar = true;
-				}
 				comboComputerName.Enabled = false;
 				comboComputerName.Text = DataConnection.GetServerName();
 				comboDatabase.Enabled = false;

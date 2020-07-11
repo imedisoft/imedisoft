@@ -155,7 +155,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an image first.");
+				MessageBox.Show("Please select an image first.");
 				return;
 			}
 			SelectedDocNum=_listDocuments[gridMain.GetSelectedIndex()].DocNum;

@@ -212,13 +212,13 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textRuleDesc.Text==""){
-				MsgBox.Show(this,"Description not allowed to be blank.");
+				MessageBox.Show("Description not allowed to be blank.");
 				return;
 			}
 			if(!ProcedureCodes.IsValidCode(textCodeStart.Text)
 				|| !ProcedureCodes.IsValidCode(textCodeEnd.Text))
 			{
-				MsgBox.Show(this,"Start and end codes must be valid procedure codes.");
+				MessageBox.Show("Start and end codes must be valid procedure codes.");
 				return;
 			}
 			ApptRuleCur.RuleDesc=textRuleDesc.Text;

@@ -392,7 +392,7 @@ namespace OpenDental{
 		private void butCopy2_Click(object sender, EventArgs e) {
 			//This button is not enabled unless user has appropriate permission for setup.
 			if(grid2.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a sheet from the list above first.");
+				MessageBox.Show("Please select a sheet from the list above first.");
 				return;
 			}
 			SheetDef sheetdef=grid2.SelectedTag<SheetDef>();
@@ -405,7 +405,7 @@ namespace OpenDental{
 
 		private void butCopy_Click(object sender,EventArgs e) {
 			if(grid1.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an internal sheet from the list above first.");
+				MessageBox.Show("Please select an internal sheet from the list above first.");
 				return;
 			}
 			SheetDef sheetdef=grid1.SelectedTag<SheetDef>();
@@ -414,7 +414,7 @@ namespace OpenDental{
 			if(sheetdef.SheetType==SheetTypeEnum.MedicalHistory
 				&& (sheetdef.Description=="Medical History New Patient" || sheetdef.Description=="Medical History Update")) 
 			{
-				MsgBox.Show(this,"This is just a template, it may contain allergies and problems that do not exist in your setup.");
+				MessageBox.Show("This is just a template, it may contain allergies and problems that do not exist in your setup.");
 			}
 			grid1.SetSelected(false);
 			FillGrid2(sheetdef.SheetDefNum);

@@ -272,7 +272,7 @@ namespace OpenDental {
 				Schedules.BlockoutLogHelper(BlockoutAction.Clear,dateTime:DateSelected,clinicNum:Clinics.ClinicNum);
 			}
 			else {
-				if(!MsgBox.Show(this,true,"Clear all blockouts for day? (This may include blockouts not shown in the current appointment view)")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Clear all blockouts for day? (This may include blockouts not shown in the current appointment view)")) {
 					return;
 				}
 				Schedules.ClearBlockoutsForDay(DateSelected);//works for daily or weekly
@@ -325,7 +325,7 @@ namespace OpenDental {
 				int.Parse(textRepeat.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Please fix number box first.");
+				MessageBox.Show("Please fix number box first.");
 				return;
 			}
 			CopyOverBlockouts(PIn.Int(textRepeat.Text));
@@ -333,11 +333,11 @@ namespace OpenDental {
 
 		private void CopyOverBlockouts(int numRepeat) {
 			if(DateCopyStart.Year < 1880) {
-				MsgBox.Show(this,"Please copy a selection to the clipboard first.");
+				MessageBox.Show("Please copy a selection to the clipboard first.");
 				return;
 			}
 			if(_isWeekend && !checkWeekend.Checked) {//user is trying to 'paste' onto a weekend date
-				MsgBox.Show(this,"You must check 'Include Weekends' if you would like to paste into weekends.");
+				MessageBox.Show("You must check 'Include Weekends' if you would like to paste into weekends.");
 				return;
 			}
 			//calculate which day or week is currently selected.
@@ -361,7 +361,7 @@ namespace OpenDental {
 			}
 			//When pasting, it's not allowed to paste back over the same day or week.
 			if(dateSelectedStart==DateCopyStart && numRepeat==1) {
-				MsgBox.Show(this,"Not allowed to paste back onto the same date as is on the clipboard.");
+				MessageBox.Show("Not allowed to paste back onto the same date as is on the clipboard.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;

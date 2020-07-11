@@ -1666,11 +1666,11 @@ namespace OpenDental{
 			}
 			string localFileName=dlg.FileName;
 			if(!File.Exists(localFileName)) {
-				MsgBox.Show(this,"File does not exist.");
+				MessageBox.Show("File does not exist.");
 				return;
 			}
 			if(!ImageHelper.HasImageExtension(localFileName)) {
-				MsgBox.Show(this,"Only allowed to import an image.");
+				MessageBox.Show("Only allowed to import an image.");
 				return;
 			}
 			string atoZFileName=FileAtoZ.CombinePaths(ImageStore.GetProviderImagesFolder(),Path.GetFileName(localFileName));
@@ -1679,7 +1679,7 @@ namespace OpenDental{
 				string newAtoZFileName=FileAtoZ.AppendSuffix(atoZFileName,"_"+attempts);
 				while(FileAtoZ.Exists(newAtoZFileName)) {
 					if(attempts++ > 1000) {
-						MsgBox.Show(this,"Unable to upload image.");
+						MessageBox.Show("Unable to upload image.");
 						return;
 					}
 					newAtoZFileName=FileAtoZ.AppendSuffix(atoZFileName,"_"+attempts);
@@ -1744,7 +1744,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(!dateTerm.IsValid) {
-				MsgBox.Show(this,"Term Date invalid.");
+				MessageBox.Show("Term Date invalid.");
 				return;
 			}
 			if(textAbbr.Text=="") {
@@ -1752,25 +1752,25 @@ namespace OpenDental{
 				return;
 			}
 			if(textSSN.Text.Contains("-")) {
-				MsgBox.Show(this,"SSN/TIN not allowed to have dash.");
+				MessageBox.Show("SSN/TIN not allowed to have dash.");
 				return;
 			}
 			if(checkIsHidden.Checked) {
 				if(PrefC.GetLong(PrefName.PracticeDefaultProv)==ProvCur.ProvNum) {
-					MsgBox.Show(this,"Not allowed to hide practice default provider.");
+					MessageBox.Show("Not allowed to hide practice default provider.");
 					return;
 				}
 				if(Clinics.IsDefaultClinicProvider(ProvCur.ProvNum)) {
-					MsgBox.Show(this,"Not allowed to hide a clinic default provider.");
+					MessageBox.Show("Not allowed to hide a clinic default provider.");
 					return;
 				}
 				if(PrefC.GetLong(PrefName.InsBillingProv)==ProvCur.ProvNum) {
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"You are about to hide the default ins billing provider. Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"You are about to hide the default ins billing provider. Continue?")) {
 						return;
 					}
 				}
 				if(Clinics.IsInsBillingProvider(ProvCur.ProvNum)) {
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"You are about to hide a clinic ins billing provider. Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"You are about to hide a clinic ins billing provider. Continue?")) {
 						return;
 					}
 				}
@@ -1790,28 +1790,28 @@ namespace OpenDental{
 				}
 			}
 			if(Providers.GetExists(x => x.ProvNum!=ProvCur.ProvNum && x.Abbr==textAbbr.Text && PrefC.GetBool(PrefName.EasyHideDentalSchools))) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This abbreviation is already in use by another provider.  Continue anyway?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This abbreviation is already in use by another provider.  Continue anyway?")) {
 					return;
 				}
 			}
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && checkIsCDAnet.Checked) {
 				if(textNationalProvID.Text!=OpenDentBusiness.Eclaims.Canadian.TidyAN(textNationalProvID.Text,9,true)) {
-					MsgBox.Show(this,"CDA number must be 9 characters long and composed of numbers and letters only.");
+					MessageBox.Show("CDA number must be 9 characters long and composed of numbers and letters only.");
 					return;
 				}
 				if(textCanadianOfficeNum.Text!=OpenDentBusiness.Eclaims.Canadian.TidyAN(textCanadianOfficeNum.Text,4,true)) {
-					MsgBox.Show(this,"Office number must be 4 characters long and composed of numbers and letters only.");
+					MessageBox.Show("Office number must be 4 characters long and composed of numbers and letters only.");
 					return;
 				}
 			}
 			if(checkIsNotPerson.Checked) {
 				if(textFName.Text!="" || textMI.Text!="") {
-					MsgBox.Show(this,"When the 'Not a Person' box is checked, the provider may not have a First Name or Middle Initial entered.");
+					MessageBox.Show("When the 'Not a Person' box is checked, the provider may not have a First Name or Middle Initial entered.");
 					return;
 				}
 			}
 			if(checkIsHidden.Checked && ProvCur.IsHidden==false) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"If there are any future hours on this provider's schedule, they will be removed.  "
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"If there are any future hours on this provider's schedule, they will be removed.  "
 					+"This does not affect scheduled appointments or any other appointments in any way.")) 
 				{
 					return;
@@ -1820,7 +1820,7 @@ namespace OpenDental{
 			}
 			if(!PrefC.GetBool(PrefName.EasyHideDentalSchools) && (ProvCur.IsInstructor || ProvCur.SchoolClassNum!=0)) {//Is an Instructor or a Student
 				if(textUserName.Text=="") {
-					MsgBox.Show(this,"User Name is not allowed to be blank.");
+					MessageBox.Show("User Name is not allowed to be blank.");
 					return;
 				}
 			}
@@ -1831,27 +1831,27 @@ namespace OpenDental{
 					provClaimBillingOverride=Providers.GetProv(claimBillingOverrideProvNum);//Can return null if the provider doesn't exist
 				}
 				if(provClaimBillingOverride!=null && !provClaimBillingOverride.IsNotPerson) {//Override is a person.
-					MsgBox.Show(this,"E-claim Billing Prov Override cannot be a person.");
+					MessageBox.Show("E-claim Billing Prov Override cannot be a person.");
 					return;
 				}
 			}
 			if(ProvCur.IsNew == false && comboProv.GetSelectedProvNum()==ProvCur.ProvNum) {//Override is the same provider.
-				MsgBox.Show(this,"E-claim Billing Prov Override cannot be the same provider.");
+				MessageBox.Show("E-claim Billing Prov Override cannot be the same provider.");
 				return;
 			}
 			if(ProvCur.IsErxEnabled==ErxEnabledStatus.Disabled && checkUseErx.Checked) {//The user enabled eRx for this provider when it was previously disabled.
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"By clicking Yes, you acknowledge and approve Electronic Rx (eRx) fees for this "
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"By clicking Yes, you acknowledge and approve Electronic Rx (eRx) fees for this "
 					+"provider. See the website for more details. ERx only works for the United States and its territories. Do you want to continue?"))
 				{
 					return;
 				}
 			}
 			if(textBirthdate.Text!="" && textBirthdate.errorProvider1.GetError(textBirthdate)!="") {
-				MsgBox.Show(this,"Birthdate invalid.");
+				MessageBox.Show("Birthdate invalid.");
 				return;
 			}
 			if(textProdGoalHr.errorProvider1.GetError(textProdGoalHr)!="") {
-				MsgBox.Show(this,"Hourly production goal invalid.");
+				MessageBox.Show("Hourly production goal invalid.");
 				return;
 			}
 			ProvCur.Abbr=textAbbr.Text;

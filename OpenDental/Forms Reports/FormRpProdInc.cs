@@ -1651,23 +1651,23 @@ namespace OpenDental {
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(!checkAllProv.Checked && listProv.SelectedIndices.Count==0){
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(!checkAllClin.Checked && listClin.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"At least one clinic must be selected.");
+					MessageBox.Show("At least one clinic must be selected.");
 					return;
 				}
 			}
 			dateFrom=PIn.Date(textDateFrom.Text);
 			dateTo=PIn.Date(textDateTo.Text);
 			if(dateTo<dateFrom) {
-				MsgBox.Show(this,"To date cannot be before From date.");
+				MessageBox.Show("To date cannot be before From date.");
 				return;
 			}
 			if(radioDaily.Checked){

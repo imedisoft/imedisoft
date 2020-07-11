@@ -48,7 +48,7 @@ namespace OpenDental {
 		///<summary></summary>
 		private static void ViewEra(List<Etrans> listEtrans,List<Etrans835Attach> listAttaches,long specificClaimNum=0) {
 			if(listEtrans.Count==0) {
-				MsgBox.Show("X835","No matching ERAs could be located based on the claim identifier.");
+				MsgBox.Show("No matching ERAs could be located based on the claim identifier.");
 			}
 			else if(listEtrans.Count==1) {//This also takes care of older 835s such that there are multiple 835s in 1 X12 msg but only 1 etrans row.
 				ViewFormForEra(listEtrans[0],specificClaimNum:specificClaimNum);
@@ -95,7 +95,7 @@ namespace OpenDental {
 				case X835Status.NotFinalized:
 				case X835Status.FinalizedSomeDetached:
 				case X835Status.Finalized:
-					MsgBox.Show("X835","You cannot delete an ERA with received claims attached.  Manually change status of attached claims before trying again.");
+					MsgBox.Show("You cannot delete an ERA with received claims attached.  Manually change status of attached claims before trying again.");
 					return false;
 			}
 			Etranss.Delete835(x835.EtransSource);
@@ -400,7 +400,7 @@ namespace OpenDental {
 			#endregion
 			if(listClaims.Count==0) {
 				if(!isAutomatic) {
-					MsgBox.Show("X835","All claims have been detached from this ERA or are preauths (there is no payment).  Click OK to close the ERA instead.");
+					MsgBox.Show("All claims have been detached from this ERA or are preauths (there is no payment).  Click OK to close the ERA instead.");
 				}
 				return false;
 			}

@@ -887,7 +887,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(!MsgBox.Show(this,true,"Delete this clock event?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this clock event?")){
 				return;
 			}
 			ClockEvents.Delete(ClockEventCur.ClockEventNum);
@@ -899,7 +899,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//if(textAmountBonus.errorProvider1.GetError(textAmountBonus)!="") {
-			//  MsgBox.Show(this,"Please enter in a valid dollar amount for Bonus.");
+			//  MessageBox.Show("Please enter in a valid dollar amount for Bonus.");
 			//  return;
 			//}
 			DateTime timeDisplayed1=DateTime.MinValue;
@@ -908,19 +908,19 @@ namespace OpenDental{
 			}
 			catch{
 				if(ClockEventCur.ClockStatus==TimeClockStatus.Break){
-					MsgBox.Show(this,"Please enter a valid clock-out date and time.");
+					MessageBox.Show("Please enter a valid clock-out date and time.");
 				}
 				else{
-					MsgBox.Show(this,"Please enter a valid clock-in date and time.");
+					MessageBox.Show("Please enter a valid clock-in date and time.");
 				}
 				return;
 			}
 			if(timeDisplayed1.Date > DateTime.Today) {
 				if(ClockEventCur.ClockStatus==TimeClockStatus.Break){
-					MsgBox.Show(this,"Clock-out date cannot be a future date.");
+					MessageBox.Show("Clock-out date cannot be a future date.");
 				}
 				else{
-					MsgBox.Show(this,"Clock-in date cannot be a future date.");
+					MessageBox.Show("Clock-in date cannot be a future date.");
 				}
 				return;
 			}
@@ -931,35 +931,35 @@ namespace OpenDental{
 				}
 				catch{
 					if(ClockEventCur.ClockStatus==TimeClockStatus.Break){
-						MsgBox.Show(this,"Please enter a valid clock-in date and time.");
+						MessageBox.Show("Please enter a valid clock-in date and time.");
 					}
 					else{
-						MsgBox.Show(this,"Please enter a valid clock-out date and time.");
+						MessageBox.Show("Please enter a valid clock-out date and time.");
 					}
 					return;
 				}
 			}
 			if(timeDisplayed2.Date > DateTime.Today) {
 				if(ClockEventCur.ClockStatus==TimeClockStatus.Break){
-					MsgBox.Show(this,"Clock-in date cannot be a future date.");
+					MessageBox.Show("Clock-in date cannot be a future date.");
 				}
 				else{
-					MsgBox.Show(this,"Clock-out date cannot be a future date.");
+					MessageBox.Show("Clock-out date cannot be a future date.");
 				}
 				return;
 			}
 			if(textTimeDisplayed2.Text!="" && timeDisplayed1 > timeDisplayed2){
 				if(ClockEventCur.ClockStatus==TimeClockStatus.Break) {
-					MsgBox.Show(this,"Break end time cannot be earlier than break start time.");
+					MessageBox.Show("Break end time cannot be earlier than break start time.");
 					return;
 				}
 				else {
-					MsgBox.Show(this,"Clock out time cannot be earlier than clock in time.");
+					MessageBox.Show("Clock out time cannot be earlier than clock in time.");
 					return;
 				}
 			}
 			if(textTimeDisplayed2.Text=="" && textTimeEntered2.Text!="") {//user is trying to clear the time manually
-				MsgBox.Show(this,"A date and time must be entered in the second box, or use the Clear button.");
+				MessageBox.Show("A date and time must be entered in the second box, or use the Clear button.");
 				return;
 			}
 			TimeSpan overtime=TimeSpan.Zero;
@@ -974,12 +974,12 @@ namespace OpenDental{
 							overtime=TimeSpan.FromHours(Double.Parse(textOTimeHours.Text));
 						}
 						if(overtime < TimeSpan.Zero) {
-							MsgBox.Show(this,"Overtime must be positive.");
+							MessageBox.Show("Overtime must be positive.");
 							return;
 						}
 					}
 					catch {
-						MsgBox.Show(this,"Please enter a valid overtime amount.");
+						MessageBox.Show("Please enter a valid overtime amount.");
 						return;
 					}
 				}
@@ -993,19 +993,19 @@ namespace OpenDental{
 						}
 					}
 					catch {
-						MsgBox.Show(this,"Please enter a valid adjustment amount.");
+						MessageBox.Show("Please enter a valid adjustment amount.");
 						return;
 					}
 				}
 				if(textRegTime.Text=="") {//Must be invalid calc.
 					if(textTimeEntered2.Text=="") {//They haven't clocked out yet.	Invalid calc is expected.
 						if(textAdjust.Text.Trim()!=""||textOTimeHours.Text.Trim()!="") {//They're entering in overtime or adjustments.
-							MsgBox.Show(this,"Cannot enter overtime or adjustments while clocked in.");//To this timespan is implied.
+							MessageBox.Show("Cannot enter overtime or adjustments while clocked in.");//To this timespan is implied.
 							return;
 						}
 					}
 					else {//They have clocked out.
-						MsgBox.Show(this,"Overtime and adjustments cannot exceed the total time.");
+						MessageBox.Show("Overtime and adjustments cannot exceed the total time.");
 						return;
 					}
 				}

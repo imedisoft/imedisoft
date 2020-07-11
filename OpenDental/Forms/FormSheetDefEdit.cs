@@ -1032,16 +1032,16 @@ namespace OpenDental {
 				}
 			}
 			else {
-				if(ODBuild.IsDebug()) {
-					g.DrawRectangle(GetOutlinePenForSheetFieldDef(sheetFieldDef,new Pen(Brushes.IndianRed)),sheetFieldDef.XPos,sheetFieldDef.YPos,sheetFieldDef.Width,sheetFieldDef.Height);
+#if DEBUG
+				g.DrawRectangle(GetOutlinePenForSheetFieldDef(sheetFieldDef,new Pen(Brushes.IndianRed)),sheetFieldDef.XPos,sheetFieldDef.YPos,sheetFieldDef.Width,sheetFieldDef.Height);
 					g.DrawString(Lan.g(this,"Cannot find image")+": "+sheetFieldDef.FieldName,Font,_argsDF.brush??Brushes.Black,sheetFieldDef.XPos,sheetFieldDef.YPos);
-				}
+#endif
 				return;
 			}
 			g.DrawImage(img,sheetFieldDef.XPos,sheetFieldDef.YPos,sheetFieldDef.Width,sheetFieldDef.Height);
-			if(ODBuild.IsDebug()) {
-				g.DrawRectangle(GetOutlinePenForSheetFieldDef(sheetFieldDef,new Pen(Brushes.IndianRed)),sheetFieldDef.XPos,sheetFieldDef.YPos,sheetFieldDef.Width,sheetFieldDef.Height);
-			}
+#if DEBUG
+			g.DrawRectangle(GetOutlinePenForSheetFieldDef(sheetFieldDef,new Pen(Brushes.IndianRed)),sheetFieldDef.XPos,sheetFieldDef.YPos,sheetFieldDef.Width,sheetFieldDef.Height);
+#endif
 			if(img!=null) {
 				img.Dispose();
 			}
@@ -1672,7 +1672,7 @@ namespace OpenDental {
 
 		private void butAddOutputText_Click(object sender,EventArgs e) {
 			if(SheetFieldsAvailable.GetList(_sheetDefCur.SheetType,OutInCheck.Out).Count==0) {
-				MsgBox.Show(this,"There are no output fields available for this type of sheet.");
+				MessageBox.Show("There are no output fields available for this type of sheet.");
 				return;
 			}
 			CreateSheetFieldDef(SheetFieldType.OutputText);
@@ -1684,7 +1684,7 @@ namespace OpenDental {
 
 		private void butAddInputField_Click(object sender,EventArgs e) {
 			if(SheetFieldsAvailable.GetList(_sheetDefCur.SheetType,OutInCheck.In).Count==0) {
-				MsgBox.Show(this,"There are no input fields available for this type of sheet.");
+				MessageBox.Show("There are no input fields available for this type of sheet.");
 				return;
 			}
 			CreateSheetFieldDef(SheetFieldType.InputField);
@@ -1692,7 +1692,7 @@ namespace OpenDental {
 
 		private void butAddImage_Click(object sender,EventArgs e) {
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MsgBox.Show(this,"Not allowed because not using AtoZ folder");
+				MessageBox.Show("Not allowed because not using AtoZ folder");
 				return;
 			}
 			CreateSheetFieldDef(SheetFieldType.Image);
@@ -1708,7 +1708,7 @@ namespace OpenDental {
 
 		private void butAddCheckBox_Click(object sender,EventArgs e) {
 			if(SheetFieldsAvailable.GetList(_sheetDefCur.SheetType,OutInCheck.Check).Count==0) {
-				MsgBox.Show(this,"There are no checkbox fields available for this type of sheet.");
+				MessageBox.Show("There are no checkbox fields available for this type of sheet.");
 				return;
 			}
 			CreateSheetFieldDef(SheetFieldType.CheckBox);
@@ -1727,7 +1727,7 @@ namespace OpenDental {
 				AddNewSheeFieldDef(SheetFieldDef.NewScreenChart("ChartSealantTreatment",fieldValue,0,0));
 			}
 			else {
-				MsgBox.Show(this,"Only two charts are allowed per screening sheet.");
+				MessageBox.Show("Only two charts are allowed per screening sheet.");
 				return;
 			}
 			FillFieldList();
@@ -1749,7 +1749,7 @@ namespace OpenDental {
 				return;
 			}
 			if(GetIsDynamicSheetType() && GetPertinentSheetFieldDefs().Any(x => x.FieldName==FormSFS.SheetFieldDefCur.FieldName)) {
-				MsgBox.Show(this,"Field already exists.");
+				MessageBox.Show("Field already exists.");
 				return;
 			}
 			AddNewSheeFieldDef(FormSFS.SheetFieldDefCur);
@@ -1759,7 +1759,7 @@ namespace OpenDental {
 
 		private void butAddPatImage_Click(object sender,EventArgs e) {
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MsgBox.Show(this,"Not allowed because not using AtoZ folder");
+				MessageBox.Show("Not allowed because not using AtoZ folder");
 				return;
 			}
 			CreateSheetFieldDef(SheetFieldType.PatImage);
@@ -1786,7 +1786,7 @@ namespace OpenDental {
 				return;
 			}
 			if(GetIsDynamicSheetType() && GetPertinentSheetFieldDefs().Any(x => x.FieldName==FormS.SheetFieldDefCur.FieldName)) {
-				MsgBox.Show(this,"Grid already exists.");
+				MessageBox.Show("Grid already exists.");
 				return;
 			}
 			AddNewSheeFieldDef(FormS.SheetFieldDefCur);
@@ -2193,7 +2193,7 @@ namespace OpenDental {
 				if(listFields.SelectedIndices.Count==0) {
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete selected fields?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete selected fields?")) {
 					return;
 				}
 				for(int i=listSheetFieldDefs.Count-1;i>=0;i--) { //iterate backwards through list
@@ -2204,7 +2204,7 @@ namespace OpenDental {
 					if(fieldI.FieldType==SheetFieldType.Grid && fieldI.FieldName=="TreatPlanMain"
 						&& _sheetDefCur.SheetFieldDefs.FindAll(x=>x.FieldType==SheetFieldType.Grid && x.FieldName=="TreatPlanMain").Count==1) 
 					{
-						MsgBox.Show(this,"Cannot delete the last main grid from treatment plan.");
+						MessageBox.Show("Cannot delete the last main grid from treatment plan.");
 						continue;//skip this one.
 					}
 					if(fieldI.FieldType==SheetFieldType.ScreenChart) {
@@ -2399,7 +2399,7 @@ namespace OpenDental {
 				return;
 			}
 			if(GetIsDynamicSheetType() && _sheetDefCur.SheetDefNum==PrefC.GetLong(PrefName.SheetsDefaultChartModule)) {
-				MsgBox.Show(this,"This is the current Chart module default layout.\r\nPlease select a new default in Sheet Def Defaults first.");
+				MessageBox.Show("This is the current Chart module default layout.\r\nPlease select a new default in Sheet Def Defaults first.");
 				return;
 			}
 			if(!_selectedLanguageThreeLetters.IsNullOrEmpty()){//User clicked 'Delete' while viewing a translated view.
@@ -2412,7 +2412,7 @@ namespace OpenDental {
 				}
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete entire sheet?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete entire sheet?")) {
 				return;
 			}
 			try {
@@ -2557,7 +2557,7 @@ namespace OpenDental {
 					if(listSheetFieldDefs[listFields.SelectedIndices[i]].Bounds.Y //compare the int bounds not the boundsF for practical use
 					   ==listSheetFieldDefs[listFields.SelectedIndices[j]].Bounds.Y) //compare the int bounds not the boundsF for practical use
 					{
-						MsgBox.Show(this,"Cannot align controls. Two or more selected controls will overlap.");
+						MessageBox.Show("Cannot align controls. Two or more selected controls will overlap.");
 						return;
 					}
 				}
@@ -2585,7 +2585,7 @@ namespace OpenDental {
 			float minX=int.MaxValue;
 			foreach(SheetFieldDef field in listSelectedFields) {
 				if(yPositions.Contains(field.YPos)) {
-					MsgBox.Show(this,"Cannot align controls. Two or more selected controls will overlap.");
+					MessageBox.Show("Cannot align controls. Two or more selected controls will overlap.");
 					return;
 				}
 				yPositions.Add(field.YPos);
@@ -2614,7 +2614,7 @@ namespace OpenDental {
 				listSelectedFields.Add(listSheetFieldDefs[listFields.SelectedIndices[i]]);
 			}
 			if(listSelectedFields.Exists(f1 => listSelectedFields.FindAll(f2 => f1.YPos==f2.YPos).Count>1)) {
-				MsgBox.Show(this,"Cannot align controls. Two or more selected controls will overlap.");
+				MessageBox.Show("Cannot align controls. Two or more selected controls will overlap.");
 				return;
 			}
 			int maxX=listSelectedFields.Max(d => d.Bounds.Right);
@@ -2666,7 +2666,7 @@ namespace OpenDental {
 					if(listSheetFieldDefs[listFields.SelectedIndices[i]].Bounds.X //compair the int bounds not the boundsF for practical use
 					   ==listSheetFieldDefs[listFields.SelectedIndices[j]].Bounds.X) //compair the int bounds not the boundsF for practical use
 					{
-						MsgBox.Show(this,"Cannot align controls. Two or more selected controls will overlap.");
+						MessageBox.Show("Cannot align controls. Two or more selected controls will overlap.");
 						return;
 					}
 				}
@@ -2764,7 +2764,7 @@ namespace OpenDental {
 			int onePageHeight=_sheetDefCur.IsLandscape ? _sheetDefCur.Width : _sheetDefCur.Height;
 			int minimumPageCount=(int)Math.Ceiling((double)arbitraryHeight / (onePageHeight-40-60));//40/60 for the header/footer respectively.
 			if(minimumPageCount > _sheetDefCur.PageCount) { //There are fields that have a YPos and heights that push them past the bottom of the page.
-				MsgBox.Show(this,"Cannot remove pages that contain sheet fields.");
+				MessageBox.Show("Cannot remove pages that contain sheet fields.");
 				_sheetDefCur.PageCount++;//Forcefully add a page back.
 				return;
 			}
@@ -2777,7 +2777,7 @@ namespace OpenDental {
 			if(!VerifyDesign()) {
 				return;
 			}
-			if(!sheetEditMobile.MergeMobileSheetFieldDefs(_sheetDefCur,true,new Action<string>((err) => { MsgBox.Show(this,err); }))) {
+			if(!sheetEditMobile.MergeMobileSheetFieldDefs(_sheetDefCur,true,new Action<string>((err) => { MessageBox.Show(err); }))) {
 				return;
 			}
 			if(!UpdateWebSheetDef()) {

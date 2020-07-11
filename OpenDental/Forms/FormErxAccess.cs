@@ -65,7 +65,7 @@ namespace OpenDental {
 
 		private void butEnable_Click(object sender,EventArgs e) {
 			if(gridProviders.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			gridProviders.BeginUpdate();
@@ -81,10 +81,10 @@ namespace OpenDental {
 
 		private void butDisable_Click(object sender,EventArgs e) {
 			if(gridProviders.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Only use this button if the selected providers were Enabled accidentally or if the provider has canceled eRx.  "
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Only use this button if the selected providers were Enabled accidentally or if the provider has canceled eRx.  "
 				+"Continue?"))
 			{
 				return;
@@ -102,7 +102,7 @@ namespace OpenDental {
 
 		private void butIdpd_Click(object sender,EventArgs e) {
 			if(gridProviders.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			gridProviders.BeginUpdate();
@@ -118,10 +118,10 @@ namespace OpenDental {
 
 		private void butNotIdpd_Click(object sender,EventArgs e) {
 			if(gridProviders.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Only use this button if the selected providers were set to IDP'd accidentally.  Continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Only use this button if the selected providers were set to IDP'd accidentally.  Continue?")) {
 				return;
 			}
 			gridProviders.BeginUpdate();
@@ -137,7 +137,7 @@ namespace OpenDental {
 
 		private void butEPCS_Click(object sender,EventArgs e) {
 			if(gridProviders.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			gridProviders.BeginUpdate();
@@ -153,7 +153,7 @@ namespace OpenDental {
 
 		private void butNotEPCS_Click(object sender,EventArgs e) {
 			if(gridProviders.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			gridProviders.BeginUpdate();

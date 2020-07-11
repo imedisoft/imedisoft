@@ -161,11 +161,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(!Directory.Exists(textLocation.Text)){
-				MsgBox.Show(this,"Location does not exist.");
+				MessageBox.Show("Location does not exist.");
 				return;
 			}
 			if(Directory.Exists(ODFileUtils.CombinePaths(textLocation.Text,textName.Text))) {
-				MsgBox.Show(this,"Folder already exists.");
+				MessageBox.Show("Folder already exists.");
 				return;
 			}
 			try {

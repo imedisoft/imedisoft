@@ -519,7 +519,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete Site?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete Site?")) {
 				return;
 			}
 			try{

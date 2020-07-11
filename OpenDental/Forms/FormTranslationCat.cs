@@ -222,17 +222,14 @@ namespace OpenDental{
 		private void butExport_Click(object sender, System.EventArgs e) {
 			string fileName=CultureInfo.CurrentCulture.Name+".sql";//eg en-US.sql
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
-			if(ODBuild.IsWeb()) {
-				//file download dialog will come up later, after file is created.
-			}
-			else {
+
 				saveFileDialog1.InitialDirectory=Application.StartupPath;
 				saveFileDialog1.FileName=fileName;
 				if(saveFileDialog1.ShowDialog()!=DialogResult.OK) {
 					return;
 				}
 				filePath=saveFileDialog1.FileName;
-			}
+			
 			StreamWriter sw=new StreamWriter(filePath,false,System.Text.Encoding.UTF8);
 			sw.WriteLine("DELETE FROM languageforeign WHERE Culture='"+CultureInfo.CurrentCulture.Name+"';");
 			LanguageForeign[] LFList=LanguageForeigns.GetListForCurrentCulture();
@@ -246,12 +243,9 @@ namespace OpenDental{
 				);
 			}//for
 			sw.Close();
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(filePath);
-			}
-			else {
+
 				MessageBox.Show("Done");
-			}
+			
 		}
 
 		private void butClose_Click(object sender, System.EventArgs e) {

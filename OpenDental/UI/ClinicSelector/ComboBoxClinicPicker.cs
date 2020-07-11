@@ -169,7 +169,7 @@ namespace OpenDental.UI {
 					//If user then selects a non-hidden clinic, _selectedClinicNoPermission will get set to null.
 				}
 				else {
-					MsgBox.Show(this,"Not allowed");
+					MessageBox.Show("Not allowed");
 					return;
 				}
 			}

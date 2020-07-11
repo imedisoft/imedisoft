@@ -43,17 +43,16 @@ namespace OpenDentBusiness.Shared {
 			//but we don't care at this point, so ignore
 			//set OfficeManagement | OffManConnected = 1 to make sidexis ready to accept a message.
 			WritePrivateProfileString("OfficeManagement","OffManConnected","1",iniFile);
-			if(ODBuild.IsDebug() && sendBox.IsNullOrEmpty()) {
+#if DEBUG
+			if(sendBox.IsNullOrEmpty()) {
 				sendBox=@"C:\Bridges\Sirona\iniFile.ini";
 			}
-			#endregion
+#endif
+#endregion
 			using FileStream fs=new FileStream(sendBox,FileMode.Append);
 			using BinaryWriter bw=new BinaryWriter(fs);
 			for(int i=0;i<listIniLines.Count;i++) {
 				string line=line=listIniLines[i];
-				if(ODBuild.IsWeb()) {
-					line=line.Replace("{{SystemInformation.ComputerName}}",SystemInformation.ComputerName);
-				}
 				bw.Write(IntToByteArray(line.Length+2));//the 2 accounts for these two chars.
 				bw.Write(StrToBytes(line));
 			}

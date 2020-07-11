@@ -1824,15 +1824,15 @@ namespace OpenDental{
 				return;
 			}
 			if(PerioExams.ListExams.Count==0){
-				MsgBox.Show(this,"Please use the Add button to create an initial exam.");
+				MessageBox.Show("Please use the Add button to create an initial exam.");
 				return;
 			}
 			if(listExams.SelectedIndex==-1) {
 				//with the current code, this will never actually get hit because we don't allow deselecting.
-				MsgBox.Show(this,"Please select an existing exam first.");
+				MessageBox.Show("Please select an existing exam first.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"A copy will be made of the previous exam.  Continue?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"A copy will be made of the previous exam.  Continue?")){
 				return;
 			}
 			gridP.SaveCurExam(PerioExamCur);
@@ -1872,10 +1872,6 @@ namespace OpenDental{
 		}
 
 		private void butListen_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Voice Perio is not available for the Web version at this time.");
-				return;
-			}
 			if(_voiceController!=null && _voiceController.IsListening) {
 				_voiceController.StopListening();
 				labelListening.Visible=false;
@@ -2189,7 +2185,7 @@ namespace OpenDental{
 
 		private void butPrint_Click(object sender, System.EventArgs e) {
 			if(this.listExams.SelectedIndex<0) {
-				MsgBox.Show(this,"Please select an exam first.");
+				MessageBox.Show("Please select an exam first.");
 				return;
 			}
 			PrinterL.TryPrint(pd2_PrintPage,
@@ -2265,7 +2261,7 @@ namespace OpenDental{
 			g.DrawImageUnscaled(gridImage,(int)((perioPrintImage.Width-gridImage.Width)/2f),(int)y);
 			long defNumCategory=Defs.GetImageCat(ImageCategorySpecial.T);
 			if(defNumCategory==0) {
-				MsgBox.Show(this,"No image category set for tooth charts in definitions.");
+				MessageBox.Show("No image category set for tooth charts in definitions.");
 				perioPrintImage.Dispose();
 				gridImage.Dispose();
 				perioPrintImage=null;
@@ -2285,7 +2281,7 @@ namespace OpenDental{
 				g.Dispose();
 				return;
 			}
-			MsgBox.Show(this,"Saved.");
+			MessageBox.Show("Saved.");
 			/*
 			string patImagePath=ImageStore.GetPatientFolder(PatCur);
 			string filePath="";
@@ -2429,11 +2425,11 @@ namespace OpenDental{
 
 		private void butGraphical_Click(object sender,EventArgs e) {
 			if(ComputerPrefs.LocalComputer.GraphicsSimple!=DrawingMode.DirectX) {
-				MsgBox.Show(this,"In the Graphics setup window, you must first select DirectX.");
+				MessageBox.Show("In the Graphics setup window, you must first select DirectX.");
 				return;
 			}
 			if(listExams.SelectedIndex==-1) {
-				MsgBox.Show(this,"Exam must be selected first.");
+				MessageBox.Show("Exam must be selected first.");
 				return;
 			}
 			if(localDefsChanged) {

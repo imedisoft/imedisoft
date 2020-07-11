@@ -21,7 +21,7 @@ namespace OpenDental {
 
 		private void butSendCode_Click(object sender,EventArgs e) {
 			if(textEmailAddress.Text.Trim()=="") {
-				MsgBox.Show(this,"Email Address is blank.");
+				MessageBox.Show("Email Address is blank.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -77,16 +77,16 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textVerificationCode.Text.Trim()=="") {
-				MsgBox.Show(this,"Verification Code is blank.");
+				MessageBox.Show("Verification Code is blank.");
 				return;
 			}
 			if(!File.Exists(textCertFilePath.Text)) {
-				MsgBox.Show(this,"Certificate file path is invalid.");
+				MessageBox.Show("Certificate file path is invalid.");
 				return;
 			}
 			string ext=Path.GetExtension(textCertFilePath.Text).ToLower();
 			if(ext!=".der" && ext!=".cer") {
-				MsgBox.Show(this,"Certificate file path extension must be .der or .cer.");
+				MessageBox.Show("Certificate file path extension must be .der or .cer.");
 				return;
 			}
 			byte[] arrayCertificateBytes=null;
@@ -112,7 +112,7 @@ namespace OpenDental {
 				return;
 			}
 			if(cert.HasPrivateKey) {
-				MsgBox.Show(this,"The specified certificate contains a private key.  For your security, please export your public key and upload that instead.");
+				MessageBox.Show("The specified certificate contains a private key.  For your security, please export your public key and upload that instead.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;

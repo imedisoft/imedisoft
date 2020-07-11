@@ -204,7 +204,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(gridLan.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select a row first.");
+				MessageBox.Show("Please select a row first.");
 				return;
 			}
 			List<string> strList=new List<string>();
@@ -227,7 +227,7 @@ namespace OpenDental{
 				}
 			}
 			if(strList.Count==0){
-				MsgBox.Show(this,"All unused rows have already been deleted.");
+				MessageBox.Show("All unused rows have already been deleted.");
 				return;
 			}
 			Lans.DeleteItems(ClassType,strList);

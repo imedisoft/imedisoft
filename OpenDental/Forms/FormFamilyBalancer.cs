@@ -57,7 +57,7 @@ namespace OpenDental {
 				return false;
 			}
 			//Make sure the user wants to run the tool.
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"This process can take a long time and can only be manually reversed.\r\n\r\nContinue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"This process can take a long time and can only be manually reversed.\r\n\r\nContinue?")) {
 				return false;
 			}
 			return true;

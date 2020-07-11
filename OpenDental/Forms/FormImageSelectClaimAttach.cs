@@ -145,23 +145,23 @@ namespace OpenDental{
 		private void SaveAttachment(){
 			Patient PatCur=Patients.GetPat(PatNum);
 			//if(PatCur.ImageFolder=="") {
-			//	MsgBox.Show(this,"Invalid patient image folder.");
+			//	MessageBox.Show("Invalid patient image folder.");
 			//	return;
 			//}
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MsgBox.Show(this,"Error. Not using AtoZ images folder.");
+				MessageBox.Show("Error. Not using AtoZ images folder.");
 				return;
 			}
 			string patfolder=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());
 				//ODFileUtils.CombinePaths(
 				//FormPath.GetPreferredImagePath(),PatCur.ImageFolder.Substring(0,1).ToUpper(),PatCur.ImageFolder);
 			//if(!Directory.Exists(patfolder)) {
-			//	MsgBox.Show(this,"Patient folder not found in AtoZ folder.");
+			//	MessageBox.Show("Patient folder not found in AtoZ folder.");
 			//	return;
 			//}
 			Document doc=Docs[gridMain.GetSelectedIndex()];
 			if(!ImageHelper.HasImageExtension(doc.FileName)){
-				MsgBox.Show(this,"Invalid file.  Only images may be attached, no other file format.");
+				MessageBox.Show("Invalid file.  Only images may be attached, no other file format.");
 				return;
 			}
 			string oldPath=ODFileUtils.CombinePaths(patfolder,doc.FileName);
@@ -251,7 +251,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an image first.");
+				MessageBox.Show("Please select an image first.");
 				return;
 			}
 			SaveAttachment();

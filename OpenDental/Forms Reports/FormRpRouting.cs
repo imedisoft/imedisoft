@@ -332,7 +332,7 @@ namespace OpenDental {
 			}
 			List<Sheet> sheetBatch=SheetUtil.TryCreateBatch(sheetDef,aptNums);
 			if(sheetBatch.Count==0) {
-				MsgBox.Show(this,"There are no routing slips to print.");
+				MessageBox.Show("There are no routing slips to print.");
 				return;
 			}
 			try {
@@ -359,7 +359,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender, System.EventArgs e){
 			//validate user input
 			if(textDate.errorProvider1.GetError(textDate) != "")	{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDate.Text.Length==0){
@@ -368,14 +368,14 @@ namespace OpenDental {
 			}
 			date=PIn.Date(textDate.Text);
 			if(listProv.SelectedIndices.Count==0 && !checkProvAll.Checked){
-				MsgBox.Show(this,"You must select at least one provider.");
+				MessageBox.Show("You must select at least one provider.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled 
 				&& listClin.SelectedIndices.Count==0 
 				&& !checkClinAll.Checked) 
 			{
-				MsgBox.Show(this,"You must select at least one clinic.");
+				MessageBox.Show("You must select at least one clinic.");
 				return;
 			}
 			List<long> listProvNums=new List<long>();

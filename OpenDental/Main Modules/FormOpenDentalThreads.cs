@@ -23,7 +23,6 @@ namespace OpenDental {
 		private List<ODThread> _listOdThreadsRunOnce=new List<ODThread>();
 		private ODThread _odThreadDataConnectionLost;
 		private ODThread _odThreadCrashedTableMonitor;
-		private ODThread _odThreadMiddleTierConnectionLost;
 		private ODThread _odThreadDataReaderNullMonitor;
 		#endregion
 
@@ -800,7 +799,7 @@ namespace OpenDental {
 			Computers.ClearAllHeartBeats(Environment.MachineName);//always assume success
 			o.QuitAsync();//Quitting the thread here will quit it once this method exits (after the invoke returns).
 			this.Invoke(() => {
-				MsgBox.Show(this,"This database is temporarily unavailable.  Please connect instead to your alternate database at the other location.");
+				MessageBox.Show("This database is temporarily unavailable.  Please connect instead to your alternate database at the other location.");
 				Application.Exit();
 			});
 		}

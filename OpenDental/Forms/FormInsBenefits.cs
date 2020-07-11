@@ -1304,7 +1304,7 @@ namespace OpenDental{
 			if(checkSimplified.Checked){
 				if(dontAllowSimplified){
 					checkSimplified.Checked=false;
-					MsgBox.Show(this,"Not allowed to use simplified view until you fix your Insurance Categories from the setup menu.  At least one of each e-benefit category must be present.");
+					MessageBox.Show("Not allowed to use simplified view until you fix your Insurance Categories from the setup menu.  At least one of each e-benefit category must be present.");
 					return;
 				}
 				gridBenefits.Title=Lan.g(this,"Other Benefits");
@@ -2107,7 +2107,7 @@ namespace OpenDental{
 		private void butClear_Click(object sender,EventArgs e) {
 			if(gridBenefits.SelectedIndices.Length==0) {
 				gridBenefits.SetSelected(true);
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete all benefits in list?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete all benefits in list?")) {
 					return;
 				}
 			}
@@ -2179,13 +2179,13 @@ namespace OpenDental{
 				)
 			{
 				if(!isSilent) {
-					MsgBox.Show(this,"Please fix data entry errors first.");
+					MessageBox.Show("Please fix data entry errors first.");
 				}
 				return false;
 			}
 			if(!checkCalendarYear.Checked && textMonth.Text=="") {
 				if(!isSilent) {
-					MsgBox.Show(this,"Please enter a starting month for the benefit year.");
+					MessageBox.Show("Please enter a starting month for the benefit year.");
 				}
 				return false;
 			}
@@ -2198,7 +2198,7 @@ namespace OpenDental{
 				hasFam=true;
 			}
 			if(hasIndivid && hasFam) {
-				MsgBox.Show(this,"You can enter either Individual or Family benefits, but not both.");
+				MessageBox.Show("You can enter either Individual or Family benefits, but not both.");
 				return false;
 			}*/
 			benefitListAll=new List<Benefit>(benefitList);
@@ -2724,7 +2724,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(!checkCalendarYear.Checked && textMonth.Text=="") {
-				MsgBox.Show(this,"Please enter a starting month for the benefit year.");
+				MessageBox.Show("Please enter a starting month for the benefit year.");
 				return;
 			}
 			if(panelSimple.Visible) {
@@ -2732,7 +2732,7 @@ namespace OpenDental{
 					return;
 				}
 				if(HasInvalidTimePeriods()) {
-					MsgBox.Show(this,"A mixture of calendar and service year time periods are not allowed.");
+					MessageBox.Show("A mixture of calendar and service year time periods are not allowed.");
 					return;
 				}
 				//OriginalBenList.Clear();
@@ -2767,7 +2767,7 @@ namespace OpenDental{
 			}
 			else {//not simple view.  Will optimize this later for speed.  Should be easier.
 				if(HasInvalidTimePeriods()) {
-					MsgBox.Show(this,"A mixture of calendar and service year time periods are not allowed.");
+					MessageBox.Show("A mixture of calendar and service year time periods are not allowed.");
 					return;
 				}
 				OriginalBenList.Clear();

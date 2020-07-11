@@ -378,7 +378,7 @@ namespace OpenDental {
 					&& textContentEmail.SelectionStart <	match.Index+match.Length) 
 				{
 					e.Handled=true;
-					MsgBox.Show(this,"Direct editing of tables is not allowed here.  Use the table button or double click to edit.");
+					MessageBox.Show("Direct editing of tables is not allowed here.  Use the table button or double click to edit.");
 					return;
 				}
 			}
@@ -419,7 +419,7 @@ namespace OpenDental {
 			if(!IsRawAllowed) {
 				if(checkIsRaw.Checked) {
 					checkIsRaw.Checked=false;
-					MsgBox.Show(this,"This feature does not support raw HTML emails.");
+					MessageBox.Show("This feature does not support raw HTML emails.");
 				}
 				return;
 			}
@@ -467,12 +467,12 @@ namespace OpenDental {
 					return;
 				}
 				if(_isInvalidPreview) {
-					MsgBox.Show(this,"This page is in an invalid state and cannot be saved.");
+					MessageBox.Show("This page is in an invalid state and cannot be saved.");
 					return;
 				}
 			}
 			if(DoCheckForDisclaimer && PrefC.GetBool(PrefName.EmailDisclaimerIsOn) && !textContentEmail.Text.ToLower().Contains("[emaildisclaimer]")) {
-				MsgBox.Show(this,"Email must contain the \"[EmailDisclaimer]\" tag.");
+				MessageBox.Show("Email must contain the \"[EmailDisclaimer]\" tag.");
 				return;
 			}
 			HtmlText=webBrowserEmail.DocumentText;

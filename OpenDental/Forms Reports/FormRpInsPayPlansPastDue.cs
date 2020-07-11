@@ -55,7 +55,7 @@ namespace OpenDental {
 			List<InsPlan> listInsPlans;
 			listPayPlans=PayPlans.GetAllOpenInsPayPlans();
       if(listPayPlans.Count==0) {
-        MsgBox.Show(this,"There are no insurance payment plans past due.");
+        MessageBox.Show("There are no insurance payment plans past due.");
         return false;
       }
 			listPayPlanCharges=PayPlanCharges.GetForPayPlans(listPayPlans.Select(x => x.PayPlanNum).ToList()).Where(x => x.ChargeType == PayPlanChargeType.Debit).ToList();
@@ -193,11 +193,7 @@ namespace OpenDental {
 		private void butExport_Click(object sender,System.EventArgs e) {			
 			string fileName=Lan.g(this,"Outstanding Insurance Payment Plans");
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
-			if(ODBuild.IsWeb()) {
-				//file download dialog will come up later, after file is created.
-				filePath+=".txt";//Provide the filepath an extension so that Thinfinity can offer as a download.
-			}
-			else {
+
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
 				saveFileDialog.AddExtension=true;
 				saveFileDialog.FileName=fileName;
@@ -219,7 +215,7 @@ namespace OpenDental {
 					return;
 				}
 				filePath=saveFileDialog.FileName;
-			}
+			
 			try {
 				using(StreamWriter sw=new StreamWriter(filePath,false))
 				//new FileStream(,FileMode.Create,FileAccess.Write,FileShare.Read)))
@@ -245,12 +241,9 @@ namespace OpenDental {
 				MessageBox.Show(Lan.g(this,"File in use by another program.  Close and try again."));
 				return;
 			}
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(filePath);
-			}
-			else {
+
 				MessageBox.Show(Lan.g(this,"File created successfully"));
-			}
+			
 		}
 
 

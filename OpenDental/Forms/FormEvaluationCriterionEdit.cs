@@ -55,7 +55,7 @@ namespace OpenDental {
 			//float result;
 			//if(_gradingScale.IsPercentage) {
 			//	if(!float.TryParse(textGradeNumber.Text,out result)) {
-			//		MsgBox.Show(this,"Grade number must be a valid percentage. Do not include '%' in the value.");
+			//		MessageBox.Show("Grade number must be a valid percentage. Do not include '%' in the value.");
 			//		return;
 			//	}
 			//	_evalCritCur.GradeNumber=result;

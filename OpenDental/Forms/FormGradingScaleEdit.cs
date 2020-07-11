@@ -119,7 +119,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"This will delete the grading scale.  Continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will delete the grading scale.  Continue?")) {
 				return;
 			}
 			try {
@@ -133,13 +133,13 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDescription.Text=="") {
-				MsgBox.Show(this,"Please input a description.");
+				MessageBox.Show("Please input a description.");
 				return;
 			}
 			_gradingScaleCur.Description=textDescription.Text;
 			_gradingScaleCur.ScaleType=(EnumScaleType)comboScaleType.SelectedIndex;
 			if(GradingScales.IsDupicateDescription(_gradingScaleCur)) {//This will check it for like types.
-				MsgBox.Show(this,"The selected grading scale description is already used by another grading scale.  Please input a unique description.");
+				MessageBox.Show("The selected grading scale description is already used by another grading scale.  Please input a unique description.");
 				return;
 			}
 			_gradingScaleCur.Description=textDescription.Text;

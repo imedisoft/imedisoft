@@ -27,10 +27,6 @@ namespace OpenDental.Bridges{
 			string locationID=listXDRProperties.FirstOrDefault(x => x.ClinicNum==Clinics.ClinicNum && x.PropertyDesc==XDR.PropertyDescs.LocationID)?.PropertyValue;
 			string infoFile=listXDRProperties.FirstOrDefault(x => x.PropertyDesc==XDR.PropertyDescs.InfoFilePath)?.PropertyValue;
 			if(infoFile.Trim()=="") {
-				if(ODBuild.IsWeb()) {
-					MsgBox.Show("XDR","InfoFile path must not be empty.");
-					return;
-				}
 				infoFile=CodeBase.ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),"infofile.txt");
 			}
 			if(pat!=null) {

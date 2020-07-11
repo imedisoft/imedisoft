@@ -19,7 +19,7 @@ namespace OpenDental {
 		private void FormRedundantIndexes_Load(object sender,EventArgs e) {
 			FillGrid();
 			if(gridMain.ListGridRows.Count==0) {
-				MsgBox.Show(this,"There are no redundant indexes in the current database.");
+				MessageBox.Show("There are no redundant indexes in the current database.");
 				DialogResult=DialogResult.OK;
 			}
 		}
@@ -46,7 +46,7 @@ namespace OpenDental {
 				string msgText="It is recommended that you log the statements to add the indexes back in case you wish to undo the actions performed by this "
 					+"tool.  Without the log the indexes dropped by this tool cannot be recovered.\r\n"
 					+"Do you want to re-enable logging of the statements?";
-				checkLogAddStatements.Checked=MsgBox.Show(this,MsgBoxButtons.YesNo,msgText);
+				checkLogAddStatements.Checked=MsgBox.Show(MsgBoxButtons.YesNo,msgText);
 			}
 		}
 
@@ -60,10 +60,10 @@ namespace OpenDental {
 
 		private void butDrop_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select the index(es) to drop first.");
+				MessageBox.Show("Please select the index(es) to drop first.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"This tool could take a long time to finish.  Do you wish to continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"This tool could take a long time to finish.  Do you wish to continue?")) {
 				return;
 			}
 			MsgBoxCopyPaste msgBox;
@@ -94,7 +94,7 @@ namespace OpenDental {
 					msgBox.ShowDialog();
 				}
 			}
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 			DialogResult=DialogResult.OK;
 		}
 		

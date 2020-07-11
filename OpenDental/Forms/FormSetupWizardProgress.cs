@@ -48,7 +48,7 @@ namespace OpenDental {
 			//Call the Control Done method for the setup class.
 			ControlDone();
 			if(_listSetupClasses.Count-1 < ++_indexSetupClasses) {
-				MsgBox.Show("FormSetupWizard","You have finished setup.");
+				MsgBox.Show("You have finished setup.");
 				Close();
 				return;
 			}
@@ -102,7 +102,7 @@ namespace OpenDental {
 				_indexSetupClasses++;
 			}
 			if(_listSetupClasses.Count-1 < _indexSetupClasses) {
-				MsgBox.Show("FormSetupWizard","You have finished setup.");
+				MsgBox.Show("You have finished setup.");
 				Close();
 				return;
 			}

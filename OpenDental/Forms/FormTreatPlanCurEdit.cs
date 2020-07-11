@@ -182,7 +182,7 @@ namespace OpenDental {
 						 if(procCur.PlannedAptNum>0) {
 							msg="Not allowed to move prodecures to Available Procedures that are attached to a Planned Appointment.";
 						}
-						MsgBox.Show(this,msg);
+						MessageBox.Show(msg);
 						hasMsgShow=true;
 					}
 					continue;
@@ -302,7 +302,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(TreatPlanCur.TPStatus==TreatPlanStatus.Active) {
-				MsgBox.Show(this,"Cannot delete active treatment plan."); //Should never happen.
+				MessageBox.Show("Cannot delete active treatment plan."); //Should never happen.
 				return;
 			}
 			if(TreatPlanCur.TreatPlanNum!=0) {

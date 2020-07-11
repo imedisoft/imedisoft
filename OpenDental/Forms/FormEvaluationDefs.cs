@@ -75,7 +75,7 @@ namespace OpenDental {
 
 		private void butDuplicate_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select an evaluation to duplicate");
+				MessageBox.Show("Please select an evaluation to duplicate");
 				return;
 			}
 			//Creates a full copy of the EvaluationDef including all EvaluationCriterionDefs.

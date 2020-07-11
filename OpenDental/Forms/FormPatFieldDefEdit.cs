@@ -258,13 +258,13 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(OldFieldName!=textName.Text && !IsNew) {
 				if(!PrefC.GetBool(PrefName.DisplayRenamedPatFields)
-					&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"Changing the field name will cause existing information for this field to be hidden.  Continue?")) 
+					&& !MsgBox.Show(MsgBoxButtons.YesNo,"Changing the field name will cause existing information for this field to be hidden.  Continue?")) 
 				{
 					textName.Text=OldFieldName;
 					return;
 				}
 				if(PatFieldDefs.GetExists(x => x.FieldName==textName.Text)) {
-					MsgBox.Show(this,"Field name currently being used.");
+					MessageBox.Show("Field name currently being used.");
 					return;
 				}
 			}
@@ -273,7 +273,7 @@ namespace OpenDental{
 			FieldDef.FieldType=(PatFieldType)comboFieldType.SelectedIndex;
 			if(FieldDef.FieldType==PatFieldType.PickList) {
 				if(textPickList.Text=="") {
-					MsgBox.Show(this,"List cannot be blank.");
+					MessageBox.Show("List cannot be blank.");
 					return;
 				}
 				FieldDef.PickList=textPickList.Text;

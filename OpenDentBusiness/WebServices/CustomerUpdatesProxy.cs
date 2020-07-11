@@ -15,17 +15,19 @@ namespace OpenDentBusiness {
 
 		///<summary>Get an instance of OpenDentBusiness.localhost.Service1 (referred to as 'Customer Updates Web Service'.
 		///Also sets IWebProxy and ICredentials if specified for this customer.  Service1 is ready to use on return.</summary>
-		public static localhost.Service1 GetWebServiceInstance() {
-			localhost.Service1 ws=new localhost.Service1();//Points to the debug localhost instance by default.
-			if(!ODBuild.IsDebug()) {
-				ws.Url=PrefC.GetString(PrefName.UpdateServerAddress);
-				ws.Timeout=(int)TimeSpan.FromMinutes(20).TotalMilliseconds;
-			}
-			if(PrefC.GetString(PrefName.UpdateWebProxyAddress) !="") {
+		public static localhost.Service1 GetWebServiceInstance()
+		{
+			localhost.Service1 ws = new localhost.Service1();//Points to the debug localhost instance by default.
+#if DEBUG
+			ws.Url = PrefC.GetString(PrefName.UpdateServerAddress);
+			ws.Timeout = (int)TimeSpan.FromMinutes(20).TotalMilliseconds;
+#endif
+			if (PrefC.GetString(PrefName.UpdateWebProxyAddress) != "")
+			{
 				IWebProxy proxy = new WebProxy(PrefC.GetString(PrefName.UpdateWebProxyAddress));
-				ICredentials cred=new NetworkCredential(PrefC.GetString(PrefName.UpdateWebProxyUserName),PrefC.GetString(PrefName.UpdateWebProxyPassword));
-				proxy.Credentials=cred;
-				ws.Proxy=proxy;
+				ICredentials cred = new NetworkCredential(PrefC.GetString(PrefName.UpdateWebProxyUserName), PrefC.GetString(PrefName.UpdateWebProxyPassword));
+				proxy.Credentials = cred;
+				ws.Proxy = proxy;
 			}
 			return ws;
 		}

@@ -198,7 +198,7 @@ namespace OpenDental{
 			//DirectoryEntry does recognize an empty string as a valid LDAP entry and will just return all logins from all available domains
 			//But all logins should be on the same domain, so this field is required
 			if(string.IsNullOrWhiteSpace(PrefC.GetString(PrefName.DomainLoginPath))) {
-				MsgBox.Show(this,"DomainLoginPath is missing in security settings. DomainLoginPath is required before assigning domain logins to user accounts.");
+				MessageBox.Show("DomainLoginPath is missing in security settings. DomainLoginPath is required before assigning domain logins to user accounts.");
 				return;
 			}
 			//Try to access the specified DomainLoginPath
@@ -251,7 +251,7 @@ namespace OpenDental{
 		}
 
 		private void butUnlock_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,true,"Users can become locked when invalid credentials have been entered several times in a row.\r\n"
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Users can become locked when invalid credentials have been entered several times in a row.\r\n"
 				+"Unlock this user so that more log in attempts can be made?"))
 			{
 				return;
@@ -260,10 +260,10 @@ namespace OpenDental{
 			UserCur.FailedAttempts=0;
 			try {
 				Userods.Update(UserCur);
-				MsgBox.Show(this,"User has been unlocked.");
+				MessageBox.Show("User has been unlocked.");
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"There was a problem unlocking this user.  Please call support or wait the allotted lock time.");
+				MessageBox.Show("There was a problem unlocking this user.  Please call support or wait the allotted lock time.");
 			}
 		}
 
@@ -280,7 +280,7 @@ namespace OpenDental{
 
 		private bool IsValidLogOffMinutes() {
 			if(!(textLogOffAfterMinutes.Text=="") && (!int.TryParse(textLogOffAfterMinutes.Text,out int minutes) || minutes<0)) {
-				MsgBox.Show(this,"Invalid 'Automatic logoff time in minutes'.\r\n" +
+				MessageBox.Show("Invalid 'Automatic logoff time in minutes'.\r\n" +
 					"Must be blank, 0, or a positive integer.");
 				return false;
 			}
@@ -298,32 +298,32 @@ namespace OpenDental{
 				_logOffAfterMinutes.ValueString=textLogOffAfterMinutes.Text;
 				UserOdPrefs.Upsert(_logOffAfterMinutes);
 				if(!PrefC.GetBool(PrefName.SecurityLogOffAllowUserOverride)) {
-					MsgBox.Show(this,"User logoff overrides will not take effect until the Global Security setting \"Allow user override for automatic logoff\" is checked");
+					MessageBox.Show("User logoff overrides will not take effect until the Global Security setting \"Allow user override for automatic logoff\" is checked");
 				}
 			}
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textUserName.Text==""){
-				MsgBox.Show(this,"Please enter a username.");
+				MessageBox.Show("Please enter a username.");
 				return;
 			}
 			if(!_isFromAddUser && IsNew && PrefC.GetBool(PrefName.PasswordsMustBeStrong) && string.IsNullOrWhiteSpace(_passwordTyped)) {
-				MsgBox.Show(this,"Password may not be blank when the strong password feature is turned on.");
+				MessageBox.Show("Password may not be blank when the strong password feature is turned on.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled && listClinic.SelectedIndex==-1) {
-				MsgBox.Show(this,"This user does not have a User Default Clinic set.  Please choose one to continue.");
+				MessageBox.Show("This user does not have a User Default Clinic set.  Please choose one to continue.");
 				return;
 			}
 			if(listUserGroup.SelectedIndices.Count == 0) {
-				MsgBox.Show(this,"Users must have at least one user group associated. Please select a user group to continue.");
+				MessageBox.Show("Users must have at least one user group associated. Please select a user group to continue.");
 				return;
 			}
 			if(_isFromAddUser && !Security.IsAuthorized(Permissions.SecurityAdmin,true)
 				&& (listUserGroup.SelectedItems.Count!=1 || listUserGroup.GetSelected<UserGroup>().UserGroupNum!=PrefC.GetLong(PrefName.DefaultUserGroup)))
 			{
-				MsgBox.Show(this,"This user must be assigned to the default user group.");
+				MessageBox.Show("This user must be assigned to the default user group.");
 				for(int i=0;i<listUserGroup.Items.Count;i++) {
 					if(((ODBoxItem<UserGroup>)listUserGroup.Items[i]).Tag.UserGroupNum==PrefC.GetLong(PrefName.DefaultUserGroup)) {
 						listUserGroup.SetSelected(i,true);
@@ -344,7 +344,7 @@ namespace OpenDental{
 				}
 				//If they set the user up with a default clinic and it's not in the restricted list, return.
 				if(!listUserClinics.Exists(x => x.ClinicNum==_listClinics[listClinic.SelectedIndex-1].ClinicNum)) {
-					MsgBox.Show(this,"User cannot have a default clinic that they are not restricted to.");
+					MessageBox.Show("User cannot have a default clinic that they are not restricted to.");
 					return;
 				}
 			}

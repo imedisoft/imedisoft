@@ -243,7 +243,7 @@ namespace OpenDental{
 				}
 			}
 			if(listType.Items.Count==0){
-				MsgBox.Show(this,"You must setup blockout types first in Setup-Definitions.");
+				MessageBox.Show("You must setup blockout types first in Setup-Definitions.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -294,7 +294,7 @@ namespace OpenDental{
 
     private void butOK_Click(object sender, System.EventArgs e) { 
 			if(listOp.SelectedIndices.Count==0){
-				MsgBox.Show(this,"Please select at least one operatory first.");
+				MessageBox.Show("Please select at least one operatory first.");
 				return;
 			}
 		  try{
@@ -302,7 +302,7 @@ namespace OpenDental{
 				_schedCur.StopTime=DateTime.Parse(comboStop.Text).TimeOfDay;
 			}
 			catch{
-				MsgBox.Show(this,"Incorrect time format");
+				MessageBox.Show("Incorrect time format");
 				return;
 			}
       _schedCur.Note=textNote.Text;
@@ -314,10 +314,10 @@ namespace OpenDental{
 			List<Schedule> listOverlapSchedules;
 			if(Schedules.Overlaps(_schedCur,out listOverlapSchedules)) {
 				if(!PrefC.GetBool(PrefName.ReplaceExistingBlockout) || !Schedules.IsAppointmentBlocking(_schedCur.BlockoutType)) {
-					MsgBox.Show(this,"Blockouts not allowed to overlap.");
+					MessageBox.Show("Blockouts not allowed to overlap.");
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Creating this blockout will cause blockouts to overlap. Continuing will delete the existing "
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Creating this blockout will cause blockouts to overlap. Continuing will delete the existing "
 					+"blockout(s). Continue?")) 
 				{
 					return;

@@ -471,11 +471,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Description not allowed to be blank.");
+				MessageBox.Show("Description not allowed to be blank.");
 				return;
 			}
 			if(comboAction.SelectedIndex==-1) {
-				MsgBox.Show(this,"Action not allowed to be blank.");
+				MessageBox.Show("Action not allowed to be blank.");
 				return;
 			}
 			AutoCur.Description=textDescription.Text;
@@ -484,11 +484,11 @@ namespace OpenDental{
 			AutoCur.ProcCodes="";//set to correct proc code string below if necessary
 			if(new[] { AutomationTrigger.CompleteProcedure,AutomationTrigger.ScheduleProcedure }.Contains(AutoCur.Autotrigger)) {
 				if(textProcCodes.Text.Contains(" ")){
-					MsgBox.Show(this,"Procedure codes cannot contain any spaces.");
+					MessageBox.Show("Procedure codes cannot contain any spaces.");
 					return;
 				}
 				if(textProcCodes.Text=="") {
-					MsgBox.Show(this,"Please enter valid procedure code(s) first.");
+					MessageBox.Show("Please enter valid procedure code(s) first.");
 					return;
 				}
 				string strInvalidCodes=string.Join(", ",textProcCodes.Text.Split(',').Where(x => !ProcedureCodes.IsValidCode(x)));
@@ -518,7 +518,7 @@ namespace OpenDental{
 			switch(AutoCur.AutoAction) {
 				case AutomationAction.CreateCommlog:
 					if(comboActionObject.SelectedIndex==-1) {
-						MsgBox.Show(this,"A commlog type must be selected.");
+						MessageBox.Show("A commlog type must be selected.");
 						return;
 					}
 					AutoCur.CommType=_listCommLogTypeDefs[comboActionObject.SelectedIndex].DefNum;
@@ -527,7 +527,7 @@ namespace OpenDental{
 				case AutomationAction.PopUp:
 				case AutomationAction.PopUpThenDisable10Min:
 					if(string.IsNullOrEmpty(textMessage.Text.Trim())) {
-						MsgBox.Show(this,"The message cannot be blank.");
+						MessageBox.Show("The message cannot be blank.");
 						return;
 					}
 					AutoCur.MessageContent=textMessage.Text;
@@ -538,7 +538,7 @@ namespace OpenDental{
 				case AutomationAction.ShowConsentForm:
 				case AutomationAction.PrintRxInstruction:
 					if(comboActionObject.SelectedIndex==-1) {
-						MsgBox.Show(this,"A sheet definition must be selected.");
+						MessageBox.Show("A sheet definition must be selected.");
 						return;
 					}
 					List<SheetDef> listSheets=SheetDefs.GetDeepCopy().FindAll(x => !SheetDefs.IsDashboardType(x));
@@ -552,14 +552,14 @@ namespace OpenDental{
 					break;
 				case AutomationAction.SetApptType:
 					if(comboActionObject.SelectedIndex==-1) {
-						MsgBox.Show(this,"An appointment type must be selected.");
+						MessageBox.Show("An appointment type must be selected.");
 						return;
 					}
 					AutoCur.AppointmentTypeNum=_listAptTypes[comboActionObject.SelectedIndex].AppointmentTypeNum;
 					break;
 				case AutomationAction.ChangePatStatus:
 					if(comboAction.SelectedIndex==-1) {
-						MsgBox.Show(this,"A patient status must be selected.");
+						MessageBox.Show("A patient status must be selected.");
 						return;
 					}
 					AutoCur.PatStatus=comboActionObject.GetSelected<PatientStatus>();

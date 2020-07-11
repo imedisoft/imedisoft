@@ -69,7 +69,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a Loinc code from the list.");
+				MessageBox.Show("Please select a Loinc code from the list.");
 				return;
 			}
 			if(IsSelectionMode) {

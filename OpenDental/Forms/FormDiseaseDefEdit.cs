@@ -292,7 +292,7 @@ namespace OpenDental{
 				return;
 			}
 			if(DiseaseDefs.ContainsSnomed(FormS.SelectedSnomed.SnomedCode,DiseaseDefCur.DiseaseDefNum)) {//DiseaseDefNum could be zero
-				MsgBox.Show(this,"Snomed code already exists in the problems list.");
+				MessageBox.Show("Snomed code already exists in the problems list.");
 				return;
 			}
 			DiseaseDefCur.SnomedCode=FormS.SelectedSnomed.SnomedCode;
@@ -313,7 +313,7 @@ namespace OpenDental{
 				return;
 			}
 			if(DiseaseDefs.ContainsICD9(FormI.SelectedIcd9.ICD9Code,DiseaseDefCur.DiseaseDefNum)) {
-				MsgBox.Show(this,"ICD-9 code already exists in the problems list.");
+				MessageBox.Show("ICD-9 code already exists in the problems list.");
 				return;
 			}
 			DiseaseDefCur.ICD9Code=FormI.SelectedIcd9.ICD9Code;
@@ -334,7 +334,7 @@ namespace OpenDental{
 				return;
 			}
 			if(DiseaseDefs.ContainsIcd10(FormI.SelectedIcd10.Icd10Code,DiseaseDefCur.DiseaseDefNum)) {
-				MsgBox.Show(this,"ICD-10 code already exists in the problems list.");
+				MessageBox.Show("ICD-10 code already exists in the problems list.");
 				return;
 			}
 			DiseaseDefCur.Icd10Code=FormI.SelectedIcd10.Icd10Code;
@@ -347,7 +347,7 @@ namespace OpenDental{
 				return;
 			}
 			if(!_hasDelete) {
-				MsgBox.Show(this,"This problem def is currently in use and cannot be deleted.");
+				MessageBox.Show("This problem def is currently in use and cannot be deleted.");
 				return;
 			}
 			SecurityLogMsgText=DiseaseDefCur.DiseaseName+" "+Lan.g(this,"deleted.");
@@ -357,7 +357,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textName.Text=="") {
-				MsgBox.Show(this,"Not allowed to create a Disease Definition without a description.");
+				MessageBox.Show("Not allowed to create a Disease Definition without a description.");
 				return;
 			}
 			//Icd9Code and SnomedCode set on load or on return from code picker forms

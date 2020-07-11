@@ -38,7 +38,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete this Reactivation?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this Reactivation?")) {
 				return;
 			}
 			if(!_reactivationCur.IsNew) {

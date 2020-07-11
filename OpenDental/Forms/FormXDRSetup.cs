@@ -60,7 +60,7 @@ namespace OpenDental {
 			}
 			_progCur=Programs.GetCur(ProgramName.XDR);
 			if(_progCur==null) {
-				MsgBox.Show(this,"The XDR bridge is missing from the database.");//should never happen
+				MessageBox.Show("The XDR bridge is missing from the database.");//should never happen
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -84,7 +84,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				ex.DoNothing();
-				MsgBox.Show(this,"You are missing a program property for XDR.  Please contact support to resolve this issue.");
+				MessageBox.Show("You are missing a program property for XDR.  Please contact support to resolve this issue.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -120,7 +120,7 @@ namespace OpenDental {
 				}
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"You are missing a program property from the database.  Please call support to resolve this issue.");
+				MessageBox.Show("You are missing a program property from the database.  Please call support to resolve this issue.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -248,7 +248,7 @@ namespace OpenDental {
 				pictureBox.Image=importedImg;
 			}
 			catch {
-				MsgBox.Show(this,"Error loading file.");
+				MessageBox.Show("Error loading file.");
 			}
 		}
 

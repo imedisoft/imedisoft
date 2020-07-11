@@ -62,16 +62,6 @@ namespace OpenDental {
 			}
 			textSupplementalBackupCopyNetworkPath.Text=PrefC.GetString(PrefName.SupplementalBackupNetworkPath);
 			#endregion Supplemental Tab
-			if(ODBuild.IsWeb()) {
-				//OD Cloud users cannot use this tool because they're InnoDb.
-				tabControl1.TabPages.Remove(tabPageBackup);
-				//We don't want to allow the user to connect to another server.
-				checkArchiveDoBackupFirst.Visible=false;
-				checkArchiveDoBackupFirst.Checked=false;
-				groupBoxBackupConnection.Visible=false;
-				//We don't want the user to be able to tell if a directory exists.
-				tabControl1.TabPages.Remove(tabPageSupplementalBackups);
-			}
 		}
 
 		#region Backup Tab
@@ -79,23 +69,23 @@ namespace OpenDental {
 		private bool IsBackupTabValid() {
 			//test for trailing slashes
 			if(textBackupFromPath.Text!="" && !textBackupFromPath.Text.EndsWith(""+Path.DirectorySeparatorChar)){
-				MsgBox.Show(this,"Paths must end with "+Path.DirectorySeparatorChar+".");
+				MessageBox.Show("Paths must end with "+Path.DirectorySeparatorChar+".");
 				return false;
 			}
 			if(textBackupToPath.Text!="" && !textBackupToPath.Text.EndsWith(""+Path.DirectorySeparatorChar)){
-				MsgBox.Show(this,"Paths must end with "+Path.DirectorySeparatorChar+".");
+				MessageBox.Show("Paths must end with "+Path.DirectorySeparatorChar+".");
 				return false;
 			}
 			if(textBackupRestoreFromPath.Text!="" && !textBackupRestoreFromPath.Text.EndsWith(""+Path.DirectorySeparatorChar)) {
-				MsgBox.Show(this,"Paths must end with "+Path.DirectorySeparatorChar+".");
+				MessageBox.Show("Paths must end with "+Path.DirectorySeparatorChar+".");
 				return false;
 			}
 			if(textBackupRestoreToPath.Text!="" && !textBackupRestoreToPath.Text.EndsWith(""+Path.DirectorySeparatorChar)) {
-				MsgBox.Show(this,"Paths must end with "+Path.DirectorySeparatorChar+".");
+				MessageBox.Show("Paths must end with "+Path.DirectorySeparatorChar+".");
 				return false;
 			}
 			if(textBackupRestoreAtoZToPath.Text!="" && !textBackupRestoreAtoZToPath.Text.EndsWith(""+Path.DirectorySeparatorChar)) {
-				MsgBox.Show(this,"Paths must end with "+Path.DirectorySeparatorChar+".");
+				MessageBox.Show("Paths must end with "+Path.DirectorySeparatorChar+".");
 				return false;
 			}
 			return true;
@@ -175,7 +165,7 @@ namespace OpenDental {
 			//Ensure that the backup from and backup to paths are different. This is to prevent the live database
 			//from becoming corrupt.
 			if(this.textBackupFromPath.Text.Trim().ToLower()==this.textBackupToPath.Text.Trim().ToLower()) {
-				MsgBox.Show(this,"The backup from path and backup to path must be different.");
+				MessageBox.Show("The backup from path and backup to path must be different.");
 				return;
 			}
 			//test saving defaults
@@ -185,22 +175,22 @@ namespace OpenDental {
 				|| textBackupRestoreToPath.Text!=PrefC.GetString(PrefName.BackupRestoreToPath)
 				|| textBackupRestoreAtoZToPath.Text!=PrefC.GetString(PrefName.BackupRestoreAtoZToPath)) 
 			{
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Set as default?") && SaveTabPrefs()) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Set as default?") && SaveTabPrefs()) {
 					DataValid.SetInvalid(InvalidType.Prefs);
 				}
 			}
 			string dbName=MiscData.GetCurrentDatabase();
 			if(InnoDb.HasInnoDbTables(dbName)) {
 				//Database has innodb tables. Backup tool does not work on dbs with InnoDb tables. 
-				MsgBox.Show(this,"InnoDb tables detected. Backup tool cannot run with InnoDb tables.");
+				MessageBox.Show("InnoDb tables detected. Backup tool cannot run with InnoDb tables.");
 				return;
 			}
 			if(!Directory.Exists(ODFileUtils.CombinePaths(textBackupFromPath.Text,dbName))){// C:\mysql\data\opendental
-				MsgBox.Show(this,"Backup FROM path is invalid.");
+				MessageBox.Show("Backup FROM path is invalid.");
 				return;
 			}
 			if(!Directory.Exists(textBackupToPath.Text)){// D:\
-				MsgBox.Show(this,"Backup TO path is invalid.");
+				MessageBox.Show("Backup TO path is invalid.");
 				return;
 			}
 			_errorMessage="";
@@ -464,7 +454,7 @@ namespace OpenDental {
 				//dmg This check will not work on Linux, because mapped drives exist as regular (mounted) paths. Perhaps there
 				//is another way to check for this on Linux.
 				if(textBackupRestoreToPath.Text!="" && textBackupRestoreToPath.Text.StartsWith(""+Path.DirectorySeparatorChar)){
-					MsgBox.Show(this,"The restore database TO folder must be on this computer.");
+					MessageBox.Show("The restore database TO folder must be on this computer.");
 					return;
 				}
 			}
@@ -472,7 +462,7 @@ namespace OpenDental {
 			string dbName=MiscData.GetCurrentDatabase();
 			if(InnoDb.HasInnoDbTables(dbName)) {
 				//Database has innodb tables. Restore tool does not work on dbs with InnoDb tables. 
-				MsgBox.Show(this,"InnoDb tables detected. Restore tool cannot run with InnoDb tables.");
+				MessageBox.Show("InnoDb tables detected. Restore tool cannot run with InnoDb tables.");
 				return;
 			}
 			if(!Directory.Exists(ODFileUtils.CombinePaths(textBackupRestoreFromPath.Text,dbName))){// D:\opendental
@@ -485,7 +475,7 @@ namespace OpenDental {
 			}
 			if(ShouldUseAtoZFolder()) {
 				if(!Directory.Exists(textBackupRestoreAtoZToPath.Text)) {// C:\OpenDentalData\
-					MsgBox.Show(this,"Restore A-Z images TO path is invalid.");
+					MessageBox.Show("Restore A-Z images TO path is invalid.");
 					return;
 				}
 				string atozFull=textBackupRestoreAtoZToPath.Text;// C:\OpenDentalData\
@@ -493,7 +483,7 @@ namespace OpenDental {
 				atozFull=atozFull.Substring(0,atozFull.Length-1);// C:\OpenDentalData
 				string atozDir=atozFull.Substring(atozFull.LastIndexOf(Path.DirectorySeparatorChar)+1);// OpenDentalData
 				if(!Directory.Exists(ODFileUtils.CombinePaths(textBackupRestoreFromPath.Text,atozDir))){// D:\OpenDentalData
-					MsgBox.Show(this,"Restore A-Z images FROM path is invalid.");
+					MessageBox.Show("Restore A-Z images FROM path is invalid.");
 					return;
 				}
 			}
@@ -508,7 +498,7 @@ namespace OpenDental {
 			//stop the service--------------------------------------------------------------------------------------
 			ServiceController sc=new ServiceController("MySQL");
 			if(!ServicesHelper.Stop(sc)) {
-				MsgBox.Show(this,"Unable to stop MySQL service.");
+				MessageBox.Show("Unable to stop MySQL service.");
 				Cursor=Cursors.Default;
 				return;
 			}
@@ -559,14 +549,14 @@ namespace OpenDental {
 			Version programVersionDb=new Version(PrefC.GetStringNoCache(PrefName.ProgramVersion));
 			Version programVersionCur=new Version(Application.ProductVersion);
 			if(programVersionDb!=programVersionCur) {
-				MsgBox.Show(this,"The restored database version is different than the version installed and requires a restart.  The program will now close.");
+				MessageBox.Show("The restored database version is different than the version installed and requires a restart.  The program will now close.");
 				FormOpenDental.S_ProcessKillCommand();
 				return;
 			}
 			else {
 				DataValid.SetInvalid(Cache.GetAllCachedInvalidTypes().ToArray());
 			}
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 			Close();
 			return;
 		}
@@ -613,11 +603,11 @@ namespace OpenDental {
 				}
 				//Validation
 				if(string.IsNullOrWhiteSpace(textArchiveServerName.Text)) {
-					MsgBox.Show(this,"Please specify a Server Name.");
+					MessageBox.Show("Please specify a Server Name.");
 					return;
 				}
 				if(string.IsNullOrWhiteSpace(textArchiveUser.Text)) {
-					MsgBox.Show(this,"Please enter a User.");
+					MessageBox.Show("Please enter a User.");
 					return;
 				}
 				if(string.IsNullOrWhiteSpace(PrefC.GetString(PrefName.ArchiveKey))) {//If archive key isn't set, generate a new one.
@@ -650,7 +640,7 @@ namespace OpenDental {
 		private void butSaveArchive_Click(object sender,EventArgs e) {
 			if(SaveTabPrefs()) {
 				DataValid.SetInvalid(InvalidType.Prefs);
-				MsgBox.Show(this,"Saved");
+				MessageBox.Show("Saved");
 			}
             PrefName.ArchiveDate.Update(dateTimeArchive.Value);
         }
@@ -676,7 +666,7 @@ namespace OpenDental {
 
 		private void ButSupplementalSaveDefaults_Click(object sender,EventArgs e) {
 			if(!string.IsNullOrEmpty(textSupplementalBackupCopyNetworkPath.Text) && !Directory.Exists(textSupplementalBackupCopyNetworkPath.Text)) {
-				MsgBox.Show(this,"Invalid or inaccessible "+labelSupplementalBackupCopyNetworkPath.Text+".");//This label text will rarely change.
+				MessageBox.Show("Invalid or inaccessible "+labelSupplementalBackupCopyNetworkPath.Text+".");//This label text will rarely change.
 				return;
 			}
 			if(Prefs.UpdateBool(PrefName.SupplementalBackupEnabled,checkSupplementalBackupEnabled.Checked)) {
@@ -699,7 +689,7 @@ namespace OpenDental {
 				SecurityLogs.MakeLogEntry(Permissions.SupplementalBackup,0,
 					labelSupplementalBackupCopyNetworkPath.Text+" changed to '"+textSupplementalBackupCopyNetworkPath.Text+"'.");
 			}
-			MsgBox.Show(this,"Saved");
+			MessageBox.Show("Saved");
 		}
 
 		#endregion Supplemental Tab

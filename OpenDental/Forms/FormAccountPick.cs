@@ -237,7 +237,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an account first.");
+				MessageBox.Show("Please select an account first.");
 				return;
 			}
 			if(IsQuickBooks) {

@@ -181,7 +181,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(PrefC.HasClinicsEnabled && !checkAllClin.Checked && listClin.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one clinic must be selected.");
+				MessageBox.Show("At least one clinic must be selected.");
 				return;
 			}
 			ReportComplex report=new ReportComplex(true,false);

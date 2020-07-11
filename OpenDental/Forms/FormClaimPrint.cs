@@ -208,7 +208,7 @@ namespace OpenDental{
 				//Get the default claim form for the practice.
 				ClaimFormCur=ClaimForms.GetClaimForm(PrefC.GetLong(PrefName.DefaultClaimForm));
 				if(ClaimFormCur==null) {//Could happen if printing a blank form and no default claim form is set.
-					MsgBox.Show(this,"No default claim form set.  Set a default in Setup | Family / Insurance | Claim Forms.");
+					MessageBox.Show("No default claim form set.  Set a default in Setup | Family / Insurance | Claim Forms.");
 					return false;
 				}
 			}
@@ -469,14 +469,14 @@ namespace OpenDental{
 			Family FamCur=Patients.GetFamily(PatNumCur);
 			Patient PatCur=FamCur.GetPatient(PatNumCur);
 			if(PatCur==null) {
-				MsgBox.Show(this,"Unable to find patient.");
+				MessageBox.Show("Unable to find patient.");
 				butPrint.Enabled=false;
 				return false;
 			}
 			List<Claim> ClaimList=Claims.Refresh(PatCur.PatNum);
 			ClaimCur=Claims.GetFromList(ClaimList,ClaimNumCur);
 			if(ClaimCur==null) {
-				MsgBox.Show(this,"Claim has been deleted by another user.");
+				MessageBox.Show("Claim has been deleted by another user.");
 				butPrint.Enabled=false;
 				return false;
 			}
@@ -511,7 +511,7 @@ namespace OpenDental{
 				subsc=FamCur.ListPats[FamCur.GetIndex(subCur.Subscriber)];
 			}
 			if(subsc==null) {//Patient for this InsSub could not be found.  Likely db corruption.
-				MsgBox.Show(this,"Insurance Plan attached to Claim does not have a valid Subscriber.  Run Database Maintenance (Tools): InsSubInvalidSubscriber.");
+				MessageBox.Show("Insurance Plan attached to Claim does not have a valid Subscriber.  Run Database Maintenance (Tools): InsSubInvalidSubscriber.");
 				butPrint.Enabled=false;
 				return false;
 			}

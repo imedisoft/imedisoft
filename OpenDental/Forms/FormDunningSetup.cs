@@ -132,7 +132,7 @@ namespace OpenDental {
 		
 		private void butDuplicate_Click(object sender,EventArgs e) {
 			if(gridDunning.SelectedIndices.Count()==0) {
-				MsgBox.Show(this,"Please select a message to duplicate first.");
+				MessageBox.Show("Please select a message to duplicate first.");
 				return;
 			}
 			Dunning dun=((Dunning)gridDunning.ListGridRows[gridDunning.GetSelectedIndex()].Tag).Copy();

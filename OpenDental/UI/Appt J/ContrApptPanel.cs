@@ -816,7 +816,7 @@ namespace OpenDental.UI{
 				TimeSpan timeSpanNew=RoundTimeDown(_timeClicked,MinPerIncr);
 				DateTime dateTimeStart=DateSelected+timeSpanNew;
 				if(Appointments.CheckTimeForBlockoutOverlap(dateTimeStart,_opNumClicked)) {
-					MsgBox.Show(this, "Appointment cannot be created on a blockout marked as 'Block appointment scheduling'");
+					MessageBox.Show("Appointment cannot be created on a blockout marked as 'Block appointment scheduling'");
 					return;
 				}
 				OnApptMainAreaDoubleClicked(dateTimeStart,_opNumClicked,_pointMouseOrigin);
@@ -1072,7 +1072,7 @@ namespace OpenDental.UI{
 					TimeSpan newspan=timeSpanBottomRounded-dateTimeTempAppt.TimeOfDay;
 					//check if the appointment is being dragged to the next day
 					if(dateTimeTempAppt.Day!=(dateTimeTempAppt+newspan).Day) {//I don't think this can get hit
-						MsgBox.Show(this,"You cannot have an appointment that starts and ends on different days.");
+						MessageBox.Show("You cannot have an appointment that starts and ends on different days.");
 						return;
 					}
 					int newpatternL=Math.Max((int)newspan.TotalMinutes/5,1);
@@ -1157,7 +1157,7 @@ namespace OpenDental.UI{
 						return;
 					}
 					if((ApptStatus)PIn.Int(_dataRowTempAppt["AptStatus"].ToString())==ApptStatus.Complete) {//could cause completed procs to change date
-						MsgBox.Show(this,"Not allowed to move completed appointments.");
+						MessageBox.Show("Not allowed to move completed appointments.");
 						return;
 					}
 					//HideDraggableTempApptSingle() handled down below
@@ -1188,7 +1188,7 @@ namespace OpenDental.UI{
 					out DateTime dateNew,
 					out int opIdx,contrTempAppt.Width);
 				if(opIdx<0){
-					MsgBox.Show(this,"Invalid operatory");
+					MessageBox.Show("Invalid operatory");
 					return;
 				}
 				if(timeSpanNewRounded!=appt.AptDateTime.TimeOfDay
@@ -1209,7 +1209,7 @@ namespace OpenDental.UI{
 						{
 							return;
 						}
-						if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Move Appointment?")){
+						if(!MsgBox.Show(MsgBoxButtons.YesNo,"Move Appointment?")){
 							return;
 						}
 					}
@@ -1218,7 +1218,7 @@ namespace OpenDental.UI{
 				appt.AptDateTime=dateNew+timeSpanNewRounded;
 				//Compare beginning of new appointment against end to see if the appointment spans two days
 				if(appt.AptDateTime.Day!=appt.AptDateTime.AddMinutes(appt.Pattern.Length*5).Day) {
-					MsgBox.Show(this,"You cannot have an appointment that starts and ends on different days.");
+					MessageBox.Show("You cannot have an appointment that starts and ends on different days.");
 					return;
 				}
 				//Prevent double-booking of certain procedures

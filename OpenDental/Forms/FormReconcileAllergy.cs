@@ -344,7 +344,7 @@ namespace OpenDental {
 
 		private void butAddNew_Click(object sender,EventArgs e) {
 			if(gridAllergyImport.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"A row must be selected to add");
+				MessageBox.Show("A row must be selected to add");
 				return;
 			}
 			Allergy al;
@@ -390,7 +390,7 @@ namespace OpenDental {
 
 		private void butAddExist_Click(object sender,EventArgs e) {
 			if(gridAllergyExisting.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"A row must be selected to add");
+				MessageBox.Show("A row must be selected to add");
 				return;
 			}
 			Allergy al;
@@ -447,7 +447,7 @@ namespace OpenDental {
 
 		private void butRemoveRec_Click(object sender,EventArgs e) {
 			if(gridAllergyReconcile.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"A row must be selected to remove");
+				MessageBox.Show("A row must be selected to remove");
 				return;
 			}
 			Allergy al;
@@ -460,7 +460,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(_listAllergyReconcile.Count==0) {
-				if(!MsgBox.Show(this,true,"The reconcile list is empty which will cause all existing allergies to be removed.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"The reconcile list is empty which will cause all existing allergies to be removed.  Continue?")) {
 					return;
 				}
 			}

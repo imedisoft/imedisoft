@@ -443,7 +443,7 @@ namespace OpenDental{
 
 		private void goToChartToolStripMenuItem_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select a patient first.");
+				MessageBox.Show("Please select a patient first.");
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.ChartModule)) {

@@ -336,27 +336,27 @@ namespace OpenDental{
 			if( textDebit.errorProvider1.GetError(textDebit)!=""
 				|| textCredit.errorProvider1.GetError(textCredit)!=""
 				){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			/*if(comboAccount.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select an account first.");
+				MessageBox.Show("Please select an account first.");
 				return;
 			}*/
 			if(PIn.Double(textDebit.Text)<0 || PIn.Double(textCredit.Text)<0){
-				MsgBox.Show(this,"Both amounts not allowed to be less than 0.");
+				MessageBox.Show("Both amounts not allowed to be less than 0.");
 				return;
 			}
 			if(PIn.Double(textDebit.Text)==0 && PIn.Double(textCredit.Text)==0) {
-				MsgBox.Show(this,"One amount must be filled in.");
+				MessageBox.Show("One amount must be filled in.");
 				return;
 			}
 			if(PIn.Double(textDebit.Text)>0 && PIn.Double(textCredit.Text)>0) {
-				MsgBox.Show(this,"Only one amount can be filled in.");
+				MessageBox.Show("Only one amount can be filled in.");
 				return;
 			}
 			if(AccountPicked==null || AccountPicked.AccountNum==0) {
-				MsgBox.Show(this,"Please select an account.");
+				MessageBox.Show("Please select an account.");
 				return;
 			}
 			EntryCur.AccountNum=AccountPicked.AccountNum;

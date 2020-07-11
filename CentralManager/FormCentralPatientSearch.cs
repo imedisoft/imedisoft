@@ -282,7 +282,7 @@ namespace CentralManager {
 
 		private void buttonOK_Click(object sender, EventArgs e){
 			if(gridPats.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a patient, first.");
+				MsgBox.Show("Please select a patient, first.");
 				return;
 			}
 			DataRowSelectedPatient=(DataRow)gridPats.ListGridRows[gridPats.GetSelectedIndex()].Tag;

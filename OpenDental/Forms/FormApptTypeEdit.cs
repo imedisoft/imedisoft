@@ -57,7 +57,7 @@ namespace OpenDental {
 			else {
 				string msg=AppointmentTypes.CheckInUse(AppointmentTypeCur.AppointmentTypeNum);
 				if(!string.IsNullOrWhiteSpace(msg)) {
-					MsgBox.Show(this,msg);
+					MessageBox.Show(msg);
 					return;
 				}
 				AppointmentTypeCur=null;
@@ -153,10 +153,10 @@ namespace OpenDental {
 
 		private void butRemove_Click(object sender,EventArgs e) {
 			if(listBoxProcCodes.SelectedItems.Count<1) {
-				MsgBox.Show(this,"Please select the procedures you wish to remove.");
+				MessageBox.Show("Please select the procedures you wish to remove.");
 				return;
 			}
-			if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Remove selected procedure(s)?")) {
+			if(MsgBox.Show(MsgBoxButtons.OKCancel,"Remove selected procedure(s)?")) {
 				_listProcCodes.RemoveAll(x => listBoxProcCodes.SelectedItems.Contains(x.ProcCode));
 				RefreshListBoxProcCodes();
 			}

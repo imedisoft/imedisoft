@@ -67,7 +67,7 @@ namespace OpenDental {
 			int expYear=0;
 			int expMonth=0;
 			if(textCardNumber.Text.Trim().Length<5) {
-				MsgBox.Show(this,"Invalid Card Number.");
+				MessageBox.Show("Invalid Card Number.");
 				return false;
 			}
 			try {//PIn.Int will throw an exception if not a valid format
@@ -80,35 +80,35 @@ namespace OpenDental {
 					expMonth=PIn.Int(textExpDate.Text.Substring(0,2));
 				}
 				else {
-					MsgBox.Show(this,"Expiration format invalid.");
+					MessageBox.Show("Expiration format invalid.");
 					return false;
 				}
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"Expiration format invalid.");
+				MessageBox.Show(this,"Expiration format invalid.");
 				return false;
 			}
 			if(_creditCard==null) {
 				//using a new CC and the card number entered contains something other than digits
 				if(textCardNumber.Text.Any(x => !char.IsDigit(x))) {
-					MsgBox.Show(this,"Invalid card number.");
+					MessageBox.Show("Invalid card number.");
 					return false;
 				}
 			}
 			else if(_creditCard.XChargeToken=="" && Regex.IsMatch(textCardNumber.Text,@"X+[0-9]{4}")) {//using a stored CC
-				MsgBox.Show(this,"There is no saved XWeb token for this credit card.  The card number and expiration must be re-entered.");
+				MessageBox.Show("There is no saved XWeb token for this credit card.  The card number and expiration must be re-entered.");
 				return false;
 			}
 			if(!Regex.IsMatch(textAmount.Text,"^[0-9]+$") && !Regex.IsMatch(textAmount.Text,"^[0-9]*\\.[0-9]+$")) {
-				MsgBox.Show(this,"Invalid amount.");
+				MessageBox.Show("Invalid amount.");
 				return false;
 			}
 			if(_tranType==XWebTransactionType.CreditVoidTransaction && textRefNumber.Text=="") {
-				MsgBox.Show(this,"Ref Number required.");
+				MessageBox.Show("Ref Number required.");
 				return false;
 			}
 			if(textPayNote.Text=="") {
-				MsgBox.Show(this,"Payment note required.");
+				MessageBox.Show("Payment note required.");
 				return false;
 			}
 			return true;

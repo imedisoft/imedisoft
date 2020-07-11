@@ -374,7 +374,7 @@ namespace OpenDental{
 
 		private void butAdd_Click(object sender, System.EventArgs e) {
 			if(listCategories.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a category first.");
+				MessageBox.Show("Please select a category first.");
 				return;
 			}
 			LetterMerge letter=new LetterMerge();
@@ -432,7 +432,7 @@ namespace OpenDental{
 				}
       }
       catch{
-        MsgBox.Show(this,"File in use by another program.  Close and try again.");
+        MessageBox.Show("File in use by another program.  Close and try again.");
 				return false;
 			}
 			return true;
@@ -442,7 +442,7 @@ namespace OpenDental{
 			if(!CreateData()){
 				return;
 			}
-			MsgBox.Show(this,"done");
+			MessageBox.Show("done");
 		}
 
 		private void butViewData_Click(object sender,EventArgs e) {
@@ -456,13 +456,13 @@ namespace OpenDental{
 
 		private bool CreateData(){
 			if(listLetters.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a letter first.");
+				MessageBox.Show("Please select a letter first.");
 				return false;
 			}
 			LetterMerge letterCur=ListForCat[listLetters.SelectedIndex];
 			string dataFile=PrefC.GetString(PrefName.LetterMergePath)+letterCur.DataFileName;
 			if(!Directory.Exists(PrefC.GetString(PrefName.LetterMergePath))){
-				MsgBox.Show(this,"Letter merge path not valid.");
+				MessageBox.Show("Letter merge path not valid.");
 				return false;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -480,7 +480,7 @@ namespace OpenDental{
 			return;
 #endif
 			if(listLetters.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a letter first.");
+				MessageBox.Show("Please select a letter first.");
 				return;
 			}
 			LetterMerge letterCur=ListForCat[listLetters.SelectedIndex];
@@ -488,7 +488,7 @@ namespace OpenDental{
 			string templateFile=ODFileUtils.CombinePaths(PrefC.GetString(PrefName.LetterMergePath),letterCur.TemplateName);
 			string dataFile=ODFileUtils.CombinePaths(PrefC.GetString(PrefName.LetterMergePath),letterCur.DataFileName);
 			if(!File.Exists(templateFile)){
-				MsgBox.Show(this,"Template file does not exist.");
+				MessageBox.Show("Template file does not exist.");
 				return;
 			}
 			PrintDocument pd=new PrintDocument();
@@ -565,7 +565,7 @@ namespace OpenDental{
 		private void butPreview_Click(object sender, System.EventArgs e) {
 #if !DISABLE_MICROSOFT_OFFICE
 			if(listLetters.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a letter first.");
+				MessageBox.Show("Please select a letter first.");
 				return;
 			}
 			LetterMerge letterCur=ListForCat[listLetters.SelectedIndex];
@@ -573,7 +573,7 @@ namespace OpenDental{
 			string templateFile=ODFileUtils.CombinePaths(PrefC.GetString(PrefName.LetterMergePath),letterCur.TemplateName);
 			string dataFile=ODFileUtils.CombinePaths(PrefC.GetString(PrefName.LetterMergePath),letterCur.DataFileName);
 			if(!File.Exists(templateFile)){
-				MsgBox.Show(this,"Template file does not exist.");
+				MessageBox.Show("Template file does not exist.");
 				return;
 			}
 			if(!CreateDataFile(dataFile,letterCur)){
@@ -720,7 +720,7 @@ namespace OpenDental{
 		private void butEditTemplate_Click(object sender, System.EventArgs e) {
 #if !DISABLE_MICROSOFT_OFFICE
 			if(listLetters.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a letter first.");
+				MessageBox.Show("Please select a letter first.");
 				return;
 			}
 			LetterMerge letterCur=ListForCat[listLetters.SelectedIndex];

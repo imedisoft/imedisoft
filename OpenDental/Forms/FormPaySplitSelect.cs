@@ -140,7 +140,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			ListSelectedSplits.Clear();

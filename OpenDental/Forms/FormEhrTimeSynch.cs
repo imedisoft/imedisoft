@@ -37,7 +37,7 @@ namespace OpenDental {
 			textNistUrl.Text=PrefC.GetString(PrefName.NistTimeServerUrl);
 			double nistOffset=GetNistOffset();
 			if(nistOffset==double.MaxValue) { //Timed out
-				MsgBox.Show(this,"No response received from NIST time server.  Click synch time after four seconds.");
+				MessageBox.Show("No response received from NIST time server.  Click synch time after four seconds.");
 				this.Cursor=Cursors.Default;
 				return false;
 			}
@@ -54,7 +54,7 @@ namespace OpenDental {
 				WindowsTime.SetTime(_timeNist); //Sets local machine time
 			}
 			catch {
-				MsgBox.Show(this,"Error setting local machine time.");
+				MessageBox.Show("Error setting local machine time.");
 			}
 			_timeLocal=DateTime.Now;//Update time since it has now been set
 			double serverOffset=(MiscData.GetNowDateTime()-DateTime.Now).TotalSeconds; //Cannot get milliseconds from Now() in Mysql Pre-5.6.4, Only gets whole seconds.
@@ -78,7 +78,7 @@ namespace OpenDental {
 			//Get NistTime Offset
 			double nistOffset=GetNistOffset();
 			if(nistOffset==double.MaxValue) { //Timed out
-				MsgBox.Show(this,"No response received from NIST time server.  Click synch time after four seconds.");
+				MessageBox.Show("No response received from NIST time server.  Click synch time after four seconds.");
 				this.Cursor=Cursors.Default;
 				return;
 			}
@@ -95,7 +95,7 @@ namespace OpenDental {
 				WindowsTime.SetTime(_timeNist); //Sets local machine time
 			}
 			catch {
-				MsgBox.Show(this,"Error setting local machine time.");
+				MessageBox.Show("Error setting local machine time.");
 			}
 			_timeLocal=DateTime.Now; //Update time since it has now been set
 			this.Cursor=Cursors.Default;
@@ -111,7 +111,7 @@ namespace OpenDental {
 				nistOffset=ntp.getTime(textNistUrl.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Invalid NIST Server URL");
+				MessageBox.Show("Invalid NIST Server URL");
 				return double.MinValue;
 			}
 			timerSendingLimit.Enabled=true;
@@ -149,7 +149,7 @@ namespace OpenDental {
 		///<summary>Refresh the time textboxes.  Stops users from sending requests to NIST server more than once every 4 seconds.</summary>
 		private void butRefreshTime_Click(object sender,EventArgs e) {
 			if(timerSendingLimit.Enabled) {
-				MsgBox.Show(this,"Cannot send a time request more than once every four seconds");
+				MessageBox.Show("Cannot send a time request more than once every four seconds");
 				return;
 			}
 			SynchTimes();

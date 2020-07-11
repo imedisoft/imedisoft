@@ -128,7 +128,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this educational resource?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this educational resource?")) {
 				return;
 			}
 			EduResources.Delete(EduResourceCur.EduResourceNum);

@@ -120,7 +120,7 @@ namespace OpenDental {
 				_dentalOfficeID=WebUtils.GetDentalOfficeID();
 				if(_dentalOfficeID==0) {
 					Cursor=Cursors.Default;
-					MsgBox.Show(this,"Either the registration key provided by the dental office is incorrect or the Host Server Address cannot be found.");
+					MessageBox.Show("Either the registration key provided by the dental office is incorrect or the Host Server Address cannot be found.");
 					return;
 				}
 				if(WebForms_Preferences.TryGetPreference(out _webFormPref)) {
@@ -146,7 +146,7 @@ namespace OpenDental {
 		private void FillGrid() {
 			try{
 				if(!WebForms_SheetDefs.TryDownloadSheetDefs(out _listWebFormSheetDefs)) {
-					MsgBox.Show(this,"Failed to download sheet definitions.");
+					MessageBox.Show("Failed to download sheet definitions.");
 					_listWebFormSheetDefs=new List<WebForms_SheetDef>();
 				}
 				gridMain.ListGridColumns.Clear();
@@ -219,7 +219,7 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			if(!WebForms_Preferences.SetPreferences(_webFormPref,urlOverride:textboxWebHostAddress.Text.Trim())) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Either the registration key provided by the dental office is incorrect or the Host Server Address cannot be found.");
+				MessageBox.Show("Either the registration key provided by the dental office is incorrect or the Host Server Address cannot be found.");
 				return false;
 			}
 			_webFormPrefOld=_webFormPref.Copy();
@@ -334,17 +334,17 @@ namespace OpenDental {
 
 		private void butUpdate_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length < 1) {
-				MsgBox.Show(this,"Please select an item from the grid first.");
+				MessageBox.Show("Please select an item from the grid first.");
 				return;
 			}
 			if(gridMain.SelectedIndices.Length > 1) {
-				MsgBox.Show(this,"Please select one web form at a time.");
+				MessageBox.Show("Please select one web form at a time.");
 				return;
 			}
 			WebForms_SheetDef wf_sheetDef=gridMain.SelectedTag<WebForms_SheetDef>();
 			SheetDef sheetDef=SheetDefs.GetFirstOrDefault(x => x.SheetDefNum==wf_sheetDef.SheetDefNum);
 			if(sheetDef==null) {//This web form has never had a SheetDefNum assigned or the sheet has been deleted.
-				MsgBox.Show(this,"This Web Form is not linked to a valid Sheet.  Please select the correct Sheet that this Web Form should be linked to.");
+				MessageBox.Show("This Web Form is not linked to a valid Sheet.  Please select the correct Sheet that this Web Form should be linked to.");
 				FormSheetPicker FormS=new FormSheetPicker();
 				FormS.SheetType=SheetTypeEnum.PatientForm;
 				FormS.HideKioskButton=true;
@@ -369,7 +369,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an item from the grid first.");
+				MessageBox.Show("Please select an item from the grid first.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -401,7 +401,7 @@ namespace OpenDental {
 				ODClipboard.SetClipboard(textURLs.Text);
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Could not copy contents to the clipboard.  Please try again.");
+				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
 				ex.DoNothing();
 			}
 		}

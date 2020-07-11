@@ -70,7 +70,7 @@ namespace OpenDental {
 						table.ReadXml(xmlReader);
 					}
 					catch(Exception) {
-						MsgBox.Show(this,"Corruption detected in the Old Revision table.  Partial data will be displayed.  Please call us for support.");
+						MessageBox.Show("Corruption detected in the Old Revision table.  Partial data will be displayed.  Please call us for support.");
 						gridOld.EndUpdate();
 						return;
 					}
@@ -108,14 +108,14 @@ namespace OpenDental {
 			if(gridMain.GetSelectedIndex()==-1){
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Revert list to currently selected revision?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Revert list to currently selected revision?")) {
 				return;
 			}
 			try {
 				WikiListHists.RevertFrom(gridMain.SelectedTag<WikiListHist>(),Security.CurUser.UserNum);
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"There was an error when trying to revert changes.  Please call us for support.");
+				MessageBox.Show("There was an error when trying to revert changes.  Please call us for support.");
 				return;
 			}
 			FillGridMain();

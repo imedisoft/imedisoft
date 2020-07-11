@@ -30,9 +30,6 @@ namespace OpenDental.Bridges{
 
 		///<Summary>There might be incoming files that we have to watch for.  They will get processed and deleted.  There is no user interface for this function.  This method is called when OD first starts up.</Summary>
 		public static void InitializeFileWatcher(){
-			if(ODBuild.IsWeb()) {
-				return;//bridge is not enabled for WEB mode.
-			}
 			if(!Directory.Exists(dir)){
 				if(watcher!=null){
 					watcher.Dispose();

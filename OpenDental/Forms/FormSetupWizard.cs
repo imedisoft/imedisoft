@@ -157,7 +157,7 @@ namespace OpenDental {
 				|| clickedCol.ImageList == null) {
 				return;
 			}
-			MsgBox.Show(this,((SetupWizard.SetupWizClass)clickedRow.Tag).GetDescript);
+			MessageBox.Show(((SetupWizard.SetupWizClass)clickedRow.Tag).GetDescript);
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {

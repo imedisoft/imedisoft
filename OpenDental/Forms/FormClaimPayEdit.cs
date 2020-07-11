@@ -881,7 +881,7 @@ namespace OpenDental{
 				return;
 			}
 			if(textAmount.Text=="" || PIn.Double(textAmount.Text)==0) {
-				MsgBox.Show(this,"Please enter an amount first.");
+				MessageBox.Show("Please enter an amount first.");
 				textAmount.Focus();
 				return;
 			}
@@ -906,7 +906,7 @@ namespace OpenDental{
 
 		private void butPayConnect_Click(object sender,EventArgs e) {
 			if(textAmount.Text=="" || PIn.Double(textAmount.Text)==0) {
-				MsgBox.Show(this,"Please enter an amount first.");
+				MessageBox.Show("Please enter an amount first.");
 				textAmount.Focus();
 				return;
 			}
@@ -927,7 +927,7 @@ namespace OpenDental{
 				return;
 			}
 			if(textAmount.Text=="" || PIn.Double(textAmount.Text)==0) {
-				MsgBox.Show(this,"Please enter an amount first.");
+				MessageBox.Show("Please enter an amount first.");
 				textAmount.Focus();
 				return;
 			}
@@ -1135,18 +1135,18 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			SetRequiredFields();//Required field validation
 			if(textDate.Text=="") {
-				MsgBox.Show(this,"Please enter a date.");
+				MessageBox.Show("Please enter a date.");
 				return;
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date
 				&& !PrefC.GetBool(PrefName.FutureTransDatesAllowed) 
 				&& !PrefC.GetBool(PrefName.AllowFutureInsPayments)) 
 			{
-				MsgBox.Show(this,"Payment date cannot be in the future.");
+				MessageBox.Show("Payment date cannot be in the future.");
 				return;
 			}
 			if(textCarrierName.Text=="") {
-				MsgBox.Show(this,"Please enter a carrier.");
+				MessageBox.Show("Please enter a carrier.");
 				return;
 			}
 			if(textDate.errorProvider1.GetError(textDate)!="" 
@@ -1155,11 +1155,11 @@ namespace OpenDental{
 				|| validDepositDate.errorProvider1.GetError(validDepositDate)!=""
 				|| validDoubleDepositAmt.errorProvider1.GetError(validDoubleDepositAmt)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(!PrefC.GetBool(PrefName.AllowFutureInsPayments) && PIn.Date(textDate.Text).Date>MiscData.GetNowDateTime().Date) {
-				MsgBox.Show(this,"Insurance Payment Date must not be a future date.");
+				MessageBox.Show("Insurance Payment Date must not be a future date.");
 				return;
 			}
 			if(textAmount.Text=="") {
@@ -1167,7 +1167,7 @@ namespace OpenDental{
 				return;
 			}
 			if(_isMissingRequiredFields) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Required fields are missing or incorrect.  Click OK to save anyway or Cancel to return and "
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Required fields are missing or incorrect.  Click OK to save anyway or Cancel to return and "
 						+"finish payment information.")) {
 					_isValidating=true;
 					SetRequiredFields();
@@ -1185,7 +1185,7 @@ namespace OpenDental{
 				Deposit depositCur=GetDepositCur();
 				//Double check that there is a valid date entered into the form before trying to insert the deposit into the database.
 				if(depositCur.DateDeposit.Year < 1880) {
-					MsgBox.Show(this,"Please enter a valid Auto Deposit Date.");
+					MessageBox.Show("Please enter a valid Auto Deposit Date.");
 					return;
 				}
 				if(!Security.IsAuthorized(Permissions.DepositSlips,depositCur.DateDeposit)) {
@@ -1218,7 +1218,7 @@ namespace OpenDental{
 					insPayTotal+=listClaimPaySplit[i].InsPayAmt;
 				}
 				if(!insPayTotal.IsEqual(amt)) {
-					if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Amount entered does not match Total Payments attached.\r\n"
+					if(MsgBox.Show(MsgBoxButtons.OKCancel,"Amount entered does not match Total Payments attached.\r\n"
 						+"If you choose to continue, this insurance payment will be flagged as a partial payment, which will affect reports.\r\n"
 						+"Click OK to continue, or click Cancel to edit Amount."))
 					{

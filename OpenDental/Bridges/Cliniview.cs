@@ -24,7 +24,7 @@ namespace OpenDental.Bridges{
 			//Critical not to have any spaces in argument string.
 			//We got this info directly from the programmers at CliniView
 			if(pat==null){
-				MsgBox.Show("Cliniview","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			if(!File.Exists(path)){
@@ -34,7 +34,7 @@ namespace OpenDental.Bridges{
 			string info="-";
 			if(ProgramProperties.GetPropVal(ProgramCur.ProgramNum,"Enter 0 to use PatientNum, or 1 to use ChartNum")=="1") {
 				if(pat.ChartNumber=="") {
-					MsgBox.Show("Cliniview","This patient has no ChartNumber entered.");
+					MsgBox.Show("This patient has no ChartNumber entered.");
 					return;
 				}
 				info+=pat.ChartNumber;

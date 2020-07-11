@@ -93,7 +93,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			string logEntry=Lan.g(this,"Ehr Measure Event was deleted.")+"  "
@@ -109,19 +109,19 @@ namespace OpenDental {
 			//inserts never happen here.  Only updates.
 			DateTime dateTEvent=PIn.DateT(textDateTime.Text);
 			if(dateTEvent==DateTime.MinValue) {
-				MsgBox.Show(this,"Please enter a valid date time.");//because this must always be valid
+				MessageBox.Show("Please enter a valid date time.");//because this must always be valid
 				return;
 			}
 			if(textTobaccoStartDate.Visible //only visible for tobacco use assessments
 				&& textTobaccoStartDate.errorProvider1.GetError(textTobaccoStartDate)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textTobaccoDesireToQuit.Visible //only visible for tobacco use assessments
 				&& textTobaccoDesireToQuit.errorProvider1.GetError(textTobaccoDesireToQuit)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			List<string> listLogEdits=new List<string>();

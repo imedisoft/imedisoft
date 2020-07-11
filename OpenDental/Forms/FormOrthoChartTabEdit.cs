@@ -24,7 +24,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textTabName.Text.Trim()=="") {
-				MsgBox.Show(this,"Tab Name cannot be blank.");
+				MessageBox.Show("Tab Name cannot be blank.");
 				return;
 			}
 			_orthoChartTab.TabName=textTabName.Text;

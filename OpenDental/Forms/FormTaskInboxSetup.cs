@@ -64,11 +64,11 @@ namespace OpenDental {
 
 		private void butSet_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a user first.");
+				MessageBox.Show("Please select a user first.");
 				return;
 			}
 			if(listMain.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select an item from the list first.");
+				MessageBox.Show("Please select an item from the list first.");
 				return;
 			}
 			if(listMain.SelectedIndex==0){

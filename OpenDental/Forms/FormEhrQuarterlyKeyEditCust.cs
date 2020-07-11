@@ -95,7 +95,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!FormEHR.QuarterlyKeyIsValid(textYear.Text,textQuarter.Text,textPracticeTitle.Text,textEhrKey.Text)) {
-				MsgBox.Show(this,"Invalid quarterly key");
+				MessageBox.Show("Invalid quarterly key");
 				return;
 			}
 			KeyCur.YearValue=PIn.Int(textYear.Text);
@@ -117,7 +117,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
 				return;
 			}
 			EhrQuarterlyKeys.Delete(KeyCur.EhrQuarterlyKeyNum);

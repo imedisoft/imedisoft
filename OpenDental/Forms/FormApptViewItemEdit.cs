@@ -52,7 +52,7 @@ namespace OpenDental {
 				ApptVItem.ElementColor=panelColor.BackColor;
 			}
 			if(listAlignment.Text!="Main" && textDesc.Text=="ProcsColored") {
-				MsgBox.Show(this,"ProcsColored is not intended to be used outside of Main and will not display in the upper or lower right.");
+				MessageBox.Show("ProcsColored is not intended to be used outside of Main and will not display in the upper or lower right.");
 			}
 			ApptVItem.ElementAlignment=(ApptViewAlignment)listAlignment.SelectedIndex;
 			DialogResult=DialogResult.OK;

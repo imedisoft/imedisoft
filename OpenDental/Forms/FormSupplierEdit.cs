@@ -30,7 +30,7 @@ namespace OpenDental {
 			if(Supp.IsNew){
 				DialogResult=DialogResult.Cancel;
 			}
-			if(!MsgBox.Show(this,true,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete?")){
 				return;
 			}
 			try{
@@ -45,11 +45,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			//if(textDate.errorProvider1.GetError(textDate)!=""){
-			//	MsgBox.Show(this,"Please fix data entry errors first.");
+			//	MessageBox.Show("Please fix data entry errors first.");
 			//	return;
 			//}
 			if(textName.Text==""){
-				MsgBox.Show(this,"Please enter a name.");
+				MessageBox.Show("Please enter a name.");
 				return;
 			}
 			Supp.Name=textName.Text;

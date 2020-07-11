@@ -23,7 +23,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void UserControlSetupWizProvider_Load(object sender,EventArgs e) {
 			FillGrid();
 			if(Providers.GetWhere(x => x.FName.ToLower() != "default",true).ToList().Count==0) {
-				MsgBox.Show("FormSetupWizard","You have no valid providers. Please click the add button to Add a provider or Add information to the default providers.");
+				MsgBox.Show("You have no valid providers. Please click the add button to Add a provider or Add information to the default providers.");
 				timer1.Start();
 			}
 		}

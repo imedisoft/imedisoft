@@ -417,7 +417,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;//causes claimPayment to be deleted.
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete this insurance check?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this insurance check?")){
 				return;
 			}
 			try{
@@ -445,18 +445,18 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDate.Text=="") {
-				MsgBox.Show(this,"Please enter a date first.");
+				MessageBox.Show("Please enter a date first.");
 				return;
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed) 
 				&& !PrefC.GetBool(PrefName.AllowFutureInsPayments)) 
 			{
-				MsgBox.Show(this,"Payments cannot be for a date in the future.");
+				MessageBox.Show("Payments cannot be for a date in the future.");
 				return; //probably not necesasary since this is an old form, but just in case we use it again
 			}
 			if(textDate.errorProvider1.GetError(textDate)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0){

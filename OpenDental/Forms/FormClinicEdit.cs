@@ -1207,15 +1207,15 @@ namespace OpenDental {
 		private void butOK_Click(object sender, System.EventArgs e) {
 			#region Validation 
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Description cannot be blank.");
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			if(textClinicAbbr.Text==""){
-				MsgBox.Show(this,"Abbreviation cannot be blank.");
+				MessageBox.Show("Abbreviation cannot be blank.");
 				return;
 			}
 			if(radioInsBillingProvSpecific.Checked && comboInsBillingProv.SelectedIndex==-1){ 
-				MsgBox.Show(this,"You must select a provider.");
+				MessageBox.Show("You must select a provider.");
 				return;
 			}
 			string phone=textPhone.Text;
@@ -1225,7 +1225,7 @@ namespace OpenDental {
 				phone=phone.Replace(" ","");
 				phone=phone.Replace("-","");
 				if(phone.Length!=0 && phone.Length!=10){
-					MsgBox.Show(this,"Invalid phone");
+					MessageBox.Show("Invalid phone");
 					return;
 				}
 			}
@@ -1236,7 +1236,7 @@ namespace OpenDental {
 				fax=fax.Replace(" ","");
 				fax=fax.Replace("-","");
 				if(fax.Length!=0 && fax.Length!=10) {
-					MsgBox.Show(this,"Invalid fax");
+					MessageBox.Show("Invalid fax");
 					return;
 				}
 			}
@@ -1245,7 +1245,7 @@ namespace OpenDental {
 				&& Clinics.GetWhere(x => x.ClinicNum!=ClinicCur.ClinicNum)
 						.Any(x => x.MedLabAccountNum==textMedLabAcctNum.Text.Trim())) //this account num is already in use by another Clinic
 			{
-				MsgBox.Show(this,"The MedLab Account Number entered is already in use by another clinic.");
+				MessageBox.Show("The MedLab Account Number entered is already in use by another clinic.");
 				return;
 			}
 			if(checkHidden.Checked) {
@@ -1263,7 +1263,7 @@ namespace OpenDental {
 					externalID=long.Parse(textExternalID.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Please fix data entry errors first."+"\r\n"+", The External ID must be a number. No letters or symbols allowed.");
+					MessageBox.Show("Please fix data entry errors first."+"\r\n"+", The External ID must be a number. No letters or symbols allowed.");
 					return;
 				}
 			}

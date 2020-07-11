@@ -151,7 +151,7 @@ namespace OpenDental{
 		/// and the selected index is removed from SubList and listPlans </summary>
 		private bool VerifyInsPlanExists() {
 			if(InsPlans.GetPlan(SubList[listPlans.SelectedIndex].PlanNum,new List<InsPlan>())==null) {
-				MsgBox.Show(this,"Insurance plan selected no longer exists.");
+				MessageBox.Show("Insurance plan selected no longer exists.");
 				SubList.RemoveAt(listPlans.SelectedIndex);
 				listPlans.Items.RemoveAt(listPlans.SelectedIndex);
 				return false;
@@ -164,7 +164,7 @@ namespace OpenDental{
 				return;
 			}
 			if(PatPlans.GetCountForPatAndInsSub(SubList[listPlans.SelectedIndex].InsSubNum,_patNum)!=0) {
-				MsgBox.Show(this,"This patient already has this plan attached.  If you would like to add a new plan for the same subscriber and insurance carrier, click new plan.");
+				MessageBox.Show("This patient already has this plan attached.  If you would like to add a new plan for the same subscriber and insurance carrier, click new plan.");
 				return;
 			}
 			if(!VerifyInsPlanExists()) {
@@ -181,11 +181,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(listPlans.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a plan first.");
+				MessageBox.Show("Please select a plan first.");
 				return;
 			}
 			if(PatPlans.GetCountForPatAndInsSub(SubList[listPlans.SelectedIndex].InsSubNum,_patNum)!=0) {
-				MsgBox.Show(this,"This patient already has this plan attached.  If you would like to add a new plan for the same subscriber and insurance carrier, click new plan.");
+				MessageBox.Show("This patient already has this plan attached.  If you would like to add a new plan for the same subscriber and insurance carrier, click new plan.");
 				return;
 			}
 			if(!VerifyInsPlanExists()) {

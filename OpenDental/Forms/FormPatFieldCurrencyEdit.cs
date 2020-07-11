@@ -27,7 +27,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textFieldCurrency.errorProvider1.GetError(textFieldCurrency)!="") {
-				MsgBox.Show(this,"Invalid currency");
+				MessageBox.Show("Invalid currency");
 				return;
 			}			
 			_fieldCur.FieldValue=textFieldCurrency.Text;

@@ -460,7 +460,7 @@ namespace OpenDental{
 
 		private void butDeleteTurnaround_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			turnaroundList.RemoveAt(gridMain.GetSelectedIndex());
@@ -472,7 +472,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete this entire Laboratory?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this entire Laboratory?")){
 				return;
 			}
 			try{
@@ -486,7 +486,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Description cannot be blank.");
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			LabCur.Description=textDescription.Text;

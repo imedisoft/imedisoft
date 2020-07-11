@@ -109,7 +109,7 @@ namespace OpenDental{
 
 		private void checkAppointmentTimeIsLocked_MouseUp(object sender,MouseEventArgs e) {
 			if(checkAppointmentTimeIsLocked.Checked) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to lock appointment times for all existing appointments?")){
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to lock appointment times for all existing appointments?")){
 					Appointments.SetAptTimeLocked();
 				}
 			}
@@ -125,7 +125,7 @@ namespace OpenDental{
 			if(!checkAllowedFeeSchedsAutomate.Checked){
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Allowed fee schedules will now be set up for all insurance plans that do not already have one.\r\nThe name of each fee schedule will exactly match the name of the carrier.\r\nOnce created, allowed fee schedules can be easily managed from the fee schedules window.\r\nContinue?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Allowed fee schedules will now be set up for all insurance plans that do not already have one.\r\nThe name of each fee schedule will exactly match the name of the carrier.\r\nOnce created, allowed fee schedules can be easily managed from the fee schedules window.\r\nContinue?")){
 				checkAllowedFeeSchedsAutomate.Checked=false;
 				return;
 			}
@@ -162,7 +162,7 @@ namespace OpenDental{
 			if(!checkInsDefaultShowUCRonClaims.Checked) {
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to immediately change all plans to show office UCR fees on claims?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to immediately change all plans to show office UCR fees on claims?")) {
 				return;
 			}
 			long plansAffected=InsPlans.SetAllPlansToShowUCR();
@@ -170,7 +170,7 @@ namespace OpenDental{
 		}
 
 		private void comboCobRule_SelectionChangeCommitted(object sender,EventArgs e) {
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to change the COB rule for all existing insurance plans?")) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to change the COB rule for all existing insurance plans?")) {
 				InsPlans.UpdateCobRuleForAll((EnumCobRule)comboCobRule.SelectedIndex);
 			}
 		}
@@ -230,7 +230,7 @@ namespace OpenDental{
 		}
 
 		private void checkShowFamilyCommByDefault_Click(object sender,EventArgs e) {
-			MsgBox.Show(this,"You will need to restart the program for the change to take effect.");
+			MessageBox.Show("You will need to restart the program for the change to take effect.");
 		}
 
 		private void comboPayPlansVersion_SelectionChangeCommitted(object sender,EventArgs e) {
@@ -249,7 +249,7 @@ namespace OpenDental{
 			if(checkRepeatingChargesAutomated.Checked && checkRecurringChargesAutomated.Checked
 				&& PIn.DateT(textRepeatingChargesAutomatedTime.Text).TimeOfDay>=PIn.DateT(textRecurringChargesTime.Text).TimeOfDay)
 			{
-				MsgBox.Show(this,"Recurring charges run time is currently set before Repeating charges run time.\r\nConsider setting repeating charges to "
+				MessageBox.Show("Recurring charges run time is currently set before Repeating charges run time.\r\nConsider setting repeating charges to "
 					+"automatically run before recurring charges.");
 			}
 		}
@@ -275,13 +275,13 @@ namespace OpenDental{
 		private void radioTreatPlanSortOrder_Click(object sender,EventArgs e) {
 			//Sort by order is a false 
 			if(PrefC.GetBool(PrefName.TreatPlanSortByTooth)==radioTreatPlanSortOrder.Checked) {
-				MsgBox.Show(this,"You will need to restart the program for the change to take effect.");
+				MessageBox.Show("You will need to restart the program for the change to take effect.");
 			}
 		}
 
 		private void radioTreatPlanSortTooth_Click(object sender,EventArgs e) {
 			if(PrefC.GetBool(PrefName.TreatPlanSortByTooth)!=radioTreatPlanSortTooth.Checked) {
-				MsgBox.Show(this,"You will need to restart the program for the change to take effect.");
+				MessageBox.Show("You will need to restart the program for the change to take effect.");
 			}
 		}
 		#endregion Methods - Event Handlers Treat' Plan
@@ -348,7 +348,7 @@ namespace OpenDental{
 				}
 				if(inputBox.textResult.Text!="abracadabra") {//To prevent unaware users from clicking this box
 					checkClaimProcsAllowEstimatesOnCompl.Checked=false;
-					MsgBox.Show(this,"Wrong password");
+					MessageBox.Show("Wrong password");
 					return;
 				}
 			}
@@ -360,12 +360,12 @@ namespace OpenDental{
 
 		private void checkProcLockingIsAllowed_Click(object sender,EventArgs e) {
 			if(checkProcLockingIsAllowed.Checked) {//if user is checking box			
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This option is not normally used, because all notes are already locked internally, and all changes to notes are viewable in the audit mode of the Chart module.  This option is only for offices that insist on locking each procedure and only allowing notes to be appended.  Using this option, there really is no way to unlock a procedure, regardless of security permission.  So locked procedures can instead be marked as invalid in the case of mistakes.  But it's a hassle to mark procedures invalid, and they also cause clutter.  This option can be turned off later, but locked procedures will remain locked.\r\n\r\nContinue anyway?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This option is not normally used, because all notes are already locked internally, and all changes to notes are viewable in the audit mode of the Chart module.  This option is only for offices that insist on locking each procedure and only allowing notes to be appended.  Using this option, there really is no way to unlock a procedure, regardless of security permission.  So locked procedures can instead be marked as invalid in the case of mistakes.  But it's a hassle to mark procedures invalid, and they also cause clutter.  This option can be turned off later, but locked procedures will remain locked.\r\n\r\nContinue anyway?")) {
 					checkProcLockingIsAllowed.Checked=false;
 				}
 			}
 			else {//unchecking box
-				MsgBox.Show(this,"Turning off this option will not affect any procedures that are already locked or invalidated.");
+				MessageBox.Show("Turning off this option will not affect any procedures that are already locked or invalidated.");
 			}
 		}
 		#endregion Methods - Event Handlers Chart
@@ -485,11 +485,11 @@ namespace OpenDental{
 		private bool SaveAppts(){
 			int noteLength=0;
 			if(!int.TryParse(textApptBubNoteLength.Text,out noteLength)) {
-				MsgBox.Show(this,"Max appointment note length is invalid. Please enter a valid number to continue.");
+				MessageBox.Show("Max appointment note length is invalid. Please enter a valid number to continue.");
 				return false;
 			}
 			if(noteLength<0) {
-				MsgBox.Show(this,"Max appointment note length cannot be a negative number.");
+				MessageBox.Show("Max appointment note length cannot be a negative number.");
 				return false;
 			}
 			int waitingRoomAlertTime=0;
@@ -500,7 +500,7 @@ namespace OpenDental{
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Waiting room alert time is invalid.");
+				MessageBox.Show("Waiting room alert time is invalid.");
 				return false;
 			}
 			if(textApptWithoutProcsDefaultLength.errorProvider1.GetError(textApptWithoutProcsDefaultLength)!=""
@@ -511,15 +511,15 @@ namespace OpenDental{
 			}
 			float apptFontSize=0;
 			if(!float.TryParse(textApptFontSize.Text,out apptFontSize)){
-				MsgBox.Show(this,"Appt Font Size invalid.");
+				MessageBox.Show("Appt Font Size invalid.");
 				return false;
 			}
 			if(apptFontSize<1 || apptFontSize>40){
-				MsgBox.Show(this,"Appt Font Size must be between 1 and 40.");
+				MessageBox.Show("Appt Font Size must be between 1 and 40.");
 				return false;
 			}
 			if(!textApptProvbarWidth.IsValid) {
-				MsgBox.Show(this,"Please fix data errors first.");
+				MessageBox.Show("Please fix data errors first.");
 				return false;
 			}
 			_changed|=Prefs.UpdateBool(PrefName.AppointmentBubblesDisabled,checkAppointmentBubblesDisabled.Checked);
@@ -675,7 +675,7 @@ namespace OpenDental{
 		private bool SaveFamily(){
 			DateTime claimSnapshotRunTime=DateTime.MinValue;
 			if(!DateTime.TryParse(textClaimSnapshotRunTime.Text,out claimSnapshotRunTime)) {
-				MsgBox.Show(this,"Service Snapshot Run Time must be a valid time value.");
+				MessageBox.Show("Service Snapshot Run Time must be a valid time value.");
 				return false;
 			}
 			claimSnapshotRunTime=new DateTime(1881,01,01,claimSnapshotRunTime.Hour,claimSnapshotRunTime.Minute,claimSnapshotRunTime.Second);
@@ -848,27 +848,27 @@ namespace OpenDental{
 		private bool SaveAccount(){
 			double taxPercent=0;
 			if(!double.TryParse(textTaxPercent.Text,out taxPercent)) {
-				MsgBox.Show(this,"Sales Tax percent is invalid.  Please enter a valid number to continue.");
+				MessageBox.Show("Sales Tax percent is invalid.  Please enter a valid number to continue.");
 				return false;
 			}
 			if(taxPercent<0) {
-				MsgBox.Show(this,"Sales Tax percent cannot be a negative number.");
+				MessageBox.Show("Sales Tax percent cannot be a negative number.");
 				return false;
 			}
 			if(checkRecurringChargesAutomated.Checked 
 				&& (string.IsNullOrWhiteSpace(textRecurringChargesTime.Text) || !textRecurringChargesTime.IsValid)) 
 			{
-				MsgBox.Show(this,"Recurring charge time must be a valid time.");
+				MessageBox.Show("Recurring charge time must be a valid time.");
 				return false;
 			}
 			if(checkRepeatingChargesAutomated.Checked 
 				&& (string.IsNullOrWhiteSpace(textRepeatingChargesAutomatedTime.Text) || !textRepeatingChargesAutomatedTime.IsValid)) 
 			{
-				MsgBox.Show(this,"Repeating charge time must be a valid time.");
+				MessageBox.Show("Repeating charge time must be a valid time.");
 				return false;
 			}
 			if(string.IsNullOrWhiteSpace(textDynamicPayPlan.Text) || !textDynamicPayPlan.IsValid) {
-				MsgBox.Show(this,"Dynamic payment plan time must be a valid time.");
+				MessageBox.Show("Dynamic payment plan time must be a valid time.");
 				return false;
 			}
 			string strListBadDebtAdjTypes=string.Join(",",listboxBadDebtAdjs.Items.Cast<ODBoxItem<Def>>().Select(x => x.Tag.DefNum));
@@ -1023,7 +1023,7 @@ namespace OpenDental{
 		private bool SaveTreatPlan(){
 			float percent=0;
 			if(!float.TryParse(textDiscountPercentage.Text,out percent)) {
-				MsgBox.Show(this,"Procedure discount percent is invalid. Please enter a valid number to continue.");
+				MessageBox.Show("Procedure discount percent is invalid. Please enter a valid number to continue.");
 				return false;
 			}
 			if(PrefC.GetString(PrefName.TreatmentPlanNote)!=textTreatNote.Text) {
@@ -1147,11 +1147,11 @@ namespace OpenDental{
 		private bool SaveChart(){
 			int daysStop=0;
 			if(!int.TryParse(textMedDefaultStopDays.Text,out daysStop)) {
-				MsgBox.Show(this,"Days until medication order stop date entered was is invalid. Please enter a valid number to continue.");
+				MessageBox.Show("Days until medication order stop date entered was is invalid. Please enter a valid number to continue.");
 				return false;
 			}
 			if(daysStop<0) {
-				MsgBox.Show(this,"Days until medication order stop date cannot be a negative number.");
+				MessageBox.Show("Days until medication order stop date cannot be a negative number.");
 				return false;
 			}
 			_changed|=Prefs.UpdateBool(PrefName.AllowSettingProcsComplete,checkAllowSettingProcsComplete.Checked);
@@ -1284,7 +1284,7 @@ namespace OpenDental{
 				return false;
 			}
 			if(textClaimsReceivedDays.errorProvider1.GetError(textClaimsReceivedDays)!="") {
-				MsgBox.Show(this,"Show claims received after days must be a positive integer or blank.");
+				MessageBox.Show("Show claims received after days must be a positive integer or blank.");
 				return false;
 			}
 			_changed|=Prefs.UpdateBool(PrefName.RxSendNewToQueue,checkRxSendNewToQueue.Checked);

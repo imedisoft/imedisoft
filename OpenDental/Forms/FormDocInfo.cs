@@ -49,8 +49,6 @@ namespace OpenDental{
 		private Label labelCropInfo;
 		private List<Def> _listImageCatDefs;
 
-		///<summary>Deprecated. Poorly designed.  Use the other constructor. ALWAYS save docCur before loading this form.</summary>
-		[Obsolete]
 		public FormDocInfo(Patient patCur,Document docCur,string initialCategoryName,bool isOkDisabled=false){
 			InitializeComponent();
 			_patCur=patCur;
@@ -464,12 +462,9 @@ namespace OpenDental{
 				//Create temp file here or create the file with the actual name?  Changes made when opening the file won't be saved, so I think temp file is best.
 				string tempFile=PrefC.GetRandomTempFile(Path.GetExtension(_documentCur.FileName));
 				File.WriteAllBytes(tempFile,state.FileContent);
-				if(ODBuild.IsWeb()) {
-					ThinfinityUtils.HandleFile(tempFile);
-				}
-				else {
+
 					System.Diagnostics.Process.Start(tempFile);
-				}
+				
 			}
 		}
 
@@ -498,16 +493,16 @@ namespace OpenDental{
 				return;
 			}
 			if(textDate.Text=="") {
-				MsgBox.Show(this,"Please enter a date.");
+				MessageBox.Show("Please enter a date.");
 				return;
 			}
 			if(textTime.Text=="") {
-				MsgBox.Show(this,"Please enter a time.");
+				MessageBox.Show("Please enter a time.");
 				return;
 			}
 			DateTime time;
 			if(!DateTime.TryParse(textTime.Text,out time)) {
-				MsgBox.Show(this,"Please enter a valid time.");
+				MessageBox.Show("Please enter a valid time.");
 				return;
 			}
 			//We had a security bug where users could change the date to a more recent date, and then subsequently delete.

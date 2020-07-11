@@ -143,7 +143,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete?")) {
 				return;
 			}
 			try{

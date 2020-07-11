@@ -44,7 +44,7 @@ namespace OpenDental {
 					Userods.UpdateUserGroupsForDentalSchools(FormUGP.UserGroup,false);
 				}
 				catch {
-					MsgBox.Show(this,"Cannot move students to the new user group because it would leave no users with the SecurityAdmin permission.  Give the SecurityAdmin permission to at least one user that is in another group or is not flagged as a student.");
+					MessageBox.Show("Cannot move students to the new user group because it would leave no users with the SecurityAdmin permission.  Give the SecurityAdmin permission to at least one user that is in another group or is not flagged as a student.");
 					return;
 				}
 			}
@@ -74,7 +74,7 @@ namespace OpenDental {
 					Userods.UpdateUserGroupsForDentalSchools(FormUGP.UserGroup,true);
 				}
 				catch {
-					MsgBox.Show(this,"Cannot move instructors to the new user group because it would leave no users with the SecurityAdmin permission.  Give the SecurityAdmin permission to at least one user that is in another group or is not flagged as an instructor.");
+					MessageBox.Show("Cannot move instructors to the new user group because it would leave no users with the SecurityAdmin permission.  Give the SecurityAdmin permission to at least one user that is in another group or is not flagged as an instructor.");
 					return;
 				}
 			}

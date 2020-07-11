@@ -61,7 +61,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			if(listTransType.SelectedIndex==2) { //Debit Purchase
 				if(textCashBackAmt.errorProvider1.GetError(textCashBackAmt)!="") {
-					MsgBox.Show(this,"Please fix data entry errors first.");
+					MessageBox.Show("Please fix data entry errors first.");
 					return;
 				}
 				CashBackAmount=PIn.Decimal(textCashBackAmt.Text);

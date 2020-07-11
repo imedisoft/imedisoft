@@ -257,7 +257,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			int[] selected=new int[gridMain.SelectedIndices.Length];
@@ -280,7 +280,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			int[] selected=new int[gridMain.SelectedIndices.Length];

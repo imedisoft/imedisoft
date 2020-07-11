@@ -72,7 +72,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.OK;
 			}
 			catch {
-				MsgBox.Show(this,"Please enter or select a valid time.");
+				MessageBox.Show("Please enter or select a valid time.");
 			}
 		}
 

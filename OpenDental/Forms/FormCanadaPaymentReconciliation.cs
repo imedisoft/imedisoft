@@ -52,15 +52,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(listCarriers.SelectedIndex<0) {
-				MsgBox.Show(this,"You must first choose a carrier.");
+				MessageBox.Show("You must first choose a carrier.");
 				return;
 			}
 			if(listBillingProvider.SelectedIndex<0) {
-				MsgBox.Show(this,"You must first choose a billing provider.");
+				MessageBox.Show("You must first choose a billing provider.");
 				return;
 			}
 			if(listTreatingProvider.SelectedIndex<0) {
-				MsgBox.Show(this,"You must first choose a treating provider.");
+				MessageBox.Show("You must first choose a treating provider.");
 				return;
 			}
 			DateTime reconciliationDate;
@@ -68,7 +68,7 @@ namespace OpenDental {
 				reconciliationDate=DateTime.Parse(textDateReconciliation.Text).Date;
 			}
 			catch {
-				MsgBox.Show(this,"Reconciliation date invalid.");
+				MessageBox.Show("Reconciliation date invalid.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -79,7 +79,7 @@ namespace OpenDental {
 				CanadianOutput.GetPaymentReconciliations(clearinghouseClin,carrier,_listProviders[listTreatingProvider.SelectedIndex],
 					_listProviders[listBillingProvider.SelectedIndex],reconciliationDate,Clinics.ClinicNum,false,FormCCDPrint.PrintCCD);
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;

@@ -243,7 +243,7 @@ namespace OpenDental{
 
 		private void butDuplicate_Click(object sender,System.EventArgs e) {
 			if(grid2.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a Custom HL7Def from the list on the right first.");
+				MessageBox.Show("Please select a Custom HL7Def from the list on the right first.");
 				return;
 			}
 			HL7Def hl7def=ListCustom[grid2.GetSelectedIndex()].Clone();
@@ -268,7 +268,7 @@ namespace OpenDental{
 
 		private void butCopy_Click(object sender,EventArgs e) {
 			if(grid1.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an internal HL7Def from the list on the left first.");
+				MessageBox.Show("Please select an internal HL7Def from the list on the left first.");
 				return;
 			}
 			HL7Def hl7def=ListInternal[grid1.GetSelectedIndex()].Clone();

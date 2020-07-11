@@ -87,15 +87,15 @@ namespace OpenDental{
 
 		private bool IsValid() {
 			if(!checkAllProv.Checked && listBoxProv.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return false;
 			}
 			if(PrefC.HasClinicsEnabled && !checkAllClinics.Checked && listBoxClinic.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one clinic must be selected.");
+				MessageBox.Show("At least one clinic must be selected.");
 				return false;
 			}
 			if(!checkAllUnearnedTypes.Checked && listBoxUnearnedTypes.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one unearned type must be selected.");
+				MessageBox.Show("At least one unearned type must be selected.");
 				return false;
 			}
 			return true;

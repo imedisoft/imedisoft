@@ -29,7 +29,7 @@ namespace OpenDental {
 		
 		private void butSearch_Click(object sender,EventArgs e) {
 			//if(textCode.Text.Length<3) {
-			//	MsgBox.Show(this,"Please enter at least 3 characters before searching.");
+			//	MessageBox.Show("Please enter at least 3 characters before searching.");
 			//	return;
 			//}
 			//forget about the above.  Allow general browsing by entering no search parameters.
@@ -86,7 +86,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//not even visible unless IsSelectionMode
 			if(listMain.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			SelectedIcd9=icd9List[listMain.SelectedIndex];

@@ -175,7 +175,7 @@ namespace OpenDental{
 
 		private void butNewClaims_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {//No selections made.
-				MsgBox.Show(this,"Please select at least one procedure.");
+				MessageBox.Show("Please select at least one procedure.");
 				return;
 			}
 			if(!ClaimL.CheckClearinghouseDefaults()) {
@@ -322,10 +322,10 @@ namespace OpenDental{
 				listGroupedProcs.Add(listProcs);
 			}
 			if(claimCreatedCount<=0 && listProcNumsPastLockDate.Count>0) {//No claims can be created because of the lock date.
-				MsgBox.Show(this,"No claims can be created because all procedure dates extend past the lock date for this report.");
+				MessageBox.Show("No claims can be created because all procedure dates extend past the lock date for this report.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Clicking OK will create up to "+POut.Int(claimCreatedCount)
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Clicking OK will create up to "+POut.Int(claimCreatedCount)
 				+" claims and cannot be undone, except by manually going to each account.  "
 				+"Some claims may not be created if there are validation issues.\r\n"
 				+"Click OK to continue, otherwise click Cancel."))
@@ -398,13 +398,13 @@ namespace OpenDental{
 		private void menuItemGridGoToAccount_Click(object sender,EventArgs e) {
 			//accessed by right clicking the history grid
 			if(gridMain.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select exactly one item first.");
+				MessageBox.Show("Please select exactly one item first.");
 				return;
 			}
 			DataRow row=(DataRow)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
 			long patNum=PIn.Long(row["PatNum"].ToString());
 			if(patNum==0) {
-				MsgBox.Show(this,"Please select an item with a patient.");
+				MessageBox.Show("Please select an item with a patient.");
 				return;
 			}
 			ODEvent.Fire(ODEventType.FormProcNotBilled_GoTo,patNum);

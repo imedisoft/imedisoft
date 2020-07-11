@@ -27,7 +27,7 @@ namespace OpenDental {
 		}
 
 		private void butDeleteAll_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete Reference Entry?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete Reference Entry?")) {
 				return;
 			}
 			CustRefEntries.Delete(CustRefEntryCur.CustRefEntryNum);

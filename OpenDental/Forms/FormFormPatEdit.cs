@@ -193,7 +193,7 @@ namespace OpenDental{
 		private void FormFormPatEdit_Shown(object sender,EventArgs e) {
 			if(IsNew){
 				if(QuestionDefList.Length==0){
-					MsgBox.Show(this,"Go to Setup | Obsolete | Questionnaire to setup questions for all patients.");
+					MessageBox.Show("Go to Setup | Obsolete | Questionnaire to setup questions for all patients.");
 				}
 			}
 		}
@@ -231,7 +231,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			//only visible if editing existing quesionnaire.
-			if(!MsgBox.Show(this,true,"Delete this questionnaire?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this questionnaire?")){
 				return;
 			}
 			FormPats.Delete(FormPatCur.FormPatNum);
@@ -240,7 +240,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(QuestionDefList.Length==0){
-				MsgBox.Show(this,"No questions to save.");
+				MessageBox.Show("No questions to save.");
 				return;
 			}
 			//only visible if IsNew

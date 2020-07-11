@@ -34,17 +34,17 @@ namespace OpenDental {
 		///<summary>Displays a Sheet, first checking if the sheet is linked to an existing Document and if so, displaying the file.  Otherwise, opens the Sheet via FormSheetFillEdit.</summary>
 		public static void ShowSheet(Sheet sheet,Patient pat,FormClosingEventHandler onFormClosing) {
 			if(sheet==null) {
-				MsgBox.Show("Sheets","Error opening sheet.");
+				MsgBox.Show("Error opening sheet.");
 				return;
 			}
 			if(sheet.DocNum!=0) {
 				if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-					MsgBox.Show("Sheets","Unable to view saved sheet when storing images in database.");
+					MsgBox.Show("Unable to view saved sheet when storing images in database.");
 					return;
 				}
 				Document sheetDoc=Documents.GetByNum(sheet.DocNum,true);
 				if(sheetDoc==null) {
-					MsgBox.Show("Sheets","Saved sheet no longer exists.");
+					MsgBox.Show("Saved sheet no longer exists.");
 					return;
 				}
 				string patFolder=ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath());

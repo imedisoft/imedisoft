@@ -3313,14 +3313,7 @@ namespace OpenDental.UI {
 		///<summary>Exports the grid to a text or Excel file. The user will have the opportunity to choose the location of the export file.</summary>
 		public void Export(string fileName) {
 			string selectedFilePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
-			if(ODBuild.IsWeb()) {
-				//file download dialog will come up later, after file is created.
-				//If extension is missing, add .txt extension. VirtualUI won't download if missing extension.
-				if(string.IsNullOrEmpty(Path.GetExtension(selectedFilePath))) {
-					selectedFilePath+=".txt";
-				}
-			}
-			else {
+
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
 				saveFileDialog.AddExtension=true;
 				saveFileDialog.FileName=fileName;
@@ -3342,7 +3335,7 @@ namespace OpenDental.UI {
 					return;
 				}
 				selectedFilePath=saveFileDialog.FileName;
-			}
+			
 			try {
 				using(StreamWriter sw=new StreamWriter(selectedFilePath,false)) {
 					String line="";
@@ -3369,12 +3362,9 @@ namespace OpenDental.UI {
 				MessageBox.Show(Lans.g(this,"File in use by another program.  Close and try again."));
 				return;
 			}
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(selectedFilePath);
-			}
-			else {
+
 				MessageBox.Show(Lans.g(this,"File created successfully"));
-			}
+			
 		}
 
 		///<summary>Returns the text in the cell for the given row and column. Will throw if either index is invalid.</summary>

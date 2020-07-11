@@ -222,7 +222,7 @@ namespace OpenDental {
 
 		private void butCopy_Click(object sender,EventArgs e) {
 			if(gridInternal.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an internal sheet first.");
+				MessageBox.Show("Please select an internal sheet first.");
 				return;
 			}
 			SheetDef sheetDef=gridInternal.SelectedTag<SheetDef>().Copy();
@@ -236,7 +236,7 @@ namespace OpenDental {
 
 		private void butDuplicate_Click(object sender,EventArgs e) {
 			if(gridCustom.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a sheet from the custom list first.");
+				MessageBox.Show("Please select a sheet from the custom list first.");
 				return;
 			}
 			SheetDef sheetDef=gridCustom.SelectedTag<SheetDef>().Copy();

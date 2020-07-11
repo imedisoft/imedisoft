@@ -53,7 +53,7 @@ and should be accessed/opened by C:/Program Files/Digirex/digirex.ini
 				}
 				Provider priProv=Providers.GetProv(pat.PriProv);
 				if(priProv==null) {
-					MsgBox.Show("Apixia","Invalid provider for the selected patient.");
+					MsgBox.Show("Invalid provider for the selected patient.");
 					return;
 				}
 				iniString+="Gender="+pat.Gender.ToString()+"\r\n"

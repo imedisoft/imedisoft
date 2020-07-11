@@ -56,7 +56,7 @@ namespace OpenDental {
 
 		private void butRemoveProc_Click(object sender,EventArgs e) {
 			if(listProcs.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a procedure first.");
+				MessageBox.Show("Please select a procedure first.");
 				return;
 			}
 			_listCCProcs.RemoveAt(listProcs.SelectedIndex);

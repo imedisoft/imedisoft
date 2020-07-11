@@ -74,7 +74,7 @@ namespace OpenDental {
 
 		private void menuItemAccount_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()<0) {
-				MsgBox.Show(this,"Please select a reseller first.");
+				MessageBox.Show("Please select a reseller first.");
 				return;
 			}
 			GotoModule.GotoAccount(PIn.Long(TableResellers.Rows[gridMain.GetSelectedIndex()]["PatNum"].ToString()));
@@ -91,11 +91,11 @@ namespace OpenDental {
 			}
 			Patient patientSelected=Patients.GetPat(FormPS.SelectedPatNum);
 			if(patientSelected.Guarantor!=FormPS.SelectedPatNum) {
-				MsgBox.Show(this,"Customer must be a guarantor before they can be added as a reseller.");
+				MessageBox.Show("Customer must be a guarantor before they can be added as a reseller.");
 				return;
 			}
 			if(Resellers.IsResellerFamily(patientSelected)) {
-				MsgBox.Show(this,"Customer is already a reseller or part of a reseller family.");
+				MessageBox.Show("Customer is already a reseller or part of a reseller family.");
 				return;
 			}
 			Reseller reseller=new Reseller() {

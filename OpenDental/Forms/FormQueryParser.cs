@@ -145,7 +145,7 @@ namespace OpenDental {
 			string valNew = rowLeaving.Cells[1].Text.ToString();
 			if(UserQueries.SplitQuery(valNew,true,";").Count > 1) {
 				Point _selectedCell = gridMain.SelectedCell;
-				MsgBox.Show(this,"You may not include semicolons in the value text. Please remove all semicolons.");
+				MessageBox.Show("You may not include semicolons in the value text. Please remove all semicolons.");
 				gridMain.SelectedGridRows[0].Cells[1].Text = valOld;
 				gridMain.SetSelected(_selectedCell); //this just refreshes the cell that is being left. Is there an easy way to cancel the CellLeave action?
 				return;

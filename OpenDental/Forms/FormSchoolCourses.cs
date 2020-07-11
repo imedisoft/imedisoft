@@ -183,7 +183,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a course.");
+				MessageBox.Show("Please select a course.");
 				return;
 			}
 			if(IsSelectionMode) {

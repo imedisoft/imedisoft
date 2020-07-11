@@ -522,7 +522,7 @@ namespace OpenDental{
 
 		private void menuRight_click(object sender,System.EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			switch(menuRightClick.Items.IndexOf((ToolStripMenuItem)sender)) {
@@ -556,7 +556,7 @@ namespace OpenDental{
 		///<summary>If multiple patients are selected in UnchedList, will select the last patient to remain consistent with sending to pinboard behavior.</summary>
 		private void SeeChart_Click() {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			//If multiple selected, just take the last one to remain consistent with SendPinboard_Click.
@@ -568,7 +568,7 @@ namespace OpenDental{
 
 		private void SendPinboard_Click() {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			List<long> listAptSelected=new List<long>();
@@ -848,7 +848,7 @@ namespace OpenDental{
 				aptNums.Add(PIn.Long(Table.Rows[gridMain.SelectedIndices[i]]["AptNum"].ToString()));
 			}
 			if(aptNums.Count==0) {
-				MsgBox.Show(this,"No postcards necessary because contact method is not set to Mail for anyone in the list.");
+				MessageBox.Show("No postcards necessary because contact method is not set to Mail for anyone in the list.");
 				return;
 			}
 			AddrTable=Appointments.GetAddrTable(aptNums);
@@ -1068,15 +1068,15 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.ListGridRows.Count==0) {
-				MsgBox.Show(this,"There are no Patients in the table.  Must have at least one.");
+				MessageBox.Show("There are no Patients in the table.  Must have at least one.");
 				return;
 			}
 			if(!EmailAddresses.ExistsValidEmail()) {
-				MsgBox.Show(this,"You need to enter an SMTP server name in e-mail setup before you can send e-mail.");
+				MessageBox.Show("You need to enter an SMTP server name in e-mail setup before you can send e-mail.");
 				return;
 			}
 			if(PrefC.GetLong(PrefName.ConfirmStatusEmailed)==0) {
-				MsgBox.Show(this,"No 'Status for e-mailed confirmation' set in the Setup Confirmation window.");
+				MessageBox.Show("No 'Status for e-mailed confirmation' set in the Setup Confirmation window.");
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0) {
@@ -1095,7 +1095,7 @@ namespace OpenDental{
 					gridMain.SetSelected(i,true);
 				}
 				if(gridMain.SelectedIndices.Length==0) {
-					MsgBox.Show(this,"Confirmations have been sent to all patients of email type who also have an email address entered.");
+					MessageBox.Show("Confirmations have been sent to all patients of email type who also have an email address entered.");
 					return;
 				}
 			}
@@ -1108,14 +1108,14 @@ namespace OpenDental{
 					}
 				}
 				if(gridMain.SelectedIndices.Length==0) {
-					MsgBox.Show(this,"None of the selected patients had email addresses entered.");
+					MessageBox.Show("None of the selected patients had email addresses entered.");
 					return;
 				}
 				if(skipped>0) {
 					MessageBox.Show(Lan.g(this,"Selected patients skipped due to missing email addresses: ")+skipped.ToString());
 				}
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Send email to all of the selected patients?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Send email to all of the selected patients?")) {
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -1206,11 +1206,11 @@ namespace OpenDental{
 			string wirelessPhone;
 			YN txtMsgOk;
 			if(gridMain.ListGridRows.Count==0) {
-				MsgBox.Show(this,"There are no Patients in the table.  Must have at least one.");
+				MessageBox.Show("There are no Patients in the table.  Must have at least one.");
 				return;
 			}
 			if(PrefC.GetLong(PrefName.ConfirmStatusTextMessaged)==0) {
-				MsgBox.Show(this,"You need to set a status for text message confirmations in the Confirmation Setup window.");
+				MessageBox.Show("You need to set a status for text message confirmations in the Confirmation Setup window.");
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0) {//None selected. Select all of type text that are not yet confirmed by text message.
@@ -1229,7 +1229,7 @@ namespace OpenDental{
 					gridMain.SetSelected(i,true);
 				}
 				if(gridMain.SelectedIndices.Length==0) {
-					MsgBox.Show(this,"All patients of text message type have been sent confirmations.");
+					MessageBox.Show("All patients of text message type have been sent confirmations.");
 					return;
 				}
 			}
@@ -1264,13 +1264,13 @@ namespace OpenDental{
 				}
 			}
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"None of the selected patients have wireless phone numbers and are OK to text.");
+				MessageBox.Show("None of the selected patients have wireless phone numbers and are OK to text.");
 				return;
 			}
 			if(skipped>0) {
 				MessageBox.Show(Lan.g(this,"Selected patients skipped: ")+skipped.ToString());
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Send text message to all of the selected patients?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Send text message to all of the selected patients?")) {
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -1302,7 +1302,7 @@ namespace OpenDental{
 					}
 				}
 				else {//There was an exception thrown in FormTME.SendText() meaning something went wrong.  Give the user an option to stop sending messages.
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"There was an error sending, do you want to continue sending messages?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"There was an error sending, do you want to continue sending messages?")) {
 						break;
 					}
 				}

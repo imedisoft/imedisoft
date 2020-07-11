@@ -112,7 +112,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textValue.Text.Trim()=="") {
-				MsgBox.Show(this,"Missing value.");
+				MessageBox.Show("Missing value.");
 				return;
 			}
 			VaccineObsType vaccineObsType=(VaccineObsType)listValueType.SelectedIndex;
@@ -124,7 +124,7 @@ namespace OpenDental {
 					DateTime.Parse(textValue.Text);
 				}
 				catch(Exception) {
-					MsgBox.Show(this,"Value must be a valid date.");
+					MessageBox.Show("Value must be a valid date.");
 					return;
 				}
 			}
@@ -133,7 +133,7 @@ namespace OpenDental {
 					double.Parse(textValue.Text);
 				}
 				catch(Exception) {
-					MsgBox.Show(this,"Value must be a valid number.");
+					MessageBox.Show("Value must be a valid number.");
 					return;
 				}
 			}
@@ -145,12 +145,12 @@ namespace OpenDental {
 					DateTime.Parse(textValue.Text);
 				}
 				catch(Exception) {
-					MsgBox.Show(this,"Value must be a valid date and time.");
+					MessageBox.Show("Value must be a valid date and time.");
 					return;
 				}
 			}
 			if(comboUnits.Enabled && comboUnits.SelectedIndex==0) {
-				MsgBox.Show(this,"Missing units.");
+				MessageBox.Show("Missing units.");
 				return;
 			}
 			if(textDateObserved.errorProvider1.GetError(textDateObserved)!="") {
@@ -158,7 +158,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!textMethodCode.ReadOnly && textMethodCode.Text.Trim()=="") {
-				MsgBox.Show(this,"Missing method code.");
+				MessageBox.Show("Missing method code.");
 				return;
 			}
 			_vaccineObsCur.IdentifyingCode=(VaccineObsIdentifier)comboObservationQuestion.SelectedIndex;

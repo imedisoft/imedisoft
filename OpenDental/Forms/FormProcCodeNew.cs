@@ -665,19 +665,19 @@ namespace OpenDental{
 
 		private bool AddProc(){
 			if(textNewCode.Text=="") {
-				MsgBox.Show(this,"Code not allowed to be blank.");
+				MessageBox.Show("Code not allowed to be blank.");
 				return false;
 			}
 			if(ProcedureCodes.IsValidCode(textNewCode.Text)){
-				MsgBox.Show(this,"That code already exists.");
+				MessageBox.Show("That code already exists.");
 				return false;
 			}
 			if(textDescription.Text=="") {
-				MsgBox.Show(this,"Description not allowed to be blank.");
+				MessageBox.Show("Description not allowed to be blank.");
 				return false;
 			}
 			if(textAbbreviation.Text=="") {
-				MsgBox.Show(this,"Abbreviation not allowed to be blank.");
+				MessageBox.Show("Abbreviation not allowed to be blank.");
 				return false;
 			}
 			//ok to add code-----------------------------------------------------------------------------------
@@ -702,7 +702,7 @@ namespace OpenDental{
 
 		private void butDefault_Click(object sender,EventArgs e) {
 			Changed=true;//because of add definition for new proc category
-			if(MsgBox.Show(this,true,"Delete all 'T' codes which came with trial version?")){
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Delete all 'T' codes which came with trial version?")){
 				
 			}
 		}

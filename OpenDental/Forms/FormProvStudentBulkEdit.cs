@@ -97,7 +97,7 @@ namespace OpenDental {
 				studSelected.OutlineColor=butOutlineColor.BackColor;
 				Providers.Update(studSelected);
 			}
-			MsgBox.Show(this,"Selected students have been updated.");
+			MessageBox.Show("Selected students have been updated.");
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

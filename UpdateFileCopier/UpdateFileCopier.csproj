@@ -114,9 +114,6 @@
     <Compile Include="..\CodeBase\Utilities\ODBoxItem.cs">
       <Link>ODBoxItem.cs</Link>
     </Compile>
-    <Compile Include="..\CodeBase\Utilities\ODBuild.cs">
-      <Link>ODBuild.cs</Link>
-    </Compile>
     <Compile Include="..\CodeBase\Utilities\ODClassExtensions.cs">
       <Link>ODClassExtensions.cs</Link>
     </Compile>

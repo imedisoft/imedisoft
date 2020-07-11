@@ -82,19 +82,19 @@ namespace OpenDental {
 		///<summary></summary>
 		private void buttonOK_Click(object sender,EventArgs e) {
 			if(string.IsNullOrWhiteSpace(textFileName.Text)) {
-				MsgBox.Show(this,"Enter the filename for this attachment.");
+				MessageBox.Show("Enter the filename for this attachment.");
 				return;
 			}
 			if(textFileName.Text.IndexOfAny(Path.GetInvalidFileNameChars())>=0) {//returns -1 if nothing found
-				MsgBox.Show(this,"Invalid characters detected in the filename. Please remove them and try again.");
+				MessageBox.Show("Invalid characters detected in the filename. Please remove them and try again.");
 				return;
 			}
 			if(comboImageType.SelectedIndex==-1) {
-				MsgBox.Show(this,"Choose an image type.");
+				MessageBox.Show("Choose an image type.");
 				return;
 			}
 			if(textDateCreated.errorProvider1.GetError(textDateCreated)!="") {
-				MsgBox.Show(this,"Enter a valid date.");
+				MessageBox.Show("Enter a valid date.");
 				return;
 			}
 			CreateImageAttachment();

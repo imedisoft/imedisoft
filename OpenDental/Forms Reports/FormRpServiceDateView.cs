@@ -94,13 +94,13 @@ namespace OpenDental {
 
 		private void butSavePDFToImages_Click(object sender,EventArgs e) {
 			if(gridMain.ListGridRows.Count==0) {
-				MsgBox.Show(this,"Grid is empty.");
+				MessageBox.Show("Grid is empty.");
 				return;
 			}
 			//Get image category to save to. First image "Statement(S)" category.
 			List<Def> listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true).Where(x => x.ItemValue.Contains("S")).ToList();
 			if(listImageCatDefs.IsNullOrEmpty()) {
-				MsgBox.Show(this,"No image category set for Statements.");
+				MessageBox.Show("No image category set for Statements.");
 				return;
 			}
 			string tempFile=PrefC.GetRandomTempFile(".pdf");
@@ -132,7 +132,7 @@ namespace OpenDental {
 			catch(Exception ex) {
 				ex.DoNothing();
 			}
-			MsgBox.Show(this,"PDF saved successfully.");
+			MessageBox.Show("PDF saved successfully.");
 		}
 
 		private void CreatePDF(string tempFile) {
@@ -176,7 +176,7 @@ namespace OpenDental {
 
 		private void butPrint_Click(object sender,EventArgs e) {
 			if(gridMain.ListGridRows.Count==0) {
-				MsgBox.Show(this,"Grid is empty.");
+				MessageBox.Show("Grid is empty.");
 				return;
 			}
 			_pagesPrinted=0;

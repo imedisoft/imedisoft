@@ -689,7 +689,7 @@ namespace OpenDental{
 			checkMultiplePaths.Checked=(textDocPath.Text.LastIndexOf(';')!=-1);	
 			//Also set the "multiple paths" checkbox at startup based on the current image folder list format. No need to store this info in the db.
 			if(IsStartingUp) {//and failed to find path
-				MsgBox.Show(this,"Could not find the path for the AtoZ folder.");
+				MessageBox.Show("Could not find the path for the AtoZ folder.");
 				if(Security.CurUser==null || !Security.IsAuthorized(Permissions.Setup)) {
 					//The user is still allowed to set the "Path override for this computer", thus the user has a way to temporariliy get into OD in worst case.
 					//For example, if the primary folder path is wrong or has changed, the user can set the path override for this computer to get into OD, then
@@ -699,11 +699,6 @@ namespace OpenDental{
 					butBrowseLocal.Enabled=true;
 					ActiveControl=textLocalPath;//Focus on textLocalPath, since this is the only textbox the user can edit in this case.
 				}
-			}
-			if(ODBuild.IsWeb()) {
-				textSftpUsername.UseSystemPasswordChar=true;
-				butOK.Enabled=false;
-				DisableMostControls();
 			}
 		}
 
@@ -768,7 +763,7 @@ namespace OpenDental{
 					_storageType=DataStorageType.SftpAtoZ;
 					break;
 				default:
-					MsgBox.Show(this,"There was an error retrieving your preferred data storage method.  Please call support to solve this issue.");
+					MessageBox.Show("There was an error retrieving your preferred data storage method.  Please call support to solve this issue.");
 					break;
 			}
 		}
@@ -782,7 +777,7 @@ namespace OpenDental{
 				return (fb.ShowDialog()==DialogResult.OK);
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"There was an error showing the Browse window.\r\nTry running as an Administrator or manually typing in a path.");
+				MessageBox.Show("There was an error showing the Browse window.\r\nTry running as an Administrator or manually typing in a path.");
 				return false;
 			}
 		}
@@ -886,7 +881,7 @@ namespace OpenDental{
 				}
 				if(inputbox.textResult.Text!="abracadabra"){//to keep ignorant people from clicking this box.
 					SetRadioButtonChecked(_storageType);
-					MsgBox.Show(this,"Wrong password");
+					MessageBox.Show("Wrong password");
 					return;
 				}
 			}
@@ -1001,25 +996,25 @@ namespace OpenDental{
 			if(radioUseFolder.Checked){
 				if(textLocalPath.Text!="") {
 					if(OpenDentBusiness.FileIO.FileAtoZ.GetValidPathFromString(textLocalPath.Text)==null) {
-						MsgBox.Show(this,"The path override for this computer is invalid.  The folder must exist and must contain all 26 A through Z folders.");
+						MessageBox.Show("The path override for this computer is invalid.  The folder must exist and must contain all 26 A through Z folders.");
 						return;
 					}
 				}
 				else if(textServerPath.Text!="") {
 					if(OpenDentBusiness.FileIO.FileAtoZ.GetValidPathFromString(textServerPath.Text)==null) {
-						MsgBox.Show(this,"The path override for this server is invalid.  The folder must exist and must contain all 26 A through Z folders.");
+						MessageBox.Show("The path override for this server is invalid.  The folder must exist and must contain all 26 A through Z folders.");
 						return;
 					}
 				}
 				else {
 					if(OpenDentBusiness.FileIO.FileAtoZ.GetValidPathFromString(textDocPath.Text)==null) {
-						MsgBox.Show(this,"The path is invalid.  The folder must exist and must contain all 26 A through Z folders.");
+						MessageBox.Show("The path is invalid.  The folder must exist and must contain all 26 A through Z folders.");
 						return;
 					}
 				}				
     		}
 			if(radioDropboxStorage.Checked && PrefC.AtoZfolderUsed!=DataStorageType.DropboxAtoZ
-				&& !MsgBox.Show(this,true,"Warning: Updating workstations older than 16.3 while using Dropbox may cause issues."
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"Warning: Updating workstations older than 16.3 while using Dropbox may cause issues."
 					+"\r\nIf experienced, use Setup.exe located in AtoZ folder on DropBox to reinstall."))
 			{
 				return;
@@ -1029,7 +1024,7 @@ namespace OpenDental{
 				ODFileUtils.CombinePaths(textAtoZPath.Text,"A",'/'))) 
 			{
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"The Dropbox folder cannot be accessed or does not exist. The folder must contain all 26 A through Z folders.");
+				MessageBox.Show("The Dropbox folder cannot be accessed or does not exist. The folder must contain all 26 A through Z folders.");
 				return;
 			}
 			Cursor=Cursors.Default;
@@ -1043,7 +1038,7 @@ namespace OpenDental{
 						ODFileUtils.CombinePaths(textSftpAtoZ.Text,"A",'/'))) 
 					{
 						Cursor=Cursors.Default;
-						MsgBox.Show(this,"The SFTP folder cannot be accessed or does not exist. The folder must contain all 26 A through Z folders.");
+						MessageBox.Show("The SFTP folder cannot be accessed or does not exist. The folder must contain all 26 A through Z folders.");
 						return;
 					}
 				}
@@ -1057,7 +1052,7 @@ namespace OpenDental{
 			string sftpWarningMsg=Lan.g(this,"Warning: Updating workstations older than 16.3 while using SFTP may cause issues."
 				+"\r\nIf experienced, use the Setup.exe located in the AtoZ folder on your SFTP server to reinstall.");
 			if(radioSftp.Checked && PrefC.AtoZfolderUsed!=DataStorageType.SftpAtoZ
-				&& !MsgBox.Show(this,true,sftpWarningMsg))
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,sftpWarningMsg))
 			{
 				return;
 			}
@@ -1109,7 +1104,7 @@ namespace OpenDental{
 				&& ImageStore.GetValidPathFromString(textDocPath.Text)==null 
 				&& ImageStore.GetValidPathFromString(textLocalPath.Text)==null) 
 			{
-				MsgBox.Show(this,"Invalid A to Z path.  Closing program.");
+				MessageBox.Show("Invalid A to Z path.  Closing program.");
 				Application.Exit();
 			}*/
 		}

@@ -38,16 +38,16 @@ namespace OpenDental {
 		///<summary>Sets the AutoNoteResponseText with the selected AutoNote in the format "Auto Note Response Text : {AutoNoteName}".</summary>
 		private void butOK_Click(object sender,EventArgs e) {
 			if(string.IsNullOrEmpty(textResponseText.Text)) {
-				MsgBox.Show(this,"Please enter a response text.");
+				MessageBox.Show("Please enter a response text.");
 				return;
 			}
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select an AutoNote.");
+				MessageBox.Show("Please select an AutoNote.");
 				return;
 			}
 			AutoNote autoNoteSelected=gridMain.SelectedTag<AutoNote>();
 			if(autoNoteSelected==null) {
-				MsgBox.Show(this,"Invalid AutoNote selected. Please select a new one.");
+				MessageBox.Show("Invalid AutoNote selected. Please select a new one.");
 				gridMain.SetSelected(false);
 				return;//This shouldn't happen.
 			}

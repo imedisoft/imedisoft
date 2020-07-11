@@ -13,18 +13,21 @@ namespace OpenDentBusiness{
 		#region Get Methods
 
 		///<summary>Returns an instance of the account api for the given Clinic Num.</summary>
-		public static IAccountApi GetAccountApi(long clinicNum) {
-			if(ODBuild.IsDebug()) {
-				return new AccountApiMock();
-			}
-			string guid=ClinicPrefs.GetPrefValue(PrefName.MassEmailGuid,clinicNum);
-			string secret=ClinicPrefs.GetPrefValue(PrefName.MassEmailSecret,clinicNum);
-			if(string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(secret)) {
+		public static IAccountApi GetAccountApi(long clinicNum)
+		{
+#if DEBUG
+			return new AccountApiMock();
+#else
+			string guid = ClinicPrefs.GetPrefValue(PrefName.MassEmailGuid, clinicNum);
+			string secret = ClinicPrefs.GetPrefValue(PrefName.MassEmailSecret, clinicNum);
+			if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(secret))
+			{
 				//Huge assumption that we have already checked that the current clinic is signed up.
-				guid=ClinicPrefs.GetPrefValue(PrefName.MassEmailGuid,Clinics.ClinicNum);
-				secret=ClinicPrefs.GetPrefValue(PrefName.MassEmailSecret,Clinics.ClinicNum);
+				guid = ClinicPrefs.GetPrefValue(PrefName.MassEmailGuid, Clinics.ClinicNum);
+				secret = ClinicPrefs.GetPrefValue(PrefName.MassEmailSecret, Clinics.ClinicNum);
 			}
-			return new AccountApi(guid,secret);
+			return new AccountApi(guid, secret);
+#endif
 		}
 
 		///<summary></summary>

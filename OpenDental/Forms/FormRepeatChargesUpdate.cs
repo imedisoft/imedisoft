@@ -156,7 +156,7 @@ namespace OpenDental{
 			}
 			DateTime repeatingChargesBeginDateTime=PrefC.GetDateT(PrefName.RepeatingChargesBeginDateTime);
 			if((MiscData.GetNowDateTime()-repeatingChargesBeginDateTime).TotalHours < 24) {
-				MsgBox.Show(this,"Repeating charges already running on another workstation, you must wait for them to finish before continuing.");
+				MessageBox.Show("Repeating charges already running on another workstation, you must wait for them to finish before continuing.");
 				return false;
 			}
 			//It's been more than 24 hours since repeat charges started.
@@ -182,7 +182,7 @@ namespace OpenDental{
 			}
 			//If the AvaTax API is not available at HQ show popup and return.
 			if(AvaTax.IsEnabled() && !AvaTax.PingAvaTax()) {
-				MsgBox.Show(this,"Unable to connect to AvaTax API.");
+				MessageBox.Show("Unable to connect to AvaTax API.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;

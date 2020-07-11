@@ -109,11 +109,11 @@ namespace OpenDental.User_Controls.SetupWizard {
 			Schedule sched = new Schedule();
 			FormTimePick FormTP = new FormTimePick(false);
 			FormTP.SelectedDTime=new DateTime(1,1,1,8,0,0);
-			MsgBox.Show("FormSetupWizard","Enter a Start Time.");
+			MsgBox.Show("Enter a Start Time.");
 			FormTP.ShowDialog();
 			if(FormTP.DialogResult == DialogResult.OK) {
 				sched.StartTime = FormTP.SelectedDTime.TimeOfDay;
-				MsgBox.Show("FormSetupWizard","Enter an End Time.");
+				MsgBox.Show("Enter an End Time.");
 				FormTP = new FormTimePick(false);
 				FormTP.SelectedDTime=new DateTime(1,1,1,17,0,0);
 				FormTP.ShowDialog();

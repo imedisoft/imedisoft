@@ -171,7 +171,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 			}
 			else{
-				if(!MsgBox.Show(this,true,"Delete this Dental School Class?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this Dental School Class?")){
 					return;
 				}
 				try{
@@ -188,11 +188,11 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textGradYear.errorProvider1.GetError(textGradYear)!=""
 				){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textGradYear.Text==""){
-				MsgBox.Show(this,"Please enter a graduation year.");
+				MessageBox.Show("Please enter a graduation year.");
 				return;
 			}
 			ClassCur.GradYear=PIn.Int(textGradYear.Text);

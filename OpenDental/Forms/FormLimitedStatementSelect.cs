@@ -365,7 +365,7 @@ namespace OpenDental {
 			}
 			SelectAssociatedTrans();
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"There are no transactions with today's date.");
+				MessageBox.Show("There are no transactions with today's date.");
 			}
 		}
 
@@ -377,7 +377,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			List<LimitedRow> listSelectedRows=gridMain.SelectedTags<LimitedRow>();
 			if(listSelectedRows.Count==0) {
-				MsgBox.Show(this,"Please select procedures, adjustments, or payments first.");
+				MessageBox.Show("Please select procedures, adjustments, or payments first.");
 				return;
 			}
 			ListSelectedPatNums=listSelectedRows.Select(x => x.PatNum).Distinct().ToList();

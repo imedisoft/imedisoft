@@ -546,7 +546,7 @@ namespace OpenDental{
 				|| textDateEnd.errorProvider1.GetError(textDateEnd)!="")
 			{
 				ignoreRefreshOnce=true;
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			int scrollPos=gridBill.ScrollValue;
@@ -684,7 +684,7 @@ namespace OpenDental{
 				|| textDateEnd.errorProvider1.GetError(textDateEnd)!="")
 			{
 				ignoreRefreshOnce=true;
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			FillGrid();
@@ -699,7 +699,7 @@ namespace OpenDental{
 			Statement stmt;
 			stmt=Statements.GetStatement(PIn.Long(((DataRow)gridBill.ListGridRows[e.Row].Tag)["StatementNum"].ToString()));
 			if(stmt==null) {
-				MsgBox.Show(this,"The statement has been deleted.");
+				MessageBox.Show("The statement has been deleted.");
 				return;
 			}
 			FormSO.StmtCur=stmt;
@@ -714,7 +714,7 @@ namespace OpenDental{
 
 		private void menuItemGoTo_Click(object sender,EventArgs e) {
 			if(gridBill.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select one bill first.");
+				MessageBox.Show("Please select one bill first.");
 				return;
 			}
 			long patNum=PIn.Long(((DataRow)gridBill.ListGridRows[gridBill.GetSelectedIndex()].Tag)["PatNum"].ToString());
@@ -725,7 +725,7 @@ namespace OpenDental{
 
 		private void butEdit_Click(object sender,EventArgs e) {
 			if(gridBill.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select one or more bills first.");
+				MessageBox.Show("Please select one or more bills first.");
 				return;
 			}
 			FormStatementOptions FormSO=new FormStatementOptions(true);
@@ -777,16 +777,6 @@ namespace OpenDental{
 		}
 
 		private void butSend_Click(object sender,System.EventArgs e) {
-			if(ODBuild.IsWeb() && PrefC.GetEnum<BillingUseElectronicEnum>(PrefName.BillingUseElectronic).In(
-					BillingUseElectronicEnum.ClaimX,
-					BillingUseElectronicEnum.EDS,
-					BillingUseElectronicEnum.POS
-				)) 
-			{
-				MsgBox.Show(this,$"Electronic statements using {PrefC.GetEnum<BillingUseElectronicEnum>(PrefName.BillingUseElectronic).GetDescription()} "
-					+"are not available while viewing through the web.");
-				return;
-			}
 			_listStatementNumsSent=new List<long>();
 			if(gridBill.SelectedIndices.Length==0){
 				MessageBox.Show(Lan.g(this,"Please select items first."));
@@ -796,7 +786,7 @@ namespace OpenDental{
 			labelEmailed.Text=Lan.g(this,"E-mailed=")+"0";
 			labelSentElect.Text=Lan.g(this,"SentElect=")+"0";
 			labelTexted.Text=Lan.g(this,"Texted=")+"0";
-			if(!MsgBox.Show(this,true,"Please be prepared to wait up to ten minutes while all the bills get processed.\r\nOnce complete, the pdf print preview will be launched in Adobe Reader.  You will print from that program.  Continue?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Please be prepared to wait up to ten minutes while all the bills get processed.\r\nOnce complete, the pdf print preview will be launched in Adobe Reader.  You will print from that program.  Continue?")){
 				return;
 			}
 			PdfDocument outputDocument = new PdfDocument();
@@ -822,17 +812,14 @@ namespace OpenDental{
 			if(_hasToShowPdf) {
 				string tempFileOutputDocument = PrefC.GetRandomTempFile(".pdf");
 				outputDocument.Save(tempFileOutputDocument);
-				if(ODBuild.IsWeb()) {
-					ThinfinityUtils.HandleFile(tempFileOutputDocument);
-				}
-				else {
+
 					try {
 						Process.Start(tempFileOutputDocument);
 					}
 					catch(Exception ex) {
 						MessageBox.Show(Lan.g(this,"Error: Please make sure Adobe Reader is installed.")+ex.Message);
 					}
-				}
+				
 			}
 			#endregion
 			string msg="";
@@ -855,7 +842,7 @@ namespace OpenDental{
 			if(listDictPatnumsSkipped.Count(x => x.Count>0)>0) {
 				//Modify original box to have yes/no buttons to see if they want to see who errored out
 				msg+="\r\n\r\n"+"Would you like to see skipped patnums?";
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,msg)) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,msg)) {
 					string skippedPatNums="";
 					foreach(Dictionary<long,string> dictSkipReasons in listDictPatnumsSkipped) {
 						foreach(KeyValuePair<long,string> kvp in dictSkipReasons) {
@@ -868,7 +855,7 @@ namespace OpenDental{
 			}
 			else {
 				//If there were no errors, we simply show this.
-				MsgBox.Show(this,msg);
+				MessageBox.Show(msg);
 			}
 			Cursor=Cursors.Default;
 			isPrinting=false;
@@ -1052,7 +1039,7 @@ namespace OpenDental{
 				if(stmt.Mode_==StatementMode.Email) {
 					if(emailAddress.SMTPserver=="") {
 						_progExtended.Close();
-						MsgBox.Show(this,"You need to enter an SMTP server name in e-mail setup before you can send e-mail.");
+						MessageBox.Show("You need to enter an SMTP server name in e-mail setup before you can send e-mail.");
 						Cursor=Cursors.Default;
 						isPrinting=false;
 						//FillGrid();//automatic
@@ -1102,7 +1089,7 @@ namespace OpenDental{
 						,progressBarEventType:ProgBarEventType.TextMsg)));
 					if(stmt.DocNum==0) {
 						_progExtended.Close();
-						MsgBox.Show(this,"Failed to save PDF.  In Setup, DataPaths, please make sure the top radio button is checked.");
+						MessageBox.Show("Failed to save PDF.  In Setup, DataPaths, please make sure the top radio button is checked.");
 						Cursor=Cursors.Default;
 						isPrinting=false;
 						return false;

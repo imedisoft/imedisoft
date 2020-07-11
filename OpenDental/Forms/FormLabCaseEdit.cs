@@ -561,14 +561,14 @@ namespace OpenDental{
 				return;
 			}
 			if(CaseCur==null) {
-				MsgBox.Show(this,"Lab case no longer exists.");
+				MessageBox.Show("Lab case no longer exists.");
 				DialogResult=DialogResult.Abort;//Results in form closing logic
 				return;
 			}
 			Patient pat=Patients.GetPat(CaseCur.PatNum);
 			//If pat is null, this can trickle down and allow the user to create a lab sheet with a FK to an invalid Patient.
 			if(pat==null) {
-				MsgBox.Show(this,"There is no valid Patient attached to this Labcase.");
+				MessageBox.Show("There is no valid Patient attached to this Labcase.");
 				DialogResult=DialogResult.Abort;//Results in form closing logic
 				return;
 			}
@@ -744,7 +744,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			//whether new or not
-			if(!MsgBox.Show(this,true,"Delete Lab Case?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete Lab Case?")){
 				return;
 			}
 			try{
@@ -759,11 +759,11 @@ namespace OpenDental{
 		/// <summary>Returns false if not able to save.</summary>
 		private bool SaveToDb() {
 			if(listLab.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a lab first.");
+				MessageBox.Show("Please select a lab first.");
 				return false;
 			}
 			if(comboProv.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a provider first.");
+				MessageBox.Show("Please select a provider first.");
 				return false;
 			}
 			if(textDateCreated.Text!=""){
@@ -771,7 +771,7 @@ namespace OpenDental{
 					DateTime.Parse(textDateCreated.Text);
 				}
 				catch{
-					MsgBox.Show(this,"Date Time Created is invalid.");
+					MessageBox.Show("Date Time Created is invalid.");
 					return false;
 				}
 			}
@@ -780,7 +780,7 @@ namespace OpenDental{
 					DateTime.Parse(textDateSent.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Date Time Sent is invalid.");
+					MessageBox.Show("Date Time Sent is invalid.");
 					return false;
 				}
 			}
@@ -789,7 +789,7 @@ namespace OpenDental{
 					DateTime.Parse(textDateRecd.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Date Time Received is invalid.");
+					MessageBox.Show("Date Time Received is invalid.");
 					return false;
 				}
 			}
@@ -798,7 +798,7 @@ namespace OpenDental{
 					DateTime.Parse(textDateChecked.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Date Time Checked is invalid.");
+					MessageBox.Show("Date Time Checked is invalid.");
 					return false;
 				}
 			}
@@ -807,12 +807,12 @@ namespace OpenDental{
 					DateTime.Parse(textDateDue.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Date Time Due is invalid.");
+					MessageBox.Show("Date Time Due is invalid.");
 					return false;
 				}
 			}
 			if(textLabFee.errorProvider1.GetError(textLabFee)!="") {
-				MsgBox.Show(this,"Lab fee amount is invalid.");
+				MessageBox.Show("Lab fee amount is invalid.");
 				return false;
 			}
 			CaseCur.LaboratoryNum=ListLabs[listLab.SelectedIndex].LaboratoryNum;

@@ -722,7 +722,7 @@ namespace OpenDental{
 				}
 				catch(ApplicationException ex) {
 					if(ex.Message=="Missing codenum") {
-						MsgBox.Show(this,$"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
+						MessageBox.Show($"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
 						PatCur=null;
 						return;
 					}
@@ -2014,7 +2014,7 @@ namespace OpenDental{
 
 		private void checkShowIns_Click(object sender,EventArgs e) {
 			if(!checkShowIns.Checked && !checkShowInsNotAutomatic) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Turn off automatic checking of this box for Active/Inactive Treatment Plans for the rest of this session?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Turn off automatic checking of this box for Active/Inactive Treatment Plans for the rest of this session?")) {
 					checkShowInsNotAutomatic=true;
 				}
 			}
@@ -2023,7 +2023,7 @@ namespace OpenDental{
 
 		private void checkShowDiscount_Click(object sender,EventArgs e) {
 			if(!checkShowDiscount.Checked && !checkShowDiscountNotAutomatic) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Turn off automatic checking of this box for Active/Inactive Treatment Plans for the rest of this session?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Turn off automatic checking of this box for Active/Inactive Treatment Plans for the rest of this session?")) {
 					checkShowDiscountNotAutomatic=true;
 				}
 			}
@@ -2040,7 +2040,7 @@ namespace OpenDental{
 
 		private void ToolBarMainPrint_Click() {
 			if(gridPlans.SelectedIndices.Length < 1) {
-				MsgBox.Show(this,"Select a Treatment Plan to print.");
+				MessageBox.Show("Select a Treatment Plan to print.");
 				return;
 			}
 			#region FuchsOptionOn
@@ -2270,7 +2270,7 @@ namespace OpenDental{
 			List<TreatPlanAttach> listTreatPlanAttaches=loadActiveData.ListTreatPlanAttaches;
 			List<Procedure> listProcForTP=loadActiveData.listProcForTP;
 			if(listProcForTP.Any(x => ProcedureCodes.GetWhereFromList(y => y.CodeNum==x.CodeNum).Count==0)) {
-				MsgBox.Show(this,$"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
+				MessageBox.Show($"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
 				return new List<ProcTP>();//Show an empty TP
 			}
 			Lookup<FeeKey2,Fee> lookupFees=null;
@@ -3269,10 +3269,10 @@ namespace OpenDental{
 
 		private void ToolBarMainUpdate_Click() {
 			if(!new[] { TreatPlanStatus.Active,TreatPlanStatus.Inactive }.Contains(_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus)) {
-				MsgBox.Show(this,"The update fee utility only works on current treatment plans, not any saved plans.");
+				MessageBox.Show("The update fee utility only works on current treatment plans, not any saved plans.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Update all fees and insurance estimates on this treatment plan to the current fees for this patient?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Update all fees and insurance estimates on this treatment plan to the current fees for this patient?")) {
 				return;
 			}
 			Procedure procCur;
@@ -3332,7 +3332,7 @@ namespace OpenDental{
 			//Cannot even click this button if user has not selected one of the treatment plans; Otherwise button is disabled.
 			if(!new[]{TreatPlanStatus.Active,TreatPlanStatus.Inactive}.Contains(_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus)){
 			//if(gridPlans.SelectedIndices[0]!=0){
-				MsgBox.Show(this,"An Active or Inactive TP must be selected before saving a TP.  You can highlight some procedures in the TP to save a TP with only those procedures in it.");
+				MessageBox.Show("An Active or Inactive TP must be selected before saving a TP.  You can highlight some procedures in the TP to save a TP with only those procedures in it.");
 				return;
 			}
 			//Check for duplicate procedures on the appointment before sending the DFT to eCW.
@@ -3483,7 +3483,7 @@ namespace OpenDental{
 					//MessageConstructor.GenerateDFT(procList,EventTypeHL7.P03,PatCur,Patients.GetPat(PatCur.Guarantor),Bridges.ECW.AptNum,"treatment",pdfDataStr);
 					MessageHL7 messageHL7=MessageConstructor.GenerateDFT(new List<Procedure>(),EventTypeHL7.P03,PatCur,Patients.GetPat(PatCur.Guarantor),Bridges.ECW.AptNum,"treatment",pdfDataStr);
 					if(messageHL7==null) {
-						MsgBox.Show(this,"There is no DFT message type defined for the enabled HL7 definition.");
+						MessageBox.Show("There is no DFT message type defined for the enabled HL7 definition.");
 						return;
 					}
 					HL7Msg hl7Msg=new HL7Msg();
@@ -3508,7 +3508,7 @@ namespace OpenDental{
 
 		private void ToolBarMainSign_Click() {
 			if(_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus!=TreatPlanStatus.Saved) {
-				MsgBox.Show(this,"You may only sign a saved TP, not an Active or Inactive TP.");
+				MessageBox.Show("You may only sign a saved TP, not an Active or Inactive TP.");
 				return;
 			}
 			//string patFolder=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());
@@ -3516,14 +3516,14 @@ namespace OpenDental{
 			   && _listTreatPlans[gridPlans.SelectedIndices[0]].Signature!="" //and document is signed
 			   && Documents.DocExists(_listTreatPlans[gridPlans.SelectedIndices[0]].DocNum)) //and file exists
 			{
-				MsgBox.Show(this,"Document already signed and saved to PDF. Unsign treatment plan from edit window to enable resigning.");
+				MessageBox.Show("Document already signed and saved to PDF. Unsign treatment plan from edit window to enable resigning.");
 				Cursor=Cursors.WaitCursor;
 				Documents.OpenDoc(_listTreatPlans[gridPlans.SelectedIndices[0]].DocNum);
 				Cursor=Cursors.Default;
 				return;//cannot re-sign document.
 			}
 			if(_listTreatPlans[gridPlans.SelectedIndices[0]].DocNum>0 && !Documents.DocExists(_listTreatPlans[gridPlans.SelectedIndices[0]].DocNum)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Unable to open saved treatment plan. Would you like to recreate document using current information?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Unable to open saved treatment plan. Would you like to recreate document using current information?")) {
 					return;
 				}
 			}//TODO: Implement ODprintout pattern - MigraDoc
@@ -3563,7 +3563,7 @@ namespace OpenDental{
 		/// If TreatPlanSaveSignedToPdf enabled, will default to first non-hidden category if no TP categories are explicitly defined.</summary>
 		private List<Document> SaveTPAsDocument(bool isSigSave,Sheet sheet=null) {
 			if(DoPrintUsingSheets() && sheet==null) {
-				MsgBox.Show(this,"An error has occurred with the Treatment Plans to sheets feature.  Please contact support.");
+				MessageBox.Show("An error has occurred with the Treatment Plans to sheets feature.  Please contact support.");
 				return new List<Document>();
 			}
 			List<Document> retVal=new List<Document>();
@@ -3575,7 +3575,7 @@ namespace OpenDental{
 				//we must save at least one document, pick first non-hidden image category.
 				Def imgCat=listImageCatDefs.FirstOrDefault(x => !x.IsHidden);
 				if(imgCat==null) {
-					MsgBox.Show(this,"Unable to save treatment plan because all image categories are hidden.");
+					MessageBox.Show("Unable to save treatment plan because all image categories are hidden.");
 					return new List<Document>();
 				}
 				categories.Add(imgCat.DefNum);
@@ -3658,11 +3658,11 @@ namespace OpenDental{
 		///<summary>Similar method in Account</summary>
 		private bool CheckClearinghouseDefaults() {
 			if(PrefC.GetLong(PrefName.ClearinghouseDefaultDent)==0) {
-				MsgBox.Show(this,"No default dental clearinghouse defined.");
+				MessageBox.Show("No default dental clearinghouse defined.");
 				return false;
 			}
 			if(PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance) && PrefC.GetLong(PrefName.ClearinghouseDefaultMed)==0) {
-				MsgBox.Show(this,"No default medical clearinghouse defined.");
+				MessageBox.Show("No default medical clearinghouse defined.");
 				return false;
 			}
 			return true;
@@ -3679,7 +3679,7 @@ namespace OpenDental{
 				return;
 			}
 			if(!new[] { TreatPlanStatus.Active,TreatPlanStatus.Inactive }.Contains(_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus)) {
-				MsgBox.Show(this,"You can only send a preauth from a current TP, not a saved TP.");
+				MessageBox.Show("You can only send a preauth from a current TP, not a saved TP.");
 				return;
 			}
 			if(gridMain.SelectedIndices.All(x => gridMain.ListGridRows[x].Tag==null)) {
@@ -3705,7 +3705,7 @@ namespace OpenDental{
 						}
 					}
 					if(selectedIndices.FindAll(x => gridMain.ListGridRows[x].Tag!=null).Count-selectedLabCount>7) {//only if they selected more than 7 procedures, not 7 rows.
-						MsgBox.Show(this,"Only the first 7 procedures will be selected.  You will need to create another preauth for the remaining procedures.");
+						MessageBox.Show("Only the first 7 procedures will be selected.  You will need to create another preauth for the remaining procedures.");
 					}
 				}
 			}
@@ -3738,7 +3738,7 @@ namespace OpenDental{
 				}
 				Procedure proc=Procedures.GetOneProc(((ProcTP)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag).ProcNumOrig,false);
 				if(Procedures.NoBillIns(proc,ClaimProcList,ClaimCur.PlanNum)) {
-					MsgBox.Show(this,"Not allowed to send procedures to insurance that are marked 'Do not bill to ins'.");
+					MessageBox.Show("Not allowed to send procedures to insurance that are marked 'Do not bill to ins'.");
 					return;
 				}
 				if(proc.ProcNumLab!=0) {
@@ -3773,11 +3773,11 @@ namespace OpenDental{
 				}
 				Procedure proc=listProcsSelected[i];
 				if(PrefC.HasClinicsEnabled && procClinicNum!=proc.ClinicNum) {
-					MsgBox.Show(this,"All procedures do not have the same clinic.");
+					MessageBox.Show("All procedures do not have the same clinic.");
 					return;
 				}
 				if(!PrefC.GetBool(PrefName.EasyHidePublicHealth) && proc.PlaceService!=placeService) {
-					MsgBox.Show(this,"All procedures do not have the same place of service.");
+					MessageBox.Show("All procedures do not have the same place of service.");
 					return;
 				}
 			}
@@ -3791,7 +3791,7 @@ namespace OpenDental{
 					break;
 				case ClaimZeroDollarProcBehavior.Block:
 					if(listProcsSelected.FirstOrDefault(x => x.ProcFee.IsZero())!=null) {
-						MsgBox.Show("ContrTreat","You can't make a claim for a $0 procedure.");
+						MsgBox.Show("You can't make a claim for a $0 procedure.");
 						return;
 					}
 					break;
@@ -3884,7 +3884,7 @@ namespace OpenDental{
 
 		private void ToolBarMainDiscount_Click() {
 			if(!new[] { TreatPlanStatus.Active,TreatPlanStatus.Inactive }.Contains(_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus)) {
-				MsgBox.Show(this,"You can only create discounts from a current TP, not a saved TP.");
+				MessageBox.Show("You can only create discounts from a current TP, not a saved TP.");
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0) {
@@ -3895,7 +3895,7 @@ namespace OpenDental{
 				.Select(x => ((ProcTP)gridMain.ListGridRows[x].Tag).ProcNumOrig)
 				.ToList(),false);
 			if(listProcs.Count<=0) {
-				MsgBox.Show(this,"There are no procedures selected in the treatment plan. Please add to, or select from, procedures attached to the treatment plan before applying a discount");
+				MessageBox.Show("There are no procedures selected in the treatment plan. Please add to, or select from, procedures attached to the treatment plan before applying a discount");
 				return;
 			}
 			FormTreatmentPlanDiscount FormTPD=new FormTreatmentPlanDiscount(listProcs);
@@ -3918,7 +3918,7 @@ namespace OpenDental{
 			}
 			Claim claim=Claims.GetClaim(((Claim)ALPreAuth[e.Row]).ClaimNum);//gets attached images.
 			if(claim==null) {
-				MsgBox.Show(this,"The pre authorization has been deleted.");
+				MessageBox.Show("The pre authorization has been deleted.");
 				ModuleSelected(PatCur.PatNum);
 				return;
 			}
@@ -3960,7 +3960,7 @@ namespace OpenDental{
 
 		private void butInsRem_Click(object sender,EventArgs e) {
 			if(PatCur==null) {
-				MsgBox.Show(this,"Please select a patient before attempting to view insurance remaining.");
+				MessageBox.Show("Please select a patient before attempting to view insurance remaining.");
 				return;
 			}
 			FormInsRemain FormIR=new FormInsRemain(PatCur.PatNum);
@@ -3974,13 +3974,13 @@ namespace OpenDental{
 		
 		private void butPlannedAppt_Click(object sender,EventArgs e) {
 			if(PatCur==null) {
-				MsgBox.Show(this,"Please select a Patient.");
+				MessageBox.Show("Please select a Patient.");
 				return;
 			}
 			if(!gridPlans.GetSelectedIndex().Between(0,_listTreatPlans.Count-1)
 				|| _listTreatPlans[gridPlans.GetSelectedIndex()].TPStatus!=TreatPlanStatus.Active || gridMain.SelectedIndices.Count()==0) 
 			{
-				MsgBox.Show(this,"Please select at least one procedure on an Active treatment plan.");
+				MessageBox.Show("Please select at least one procedure on an Active treatment plan.");
 				return;
 			}
 			//We only care about ShowAppointments in the ChartModuleComponentsToLoad, reduces Db calls

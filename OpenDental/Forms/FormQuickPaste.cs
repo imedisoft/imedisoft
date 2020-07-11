@@ -580,7 +580,7 @@ namespace OpenDental{
 
 		private void butAlphabetize_Click(object sender,EventArgs e) {
 			//Since this string is hardcoded we can pass them into the MsgBox for translation even with the variable
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Quick Paste Notes will be ordered alphabetically by "
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Quick Paste Notes will be ordered alphabetically by "
 				+(radioSortByAbbrev.Checked?"abbreviation":"note")
 				+".  This cannot be undone.  Continue?")) 
 			{
@@ -643,7 +643,7 @@ namespace OpenDental{
 				}
 				catch(Exception) {
 					//If pasting into the Rtf AND the plain text fails, notify the user.
-					MsgBox.Show(this,"There was a problem pasting clipboard contents.");
+					MessageBox.Show("There was a problem pasting clipboard contents.");
 				}
 			}
 		}

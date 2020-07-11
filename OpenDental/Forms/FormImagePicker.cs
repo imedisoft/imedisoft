@@ -120,7 +120,7 @@ namespace OpenDental {
 							}
 							bool cancel=false;
 							while(!cancel && FileAtoZ.Exists(FileAtoZ.CombinePaths(_imageFolder,ip.textResult.Text))){
-								MsgBox.Show(this,"File name already exists.");
+								MessageBox.Show("File name already exists.");
 								if(ip.ShowDialog()!=DialogResult.OK) {
 									cancel=true;
 								}

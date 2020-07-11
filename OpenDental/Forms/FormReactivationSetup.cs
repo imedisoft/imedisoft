@@ -111,14 +111,14 @@ namespace OpenDental {
 			if(textDaysPast.errorProvider1.GetError(textDaysPast)!=""
 				|| textMaxReminders.errorProvider1.GetError(textMaxReminders)!="") 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textPostcardsPerSheet.Text!="1"
 				&& textPostcardsPerSheet.Text!="3"
 				&& textPostcardsPerSheet.Text!="4") 
 			{
-				MsgBox.Show(this,"The value in postcards per sheet must be 1, 3, or 4");
+				MessageBox.Show("The value in postcards per sheet must be 1, 3, or 4");
 				return;
 			}
 			if(comboStatusMailedReactivation.SelectedIndex==-1
@@ -126,7 +126,7 @@ namespace OpenDental {
 				|| comboStatusTextedReactivation.SelectedIndex==-1
 				|| comboStatusEmailTextReactivation.SelectedIndex==-1) 
 			{
-				MsgBox.Show(this,"All status options on the left must be set.");
+				MessageBox.Show("All status options on the left must be set.");
 				return;
 			}
 			//End of Validation
@@ -134,7 +134,7 @@ namespace OpenDental {
 			didChange |= Prefs.UpdateString(PrefName.ReactivationPostcardsPerSheet,textPostcardsPerSheet.Text);
 			if(didChange) {
 				if(textPostcardsPerSheet.Text=="1") {
-					MsgBox.Show(this,"If using 1 postcard per sheet, you must adjust the position, and also the preview will not work");
+					MessageBox.Show("If using 1 postcard per sheet, you must adjust the position, and also the preview will not work");
 				}
 			}
 			didChange |= Prefs.UpdateBool(PrefName.ReactivationGroupByFamily,checkGroupFamilies.Checked);

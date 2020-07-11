@@ -21,10 +21,10 @@ namespace OpenDentBusiness {
 			//No remoting role check; no call to db
 			Stopwatch sw=null;
 			Stopwatch sTotal=null;
-			if(ODBuild.IsDebug()) {
-				sw=Stopwatch.StartNew();
+#if DEBUG
+			sw=Stopwatch.StartNew();
 				sTotal=Stopwatch.StartNew();
-			}
+#endif
 			DataTable table=new DataTable();
 			//columns that start with lowercase are altered for display rather than being raw data.
 			table.Columns.Add("PatNum");
@@ -49,11 +49,11 @@ namespace OpenDentBusiness {
 			//dictionary with Key=PatNum, Value=AmtPlanned
 			Dictionary<long,double> dictAmtPlanned=new Dictionary<long,double>();
 			using(DataTable tablePlanned=GetDictAmtPlanned(patsWithAppts,dateSince,listProviders,listBilling,code1,code2,listClinicNums)) {
-				if(ODBuild.IsDebug()) {
-					sw.Stop();
+#if DEBUG
+				sw.Stop();
 					Console.WriteLine("Get tablePlanned: "+sw.Elapsed.TotalSeconds+" sec, Rows: "+tablePlanned.Rows.Count);
 					sw=Stopwatch.StartNew();
-				}
+#endif
 				if(tablePlanned.Rows.Count==0) {
 					return table;
 				}
@@ -67,39 +67,39 @@ namespace OpenDentBusiness {
 				dictPatInfo=tablePat.Select().ToDictionary(x => PIn.Long(x["PatPlanNum"].ToString()),
 					x => Tuple.Create(PIn.Double(x["AmtPending"].ToString()),PIn.Double(x["AmtUsed"].ToString())));
 			}
-			if(ODBuild.IsDebug()) {
-				sw.Stop();
+#if DEBUG
+			sw.Stop();
 				Console.WriteLine("Get dictPatInfo: "+sw.Elapsed.TotalSeconds+" sec, Count: "+dictPatInfo.Count);
 				sw=Stopwatch.StartNew();
-			}
+#endif
 			//dictionary with Key=InsSubNum, Value=Tuple(AmtPending,AmtUsed)
 			Dictionary<long,Tuple<double,double>> dictFamInfo=new Dictionary<long,Tuple<double,double>>();
 			using(DataTable tableFam=GetFamInfo(isProcsGeneral,renewDate,patNumStr)) {
 				dictFamInfo=tableFam.Select().ToDictionary(x => PIn.Long(x["InsSubNum"].ToString()),
 					x => Tuple.Create(PIn.Double(x["AmtPending"].ToString()),PIn.Double(x["AmtUsed"].ToString())));
 			}
-			if(ODBuild.IsDebug()) {
-				sw.Stop();
+#if DEBUG
+			sw.Stop();
 				Console.WriteLine("Get dictFamInfo: "+sw.Elapsed.TotalSeconds+" sec, Rows: "+dictFamInfo.Count);
 				sw=Stopwatch.StartNew();
-			}
+#endif
 			//dictionary with Key=PlanNum, Value=Tuple(AnnualMaxInd,AnnualMaxFam)
 			Dictionary<long,Tuple<double,double>> dictAnnualMax=new Dictionary<long,Tuple<double,double>>();
 			using(DataTable tableAnnualMax=GetAnnualMaxInfo(patNumStr)) {
 				dictAnnualMax=tableAnnualMax.Select().ToDictionary(x => PIn.Long(x["PlanNum"].ToString()),
 					x => Tuple.Create(PIn.Double(x["AnnualMaxInd"].ToString()),PIn.Double(x["AnnualMaxFam"].ToString())));
 			}
-			if(ODBuild.IsDebug()) {
-				sw.Stop();
+#if DEBUG
+			sw.Stop();
 				Console.WriteLine("Get dictAnnualMax: "+sw.Elapsed.TotalSeconds+" sec, Rows: "+dictAnnualMax.Count);
 				sw=Stopwatch.StartNew();
-			}
+#endif
 			using(DataTable rawtable=GetTableRaw(noIns,monthStart,patNumStr)) {
-				if(ODBuild.IsDebug()) {
-					sw.Stop();
+#if DEBUG
+				sw.Stop();
 					Console.WriteLine("Get RawTable: "+sw.Elapsed.TotalSeconds+" sec, Rows: "+rawtable.Rows.Count);
 					sw=Stopwatch.StartNew();
-				}
+#endif
 				DataRow row;
 				foreach(DataRow rawRow in rawtable.Rows) {
 					row=table.NewRow();
@@ -175,14 +175,14 @@ namespace OpenDentBusiness {
 					table.Rows.Add(row);
 				}
 			}
-			if(ODBuild.IsDebug()) {
-				sw.Stop();
+#if DEBUG
+			sw.Stop();
 				sTotal.Stop();
 				Console.WriteLine("Finished Filling DataTable: {0}\r\n\tTotal time: {1}\r\n\tRows: {2}",
 					(sw.Elapsed.Minutes>0?(sw.Elapsed.Minutes+" min "):"")+(sw.Elapsed.TotalSeconds-sw.Elapsed.Minutes*60)+" sec",
 					(sTotal.Elapsed.Minutes>0?(sTotal.Elapsed.Minutes+" min "):"")+(sTotal.Elapsed.TotalSeconds-sTotal.Elapsed.Minutes*60)+" sec",
 					table.Rows.Count);
-			}
+#endif
 			return table;
 		}
 

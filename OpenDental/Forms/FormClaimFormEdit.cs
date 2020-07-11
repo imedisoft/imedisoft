@@ -1408,7 +1408,7 @@ namespace OpenDental{
 							break;
 						default:
 							if(!FileAtoZ.Exists(fileName)) {
-								MsgBox.Show(this,"File not found.");
+								MessageBox.Show("File not found.");
 								continue;
 							}
 							thisImage=FileAtoZ.GetImage(fileName);

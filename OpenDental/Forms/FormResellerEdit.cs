@@ -126,7 +126,7 @@ namespace OpenDental {
 
 		private void menuItemAccount_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()<0) {
-				MsgBox.Show(this,"Please select a customer first.");
+				MessageBox.Show("Please select a customer first.");
 				return;
 			}
 			GotoModule.GotoAccount(PIn.Long(_tableCustomers.Rows[gridMain.GetSelectedIndex()]["PatNum"].ToString()));
@@ -168,10 +168,10 @@ namespace OpenDental {
 			}
 			//Do not let the reseller be deleted if they have customers in their list.
 			if(Resellers.HasActiveResellerCustomers(_resellerCur)) {
-				MsgBox.Show(this,"This reseller cannot be deleted until all active services are removed from their customers.  This should be done using the reseller portal.");
+				MessageBox.Show("This reseller cannot be deleted until all active services are removed from their customers.  This should be done using the reseller portal.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"This will update PatStatus to inactive and set every registartion key's stop date.\r\nContinue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will update PatStatus to inactive and set every registartion key's stop date.\r\nContinue?")) {
 				return;
 			}
 			Patient patOld=Patients.GetPat(_resellerCur.PatNum);
@@ -193,15 +193,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textPassword.Text!="" && textUserName.Text.Trim()=="") {
-				MsgBox.Show(this,"User Name cannot be blank.");
+				MessageBox.Show("User Name cannot be blank.");
 				return;
 			}
 			if(textUserName.Text!="" && textPassword.Text.Trim()=="") {
-				MsgBox.Show(this,"Password cannot be blank.");
+				MessageBox.Show("Password cannot be blank.");
 				return;
 			}
 			if(textUserName.Text!="" && Resellers.IsUserNameInUse(_resellerCur.PatNum,textUserName.Text)) {
-				MsgBox.Show(this,"User Name already in use.");
+				MessageBox.Show("User Name already in use.");
 				return;
 			}
 			if(IsBundleMissing()) {
@@ -218,11 +218,11 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				ex.DoNothing();
-				MsgBox.Show(this,"Billing Type is invalid.");
+				MessageBox.Show("Billing Type is invalid.");
 				return;
 			}
 			if(!int.TryParse(textVotesAllotted.Text,out int votesAllotted) || votesAllotted < 0) {
-				MsgBox.Show(this,"Votes Allotted is invalid.");
+				MessageBox.Show("Votes Allotted is invalid.");
 				return;
 			}
 			_resellerCur.VotesAllotted=votesAllotted;

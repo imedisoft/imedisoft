@@ -41,18 +41,18 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(!IsNew) {
-				MsgBox.Show(this,"Deleting services not implemented yet.");
+				MessageBox.Show("Deleting services not implemented yet.");
 			}
 			DialogResult=DialogResult.OK;
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(ResellerServiceCur.CodeNum==0) {
-				MsgBox.Show(this,"Please pick a service from the list of procedure codes.");
+				MessageBox.Show("Please pick a service from the list of procedure codes.");
 				return;
 			}
 			if(textFee.errorProvider1.GetError(textFee)!="") {
-				MsgBox.Show(this,"Please fix the service fee first.");
+				MessageBox.Show("Please fix the service fee first.");
 				return;
 			}
 			ResellerServiceCur.Fee=PIn.Double(textFee.Text);

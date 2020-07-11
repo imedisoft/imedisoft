@@ -612,7 +612,7 @@ namespace OpenDental {
 				//Didn't exist in our list of ProcedureCodes, tell user it won't be added.
 				if(procCode.CodeNum==0) {
 					//Did not translate because HQ only.
-					MsgBox.Show(this,"Selected procedure cannot be used with the Prepayment Tool.");
+					MessageBox.Show("Selected procedure cannot be used with the Prepayment Tool.");
 					continue;
 				}
 				ProcedureCharge procCharge=new ProcedureCharge(procCode,proc.ProcFee);

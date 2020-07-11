@@ -20,7 +20,7 @@ namespace OpenDental{
 		public static Clearinghouse GetClearinghouseHq(long hqClearinghouseNum,bool suppressError) {
 			Clearinghouse clearinghouse=Clearinghouses.GetClearinghouse(hqClearinghouseNum);
 			if(clearinghouse==null && !suppressError) {
-				MsgBox.Show("Clearinghouses","Error. Could not locate Clearinghouse.");
+				MsgBox.Show("Error. Could not locate Clearinghouse.");
 			}
 			return clearinghouse;
 		}

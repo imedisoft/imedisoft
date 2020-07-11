@@ -380,7 +380,7 @@ namespace OpenDental{
 			comboBillType.SetSelectedDefNum(PatCur.BillingType); 
 			if(comboBillType.SelectedIndex==-1){
 				if(comboBillType.Items.Count==0) {
-					MsgBox.Show(this,"Error.  All billing types have been hidden.  Please go to Definitions and unhide at least one.");
+					MessageBox.Show("Error.  All billing types have been hidden.  Please go to Definitions and unhide at least one.");
 					DialogResult=DialogResult.Cancel;
 					return;
 				}
@@ -1629,14 +1629,14 @@ namespace OpenDental{
 				|| textCity.Text=="" 
 				|| textState.Text=="") 
 			{
-				MsgBox.Show(this,"Please fill in Address, City, and ST before using maps.");
+				MessageBox.Show("Please fill in Address, City, and ST before using maps.");
 				return;
 			}
 			try {
 				Process.Start("http://maps.google.com/maps?t=m&q="+textAddress.Text+" "+textAddress2.Text+" "+textCity.Text+" "+textState.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet then try again.");
+				MessageBox.Show("Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet then try again.");
 			}
 		}
 
@@ -1703,7 +1703,7 @@ namespace OpenDental{
 		///revert the changes.</summary>
 		private void UpdateLocalNameHelper() {
 			if(textLName.Text=="") {
-				MsgBox.Show(this,"Last Name must be entered.");
+				MessageBox.Show("Last Name must be entered.");
 				return;
 			}
 			PatCur.LName=textLName.Text;
@@ -2281,7 +2281,7 @@ namespace OpenDental{
 
 		private void butGuardianDefaults_Click(object sender,EventArgs e) {
 			if(Guardians.ExistForFamily(PatCur.Guarantor)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Replace existing relationships with default relationships for entire family?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Replace existing relationships with default relationships for entire family?")) {
 					return;
 				}
 				//don't delete existing guardians for family until we are certain we can replace them with the defaults
@@ -2320,15 +2320,15 @@ namespace OpenDental{
 				//Do not do anything for the other genders.
 			}
 			if(listAdults.Count<1) {
-				MsgBox.Show(this,"No adults found.\r\nFamily relationships will not be changed.");
+				MessageBox.Show("No adults found.\r\nFamily relationships will not be changed.");
 				return;
 			}
 			if(listChildren.Count<1) {
-				MsgBox.Show(this,"No children found.\r\nFamily relationships will not be changed.");
+				MessageBox.Show("No children found.\r\nFamily relationships will not be changed.");
 				return;
 			}
 			if(eldestFemaleAdult==null && eldestMaleAdult==null) {
-				MsgBox.Show(this,"No male or female adults found.\r\nFamily relationships will not be changed.");
+				MessageBox.Show("No male or female adults found.\r\nFamily relationships will not be changed.");
 				return;
 			}
 			_hasGuardiansChanged=true;
@@ -2498,7 +2498,7 @@ namespace OpenDental{
 				return;
 			}
 			Referral refCur=new Referral();
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Is the referral source an existing patient?")) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Is the referral source an existing patient?")) {
 				FormPatientSelect FormPS=new FormPatientSelect();
 				FormPS.SelectionModeOnly=true;
 				FormPS.ShowDialog();
@@ -2652,7 +2652,7 @@ namespace OpenDental{
 				|| textDateFirstVisit.errorProvider1.GetError(textDateFirstVisit)!=""
 				|| textAdmitDate.errorProvider1.GetError(textAdmitDate)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime dateTimeDeceased=DateTime.MinValue;
@@ -2662,11 +2662,11 @@ namespace OpenDental{
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Date time deceased is invalid.");
+				MessageBox.Show("Date time deceased is invalid.");
 				return;
 			}
 			if(textLName.Text==""){
-				MsgBox.Show(this,"Last Name must be entered.");
+				MessageBox.Show("Last Name must be entered.");
 				return;
 			}
 			//see if chartNum is a duplicate
@@ -2682,7 +2682,7 @@ namespace OpenDental{
 				PIn.Int(textAskToArriveEarly.Text);
 			}
 			catch{
-				MsgBox.Show(this,"Ask To Arrive Early invalid.");
+				MessageBox.Show("Ask To Arrive Early invalid.");
 				return;
 			}
 			if(textCounty.Text != "" && !Counties.DoesExist(textCounty.Text)){
@@ -2693,13 +2693,13 @@ namespace OpenDental{
 				&& textSpecifySexOrientation.Text.Trim()=="") 
 				
 			{
-				MsgBox.Show(this,"Sexual orientation must be specified.");
+				MessageBox.Show("Sexual orientation must be specified.");
 				return;
 			}
 			if((GenderId)comboGenderIdentity.SelectedIndex==GenderId.AdditionalGenderCategory
 				&& textSpecifyGender.Text.Trim()=="") 
 			{
-				MsgBox.Show(this,"Gender identity must be specified.");
+				MessageBox.Show("Gender identity must be specified.");
 				return;
 			}
 			if(textSite.Text=="") {
@@ -2719,18 +2719,18 @@ namespace OpenDental{
 				if(comboCanadianEligibilityCode.SelectedIndex==1//FT student
 					&& textSchool.Text=="" && PIn.Date(textBirthdate.Text).AddYears(18)<=DateTime.Today)
 				{
-					MsgBox.Show(this,"School should be entered if full-time student and patient is 18 or older.");
+					MessageBox.Show("School should be entered if full-time student and patient is 18 or older.");
 					return;
 				}
 			}
 			//If public health is enabled and the combo box is in an invalid state, warn the user.
 			if(!PrefC.GetBool(PrefName.EasyHidePublicHealth) && comboGradeLevel.SelectedIndex < 0) {
 				//This isn't really here to get valid data from the user but to prevent the value of -1 getting entered into the database.
-				MsgBox.Show(this,"Grade Level is invalid.");
+				MessageBox.Show("Grade Level is invalid.");
 				return;
 			}
 			if(comboPriProv.GetSelectedProvNum()==0) {//selected index could be -1 if the provider was selected and then hidden
-				MsgBox.Show(this,"Primary provider must be set.");
+				MessageBox.Show("Primary provider must be set.");
 				_isValidating=true;
 				SetRequiredFields();
 				return;
@@ -2739,14 +2739,14 @@ namespace OpenDental{
 				PatCur.PriProv=comboPriProv.GetSelectedProvNum();
 			}
 			if(IsNew && PrefC.HasClinicsEnabled && !PrefC.GetBool(PrefName.ClinicAllowPatientsAtHeadquarters) && comboClinic.SelectedClinicNum==0) {
-				MsgBox.Show(this,"Current settings for clinics do not allow patients to be added to the 'Unassigned' clinic. Please select a clinic.");
+				MessageBox.Show("Current settings for clinics do not allow patients to be added to the 'Unassigned' clinic. Please select a clinic.");
 				return;
 			}
 			//Don't allow changing status from Archived if this is a merged patient.
 			if(PatOld.PatStatus!=_listPatStatuses[listStatus.SelectedIndex] && PatOld.PatStatus==PatientStatus.Archived && 
 				PatientLinks.WasPatientMerged(PatOld.PatNum)) 
 			{
-				MsgBox.Show(this,"Not allowed to change the status of a merged patient.");
+				MessageBox.Show("Not allowed to change the status of a merged patient.");
 				return;
 			}
 			//Check SSN for US Formatting.  If SSN is masked and hasn't been changed, don't check.  Same checks from textSSN_Validating()
@@ -2762,7 +2762,7 @@ namespace OpenDental{
 				}
 			}
 			if(_isMissingRequiredFields) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Required fields are missing or incorrect.  Click OK to save anyway or Cancel to return and "
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Required fields are missing or incorrect.  Click OK to save anyway or Cancel to return and "
 						+"finish editing patient information.")) {
 					_isValidating=true;
 					SetRequiredFields();
@@ -2844,7 +2844,7 @@ namespace OpenDental{
 					if(patList[i].Birthdate==PatCur.Birthdate
 					|| patList[i].Birthdate.Year<1880
 					|| PatCur.Birthdate.Year<1880) {
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This patient might already exist.  Continue anyway?")) {
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This patient might already exist.  Continue anyway?")) {
 							return;
 						}
 						break;

@@ -130,7 +130,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(listGroups.SelectedIndex==-1) {
-				MsgBox.Show(this,"Select a group.");
+				MessageBox.Show("Select a group.");
 				return;
 			}
 			UserGroup=_listUserGroups[listGroups.SelectedIndex];

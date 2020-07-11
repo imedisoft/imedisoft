@@ -392,7 +392,7 @@ namespace OpenDental {
 					break;
 				case ClaimZeroDollarProcBehavior.Block:
 					if(listBillInsProcs.Any(x => x.ProcFee.IsZero())) {
-						MsgBox.Show("ContrAccount","You can't make a claim for a $0 procedure.");
+						MsgBox.Show("You can't make a claim for a $0 procedure.");
 						//Nothing to log.  The user was just notified.
 						return new Claim();
 					}
@@ -530,7 +530,7 @@ namespace OpenDental {
 				for(int i=1;i<listClaimSendQueueItems.Count;i++) {
 					long clinicNum=Claims.GetClaim(listClaimSendQueueItems[i].ClaimNum).ClinicNum;
 					if(clinicNum0!=clinicNum) {
-						MsgBox.Show("ContrAccount","All claims must be for the same clinic.  You can use the combobox at the top to filter.");//TODO: Wording.
+						MsgBox.Show("All claims must be for the same clinic.  You can use the combobox at the top to filter.");//TODO: Wording.
 						return retVal;
 					}
 				}
@@ -541,24 +541,24 @@ namespace OpenDental {
 			foreach(ClaimSendQueueItem claimSendItem in listClaimSendQueueItems) {//we start with 0 so that we can check medtype match on the first claim
 				long clearinghouseNumI=claimSendItem.ClearinghouseNum;
 				if(clearinghouseNum0!=clearinghouseNumI) {
-					MsgBox.Show("ContrAccount","All claims must be for the same clearinghouse.");
+					MsgBox.Show("All claims must be for the same clearinghouse.");
 					return retVal;
 				}
 				EnumClaimMedType medTypeI=Claims.GetClaim(claimSendItem.ClaimNum).MedType;
 				if(medType0!=medTypeI) {
-					MsgBox.Show("ContrAccount","All claims must have the same MedType.");
+					MsgBox.Show("All claims must have the same MedType.");
 					return retVal;
 				}
 				Clearinghouse clearh=Clearinghouses.GetClearinghouse(clearinghouseNumI);
 				if(clearh.Eformat==ElectronicClaimFormat.x837D_4010 || clearh.Eformat==ElectronicClaimFormat.x837D_5010_dental) {
 					if(medTypeI!=EnumClaimMedType.Dental) {
-						MsgBox.Show("ContrAccount","On claim "+POut.Int(index)+", the MedType does not match the clearinghouse e-format.");
+						MsgBox.Show("On claim "+POut.Int(index)+", the MedType does not match the clearinghouse e-format.");
 						return retVal;
 					}
 				}
 				if(clearh.Eformat==ElectronicClaimFormat.x837_5010_med_inst) {
 					if(medTypeI!=EnumClaimMedType.Medical && medTypeI!=EnumClaimMedType.Institutional) {
-						MsgBox.Show("ContrAccount","On claim "+POut.Int(index)+", the MedType does not match the clearinghouse e-format.");
+						MsgBox.Show("On claim "+POut.Int(index)+", the MedType does not match the clearinghouse e-format.");
 						return retVal;
 					}
 				}
@@ -572,15 +572,15 @@ namespace OpenDental {
 				//SendEclaimsToClearinghouse(...) already validates items in listClaimSendQueueItems, SetClaimItemIsValid(...) will just return in this case.
 				SetClaimItemIsValid(claimSendItem,clearh);
 				if(!claimSendItem.IsValid && claimSendItem.CanSendElect) {
-					MsgBox.Show("ContrAccount","Not allowed to send e-claims with missing information.");
+					MsgBox.Show("Not allowed to send e-claims with missing information.");
 					return retVal;
 				}
 				if(claimSendItem.NoSendElect==NoSendElectType.NoSendElect) {
-					MsgBox.Show("ContrAccount","Not allowed to send e-claims.");
+					MsgBox.Show("Not allowed to send e-claims.");
 					return retVal;
 				}
 				if(claimSendItem.NoSendElect==NoSendElectType.NoSendSecondaryElect && claimSendItem.Ordinal!=1) {
-					MsgBox.Show("ContrAccount","Only allowed to send primary insurance e-claims.");
+					MsgBox.Show("Only allowed to send primary insurance e-claims.");
 					return retVal;
 				}
 				index++;
@@ -633,11 +633,11 @@ namespace OpenDental {
 			,long claimPlanNum,List<InsPlan> listInsPlans,string claimNote,string claimUniformBillType,ClaimCorrectionType claimCorrectionType)
 		{
 			if(dateService=="" && claimType!="PreAuth"){
-				MsgBox.Show("Claims","Please enter a date of service");
+				MsgBox.Show("Please enter a date of service");
 				return ClaimIsValidState.False;
 			}
 			if(isSentOrReceived && claimDateSent=="") {
-				MsgBox.Show("Claims","Please enter date sent.");
+				MsgBox.Show("Please enter date sent.");
 				return ClaimIsValidState.False;
 			}
 			if(claimType=="PreAuth") {
@@ -650,7 +650,7 @@ namespace OpenDental {
 					}
 				}
 				if(hasStatusChanged) {
-					MsgBox.Show("Claims","Status of procedures was changed back to preauth to match status of claim.");
+					MsgBox.Show("Status of procedures was changed back to preauth to match status of claim.");
 					return ClaimIsValidState.FalseClaimProcsChanged;
 				}
 			}
@@ -658,13 +658,13 @@ namespace OpenDental {
 				InsPlan plan=InsPlans.GetPlan(claimPlanNum,listInsPlans);//Does a query if listInsPlans is null or if claimPlanNum is not in list.
 				if(plan!=null && plan.GroupName.Contains("ADDP")) {
 					if(!Regex.IsMatch(claimNote,"ACN[0-9]{5,}")) {//ACN with at least 5 digits following
-						MsgBox.Show("Claims","For an ADDP claim, there must be an ACN number in the note.  Example format: ACN12345");
+						MsgBox.Show("For an ADDP claim, there must be an ACN number in the note.  Example format: ACN12345");
 						return ClaimIsValidState.False;
 					}
 				}
 			}
 			if(claimUniformBillType!="" && claimCorrectionType!=ClaimCorrectionType.Original) {
-				MsgBox.Show("Claims","Correction type must be original when type of bill is not blank.");
+				MsgBox.Show("Correction type must be original when type of bill is not blank.");
 				return ClaimIsValidState.False;
 			}
 			return ClaimIsValidState.True;

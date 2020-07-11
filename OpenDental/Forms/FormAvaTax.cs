@@ -78,10 +78,10 @@ namespace OpenDental {
 
 		private void butPing_Click(object sender,EventArgs e) {
 			if(AvaTax.IsApiAvailable(radioProdEnv.Checked,textUsername.Text,textPassword.Text)) {
-				MsgBox.Show(this,"Success connecting to API.");
+				MessageBox.Show("Success connecting to API.");
 			}
 			else {
-				MsgBox.Show(this,"Failure connecting to API.  Check that username and password are correct.");
+				MessageBox.Show("Failure connecting to API.  Check that username and password are correct.");
 			}
 		}
 
@@ -134,7 +134,7 @@ namespace OpenDental {
 		///<summary>Only save program properties on close</summary>
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!validTaxLockDate.IsValid) {
-				MsgBox.Show(this,"Enter a valid tax lock date");
+				MessageBox.Show("Enter a valid tax lock date");
 				return;
 			}
 			long progNum=ProgramCur.ProgramNum;

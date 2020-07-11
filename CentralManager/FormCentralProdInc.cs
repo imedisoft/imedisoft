@@ -404,11 +404,11 @@ namespace CentralManager {
 					query.AddColumn("Tot Income",80,FieldValueType.Number,font);
 				}
 				else {
-					MsgBox.Show(this,"Connection "+listReportData[i].ConnectionString+" has no results to show.");
+					MsgBox.Show("Connection "+listReportData[i].ConnectionString+" has no results to show.");
 				}
 			}
 			if(dsTotal.Tables.Count==0) {
-				MsgBox.Show(this,"This report returned no values");
+				MsgBox.Show("This report returned no values");
 				return;
 			}
 			//setup query
@@ -581,7 +581,7 @@ namespace CentralManager {
 				query.AddColumn("Total Income",120,FieldValueType.Number);
 			}
 			if(dsTotal.Tables.Count==0) {
-				MsgBox.Show(this,"This report returned no values");
+				MsgBox.Show("This report returned no values");
 				return;
 			}
 			DataTable dtTotal;
@@ -731,7 +731,7 @@ namespace CentralManager {
 				query.AddColumn("Total Income",120,FieldValueType.Number);
 			}
 			if(dsTotal.Tables.Count==0) {
-				MsgBox.Show(this,"This report returned no values");
+				MsgBox.Show("This report returned no values");
 				return;
 			}
 			DataTable dtTotal;
@@ -928,13 +928,13 @@ namespace CentralManager {
 			if(textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MsgBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			_dateFrom=PIn.Date(textDateFrom.Text);
 			_dateTo=PIn.Date(textDateTo.Text);
 			if(_dateTo<_dateFrom) {
-				MsgBox.Show(this,"To date cannot be before From date.");
+				MsgBox.Show("To date cannot be before From date.");
 				return;
 			}
 			if(radioDaily.Checked) {
@@ -945,7 +945,7 @@ namespace CentralManager {
 			}
 			else if(radioAnnual.Checked) {
 				if(_dateFrom.AddYears(1) <= _dateTo || _dateFrom.Year != _dateTo.Year) {
-					MsgBox.Show(this,"Date range for annual report cannot be greater than one year and must be within the same year.");
+					MsgBox.Show("Date range for annual report cannot be greater than one year and must be within the same year.");
 					return;
 				}
 				Cursor=Cursors.WaitCursor;

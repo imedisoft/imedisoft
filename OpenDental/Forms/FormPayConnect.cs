@@ -85,7 +85,7 @@ namespace OpenDental {
 		private void FormPayConnect_Load(object sender,EventArgs e) {
 			_progCur=Programs.GetCur(ProgramName.PayConnect);
 			if(_progCur==null) {
-				MsgBox.Show(this,"PayConnect does not exist in the database.");
+				MessageBox.Show("PayConnect does not exist in the database.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -360,24 +360,20 @@ namespace OpenDental {
 		private bool VerifyData(out int expYear,out int expMonth){
 			expYear=0;
 			expMonth=0;
-			if(ODBuild.IsWeb() && radioTerminal.Checked) {
-				MsgBox.Show(this,"Terminal payments are not available while viewing through the web.");
-				return false;
-			}
 			if(!Regex.IsMatch(textAmount.Text,"^[0-9]+$") && !Regex.IsMatch(textAmount.Text,"^[0-9]*\\.[0-9]+$")) {
-				MsgBox.Show(this,"Invalid amount.");
+				MessageBox.Show("Invalid amount.");
 				return false;
 			}
 			if((_trantype==PayConnectService.transType.VOID || 
 				(_trantype==PayConnectService.transType.RETURN && radioWebService.Checked))//The reference number is optional for terminal returns. 
 				&& textRefNumber.Text=="") 
 			{
-				MsgBox.Show(this,"Ref Number required.");
+				MessageBox.Show("Ref Number required.");
 				return false;
 			}
 			string paytype=ProgramProperties.GetPropVal(_progCur.ProgramNum,"PaymentType",_clinicNum);
 			if(!Defs.GetDefsForCategory(DefCat.PaymentTypes,true).Any(x => x.DefNum.ToString()==paytype)) { //paytype is not a valid DefNum
-				MsgBox.Show(this,"The PayConnect payment type has not been set.");
+				MessageBox.Show("The PayConnect payment type has not been set.");
 				return false;
 			}
 			if(radioTerminal.Checked) {
@@ -386,7 +382,7 @@ namespace OpenDental {
 			//Processing through Web Service
 			// Consider adding more advanced verification methods using PayConnect validation requests.
 			if(textCardNumber.Text.Trim().Length<5){
-				MsgBox.Show(this,"Invalid Card Number.");
+				MessageBox.Show("Invalid Card Number.");
 				return false;
 			}
 			try {//PIn.Int will throw an exception if not a valid format
@@ -399,42 +395,42 @@ namespace OpenDental {
 					expMonth=PIn.Int(textExpDate.Text.Substring(0,2));
 				}
 				else {
-					MsgBox.Show(this,"Expiration format invalid.");
+					MessageBox.Show("Expiration format invalid.");
 					return false;
 				}
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"Expiration format invalid.");
+				MessageBox.Show("Expiration format invalid.");
 				return false;
 			}
 			if(_creditCardCur==null) {//if the user selected a new CC, verify through PayConnect
 				//using a new CC and the card number entered contains something other than digits
 				if(textCardNumber.Text.Any(x => !char.IsDigit(x))) {
-					MsgBox.Show(this,"Invalid card number.");
+					MessageBox.Show("Invalid card number.");
 					return false;
 				}
 				if(!PayConnect.IsValidCardAndExp(textCardNumber.Text,expYear,expMonth,x => MessageBox.Show(x))) {//if exception happens, a message box will show with the error
-					MsgBox.Show(this,"Card number or expiration date failed validation with PayConnect.");
+					MessageBox.Show("Card number or expiration date failed validation with PayConnect.");
 					return false;
 				}
 			}
 			else if(_creditCardCur.PayConnectToken=="" && Regex.IsMatch(textCardNumber.Text,@"X+[0-9]{4}")) {//using a stored CC
-				MsgBox.Show(this,"There is no saved PayConnect token for this credit card.  The card number and expiration must be re-entered.");
+				MessageBox.Show("There is no saved PayConnect token for this credit card.  The card number and expiration must be re-entered.");
 				return false;
 			}
 			if(textNameOnCard.Text.Trim()=="" && _patCur!=null){//Name required for patient credit cards, not prepaid cards.
-				MsgBox.Show(this,"Name On Card required.");
+				MessageBox.Show("Name On Card required.");
 				return false;
 			}
 			if(_trantype==PayConnectService.transType.FORCE && textRefNumber.Text=="") {
-				MsgBox.Show(this,"Authorization Code required.");
+				MessageBox.Show("Authorization Code required.");
 				return false;
 			}
 			//verify the selected clinic has a username and password type entered
 			if(ProgramProperties.GetPropVal(_progCur.ProgramNum,"Username",_clinicNum)==""
 				|| ProgramProperties.GetPropVal(_progCur.ProgramNum,"Password",_clinicNum)=="") //if username or password is blank
 			{
-				MsgBox.Show(this,"The PayConnect username and/or password has not been set.");
+				MessageBox.Show("The PayConnect username and/or password has not been set.");
 				return false;
 			}
 			return true;
@@ -517,7 +513,7 @@ namespace OpenDental {
 					|| expYear!=_creditCardCur.CCExpiration.Year //the card exp date entered doesn't have the same year
 					|| expMonth!=_creditCardCur.CCExpiration.Month)) //the card exp date entered doesn't have the same month
 			{
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"The card number or expiration date entered does not match the X-Charge card on file.  Do you wish "
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"The card number or expiration date entered does not match the X-Charge card on file.  Do you wish "
 					+"to replace the X-Charge card with this one?"))
 				{
 					_creditCardCur.XChargeToken="";
@@ -539,7 +535,7 @@ namespace OpenDental {
 				expMonth=_creditCardCur.PayConnectTokenExp.Month;
 			}
 			else if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,_clinicNum))) {
-				MsgBox.Show(this,"Cannot add a new credit card.");
+				MessageBox.Show("Cannot add a new credit card.");
 				return false;
 			}
 			string authCode="";
@@ -623,7 +619,7 @@ namespace OpenDental {
 					}
 				}
 				else {//Shouldn't happen
-					MsgBox.Show(this,"Please select a transaction type");
+					MessageBox.Show("Please select a transaction type");
 					return false;
 				}
 				posRequest.ForceDuplicate=checkForceDuplicate.Checked;

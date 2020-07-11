@@ -392,17 +392,17 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(gridMain.ListGridRows.Count==0){
-				MsgBox.Show(this,"No rows to fix.");
+				MessageBox.Show("No rows to fix.");
 				return;
 			}
 			//if(comboFeeSchedNew.SelectedIndex==0) {
-			//	MsgBox.Show(this,"No rows to fix.");
+			//	MessageBox.Show("No rows to fix.");
 			//	return;
 			//}
 			if(gridMain.SelectedIndices.Length==0){
 				gridMain.SetSelected(true);
 			}
-			if(!MsgBox.Show(this,true,"Change the fee schedule for all selected plans to the new fee schedule?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Change the fee schedule for all selected plans to the new fee schedule?")){
 				return;
 			}
 			InputBox passBox=new InputBox("To prevent accidental changes, please enter password.  It can be found in our manual.");
@@ -411,7 +411,7 @@ namespace OpenDental{
 				return;
 			}
 			if(passBox.textResult.Text!="fee") {
-				MsgBox.Show(this,"Incorrect password.");
+				MessageBox.Show("Incorrect password.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;

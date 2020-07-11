@@ -156,16 +156,16 @@ namespace OpenDental{
 
 		private void butRetrieve_Click(object sender,EventArgs e) {
 			if(comboClearhouse.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a clearinghouse first.");
+				MessageBox.Show("Please select a clearinghouse first.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Connect to clearinghouse to retrieve reports?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Connect to clearinghouse to retrieve reports?")) {
 				return;
 			}
 			Clearinghouse clearhouseHq=_listHqClearinghouses[comboClearhouse.SelectedIndex];
 			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearhouseHq,Clinics.ClinicNum);
 			if(!Directory.Exists(clearinghouseClin.ResponsePath)) {
-				MsgBox.Show(this,"Clearinghouse does not have a valid Report Path set.");
+				MessageBox.Show("Clearinghouse does not have a valid Report Path set.");
 				return;
 			}
 			ODProgressExtended progressbar=new ODProgressExtended(ODEventType.Clearinghouse,new ClearinghouseEvent(),this
@@ -269,7 +269,7 @@ namespace OpenDental{
 				Process.Start((string)listMain.SelectedItem);
 			}
 			catch{
-				MsgBox.Show(this,"Could not open the item. You could try open it directly from the folder where it is located.");
+				MessageBox.Show("Could not open the item. You could try open it directly from the folder where it is located.");
 			}
 			//FillGrid();
 		}*/

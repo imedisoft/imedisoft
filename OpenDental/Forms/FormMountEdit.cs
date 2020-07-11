@@ -233,7 +233,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(listCategory.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a category.");
+				MessageBox.Show("Please select a category.");
 				return;
 			}
 			if(textDate.errorProvider1.GetError(textDate)!="") {
@@ -241,16 +241,16 @@ namespace OpenDental{
 				return;
 			}
 			if(textDate.Text=="") {
-				MsgBox.Show(this,"Please enter a date.");
+				MessageBox.Show("Please enter a date.");
 				return;
 			}
 			if(textTime.Text=="") {
-				MsgBox.Show(this,"Please enter a time.");
+				MessageBox.Show("Please enter a time.");
 				return;
 			}
 			DateTime time;
 			if(!DateTime.TryParse(textTime.Text,out time)) {
-				MsgBox.Show(this,"Please enter a valid time.");
+				MessageBox.Show("Please enter a valid time.");
 				return;
 			}
 			_mountCur.DocCategory=_listDefNumsImageCats[listCategory.SelectedIndex].DefNum;

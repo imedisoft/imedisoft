@@ -298,7 +298,7 @@ namespace OpenDental {
 				return;
 			}
 			if(FormPP.SelectedProvNum!=_medLabCur.ProvNum) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Update all lab tests and results for this specimen with the selected ordering provider?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Update all lab tests and results for this specimen with the selected ordering provider?")) {
 					return;
 				}
 			}
@@ -325,7 +325,7 @@ namespace OpenDental {
 		///If using ImagesStoredInDB it will not launch PDF. If no valid patient is selected you cannot perform this action.</summary>
 		private void butPDF_Click(object sender,EventArgs e) {
 			if(PatCur==null) {//not attached to a patient when form loaded and they haven't selected a patient to attach to yet
-				MsgBox.Show(this,"The Medical Lab must be attached to a patient before the PDF can be saved.");
+				MessageBox.Show("The Medical Lab must be attached to a patient before the PDF can be saved.");
 				return;
 			}
 			if(PatCur.PatNum>0 && _medLabCur.PatNum!=PatCur.PatNum) {//save the current patient attached to the MedLab if it has been changed
@@ -351,7 +351,7 @@ namespace OpenDental {
 			catch(Exception ex) {
 				ex.DoNothing();
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Error saving document.");
+				MessageBox.Show("Error saving document.");
 				return;
 			}
 			finally {
@@ -391,12 +391,9 @@ namespace OpenDental {
 			}
 			Cursor=Cursors.Default;
 			if(filePathAndName!="") {
-				if(ODBuild.IsWeb()) {
-					ThinfinityUtils.HandleFile(filePathAndName);
-				}
-				else {
+
 					Process.Start(filePathAndName);
-				}
+				
 			}
 			SecurityLogs.MakeLogEntry(Permissions.SheetEdit,sheet.PatNum,sheet.Description+" from "+sheet.DateTimeSheet.ToShortDateString()+" pdf was created");
 			DialogResult=DialogResult.OK;
@@ -545,7 +542,7 @@ namespace OpenDental {
 		///and MedLabFacAttach objects, as well as any documents referenced by the results.  The original HL7 message will remain in the image folder,
 		///but this MedLab will not point to it.  We won't remove the HL7 message since there may be other MedLab rows that point to it.</summary>
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will delete all orders, results, and specimens for this MedLab as well as "
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will delete all orders, results, and specimens for this MedLab as well as "
 				+"any associated pdf files."))
 			{
 				return;

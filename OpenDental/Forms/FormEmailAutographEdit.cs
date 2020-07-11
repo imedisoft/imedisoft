@@ -191,11 +191,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textAutographText.Text=="") {
-				MsgBox.Show(this,"Autograph Text cannot be blank.");
+				MessageBox.Show("Autograph Text cannot be blank.");
 				return;
 			}
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Description cannot be blank.");
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			_emailAutograph.Description=textDescription.Text;

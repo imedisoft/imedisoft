@@ -35,7 +35,7 @@ namespace OpenDental {
 
 		private bool ValidateSelection() {
 			if(!radioMissed.Checked && !radioCancelled.Checked) {
-				MsgBox.Show(this,"Please select a broken procedure type.");
+				MessageBox.Show("Please select a broken procedure type.");
 				return false;
 			}
 			return true;
@@ -73,7 +73,7 @@ namespace OpenDental {
 				return;
 			}
 			if(PrefC.GetBool(PrefName.UnscheduledListNoRecalls) && Appointments.IsRecallAppointment(_appt)) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?")) {
 					FormApptBreakSelection=ApptBreakSelection.Delete;//Set to delete so the parent form can handle the delete. 
 					DialogResult=DialogResult.Cancel;
 				}

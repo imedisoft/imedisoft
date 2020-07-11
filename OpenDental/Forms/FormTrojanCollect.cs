@@ -411,7 +411,7 @@ namespace OpenDental {
 
 		private void FormTrojanCollect_Load(object sender,EventArgs e) {
 			if(_patCur==null) {
-				MsgBox.Show(this,"Please select a patient first.");
+				MessageBox.Show("Please select a patient first.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -420,37 +420,37 @@ namespace OpenDental {
 				_empCur=Employers.GetEmployer(_guarCur.EmployerNum);
 			}
 			if(_guarCur.LName.Length==0){
-				MsgBox.Show(this,"Missing guarantor last name.");
+				MessageBox.Show("Missing guarantor last name.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(_guarCur.FName.Length==0) {
-				MsgBox.Show(this,"Missing guarantor first name.");
+				MessageBox.Show("Missing guarantor first name.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(!Regex.IsMatch(_guarCur.SSN,@"^\d{9}$")) {
-				MsgBox.Show(this,"Guarantor SSN must be exactly 9 digits.");
+				MessageBox.Show("Guarantor SSN must be exactly 9 digits.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(_guarCur.Address.Length==0) {
-				MsgBox.Show(this,"Missing guarantor address.");
+				MessageBox.Show("Missing guarantor address.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(_guarCur.City.Length==0) {
-				MsgBox.Show(this,"Missing guarantor city.");
+				MessageBox.Show("Missing guarantor city.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(_guarCur.State.Length!=2) {
-				MsgBox.Show(this,"Guarantor state must be 2 characters.");
+				MessageBox.Show("Guarantor state must be 2 characters.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(_guarCur.Zip.Length<5) {
-				MsgBox.Show(this,"Invalid guarantor zip.");
+				MessageBox.Show("Invalid guarantor zip.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -504,12 +504,12 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(!textAmount.IsValid) {
-				MsgBox.Show(this,"Please fix debt amount.");
+				MessageBox.Show("Please fix debt amount.");
 				return;
 			}
 			double amtDebt=PIn.Double(textAmount.Text);
 			if(!textDate.IsValid) {
-				MsgBox.Show(this,"Date is not valid.");
+				MessageBox.Show("Date is not valid.");
 				return;
 			}
 			DateTime dateDelinquency=PIn.Date(textDate.Text);
@@ -518,23 +518,23 @@ namespace OpenDental {
 				return;
 			}
 			if(dateDelinquency>DateTime.Today) {
-				MsgBox.Show(this,"Date cannot be a future date.");
+				MessageBox.Show("Date cannot be a future date.");
 				return;
 			}
 			long programNum=Programs.GetProgramNum(ProgramName.TrojanExpressCollect);
 			string password=ProgramProperties.GetPropVal(programNum,"Password");
 			if(!Regex.IsMatch(password,@"^[A-Z]{2}\d{4}$")) {
-				MsgBox.Show(this,"Password is not in correct format. Must be like this: AB1234");
+				MessageBox.Show("Password is not in correct format. Must be like this: AB1234");
 				return;
 			}
 			string folderPath=ProgramProperties.GetPropVal(programNum,"FolderPath");
 			if(string.IsNullOrEmpty(folderPath)){
-				MsgBox.Show(this,"Export folder has not been setup yet.  Please go to Setup at the top of this window.");
+				MessageBox.Show("Export folder has not been setup yet.  Please go to Setup at the top of this window.");
 				return;
 			}
 			long billingType=PIn.Long(ProgramProperties.GetPropVal(programNum,"BillingType"));
 			if(billingType==0) {
-				MsgBox.Show(this,"Billing type has not been setup yet.  Please go to Setup at the top of this window.");
+				MessageBox.Show("Billing type has not been setup yet.  Please go to Setup at the top of this window.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -550,13 +550,13 @@ namespace OpenDental {
 			catch(Exception ex) {
 				ex.DoNothing();
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"There was an error attempting to delete a file from the export folder path.  Check folder permissions and/or try running as administrator.");
+				MessageBox.Show("There was an error attempting to delete a file from the export folder path.  Check folder permissions and/or try running as administrator.");
 				return;
 			}
 			using(FileSystemWatcher watcher=new FileSystemWatcher(folderPath,"TROBEN.HB")) {
 				if(watcher.WaitForChanged(WatcherChangeTypes.Created,10000).TimedOut) {
 					Cursor=Cursors.Default;
-					MsgBox.Show(this,"The Trojan Communicator is not running. Please check it.");
+					MessageBox.Show("The Trojan Communicator is not running. Please check it.");
 					return;
 				}
 			}
@@ -604,13 +604,13 @@ namespace OpenDental {
 			catch(Exception ex) {
 				ex.DoNothing();
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"There was an error writing to the export file.  Check folder permissions and/or try running as administrator.");
+				MessageBox.Show("There was an error writing to the export file.  Check folder permissions and/or try running as administrator.");
 				return;
 			}
 			using(FileSystemWatcher watcher=new FileSystemWatcher(folderPath,outputFile)) {
 				if(watcher.WaitForChanged(WatcherChangeTypes.Deleted,10000).TimedOut) {
 					Cursor=Cursors.Default;
-					MsgBox.Show(this,"Warning!! Request was not sent to Trojan within the 10 second limit.");
+					MessageBox.Show("Warning!! Request was not sent to Trojan within the 10 second limit.");
 					return;
 				}
 			}

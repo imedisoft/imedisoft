@@ -316,7 +316,7 @@ namespace OpenDental{
 		}
 
 		private void butAlphabetize_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Alphabetizing does not have an 'undo' button.  Continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Alphabetizing does not have an 'undo' button.  Continue?")) {
 				return;
 			}
 			List<Def> listDefsSorting=_listDefsCur.OrderBy(x => x.ItemName).ToList(); 

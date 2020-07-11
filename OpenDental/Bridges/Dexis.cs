@@ -23,10 +23,6 @@ namespace OpenDental.Bridges{
 			ProgramProperty PPCur=ProgramProperties.GetCur(ForProgram,"InfoFile path");
 			string infoFile=PPCur.PropertyValue;
 			if(infoFile.Trim()=="") {
-				if(ODBuild.IsWeb()) {
-					MsgBox.Show("Dexis","InfoFile path must not be empty.");
-					return;
-				}
 				infoFile=CodeBase.ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),"infofile.txt");
 			}
 			if(pat!=null) {

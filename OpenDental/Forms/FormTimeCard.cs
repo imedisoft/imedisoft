@@ -1188,7 +1188,7 @@ namespace OpenDental{
 			}
 			TimeCardRule timeCardRule=TimeCardRules.GetTimeCardRule(EmployeeCur);
 			if(timeCardRule!=null && timeCardRule.IsOvertimeExempt) {
-				MsgBox.Show(this,"This employee is marked as exempt from receiving overtime hours.");
+				MessageBox.Show("This employee is marked as exempt from receiving overtime hours.");
 				return;
 			}
 			try {

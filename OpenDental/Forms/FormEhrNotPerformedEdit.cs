@@ -47,7 +47,7 @@ namespace OpenDental {
 			}
 			List<EhrCode> listEhrCodes=EhrCodes.GetForValueSetOIDs(listValueSetOIDs,true);
 			if(listEhrCodes.Count==0) {//This should only happen if the EHR.dll does not exist or if the codes in the ehrcode list do not exist in the corresponding table
-				MsgBox.Show(this,"The codes used for Not Performed items do not exist in the table in your database.  You should run the Code System Importer tool in Setup | Chart | EHR.");
+				MessageBox.Show("The codes used for Not Performed items do not exist in the table in your database.  You should run the Code System Importer tool in Setup | Chart | EHR.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -70,7 +70,7 @@ namespace OpenDental {
 						return;
 					}
 					if(chooseItem.comboSelection.SelectedIndex==-1) {
-						MsgBox.Show(this,"You must select the "+Enum.GetNames(typeof(EhrNotPerformedItem))[SelectedItemIndex]+" not being performed.");
+						MessageBox.Show("You must select the "+Enum.GetNames(typeof(EhrNotPerformedItem))[SelectedItemIndex]+" not being performed.");
 						DialogResult=DialogResult.Cancel;
 						return;
 					}
@@ -160,7 +160,7 @@ namespace OpenDental {
 			}
 			listEhrCodesReason=EhrCodes.GetForValueSetOIDs(listValueSetOIDsReason,true);//these are all SNOMEDCT codes and will only show if they exist in the snomed table.
 			if(listEhrCodesReason.Count==0) {
-				MsgBox.Show(this,"There are no codes in the database for reasons not performed.  You must run the Code System Importer tool in Setup | Chart | EHR to import the SNOMEDCT table in order to enter a valid reason.");
+				MessageBox.Show("There are no codes in the database for reasons not performed.  You must run the Code System Importer tool in Setup | Chart | EHR to import the SNOMEDCT table in order to enter a valid reason.");
 			}
 			comboCodeReason.Items.Clear();
 			comboCodeReason.Items.Add("none");
@@ -229,12 +229,12 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			Vitalsign vitCur=Vitalsigns.GetFromEhrNotPerformedNum(EhrNotPerfCur.EhrNotPerformedNum);
 			if(vitCur!=null) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Deleting this will remove it from the vitalsign exam it refers to.\r\nDelete anyway?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Deleting this will remove it from the vitalsign exam it refers to.\r\nDelete anyway?")) {
 					return;
 				}
 				vitCur.EhrNotPerformedNum=0;
@@ -248,21 +248,21 @@ namespace OpenDental {
 			//validate--------------------------------------
 			DateTime date;
 			if(textDate.Text=="") {
-				MsgBox.Show(this,"Please enter a date.");
+				MessageBox.Show("Please enter a date.");
 				return;
 			}
 			try {
 				date=DateTime.Parse(textDate.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Please fix date first.");
+				MessageBox.Show("Please fix date first.");
 				return;
 			}
 			//we force the date to match the item not being performed (like vitalsign exam) by making the date text box read only if launched from other item.  Users can still manually add a not performed item from FormEhrNotPerformed by pressing Add and choose any valid date they wish, but it will not be linked to an item.
 			string codeValReas="";
 			string codeSysReas="";
 			if(comboCodeReason.SelectedIndex<1) {//selected 'none' or possibly still -1 (although -1 should never happen)
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"If you do not select one of the reasons provided it may be harder to meet your Clinical Quality Measures.  Are you sure you want to continue without selecting a valid reason for not performing the "+Enum.GetNames(typeof(EhrNotPerformedItem))[SelectedItemIndex]+"?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"If you do not select one of the reasons provided it may be harder to meet your Clinical Quality Measures.  Are you sure you want to continue without selecting a valid reason for not performing the "+Enum.GetNames(typeof(EhrNotPerformedItem))[SelectedItemIndex]+"?")) {
 					return;
 				}
 				codeValReas="";

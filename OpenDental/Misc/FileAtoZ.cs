@@ -85,12 +85,9 @@ namespace OpenDental {
 					//placed in the temporary directory.			
 					File.Copy(actualFilePath,tempFile,true);
 				}
-				if(ODBuild.IsWeb()) {
-					ThinfinityUtils.HandleFile(tempFile);
-				}
-				else {
+
 					Process.Start(tempFile);
-				}
+				
 			}
 			catch(Exception ex) {
 				MessageBox.Show(ex.Message);
@@ -155,12 +152,9 @@ namespace OpenDental {
 			else {
 				filePathToOpen=fileFullPath;
 			}
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.HandleFile(filePathToOpen);
-			}
-			else {
+
 				Process.Start(filePathToOpen);
-			}
+			
 		}
 
 		///<summary>Runs the file.  If necessary, downloads the file from the cloud to the temp directory.  Throws exceptions.

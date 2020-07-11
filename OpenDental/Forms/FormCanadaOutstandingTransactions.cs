@@ -35,7 +35,7 @@ namespace OpenDental {
 				}
 			}
 			if(listOfficeNumbers.Items.Count<1) {
-				MsgBox.Show(this,"At least one unhidden provider must have a CDA Number and an Office Number set before running a Request for Outstanding Transactions.");
+				MessageBox.Show("At least one unhidden provider must have a CDA Number and an Office Number set before running a Request for Outstanding Transactions.");
 				Close();
 			}
 		}
@@ -64,12 +64,12 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			if(radioVersion4ToCarrier.Checked) {
 				if(listCarriers.SelectedIndex<0) {
-					MsgBox.Show(this,"You must first select a carrier to use.");
+					MessageBox.Show("You must first select a carrier to use.");
 					return;
 				}
 			}
 			if(listOfficeNumbers.SelectedIndex<0) {
-				MsgBox.Show(this,"You must first select an Office Number to use.");
+				MessageBox.Show("You must first select an Office Number to use.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -92,7 +92,7 @@ namespace OpenDental {
 				}
 				CanadianOutput.GetOutstandingForDefault(prov,formatVersion,carrier,FormClaimPrint.PrintCdaClaimForm,FormCCDPrint.PrintCCD);
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 			}
 			catch(ApplicationException aex) {
 				Cursor=Cursors.Default;

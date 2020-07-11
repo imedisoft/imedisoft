@@ -17,17 +17,17 @@ namespace OpenDental.Bridges {
 		public static void SendData(Program ProgramCur,Patient pat) {
 			string path=Programs.GetProgramPath(ProgramCur);
 			if(pat==null) {
-				MsgBox.Show("VixWinNumbered","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			string ppImagePath=ProgramProperties.GetPropVal(ProgramCur.ProgramNum,"Image Path");
 			if(ppImagePath.Trim()=="") {
-				MsgBox.Show("VixWinNumbered","Missing Image Path.");
+				MsgBox.Show("Missing Image Path.");
 				return;
 			}
 			string subDirNumbers=(pat.PatNum%100).ToString().PadLeft(2,'0');//Take the rightmost 2 numbers, preceeding with 0 if patnum<10
 			string fullPath=ODFileUtils.CombinePaths(ppImagePath.Trim(),subDirNumbers,pat.PatNum.ToString());
-			if(!ODBuild.IsWeb() && !Directory.Exists(fullPath)){
+			if(!Directory.Exists(fullPath)){
 				try {
 					Directory.CreateDirectory(fullPath);
 				}

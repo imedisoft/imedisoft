@@ -220,14 +220,14 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(_isPasswordReset) {
 				if(textPassword.Text!=textCurrent.Text || string.IsNullOrWhiteSpace(textPassword.Text)) {
-					MsgBox.Show(this,"Passwords must match and not be empty.");
+					MessageBox.Show("Passwords must match and not be empty.");
 					return;
 				}
 			}
 			else if(!IsInSecurityWindow
 				&& !Authentication.CheckPassword(Security.CurUser,textCurrent.Text))
 			{
-				MsgBox.Show(this,"Current password incorrect.");
+				MessageBox.Show("Current password incorrect.");
 				return;
 			}
 			string explanation=Userods.IsPasswordStrong(textPassword.Text);

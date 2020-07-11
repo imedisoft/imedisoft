@@ -865,7 +865,7 @@ namespace OpenDental{
 			FormB.Show();//FormBilling has a Go To option and is shown as a non-modal window so the user can view the patient account and the billing list at the same time.
 			FormB.BringToFront();
 			if(hadListShowing) {
-				MsgBox.Show(this,"These unsent bills must either be sent or deleted before a new list can be created.");
+				MessageBox.Show("These unsent bills must either be sent or deleted before a new list can be created.");
 			}
 		}
 
@@ -889,7 +889,7 @@ namespace OpenDental{
 				}
 				catch(Exception ex) {
 					ex.DoNothing();
-					MsgBox.Show(this,"Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet and then try again.");
+					MessageBox.Show("Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet and then try again.");
 				}
 				return;
 			}
@@ -897,7 +897,7 @@ namespace OpenDental{
 				while(!ValidateConnectionDetails()) {//only validate connection details if the ArManager form does not exist yet
 					string msgText="An SFTP connection could not be made using the connection details "+(PrefC.HasClinicsEnabled ? "for any clinic " : "")
 						+"in the enabled Transworld (TSI) program link.  Would you like to edit the Transworld program link now?";
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,msgText)) {//if user does not want to edit program link, return
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,msgText)) {//if user does not want to edit program link, return
 						return;
 					}
 					FormTransworldSetup FormTS=new FormTransworldSetup();
@@ -1015,14 +1015,14 @@ namespace OpenDental{
 				if(FormT.GotoKeyNum!=0){
 					Appointment apt=Appointments.GetOneApt(FormT.GotoKeyNum);
 					if(apt==null){
-						MsgBox.Show(this,"Appointment has been deleted, so it's not available.");
+						MessageBox.Show("Appointment has been deleted, so it's not available.");
 						return;
 						//this could be a little better, because window has closed, but they will learn not to push that button.
 					}
 					DateTime dateSelected=DateTime.MinValue;
 					if(apt.AptStatus==ApptStatus.Planned || apt.AptStatus==ApptStatus.UnschedList){
 						//I did not add feature to put planned or unsched apt on pinboard.
-						MsgBox.Show(this,"Cannot navigate to appointment.  Use the Other Appointments button.");
+						MessageBox.Show("Cannot navigate to appointment.  Use the Other Appointments button.");
 						//return;
 					}
 					else{
@@ -1262,7 +1262,7 @@ namespace OpenDental{
 			Employees.Update(EmployeeCur);
 			ModuleSelected(PatCurNum);
 			if(!PayPeriods.HasPayPeriodForDate(DateTime.Today)) {
-				MsgBox.Show(this,"No dates exist for this pay period.  Time clock events will not display until pay periods have been created for this date range");
+				MessageBox.Show("No dates exist for this pay period.  Time clock events will not display until pay periods have been created for this date range");
 			}
 		}
 
@@ -1272,7 +1272,7 @@ namespace OpenDental{
 				return;
 			}
 			if(listStatus.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a status first.");
+				MessageBox.Show("Please select a status first.");
 				return;
 			}
 			try{
@@ -1313,7 +1313,7 @@ namespace OpenDental{
 				return;
 			}
 			if(PayPeriods.GetCount()==0) {
-				MsgBox.Show(this,"The adminstrator needs to setup pay periods first.");
+				MessageBox.Show("The adminstrator needs to setup pay periods first.");
 				return;
 			}
 			if(!butTimeCard.Enabled) {
@@ -1331,7 +1331,7 @@ namespace OpenDental{
 				return;
 			}
 			if(PayPeriods.GetCount()==0){
-				MsgBox.Show(this,"The adminstrator needs to setup pay periods first.");
+				MessageBox.Show("The adminstrator needs to setup pay periods first.");
 				return;
 			}
 			FormTimeCard FormTC=new FormTimeCard(_listEmployees);
@@ -1346,7 +1346,7 @@ namespace OpenDental{
 				return;
 			}
 			if(PayPeriods.GetCount()==0) {
-				MsgBox.Show(this,"The adminstrator needs to setup pay periods first.");
+				MessageBox.Show("The adminstrator needs to setup pay periods first.");
 				return;
 			}
 			FormTimeCard FormTC=new FormTimeCard(_listEmployees);
@@ -1488,7 +1488,7 @@ namespace OpenDental{
 
 		private void butSend_Click(object sender, System.EventArgs e) {
 			if(textMessage.Text=="") {
-				MsgBox.Show(this,"Please type in a message first.");
+				MessageBox.Show("Please type in a message first.");
 				return;
 			}
 			SigMessage sigMessage=new SigMessage();
@@ -1573,7 +1573,7 @@ namespace OpenDental{
 
 		private void butAck_Click(object sender,EventArgs e) {
 			if(gridMessages.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select at least one item first.");
+				MessageBox.Show("Please select at least one item first.");
 				return;
 			}
 			SigMessage sigMessage;

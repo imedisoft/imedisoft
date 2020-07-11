@@ -662,19 +662,19 @@ namespace OpenDental{
 			//Validate ALL XWebID, AuthKey, and TerminalID.  Each is required for X-Web to work.
 			if(!Regex.IsMatch(textXWebID.Text.Trim(),"^[0-9]{12}$")) {
 				if(!suppressMessage) {
-					MsgBox.Show(this,"XWeb ID must be 12 digits.");
+					MessageBox.Show("XWeb ID must be 12 digits.");
 				}
 				return false;
 			}
 			if(!Regex.IsMatch(textAuthKey.Text.Trim(),"^[A-Za-z0-9]{32}$")) {
 				if(!suppressMessage) {
-					MsgBox.Show(this,"Auth Key must be 32 alphanumeric characters.");
+					MessageBox.Show("Auth Key must be 32 alphanumeric characters.");
 				}
 				return false;
 			}
 			if(!Regex.IsMatch(textTerminalID.Text.Trim(),"^[0-9]{8}$")) {
 				if(!suppressMessage) {
-					MsgBox.Show(this,"Terminal ID must be 8 digits.");
+					MessageBox.Show("Terminal ID must be 8 digits.");
 				}
 				return false;
 			}
@@ -707,7 +707,7 @@ namespace OpenDental{
 			//X-Charge will be enabled if the enabled checkbox is checked and either clinics are disabled OR both Username and Password are set
 			bool isClientEnabled=!PrefC.HasClinicsEnabled || (textUsername.Text.Trim().Length>0 && textPassword.Text.Trim().Length>0);
 			if((isClientEnabled || isXWebEnabled) && comboPaymentType.SelectedIndex<0) {
-				MsgBox.Show(this,"Please select a payment type first.");
+				MessageBox.Show("Please select a payment type first.");
 				return false;
 			}
 			if(!isAllClinics || !PrefC.HasClinicsEnabled || Security.CurUser.ClinicIsRestricted) {
@@ -730,7 +730,7 @@ namespace OpenDental{
 				//if the program is enabled and the username and password fields are not blank for client, or XWebID, AuthKey, and TerminalID are not blank
 				//for XWeb, then X-Charge is enabled for this clinic so make sure the payment type is also set
 				if((isClientEnabled || isXWebEnabled)	&& !_listPayTypeDefs.Any(x => x.DefNum.ToString()==payTypeCur)) {
-					MsgBox.Show(this,"Please select the payment type for all clinics with X-Charge enabled.");
+					MessageBox.Show("Please select the payment type for all clinics with X-Charge enabled.");
 					return false;
 				}
 			}
@@ -802,14 +802,14 @@ namespace OpenDental{
 		private void butOK_Click(object sender,System.EventArgs e) {
 			#region Validation and Update Local List
 			if(_progCur==null) {//should never happen
-				MsgBox.Show(this,"X-Charge entry is missing from the database.");
+				MessageBox.Show("X-Charge entry is missing from the database.");
 				return;
 			}
 			#region Validate Path and Local Path Override
 			//Check for the path override first.
 			if(checkEnabled.Checked && textOverride.Text.Trim().Length>0) {
 				if(!File.Exists(textOverride.Text.Trim())) {
-					MsgBox.Show(this,"Local Path Override is not valid.");
+					MessageBox.Show("Local Path Override is not valid.");
 					return;
 				}
 			}
@@ -819,7 +819,7 @@ namespace OpenDental{
 				if((textPath.Text.Trim().Length==0 || !File.Exists(textPath.Text.Trim()))
 					&& !(checkWebPayEnabled.Checked && ValidateXWeb(true) && textPath.Text.Trim().Length==0)) 
 				{
-					MsgBox.Show(this,"Program Path is not valid.");
+					MessageBox.Show("Program Path is not valid.");
 					return;
 				}
 			}
@@ -829,7 +829,7 @@ namespace OpenDental{
 			//If clinics are enabled, the program link can be enabled with blank username and/or password fields for some clinics.
 			//X-Charge will be disabled for any clinic with a blank username or password.
 			if(checkEnabled.Checked && !PrefC.HasClinicsEnabled && (textUsername.Text.Trim().Length==0 || textPassword.Text.Trim().Length==0)) {
-				MsgBox.Show(this,"Please enter a username and password first.");
+				MessageBox.Show("Please enter a username and password first.");
 				return;
 			}
 			#endregion Validate Username and Password

@@ -158,39 +158,39 @@ namespace OpenDental {
 			if(textWidth.errorProvider1.GetError(textWidth)!=""
 				|| textHeight.errorProvider1.GetError(textHeight)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(listSheetType.SelectedIndex==-1 && !SheetDefs.IsDashboardType(SheetDefCur)) {
-				MsgBox.Show(this,"Please select a sheet type first.");
+				MessageBox.Show("Please select a sheet type first.");
 				return;
 			}
 			if(textDescription.Text=="") {
-				MsgBox.Show(this,"Description may not be blank.");
+				MessageBox.Show("Description may not be blank.");
 				return;
 			}
 			if(_sheetTypeSelected==SheetTypeEnum.ExamSheet) {
 				//make sure description for exam sheet does not contain a ':' or a ';' because this interferes with pulling the exam sheet fields to fill a patient letter
 				if(textDescription.Text.Contains(":") || textDescription.Text.Contains(";")) {
-					MsgBox.Show(this,"Description for an Exam Sheet may not contain a ':' or a ';'.");
+					MessageBox.Show("Description for an Exam Sheet may not contain a ':' or a ';'.");
 					return;
 				}
 			}
 			if(comboFontName.Text==""){
 				//not going to bother testing for validity unless it will cause a crash.
-				MsgBox.Show(this,"Please select a font name first.");
+				MessageBox.Show("Please select a font name first.");
 				return;
 			}
 			float fontSize;
 			try{
 				fontSize=float.Parse(textFontSize.Text);
 				if(fontSize<2){
-					MsgBox.Show(this,"Font size is invalid.");
+					MessageBox.Show("Font size is invalid.");
 					return;
 				}
 			}
 			catch{
-				MsgBox.Show(this,"Font size is invalid.");
+				MessageBox.Show("Font size is invalid.");
 				return;
 			}
 			SheetDefCur.Description=textDescription.Text;

@@ -364,97 +364,105 @@ namespace OpenDentBusiness{
 			}
 			#endregion
 			XmlDocument document=new XmlDocument();
-			try {
+			try
+			{
 				document.Load(xmlPath);
-				XPathNavigator Navigator=document.CreateNavigator();
+				XPathNavigator Navigator = document.CreateNavigator();
 				XPathNavigator nav;
 				#region Nodes with No UI
 				//Always look for these settings first in order to always preserve them correctly.
-				nav=Navigator.SelectSingleNode("//AdminCompNames");
-				if(nav!=null) {
+				nav = Navigator.SelectSingleNode("//AdminCompNames");
+				if (nav != null)
+				{
 					listAdminCompNames.Clear(); //this method gets called more than once
-					XPathNodeIterator navIterator=nav.SelectChildren(XPathNodeType.All);
-					for(int i=0;i<navIterator.Count;i++) {
+					XPathNodeIterator navIterator = nav.SelectChildren(XPathNodeType.All);
+					for (int i = 0; i < navIterator.Count; i++)
+					{
 						navIterator.MoveNext();
 						listAdminCompNames.Add(navIterator.Current.Value);//Add this computer name to the list.
 					}
 				}
 				//See if there's a UseXWebTestGateway
-				nav=Navigator.SelectSingleNode("//UseXWebTestGateway");
-				if(nav!=null) {
-					OpenDentBusiness.WebTypes.Shared.XWeb.XWebs.UseXWebTestGateway=nav.Value.ToLower()=="true";
+				nav = Navigator.SelectSingleNode("//UseXWebTestGateway");
+				if (nav != null)
+				{
+					OpenDentBusiness.WebTypes.Shared.XWeb.XWebs.UseXWebTestGateway = nav.Value.ToLower() == "true";
 				}
 				//See if there's a AllowAutoLogin node
-				nav=Navigator.SelectSingleNode("//AllowAutoLogin");
-				if(nav!=null && nav.Value.ToLower()=="false") {
+				nav = Navigator.SelectSingleNode("//AllowAutoLogin");
+				if (nav != null && nav.Value.ToLower() == "false")
+				{
 					//Node must be specifically set to false to change the allowAutoLogin bool.
-					allowAutoLogin=false;
+					allowAutoLogin = false;
 				}
 				#endregion
 				#region Nodes from Choose Database Window
 				#region Nodes with No Group Box
 				//Database Type
-				nav=Navigator.SelectSingleNode("//DatabaseType");
-				dbType=DatabaseType.MySql;
-				if(nav!=null && nav.Value=="Oracle") {
-					dbType=DatabaseType.Oracle;
+				nav = Navigator.SelectSingleNode("//DatabaseType");
+				dbType = DatabaseType.MySql;
+				if (nav != null && nav.Value == "Oracle")
+				{
+					dbType = DatabaseType.Oracle;
 				}
 				//ConnectionString
-				nav=Navigator.SelectSingleNode("//ConnectionString");
-				if(nav!=null) {
+				nav = Navigator.SelectSingleNode("//ConnectionString");
+				if (nav != null)
+				{
 					//If there is a ConnectionString, then use it.
-					connectionString=nav.Value;
+					connectionString = nav.Value;
 				}
 				//UseDynamicMode
-				nav=Navigator.SelectSingleNode("//UseDynamicMode");
-				if(nav!=null) {
+				nav = Navigator.SelectSingleNode("//UseDynamicMode");
+				if (nav != null)
+				{
 					//If there is a node, take in its value
-					useDynamicMode=PIn.Bool(nav.Value);
+					useDynamicMode = PIn.Bool(nav.Value);
 				}
 				#endregion
 				#region Connection Settings Group Box
 				//See if there's a DatabaseConnection
-				nav=Navigator.SelectSingleNode("//DatabaseConnection");
-				if(nav!=null) {
+				nav = Navigator.SelectSingleNode("//DatabaseConnection");
+				if (nav != null)
+				{
 					//If there is a DatabaseConnection, then use it.
-					centralConnection.ServerName=nav.SelectSingleNode("ComputerName").Value;
-					centralConnection.DatabaseName=nav.SelectSingleNode("Database").Value;
-					centralConnection.MySqlUser=nav.SelectSingleNode("User").Value;
-					centralConnection.MySqlPassword=nav.SelectSingleNode("Password").Value;
-					XPathNavigator encryptedPwdNode=nav.SelectSingleNode("MySQLPassHash");
+					centralConnection.ServerName = nav.SelectSingleNode("ComputerName").Value;
+					centralConnection.DatabaseName = nav.SelectSingleNode("Database").Value;
+					centralConnection.MySqlUser = nav.SelectSingleNode("User").Value;
+					centralConnection.MySqlPassword = nav.SelectSingleNode("Password").Value;
+					XPathNavigator encryptedPwdNode = nav.SelectSingleNode("MySQLPassHash");
 					//If the Password node is empty, but there is a value in the MySQLPassHash node, decrypt the node value and use that instead
 					string _decryptedPwd;
-					if(centralConnection.MySqlPassword==""
-						&& encryptedPwdNode!=null
-						&& encryptedPwdNode.Value!=""
-						&& CDT.Class1.Decrypt(encryptedPwdNode.Value,out _decryptedPwd))
+					if (centralConnection.MySqlPassword == ""
+						&& encryptedPwdNode != null
+						&& encryptedPwdNode.Value != ""
+						&& CDT.Class1.Decrypt(encryptedPwdNode.Value, out _decryptedPwd))
 					{
 						//decrypted value could be an empty string, which means they don't have a password set, so textPassword will be an empty string
-						centralConnection.MySqlPassword=_decryptedPwd;
+						centralConnection.MySqlPassword = _decryptedPwd;
 					}
-					XPathNavigator noshownav=nav.SelectSingleNode("NoShowOnStartup");
-					if(noshownav!=null) {
-						if(noshownav.Value=="True") {
-							noShow=YN.Yes;
+					XPathNavigator noshownav = nav.SelectSingleNode("NoShowOnStartup");
+					if (noshownav != null)
+					{
+						if (noshownav.Value == "True")
+						{
+							noShow = YN.Yes;
 						}
-						else {
-							noShow=YN.No;
+						else
+						{
+							noShow = YN.No;
 						}
 					}
 				}
 				#endregion
 				#endregion
 			}
-			catch(Exception) {
+			catch (Exception)
+			{
 				//Common error: root element is missing
-				centralConnection.ServerName="localhost";
-				if(ODBuild.IsTrial()) {
-					centralConnection.DatabaseName="demo";
-				}
-				else { 
-					centralConnection.DatabaseName="opendental";
-				}
-				centralConnection.MySqlUser="root";
+				centralConnection.ServerName = "localhost";
+				centralConnection.DatabaseName = "opendental";
+				centralConnection.MySqlUser = "root";
 			}
 		}
 

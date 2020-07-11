@@ -91,11 +91,6 @@ namespace OpenDentBusiness
 					}
 					//Be aware that if PrefC cache is not already filled and/or DataConnection.SetDb() has not already been called, this will fail.
 					CentralConnection cn = null;
-					if (ODBuild.IsWeb() && PrefC.ReportingServer.Server != "" && PrefC.ReportingServer.Database != DataConnection.GetDatabaseName())
-					{
-						//Security safeguard to prevent Web users from connecting to another office's database.
-						throw new ODException("Report server database name must match current database.");
-					}
 					ODException.SwallowAnyException(() =>
 					{
 						//give regular server credentials if the report server is not set up.

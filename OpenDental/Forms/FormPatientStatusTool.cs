@@ -90,11 +90,11 @@ namespace OpenDental {
 
 		private void butCreateList_Click(object sender,EventArgs e) {
 			if(listOptions.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"Please select an option from the list.");
+				MessageBox.Show("Please select an option from the list.");
 				return;
 			}
 			if(!odDatePickerSince.IsValid) {
-				MsgBox.Show(this,"Please select a valid from and to date.");
+				MessageBox.Show("Please select a valid from and to date.");
 				return;
 			}
 			_isConvertToPatient=radioInactiveWith.Checked;
@@ -103,7 +103,7 @@ namespace OpenDental {
 
 		private void butRun_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please make a selection first");
+				MessageBox.Show("Please make a selection first");
 				return;
 			}
 			string patientStatus=Lan.g("enumPatientStatus","Patient");

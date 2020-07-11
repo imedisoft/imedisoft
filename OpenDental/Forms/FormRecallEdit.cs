@@ -576,11 +576,11 @@ namespace OpenDental{
 				return;
 			}
 			if(RecallCur.DatePrevious.Year>1880){
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This recall should not normally be deleted because the Previous Date has a value.  You should use the Disabled checkBox instead.  But if you are just deleting a duplicate, it's ok to continue.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This recall should not normally be deleted because the Previous Date has a value.  You should use the Disabled checkBox instead.  But if you are just deleting a duplicate, it's ok to continue.  Continue?")) {
 					return;
 				}
 			}
-			else if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this recall?")) {
+			else if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this recall?")) {
 				return;
 			}
 			Recalls.Delete(RecallCur);
@@ -591,7 +591,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(comboType.SelectedIndex==-1){
-				MsgBox.Show(this,"Please pick a type first.");
+				MessageBox.Show("Please pick a type first.");
 				return;
 			}
 			if(  textDateDue.errorProvider1.GetError(textDateDue)!=""
@@ -602,12 +602,12 @@ namespace OpenDental{
 				|| textBalance.errorProvider1.GetError(textBalance)!=""
 				|| textDisableDate.errorProvider1.GetError(textDisableDate)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			double disableUntilBalance=PIn.Double(textBalance.Text);
 			if(disableUntilBalance<0){
-				MsgBox.Show(this,"Disabled balance must be greater than zero.");
+				MessageBox.Show("Disabled balance must be greater than zero.");
 				return;
 			}
 			RecallCur.RecallTypeNum=_listRecallTypes[comboType.SelectedIndex].RecallTypeNum;
@@ -630,7 +630,7 @@ namespace OpenDental{
 			RecallCur.Priority=(checkASAP.Checked ? RecallPriority.ASAP : RecallPriority.Normal);
 			if(IsNew){
 				//if(Recalls.IsAllDefault(RecallCur)){//only save if something meaningful
-				//	MsgBox.Show(this,"Recall cannot be saved if all values are still default.");
+				//	MessageBox.Show("Recall cannot be saved if all values are still default.");
 				//	return;
 				//}
 				Recalls.Insert(RecallCur);
@@ -638,7 +638,7 @@ namespace OpenDental{
 			}
 			else{
 				/*if(Recalls.IsAllDefault(RecallCur)){
-					if(!MsgBox.Show(this,true,"All values are default.  This recall will be deleted.  Continue?")){
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"All values are default.  This recall will be deleted.  Continue?")){
 						return;
 					}
 					Recalls.Delete(RecallCur);

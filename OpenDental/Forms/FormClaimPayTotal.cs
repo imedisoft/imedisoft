@@ -292,18 +292,18 @@ namespace OpenDental {
 					if(gridMain.ListGridRows[i].Cells[writeoffIdx].Text != "") {
 						dbl=Convert.ToDouble(gridMain.ListGridRows[i].Cells[writeoffIdx].Text);
 						if(dbl<0 && gridMain.ListGridRows[i].Cells[statusIdx].Text!="Supp") {
-							MsgBox.Show(this,"Only supplemental payments can have a negative writeoff.");
+							MessageBox.Show("Only supplemental payments can have a negative writeoff.");
 							return false;
 						}
 						double claimWriteOffTotal=ClaimProcs.GetClaimWriteOffTotal(ClaimProcsToEdit[0].ClaimNum,ClaimProcsToEdit[i].ProcNum,ClaimProcsToEdit.ToList());
 						if(claimWriteOffTotal+dbl<0) {
-							MsgBox.Show(this,"The current writeoff value for supplemental payment "+(i+1).ToString()+" will cause the procedure's total writeoff to be negative.  Please change it to be at least "+(dbl-(claimWriteOffTotal+dbl)).ToString()+" to continue.");
+							MessageBox.Show("The current writeoff value for supplemental payment "+(i+1).ToString()+" will cause the procedure's total writeoff to be negative.  Please change it to be at least "+(dbl-(claimWriteOffTotal+dbl)).ToString()+" to continue.");
 							return false;
 						}
 					}
 				}
 				catch{
-					MsgBox.Show(this,"Invalid number.  It needs to be in 0.00 form.");
+					MessageBox.Show("Invalid number.  It needs to be in 0.00 form.");
 					return false;
 				}
 			}
@@ -435,7 +435,7 @@ namespace OpenDental {
 
 		private void butDeductible_Click(object sender, System.EventArgs e) {
 			if(gridMain.SelectedCell.X==-1){
-				MsgBox.Show(this,"Please select one procedure.  Then click this button to assign the deductible to that procedure.");
+				MessageBox.Show("Please select one procedure.  Then click this button to assign the deductible to that procedure.");
 				return;
 			}
 			if(!SaveGridChanges()) {
@@ -452,7 +452,7 @@ namespace OpenDental {
 				}
 			}
 			if(dedAmt==0){
-				MsgBox.Show(this,"There does not seem to be a deductible to apply.  You can still apply a deductible manually by double clicking on a procedure.");
+				MessageBox.Show("There does not seem to be a deductible to apply.  You can still apply a deductible manually by double clicking on a procedure.");
 				return;
 			}
 			//then move dedAmt to the selected proc
@@ -553,7 +553,7 @@ namespace OpenDental {
 				return;
 			}
 			//ask user if they want to save the fees
-			if(!MsgBox.Show(this,true,"Save the allowed amounts to the allowed fee schedule?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Save the allowed amounts to the allowed fee schedule?")){
 				return;
 			}
 			//select the feeSchedule
@@ -565,7 +565,7 @@ namespace OpenDental {
 			feeSched=plan.AllowedFeeSched;
 			//}
 			if(FeeScheds.GetIsHidden(feeSched)){
-				MsgBox.Show(this,"Allowed fee schedule is hidden, so no changes can be made.");
+				MessageBox.Show("Allowed fee schedule is hidden, so no changes can be made.");
 				return;
 			}
 			Fee FeeCur=null;
@@ -615,7 +615,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!ValidateTotals()) {
-				MsgBox.Show(this,"One or more column totals exceed the maximum allowed value, please fix data entry errors.");
+				MessageBox.Show("One or more column totals exceed the maximum allowed value, please fix data entry errors.");
 				return;
 			}
 			SaveAllowedFees();

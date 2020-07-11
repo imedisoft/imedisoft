@@ -52,15 +52,15 @@ namespace OpenDental {
 			//Validate list name---------------------------------------------------------------------------
 			if(DbHelper.isMySQLReservedWord(inputListName.textResult.Text)) {
 				//Can become an issue when retrieving column header names.
-				MsgBox.Show(this,"List name is a reserved word in MySQL.");
+				MessageBox.Show("List name is a reserved word in MySQL.");
 				return;
 			}
 			if(inputListName.textResult.Text=="") {
-				MsgBox.Show(this,"List name cannot be blank.");
+				MessageBox.Show("List name cannot be blank.");
 				return;
 			}
 			if(WikiLists.CheckExists(inputListName.textResult.Text)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"List already exists with that name. Would you like to edit existing list?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"List already exists with that name. Would you like to edit existing list?")) {
 					return;
 				}
 			}

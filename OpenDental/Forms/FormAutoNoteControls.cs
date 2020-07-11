@@ -60,7 +60,7 @@ namespace OpenDental {
 
 		private void butEdit_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			FormAutoNoteControlEdit FormA=new FormAutoNoteControlEdit();
@@ -85,7 +85,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			SelectedControlNum=_listAutoNoteControls[gridMain.GetSelectedIndex()].AutoNoteControlNum;

@@ -154,31 +154,31 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDateStart.errorProvider1.GetError(textDateStart)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDateStart.Text=="") {
-				MsgBox.Show(this,"Please enter a start date.");
+				MessageBox.Show("Please enter a start date.");
 				return;
 			}
 			if(textDateEnd.errorProvider1.GetError(textDateEnd)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDateEnd.Text=="") {
-				MsgBox.Show(this,"Please enter an end date.");
+				MessageBox.Show("Please enter an end date.");
 				return;
 			}
 			if(gridCourses.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"At least one course must be selected to run a report.  Please select a row from the course grid.");
+				MessageBox.Show("At least one course must be selected to run a report.  Please select a row from the course grid.");
 				return;
 			}
 			if(gridInstructors.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"At least one instructor must be selected to run a report.  Please select a row from the instructor grid.");
+				MessageBox.Show("At least one instructor must be selected to run a report.  Please select a row from the instructor grid.");
 				return;
 			}
 			if(gridStudents.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"At least one student must be selected to run a report.  Please select a row from the student grid.");
+				MessageBox.Show("At least one student must be selected to run a report.  Please select a row from the student grid.");
 				return;
 			}
 			DateTime dateStart=PIn.Date(textDateStart.Text);

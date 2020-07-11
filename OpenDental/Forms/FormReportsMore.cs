@@ -617,7 +617,7 @@ namespace OpenDental {
 				return;
 			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				MsgBox.Show(this,"Not allowed while using Oracle.");
+				MessageBox.Show("Not allowed while using Oracle.");
 				return;
 			}
 			FormQuery FormQ;
@@ -655,11 +655,11 @@ namespace OpenDental {
 				return;
 			}
 			if(!_listReportPermissions.Exists(x => x.FKey==_listProdInc[selected].DisplayReportNum)) {
-				MsgBox.Show(this,"You do not have permission to run this report.");
+				MessageBox.Show("You do not have permission to run this report.");
 				return;
 			}
 			if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportProdIncAllProviders,true)) {
-				MsgBox.Show(this,"The current user needs to be a provider or have the 'All Providers' permission for this report");
+				MessageBox.Show("The current user needs to be a provider or have the 'All Providers' permission for this report");
 				return;
 			}
 			OpenReportLocalHelper(_listProdInc[selected],_listReportPermissions,false);
@@ -738,7 +738,7 @@ namespace OpenDental {
 					listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurUser.IsInUserGroup(x.UserGroupNum)).ToList();
 				}
 				if(!listReportPermissions.Exists(x => x.FKey==displayReport.DisplayReportNum)) {
-					MsgBox.Show("FormReportsMore","You do not have permission to run this report.");
+					MsgBox.Show("You do not have permission to run this report.");
 					return ReportNonModalSelection.None;
 				}
 			}
@@ -807,7 +807,7 @@ namespace OpenDental {
 					break;
 				case "ODAdjustments"://Adjustments
 					if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
-						MsgBox.Show("FormReportsMore","The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
+						MsgBox.Show("The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
 						break;
 					}
 					FormRpAdjSheet FormAdjSheet=new FormRpAdjSheet();
@@ -816,7 +816,7 @@ namespace OpenDental {
 					break;
 				case "ODPayments"://Payments
 					if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
-						MsgBox.Show("FormReportsMore","The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
+						MsgBox.Show("The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
 						break;
 					}
 					FormRpPaySheet FormPaySheet=new FormRpPaySheet();
@@ -825,7 +825,7 @@ namespace OpenDental {
 					break;
 				case "ODProcedures"://Procedures
 					if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
-						MsgBox.Show("FormReportsMore","The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
+						MsgBox.Show("The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
 						break;
 					}
 					FormRpProcSheet FormProcSheet=new FormRpProcSheet();
@@ -837,7 +837,7 @@ namespace OpenDental {
 					return ReportNonModalSelection.ODProcsOverpaid;
 				case "ODWriteoffs"://Writeoffs
 					if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
-						MsgBox.Show("FormReportsMore","The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
+						MsgBox.Show("The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
 						break;
 					}
 					FormRpWriteoffSheet FormW=new FormRpWriteoffSheet();
@@ -1068,7 +1068,7 @@ namespace OpenDental {
 					SecurityLogs.MakeLogEntry(Permissions.Reports,0,"Dynamic Payment Plans Overcharged report run.");
 					return ReportNonModalSelection.DPPOvercharged;
 				default:
-					MsgBox.Show("FormReportsMore","Error finding the report");
+					MsgBox.Show("Error finding the report");
 					break;
 			}
 			return ReportNonModalSelection.None;

@@ -136,7 +136,7 @@ namespace OpenDental {
 			if(_selectedFieldName=="allergy") {
 				//if nothing is selected we didn't find it, prompt to add
 				if(listMedical.SelectedIndex<=-1) {
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Allergy does not exist in list. Would you like to add the allergy?")){
+					if(MsgBox.Show(MsgBoxButtons.YesNo,"Allergy does not exist in list. Would you like to add the allergy?")){
 						AddAllergy(SheetFieldDefCur);
 					}
 				}
@@ -144,7 +144,7 @@ namespace OpenDental {
 			else if(_selectedFieldName=="problem") {
 				//if nothing is selected we didn't find it, prompt to add
 				if(listMedical.SelectedIndex<=-1) {
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Problem does not exist in problems list. Would you like to add the problem?")){
+					if(MsgBox.Show(MsgBoxButtons.YesNo,"Problem does not exist in problems list. Would you like to add the problem?")){
 						AddProblem(SheetFieldDefCur);
 					}
 				}
@@ -384,16 +384,16 @@ namespace OpenDental {
                 return;
             }
 			if(!_hasSelectedFieldName) {
-				MsgBox.Show(this,"Please select a field name first.");
+				MessageBox.Show("Please select a field name first.");
 				return;
 			}
 			if(_sheetDefCur.SheetType==SheetTypeEnum.ExamSheet) {
 				if(textReportableName.Text.Contains(";") || textReportableName.Text.Contains(":")) {
-					MsgBox.Show(this,"Reportable name for Exam Sheet fields may not contain a ':' or a ';'.");
+					MessageBox.Show("Reportable name for Exam Sheet fields may not contain a ':' or a ';'.");
 					return;
 				}
 				if(comboRadioGroupNameMisc.Text.Contains(";") ||comboRadioGroupNameMisc.Text.Contains(":")) {
-					MsgBox.Show(this,"Radio button group name for Exam Sheet fields may not contain a ':' or a ';'.");
+					MessageBox.Show("Radio button group name for Exam Sheet fields may not contain a ':' or a ';'.");
 					return;
 				}
 			}
@@ -406,10 +406,10 @@ namespace OpenDental {
 					if(!_hasSelectedMedicalItem) {
 						switch(fieldName) {
 							case "allergy":
-								MsgBox.Show(this,"Please select an allergy first.");
+								MessageBox.Show("Please select an allergy first.");
 								return;
 							case "problem":
-								MsgBox.Show(this,"Please select a problem first.");
+								MessageBox.Show("Please select a problem first.");
 								return;
 						}
 					}
@@ -432,7 +432,7 @@ namespace OpenDental {
 			}
 			#endregion
 			if(groupRadio.Visible && listRadio.SelectedIndex<0) {
-				MsgBox.Show(this,"Please select a Radio Button Value first.");
+				MessageBox.Show("Please select a Radio Button Value first.");
 				return;
 			}
 			SheetFieldDefCur.FieldName=fieldName;

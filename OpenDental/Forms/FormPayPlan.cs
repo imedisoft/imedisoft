@@ -1486,11 +1486,11 @@ namespace OpenDental{
 
 		private void butChangeGuar_Click(object sender,System.EventArgs e) {
 			if(PayPlans.GetAmtPaid(_payPlanCur)!=0) {
-				MsgBox.Show(this,"Not allowed to change the guarantor because payments are attached.");
+				MessageBox.Show("Not allowed to change the guarantor because payments are attached.");
 				return;
 			}
 			if(gridCharges.ListGridRows.Count>0) {
-				MsgBox.Show(this,"Not allowed to change the guarantor without first clearing the amortization schedule.");
+				MessageBox.Show("Not allowed to change the guarantor without first clearing the amortization schedule.");
 				return;
 			}
 			FormPatientSelect FormPS=new FormPatientSelect();
@@ -1578,7 +1578,7 @@ namespace OpenDental{
 				return;
 			}
 			if(textAmount.Text=="" || PIn.Double(textAmount.Text)==0) {
-				MsgBox.Show(this,"Please enter an amount first.");
+				MessageBox.Show("Please enter an amount first.");
 				return;
 			}
 			if(textDateFirstPay.Text=="") {
@@ -1593,28 +1593,28 @@ namespace OpenDental{
 			CalculateDateInterestStartFromInterestDelay();
 			if(textPaymentCount.Text=="" && textPeriodPayment.Text=="") {
 				//message box also used when butRecalculate is clicked
-				MsgBox.Show(this,"Please enter a term or payment amount first.");
+				MessageBox.Show("Please enter a term or payment amount first.");
 				return;
 			}
 			if(textPaymentCount.Text=="" && PIn.Double(textPeriodPayment.Text)==0) {
-				MsgBox.Show(this,"Payment cannot be 0.");
+				MessageBox.Show("Payment cannot be 0.");
 				return;
 			}
 			if(textPaymentCount.Text!="" && textPeriodPayment.Text!="") {
-				MsgBox.Show(this,"Please choose either Number of Payments or Payment Amt.");
+				MessageBox.Show("Please choose either Number of Payments or Payment Amt.");
 				return;
 			}
 			if(textPeriodPayment.Text=="" && PIn.Long(textPaymentCount.Text)<1) {
-				MsgBox.Show(this,"Term cannot be less than 1.");
+				MessageBox.Show("Term cannot be less than 1.");
 				return;
 			}
 			if(PIn.Double(textAmount.Text)-PIn.Double(textDownPayment.Text)<0) {
-				MsgBox.Show(this,"Down payment must be less than or equal to total amount.");
+				MessageBox.Show("Down payment must be less than or equal to total amount.");
 				return;
 			}
 			//If there are any debits, this button is going to delete them and replace them all with a new amortization schedule
 			if(_listPayPlanCharges.FindAll(x => x.ChargeType==PayPlanChargeType.Debit).Count>0) {
-				if(!MsgBox.Show(this,true,"Replace existing amortization schedule?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Replace existing amortization schedule?")) {
 					return;
 				}
 				_listPayPlanCharges.RemoveAll(x => x.ChargeType==PayPlanChargeType.Debit); //for version 1, debits are the only chargetype available.
@@ -1643,24 +1643,24 @@ namespace OpenDental{
 				|| textPaymentCount.errorProvider1.GetError(textPaymentCount)!=""
 				|| textPeriodPayment.errorProvider1.GetError(textPeriodPayment)!=""
 				|| textCompletedAmt.errorProvider1.GetError(textCompletedAmt)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(_listPayPlanCharges.Count(x => x.ChargeType==PayPlanChargeType.Debit)==0) {//This is only possible if they manually delete all of their rows and try to press recalculate.
-				MsgBox.Show(this,"There is no payment plan to recalculate.");
+				MessageBox.Show("There is no payment plan to recalculate.");
 				return;
 			}
 			if(IsInsPayPlan) {
-				MsgBox.Show(this,"Insurance payment plans can't be recalculated.");
+				MessageBox.Show("Insurance payment plans can't be recalculated.");
 				return;
 			}
 			if(textPaymentCount.Text=="" && textPeriodPayment.Text=="") {
 				//message box also used when butCreateSched is clicked
-				MsgBox.Show(this,"Please enter a term or payment amount first.");
+				MessageBox.Show("Please enter a term or payment amount first.");
 				return;
 			}
 			if(PIn.Double(textTotalCost.Text)<=PIn.Double(textAmtPaid.Text)) {
-				MsgBox.Show(this,"The payment plan has been completely paid and can't be recalculated.");
+				MessageBox.Show("The payment plan has been completely paid and can't be recalculated.");
 				return;
 			}
 			_formPayPlanRecalculate.ShowDialog();
@@ -1724,7 +1724,7 @@ namespace OpenDental{
 				DataRow bundledClaimProc=(DataRow)gridCharges.ListGridRows[e.Row].Tag;
 				Claim claimCur=Claims.GetClaim(PIn.Long(bundledClaimProc["ClaimNum"].ToString()));
 				if(claimCur==null) {
-					MsgBox.Show(this,"The claim has been deleted.");
+					MessageBox.Show("The claim has been deleted.");
 				}
 				else {
 					if(!Security.IsAuthorized(Permissions.ClaimView)) {
@@ -1755,7 +1755,7 @@ namespace OpenDental{
 		}
 
 		private void butClear_Click(object sender,System.EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Clear all charges and adjustments from amortization schedule?  Credits will not be cleared.")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Clear all charges and adjustments from amortization schedule?  Credits will not be cleared.")) {
 				return;
 			}
 			textAmount.Text=TotPrinc.ToString("f");//give the total amount back it's original value w/o adjustments.
@@ -1939,7 +1939,7 @@ namespace OpenDental{
       //only attempt to change the total amt of the payment plan if an amortization schedule doesn't already exist.
       if(_listPayPlanCharges.Count(x => x.ChargeType==PayPlanChargeType.Debit)==0//amortization schedule does not exist
 				&& PIn.Double(textTotalTxAmt.Text)!=PIn.Double(textAmount.Text)//Total treatment amount does not match term amount.
-				&& MsgBox.Show(this,MsgBoxButtons.YesNo,"Change term Total Amount to match Total Tx Amount?")) {
+				&& MsgBox.Show(MsgBoxButtons.YesNo,"Change term Total Amount to match Total Tx Amount?")) {
 				textAmount.Text=txTotalAmt.ToString("f");
 			}
 			FillCharges();
@@ -1950,7 +1950,7 @@ namespace OpenDental{
 				return;
 			}
 			if(!IsInsPayPlan) {//Patient Payment Plan
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Closing out this payment plan will remove interest from all future charges "
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Closing out this payment plan will remove interest from all future charges "
 					+"and make them due immediately.  Do you want to continue?")) {
 					return;
 				}
@@ -1959,7 +1959,7 @@ namespace OpenDental{
 				_listPayPlanCharges.Add(closeoutCharge);
 			}
 			else {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Closing out an insurance payment plan will change the Tx Completed Amt to match the amount"
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Closing out an insurance payment plan will change the Tx Completed Amt to match the amount"
 					+" insurance actually paid.  Do you want to continue?")) {
 					return;
 				}
@@ -1979,19 +1979,19 @@ namespace OpenDental{
 		private bool HasErrors() {
 			if(textDate.errorProvider1.GetError(textDate)!=""
 			|| textCompletedAmt.errorProvider1.GetError(textCompletedAmt)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return true;
 			}
 			if(gridCharges.ListGridRows.Count==0) {
-				MsgBox.Show(this,"An amortization schedule must be created first.");
+				MessageBox.Show("An amortization schedule must be created first.");
 				return true;
 			}
 			if(comboProv.GetSelectedProvNum()==0) {
-				MsgBox.Show(this,"A provider must be selected first.");
+				MessageBox.Show("A provider must be selected first.");
 				return true;
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Payment plan date cannot be set for the future.");
+				MessageBox.Show("Payment plan date cannot be set for the future.");
 				return true;
 			}
 			return false;
@@ -2100,11 +2100,11 @@ namespace OpenDental{
 				return;
 			}
 			if(_payPlanCur.IsClosed) {
-				MsgBox.Show(this,"Cannot add adjustments to closed payment plans.");
+				MessageBox.Show("Cannot add adjustments to closed payment plans.");
 				return;
 			}
 			if(PrefC.GetInt(PrefName.PayPlanAdjType)==0) {
-				MsgBox.Show(this,"Adjustments cannot be created for payment plans until a default adjustment type has been selected in account preferences.");
+				MessageBox.Show("Adjustments cannot be created for payment plans until a default adjustment type has been selected in account preferences.");
 				return;
 			}
 			InputBox inputBox=new InputBox(new List<InputBoxParam>() 
@@ -2115,11 +2115,11 @@ namespace OpenDental{
 				,new Func<string,bool>((text) => {
 					double amount=PIn.Double(text);
 					if(amount==0) {
-						MsgBox.Show(this,"Please enter a valid value");
+						MessageBox.Show("Please enter a valid value");
 						return false;
 					}
 					if(amount<0) {
-						MsgBox.Show(this,"Please enter a positive value for the negative adjustment");
+						MessageBox.Show("Please enter a positive value for the negative adjustment");
 						return false;
 					}
 					return true;
@@ -2132,7 +2132,7 @@ namespace OpenDental{
 			}
 			double negAdjAmt=-(PIn.Double(inputBox.textResult.Text));
 			if(((_totalNegFutureAdjs+negAdjAmt)*-1).IsGreaterThan(_totalRemainingBal)) {//make negative to compare _totalRemainingBal
-				MsgBox.Show(this,"Cannot add an adjustment totaling more than remaining balance due");
+				MessageBox.Show("Cannot add an adjustment totaling more than remaining balance due");
 				return;
 			}
 			_listPayPlanCharges=PayPlanEdit.CreatePayPlanAdjustments(negAdjAmt,_listPayPlanCharges,_totalNegFutureAdjs);
@@ -2218,7 +2218,7 @@ namespace OpenDental{
 			}
 			if(PayPlans.GetOne(_payPlanCur.PayPlanNum)==null) {
 				//The payment plan no longer exists in the database. 
-				MsgBox.Show(this,"This payment plan has been deleted by another user.");
+				MessageBox.Show("This payment plan has been deleted by another user.");
 				return;
 			}
 			PayPlans.Update(_payPlanCur);//always saved to db before opening this form
@@ -2232,7 +2232,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender,System.EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete payment plan?  All debits and credits will also be deleted.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete payment plan?  All debits and credits will also be deleted.")) {
 				return;
 			}
 			//later improvement if needed: possibly prevent deletion of some charges like older ones.
@@ -2263,7 +2263,7 @@ namespace OpenDental{
 				return;
 			}
 			if(IsInsPayPlan && _payPlanCur.PlanNum==0) {
-				MsgBox.Show(this,"An insurance plan must be selected.");
+				MessageBox.Show("An insurance plan must be selected.");
 				return;
 			}
 			if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
@@ -2271,20 +2271,20 @@ namespace OpenDental{
 				if(!PIn.Double(textTotalTxAmt.Text).IsZero() && _payPlanCur.PlanNum==0
 					&& _listPayPlanCharges.Where(x=> x.ChargeType==PayPlanChargeType.Credit).Any(x => x.ProcNum==0 && !x.IsCreditAdjustment)) 
 				{
-					MsgBox.Show(this,"All treatment credits (excluding adjustments) must have a procedure.");
+					MessageBox.Show("All treatment credits (excluding adjustments) must have a procedure.");
 					return;
 				}
 			}
 			//insurance payment plans use the CompletedAmt text box, regular payment plans use totalTxAmt text box for validation.
 			if(IsInsPayPlan && PIn.Double(textCompletedAmt.Text)!=PIn.Double(textAmount.Text)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Tx Completed Amt and Total Amount do not match, continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Tx Completed Amt and Total Amount do not match, continue?")) {
 					return;
 				}
 			}
 			else if(!IsInsPayPlan && PIn.Double(textTotalTxAmt.Text)!=PIn.Double(textAmount.Text) 
 				&& PrefC.GetInt(PrefName.PayPlansVersion)!=(int)PayPlanVersions.NoCharges) //Credits do not matter in ppv4
 			{
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Total Tx Amt and Total Amount do not match, continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Total Tx Amt and Total Amount do not match, continue?")) {
 					return;
 				}
 			}

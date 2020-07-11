@@ -184,7 +184,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			IEnumerable<Control> controls=GetAllControls(this);
 			if(controls.OfType<ValidNumber>().Any(x => !x.IsValid)) {
-				MsgBox.Show(this,"Please fix data errors first.");
+				MessageBox.Show("Please fix data errors first.");
 				return;
 			}
 			_listFrequencyBenefits.ForEach(x => _listBenefitsAll.Remove(x));

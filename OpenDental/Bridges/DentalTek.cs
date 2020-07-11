@@ -79,7 +79,7 @@ namespace OpenDental.Bridges {
 		public static void SendData(Program ProgramCur,Patient pat) {
 			string path=Programs.GetProgramPath(ProgramCur);
 			if(pat==null) {
-				MsgBox.Show("DentalTek","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			string phoneNumber="";
@@ -105,7 +105,7 @@ namespace OpenDental.Bridges {
 				//Remove the titles that were added in addition to the phone numbers for UI purposes.
 				phoneNumber=new string(listPhoneNumbers[inputBox.comboSelection.SelectedIndex].Where(x => char.IsDigit(x)).ToArray());
 				if(!PlaceCall(phoneNumber)) {
-					MsgBox.Show("DentalTek","Unable to place phone call.");
+					MsgBox.Show("Unable to place phone call.");
 				}
 			}
 

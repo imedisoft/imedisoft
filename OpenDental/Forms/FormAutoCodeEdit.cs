@@ -276,7 +276,7 @@ namespace OpenDental{
         return;
       }
 			if(listForCode.Count==0){
-				MsgBox.Show(this,"Must have at least one item in the list.");
+				MessageBox.Show("Must have at least one item in the list.");
 				//This is not actually rigorous enough since items will already be deleted.
 				return;
 			}
@@ -305,7 +305,7 @@ namespace OpenDental{
 				}
 				if(listForCode.Count==0){
 					//Since changes to AutoCodeItems and AutoCodeConds are written to the database already, Cancel isn't a true cancel.
-					MsgBox.Show(this,"Must have at least one Code in the list.");//Block this invalid AutoCode state.  
+					MessageBox.Show("Must have at least one Code in the list.");//Block this invalid AutoCode state.  
 					e.Cancel=true;
 					return;
 				}
@@ -323,7 +323,7 @@ namespace OpenDental{
 			//Must have same number of conditions for each AutoCodeItem.----------------------------------------------------------------------------------
 			for(int i=1;i<listForCode.Count;i++) {//start at 1 and compare to the 0 index.
 				if(listForCode[i].ListConditions.Count!=listForCode[0].ListConditions.Count) {
-					MsgBox.Show(this,"All AutoCode items must have the same number of conditions.");
+					MessageBox.Show("All AutoCode items must have the same number of conditions.");
 					e.Cancel=true;
 					return;
 				}
@@ -341,7 +341,7 @@ namespace OpenDental{
 						}
 					}
 					if(matches==listForCode[i].ListConditions.Count) {//If the number of matches equals the number of conditions on this row
-						MsgBox.Show(this,"Cannot have two AutoCode Items with duplicate conditions.");
+						MessageBox.Show("Cannot have two AutoCode Items with duplicate conditions.");
 						e.Cancel=true;
 						return;
 					}
@@ -411,13 +411,13 @@ namespace OpenDental{
 			}
 			//After the loop, you had better have exactly the same number of booleans true as number of conditions on each item.--------------------
 			if(isAntPost && isAntPreMol) {
-				MsgBox.Show(this,"Cannot have both Posterior and Premolar/Molar categories.");
+				MessageBox.Show("Cannot have both Posterior and Premolar/Molar categories.");
 				e.Cancel=true;
 				return;
 			}
 			if(isAnt) {//This is the only purpose of the isAnt bool.  We won't use it anymore.
 				if(!isAntPost && !isAntPreMol) {
-					MsgBox.Show(this,"Anterior condition is present without any corresponding posterior or premolar/molar condition.");
+					MessageBox.Show("Anterior condition is present without any corresponding posterior or premolar/molar condition.");
 					e.Cancel=true;
 					return;
 				}

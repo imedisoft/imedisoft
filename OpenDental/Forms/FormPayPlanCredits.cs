@@ -294,11 +294,11 @@ namespace OpenDental {
 			}
 			if(listSelectedEntries.Count<=1) { //validation (doesn't matter if multiple are selected)
 				if(string.IsNullOrEmpty(textAmt.Text) || textAmt.errorProvider1.GetError(textAmt)!="" || PIn.Double(textAmt.Text)==0) {
-					MsgBox.Show(this,"Please enter a valid amount.");
+					MessageBox.Show("Please enter a valid amount.");
 					return;
 				}
 				if(textDate.Text!="" && textDate.errorProvider1.GetError(textDate)!="") {
-					MsgBox.Show(this,"Please enter a valid date.");
+					MessageBox.Show("Please enter a valid date.");
 					return;
 				}
 			}
@@ -310,7 +310,7 @@ namespace OpenDental {
 			}
 			if(listSelectedEntries.Count==0 ) {
 				if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) { //if they have none selected
-					MsgBox.Show(this,"All treatment credits (excluding adjustments) must have a procedure.");
+					MessageBox.Show("All treatment credits (excluding adjustments) must have a procedure.");
 					return;
 				}
 				//add an unattached charge only if not on enforce fully
@@ -321,14 +321,14 @@ namespace OpenDental {
 			else if(listSelectedEntries.Count==1) { //if they have one selected
 				PayPlanEdit.PayPlanEntry selectedEntry=listSelectedEntries[0];
 				if(selectedEntry.Proc!=null && _listPayPlanLinksForProcs.Select(x => x.FKey).Contains(selectedEntry.Proc.ProcNum)) {
-					MsgBox.Show(this,"This procedure is already linked to a dynamic payment plan.");
+					MessageBox.Show("This procedure is already linked to a dynamic payment plan.");
 					return;
 				}
 				if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
 					if((selectedEntry.Proc==null || selectedEntry.Proc.ProcNum==0)
 						&& !(selectedEntry.Charge!=null && selectedEntry.Charge.IsCreditAdjustment)) 
 					{
-						MsgBox.Show(this,"All treatment credits (excluding adjustments) must have a procedure.");
+						MessageBox.Show("All treatment credits (excluding adjustments) must have a procedure.");
 						return;
 					}
 				}
@@ -345,10 +345,10 @@ namespace OpenDental {
 				//remove everythig that doesn't have a procnum from the list
 				List<PayPlanEdit.PayPlanEntry> listSelectedProcs=listSelectedEntries.Where(x => !x.IsChargeOrd).Where(x => x.Proc != null).ToList();
 				if(listSelectedEntries.Count==0) { //if the list is then empty, there's nothing to do.
-					MsgBox.Show(this,"You must have at least one procedure selected.");
+					MessageBox.Show("You must have at least one procedure selected.");
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel, 
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel, 
 					"Add a payment plan credit for each of the selected procedure's remaining amount?  Selected credits will be ignored.")) {
 					return;
 				}
@@ -358,7 +358,7 @@ namespace OpenDental {
 				ListPayPlanCreditsCur=PayPlanEdit.CreateCreditsForAllSelectedEntries(listValidSelectedProcs,_listPayPlanEntries,DateTimeOD.Today
 					,_patCur.PatNum,_payPlanCur.PayPlanNum,ListPayPlanCreditsCur);
 				if(countProcsSkipped>0) {
-					MsgBox.Show(this,"Credits were not made for "+countProcsSkipped+" procedure(s) because they are linked to one or more dynamic payment plans.");
+					MessageBox.Show("Credits were not made for "+countProcsSkipped+" procedure(s) because they are linked to one or more dynamic payment plans.");
 				}
 			}
 			textAmt.Text="";
@@ -428,10 +428,10 @@ namespace OpenDental {
 			List<PayPlanCharge> listSelectedCharges=listSelectedEntries.Where(x => x.Charge != null).Select(x => x.Charge).ToList();
 			//remove all procedures from the list. you cannot delete procedures from here.
 			if(listSelectedCharges.Count<1) {
-				MsgBox.Show(this,"You must have at least one payment plan charge selected.");
+				MessageBox.Show("You must have at least one payment plan charge selected.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete selected payment plan charges?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete selected payment plan charges?")) {
 				return;
 			}
 			foreach(PayPlanCharge chargeCur in listSelectedCharges) {
@@ -445,14 +445,14 @@ namespace OpenDental {
 			if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
 				//If no procs attached and not an adjustment with a negative amount
 				if(ListPayPlanCreditsCur.Any(x => x.ProcNum==0 && !x.IsCreditAdjustment)) {
-					MsgBox.Show(this,"All treatment credits (excluding adjustments) must have a procedure.");
+					MessageBox.Show("All treatment credits (excluding adjustments) must have a procedure.");
 					return;
 				}
 			}
 			//find if any charges exist for attached credits that have a provider other than the provdier on the payment plan. Unattached credits will be 0.
 			if(ListPayPlanCreditsCur.Count>0 && _listPayPlanEntries.FindAll(x => x.Charge!=null && x.ProvNum!=0).Any(x => x.ProvNum!=_provNum)) {
 				//All credits go to the provider on the payment plan. We need to check if the procedure's provider does not match.
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Provider(s) for procedure credits do not match the provider on the payment plan. Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Provider(s) for procedure credits do not match the provider on the payment plan. Continue?")) {
 					return;
 				}
 			}

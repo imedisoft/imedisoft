@@ -71,7 +71,7 @@ namespace OpenDental {
 
 		private void butAddSupply_Click(object sender,EventArgs e) {
 			if(gridOrders.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a supply order to add items to first.");
+				MessageBox.Show("Please select a supply order to add items to first.");
 				return;
 			}
 			FormSupplies formSupplies = new FormSupplies();
@@ -84,7 +84,7 @@ namespace OpenDental {
 			for(int i=0;i<formSupplies.ListSuppliesSelected.Count;i++) {
 				//check for existing----			
 				if(_tableOrderItems.Rows.OfType<DataRow>().Any(x => PIn.Long(x["SupplyNum"].ToString())==formSupplies.ListSuppliesSelected[i].SupplyNum)) {
-					//MsgBox.Show(this,"Selected item already exists in currently selected order. Please edit quantity instead.");
+					//MessageBox.Show("Selected item already exists in currently selected order. Please edit quantity instead.");
 					continue;
 				}
 				SupplyOrderItem supplyOrderItem = new SupplyOrderItem();
@@ -221,12 +221,12 @@ namespace OpenDental {
 
 		private void butNewOrder_Click(object sender,EventArgs e) {
 			if(comboSupplier.IsAllSelected){
-				MsgBox.Show(this,"Please select a supplier first.");
+				MessageBox.Show("Please select a supplier first.");
 				return;
 			}
 			for(int i=0;i<_listSupplyOrders.Count;i++) {
 				if(_listSupplyOrders[i].DatePlaced.Year>2200) {
-					MsgBox.Show(this,"Not allowed to add a new order when there is already one pending.  Please finish the other order instead.");
+					MessageBox.Show("Not allowed to add a new order when there is already one pending.  Please finish the other order instead.");
 					return;
 				}
 			}
@@ -250,7 +250,7 @@ namespace OpenDental {
 
 		private void butPrint_Click(object sender,EventArgs e) {
 			if(_tableOrderItems.Rows.Count<1) {
-				MsgBox.Show(this,"Supply list is Empty.");
+				MessageBox.Show("Supply list is Empty.");
 				return;
 			}
 			_pagesPrinted=0;

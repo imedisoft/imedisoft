@@ -408,7 +408,7 @@ namespace OpenDental{
 
 		private void FillGrid() {
 			if(textRows.errorProvider1.GetError(textRows)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			long userNum=0;
@@ -516,7 +516,7 @@ namespace OpenDental{
 				|| !textDateEditedFrom.IsValid
 				|| !textDateEditedTo.IsValid)
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			FillGrid();

@@ -78,10 +78,10 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(listboxOrthoPlacementProcs.SelectedIndices.Count == 0) {
-				MsgBox.Show(this,"Select an item to delete.");
+				MessageBox.Show("Select an item to delete.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you want to delete the selected items?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to delete the selected items?")) {
 				return;
 			}
 			foreach(ODBoxItem<ProcedureCode> boxItem in listboxOrthoPlacementProcs.SelectedItems) {
@@ -92,11 +92,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textOrthoMonthsTreat.errorProvider1.GetError(textOrthoMonthsTreat)!="") {
-				MsgBox.Show(this,"Default months treatment must be between 0 and 255 months.");
+				MessageBox.Show("Default months treatment must be between 0 and 255 months.");
 				return;
 			}
 			if(PrefC.GetBool(PrefName.ShowFeaturePatientClone)!=checkPatClone.Checked) {
-				MsgBox.Show(this,"You will need to restart OpenDental for this change to take effect.");
+				MessageBox.Show("You will need to restart OpenDental for this change to take effect.");
 			}
 			if(Prefs.UpdateBool(PrefName.ShowFeaturePatientClone,checkPatClone.Checked)
 			| Prefs.UpdateBool(PrefName.ApptModuleShowOrthoChartItem,checkApptModuleShowOrthoChartItem.Checked)

@@ -592,7 +592,7 @@ namespace OpenDental{
 		private void GotoAccount_Clicked(object sender, System.EventArgs e){
 			//accessed by right clicking
 			if(gridMain.SelectedTags<ClaimSendQueueItem>().Count!=1) {
-				MsgBox.Show(this,"Please select exactly one item first.");
+				MessageBox.Show("Please select exactly one item first.");
 				return;
 			}
 			ODEvent.Fire(ODEventType.FormClaimSend_GoTo,gridMain.SelectedTags<ClaimSendQueueItem>().First());
@@ -870,7 +870,7 @@ namespace OpenDental{
 						gridMain.SetSelected(i,true);
 					}
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"No claims were selected.  Print all selected paper claims?")){
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"No claims were selected.  Print all selected paper claims?")){
 					return;
 				}
 			}
@@ -954,10 +954,10 @@ namespace OpenDental{
 				}
 			}
 			if(claimAlreadySentCount>0) {
-				MsgBox.Show(this,"WARNING: Some of the selected claims have already been sent or received.  They will be removed from the grid.");
+				MessageBox.Show("WARNING: Some of the selected claims have already been sent or received.  They will be removed from the grid.");
 			}
 			if(arrayRefreshQueueItems.Length!=gridMain.SelectedTags<ClaimSendQueueItem>().Count) {
-				MsgBox.Show(this,"WARNING: One or more claims were deleted from outside this window.  They will be removed from the grid.");
+				MessageBox.Show("WARNING: One or more claims were deleted from outside this window.  They will be removed from the grid.");
 			}
 			if(listQueueItems.Count>0) {//At least one claim still exists
 				ValidateClaims(listQueueItems);//Validate refeshed claims, also fills grid
@@ -971,7 +971,7 @@ namespace OpenDental{
 		private void SendEclaimsToClearinghouse(long hqClearinghouseNum) {
 			if(PrefC.HasClinicsEnabled) {//Clinics is in use
 				if(hqClearinghouseNum==0){
-					MsgBox.Show(this,"When the Clinics option is enabled, you must use the dropdown list to select the clearinghouse to send to.");
+					MessageBox.Show("When the Clinics option is enabled, you must use the dropdown list to select the clearinghouse to send to.");
 					return;
 				}
 			}
@@ -984,11 +984,11 @@ namespace OpenDental{
 			}
 			if(clearDefault!=null && clearDefault.ISA08=="113504607" && Process.GetProcessesByName("TesiaLink").Length==0){
 				#if DEBUG
-					if(!MsgBox.Show(this,true,"TesiaLink is not started.  Create file anyway?")){
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"TesiaLink is not started.  Create file anyway?")){
 						return;
 					}
 				#else
-					MsgBox.Show(this,"Please start TesiaLink first.");
+					MessageBox.Show("Please start TesiaLink first.");
 					return;
 				#endif
 			}
@@ -1013,10 +1013,10 @@ namespace OpenDental{
 				//then ask user if they want to send all of the electronic ones through this clearinghouse.
 				if(hqClearinghouseNum!=0 && gridMain.SelectedTags<ClaimSendQueueItem>().Count==0) {
 					if(comboClinic.SelectedIndex==0) {
-						MsgBox.Show(this,"Please filter by clinic first.");
+						MessageBox.Show("Please filter by clinic first.");
 						return;
 					}
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Send all e-claims through selected clearinghouse?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Send all e-claims through selected clearinghouse?")) {
 						return;
 					}
 					for(int i=0;i<gridMain.ListGridRows.Count;i++) {//loop through all filtered rows
@@ -1027,7 +1027,7 @@ namespace OpenDental{
 					}
 				}
 				if(gridMain.SelectedTags<ClaimSendQueueItem>().Count==0){//No claims in filtered list
-					MsgBox.Show(this,"No claims to send.");
+					MessageBox.Show("No claims to send.");
 					return;
 				}
 				if(hqClearinghouseNum!=0) {//if they used the dropdown list to specify clearinghouse
@@ -1035,7 +1035,7 @@ namespace OpenDental{
 						ClaimSendQueueItem queueItem=(ClaimSendQueueItem)row.Tag;
 						Clearinghouse clearRow=Clearinghouses.GetClearinghouse(queueItem.ClearinghouseNum);
 						if(clearDefault.Eformat!=clearRow.Eformat) {
-							MsgBox.Show(this,"The default clearinghouse format does not match the format of the selected clearinghouse.  You may need to change the clearinghouse format.  Or, you may need to add a Payor ID into a clearinghouse.");
+							MessageBox.Show("The default clearinghouse format does not match the format of the selected clearinghouse.  You may need to change the clearinghouse format.  Or, you may need to add a Payor ID into a clearinghouse.");
 							return;
 						}
 						if(queueItem.CanSendElect) {
@@ -1045,7 +1045,7 @@ namespace OpenDental{
 					}
 					FillGrid(true);
 				}
-				if(!MsgBox.Show(this,true,"Send all selected e-claims?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Send all selected e-claims?")){
 					FillGrid();//this changes back any clearinghouse descriptions that we changed manually.
 					return;
 				}
@@ -1056,7 +1056,7 @@ namespace OpenDental{
 						ClaimSendQueueItem queueItem=(ClaimSendQueueItem)row.Tag;
 						Clearinghouse clearRow=Clearinghouses.GetClearinghouse(queueItem.ClearinghouseNum);
 						if(clearDefault.Eformat!=clearRow.Eformat) {
-							MsgBox.Show(this,"The default clearinghouse format does not match the format of the selected clearinghouse.  You may need to change the clearinghouse format.  Or, you may need to add a Payor ID into a clearinghouse.");
+							MessageBox.Show("The default clearinghouse format does not match the format of the selected clearinghouse.  You may need to change the clearinghouse format.  Or, you may need to add a Payor ID into a clearinghouse.");
 							return;
 						}
 						if(queueItem.CanSendElect) {
@@ -1068,7 +1068,7 @@ namespace OpenDental{
 			}
 			RefreshAndValidateSelections();
 			if(gridMain.SelectedTags<ClaimSendQueueItem>().Count==0){//No claims selected after Validation
-				MsgBox.Show(this,"No claims to send.");
+				MessageBox.Show("No claims to send.");
 				return;
 			}
 			List<ClaimSendQueueItem> listSelectedClaimSendQueueItems=gridMain.SelectedTags<ClaimSendQueueItem>();
@@ -1372,7 +1372,7 @@ namespace OpenDental{
 
 		private void RefreshHistory_Click() {
 			if(!dateRangePicker.IsValid) {
-				MsgBox.Show(this,"Please fix date entry errors first.");
+				MessageBox.Show("Please fix date entry errors first.");
 				return;
 			}
 			FillHistory();
@@ -1380,7 +1380,7 @@ namespace OpenDental{
 
 		private void Undo_Click(){
 			if(gridHistory.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select at least one item first.");
+				MessageBox.Show("Please select at least one item first.");
 				return;
 			}
 			if(gridHistory.SelectedIndices.Length>1){//if there are multiple items selected.
@@ -1389,7 +1389,7 @@ namespace OpenDental{
 				for(int i=0;i<gridHistory.SelectedIndices.Length;i++) {
 					etype=(EtransType)PIn.Long(tableHistory.Rows[gridHistory.SelectedIndices[i]]["Etype"].ToString());
 					if(etype!=EtransType.Claim_Ren && etype!=EtransType.ClaimSent && etype!=EtransType.ClaimPrinted){
-						MsgBox.Show(this,"That type of transaction cannot be undone as a group.  Please undo one at a time.");
+						MessageBox.Show("That type of transaction cannot be undone as a group.  Please undo one at a time.");
 						return;
 					}
 				}
@@ -1405,7 +1405,7 @@ namespace OpenDental{
 				//}
 				
 			}
-			if(!MsgBox.Show(this,true,"Remove the selected claims from the history list, and change the claim status from 'Sent' back to 'Waiting to Send'?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Remove the selected claims from the history list, and change the claim status from 'Sent' back to 'Waiting to Send'?")){
 				return;
 			}
 			for(int i=0;i<gridHistory.SelectedIndices.Length;i++){
@@ -1428,13 +1428,13 @@ namespace OpenDental{
 		private void menuItemHistoryGoToAccount_Click(object sender,EventArgs e) {
 			//accessed by right clicking the history grid
 			if(gridHistory.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select exactly one item first.");
+				MessageBox.Show("Please select exactly one item first.");
 				return;
 			}
 			DataRow row=tableHistory.Rows[gridHistory.GetSelectedIndex()];			
 			long patNum=PIn.Long(row["PatNum"].ToString());
 			if(patNum==0) {
-				MsgBox.Show(this,"Please select an item with a patient.");
+				MessageBox.Show("Please select an item with a patient.");
 				return;
 			}
 			ClaimSendQueueItem claimSendQueueItem=new ClaimSendQueueItem();
@@ -1516,14 +1516,14 @@ namespace OpenDental{
 		private void PrintItem_Click(){
 			//not currently accessible
 			if(gridHistory.ListGridRows.Count==0){
-				MsgBox.Show(this,"There are no items to print.");
+				MessageBox.Show("There are no items to print.");
 				return;
 			}
 			if(gridHistory.SelectedIndices.Length==0){
 				#if DEBUG
 				gridHistory.SetSelected(0,true);//saves you a click when testing
 				#else
-				MsgBox.Show(this,"Please select at least one item first.");
+				MessageBox.Show("Please select at least one item first.");
 				return;
 				#endif
 			}

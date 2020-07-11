@@ -534,7 +534,7 @@ namespace OpenDental{
 					return;
 				}
 				if(ReplicationServers.Server_id!=0 && ReplicationServers.Server_id==PrefC.GetLong(PrefName.ReplicationFailureAtServer_id)) {
-					MsgBox.Show(this,"This database is temporarily unavailable.  Please connect instead to your alternate database at the other location.");
+					MessageBox.Show("This database is temporarily unavailable.  Please connect instead to your alternate database at the other location.");
 					chooseDatabaseInfo.NoShow=YN.No;//This ensures they will get a choose db window next time through the loop.
 					ReplicationServers.Server_id=-1;
 					formSplash.Close();
@@ -637,7 +637,7 @@ namespace OpenDental{
 					FormP.IsStartingUp=true;
 					FormP.ShowDialog();
 					if(FormP.DialogResult!=DialogResult.OK) {
-						MsgBox.Show(this,"Invalid A to Z path.  Closing program.");
+						MessageBox.Show("Invalid A to Z path.  Closing program.");
 						Application.Exit();
 					}
 				}
@@ -660,13 +660,13 @@ namespace OpenDental{
 			RefreshMenuReports();
 			Cursor=Cursors.Default;
 			if(moduleBar.SelectedModule==EnumModuleType.None){
-				MsgBox.Show(this,"You do not have permission to use any modules.");
+				MessageBox.Show("You do not have permission to use any modules.");
 			}
 			Bridges.Trojan.StartupCheck();
 			FormUAppoint.StartThreadIfEnabled();
 			Bridges.ICat.StartFileWatcher();
 			Bridges.TigerView.StartFileWatcher();
-			if(!ODBuild.IsTrial() && PrefC.GetDate(PrefName.BackupReminderLastDateRun).AddMonths(1)<DateTime.Today) {
+			if(PrefC.GetDate(PrefName.BackupReminderLastDateRun).AddMonths(1)<DateTime.Today) {
 				FormBackupReminder FormBR=new FormBackupReminder();
 				FormBR.ShowDialog();
 				if(FormBR.DialogResult==DialogResult.OK){
@@ -721,7 +721,7 @@ namespace OpenDental{
 			menuItemAccount.MenuItems.Clear();
 			
 			if(PrefC.GetString(PrefName.LanguageAndRegion)!=CultureInfo.CurrentCulture.Name && !ComputerPrefs.LocalComputer.NoShowLanguage) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Warning, having mismatched language setting between the workstation and server may cause the program "
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Warning, having mismatched language setting between the workstation and server may cause the program "
 					+"to behave in unexpected ways. Would you like to view the setup window?"))
 				{
 					FormLanguageAndRegion FormLAR=new FormLanguageAndRegion();
@@ -763,29 +763,9 @@ namespace OpenDental{
 			if(Programs.GetCur(ProgramName.BencoPracticeManagement).Enabled) {
 				menuItemRemoteSupport.Visible=false;
 			}
-			if(ODBuild.IsWeb()) {
-				menuItemCreateAtoZFolders.Visible=false;
-				menuItemServiceManager.Visible=false;
-				menuItemRemoteSupport.Visible=false;
-				menuItemReplication.Visible=false;
-				menuItemPrinter.Visible=false;
-				//If the office needs to reset their office passowrd, we will prompt them until they change it.
-				if(PrefC.GetEnum<YN>(PrefName.CloudPasswordNeedsReset)!=YN.No) {
-					string message="You must reset the office password. ";
-					if(Security.IsAuthorized(Permissions.SecurityAdmin)) {
-						if(MsgBox.Show(this,MsgBoxButtons.YesNo,message+"Do you want to open the Change Office Password window?")) {
-							FormChangeCloudPassword formChangeCloudPassword=new FormChangeCloudPassword();
-							formChangeCloudPassword.ShowDialog();
-						}
-					}
-					else {
-						MsgBox.Show(this,message+"This must be done by a SecurityAdmin user.");
-					}
-				}
-			}
-			else {
-				menuItemCloudManagement.Visible=false;
-			}
+
+			menuItemCloudManagement.Visible = false;
+			
 			if(CommandLineArgs.Contains("--runLoadSimulation")) {
 				StartLoadSimulation();
 			}
@@ -1240,7 +1220,7 @@ namespace OpenDental{
 				}
 				catch(Exception ex) {
 					ex.DoNothing();
-					MsgBox.Show(this,"Failed to retrieve custom reports.");
+					MessageBox.Show("Failed to retrieve custom reports.");
 				}
 			}
 			if(menuItemCustomReports.MenuItems.Count==0) {
@@ -1555,7 +1535,7 @@ namespace OpenDental{
 
 		private void toolButEmail_Click() {
 			if(CurPatNum==0) {
-				MsgBox.Show(this,"Please select a patient to send an email.");
+				MessageBox.Show("Please select a patient to send an email.");
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.EmailSend)){
@@ -1633,7 +1613,7 @@ namespace OpenDental{
 				Referral refer=(Referral)((MenuItem)sender).Tag;
 				if(refer.EMail==""){
 					return;
-					//MsgBox.Show(this,"");
+					//MessageBox.Show("");
 				}
 				EmailMessage message=new EmailMessage();
 				message.PatNum=CurPatNum;
@@ -1758,10 +1738,6 @@ namespace OpenDental{
 			Patient pat=Patients.GetPat(CurPatNum);
 			if(((MenuItem)sender).Tag.GetType()==typeof(string)) {
 				if(((MenuItem)sender).Tag.ToString()=="Merge") {
-					if(ODBuild.IsWeb()) {
-						MsgBox.Show(this,"Letter Merge is not available while viewing through the web.");
-						return;
-					}
 					FormLetterMerges FormL=new FormLetterMerges(pat);
 					FormL.ShowDialog();
 				}
@@ -2044,7 +2020,7 @@ namespace OpenDental{
 			Patient pat=Patients.GetPat(patNum);
 			bool updateTextYN=false;
 			if(pat.TxtMsgOk==YN.No){
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"This patient is marked to not receive text messages. "
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"This patient is marked to not receive text messages. "
 					+"Would you like to mark this patient as okay to receive text messages?")) 
 				{
 					updateTextYN=true;
@@ -2054,7 +2030,7 @@ namespace OpenDental{
 				}
 			}
 			if(pat.TxtMsgOk==YN.Unknown && PrefC.GetBool(PrefName.TextMsgOkStatusTreatAsNo)){
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"This patient might not want to receive text messages. "
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"This patient might not want to receive text messages. "
 					+"Would you like to mark this patient as okay to receive text messages?")) 
 				{
 					updateTextYN=true;
@@ -2785,9 +2761,9 @@ namespace OpenDental{
 				//3. the CorruptedDatabase flag is set
 				if(_hasSignalProcessingPaused) {
 					string errorMsg;
-					if(!ODBuild.IsDebug() && !IsDbConnectionSafe(out errorMsg)) {//Running version verses ProgramVersion preference can be different in debug.
+					if(!IsDbConnectionSafe(out errorMsg)) {//Running version verses ProgramVersion preference can be different in debug.
 						timerSignals.Stop();
-						MessageBox.Show(this,errorMsg);
+						MessageBox.Show(errorMsg);
 						ProcessKillCommand();
 						return;
 					}
@@ -3802,13 +3778,13 @@ namespace OpenDental{
 			if(taskOT==TaskObjectType.Appointment) {
 				Appointment apt=Appointments.GetOneApt(keyNum);
 				if(apt==null) {
-					MsgBox.Show(this,"Appointment has been deleted, so it's not available.");
+					MessageBox.Show("Appointment has been deleted, so it's not available.");
 					return;
 				}
 				DateTime dateSelected=DateTime.MinValue;
 				if(apt.AptStatus==ApptStatus.Planned || apt.AptStatus==ApptStatus.UnschedList) {
 					//I did not add feature to put planned or unsched apt on pinboard.
-					MsgBox.Show(this,"Cannot navigate to appointment.  Use the Other Appointments button.");
+					MessageBox.Show("Cannot navigate to appointment.  Use the Other Appointments button.");
 					//return;
 				}
 				else {
@@ -3901,7 +3877,7 @@ namespace OpenDental{
 
 		private void menuItemGraphics_Click(object sender,EventArgs e) {
 			//if(ToothChartRelay.IsSparks3DPresent){
-			//	MsgBox.Show(this,"You are using the new 3D tooth chart (Sparks3D.dll), so the Graphics setup window is not needed.");
+			//	MessageBox.Show("You are using the new 3D tooth chart (Sparks3D.dll), so the Graphics setup window is not needed.");
 			//	return;
 			//}
 			if(!Security.IsAuthorized(Permissions.GraphicsEdit)) {
@@ -4029,7 +4005,7 @@ namespace OpenDental{
 
 		private void menuItemClaimForms_Click(object sender, System.EventArgs e) {
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase){
-				MsgBox.Show(this,"Claim Forms feature is unavailable when data path A to Z folder is disabled.");
+				MessageBox.Show("Claim Forms feature is unavailable when data path A to Z folder is disabled.");
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.Setup)){
@@ -4172,7 +4148,7 @@ namespace OpenDental{
 			}
 			//Users that are clinic restricted are not allowed to setup Fee Schedule Groups.
 			if(Security.CurUser.ClinicIsRestricted) {
-				MsgBox.Show(this,"You are restricted from accessing certain clinics.  Only user without clinic restrictions can edit Fee Schedule Groups.");
+				MessageBox.Show("You are restricted from accessing certain clinics.  Only user without clinic restrictions can edit Fee Schedule Groups.");
 				return;
 			}
 			FormFeeSchedGroups FormF=new FormFeeSchedGroups();
@@ -4608,32 +4584,46 @@ namespace OpenDental{
 			RefreshMenuDashboards();
 		}
 
-		private void menuItemAddUser_Click(object sender,EventArgs e) {
-			bool isAuthorizedAddNewUser=Security.IsAuthorized(Permissions.AddNewUser,true);
-			bool isAuthorizedSecurityAdmin=Security.IsAuthorized(Permissions.SecurityAdmin,true);
-			if(!(isAuthorizedAddNewUser || isAuthorizedSecurityAdmin)) {
-				MsgBox.Show(this,"Not authorized to add a new user.");
+		private void menuItemAddUser_Click(object sender, EventArgs e)
+		{
+			bool isAuthorizedAddNewUser = Security.IsAuthorized(Permissions.AddNewUser, true);
+			bool isAuthorizedSecurityAdmin = Security.IsAuthorized(Permissions.SecurityAdmin, true);
+			if (!(isAuthorizedAddNewUser || isAuthorizedSecurityAdmin))
+			{
+				MessageBox.Show( "Not authorized to add a new user.");
 				return;
 			}
-			if(PrefC.GetLong(PrefName.DefaultUserGroup)==0) {
-				if(isAuthorizedSecurityAdmin) {
+			if (PrefC.GetLong(PrefName.DefaultUserGroup) == 0)
+			{
+				if (isAuthorizedSecurityAdmin)
+				{
 					//Prompt to go to form.
-					string msg="Default user group is not set.  Would you like to set the default user group now?";
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,msg,"Default user group")){
-						FormGlobalSecurity FormGS=new FormGlobalSecurity();
+					var result = MessageBox.Show(this,
+						"Default user group is not set. Would you like to set the default user group now?",
+						"Default user group", 
+						MessageBoxButtons.YesNo, 
+						MessageBoxIcon.Question);
+
+					if (result == DialogResult.Yes)
+                    {
+						FormGlobalSecurity FormGS = new FormGlobalSecurity();
 						FormGS.ShowDialog();//No refresh needed; Signals sent from this form.
 					}
 				}
-				else {
+				else
+				{
 					//Using verbage similar to that found in the manual for describing how to navigate to a window in the program.
-					string msg="Default user group is not set.  A user with the SecurityAdmin permission must set a default user group.  "
-						+"To view the default user group, in the Main Menu, click Setup, Security, Security Settings, Global Security Settings.";
-					MsgBox.Show(this,msg,"Default user group");
+					MessageBox.Show(this,
+						"Default user group is not set. A user with the SecurityAdmin permission must set a default user group. " +
+						"To view the default user group, in the Main Menu, click Setup, Security, Security Settings, Global Security Settings.", 
+						"Default user group", 
+						MessageBoxButtons.OK, 
+						MessageBoxIcon.Error);
 				}
 				return;
 			}
-			FormUserEdit FormUE=new FormUserEdit(new Userod(),true);
-			FormUE.IsNew=true;
+			FormUserEdit FormUE = new FormUserEdit(new Userod(), true);
+			FormUE.IsNew = true;
 			FormUE.ShowDialog();
 		}
 
@@ -4911,7 +4901,7 @@ namespace OpenDental{
 			//Check if the user has permission to view all providers in production and income reports
 			bool hasAllProvsPermission=Security.IsAuthorized(Permissions.ReportProdIncAllProviders,true);
 			if(!hasAllProvsPermission && Security.CurUser.ProvNum==0) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"The current user must be a provider or have the 'All Providers' permission to view provider reports. Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The current user must be a provider or have the 'All Providers' permission to view provider reports. Continue?")) {
 					return;
 				}
 			}
@@ -4926,7 +4916,7 @@ namespace OpenDental{
 				return;
 			}
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				MsgBox.Show(this,"Not allowed while using Oracle.");
+				MessageBox.Show("Not allowed while using Oracle.");
 				return;
 			}
 			if(Security.IsAuthorized(Permissions.UserQueryAdmin,true)) {
@@ -4952,7 +4942,7 @@ namespace OpenDental{
 
 		private void menuItemReportsUnfinalizedPay_Click(object sender,EventArgs e) {
 			if(!GroupPermissions.HasReportPermission(DisplayReports.ReportNames.UnfinalizedInsPay,Security.CurUser)) {
-				MsgBox.Show(this,"You do not have permission to run this report.");
+				MessageBox.Show("You do not have permission to run this report.");
 				return;
 			}
 			FormRpUnfinalizedInsPay formRp=new FormRpUnfinalizedInsPay();
@@ -5255,7 +5245,7 @@ namespace OpenDental{
 
 		private void menuItemEvaluations_Click(object sender,EventArgs e) {
 			if(!Security.IsAuthorized(Permissions.AdminDentalEvaluations,true) && (Security.CurUser.ProvNum==0 || Providers.GetProv(Security.CurUser.ProvNum).SchoolClassNum!=0)) {
-				MsgBox.Show(this,"Only Instructors may view or edit evaluations.");
+				MessageBox.Show("Only Instructors may view or edit evaluations.");
 				return;
 			}
 			FormEvaluations FormE=new FormEvaluations();
@@ -5264,14 +5254,8 @@ namespace OpenDental{
 
 		private void menuItemTerminal_Click(object sender,EventArgs e) {
 			if(PrefC.GetLong(PrefName.ProcessSigsIntervalInSecs)==0) {
-				MsgBox.Show(this,"Cannot open terminal unless process signal interval is set. To set it, go to Setup > Miscellaneous.");
+				MessageBox.Show("Cannot open terminal unless process signal interval is set. To set it, go to Setup > Miscellaneous.");
 				return;
-			}
-			if(ODBuild.IsWeb()) {
-				//Thinfinity messes up window ordering so sometimes FormOpenDental is visible in Kiosk mode.
-				foreach(Form form in Application.OpenForms) {
-					form.Visible=false;
-				}
 			}
 			FormTerminal FormT=new FormTerminal();
 			FormT.ShowDialog(); 
@@ -5335,7 +5319,7 @@ namespace OpenDental{
 		private void menuItemReqStudents_Click(object sender,EventArgs e) {
 			Provider prov=Providers.GetProv(Security.CurUser.ProvNum);
 			if(prov==null) {
-				MsgBox.Show(this,"The current user is not attached to a provider. Attach the user to a provider to gain access to this feature.");
+				MessageBox.Show("The current user is not attached to a provider. Attach the user to a provider to gain access to this feature.");
 				return;
 			}
 			if(!prov.IsInstructor){//if a student is logged in
@@ -5378,7 +5362,7 @@ namespace OpenDental{
 
 		public static void S_WikiLoadPage(string pageTitle) {
 			if(!PrefC.GetBool(PrefName.WikiCreatePageFromLink) && !WikiPages.CheckPageNamesExist(new List<string>{ pageTitle })[0]) {
-				MsgBox.Show("FormOpenDental","Wiki page does not exist.");
+				MsgBox.Show("Wiki page does not exist.");
 				return;
 			}
 			FormWiki FormW=new FormWiki();
@@ -5388,13 +5372,13 @@ namespace OpenDental{
 
 		private void menuItemAutoClosePayPlans_Click(object sender,EventArgs e) {
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				MsgBox.Show(this,"Tool does not currently support Oracle.  Please call support to see if you need this fix.");
+				MessageBox.Show("Tool does not currently support Oracle.  Please call support to see if you need this fix.");
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Running this tool will automatically mark all payment plans that have"
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Running this tool will automatically mark all payment plans that have"
 				+" been paid off and have no future charges as closed.  Do you want to continue?")) 
 			{
 				return;
@@ -5546,7 +5530,7 @@ namespace OpenDental{
 			}
 			if(userControlTasks1.Visible && ComputerPrefs.LocalComputer.TaskDock==1) {//Tasks are docked right
 				this.InvokeIfRequired(() => {
-					MsgBox.Show(this,"Dashboards are disabled when Tasks are docked to the right.");
+					MessageBox.Show("Dashboards are disabled when Tasks are docked to the right.");
 					if(Security.CurUser.UserNum!=0){//If the userNum is 0 for the following command it will delete all Patient Dashboard UserOdPrefs!
 						//Stop the Patient Dashboard from attempting to open on next login.
 						UserOdPrefs.DeleteForValueString(Security.CurUser.UserNum,UserOdFkeyType.Dashboard,"");
@@ -5558,7 +5542,7 @@ namespace OpenDental{
 			if(sheetDefDashboard==null) {//Couldn't find the SheetDef, no sense trying to initialize the Patient Dashboard.
 				if(isOpenedManually) {//Only prompt if user attempted to open a Patient Dashboard from the menu.
 					this.InvokeIfRequired(() => {
-						MsgBox.Show(this,"Patient Dashboard could not be found.");
+						MessageBox.Show("Patient Dashboard could not be found.");
 					});
 				}
 				return;
@@ -5816,7 +5800,7 @@ namespace OpenDental{
 				return;
 			}
 			if(menuItem.Name==ActionType.Delete.ToString()) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will delete the alert for all users. Are you sure you want to delete it?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will delete the alert for all users. Are you sure you want to delete it?")) {
 					return;
 				}
 				AlertItems.Delete(listAlertItemNums);
@@ -6090,7 +6074,7 @@ namespace OpenDental{
 					+Lan.g(this,"Please set up a default web browser."));
 			}
 			/*
-			if(!MsgBox.Show(this,true,"A remote connection will now be attempted. Do NOT continue unless you are already on the phone with us.  Do you want to continue?"))
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"A remote connection will now be attempted. Do NOT continue unless you are already on the phone with us.  Do you want to continue?"))
 			{
 				return;
 			}
@@ -6098,7 +6082,7 @@ namespace OpenDental{
 				Process.Start("remoteclient.exe");//Network streaming remote client or any other similar client
 			}
 			catch{
-				MsgBox.Show(this,"Could not find file.");
+				MessageBox.Show("Could not find file.");
 			}*/
 		}
 
@@ -6107,7 +6091,7 @@ namespace OpenDental{
 				Process.Start("Help.chm");
 			}
 			catch{
-				MsgBox.Show(this,"Could not find file.");
+				MessageBox.Show("Could not find file.");
 			}
 		}
 
@@ -6116,7 +6100,7 @@ namespace OpenDental{
 				Process.Start("https://www.opendental.com/manual/manual.html");
 			}
 			catch{
-				MsgBox.Show(this,"Could not find file.");
+				MessageBox.Show("Could not find file.");
 			}
 		}
 
@@ -6125,7 +6109,7 @@ namespace OpenDental{
 				Process.Start("https://www.opendental.com/site/searchsite.html");
 			}
 			catch{
-				MsgBox.Show(this,"Could not find file.");
+				MessageBox.Show("Could not find file.");
 			}
 		}
 		
@@ -6134,7 +6118,7 @@ namespace OpenDental{
 				Process.Start("https://opendental.com/webinars/webinars.html");
 			}
 			catch{
-				MsgBox.Show(this,"Could not open page.");
+				MessageBox.Show("Could not open page.");
 			}
 		}
 
@@ -6149,7 +6133,7 @@ namespace OpenDental{
 				Process.Start(fileGTA);
 			}
 			catch {
-				MsgBox.Show(this,"Could not find file.  Please use Online Support instead.");
+				MessageBox.Show("Could not find file.  Please use Online Support instead.");
 			}
 		}
 
@@ -6358,7 +6342,7 @@ namespace OpenDental{
 						userControlTasks1.InitializeOnStartup();
 					}
 					if(moduleBar.SelectedModule==EnumModuleType.None) {
-						MsgBox.Show(this,"You do not have permission to use any modules.");
+						MessageBox.Show("You do not have permission to use any modules.");
 					}
 				}
 			
@@ -6438,7 +6422,7 @@ namespace OpenDental{
 			if(patCur!=null 
 						&& patCur.PatStatus.ToString()=="NonPatient"
 						&& _datePopupDelay<=DateTime.Now) {
-				MsgBox.Show(this,"A patient with the status NonPatient is currently selected.");
+				MessageBox.Show("A patient with the status NonPatient is currently selected.");
 				_datePopupDelay=DateTime.Now.AddMinutes(5);
 			}
 		}
@@ -6482,7 +6466,7 @@ namespace OpenDental{
 			if(Security.CurUser==null) {//Security.CurUser could be set if valid command line arguments were passed in.
 				#region Admin User No Password
 				if(!Userods.HasSecurityAdminUserNoCache()) {
-					MsgBox.Show(this,"There are no users with the SecurityAdmin permission.  Call support.");
+					MessageBox.Show("There are no users with the SecurityAdmin permission.  Call support.");
 					Application.Exit();
 					return;
 				}
@@ -6662,7 +6646,7 @@ namespace OpenDental{
 				}
 				if(openForm.Name=="FormWikiEdit") {
 					if(!isForceClose) {
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"You are currently editing a wiki page and it will be saved as a draft.  Continue?")) {
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You are currently editing a wiki page and it will be saved as a draft.  Continue?")) {
 							return false;//This form needs to stay open and the close operation should be aborted.
 						}
 					}
@@ -6864,7 +6848,7 @@ namespace OpenDental{
 			IsFormLogOnLastActive=false;
 			Security.DateTimeLastActivity=DateTime.Now;
 			if(moduleBar.SelectedModule==EnumModuleType.None) {
-				MsgBox.Show(this,"You do not have permission to use any modules.");
+				MessageBox.Show("You do not have permission to use any modules.");
 			}
 		}
 

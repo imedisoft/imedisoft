@@ -608,7 +608,7 @@ namespace OpenDental{
 				return;
 			}
 			if(TerminalActives.PatIsInUse(PatCur.PatNum)){
-				MsgBox.Show(this,"Patient is currently entering info at a reception terminal.  Please try again later.");
+				MessageBox.Show("Patient is currently entering info at a reception terminal.  Please try again later.");
 				return;
 			}
 			if(gridPat.ListGridRows[e.Row].Tag==null 
@@ -1593,7 +1593,7 @@ namespace OpenDental{
 			Patient PatOld=PatCur.Copy();
 			if(PatCur.PatNum==PatCur.Guarantor){//if selecting guarantor
 				if(FamCur.ListPats.Length==1){
-					if(!MsgBox.Show(this,true,"Delete Patient?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete Patient?")) {
 						return;
 					}
 					PatCur.PatStatus=PatientStatus.Deleted;
@@ -1620,7 +1620,7 @@ namespace OpenDental{
 				}
 			}
 			else{//not selecting guarantor
-				if(!MsgBox.Show(this,true,"Delete Patient?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete Patient?")) {
 					return;
 				}
 				PatCur.PatStatus=PatientStatus.Deleted;
@@ -1666,7 +1666,7 @@ namespace OpenDental{
 			//Patient PatCur;
 			if(PatCur.PatNum==PatCur.Guarantor){//if guarantor selected
 				if(PatCur.SuperFamily==PatCur.Guarantor && _loadData.SuperFamilyMembers.Count>1) {
-					MsgBox.Show(this,"You cannot move the head of a super family. If you wish to move the super family head, you must first remove all other super family members.");
+					MessageBox.Show("You cannot move the head of a super family. If you wish to move the super family head, you must first remove all other super family members.");
 					return;
 				}
 				if(FamCur.ListPats.Length==1){//and no other family members
@@ -1691,7 +1691,7 @@ namespace OpenDental{
 				}
 			}
 			else{//guarantor not selected
-				if(!MsgBox.Show(this,true,"Preparing to move family member. Financial notes will not be transferred. Popups will be copied. Proceed to next step?"))
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Preparing to move family member. Financial notes will not be transferred. Popups will be copied. Proceed to next step?"))
 				{
 					return;
 				}
@@ -1711,7 +1711,7 @@ namespace OpenDental{
 						SecurityLogs.MakeLogEntry(Permissions.PatientEdit,PatCur.PatNum,"Patient moved to new family.");
 						break;
 					case DialogResult.No://move to an existing family
-						if(!MsgBox.Show(this,true,"Select the family to move this patient to from the list that will come up next.")){
+						if(!MsgBox.Show(MsgBoxButtons.YesNo,"Select the family to move this patient to from the list that will come up next.")){
 							return;
 						}
 						FormPatientSelect FormPS=new FormPatientSelect();
@@ -1744,10 +1744,10 @@ namespace OpenDental{
 
 		private bool MovePats(Patient patOld,Family famCur=null) {
 			//no need to check insurance.  It will follow.
-			if(!MsgBox.Show(this,true,"Moving the guarantor will cause two families to be combined.  The financial notes for both families will be combined and may need to be edited.  The address notes will also be combined and may need to be edited. Do you wish to continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Moving the guarantor will cause two families to be combined.  The financial notes for both families will be combined and may need to be edited.  The address notes will also be combined and may need to be edited. Do you wish to continue?")) {
 				return false;
 			}
-			if(!MsgBox.Show(this,true,"Select the family to move this patient to from the list that will come up next.")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Select the family to move this patient to from the list that will come up next.")) {
 				return false;
 			}
 			FormPatientSelect FormPS=new FormPatientSelect();
@@ -2026,7 +2026,7 @@ namespace OpenDental{
 			}
 			Patient patSelected=Patients.GetPat(formPS.SelectedPatNum);
 			if(patSelected.SuperFamily==PatCur.SuperFamily) {
-				MsgBox.Show(this,"That patient is already part of this superfamily.");
+				MessageBox.Show("That patient is already part of this superfamily.");
 				return;
 			}
 			List<Patient> listSuperFamPats=new List<Patient>();
@@ -2089,7 +2089,7 @@ namespace OpenDental{
 				PatPlans.GetInsSubNum(listPatPlansSuper,PatPlans.GetOrdinal(PriSecMed.Primary,listPatPlansSuper,listInsPlansSuper,listInsSubsSuper)),
 				listInsSubsSuper);
 			if(sub.InsSubNum==0 //should never happen, an active insplan exists, GetSub should return the inssub for the pri plan, just in case
-				|| !MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to add the super family guarantor's primary insurance plan to the patients in this family?"))
+				|| !MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to add the super family guarantor's primary insurance plan to the patients in this family?"))
 			{
 				return;
 			}
@@ -2161,7 +2161,7 @@ namespace OpenDental{
 
 		private void ToolButRemoveSuper_Click() {
 			if(PatCur.SuperFamily==PatCur.Guarantor) {
-				MsgBox.Show(this,"You cannot delete the head of a super family.");
+				MessageBox.Show("You cannot delete the head of a super family.");
 				return;
 			}
 			if(PatCur.SuperFamily==0) {
@@ -2181,7 +2181,7 @@ namespace OpenDental{
 				return;
 			}
 			Patient superHead = Patients.GetPat(PatCur.SuperFamily);
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Would you like to disband and remove all members in the super family of "+superHead.GetNameFL()+"?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Would you like to disband and remove all members in the super family of "+superHead.GetNameFL()+"?")) {
 				return;
 			}
 			Popups.RemoveForDisbandingSuperFamily(PatCur);
@@ -2251,7 +2251,7 @@ namespace OpenDental{
 		///If something is not ready for clone action to be taken a message will show to the user and false will be returned.</summary>
 		private bool IsValidForCloneAction() {
 			if(PatCur==null) {
-				MsgBox.Show(this,"Select a patient to perform clone actions.");
+				MessageBox.Show("Select a patient to perform clone actions.");
 				return false;
 			}
 			return true;
@@ -2269,7 +2269,7 @@ namespace OpenDental{
 				Patient patientMaster=Patients.GetPat(patNumMaster);
 				//Double check that the original or master patient was found.
 				if(patientMaster==null) {
-					MsgBox.Show(this,"The original patient cannot be found in order to create additional clones.  Please call support.");
+					MessageBox.Show("The original patient cannot be found in order to create additional clones.  Please call support.");
 					return;
 				}
 				FormCA=new FormCloneAdd(patientMaster);
@@ -2295,7 +2295,7 @@ namespace OpenDental{
 			if(!IsValidForCloneAction()) {
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Demographic and Insurance Plan information from the selected patient will get synchronized to all clones of this patient.\r\n"
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Demographic and Insurance Plan information from the selected patient will get synchronized to all clones of this patient.\r\n"
 				+"Continue?"))
 			{
 				return;
@@ -2314,13 +2314,13 @@ namespace OpenDental{
 				return;
 			}
 			if(PatientLinks.IsPatientAClone(PatCur.PatNum)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Break the currently selected clone from the current clone group?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Break the currently selected clone from the current clone group?")) {
 					return;
 				}
 				PatientLinks.DeletePatNumTos(PatCur.PatNum,PatientLinkType.Clone);
 			}
 			else {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"The original patient clone is currently selected.  "
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"The original patient clone is currently selected.  "
 					+"Breaking the original patient clone will cause all clone links in the current clone group to be broken.\r\n"
 					+"Continue anyway?")) 
 				{
@@ -2342,7 +2342,7 @@ namespace OpenDental{
 
 		private void ToolButIns_Click(){
 			if(PatCur.DiscountPlanNum!=0) {
-				MsgBox.Show(this,"Cannot add insurance if patient has a discount plan.");
+				MessageBox.Show("Cannot add insurance if patient has a discount plan.");
 				return;
 			}
 			DialogResult result=MessageBox.Show(Lan.g(this,"Is this patient the subscriber?"),"",MessageBoxButtons.YesNoCancel);
@@ -2464,7 +2464,7 @@ namespace OpenDental{
 
 		private void ToolButDiscount_Click() {
 			if(PatPlanList.Count > 0) {
-				MsgBox.Show(this,"Cannot add discount plan when patient has insurance.");
+				MessageBox.Show("Cannot add discount plan when patient has insurance.");
 				return;
 			}
 			FormDiscountPlans FormDP=new FormDiscountPlans();
@@ -2969,12 +2969,12 @@ namespace OpenDental{
 			if(PatCur.DiscountPlanNum!=0) {
 				DiscountPlan discountPlan=DiscountPlans.GetPlan(Patients.GetPat(PatCur.PatNum).DiscountPlanNum);
 				if(discountPlan==null) {
-					MsgBox.Show(this,"Discount plan deleted by another user.");
+					MessageBox.Show("Discount plan deleted by another user.");
 					ModuleSelected(PatCur.PatNum);
 					return;
 				}
 				if(discountPlan.DiscountPlanNum!=PatCur.DiscountPlanNum) {
-					MsgBox.Show(this,"Discount plan changed by another user.");
+					MessageBox.Show("Discount plan changed by another user.");
 					ModuleSelected(PatCur.PatNum);
 					return;
 				}
@@ -2994,7 +2994,7 @@ namespace OpenDental{
 			PatPlan patPlan=PatPlans.GetByPatPlanNum(PatPlanList[e.Col-1].PatPlanNum);
 			if(patPlan==null) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Insurance plan for this patient no longer exists.  Refresh the module.");
+				MessageBox.Show("Insurance plan for this patient no longer exists.  Refresh the module.");
 				return;
 			}
 			SubList=InsSubs.RefreshForFam(FamCur);

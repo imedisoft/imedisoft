@@ -190,7 +190,7 @@ namespace OpenDental.User_Controls {
 					return;
 				case VERIFYTXT_COL:
 					if(!IsTextingEnabled) {
-						MsgBox.Show(this,"Texting not enabled"+(PrefC.HasClinicsEnabled?" for this clinic":""));
+						MessageBox.Show("Texting not enabled"+(PrefC.HasClinicsEnabled?" for this clinic":""));
 						return;
 					}
 					break;
@@ -202,9 +202,16 @@ namespace OpenDental.User_Controls {
 			gridOptions.Refresh();
 		}
 
-		private void butClear_Click(object sender,EventArgs e) {
-			if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will clear the formed URL and you will have to click Edit to create a new one. " +
-				"Continue?","Clear Webform URL")) {
+		private void butClear_Click(object sender, EventArgs e)
+		{
+			var result = MessageBox.Show(this,
+				"This will clear the formed URL and you will have to click Edit to create a new one. Continue?", 
+				"Clear Webform URL",
+				MessageBoxButtons.YesNo, 
+				MessageBoxIcon.Question);
+
+			if (result == DialogResult.Yes)
+            {
 				SetFormToLaunch("");
 			}
 		}

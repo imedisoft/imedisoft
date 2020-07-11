@@ -1584,18 +1584,10 @@ namespace OpenDentBusiness
 					AND deflink.FKey=patient.PatNum
 					AND definition.Category={SOut.Int((int)DefCat.ClinicSpecialty)}
 				)") + $@" Specialty,"//always include Specialty column, only populate if displaying specialty field
-			+ (!PrefC.GetBool(PrefName.DistributorKey) ? "" : $@"
-				GROUP_CONCAT(DISTINCT phonenumber.PhoneNumberVal) AS OtherPhone,registrationkey.RegKey,")
 			+ (string.IsNullOrEmpty(ptSearchArgs.InvoiceNumber) ? "'' " : "statement.") + $@"StatementNum
 				FROM patient"
 			+ (!usePhonenumTable ? "" : $@"
 				INNER JOIN phonenumber ON phonenumber.PatNum=patient.PatNum")
-			+ (!PrefC.GetBool(PrefName.DistributorKey) ? "" : $@"{(usePhonenumTable ? "" : $@"
-				LEFT JOIN phonenumber ON phonenumber.PatNum=patient.PatNum
-					AND phonenumber.PhoneType={SOut.Int((int)PhoneType.Other)}
-				{(string.IsNullOrEmpty(regexp) ? "" : $@"
-					AND phonenumber.PhoneNumberVal REGEXP '{regexp}'")}")}
-				LEFT JOIN registrationkey ON patient.PatNum=registrationkey.PatNum")
 			+ (string.IsNullOrEmpty(ptSearchArgs.SubscriberId) ? "" : $@"
 				LEFT JOIN patplan ON patplan.PatNum=patient.PatNum
 				LEFT JOIN inssub ON patplan.InsSubNum=inssub.InsSubNum")
@@ -1616,29 +1608,23 @@ namespace OpenDentBusiness
 				) ")
 				+ (string.IsNullOrEmpty(ptSearchArgs.LName) ? "" : $@"
 				AND (
-					patient.LName LIKE '{(ptSearchArgs.DoLimit ? "" : "%") + ptSearchArgs.LName}%'{(!PrefC.GetBool(PrefName.DistributorKey) ? "" : $@"
-					OR patient.Preferred LIKE '{(ptSearchArgs.DoLimit ? "" : "%") + ptSearchArgs.LName}%'")}
+					patient.LName LIKE '{(ptSearchArgs.DoLimit ? "" : "%") + ptSearchArgs.LName}%'
 				) ")
 				+ (string.IsNullOrEmpty(ptSearchArgs.FName) ? "" : $@"
 				AND (
-					patient.FName LIKE '{ptSearchArgs.FName}%'"
-					//Nathan has approved the preferred name search for first name only. It is not intended to work with last name for our customers.
-					+ $@"{((!PrefC.GetBool(PrefName.DistributorKey) && !PrefC.GetBool(PrefName.PatientSelectUseFNameForPreferred)) ? "" : $@"
-					OR patient.Preferred LIKE '{ptSearchArgs.FName}%'")}
+					patient.FName LIKE '{ptSearchArgs.FName}%'
 				) ")
 				+ (string.IsNullOrEmpty(regexp) || usePhonenumTable ? "" : $@"
 				AND (
 					patient.HmPhone REGEXP '{regexp}'
 					OR patient.WkPhone REGEXP '{regexp}'
-					OR patient.WirelessPhone REGEXP '{regexp}'{(!PrefC.GetBool(PrefName.DistributorKey) ? "" : $@"
-					OR phonenumber.PhoneNumberVal REGEXP '{regexp}'")}
+					OR patient.WirelessPhone REGEXP '{regexp}'
 				) ")
 				+ (!usePhonenumTable ? "" : $@"
 				AND phonenumber.PhoneNumberDigits LIKE '%{POut.String(phDigitsTrimmed)}%'")
 				+ (string.IsNullOrEmpty(strAddress) ? "" : $@"
 				AND (
-					patient.Address LIKE '%{strAddress}%'{(!PrefC.IsODHQ ? "" : $@"
-					OR patient.Address2 LIKE '%{strAddress}%'")}
+					patient.Address LIKE '%{strAddress}%'
 				)")
 				+ (string.IsNullOrEmpty(ptSearchArgs.City) ? "" : $@"
 				AND patient.City LIKE '{ptSearchArgs.City}%'")//LIKE is case insensitive in mysql.
@@ -1693,8 +1679,6 @@ namespace OpenDentBusiness
 				+ (ptSearchArgs.ListExplicitPatNums.IsNullOrEmpty() ? "" : $@"
 				AND FALSE
 				OR patient.PatNum IN ({string.Join(",", ptSearchArgs.ListExplicitPatNums)})")
-				+ (!PrefC.GetBool(PrefName.DistributorKey) ? "" : $@"
-				GROUP BY patient.PatNum")
 				+ $@"
 				ORDER BY {((ptSearchArgs.InitialPatNum == 0 || !ptSearchArgs.DoLimit) ? "" : $@"patient.PatNum={ptSearchArgs.InitialPatNum} DESC,")}"
 				+ $@"{exactMatchSnippet} DESC,patient.LName,patient.FName";
@@ -1765,11 +1749,6 @@ namespace OpenDentBusiness
 				long clinicNum = PIn.Long(dRow["ClinicNum"].ToString());
 				r["ClinicNum"] = clinicNum;
 				r["clinic"] = Clinics.GetAbbr(clinicNum);
-				if (PrefC.GetBool(PrefName.DistributorKey))
-				{//if for OD HQ
-					r["OtherPhone"] = dRow["OtherPhone"].ToString();
-					r["RegKey"] = dRow["RegKey"].ToString();
-				}
 				r["StatementNum"] = dRow["StatementNum"].ToString();
 				r["WirelessPhone"] = dRow["WirelessPhone"].ToString();
 				r["SecProv"] = Providers.GetAbbr(SIn.Long(dRow["SecProv"].ToString()));
@@ -1808,10 +1787,7 @@ namespace OpenDentBusiness
 			List<string> listClauses = new List<string>();
 			listClauses.Add(string.IsNullOrEmpty(args.LName) ? "" : "(patient.LName='" + args.LName + "')");
 			listClauses.Add(string.IsNullOrEmpty(args.FName) ? "" : "(patient.FName='" + args.FName + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.Phone) ? "" :
-				"(patient.WirelessPhone='" + args.Phone + "' OR patient.HmPhone='" + args.Phone + "' OR patient.WkPhone='" + args.Phone + "'"
-				+ (!PrefC.GetBool(PrefName.DistributorKey) ? "" : " OR phonenumber.PhoneNumberVal='" + args.Phone + "'") //Join
-				+ ")");
+			listClauses.Add(string.IsNullOrEmpty(args.Phone) ? "" : "(patient.WirelessPhone='" + args.Phone + "' OR patient.HmPhone='" + args.Phone + "' OR patient.WkPhone='" + args.Phone + "')");
 			listClauses.Add(string.IsNullOrEmpty(args.Address) ? "" : "(patient.Address='" + args.Address + "')");
 			listClauses.Add(string.IsNullOrEmpty(args.City) ? "" : "(patient.City='" + args.City + "')");
 			listClauses.Add(string.IsNullOrEmpty(args.State) ? "" : "(patient.State='" + args.State + "')");
@@ -1821,7 +1797,6 @@ namespace OpenDentBusiness
 			listClauses.Add(string.IsNullOrEmpty(args.SubscriberId) ? "" : "(inssub.SubscriberId='" + args.SubscriberId + "')"); //Join
 			listClauses.Add(string.IsNullOrEmpty(args.Email) ? "" : "(patient.Email='" + args.Email + "')");
 			listClauses.Add(string.IsNullOrEmpty(args.Country) ? "" : "(patient.Country='" + args.Country + "')");
-			listClauses.Add((string.IsNullOrEmpty(args.RegKey) || !PrefC.GetBool(PrefName.DistributorKey)) ? "" : "(registrationkey.RegKey='" + args.RegKey + "')"); //Join
 			listClauses.Add(args.Birthdate.Year < 1880 ? "" : "(patient.Birthdate=" + SOut.Date(args.Birthdate) + ")");
 			listClauses.Add(string.IsNullOrEmpty(args.InvoiceNumber) ? "" : "(statement.StatementNum='" + args.InvoiceNumber + "')");
 			listClauses.RemoveAll(string.IsNullOrEmpty);

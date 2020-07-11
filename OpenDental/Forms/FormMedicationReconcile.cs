@@ -135,7 +135,7 @@ namespace OpenDental {
 
 		private void butPickRxListImage_Click(object sender,EventArgs e) {	
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MsgBox.Show(this,"This option is not supported with images stored in the database.");
+				MessageBox.Show("This option is not supported with images stored in the database.");
 				return;
 			}
 			FormImageSelect formIS=new FormImageSelect();
@@ -147,7 +147,7 @@ namespace OpenDental {
 			string patFolder=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());
 			Document doc=Documents.GetByNum(formIS.SelectedDocNum);
 			if(!ImageStore.HasImageExtension(doc.FileName)) {
-				MsgBox.Show(this,"The selected file is not a supported image type.");
+				MessageBox.Show("The selected file is not a supported image type.");
 				return;
 			}
 			textDocDateDesc.Text=doc.DateTStamp.ToShortDateString()+" - "+doc.Description.ToString();

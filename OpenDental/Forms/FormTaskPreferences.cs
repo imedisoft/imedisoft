@@ -104,7 +104,7 @@ namespace OpenDental {
 				return;
 			}
 			if(FormOpenDental.IsDashboardVisible && checkTaskListAlwaysShow.Checked && !checkBoxTaskKeepListHidden.Checked && radioRight.Checked) {
-				MsgBox.Show(this,"Tasks cannot be docked to the right when Dashboards are in use.");
+				MessageBox.Show("Tasks cannot be docked to the right when Dashboards are in use.");
 				return;
 			}
 			bool changed = false;

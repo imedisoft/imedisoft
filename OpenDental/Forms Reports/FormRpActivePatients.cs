@@ -91,16 +91,16 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!checkAllBilling.Checked && listBillingTypes.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one Billing Type must be selected.");
+				MessageBox.Show("At least one Billing Type must be selected.");
 				return;
 			}
 			if(!checkAllProv.Checked && listProv.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one Provider must be selected.");
+				MessageBox.Show("At least one Provider must be selected.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(!checkAllClin.Checked && listClin.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"At least one Clinic must be selected.");
+					MessageBox.Show("At least one Clinic must be selected.");
 					return;
 				}
 			}

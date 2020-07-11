@@ -491,7 +491,7 @@ namespace OpenDental{
 
 		private bool InsPlanExists(InsPlan plan) {
 			if(plan==null || plan.PlanNum==0) {
-				MsgBox.Show(this,"Insurance plan selected no longer exists.");
+				MessageBox.Show("Insurance plan selected no longer exists.");
 				FillGrid();
 				return false;
 			}
@@ -633,7 +633,7 @@ namespace OpenDental{
 		private void butHide_Click(object sender,EventArgs e) {
 			int unusedCount=InsPlans.UnusedGetCount();
 			if(unusedCount==0) {
-				MsgBox.Show(this,"All plans are in use.");
+				MessageBox.Show("All plans are in use.");
 				return;
 			}
 			string msgText=unusedCount.ToString()+" "+Lan.g(this,"plans found that are not in use by any subscribers.  Hide all of them?");
@@ -642,7 +642,7 @@ namespace OpenDental{
 			}
 			InsPlans.UnusedHideAll();
 			FillGrid();
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {

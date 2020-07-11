@@ -49,7 +49,7 @@ namespace OpenDental {
 				_table=WikiLists.GetByName(WikiListCurName);
 				_listColumnHeaders=WikiListHeaderWidths.GetForList(WikiListCurName);
 				if(_listColumnHeaders.Count!=_table.Columns.Count) {//if they still do not match, one of them did not get synched correctly.
-					MsgBox.Show(this,"Unable to open the wiki list.");
+					MessageBox.Show("Unable to open the wiki list.");
 					return;
 				}
 			}
@@ -180,11 +180,11 @@ namespace OpenDental {
 				return;
 			}
 			if(gridMain.SelectedCell.X==-1) {
-				MsgBox.Show(this,"Select cell in column to be deleted first.");
+				MessageBox.Show("Select cell in column to be deleted first.");
 				return;
 			}
 			if(!WikiLists.CheckColumnEmpty(WikiListCurName,_table.Columns[gridMain.SelectedCell.X].ColumnName)) {
-				MsgBox.Show(this,"Column cannot be deleted because it contains data.");
+				MessageBox.Show("Column cannot be deleted because it contains data.");
 				return;
 			}
 			SetIsEdited();
@@ -227,16 +227,16 @@ namespace OpenDental {
 			}
 			//Validate list name---------------------------------------------------------------------------
 			if(string.IsNullOrEmpty(newListName)) {
-				MsgBox.Show(this,"List name cannot be blank.");
+				MessageBox.Show("List name cannot be blank.");
 				return;
 			}
 			if(DbHelper.isMySQLReservedWord(newListName)) {
 				//Can become an issue when retrieving column header names.
-				MsgBox.Show(this,"List name is a MySQL reserved word.");
+				MessageBox.Show("List name is a MySQL reserved word.");
 				return;
 			}
 			if(WikiLists.CheckExists(newListName)) {
-				MsgBox.Show(this,"List name already exists.");
+				MessageBox.Show("List name already exists.");
 				return;
 			}
 			try {
@@ -269,10 +269,10 @@ namespace OpenDental {
 				return;
 			}
 			if(gridMain.ListGridRows.Count>0) {
-				MsgBox.Show(this,"Cannot delete a non-empty list.  Remove all items first and try again.");
+				MessageBox.Show("Cannot delete a non-empty list.  Remove all items first and try again.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this entire list and all references to it?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this entire list and all references to it?")) {
 				return;
 			}
 			SetIsEdited();

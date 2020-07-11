@@ -232,18 +232,18 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a substitution code first.");
+				MessageBox.Show("Please select a substitution code first.");
 				return;
 			}
 			ProcedureCode procCode=gridMain.SelectedTag<ProcedureCode>();
 			SubstitutionLink subLink=_listSubstLinks.FirstOrDefault(x => x.CodeNum==procCode.CodeNum);
 			if(subLink==null) {//User selected a procedure code level substitution code. Cannot delete
-				MsgBox.Show(this,"Cannot delete a global substitution code.");
+				MessageBox.Show("Cannot delete a global substitution code.");
 				return;
 			}
 			string msgText="Delete the selected insurance specific substitution code?\r\nDeleting the insurance specific substitution code will default to "
 				+"the global substitution code for procedure";
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,Lan.g(this,msgText)+" \""+procCode.ProcCode+"\".")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,Lan.g(this,msgText)+" \""+procCode.ProcCode+"\".")) {
 				return;
 			}
 			_listSubstLinks.Remove(subLink);

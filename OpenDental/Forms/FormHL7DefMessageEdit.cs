@@ -94,7 +94,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete Message?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete Message?")) {
 				return;
 			}
 			for(int s=0;s<HL7DefMesCur.hl7DefSegments.Count;s++) {
@@ -125,11 +125,11 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//This button is disabled if IsHL7DefInternal
 			if(radioOut.Checked && textItemOrder.errorProvider1.GetError(textItemOrder)!="") {
-				MsgBox.Show(this,"Please fix data entry error first.");
+				MessageBox.Show("Please fix data entry error first.");
 				return;
 			}
 			if(HL7DefMesCur.hl7DefSegments[0].SegmentName!=SegmentNameHL7.MSH) {
-				MsgBox.Show(this,"The first segment in any message must be the MSH - Message Header segment.");
+				MessageBox.Show("The first segment in any message must be the MSH - Message Header segment.");
 				return;
 			}
 			HL7DefMesCur.MessageType=(MessageTypeHL7)comboMsgType.SelectedIndex+1;//+1 because 0 is NotDefined and is not displayed for user to select

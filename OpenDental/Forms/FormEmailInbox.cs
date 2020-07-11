@@ -113,7 +113,7 @@ namespace OpenDental {
 			FillComboEmail();	//Also sets _listEmailAddresses
 			SetButtonsEnabled();
 			if(_listEmailAddresses.Count==0) {
-				MsgBox.Show(this,"No email addresses available for current user.  Edit email address info in the File menu or Setup menu.");
+				MessageBox.Show("No email addresses available for current user.  Edit email address info in the File menu or Setup menu.");
 				this.Close();
 				return;
 			}
@@ -658,7 +658,7 @@ namespace OpenDental {
 			emailMessage=EmailMessages.GetOne(emailMessage.EmailMessageNum);//Refresh from the database to get the full body text.
 			if(emailMessage==null) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Email has been deleted.");
+				MessageBox.Show("Email has been deleted.");
 				FillInboxOrSent(true);
 				return;
 			}
@@ -749,7 +749,7 @@ namespace OpenDental {
 
 		private void butChangePat_Click(object sender,EventArgs e) {
 			if(ActiveGrid.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an email message.");
+				MessageBox.Show("Please select an email message.");
 				return;
 			}
 			FormPatientSelect form=new FormPatientSelect();
@@ -877,7 +877,7 @@ namespace OpenDental {
 
 		private void butSearch_Click(object sender,EventArgs e) {
 			if(textSearchBody.Text=="" && textDateFrom.Text=="" && textDateTo.Text==""&& textSearchEmail.Text=="" && textSearchPat.Text=="" && !checkSearchAttach.Checked) {
-				MsgBox.Show(this,"Please specify some search criteria before searching.");
+				MessageBox.Show("Please specify some search criteria before searching.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -934,7 +934,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridInbox.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"You must select an email before replying.");
+				MessageBox.Show("You must select an email before replying.");
 				return;
 			}
 			EmailMessage selectedMessage=EmailMessages.GetOne(((EmailMessage)gridInbox
@@ -950,7 +950,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridInbox.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"You must select an email to forward.");
+				MessageBox.Show("You must select an email to forward.");
 				return;
 			}
 			EmailMessage selectedMessage=EmailMessages.GetOne(((EmailMessage)gridInbox
@@ -1066,10 +1066,10 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(ActiveGrid.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select email to delete or hide.");
+				MessageBox.Show("Please select email to delete or hide.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Permanently delete or hide selected email(s)?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Permanently delete or hide selected email(s)?")) {
 				return;
 			}
 			Cursor=Cursors.WaitCursor;

@@ -102,7 +102,7 @@ namespace CentralManager {
 
 		private void butRemovePats_Click(object sender,EventArgs e) {
 			if(gridPatients.SelectedIndices.Count()==0) {
-				MsgBox.Show(this,"At least one patient must be selected.");
+				MsgBox.Show("At least one patient must be selected.");
 				return;
 			}
 			foreach(GridRow row in gridPatients.SelectedGridRows) {
@@ -113,7 +113,7 @@ namespace CentralManager {
 
 		private void butRemoveDb_Click(object sender,EventArgs e) {
 			if(gridDatabasesTo.SelectedIndices.Count()==0) {
-				MsgBox.Show(this,"At least one connection must be selected.");
+				MsgBox.Show("At least one connection must be selected.");
 				return;
 			}
 			foreach(GridRow row in gridDatabasesTo.SelectedGridRows) {
@@ -124,11 +124,11 @@ namespace CentralManager {
 
 		private void butTransfer_Click(object sender,EventArgs e) {
 			if(gridPatients.ListGridRows.Count==0) {
-				MsgBox.Show(this,"At least one patient must be selected to transfer.");
+				MsgBox.Show("At least one patient must be selected to transfer.");
 				return;
 			}
 			if(gridDatabasesTo.ListGridRows.Count==0) {
-				MsgBox.Show(this,"At least one database must be selected to transfer.");
+				MsgBox.Show("At least one database must be selected to transfer.");
 				return;
 			}
 			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"The transfer process may take a long time. Continue?")) {
@@ -171,7 +171,7 @@ namespace CentralManager {
 				msgBoxCP.ShowDialog();
 			}
 			else {
-				MsgBox.Show(this,"Transfers Completed Successfully\r\nGo to each database you transferred patients to and retrieve Webforms to finish the "
+				MsgBox.Show("Transfers Completed Successfully\r\nGo to each database you transferred patients to and retrieve Webforms to finish the "
 					+"transfer process.");
 			}
 		}

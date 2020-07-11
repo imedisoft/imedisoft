@@ -270,7 +270,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(listButtons.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			int selected=listButtons.SelectedIndex;
@@ -288,7 +288,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(listButtons.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			int selected=listButtons.SelectedIndex;
@@ -300,7 +300,7 @@ namespace OpenDental{
 				return;
 			}
 			if(button.ButtonIndex==_maxNumButtonsInList-1) {
-				MsgBox.Show(this,$"No more than {_maxNumButtonsInList} buttons are allowed.");
+				MessageBox.Show($"No more than {_maxNumButtonsInList} buttons are allowed.");
 				return;
 			}
 			_arraySigButDefs=SigButDefs.MoveDown(button,_arraySigButDefs);

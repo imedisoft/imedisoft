@@ -26,18 +26,18 @@ namespace OpenDental {
 			if(textDate1.errorProvider1.GetError(textDate1)!=""
 				|| textDate2.errorProvider1.GetError(textDate2)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime date1=PIn.Date(textDate1.Text);
 			DateTime date2=PIn.Date(textDate2.Text);
 			if(date1>date2) {
-				MsgBox.Show(this,"Date 1 cannot be greater than Date 2.");
+				MessageBox.Show("Date 1 cannot be greater than Date 2.");
 				return;
 			}
 			if(date1.AddDays(7) < date2) {
 				if(!Security.IsAuthorized(Permissions.SecurityAdmin,true)) {
-					MsgBox.Show(this,"Admin permission is required for date spans greater than 7 days.");
+					MessageBox.Show("Admin permission is required for date spans greater than 7 days.");
 					return;
 				}
 			}

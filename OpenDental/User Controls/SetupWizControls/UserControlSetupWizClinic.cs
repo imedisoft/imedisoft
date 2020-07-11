@@ -24,7 +24,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void UserControlSetupWizClinic_Load(object sender,EventArgs e) {
 			FillGrid();
 			if(Clinics.GetCount(true)==0) {
-				MsgBox.Show("FormSetupWizard","You have no valid clinics. Please click the Add button to add a clinic.");
+				MsgBox.Show("You have no valid clinics. Please click the Add button to add a clinic.");
 				timer1.Start();
 			}
 		}

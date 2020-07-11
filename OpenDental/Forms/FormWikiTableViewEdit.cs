@@ -62,7 +62,7 @@ namespace OpenDental {
 
 		private void butRight_Click(object sender,EventArgs e) {
 			if(listAvail.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item on the left first.");
+				MessageBox.Show("Please select an item on the left first.");
 				return;
 			}
 			//It should to be put back in the same order as the CollsAll, although it's not critical.  Columns may still get out of order later.
@@ -79,7 +79,7 @@ namespace OpenDental {
 
 		private void butLeft_Click(object sender,EventArgs e) {
 			if(listShowing.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item on the right first.");
+				MessageBox.Show("Please select an item on the right first.");
 				return;
 			}
 			WikiViewCur.Columns.RemoveAt(listShowing.SelectedIndex);
@@ -91,7 +91,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this view?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this view?")) {
 				return;
 			}
 			WikiViewCur=null;
@@ -100,11 +100,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textViewName.Text=="") {
-				MsgBox.Show(this,"Please enter a view name first.");
+				MessageBox.Show("Please enter a view name first.");
 				return;
 			}
 			if(WikiViewCur.Columns.Count==0) {
-				MsgBox.Show(this,"Please select columns to show first.");
+				MessageBox.Show("Please select columns to show first.");
 				return;
 			}
 			WikiViewCur.ViewName=textViewName.Text;

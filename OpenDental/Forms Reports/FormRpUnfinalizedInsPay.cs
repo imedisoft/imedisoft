@@ -174,12 +174,12 @@ namespace OpenDental {
 			}
 			if(PrefC.GetBool(PrefName.ClaimPaymentBatchOnly)) {
 				//Is there a permission in the manage module that would block this behavior? Are we sending the user into a TRAP?!
-				MsgBox.Show(this,"Please use Batch Insurance in Manage Module to Finalize Payments.");
+				MessageBox.Show("Please use Batch Insurance in Manage Module to Finalize Payments.");
 				return;
 			}
 			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
 			if(unfinalPay.ClaimCur==null) {
-				MsgBox.Show(this,"Unable to find claim for this partial payment.");
+				MessageBox.Show("Unable to find claim for this partial payment.");
 				return;
 			}
 			List<ClaimProc> listClaimProcForClaim=ClaimProcs.RefreshForClaim(unfinalPay.ClaimCur.ClaimNum);
@@ -219,7 +219,7 @@ namespace OpenDental {
 			//Refresh claim from database.  Will return null if not in db, or unfinalPay.ClaimCur already null.
 			unfinalPay.ClaimCur=Claims.GetClaim(unfinalPay.ClaimCur?.ClaimNum??0);
 			if(unfinalPay.ClaimCur==null) {
-				MsgBox.Show(this,"Claim has been deleted by another user.");
+				MessageBox.Show("Claim has been deleted by another user.");
 			}
 			else {
 				Family famCur=Patients.GetFamily(unfinalPay.PatientCur.PatNum);
@@ -243,7 +243,7 @@ namespace OpenDental {
 			}
 			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
 			if(unfinalPay.ClaimPaymentCur==null) {
-				MsgBox.Show(this,"This claim payment has been deleted.");
+				MessageBox.Show("This claim payment has been deleted.");
 				return;
 			}
 			FormClaimPayBatch FormCPB=new FormClaimPayBatch(unfinalPay.ClaimPaymentCur);
@@ -256,7 +256,7 @@ namespace OpenDental {
 		private void deleteEOBToolStripMenuItem_Click(object sender,EventArgs e) {
 			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
 			if(unfinalPay.ClaimPaymentCur==null) {
-				MsgBox.Show(this,"This claim payment has been deleted.");
+				MessageBox.Show("This claim payment has been deleted.");
 				return;
 			}
 			//Most likely this claim payment is marked as partial. Everyone should have permission to delete a partial payment.
@@ -264,7 +264,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.InsPayEdit,unfinalPay.ClaimPaymentCur.CheckDate) && !unfinalPay.ClaimPaymentCur.IsPartial) {
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete this insurance check?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this insurance check?")) {
 				return;
 			}
 			try {
@@ -343,11 +343,6 @@ namespace OpenDental {
 		private void butExport_Click(object sender,System.EventArgs e) {
 			string fileName=Lan.g(this,"Unfinalized Insurance Payments");
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
-			if(ODBuild.IsWeb()) {
-				//file download dialog will come up later, after file is created.
-				filePath+=".txt";//Provide the filepath an extension so that Thinfinity can offer as a download.
-			}
-			else {
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
 				saveFileDialog.AddExtension=true;
 				saveFileDialog.FileName=fileName;
@@ -369,7 +364,7 @@ namespace OpenDental {
 					return;
 				}
 				filePath=saveFileDialog.FileName;
-			}
+			
 			try {
 				using(StreamWriter sw=new StreamWriter(filePath,false))
 				{
@@ -394,12 +389,9 @@ namespace OpenDental {
 				MessageBox.Show(Lan.g(this,"File in use by another program.  Close and try again."));
 				return;
 			}
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(filePath);
-			}
-			else {
+
 				MessageBox.Show(Lan.g(this,"File created successfully"));
-			}
+			
 		}
 		
 		private void butClose_Click(object sender,EventArgs e) {

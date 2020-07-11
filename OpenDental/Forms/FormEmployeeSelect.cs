@@ -393,7 +393,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Schedules may be lost.  Continue?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Schedules may be lost.  Continue?")){
 				return;
 			}
 			for(int i=0;i<_listEmployeesShowing.Count;i++){

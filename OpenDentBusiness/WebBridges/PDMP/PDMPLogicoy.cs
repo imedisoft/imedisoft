@@ -52,46 +52,59 @@ namespace OpenDentBusiness {
 				client.Headers[HttpRequestHeader.ContentType]="application/xml";
 				client.Headers[HttpRequestHeader.Authorization]=authHeader;
 				client.Encoding=UnicodeEncoding.UTF8;
-				try {
-					string res="";
-					if(method==HttpMethod.Get) {
-						res=client.DownloadString(GetApiUrl(route));
+				try
+				{
+					string res = "";
+					if (method == HttpMethod.Get)
+					{
+						res = client.DownloadString(GetApiUrl(route));
 					}
-					else if(method==HttpMethod.Post) {
-						res=client.UploadString(GetApiUrl(route),HttpMethod.Post.Method,body);
+					else if (method == HttpMethod.Post)
+					{
+						res = client.UploadString(GetApiUrl(route), HttpMethod.Post.Method, body);
 					}
-					else if(method==HttpMethod.Put) {
-						res=client.UploadString(GetApiUrl(route),HttpMethod.Put.Method,body);
+					else if (method == HttpMethod.Put)
+					{
+						res = client.UploadString(GetApiUrl(route), HttpMethod.Put.Method, body);
 					}
-					else {
-						throw new Exception("Unsupported HttpMethod type: "+method.Method);
+					else
+					{
+						throw new Exception("Unsupported HttpMethod type: " + method.Method);
 					}
-					if(ODBuild.IsDebug()) {
-						if((typeof(T)==typeof(string))) {//If user wants the entire json response as a string
-							return (T)Convert.ChangeType(res,typeof(T));
-						}
-						Console.WriteLine(res);
+#if DEBUG
+					if ((typeof(T) == typeof(string)))
+					{//If user wants the entire json response as a string
+						return (T)Convert.ChangeType(res, typeof(T));
 					}
-					return Deserialize<T>(res,responseType);
+					Console.WriteLine(res);
+#endif
+
+					return Deserialize<T>(res, responseType);
 				}
-				catch(WebException wex) {
-					string res="";
-					using(var sr=new StreamReader(((HttpWebResponse)wex.Response).GetResponseStream())) {
-						res=sr.ReadToEnd();
+				catch (WebException wex)
+				{
+					string res = "";
+					using (var sr = new StreamReader(((HttpWebResponse)wex.Response).GetResponseStream()))
+					{
+						res = sr.ReadToEnd();
 					}
-					if(string.IsNullOrWhiteSpace(res)) {
+					if (string.IsNullOrWhiteSpace(res))
+					{
 						//The response didn't contain a body.  Through my limited testing, it only happens for 401 (Unauthorized) requests.
-						if(wex.Response.GetType()==typeof(HttpWebResponse)) {
-							HttpStatusCode statusCode=((HttpWebResponse)wex.Response).StatusCode;
-							if(statusCode==HttpStatusCode.Unauthorized) {
-								throw new ODException(Lans.g("PDMP","Invalid PDMP credentials."));
+						if (wex.Response.GetType() == typeof(HttpWebResponse))
+						{
+							HttpStatusCode statusCode = ((HttpWebResponse)wex.Response).StatusCode;
+							if (statusCode == HttpStatusCode.Unauthorized)
+							{
+								throw new ODException(Lans.g("PDMP", "Invalid PDMP credentials."));
 							}
 						}
 					}
-					string errorMsg=wex.Message+(string.IsNullOrWhiteSpace(res) ? "" : "\r\nRaw response:\r\n"+res);
-					throw new Exception(errorMsg,wex);//If we got this far and haven't rethrown, simply throw the entire exception.
+					string errorMsg = wex.Message + (string.IsNullOrWhiteSpace(res) ? "" : "\r\nRaw response:\r\n" + res);
+					throw new Exception(errorMsg, wex);//If we got this far and haven't rethrown, simply throw the entire exception.
 				}
-				catch(Exception ex) {
+				catch (Exception ex)
+				{
 					//WebClient returned an http status code >= 300
 					ex.DoNothing();
 					//For now, rethrow error and let whoever is expecting errors to handle them.
@@ -221,21 +234,24 @@ namespace OpenDentBusiness {
 			return prescrRequest;
 		}
 
-		private string MakeBasicAuthHeader() {
-			if(ODBuild.IsDebug()) {
-				_clientUsername="guest";
-				_clientPassword="welcome123";
-			}
-			string basicAuthContent=System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(_clientUsername+":"+_clientPassword));
-			return "Basic "+basicAuthContent;
+		private string MakeBasicAuthHeader()
+		{
+#if DEBUG
+			_clientUsername = "guest";
+			_clientPassword = "welcome123";
+#endif
+			string basicAuthContent = Convert.ToBase64String(
+				Encoding.GetEncoding("ISO-8859-1").GetBytes(_clientUsername + ":" + _clientPassword));
+
+			return "Basic " + basicAuthContent;
 		}
 
 		///<summary>Returns the full URL according to the route given.</summary>
 		private string GetApiUrl(ApiRoute route) {
 			string apiUrl=Introspection.GetOverride(Introspection.IntrospectionEntity.PDMPURL,"https://www.ilpmp.org/rxhistorySumAdp/getReport");
-			if(ODBuild.IsDebug()) {
-				apiUrl="https://openid.logicoy.com/ilpdmp/test/getReport";
-			}
+#if DEBUG
+			apiUrl="https://openid.logicoy.com/ilpdmp/test/getReport";
+#endif
 			switch(route) {
 				case ApiRoute.Root:
 					//Do nothing.  This is to allow someone to quickly grab the URL without having to make a copy+paste reference.

@@ -26,7 +26,7 @@ namespace OpenDental {
 				textMain.Rtf=textIn;
 			}
 			catch {
-				MsgBox.Show(this,"Invalid RTF. Clicking OK in this window will result in loss of formatting.");
+				MessageBox.Show("Invalid RTF. Clicking OK in this window will result in loss of formatting.");
 				textMain.Text=textIn;
 			}
 		}

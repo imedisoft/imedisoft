@@ -231,15 +231,15 @@ namespace OpenDental {
 
 		private void PressOK(int index) {
 			if(index<0) {
-				MsgBox.Show(this,"Please select a field.");
+				MessageBox.Show("Please select a field.");
 				return;
 			}
 			if(!((ReplacementField)gridMain.ListGridRows[index].Tag).IsSupported) {
-				MsgBox.Show(this,"The selected field is not supported for this method of communication.");
+				MessageBox.Show("The selected field is not supported for this method of communication.");
 				return;
 			}
 			if(((ReplacementField)gridMain.ListGridRows[index].Tag).IsPHI && !_allowPHI) {
-				MsgBox.Show(this,"The selected field is considered Protected Health Information and this method of communication does not allow PHI.");
+				MessageBox.Show("The selected field is considered Protected Health Information and this method of communication does not allow PHI.");
 				return;
 			}
 			DialogResult=DialogResult.OK;

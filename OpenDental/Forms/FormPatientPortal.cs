@@ -62,7 +62,7 @@ namespace OpenDental {
 			if(butGiveAccess.Text=="Provide Online Access") {//When form open opens with a blank password
 				if(PrefC.GetString(PrefName.PatientPortalURL)=="") {
 					//User probably hasn't set up the patient portal yet.
-					MsgBox.Show(this,"Patient Facing URL is required to be set before granting online access.  Click Setup to set the Patient Facing URL.");
+					MessageBox.Show("Patient Facing URL is required to be set before granting online access.  Click Setup to set the Patient Facing URL.");
 					return;
 				}
 				string error;
@@ -139,7 +139,7 @@ namespace OpenDental {
 
 		private void butPrint_Click(object sender,EventArgs e) {
 			if(textPatientPortalURL.Text=="") {
-				MsgBox.Show(this,"Online Access Link required. Please use Setup to set the Online Access Link first.");
+				MessageBox.Show("Online Access Link required. Please use Setup to set the Online Access Link first.");
 				return;
 			}
 			if(textOnlinePassword.Text=="" || textOnlinePassword.Text=="********") {
@@ -189,12 +189,12 @@ namespace OpenDental {
 			bool shouldPrint=false;
 			if(textOnlineUsername.ReadOnly==false) {
 				if(textOnlineUsername.Text=="") {
-					MsgBox.Show(this,"Online Username cannot be blank.");
+					MessageBox.Show("Online Username cannot be blank.");
 					return;
 				}
 				else if(_userWebCur.UserName!=textOnlineUsername.Text) {
 					if(UserWebs.UserNameExists(textOnlineUsername.Text,UserWebFKeyType.PatientPortal)) {
-						MsgBox.Show(this,"The Online Username already exists.");
+						MessageBox.Show("The Online Username already exists.");
 						return;
 					}
 					_userWebCur.UserName=textOnlineUsername.Text;

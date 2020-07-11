@@ -109,7 +109,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete this condition?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this condition?")) {
 				return;
 			}
 			try {
@@ -142,17 +142,17 @@ namespace OpenDental {
 			}
 			else {
 				if(textCompareString.Text.Trim()=="") {
-					MsgBox.Show(this,"Text not allowed to be blank.");
+					MessageBox.Show("Text not allowed to be blank.");
 					return;
 				}
 				if(!ReasonableLogic()) {
-					MsgBox.Show(this,"Comparison does not make sense with chosen field.");
+					MessageBox.Show("Comparison does not make sense with chosen field.");
 					return;
 				}
 				if(((AutoCondField)listCompareField.SelectedIndex==AutoCondField.Gender
 					&& !(textCompareString.Text.ToLower()=="m" || textCompareString.Text.ToLower()=="f"))) 
 				{
-					MsgBox.Show(this,"Allowed gender values are M or F.");
+					MessageBox.Show("Allowed gender values are M or F.");
 					return;
 				}
 				ConditionCur.CompareString=textCompareString.Text;

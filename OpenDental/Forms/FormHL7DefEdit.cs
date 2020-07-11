@@ -307,11 +307,11 @@ namespace OpenDental {
 				bool isHL7Enabled=HL7Defs.IsExistingHL7Enabled(HL7DefCur.HL7DefNum,HL7DefCur.InternalType==HL7InternalType.MedLabv2_3);
 				if(isHL7Enabled) {
 					checkEnabled.Checked=false;
-					MsgBox.Show(this,"Only one HL7 process can be enabled.  Another HL7 definition is enabled.");
+					MessageBox.Show("Only one HL7 process can be enabled.  Another HL7 definition is enabled.");
 					return;
 				}
 				if(Programs.IsEnabled(ProgramName.eClinicalWorks)) {
-					MsgBox.Show(this,"The eClinicalWorks program link is enabled.  This definition will now control the HL7 messages.");
+					MessageBox.Show("The eClinicalWorks program link is enabled.  This definition will now control the HL7 messages.");
 				}
 			}
 			else {
@@ -325,7 +325,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			//This button is only enabled if this is a custom def.
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete entire HL7Def?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete entire HL7Def?")) {
 				return;
 			}
 			for(int m=0;m<HL7DefCur.hl7DefMessages.Count;m++) {
@@ -373,77 +373,73 @@ namespace OpenDental {
 			if(!checkEnabled.Checked) {
 				return true;
 			}
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"HL7 is not supported in web mode.");
-				return false;
-			}
 			if(textHL7Server.Text=="") {
-				MsgBox.Show(this,"HL7 Server may not be blank.");
+				MessageBox.Show("HL7 Server may not be blank.");
 				return false;
 			}
 			if(textHL7ServiceName.Text=="") {
-				MsgBox.Show(this,"HL7 Service Name may not be blank.");
+				MessageBox.Show("HL7 Service Name may not be blank.");
 				return false;
 			}
 			switch(comboModeTx.SelectedIndex) {
 				case (int)ModeTxHL7.File:
 					if(textInPathOrSocket.Text=="") {
-						MsgBox.Show(this,"The path for Inbound Folder is empty.");
+						MessageBox.Show("The path for Inbound Folder is empty.");
 						return false;
 					}
 					if(textOutPathSocketOrDir.Text=="") {
-						MsgBox.Show(this,"The path for Outbound Folder is empty.");
+						MessageBox.Show("The path for Outbound Folder is empty.");
 						return false;
 					}
 					//paths are checked when service starts, not when closing form, since paths are local paths but only exist on the ODHL7 server
 					break;
 				case (int)ModeTxHL7.TcpIp:
 					if(textInPathOrSocket.Text=="") {
-						MsgBox.Show(this,"The Inbound Port is empty.");
+						MessageBox.Show("The Inbound Port is empty.");
 						return false;
 					}
 					if(textOutPathSocketOrDir.Text=="") {
-						MsgBox.Show(this,"The Outbound IP:Port is empty.");
+						MessageBox.Show("The Outbound IP:Port is empty.");
 						return false;
 					}
 					string[] strIpPort=textOutPathSocketOrDir.Text.Split(':');
 					if(strIpPort.Length!=2) {//there isn't a ':' in the IpPort field
-						MsgBox.Show(this,"The Outbound IP:Port field requires an IP address, followed by a colon, followed by a port number.");
+						MessageBox.Show("The Outbound IP:Port field requires an IP address, followed by a colon, followed by a port number.");
 						return false;
 					}
 					try {
 						System.Net.IPAddress.Parse(strIpPort[0]);
 					}
 					catch {
-						MsgBox.Show(this,"The Outbound IP address is invalid.");
+						MessageBox.Show("The Outbound IP address is invalid.");
 						return false;
 					}
 					try {
 						int.Parse(strIpPort[1]);
 					}
 					catch {
-						MsgBox.Show(this,"The Outbound Port must be a valid integer.");
+						MessageBox.Show("The Outbound Port must be a valid integer.");
 						return false;
 					}
 					try {
 						int.Parse(textInPathOrSocket.Text.ToString());
 					}
 					catch {
-						MsgBox.Show(this,"The Inbound Port must be a valid integer.");
+						MessageBox.Show("The Inbound Port must be a valid integer.");
 						return false;
 					}
 					break;
 				case (int)ModeTxHL7.Sftp:
 					if(textInPathOrSocket.Text=="") {
-						MsgBox.Show(this,"The Sftp Server Address:Port field is empty.");
+						MessageBox.Show("The Sftp Server Address:Port field is empty.");
 						return false;
 					}
 					if(textSftpUsername.Text=="") {
-						MsgBox.Show(this,"The Sftp Username field is empty.");
+						MessageBox.Show("The Sftp Username field is empty.");
 						return false;
 					}
 					if(textSftpPassword.Text=="") {
-						MsgBox.Show(this,"The Sftp Password field is empty.");
+						MessageBox.Show("The Sftp Password field is empty.");
 						return false;
 					}
 					//NOTE: May not always require a port, so this test may not be necessary
@@ -454,7 +450,7 @@ namespace OpenDental {
 						}
 						catch(Exception ex) {
 							ex.DoNothing();
-							MsgBox.Show(this,"The Sftp Server Port must be a valid integer.");
+							MessageBox.Show("The Sftp Server Port must be a valid integer.");
 							return false;
 						}
 					}
@@ -463,23 +459,23 @@ namespace OpenDental {
 					break;
 			}
 			if(textFieldSep.Text.Length!=1) {
-				MsgBox.Show(this,"The field separator must be a single character.");
+				MessageBox.Show("The field separator must be a single character.");
 				return false;
 			}
 			if(textRepSep.Text.Length!=1) {
-				MsgBox.Show(this,"The repetition separator must be a single character.");
+				MessageBox.Show("The repetition separator must be a single character.");
 				return false;
 			}
 			if(textCompSep.Text.Length!=1) {
-				MsgBox.Show(this,"The component separator must be a single character.");
+				MessageBox.Show("The component separator must be a single character.");
 				return false;
 			}
 			if(textSubcompSep.Text.Length!=1) {
-				MsgBox.Show(this,"The subcomponent separator must be a single character.");
+				MessageBox.Show("The subcomponent separator must be a single character.");
 				return false;
 			}
 			if(textEscChar.Text.Length!=1) {
-				MsgBox.Show(this,"The escape character must be a single character.");
+				MessageBox.Show("The escape character must be a single character.");
 				return false;
 			}
 			for(int i=0;i<HL7DefCur.hl7DefMessages.Count;i++) {
@@ -489,7 +485,7 @@ namespace OpenDental {
 				//if there is an inbound SIU defined, appts will be created from these messages and there is no overlap check
 				//since OD has no control over the scheduling of these appts and inserts them all with OpNum=0, the appts module should be hidden
 				if(HL7DefCur.hl7DefMessages[i].MessageType==MessageTypeHL7.SIU && HL7DefCur.hl7DefMessages[i].InOrOut==InOutHL7.Incoming) {
-					MsgBox.Show(this,"The Appts module should be hidden if there is an inbound SIU message defined.\r\n"
+					MessageBox.Show("The Appts module should be hidden if there is an inbound SIU message defined.\r\n"
 						+"Either uncheck the Show Appts Module check box or delete the inbound SIU message definition.");
 					return false;
 				}
@@ -577,7 +573,7 @@ namespace OpenDental {
 			else {//not enabled
 				if(HL7DefCur.IsInternal) {
 					if(HL7DefCur.IsEnabled) {//If def was enabled but user wants to disable
-						if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Disable HL7Def?  Changes made will be lost.  Continue?")) {
+						if(MsgBox.Show(MsgBoxButtons.OKCancel,"Disable HL7Def?  Changes made will be lost.  Continue?")) {
 							HL7Defs.Delete(HL7DefCur.HL7DefNum);
 						}
 						else {//user selected Cancel
@@ -585,7 +581,7 @@ namespace OpenDental {
 						}
 					}
 					else {//was disabled and is still disabled
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Changes made will be lost.  Continue?")) {
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Changes made will be lost.  Continue?")) {
 							return;
 						}
 						//do nothing.  Changes will be lost.

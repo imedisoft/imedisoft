@@ -51,7 +51,7 @@ namespace OpenDental {
 
 		private void butMerge_Click(object sender,EventArgs e) {
 			if(_patTo.PatNum==_patFrom.PatNum) {
-				MsgBox.Show(this,"Cannot merge a patient account into itself. Please select a different patient to merge from.");
+				MessageBox.Show("Cannot merge a patient account into itself. Please select a different patient to merge from.");
 				return;
 			}
 			string msgText="";
@@ -75,7 +75,7 @@ namespace OpenDental {
 				}
 			}
 			else {//name and bd match
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Merge the patient at the bottom into the patient shown at the top?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Merge the patient at the bottom into the patient shown at the top?")) {
 					return;//The user chose not to merge.
 				}
 			}
@@ -222,7 +222,7 @@ namespace OpenDental {
 				//This will cause CheckUIState() to disabled the merge button until the user selects a new _patFrom.
 				_patFrom=null;
 				CheckUIState();
-				MsgBox.Show(this,"Patients merged successfully.");
+				MessageBox.Show("Patients merged successfully.");
 			}//end MergeTwoPatients
 			Cursor=Cursors.Default;
 		}

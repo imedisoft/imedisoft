@@ -27,7 +27,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void UserControlSetupWizEmployee_Load(object sender,EventArgs e) {
 			FillGrid();
 			if(_listEmployees.Where(x => x.FName.ToLower() != "default").ToList().Count==0) {
-				MsgBox.Show(this,"You have no valid employees. Please click the 'Add' button to add an employee.");
+				MessageBox.Show("You have no valid employees. Please click the 'Add' button to add an employee.");
 				timerBlink.Start();
 			}
 		}

@@ -293,20 +293,15 @@ namespace OpenDental{
 			sb.AppendLine(string.Join(",",gridMain.ListGridColumns.OfType<GridColumn>().Select(x => x.Heading)));
 			gridMain.ListGridRows.OfType<GridRow>().ToList()
 				.ForEach(row => sb.AppendLine(string.Join(",",row.Cells.Select(cell => cell.Text.Replace(',','-').Replace('\t',',')))));
-			if(ODBuild.IsWeb()) {
-				string exportFilename="BenefitsRpt_"+_dtNow.ToString("yyyyMMdd")+"_"+DateTime.Now.ToString("hhmm")+".csv";
-				string dataString=sb.ToString();
-				ThinfinityUtils.ExportForDownload(exportFilename,dataString);
-				return;
-			}
+
 			FolderBrowserDialog fbd = new FolderBrowserDialog();
 			if(fbd.ShowDialog()!=DialogResult.OK || string.IsNullOrEmpty(fbd.SelectedPath)) {
-				MsgBox.Show(this,"Invalid directory.");
+				MessageBox.Show("Invalid directory.");
 				return;
 			}
 			string filename = ODFileUtils.CombinePaths(fbd.SelectedPath,"BenefitsRpt_"+_dtNow.ToString("yyyyMMdd")+"_"+DateTime.Now.ToString("hhmm")+".csv");
 			System.IO.File.WriteAllText(filename,sb.ToString());
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to open the file now?")) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to open the file now?")) {
 				try {
 					System.Diagnostics.Process.Start(filename);
 				}

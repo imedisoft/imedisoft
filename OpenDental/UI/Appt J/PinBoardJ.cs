@@ -287,14 +287,14 @@ namespace OpenDental.UI {
 			}
 			#endregion Provider Term Date Check
 			List<Procedure> procsForSingleApt=Procedures.GetProcsForSingle(apt.AptNum,false);
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Change length for new provider?")){
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Change length for new provider?")){
 				List<long> codeNums=new List<long>();
 				for(int p=0;p<procsForSingleApt.Count;p++) {
 					codeNums.Add(procsForSingleApt[p].CodeNum);
 				}
 				string calcPattern=Appointments.CalculatePattern(apt.ProvNum,apt.ProvHyg,codeNums,true);
 				if(apt.Pattern != calcPattern) {
-					if(!apt.TimeLocked || MsgBox.Show(this,MsgBoxButtons.YesNo,"Appointment length is locked.  Change length for new provider anyway?")) {
+					if(!apt.TimeLocked || MsgBox.Show(MsgBoxButtons.YesNo,"Appointment length is locked.  Change length for new provider anyway?")) {
 						apt.Pattern=calcPattern;
 					}
 				}
@@ -307,7 +307,7 @@ namespace OpenDental.UI {
 				string promptText="";
 				isUpdatingFees=Procedures.ShouldFeesChange(listProcsNew,procsForSingleApt,ref promptText,procFeeHelper);
 				if(isUpdatingFees) {//Made it pass the pref check.
-					if(promptText!="" && !MsgBox.Show(this,MsgBoxButtons.YesNo,promptText)) {
+					if(promptText!="" && !MsgBox.Show(MsgBoxButtons.YesNo,promptText)) {
 							isUpdatingFees=false;
 					}
 				}

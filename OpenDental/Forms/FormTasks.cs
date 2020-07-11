@@ -157,7 +157,7 @@ namespace OpenDental
 					Appointment apt = Appointments.GetOneApt(gotoKeyNum);
 					if (apt == null)
 					{
-						MsgBox.Show(this, "Appointment has been deleted, so it's not available.");
+						MessageBox.Show( "Appointment has been deleted, so it's not available.");
 						return;
 						//this could be a little better, because window has closed, but they will learn not to push that button.
 					}
@@ -165,7 +165,7 @@ namespace OpenDental
 					if (apt.AptStatus == ApptStatus.Planned || apt.AptStatus == ApptStatus.UnschedList)
 					{
 						//I did not add feature to put planned or unsched apt on pinboard.
-						MsgBox.Show(this, "Cannot navigate to appointment.  Use the Other Appointments button.");
+						MessageBox.Show( "Cannot navigate to appointment.  Use the Other Appointments button.");
 						//return;
 					}
 					else

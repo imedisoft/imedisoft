@@ -296,7 +296,7 @@ namespace OpenDental {
 			}
 			Claim claim=Claims.GetClaim(((Claim)gridClaims.ListGridRows[e.Row].Tag).ClaimNum);//This is the easiest way to determine if the claim was deleted.
 			if(claim==null) {//Was deleted.
-				MsgBox.Show(this,"Claim has been deleted by another user.");
+				MessageBox.Show("Claim has been deleted by another user.");
 				gridClaims.BeginUpdate();
 				gridClaims.ListGridRows.RemoveAt(e.Row);//This will also deselect the row.
 				gridClaims.EndUpdate();
@@ -361,7 +361,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridClaims.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"You must select a claim.");
+				MessageBox.Show("You must select a claim.");
 				return;
 			}
 			Claim claimSelected=(Claim)gridClaims.ListGridRows[gridClaims.GetSelectedIndex()].Tag;

@@ -61,7 +61,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"This will delete the criterion def.  Continue?")) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"This will delete the criterion def.  Continue?")) {
 				EvaluationCriterionDefs.Delete(_evalCritDef.EvaluationCriterionDefNum);
 			}
 			DialogResult=DialogResult.OK;
@@ -69,12 +69,12 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDescript.Text=="") {
-				MsgBox.Show(this,"Description cannot be blank.");
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			float points=0;
 			if(_gradeScale.ScaleType==EnumScaleType.Weighted && !float.TryParse(textPoints.Text,out points)) {
-				MsgBox.Show(this,"The specified point value is not a valid number.  Please input a valid number to save the criterion.");
+				MessageBox.Show("The specified point value is not a valid number.  Please input a valid number to save the criterion.");
 				return;
 			}
 			_evalCritDef.CriterionDescript=textDescript.Text;

@@ -190,15 +190,15 @@ namespace OpenDental {
 			EhrAptObsIdentifier ehrAptObsId=(EhrAptObsIdentifier)comboObservationQuestion.SelectedIndex;
 			if(listValueType.SelectedIndex==(int)EhrAptObsType.Address && ehrAptObsId!=EhrAptObsIdentifier.TreatFacilityLocation ||
 				listValueType.SelectedIndex!=(int)EhrAptObsType.Address && ehrAptObsId==EhrAptObsIdentifier.TreatFacilityLocation) {
-				MsgBox.Show(this,"Value type Address must be used with question TreatFacilityLocation.");
+				MessageBox.Show("Value type Address must be used with question TreatFacilityLocation.");
 				return;
 			}
 			if(listValueType.SelectedIndex==(int)EhrAptObsType.Coded && _loincValue==null && _snomedValue==null && _icd9Value==null && _icd10Value==null) {
-				MsgBox.Show(this,"Missing value code.");
+				MessageBox.Show("Missing value code.");
 				return;
 			}
 			if(listValueType.SelectedIndex!=(int)EhrAptObsType.Coded && textValue.Text=="") {
-				MsgBox.Show(this,"Missing value.");
+				MessageBox.Show("Missing value.");
 				return;
 			}
 			_ehrAptObsCur.IdentifyingCode=ehrAptObsId;

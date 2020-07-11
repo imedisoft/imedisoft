@@ -289,7 +289,7 @@ namespace OpenDental{
 
 		private void butLeft_Click(object sender,EventArgs e) {
 			if(listAvailable.SelectedItems.Count==0) {
-				MsgBox.Show(this,"Please select an item in the list on the right first.");
+				MessageBox.Show("Please select an item in the list on the right first.");
 				return;
 			}
 			DisplayField field;
@@ -303,7 +303,7 @@ namespace OpenDental{
 
 		private void butRight_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid on the left first.");
+				MessageBox.Show("Please select an item in the grid on the left first.");
 				return;
 			}
 			for(int i=gridMain.SelectedIndices.Length-1;i>=0;i--){//go backwards
@@ -315,7 +315,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			int[] selected=new int[gridMain.SelectedIndices.Length];
@@ -337,7 +337,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			int[] selected=new int[gridMain.SelectedIndices.Length];

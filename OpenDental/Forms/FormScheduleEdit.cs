@@ -269,21 +269,21 @@ namespace OpenDental{
 			DateTime stopDateT=DateTime.MinValue;
 			if(!_isHolidayOrNote) {
 				if(listOps.SelectedIndices.Count==0){
-					MsgBox.Show(this,"Please select ops first.");
+					MessageBox.Show("Please select ops first.");
 					return;
 				}
 				if(listOps.SelectedIndices.Count>1 && listOps.SelectedIndices.Contains(0)){
-					MsgBox.Show(this,"Invalid selection of ops.");
+					MessageBox.Show("Invalid selection of ops.");
 					return;
 				}
 				startDateT=PIn.DateT(comboStart.Text);
 				stopDateT=PIn.DateT(comboStop.Text);
 				if(startDateT==DateTime.MinValue || stopDateT==DateTime.MinValue) {
-					MsgBox.Show(this,"Incorrect time format");
+					MessageBox.Show("Incorrect time format");
 					return;
 				}
 				if(startDateT>stopDateT) {
-					MsgBox.Show(this,"Stop time must be later than start time.");
+					MessageBox.Show("Stop time must be later than start time.");
 					return;
 				}
 				List<long> listSelectedOps=new List<long>();
@@ -311,7 +311,7 @@ namespace OpenDental{
 				}
 			}
 			else if(SchedCur.Status!=SchedStatus.Holiday && textNote.Text=="") {//don't allow blank schedule notes
-				MsgBox.Show(this,"Please enter a note first.");
+				MessageBox.Show("Please enter a note first.");
 				return;
 			}
 			long clinicNum=0;
@@ -326,7 +326,7 @@ namespace OpenDental{
 					if(listScheds.Any(x => x.ClinicNum==0 || x.ClinicNum==clinicNum)//already a holiday for HQ in db or duplicate holiday for a clinic
 						|| (clinicNum==0 && listScheds.Count>0))//OR trying to create a HQ holiday when a clinic already has one for this day
 					{
-						MsgBox.Show(this,"There is already a Holiday for the practice or clinic on this date.");
+						MessageBox.Show("There is already a Holiday for the practice or clinic on this date.");
 						return;
 					}
 				}

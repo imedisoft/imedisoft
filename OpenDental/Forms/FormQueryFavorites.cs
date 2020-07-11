@@ -338,7 +338,7 @@ namespace OpenDental{
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(UserQueryCur == null) {
-				MsgBox.Show(this,"Please select an item first."); //should never happen.
+				MessageBox.Show("Please select an item first."); //should never happen.
 				return;
 			}
 			ReportSimpleGrid report=new ReportSimpleGrid();
@@ -361,7 +361,7 @@ namespace OpenDental{
 		private void butEdit_Click(object sender,EventArgs e) {
 			//button is disabled for users without Query Admin permission.
 			if(UserQueryCur==null) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			FormQueryEdit FormQE=new FormQueryEdit();
@@ -405,7 +405,7 @@ namespace OpenDental{
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			//button is disabled for users without Query Admin permission.
 			if(UserQueryCur==null){
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(MessageBox.Show(Lan.g(this,"Delete Item?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
@@ -421,7 +421,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(UserQueryCur == null){
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			ReportSimpleGrid report=new ReportSimpleGrid();

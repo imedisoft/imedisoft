@@ -1161,10 +1161,10 @@ namespace OpenDental{
 
 		private void butClear_Click(object sender,EventArgs e) {
 			if(gridPlanned.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select an item first");
+				MessageBox.Show("Please select an item first");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete planned appointment(s)?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete planned appointment(s)?")){
 				return;
 			}
 			for(int i=0;i<gridPlanned.SelectedIndices.Length;i++){
@@ -1175,11 +1175,11 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridPlanned.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(gridPlanned.SelectedIndices.Length>1) {
-				MsgBox.Show(this,"Please only select one item first.");
+				MessageBox.Show("Please only select one item first.");
 				return;
 			}
 			int idx=gridPlanned.SelectedIndices[0];
@@ -1200,11 +1200,11 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridPlanned.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(gridPlanned.SelectedIndices.Length>1) {
-				MsgBox.Show(this,"Please only select one item first.");
+				MessageBox.Show("Please only select one item first.");
 				return;
 			}
 			int idx=gridPlanned.SelectedIndices[0];
@@ -1499,11 +1499,11 @@ namespace OpenDental{
 
 		private bool EntriesAreValid() {
 			if(textProcDate.errorProvider1.GetError(textProcDate)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(!signatureBoxWrapper.IsValid) {
-				MsgBox.Show(this,"Your signature is invalid. Please sign and click OK again.");
+				MessageBox.Show("Your signature is invalid. Please sign and click OK again.");
 				return false;
 			}
 			return true;
@@ -1538,7 +1538,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.GroupNoteEditSigned)) {
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete this group note?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this group note?")){
 				return;
 			}
 			try { 
@@ -1570,7 +1570,7 @@ namespace OpenDental{
 				return;
 			}
 			if(_hasUserChanged && signatureBoxWrapper.SigIsBlank 
-				&& !MsgBox.Show(this,MsgBoxButtons.OKCancel,
+				&& !MsgBox.Show(MsgBoxButtons.OKCancel,
 					"The signature box has not been re-signed.  Continuing will remove the previous signature from this procedure.  Exit anyway?")) 
 			{
 				return;
@@ -1588,7 +1588,7 @@ namespace OpenDental{
 				return;
 			}
 			if(GroupOld.Note.Replace("\r","").Trim()!=textNotes.Text.Replace("\r","").Trim()) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Note has been changed.  Unsaved changes will be lost.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Note has been changed.  Unsaved changes will be lost.  Continue?")) {
 					e.Cancel=true;//Prevent the form from closing.
 					IsOpen=true;
 					return;

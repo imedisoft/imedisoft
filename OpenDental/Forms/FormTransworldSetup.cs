@@ -28,7 +28,7 @@ namespace OpenDental {
 		private void FormTransworldSetup_Load(object sender,EventArgs e) {
 			_progCur=Programs.GetCur(ProgramName.Transworld);
 			if(_progCur==null) {
-				MsgBox.Show(this,"The Transworld entry is missing from the database.  Please contact support.");//should never happen
+				MessageBox.Show("The Transworld entry is missing from the database.  Please contact support.");//should never happen
 				return;
 			}
 			checkEnabled.Checked=_progCur.Enabled;
@@ -249,7 +249,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!string.IsNullOrEmpty(textSftpPort.errorProvider1.GetError(textSftpPort))) {
-				MsgBox.Show(this,"Please enter a valid integer for the Sftp Server Port.");
+				MessageBox.Show("Please enter a valid integer for the Sftp Server Port.");
 				comboClinic.SelectedClinicNum=_selectedClinicNum;
 				return;
 			}
@@ -294,28 +294,28 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!string.IsNullOrEmpty(textSftpPort.errorProvider1.GetError(textSftpPort))) {
-				MsgBox.Show(this,"Please enter a valid integer for the Sftp Server Port.");
+				MessageBox.Show("Please enter a valid integer for the Sftp Server Port.");
 				return;
 			}
 			int sendFreq=(int)numericSendFrequency.Value;
 			DateTime accountUpdatesRuntime=DateTime.MinValue;
 			if(!string.IsNullOrWhiteSpace(textUpdatesTimeOfDay.Text) && !DateTime.TryParse(textUpdatesTimeOfDay.Text,out accountUpdatesRuntime)) {
-				MsgBox.Show(this,"Account Updates Run Time must be blank or a valid time of day.");
+				MessageBox.Show("Account Updates Run Time must be blank or a valid time of day.");
 				return;
 			}
 			if(comboSendFrequencyUnits.SelectedIndex<0 || comboSendFrequencyUnits.SelectedIndex>=Enum.GetNames(typeof(FrequencyUnit)).Length) {
 				//shouldn't be possible, but just in case
-				MsgBox.Show(this,"Please select a valid unit of measurement for the Account Activity Updates repeat frequency.");
+				MessageBox.Show("Please select a valid unit of measurement for the Account Activity Updates repeat frequency.");
 				return;
 			}
 			if(numericSendFrequency.Value<1 || numericSendFrequency.Value>new[] { 30,24,60 }[comboSendFrequencyUnits.SelectedIndex]) {
 				//shouldn't be possible, but just in case
-				MsgBox.Show(this,"Please enter a valid value for the Account Activity Updates repeat frequency.");
+				MessageBox.Show("Please enter a valid value for the Account Activity Updates repeat frequency.");
 				return;
 			}
 			long billTypePaidInFullDefNum=comboPaidInFullBillType.GetSelectedDefNum();
 			if(billTypePaidInFullDefNum==0 && checkEnabled.Checked) {
-				MsgBox.Show(this,"Please select a Paid in Full Billing Type.");
+				MessageBox.Show("Please select a Paid in Full Billing Type.");
 				return;
 			}
 			SyncWithHQ();//will remove any clinic from the dict if all props exactly match the HQ props, or add clinic props if different

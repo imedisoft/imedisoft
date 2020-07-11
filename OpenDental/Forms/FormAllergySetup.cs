@@ -79,7 +79,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//Only visible in IsSelectionMode.
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Select at least one allergy.");
+				MessageBox.Show("Select at least one allergy.");
 				return;
 			}
 			SelectedAllergyDefNum=listAllergyDefs[gridMain.GetSelectedIndex()].AllergyDefNum;

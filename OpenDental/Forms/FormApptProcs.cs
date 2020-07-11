@@ -190,7 +190,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select items first.");
+				MessageBox.Show("Please select items first.");
 				return;
 			}
 			bool isAttachedToOtherApt=false;
@@ -206,7 +206,7 @@ namespace OpenDental {
 				}
 			}
 			if(isAttachedToOtherApt){
-				if(!MsgBox.Show(this,true,"One or more of the procedures is already attached to another appointment.  Attach to this appointment instead?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"One or more of the procedures is already attached to another appointment.  Attach to this appointment instead?")){
 					SelectedProcNums=new List<long>();
 					return;
 				}

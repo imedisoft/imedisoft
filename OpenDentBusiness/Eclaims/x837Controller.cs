@@ -33,14 +33,14 @@ namespace OpenDentBusiness.Eclaims
 		///<summary>Gets the filename for this batch. Used when saving.</summary>
 		private static string GetFileName(Clearinghouse clearinghouseClin,int batchNum,bool isAutomatic) { //called from this.SendBatch. Clinic-level clearinghouse passed in.
 			string saveFolder=clearinghouseClin.ExportPath;
-			if(!ODBuild.IsWeb() && !Directory.Exists(saveFolder)) {
+			if(!Directory.Exists(saveFolder)) {
 				if(!isAutomatic) {
 					MessageBox.Show(saveFolder+" not found.");
 				}
 				return "";
 			}
 			if(clearinghouseClin.CommBridge==EclaimsCommBridge.RECS){
-				if(!ODBuild.IsWeb() && File.Exists(ODFileUtils.CombinePaths(saveFolder,"ecs.txt"))){
+				if(File.Exists(ODFileUtils.CombinePaths(saveFolder,"ecs.txt"))){
 					if(!isAutomatic) {
 						MessageBox.Show(RECSFileExistsMsg);
 					}
@@ -92,30 +92,11 @@ namespace OpenDentBusiness.Eclaims
 					messageText=messageText.Replace("\r","");
 					messageText=messageText.Replace("\n","");
 				}
-				if(ODBuild.IsWeb()) {
-					try {
-						ODCloudClient.ExportClaim(saveFile,messageText,doOverwriteFile:clearinghouseClin.CommBridge!=EclaimsCommBridge.RECS);
-					}
-					catch(ODException odEx) {
-						if(odEx.ErrorCodeAsEnum==ODException.ErrorCodes.FileExists && clearinghouseClin.CommBridge==EclaimsCommBridge.RECS) {
-							MessageBox.Show(RECSFileExistsMsg,"x837");
-						}
-						else {
-							MessageBox.Show(odEx.Message,"x837");
-						}
-						if(odEx.ErrorCodeAsEnum!=ODException.ErrorCodes.ClaimArchiveFailed) {//If archiving failed, we can continue with sending.
-							return "";
-						}
-					}
-					catch(Exception ex) {
-						MessageBox.Show(ex.Message,"x837");
-						return "";
-					}
-				}
-				else {
+
+
 					File.WriteAllText(saveFile,messageText,Encoding.ASCII);
 					CopyToArchive(saveFile);
-				}
+				
 			}
 			return messageText;
 		}

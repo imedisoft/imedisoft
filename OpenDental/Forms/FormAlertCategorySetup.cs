@@ -101,7 +101,7 @@ namespace OpenDental {
 
 		private void butCopy_Click(object sender,EventArgs e) {
 			if(gridInternal.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select an internal alert category from the list first.");
+				MessageBox.Show("Please select an internal alert category from the list first.");
 				return;
 			}
 			InsertCopyAlertCategory(_listInternalAlertCategory[gridInternal.GetSelectedIndex()].Copy());
@@ -109,7 +109,7 @@ namespace OpenDental {
 
 		private void butDuplicate_Click(object sender,EventArgs e) {
 			if(gridCustom.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a custom alert category from the list first.");
+				MessageBox.Show("Please select a custom alert category from the list first.");
 				return;
 			}
 			InsertCopyAlertCategory(_listCustomAlertCategory[gridCustom.GetSelectedIndex()].Copy());

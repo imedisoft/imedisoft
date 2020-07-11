@@ -325,7 +325,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete?")){
 				return;
 			}
 			ProcCodeNotes.Delete(NoteCur.ProcCodeNoteNum);
@@ -335,7 +335,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(listProv.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a provider first.");
+				MessageBox.Show("Please select a provider first.");
 				return;
 			}
 			NoteCur.ProcTime=strBTime.ToString();

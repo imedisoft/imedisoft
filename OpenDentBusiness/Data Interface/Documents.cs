@@ -714,10 +714,6 @@ namespace OpenDentBusiness {
 				OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.Download(ImageStore.GetPatientFolder(patCur,ImageStore.GetPreferredAtoZpath())
 					,docCur.FileName);
 				docPath=PrefC.GetRandomTempFile(ImageStore.GetExtension(docCur));
-				if(ODBuild.IsWeb()) {
-					ThinfinityUtils.HandleFile(docPath);
-					return;
-				}
 				File.WriteAllBytes(docPath,state.FileContent);
 			}
 			Process.Start(docPath);

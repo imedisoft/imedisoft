@@ -521,13 +521,13 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDaysInAdvance.errorProvider1.GetError(textDaysInAdvance)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDunMessage.Text=="" && textMessageBold.Text==""
 				&& textEmailSubject.Text=="" && textEmailBody.Text=="") 
 			{
-				MsgBox.Show(this,"All messages cannot be blank.");
+				MessageBox.Show("All messages cannot be blank.");
 				return;
 			}
 			_dunningCur.BillingType=0;

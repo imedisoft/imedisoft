@@ -52,7 +52,7 @@ namespace OpenDental{
 
 		private void checkEnableClinics_Click(object sender,EventArgs e) {
 			string question="If you are subscribed to eServices, you may need to restart the eConnector when you turn clinics on or off. Continue?";
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,question)) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,question)) {
 				RestoreClinicCheckBox();
 			}
 		}
@@ -60,10 +60,10 @@ namespace OpenDental{
 		private void checkEhr_Click(object sender,EventArgs e) {
 			if(checkEhr.Checked && !File.Exists(ODFileUtils.CombinePaths(Application.StartupPath,"EHR.dll"))){
 				checkEhr.Checked=false;
-				MsgBox.Show(this,"EHR.dll could not be found.");
+				MessageBox.Show("EHR.dll could not be found.");
 				return;
 			}
-			MsgBox.Show(this,"You will need to restart the program for the change to take effect.");
+			MessageBox.Show("You will need to restart the program for the change to take effect.");
 		}
 
 		private void checkRestart_Click(object sender,EventArgs e) {
@@ -139,7 +139,7 @@ namespace OpenDental{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			if(_hasClinicsEnabledChanged) {
-				MsgBox.Show(this,"You will need to restart the program for the change to take effect.");
+				MessageBox.Show("You will need to restart the program for the change to take effect.");
 			}
 			//We should use ToolBut invalidation to redraw toolbars that could've been just enabled and stop forcing customers restarting.
 			//DataValid.SetInvalid(InvalidType.ToolBut);

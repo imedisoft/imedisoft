@@ -336,7 +336,7 @@ namespace OpenDental{
 				&& listExtras.SelectedIndex==-1
 				&& listMessages.SelectedIndex==-1)
 			{
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			int selected;
@@ -373,7 +373,7 @@ namespace OpenDental{
 			if(listToFrom.SelectedIndex==-1
 				&& listExtras.SelectedIndex==-1
 				&& listMessages.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			int selected;

@@ -65,34 +65,34 @@ namespace OpenDental {
 			DateTime start=PIn.DateT(comboStart.SelectedItem.ToString());
 			DateTime stop=PIn.DateT(comboStop.SelectedItem.ToString());
 			if(start.Minute>0 || stop.Minute>0) {
-				MsgBox.Show(this,"Please use hours only, no minutes.");
+				MessageBox.Show("Please use hours only, no minutes.");
 				return false;
 			}
 			//If stop time is the same as start time and not midnight to midnight.
 			if(stop.Hour==start.Hour && (stop.Hour!=0 && start.Hour!=0)) {
-				MsgBox.Show(this,"Start time must be different than stop time.");
+				MessageBox.Show("Start time must be different than stop time.");
 				return false;
 			}
 			if(stop.Hour!=0 && stop.Hour<start.Hour) {//If stop time is earlier than start time.
-				MsgBox.Show(this,"Start time cannot exceed stop time.");
+				MessageBox.Show("Start time cannot exceed stop time.");
 				return false;
 			}
 			if(start==DateTime.MinValue) {
-				MsgBox.Show(this,"Please enter a valid start time.");
+				MessageBox.Show("Please enter a valid start time.");
 				return false;
 			}
 			if(stop==DateTime.MinValue) {
-				MsgBox.Show(this,"Please enter a valid stop time.");
+				MessageBox.Show("Please enter a valid stop time.");
 				return false;
 			}
 			if(textColumnsPerPage.errorProvider1.GetError(textColumnsPerPage)!=""
 				|| textFontSize.errorProvider1.GetError(textFontSize)!="") 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(PIn.Int(textColumnsPerPage.Text)<1) {
-				MsgBox.Show(this,"Columns per page cannot be 0 or less.");
+				MessageBox.Show("Columns per page cannot be 0 or less.");
 				return false;
 			}
 			return true;
@@ -105,7 +105,7 @@ namespace OpenDental {
 				Prefs.UpdateString(PrefName.ApptPrintFontSize,textFontSize.Text);
 				Prefs.UpdateInt(PrefName.ApptPrintColumnsPerPage,PIn.Int(textColumnsPerPage.Text));
 				if(!suppressMessage) {
-					MsgBox.Show(this,"Settings saved.");
+					MessageBox.Show("Settings saved.");
 				}
 			}
 		}
@@ -123,7 +123,7 @@ namespace OpenDental {
 				changed=true;
 			}
 			if(changed) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Save the changes that were made?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Save the changes that were made?")) {
 					SaveChanges(true);
 				}
 			}

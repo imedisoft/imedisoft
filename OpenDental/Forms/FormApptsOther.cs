@@ -85,10 +85,10 @@ namespace OpenDental {
 				|| _patCur.PatStatus==PatientStatus.Archived
 				|| _patCur.PatStatus==PatientStatus.Prospective)
 			{
-				MsgBox.Show(this, "Warning. Patient is not active.");
+				MessageBox.Show( "Warning. Patient is not active.");
 			}
 			if (_patCur.PatStatus==PatientStatus.Deceased) {
-				MsgBox.Show(this, "Warning. Patient is deceased.");
+				MessageBox.Show( "Warning. Patient is deceased.");
 			}
 		}
 
@@ -177,7 +177,7 @@ namespace OpenDental {
 				FormOpenDental.S_Contr_PatientSelected(_patCur,true,false);
 			}
 			if(_patCur!=null && _patCur.PatStatus.In(PatientStatus.Archived,PatientStatus.Deceased)) {
-				MsgBox.Show(this,"Appointments cannot be scheduled for "+_patCur.PatStatus.ToString().ToLower()+" patients.");
+				MessageBox.Show("Appointments cannot be scheduled for "+_patCur.PatStatus.ToString().ToLower()+" patients.");
 				return;
 			}
 			MakeRecallAppointment();
@@ -412,7 +412,7 @@ namespace OpenDental {
 				FormOpenDental.S_Contr_PatientSelected(_patCur,true,false);
 			}
 			if(_patCur!=null && _patCur.PatStatus.In(PatientStatus.Archived,PatientStatus.Deceased)) {
-				MsgBox.Show(this,"Appointments cannot be scheduled for "+_patCur.PatStatus.ToString().ToLower()+" patients.");
+				MessageBox.Show("Appointments cannot be scheduled for "+_patCur.PatStatus.ToString().ToLower()+" patients.");
 				return;
 			}
 			MakeAppointment();
@@ -428,7 +428,7 @@ namespace OpenDental {
 			long aptNum=0;
 			bool isSchedulingUnscheduled=false;
 			if(listUnschedAppts.Count>0 &&
-				 MsgBox.Show(this,MsgBoxButtons.YesNo,"This patient has an unscheduled appointment, would you like to use an existing unscheduled appointment?"))
+				 MsgBox.Show(MsgBoxButtons.YesNo,"This patient has an unscheduled appointment, would you like to use an existing unscheduled appointment?"))
 			{
 				if(listUnschedAppts.Count==1) {
 					aptNum=listUnschedAppts[0].AptNum;
@@ -467,14 +467,14 @@ namespace OpenDental {
 				Operatory opCur=Operatories.GetOperatory(aptCur.Op);
 				if(opCur!=null) {
 					if(opCur.SetProspective && _patCur.PatStatus!=PatientStatus.Prospective) { //Don't need to prompt if patient is already prospective.
-						if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Patient's status will be set to Prospective.")) {
+						if(MsgBox.Show(MsgBoxButtons.OKCancel,"Patient's status will be set to Prospective.")) {
 							Patient patOld=_patCur.Copy();
 							_patCur.PatStatus=PatientStatus.Prospective;
 							Patients.Update(_patCur,patOld);
 						}
 					}
 					else if(!opCur.SetProspective && _patCur.PatStatus==PatientStatus.Prospective) {
-						if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Patient's status will change from Prospective to Patient.")) {
+						if(MsgBox.Show(MsgBoxButtons.OKCancel,"Patient's status will change from Prospective to Patient.")) {
 							Patient patOld=_patCur.Copy();
 							_patCur.PatStatus=PatientStatus.Patient;
 							Patients.Update(_patCur,patOld);
@@ -498,7 +498,7 @@ namespace OpenDental {
 
 		private void butPin_Click(object sender, System.EventArgs e) {
 			if(odApptGrid.SelectedApptOther==null) {
-				MsgBox.Show(this,"Please select appointment first.");
+				MessageBox.Show("Please select appointment first.");
 				return;
 			}
 			if(odApptGrid.IsSelectedApptOtherNull()) {
@@ -544,7 +544,7 @@ namespace OpenDental {
 
 		private void butGoTo_Click(object sender, System.EventArgs e) {
 			if(odApptGrid.SelectedApptOther==null) {
-				MsgBox.Show(this,"Please select appointment first.");
+				MessageBox.Show("Please select appointment first.");
 				return;
 			}
 			if(odApptGrid.IsSelectedApptOtherNull()) {
@@ -552,7 +552,7 @@ namespace OpenDental {
 			}
 			ApptOther aptSelected=odApptGrid.SelectedApptOther;
 			if(aptSelected.AptDateTime.Year<1880) {
-				MsgBox.Show(this,"Unable to go to unscheduled appointment.");
+				MessageBox.Show("Unable to go to unscheduled appointment.");
 				return;
 			}
 			ListAptNumsSelected.Add(aptSelected.AptNum);
@@ -565,7 +565,7 @@ namespace OpenDental {
 			//only used when selecting from TaskList. oResult is completely ignored in this case.
 			//I didn't bother enabling double click. Maybe later.
 			if(odApptGrid.SelectedApptOther==null) {
-				MsgBox.Show(this,"Please select appointment first.");
+				MessageBox.Show("Please select appointment first.");
 				return;
 			}
 			ListAptNumsSelected.Add(odApptGrid.SelectedApptOther.AptNum);

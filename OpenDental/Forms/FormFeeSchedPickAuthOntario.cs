@@ -34,11 +34,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textODAMemberNumber.Text=="") {
-				MsgBox.Show(this,"ODA Member Number cannot be blank.");
+				MessageBox.Show("ODA Member Number cannot be blank.");
 				return;
 			}
 			if(textODAMemberPassword.Text=="") {
-				MsgBox.Show(this,"ODA Member Password cannot be blank.");
+				MessageBox.Show("ODA Member Password cannot be blank.");
 				return;
 			}
 			Prefs.UpdateString(PrefName.CanadaODAMemberNumber,textODAMemberNumber.Text);

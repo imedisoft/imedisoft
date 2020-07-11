@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		private void ButOK_Click(object sender,EventArgs e) {
 			if(textKey.Text=="") {
-				MsgBox.Show(this,"Please enter an API key.");
+				MessageBox.Show("Please enter an API key.");
 				return;
 			}
 			string officeData=PayloadHelper.CreatePayload(PayloadHelper.CreatePayloadContent(textKey.Text,"APIKey"),eServiceCode.FHIR);
@@ -37,7 +37,7 @@ namespace OpenDental {
 				Cursor=Cursors.Default;
 				return;
 			}
-			MsgBox.Show(this,WebSerializer.DeserializeTag<string>(result,"Response"));
+			MessageBox.Show(WebSerializer.DeserializeTag<string>(result,"Response"));
 			DialogResult=DialogResult.OK;
 		}
 

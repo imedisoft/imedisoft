@@ -2094,7 +2094,7 @@ namespace OpenDental{
 				return;
 			}
 			if(comboTobaccoStatus.SelectedIndex==_listTobaccoStatuses.Count
-				&& !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Selecting a code that is not in the recommended list of codes may make "
+				&& !MsgBox.Show(MsgBoxButtons.OKCancel,"Selecting a code that is not in the recommended list of codes may make "
 					+"it more difficult to meet CQM's."))
 			{
 				comboTobaccoStatus.SelectedIndex=-1;
@@ -2201,14 +2201,14 @@ namespace OpenDental{
 		private void tabControlFormMedical_Selecting(object sender,TabControlCancelEventArgs e) {
 			if(!((Control)e.TabPage).Enabled) {
 				e.Cancel=true;
-				MsgBox.Show(this,"The codes used for Tobacco Use Screening assessments do not exist in the LOINC table in your database.  You must run the "
+				MessageBox.Show("The codes used for Tobacco Use Screening assessments do not exist in the LOINC table in your database.  You must run the "
 					+"Code System Importer tool in Setup | Chart | EHR to import this code set before accessing the Tobacco Use Tab.");
 			}
 		}
 
 		private void butAssessed_Click(object sender,EventArgs e) {
 			if(comboTobaccoStatus.SelectedIndex<0 || comboTobaccoStatus.SelectedIndex>=_listTobaccoStatuses.Count) {
-				MsgBox.Show(this,"You must select a tobacco status.");
+				MessageBox.Show("You must select a tobacco status.");
 				return;
 			}
 			DateTime dateTEntered=PIn.DateT(textDateAssessed.Text);
@@ -2228,7 +2228,7 @@ namespace OpenDental{
 
 		private void butIntervention_Click(object sender,EventArgs e) {
 			if(comboInterventionCode.SelectedIndex<0) {
-				MsgBox.Show(this,"You must select an intervention code.");
+				MessageBox.Show("You must select an intervention code.");
 				return;
 			}
 			EhrCode iCodeCur=_listInterventionCodes[comboInterventionCode.SelectedIndex];
@@ -2259,7 +2259,7 @@ namespace OpenDental{
 					return;
 				}
 				if(FormMP.MedicationPatCur.DateStart.Date<dateCur.AddMonths(-6).Date || FormMP.MedicationPatCur.DateStart.Date>dateCur.Date) {
-					MsgBox.Show(this,"The medication order just entered is not within the 6 months prior to the date of this intervention.  You can modify the "
+					MessageBox.Show("The medication order just entered is not within the 6 months prior to the date of this intervention.  You can modify the "
 						+"date of the medication order in the patient's medical history section.");
 				}
 			}

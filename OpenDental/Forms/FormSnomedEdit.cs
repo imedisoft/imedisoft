@@ -32,7 +32,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
 				return;
 			}
 			try {
@@ -50,7 +50,7 @@ namespace OpenDental {
 			SnomedCur.Description=textDescription.Text;
 			if(IsNew) {//Used the "+Add" button to open this form.
 				if(ICD9s.CodeExists(SnomedCur.SnomedCode)) {//Must enter a unique code.
-					MsgBox.Show(this,"You must choose a unique code.");
+					MessageBox.Show("You must choose a unique code.");
 					return;
 				}
 				Snomeds.Insert(SnomedCur);

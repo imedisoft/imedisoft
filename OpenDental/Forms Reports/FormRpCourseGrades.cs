@@ -164,7 +164,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//if(comboSchoolClass.SelectedIndex==-1 || comboSchoolCourse.SelectedIndex==-1){
-			//	MsgBox.Show(this,"Please select a class and course.");
+			//	MessageBox.Show("Please select a class and course.");
 			//	return;
 			//}
 			

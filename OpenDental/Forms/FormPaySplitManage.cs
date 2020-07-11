@@ -437,7 +437,7 @@ namespace OpenDental {
 				//Remaining credits will always be all of one sign.
 					if(!isTest && AmtTotal != 0) {
 						//Don't want the message box to appear if the user did not set a AmtTotal limit for themselves.
-						MsgBox.Show(this,"Payment cannot be automatically allocated because there are no outstanding negative balances.");
+						MessageBox.Show("Payment cannot be automatically allocated because there are no outstanding negative balances.");
 					}
 					return listAutoSplits;//Will be empty
 				}
@@ -804,7 +804,7 @@ namespace OpenDental {
 			decimal payAmt=PIn.Decimal(textPayAmt.Text);
 			decimal splitTotal=PIn.Decimal(textSplitTotal.Text);
 			if(splitTotal != 0 && PaymentCur.PayType == 0) { //income transfer
-				MsgBox.Show(this,"Income transfers must have a split total of 0.");
+				MessageBox.Show("Income transfers must have a split total of 0.");
 				return;
 			}
 			//Create an unallocated split if there is any remaining in the payment amount.
@@ -822,7 +822,7 @@ namespace OpenDental {
 				}
 				split.PayNum=PaymentCur.PayNum;
 				ListSplitsCur.Add(split);
-				MsgBox.Show(this,"Payment split total does not equal payment amount.  An unallocated payment split has been added, please check for correctness.");
+				MessageBox.Show("Payment split total does not equal payment amount.  An unallocated payment split has been added, please check for correctness.");
 				FillGridSplits();
 				return;
 			}
@@ -833,7 +833,7 @@ namespace OpenDental {
 				//Do nothing.
 			}
 			else {
-				MsgBox.Show(this,"Payment amount cannot be less than the total split value.");
+				MessageBox.Show("Payment amount cannot be less than the total split value.");
 				return;
 			}
 			List<AccountEntry> listAdjustmentEntriesPaid = _listAccountCharges.Where(x => x.Tag.GetType() == typeof(Adjustment) && x.AmountAvailable > x.AmountEnd).ToList();
@@ -842,7 +842,7 @@ namespace OpenDental {
 					.Where(x => x.AmountEnd > 0
 						&& (x.Tag.GetType()==typeof(Procedure) || x.Tag.GetType()==typeof(PayPlanCharge))
 						&& x.Date < adjEntry.Date).Count()>0) {
-					if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Splits to adjustments exist when there are older procedures or payment plan charges not paid "
+					if(MsgBox.Show(MsgBoxButtons.OKCancel,"Splits to adjustments exist when there are older procedures or payment plan charges not paid "
 						+"off. This can cause line item accounting to be off for future splits made in the Paysplit manager.  Do you want to continue?")) {
 						break; //they want to continue. Only ever show this msgbox once.
 					}

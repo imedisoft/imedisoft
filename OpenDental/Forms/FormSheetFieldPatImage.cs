@@ -39,7 +39,7 @@ namespace OpenDental {
                 return;
             }
 			if(comboImageCategory.SelectedIndex<0) {
-				MsgBox.Show(this,"Please select an image category first.");
+				MessageBox.Show("Please select an image category first.");
 				return;
 			}
 			SheetFieldDefCur.FieldName=_listImageCatDefs[comboImageCategory.SelectedIndex].DefNum.ToString();

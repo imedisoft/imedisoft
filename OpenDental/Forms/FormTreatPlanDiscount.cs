@@ -30,7 +30,7 @@ namespace OpenDental {
 			int countProcsLinkedToOrthoCase=0;
 			float percent=0;//Placeholder
 			if(!float.TryParse(textPercentage.Text,out percent)) {
-				MsgBox.Show(this,"Percent is invalid. Please enter a valid number to continue.");
+				MessageBox.Show("Percent is invalid. Please enter a valid number to continue.");
 				return;
 			}
 			bool hasDiscount=false;
@@ -41,7 +41,7 @@ namespace OpenDental {
 				}
 			}
 			if(hasDiscount //A discount exists for a procedure
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"One or more of the selected procedures has a discount value already set.  This will overwrite current discount values with a new value.  Continue?")) 
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"One or more of the selected procedures has a discount value already set.  This will overwrite current discount values with a new value.  Continue?")) 
 			{
 				return;
 			}

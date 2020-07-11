@@ -374,7 +374,7 @@ namespace OpenDental{
 
 		private void menuRight_click(object sender,System.EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			switch(menuRightClick.Items.IndexOf((ToolStripMenuItem)sender)) {
@@ -486,7 +486,7 @@ namespace OpenDental{
 
 		private void SeeChart_Click() {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			//Only one can be selected at a time in this grid, but just in case we change it in the future it will select the last one in the list to be consistent with other patient selections.
@@ -497,7 +497,7 @@ namespace OpenDental{
 
 		private void SendPinboard_Click() {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			List<long> listAppts=new List<long>();

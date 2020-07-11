@@ -17,7 +17,6 @@ namespace OpenDental{
 		private System.Windows.Forms.Label labelPatName;
 		private System.Windows.Forms.TextBox textBoxCarrier;
 		private System.ComponentModel.Container components = null;
-		private FormQuery FormQuery2;
 		private string carrier;
 
 		///<summary></summary>

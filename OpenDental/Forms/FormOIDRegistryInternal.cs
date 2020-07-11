@@ -124,12 +124,12 @@ namespace OpenDental {
 			//Process a valid return value------------------------------------------------------------------------------------------------
 			node=doc.SelectSingleNode("//CustomerIdResponse");
 			if(node==null) {
-				MsgBox.Show(this,"There was an error requesting your OID or processing the result of the request.  Please try again.");
+				MessageBox.Show("There was an error requesting your OID or processing the result of the request.  Please try again.");
 				return;
 			}
 			if(node.InnerText=="") {
 				labelRetrieveStatus.Text="";
-				MsgBox.Show(this,"Invalid registration key.  Your OIDs will have to be set manually.");
+				MessageBox.Show("Invalid registration key.  Your OIDs will have to be set manually.");
 				return;
 			}
 			//CustomerIdResponse has been returned and is not blank, use it for the root displayed as the recommended value
@@ -146,7 +146,7 @@ namespace OpenDental {
 				}
 			}
 			//ask if they want to overwrite the current actual values with the recommended values
-			if(customOIDsExist && !MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to update all OIDs using the root provided by Open Dental?")) {
+			if(customOIDsExist && !MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to update all OIDs using the root provided by Open Dental?")) {
 				FillGrid();
 				return;
 			}

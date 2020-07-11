@@ -1008,11 +1008,6 @@ namespace OpenDental {
 			if(string.IsNullOrWhiteSpace(textBoxUpdateInProg.Text)) {
 				butClearUpdateInProgress.Enabled=false;
 			}
-			if(ODBuild.IsWeb()) {
-				//If the office converted their db to MyISAM, their backups would stop working.
-				butInnoDB.Visible=false;
-				labelInnoDb.Visible=false;
-			}
 		}
 
 		private void FillGrid() {
@@ -1218,17 +1213,17 @@ namespace OpenDental {
 		}
 
 		private void butApptProcs_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will fix procedure descriptions in the Appt module that aren't correctly showing tooth numbers.\r\nContinue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will fix procedure descriptions in the Appt module that aren't correctly showing tooth numbers.\r\nContinue?")) {
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
 			Appointments.UpdateProcDescriptForAppts(Appointments.GetForPeriod(DateTime.Now.Date.AddMonths(-6),DateTime.MaxValue.AddDays(-10)).ToList());
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Done. Please refresh Appt module to see the changes.");
+			MessageBox.Show("Done. Please refresh Appt module to see the changes.");
 		}
 
 		private void butSpecChar_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This is only used if your mobile synch or middle tier is failing.  This cannot be undone.  Do you wish to continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This is only used if your mobile synch or middle tier is failing.  This cannot be undone.  Do you wish to continue?")) {
 				return;
 			}
 			InputBox box=new InputBox("In our online manual, on the database maintenance page, look for the password and enter it below.");
@@ -1240,7 +1235,7 @@ namespace OpenDental {
 				return;
 			}
 			DatabaseMaintenances.FixSpecialCharacters();
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 			_isCacheInvalid=true;//Definitions are cached and could have been changed from above DBM.
 		}
 
@@ -1255,7 +1250,7 @@ namespace OpenDental {
 		}
 
 		private void butRemoveNulls_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will replace ALL null strings in your database with empty strings.  This cannot be undone.  Do you wish to continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will replace ALL null strings in your database with empty strings.  This cannot be undone.  Do you wish to continue?")) {
 				return;
 			}
 			MessageBox.Show(Lan.g(this,"Number of null strings replaced with empty strings")+": "+DatabaseMaintenances.MySqlRemoveNullStrings());
@@ -1264,20 +1259,20 @@ namespace OpenDental {
 
 		private void butEtrans_Click(object sender,EventArgs e) {
 			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				MsgBox.Show(this,"Tool does not currently support Oracle.  Please call support to see if you need this fix.");
+				MessageBox.Show("Tool does not currently support Oracle.  Please call support to see if you need this fix.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will clear out etrans message text entries over a year old.  An automatic backup of the database will be created before deleting any entries.  This process may take a while to run depending on the size of your database.  Continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will clear out etrans message text entries over a year old.  An automatic backup of the database will be created before deleting any entries.  This process may take a while to run depending on the size of your database.  Continue?")) {
 				return;
 			}
 #if !DEBUG
 			if(!Shared.MakeABackup(BackupLocation.DatabaseMaintenanceTool)) {
-				MsgBox.Show(this,"Etrans message text entries were not altered.  Please try again.");
+				MessageBox.Show("Etrans message text entries were not altered.  Please try again.");
 				return;
 			}
 #endif
 			DatabaseMaintenances.ClearOldEtransMessageText();
-			MsgBox.Show(this,"Etrans message text entries over a year old removed");
+			MessageBox.Show("Etrans message text entries over a year old removed");
 		}
 
 		private void butActiveTPs_Click(object sender,EventArgs e) {
@@ -1285,7 +1280,7 @@ namespace OpenDental {
 			List<Procedure> listTpTpiProcs=DatabaseMaintenances.GetProcsNoActiveTp();
 			Cursor=Cursors.Default;
 			if(listTpTpiProcs.Count==0) {
-				MsgBox.Show(this,"Done");
+				MessageBox.Show("Done");
 				return;
 			}
 			int numTPs=listTpTpiProcs.Select(x => x.PatNum).Distinct().ToList().Count;
@@ -1294,7 +1289,7 @@ namespace OpenDental {
 			//the factor 0.001 was determined by running tests on a large db
 			//212631 TPAs and 30000 TPs were inserted in 225 seconds
 			//225/(212631+30000)=0.0009273341 seconds per inserted row (rounded up to 0.001 seconds)
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"From your database size we estimate that this could take "+(estRuntime.Minutes+1)+" minutes to create "
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"From your database size we estimate that this could take "+(estRuntime.Minutes+1)+" minutes to create "
 				+numTPs+" treatment plans for "+numTPAs+" procedures if running form the server.\r\nDo you wish to continue?"))
 			{
 				return;
@@ -1305,11 +1300,11 @@ namespace OpenDental {
 			if(string.IsNullOrEmpty(msg)) {
 				msg="Done";
 			}
-			MsgBox.Show(this,msg);
+			MessageBox.Show(msg);
 		}
 
 		private void butRawEmails_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo
+			if(!MsgBox.Show(MsgBoxButtons.YesNo
 				,"This tool is only necessary to run if utilizing the email inbox feature.\r\n"
 				+"Run this tool if email messages are encoded in the Chart progress notes, \r\n"
 				+"or if the emailmessage table has grown to a large size.\r\n"
@@ -1331,7 +1326,7 @@ namespace OpenDental {
 		}
 
 		private void butEmailAttaches_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo
+			if(!MsgBox.Show(MsgBoxButtons.YesNo
 				,"This tool is only necessary to run if utilizing the email feature.\r\n"
 				+"Run this tool if there are files that start with 'In_' or 'Out_' within the AtoZ EmailAttachments folder.  "
 				+"The issue is evident when trying to view an attachment and a file not found error occurs.\r\n\r\n"
@@ -1351,7 +1346,7 @@ namespace OpenDental {
 		}
 
 		private void butRecalcEst_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo
+			if(!MsgBox.Show(MsgBoxButtons.YesNo
 				,"This tool will mimic what happens when you click OK in the procedure edit window.  "
 				+"The tool will identify patients with at least one estimate which belongs to a dropped insurance plan.  "
 				+"For each such patient, estimates will be recalculated for current plans, and  "
@@ -1366,7 +1361,7 @@ namespace OpenDental {
 		}
 		
 		private void butPayPlanPayments_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo
+			if(!MsgBox.Show(MsgBoxButtons.YesNo
 				,"You are running a tool to detach patient payments from insurance payment plans and detach insurance payments from patient payment plans.  "
 				+"The payments will still exist, and because they will now be reflected in the account instead of the payment plan, historical and "
 				+"current account balances may change.  Proceed?"))
@@ -1392,7 +1387,7 @@ namespace OpenDental {
 				return;
 			}
 			if(inputbox.textResult.Text!="ConversionsDepartment") {
-				MsgBox.Show(this,"Wrong password");
+				MessageBox.Show("Wrong password");
 				return;
 			}
 			if(Security.IsAuthorized(Permissions.SecurityAdmin)) {
@@ -1412,7 +1407,7 @@ namespace OpenDental {
 				}
 				if(inputbox.textResult.Text!="abracadabra") {
 					_redundantPasswordEntered=false;
-					MsgBox.Show(this,"Wrong password");
+					MessageBox.Show("Wrong password");
 					return;
 				}
 				_redundantPasswordEntered=true;
@@ -1433,7 +1428,7 @@ namespace OpenDental {
 			_isCancelled=false;
 			Cursor=Cursors.WaitCursor;
 			if(grid.ListGridRows.Count > 0 && grid.ListGridColumns.Count < 3) {//Enforce the requirement of having the Results column as the third column.
-				MsgBox.Show(this,"Must have at least three columns in the grid.");
+				MessageBox.Show("Must have at least three columns in the grid.");
 				return;
 			}
 			int colresults=2;
@@ -1705,7 +1700,7 @@ namespace OpenDental {
 		private void Fix(bool isOld=false) {
 			List<Computer> runningComps=Computers.GetRunningComputers();
 			if(runningComps.Count>50) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"WARNING!\r\nMore than 50 workstations are connected to this database. "
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"WARNING!\r\nMore than 50 workstations are connected to this database. "
 					+"Running DBM may cause severe network slowness. "
 					+"We recommend running this tool when fewer users are connected (possibly after working hours). \r\n\r\n"
 					+"Continue?")) {

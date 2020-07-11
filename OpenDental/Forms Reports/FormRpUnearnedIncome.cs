@@ -135,16 +135,16 @@ namespace OpenDental {
 		private void butUnearnedAllocationOK_Click(object sender,EventArgs e) {
 			if(PrefC.HasClinicsEnabled) {
 				if(!checkUnearnedAllocationAllClins.Checked && listUnearnedAllocationClins.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"At least one clinic must be selected.");
+					MessageBox.Show("At least one clinic must be selected.");
 					return;
 				}
 			}
 			if(!checkUnearnedAllocationAllProvs.Checked && listUnearnedAllocationProvs.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(!checkUnearnedAllocationAllTypes.Checked && listUnearnedAllocationTypes.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one unearned type must be selected.");
+				MessageBox.Show("At least one unearned type must be selected.");
 				return;
 			}
 			List<long> listClinicNums = listUnearnedAllocationClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.ClinicNum).ToList();
@@ -250,16 +250,16 @@ namespace OpenDental {
 		private void butNetUnearnedOK_Click(object sender,EventArgs e) {
 			if(PrefC.HasClinicsEnabled) {
 				if(!checkNetUnearnedAllClins.Checked && listNetUnearnedClins.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"At least one clinic must be selected.");
+					MessageBox.Show("At least one clinic must be selected.");
 					return;
 				}
 			}
 			if(!checkNetUnearnedAllProvs.Checked && listNetUnearnedProvs.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(!checkNetUnearnedAllTypes.Checked && listNetUnearnedTypes.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one unearned type must be selected.");
+				MessageBox.Show("At least one unearned type must be selected.");
 				return;
 			}
 			List<long> listClinicNums = listNetUnearnedClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.ClinicNum).ToList();
@@ -325,12 +325,12 @@ namespace OpenDental {
 
 		private void butLineItemOK_Click(object sender,EventArgs e) {
 			if(dateLineItemTo.SelectionStart<dateLineItemFrom.SelectionStart) {
-				MsgBox.Show(this,"End date cannot be before start date.");
+				MessageBox.Show("End date cannot be before start date.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(!checkLineItemAllClins.Checked && listLineItemClins.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"At least one clinic must be selected.");
+					MessageBox.Show("At least one clinic must be selected.");
 					return;
 				}
 			}
@@ -403,7 +403,7 @@ namespace OpenDental {
 		private void butUnearnedAcctOk_Click(object sender,EventArgs e) {
 			if(PrefC.HasClinicsEnabled) {
 				if(!checkUnearnedAcctAllClins.Checked && listUnearnedAcctClins.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"At least one clinic must be selected.");
+					MessageBox.Show("At least one clinic must be selected.");
 					return;
 				}
 			}

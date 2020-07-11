@@ -357,7 +357,7 @@ namespace OpenDental{
 
 		private void butAdd_Click(object sender, System.EventArgs e) {
 			if(comboClassFrom.SelectedIndex==-1 || comboCourseFrom.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a Class and Course first.");
+				MessageBox.Show("Please select a Class and Course first.");
 				return;
 			}
 			FormReqNeededEdit FormR=new FormReqNeededEdit();
@@ -372,7 +372,7 @@ namespace OpenDental{
 			if(_listReqsInGrid.Any(x => x.Descript==FormR.ReqCur.Descript//Alternative to LINQ would be to create a method and loop through the whole list
 					&& x.SchoolClassNum==FormR.ReqCur.SchoolClassNum 
 					&& x.SchoolCourseNum==FormR.ReqCur.SchoolCourseNum)) {
-				MsgBox.Show(this,"Requirement already exist.");
+				MessageBox.Show("Requirement already exist.");
 				return;
 			}
 			_listReqsAll.Add(FormR.ReqCur);
@@ -399,10 +399,10 @@ namespace OpenDental{
 
 		private void butCopy_Click(object sender,EventArgs e) {
 			if(comboClassTo.SelectedIndex==-1 ||comboCourseTo.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a Class and Course first.");
+				MessageBox.Show("Please select a Class and Course first.");
 				return;
 			}
-			if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Are you sure you would like to copy over the requirements? Doing so will not replace any previous requirements.")) {
+			if(MsgBox.Show(MsgBoxButtons.OKCancel,"Are you sure you would like to copy over the requirements? Doing so will not replace any previous requirements.")) {
 				long schoolClassFrom=_listSchoolClasses[comboClassFrom.SelectedIndex].SchoolClassNum;
 				long schoolClassTo=_listSchoolClasses[comboClassTo.SelectedIndex].SchoolClassNum;
 				long schoolCourseFrom=_listSchoolCourses[comboCourseFrom.SelectedIndex].SchoolCourseNum;
@@ -432,16 +432,16 @@ namespace OpenDental{
 
 		/*private void butSynch_Click(object sender,EventArgs e) {
 			if(comboClass.SelectedIndex==-1 || comboCourse.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a Class and Course first.");
+				MessageBox.Show("Please select a Class and Course first.");
 				return;
 			}
 			ReqNeededs.Synch(SchoolClasses.List[comboClass.SelectedIndex].SchoolClassNum,
 				SchoolCourses.List[comboCourse.SelectedIndex].SchoolCourseNum);
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}*/
 
 		private void butDeleteReq_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Are you sure you would like to delete all requirements needed?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Are you sure you would like to delete all requirements needed?")) {
 				return;
 			}
 			for(int i=0;i<_listReqsInGrid.Count;i++) {

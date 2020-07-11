@@ -98,15 +98,15 @@ namespace OpenDental {
 
 		private bool IsTemplateValid() {
 			if(string.IsNullOrEmpty(textTemplateName.Text)) {
-				MsgBox.Show(this,"Template must have a name.");
+				MessageBox.Show("Template must have a name.");
 				return false;
 			}
 			if(string.IsNullOrEmpty(textSubject.Text)) {
-				MsgBox.Show(this,"Template must have a subject.");
+				MessageBox.Show("Template must have a subject.");
 				return false;
 			}
 			if(string.IsNullOrEmpty(textboxPlainText.Text)) {
-				MsgBox.Show(this,"Template must have plain text body.");
+				MessageBox.Show("Template must have plain text body.");
 				return false;
 			}
 			return true;
@@ -209,7 +209,7 @@ namespace OpenDental {
 
 		private void butCancel_Click(object sender,EventArgs e) {
 			if(_isImportOrCopy  &&
-				!MsgBox.Show(this,MsgBoxButtons.YesNo,"Canceling will cause a loss of all work. Do you want to continue?")) 
+				!MsgBox.Show(MsgBoxButtons.YesNo,"Canceling will cause a loss of all work. Do you want to continue?")) 
 			{
 				return;
 			}

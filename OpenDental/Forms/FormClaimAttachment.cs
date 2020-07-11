@@ -40,7 +40,7 @@ namespace OpenDental {
 			}
 			//Non-DXC numbers (NEA) can be wiped out as they are no longer supported by DentalXChange starting 12/01/19.
 			if(!string.IsNullOrWhiteSpace(_claimCur.AttachmentID) && !_claimCur.AttachmentID.ToLower().StartsWith("dxc") && 
-				MsgBox.Show(this,MsgBoxButtons.YesNo,"The claim has a non DentalXChange Attachment ID. Would you like to clear it out?")) 
+				MsgBox.Show(MsgBoxButtons.YesNo,"The claim has a non DentalXChange Attachment ID. Would you like to clear it out?")) 
 			{
 				ClearAttachmentID();
 			}
@@ -234,7 +234,7 @@ namespace OpenDental {
 				}
 			}
 			catch(ODException ode) {
-				MsgBox.Show(this,ode.Message);
+				MessageBox.Show(ode.Message);
 			}
 			catch(ExternalException ee) {
 				FriendlyException.Show(Lan.g(this,"The clipboard could not be accessed. This typically occurs when the clipboard is being used by another process."),ee);
@@ -334,7 +334,7 @@ namespace OpenDental {
 		private void buttonOK_Click(object sender,EventArgs e) {
 			//The user must create an image or narrative attachment before sending.
 			if(gridAttachedImages.ListGridRows.Count==0 && textNarrative.Text.Trim().Length==0) {
-				MsgBox.Show(this,"An image or narrative must be specified before continuing.");
+				MessageBox.Show("An image or narrative must be specified before continuing.");
 				return;
 			}
 			try {
@@ -354,7 +354,7 @@ namespace OpenDental {
 			}
 			//Validate the claim, if it isn't valid let the user decide if they want to continue
 			if(!ValidateClaimHelper()) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"There were errors validating the claim, would you like to continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"There were errors validating the claim, would you like to continue?")) {
 					return;
 				}
 			}

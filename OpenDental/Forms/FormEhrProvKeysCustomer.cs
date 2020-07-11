@@ -176,7 +176,7 @@ namespace OpenDental {
 				MessageBox.Show("Unable to save file: "+ex.Message);
 				return;
 			}
-			MsgBox.Show(this,"Saved.");
+			MessageBox.Show("Saved.");
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

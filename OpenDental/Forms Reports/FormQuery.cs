@@ -102,7 +102,7 @@ namespace OpenDental{
 				ODClipboard.SetClipboard(textQuery.Text);
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Could not copy contents to the clipboard.  Please try again.");
+				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
 				ex.DoNothing();
 			}
 		}
@@ -159,10 +159,7 @@ namespace OpenDental{
 				fileName="queryexport.txt";
 			}
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
-			if(ODBuild.IsWeb()) {
-				//file download dialog will come up later, after file is created.
-			}
-			else {
+
 				saveFileDialog2=new SaveFileDialog();
 				saveFileDialog2.AddExtension=true;
 				//saveFileDialog2.Title=Lan.g(this,"Select Folder to Save File To");
@@ -192,7 +189,7 @@ namespace OpenDental{
 					return;
 				}
 				filePath=saveFileDialog2.FileName;
-			}
+			
 			try{
 			  using(StreamWriter sw=new StreamWriter(filePath,false))
 					//new FileStream(,FileMode.Create,FileAccess.Write,FileShare.Read)))
@@ -238,12 +235,9 @@ namespace OpenDental{
         MessageBox.Show(Lan.g(this,"File in use by another program.  Close and try again."));
 				return;
 			}
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(filePath);
-			}
-			else {
+
 				MessageBox.Show(Lan.g(this,"File created successfully"));
-			}
+			
 		}
 
 		private void butFavorites_Click(object sender, System.EventArgs e) {
@@ -269,14 +263,10 @@ namespace OpenDental{
 		private void butPaste_Click(object sender, System.EventArgs e){
 			IDataObject iData;
 			try {
-				if(ODBuild.IsWeb()) {
-					textQuery.Text=ODClipboard.GetText();
-					return;
-				}
 				iData=Clipboard.GetDataObject();
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Could not paste contents from the clipboard.  Please try again.");
+				MessageBox.Show("Could not paste contents from the clipboard.  Please try again.");
 				ex.DoNothing();
 				return;
 			}
@@ -978,7 +968,7 @@ namespace OpenDental{
 				switch(_queryExceptionStateCur) {
 					case QueryExceptionState.Interrupt:
 						_queryExceptionStateCur=QueryExceptionState.Suppress;
-						MsgBox.Show(this,"Query execution interrupted.");
+						MessageBox.Show("Query execution interrupted.");
 						break;
 					case QueryExceptionState.Suppress:
 						//Swallow any errors.

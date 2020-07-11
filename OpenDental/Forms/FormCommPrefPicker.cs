@@ -50,7 +50,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a communication preference first.");
+				MessageBox.Show("Please select a communication preference first.");
 				return;
 			}
 			ContMethCur=(ContactMethod)gridMain.GetSelectedIndex();

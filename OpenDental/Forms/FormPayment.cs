@@ -471,7 +471,7 @@ namespace OpenDental {
 				return;
 			}
 			if(string.IsNullOrWhiteSpace(_paymentCur.Receipt)) {
-				MsgBox.Show(this,"There is no receipt to send for this payment.");
+				MessageBox.Show("There is no receipt to send for this payment.");
 				return;
 			}
 			List<string> errors=new List<string>();
@@ -513,7 +513,7 @@ namespace OpenDental {
 		private void butPay_Click(object sender,EventArgs e) {
 			if(checkPayTypeNone.Checked) {//Income transfer mode.
 				if(!gridSplits.ListGridRows.IsNullOrEmpty()) {
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Performing a transfer will overwrite all Current Payment Splits.  Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Performing a transfer will overwrite all Current Payment Splits.  Continue?")) {
 						return;
 					}
 				}
@@ -565,7 +565,7 @@ namespace OpenDental {
 			if(comboCreditCards.SelectedIndex < _listCreditCards.Count) {
 				CreditCard cc=_listCreditCards[comboCreditCards.SelectedIndex];
 				if(cc!=null && cc.CCSource==CreditCardSource.PayConnectPortal) {
-					MsgBox.Show(this,"The selected credit card can only be used to void and return payments made with this card.  Use the Void and Return buttons in this window instead.");
+					MessageBox.Show("The selected credit card can only be used to void and return payments made with this card.  Use the Void and Return buttons in this window instead.");
 					return;
 				}
 			}
@@ -584,11 +584,11 @@ namespace OpenDental {
 
 		private void butPrePay_Click(object sender,EventArgs e) {
 			if(PIn.Double(textAmount.Text)==0) {
-				MsgBox.Show(this,"Amount cannot be zero.");
+				MessageBox.Show("Amount cannot be zero.");
 				return;
 			}
 			if(_listSplitsCur.Count>0) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"This will replace all Payment Splits with one split for the total amount.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will replace all Payment Splits with one split for the total amount.  Continue?")) {
 					return;
 				}
 			}
@@ -819,7 +819,7 @@ namespace OpenDental {
 			//_listUserClinicNums contains all clinics the user has access to as well as ClinicNum 0 for 'none'
 			_paymentCur.ClinicNum=comboClinic.SelectedClinicNum;
 			if(_listSplitsCur.Count>0) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Change clinic for all splits?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Change clinic for all splits?")) {
 					return;
 				}
 				_listSplitsCur.ForEach(x => x.ClinicNum=_paymentCur.ClinicNum);
@@ -943,7 +943,7 @@ namespace OpenDental {
 		///<summary>Returns true if the user can add a new credit card.</summary>
 		private bool CanAddNewCreditCard(Program prog,string progPropertyDescription) {
 			if(comboCreditCards.GetSelected<CreditCard>()==null) {
-				MsgBox.Show(this,"Invalid credit card selected.");
+				MessageBox.Show("Invalid credit card selected.");
 				return false;
 			}
 			bool hasPreventCcAdd=PIn.Bool(ProgramProperties.GetPropVal(prog.ProgramNum,progPropertyDescription,_paymentCur.ClinicNum));
@@ -962,7 +962,7 @@ namespace OpenDental {
 				hasToken=true;
 			}
 			if(hasPreventCcAdd && (ccSelected.CreditCardNum==0 || !hasToken)) {
-				MsgBox.Show(this,"Cannot add a new credit card.");
+				MessageBox.Show("Cannot add a new credit card.");
 				return false;
 			}
 			return true;
@@ -1107,12 +1107,20 @@ namespace OpenDental {
 			FormAE.ShowDialog();
 			if(FormAE.DialogResult==DialogResult.OK) {
 				decimal amount=FormAE.Amount;
+				
 				//Warn the user if they chose to overpay the selected account entries which will put them into the negative.
-				if(amountEndTotal < amount) {
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"One or more Outstanding Charges will be negative.  Continue?","Overpaid Charge Warning")) {
+				if (amountEndTotal < amount)
+				{
+					var result = MessageBox.Show(this,
+						"One or more Outstanding Charges will be negative. Continue?", "Overpaid Charge Warning",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+					if (result == DialogResult.No)
+					{
 						return;
 					}
 				}
+
 				foreach(AccountEntry entry in arrayAccountEntries) {
 					if(amount.IsLessThanOrEqualToZero()) {
 						return;
@@ -1153,7 +1161,7 @@ namespace OpenDental {
 			bool suppressMessage=false;
 			foreach(PaySplit paySplit in gridSplits.SelectedTags<PaySplit>()) {
 				if(paySplit.SplitNum!=0 && _loadData.ListPaySplitAllocations.Any(x => x.FSplitNum==paySplit.SplitNum && x.PayNum!=paySplit.PayNum)) {
-					MsgBox.Show(this,"Splits in this payment have been allocated elsewhere.  Please delete those first.");
+					MessageBox.Show("Splits in this payment have been allocated elsewhere.  Please delete those first.");
 					return;
 				}
 				if(paySplit.DateEntry!=DateTime.MinValue && !Security.IsAuthorized(Permissions.PaymentEdit,paySplit.DatePay,suppressMessage)) {
@@ -1977,7 +1985,7 @@ namespace OpenDental {
 		private bool HasXCharge() {
 			_listPaymentTypeDefs=_listPaymentTypeDefs??Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
 			if(_xProg==null) {
-				MsgBox.Show(this,"X-Charge entry is missing from the database.");//should never happen
+				MessageBox.Show("X-Charge entry is missing from the database.");//should never happen
 				return false;
 			}
 			bool isSetupRequired=false;
@@ -2002,7 +2010,7 @@ namespace OpenDental {
 			//if X-Charge is enabled and the Username and Password is set and the PaymentType is a valid DefNum,
 			//make sure the path (either local override or program path) is valid
 			if(!isSetupRequired && !File.Exists(_xPath)) {
-				MsgBox.Show(this,"Path is not valid.");
+				MessageBox.Show("Path is not valid.");
 				isSetupRequired=true;
 			}
 			//if setup is required and the user is authorized for setup, load the X-Charge setup form, but return false so the validation can happen again
@@ -2076,7 +2084,7 @@ namespace OpenDental {
 		private void PayConnectReturn() {
 			string refNum=_payConnectResponseWeb.RefNumber;
 			if(refNum.IsNullOrEmpty()) {
-				MsgBox.Show(this,"Missing PayConnect Reference Number. This return cannot be processed.");
+				MessageBox.Show("Missing PayConnect Reference Number. This return cannot be processed.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -2085,13 +2093,13 @@ namespace OpenDental {
 				return;
 			}
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Return successful.");
+			MessageBox.Show("Return successful.");
 		}
 
 		private void PayConnectVoid() {
 			string refNum=_payConnectResponseWeb.RefNumber;
 			if(refNum.IsNullOrEmpty()) {
-				MsgBox.Show(this,"Missing PayConnect Reference Number. This void cannot be processed.");
+				MessageBox.Show("Missing PayConnect Reference Number. This void cannot be processed.");
 				butVoid.Enabled=false;
 				return;
 			}
@@ -2101,7 +2109,7 @@ namespace OpenDental {
 				return;
 			}
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Void successful.");
+			MessageBox.Show("Void successful.");
 		}
 
 		private void PrintReceipt(string receiptStr,string strAuditDescription) {//TODO: Implement ODprintout pattern - MigraDoc
@@ -2147,12 +2155,12 @@ namespace OpenDental {
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date
 					&& !PrefC.GetBool(PrefName.FutureTransDatesAllowed) && !PrefC.GetBool(PrefName.AccountAllowFutureDebits))
 			{
-				MsgBox.Show(this,"Payment date cannot be in the future.");
+				MessageBox.Show("Payment date cannot be in the future.");
 				return false;
 			}
 			if(checkPayTypeNone.Checked) {
 				if(PIn.Double(textAmount.Text)!=0) {
-					MsgBox.Show(this,"Amount must be zero for a transfer.");
+					MessageBox.Show("Amount must be zero for a transfer.");
 					return false;
 				}
 			}
@@ -2163,20 +2171,20 @@ namespace OpenDental {
 					return false;
 				}
 				if(amt!=0 && listPayType.SelectedIndex==-1) {
-					MsgBox.Show(this,"A payment type must be selected.");
+					MessageBox.Show("A payment type must be selected.");
 					return false;
 				}
 			}
 			if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
 				if(_listSplitsCur.Any(x => x.ProcNum==0 && x.UnearnedType==0 && x.AdjNum==0)) {//if no procs and no adjust and not an unearned type
-					MsgBox.Show(this,"A procedure, adjustment, or unearned type must be selected for each of the payment splits.");
+					MessageBox.Show("A procedure, adjustment, or unearned type must be selected for each of the payment splits.");
 					return false;
 				}
 			}
 			double unearnedCur=_listSplitsCur.FindAll(x => x.UnearnedType>0).Sum(x => x.SplitAmt);
 			if(unearnedCur.IsLessThan(0)
 				&& !(unearnedCur+(double)PaySplits.GetUnearnedForFam(_famCur,payNumExcluded:_paymentCur.PayNum)).IsGreaterThanOrEqualToZero()
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"You are attempting to create a negative unearned amount. Continue?"))
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"You are attempting to create a negative unearned amount. Continue?"))
 			{
 				return false;
 			}
@@ -2245,21 +2253,21 @@ namespace OpenDental {
 				if(_listCreditCards[comboCreditCards.SelectedIndex].ChargeAmt==0 
 					|| _listCreditCards[comboCreditCards.SelectedIndex].DateStart.Year < 1880) 
 				{
-					MsgBox.Show(this,"The selected credit card has not been setup for recurring charges.");
+					MessageBox.Show("The selected credit card has not been setup for recurring charges.");
 					return false;
 				}
 				//Check if a stop date was set and if that date falls in on today or in the past.
 				if(_listCreditCards[comboCreditCards.SelectedIndex].DateStop.Year > 1880
 					&& _listCreditCards[comboCreditCards.SelectedIndex].DateStop<=DateTime.Now) 
 				{
-					MsgBox.Show(this,"This card is no longer accepting recurring charges based on the stop date.");
+					MessageBox.Show("This card is no longer accepting recurring charges based on the stop date.");
 					return false;
 				}
 				//Have the user decide what month to apply the recurring charge towards.
 				FormCreditRecurringDateChoose formDateChoose=new FormCreditRecurringDateChoose(_listCreditCards[comboCreditCards.SelectedIndex],_patCur);
 				formDateChoose.ShowDialog();
 				if(formDateChoose.DialogResult!=DialogResult.OK) {
-					MsgBox.Show(this,"Uncheck the \"Apply to Recurring Charge\" box.");
+					MessageBox.Show("Uncheck the \"Apply to Recurring Charge\" box.");
 					return false;
 				}
 				//This will change the PayDate to work better with the recurring charge automation.  User was notified in previous window.
@@ -2269,7 +2277,7 @@ namespace OpenDental {
 				_paymentCur.RecurringChargeDate=formDateChoose.PayDate;
 			}
 			else if(IsNew && checkRecurring.Checked && comboCreditCards.SelectedIndex==_listCreditCards.Count) {
-				MsgBox.Show(this,"Cannot apply a recurring charge to a new card.");
+				MessageBox.Show("Cannot apply a recurring charge to a new card.");
 				return false;
 			}
 			#endregion
@@ -2291,7 +2299,7 @@ namespace OpenDental {
 				else if(!_isCCDeclined
 					&& Payments.AllocationRequired(_paymentCur.PayAmt,_paymentCur.PatNum)
 					&& _curFamOrSuperFam.ListPats.Length>1 //Has other family members
-					&& MsgBox.Show(this,MsgBoxButtons.YesNo,"Apply part of payment to other family members?"))
+					&& MsgBox.Show(MsgBoxButtons.YesNo,"Apply part of payment to other family members?"))
 				{
 					_listSplitsCur=Payments.Allocate(_paymentCur);//PayAmt needs to be set first
 				}
@@ -2321,7 +2329,7 @@ namespace OpenDental {
 					textSplitTotal.Text=textAmount.Text;
 				}
 				if(_paymentCur.PayAmt!=PIn.Double(textSplitTotal.Text)) {
-					MsgBox.Show(this,"Split totals must equal payment amount.");
+					MessageBox.Show("Split totals must equal payment amount.");
 					//work on reallocation schemes here later
 					return false;
 				}
@@ -2333,7 +2341,7 @@ namespace OpenDental {
 			//At this point there better be a split in the list of Current Payment Splits.
 			//There is no such thing as a payment with no payment splits.  If there is then the DBM 'PaymentMissingPaySplit' needs to be removed.
 			if(_listSplitsCur.Count==0) {
-				MsgBox.Show(this,"Please create payment splits.");
+				MessageBox.Show("Please create payment splits.");
 				return false;
 			}
 			if(_listSplitsCur.Count>1) {
@@ -2504,7 +2512,7 @@ namespace OpenDental {
 			}
 			Cursor=Cursors.Default;
 			if(response==null || response.StatusCode!="0") {//error in transaction
-				MsgBox.Show(this,"This credit card payment has already been processed and will have to be voided manually through the web interface.");
+				MessageBox.Show("This credit card payment has already been processed and will have to be voided manually through the web interface.");
 				return;
 			}
 			else {//Record a new payment for the voided transaction
@@ -2539,7 +2547,7 @@ namespace OpenDental {
 			}
 			catch(PaySimpleException ex) {
 				MessageBox.Show(ex.Message);
-				if(ex.ErrorType==PaySimpleError.CustomerDoesNotExist && MsgBox.Show(this,MsgBoxButtons.OKCancel,
+				if(ex.ErrorType==PaySimpleError.CustomerDoesNotExist && MsgBox.Show(MsgBoxButtons.OKCancel,
 					"Delete the link to the customer id for this patient?")) 
 				{
 					PatientLinks.DeletePatNumTos(ex.CustomerId,PatientLinkType.PaySimple);
@@ -2726,11 +2734,11 @@ namespace OpenDental {
 				cc=creditCards[comboCreditCards.SelectedIndex];
 			}
 			if(cc==null) {
-				MsgBox.Show(this,"Card no longer available. Return cannot be processed.");
+				MessageBox.Show("Card no longer available. Return cannot be processed.");
 				return;
 			}
 			if(!cc.IsXWeb()) {
-				MsgBox.Show(this,"Only cards that were created from XWeb can process an XWeb return.");
+				MessageBox.Show("Only cards that were created from XWeb can process an XWeb return.");
 				return;
 			}
 			FormXWeb FormXW=new FormXWeb(_patCur.PatNum,cc,XWebTransactionType.CreditReturnTransaction,createPayment:false);
@@ -2745,7 +2753,7 @@ namespace OpenDental {
 					butVoid.Visible=true;
 					groupXWeb.Height=85;
 				}
-				MsgBox.Show(this,"Return successful.");
+				MessageBox.Show("Return successful.");
 			}
 		}
 
@@ -2770,7 +2778,7 @@ namespace OpenDental {
 				string payNote=Lan.g(this,"Void XWeb payment made from within Open Dental");
 				XWebs.VoidPayment(_patCur.PatNum,payNote,_xWebResponse.XWebResponseNum);
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Void successful. A new payment has been created for this void transaction.");
+				MessageBox.Show("Void successful. A new payment has been created for this void transaction.");
 			}
 			catch(ODException ex) {
 				Cursor=Cursors.Default;
@@ -2789,21 +2797,21 @@ namespace OpenDental {
 			}
 			if(prepaidAmt==0) {//Validation for regular credit cards (not prepaid cards).
 				if(textAmount.Text=="") {
-					MsgBox.Show(this,"Please enter an amount first.");
+					MessageBox.Show("Please enter an amount first.");
 					textAmount.Focus();
 					return null;
 				}
 				if(_listSplitsCur.Count>0 && PIn.Double(textAmount.Text)!=PIn.Double(textSplitTotal.Text)
 					&& (_listSplitsCur.Count!=1 || _listSplitsCur[0].PayPlanNum==0)) //Not one paysplit attached to payplan
 				{
-					MsgBox.Show(this, "Split totals must equal payment amount before running a credit card transaction.");
+					MessageBox.Show( "Split totals must equal payment amount before running a credit card transaction.");
 					return null;
 				}
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date
 					&& !PrefC.GetBool(PrefName.FutureTransDatesAllowed) && !PrefC.GetBool(PrefName.AccountAllowFutureDebits))
 			{
-				MsgBox.Show(this,"Payment date cannot be in the future.");
+				MessageBox.Show("Payment date cannot be in the future.");
 				return null;
 			}
 			CreditCard cc=null;
@@ -2871,7 +2879,7 @@ namespace OpenDental {
 							}
 							_paymentCur.Receipt=FormP.ReceiptStr;
 							if(SavePaymentToDb()) {
-								MsgBox.Show(this,"Void successful.");
+								MessageBox.Show("Void successful.");
 								DialogResult=DialogResult.OK;//Close FormPayment window now so the user will not have the option to hit Cancel
 							}
 							return resultNote;
@@ -2907,7 +2915,7 @@ namespace OpenDental {
 								MessageBox.Show(strErrorMsg);
 							}
 						}
-						MsgBox.Show(this,"Void successful.");
+						MessageBox.Show("Void successful.");
 						DialogResult=DialogResult.OK;//Close FormPayment window now so the user will not have the option to hit Cancel
 						return resultNote;
 					}
@@ -3022,7 +3030,7 @@ namespace OpenDental {
 						}
 						_paymentCur.Receipt=form.ApiResponseOut.TransactionReceipt;
 						if(SavePaymentToDb()) {
-							MsgBox.Show(this,"Void successful.");
+							MessageBox.Show("Void successful.");
 							DialogResult=DialogResult.OK;//Close FormPayment window now so the user will not have the option to hit Cancel
 						}
 						return resultNote;
@@ -3058,7 +3066,7 @@ namespace OpenDental {
 							MessageBox.Show(strErrorMsg);
 						}
 					}
-					MsgBox.Show(this,"Void successful.");
+					MessageBox.Show("Void successful.");
 					DialogResult=DialogResult.OK;//Close FormPayment window now so the user will not have the option to hit Cancel
 					return resultNote;
 				}
@@ -3099,10 +3107,6 @@ namespace OpenDental {
 		///If prepaidAmt is not zero, then will show the xcharge window with the given prepaid amount and let the user enter card # and exp.
 		///A patient is not required for prepaid cards.</summary>
 		public string MakeXChargeTransaction(double prepaidAmt=0) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"XCharge is not available while viewing through the web.");
-				return null;
-			}
 			//Need to refresh this list locally in case we are coming from another form
 			_listPaymentTypeDefs=_listPaymentTypeDefs??Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
 			_xChargeMilestone="Validation";
@@ -3116,7 +3120,7 @@ namespace OpenDental {
 			}
 			if(prepaidAmt==0) {//Validation for regular credit cards (not prepaid cards).
 				if(textAmount.Text=="" || PIn.Double(textAmount.Text)==0) {
-					MsgBox.Show(this,"Please enter an amount first.");
+					MessageBox.Show("Please enter an amount first.");
 					textAmount.Focus();
 					return null;
 				}
@@ -3125,20 +3129,20 @@ namespace OpenDental {
 					cc=creditCards[comboCreditCards.SelectedIndex];
 				}
 				if(cc!=null && cc.IsXWeb()) {
-					MsgBox.Show(this,"Cards saved through XWeb cannot be used with the XCharge client program.");
+					MessageBox.Show("Cards saved through XWeb cannot be used with the XCharge client program.");
 					return null;
 				}
 				if(_listSplitsCur.Count>0 && PIn.Double(textAmount.Text)!=PIn.Double(textSplitTotal.Text)
 					&& (_listSplitsCur.Count!=1 || _listSplitsCur[0].PayPlanNum==0)) //Not one paysplit attached to payplan
 				{
-					MsgBox.Show(this,"Split totals must equal payment amount before running a credit card transaction.");
+					MessageBox.Show("Split totals must equal payment amount before running a credit card transaction.");
 					return null;
 				}
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date
 					&& !PrefC.GetBool(PrefName.FutureTransDatesAllowed) && !PrefC.GetBool(PrefName.AccountAllowFutureDebits))
 			{
-				MsgBox.Show(this,"Payment date cannot be in the future.");
+				MessageBox.Show("Payment date cannot be in the future.");
 				return null;
 			}
 			_xChargeMilestone="XResult File";
@@ -3147,7 +3151,7 @@ namespace OpenDental {
 				File.Delete(resultfile);//delete the old result file.
 			}
 			catch {
-				MsgBox.Show(this,"Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have "
+				MessageBox.Show("Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have "
 					+"sufficient permissions.");
 				return null;
 			}
@@ -3172,7 +3176,7 @@ namespace OpenDental {
 			if(prepaidAmt==0) {
 				pat=Patients.GetPat(_paymentCur.PatNum);
 				if(pat==null) {
-					MsgBox.Show(this,"Invalid patient associated to this payment.");
+					MessageBox.Show("Invalid patient associated to this payment.");
 					return null;
 				}
 			}
@@ -3213,7 +3217,7 @@ namespace OpenDental {
 			if(cc!=null && !string.IsNullOrEmpty(cc.XChargeToken)) {//Have CC on file with an XChargeToken
 				hasXToken=true;
 				if(CreditCards.GetXChargeTokenCount(cc.XChargeToken,false)!=1) {
-					MsgBox.Show(this,"This card shares a token with another card. Delete it from the Credit Card Manage window and re-add it.");
+					MessageBox.Show("This card shares a token with another card. Delete it from the Credit Card Manage window and re-add it.");
 					return null;
 				}
 				/*       ***** An example of how recurring charges work***** 
@@ -3438,7 +3442,7 @@ namespace OpenDental {
 							creditCardNum=CreditCards.Insert(cc);
 						}
 						else if(string.IsNullOrEmpty(xChargeToken)) {//Shouldn't happen again but leaving just in case.
-							MsgBox.Show(this,"X-Charge didn't return a token so credit card information couldn't be saved.");
+							MessageBox.Show("X-Charge didn't return a token so credit card information couldn't be saved.");
 						}
 					}
 					if(updateCard && newAccount!="" && newExpiration.Year>1880 && prepaidAmt==0) {//Never save credit card info to patient for prepaid cards.
@@ -3580,14 +3584,14 @@ namespace OpenDental {
 
 		private void butDeletePayment_Click(object sender,System.EventArgs e) {
 			if(textDeposit.Visible) {//this will get checked again by the middle layer
-				MsgBox.Show(this,"This payment is attached to a deposit.  Not allowed to delete.");
+				MessageBox.Show("This payment is attached to a deposit.  Not allowed to delete.");
 				return;
 			}
 			if(PaySplits.GetSplitsForPrepay(_listSplitsCur).Count>0) {
-				MsgBox.Show(this,"This prepayment has been allocated.  Not allowed to delete.");
+				MessageBox.Show("This prepayment has been allocated.  Not allowed to delete.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will delete the entire payment and all splits.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will delete the entire payment and all splits.")) {
 				return;
 			}
 			//If payment is attached to a transaction which is more than 48 hours old, then not allowed to delete.
@@ -3595,12 +3599,12 @@ namespace OpenDental {
 			Transaction trans=Transactions.GetAttachedToPayment(_paymentCur.PayNum);
 			if(trans != null) {
 				if(trans.DateTimeEntry < MiscData.GetNowDateTime().AddDays(-2)) {
-					MsgBox.Show(this,"Not allowed to delete.  This payment is already attached to an accounting transaction.  You will need to detach it from "
+					MessageBox.Show("Not allowed to delete.  This payment is already attached to an accounting transaction.  You will need to detach it from "
 						+"within the accounting section of the program.");
 					return;
 				}
 				if(Transactions.IsReconciled(trans)) {
-					MsgBox.Show(this,"Not allowed to delete.  This payment is attached to an accounting transaction that has been reconciled.  You will need "
+					MessageBox.Show("Not allowed to delete.  This payment is attached to an accounting transaction that has been reconciled.  You will need "
 						+"to detach it from within the accounting section of the program.");
 					return;
 				}
@@ -3683,18 +3687,18 @@ namespace OpenDental {
 				return;
 			}
 			//Successful CC payment
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"This will void the transaction that has just been completed. Are you sure you want to continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will void the transaction that has just been completed. Are you sure you want to continue?")) {
 				e.Cancel=true;//Stop the form from closing
 				return;
 			}
 			DateTime payDateCur=PIn.Date(textDate.Text);
 			if(payDateCur==null || payDateCur==DateTime.MinValue) {
-				MsgBox.Show(this,"Invalid Payment Date");
+				MessageBox.Show("Invalid Payment Date");
 				e.Cancel=true;//Stop the form from closing
 				return;
 			}
 			if(payDateCur.Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.AccountAllowFutureDebits) && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Payment Date must not be a future date.");
+				MessageBox.Show("Payment Date must not be a future date.");
 				e.Cancel=true;//Stop the form from closing
 				return;
 			}
@@ -3723,7 +3727,7 @@ namespace OpenDental {
 				textSplitTotal.Text=textAmount.Text;
 			}
 			if(_paymentCur.PayAmt!=PIn.Double(textSplitTotal.Text)) {
-				MsgBox.Show(this,"Split totals must equal payment amount.");
+				MessageBox.Show("Split totals must equal payment amount.");
 				DialogResult=DialogResult.None;
 				return;
 			}
@@ -3800,7 +3804,7 @@ namespace OpenDental {
 				VoidPaySimpleTransaction(paySimplePaymentId,originalReceipt);
 			}
 			else {
-				MsgBox.Show(this,"Unable to void transaction");
+				MessageBox.Show("Unable to void transaction");
 			}
 			DialogResult=DialogResult.Cancel;
 		}

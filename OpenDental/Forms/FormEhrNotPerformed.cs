@@ -134,7 +134,7 @@ namespace OpenDental {
 				return;
 			}
 			if(chooseItem.comboSelection.SelectedIndex==-1) {
-				MsgBox.Show(this,"You must select an item that is not being performed from the list of available items.");
+				MessageBox.Show("You must select an item that is not being performed from the list of available items.");
 				return;
 			}
 			FormEhrNotPerformedEdit FormEE=new FormEhrNotPerformedEdit();

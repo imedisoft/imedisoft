@@ -66,14 +66,6 @@ namespace CodeBase{
 			}
 		}
 
-		///<summary>Indicates if we are running on an OD Cloud server.</summary>
-		public static bool IsCloudServer {
-			get {
-				//Sometimes we connect to an OD Cloud db with a normal build to do things like updates.
-				return ODBuild.IsWeb() || Directory.Exists(@"C:\Program Files\Thinfinity\VirtualUI");
-			}
-		}
-
 		///<summary>True if the current device is both a Tablet PC and is also in slate mode, the combination of which we will consider to mean the
 		///device is currently running in Tablet Mode.  SM_CONVERTIBLESLATEMODE reflects the state of the laptop or slate mode, 0 for Slate Mode and 
 		///non-zero otherwise. Note that the SM_CONVERTIBLESLATEMODE system metric doesn't apply to desktop PCs, and as such is only useful for 

@@ -23,18 +23,12 @@ namespace OpenDental {
 		private string _alphaAvailableDisplay;
 		private DateTime _updateTime;//Updated in SetButtonVisibility.
 
-		///<summary></summary>
 		public FormUpdate() {
 			InitializeComponent();
 			Lan.F(this);
 		}
 
 		private void FormUpdate_Load(object sender, System.EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Updates are not allowed manually from within the program. Please call support.");
-				Close();
-				return;
-			}
 			SetButtonVisibility();
 			labelVersion.Text=Lan.g(this,"Using Version:")+" "+Application.ProductVersion;
 			UpdateHistory updateHistory=UpdateHistories.GetForVersion(Application.ProductVersion);
@@ -101,7 +95,7 @@ namespace OpenDental {
 				return;
 			}
 			if(ReplicationServers.ServerIsBlocked()) {
-				MsgBox.Show(this,"Updates are not allowed on this replication server");
+				MessageBox.Show("Updates are not allowed on this replication server");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -281,7 +275,7 @@ namespace OpenDental {
 		///If so, shows a message to the user and then returns true so that the calling method can stop the user from updating.</summary>
 		private bool IsDynamicMode() {
 			if(Application.StartupPath.Contains("DynamicMode")) {
-				MsgBox.Show(this,"Cannot perform update when using Dynamic Mode.");
+				MessageBox.Show("Cannot perform update when using Dynamic Mode.");
 				return true;
 			}
 			return false;
@@ -339,7 +333,7 @@ namespace OpenDental {
 				MsgBox.Show("You must check the acknowledgement in order to install a beta version.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you really want to install a beta version?"
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you really want to install a beta version?"
 				+"  Do NOT do this unless you are OK with some bugs.  Continue?"))
 			{
 				return;
@@ -348,7 +342,7 @@ namespace OpenDental {
 		}
 
 		private void butInstallAlpha_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you really want to install a alpha version?\r\n"
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you really want to install a alpha version?\r\n"
 				+"Do NOT do this unless you enjoy bugs.\r\n\r\n"
 				+"Continue?"))
 			{

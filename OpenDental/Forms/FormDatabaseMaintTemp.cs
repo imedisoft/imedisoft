@@ -38,17 +38,17 @@ namespace OpenDental {
 
 		private void butRun_Click(object sender,EventArgs e) {
 			if(comboDbs.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a backup database first.");
+				MessageBox.Show("Please select a backup database first.");
 				return;
 			}
 			//make sure it's not this database
 			if(comboDbs.SelectedItem.ToString()==MiscData.GetCurrentDatabase()){
-				MsgBox.Show(this,"Please choose a database other than the current database.");
+				MessageBox.Show("Please choose a database other than the current database.");
 				return;
 			}
 			//make sure it's from before March 17th.
 			//if(!DatabaseMaintenance.DatabaseIsOlderThanMarchSeventeenth(comboDbs.SelectedItem.ToString())){
-			//	MsgBox.Show(this,"The backup database must be older than March 17, 2010.");
+			//	MessageBox.Show("The backup database must be older than March 17, 2010.");
 			//	return;
 			//}
 			Cursor=Cursors.WaitCursor;
@@ -84,7 +84,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			string fileName=CodeBase.ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),"results.txt");
 			ODFileUtils.WriteAllTextThenStart(fileName,textResults.Text,"");
-			MsgBox.Show(this,"Please print from the text editor.");
+			MessageBox.Show("Please print from the text editor.");
 		}
 
 		private void linkLabel1_LinkClicked(object sender,LinkLabelLinkClickedEventArgs e) {

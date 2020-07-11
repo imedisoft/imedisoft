@@ -324,10 +324,10 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedIndices.Length<2) {
-				MsgBox.Show(this,"Please select multiple items first while holding down the control key.");
+				MessageBox.Show("Please select multiple items first while holding down the control key.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,
 				"Combine all selected operatories into a single operatory?\r\n\r\n"
 				+"This will affect all appointments set in these operatories and could take a while to run.  "
 				+"The next window will let you select which operatory to keep when combining."))
@@ -362,7 +362,7 @@ namespace OpenDental{
 			if(!PrefC.GetYN(PrefName.ApptsAllowOverlap)) { //We only want to check appt overlap and return if the customer has the relevant pref turned off
 				ListConflictingAppts=listTupleApptsToMerge.Where(x => x.Item2).Select(x => x.Item1).ToList();
 				if(ListConflictingAppts.Count > 0) {//Appointments conflicts exist, can not merge
-					if(!MsgBox.Show(this,true,"Cannot merge operatories due to appointment conflicts.\r\n\r\n"
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Cannot merge operatories due to appointment conflicts.\r\n\r\n"
 						+"These conflicts need to be resolved before combining can occur.\r\n"
 						+"Click OK to view the conflicting appointments.")) 
 					{
@@ -411,7 +411,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender, System.EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0){
-				MsgBox.Show(this,"You must first select a row.");
+				MessageBox.Show("You must first select a row.");
 				return;
 			}
 			int selected = gridMain.GetSelectedIndex();
@@ -439,7 +439,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender, System.EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0){
-				MsgBox.Show(this,"You must first select a row.");
+				MessageBox.Show("You must first select a row.");
 				return;
 			}
 			int selected = gridMain.GetSelectedIndex();

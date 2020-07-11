@@ -30,7 +30,7 @@ namespace OpenDental.Bridges {
 			}
 			else {
 				if(pat.ChartNumber==null || pat.ChartNumber=="") {
-					MsgBox.Show("HandyDentist","This patient does not have a chart number.");
+					MsgBox.Show("This patient does not have a chart number.");
 					return;
 				}
 				info+=Tidy(pat.ChartNumber);

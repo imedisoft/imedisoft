@@ -50,7 +50,7 @@ namespace CentralManager {
 		#region Sync Methods
 		private void butPushBoth_Click(object sender,EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Please fix error first.");
+				MsgBox.Show("Please fix error first.");
 				return;
 			}
 			//Enter info into local DB before pushing out to others so we save it.
@@ -165,7 +165,7 @@ namespace CentralManager {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Please fix error first.");
+				MsgBox.Show("Please fix error first.");
 				return;
 			}
 			//Enter info into local DB before pushing out to others so we save it.

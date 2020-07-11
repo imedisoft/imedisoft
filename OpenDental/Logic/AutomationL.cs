@@ -105,7 +105,7 @@ namespace OpenDental {
 					case AutomationAction.PrintReferralLetter:
 						long referralNum=RefAttaches.GetReferralNum(patNum);
 						if(referralNum==0) {
-							MsgBox.Show("Automations","This patient has no referral source entered.");
+							MsgBox.Show("This patient has no referral source entered.");
 							automationHappened=true;
 							continue;
 						}
@@ -139,7 +139,7 @@ namespace OpenDental {
 					case AutomationAction.SetApptASAP:
 						aptNew=Appointments.GetOneApt(aptNum);
 						if(aptNew==null) {
-							MsgBox.Show("Automations","Invalid appointment for automation.");
+							MsgBox.Show("Invalid appointment for automation.");
 							automationHappened=true;
 							continue;
 						}
@@ -150,7 +150,7 @@ namespace OpenDental {
 					case AutomationAction.SetApptType:
 						aptNew=Appointments.GetOneApt(aptNum);
 						if(aptNew==null) {
-							MsgBox.Show("Automations","Invalid appointment for automation.");
+							MsgBox.Show("Invalid appointment for automation.");
 							automationHappened=true;
 							continue;
 						}
@@ -212,7 +212,7 @@ namespace OpenDental {
 							&& patOld.PatStatus==PatientStatus.Archived 
 							&& PatientLinks.WasPatientMerged(patOld.PatNum))
 						{
-							MsgBox.Show("FormPatientEdit","Not allowed to change the status of a merged patient.");
+							MsgBox.Show("Not allowed to change the status of a merged patient.");
 							continue;
 						}
 						switch(pat.PatStatus) {

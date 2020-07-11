@@ -300,7 +300,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridChartViews.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a view first.");
+				MessageBox.Show("Please select a view first.");
 				return;
 			}
 			int oldIdx;
@@ -334,7 +334,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridChartViews.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a view first.");
+				MessageBox.Show("Please select a view first.");
 				return;
 			}
 			int oldIdx;
@@ -408,7 +408,7 @@ namespace OpenDental {
 		{
 			if (FormOpenDental.CurPatNum == 0)
 			{
-				MsgBox.Show(this, "Please select a patient first.");
+				MessageBox.Show( "Please select a patient first.");
 				return;
 			}
 			FormPhoneNumbersManage formPNM = new FormPhoneNumbersManage();
@@ -613,7 +613,7 @@ namespace OpenDental {
 				return;
 			}
 			if(TerminalActives.PatIsInUse(_patCur.PatNum)) {
-				MsgBox.Show(this,"Patient is currently entering info at a reception terminal.  Please try again later.");
+				MessageBox.Show("Patient is currently entering info at a reception terminal.  Please try again later.");
 				return;
 			}
 			if(gridPtInfo.ListGridRows[e.Row].Tag!=null && gridPtInfo.ListGridRows[e.Row].Tag.ToString()!="DOB") {
@@ -794,7 +794,7 @@ namespace OpenDental {
 		#region Methods - Event Handlers - Lists
 		private void listCommonProcs_MouseDown(object sender,MouseEventArgs e) {
 			if(listCommonProcs.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a procedure.");
+				MessageBox.Show("Please select a procedure.");
 				return;
 			}
 			string procCode="";
@@ -992,7 +992,7 @@ namespace OpenDental {
 		private void menuItemChartBig_Click(object sender,EventArgs e) {
 			//Check for patient because the tooth chart will be expecting data from a patient's chart.
 			if(_patCur==null) {
-				MsgBox.Show(this,"Please select a patient.");
+				MessageBox.Show("Please select a patient.");
 				return;
 			}
 			FormToothChartingBig formTCB=new FormToothChartingBig(checkShowTeeth.Checked,_listToothInitials,_listRowsProcForGraphical);
@@ -1002,7 +1002,7 @@ namespace OpenDental {
 		private void menuItemChartSave_Click(object sender,EventArgs e) {
 			//Check for patient because the tooth chart will be expecting data from a patient's chart.
 			if(_patCur==null) {
-				MsgBox.Show(this,"Please select a patient.");
+				MessageBox.Show("Please select a patient.");
 				return;
 			}
 			long defNum=Defs.GetImageCat(ImageCategorySpecial.T);
@@ -1034,7 +1034,7 @@ namespace OpenDental {
 					bitmapChart=null;
 				}
 			}
-			MsgBox.Show(this,"Saved.");
+			MessageBox.Show("Saved.");
 		}
 
 		private void menuItemDelete_Click(object sender,EventArgs e) {
@@ -1055,7 +1055,7 @@ namespace OpenDental {
 
 		private void menuItemEditSelected_Click(object sender,EventArgs e) {
 			if(gridProg.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select procedures first.");
+				MessageBox.Show("Please select procedures first.");
 				return;
 			}
 			DataRow row;
@@ -1103,7 +1103,7 @@ namespace OpenDental {
 			ProcMultiVisits.CreateGroup(listProcs);
 			LoadData.ListProcMultiVisits.AddRange(ProcMultiVisits.GetGroupsForProcsFromDb(listProcs.Select(x => x.ProcNum).ToArray()));
 			FillProgNotes(retainToothSelection:true,doRefreshData:false);//Refresh to show potential status change.
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void menuItemGroupSelected_Click(object sender,EventArgs e) {
@@ -1203,7 +1203,7 @@ namespace OpenDental {
 
 		private void menuItemLabFeeDetach_Click(object sender,EventArgs e) {
 			if(gridProg.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select exactly one lab procedure first.");
+				MessageBox.Show("Please select exactly one lab procedure first.");
 				return;
 			}
 			DataRow row=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[0]].Tag;
@@ -1265,7 +1265,7 @@ namespace OpenDental {
 
 		private void menuItemPrintDay_Click(object sender,EventArgs e) {
 			if(gridProg.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select at least one item first.");
+				MessageBox.Show("Please select at least one item first.");
 				return;
 			}
 			DataRow row=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[0]].Tag;
@@ -1311,7 +1311,7 @@ namespace OpenDental {
 			//Fill progress notes with only desired rows to be printed, then print.
 			FillProgNotes();
 			if(gridProg.ListGridRows.Count==0) {
-				MsgBox.Show(this,"No completed procedures or notes to print");
+				MessageBox.Show("No completed procedures or notes to print");
 			}
 			else {
 				try {
@@ -1420,9 +1420,9 @@ namespace OpenDental {
 						hl7Msg.MsgText=messageHL7.ToString();
 						hl7Msg.PatNum=_patCur.PatNum;
 						HL7Msgs.Insert(hl7Msg);
-						if(ODBuild.IsDebug()) { 
-							MessageBox.Show(this,messageHL7.ToString());
-						}
+#if DEBUG
+						MessageBox.Show(this,messageHL7.ToString());
+#endif
 					}
 				}
 				Recalls.Synch(_patCur.PatNum);
@@ -1494,7 +1494,7 @@ namespace OpenDental {
 				ProcMultiVisits.RefreshCache();
 				FillProgNotes(retainToothSelection:true,doRefreshData:false);//Refresh to show potential status change.
 			}
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void MenuItemUnmaskDOB_Click(object sender,EventArgs e) {
@@ -2104,7 +2104,7 @@ namespace OpenDental {
 			{
 				return;
 			}
-			MsgBox.Show(this,"The selected Prognosis has been hidden.");
+			MessageBox.Show("The selected Prognosis has been hidden.");
 			ModuleSelected(_patCur.PatNum);
 		}
 
@@ -2114,7 +2114,7 @@ namespace OpenDental {
 				return;
 			}
 			//this only happens if the user selects a priority that was just hidden by someone else
-			MsgBox.Show(this,"The selected Priority has been hidden.");
+			MessageBox.Show("The selected Priority has been hidden.");
 			ModuleSelected(_patCur.PatNum);
 		}
 
@@ -2124,7 +2124,7 @@ namespace OpenDental {
 			switch(ChartModules.GetRowType(row,out long rowPk)){
 				case ProgNotesRowType.Proc:
 					if(checkAudit.Checked){
-						MsgBox.Show(this,"Not allowed to edit procedures when in audit mode.");
+						MessageBox.Show("Not allowed to edit procedures when in audit mode.");
 						return;
 					}
 					Procedure proc=Procedures.GetOneProc(rowPk,true);
@@ -2159,7 +2159,7 @@ namespace OpenDental {
 				case ProgNotesRowType.CommLog:
 					Commlog commlog=Commlogs.GetOne(rowPk);
 					if(commlog==null) {
-						MsgBox.Show(this,"This commlog has been deleted by another user.");
+						MessageBox.Show("This commlog has been deleted by another user.");
 					}
 					else {
 						FormCommItem formCommItem=new FormCommItem(commlog);
@@ -2171,7 +2171,7 @@ namespace OpenDental {
 				case ProgNotesRowType.Rx:
 					RxPat rx=RxPats.GetRx(rowPk);
 					if(rx==null) {
-						MsgBox.Show(this,"This prescription has been deleted by another user.");
+						MessageBox.Show("This prescription has been deleted by another user.");
 					}
 					else {
 						FormRxEdit formRxEdit=new FormRxEdit(_patCur,rx);
@@ -2184,7 +2184,7 @@ namespace OpenDental {
 				case ProgNotesRowType.LabCase:
 					LabCase labCase=LabCases.GetOne(rowPk);
 					if(labCase==null) {
-						MsgBox.Show(this,"This LabCase has been deleted by another user.");
+						MessageBox.Show("This LabCase has been deleted by another user.");
 					}
 					else {
 						FormLabCaseEdit formLabCaseEdit=new FormLabCaseEdit();
@@ -2196,7 +2196,7 @@ namespace OpenDental {
 				case ProgNotesRowType.Task:
 					Task task=Tasks.GetOne(rowPk);
 					if(task==null) {
-						MsgBox.Show(this,"This task has been deleted by another user.");
+						MessageBox.Show("This task has been deleted by another user.");
 					}
 					else {
 						FormTaskEdit formTaskEdit=new FormTaskEdit(task);
@@ -2277,14 +2277,14 @@ namespace OpenDental {
 			{
 				return;
 			}
-			MsgBox.Show(this,"The selected Diagnosis has been hidden.");
+			MessageBox.Show("The selected Diagnosis has been hidden.");
 			ModuleSelected(_patCur.PatNum);
 		}
 
 		private void listViewButtons_Click(object sender,EventArgs e) {
 			if(_procStatusNew==ProcStat.C) {
 				if(!PrefC.GetBool(PrefName.AllowSettingProcsComplete)) {
-					MsgBox.Show(this,"Set the procedure complete by setting the appointment complete.  "
+					MessageBox.Show("Set the procedure complete by setting the appointment complete.  "
 						+"If you want to be able to set procedures complete, you must turn on that option in Setup | Chart | Chart Preferences.");
 					return;
 				}
@@ -2382,7 +2382,7 @@ namespace OpenDental {
 
 		private void butHidden_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2394,7 +2394,7 @@ namespace OpenDental {
 
 		private void butMissing_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2406,7 +2406,7 @@ namespace OpenDental {
 
 		private void butNotMissing_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2418,7 +2418,7 @@ namespace OpenDental {
 
 		private void butUnhide_Click(object sender,EventArgs e) {
 			if(listHidden.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item from the list first.");
+				MessageBox.Show("Please select an item from the list first.");
 				return;
 			}
 			ToothInitials.ClearValue(_patCur.PatNum,(string)_arrayListHiddenTeeth[listHidden.SelectedIndex],ToothInitialType.Hidden);
@@ -2436,7 +2436,7 @@ namespace OpenDental {
 				|| textTipM.errorProvider1.GetError(textTipM)!=""
 				|| textTipB.errorProvider1.GetError(textTipB)!="")
 			{
-				MsgBox.Show(this,"Please fix errors first.");
+				MessageBox.Show("Please fix errors first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2464,7 +2464,7 @@ namespace OpenDental {
 		}
 
 		private void butClearAllMovements_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Clear all movements on all teeth for this patient?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Clear all movements on all teeth for this patient?")) {
 				return;
 			}
 			ToothInitials.ClearAllValuesForType(_patCur.PatNum,ToothInitialType.Rotate);
@@ -2492,7 +2492,7 @@ namespace OpenDental {
 
 		private void butRotateMinus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2504,7 +2504,7 @@ namespace OpenDental {
 
 		private void butRotatePlus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2516,7 +2516,7 @@ namespace OpenDental {
 
 		private void butShiftBminus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2528,7 +2528,7 @@ namespace OpenDental {
 
 		private void butShiftBplus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2540,7 +2540,7 @@ namespace OpenDental {
 
 		private void butShiftMminus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2552,7 +2552,7 @@ namespace OpenDental {
 
 		private void butShiftMplus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2564,7 +2564,7 @@ namespace OpenDental {
 
 		private void butShiftOminus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2576,7 +2576,7 @@ namespace OpenDental {
 
 		private void butShiftOplus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2588,7 +2588,7 @@ namespace OpenDental {
 
 		private void butTipBminus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2600,7 +2600,7 @@ namespace OpenDental {
 
 		private void butTipBplus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2612,7 +2612,7 @@ namespace OpenDental {
 
 		private void butTipMminus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2624,7 +2624,7 @@ namespace OpenDental {
 
 		private void butTipMplus_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2664,7 +2664,7 @@ namespace OpenDental {
 
 		private void butPerm_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2683,7 +2683,7 @@ namespace OpenDental {
 
 		private void butPrimary_Click(object sender,EventArgs e) {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
-				MsgBox.Show(this,"Please select teeth first.");
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<_toothChartRelay.SelectedTeeth.Count;i++) {
@@ -2698,10 +2698,10 @@ namespace OpenDental {
 		///<summary>This is the listener for the Delete button.</summary>
 		private void butClear_Click(object sender,EventArgs e) {
 			if(gridPlanned.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item first");
+				MessageBox.Show("Please select an item first");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete planned appointment(s)?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete planned appointment(s)?")) {
 				return;
 			}
 			for(int i=0;i<gridPlanned.SelectedIndices.Length;i++) {			
@@ -2712,11 +2712,11 @@ namespace OpenDental {
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridPlanned.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(gridPlanned.SelectedIndices.Length>1) {
-				MsgBox.Show(this,"Please only select one item first.");
+				MessageBox.Show("Please only select one item first.");
 				return;
 			}
 			int idx=gridPlanned.SelectedIndices[0];
@@ -2736,7 +2736,7 @@ namespace OpenDental {
 
 		private void butNew_Click(object sender,EventArgs e) {
 			if(_patCur==null) {
-				MsgBox.Show(this,"Please select a Patient.");
+				MessageBox.Show("Please select a Patient.");
 				return;
 			}
 			List<long> listProcNums=null;
@@ -2763,32 +2763,32 @@ namespace OpenDental {
 		///<summary></summary>
 		private void butPin_Click(object sender,EventArgs e) {
 			if(gridPlanned.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item first");
+				MessageBox.Show("Please select an item first");
 				return;
 			}
 			if(_patCur.PatStatus.In(PatientStatus.Archived,PatientStatus.Deceased)) {
-				MsgBox.Show(this,"Appointments cannot be scheduled for "+_patCur.PatStatus.ToString().ToLower()+" patients.");
+				MessageBox.Show("Appointments cannot be scheduled for "+_patCur.PatStatus.ToString().ToLower()+" patients.");
 				return;
 			}
 			List<long> listAptNums=new List<long>();
 			for(int i=0;i<gridPlanned.SelectedIndices.Length;i++) {
 				long aptNum=PIn.Long(_listPlannedAppt[gridPlanned.SelectedIndices[i]]["AptNum"].ToString());
 				if(Procedures.GetProcsForSingle(aptNum,true).Count(x => x.ProcStatus==ProcStat.C)>0) {
-					MsgBox.Show(this,"Not allowed to send a planned appointment to the pinboard if completed procedures are attached. Edit the planned "
+					MessageBox.Show("Not allowed to send a planned appointment to the pinboard if completed procedures are attached. Edit the planned "
 						+"appointment first.");
 					return;
 				}
 				ApptStatus aptStatus=(ApptStatus)(PIn.Long(_listPlannedAppt[gridPlanned.SelectedIndices[i]]["AptStatus"].ToString()));
 				if(aptStatus==ApptStatus.Complete) {
 					//Warn the user they are moving a completed appointment.
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"You are about to move an already completed appointment.  Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You are about to move an already completed appointment.  Continue?")) {
 						return;
 					}
 					listAptNums.Add(PIn.Long(_listPlannedAppt[gridPlanned.SelectedIndices[i]]["SchedAptNum"].ToString()));
 				}
 				else if(aptStatus==ApptStatus.Scheduled) {
 					//Warn the user they are moving an already scheduled appointment.
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"You are about to move an appointment already on the schedule.  Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You are about to move an appointment already on the schedule.  Continue?")) {
 						return;
 					}
 					listAptNums.Add(PIn.Long(_listPlannedAppt[gridPlanned.SelectedIndices[i]]["SchedAptNum"].ToString()));
@@ -2806,11 +2806,11 @@ namespace OpenDental {
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridPlanned.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(gridPlanned.SelectedIndices.Length>1) {
-				MsgBox.Show(this,"Please only select one item first.");
+				MessageBox.Show("Please only select one item first.");
 				return;
 			}
 			int idx=gridPlanned.SelectedIndices[0];
@@ -2833,7 +2833,7 @@ namespace OpenDental {
 			Patient patOld=_patCur.Copy();
 			if(checkDone.Checked) {
 				if(_tablePlannedAll.Rows.Count>0) {
-					if(!MsgBox.Show(this,true,"ALL planned appointment(s) will be deleted. Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"ALL planned appointment(s) will be deleted. Continue?")) {
 						checkDone.Checked=false;
 						return; 
 					}
@@ -4987,7 +4987,7 @@ namespace OpenDental {
 			DataRow row;
 			if(gridProg.SelectedIndices.Length==0) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Please select procedures to attach a group note to."); 
+					MessageBox.Show("Please select procedures to attach a group note to."); 
 				}
 				return false;
 			}
@@ -5007,19 +5007,19 @@ namespace OpenDental {
 			for(int i=0;i<listProcs.Count;i++) {//starts at 0 to check procStatus
 				if(listProcs[i].ProcDate!=procDate) {
 					if(!isSilent) {
-						MsgBox.Show(this,"Procedures must have the same date to attach a group note."); 
+						MessageBox.Show("Procedures must have the same date to attach a group note."); 
 					}
 					return false;
 				}
 				if(PrefC.HasClinicsEnabled && listProcs[i].ClinicNum!=clinicNum) {
 					if(!isSilent) {
-						MsgBox.Show(this,"Procedures must have the same clinic to attach a group note."); 
+						MessageBox.Show("Procedures must have the same clinic to attach a group note."); 
 					}
 					return false;
 				}
 				if(listProcs[i].ProvNum!=provNum) {
 					if(!isSilent) {
-						MsgBox.Show(this,"Procedures must have the same provider to attach a group note."); 
+						MessageBox.Show("Procedures must have the same provider to attach a group note."); 
 					}
 					return false;
 				}
@@ -5034,7 +5034,7 @@ namespace OpenDental {
 			}
 			if(gridProg.SelectedIndices.Length<2 || gridProg.SelectedIndices.Length>3) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Please select two or three procedures, one regular and the other one or two lab.");
+					MessageBox.Show("Please select two or three procedures, one regular and the other one or two lab.");
 				}
 				return false;
 			}
@@ -5047,7 +5047,7 @@ namespace OpenDental {
 			}
 			if(row1["ProcNum"].ToString()=="0" || row2["ProcNum"].ToString()=="0" || (row3!=null && row3["ProcNum"].ToString()=="0")) {
 				if(!isSilent) {
-					MsgBox.Show(this,"All selected items must be procedures.");
+					MessageBox.Show("All selected items must be procedures.");
 				}
 				return false;
 			}
@@ -5073,13 +5073,13 @@ namespace OpenDental {
 			}
 			if(procNumsReg.Count==0) {
 				if(!isSilent) {
-					MsgBox.Show(this,"One of the selected procedures must be a regular non-lab procedure as defined in Procedure Codes.");
+					MessageBox.Show("One of the selected procedures must be a regular non-lab procedure as defined in Procedure Codes.");
 				}
 				return false;
 			}
 			if(procNumsReg.Count>1) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Only one of the selected procedures may be a regular non-lab procedure as defined in Procedure Codes.");
+					MessageBox.Show("Only one of the selected procedures may be a regular non-lab procedure as defined in Procedure Codes.");
 				}
 				return false;
 			}
@@ -5093,7 +5093,7 @@ namespace OpenDental {
 			}
 			if(newProcStatus==ProcStat.C && !PrefC.GetBool(PrefName.AllowSettingProcsComplete)) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Only single appointments and tasks may be set complete.  If you want to be able to set procedures complete, you must turn "
+					MessageBox.Show("Only single appointments and tasks may be set complete.  If you want to be able to set procedures complete, you must turn "
 						+"on that option in Setup | Chart | Chart Preferences.");
 				}
 				return false;
@@ -5101,7 +5101,7 @@ namespace OpenDental {
 			//check to make sure we don't have non-procedures
 			if(row["ProcNum"].ToString()=="0" || row["ProcCode"].ToString()=="~GRP~") {
 				if(!isSilent) {
-					MsgBox.Show(this,"Only procedures, single appointments, or single tasks may be set complete.");
+					MessageBox.Show("Only procedures, single appointments, or single tasks may be set complete.");
 				}
 				return false;
 			}
@@ -5115,20 +5115,20 @@ namespace OpenDental {
 				.FirstOrDefault(x => x.ProcNum==procNum);
 			if(procOld.IsLocked) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Locked procedures cannot be edited.");
+					MessageBox.Show("Locked procedures cannot be edited.");
 				}
 				return false;
 			}
 			#region Validation
 			if(procOld.ProcStatus==newProcStatus) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Procedure's status already is "+newProcStatus);
+					MessageBox.Show("Procedure's status already is "+newProcStatus);
 				}
 				return false;
 			}
 			if(ProcedureCodes.GetWhere(x => x.CodeNum==procOld.CodeNum).Count==0) {
 				if(!isSilent) {
-					MsgBox.Show(this,$"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
+					MessageBox.Show($"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
 				}
 				return false;
 			}
@@ -5160,7 +5160,7 @@ namespace OpenDental {
 			if(procOld.ProcStatus==ProcStat.C) {
 				#region Changing from completed to something else.
 				if(Adjustments.GetForProc(procCur.ProcNum,arrayAdjustments).Count!=0 && !isSilent
-					&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"This procedure has adjustments attached to it. Changing the status from completed will delete any "
+					&& !MsgBox.Show(MsgBoxButtons.YesNo,"This procedure has adjustments attached to it. Changing the status from completed will delete any "
 						+"adjustments for the procedure. Continue?")) 
 				{
 					return false;
@@ -5168,7 +5168,7 @@ namespace OpenDental {
 				double sumPaySplits=PaySplits.GetForProc(procCur.ProcNum,arrayPaySplits).ToArray().ToList().Sum(x => ((PaySplit)x).SplitAmt);
 				if(sumPaySplits!=0) {
 					if(!isSilent) {
-						MsgBox.Show(this,"Not allowed to modify the status of a procedure that has payments attached to it. Detach payments from the procedure first.");
+						MessageBox.Show("Not allowed to modify the status of a procedure that has payments attached to it. Detach payments from the procedure first.");
 					}
 					return false;
 				}
@@ -5178,7 +5178,7 @@ namespace OpenDental {
 				}
 				if(orthoProcLink!=null) {
 					if(!isSilent) {
-						MsgBox.Show(this,"Cannot change the status of completed procedures that are linked to an ortho cases. Detach the procedure from the ortho case first.");
+						MessageBox.Show("Cannot change the status of completed procedures that are linked to an ortho cases. Detach the procedure from the ortho case first.");
 					}
 					return false;
 				}
@@ -5198,7 +5198,7 @@ namespace OpenDental {
 					return false;
 				}
 				if(procDate.Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-					MsgBox.Show(this,"Completed procedures cannot be set for future dates.");
+					MessageBox.Show("Completed procedures cannot be set for future dates.");
 					return false;
 				}
 				#endregion
@@ -5213,7 +5213,7 @@ namespace OpenDental {
 				.Select(x => (DataRow)gridProg.ListGridRows[x].Tag).ToList();
 			if(!CanDisplayAppointment() || listSelectedRows.Count!=1) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Only procedures, single appointments, or single tasks may be set complete.");
+					MessageBox.Show("Only procedures, single appointments, or single tasks may be set complete.");
 				}
 				//Row selected is not an appoitment or the rows selected != 1
 				return false;
@@ -5227,13 +5227,13 @@ namespace OpenDental {
 			Appointment apt=doCheckDb ? Appointments.GetOneApt(aptNum) : LoadData.ArrAppts.FirstOrDefault(x => x.AptNum==aptNum);
 			if(apt==null) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Appointment does not exist.");
+					MessageBox.Show("Appointment does not exist.");
 				}
 				return false;
 			}
 			if(apt.AptStatus==ApptStatus.Complete) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Already complete.");
+					MessageBox.Show("Already complete.");
 				}
 				return false;
 			}
@@ -5243,7 +5243,7 @@ namespace OpenDental {
 				|| apt.AptStatus==ApptStatus.UnschedList) 
 			{
 				if(!isSilent) {
-					MsgBox.Show(this,"Not allowed for that status.");
+					MessageBox.Show("Not allowed for that status.");
 				}
 				return false;
 			}
@@ -5263,13 +5263,13 @@ namespace OpenDental {
 			if(apt.AptDateTime.Date>DateTime.Today.Date) {
 				if(!PrefC.GetBool(PrefName.ApptAllowFutureComplete)) {
 					if(!isSilent) {
-						MsgBox.Show(this,"Not allowed to set future appointments complete."); 
+						MessageBox.Show("Not allowed to set future appointments complete."); 
 					}
 					return false;
 				}
 				if(!PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
 					if(!isSilent) {
-						MsgBox.Show(this,"Not allowed to set procedures complete with future dates."); 
+						MessageBox.Show("Not allowed to set procedures complete with future dates."); 
 					}
 					return false;
 				}
@@ -5280,7 +5280,7 @@ namespace OpenDental {
 				&& !hasProcsAttached)
 			{
 				if(!isSilent) {
-					MsgBox.Show(this,"Appointments without procedures attached can not be set complete."); 
+					MessageBox.Show("Appointments without procedures attached can not be set complete."); 
 				}
 				return false;
 			}
@@ -5293,7 +5293,7 @@ namespace OpenDental {
 				return false;
 			}
 			#endregion Provider Term Date Check
-			else if(!isSilent && !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Set appointment complete?")) {
+			else if(!isSilent && !MsgBox.Show(MsgBoxButtons.OKCancel,"Set appointment complete?")) {
 				return false;
 			}
 			return true;//Appointment row can be completed
@@ -5305,11 +5305,11 @@ namespace OpenDental {
 				.Select(x => (DataRow)gridProg.ListGridRows[x].Tag).ToList();
 			if(!CanDisplayTask() || listSelectedRows.Count!=1) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Only procedures, single appointments, or single tasks may be set complete.");
+					MessageBox.Show("Only procedures, single appointments, or single tasks may be set complete.");
 				}
 				return false;
 			}
-			if(!isSilent && !MsgBox.Show(this,MsgBoxButtons.OKCancel,"The selected task will be marked Done and will affect all users.")) {
+			if(!isSilent && !MsgBox.Show(MsgBoxButtons.OKCancel,"The selected task will be marked Done and will affect all users.")) {
 				return false;
 			}
 			if(listSelectedRows.Count!=gridProg.SelectedIndices.Length) {
@@ -5320,7 +5320,7 @@ namespace OpenDental {
 				Task taskCur=Tasks.GetOne(taskNum);
 				if(taskCur==null) {
 					if(!isSilent) {
-						MsgBox.Show(this,"The task has been deleted or moved.  Try again.");
+						MessageBox.Show("The task has been deleted or moved.  Try again.");
 					}
 					return false;
 				} 
@@ -5408,13 +5408,13 @@ namespace OpenDental {
 			}
 			if(row["ProcNum"].ToString()=="0") {
 				if(!isSilent) {
-					MsgBox.Show(this,"Please select a lab procedure first.");
+					MessageBox.Show("Please select a lab procedure first.");
 				}
 				return false;
 			}
 			if(row["ProcNumLab"].ToString()=="0") {
 				if(!isSilent) {
-					MsgBox.Show(this,"The selected procedure is not attached as a lab procedure.");
+					MessageBox.Show("The selected procedure is not attached as a lab procedure.");
 				}
 				return false;
 			}
@@ -5454,27 +5454,27 @@ namespace OpenDental {
 		private bool CanEditRow(DataRow row,bool doCheckDb,bool isSilent,List<Procedure> listProcsToEdit) {
 			if(checkAudit.Checked) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Not allowed to edit procedures when in audit mode.");
+					MessageBox.Show("Not allowed to edit procedures when in audit mode.");
 				}
 				return false;
 			}
 			long procNum=PIn.Long(row["ProcNum"].ToString());
 			if(procNum==0) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Only procedures may be edited.");
+					MessageBox.Show("Only procedures may be edited.");
 				}
 				return false;
 			}
 			Procedure proc=doCheckDb ? Procedures.GetOneProc(procNum,true) : LoadData.ListProcs.FirstOrDefault(x => x.ProcNum==procNum);
 			if(proc==null) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Procedure does not exist.");
+					MessageBox.Show("Procedure does not exist.");
 				}
 				return false;
 			}
 			if(proc.IsLocked) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Locked procedures cannot be edited.");
+					MessageBox.Show("Locked procedures cannot be edited.");
 				}
 				return false;
 			}
@@ -5487,14 +5487,14 @@ namespace OpenDental {
 			long procNum=PIn.Long(row["ProcNum"].ToString());
 			if(procNum==0) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Some of the selected items are not procedures.\r\n"
+					MessageBox.Show("Some of the selected items are not procedures.\r\n"
 					+"Select only procedures and try again.");
 				}
 				return false;
 			}
 			if(gridProg.SelectedTags<DataRow>().Count(x => x["ProcNum"].ToString()!="0")<2) {
 				if(!isSilent) {
-					MsgBox.Show(this,"At least two procedures must be selected to create a multiple visit group.");
+					MessageBox.Show("At least two procedures must be selected to create a multiple visit group.");
 				}
 				return false;
 			}
@@ -5502,7 +5502,7 @@ namespace OpenDental {
 				: LoadData.ListProcMultiVisits.FindAll(x => x.ProcNum==procNum);
 			if(listProcMVs.Count>0) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Some of the selected items belong to existing multiple visit groups.\r\n"
+					MessageBox.Show("Some of the selected items belong to existing multiple visit groups.\r\n"
 					+"Select only procedures which are not part of a multiple visit group and try again.\r\n"
 					+"Consider ungrouping an existing group before adding new procedures to the group if needed.");
 				}
@@ -5516,7 +5516,7 @@ namespace OpenDental {
 			long procNum=PIn.Long(row["ProcNum"].ToString());
 			if(procNum==0) { //This is not a procedure.
 				if(!isSilent) {
-					MsgBox.Show(this,"You may only attach a group note to procedures.");
+					MessageBox.Show("You may only attach a group note to procedures.");
 				}
 				return false;
 			}
@@ -5526,25 +5526,25 @@ namespace OpenDental {
 			}
 			if(ProcedureCodes.GetStringProcCode(proc.CodeNum,doThrowIfMissing: false)==ProcedureCodes.GroupProcCode) {
 				if(!isSilent) {
-					MsgBox.Show(this,"You cannot attach a group note to another group note.");
+					MessageBox.Show("You cannot attach a group note to another group note.");
 				}
 				return false;
 			}
 			if(proc.IsLocked) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Locked procedures cannot be attached to a group note.");
+					MessageBox.Show("Locked procedures cannot be attached to a group note.");
 				}
 				return false;
 			}
 			if(proc.ProcStatus!=ProcStat.C) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Procedures must be complete to attach a group note.");
+					MessageBox.Show("Procedures must be complete to attach a group note.");
 				}
 				return false;
 			}
 			if(proc.ProcStatus==ProcStat.C && proc.ProcDate.Date>DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Completed procedures cannot be set complete for days in the future.");
+					MessageBox.Show("Completed procedures cannot be set complete for days in the future.");
 				}
 				return false;
 			}
@@ -5590,13 +5590,13 @@ namespace OpenDental {
 		private bool CanPrintRoutingSlip(bool isSilent) {
 			if(gridProg.SelectedIndices.Length==0) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Please select an appointment first.");
+					MessageBox.Show("Please select an appointment first.");
 				}
 				return false;
 			}
 			if(checkAudit.Checked) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Not allowed in audit mode.");
+					MessageBox.Show("Not allowed in audit mode.");
 				}
 				return false;
 			}
@@ -5604,7 +5604,7 @@ namespace OpenDental {
 				|| ((DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[0]].Tag)["AptNum"].ToString()=="0") 
 			{
 				if(!isSilent) {
-					MsgBox.Show(this,"Routing slips can only be printed for single appointments.");
+					MessageBox.Show("Routing slips can only be printed for single appointments.");
 				}
 				return false;
 			}
@@ -5616,7 +5616,7 @@ namespace OpenDental {
 			long procNum=PIn.Long(row["ProcNum"].ToString());
 			if(procNum==0) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Some of the selected items are not procedures.\r\n"
+					MessageBox.Show("Some of the selected items are not procedures.\r\n"
 					+"Select only procedures and try again.");
 				}
 				return false;
@@ -5625,7 +5625,7 @@ namespace OpenDental {
 				List<ProcMultiVisit> listProcMVs=LoadData.ListProcMultiVisits.FindAll(x => x.ProcNum==procNum);
 				if(listProcMVs.Count==0) {
 					if(!isSilent) {
-						MsgBox.Show(this,"Selected procedures are not part of multi visit group.");
+						MessageBox.Show("Selected procedures are not part of multi visit group.");
 					}
 					return false;
 				}
@@ -6201,7 +6201,7 @@ namespace OpenDental {
 			Def selectedButtonCatDef=listButtonCats.GetSelected<Def>();//Will not be null if 'Quick Buttons' is selected due to above if statement
 			List<long> listProcButtonDefNums=Defs.GetDefsForCategory(DefCat.ProcButtonCats,true).Select(x => x.DefNum).ToList();
 			if(!listProcButtonDefNums.Contains(selectedButtonCatDef.DefNum)) {
-				MsgBox.Show(this,"The Procedue Button Category has been hidden.");
+				MessageBox.Show("The Procedue Button Category has been hidden.");
 				ModuleSelected(_patCur.PatNum);
 				return;
 			}
@@ -6871,13 +6871,13 @@ namespace OpenDental {
 		private bool IsAuditMode(bool isSilent) {
 			if(gridProg.SelectedIndices.Count(x => x>-1 && x<gridProg.ListGridRows.Count)==0) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Please select an item first."); 
+					MessageBox.Show("Please select an item first."); 
 				}
 				return false;
 			}
 			if(checkAudit.Checked) {
 				if(!isSilent) {
-					MsgBox.Show(this,"Not allowed in audit mode."); 
+					MessageBox.Show("Not allowed in audit mode."); 
 				}
 				return false;
 			}
@@ -7379,7 +7379,7 @@ namespace OpenDental {
 					return;//Patient has a future scheduled appt that is not Diagnostic,Xray,or Preventative
 				}
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Create Planned Appointment with highest priority planned treatment selected?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Create Planned Appointment with highest priority planned treatment selected?")) {
 				return;
 			}
 			List<Def> listTreatPlanPriorities=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
@@ -7538,7 +7538,7 @@ namespace OpenDental {
 			}
 			catch(ApplicationException ex) {
 				if(ex.Message=="Missing codenum") {
-					MsgBox.Show(this,$"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
+					MessageBox.Show($"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
 					_patCur=null;
 					LoadData=null;
 					return;
@@ -7847,12 +7847,12 @@ namespace OpenDental {
 
 		private void Tool_Consent_Click() {
 			if(_patCur==null) {
-				MsgBox.Show(this,"Please select a patient.");
+				MessageBox.Show("Please select a patient.");
 				return;
 			}
 			List<SheetDef> listSheetDefs=SheetDefs.GetCustomForType(SheetTypeEnum.Consent);
 			if(listSheetDefs.Count>0) {
-				MsgBox.Show(this,"Please use dropdown list.");
+				MessageBox.Show("Please use dropdown list.");
 				return;
 			}
 			SheetDef sheetDef=SheetsInternal.GetSheetDef(SheetInternalType.Consent);
@@ -7865,13 +7865,13 @@ namespace OpenDental {
 
 		private void Tool_EHR_Click(bool onLoadShowOrders) {
 			if(_patCur==null) {
-				MsgBox.Show(this,"Please select a patient.");
+				MessageBox.Show("Please select a patient.");
 				return;
 			}
 			//Quarterly key check was removed from here so that any customer can use EHR tools
 			//But we require a EHR subscription for them to obtain their MU reports.
 			if(Providers.GetProv(_patCur.PriProv)==null) {
-				MsgBox.Show(this,"Please set the patient's primary provider first.");
+				MessageBox.Show("Please set the patient's primary provider first.");
 				return;
 			}
 			FormEHR formEHR=new FormEHR();
@@ -7942,14 +7942,14 @@ namespace OpenDental {
 					message="The primary provider for this patient has a Term Date that has expired. "
 						+"Please change the primary provider for this patient or change the provider's term date.";
 				}
-				MsgBox.Show(this,message);
+				MessageBox.Show(message);
 				return;
 			}
 			#endregion Provider Term Date Check
 			if(erxOption==ErxOption.Legacy) {
 				string newCropAccountId=PrefC.GetString(PrefName.NewCropAccountId);
 				if(newCropAccountId=="") {//NewCrop has not been enabled yet.
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Continuing will enable basic Electronic Rx (eRx).  Fees are associated with this secure e-prescribing system.  See our online manual for details.  At this time, eRx only works for the United States and its territories, including Puerto Rico.  Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Continuing will enable basic Electronic Rx (eRx).  Fees are associated with this secure e-prescribing system.  See our online manual for details.  At this time, eRx only works for the United States and its territories, including Puerto Rico.  Continue?")) {
 						return;
 					}
 					//prepare the xml document to send--------------------------------------------------------------------------------------
@@ -8013,7 +8013,7 @@ namespace OpenDental {
 						string newCropName=PrefC.GetString(PrefName.NewCropName);
 						string newCropPassword=PrefC.GetString(PrefName.NewCropPassword);
 						if(newCropName=="" || newCropPassword=="") { //NewCrop does not allow blank passwords.
-							MsgBox.Show(this,"NewCropName preference and NewCropPassword preference must not be blank when using a NewCrop AccountID provided by a reseller.");
+							MessageBox.Show("NewCropName preference and NewCropPassword preference must not be blank when using a NewCrop AccountID provided by a reseller.");
 							return;
 						}
 					}
@@ -8025,7 +8025,7 @@ namespace OpenDental {
 					return;
 				}
 				if(Security.CurUser.EmployeeNum==0 && Security.CurUser.ProvNum==0) {
-					MsgBox.Show(this,"This user must be associated with either a provider or an employee.  The security admin must make this change before this user can submit prescriptions.");
+					MessageBox.Show("This user must be associated with either a provider or an employee.  The security admin must make this change before this user can submit prescriptions.");
 					return;
 				}
 				//clinicNum should be 0 for offices not using clinics.
@@ -8096,7 +8096,7 @@ namespace OpenDental {
 							listInvalidProvs=Providers.GetInvalidProvsByTermDate(new List<long> { prov.ProvNum },DateTime.Now);
 							if(listInvalidProvs.Count>0) {
 								message="The provider selected has a Term Date that has expired. Please select another provider.";
-								MsgBox.Show(this,message);
+								MessageBox.Show(message);
 								return;
 							}
 							#endregion Provider Term Date Check
@@ -8105,8 +8105,9 @@ namespace OpenDental {
 						arrayPostData=ErxXml.BuildDoseSpotPostDataBytes(doseSpotClinicID,doseSpotClinicKey,doseSpotUserID,onBehalfOfUserId,_patCur,out queryString);
 					}
 					//Running this block in debug won't work.
-					if(!ODBuild.IsDebug()) {
-						if(!isEmp && Security.CurUser.ProvNum!=0) {//Not a proxy clinician, so we want to validate that they are allowed access.
+					// TODO: This how do we test this?
+#if !DEBUG
+					if(!isEmp && Security.CurUser.ProvNum!=0) {//Not a proxy clinician, so we want to validate that they are allowed access.
 							DoseSpot.ValidateProvider(prov,clinicNum);
 							//hook for additional authorization before prescription is saved
 							bool[] arrayAuthorized=new bool[1] { false };
@@ -8143,7 +8144,7 @@ namespace OpenDental {
 							MessageBox.Show(Lan.g(this,"Contact support to enable eRx for clinic")+" "+clinicAbbr);
 							isDoseSpotAccessAllowed=false;
 						}
-					}
+#endif
 					//Try to add any self reported medications to DoseSpot before the user gets views their list.
 					DoseSpot.SyncPrescriptionsToDoseSpot(doseSpotClinicID,doseSpotClinicKey,doseSpotUserID,_patCur.PatNum);
 				}
@@ -8175,11 +8176,11 @@ namespace OpenDental {
 			}
 			//Validation------------------------------------------------------------------------------------------------------------------------------------------------------
 			if(Security.CurUser.EmployeeNum==0 && Security.CurUser.ProvNum==0) {
-				MsgBox.Show(this,"This user must be associated with either a provider or an employee.  The security admin must make this change before this user can submit prescriptions.");
+				MessageBox.Show("This user must be associated with either a provider or an employee.  The security admin must make this change before this user can submit prescriptions.");
 				return;
 			}
 			if(_patCur==null) {
-				MsgBox.Show(this,"No patient selected.");
+				MessageBox.Show("No patient selected.");
 				return;
 			}
 			Employee emp=null;
@@ -8223,7 +8224,7 @@ namespace OpenDental {
 				MessageBox.Show(ex.Message);//All ODExceptions thrown in this context should have already been translated.
 				return;
 			}
-			#region ProviderErx Validation
+#region ProviderErx Validation
 			string npi=Regex.Replace(prov.NationalProvID,"[^0-9]*","");//NPI with all non-numeric characters removed.
 			bool isAccessAllowed=true;
 			UpdateErxAccess(npi,"",0,"","",erxOption);//0/blank/blank for clinicNum/clinicid/clinickey is fine because we don't enable/disable the clinic for NewCrop.
@@ -8243,10 +8244,10 @@ namespace OpenDental {
 				MessageBox.Show(Lan.g(this,"Contact support to enable eRx for provider")+" "+prov.Abbr);
 				isAccessAllowed=false;
 			}
-			#endregion ProviderErx Validation
+#endregion ProviderErx Validation
 			string clickThroughXml="";
 			byte[] arrayPostDataBytes=ErxXml.BuildNewCropPostDataBytes(prov,emp,_patCur,out clickThroughXml);
-			#region Launch eRx in external browser window.
+#region Launch eRx in external browser window.
 //			string xmlBase64=System.Web.HttpUtility.HtmlEncode(Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(clickThroughXml)));
 //			xmlBase64=xmlBase64.Replace("+","%2B");//A common base 64 character which needs to be escaped within URLs.
 //			xmlBase64=xmlBase64.Replace("/","%2F");//A common base 64 character which needs to be escaped within URLs.
@@ -8262,11 +8263,11 @@ namespace OpenDental {
 //			string newCropUrl="https://secure.newcropaccounts.com/interfacev7/rxentry.aspx";
 //#endif
 //			IE.Navigate(newCropUrl,null,null,PostDataBytes,additionalHeaders);
-			#endregion Launch eRx in external browser window.
+#endregion Launch eRx in external browser window.
 			try {
 				//Enforce Latest IE Version Available.
 				if(MiscUtils.TryUpdateIeEmulation()) {
-					MsgBox.Show(this,"Browser emulation version updated.\r\nYou must restart this application before using eRx.");
+					MessageBox.Show("Browser emulation version updated.\r\nYou must restart this application before using eRx.");
 					return;
 				}
 				FormErx formErx=new FormErx();
@@ -8298,7 +8299,7 @@ namespace OpenDental {
 
 		private void Tool_ExamSheet_Click() {
 			if(_patCur==null) {
-				MsgBox.Show(this,"Please select a patient.");
+				MessageBox.Show("Please select a patient.");
 				return;
 			}
 			FormExamSheets formExamSheets=new FormExamSheets();
@@ -8307,85 +8308,102 @@ namespace OpenDental {
 			formExamSheets.Show();
 		}
 
-		private void Tool_HL7_Click() {
+		private void Tool_HL7_Click()
+		{
 			DataRow row;
-			if(gridProg.SelectedIndices.Length==0) {
+			if (gridProg.SelectedIndices.Length == 0)
+			{
 				//autoselect procedures
-				for(int i=0;i<gridProg.ListGridRows.Count;i++) {//loop through every line showing in progress notes
-					row=(DataRow)gridProg.ListGridRows[i].Tag;
-					if(row["ProcNum"].ToString()=="0") {
+				for (int i = 0; i < gridProg.ListGridRows.Count; i++)
+				{//loop through every line showing in progress notes
+					row = (DataRow)gridProg.ListGridRows[i].Tag;
+					if (row["ProcNum"].ToString() == "0")
+					{
 						continue;//ignore non-procedures
 					}
 					//May want to ignore procs with zero fee?
 					//if((decimal)row["chargesDouble"]==0) {
 					//  continue;//ignore zero fee procedures, but user can explicitly select them
 					//}
-					if(PIn.Date(row["ProcDate"].ToString())==DateTime.Today && PIn.Int(row["ProcStatus"].ToString())==(int)ProcStat.C) {
-						gridProg.SetSelected(i,true);
+					if (PIn.Date(row["ProcDate"].ToString()) == DateTime.Today && PIn.Int(row["ProcStatus"].ToString()) == (int)ProcStat.C)
+					{
+						gridProg.SetSelected(i, true);
 					}
 				}
-				if(gridProg.SelectedIndices.Length==0) {//if still none selected
-					MsgBox.Show(this,"Please select procedures first.");
+				if (gridProg.SelectedIndices.Length == 0)
+				{//if still none selected
+					MessageBox.Show("Please select procedures first.");
 					return;
 				}
 			}
-			List<Procedure> listProcs=new List<Procedure>();
-			bool allAreProcedures=true;
-			for(int i=0;i<gridProg.SelectedIndices.Length;i++) {
-				row=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[i]].Tag;
-				if(row["ProcNum"].ToString()=="0") {
-					allAreProcedures=false;
+			List<Procedure> listProcs = new List<Procedure>();
+			bool allAreProcedures = true;
+			for (int i = 0; i < gridProg.SelectedIndices.Length; i++)
+			{
+				row = (DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[i]].Tag;
+				if (row["ProcNum"].ToString() == "0")
+				{
+					allAreProcedures = false;
 				}
-				else {
-					listProcs.Add(Procedures.GetOneProc(PIn.Long(row["ProcNum"].ToString()),false));
+				else
+				{
+					listProcs.Add(Procedures.GetOneProc(PIn.Long(row["ProcNum"].ToString()), false));
 				}
 			}
-			if(!allAreProcedures) {
-				MsgBox.Show(this,"You can only select procedures.");
+			if (!allAreProcedures)
+			{
+				MessageBox.Show("You can only select procedures.");
 				return;
 			}
-			long aptNum=0;
-			for(int i=0;i<listProcs.Count;i++) {
-				if(listProcs[i].AptNum==0) {
+			long aptNum = 0;
+			for (int i = 0; i < listProcs.Count; i++)
+			{
+				if (listProcs[i].AptNum == 0)
+				{
 					continue;
 				}
-				aptNum=listProcs[i].AptNum;
+				aptNum = listProcs[i].AptNum;
 				break;
 			}
-			if(HL7Defs.GetOneDeepEnabled().IsProcApptEnforced && listProcs.Any(x => x.AptNum==0)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"At least one of these procedures is not attached to an appointment. Send anyway?")) {
+			if (HL7Defs.GetOneDeepEnabled().IsProcApptEnforced && listProcs.Any(x => x.AptNum == 0))
+			{
+				if (!MsgBox.Show(MsgBoxButtons.YesNo, "At least one of these procedures is not attached to an appointment. Send anyway?"))
+				{
 					return;
 				}
 			}
-//todo: compare with: Bridges.ECW.AptNum, no need to generate PDF segment, pdfs only with eCW and this button not available with eCW integration
-			MessageHL7 messageHL7=MessageConstructor.GenerateDFT(listProcs,EventTypeHL7.P03,_patCur,_famCur.ListPats[0],aptNum,"treatment","PDF Segment");
-			if(messageHL7==null) {
-				MsgBox.Show(this,"There is no DFT message type defined for the enabled HL7 definition.");
+			//todo: compare with: Bridges.ECW.AptNum, no need to generate PDF segment, pdfs only with eCW and this button not available with eCW integration
+			MessageHL7 messageHL7 = MessageConstructor.GenerateDFT(listProcs, EventTypeHL7.P03, _patCur, _famCur.ListPats[0], aptNum, "treatment", "PDF Segment");
+			if (messageHL7 == null)
+			{
+				MessageBox.Show("There is no DFT message type defined for the enabled HL7 definition.");
 				return;
 			}
-			HL7Msg hl7Msg=new HL7Msg();
-			hl7Msg.AptNum=aptNum;
-			hl7Msg.HL7Status=HL7MessageStatus.OutPending;//it will be marked outSent by the HL7 service.
-			hl7Msg.MsgText=messageHL7.ToString();
-			hl7Msg.PatNum=_patCur.PatNum;
-			HL7ProcAttach hl7ProcAttach=new HL7ProcAttach();
-			hl7ProcAttach.HL7MsgNum=HL7Msgs.Insert(hl7Msg);
-			foreach(Procedure proc in listProcs) {
-				hl7ProcAttach.ProcNum=proc.ProcNum;
+			HL7Msg hl7Msg = new HL7Msg();
+			hl7Msg.AptNum = aptNum;
+			hl7Msg.HL7Status = HL7MessageStatus.OutPending;//it will be marked outSent by the HL7 service.
+			hl7Msg.MsgText = messageHL7.ToString();
+			hl7Msg.PatNum = _patCur.PatNum;
+			HL7ProcAttach hl7ProcAttach = new HL7ProcAttach();
+			hl7ProcAttach.HL7MsgNum = HL7Msgs.Insert(hl7Msg);
+			foreach (Procedure proc in listProcs)
+			{
+				hl7ProcAttach.ProcNum = proc.ProcNum;
 				HL7ProcAttaches.Insert(hl7ProcAttach);
 			}
-			if(ODBuild.IsDebug()) {
-				MsgBox.Show(this,messageHL7.ToString());
-			}
-			else {
-				MessageBox.Show(listProcs.Count+" "+(listProcs.Count==1?Lan.g(this,"procedure"):Lan.g(this,"procedures"))
-					+" "+Lan.g(this,"queued to be sent by the HL7 service."));
-			}
+
+#if DEBUG
+			MessageBox.Show(messageHL7.ToString());
+#endif
+
+			MessageBox.Show(listProcs.Count + " " + (listProcs.Count == 1 ? Lan.g(this, "procedure") : Lan.g(this, "procedures"))
+					+ " " + Lan.g(this, "queued to be sent by the HL7 service."));
+
 		}
 
 		private void Tool_LabCase_Click() {
 			if(_patCur==null) {
-				MsgBox.Show(this,"Please select a patient.");
+				MessageBox.Show("Please select a patient.");
 				return;
 			}
 			LabCase labCase=new LabCase();
@@ -8421,7 +8439,7 @@ namespace OpenDental {
 
 		private void Tool_Perio_Click() {
 			if(_patCur==null || LoadData==null || LoadData.TableProgNotes==null) {
-				MsgBox.Show(this,"Please select a patient and try again.");
+				MessageBox.Show("Please select a patient and try again.");
 				return;
 			}
 			List<Procedure> listProcedures=new List<Procedure>();
@@ -8449,7 +8467,7 @@ namespace OpenDental {
 
 		private void Tool_Ortho_Click() {
 			if(_patCur==null) {
-				MsgBox.Show(this,"Please select a patient.");
+				MessageBox.Show("Please select a patient.");
 				return;
 			}
 			//We store the current patNum because previously we've seen PatCur become null prior to ModuleSelected(...) being called somehow.
@@ -8494,7 +8512,7 @@ namespace OpenDental {
 				menuItemChartSave_Click(this,new EventArgs());
 				return;
 			}
-			MsgBox.Show(this,"Please use dropdown list.");
+			MessageBox.Show("Please use dropdown list.");
 			return;
 		}
 
@@ -8699,9 +8717,9 @@ namespace OpenDental {
 		private bool UsingEcwTightOrFull() {
 			return Programs.UsingEcwTightOrFullMode();
 		}
-		#endregion Methods - Private - General
+#endregion Methods - Private - General
 
-		#region Methods - Private - Tab EnterTx
+#region Methods - Private - Tab EnterTx
 		///<summary>Sets many fields for a new procedure, then displays it for editing before inserting it into the db.  No need to worry about ProcOld because it's an insert, not an update.  AddProcedure and AddQuick both call AddProcHelper, where most of the logic for setting the fields for a new procedure is located.</summary>
 		private void AddProcedure(Procedure ProcCur,List<Fee> listFees) {
 			if(!AddProcHelper(ProcCur,listFees)) { //Procedure was deleted.
@@ -8749,7 +8767,7 @@ namespace OpenDental {
 				ProcCur.ProcDate=ProcCur.DateTP;
 			}
 			ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(ProcCur.CodeNum);
-			#region ProvNum
+#region ProvNum
 			//This strategy for assigning procnum is consistent here, in the Chart Module, but it doesn't seem to be used anywhere else.
 			//For example, in the Appt Module, for recall, etc, the proc is simply whatever appointment we are in.
 			ProcCur.ProvNum=procCodeCur.ProvNumDefault;//use proc default prov if set
@@ -8777,15 +8795,15 @@ namespace OpenDental {
 					ProcCur.ProvNum=provPri;
 				}
 			}
-			#endregion ProvNum
+#endregion ProvNum
 			if(_procStatusNew==ProcStat.C) {
 				if(ProcCur.ProcDate.Date>DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-					MsgBox.Show(this,"Completed procedures cannot be set for future dates.");
+					MessageBox.Show("Completed procedures cannot be set for future dates.");
 					return false;
 				}
 				Procedures.SetOrthoProcComplete(ProcCur,procCodeCur); //does nothing if not an ortho proc
 			}
-			#region Note
+#region Note
 			if(_procStatusNew==ProcStat.C || _procStatusNew==ProcStat.TP) {
 				string procNoteDefault=ProcCodeNotes.GetNote(ProcCur.ProvNum,ProcCur.CodeNum,_procStatusNew);
 				if(ProcCur.Note!="" && procNoteDefault!="") {
@@ -8800,7 +8818,7 @@ namespace OpenDental {
 			else {
 				ProcCur.Note="";
 			}
-			#endregion
+#endregion
 			ProcCur.ClinicNum=_patCur.ClinicNum;
 			if(_procStatusNew==ProcStat.R || _procStatusNew==ProcStat.EO || _procStatusNew==ProcStat.EC) {
 				ProcCur.ProcFee=0;
@@ -9035,7 +9053,7 @@ namespace OpenDental {
 			//orionProcNum=0;
 			if(_procStatusNew==ProcStat.C) {
 				if(!PrefC.GetBool(PrefName.AllowSettingProcsComplete)) {
-					MsgBox.Show(this,"Set the procedure complete by setting the appointment complete.  "
+					MessageBox.Show("Set the procedure complete by setting the appointment complete.  "
 						+"If you want to be able to set procedures complete, you must turn on that option in Setup | Chart | Chart Preferences.");
 					return;
 				}
@@ -9193,17 +9211,13 @@ namespace OpenDental {
 		private void ProcButtonClicked(ProcButton procButton,ProcButtonQuick procButtonQuick=null) {
 			if(_procStatusNew==ProcStat.C) {
 				if(!PrefC.GetBool(PrefName.AllowSettingProcsComplete)) {
-					MsgBox.Show(this,"Set the procedure complete by setting the appointment complete.  "
+					MessageBox.Show("Set the procedure complete by setting the appointment complete.  "
 						+"If you want to be able to set procedures complete, you must turn on that option in Setup | Chart | Chart Preferences.");
 					return;
 				}
 				if(!Security.IsAuthorized(Permissions.ProcComplCreate,PIn.Date(textDate.Text))) {
 					return;
 				}
-			}
-			if(ODBuild.IsTrial() && procButton==null) {//Quick button
-				MsgBox.Show(this,"Quick buttons do not work in the trial version because dummy codes are being used instead of real codes.  Just to the left, change to a different category to see other procedure buttons available which do work.");
-				return;
 			}
 			bool isValid;
 			TreatmentArea tArea;
@@ -9227,7 +9241,7 @@ namespace OpenDental {
 			//It is very important that we stop users here before entering any procedures or doing any automation.
 			foreach(long autoCodeNum in arrayAutoCodeList) {
 				if(!AutoCodes.GetContainsKey(autoCodeNum)) {
-					MsgBox.Show(this,$"The procedure button '{procButton.Description}' contains an invalid AutoCode.\r\n" +
+					MessageBox.Show($"The procedure button '{procButton.Description}' contains an invalid AutoCode.\r\n" +
 						$"Run {nameof(DatabaseMaintenances.ProcButtonItemsDeleteWithInvalidAutoCode)} in the Database Maintenance Tool and try again.");
 					return;
 				}
@@ -9586,9 +9600,9 @@ namespace OpenDental {
 		public void UserLogOffCommited() {
 			_sheetLayoutController?.UserLogOffCommited();//Can be null if user never visted the chart module.
 		}
-		#endregion Methods - Private Tab - EnterTx
+#endregion Methods - Private Tab - EnterTx
 
-		#region Methods - Private - Tab Movements
+#region Methods - Private - Tab Movements
 		private void FillMovementsAndHidden() {
 			if(_toothChartRelay.SelectedTeeth.Count==0) {
 				textShiftM.Text="";
@@ -9642,17 +9656,17 @@ namespace OpenDental {
 					}
 				}
 			}
-			#region Hidden
+#region Hidden
 			listHidden.Items.Clear();
 			_arrayListHiddenTeeth=ToothInitials.GetHiddenTeeth(_listToothInitials);
 			for(int i=0;i<_arrayListHiddenTeeth.Count;i++) {
 				listHidden.Items.Add(Tooth.ToInternat((string)_arrayListHiddenTeeth[i]));
 			}
-			#endregion
+#endregion
 		}
-		#endregion Methods - Private - Tab Movements
+#endregion Methods - Private - Tab Movements
 
-		#region Methods - Private - Tab Planned Appts
+#region Methods - Private - Tab Planned Appts
 		private void FillPlanned() {
 			if(_patCur==null) {
 				//clear patient data, might be left over if login sessions changed
@@ -9781,9 +9795,9 @@ namespace OpenDental {
 				}
 			}
 		}
-		#endregion Methods - Private - Tab Planned Appts
+#endregion Methods - Private - Tab Planned Appts
 
-		#region Methods - Private - Tab Show
+#region Methods - Private - Tab Show
 		///<summary>Searches the given row at the given column for any matching search terms in searchInput. If a match is found, the search term is removed from searchInput.</summary>
 		private void CheckForSearchMatch(string columnName,DataRow rowCur,ref List<string> searchInput,bool isClinicDesc=false,bool isClinicAbbr=false) {
 			for(int i=searchInput.Count-1;i>=0;--i) {
@@ -9976,9 +9990,9 @@ namespace OpenDental {
 				});
 			}
 		}
-		#endregion Methods - Private - Tab Show
+#endregion Methods - Private - Tab Show
 
-		#region Methods - Helpers - Tab Planned
+#region Methods - Helpers - Tab Planned
 		///<summary>Sets item orders appropriately. Does not reorder list, and does not repaint/refill grid.</summary>
 		private void moveItemOrderHelper(DataRow plannedAppt,int newItemOrder) {
 			int plannedApptItemOrder=PIn.Int(plannedAppt["ItemOrder"].ToString());
@@ -10042,9 +10056,9 @@ namespace OpenDental {
 				PlannedAppts.Update(plannedAppt,oldPlannedAppt);
 			}
 		}
-		#endregion Methods - Helpers - Tab Planned
+#endregion Methods - Helpers - Tab Planned
 
-		#region Helper - Classes - Public
+#region Helper - Classes - Public
 		///<summary>Class that holds a DataRow along with the index of the table it is a part of.</summary>
 		public class DataRowWithIdx {
 			public DataRow Row;
@@ -10055,9 +10069,9 @@ namespace OpenDental {
 				Index=index;
 			}
 		}
-		#endregion Helper - Classes - Public
+#endregion Helper - Classes - Public
 
-		#region Methods - Inactive
+#region Methods - Inactive
 
 		//private void Tool_EHR_Click_old(bool onLoadShowOrders) {
 		//	#if EHRTEST
@@ -10373,9 +10387,9 @@ namespace OpenDental {
 		//	ProcButtonClicked(0, "D2394");
 		//}
 		//#endregion Quick Buttons
-		#endregion Methods - Inactive
+#endregion Methods - Inactive
 
-		#region VisiQuick integration code written by Thomas Jensen tje@thomsystems.com 
+#region VisiQuick integration code written by Thomas Jensen tje@thomsystems.com 
 		/*
 		private void XrayLinkBtn_Click(object sender, System.EventArgs e)	// TJE
 		{
@@ -10511,11 +10525,11 @@ namespace OpenDental {
 			VQLink.SearchPhotos("",VisiQuick.spf_single,VisiQuick.spi_fileview);
 		}
 		*/
-		#endregion
+#endregion
 
 	}//end class
 
-	#region Class - ODDataRowComparer
+#region Class - ODDataRowComparer
 	/// <summary>Compares two given DataRows by their associated row types and PK column.</summary>
 	public class ODDataRowComparer : IEqualityComparer<DataRow> {
 		public bool Equals(DataRow x,DataRow y) {
@@ -10528,5 +10542,5 @@ namespace OpenDental {
 			return 0;
 		}
 	}
-	#endregion Class - ODDataRowComparer
+#endregion Class - ODDataRowComparer
 }

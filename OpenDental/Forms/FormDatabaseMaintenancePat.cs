@@ -120,7 +120,7 @@ namespace OpenDental {
 
 		private void Run(ODGrid gridCur,DbmMode modeCur) {
 			if(_patNum<1) {
-				MsgBox.Show(this,"Select a patient first.");
+				MessageBox.Show("Select a patient first.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -212,7 +212,7 @@ namespace OpenDental {
 			//We know that this method supports giving the user a break down and shall call the method's fix section where the break down results should be.
 			//TODO: Make sure that DBM methods with break downs ALWAYS have the break down in the fix section.
 			if(_patNum<1) {
-				MsgBox.Show(this,"Select a patient first.");
+				MessageBox.Show("Select a patient first.");
 				return;
 			}
 			DbmMethodAttr methodAttributes=(DbmMethodAttr)Attribute.GetCustomAttribute(method,typeof(DbmMethodAttr));
@@ -292,7 +292,7 @@ namespace OpenDental {
 			}
 			//We know that this method supports giving the user a break down and shall call the method's fix section where the break down results should be.
 			if(_patNum<1) {
-				MsgBox.Show(this,"Select a patient first.");
+				MessageBox.Show("Select a patient first.");
 				return;
 			}
 			DbmMethodAttr methodAttributes=(DbmMethodAttr)Attribute.GetCustomAttribute(_listDbmMethodsGridOld[e.Row],typeof(DbmMethodAttr));

@@ -103,14 +103,14 @@ namespace OpenDental {
 					|| x.Status==ClaimProcStatus.Supplemental
 					|| x.Status==ClaimProcStatus.CapClaim)) 
 				{
-					MsgBox.Show("Procedures","The appointment provider does not match the provider on at least one procedure that is attached " 
+					MsgBox.Show("The appointment provider does not match the provider on at least one procedure that is attached " 
 						+"to a claim.\r\nThe provider on the procedure(s) cannot be changed.");
 					return true;
 				}
 			}
 			List<PaySplit> listPaySplit=PaySplits.GetPaySplitsFromProcs(listCompletedProcWithDifferentProv.Select(x=>x.ProcNum).ToList());
 			if(listPaySplit.Count>0) {
-				MsgBox.Show("Procedures","The appointment provider does not match the provider on at least one completed procedure.\r\n"
+				MsgBox.Show("The appointment provider does not match the provider on at least one completed procedure.\r\n"
 					+"The procedure provider cannot be changed to match the appointment provider because the paysplit provider would no longer match.  "
 					+"Any change to the provider on the completed procedure(s) or paysplit(s) will have to be made manually.");
 				return true;//paysplits exist on one of the completed procedures. Per Nathan, don't change the provider. User will need to change manually.
@@ -146,7 +146,7 @@ namespace OpenDental {
 			if(proc.ProcStatus==ProcStat.C && Procedures.IsAttachedToClaim(proc,listClaimProcs.FindAll(x => x.ProcNum==proc.ProcNum),false)) {
 				//status cannot be changed for completed procedures attached to a claim, except we allow changing status for preauths.
 				if(!isSilent) {
-					MsgBox.Show("Procedures","This is a completed procedure that is attached to a claim.  You must remove the procedure from the claim"+
+					MsgBox.Show("This is a completed procedure that is attached to a claim.  You must remove the procedure from the claim"+
 						" or delete the claim before editing the status.");
 				}
 				return true;
@@ -156,7 +156,7 @@ namespace OpenDental {
 
 		public static bool IsQuantityValid(int quantity) {
 			if(quantity<1) {
-				MsgBox.Show("Procedures","Qty not valid.  Typical value is 1.");
+				MsgBox.Show("Qty not valid.  Typical value is 1.");
 				return false;
 			}
 			return true;
@@ -225,7 +225,7 @@ namespace OpenDental {
 			if(provNumForProc!=selectedProvNum && PrefC.GetBool(PrefName.ProcProvChangesClaimProcWithClaim)) {
 				//if selected prov is null (no selection made), no change will happen to the provider
 				if(listClaimProcsForProc.Any(x => x.Status.In(ClaimProcStatus.Received,ClaimProcStatus.Supplemental,ClaimProcStatus.CapClaim))) {
-					MsgBox.Show("Procedures","The provider cannot be changed when this procedure is attached to a claim.");
+					MsgBox.Show("The provider cannot be changed when this procedure is attached to a claim.");
 					return false;
 				}
 			}

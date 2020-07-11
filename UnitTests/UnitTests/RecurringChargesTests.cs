@@ -260,7 +260,6 @@ namespace UnitTests.RecurringCharges_Tests {
 		[TestMethod]
 		public void RecurringCharges_FillCharges_AdjustmentsOnProcs() {
 			PrefT.UpdateBool(PrefName.EasyNoClinics,true);
-			PrefT.UpdateBool(PrefName.DockPhonePanelShow,true);//Run as OD HQ
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			CreditCard cc=CreditCardT.CreateCard(pat.PatNum,50,DateTime.Today,0,authorizedProcs:"001");
@@ -281,7 +280,6 @@ namespace UnitTests.RecurringCharges_Tests {
 		[TestMethod]
 		public void RecurringCharges_FillCharges_TwoAdjustmentsOnProcs() {
 			PrefT.UpdateBool(PrefName.EasyNoClinics,true);
-			PrefT.UpdateBool(PrefName.DockPhonePanelShow,true);//Run as OD HQ
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			CreditCard cc=CreditCardT.CreateCard(pat.PatNum,50,DateTime.Today,0,authorizedProcs:"001");

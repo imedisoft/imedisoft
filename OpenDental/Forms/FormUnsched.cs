@@ -406,7 +406,7 @@ namespace OpenDental{
 
 		private void menuRight_click(object sender,System.EventArgs e) {
 			if(grid.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			switch(menuRightClick.Items.IndexOf((ToolStripMenuItem)sender)) {
@@ -443,7 +443,7 @@ namespace OpenDental{
 		///<summary>If multiple patients are selected in UnchedList, will select the last patient to remain consistent with sending to pinboard behavior.</summary>
 		private void SeeChart_Click() {
 			if(grid.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			Patient pat=Patients.GetPat(_listUnschedApt[grid.SelectedIndices[grid.SelectedIndices.Length-1]].PatNum);//If multiple selected, just take the last one to remain consistent with SendPinboard_Click.

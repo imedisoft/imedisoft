@@ -162,12 +162,9 @@ namespace OpenDentBusiness {
 			//No need to check RemotingRole; no call to db.
 			TransferableAutoNotes export=new TransferableAutoNotes(listAutoNotes,listAutoNoteControls);
 			string json=JsonConvert.SerializeObject(export);
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(path,json);
-			}
-			else {
+
 				File.WriteAllText(path,json);
-			}
+			
 		}
 	}
 

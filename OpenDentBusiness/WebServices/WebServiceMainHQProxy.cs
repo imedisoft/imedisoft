@@ -122,10 +122,14 @@ namespace OpenDentBusiness {
 			string shortCodePracticeTitle=string.IsNullOrWhiteSpace(PrefC.GetString(PrefName.ShortCodeOptInClinicTitle))
 				? PrefC.GetString(PrefName.PracticeTitle) : PrefC.GetString(PrefName.ShortCodeOptInClinicTitle);
 			bool isMockChanged=false;
-			if(ODBuild.IsDebug() && WebServiceMainHQProxy.MockWebServiceMainHQ==null && !Environment.MachineName.In("CHRISM","ANDREWD","SAM","LINDSAYS")) {
+
+#if DEBUG
+			if(WebServiceMainHQProxy.MockWebServiceMainHQ==null && !Environment.MachineName.In("CHRISM","ANDREWD","SAM","LINDSAYS")) {
 				WebServiceMainHQProxy.MockWebServiceMainHQ=new WebServiceMainHQMockDemo();
 				isMockChanged=true;
 			}
+#endif
+
 			EServiceSetup.SignupOut signupOut=WebSerializer.ReadXml<EServiceSetup.SignupOut>
 				(
 					WebSerializer.DeserializePrimitiveOrThrow<string>
@@ -158,9 +162,11 @@ namespace OpenDentBusiness {
 						)
 					)
 				);
-			if(ODBuild.IsDebug() && isMockChanged) {
+#if DEBUG
+			if(isMockChanged) {
 				WebServiceMainHQProxy.MockWebServiceMainHQ=null;
 			}
+#endif
 			//We just got the latest sync info from HQ so update the local db to reflect what HQ says is true.
 			#region Reconcile Phones
 			List<SmsPhone> listPhonesHQ=EServiceSetup.SignupOut.SignupOutPhone.ToSmsPhones(signupOut.Phones);

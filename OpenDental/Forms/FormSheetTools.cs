@@ -114,7 +114,7 @@ namespace OpenDental {
 				return;
 			}
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Imported.");
+			MessageBox.Show("Imported.");
 		}
 
 		private void butExport_Click(object sender,EventArgs e) {

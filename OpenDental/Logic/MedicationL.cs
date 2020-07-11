@@ -88,12 +88,9 @@ namespace OpenDental {
 				strBldrOutput.AppendLine(encapsulate(med.MedName)+'\t'+encapsulate(Medications.GetGenericName(med.GenericNum))+'\t'+encapsulate(med.Notes)
 					+'\t'+encapsulate(POut.Long(med.RxCui)));
 			}
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(filename,strBldrOutput.ToString());
-			}
-			else {
+
 				File.WriteAllText(filename,strBldrOutput.ToString());//Allow Exception to trickle up.
-			}
+			
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,
 				Lans.g("Medications","Exported")+" "+POut.Int(listMedications.Count)+" "+Lans.g("Medications","medications to:")+" "+filename
 			);

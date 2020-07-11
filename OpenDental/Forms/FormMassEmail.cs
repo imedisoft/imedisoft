@@ -183,7 +183,7 @@ namespace OpenDental {
 			int ageFrom=PIn.Int(textAgeFrom.Text);
 			int ageTo=PIn.Int(textAgeTo.Text);
 			if(ageFrom > ageTo) {
-				MsgBox.Show(this, "The 'From age' cannot be greater than the 'To age'.");
+				MessageBox.Show( "The 'From age' cannot be greater than the 'To age'.");
 				return;
 			}
 			_listPatients=new List<PatientInfo>();
@@ -340,7 +340,7 @@ namespace OpenDental {
 		}
 
 		private void butDeleteTemplate_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you want to delete the selected template? This cannot be undone.")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to delete the selected template? This cannot be undone.")) {
 				return;
 			}
 			//Create an API instance with the clinic num for this template.
@@ -361,7 +361,7 @@ namespace OpenDental {
 
 		private void butCopy_Click(object sender,EventArgs e) {
 			if(_templateCur==null) {
-				MsgBox.Show(this,"No valid template selected to copy from.");
+				MessageBox.Show("No valid template selected to copy from.");
 				return;
 			}
 			EmailHostingTemplate copyTemplate=_templateCur.DeepCopy<EmailHostingTemplate,EmailHostingTemplate>();
@@ -437,7 +437,7 @@ namespace OpenDental {
 			string fileName=Path.GetFileName(openFileDialog.FileName);
 			string path=openFileDialog.FileName;
 			if(!File.Exists(path)) {
-				MsgBox.Show(this,"File does not exist or cannot be read.");
+				MessageBox.Show("File does not exist or cannot be read.");
 				return;
 			}
 			if(Path.GetExtension(fileName)!=".html") {
@@ -587,7 +587,7 @@ namespace OpenDental {
 		private void butSendEmails_Click(object sender,EventArgs e) {
 			//send the email with the selected template to each person that is in the selected patients grid.
 			if(_listPatientsSelected.Count<=0) {
-				MsgBox.Show(this,"Patients must be selected before email can be sent.");
+				MessageBox.Show("Patients must be selected before email can be sent.");
 				return;
 			}
 			if(_templateCur.TemplateId==0) {

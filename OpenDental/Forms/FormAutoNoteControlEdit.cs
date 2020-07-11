@@ -164,7 +164,7 @@ namespace OpenDental {
 
 		private void butAutoNoteResp_Click(object sender,EventArgs e) {
 			if(comboType.SelectedItem.ToString()!="OneResponse") {
-				MsgBox.Show(this,"Can only add AutoNotes to single response types.");
+				MessageBox.Show("Can only add AutoNotes to single response types.");
 				return;//This shouldn't happen since the button should not be visible. Adding just in case.
 			}
 			FormAutoNoteResponsePicker FormARP=new FormAutoNoteResponsePicker();
@@ -187,7 +187,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Completely delete this prompt?  It will not be available from any AutoNote.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Completely delete this prompt?  It will not be available from any AutoNote.")) {
 				return;
 			}
 			AutoNoteControls.Delete(ControlCur.AutoNoteControlNum);
@@ -204,11 +204,11 @@ namespace OpenDental {
 			if(textBoxControlDescript.Text.ToString()=="" 
 				|| comboType.SelectedIndex==-1) 
 			{
-				MsgBox.Show(this,"Please make sure that the Description and Type are not blank");
+				MessageBox.Show("Please make sure that the Description and Type are not blank");
 				return;
 			}
 			if(!Regex.IsMatch(textBoxControlDescript.Text,"^[a-zA-Z_0-9 ]*$")){
-				MsgBox.Show(this,"The description can only contain letters, numbers, underscore, and space.");
+				MessageBox.Show("The description can only contain letters, numbers, underscore, and space.");
 				return;
 			}
 			ControlCur.Descript=textBoxControlDescript.Text.ToString();

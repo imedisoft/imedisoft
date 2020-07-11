@@ -118,7 +118,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(String.IsNullOrWhiteSpace(textEmp.Text)) {
-				MsgBox.Show(this,"Please enter an employer name.");
+				MessageBox.Show("Please enter an employer name.");
 				return;
 			}
 			Employer empOld=EmployerCur.Copy();

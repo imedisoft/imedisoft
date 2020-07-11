@@ -151,7 +151,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(listPats.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a patient first.");
+				MessageBox.Show("Please select a patient first.");
 				return;
 			}
 			SelectedPatNum=listPats.GetSelected<Patient>().PatNum;

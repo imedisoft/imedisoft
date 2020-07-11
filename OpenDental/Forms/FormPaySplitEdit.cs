@@ -565,7 +565,7 @@ namespace OpenDental {
 				//get all plans where the selected patient is the patnum or the guarantor of the payplan. Do not include insurance payment plans
 				List<PayPlan> payPlanList=PayPlans.GetForPatNum(_famCur.ListPats[listPatient.SelectedIndex].PatNum).Where(x => x.PlanNum == 0).ToList();
 				if(payPlanList.Count==0){//no valid plans
-					MsgBox.Show(this,"The selected patient is not the guarantor for any payment plans.");
+					MessageBox.Show("The selected patient is not the guarantor for any payment plans.");
 					checkPayPlan.Checked=false;
 					return;
 				}
@@ -600,7 +600,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(!MsgBox.Show(this,true,"Delete Item?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete Item?")) {
 				return;
 			}
 			if(IsNew) {
@@ -616,7 +616,7 @@ namespace OpenDental {
 			}
 			//If there are objects in the list and the current paysplit is associated to another paysplit.
 			if(!ListPaySplitAssociated.IsNullOrEmpty() && ListPaySplitAssociated.Exists(x => x.ContainsSplit(PaySplitCur))) {
-				MsgBox.Show(this,"Attached splits have been allocated elsewhere.  Please delete those first.");
+				MessageBox.Show("Attached splits have been allocated elsewhere.  Please delete those first.");
 				return;
 			}
 			PaySplitCur=null;
@@ -625,13 +625,13 @@ namespace OpenDental {
 
 		private bool IsValid() {
 			if(textAmount.errorProvider1.GetError(textAmount)!=""	|| textDatePay.errorProvider1.GetError(textDatePay)!=""){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			//check for TP pre-pay changes. If money has been detached from procedure it needs to be transferred to regular unearned if had been hidden.
 			if(_procedureOld!=null && _procedureOld.ProcStatus==ProcStat.TP && ProcCur==null && !string.IsNullOrEmpty(_unearnedOld?.ItemValue)) {
 				//user has detached the hidden paysplit 
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Hidden split is no longer attached to a procedure. Change unearned type to default?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Hidden split is no longer attached to a procedure. Change unearned type to default?")) {
 					comboUnearnedTypes.SetSelectedDefNum(PrefC.GetLong(PrefName.PrepaymentUnearnedType));
 					PaySplitCur.UnearnedType=comboUnearnedTypes.GetSelectedDefNum();
 				}
@@ -643,26 +643,35 @@ namespace OpenDental {
 			if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully && PaySplitCur.UnearnedType!=0 && ProcCur!=null 
 				&& !_isEditAnyway && ProcCur.ProcStatus!=ProcStat.TP) 
 			{
-				MsgBox.Show(this,"Cannot have an unallocated split that also has an attached procedure.");
+				MessageBox.Show("Cannot have an unallocated split that also has an attached procedure.");
 				return false;
 			}
 			if(ProcCur!=null && _adjCur!=null) {//should not be possible, but as an extra precaution because this is not allowed. 
-				MsgBox.Show(this,"Cannot have a paysplit with both a procedure and an adjustment.");
+				MessageBox.Show("Cannot have a paysplit with both a procedure and an adjustment.");
 				return false;
 			}
-			if(_remainAmt<0 && ProcCur!=null) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Remaining amount is negative.  Continue?","Overpaid Procedure Warning")) {
+
+			if (_remainAmt < 0 && ProcCur != null)
+			{
+				var result = MessageBox.Show(this,
+					"Remaining amount is negative. Continue?",
+					"Overpaid Procedure Warning",
+					MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+				if (result == DialogResult.Cancel)
+				{
 					return false;
 				}
 			}
+
       if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully && ProcCur==null && PaySplitCur.UnearnedType==0 
 					&& _adjCur==null) 
 			{
-				MsgBox.Show(this,"You must attach a procedure or adjustment to this payment.");
+				MessageBox.Show("You must attach a procedure or adjustment to this payment.");
 				return false;
       }
 			if(comboUnearnedTypes.SelectedIndex==0 && comboProvider.SelectedIndex==0) {
-				MsgBox.Show(this,"Please select an unearned type or a provider.");
+				MessageBox.Show("Please select an unearned type or a provider.");
 				return false;
 			}
 			//at this point in time, TP procs are allowed to have providers even if provs are typically not allowed on prepayments.
@@ -672,7 +681,7 @@ namespace OpenDental {
 				}
 				else if(PaySplitCur.ProvNum<=0){
 					if(comboUnearnedTypes.SelectedIndex==0 
-						&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"Having a provider of \"None\" will mark this paysplit as a prepayment.  Continue?")) 
+						&& !MsgBox.Show(MsgBoxButtons.YesNo,"Having a provider of \"None\" will mark this paysplit as a prepayment.  Continue?")) 
 					{
 						return false;
 					}

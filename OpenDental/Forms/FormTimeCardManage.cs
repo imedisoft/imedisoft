@@ -42,7 +42,7 @@ namespace OpenDental {
 		private void FormTimeCardManage_Load(object sender,EventArgs e) {
 			SelectedPayPeriod=PayPeriods.GetForDate(DateTimeOD.Today);
 			if(SelectedPayPeriod==-1) {
-				MsgBox.Show(this,"At least one pay period needs to exist before you can manage time cards.");
+				MessageBox.Show("At least one pay period needs to exist before you can manage time cards.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -501,7 +501,7 @@ namespace OpenDental {
 		//Prints one timecard for each employee.
 		private void butPrintAll_Click(object sender,EventArgs e) {
 			if(gridMain.ListGridRows.Count==0) {
-				MsgBox.Show(this,"No time cards to print.");
+				MessageBox.Show("No time cards to print.");
 				return;
 			}
 			_pagesPrinted=0;
@@ -524,7 +524,7 @@ namespace OpenDental {
 		///<summary>Print timecards for selected employees only.</summary>
 		private void butPrintSelected_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"No employees selected, please select one or more employees or click 'Print All' to print all employees.");
+				MessageBox.Show("No employees selected, please select one or more employees or click 'Print All' to print all employees.");
 				return;
 			}
 			_pagesPrinted=0;
@@ -705,7 +705,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"No employees selected. Would you like to run calculations for all employees?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"No employees selected. Would you like to run calculations for all employees?")) {
 					return;
 				}
 				gridMain.SetSelected(true);
@@ -732,7 +732,7 @@ namespace OpenDental {
 				gridMain.SetSelected(listSelectedIndexCach[i],true);
 			}
 			if(aggregateErrors=="") {
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 			}
 			else {
 				MessageBox.Show(this,Lan.g(this,"Time cards were not calculated for some Employees for the following reasons")+":\r\n"+aggregateErrors);
@@ -744,7 +744,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0){
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"No employees selected. Would you like to run calculations for all employees?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"No employees selected. Would you like to run calculations for all employees?")) {
 					return;
 				}
 				gridMain.SetSelected(true);
@@ -772,7 +772,7 @@ namespace OpenDental {
 			}
 			//Done or Error messages.
 			if(aggregateErrors=="") {
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 			}
 			else {
 				MessageBox.Show(this,Lan.g(this,"Time cards were not calculated for some Employees for the following reasons")+":\r\n"+aggregateErrors);
@@ -780,7 +780,7 @@ namespace OpenDental {
 		}
 
 		private void butClearManual_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"This cannot be undone. Would you like to continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"This cannot be undone. Would you like to continue?")) {
 				return;
 			}
 			//List<Employee> employeesList = new List<Employee>();
@@ -804,7 +804,7 @@ namespace OpenDental {
 		}
 
 		private void butClearAuto_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This cannot be undone, but you can run the Calc buttons again later.  Would you like to continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This cannot be undone, but you can run the Calc buttons again later.  Would you like to continue?")) {
 				return;
 			}
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
@@ -891,11 +891,11 @@ namespace OpenDental {
 		///<summary>Exports MainTable (a data table) not the actual OD Grid. This allows for EmployeeNum and ADPNum without having to perform any lookups.</summary>
 		private void butExportGrid_Click(object sender,EventArgs e) {
 			FolderBrowserDialog fbd = new FolderBrowserDialog();
-			if(!ODBuild.IsWeb()) {
+
 				if(fbd.ShowDialog()!=DialogResult.OK) {
 					return;
 				}
-			}
+			
 			StringBuilder strb = new StringBuilder();
 			string headers="";
 			for(int i=0;i<MainTable.Columns.Count;i++) {
@@ -941,10 +941,6 @@ namespace OpenDental {
 				strb.AppendLine(row);
 			}
 			string fileName="ODPayroll"+DateTime.Now.ToString("yyyyMMdd_hhmmss")+".TXT";
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(fileName,strb.ToString());
-				return;
-			}
 			try {
 				System.IO.File.WriteAllText(fbd.SelectedPath+"\\"+fileName,strb.ToString());
 				MessageBox.Show(this,Lan.g(this,"File created")+" : "+fbd.SelectedPath+"\\"+fileName);
@@ -1071,11 +1067,11 @@ namespace OpenDental {
 				}
 			}
 			FolderBrowserDialog fbd = new FolderBrowserDialog();
-			if(!ODBuild.IsWeb()) {
+
 				if(fbd.ShowDialog()!=DialogResult.OK) {
 					return;
 				}
-			}
+			
 			string fileSuffix="";
 			for(int i=0;i<=1297;i++) {//1296=36*36 to represent all acceptable suffixes for file name consisting of two alphanumeric digits; +1 to catch error. (A-Z, 0-9)
 				fileSuffix="";
@@ -1097,22 +1093,16 @@ namespace OpenDental {
 				else {
 					fileSuffix+=(Char)((i%36)-10+65);//65='A' in ASCII.  (A to Z)
 				}
-				if(ODBuild.IsWeb()) {
-					break;//we don't have a way to check if the file exists
-				}
+
 				//File suffix is now a a two digit alphanumeric string.
 				if(!System.IO.File.Exists(fbd.SelectedPath+"\\EPI"+coCode+fileSuffix+".CSV")){
 					break;
 				}
 			}			
 			try {
-				if(ODBuild.IsWeb()) {
-					string fileName="EPI"+coCode+fileSuffix+".CSV";
-					ThinfinityUtils.ExportForDownload(fileName,strb.ToString());
-				}
-				else {
+
 					System.IO.File.WriteAllText(fbd.SelectedPath+"\\EPI"+coCode+fileSuffix+".CSV",strb.ToString());
-				}
+				
 				if(errors!="") {
 					MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(
 						"The following errors will prevent ADP from properly processing this export:\r\n"+errors);

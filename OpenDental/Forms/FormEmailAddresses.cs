@@ -100,11 +100,11 @@ namespace OpenDental {
 
 		private void butSetDefault_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a row first.");
+				MessageBox.Show("Please select a row first.");
 				return;
 			}
 			if(gridMain.SelectedTag<EmailAddress>().UserNum>0) {
-				MsgBox.Show(this,"User email address cannot be set as the default.");
+				MessageBox.Show("User email address cannot be set as the default.");
 				return;
 			}
 			if(Prefs.UpdateLong(PrefName.EmailDefaultAddressNum,_listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum)) {
@@ -115,11 +115,11 @@ namespace OpenDental {
 
 		private void butWebMailNotify_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a row first.");
+				MessageBox.Show("Please select a row first.");
 				return;
 			}
 			if(gridMain.SelectedTag<EmailAddress>().UserNum>0) {
-				MsgBox.Show(this,"User email address cannot be set as WebMail Notify.");
+				MessageBox.Show("User email address cannot be set as WebMail Notify.");
 				return;
 			}
 			if(Prefs.UpdateLong(PrefName.EmailNotifyAddressNum,_listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum)) {
@@ -144,7 +144,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			if(IsSelectionMode) {
 				if(gridMain.GetSelectedIndex()==-1) {
-					MsgBox.Show(this,"Please select an email address.");
+					MessageBox.Show("Please select an email address.");
 					return;
 				}
 				EmailAddressNum=_listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum;
@@ -158,7 +158,7 @@ namespace OpenDental {
 					}
 				}
 				catch {
-					MsgBox.Show(this,"Inbox check interval must be between 1 and 60 inclusive.");
+					MessageBox.Show("Inbox check interval must be between 1 and 60 inclusive.");
 					return;
 				}
 				if(Prefs.UpdateInt(PrefName.EmailInboxCheckInterval,inboxCheckIntervalMinuteCount)

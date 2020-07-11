@@ -168,21 +168,21 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!checkAllProvs.Checked && listProvs.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(_hasClinicsEnabled) {
 				if(!checkAllClinics.Checked && listClinics.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"At least one clinic must be selected.");
+					MessageBox.Show("At least one clinic must be selected.");
 					return;
 				}
 			}
 			if(radioAdj.Checked && listOptions.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one adjustment type must be selected.");
+				MessageBox.Show("At least one adjustment type must be selected.");
 				return;
 			}
 			if(radioProcs.Checked && listOptions.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one procedure code option must be selected.");
+				MessageBox.Show("At least one procedure code option must be selected.");
 				return;
 			}
 			List<long> listClinicNums=new List<long>();

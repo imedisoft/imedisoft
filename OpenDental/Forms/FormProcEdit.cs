@@ -291,7 +291,7 @@ namespace OpenDental {
 						|| _orionProcCur.Status2==OrionStatus.CA_PD
 						|| _orionProcCur.Status2==OrionStatus.CA_Tx
 						|| _orionProcCur.Status2==OrionStatus.R)) {//Not allowed to edit procedures with these statuses that are older than a day.
-						MsgBox.Show(this,"You cannot edit refused or cancelled procedures.");
+						MessageBox.Show("You cannot edit refused or cancelled procedures.");
 						DialogResult=DialogResult.Cancel;
 					}
 					if(_orionProcCur.Status2==OrionStatus.C || _orionProcCur.Status2==OrionStatus.CR || _orionProcCur.Status2==OrionStatus.CS) {
@@ -1172,7 +1172,7 @@ namespace OpenDental {
 				row.Cells.Add(InsPlans.GetDescript(_listClaimProcsForProc[i].PlanNum,_famCur,_listInsPlans,_listClaimProcsForProc[i].InsSubNum,_listInsSubs));
 				plan=InsPlans.GetPlan(_listClaimProcsForProc[i].PlanNum,_listInsPlans);
 				if(plan==null) {
-					MsgBox.Show(this,"No insurance plan exists for this claim proc.  Please run database maintenance.");
+					MessageBox.Show("No insurance plan exists for this claim proc.  Please run database maintenance.");
 					return;
 				}
 				if(plan.IsMedical) {
@@ -1292,7 +1292,7 @@ namespace OpenDental {
 
 		private void butAddEstimate_Click(object sender, System.EventArgs e) {
 			if(_procCur.ProcNumLab!=0) {
-				MsgBox.Show(this,"Estimates cannot be added directly to labs.  Lab estimates will be created automatically when the parent procedure estimates are calculated.");
+				MessageBox.Show("Estimates cannot be added directly to labs.  Lab estimates will be created automatically when the parent procedure estimates are calculated.");
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.InsWriteOffEdit,_procCur.DateEntryC)) {
@@ -1450,12 +1450,12 @@ namespace OpenDental {
 
 		private void butAddAdjust_Click(object sender, System.EventArgs e) {
 			if(_procCur.ProcStatus!=ProcStat.C){
-				MsgBox.Show(this,"Adjustments may only be added to completed procedures.");
+				MessageBox.Show("Adjustments may only be added to completed procedures.");
 				return;
 			}
 			bool isTsiAdj=(TsiTransLogs.IsTransworldEnabled(_patCur.ClinicNum)
 				&& Patients.IsGuarCollections(_patCur.Guarantor)
-				&& MsgBox.Show(this,MsgBoxButtons.YesNo,"The guarantor of this family has been sent to Transworld for collection.\r\n"
+				&& MsgBox.Show(MsgBoxButtons.YesNo,"The guarantor of this family has been sent to Transworld for collection.\r\n"
 					+"Is this an adjustment due to a payment received from Transworld?"));
 			Adjustment adj=new Adjustment();
 			adj.PatNum=_patCur.PatNum;
@@ -1479,7 +1479,7 @@ namespace OpenDental {
 				return;
 			}
 			if(_procCur.ProcStatus!=ProcStat.C){
-				MsgBox.Show(this,"Adjustments may only be added to completed procedures.");
+				MessageBox.Show("Adjustments may only be added to completed procedures.");
 				return;
 			}
 			FormAdjustmentPicker FormAP=new FormAdjustmentPicker(_patCur.PatNum,true);
@@ -1497,20 +1497,30 @@ namespace OpenDental {
 			}
 			List<PaySplit> listPaySplitsForAdjustment=PaySplits.GetForAdjustments(new List<long>{FormAP.SelectedAdjustment.AdjNum});
 			if(listPaySplitsForAdjustment.Count>0) {
-				MsgBox.Show(this,"Cannot attach adjustment which has associated payments");
+				MessageBox.Show("Cannot attach adjustment which has associated payments");
 				return;
 			}
 			List<PayPlanLink> listPayPlanLinks=PayPlanLinks.GetForFKeyAndLinkType(FormAP.SelectedAdjustment.AdjNum,PayPlanLinkType.Adjustment);
 			if(listPayPlanLinks.Count>0) {
-				MsgBox.Show(this,"Cannot attach adjustment which is associated to a payment plan.");
+				MessageBox.Show("Cannot attach adjustment which is associated to a payment plan.");
 				return;
 			}
 			decimal estPatPort=ClaimProcs.GetPatPortion(_procCur,_loadData.ListClaimProcsForProc,_loadData.ArrAdjustments.ToList());
 			decimal procPatPaid=(decimal)PaySplits.GetTotForProc(_procCur);
 			decimal adjRemAmt=estPatPort-procPatPaid+(decimal)FormAP.SelectedAdjustment.AdjAmt;
-			if(adjRemAmt<0 && !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Remaining amount is negative.  Continue?","Overpaid Procedure Warning")) {
-				return;
+
+			if (adjRemAmt < 0)
+			{
+				var result = MessageBox.Show(this,
+					"Remaining amount is negative. Continue?", "Overpaid Procedure Warning",
+					MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+				if (result == DialogResult.No)
+				{
+					return;
+				}
 			}
+
 			FormAP.SelectedAdjustment.ProcNum=_procCur.ProcNum;
 			FormAP.SelectedAdjustment.ProcDate=_procCur.ProcDate;
 			Adjustments.Update(FormAP.SelectedAdjustment);
@@ -1620,7 +1630,7 @@ namespace OpenDental {
 			ProcedureCode procCodeOld=ProcedureCodes.GetProcCode(_procCur.CodeNum);
 			ProcedureCode procCodeNew=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
 			if(procCodeOld.TreatArea != procCodeNew.TreatArea) {
-				MsgBox.Show(this,"Not allowed due to treatment area mismatch.");
+				MessageBox.Show("Not allowed due to treatment area mismatch.");
 				return;
 			}
       _procCur.CodeNum=FormP.SelectedCodeNum;
@@ -1701,7 +1711,7 @@ namespace OpenDental {
 				return;
 			}
 			if(_orthoProcLink!=null) {
-				MsgBox.Show(this,"Not allowed to edit specific procedure fields for procedures linked to an ortho case.");
+				MessageBox.Show("Not allowed to edit specific procedure fields for procedures linked to an ortho case.");
 				return;
 			}
 			panel1.Enabled=true;
@@ -1753,7 +1763,7 @@ namespace OpenDental {
 			if(comboProcStatus.GetSelected<ProcStat>()==ProcStat.C) {
 				bool isAllowedToCompl=true;
 				if(!PrefC.GetBool(PrefName.AllowSettingProcsComplete)) {
-					MsgBox.Show(this,"Set the procedure complete by setting the appointment complete.  "
+					MessageBox.Show("Set the procedure complete by setting the appointment complete.  "
 						+"If you want to be able to set procedures complete, you must turn on that option in Setup | Chart | Chart Preferences.");
 					isAllowedToCompl=false;
 				}
@@ -1820,11 +1830,11 @@ namespace OpenDental {
 		private void butSetComplete_Click(object sender, System.EventArgs e) {
 			//can't get to here if attached to a claim, even if use the Edit Anyway button.
 			if(_procOld.ProcStatus==ProcStat.C){
-				MsgBox.Show(this,"Procedure was already set complete.");
+				MessageBox.Show("Procedure was already set complete.");
 				return;
 			}
 			if(!PrefC.GetBool(PrefName.AllowSettingProcsComplete)) {
-				MsgBox.Show(this,"Set the procedure complete by setting the appointment complete.  "
+				MessageBox.Show("Set the procedure complete by setting the appointment complete.  "
 					+"If you want to be able to set procedures complete, you must turn on that option in Setup | Chart | Chart Preferences.");
 				return;
 			}
@@ -1833,7 +1843,7 @@ namespace OpenDental {
 			}
 			//If user is trying to change status to complete and using eCW.
 			if((IsNew || _procOld.ProcStatus!=ProcStat.C) && Programs.UsingEcwTightOrFullMode()) {
-				MsgBox.Show(this,"Procedures cannot be set complete in this window.  Set the procedure complete by setting the appointment complete.");
+				MessageBox.Show("Procedures cannot be set complete in this window.  Set the procedure complete by setting the appointment complete.");
 				return;
 			}
 			//broken appointment procedure codes shouldn't trigger DateFirstVisit update.
@@ -2440,7 +2450,7 @@ namespace OpenDental {
 				return;
 			}
 			if(Procedures.IsAttachedToClaim(_procCur,_listClaimProcsForProc)) {
-				MsgBox.Show(this,"This procedure is attached to a claim and cannot be invalidated without first deleting the claim.");
+				MessageBox.Show("This procedure is attached to a claim and cannot be invalidated without first deleting the claim.");
 				return;
 			}
 			try {
@@ -2563,7 +2573,7 @@ namespace OpenDental {
 				return;
 			}
 			if(_orthoProcLink!=null) {
-				MsgBox.Show(this,"Not allowed to delete a procedure that is linked to an ortho case. " +
+				MessageBox.Show("Not allowed to delete a procedure that is linked to an ortho case. " +
 					"Detach the procedure from the ortho case or delete the ortho case first.");
 				return;
 			}
@@ -2617,7 +2627,7 @@ namespace OpenDental {
 				tooManyNewLines.Append("\r\n");
 			}
 			if(textNotes.Text.Contains(tooManyNewLines.ToString())) {
-				MsgBox.Show(this,"The notes contain 50 or more consecutive blank lines. Probably unintentional and must be fixed.");
+				MessageBox.Show("The notes contain 50 or more consecutive blank lines. Probably unintentional and must be fixed.");
 				return false;
 			}
 			#endregion
@@ -2633,32 +2643,32 @@ namespace OpenDental {
 			#endregion
 			#region Provider UI
 			if(comboProv.GetSelectedProvNum()==0){
-				MsgBox.Show(this,"You must select a provider first.");
+				MessageBox.Show("You must select a provider first.");
 				return false;
 			}
 			#endregion
 			if(errorProvider2.GetError(textSurfaces)!=""
 				|| errorProvider2.GetError(textTooth)!="")
 			{
-				MsgBox.Show(this,"Please fix tooth number or surfaces first.");
+				MessageBox.Show("Please fix tooth number or surfaces first.");
 				return false;
 			}
 			if(errorProvider2.GetError(groupSextant)!=""
 				|| errorProvider2.GetError(groupArch)!="") 
 			{
-				MsgBox.Show(this,"Please fix arch or sextant first.");
+				MessageBox.Show("Please fix arch or sextant first.");
 				return false;
 			}
 			#region Medical Code
 			if(textMedicalCode.Text!="" && !ProcedureCodes.GetContainsKey(textMedicalCode.Text)){
-				MsgBox.Show(this,"Invalid medical code.  It must refer to an existing procedure code.");
+				MessageBox.Show("Invalid medical code.  It must refer to an existing procedure code.");
 				return false;
 			}
 			#endregion
 			#region Drug UI
 			if(textDrugNDC.Text!=""){
 				if(comboDrugUnit.SelectedIndex==(int)EnumProcDrugUnit.None || textDrugQty.Text==""){
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Drug quantity and unit are not entered.  Continue anyway?")){
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Drug quantity and unit are not entered.  Continue anyway?")){
 						return false;
 					}
 				}
@@ -2668,7 +2678,7 @@ namespace OpenDental {
 					float.Parse(textDrugQty.Text);
 				}
 				catch{
-					MsgBox.Show(this,"Please fix drug qty first.");
+					MessageBox.Show("Please fix drug qty first.");
 					return false;
 				}
 			}
@@ -2676,11 +2686,11 @@ namespace OpenDental {
 			#region Procedure Status
 			//If user is trying to change status to complete and using eCW.
 			if(_procCur.ProcStatus==ProcStat.C && (IsNew || _procOld.ProcStatus!=ProcStat.C) && Programs.UsingEcwTightOrFullMode()) {
-				MsgBox.Show(this,"Procedures cannot be set complete in this window.  Set the procedure complete by setting the appointment complete.");
+				MessageBox.Show("Procedures cannot be set complete in this window.  Set the procedure complete by setting the appointment complete.");
 				return false;
 			}
 			if(_procCur.ProcStatus==ProcStat.C && PIn.Date(textDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Completed procedures cannot have future dates.");
+				MessageBox.Show("Completed procedures cannot have future dates.");
 				return false;
 			}
 			if(_procOld.ProcStatus!=ProcStat.C && _procCur.ProcStatus==ProcStat.C){//if status was changed to complete
@@ -2722,7 +2732,7 @@ namespace OpenDental {
 						|| checkTypeCodeL.Checked
 						|| checkTypeCodeS.Checked) 
 					{
-						MsgBox.Show(this,"If type code 'none' is checked, no other type codes may be checked.");
+						MessageBox.Show("If type code 'none' is checked, no other type codes may be checked.");
 						return false;
 					}
 				}
@@ -2735,7 +2745,7 @@ namespace OpenDental {
 					&& !checkTypeCodeS.Checked
 					&& !checkTypeCodeX.Checked) 
 				{
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"At least one type code should be checked for prosthesis.  Continue anyway?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"At least one type code should be checked for prosthesis.  Continue anyway?")) {
 						return false;
 					}
 				}
@@ -2748,7 +2758,7 @@ namespace OpenDental {
 				if(_procedureCode2.IsProsth) {
 					if(listProsth.SelectedIndex==0
 					|| (listProsth.SelectedIndex==2 && textDateOriginalProsth.Text=="")) {
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Prosthesis date not entered. Continue anyway?")){
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Prosthesis date not entered. Continue anyway?")){
 							return false;
 						}
 					}
@@ -2759,15 +2769,15 @@ namespace OpenDental {
 			if(Programs.UsingOrion) {
 			//if(panelOrion.Visible) {
 				if(comboStatus.SelectedIndex==-1) {
-					MsgBox.Show(this,"Invalid status.");
+					MessageBox.Show("Invalid status.");
 					return false;
 				}
 				if(textDateScheduled.errorProvider1.GetError(textDateScheduled)!="") {
-					MsgBox.Show(this,"Invalid schedule date.");
+					MessageBox.Show("Invalid schedule date.");
 					return false;
 				}
 				if(textDateStop.errorProvider1.GetError(textDateStop)!="") {
-					MsgBox.Show(this,"Invalid stop clock date.");
+					MessageBox.Show("Invalid stop clock date.");
 					return false;
 				}
 			}
@@ -2775,7 +2785,7 @@ namespace OpenDental {
 			#region Quadrant UI
 			if(_procedureCode2.TreatArea==TreatmentArea.Quad) {
 				if(!radioUL.Checked && !radioUR.Checked && !radioLL.Checked && !radioLR.Checked) {
-					MsgBox.Show(this,"Please select a quadrant.");
+					MessageBox.Show("Please select a quadrant.");
 					return false;
 				}
 			}
@@ -2788,7 +2798,7 @@ namespace OpenDental {
 			#endregion
 			//Block if proc is linked to ortho case and user tries to set status from complete to any other status.
 			if(_orthoProcLink!=null && (_procOld.ProcStatus==ProcStat.C && _procCur.ProcStatus!=ProcStat.C)) {
-				MsgBox.Show(this,"The status of a completed procedure that is attached to an ortho case cannot be changed. " +
+				MessageBox.Show("The status of a completed procedure that is attached to an ortho case cannot be changed. " +
 					"Detach the procedure from the ortho case or delete the ortho case first.");
 				return false;
 			}
@@ -2904,7 +2914,7 @@ namespace OpenDental {
 						}
 					}
 					if(hasSplitProvChanged
-						&& !MsgBox.Show(this,MsgBoxButtons.OKCancel,"The provider for the associated payment splits will be changed to match the provider on the procedure.")) {
+						&& !MsgBox.Show(MsgBoxButtons.OKCancel,"The provider for the associated payment splits will be changed to match the provider on the procedure.")) {
 						return;
 					}
 				}
@@ -2918,7 +2928,7 @@ namespace OpenDental {
 					}
 				}
 				if(hasAdjProvChanged
-					&& !MsgBox.Show(this,MsgBoxButtons.OKCancel,"The provider for the associated adjustments will be changed to match the provider on the procedure.")) {
+					&& !MsgBox.Show(MsgBoxButtons.OKCancel,"The provider for the associated adjustments will be changed to match the provider on the procedure.")) {
 					return;
 				}
 			}
@@ -2928,11 +2938,11 @@ namespace OpenDental {
 			}
 			if(_procOld.ProcStatus==ProcStat.C && _procCur.ProcStatus!=ProcStat.C) {//Proc was complete but was changed.
 				if(Adjustments.GetForProc(_procCur.ProcNum,Adjustments.Refresh(_procCur.PatNum)).Count!=0
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"This procedure has adjustments attached to it. Changing the status from completed will delete any adjustments for the procedure. Continue?")) {
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"This procedure has adjustments attached to it. Changing the status from completed will delete any adjustments for the procedure. Continue?")) {
 					return;
 				}
 				if(sumPaySplits!=0) {
-					MsgBox.Show(this,"Not allowed to modify the status of a procedure that has payments attached to it. Detach payments from the procedure first.");
+					MessageBox.Show("Not allowed to modify the status of a procedure that has payments attached to it. Detach payments from the procedure first.");
 					return;
 				}
 			}
@@ -3368,12 +3378,12 @@ namespace OpenDental {
 			if(Programs.UsingOrion) {
 				if(_orionProcOld!=null && _orionProcOld.DateStopClock.Year>1880) {
 					if(PIn.Date(textDateStop.Text)>_orionProcOld.DateStopClock.Date) {
-						MsgBox.Show(this,"Future date not allowed for Date Stop Clock.");
+						MessageBox.Show("Future date not allowed for Date Stop Clock.");
 						return;
 					}
 				}
 				else if(PIn.Date(textDateStop.Text)>MiscData.GetNowDateTime().Date) {
-					MsgBox.Show(this,"Future date not allowed for Date Stop Clock.");
+					MessageBox.Show("Future date not allowed for Date Stop Clock.");
 					return;
 				}
 				//Strange logic for Orion for setting sched by date to a scheduled date from a previously cancelled TP on the same tooth/surf.
@@ -3385,14 +3395,14 @@ namespace OpenDental {
 							if(PIn.DateT(table.Rows[0]["DateScheduleBy"].ToString())>MiscData.GetNowDateTime().Date) {
 								textDateScheduled.Text=((DateTime)table.Rows[0]["DateScheduleBy"]).ToShortDateString();
 								_cancelledScheduleByDate=DateTime.Parse(textDateScheduled.Text);
-								MsgBox.Show(this,"Schedule by date cannot be later than: "+textDateScheduled.Text+".");
+								MessageBox.Show("Schedule by date cannot be later than: "+textDateScheduled.Text+".");
 								return;
 							}
 						}
 					}
 				}
 				if(comboDPC.SelectedIndex==0) {
-					MsgBox.Show(this,"DPC should not be \"Not Specified\".");
+					MessageBox.Show("DPC should not be \"Not Specified\".");
 					return;
 				}
 			}
@@ -3400,7 +3410,7 @@ namespace OpenDental {
 			if(_hasUserChanged 
 				&& !_procOld.Signature.IsNullOrEmpty()
 				&& signatureBoxWrapper.SigIsBlank 
-				&& !MsgBox.Show(this,MsgBoxButtons.OKCancel,
+				&& !MsgBox.Show(MsgBoxButtons.OKCancel,
 					"The signature box has not been re-signed.  Continuing will remove the previous signature from this procedure.  Exit anyway?")) 
 			{
 				return;

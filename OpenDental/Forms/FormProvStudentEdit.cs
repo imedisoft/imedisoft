@@ -99,19 +99,19 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textFirstName.Text=="") {
-				MsgBox.Show(this,"Please fill in a first name.");
+				MessageBox.Show("Please fill in a first name.");
 				return;
 			}
 			if(textLastName.Text=="") {
-				MsgBox.Show(this,"Please fill in a last name.");
+				MessageBox.Show("Please fill in a last name.");
 				return;
 			}
 			if(textAbbr.Text=="") {
-				MsgBox.Show(this,"Please fill in an abbreviation.");
+				MessageBox.Show("Please fill in an abbreviation.");
 				return;
 			}
 			if(textUserName.Text=="") {
-				MsgBox.Show(this,"Please fill in a user name.");
+				MessageBox.Show("Please fill in a user name.");
 				return;
 			}
 			ProvStudent.FName=textFirstName.Text;
@@ -126,12 +126,12 @@ namespace OpenDental {
 			if(isAutoUserName && !PrefC.GetBool(PrefName.RandomPrimaryKeys)) {//Is a new student using the default user name given
 				long provNum=Providers.GetNextAvailableProvNum();
 				if(_autoUserName!=provNum) {
-					MsgBox.Show(this,"The default user name was already taken.  The next available user name was used.");
+					MessageBox.Show("The default user name was already taken.  The next available user name was used.");
 					_autoUserName=provNum;
 				}
 				provNum=Providers.Insert(ProvStudent);
 				if(provNum!=_autoUserName) {
-					MsgBox.Show(this,"The default user name is unavailable.  Please set a user name manually.");
+					MessageBox.Show("The default user name is unavailable.  Please set a user name manually.");
 					Providers.Delete(ProvStudent);
 					return;
 				}

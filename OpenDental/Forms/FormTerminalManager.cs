@@ -108,25 +108,25 @@ namespace OpenDental {
 					FillGrid();
 					if(device.PatNum==0) { //we are trying to load the patient
 						if(FormOpenDental.CurPatNum==0) {
-							MsgBox.Show(this,"There is currently no patient selected to send to the device. Select a patient in Open Dental " +
+							MessageBox.Show("There is currently no patient selected to send to the device. Select a patient in Open Dental " +
 								"in order to continue.");
 							return;
 						}
 						if(device.IsKiosk) { //kiosk only
 							if(listSheets.Items.Count==0) { //eClipboard will allow to continue to load here in case we just want to take a photo
-								MsgBox.Show(this,"There are no sheets to send to the computer or device for the current patient.");
+								MessageBox.Show("There are no sheets to send to the computer or device for the current patient.");
 								return;
 							}
 						}
 						else { //eclipboard only
 							if(MobileAppDevices.PatientIsAlreadyUsingDevice(FormOpenDental.CurPatNum)) {
-								MsgBox.Show(this,"The patient you have selected is already using another device. Select a patient who is not currently "+
+								MessageBox.Show("The patient you have selected is already using another device. Select a patient who is not currently "+
 									"using a device in order to continue.");
 								return;
 							}
 							Appointment apptForToday=Appointments.GetAppointmentsForPat(FormOpenDental.CurPatNum).FirstOrDefault(x => x.AptDateTime.Date==DateTime.Today.Date);
 							if(apptForToday==null) {
-								MsgBox.Show(this,"The patient you have selected does not have an appointment today. Only patients with an "+
+								MessageBox.Show("The patient you have selected does not have an appointment today. Only patients with an "+
 									"appointment on the same day can be sent to eClipboard.");
 								return;
 							}
@@ -153,7 +153,7 @@ namespace OpenDental {
 						device.SetPatNum(FormOpenDental.CurPatNum);
 					}
 					else { //we are trying to clear the patient
-						if(!MsgBox.Show(this,true,"A patient is currently using the terminal.  If you continue, they will lose the information that is on their "
+						if(!MsgBox.Show(MsgBoxButtons.YesNo,"A patient is currently using the terminal.  If you continue, they will lose the information that is on their "
 							+"screen.  Continue anyway?")) {
 							return;
 						}
@@ -170,7 +170,7 @@ namespace OpenDental {
 					#region Delete click handler
 					void DeleteClick(object sender,EventArgs e) {
 						FillGrid();
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"A row should not be deleted unless it is showing erroneously and there really is "+
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"A row should not be deleted unless it is showing erroneously and there really is "+
 							"nothing running on the computer or device shown.  Continue anyway?")) {
 							return;
 						}
@@ -267,7 +267,7 @@ namespace OpenDental {
 			if(Prefs.UpdateString(PrefName.TerminalClosePassword,textPassword.Text)){
 				Signalods.SetInvalid(InvalidType.Prefs);
 			}
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

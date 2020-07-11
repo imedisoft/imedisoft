@@ -383,7 +383,7 @@ namespace OpenDental{
 		///b) There are clockevents tied to it and there are no other pay periods for the date of the clockevent.</summary>
 		private bool IsSafeToDelete(List<PayPeriod> listSelectedPayPeriods,out List<PayPeriod> retListToDelete) {
 			if(listSelectedPayPeriods.Where(x => x.DateStop < DateTimeOD.Today).Count() > 0) {
-				MsgBox.Show(this,"You may not delete past pay periods from here. Delete them individually by double clicking them instead.");
+				MessageBox.Show("You may not delete past pay periods from here. Delete them individually by double clicking them instead.");
 				retListToDelete=new List<PayPeriod>();
 				return false;
 			}
@@ -400,7 +400,7 @@ namespace OpenDental{
 				foreach(ClockEvent clockEvent in listClockEventsForPeriod) {
 					if(_listPayPeriods.Where(x => x.DateStart <= clockEvent.TimeDisplayed1 && x.DateStop >= clockEvent.TimeDisplayed1 && !listSelectedPayPeriods.Contains(x)).Count() < 1) {
 						//if no, then kick out.
-						MsgBox.Show(this,"You may not delete all pay periods where a clock event exists.");
+						MessageBox.Show("You may not delete all pay periods where a clock event exists.");
 						retListToDelete=new List<PayPeriod>();
 						return false;
 					}
@@ -479,10 +479,10 @@ namespace OpenDental{
 		
 		private void butDeleteRules_Click(object sender,EventArgs e) {
 			if(gridRules.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select one or more Rules to delete.");
+				MessageBox.Show("Please select one or more Rules to delete.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you want to delete all selected Rules?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to delete all selected Rules?")) {
 				return;
 			}
 			List<long> listTimeCardRuleNums=gridRules.SelectedTags<TimeCardRule>().Select(x => x.TimeCardRuleNum).ToList();
@@ -509,10 +509,10 @@ namespace OpenDental{
 		private void butDelete_Click(object sender,EventArgs e) {
 			//validation
 			if(gridMain.SelectedIndices.Length == 0) {
-				MsgBox.Show(this,"Please select one or more Pay Periods to delete.");
+				MessageBox.Show("Please select one or more Pay Periods to delete.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you want to delete all selected pay periods?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to delete all selected pay periods?")) {
 				return;
 			}
 			List<PayPeriod> listSelectedPayPeriods = new List<PayPeriod>();
@@ -546,7 +546,7 @@ namespace OpenDental{
 				e.Cancel=true;
 			}
 			if(textADPCompanyCode.Text!="" && !Regex.IsMatch(textADPCompanyCode.Text,"^[a-zA-Z0-9]{2,3}$")) {
-				MsgBox.Show(this,"ADP Company Code must be two or three alpha-numeric characters.\r\nFix or clear before continuing.");
+				MessageBox.Show("ADP Company Code must be two or three alpha-numeric characters.\r\nFix or clear before continuing.");
 				e.Cancel=true;
 			}
 			if(Prefs.UpdateString(PrefName.ADPCompanyCode,textADPCompanyCode.Text)) {

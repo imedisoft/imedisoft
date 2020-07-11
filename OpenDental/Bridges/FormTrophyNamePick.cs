@@ -58,7 +58,7 @@ namespace OpenDental.Bridges {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select an item from the list first.");
+				MessageBox.Show("Please select an item from the list first.");
 				return;
 			}
 			PickedName=ListMatches[gridMain.GetSelectedIndex()].FolderName;

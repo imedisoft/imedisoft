@@ -343,7 +343,7 @@ namespace OpenDental{
 			if(PayPlanChargeCur.Principal<0//Payment plan adjustments are always negative
 				&& textPrincipal.errorProvider1.GetError(textPrincipal)!="")//This will ensure number is negative due to defined range.
 			{
-				MsgBox.Show(this,"Adjustments must be negative.");
+				MessageBox.Show("Adjustments must be negative.");
 				return;
 			}
 			if( textDate.errorProvider1.GetError(textDate)!=""
@@ -354,7 +354,7 @@ namespace OpenDental{
 				return;
 			}
 			//if(comboProvNum.SelectedIndex==-1){
-			//	MsgBox.Show(this,"Please select a provider first.");
+			//	MessageBox.Show("Please select a provider first.");
 			//	return;
 			//}
 			if(textPrincipal.Text==""){

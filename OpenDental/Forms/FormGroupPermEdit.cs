@@ -230,12 +230,12 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!="" || textDays.errorProvider1.GetError(textDays)!=""){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			int newerDays=PIn.Int(textDays.Text);
 			if(newerDays>GroupPermissions.NewerDaysMax) {
-				MsgBox.Show(this,$"Days must be less than {GroupPermissions.NewerDaysMax.ToString()}.");
+				MessageBox.Show($"Days must be less than {GroupPermissions.NewerDaysMax.ToString()}.");
 				return;
 			}
 			Cur.NewerDays=newerDays;

@@ -207,12 +207,12 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!=""){
-				MsgBox.Show(this,"Please fix error first.");
+				MessageBox.Show("Please fix error first.");
 				return;
 			}
 			int days = 0;
 			if(!int.TryParse(textDays.Text,out days) && !string.IsNullOrEmpty(textDays.Text)) {
-				MsgBox.Show(this,"Invalid number of days.");
+				MessageBox.Show("Invalid number of days.");
 				return;
 			}
 			if(days<0) {

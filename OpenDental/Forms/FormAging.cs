@@ -207,7 +207,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDateCalc.errorProvider1.GetError(textDateCalc)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime dateCalc=PIn.Date(textDateCalc.Text);
@@ -239,7 +239,7 @@ namespace OpenDental{
 					DataValid.SetInvalid(InvalidType.Prefs);
 				}
 			}
-			MsgBox.Show(this,"Aging Complete");
+			MessageBox.Show("Aging Complete");
 			DialogResult=DialogResult.OK;
 		}
 	}

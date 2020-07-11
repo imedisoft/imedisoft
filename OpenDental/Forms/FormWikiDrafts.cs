@@ -122,7 +122,7 @@ namespace OpenDental {
 				return;
 			}
 			int selectedIndex=gridMain.GetSelectedIndex();
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete this draft?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this draft?")) {
 				return;
 			}
 			try {

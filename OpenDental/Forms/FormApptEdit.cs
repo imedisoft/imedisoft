@@ -147,7 +147,7 @@ namespace OpenDental{
 				_isInsertRequired=true;
 				Patient pat=patient??Patients.GetPat(patNum);
 				if(pat==null) {
-					MsgBox.Show(this,"Invalid patient passed in.  Please call support or try again.");
+					MessageBox.Show("Invalid patient passed in.  Please call support or try again.");
 					DialogResult=DialogResult.Cancel;
 					if(!this.Modal) {
 						Close();
@@ -174,7 +174,7 @@ namespace OpenDental{
 
 		private void FormApptEdit_Load(object sender, System.EventArgs e) {
 			if(AptCur==null) {//Can happen if appointment was deleted by another WS.
-				MsgBox.Show(this,"Appointment no longer exists.");
+				MessageBox.Show("Appointment no longer exists.");
 				DialogResult=DialogResult.Cancel;
 				if(!this.Modal) {
 					Close();
@@ -719,7 +719,7 @@ namespace OpenDental{
 			if (commNum>0) {
 				Commlog item=Commlogs.GetOne(commNum);
 				if(item==null) {
-					MsgBox.Show(this,"This commlog has been deleted by another user.");
+					MessageBox.Show("This commlog has been deleted by another user.");
 					return;
 				}
 				FormCommItem FormCI=new FormCommItem(item);
@@ -728,7 +728,7 @@ namespace OpenDental{
 			else if (msgNum>0) {
 				EmailMessage email=EmailMessages.GetOne(msgNum);
 				if (email==null) {
-					MsgBox.Show(this,"This e-mail has been deleted by another user.");
+					MessageBox.Show("This e-mail has been deleted by another user.");
 					return;
 				}
 				FormEmailMessageEdit FormEME=new FormEmailMessageEdit(email,isDeleteAllowed:false);
@@ -930,7 +930,7 @@ namespace OpenDental{
 			}
 			bool updateTextYN=false;
 			if(pat.TxtMsgOk==YN.No) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"This patient is marked to not receive text messages. "
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"This patient is marked to not receive text messages. "
 					+"Would you like to mark this patient as okay to receive text messages?")) {
 					updateTextYN=true;
 				}
@@ -939,7 +939,7 @@ namespace OpenDental{
 				}
 			}
 			if(pat.TxtMsgOk==YN.Unknown && PrefC.GetBool(PrefName.TextMsgOkStatusTreatAsNo)) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"This patient might not want to receive text messages. "
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"This patient might not want to receive text messages. "
 					+"Would you like to mark this patient as okay to receive text messages?")) {
 					updateTextYN=true;
 				}
@@ -1064,10 +1064,10 @@ namespace OpenDental{
 		private void butDeleteProc_Click(object sender,EventArgs e) {
 			//this button will not be enabled if user does not have permission for AppointmentEdit
 			if(gridProc.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select one or more procedures first.");
+				MessageBox.Show("Please select one or more procedures first.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Permanently delete all selected procedure(s)?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Permanently delete all selected procedure(s)?")){
 				return;
 			}
 			int skipped=0;
@@ -1144,7 +1144,7 @@ namespace OpenDental{
 
 		private void butAdd_Click(object sender,EventArgs e) {
 			if(comboProv.GetSelectedProvNum()==0) {
-				MsgBox.Show(this,"Please select a provider.");
+				MessageBox.Show("Please select a provider.");
 				return;
 			}
 			FormProcCodes FormP=new FormProcCodes();
@@ -1350,7 +1350,7 @@ namespace OpenDental{
 				return;
 			}
 			if(comboProv.GetSelectedProvNum()==0){
-				MsgBox.Show(this,"Please select a provider.");
+				MessageBox.Show("Please select a provider.");
 				return;
 			}
 			if(listQuickAdd.IndexFromPoint(e.X,e.Y)==-1) {
@@ -1365,7 +1365,7 @@ namespace OpenDental{
 			string[] codes=_listApptProcsQuickAddDefs[listQuickAdd.IndexFromPoint(e.X,e.Y)].ItemValue.Split(',');
 			for(int i=0;i<codes.Length;i++) {
 				if(!ProcedureCodes.GetContainsKey(codes[i])) {//these are D codes, not codeNums.
-					MsgBox.Show(this,"Definition contains invalid code.");
+					MessageBox.Show("Definition contains invalid code.");
 					return;
 				}
 			}
@@ -1514,7 +1514,7 @@ namespace OpenDental{
 				return;
 			}
 			if(ApptFieldDefs.HasDuplicateFieldNames()) {//Check for duplicate field names.
-				MsgBox.Show(this,"There are duplicate appointment field defs, go rename or delete the duplicates.");
+				MessageBox.Show("There are duplicate appointment field defs, go rename or delete the duplicates.");
 				return;
 			}
 			ApptField field=ApptFields.GetOne(PIn.Long(_tableFields.Rows[e.Row]["ApptFieldNum"].ToString()));
@@ -1525,7 +1525,7 @@ namespace OpenDental{
 				field.FieldName=_tableFields.Rows[e.Row]["FieldName"].ToString();
 				ApptFieldDef fieldDef=ApptFieldDefs.GetFieldDefByFieldName(field.FieldName);
 				if(fieldDef==null) {//This could happen if the field def was deleted while the appointment window was open.
-					MsgBox.Show(this,"This Appointment Field Def no longer exists.");
+					MessageBox.Show("This Appointment Field Def no longer exists.");
 				}
 				else {
 					if(fieldDef.FieldType==ApptFieldType.Text) {
@@ -1549,7 +1549,7 @@ namespace OpenDental{
 				}
 			}
 			else {//This probably won't happen because a field def should not be able to be deleted while in use.
-				MsgBox.Show(this,"This Appointment Field Def no longer exists.");
+				MessageBox.Show("This Appointment Field Def no longer exists.");
 			}
 			_tableFields=Appointments.GetApptFields(AptCur.AptNum);
 			FillFields();
@@ -1569,7 +1569,7 @@ namespace OpenDental{
 				&& gridProc.SelectedIndices.Length==0
 				&& !AptCur.AptStatus.In(ApptStatus.PtNote,ApptStatus.PtNoteCompleted)) 
 			{
-				MsgBox.Show(this,"At least one procedure must be attached to the appointment.");
+				MessageBox.Show("At least one procedure must be attached to the appointment.");
 				return false;
 			}
 			if(_selectedApptStatus==ApptStatus.Complete 
@@ -1630,7 +1630,7 @@ namespace OpenDental{
 			}
 			if(listAptsToDelete.Count>0) {
 				//Verbiage approved by Allen
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,
 					"One or more procedures are attached to another appointment.\r\n"
 					+"All selected procedures will be detached from the other appointment which will result in its deletion.\r\n"
 					+"Continue?"))
@@ -1639,7 +1639,7 @@ namespace OpenDental{
 				}
 			}
 			else if(hasProcsConcurrent && _isPlanned) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,
 					"One or more procedures are attached to another planned appointment.\r\n"
 					+"All selected procedures will be detached from the other planned appointment.\r\n"
 					+"Continue?"))
@@ -1648,7 +1648,7 @@ namespace OpenDental{
 				}
 			}
 			else if(hasProcsConcurrent && !_isPlanned) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,
 					"One or more procedures are attached to another appointment.\r\n"
 					+"All selected procedures will be detached from the other appointment.\r\n"
 					+"Continue?"))
@@ -1672,7 +1672,7 @@ namespace OpenDental{
 				if(PrefC.GetBool(PrefName.UnscheduledListNoRecalls) 
 					&& Appointments.IsRecallAppointment(AptCur,gridProc.SelectedGridRows.Select(x => (Procedure)(x.Tag)).ToList())) 
 				{
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?")) {
+					if(MsgBox.Show(MsgBoxButtons.YesNo,"Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?")) {
 						OnDelete_Click(true);//Skip the standard "Delete Appointment?" prompt since we have already prompted here. Closes form and syncs data.
 					}
 					return false;//Always return false since the appointment was either deleted of the user canceled.
@@ -1687,7 +1687,7 @@ namespace OpenDental{
 				InsSub sub1=InsSubs.GetSub(PatPlans.GetInsSubNum(listPatPlans,PatPlans.GetOrdinal(PriSecMed.Primary,listPatPlans,PlanList,SubList)),SubList);
 				InsSub sub2=InsSubs.GetSub(PatPlans.GetInsSubNum(listPatPlans,PatPlans.GetOrdinal(PriSecMed.Secondary,listPatPlans,PlanList,SubList)),SubList);
 				if(sub1.PlanNum!=AptCur.InsPlan1 || sub2.PlanNum!=AptCur.InsPlan2) {
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"The current insurance plans for this patient are different than the plans associated to this appointment.  They will be updated to the patient's current insurance plans.  Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The current insurance plans for this patient are different than the plans associated to this appointment.  They will be updated to the patient's current insurance plans.  Continue?")) {
 						return false;
 					}
 					//Update the ins plans associated to this appointment so that they're the most accurate at this time.
@@ -1700,7 +1700,7 @@ namespace OpenDental{
 					dateTimeAskedToArrive=AptCur.AptDateTime.Date+DateTime.Parse(textTimeAskedToArrive.Text).TimeOfDay;
 				}
 				catch{
-					MsgBox.Show(this,"Time Asked To Arrive invalid.");
+					MessageBox.Show("Time Asked To Arrive invalid.");
 					return false;
 				}
 			}
@@ -1710,7 +1710,7 @@ namespace OpenDental{
 					dateTimeArrived=AptCur.AptDateTime.Date+DateTime.Parse(textTimeArrived.Text).TimeOfDay;
 				}
 				catch{
-					MsgBox.Show(this,"Time Arrived invalid.");
+					MessageBox.Show("Time Arrived invalid.");
 					return false;
 				}
 			}
@@ -1720,7 +1720,7 @@ namespace OpenDental{
 					dateTimeSeated=AptCur.AptDateTime.Date+DateTime.Parse(textTimeSeated.Text).TimeOfDay;
 				}
 				catch{
-					MsgBox.Show(this,"Time Seated invalid.");
+					MessageBox.Show("Time Seated invalid.");
 					return false;
 				}
 			}
@@ -1730,7 +1730,7 @@ namespace OpenDental{
 					dateTimeDismissed=AptCur.AptDateTime.Date+DateTime.Parse(textTimeDismissed.Text).TimeOfDay;
 				}
 				catch{
-					MsgBox.Show(this,"Time Dismissed invalid.");
+					MessageBox.Show("Time Dismissed invalid.");
 					return false;
 				}
 			}
@@ -1742,7 +1742,7 @@ namespace OpenDental{
 				&& comboStatus.SelectedIndex==1 //making it complete
 				&& AptCur.AptDateTime.Date > DateTime.Today)//and future appt
 			{
-				MsgBox.Show(this,"Not allowed to set future appointments complete.");
+				MessageBox.Show("Not allowed to set future appointments complete.");
 				return false;
 			}
 			bool hasProcsAttached=gridProc.SelectedIndices
@@ -1757,7 +1757,7 @@ namespace OpenDental{
 				&& comboStatus.SelectedIndex==1)//making it complete
 			{				
 				if(!hasProcsAttached) {
-					MsgBox.Show(this,"Appointments without procedures attached can not be set complete.");
+					MessageBox.Show("Appointments without procedures attached can not be set complete.");
 					return false;
 				}
 			}
@@ -1793,7 +1793,7 @@ namespace OpenDental{
 			if(listProcs.Count > 0 && comboStatus.SelectedIndex==1 && AptCur.AptDateTime.Date > DateTime.Today.Date 
 				&& !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) 
 			{
-				MsgBox.Show(this,"Not allowed to set procedures complete with future dates.");
+				MessageBox.Show("Not allowed to set procedures complete with future dates.");
 				return false;
 			}
 			#endregion Validate Form Data
@@ -1829,7 +1829,7 @@ namespace OpenDental{
 				//Adjusts AptCur.Pattern directly when necessary.
 				if(!PrefC.GetYN(PrefName.ApptsAllowOverlap)){
 					if(ContrAppt.TryAdjustAppointmentPattern(AptCur,ContrApptPanel.GetListOpsVisible())) {
-						MsgBox.Show(this,"Appointment is too long and would overlap another appointment.  Automatically shortened to fit.");
+						MessageBox.Show("Appointment is too long and would overlap another appointment.  Automatically shortened to fit.");
 //todo? Consider changing PatternSecondary length to match Pattern length.  But there are many places in the program where this would need to be done.  Probably easier to assume they can be out of synch.
 					}
 				}
@@ -1895,7 +1895,7 @@ namespace OpenDental{
 				string promptText="";
 				//PatientNote "Appointment" will never have fees.  Prompting/Updating proc fees unnecessary.
 				updateProcFees=(!_isPtNote && Procedures.ShouldFeesChange(listNewProcs,listOldProcs,ref promptText,procFeeHelper));
-				if(updateProcFees && promptText!="" && !MsgBox.Show(this,MsgBoxButtons.YesNo,promptText)) {
+				if(updateProcFees && promptText!="" && !MsgBox.Show(MsgBoxButtons.YesNo,promptText)) {
 					updateProcFees=false;
 				}
 			}
@@ -1977,7 +1977,7 @@ namespace OpenDental{
 		
 		private void butPDF_Click(object sender,EventArgs e) {
 			if(_isInsertRequired) {
-				MsgBox.Show(this,"Please click OK to create this appointment before taking this action.");
+				MessageBox.Show("Please click OK to create this appointment before taking this action.");
 				return;
 			}
 			//this will only happen for eCW HL7 interface users.
@@ -1995,7 +1995,7 @@ namespace OpenDental{
 				//MessageHL7 messageHL7=MessageConstructor.GenerateDFT(procs,EventTypeHL7.P03,pat,Patients.GetPat(pat.Guarantor),AptCur.AptNum,"progressnotes",pdfDataStr);
 				MessageHL7 messageHL7=MessageConstructor.GenerateDFT(new List<Procedure>(),EventTypeHL7.P03,pat,Patients.GetPat(pat.Guarantor),AptCur.AptNum,"progressnotes",pdfDataStr);
 				if(messageHL7==null) {
-					MsgBox.Show(this,"There is no DFT message type defined for the enabled HL7 definition.");
+					MessageBox.Show("There is no DFT message type defined for the enabled HL7 definition.");
 					return;
 				}
 				HL7Msg hl7Msg=new HL7Msg();
@@ -2013,7 +2013,7 @@ namespace OpenDental{
 				//Note: AptCur.ProvNum may not reflect the selected provider in comboProv. This is still the Provider that the appointment was last saved with.
 				Bridges.ECW.SendHL7(AptCur.AptNum,AptCur.ProvNum,pat,pdfDataStr,"progressnotes",true,null);//just pdf, passing null proc list
 			}
-			MsgBox.Show(this,"Notes PDF sent.");
+			MessageBox.Show("Notes PDF sent.");
 		}
 
 		///<summary>Creates a new .pdf file containing all of the procedures attached to this appointment and 
@@ -2186,7 +2186,7 @@ namespace OpenDental{
 		private void butComplete_Click(object sender,EventArgs e) {
 			//It is OK to let the user click the OK button as long as AptCur.AptNum is NOT used prior to UpdateListAndDB().
 			//if(_isInsertRequired) {
-			//	MsgBox.Show(this,"Please click OK to create this appointment before taking this action.");
+			//	MessageBox.Show("Please click OK to create this appointment before taking this action.");
 			//	return;
 			//}
 			//This is only used with eCW HL7 interface.
@@ -2195,7 +2195,7 @@ namespace OpenDental{
 				if(!Security.IsAuthorized(Permissions.EcwAppointmentRevise)) {
 					return;
 				}
-				MsgBox.Show(this,"Any changes that you make will not be sent to eCW.  You will also have to make the same changes in eCW.");
+				MessageBox.Show("Any changes that you make will not be sent to eCW.  You will also have to make the same changes in eCW.");
 				//revise is only clickable if user has permission
 				butOK.Enabled=true;
 				gridProc.Enabled=true;
@@ -2212,18 +2212,18 @@ namespace OpenDental{
 			}
 			if(ProgramProperties.GetPropVal(ProgramName.eClinicalWorks,"ProcNotesNoIncomplete")=="1") {
 				if(listProcsForAppt.Any(x => x.Note!=null && x.Note.Contains("\"\""))) {
-					MsgBox.Show(this,"This appointment cannot be sent because there are incomplete procedure notes.");
+					MessageBox.Show("This appointment cannot be sent because there are incomplete procedure notes.");
 					return;
 				}
 			}
 			if(ProgramProperties.GetPropVal(ProgramName.eClinicalWorks,"ProcRequireSignature")=="1") {
 				if(listProcsForAppt.Any(x => !string.IsNullOrEmpty(x.Note) && string.IsNullOrEmpty(x.Signature))) {
-					MsgBox.Show(this,"This appointment cannot be sent because there are unsigned procedure notes.");
+					MessageBox.Show("This appointment cannot be sent because there are unsigned procedure notes.");
 					return;
 				}
 			}
 			//user can only get this far if aptNum matches visit num previously passed in by eCW.
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Send attached procedures to eClinicalWorks and exit?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Send attached procedures to eClinicalWorks and exit?")) {
 				return;
 			}
 			comboStatus.SelectedIndex=1;//Set the appointment status to complete. This will trigger the procedures to be completed in UpdateToDB() as well.
@@ -2238,7 +2238,7 @@ namespace OpenDental{
 				MessageHL7 messageHL7=MessageConstructor.GenerateDFT(listProcsForAppt,EventTypeHL7.P03,pat,Patients.GetPat(pat.Guarantor),AptCur.AptNum,
 					"progressnotes",pdfDataStr);
 				if(messageHL7==null) {
-					MsgBox.Show(this,"There is no DFT message type defined for the enabled HL7 definition.");
+					MessageBox.Show("There is no DFT message type defined for the enabled HL7 definition.");
 					return;
 				}
 				HL7Msg hl7Msg=new HL7Msg();
@@ -2270,7 +2270,7 @@ namespace OpenDental{
 
 		private void butAudit_Click(object sender,EventArgs e) {
 			if(_isInsertRequired) {
-				MsgBox.Show(this,"Please click OK to create this appointment before taking this action.");
+				MessageBox.Show("Please click OK to create this appointment before taking this action.");
 				return;
 			}
 			List<Permissions> perms=new List<Permissions>();
@@ -2310,7 +2310,7 @@ namespace OpenDental{
 			if(AptCur.AptStatus.In(ApptStatus.UnschedList,ApptStatus.Planned)
 				&& pat.PatStatus.In(PatientStatus.Archived,PatientStatus.Deceased)) 
 			{
-				MsgBox.Show(this,"Appointments cannot be scheduled for "+pat.PatStatus.ToString().ToLower()+" patients.");
+				MessageBox.Show("Appointments cannot be scheduled for "+pat.PatStatus.ToString().ToLower()+" patients.");
 				return;
 			}
 			if(!UpdateListAndDB()) {
@@ -2343,7 +2343,7 @@ namespace OpenDental{
 				//and if they have the preference AppointmentTypeWarning on,
 				//Display the warning
 				if(listProcCodeNumsToDetach.Count>0 && PrefC.GetBool(PrefName.AppointmentTypeShowWarning)) {
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Selecting this appointment type will dissociate the current procedures from this "
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Selecting this appointment type will dissociate the current procedures from this "
 						+"appointment and attach the procedures defined for this appointment type.  Do you want to continue?")) {
 						return false;
 					}
@@ -2551,7 +2551,7 @@ namespace OpenDental{
 			}
 			DateTime datePrevious=AptCur.DateTStamp;
 			if (AptCur.AptStatus == ApptStatus.PtNote || AptCur.AptStatus == ApptStatus.PtNoteCompleted) {
-				if(!isSkipDeletePrompt && !MsgBox.Show(this, true, "Delete Patient Note?")) {
+				if(!isSkipDeletePrompt && !MsgBox.Show(MsgBoxButtons.OKCancel, "Delete Patient Note?")) {
 					return;
 				}
 				if(textNote.Text != "") {
@@ -2646,7 +2646,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			DateTime datePrevious=AptCur.DateTStamp;
 			if(comboProv.GetSelectedProvNum()==0) {
-				MsgBox.Show(this,"Please select a provider.");
+				MessageBox.Show("Please select a provider.");
 				return;
 			}
 			if(AptOld.AptStatus!=ApptStatus.UnschedList && AptCur.AptStatus==ApptStatus.UnschedList) {
@@ -2662,7 +2662,7 @@ namespace OpenDental{
 			int minutes=contrApptProvSlider.Pattern.Length*5;
 			//compare beginning of new appointment against end to see if they fall on different days
 			if(AptCur.AptDateTime.Day!=AptCur.AptDateTime.AddMinutes(minutes).Day) {
-				MsgBox.Show(this,"You cannot have an appointment that starts and ends on different days.");
+				MessageBox.Show("You cannot have an appointment that starts and ends on different days.");
 				return;
 			}
 			#endregion
@@ -2707,7 +2707,7 @@ namespace OpenDental{
 						if(!Security.IsAuthorized(Permissions.AppointmentCompleteEdit,true)) {
 							continue;
 						}
-						MsgBox.Show(this,"Detach treatment planned procedures or click OK in the appointment edit window to set them complete.");
+						MessageBox.Show("Detach treatment planned procedures or click OK in the appointment edit window to set them complete.");
 						e.Cancel=true;
 						return;
 					}

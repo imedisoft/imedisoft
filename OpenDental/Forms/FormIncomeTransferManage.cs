@@ -159,10 +159,10 @@ namespace OpenDental {
 				return;
 			}
 			if(results.HasInvalidSplits) {
-				MsgBox.Show(this,"Due to Rigorous Accounting, one or more invalid transactions have been cancelled.  Please fix those manually.");
+				MessageBox.Show("Due to Rigorous Accounting, one or more invalid transactions have been cancelled.  Please fix those manually.");
 			}
 			else if(results.HasInvalidProcWithPayPlan) {
-				MsgBox.Show(this,"One or more over allocated paysplit was not able to be reversed.");
+				MessageBox.Show("One or more over allocated paysplit was not able to be reversed.");
 			}
 			if(results.ListSplitsCur.IsNullOrEmpty()) {
 				return;

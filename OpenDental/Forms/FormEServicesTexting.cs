@@ -103,7 +103,7 @@ namespace OpenDental {
 				string prompt=Lan.g(this,string.IsNullOrWhiteSpace(PrefC.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript)) 
 					? "By disabling this prompt, you agree to obtain verbal confirmation from patients to send Appt Texts."
 					: PrefC.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript));
-				MsgBox.Show(this,prompt);
+				MessageBox.Show(prompt);
 			}
 			labelUnsavedShortCodeChanges.Visible=AreShortCodeSettingsUnsaved();
 		}
@@ -154,7 +154,7 @@ namespace OpenDental {
 
 		private void butDefaultClinic_Click(object sender,EventArgs e) {
 			if(_smsClinicSelected.ClinicNum==0) {
-				MsgBox.Show(this,"Select clinic to make default.");
+				MessageBox.Show("Select clinic to make default.");
 				return;
 			}
 			Prefs.UpdateLong(PrefName.TextingDefaultClinicNum,(_smsClinicSelected.ClinicNum));

@@ -33,12 +33,12 @@ namespace OpenDental {
 				return;
 			}
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Invalid date");
+				MessageBox.Show("Invalid date");
 				return;
 			}
 			DateTime date=PIn.Date(textDate.Text);
 			if(date < DateTime.Today.AddDays(-7)){
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Date is from more than one week ago.  Continue anyway?")){
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Date is from more than one week ago.  Continue anyway?")){
 					return;
 				}
 			}
@@ -47,7 +47,7 @@ namespace OpenDental {
 			}
 			Commlogs.RecallUndo(date);
 			SecurityLogs.MakeLogEntry(Permissions.CommlogEdit,0,"Recall list undo tool ran");
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 			DialogResult=DialogResult.OK;
 		}
 

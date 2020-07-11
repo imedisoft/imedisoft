@@ -157,7 +157,7 @@ namespace OpenDental {
 			}
 			Payment pay=Payments.GetPayment(charge.PayNum);
 			if(pay==null) {//The payment has been deleted
-				MsgBox.Show(this,"This payment no longer exists.");
+				MessageBox.Show("This payment no longer exists.");
 				return;
 			}
 			Patient pat=Patients.GetPat(pay.PatNum);
@@ -176,14 +176,14 @@ namespace OpenDental {
 
 		private void menuItemDeletePending_Click(object sender,EventArgs e) {
 			RecurringCharge charge=gridMain.SelectedTag<RecurringCharge>();
-			if(charge==null || !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this pending recurring charge?"
+			if(charge==null || !MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this pending recurring charge?"
 				+"\r\n\r\nAnother user or service may be processing this card right now.")) 
 			{
 				return;
 			}
 			RecurringCharge chargeDb=RecurringCharges.GetOne(charge.RecurringChargeNum);
 			if(chargeDb==null || chargeDb.ChargeStatus!=RecurringChargeStatus.NotYetCharged) {
-				MsgBox.Show(this,"This recurring charge is no longer pending. Unable to delete.");
+				MessageBox.Show("This recurring charge is no longer pending. Unable to delete.");
 				return;
 			}
 			RecurringCharges.Delete(charge.RecurringChargeNum);

@@ -660,18 +660,18 @@ namespace OpenDental{
 
 		private void FormFinanceCharges_Load(object sender, System.EventArgs e) {
 			if(PrefC.GetLong(PrefName.FinanceChargeAdjustmentType)==0){
-				MsgBox.Show(this,"No finance charge adjustment type has been set.  Please go to Setup | Account to fix this.");
+				MessageBox.Show("No finance charge adjustment type has been set.  Please go to Setup | Account to fix this.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(PrefC.GetLong(PrefName.BillingChargeAdjustmentType)==0){
-				MsgBox.Show(this,"No billing charge adjustment type has been set.  Please go to Setup | Account to fix this.");
+				MessageBox.Show("No billing charge adjustment type has been set.  Please go to Setup | Account to fix this.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
 			if(_listBillingTypeDefs.Count==0){//highly unlikely that this would happen
-				MsgBox.Show(this,"No billing types have been set up or are visible.");
+				MessageBox.Show("No billing types have been set up or are visible.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -889,7 +889,7 @@ namespace OpenDental{
 			}
 			if(PrefC.GetBool(PrefName.AgingIsEnterprise)) {
 				if(!RunAgingEnterprise()) {
-					MsgBox.Show(this,"There was an error calculating aging after the "+chargeType.ToLower()+" charge adjustments were deleted.\r\n"
+					MessageBox.Show("There was an error calculating aging after the "+chargeType.ToLower()+" charge adjustments were deleted.\r\n"
 						+"You should run aging later to update affected accounts.");
 				}
 			}
@@ -918,31 +918,31 @@ namespace OpenDental{
 				|| textExcludeLessThan.errorProvider1.GetError(textExcludeLessThan)!=""
 				|| textExcludeNotBilledSince.errorProvider1.GetError(textExcludeNotBilledSince)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime date=PIn.Date(textDate.Text);
 			if(PrefC.GetDate(PrefName.FinanceChargeLastRun).AddDays(25)>date) {
-				if(!MsgBox.Show(this,true,"Warning.  Finance charges should not be run more than once per month.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Warning.  Finance charges should not be run more than once per month.  Continue?")) {
 					return;
 				}
 			} 
 			else if(PrefC.GetDate(PrefName.BillingChargeLastRun).AddDays(25)>date) {
-				if(!MsgBox.Show(this,true,"Warning.  Billing charges should not be run more than once per month.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Warning.  Billing charges should not be run more than once per month.  Continue?")) {
 					return;
 				}
 			}
 			if(listBillType.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"Please select at least one billing type first.");
+				MessageBox.Show("Please select at least one billing type first.");
 				return;
 			}
 			if(PIn.Long(textAPR.Text) < 2) {
-				if(!MsgBox.Show(this,true,"The APR is much lower than normal. Do you wish to proceed?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"The APR is much lower than normal. Do you wish to proceed?")) {
 					return;
 				}
 			}
 			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily) && PrefC.GetDate(PrefName.DateLastAging).AddMonths(1)<=DateTime.Today) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"It has been more than a month since aging has been run.  It is recommended that you update the "
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"It has been more than a month since aging has been run.  It is recommended that you update the "
 					+"aging date and run aging before continuing."))
 				{
 					return;
@@ -1041,7 +1041,7 @@ namespace OpenDental{
 			MessageBox.Show(Lan.g(this,chargeType+" charges added")+": "+chargesAdded);
 			if(PrefC.GetBool(PrefName.AgingIsEnterprise)) {
 				if(!RunAgingEnterprise()) {
-					MsgBox.Show(this,"There was an error calculating aging after the "+chargeType.ToLower()+" charge adjustments were added.\r\n"
+					MessageBox.Show("There was an error calculating aging after the "+chargeType.ToLower()+" charge adjustments were added.\r\n"
 						+"You should run aging later to update affected accounts.");
 				}
 			}
@@ -1063,7 +1063,7 @@ namespace OpenDental{
 			Dictionary<long,InstallmentPlan> dictInstallmentPlans=null)
 		{
 			if(date.Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Adjustments cannot be made for future dates. Finance charge was not added.");
+				MessageBox.Show("Adjustments cannot be made for future dates. Finance charge was not added.");
 				return false;
 			}
 			if(dictInstallmentPlans!=null) {
@@ -1096,7 +1096,7 @@ namespace OpenDental{
 
 		private void AddBillingCharge(long patNum,DateTime date,string BillingChargeAmount,long PriProv) {
 			if(date.Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Adjustments cannot be made for future dates");
+				MessageBox.Show("Adjustments cannot be made for future dates");
 				return;
 			}
 			Adjustment AdjustmentCur = new Adjustment();

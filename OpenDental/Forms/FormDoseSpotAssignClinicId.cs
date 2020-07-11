@@ -46,7 +46,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(comboClinics.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a clinic.");
+				MessageBox.Show("Please select a clinic.");
 				return;
 			}
       _clinicErxCur.ClinicNum=comboClinics.GetSelected<Clinic>().ClinicNum;

@@ -39,13 +39,13 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(comboLanguageAndRegion.SelectedIndex==-1) {
-				MsgBox.Show(this,"Select a language and region.");
+				MessageBox.Show("Select a language and region.");
 				return;
 			}
 			if(Security.IsAuthorized(Permissions.Setup,true)) {
 				//_cultureCur=_listAllCultures[comboLanguageAndRegion.SelectedIndex];
 				if(Prefs.UpdateString(PrefName.LanguageAndRegion,_listAllCultures[comboLanguageAndRegion.SelectedIndex].Name)) {
-					MsgBox.Show(this,"Program must be restarted for changes to take full effect.");
+					MessageBox.Show("Program must be restarted for changes to take full effect.");
 				}
 				ComputerPrefs.LocalComputer.NoShowLanguage=checkNoShow.Checked;
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);

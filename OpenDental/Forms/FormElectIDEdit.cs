@@ -27,11 +27,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textPayerID.Text=="") {
-				MsgBox.Show(this,"Payer ID cannot be blank.");
+				MessageBox.Show("Payer ID cannot be blank.");
 				return;
 			}
 			if(textCarrierName.Text=="") {
-				MsgBox.Show(this,"Carrier name cannot be blank.");
+				MessageBox.Show("Carrier name cannot be blank.");
 				return;
 			}
 			electIDCur.PayorID=textPayerID.Text;

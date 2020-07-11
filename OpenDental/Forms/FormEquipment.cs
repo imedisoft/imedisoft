@@ -45,7 +45,7 @@ namespace OpenDental {
 			if(textDateStart.errorProvider1.GetError(textDateStart)!=""
 				|| textDateEnd.errorProvider1.GetError(textDateEnd)!="") 
 			{
-				MsgBox.Show(this,"Invalid date.");
+				MessageBox.Show("Invalid date.");
 				return;
 			}
 			FillGrid();

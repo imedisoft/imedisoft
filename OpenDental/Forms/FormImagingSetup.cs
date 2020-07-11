@@ -567,7 +567,7 @@ namespace OpenDental{
 			if(textScanDocQuality.Text=="100"
 				|| (radioScanDocUseOptionsBelow.Checked && PIn.Int(textScanDocResolution.Text)>300)) 
 			{
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"With the provided settings the file created may be extremely large.  Would you like to continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"With the provided settings the file created may be extremely large.  Would you like to continue?")) {
 					return;
 				}
 			}

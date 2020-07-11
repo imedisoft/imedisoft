@@ -403,11 +403,11 @@ namespace OpenDental{
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete custom claim form?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete custom claim form?")) {
 				return;
 			}
 			if(!ClaimForms.Delete(claimFormCur)){
-				MsgBox.Show(this,"Claim form is already in use.");
+				MessageBox.Show("Claim form is already in use.");
 				return;
 			}
 			changed=true;
@@ -417,7 +417,7 @@ namespace OpenDental{
 		///<summary>Duplicate a custom claim form.</summary>
 		private void butDuplicate_Click(object sender, System.EventArgs e) {
 			if(gridCustom.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a Custom Claim Form first.");
+				MessageBox.Show("Please select a Custom Claim Form first.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
@@ -432,20 +432,11 @@ namespace OpenDental{
 		///users can always copy over an internal claim form to a custom form and then export it.</summary>
 		private void butExport_Click(object sender, System.EventArgs e) {
 			if(gridCustom.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a Custom Claim Form first.");
+				MessageBox.Show("Please select a Custom Claim Form first.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
 			string filename = "ClaimForm"+claimFormCur.Description+".xml";
-			if(ODBuild.IsWeb()) {
-				StringBuilder strbuild=new StringBuilder();
-				using(XmlWriter writer=XmlWriter.Create(strbuild)) {
-					XmlSerializer serializer=new XmlSerializer(typeof(ClaimForm));
-					serializer.Serialize(writer,claimFormCur);
-				}
-				ThinfinityUtils.ExportForDownload(filename,strbuild.ToString());
-				return;
-			}
 			try {
 				using(SaveFileDialog saveDlg=new SaveFileDialog()) {
 					saveDlg.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
@@ -458,11 +449,11 @@ namespace OpenDental{
 						serializer.Serialize(writer,claimFormCur);
 					}
 				}
-				MsgBox.Show(this,"Exported");
+				MessageBox.Show("Exported");
 			}
 			catch(Exception ex) {
 				ex.DoNothing();
-				MsgBox.Show(this,"Export failed.  This could be due to lack of permissions in the designated folder.");
+				MessageBox.Show("Export failed.  This could be due to lack of permissions in the designated folder.");
 			}
 		}
 
@@ -482,7 +473,7 @@ namespace OpenDental{
 				return;
 			}
 			ClaimForms.Insert(claimForm,true);//now we have a primary key.
-			MsgBox.Show(this,"Imported");
+			MessageBox.Show("Imported");
 			changed=true;
 			FillGridCustom();
 		}		
@@ -490,7 +481,7 @@ namespace OpenDental{
 		///<summary>Sets a custom claim form as the default.  We do not currently allow setting internal claim forms as default - users need to copy it over first.</summary>
 		private void butDefault_Click(object sender,EventArgs e) {
 			if(gridCustom.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a claimform from the list first.");
+				MessageBox.Show("Please select a claimform from the list first.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
@@ -503,11 +494,11 @@ namespace OpenDental{
 		///<summary>Reassigns all current insurance plans using the selected claimform to another claimform.</summary>
 		private void butReassign_Click(object sender,EventArgs e) {
 			if(gridCustom.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a claimform from the list at the left first.");
+				MessageBox.Show("Please select a claimform from the list at the left first.");
 				return;
 			}
 			if(comboReassign.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a claimform from the list below.");
+				MessageBox.Show("Please select a claimform from the list below.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;

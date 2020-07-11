@@ -97,22 +97,36 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 		#region EdgeExpress
 
 		///<summary>Url to setup a payment page and get a OTK.</summary>
-		private static string _edgeExpressHostPayUrl {
-			get {
-				if(ODBuild.IsDebug() || UseXWebTestGateway) {
+		private static string _edgeExpressHostPayUrl
+		{
+			get
+			{
+#if DEBUG
+				return "https://ee.test.paygateway.com/HostPayService/v1/hostpay/transactions";
+#else
+				if (UseXWebTestGateway)
+				{
 					return "https://ee.test.paygateway.com/HostPayService/v1/hostpay/transactions";
 				}
 				return "https://ee.paygateway.com/HostPayService/v1/hostpay/transactions/";
+#endif
 			}
 		}
 
 		///<summary>Url for transactions that do not require a payment page.</summary>
-		private static string _edgeExpressDirectPayUrl {
-			get {
-				if(ODBuild.IsDebug() || UseXWebTestGateway) {
+		private static string _edgeExpressDirectPayUrl
+		{
+			get
+			{
+#if DEBUG
+				return "https://ee.test.paygateway.com/HostPayService/v1/directpay/express";
+#else
+				if (UseXWebTestGateway)
+				{
 					return "https://ee.test.paygateway.com/HostPayService/v1/directpay/express";
 				}
 				return "https://ee.paygateway.com/HostPayService/v1/directpay/express";
+#endif
 			}
 		}
 
@@ -174,12 +188,11 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 				xmlWriter.WriteElementString("TYPE","KEYED");
 				xmlWriter.WriteEndElement();//POSDEVICE
 				xmlWriter.WriteStartElement("RETURNOPTION");
-				if(ODBuild.IsDebug()) {
-					xmlWriter.WriteElementString("RETURNURL","http://localhost/OpenDentalWebLander/PortalPayDone.aspx");
-				}
-				else {
-					xmlWriter.WriteElementString("RETURNURL","https://www.patientviewer.com/PortalPayDone.aspx");
-				}
+#if DEBUG
+				xmlWriter.WriteElementString("RETURNURL","http://localhost/OpenDentalWebLander/PortalPayDone.aspx");
+#else
+				xmlWriter.WriteElementString("RETURNURL","https://www.patientviewer.com/PortalPayDone.aspx");
+#endif
 				xmlWriter.WriteElementString("RETURNTARGET","_self");//without this line, the top level window will be redirected to RETURNURL
 				xmlWriter.WriteEndElement();//RETURNOPTION
 				xmlWriter.WriteElementString("DISABLEFRAMING","false");//allows us to put the page in an iframe.
@@ -328,18 +341,27 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 				}
 			}
 			///<summary>Returns the test or production URL for the XWeb gateway based on if the solution is configured for debugging.</summary>
-			private string _gatewayUrl {
-				get {
-					if(UseXWebTestGateway || ODBuild.IsDebug()) {
+			private string _gatewayUrl
+			{
+				get
+				{
+#if DEBUG
+					return "https://test.t3secure.net/x-chargeweb.dll";
+#else
+					if (UseXWebTestGateway)
+					{
 						//X-Charge Test Gateway URL 
 						return "https://test.t3secure.net/x-chargeweb.dll";
 					}
-					else {
+					else
+					{
 						//X-Charge Production Gateway URL : 
 						return "https://gw.t3secure.net/x-chargeweb.dll";
 					}
+#endif
 				}
 			}
+
 			///<summary>Provide key/value pairs for the XWeb transmission. X-Web program properties should be validated before calling this method.</summary>
 			private Dictionary<string,string> GatewayParams {
 				get {
@@ -770,7 +792,7 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 				}			
 			}
 		}
-		#endregion
+#endregion
 	}
 
 	///<summary>Where this charge is coming from.</summary>

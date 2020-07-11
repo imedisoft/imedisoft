@@ -502,7 +502,7 @@ namespace OpenDental{
 
 		private void ButUpdateProvs_Click(object sender, EventArgs e){
 			if(IsNew){
-				MsgBox.Show(this,"Not for new operatories.");
+				MessageBox.Show("Not for new operatories.");
 				return;
 			}
 			//Check against cache. Instead of saving changes, make them get out and reopen. Safer and simpler.
@@ -517,7 +517,7 @@ namespace OpenDental{
 				|| op.SetProspective!=checkSetProspective.Checked
 				|| op.IsWebSched!=checkIsWebSched.Checked)
 			{
-				MsgBox.Show(this,"Changes were detected above.  Save all changes, get completely out of the operatories window, and then re-enter.");
+				MessageBox.Show("Changes were detected above.  Save all changes, get completely out of the operatories window, and then re-enter.");
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.Setup) || !Security.IsAuthorized(Permissions.AppointmentEdit)) {
@@ -525,10 +525,10 @@ namespace OpenDental{
 			}
 			//Operatory operatory=Operatories.GetOperatory(contrApptPanel.OpNumClicked);
 			if(Security.CurUser.ClinicIsRestricted && !Clinics.GetForUserod(Security.CurUser).Exists(x => x.ClinicNum==OpCur.ClinicNum)) {
-				MsgBox.Show(this,"You are restricted from accessing the clinic belonging to the selected operatory.  No changes will be made.");
+				MessageBox.Show("You are restricted from accessing the clinic belonging to the selected operatory.  No changes will be made.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,
 				"WARNING: We recommend backing up your database before running this tool.  "
 				+"This tool may take a very long time to run and should be run after hours.  "
 				+"In addition, this tool could potentially change hundreds of appointments.  "
@@ -544,16 +544,16 @@ namespace OpenDental{
 				listApptsOld.Add(appt.Copy());
 			}
 			ContrApptRef.MoveAppointments(listAppts,listApptsOld,OpCur);
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textOpName.Text==""){
-				MsgBox.Show(this,"Operatory name cannot be blank.");
+				MessageBox.Show("Operatory name cannot be blank.");
 				return;
 			}
 			if(checkIsHidden.Checked==true && Operatories.HasFutureApts(OpCur.OperatoryNum,ApptStatus.UnschedList)) {
-				MsgBox.Show(this,"Can not hide an operatory with future appointments.");
+				MessageBox.Show("Can not hide an operatory with future appointments.");
 				checkIsHidden.Checked=false;
 				return;
 			}

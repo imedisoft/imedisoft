@@ -45,7 +45,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.EquipmentDelete,Equip.DateEntry)) {
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete?")){
 				return;
 			}
 			try{
@@ -69,19 +69,19 @@ namespace OpenDental {
 				|| textPurchaseCost.errorProvider1.GetError(textPurchaseCost)!=""
 				|| textMarketValue.errorProvider1.GetError(textMarketValue)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Please enter a description.");
+				MessageBox.Show("Please enter a description.");
 				return;
 			}
 			if(textDatePurchased.Text=="") {
-				MsgBox.Show(this,"Please enter date purchased.");
+				MessageBox.Show("Please enter date purchased.");
 				return;
 			}
 			if(PIn.Date(textDatePurchased.Text) > DateTime.Today) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Date is in the future.  Continue anyway?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Date is in the future.  Continue anyway?")) {
 					return;
 				}
 			}
@@ -95,7 +95,7 @@ namespace OpenDental {
 			Equip.Location=textLocation.Text;
 			Equip.Status=textStatus.Text;
 			if(!string.IsNullOrEmpty(textSerialNumber.Text) && Equipments.HasExisting(Equip)) {
-				MsgBox.Show(this,"Serial number already in use.  Please enter another.");
+				MessageBox.Show("Serial number already in use.  Please enter another.");
 				return;
 			}
 			if(IsNew) {

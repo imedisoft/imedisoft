@@ -216,22 +216,22 @@ namespace OpenDental{
 				|| textDateStop.errorProvider1.GetError(textDateStop)!=""
 				|| textDatePaycheck.errorProvider1.GetError(textDatePaycheck)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDateStart.Text=="" || textDateStop.Text=="") {
-				MsgBox.Show(this,"Start and end dates are required.");
+				MessageBox.Show("Start and end dates are required.");
 				return;
 			}
 			DateTime dateStart=PIn.Date(textDateStart.Text);
 			DateTime dateStop=PIn.Date(textDateStop.Text);
 			DateTime datePaycheck=PIn.Date(textDatePaycheck.Text);
 			if(dateStart>dateStop) {
-				MsgBox.Show(this,"The End Date cannot be before the Start Date.  Please change the date range.");
+				MessageBox.Show("The End Date cannot be before the Start Date.  Please change the date range.");
 				return;
 			}
 			if(dateStop>datePaycheck) {
-				MsgBox.Show(this,"The Paycheck Date must be on or after the End Date.  Please change the End Date or the Paycheck Date.");
+				MessageBox.Show("The Paycheck Date must be on or after the End Date.  Please change the End Date or the Paycheck Date.");
 				return;
 			}
 			_payPeriodCur.DateStart=PIn.Date(textDateStart.Text);
@@ -244,7 +244,7 @@ namespace OpenDental{
 				listExistingPayPeriods.AddRange(_listNonInsertedPayPeriods.FindAll(x => !x.IsSame(_payPeriodCur)));
 			}
 			if(PayPeriods.AreAnyOverlapping(listExistingPayPeriods,new List<PayPeriod>() { _payPeriodCur })) {
-				MsgBox.Show(this,"This pay period overlaps with existing pay periods. Please fix this pay period first.");
+				MessageBox.Show("This pay period overlaps with existing pay periods. Please fix this pay period first.");
 				return;
 			}
 			if(IsSaveToDb) {

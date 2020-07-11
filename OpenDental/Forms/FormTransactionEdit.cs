@@ -847,13 +847,13 @@ namespace OpenDental{
 		private void checkSimple_Click(object sender,EventArgs e) {
 			if(checkSimple.Checked){
 				if(JournalList.Count>2){//do not allow switching to simple if there are more than 2 entries
-					MsgBox.Show(this,"Not allowed to switch to simple view when there are more then two entries.");
+					MessageBox.Show("Not allowed to switch to simple view when there are more then two entries.");
 					checkSimple.Checked=false;
 					return;
 				}
 				if(JournalList.Count==2 && ((JournalEntry)JournalList[0]).Memo != ((JournalEntry)JournalList[1]).Memo ) {
 					//warn if notes are different
-					if(!MsgBox.Show(this,true,"Note might be lost. Continue?")){
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Note might be lost. Continue?")){
 						checkSimple.Checked=false;
 						return;
 					}
@@ -919,7 +919,7 @@ namespace OpenDental{
 			//string msg=
 			gridMain.Export(gridMain.Title);//listOtherDetails:listOtherDetails,totalsRow:totalsRow);
 			//if(!string.IsNullOrEmpty(msg)) {
-			//	MsgBox.Show(this,msg);
+			//	MessageBox.Show(msg);
 			//}
 		}
 
@@ -1056,7 +1056,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,true,"Delete this entire transaction?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this entire transaction?")) {
 				return;
 			}
 			string securityentry="";
@@ -1092,7 +1092,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate) !="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime date=PIn.Date(textDate.Text);
@@ -1112,23 +1112,23 @@ namespace OpenDental{
 				//even though CreateTwoEntries could handle any errors, it makes more sense to catch errors before calling it
 				if(textAmount.errorProvider1.GetError(textAmount)!="")
 				{
-					MsgBox.Show(this,"Please fix data entry errors first.");
+					MessageBox.Show("Please fix data entry errors first.");
 					return;
 				}
 				if(AccountPicked==null){
-					MsgBox.Show(this,"Please select an account first.");
+					MessageBox.Show("Please select an account first.");
 					return;
 				}
 				CreateTwoEntries();
 			}
 			else{//compound view
 				if(textCredit.Text!=textDebit.Text){
-					MsgBox.Show(this,"Debits and Credits must be equal.");
+					MessageBox.Show("Debits and Credits must be equal.");
 					return;
 				}
 				for(int i=0;i<JournalList.Count;i++){
 					if(((JournalEntry)JournalList[i]).AccountNum==0){
-						MsgBox.Show(this,"Accounts must be selected for each entry first.");
+						MessageBox.Show("Accounts must be selected for each entry first.");
 						return;
 					}
 				}

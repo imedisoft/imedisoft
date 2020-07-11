@@ -112,21 +112,21 @@ namespace OpenDental {
             }
 			if(textTabOrder.errorProvider1.GetError(textTabOrder)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(listFields.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a field name first.");
+				MessageBox.Show("Please select a field name first.");
 				return;
 			}
 			if(comboFontName.Text==""){
 				//not going to bother testing for validity unless it will cause a crash.
-				MsgBox.Show(this,"Please select a font name first.");
+				MessageBox.Show("Please select a font name first.");
 				return;
 			}
 			if(_sheetDefCur.SheetType==SheetTypeEnum.ExamSheet) {
 				if(textReportableName.Text.Contains(";") || textReportableName.Text.Contains(":")) {
-					MsgBox.Show(this,"Reportable name for Exam Sheet fields may not contain a ':' or a ';'.");
+					MessageBox.Show("Reportable name for Exam Sheet fields may not contain a ':' or a ';'.");
 					return;
 				}
 			}
@@ -134,12 +134,12 @@ namespace OpenDental {
 			try{
 				fontSize=float.Parse(textFontSize.Text);
 				if(fontSize<2){
-					MsgBox.Show(this,"Font size is invalid.");
+					MessageBox.Show("Font size is invalid.");
 					return;
 				}
 			}
 			catch{
-				MsgBox.Show(this,"Font size is invalid.");
+				MessageBox.Show("Font size is invalid.");
 				return;
 			}
 			SheetFieldDefCur.FieldName=AvailFields[listFields.SelectedIndex].FieldName;

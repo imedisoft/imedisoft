@@ -146,7 +146,7 @@ namespace OpenDental {
 				return false;
 			}
 			if(_listClinicsInGroup.IsNullOrEmpty()) {
-				MsgBox.Show(this,"This group contains no clinics.  Clinics are required to make Fee Schedule Groups.");
+				MessageBox.Show("This group contains no clinics.  Clinics are required to make Fee Schedule Groups.");
 				return false;
 			}
 			return true;
@@ -179,7 +179,7 @@ namespace OpenDental {
 
 		private void butRight_Click(object sender,EventArgs e) {
 			if(comboFeeSched.SelectedIndex<0) {
-				MsgBox.Show(this,"Please select a fee schedule before selecting clinics.");
+				MessageBox.Show("Please select a fee schedule before selecting clinics.");
 				return;
 			}
 			foreach(GridRow row in gridAvailable.SelectedGridRows) {
@@ -190,7 +190,7 @@ namespace OpenDental {
 
 		private void butLeft_Click(object sender,EventArgs e) {
 			if(comboFeeSched.SelectedIndex<0) {
-				MsgBox.Show(this,"Please select a fee schedule before selecting clinics.");
+				MessageBox.Show("Please select a fee schedule before selecting clinics.");
 				return;
 			}
 			foreach(GridRow row in gridGroup.SelectedGridRows) {
@@ -201,7 +201,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			//This button is hidden if the user is adding a new FeeSchedGroup.
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you want to delete this Fee Schedule Group?")) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to delete this Fee Schedule Group?")) {
 				FeeSchedGroups.Delete(_feeSchedGroupCur.FeeSchedGroupNum);
 			}
 			DialogResult=DialogResult.Cancel;
@@ -217,7 +217,7 @@ namespace OpenDental {
 			//Initial fee sync for new groups or groups that were created without any clinics in the group, or if we just changed the Fee Schedule for the group.
 			//If editing an existing fee schedule group that contains no clinic associations, treat it like a new group and set the initial fees.
 			if(_feeSchedGroupCur.IsNew || _feeSchedGroupCur.ListClinicNumsAll.Count()<1 || _feeSchedGroupCur.FeeSchedNum!=feeSchedCur.FeeSchedNum) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to set the initial group fees to a specific clinic's fees?"
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to set the initial group fees to a specific clinic's fees?"
 					+"  Answering no will result in the default fees for the fee schedule being used."))
 				{
 					List<GridColumn> listColumnHeaders=new List<GridColumn>() {
@@ -234,14 +234,14 @@ namespace OpenDental {
 					string gridTitle=Lan.g(this,"Clinics");
 					FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 					if(form.ShowDialog()!=DialogResult.OK) {
-						MsgBox.Show(this,"A default clinic was not selected.");
+						MessageBox.Show("A default clinic was not selected.");
 						return;
 					}
 					long clinicNumMaster=((Clinic)form.ListSelectedTags[0]).ClinicNum;//DialogResult.OK means a selection was made.
 					//This list came from _listClinicsInGroup which was used to fill the grid picker that we get clinicNumMaster from.  We need to pop the master
 					//clinic off the list while copying fee schedules or else it will be deleted before copying.
 					//Give the user an out before potentially changing a lot of data in the db.
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Fees are about to be updated.  Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Fees are about to be updated.  Continue?")) {
 						return;
 					}
 					ODProgress.ShowAction(() => {
@@ -252,7 +252,7 @@ namespace OpenDental {
 				}
 				else {//Default fees.
 					//Give the user an out before potentially changing a lot of data in the db.
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Fees are about to be updated.  Continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Fees are about to be updated.  Continue?")) {
 						return;
 					}
 					ODProgress.ShowAction(() => {
@@ -265,7 +265,7 @@ namespace OpenDental {
 			else {
 				if(listClinicNumsNew.Except(_feeSchedGroupCur.ListClinicNumsAll).Count()!=0 || _feeSchedGroupCur.ListClinicNumsAll.Except(listClinicNumsNew).Count()!=0) {
 					//Give the user an out before potentially changing a lot of data in the db.
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Clinics added to the group will have their fees updated to match the group.  Clinics removed from"+
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Clinics added to the group will have their fees updated to match the group.  Clinics removed from"+
 						" the group will not have their fees changed.  Continue?")) {
 						return;
 					}

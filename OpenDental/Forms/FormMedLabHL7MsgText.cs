@@ -35,7 +35,7 @@ namespace OpenDental {
 			catch(Exception ex) {
 				ex.DoNothing();
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"The selected file could not be read.");
+				MessageBox.Show("The selected file could not be read.");
 				return;
 			}
 			textMain.Text=msgText;

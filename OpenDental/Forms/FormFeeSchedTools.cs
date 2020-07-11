@@ -837,11 +837,11 @@ namespace OpenDental {
 
 		private void butClear_Click(object sender, System.EventArgs e) {
 			if(PrefC.HasClinicsEnabled) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will clear all values from the selected fee schedule for the currently selected clinic and provider.  Are you sure you want to continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will clear all values from the selected fee schedule for the currently selected clinic and provider.  Are you sure you want to continue?")) {
 					return;
 				}
 			}
-			else if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will clear all values from the selected fee schedule for the currently selected provider.  Are you sure you want to continue?")) {
+			else if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will clear all values from the selected fee schedule for the currently selected provider.  Are you sure you want to continue?")) {
 				return;
 			}
 			List<long> listClinicNums=new List<long>();
@@ -859,7 +859,7 @@ namespace OpenDental {
 			}
 			if(checkShowGroups.Checked) {
 				if(comboGroup.SelectedIndex==-1) {
-					MsgBox.Show(this,"Please select a Fee Schedule Group.");
+					MessageBox.Show("Please select a Fee Schedule Group.");
 					return;
 				}
 				//Fees.ImportFees() will update the rest of the group.
@@ -889,20 +889,20 @@ namespace OpenDental {
 			}
 			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,logText);
 			//	});
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 		}
 
 		private void butCopy_Click(object sender, System.EventArgs e) {
 			List<long> listClinicNumsTo=comboClinicTo.ListSelectedClinicNums;
 			if(checkShowGroups.Checked) {
 				if(comboGroup.SelectedIndex<0 || comboGroupTo.SelectedIndex<0) {
-					MsgBox.Show(this,"Please select a Fee Schedule group.");
+					MessageBox.Show("Please select a Fee Schedule group.");
 					return;
 				}
 				listClinicNumsTo=comboGroupTo.GetSelected<FeeSchedGroup>().ListClinicNumsAll;
 			}
 			if(PrefC.HasClinicsEnabled && listClinicNumsTo.Count==0) {
-				MsgBox.Show(this,"At least one \"Clinic To\" clinic must be selected.");
+				MessageBox.Show("At least one \"Clinic To\" clinic must be selected.");
 				return;
 			}
 			long toProvNum=0;
@@ -921,7 +921,7 @@ namespace OpenDental {
 			if(checkShowGroups.Checked) {
 				//verify we aren't copying the same group into itself
 				if(comboGroup.GetSelected<FeeSchedGroup>().FeeSchedGroupNum==comboGroupTo.GetSelected<FeeSchedGroup>().FeeSchedGroupNum && fromProvNum==toProvNum) {
-					MsgBox.Show(this,"Fee Schedule Groups are not allowed to be copied into themselves. Please choose another fee schedule group to copy.");
+					MessageBox.Show("Fee Schedule Groups are not allowed to be copied into themselves. Please choose another fee schedule group to copy.");
 					return;
 				}
 				//Get fromclinicnum from list of group clinics.
@@ -932,7 +932,7 @@ namespace OpenDental {
 				&& fromProvNum==toProvNum
 				&& (!PrefC.HasClinicsEnabled || fromClinicNum.In(listClinicNumsTo)))//If clinics disabled, can cause false negative so shortcircuit
 			{
-				MsgBox.Show(this,"Fee Schedules are not allowed to be copied into themselves. Please choose another fee schedule to copy.");
+				MessageBox.Show("Fee Schedules are not allowed to be copied into themselves. Please choose another fee schedule to copy.");
 				return;
 			}
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
@@ -941,13 +941,13 @@ namespace OpenDental {
 					FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(toFeeSched.FeeSchedNum,clinicNumTo);
 					if(groupCur!=null) {
 						Clinic clinicCur=Clinics.GetClinic(clinicNumTo);
-						MsgBox.Show(this,Lans.g(this,"Clinic: ")+clinicCur.Abbr+Lans.g(this," is a member of Fee Schedule Group: ")+groupCur.Description
+						MessageBox.Show(Lans.g(this,"Clinic: ")+clinicCur.Abbr+Lans.g(this," is a member of Fee Schedule Group: ")+groupCur.Description
 							+Lans.g(this," for the selected Fee Schedule and must be copied at the Fee Schedule Group level."));
 						return;
 					}
 				}
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"All fees that exactly match the \"Copy To\" fee schedule/clinic/provider combination will be deleted.  Then new fees will be copied in.  Are you sure you want to continue?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"All fees that exactly match the \"Copy To\" fee schedule/clinic/provider combination will be deleted.  Then new fees will be copied in.  Are you sure you want to continue?")){
 				return;
 			}
 			ODProgress.ShowAction(() => FeeScheds.CopyFeeSchedule(fromFeeSched,fromClinicNum,fromProvNum,toFeeSched,listClinicNumsTo,toProvNum),
@@ -962,27 +962,27 @@ namespace OpenDental {
 			long feeSchedGroupToNum=comboGroupTo.GetSelected<FeeSchedGroup>()?.FeeSchedGroupNum??0;
 			comboGroupTo.Items.Clear();
 			FillFeeSchedGroupComboBox(comboGroupTo,_listFeeScheds[comboFeeSchedTo.SelectedIndex].FeeSchedNum,feeSchedGroupToNum);
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void butIncrease_Click(object sender, System.EventArgs e) {
 			int percent=0;
 			if(textPercent.Text==""){
-				MsgBox.Show(this,"Please enter a percent first.");
+				MessageBox.Show("Please enter a percent first.");
 				return;
 			}
 			try{
 				percent=System.Convert.ToInt32(textPercent.Text);
 			}
 			catch{
-				MsgBox.Show(this,"Percent is not a valid number.");
+				MessageBox.Show("Percent is not a valid number.");
 				return;
 			}
 			if(percent<-99 || percent>99){
-				MsgBox.Show(this,"Percent must be between -99 and 99.");
+				MessageBox.Show("Percent must be between -99 and 99.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will overwrite all values of the selected fee schedule/clinic/provider combo.  Previously entered fee "
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will overwrite all values of the selected fee schedule/clinic/provider combo.  Previously entered fee "
 				+"amounts will be lost.  It is recommended to first create a backup copy of the original fee schedule, then update the original fee schedule "
 				+"with the new fees.  Are you sure you want to continue?"))
 			{
@@ -1003,7 +1003,7 @@ namespace OpenDental {
 			}
 			if(checkShowGroups.Checked) {
 				if(comboGroup.SelectedIndex==-1) {
-					MsgBox.Show(this,"Please select a Fee Schedule Group.");
+					MessageBox.Show("Please select a Fee Schedule Group.");
 					return;
 				}
 				//Fees.ImportFees() will update the rest of the group.
@@ -1063,7 +1063,7 @@ namespace OpenDental {
 				startingMessage:Lan.g(this,"Preparing to modify fees")+"...",
 				eventType:typeof(FeeSchedEvent),
 				odEventType:ODEventType.FeeSched);
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		///<summary>Determines if there are overrides being updated, or just a regular feeSchedule. Returns true if there are overrides and user wants to 
@@ -1157,7 +1157,7 @@ namespace OpenDental {
 			}
 			if(checkShowGroups.Checked) {
 				if(comboGroup.SelectedIndex==-1) {
-					MsgBox.Show(this,"Please select a Fee Schedule Group.");
+					MessageBox.Show("Please select a Fee Schedule Group.");
 					return;
 				}
 				clinicNum=comboGroup.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
@@ -1168,10 +1168,7 @@ namespace OpenDental {
 			}
 			string fileName="Fees"+feeSchedDesc+".txt";
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
-			if(ODBuild.IsWeb()) {
-				//file download dialog will come up later, after file is created.
-			}
-			else {
+
 				Cursor=Cursors.WaitCursor;
 				SaveFileDialog Dlg=new SaveFileDialog();
 				if(Directory.Exists(PrefC.GetString(PrefName.ExportPath))) {
@@ -1186,7 +1183,7 @@ namespace OpenDental {
 					return;
 				}
 				filePath=Dlg.FileName;
-			}
+			
 			ODProgress.ShowAction(
 				() => {
 					FeeScheds.ExportFeeSchedule(feeSched.FeeSchedNum,clinicNum,provNum,filePath);
@@ -1195,17 +1192,14 @@ namespace OpenDental {
 				progStyle:ProgressBarStyle.Continuous,
 				eventType:typeof(FeeSchedEvent),
 				odEventType:ODEventType.FeeSched);
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(filePath);
-			}
-			else {
+
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Fee schedule exported.");
-			}
+				MessageBox.Show("Fee schedule exported.");
+			
 		}
 
 		private void butImport_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"If you want a clean slate, you should clear the current fee schedule first.  When imported, any fees that are found in the text file will overwrite values of the selected fee schedule/clinic/provider combo.  Are you sure you want to continue?")) 
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"If you want a clean slate, you should clear the current fee schedule first.  When imported, any fees that are found in the text file will overwrite values of the selected fee schedule/clinic/provider combo.  Are you sure you want to continue?")) 
 			{
 				return;
 			}
@@ -1220,7 +1214,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!File.Exists(Dlg.FileName)){
-				MsgBox.Show(this,"File not found");
+				MessageBox.Show("File not found");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -1240,7 +1234,7 @@ namespace OpenDental {
 			}
 			if(checkShowGroups.Checked) {
 				if(comboGroup.SelectedIndex==-1) {
-					MsgBox.Show(this,"Please select a Fee Schedule Group.");
+					MessageBox.Show("Please select a Fee Schedule Group.");
 					return;
 				}
 				//Fees.ImportFees() will update the rest of the group.
@@ -1268,12 +1262,12 @@ namespace OpenDental {
 			//Progress bar won't go away.  No big deal I guess.
 			Cursor=Cursors.Default;
 			if(isImportSuccessful) { 
-				MsgBox.Show(this,"Fee schedule imported.");
+				MessageBox.Show("Fee schedule imported.");
 			}
 		}
 
 		private void butImportCanada_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"If you want a clean slate, the current fee schedule should be cleared first.  When imported, any fees that are found in the text file will overwrite values of the current fee schedule showing in the main window.  Are you sure you want to continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"If you want a clean slate, the current fee schedule should be cleared first.  When imported, any fees that are found in the text file will overwrite values of the current fee schedule showing in the main window.  Are you sure you want to continue?")) {
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -1406,7 +1400,7 @@ namespace OpenDental {
 			}
 			if(checkShowGroups.Checked) {
 				if(comboGroup.SelectedIndex==-1) {
-					MsgBox.Show(this,"Please select a Fee Schedule Group.");
+					MessageBox.Show("Please select a Fee Schedule Group.");
 					return;
 				}
 				//Fees.ImportFees() will update the rest of the group.
@@ -1495,7 +1489,7 @@ namespace OpenDental {
 		}
 
 		private void butUpdateWriteoffs_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Write-off estimates will be recalculated for all treatment planned procedures.  This tool should only "
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Write-off estimates will be recalculated for all treatment planned procedures.  This tool should only "
 				+"be run if you have updated fee schedules and want to run reports on write-off estimates for patients that have not been viewed."
 				+"\r\n\r\nThis could take a very long time.  Continue?"))
 			{

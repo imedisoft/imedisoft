@@ -467,21 +467,21 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(!checkAllProv.Checked && listProv.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled && !checkAllClin.Checked && listClin.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one clinic must be selected.");
+				MessageBox.Show("At least one clinic must be selected.");
 				return;
 			}
 			if(!checkPatientTypes.Checked && listPatientTypes.SelectedIndices.Count==0
 				&& !checkInsuranceTypes.Checked && listInsuranceTypes.SelectedIndices.Count==0)
 			{
-				MsgBox.Show(this,"At least one type must be selected.");
+				MessageBox.Show("At least one type must be selected.");
 				return;
 			}
 			if(!checkAllClaimPayGroups.Checked && listClaimPayGroups.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one claim payment group must be selected.");
+				MessageBox.Show("At least one claim payment group must be selected.");
 				return;
 			}
 			ReportComplex report=new ReportComplex(true,false);

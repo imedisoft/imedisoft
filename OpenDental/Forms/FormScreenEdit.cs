@@ -645,7 +645,7 @@ namespace OpenDental{
 				IsDeleted=true;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Are you sure you want to delete this screening?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Are you sure you want to delete this screening?")){
 				return;
 			}
 			if(ScreenPatCur!=null) {

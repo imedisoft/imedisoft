@@ -124,7 +124,7 @@ namespace OpenDental{
 			if(textLength.errorProvider1.GetError(textLength)!="")
 				|| (test additional textboxes as needed) 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 //Then parse the textbox as usual. Example: appt.Length=PIn.Int(textLength.Text);

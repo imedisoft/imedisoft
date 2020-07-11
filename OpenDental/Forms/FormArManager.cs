@@ -250,7 +250,7 @@ namespace OpenDental {
 			try {
 				msgText="There was a problem running aging.  Would you like to load the accounts grid with currently existing account information?";
 				while(!RunAgingIfNecessary(true)) {
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,msgText)) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,msgText)) {
 						Close();
 						return;
 					}
@@ -259,7 +259,7 @@ namespace OpenDental {
 			catch(Exception ex) {
 				ex.DoNothing();
 				msgText="There was a problem running aging.  Would you like to load the accounts grid with currently existing account information?";
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,msgText)) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,msgText)) {
 					Close();
 					return;
 				}
@@ -302,7 +302,7 @@ namespace OpenDental {
 			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily) 
 				&& Security.IsAuthorized(Permissions.Setup,true)
 				&& PrefC.GetDate(PrefName.DateLastAging)<DateTime.Today.AddDays(-15)
-				&& MsgBox.Show(this,MsgBoxButtons.YesNo,msgText))
+				&& MsgBox.Show(MsgBoxButtons.YesNo,msgText))
 			{
 				FormAging FormA=new FormAging();
 				FormA.BringToFront();
@@ -491,7 +491,7 @@ namespace OpenDental {
 				listPatAgingsAll=_listPatAgingSentAll;
 			}
 			if(gridCur.SelectedGridRows.Count!=1) {
-				MsgBox.Show(this,"Please select one patient first.");
+				MessageBox.Show("Please select one patient first.");
 				return;
 			}
 			object pAgeIndex=gridCur.SelectedGridRows[0].Tag;
@@ -558,7 +558,7 @@ namespace OpenDental {
 				|| textSentMinBal.errorProvider1.GetError(textSentMinBal)!="" || textSentDaysLastPay.errorProvider1.GetError(textSentDaysLastPay)!=""
 				|| textExcludedMinBal.errorProvider1.GetError(textExcludedMinBal)!="" || textExcludedDaysLastPay.errorProvider1.GetError(textExcludedDaysLastPay)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			#region Sent Defaults
@@ -642,15 +642,15 @@ namespace OpenDental {
 		private bool ValidateSendUpdateData(List<long> listClinicNums,out List<long> listClinicsSkipped) {
 			listClinicsSkipped=new List<long>();
 			if(_tsiProg==null) {
-				MsgBox.Show(this,"The Transworld program link does not exist.  Please contact support.");
+				MessageBox.Show("The Transworld program link does not exist.  Please contact support.");
 				return false;
 			}
 			if(!_tsiProg.Enabled) {
-				MsgBox.Show(this,"The Transworld program link is not enabled.");
+				MessageBox.Show("The Transworld program link is not enabled.");
 				return false;
 			}
 			if(_dictClinicProgProps.Count==0) {
-				MsgBox.Show(this,"The Transworld program link is not setup.  Try again after entering the program link properties.");
+				MessageBox.Show("The Transworld program link is not setup.  Try again after entering the program link properties.");
 				return false;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -722,7 +722,7 @@ namespace OpenDental {
 			List<PatAging> listPatAgingsAll;
 			ODGrid gridCur;
 			if(_excludedBilltype==null) {
-				MsgBox.Show(this,"There is no \"Excluded\" billing type.  Please designate one in Setup -> Definitions -> Billing Types.");
+				MessageBox.Show("There is no \"Excluded\" billing type.  Please designate one in Setup -> Definitions -> Billing Types.");
 				return;
 			}
 			if(tabControlMain.SelectedTab==tabUnsent) {
@@ -734,7 +734,7 @@ namespace OpenDental {
 				listPatAgingsAll=_listPatAgingExcludedAll;
 			}
 			if(gridCur.SelectedGridRows.Count!=1) {
-				MsgBox.Show(this,"Please select one patient first.");
+				MessageBox.Show("Please select one patient first.");
 				return;
 			}
 			object pAgeIndex=gridCur.SelectedGridRows[0].Tag;
@@ -963,7 +963,7 @@ namespace OpenDental {
 			List<int> retval=new List<int>();
 			#region Validate Inputs
 			if(textUnsentMinBal.errorProvider1.GetError(textUnsentMinBal)!="" || textUnsentDaysLastPay.errorProvider1.GetError(textUnsentDaysLastPay)!="") {
-				MsgBox.Show(this,"Please fix data entry errors in Unsent tab first.");
+				MessageBox.Show("Please fix data entry errors in Unsent tab first.");
 				return retval;//return empty list, filter inputs cannot be applied since there are errors
 			}
 			#endregion Validate Inputs
@@ -1225,12 +1225,12 @@ namespace OpenDental {
 			}
 			ODGrid gridCur=(tabControlMain.SelectedTab==tabUnsent ? gridUnsent : gridExcluded);
 			if(gridCur.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"Please select accounts to send to TSI first.");
+				MessageBox.Show("Please select accounts to send to TSI first.");
 				return;
 			}
 			if(_collectionBillType==null) {
 				if(Security.IsAuthorized(Permissions.Setup)
-					&& MsgBox.Show(this,MsgBoxButtons.YesNo,"There must be a collections billing type defined in order to send accounts to TSI.  Would you like "
+					&& MsgBox.Show(MsgBoxButtons.YesNo,"There must be a collections billing type defined in order to send accounts to TSI.  Would you like "
 						+"to open the definitions window now to create a collections billing type?"))
 				{
 					FormDefinitions FormDefs=new FormDefinitions(DefCat.BillingTypes);
@@ -1241,7 +1241,7 @@ namespace OpenDental {
 				FormD.ShowDialog();//no OK button, only Close which returns DialogResult.Cancel, just get the billing type again in case they created it
 				_collectionBillType=Defs.GetDefsForCategory(DefCat.BillingTypes,true).FirstOrDefault(x => x.ItemValue.ToLower()=="c");
 				if(_collectionBillType==null) {//still no collections billing type
-					MsgBox.Show(this,"Please create a collections billing type and try again later.");
+					MessageBox.Show("Please create a collections billing type and try again later.");
 					return;
 				}
 			}
@@ -1251,7 +1251,7 @@ namespace OpenDental {
 				return;
 			}
 			if(_dictClinicProgProps.All(x => listClinicsSkipped.Contains(x.Key))) {
-				MsgBox.Show(this,"An SFTP connection could not be made using the connection details "+(PrefC.HasClinicsEnabled ? "for any clinic " : "")
+				MessageBox.Show("An SFTP connection could not be made using the connection details "+(PrefC.HasClinicsEnabled ? "for any clinic " : "")
 					+"in the enabled Transworld (TSI) program link.  Accounts cannot be sent to collection until the program link is setup.");
 				return;
 			}
@@ -1472,7 +1472,7 @@ namespace OpenDental {
 						dictClinicNumListTransLogs[clinicNum].RemoveAll(x => x.PatNum==pAgingCur.PatNum);
 					}
 					Cursor=Cursors.Default;
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,ex.Message+"\r\nDo you want to continue attempting to send the remaining accounts?")) {
+					if(MsgBox.Show(MsgBoxButtons.YesNo,ex.Message+"\r\nDo you want to continue attempting to send the remaining accounts?")) {
 						Cursor=Cursors.WaitCursor;
 						continue;
 					}
@@ -1767,7 +1767,7 @@ namespace OpenDental {
 			List<int> retval=new List<int>();
 			#region Validate Inputs
 			if(textSentMinBal.errorProvider1.GetError(textSentMinBal)!="" || textSentDaysLastPay.errorProvider1.GetError(textSentDaysLastPay)!="") {
-				MsgBox.Show(this,"Please fix data entry errors in Sent tab first.");//return empty list, filter inputs cannot be applied since there are errors
+				MessageBox.Show("Please fix data entry errors in Sent tab first.");//return empty list, filter inputs cannot be applied since there are errors
 				return retval;
 			}
 			#endregion Validate Inputs
@@ -1924,11 +1924,11 @@ namespace OpenDental {
 				return;
 			}
 			if(comboNewStatus.SelectedIndex<0 || comboNewStatus.SelectedIndex>=_listNewStatuses.Count) {
-				MsgBox.Show(this,"Please select a new status first.");
+				MessageBox.Show("Please select a new status first.");
 				return;
 			}
 			if(gridSent.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"Please select accounts to update first.");
+				MessageBox.Show("Please select accounts to update first.");
 				return;
 			}
 			List<PatAging> listPatAging=GetSelectedPatAgings(gridSent);
@@ -1937,7 +1937,7 @@ namespace OpenDental {
 				return;
 			}
 			if(_dictClinicProgProps.All(x => listClinicsSkipped.Contains(x.Key))) {
-				MsgBox.Show(this,"An SFTP connection could not be made using the connection details "+(PrefC.HasClinicsEnabled ? "for any clinic " : "")
+				MessageBox.Show("An SFTP connection could not be made using the connection details "+(PrefC.HasClinicsEnabled ? "for any clinic " : "")
 					+"in the enabled Transworld (TSI) program link.  Account statuses cannot be updated with TSI until the program link is setup.");
 				return;
 			}
@@ -1952,7 +1952,7 @@ namespace OpenDental {
 				}
 			}
 			if(comboNewBillType.SelectedIndex<0 || comboNewBillType.SelectedIndex>=_listBillTypesNoColl.Count) {
-				MsgBox.Show(this,"Please select a new billing type to assign to the guarantors that are no longer going to be managed by Transworld.");
+				MessageBox.Show("Please select a new billing type to assign to the guarantors that are no longer going to be managed by Transworld.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -2025,7 +2025,7 @@ namespace OpenDental {
 						dictClinicNumListTransLogs[clinicNum].RemoveAll(x => x.PatNum==pAgingCur.PatNum);
 					}
 					Cursor=Cursors.Default;
-					if(MsgBox.Show(this,MsgBoxButtons.YesNo,ex.Message+"\r\nDo you want to continue attempting to send any remaining accounts?")) {
+					if(MsgBox.Show(MsgBoxButtons.YesNo,ex.Message+"\r\nDo you want to continue attempting to send any remaining accounts?")) {
 						Cursor=Cursors.WaitCursor;
 						continue;
 					}
@@ -2279,7 +2279,7 @@ namespace OpenDental {
 			List<int> retval=new List<int>();
 			#region Validate Inputs
 			if(textExcludedMinBal.errorProvider1.GetError(textExcludedMinBal)!="" || textExcludedDaysLastPay.errorProvider1.GetError(textExcludedDaysLastPay)!="") {
-				MsgBox.Show(this,"Please fix data entry errors in Excluded tab first.");
+				MessageBox.Show("Please fix data entry errors in Excluded tab first.");
 				return retval;//return empty list, filter inputs cannot be applied since there are errors
 			}
 			#endregion Validate Inputs

@@ -156,12 +156,7 @@ namespace OpenDental.UI {
 
 		///<summary>True if the dropdown will be inside a popup, false if the dropdown will be added to the parent form. One way in which the popup
 		///is superior is that the drop down will extend outside the form if necessary.</summary>
-		private bool _doUsePopup {
-			get {
-				//For some unknown reason, this popup would cause the parent form to go behind other windows, even when the form was opened using ShowDialog.
-				return !ODBuild.IsWeb();
-			}
-		}
+		private bool _doUsePopup => true;
 
 		public List<object> ListSelectedItems {
 			get {

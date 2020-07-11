@@ -356,22 +356,22 @@ namespace OpenDental
 
 		private void butPostcards_Click(object sender,EventArgs e) {
 			if(!validDateFrom.IsValid || !validDateTo.IsValid) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime dateFrom=PIn.Date(validDateFrom.Text);
 			DateTime dateTo=PIn.Date(validDateTo.Text);
 			if(dateTo < dateFrom) {
-				MsgBox.Show(this,"To date cannot be before From date.");
+				MessageBox.Show("To date cannot be before From date.");
 				return;
 			}
 			if(dateFrom.AddYears(1) <= dateTo) {
-				MsgBox.Show(this,"Date range must not exceed 1 year.");
+				MessageBox.Show("Date range must not exceed 1 year.");
 				return;
 			}
 			BirthdayTable=RpBirthday.GetBirthdayTable(dateFrom,dateTo);
 			if(BirthdayTable.Rows.Count==0) {
-				MsgBox.Show(this,"No postcards to preview.");
+				MessageBox.Show("No postcards to preview.");
 				return;
 			}
 			pagesPrinted=0;
@@ -483,18 +483,18 @@ namespace OpenDental
 
 		private void butReport_Click(object sender, System.EventArgs e){
 			if(!validDateFrom.IsValid || !validDateTo.IsValid) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 
 			DateTime dateFrom=PIn.Date(validDateFrom.Text);
 			DateTime dateTo=PIn.Date(validDateTo.Text);
 			if(dateTo < dateFrom) {
-				MsgBox.Show(this,"To date cannot be before From date.");
+				MessageBox.Show("To date cannot be before From date.");
 				return;
 			}
 			if(dateFrom.AddYears(1) <= dateTo) {
-				MsgBox.Show(this,"Date range must not exceed 1 year.");
+				MessageBox.Show("Date range must not exceed 1 year.");
 				return;
 			}
 			ReportComplex report=new ReportComplex(true,false);

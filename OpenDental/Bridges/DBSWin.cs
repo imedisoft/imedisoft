@@ -19,7 +19,7 @@ namespace OpenDental.Bridges{
 		///<summary>Sends data for Patient.Cur to an import file which DBSWin will automatically recognize.</summary>
 		public static void SendData(Program ProgramCur, Patient pat){
 			if(pat==null){
-				MsgBox.Show("DBSWin","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			List<ProgramProperty> ForProgram =ProgramProperties.GetForProgram(ProgramCur.ProgramNum);

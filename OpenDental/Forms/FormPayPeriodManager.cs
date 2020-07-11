@@ -467,15 +467,15 @@ namespace OpenDental {
 		private void butGenerate_Click(object sender, EventArgs e) {
 			//Generate payperiods based on settings
 			if(numPayPeriods.errorProvider1.GetError(numPayPeriods)!="") {
-				MsgBox.Show(this,numPayPeriods.errorProvider1.GetError(numPayPeriods));
+				MessageBox.Show(numPayPeriods.errorProvider1.GetError(numPayPeriods));
 				return;
 			}
 			if(numDaysAfterPayPeriod.Enabled && numDaysAfterPayPeriod.errorProvider1.GetError(numDaysAfterPayPeriod)!="") {
-				MsgBox.Show(this,numDaysAfterPayPeriod.errorProvider1.GetError(numDaysAfterPayPeriod));
+				MessageBox.Show(numDaysAfterPayPeriod.errorProvider1.GetError(numDaysAfterPayPeriod));
 				return;
 			}
 			if(numDaysAfterPayPeriod.Enabled && numDaysAfterPayPeriod.Text=="0") {
-				MsgBox.Show(this,"# Days After Pay Period cannot be zero.");
+				MessageBox.Show("# Days After Pay Period cannot be zero.");
 				return;
 			}
 			_listPayPeriods.Clear();
@@ -614,17 +614,17 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.ListGridRows.Count==0) {
-				MsgBox.Show(this,"Pay periods must be generated first.");
+				MessageBox.Show("Pay periods must be generated first.");
 				return;
 			}
 			if(numDaysAfterPayPeriod.errorProvider1.GetError(numDaysAfterPayPeriod)!="") {
-				MsgBox.Show(this,numDaysAfterPayPeriod.errorProvider1.GetError(numDaysAfterPayPeriod));
+				MessageBox.Show(numDaysAfterPayPeriod.errorProvider1.GetError(numDaysAfterPayPeriod));
 				return;
 			}
 			PayPeriods.RefreshCache(); //Refresh the cache to include any other changes that might have been made in FormTimeCardSetup.
 			//overlapping logic
 			if(PayPeriods.AreAnyOverlapping(PayPeriods.GetDeepCopy(),_listPayPeriods)) {
-				MsgBox.Show(this,"You have created pay periods that would overlap with existing pay periods. Please fix those pay periods first.");
+				MessageBox.Show("You have created pay periods that would overlap with existing pay periods. Please fix those pay periods first.");
 				return;
 			}
 			//Save payperiods

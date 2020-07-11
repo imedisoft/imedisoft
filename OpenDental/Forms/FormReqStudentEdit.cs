@@ -324,7 +324,7 @@ namespace OpenDental{
 				//the student only has permission to view/attach/detach their own requirements
 				if(provUser.ProvNum!=ReqCur.ProvNum) {
 					//but this should never happen
-					MsgBox.Show(this,"Students may only edit their own requirements.");
+					MessageBox.Show("Students may only edit their own requirements.");
 					butDelete.Enabled=false;
 					butOK.Enabled=false;
 				}
@@ -403,7 +403,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			//if(!MsgBox.Show(this,true,"Delete this student requirement?  This is typically handled by using the synch feature from requirements needed.")){
+			//if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this student requirement?  This is typically handled by using the synch feature from requirements needed.")){
 			//	return;
 			//}
 			try{
@@ -421,7 +421,7 @@ namespace OpenDental{
 					DateTime.Parse(textDateCompleted.Text);
 				}
 				catch{
-					MsgBox.Show(this,"Date is invalid.");
+					MessageBox.Show("Date is invalid.");
 					return;
 				}
 			}

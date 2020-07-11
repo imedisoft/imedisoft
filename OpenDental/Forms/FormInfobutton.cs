@@ -1076,7 +1076,7 @@ namespace OpenDental {
 			KnowledgeRequestNotification.KnowledgeRequestNotification krn;
 			for(int i=0;i<gridMain.ListGridRows.Count;i++){
 				if(gridMain.ListGridRows[i].Tag==null){
-					MsgBox.Show(this,"Cannot search without a valid code.");
+					MessageBox.Show("Cannot search without a valid code.");
 					continue;
 				}
 				krn=new KnowledgeRequestNotification.KnowledgeRequestNotification();
@@ -1095,7 +1095,7 @@ namespace OpenDental {
 			KnowledgeRequestNotification.KnowledgeRequestNotification krn;
 			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
 				if(gridMain.ListGridRows[i].Tag==null) {
-					MsgBox.Show(this,"Cannot search without a valid code.");
+					MessageBox.Show("Cannot search without a valid code.");
 					continue;
 				}
 				krn=new KnowledgeRequestNotification.KnowledgeRequestNotification();

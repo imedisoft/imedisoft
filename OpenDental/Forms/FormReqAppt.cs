@@ -363,7 +363,7 @@ namespace OpenDental{
 
 		private void gridAttached_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(hasChanged){
-				MsgBox.Show(this,"Not allowed to edit individual requirements immediately after adding or removing.");
+				MessageBox.Show("Not allowed to edit individual requirements immediately after adding or removing.");
 				return;
 			}
 			FormReqStudentEdit FormRSE=new FormReqStudentEdit();
@@ -406,7 +406,7 @@ namespace OpenDental{
 
 		private void butAdd_Click(object sender,EventArgs e) {
 			if(gridReqs.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select at least one requirement from the list at the left first.");
+				MessageBox.Show("Please select at least one requirement from the list at the left first.");
 				return;
 			}
 			ReqStudent req;
@@ -431,7 +431,7 @@ namespace OpenDental{
 
 		private void butRemove_Click(object sender,EventArgs e) {
 			if(gridAttached.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select at least one requirement from the list below first.");
+				MessageBox.Show("Please select at least one requirement from the list below first.");
 				return;
 			}
 			for(int i=gridAttached.SelectedIndices.Length-1;i>=0;i--){//go backwards to remove from end of list

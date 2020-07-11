@@ -526,7 +526,7 @@ namespace OpenDental{
 
 		private void butBrowse_Click(object sender, System.EventArgs e) {
 			if(!Directory.Exists(PrefC.GetString(PrefName.LetterMergePath))){
-				MsgBox.Show(this,"Letter merge path invalid");
+				MessageBox.Show("Letter merge path invalid");
 				return;
 			}
 			openFileDlg.InitialDirectory=PrefC.GetString(PrefName.LetterMergePath);
@@ -542,16 +542,16 @@ namespace OpenDental{
 				return;
 			#endif
 			if(!Directory.Exists(PrefC.GetString(PrefName.LetterMergePath))){
-				MsgBox.Show(this,"Letter merge path invalid");
+				MessageBox.Show("Letter merge path invalid");
 				return;
 			}
 			if(textTemplateName.Text==""){
-				MsgBox.Show(this,"Please enter a template file name first.");
+				MessageBox.Show("Please enter a template file name first.");
 				return;
 			}
 			string templateFile=ODFileUtils.CombinePaths(PrefC.GetString(PrefName.LetterMergePath),textTemplateName.Text);
 			if(File.Exists(templateFile)){
-				MsgBox.Show(this,"A file with that name already exists.  Choose a different name, or close this window to edit the template.");
+				MessageBox.Show("A file with that name already exists.  Choose a different name, or close this window to edit the template.");
 				return;
 			}
 			Object oMissing=System.Reflection.Missing.Value;
@@ -577,11 +577,11 @@ namespace OpenDental{
 			wrdDoc.Close(ref oFalse,ref oMissing,ref oMissing);
 			WrdApp.WindowState=Word.WdWindowState.wdWindowStateMinimize;
 			wrdDoc=null;
-			MsgBox.Show(this,"Done. You can edit the new template after closing this window.");
+			MessageBox.Show("Done. You can edit the new template after closing this window.");
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
 				return;
 			}
 			LetterMerges.Delete(LetterMergeCur);
@@ -590,23 +590,23 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Please enter a description");
+				MessageBox.Show("Please enter a description");
 				return;
 			}
 			if(this.textDataFileName.Text==""
 				|| this.textTemplateName.Text=="")
 			{
-				MsgBox.Show(this,"Filenames cannot be left blank.");
+				MessageBox.Show("Filenames cannot be left blank.");
 				return;
 			}
 			if(comboCategory.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a category");
+				MessageBox.Show("Please select a category");
 				return;
 			}
 			if(listPatSelect.SelectedIndices.Count==0
 				&& listReferral.SelectedIndices.Count==0)
 			{
-				MsgBox.Show(this,"Please select at least one field.");
+				MessageBox.Show("Please select at least one field.");
 				return;
 			}
 			Cursor.Current=Cursors.WaitCursor;

@@ -82,11 +82,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(string.IsNullOrEmpty(textName.Text.Trim())) {
-				MsgBox.Show(this,"Reason required.");
+				MessageBox.Show("Reason required.");
 				return;
 			}
 			if(_apptTypeCur==null) {
-				MsgBox.Show(this,"Appointment Type required.");
+				MessageBox.Show("Appointment Type required.");
 				return;
 			}
 			_defCur.ItemName=PIn.String(textName.Text);

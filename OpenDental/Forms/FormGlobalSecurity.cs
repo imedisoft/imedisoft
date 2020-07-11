@@ -89,7 +89,7 @@ namespace OpenDental {
 
 		private void checkDomainLoginEnabled_MouseUp(object sender,MouseEventArgs e) {
 			if(checkDomainLoginEnabled.Checked && string.IsNullOrWhiteSpace(textDomainLoginPath.Text)) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to use your current domain as the domain login path?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to use your current domain as the domain login path?")) {
 					try {
 						DirectoryEntry rootDSE = new DirectoryEntry("LDAP://RootDSE");
 						string defaultNamingContext = rootDSE.Properties["defaultNamingContext"].Value.ToString();
@@ -110,7 +110,7 @@ namespace OpenDental {
 		private void textDomainLoginPath_Leave(object sender,EventArgs e) {
 			if(checkDomainLoginEnabled.Checked) {
 				if(string.IsNullOrWhiteSpace(textDomainLoginPath.Text)) {
-					MsgBox.Show(this,"Warning. Domain Login is enabled, but no path has been entered. If you do not provide a domain path,"
+					MessageBox.Show("Warning. Domain Login is enabled, but no path has been entered. If you do not provide a domain path,"
 						+"you will not be able to assign domain logins to users.");
 					_domainObjectGuid="";
 				}
@@ -130,7 +130,7 @@ namespace OpenDental {
 
 		private void checkPasswordsMustBeStrong_Click(object sender,EventArgs e) {
 			if(!checkPasswordsMustBeStrong.Checked) {//unchecking the box
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Warning.  If this box is unchecked, the strong password flag on all users will be reset.  "
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning.  If this box is unchecked, the strong password flag on all users will be reset.  "
 					+"If strong passwords are again turned on later, then each user will have to edit their password in order to cause the strong password flag to be set again.")) 
 				{
 					checkPasswordsMustBeStrong.Checked=true;//recheck it.
@@ -149,7 +149,7 @@ namespace OpenDental {
 			}
 			if(inputbox.textResult.Text!="abracadabra") {
 				checkDisableBackupReminder.Checked=!checkDisableBackupReminder.Checked;
-				MsgBox.Show(this,"Wrong password");
+				MessageBox.Show("Wrong password");
 				return;
 			}
 		}
@@ -180,7 +180,7 @@ namespace OpenDental {
 					}
 				}
 				catch {
-					MsgBox.Show(this,"Log off after minutes is invalid.");
+					MessageBox.Show("Log off after minutes is invalid.");
 					return;
 				}
 			}

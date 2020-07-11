@@ -462,7 +462,7 @@ namespace OpenDental {
 			if(_ecClinicCur==null||_ecClinicCur.ClinicNum==0) {
 				return false;//somehow editing default clinic anyways, no need to switch.
 			}
-			//if(!MsgBox.Show(this,true,"Would you like to make a copy of the defaults for this clinic and continue editing the copy?")) {
+			//if(!MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to make a copy of the defaults for this clinic and continue editing the copy?")) {
 			//	return false;
 			//}
 			_dictClinicRules[_ecClinicCur.ClinicNum]=_dictClinicRules[0].Select(x => x.Copy()).ToList();
@@ -481,7 +481,7 @@ namespace OpenDental {
 			if(_ecClinicCur==null||_ecClinicCur.ClinicNum==0) {
 				return false;//somehow editing default clinic anyways, no need to switch.
 			}
-			if(_dictClinicRules[_ecClinicCur.ClinicNum].Count>0&&!MsgBox.Show(this,true,"Delete custom rules for this clinic and switch to using defaults? This cannot be undone.")) {
+			if(_dictClinicRules[_ecClinicCur.ClinicNum].Count>0&&!MsgBox.Show(MsgBoxButtons.YesNo,"Delete custom rules for this clinic and switch to using defaults? This cannot be undone.")) {
 				checkUseDefaultsEC.Checked=false;//undo checking of box.
 				return false;
 			}
@@ -540,7 +540,7 @@ namespace OpenDental {
 
 		private bool ActivateEService(PrefName prefEnabled,ApptReminderType eService,eServiceCode? codeToValidate=null) {			
 			if(codeToValidate!=null && !WebServiceMainHQProxy.IsEServiceActive(_signupOut,(eServiceCode)codeToValidate)) { //Not yet activated with HQ.
-				MsgBox.Show(this,$"You must first signup for {codeToValidate.GetDescription()} via the Signup tab before activating {codeToValidate.GetDescription()}.");
+				MessageBox.Show($"You must first signup for {codeToValidate.GetDescription()} via the Signup tab before activating {codeToValidate.GetDescription()}.");
 				return false;
 			}
 			bool isAutoEnabled=PrefC.GetBool(prefEnabled);
@@ -573,7 +573,7 @@ namespace OpenDental {
 				.GroupBy(x => x)
 				.Any(x => x.Count()>1)) 
 			{
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"All eConfirmation appointment statuses should be different. Continue anyway?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"All eConfirmation appointment statuses should be different. Continue anyway?")) {
 					return;
 				}
 			}

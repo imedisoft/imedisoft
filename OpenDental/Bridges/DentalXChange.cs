@@ -17,7 +17,7 @@ namespace OpenDental {
 			url+="/reg/pmslogin";
 			Clearinghouse claimConnectClearingHouse=Clearinghouses.GetFirstOrDefault(x => x.CommBridge==EclaimsCommBridge.ClaimConnect);
 			if(claimConnectClearingHouse==null) {
-				MsgBox.Show("ContrAccount","ClaimConnect clearinghouse not found.");
+				MsgBox.Show("ClaimConnect clearinghouse not found.");
 				return;
 			}
 			//This is the postdata

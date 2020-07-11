@@ -98,7 +98,7 @@ namespace OpenDental {
 		private void butTerminal_Click(object sender,EventArgs e) {
 			//only visible when used from patient forms window.
 			if(listMain.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"Please select at least one item first.");
+				MessageBox.Show("Please select at least one item first.");
 				return;
 			}
 			if(SelectedSheetDefs==null) {
@@ -123,7 +123,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(listMain.SelectedIndices.Count!=1){
-				MsgBox.Show(this,"Please select one item first.");
+				MessageBox.Show("Please select one item first.");
 				return;
 			}
 			SelectedSheetDefs=new List<SheetDef>();

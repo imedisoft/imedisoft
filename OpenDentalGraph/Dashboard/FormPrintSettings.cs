@@ -198,14 +198,11 @@ namespace OpenDentalGraph {
 				FilterIndex=1,
 				RestoreDirectory=true,
 			};
-			if(ODBuild.IsWeb()) {
-				sd.FileName=ODFileUtils.CombinePaths(Path.GetTempPath(),"chart_export.pdf");
-			}
-			else {
+
 				if(sd.ShowDialog()!=DialogResult.OK) {
 					return;
 				}
-			}
+			
 			using(PdfDocument pdfDoc=new PdfDocument()) {
 				//save the chart into the memoryStream as a BitMap
 				try {
@@ -216,9 +213,7 @@ namespace OpenDentalGraph {
 						xGraphics.DrawImage(_bmpSheet,0,0,page.Width,page.Height);
 					}
 					pdfDoc.Save(sd.FileName);
-					if(ODBuild.IsWeb()) {
-						ThinfinityUtils.ExportForDownload(sd.FileName);
-					}
+
 					MessageBox.Show(Lans.g(this,"Chart saved."));
 				}
 				catch(Exception ex) {

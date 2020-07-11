@@ -47,7 +47,7 @@ namespace OpenDental {
 		private void FormPaySimple_Load(object sender,EventArgs e) {
 			_progCur=Programs.GetCur(ProgramName.PaySimple);
 			if(_progCur==null) {
-				MsgBox.Show(this,"PaySimple does not exist in the database.");
+				MessageBox.Show("PaySimple does not exist in the database.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -255,7 +255,7 @@ namespace OpenDental {
 					|| expYear!=_creditCardCur.CCExpiration.Year //the card exp date entered doesn't have the same year
 					|| expMonth!=_creditCardCur.CCExpiration.Month)) //the card exp date entered doesn't have the same month
 			{
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"The card number or expiration date entered does not match the X-Charge card on file.  Do you wish "
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"The card number or expiration date entered does not match the X-Charge card on file.  Do you wish "
 					+"to replace the X-Charge card with this one?"))
 				{
 					_creditCardCur.XChargeToken="";
@@ -276,7 +276,7 @@ namespace OpenDental {
 				expMonth=_creditCardCur.CCExpiration.Month;
 			}
 			else if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,_clinicNum))) {
-				MsgBox.Show(this,"Cannot add a new credit card.");
+				MessageBox.Show("Cannot add a new credit card.");
 				return null;
 			}
 			try {
@@ -310,7 +310,7 @@ namespace OpenDental {
 						if(string.IsNullOrWhiteSpace(textRefNumber.Text)) {
 							throw new ODException(Lan.g(this,"Invalid PaySimple Payment ID."));
 						}
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"You are about to return a payment.  This action is irreversible.  Continue?")) {
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You are about to return a payment.  This action is irreversible.  Continue?")) {
 							throw new ODException(Lan.g(this,"Payment return was cancelled by user."));
 						}
 						retVal=PaySimple.ReversePayment(textRefNumber.Text,_clinicNum);
@@ -319,7 +319,7 @@ namespace OpenDental {
 						if(string.IsNullOrWhiteSpace(textRefNumber.Text)) {
 							throw new ODException(Lan.g(this,"Invalid PaySimple Payment ID."));
 						}
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"You are about to void a payment.  This action is irreversible.  Continue?")) {
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You are about to void a payment.  This action is irreversible.  Continue?")) {
 							throw new ODException(Lan.g(this,"Payment void was cancelled by user."));
 						}
 						retVal=PaySimple.VoidPayment(textRefNumber.Text,_clinicNum);
@@ -330,7 +330,7 @@ namespace OpenDental {
 			}
 			catch(PaySimpleException ex) {
 				MessageBox.Show(ex.Message);
-				if(ex.ErrorType==PaySimpleError.CustomerDoesNotExist && MsgBox.Show(this,MsgBoxButtons.OKCancel,
+				if(ex.ErrorType==PaySimpleError.CustomerDoesNotExist && MsgBox.Show(MsgBoxButtons.OKCancel,
 					"Delete the link to the customer id for this patient?")) 
 				{
 					PatientLinks.DeletePatNumTos(ex.CustomerId,PatientLinkType.PaySimple);
@@ -372,7 +372,7 @@ namespace OpenDental {
 				accountNumber=_creditCardCur.PaySimpleToken;
 			}
 			else if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,_clinicNum))) {
-				MsgBox.Show(this,"Cannot add a new ACH payment.");
+				MessageBox.Show("Cannot add a new ACH payment.");
 				return null;
 			}
 			try {
@@ -395,7 +395,7 @@ namespace OpenDental {
 			}
 			catch(PaySimpleException ex) {
 				MessageBox.Show(ex.Message);
-				if(ex.ErrorType==PaySimpleError.CustomerDoesNotExist && MsgBox.Show(this,MsgBoxButtons.OKCancel,
+				if(ex.ErrorType==PaySimpleError.CustomerDoesNotExist && MsgBox.Show(MsgBoxButtons.OKCancel,
 					"Delete the link to the customer id for this patient?")) 
 				{
 					PatientLinks.DeletePatNumTos(ex.CustomerId,PatientLinkType.PaySimple);
@@ -489,24 +489,24 @@ namespace OpenDental {
 			expYear=0;
 			expMonth=0;
 			if(_trantype==PaySimple.TransType.SALE && !Regex.IsMatch(textAmount.Text,"^[0-9]+$") && !Regex.IsMatch(textAmount.Text,"^[0-9]*\\.[0-9]+$")) {
-				MsgBox.Show(this,"Invalid amount.");
+				MessageBox.Show("Invalid amount.");
 				return false;
 			}
 			if((_trantype==PaySimple.TransType.VOID || _trantype==PaySimple.TransType.RETURN)//The reference number is optional for terminal returns. 
 				&& textRefNumber.Text=="") 
 			{
-				MsgBox.Show(this,"Ref Number required.");
+				MessageBox.Show("Ref Number required.");
 				return false;
 			}
 			string paytype=ProgramProperties.GetPropValForClinicOrDefault(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimplePayTypeCC,_clinicNum);
 			if(!Defs.GetDefsForCategory(DefCat.PaymentTypes,true).Any(x => x.DefNum.ToString()==paytype)) { //paytype is not a valid DefNum
-				MsgBox.Show(this,"The PaySimple payment type has not been set.");
+				MessageBox.Show("The PaySimple payment type has not been set.");
 				return false;
 			}
 			//Processing through Web Service
 			// Consider adding more advanced verification methods using PaySimple validation requests.
 			if(textCardNumber.Text.Trim().Length<5) {
-				MsgBox.Show(this,"Invalid Card Number.");
+				MessageBox.Show("Invalid Card Number.");
 				return false;
 			}
 			try {//PIn.Int will throw an exception if not a valid format
@@ -519,27 +519,27 @@ namespace OpenDental {
 					expMonth=PIn.Int(textExpDate.Text.Substring(0,2));
 				}
 				else {
-					MsgBox.Show(this,"Expiration format invalid.");
+					MessageBox.Show("Expiration format invalid.");
 					return false;
 				}
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"Expiration format invalid.");
+				MessageBox.Show("Expiration format invalid.");
 				return false;
 			}
 			if(_creditCardCur==null) {//if the user selected a new CC, verify through PaySimple
 				//using a new CC and the card number entered contains something other than digits
 				if(textCardNumber.Text.Any(x => !char.IsDigit(x))) {
-					MsgBox.Show(this,"Invalid card number.");
+					MessageBox.Show("Invalid card number.");
 					return false;
 				}
 			}
 			else if(_creditCardCur.PaySimpleToken=="" && Regex.IsMatch(textCardNumber.Text,@"X+[0-9]{4}")) {//using a stored CC
-				MsgBox.Show(this,"There is no saved PaySimple token for this credit card.  The card number and expiration must be re-entered.");
+				MessageBox.Show("There is no saved PaySimple token for this credit card.  The card number and expiration must be re-entered.");
 				return false;
 			}
 			if(textNameOnCard.Text.Trim()=="" && _patCur!=null && _patCur.PatNum>0) {//Name required for patient credit cards, not prepaid cards.
-				MsgBox.Show(this,"Name On Card required.");
+				MessageBox.Show("Name On Card required.");
 				return false;
 			}
 			return IsPaySimpleSetup();
@@ -548,15 +548,15 @@ namespace OpenDental {
 		private bool VerifyDataACH() {
 			if(_creditCardCur==null || string.IsNullOrEmpty(_creditCardCur.PaySimpleToken) || _creditCardCur.CCSource!=CreditCardSource.PaySimpleACH) {
 				if(!Regex.IsMatch(textRoutingNumber.Text,"^[0-9]+$")) {
-					MsgBox.Show(this,"Invalid Routing Number.");
+					MessageBox.Show("Invalid Routing Number.");
 					return false;
 				}
 				if(!Regex.IsMatch(textCheckSaveNumber.Text,"^[0-9]+$") && !Regex.IsMatch(textCheckSaveNumber.Text,"^[0-9]*\\.[0-9]+$")) {
-					MsgBox.Show(this,"Invalid Account Number.");
+					MessageBox.Show("Invalid Account Number.");
 					return false;
 				}
 				if(string.IsNullOrWhiteSpace(textBankName.Text)) {
-					MsgBox.Show(this,"Bank Name required.");
+					MessageBox.Show("Bank Name required.");
 					return false;
 				}
 			}
@@ -568,7 +568,7 @@ namespace OpenDental {
 			if(string.IsNullOrWhiteSpace(ProgramProperties.GetPropValForClinicOrDefault(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimpleApiUserName,_clinicNum))
 				|| string.IsNullOrWhiteSpace(ProgramProperties.GetPropValForClinicOrDefault(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimpleApiKey,_clinicNum))) 
 			{
-				MsgBox.Show(this,"The PaySimple username and/or key has not been set.");
+				MessageBox.Show("The PaySimple username and/or key has not been set.");
 				return false;
 			}
 			return true;

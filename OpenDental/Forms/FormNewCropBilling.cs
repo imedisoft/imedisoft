@@ -283,7 +283,7 @@ namespace OpenDental {
 		}
 
 		private void butProcess_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will add a new repeating charge for each provider in the list above"
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will add a new repeating charge for each provider in the list above"
 				+" who is new (does not already have a repeating charge), based on PatNum and NPI.  Continue?")) {
 				return;
 			}

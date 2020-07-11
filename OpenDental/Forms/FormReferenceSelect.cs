@@ -289,7 +289,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"Select at least one reference.");
+				MessageBox.Show("Select at least one reference.");
 				return;
 			}
 			SelectedCustRefs=new List<CustReference>();

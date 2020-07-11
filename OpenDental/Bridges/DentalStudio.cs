@@ -19,7 +19,7 @@ namespace OpenDental.Bridges{
 		public static void SendData(Program ProgramCur,Patient pat) {
 			string path=Programs.GetProgramPath(ProgramCur);
 			if(pat==null) {
-				MsgBox.Show("DentalStudio","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			string str="";

@@ -70,7 +70,7 @@ namespace OpenDental {
                 || textWidth.errorProvider1.GetError(textWidth)!=""
                 || textHeight.errorProvider1.GetError(textHeight)!="")
 			{
-                MsgBox.Show(this,"Please fix data entry errors first.");
+                MessageBox.Show("Please fix data entry errors first.");
                 return false;
             }
             SheetFieldDefCur.XPos=PIn.Int(textXPos.Text);

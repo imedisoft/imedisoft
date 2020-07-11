@@ -154,7 +154,7 @@ namespace OpenDental {
 				|| textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!="") 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			FillGrid();
@@ -218,7 +218,7 @@ namespace OpenDental {
 			}
 			Payment pay=Payments.GetPayment(PIn.Long(_tableTrans.Rows[gridMain.SelectedIndices[0]]["PaymentNum"].ToString()));
 			if(pay==null) {//The payment has been deleted
-				MsgBox.Show(this,"This payment no longer exists.");
+				MessageBox.Show("This payment no longer exists.");
 				return;
 			}
 			Patient pat=Patients.GetPat(pay.PatNum);
@@ -235,7 +235,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridMain.SelectedIndices.Length<1
-				|| !MsgBox.Show(this,MsgBoxButtons.YesNo,"Void this payment?"))
+				|| !MsgBox.Show(MsgBoxButtons.YesNo,"Void this payment?"))
 			{
 				return;
 			}
@@ -262,7 +262,7 @@ namespace OpenDental {
 					}
 				}
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Void successful");
+				MessageBox.Show("Void successful");
 				FillGrid();
 			}
 			catch(ODException ex) {
@@ -285,11 +285,11 @@ namespace OpenDental {
 				List<CreditCard> listCards=CreditCards.GetCardsByToken(alias,
 					new List<CreditCardSource> { CreditCardSource.XWeb, CreditCardSource.XWebPortalLogin });
 				if(listCards.Count==0) {
-					MsgBox.Show(this,"This credit card is no longer stored in the database. Return cannot be processed.");
+					MessageBox.Show("This credit card is no longer stored in the database. Return cannot be processed.");
 					return;
 				}
 				if(listCards.Count>1) {
-					MsgBox.Show(this,"There is more than one card in the database with this token. Return cannot be processed due to the risk of charging the "+
+					MessageBox.Show("There is more than one card in the database with this token. Return cannot be processed due to the risk of charging the "+
 						"incorrect card.");
 					return;
 				}

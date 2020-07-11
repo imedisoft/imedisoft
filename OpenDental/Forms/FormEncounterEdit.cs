@@ -70,7 +70,7 @@ namespace OpenDental {
 					textCodeDescript.Text="";
 					break;
 				default:
-					MsgBox.Show(this,"Error: Unknown code system");
+					MessageBox.Show("Error: Unknown code system");
 					break;
 			}
 		}
@@ -146,7 +146,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")!=true) {
+			if(MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")!=true) {
 				return;
 			}
 			Encounters.Delete(_encCur.EncounterNum);
@@ -156,18 +156,18 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//TODO: valid date box, validation here.
 			if(textDateEnc.errorProvider1.GetError(textDateEnc)!="") {
-				MsgBox.Show(this,"You must enter a valid date");
+				MessageBox.Show("You must enter a valid date");
 				return;
 			}
 			_encCur.ProvNum=_provNumSelected;
 			_encCur.Note=textNote.Text; //PIn.String(textNote.Text);
 			_encCur.DateEncounter=PIn.Date(textDateEnc.Text);
 			if(_encCur.CodeValue==null || _encCur.CodeSystem==null) {
-				MsgBox.Show(this,"You must select a code");
+				MessageBox.Show("You must select a code");
 				return;
 			}
 			if(_encCur.ProvNum==0) { //Should never be hit, defaults to index 1
-				MsgBox.Show(this,"You must select a provider");
+				MessageBox.Show("You must select a provider");
 				return;
 			}
 			if(_encCur.IsNew){

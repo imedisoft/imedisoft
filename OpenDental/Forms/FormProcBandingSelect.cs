@@ -55,7 +55,7 @@ namespace OpenDental {
 
 		private void SelectProcedure(Procedure selectedProc) {
 			if(selectedProc.Discount!=0) {
-				MsgBox.Show(this,"Banding Procedures with discounts cannot be attached to an ortho case.");
+				MessageBox.Show("Banding Procedures with discounts cannot be attached to an ortho case.");
 				return;
 			}
 			SelectedProcedure=selectedProc;
@@ -63,7 +63,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridTpBandingProcs.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a procedure first.");
+				MessageBox.Show("Please select a procedure first.");
 				return;
 			}
 			SelectProcedure((Procedure)gridTpBandingProcs.ListGridRows[gridTpBandingProcs.GetSelectedIndex()].Tag);

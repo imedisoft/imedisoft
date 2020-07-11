@@ -291,7 +291,7 @@ namespace OpenDental {
 			}
 			listWeightCodes.AddRange(listLoincs);
 			if(!isInLoincTable) {
-				MsgBox.Show(this,"The LOINC table does not contain one or more codes used to report vitalsign exam statistics.  The LOINC table should be updated by running the Code System Importer tool found in Setup | Chart | EHR.");
+				MessageBox.Show("The LOINC table does not contain one or more codes used to report vitalsign exam statistics.  The LOINC table should be updated by running the Code System Importer tool found in Setup | Chart | EHR.");
 			}
 		}
 
@@ -1089,7 +1089,7 @@ namespace OpenDental {
 			Disease disCur=Diseases.GetOne(VitalsignCur.PregDiseaseNum);
 			if(disCur!=null) {//the currently attached preg disease is valid, will be null if they checked the box on new exam but haven't hit ok to save
 				if(examDate.Date<disCur.DateStart || (disCur.DateStop.Year>1880 && disCur.DateStop<examDate.Date)) {//if this exam is not in the active date range of the problem
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,@"The exam date is no longer within the active dates of the attached pregnancy diagnosis.
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,@"The exam date is no longer within the active dates of the attached pregnancy diagnosis.
 Do you want to remove the pregnancy diagnosis?")) 
 					{
 					 textDateTaken.Focus();
@@ -1267,7 +1267,7 @@ Do you want to remove the pregnancy diagnosis?"))
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			if(VitalsignCur.EhrNotPerformedNum!=0) {
@@ -1281,18 +1281,18 @@ Do you want to remove the pregnancy diagnosis?"))
 			#region Validate
 			DateTime date;
 			if(textDateTaken.Text=="") {
-				MsgBox.Show(this,"Please enter a date.");
+				MessageBox.Show("Please enter a date.");
 				return;
 			}
 			try {
 				date=DateTime.Parse(textDateTaken.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Please fix date first.");
+				MessageBox.Show("Please fix date first.");
 				return;
 			}
 			if(date<patCur.Birthdate) {
-				MsgBox.Show(this,"Exam date cannot be before the patient's birthdate.");
+				MessageBox.Show("Exam date cannot be before the patient's birthdate.");
 				return;
 			}
 			//validate height
@@ -1303,11 +1303,11 @@ Do you want to remove the pregnancy diagnosis?"))
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Please fix height first.");
+				MessageBox.Show("Please fix height first.");
 				return;
 			}
 			if(height<0) {
-				MsgBox.Show(this,"Please fix height first.");
+				MessageBox.Show("Please fix height first.");
 				return;
 			}
 			//validate weight
@@ -1318,11 +1318,11 @@ Do you want to remove the pregnancy diagnosis?"))
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Please fix weight first.");
+				MessageBox.Show("Please fix weight first.");
 				return;
 			}
 			if(weight<0) {
-				MsgBox.Show(this,"Please fix weight first.");
+				MessageBox.Show("Please fix weight first.");
 				return;
 			}
 			//validate bp
@@ -1337,11 +1337,11 @@ Do you want to remove the pregnancy diagnosis?"))
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Please fix BP first.");
+				MessageBox.Show("Please fix BP first.");
 				return;
 			}
 			if(BPsys<0 || BPdia<0) {
-				MsgBox.Show(this,"Please fix BP first.");
+				MessageBox.Show("Please fix BP first.");
 				return;
 			}
 			//validate pulse
@@ -1352,11 +1352,11 @@ Do you want to remove the pregnancy diagnosis?"))
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Please fix Pulse first.");
+				MessageBox.Show("Please fix Pulse first.");
 				return;
 			}
 			if(pulse<0) {
-				MsgBox.Show(this,"Please fix Pulse first.");
+				MessageBox.Show("Please fix Pulse first.");
 				return;
 			}
 			#endregion
@@ -1400,7 +1400,7 @@ Do you want to remove the pregnancy diagnosis?"))
 			if(checkPregnant.Checked) {//pregnant, add pregnant dx if necessary
 				if(pregDisDefNumCur==0) {
 					//shouldn't happen, if checked this must be set to either an existing problem def or a new problem that requires inserting, return to form with checkPregnant unchecked
-					MsgBox.Show(this,"This exam must point to a valid pregnancy diagnosis.");
+					MessageBox.Show("This exam must point to a valid pregnancy diagnosis.");
 					checkPregnant.Checked=false;
 					labelPregNotice.Visible=false;
 					return;
@@ -1418,7 +1418,7 @@ Do you want to remove the pregnancy diagnosis?"))
 					if(VitalsignCur.DateTaken<disCur.DateStart
 						|| (disCur.DateStop.Year>1880 && VitalsignCur.DateTaken>disCur.DateStop))
 					{//the current exam is no longer within dates of preg problem, uncheck the pregnancy box and remove the pointer to the disease
-						MsgBox.Show(this,"This exam is not within the active dates of the attached pregnancy problem.");
+						MessageBox.Show("This exam is not within the active dates of the attached pregnancy problem.");
 						checkPregnant.Checked=false;
 						textPregCode.Clear();
 						textPregCodeDescript.Clear();

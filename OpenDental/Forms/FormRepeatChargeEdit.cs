@@ -644,7 +644,7 @@ namespace OpenDental{
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(FormP.SelectedCodeNum);
 				if(procCode.TreatArea!=TreatmentArea.Mouth 
 					&& procCode.TreatArea!=TreatmentArea.None){
-					MsgBox.Show(this,"Procedure codes that require tooth numbers are not allowed.");
+					MessageBox.Show("Procedure codes that require tooth numbers are not allowed.");
 					DialogResult=DialogResult.Cancel;
 					return;
 				}
@@ -726,19 +726,19 @@ namespace OpenDental{
 			}
 			CreditCard cardToAddProc=null;
 			if(activeCards.Count==1) { //Only one active card so ask the user to add the procedure to that one
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"There is one active credit card on this patient's account.\r\nDo you want to add this procedure to "+
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"There is one active credit card on this patient's account.\r\nDo you want to add this procedure to "+
 					"that card?")) {
 					cardToAddProc=activeCards[0];
 				}
 			}
 			else if(activeCards.FindAll(x => x.Procedures!="").Count==1) { //Only one card has procedures attached so ask the user to add to that card
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"There is one active credit card on this patient's account with authorized procedures attached.\r\n"
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"There is one active credit card on this patient's account with authorized procedures attached.\r\n"
 					+"Do you want to add this procedure to that card?")) {
 					cardToAddProc=activeCards.FirstOrDefault(x => x.Procedures!="");
 				}
 			}
 			else { //At least two cards have procedures attached to them or there are multiple active cards and none have procedures attached
-				MsgBox.Show(this,"If you would like to add this procedure to a credit card, go to Credit Card Manage to choose the card.");
+				MessageBox.Show("If you would like to add this procedure to a credit card, go to Credit Card Manage to choose the card.");
 			}
 			if(cardToAddProc==null) {
 				return;
@@ -767,11 +767,11 @@ namespace OpenDental{
 		private void butManual_Click(object sender,EventArgs e) {
 			Prefs.RefreshCache();//Refresh the cache in case another machine has updated this pref
 			if(PrefC.GetString(PrefName.RepeatingChargesBeginDateTime)!="") {
-				MsgBox.Show(this,"Repeating charges already running on another workstation, you must wait for them to finish before continuing.");
+				MessageBox.Show("Repeating charges already running on another workstation, you must wait for them to finish before continuing.");
 				return;
 			}
 			if(RepeatCur.RepeatChargeNum==0) {
-				MsgBox.Show(this,"Please click 'OK' to save the repeat charge before adding a manual charge.");
+				MessageBox.Show("Please click 'OK' to save the repeat charge before adding a manual charge.");
 				return;
 			}
 			double procFee;
@@ -779,7 +779,7 @@ namespace OpenDental{
 				procFee=Double.Parse(textChargeAmt.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Invalid charge amount.");
+				MessageBox.Show("Invalid charge amount.");
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.ProcComplCreate,DateTimeOD.Today,ProcedureCodes.GetCodeNum(textCode.Text),procFee)) {
@@ -794,7 +794,7 @@ namespace OpenDental{
 				,orthoCaseProcLinkingData:new OrthoCaseProcLinkingData(RepeatCur.PatNum));
 			RepeatCharges.AllocateUnearned(chargeManual,proc,DateTimeOD.Today);
 			Recalls.Synch(RepeatCur.PatNum);
-			MsgBox.Show(this,"Procedure added.");
+			MessageBox.Show("Procedure added.");
 		}
 
 		private void butCalculate_Click(object sender,EventArgs e) {
@@ -808,7 +808,7 @@ namespace OpenDental{
 		///<summary>This button is only visible internally and for other distributors.</summary>
 		private void butMoveTo_Click(object sender,EventArgs e) {
 			if(!Regex.IsMatch(textErxAccountId.Text,"^(DS;)?[0-9]+\\-[a-zA-Z0-9]{5}$")) {
-				MsgBox.Show(this,"A valid ErxAccountId is required before moving this eRx repeating charge to another customer.  "
+				MessageBox.Show("A valid ErxAccountId is required before moving this eRx repeating charge to another customer.  "
 					+"The ErxAccountId is typically filled in automatically when running eRx billing.  You can manually enter by "
 					+"logging into the eRx portal and clicking the Maintain Top-Level Account Kids link, "
 					+"then locate the customer account in the list and copy the customer Account ID into the ErxAccountId of this repeating charge.");
@@ -837,30 +837,30 @@ namespace OpenDental{
 				|| textBillingDay.errorProvider1.GetError(textBillingDay)!=""
 				|| (_isForZipwhip && !textZipwhipChargeAmount.IsValid)) 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(PIn.Double(textChargeAmt.Text)<0 && checkCreatesClaim.Checked) {//user entered a value less than zero while checkCreatesClaim is checked
-				MsgBox.Show(this,"Creates Claim cannot be checked while Charge Amout is less than zero.");
+				MessageBox.Show("Creates Claim cannot be checked while Charge Amout is less than zero.");
 				return false;
 			}
 			if(textDateStart.Text=="") {
-				MsgBox.Show(this,"Start date cannot be left blank.");
+				MessageBox.Show("Start date cannot be left blank.");
 				return false;
 			}
 			if(PIn.Date(textDateStart.Text)!=RepeatCur.DateStart) {//if the user changed the date
 				if(PIn.Date(textDateStart.Text)<DateTime.Today.AddDays(-3)) {//and if the date the user entered is more than three days in the past
-					MsgBox.Show(this,"Start date cannot be more than three days in the past.  You should enter previous charges manually in the account.");
+					MessageBox.Show("Start date cannot be more than three days in the past.  You should enter previous charges manually in the account.");
 					return false;
 				}
 			}
 			if(textDateStop.Text.Trim()!="" && PIn.Date(textDateStart.Text)>PIn.Date(textDateStop.Text)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"The start date is after the stop date.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The start date is after the stop date.  Continue?")) {
 					return false;
 				}
 			}
 			if(_isErx && !Regex.IsMatch(textNpi.Text,"^[0-9]{10}$")) {
-				MsgBox.Show(this,"Invalid NPI.  Must be 10 digits.");
+				MessageBox.Show("Invalid NPI.  Must be 10 digits.");
 				return false;
 			}
 			string accountId=textErxAccountId.Text;
@@ -868,11 +868,11 @@ namespace OpenDental{
 				accountId=textErxAccountId.Text.Substring(3);
 			}
 			if(_isErx && textErxAccountId.Text!="" && !Regex.IsMatch(accountId,"^[0-9]+\\-[a-zA-Z0-9]{5}$")) {
-				MsgBox.Show(this,"Invalid ErxAccountId.");
+				MessageBox.Show("Invalid ErxAccountId.");
 				return false;
 			}
 			if(_isForZipwhip && RepeatCur.ChargeAmtAlt.IsGreaterThan(-1) && textZipwhipChargeAmount.Text.Trim()=="") {
-				MsgBox.Show(this,"Zipwhip Amount must not blank when it was previously set.");
+				MessageBox.Show("Zipwhip Amount must not blank when it was previously set.");
 				return false;
 			}
 			repeatCharge.ProcCode=textCode.Text;

@@ -459,7 +459,7 @@ namespace OpenDental.ReportingComplex {
 					QueryObject query=(QueryObject)_reportObjects[i];
 					if(!query.SubmitQuery()) {
 						_actionCloseReportProgress?.Invoke();
-						MsgBox.Show(this,"There was an error generating this report."
+						MessageBox.Show("There was an error generating this report."
 							+ (hasReportServer ? "\r\nVerify or remove the report server connection settings and try again." : ""));
 						return false;
 					}
@@ -582,7 +582,7 @@ namespace OpenDental.ReportingComplex {
 			}
 			if(!hasRows && isShowMessage) {
 				_actionCloseReportProgress?.Invoke();
-				MsgBox.Show(this,"The report has no results to show.");
+				MessageBox.Show("The report has no results to show.");
 				return false;
 			}
 			_reportObjects=newReportObjects;

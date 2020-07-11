@@ -33,7 +33,7 @@ namespace OpenDental {
 		private void FormPaySimpleSetup_Load(object sender,EventArgs e) {
 			_progCur=Programs.GetCur(ProgramName.PaySimple);
 			if(_progCur==null) {
-				MsgBox.Show(this,"The PaySimple entry is missing from the database.");//should never happen
+				MessageBox.Show("The PaySimple entry is missing from the database.");//should never happen
 				return;
 			}
 			checkEnabled.Checked=_progCur.Enabled;
@@ -162,7 +162,7 @@ namespace OpenDental {
 			//make the user select a payment type before switching clinics
 			if(checkEnabled.Checked && !IsClinicCurSetupDone()) {
 				comboClinic.SelectedIndex=_indexClinicRevert;
-				MsgBox.Show(this,"Please select a username, key, and/or payment type first.");
+				MessageBox.Show("Please select a username, key, and/or payment type first.");
 				return;
 			}
 			SynchWithHQ();//if the user just modified the HQ credentials, change any credentials that were the same as HQ to keep them synched
@@ -288,7 +288,7 @@ namespace OpenDental {
 			//if clinics are enabled, the program link can be enabled with blank username and/or key fields for some clinics
 			//clinics with blank username and/or key will essentially not have PaySimple enabled
 			if(checkEnabled.Checked && !IsClinicCurSetupDone()) {//Also works for offices not using clinics
-				MsgBox.Show(this,"Please enter a username, key, and/or payment type first.");
+				MessageBox.Show("Please enter a username, key, and/or payment type first.");
 				return;
 			}
 			SynchWithHQ();//if the user changes the HQ credentials, any clinic that had the same credentials will be kept in synch with HQ
@@ -332,7 +332,7 @@ namespace OpenDental {
 					&& (!_listPaymentTypeDefs.Any(x => x.DefNum.ToString()==payTypeCC)
 						|| !_listPaymentTypeDefs.Any(x => x.DefNum.ToString()==payTypeACH))) 
 				{
-					MsgBox.Show(this,"Please select payment types for all clinics with PaySimple username and key set.");
+					MessageBox.Show("Please select payment types for all clinics with PaySimple username and key set.");
 					return;
 				}
 			}

@@ -126,7 +126,7 @@ namespace OpenDental {
 			if(ClaimProcCur.ClaimNum>0) {
 				Claim claim=Claims.GetClaim(ClaimProcCur.ClaimNum);
 				if(claim==null) {
-					MsgBox.Show(this,"Claim has been deleted by another user.");
+					MessageBox.Show("Claim has been deleted by another user.");
 					DialogResult=DialogResult.Abort;
 					return;
 				}
@@ -632,7 +632,7 @@ namespace OpenDental {
 				//this should never happen
 			}
 			if(plan.AllowedFeeSched==0 && plan.PlanType!="p"){
-				MsgBox.Show(this,"Plan must either be a PPO type or it must have an 'Allowed' fee schedule set.");
+				MessageBox.Show("Plan must either be a PPO type or it must have an 'Allowed' fee schedule set.");
 				return;
 			}
 			long feeSched=-1;
@@ -648,7 +648,7 @@ namespace OpenDental {
 				feeSched=plan.FeeSched;
 			}
 			if(FeeScheds.GetIsHidden(feeSched)){
-				MsgBox.Show(this,"Allowed fee schedule is hidden, so no changes can be made.");
+				MessageBox.Show("Allowed fee schedule is hidden, so no changes can be made.");
 				return;
 			}
 			Fee FeeCur=Fees.GetFee(proc.CodeNum,feeSched,proc.ClinicNum,proc.ProvNum);
@@ -844,7 +844,7 @@ namespace OpenDental {
 					&& x.Status!=ClaimProcStatus.Supplemental 
 					&& x.ProcNum==ClaimProcOld.ProcNum).ToList();
 				if(!listClaimProcsForClaim.IsNullOrEmpty()) {
-					MsgBox.Show(this,"Cannot change the status of a supplemental claim procedure when there is at least one claim procedure of a different"
+					MessageBox.Show("Cannot change the status of a supplemental claim procedure when there is at least one claim procedure of a different"
 						+" status. There should be a maximum of one claim procedure of status received for each procedure in the claim.");
 					SetComboStatus(ClaimProcStatus.Supplemental);
 					return;
@@ -852,7 +852,7 @@ namespace OpenDental {
 			}
 			#region Capitation Claim Attached
 			if(Plan.PlanType=="c" && ClaimProcOld.ClaimNum > 0 && comboStatus.SelectedIndex!=5) {
-				MsgBox.Show(this,"A capitation insurance plan is associated with this claim procedure.\r\n"
+				MessageBox.Show("A capitation insurance plan is associated with this claim procedure.\r\n"
 					+"This claim procedure is currently part of a claim.\r\n"
 					+"CapClaim is the only valid status for this scenario.");
 				ClaimProcCur.Status=ClaimProcStatus.CapClaim;
@@ -867,17 +867,17 @@ namespace OpenDental {
 				&& comboStatus.SelectedIndex!=4)//User did not select Supplemental
 			{
 				if(Plan.PlanType==""){
-					MsgBox.Show(this,"This claim procedure is attached to an insurance payment.\r\n"
+					MessageBox.Show("This claim procedure is attached to an insurance payment.\r\n"
 						+"Since the insurance plan is a category percentage plan,\r\n"
 						+"you may only set the status to Received or Supplemental.");
 				}
 				else if(Plan.PlanType=="p"){
-					MsgBox.Show(this,"This claim procedure is attached to an insurance payment.\r\n"
+					MessageBox.Show("This claim procedure is attached to an insurance payment.\r\n"
 						+"Since the insurance plan is a PPO percentage plan,\r\n"
 						+"you may only set the status to Received or Supplemental.");
 				}
 				else if(Plan.PlanType=="f"){
-					MsgBox.Show(this,"This claim procedure is attached to an insurance payment.\r\n"
+					MessageBox.Show("This claim procedure is attached to an insurance payment.\r\n"
 						+"Since the insurance plan is a flat co-pay plan,\r\n"
 						+"you may only set the status to Received or Supplemental.");
 				}
@@ -953,25 +953,25 @@ namespace OpenDental {
 			}
 			if(!isValidPlanType) {
 				if(Plan.PlanType=="") {
-					MsgBox.Show(this,"A category percentage insurance plan is associated with this claim procedure.\r\n"
+					MessageBox.Show("A category percentage insurance plan is associated with this claim procedure.\r\n"
 						+"You may only select statuses which are related to category percentage,\r\n"
 						+"including Estimate, NotReceived, Received, Supplemental, and PreAuthorization.\r\n"
 						+"To change the status to a different option, you must change the plan type.");
 				}
 				else if(Plan.PlanType=="p") {
-					MsgBox.Show(this,"A PPO percentage insurance plan is associated with this claim procedure.\r\n"
+					MessageBox.Show("A PPO percentage insurance plan is associated with this claim procedure.\r\n"
 						+"You may only select statuses which are related to PPO percentage,\r\n"
 						+"including Estimate, NotReceived, Received, Supplemental, and PreAuthorization.\r\n"
 						+"To change the status to a different option, you must change the plan type.");
 				}
 				else if(Plan.PlanType=="f") {
-					MsgBox.Show(this,"A flat co-pay insurance plan is associated with this claim procedure.\r\n"
+					MessageBox.Show("A flat co-pay insurance plan is associated with this claim procedure.\r\n"
 						+"You may only select statuses which are related to flat co-pay insurance,\r\n"
 						+"including Estimate, NotReceived, Received, Supplemental, and PreAuthorization.\r\n"
 						+"To change the status to a different option, you must change the plan type.");
 				}
 				else if(Plan.PlanType=="c") {
-					MsgBox.Show(this,"A capitation insurance plan is associated with this claim procedure.\r\n"
+					MessageBox.Show("A capitation insurance plan is associated with this claim procedure.\r\n"
 						+"You may only select statuses which are related to capitation insurance,\r\n"
 						+"including CapClaim, CapEstimate, CapComplete, and PreAuthorization.\r\n"
 						+"To change the status to a different option, you must change the plan type.");
@@ -1104,7 +1104,7 @@ namespace OpenDental {
 			if(checkPayPlan.Checked) {
 				List<PayPlan> payPlanList=PayPlans.GetValidInsPayPlans(ClaimProcCur.PatNum,ClaimProcCur.PlanNum,ClaimProcCur.InsSubNum,ClaimProcCur.ClaimNum);
 				if(payPlanList.Count==0) {//no valid plans
-					MsgBox.Show(this,"The patient does not have a valid payment plan with this insurance plan attached that has not been paid in full and is not tracking expected payments for an existing claim already.");
+					MessageBox.Show("The patient does not have a valid payment plan with this insurance plan attached that has not been paid in full and is not tracking expected payments for an existing claim already.");
 					checkPayPlan.Checked=false;
 					return;
 				}
@@ -1275,16 +1275,16 @@ namespace OpenDental {
 				&& !PrefC.GetBool(PrefName.AllowFutureInsPayments)
 				&& ClaimProcCur.Status.In(ClaimProcStatus.Received,ClaimProcStatus.Supplemental,ClaimProcStatus.CapClaim,ClaimProcStatus.CapComplete)) 
 			{ 
-				MsgBox.Show(this,"Payment date cannot be for the future.");
+				MessageBox.Show("Payment date cannot be for the future.");
 				return;
 			}
 			if(ClaimProcCur.WriteOff<0 && ClaimProcCur.Status!=ClaimProcStatus.Supplemental) {
-				MsgBox.Show(this,"Only supplemental payments may have a negative WriteOff amount.");
+				MessageBox.Show("Only supplemental payments may have a negative WriteOff amount.");
 				return;
 			}
 			double claimWriteOffTotal=ClaimProcs.GetClaimWriteOffTotal(ClaimProcCur.ClaimNum,ClaimProcCur.ProcNum,new List<ClaimProc>() { ClaimProcCur });
 			if(claimWriteOffTotal+ClaimProcCur.WriteOff<0) {
-				MsgBox.Show(this,"The current writeoff value will cause the procedure's total writeoff to be negative.  Please change it to at least "+(ClaimProcCur.WriteOff-(claimWriteOffTotal+ClaimProcCur.WriteOff)).ToString()+" to continue.");
+				MessageBox.Show("The current writeoff value will cause the procedure's total writeoff to be negative.  Please change it to at least "+(ClaimProcCur.WriteOff-(claimWriteOffTotal+ClaimProcCur.WriteOff)).ToString()+" to continue.");
 				return;
 			}
 			if(IsWriteOffGreaterThanProcFee()) {
@@ -1308,7 +1308,7 @@ namespace OpenDental {
 				|| !ClaimProcOld.InsPayEst.Equals(PIn.Double(textInsPayEst.Text))
 				)) 
 			{
-				MsgBox.Show(this,"Cannot edit estimate information for procedures attached to ortho cases.");
+				MessageBox.Show("Cannot edit estimate information for procedures attached to ortho cases.");
 				return;
 			}
 			//status already handled
@@ -1336,7 +1336,7 @@ namespace OpenDental {
 				Claim curClaim=Claims.GetClaim(ClaimProcCur.ClaimNum);
 				if(curClaim?.ClaimType=="PreAuth" && ClaimProcCur.Status!=ClaimProcStatus.Preauth) {
 						ClaimProcCur.Status=ClaimProcStatus.Preauth;//change the status to preauth.
-						MsgBox.Show(this,"Status of procedure was changed back to preauth to match status of claim.");
+						MessageBox.Show("Status of procedure was changed back to preauth to match status of claim.");
 				}
 				ClaimProcs.Update(ClaimProcCur);
 				if(ClaimProcCrud.UpdateComparison(ClaimProcCur,ClaimProcOld)) {

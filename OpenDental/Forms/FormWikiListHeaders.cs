@@ -120,12 +120,12 @@ namespace OpenDental {
 				string colWidth=gridMain.ListGridRows[i].Cells[1].Text;
 				#region Validate Column Widths
 				if(Regex.IsMatch(colWidth,@"\D")) {// "\D" matches any non-decimal character
-					MsgBox.Show(this,"Column widths must only contain positive integers.");
+					MessageBox.Show("Column widths must only contain positive integers.");
 					return;
 				}
 				//inlcude the comma for international support. For instance Pi = 3.1415 or 3,1415 depending on your region
 				if(new[] { '-','.',',' }.Any(x => colWidth.Contains(x))) {
-					MsgBox.Show(this,"Column widths must only contain positive integers.");
+					MessageBox.Show("Column widths must only contain positive integers.");
 					return;
 				}
 				#endregion Validate Column Widths
@@ -139,15 +139,15 @@ namespace OpenDental {
 					continue;
 				}
 				if(Regex.IsMatch(colName,@"^\d")) {
-					MsgBox.Show(this,"Column cannot start with numbers.");
+					MessageBox.Show("Column cannot start with numbers.");
 					return;
 				}
 				if(Regex.IsMatch(colName,@"\s")) {
-					MsgBox.Show(this,"Column names cannot contain spaces.");
+					MessageBox.Show("Column names cannot contain spaces.");
 					return;
 				}
 				if(Regex.IsMatch(colName,@"\W")) {//W=non-word chars
-					MsgBox.Show(this,"Column names cannot contain special characters.");
+					MessageBox.Show("Column names cannot contain special characters.");
 					return;
 				}
 				//Check for reserved words--------------------------------------------------------------------------------

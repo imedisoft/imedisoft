@@ -963,7 +963,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			try {
@@ -985,11 +985,11 @@ namespace OpenDental{
 				return;
 			}
 			if(textLName.Text=="") {
-				MsgBox.Show(this,"Please enter a last name.");
+				MessageBox.Show("Please enter a last name.");
 				return;
 			}
 			if(listSpecialty.SelectedIndex==-1 && !IsPatient) {
-				MsgBox.Show(this,"Please select a specialty.");
+				MessageBox.Show("Please select a specialty.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -1033,7 +1033,7 @@ namespace OpenDental{
       }
 			if(IsNew){
 				if(Referrals.GetExists(x => x.LName+x.FName==RefCur.LName+RefCur.FName)) {
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Referral of same name exists. Add anyway?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Referral of same name exists. Add anyway?")) {
 						DialogResult=DialogResult.Cancel;
 						return;
 					}

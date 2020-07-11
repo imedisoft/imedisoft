@@ -1001,7 +1001,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.AppointmentEdit)) {
 				return;
 			}
-			if(gridAppts.SelectedIndices.Length>0 && !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Change priority to normal for all selected appointments?")) {
+			if(gridAppts.SelectedIndices.Length>0 && !MsgBox.Show(MsgBoxButtons.OKCancel,"Change priority to normal for all selected appointments?")) {
 				return;
 			}
 			for(int i=0;i<gridAppts.SelectedIndices.Length;i++) {
@@ -1016,7 +1016,7 @@ namespace OpenDental {
 
 		private void SendPinboard_Click() {
 			if(gridAppts.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			List<long> listAptSelected=new List<long>();
@@ -1031,7 +1031,7 @@ namespace OpenDental {
 				}
 				if(appt.AptStatus==ApptStatus.Planned) {
 					if(Procedures.GetProcsForSingle(appt.AptNum,true).Count(x => x.ProcStatus==ProcStat.C) > 0) {
-						MsgBox.Show(this,"Not allowed to send a planned appointment to the pinboard if completed procedures are attached. Edit the planned "
+						MessageBox.Show("Not allowed to send a planned appointment to the pinboard if completed procedures are attached. Edit the planned "
 							+"appointment first.");
 						return;
 					}
@@ -1039,13 +1039,13 @@ namespace OpenDental {
 					if(nextApt!=null) {
 						if(nextApt.AptStatus==ApptStatus.Complete) {
 							//Warn the user they are moving a completed appointment.
-							if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"You are about to move an already completed appointment.  Continue?")) {
+							if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You are about to move an already completed appointment.  Continue?")) {
 								return;
 							}
 						}
 						else if(nextApt.AptStatus==ApptStatus.Scheduled) {
 							//Warn the user they are moving an already scheduled appointment.
-							if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"You are about to move an appointment already on the schedule.  Continue?")) {
+							if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You are about to move an appointment already on the schedule.  Continue?")) {
 								return;
 							}
 						}
@@ -1199,7 +1199,7 @@ namespace OpenDental {
 
 		private void RemoveRecalls_Click() {
 			if(gridRecalls.SelectedIndices.Length==0 
-				|| !MsgBox.Show(this,MsgBoxButtons.OKCancel,"Change priority to normal for all selected recalls?")) 
+				|| !MsgBox.Show(MsgBoxButtons.OKCancel,"Change priority to normal for all selected recalls?")) 
 			{
 				return;
 			}
@@ -1219,7 +1219,7 @@ namespace OpenDental {
 				Patient patCur=Patients.GetPat(recall.PatNum);
 				AppointmentL.PromptForMerge(patCur,out patCur);
 				if(patCur.PatStatus.In(PatientStatus.Archived,PatientStatus.Deceased)) {
-					MsgBox.Show(this,"Appointments cannot be scheduled for "+patCur.PatStatus.ToString().ToLower()+" patients.");
+					MessageBox.Show("Appointments cannot be scheduled for "+patCur.PatStatus.ToString().ToLower()+" patients.");
 					return;
 				}
 				Family fam=Patients.GetFamily(patCur.PatNum);
@@ -1244,7 +1244,7 @@ namespace OpenDental {
 						break;
 					case 1:
 						if(gridAppts.SelectedIndices.Length==0) {
-							MsgBox.Show(this,"Please select an appointment first.");
+							MessageBox.Show("Please select an appointment first.");
 							return;
 						}
 						SeeChart_Click(((Appointment)gridAppts.SelectedGridRows.Last().Tag).PatNum);
@@ -1268,7 +1268,7 @@ namespace OpenDental {
 						break;
 					case 1:
 						if(gridRecalls.SelectedIndices.Length==0) {
-							MsgBox.Show(this,"Please select a recall first first.");
+							MessageBox.Show("Please select a recall first first.");
 							return;
 						}
 						SeeChart_Click(recall.PatNum);
@@ -1334,7 +1334,7 @@ namespace OpenDental {
 					grid.SetSelected(i,true);
 				}
 				if(grid.SelectedIndices.Length==0) {
-					MsgBox.Show(this,"None of the patients in the list are able to receive text messages.");
+					MessageBox.Show("None of the patients in the list are able to receive text messages.");
 					return listPatCommsToSend;
 				}
 			}
@@ -1654,7 +1654,7 @@ namespace OpenDental {
 				string message=PrefC.HasClinicsEnabled ?
 					"No clinics are signed up for Web Sched ASAP. Open Sign Up Portal?" :
 					"This practice is not signed up for Web Sched ASAP. Open Sign Up Portal?";
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,message)) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,message)) {
 					return;
 				}
 				OpenSignupPortal();
@@ -1662,16 +1662,16 @@ namespace OpenDental {
 			}
 			//At least one clinic is signed up for Web Sched.
 			if(!_isSendingWebSched) {//Did not get to this window by right-clicking in the Appointment module.
-				MsgBox.Show(this,
+				MessageBox.Show(
 					"To use this feature, right-click on the appointment schedule where no appointment is scheduled and select \"Text ASAP List\".");
 				return;
 			}
 			if(gridAppts.SelectedIndices.Length==0 && gridRecalls.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select at least one patient from the appointment or recall list.");
+				MessageBox.Show("Please select at least one patient from the appointment or recall list.");
 				return;
 			}
 			if(comboStart.SelectedIndex==-1|| comboEnd.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a valid start and end time.");
+				MessageBox.Show("Please select a valid start and end time.");
 				return;
 			}
 			long clinicNum=ODMethodsT.Coalesce(Operatories.GetOperatory(_opNum)).ClinicNum;
@@ -1680,7 +1680,7 @@ namespace OpenDental {
 			}
 			bool isSignedUp=(clinicNum.In(_listClinicNumsWebSched) || (!PrefC.HasClinicsEnabled && _listClinicNumsWebSched.Count > 0));
 			if(!isSignedUp) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,
 					"The clinic the selected operatory belongs to is not signed up for Web Sched ASAP. Open Sign Up Portal?")) 
 				{
 					return;

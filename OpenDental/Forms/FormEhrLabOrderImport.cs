@@ -45,7 +45,7 @@ namespace OpenDental {
 				PatCur=patAttach;
 			}
 			else if(PatCur.PatNum!=patAttach.PatNum) {
-				MsgBox.Show(this,"Patient mismatch. Selected patient does not match detected patient.");//will only happen if we set PatCur from somewhere else. Probably wont ever happen.
+				MessageBox.Show("Patient mismatch. Selected patient does not match detected patient.");//will only happen if we set PatCur from somewhere else. Probably wont ever happen.
 				PatCur=patAttach;
 			}
 			else {
@@ -151,7 +151,7 @@ namespace OpenDental {
 
 		private void butSave_Click(object sender,EventArgs e) {
 			if(PatCur==null) {
-				MsgBox.Show(this,"Please attach to patient first.");
+				MessageBox.Show("Please attach to patient first.");
 				return;
 			}
 			//Check lab dates to see if these labs already exist.
@@ -165,7 +165,7 @@ namespace OpenDental {
 					//validate Date of Lab and attached patient.
 					//Date
 					if(tempLab.ResultDateTime.CompareTo(ListEhrLabs[i].ResultDateTime)<0) {//string compare dates will return 1+ if tempLab Date is greater.
-						MsgBox.Show(this,"This lab already exists in the database and has a more recent timestamp.");
+						MessageBox.Show("This lab already exists in the database and has a more recent timestamp.");
 						continue;
 					}
 					if(PatCur.PatNum!=tempLab.PatNum) {

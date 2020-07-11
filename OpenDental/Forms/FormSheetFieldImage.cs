@@ -58,25 +58,25 @@ namespace OpenDental {
 				return;
 			}
 			if(!File.Exists(dlg.FileName)){
-				MsgBox.Show(this,"File does not exist.");
+				MessageBox.Show("File does not exist.");
 				return;
 			}
 			if(!ImageHelper.HasImageExtension(dlg.FileName)){
-				MsgBox.Show(this,"Only allowed to import an image.");
+				MessageBox.Show("Only allowed to import an image.");
 				return;
 			}
 			string newName=dlg.FileName;
 			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
 				newName=ODFileUtils.CombinePaths(SheetUtil.GetImagePath(),Path.GetFileName(dlg.FileName));
 				if(File.Exists(newName)) {
-					MsgBox.Show(this,"A file of that name already exists in SheetImages.  Please rename the file before importing.");
+					MessageBox.Show("A file of that name already exists in SheetImages.  Please rename the file before importing.");
 					return;
 				}
 				File.Copy(dlg.FileName,newName);
 			}
 			else if(CloudStorage.IsCloudStorage) {
 				if(CloudStorage.FileExists(ODFileUtils.CombinePaths(SheetUtil.GetImagePath(),Path.GetFileName(dlg.FileName)))) {
-					MsgBox.Show(this,"A file of that name already exists in SheetImages.  Please rename the file before importing.");
+					MessageBox.Show("A file of that name already exists in SheetImages.  Please rename the file before importing.");
 					return;
 				}
 				FormProgress FormP=new FormProgress();
@@ -134,7 +134,7 @@ namespace OpenDental {
 				}
 				catch {
 					pictureBox.Image=null;
-					MsgBox.Show(this,"Invalid image type.");
+					MessageBox.Show("Invalid image type.");
 				}
 			}
 			else if(comboFieldName.Text=="Patient Info.gif") {//Interal image
@@ -267,7 +267,7 @@ namespace OpenDental {
 				return;
       }
 			if(comboFieldName.Text==""){
-				MsgBox.Show(this,"Please enter a file name first.");
+				MessageBox.Show("Please enter a file name first.");
 				return;
 			}
 			if(pictureBox.Image==null) {
@@ -278,13 +278,13 @@ namespace OpenDental {
 					GC.Collect();
 					try {//catch valid files that are not valid images.
 						if(!File.Exists(textFullPath.Text)) {
-							MsgBox.Show(this,"Image file does not exist.");
+							MessageBox.Show("Image file does not exist.");
 							return;
 						}
 						pictureBox.Image=Image.FromFile(textFullPath.Text);
 					}
 					catch {
-						MsgBox.Show(this,"Not a valid image type.");
+						MessageBox.Show("Not a valid image type.");
 						return;
 					}
 				}

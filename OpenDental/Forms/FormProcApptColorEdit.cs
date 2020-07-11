@@ -224,7 +224,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete this procedure color range?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this procedure color range?")) {
 				return;
 			}
 			try {

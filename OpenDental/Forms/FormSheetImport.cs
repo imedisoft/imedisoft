@@ -70,7 +70,7 @@ namespace OpenDental {
 					acroApp=new AcroAppClass();//Initialize Acrobat by creating App object
 				}
 				catch {
-					MsgBox.Show(this,"Requires Acrobat 9 Pro to be installed on this computer.");
+					MessageBox.Show("Requires Acrobat 9 Pro to be installed on this computer.");
 					DialogResult=DialogResult.Cancel;
 					return;
 				}
@@ -1654,13 +1654,13 @@ namespace OpenDental {
 			}
 			if(row.FieldName=="referredFrom") {
 				if(row.OldValObj!=null) {
-					MsgBox.Show(this,"This patient already has a referral source selected and it cannot be changed from here.");
+					MessageBox.Show("This patient already has a referral source selected and it cannot be changed from here.");
 					return false;
 				}
 			}
 			//if(row.FieldName.StartsWith("ins1") || row.FieldName.StartsWith("ins2")) {
 			//  //if(patPlanList.Count>0) {
-			//  MsgBox.Show(this,"Insurance cannot be imported yet.");
+			//  MessageBox.Show("Insurance cannot be imported yet.");
 			//  return false;
 			//  //}
 			//}
@@ -1669,7 +1669,7 @@ namespace OpenDental {
 
 		private bool IsImportable(SheetImportRow row) {
 			if(row.ImpValObj==null) {
-				MsgBox.Show(this,"Please enter a value for this row first.");
+				MessageBox.Show("Please enter a value for this row first.");
 				return false;
 			}
 			return IsEditable(row);
@@ -1714,7 +1714,7 @@ namespace OpenDental {
 						AddressSameForFam=true;
 					}
 					else {
-						MsgBox.Show(this,"The only allowed values are X or blank.");
+						MessageBox.Show("The only allowed values are X or blank.");
 						return;
 					}
 				}
@@ -1783,7 +1783,7 @@ namespace OpenDental {
 					Rows[e.Row].ImpValDisplay="";
 				}
 				else if(enteredDate.Year<1880 || enteredDate.Year>2050) {
-					MsgBox.Show(this,INVALID_DATE);
+					MessageBox.Show(INVALID_DATE);
 					return;
 				}
 				else {
@@ -2275,11 +2275,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!Rows.Any(x => x.DoImport)) {
-				MsgBox.Show(this,"No rows are set for import.");
+				MessageBox.Show("No rows are set for import.");
 				return;
 			}
 			if(Rows.Any(x => x.DoImport && x.ImpValObj is DateTime && x.ImpValDisplay==INVALID_DATE)) {
-				MsgBox.Show(this,$"Please fix data entry errors first (ImportValues with '{INVALID_DATE}').");
+				MessageBox.Show($"Please fix data entry errors first (ImportValues with '{INVALID_DATE}').");
 				return;
 			}
 			#region Patient Form
@@ -2393,7 +2393,7 @@ namespace OpenDental {
 							//Field missing or user chose to back out to correct information.
 							if(primaryImported) {
 								//Primary has been imported, we cannot return at this point.  Simply notify the user that secondary could not be imported correctly.
-								MsgBox.Show(this,"Primary insurance was imported successfully but secondary was unable to import.");
+								MessageBox.Show("Primary insurance was imported successfully but secondary was unable to import.");
 							}
 							else {//Secondary had problems importing or the user chose to back out and correct information.
 								return;//Nothing has been updated so it's okay to just return here.
@@ -2404,10 +2404,10 @@ namespace OpenDental {
 				}
 				else {//Sheet does not contain the required ins fields.
 					if(importPriIns) {//The user has manually flagged a primary ins row for importing.
-						MsgBox.Show(this,"Required primary insurance fields are missing on this sheet.  You cannot import primary insurance with this sheet until it contains all of required fields.  Required fields: Relationship, Subscriber, SubscriberID, CarrierName, and CarrierPhone.");
+						MessageBox.Show("Required primary insurance fields are missing on this sheet.  You cannot import primary insurance with this sheet until it contains all of required fields.  Required fields: Relationship, Subscriber, SubscriberID, CarrierName, and CarrierPhone.");
 					}
 					if(importSecIns) {//The user has manually flagged a secondary ins row for importing.
-						MsgBox.Show(this,"Required secondary insurance fields are missing on this sheet.  You cannot import secondary insurance with this sheet until it contains all of required fields.  Required fields: Relationship, Subscriber, SubscriberID, CarrierName, and CarrierPhone.");
+						MessageBox.Show("Required secondary insurance fields are missing on this sheet.  You cannot import secondary insurance with this sheet until it contains all of required fields.  Required fields: Relationship, Subscriber, SubscriberID, CarrierName, and CarrierPhone.");
 					}
 				}
 				//Patient information updating---------------------------------------------------------------------------------------------------------
@@ -2563,7 +2563,7 @@ namespace OpenDental {
 				PatientNotes.Update(PatNoteCur,PatCur.Guarantor);
 			}
 			#endregion
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 			DialogResult=DialogResult.OK;
 		}
 

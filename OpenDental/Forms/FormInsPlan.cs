@@ -2852,7 +2852,7 @@ namespace OpenDental{
 			if((_planCur.PlanType=="" || _planCur.PlanType=="p")
 				&& comboPlanType.SelectedIndex.In((int)InsPlanTypeComboItem.MedicaidOrFlatCopay,(int)InsPlanTypeComboItem.Capitation)) 
 			{
-				if(!MsgBox.Show(this,true,"This will clear all percentages. Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will clear all percentages. Continue?")) {
 					comboPlanType.SelectedIndex=(int)_selectedPlanType;//Undo the selection change.
 					return;
 				}
@@ -2866,7 +2866,7 @@ namespace OpenDental{
 				FillBenefits();
 			}
 			else if(comboPlanType.SelectedIndex==(int)InsPlanTypeComboItem.PPOFixedBenefit) {
-				if(!MsgBox.Show(this,true,"This will set all percentages to 100%. Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will set all percentages to 100%. Continue?")) {
 					comboPlanType.SelectedIndex=(int)_selectedPlanType;//Undo the selection change.
 					return;
 				}
@@ -2945,7 +2945,7 @@ namespace OpenDental{
 		///<summary>Button not visible if SubCur=null, editing from big list.</summary>
 		private void butPick_Click(object sender,EventArgs e) {
 			if(!IsNewPlan && !Security.IsAuthorized(Permissions.InsPlanPickListExisting,true)) {
-				MsgBox.Show(this,"Permission required: 'Change existing Ins Plan using Pick From List'.\r\n"
+				MessageBox.Show("Permission required: 'Change existing Ins Plan using Pick From List'.\r\n"
 					+"Alternatively, the Ins Plan can be dropped and a new plan may be added.");
 				return;
 			}
@@ -2957,7 +2957,7 @@ namespace OpenDental{
 			if(FormIP.DialogResult==DialogResult.Cancel) {
 				return;
 			}
-			if(!IsNewPlan && !MsgBox.Show(this,true,"Are you sure you want to use the selected plan?  You should NOT use this if the patient is changing insurance.  Use the Drop button instead.")) {
+			if(!IsNewPlan && !MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to use the selected plan?  You should NOT use this if the patient is changing insurance.  Use the Drop button instead.")) {
 				return;
 			}
 			if(FormIP.SelectedPlan.PlanNum==0) {//user clicked Blank
@@ -3258,7 +3258,7 @@ namespace OpenDental{
 			}
 			if(CultureInfo.CurrentCulture.Name.Length>=4 && CultureInfo.CurrentCulture.Name.Substring(3)=="CA"){//en-CA or fr-CA
 				if(!Regex.IsMatch(textElectID.Text,@"^[0-9]{6}$")) {
-					if(!MsgBox.Show(this,true,"Carrier ID should be six digits long.  Continue anyway?")){
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Carrier ID should be six digits long.  Continue anyway?")){
 						textElectID.Text=_electIdCur;//They clicked Cancel, set it back to what it was.
 						e.Cancel=true;
 						return;
@@ -3269,7 +3269,7 @@ namespace OpenDental{
 			string[] electIDs=ElectIDs.GetDescripts(textElectID.Text);
 			if(electIDs.Length==0) {//if none found in the predefined list
 				if(!Carriers.ElectIdInUse(textElectID.Text)){
-					if(!MsgBox.Show(this,true,"Electronic ID not found. Continue anyway?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Electronic ID not found. Continue anyway?")) {
 						textElectID.Text=_electIdCur;//They clicked Cancel, set it back to what it was.
 						e.Cancel=true;
 						return;
@@ -3287,7 +3287,7 @@ namespace OpenDental{
 			}
 			try {
 				InsSubs.ValidateNoKeys(_subCur.InsSubNum,false);
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Change subscriber?  This should not normally be needed.")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Change subscriber?  This should not normally be needed.")) {
 					return;
 				}
 			}
@@ -3358,10 +3358,6 @@ namespace OpenDental{
 		}
 
 		private void butImportTrojan_Click(object sender,System.EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Bridge is not available while viewing through the web.");
-				return;//bridge is not yet available for web users.
-			}
 			//If SubCur is null, this button is not visible to click.
 			if(CovCats.GetForEbenCat(EbenefitCategory.Diagnostic)==null
 				|| CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive)==null
@@ -3373,7 +3369,7 @@ namespace OpenDental{
 				|| CovCats.GetForEbenCat(EbenefitCategory.OralSurgery)==null
 				|| CovCats.GetForEbenCat(EbenefitCategory.Orthodontics)==null) 
 			{
-				MsgBox.Show(this,"You must first set up your insurance categories with corresponding electronic benefit categories: Diagnostic,RoutinePreventive, Restorative, Endodontics, Periodontics, Crowns, OralSurgery, Orthodontics, and Prosthodontics");
+				MessageBox.Show("You must first set up your insurance categories with corresponding electronic benefit categories: Diagnostic,RoutinePreventive, Restorative, Endodontics, Periodontics, Crowns, OralSurgery, Orthodontics, and Prosthodontics");
 				return;
 			}
 #if DEBUG
@@ -3503,10 +3499,6 @@ namespace OpenDental{
 		}
 
 		private void butIapFind_Click(object sender,System.EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Bridge is not available while viewing through the web.");
-				return;
-			}
 			//If SubCur is null, this button is not visible to click.
 			FormIap FormI=new FormIap();
 			FormI.ShowDialog();
@@ -3939,11 +3931,11 @@ namespace OpenDental{
 			}
 			Carrier carrier=Carriers.GetCarrier(_planCur.CarrierNum);
 			if(!carrier.IsCDA){
-				MsgBox.Show(this,"Eligibility only supported for CDAnet carriers.");
+				MessageBox.Show("Eligibility only supported for CDAnet carriers.");
 				return;
 			}
 			if((carrier.CanadianSupportedTypes & CanSupTransTypes.EligibilityTransaction_08) != CanSupTransTypes.EligibilityTransaction_08) {
-				MsgBox.Show(this,"Eligibility not supported by this carrier.");
+				MessageBox.Show("Eligibility not supported by this carrier.");
 				return;
 			}
 			Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
@@ -3987,10 +3979,10 @@ namespace OpenDental{
 				//	textDivisionNo.Text,textCarrier.Text,checkIsMedical.Checked,PlanCur.PlanNum,false);
 				otherBenNote=InsSubs.GetBenefitNotes(_planCur.PlanNum,_subCur.InsSubNum);
 				if(otherBenNote=="") {
-					MsgBox.Show(this,"No benefit note found.  Benefit notes are created when importing Trojan or IAP benefit information and are frequently read-only.  Store your own notes in the subscriber note instead.");
+					MessageBox.Show("No benefit note found.  Benefit notes are created when importing Trojan or IAP benefit information and are frequently read-only.  Store your own notes in the subscriber note instead.");
 					return;
 				}
-				MsgBox.Show(this,"This plan does not have a benefit note, but a note was found for another subsriber of this plan.  You will be able to view this note, but not change it.");
+				MessageBox.Show("This plan does not have a benefit note, but a note was found for another subsriber of this plan.  You will be able to view this note, but not change it.");
 			}
 			FormInsBenefitNotes FormI=new FormInsBenefitNotes();
 			if(_subCur.BenefitNotes!="") {
@@ -4016,20 +4008,20 @@ namespace OpenDental{
 				return;
 			}
 			string warningMsg="This plan doesn't have a carrier attached and probably is being created by another user right now.  Click OK to delete plan anyway.";
-			if(_carrierCur.CarrierNum==0 && !MsgBox.Show(this,MsgBoxButtons.YesNo,warningMsg)) {
+			if(_carrierCur.CarrierNum==0 && !MsgBox.Show(MsgBoxButtons.YesNo,warningMsg)) {
 				return;
 			}
 			//1. Delete Subscriber---------------------------------------------------------------------------------------------------
 			//Can only do this if there are other subscribers present.  If this is the last subscriber, then it attempts to delete the plan itself, down below.
 			if(textLinkedNum.Text!="0") {//Other subscribers are present.  
 				if(_subCur==null) {//viewing from big list
-					MsgBox.Show(this,"Subscribers must be removed individually before deleting plan.");//by dropping, then using this same delete button.
+					MessageBox.Show("Subscribers must be removed individually before deleting plan.");//by dropping, then using this same delete button.
 					return;
 				}
 				else {//Came into here through a patient.
 					DateTime dateSubChange=_subCur.SecDateTEdit;
 					if(PatPlanCur!=null) {
-						if(!MsgBox.Show(this,true,"All patients attached to this subscription will be dropped and the subscription for this plan will be deleted. Continue?")) {
+						if(!MsgBox.Show(MsgBoxButtons.YesNo,"All patients attached to this subscription will be dropped and the subscription for this plan will be deleted. Continue?")) {
 							return;
 						}
 					}
@@ -4058,7 +4050,7 @@ namespace OpenDental{
 			//2. Delete the plan itself-------------------------------------------------------------------------------------------------
 			//This is the only subscriber, so delete inssub and insplan
 			//Or this is the big list and there are no subscribers, so just delete the insplan.
-			if(!MsgBox.Show(this,true,"Delete Plan?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete Plan?")) {
 				return;
 			}
 			DateTime datePrevious=_planCur.SecDateTEdit;
@@ -4089,7 +4081,7 @@ namespace OpenDental{
 				return false;
 			}
 			string warningMsg="This plan doesn't have a carrier attached and probably is being created by another user right now.  Click OK to drop plan anyway.";
-			if(_carrierCur.CarrierNum==0 && !MsgBox.Show(this,MsgBoxButtons.YesNo,warningMsg)) {
+			if(_carrierCur.CarrierNum==0 && !MsgBox.Show(MsgBoxButtons.YesNo,warningMsg)) {
 				return false;
 			}
 			//should we save the plan info first?  Probably not.
@@ -4107,7 +4099,7 @@ namespace OpenDental{
 					continue;
 				}
 				//Patient currently has a claim for the insplan they are trying to drop
-				MsgBox.Show(this,"Please delete all of today's claims for this patient before dropping this plan.");
+				MessageBox.Show("Please delete all of today's claims for this patient before dropping this plan.");
 				return false;
 			}
 			PatPlans.Delete(PatPlanCur.PatPlanNum);//Estimates recomputed within Delete()
@@ -4329,7 +4321,7 @@ namespace OpenDental{
 			//Visible for everyone.
 			Clearinghouse clearinghouseHq=Clearinghouses.GetDefaultEligibility();
 			if(clearinghouseHq==null){
-				MsgBox.Show(this,"No clearinghouse is set as default.");
+				MessageBox.Show("No clearinghouse is set as default.");
 				return;
 			}
 			if((clearinghouseHq.CommBridge!=EclaimsCommBridge.ClaimConnect 
@@ -4337,7 +4329,7 @@ namespace OpenDental{
 				&& clearinghouseHq.CommBridge!=EclaimsCommBridge.WebMD)
 				&& clearinghouseHq.Eformat!=ElectronicClaimFormat.Canadian)
 			{
-				MsgBox.Show(this,"So far, eligibility checks only work with ClaimConnect, EDS, WebMD (Emdeon Dental), and CDAnet.");
+				MessageBox.Show("So far, eligibility checks only work with ClaimConnect, EDS, WebMD (Emdeon Dental), and CDAnet.");
 				return;
 			}
 			if(clearinghouseHq.Eformat==ElectronicClaimFormat.Canadian) {
@@ -4391,10 +4383,10 @@ namespace OpenDental{
 						#region Drop plan and add popup
 						if(isDependentRequest
 							&& planEndDate.Year > 1900 && planEndDate < DateTime.Today
-							&& MsgBox.Show(this,true,"The plan has ended.  Would you like to drop this plan?"))
+							&& MsgBox.Show(MsgBoxButtons.YesNo,"The plan has ended.  Would you like to drop this plan?"))
 						{
 							if(DropClickHelper()
-								&& MsgBox.Show(this,true,"Would you like to add a popup to collect new insurance information from patient?"))
+								&& MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to add a popup to collect new insurance information from patient?"))
 							{
 								Popup popup=new Popup();
 								popup.PatNum=PatPlanCur.PatNum;
@@ -4417,7 +4409,7 @@ namespace OpenDental{
 				//this also catches validation errors such as missing info.
 				Cursor=Cursors.Default;
 				if(ex.Message.Contains("AAA*N**79*")){
-					MsgBox.Show(this,"There is a problem with your benefits request. Check with your clearinghouse to ensure"
+					MessageBox.Show("There is a problem with your benefits request. Check with your clearinghouse to ensure"
 						+" they support Real Time Eligibility for this carrier and verify that the correct electronic ID is entered.");
 				}
 				else{
@@ -4869,11 +4861,11 @@ namespace OpenDental{
 						//Validate plan's employer in DB
 						Employer employerDB=Employers.GetByName(textEmployer.Text);
 						if(employerDB==null) {
-							MsgBox.Show(this,"The Employer for this insurance plan has been combined or deleted since the plan was loaded.  Please choose another insurance plan.");
+							MessageBox.Show("The Employer for this insurance plan has been combined or deleted since the plan was loaded.  Please choose another insurance plan.");
 							return false;
 						}
 						if(hasExistingEmployerChanged) {//not a new insplan, and the employer was changed compared to what's in the DB.
-							MsgBox.Show(this,"The Employer for this insurance plan has been changed since the plan was loaded.  Please choose another insurance plan.");
+							MessageBox.Show("The Employer for this insurance plan has been changed since the plan was loaded.  Please choose another insurance plan.");
 							return false;
 						}
 					}
@@ -4886,7 +4878,7 @@ namespace OpenDental{
 				if(textEmployer.Text=="") {
 					if(!Security.IsAuthorized(Permissions.InsPlanEdit,true)) {//Employer is now empty.  Need to see if the insplan in DB also has empty employer, or if someone else put one on it.
 						if(hasExistingEmployerChanged) {//Not a new insplan and employer was changed
-							MsgBox.Show(this,"The Employer for this insurance plan has been changed since the plan was loaded.  Please choose another insurance plan.");
+							MessageBox.Show("The Employer for this insurance plan has been changed since the plan was loaded.  Please choose another insurance plan.");
 							return false;
 						}
 					}
@@ -4896,22 +4888,22 @@ namespace OpenDental{
 					if(!Security.IsAuthorized(Permissions.InsPlanEdit,true)) {//Without permission, they must have picked from list.  Verify employer still exists.  If it does, verify the insplan still has same employer.
 						Employer employerDB=Employers.GetByName(textEmployer.Text);
 						if(employerDB==null) {
-							MsgBox.Show(this,"The Employer for this insurance plan has been combined or deleted since the plan was loaded.  Please choose another insurance plan.");
+							MessageBox.Show("The Employer for this insurance plan has been combined or deleted since the plan was loaded.  Please choose another insurance plan.");
 							return false;
 						}						
 						if(hasExistingEmployerChanged) {//Not a new insplan and employer was changed.
-							MsgBox.Show(this,"The Employer for this insurance plan has been changed since the plan was loaded.  Please choose another insurance plan.");
+							MessageBox.Show("The Employer for this insurance plan has been changed since the plan was loaded.  Please choose another insurance plan.");
 							return false;
 						}
 					}
 					else {//Are authorized
 						if(_employerNameCur==textEmployer.Text) { //They picked from list and didn't change it manually.
 							Employer employerDB=Employers.GetByName(textEmployer.Text);
-							if(employerDB==null && !MsgBox.Show(this,MsgBoxButtons.YesNo,"The Employer entered for this insurance plan has been combined or deleted since the plan was loaded.  Do you want to override those changes?")) {
+							if(employerDB==null && !MsgBox.Show(MsgBoxButtons.YesNo,"The Employer entered for this insurance plan has been combined or deleted since the plan was loaded.  Do you want to override those changes?")) {
 								return false;
 							}
 						
-							if(hasExistingEmployerChanged && !MsgBox.Show(this,MsgBoxButtons.YesNo,"The Employer for this insurance plan has been changed since the plan was loaded.  Do you want to override those changes?")) {
+							if(hasExistingEmployerChanged && !MsgBox.Show(MsgBoxButtons.YesNo,"The Employer for this insurance plan has been changed since the plan was loaded.  Do you want to override those changes?")) {
 								return false;
 							}
 						}
@@ -4935,26 +4927,26 @@ namespace OpenDental{
 			bool hasExistingCarrierChanged=(insPlanDB.CarrierNum!=_carrierCur.CarrierNum && insPlanDB.CarrierNum!=0 && insPlanDB.CarrierNum!=_carrierNumOrig);
 			if(_carrierCur.CarrierNum!=_carrierNumOrig && Carriers.Compare(carrierForm,_carrierCur)) {//Carrier was changed via "Pick From List" and not edited manually
 				if(Security.IsAuthorized(Permissions.InsPlanEdit,true)) {
-					if(Carriers.GetCarrierDB(_carrierCur.CarrierNum)==null && !MsgBox.Show(this,MsgBoxButtons.YesNo,"The Carrier selected has been combined or deleted since it was last picked.  Would you like to override those changes?")) {//Someone deleted/combined the carrier while the window was open.
+					if(Carriers.GetCarrierDB(_carrierCur.CarrierNum)==null && !MsgBox.Show(MsgBoxButtons.YesNo,"The Carrier selected has been combined or deleted since it was last picked.  Would you like to override those changes?")) {//Someone deleted/combined the carrier while the window was open.
 						return false;
 					}
-					if(hasExistingCarrierChanged && !MsgBox.Show(this,MsgBoxButtons.YesNo,"The selected insurance plan has had its Carrier changed since it was loaded.  Would you like to override those changes?")) {//Someone changed this insplan's carrier while the window was open.
+					if(hasExistingCarrierChanged && !MsgBox.Show(MsgBoxButtons.YesNo,"The selected insurance plan has had its Carrier changed since it was loaded.  Would you like to override those changes?")) {//Someone changed this insplan's carrier while the window was open.
 						return false;
 					}
 				}
 				else {//Not authorized
 					if(Carriers.GetCarrierDB(_carrierCur.CarrierNum)==null) {
-						MsgBox.Show(this,"The selected insurance plan has had its carrier combined or deleted since it was last picked.  Please choose another.");
+						MessageBox.Show("The selected insurance plan has had its carrier combined or deleted since it was last picked.  Please choose another.");
 						return false;
 					}
 					if(hasExistingCarrierChanged) {//Someone changed this insplan's carrier while the window was open.
-						MsgBox.Show(this,"The selected insurance plan has had its Carrier changed since it was loaded.  Please choose another.");
+						MessageBox.Show("The selected insurance plan has had its Carrier changed since it was loaded.  Please choose another.");
 						return false;
 					}
 				}
 			}
 			else if(!Carriers.Compare(carrierForm,_carrierCur)) {//Carrier edited manually (doesn't matter if it was picked from list or not, user without perms can't edit manually)
-				if(hasExistingCarrierChanged && !MsgBox.Show(this,MsgBoxButtons.YesNo,"The selected insurance plan has had its Carrier changed since it was loaded.  Would you like to override those changes?")) {//Someone changed this insplan's carrier while the window was open.
+				if(hasExistingCarrierChanged && !MsgBox.Show(MsgBoxButtons.YesNo,"The selected insurance plan has had its Carrier changed since it was loaded.  Would you like to override those changes?")) {//Someone changed this insplan's carrier while the window was open.
 					return false;
 				}
 				//No need to look up if the carrier entered manually exists.  We can't tell if it doesn't exist or if it was deleted while the form was open.
@@ -4962,13 +4954,13 @@ namespace OpenDental{
 			}
 			else if(_planOld.PlanNum!=_planCur.PlanNum) {//Plan was picked from list
 				if(Security.IsAuthorized(Permissions.InsPlanEdit,true)) {
-					if(insPlanDB.CarrierNum!=_carrierCur.CarrierNum && !MsgBox.Show(this,MsgBoxButtons.YesNo,"The selected insurance plan has had its Carrier changed since it was loaded.  Would you like to override those changes?")) {
+					if(insPlanDB.CarrierNum!=_carrierCur.CarrierNum && !MsgBox.Show(MsgBoxButtons.YesNo,"The selected insurance plan has had its Carrier changed since it was loaded.  Would you like to override those changes?")) {
 						return false;
 					}
 				}
 				else {//Not authorized
 					if(insPlanDB.CarrierNum!=_carrierCur.CarrierNum) {
-						MsgBox.Show(this,"The selected insurance plan has had its Carrier changed since it was loaded.  Please choose another.");
+						MessageBox.Show("The selected insurance plan has had its Carrier changed since it was loaded.  Please choose another.");
 						return false;
 					}
 				}
@@ -5001,51 +4993,51 @@ namespace OpenDental{
 				|| textDateLastVerifiedBenefits.errorProvider1.GetError(textDateLastVerifiedBenefits)!="" 
 				|| textDateLastVerifiedPatPlan.errorProvider1.GetError(textDateLastVerifiedPatPlan)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				if(textPlanFlag.Text!="" && textPlanFlag.Text!="A" && textPlanFlag.Text!="V" && textPlanFlag.Text!="N") {
-					MsgBox.Show(this,"Plan flag must be A, V, N, or blank.");
+					MessageBox.Show("Plan flag must be A, V, N, or blank.");
 					return false;
 				}
 				if(textPlanFlag.Text=="") {
 					if(checkIsPMP.Checked) {
-						MsgBox.Show(this,"The provincial medical plan checkbox must be unchecked when the plan flag is blank.");
+						MessageBox.Show("The provincial medical plan checkbox must be unchecked when the plan flag is blank.");
 						return false;
 					}
 				}
 				else {
 					if(!checkIsPMP.Checked) {
-						MsgBox.Show(this,"The provincial medical plan checkbox must be checked when the plan flag is not blank.");
+						MessageBox.Show("The provincial medical plan checkbox must be checked when the plan flag is not blank.");
 						return false;
 					}
 					if(textPlanFlag.Text=="A") {
 						if(textCanadianDiagCode.Text=="" || textCanadianDiagCode.Text!=Canadian.TidyAN(textCanadianDiagCode.Text,textCanadianDiagCode.Text.Length,true)) {
-							MsgBox.Show(this,"When plan flag is set to A, diagnostic code must be set and must be 6 characters or less in length.");
+							MessageBox.Show("When plan flag is set to A, diagnostic code must be set and must be 6 characters or less in length.");
 							return false;
 						}
 						if(textCanadianInstCode.Text=="" || textCanadianInstCode.Text!=Canadian.TidyAN(textCanadianInstCode.Text,textCanadianInstCode.Text.Length,true)) {
-							MsgBox.Show(this,"When plan flag is set to A, institution code must be set and must be 6 characters or less in length.");
+							MessageBox.Show("When plan flag is set to A, institution code must be set and must be 6 characters or less in length.");
 							return false;
 						}
 					}
 				}
 			}
 			if(textSubscriberID.Text=="" && _subCur!=null) {
-				MsgBox.Show(this,"Subscriber ID not allowed to be blank.");
+				MessageBox.Show("Subscriber ID not allowed to be blank.");
 				return false;
 			}
 			if(textCarrier.Text=="") {
-				MsgBox.Show(this,"Carrier not allowed to be blank.");
+				MessageBox.Show("Carrier not allowed to be blank.");
 				return false;
 			}
 			if(PatPlanCur!=null && textOrdinal.errorProvider1.GetError(textOrdinal)!=""){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(comboRelationship.SelectedIndex==-1 && comboRelationship.Items.Count>0) {
-				MsgBox.Show(this,"Relationship to Subscriber is not allowed to be blank.");
+				MessageBox.Show("Relationship to Subscriber is not allowed to be blank.");
 				return false;
 			}
 			if(PatPlanCur!=null && !IsEmployerValid()) {
@@ -5086,7 +5078,7 @@ namespace OpenDental{
 						//Someone could have changed the insplan while the user was editing this window, do not overwrite the other users changes.
 						InsPlan insPlanDB=InsPlans.GetPlan(_planCur.PlanNum,null);
 						if(insPlanDB.PlanNum==0) {
-							MsgBox.Show(this,"Insurance plan has been combined or deleted since the window was opened.  Please press Cancel to continue and refresh the list of insurance plans.");
+							MessageBox.Show("Insurance plan has been combined or deleted since the window was opened.  Please press Cancel to continue and refresh the list of insurance plans.");
 							return false;
 						}
 						_carrierCur=Carriers.GetCarrier(insPlanDB.CarrierNum);
@@ -5104,7 +5096,7 @@ namespace OpenDental{
 							carrierFound=false;
 						}
 						if(!carrierFound) {
-							if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Carrier not found.  Create new carrier?")) {
+							if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Carrier not found.  Create new carrier?")) {
 								return false;
 							}
 							FormCarrierEdit formCE=new FormCarrierEdit();
@@ -5126,7 +5118,7 @@ namespace OpenDental{
 				//We don't care if carrier info is changed, only if it's removed.  
 				//If it's removed, have them choose another.  If it's simply changed, just use the same prikey.
 				if(Carriers.GetCarrier(_carrierCur.CarrierNum).CarrierName=="" && _planCur.PlanNum!=_planOld.PlanNum) {//Carrier not found, it must have been deleted or combined
-					MsgBox.Show(this,"Selected carrier has been combined or deleted.  Please choose another insurance plan.");
+					MessageBox.Show("Selected carrier has been combined or deleted.  Please choose another insurance plan.");
 					return false;
 				}
 				else if(_planCur.PlanNum==_planOld.PlanNum) {//Didn't switch insplan, they were only viewing.
@@ -5163,7 +5155,7 @@ namespace OpenDental{
 				_planCur.FeeSched=0;
 			}
 			else if(comboFeeSched.SelectedIndex == -1) {//Hidden fee schedule selected in comboFeeSched
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"The selected Fee Schedule has been hidden. Are you sure you want to continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"The selected Fee Schedule has been hidden. Are you sure you want to continue?")) {
 					return false;
 				}
 				_planCur.FeeSched=_planCurOriginal.FeeSched;
@@ -5216,7 +5208,7 @@ namespace OpenDental{
 				}
 			}
 			else if(comboAllowedFeeSched.SelectedIndex==-1) {//Hidden fee schedule selected in comboAllowedFeeSched
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"The selected Carrier Allowed Amounts fee schedule has been hidden. Are you sure you want to continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"The selected Carrier Allowed Amounts fee schedule has been hidden. Are you sure you want to continue?")) {
 					return false;
 				}
 				_planCur.AllowedFeeSched=_planCurOriginal.AllowedFeeSched;//No change, maintain hidden feesched.
@@ -5326,7 +5318,7 @@ namespace OpenDental{
 
 		private void butPatOrtho_Click(object sender,EventArgs e) {
 			if(comboOrthoClaimType.SelectedIndex != (int)OrthoClaimType.InitialPlusPeriodic) {
-				MsgBox.Show(this,"To view this setup window, the insurance plan must be set to have an Ortho Claim Type of Initial Plus Periodic.");
+				MessageBox.Show("To view this setup window, the insurance plan must be set to have an Ortho Claim Type of Initial Plus Periodic.");
 				return;
 			}
 			double defaultFee=PIn.Double(textOrthoAutoFee.Text);
@@ -5364,12 +5356,12 @@ namespace OpenDental{
 			if((radioChangeAll.Checked || (radioCreateNew.Checked && textLinkedNum.Text=="0")) //These are the two scenarios in which InsPlans.Update will be called instead of Insert.
 				&& (_planCur==null || InsPlans.GetPlan(_planCur.PlanNum,new List<InsPlan>())==null)) 
 			{
-				MsgBox.Show(this,"The selected insurance plan was removed by another user and no longer exists.  Open insurance plan again to edit.");
+				MessageBox.Show("The selected insurance plan was removed by another user and no longer exists.  Open insurance plan again to edit.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(_subCur!=null && InsPlans.GetPlan(_subCur.PlanNum,new List<InsPlan>())==null) {
-				MsgBox.Show(this,"The subscriber's insurance plan was merged by another user and no longer exists.  Open insurance plan again to edit.");
+				MessageBox.Show("The subscriber's insurance plan was merged by another user and no longer exists.  Open insurance plan again to edit.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -5891,7 +5883,7 @@ namespace OpenDental{
 			if(PatPlanCur!=null) {
 				PatPlan ppExists=PatPlans.GetByPatPlanNum(PatPlanCur.PatPlanNum);
 				if(ppExists==null) {
-					MsgBox.Show(this,"This plan was removed by another user and no longer exists.");
+					MessageBox.Show("This plan was removed by another user and no longer exists.");
 					return true;
 				}
 			}

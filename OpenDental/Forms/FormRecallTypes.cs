@@ -248,10 +248,10 @@ namespace OpenDental{
 			Cursor=Cursors.Default;
 			if(isSyncCompleted) {
 				changed=false;
-				MsgBox.Show(this,"Done.");
+				MessageBox.Show("Done.");
 			}
 			else {
-				MsgBox.Show(this,"Synch is currently running from a different workstation.");
+				MessageBox.Show("Synch is currently running from a different workstation.");
 			}
 		}
 
@@ -273,7 +273,7 @@ namespace OpenDental{
 					GC.Collect();//clean up resources, force the garbage collector to collect since resources may remain tied-up
 					Cursor=Cursors.Default;
 					if(!isSyncSuccessful) {
-						MsgBox.Show(this,"Synch is currently running from a different workstation.  Recalls should be synchronized again later.");
+						MessageBox.Show("Synch is currently running from a different workstation.  Recalls should be synchronized again later.");
 					}
 				}
 			}

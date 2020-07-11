@@ -216,7 +216,7 @@ namespace OpenDental{
 				&& !Regex.IsMatch(textKey1.Text,@"^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$")
 				&& !Regex.IsMatch(textKey1.Text,@"^[A-Z0-9]{16}$"))
 			{
-				MsgBox.Show(this,"Invalid registration key format.");
+				MessageBox.Show("Invalid registration key format.");
 				return;
 			}
 			string regkey="";
@@ -227,7 +227,7 @@ namespace OpenDental{
 				regkey=textKey1.Text;
 			}
 			if(!ValidateKey(regkey)){//a blank registration key will only be valid if the CDT.dll is foreign
-				MsgBox.Show(this,"Invalid registration key.");
+				MessageBox.Show("Invalid registration key.");
 				return;
 			}
 			Prefs.UpdateString(PrefName.RegistrationKey,regkey);

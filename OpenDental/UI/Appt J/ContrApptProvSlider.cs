@@ -562,7 +562,7 @@ namespace OpenDental.UI{
 				int lengthMax=GetLengthMax();
 				if(_pattern.Length>lengthMax){
 					_pattern=_pattern.Substring(0,lengthMax);
-					MsgBox.Show(this,"Appointment time shortened because it was too long to handle.");
+					MessageBox.Show("Appointment time shortened because it was too long to handle.");
 				}
 				Invalidate();
 			}
@@ -597,7 +597,7 @@ namespace OpenDental.UI{
 				int lengthMax=GetLengthMax();
 				if(_patternSecondary.Length>lengthMax){
 					_patternSecondary=_patternSecondary.Substring(0,lengthMax);
-					MsgBox.Show(this,"Appointment time shortened because it was too long to handle.");
+					MessageBox.Show("Appointment time shortened because it was too long to handle.");
 				}
 				Invalidate();
 			}

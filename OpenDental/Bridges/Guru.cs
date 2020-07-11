@@ -123,7 +123,7 @@ namespace OpenDental.Bridges {
 		/// <summary></summary>
 		public static void SendData(Program ProgramCur,Patient pat) {
 			if(pat==null) {
-				MsgBox.Show("Guru","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			try {
@@ -185,7 +185,7 @@ namespace OpenDental.Bridges {
 			string imagePath=CodeBase.ODFileUtils.CombinePaths(ProgramProperties.GetPropVal(ProgramCur.ProgramNum,"Guru image path"),pat.ImageFolder);
 			mvPatient.Directory = Tidy(imagePath,259);
 			if(MVSendPatient(mvPatient) != 0) {
-				MsgBox.Show("Guru","An error has occurred.");
+				MsgBox.Show("An error has occurred.");
 			}
 		}
 			//end

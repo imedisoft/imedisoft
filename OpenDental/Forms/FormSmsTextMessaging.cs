@@ -688,11 +688,11 @@ namespace OpenDental {
 		///<summary>Sets the given status for the selected receieved message.</summary>
 		private void SetReceivedSelectedStatus(SmsFromStatus smsFromStatus) {
 			if(_selectedSmsGroup!=null) {
-				MsgBox.Show(this,"Please turn off Group By Patient.");
+				MessageBox.Show("Please turn off Group By Patient.");
 				return;
 			}
 			if(_selectedSmsFromMobile==null) {
-				MsgBox.Show(this,"Please select a received message.");
+				MessageBox.Show("Please select a received message.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;			
@@ -714,11 +714,11 @@ namespace OpenDental {
 
 		private void menuItemChangePat_Click(object sender,EventArgs e) {
 			if(_selectedSmsGroup!=null) {
-				MsgBox.Show(this,"Please turn off Group By Patient.");
+				MessageBox.Show("Please turn off Group By Patient.");
 				return;
 			}
 			if(_selectedSmsFromMobile==null) {
-				MsgBox.Show(this,"Please select a received message.");
+				MessageBox.Show("Please select a received message.");
 				return;
 			}
 			FormPatientSelect form=new FormPatientSelect();
@@ -759,7 +759,7 @@ namespace OpenDental {
 			}			
 			FillGridTextMessages();//Refresh grid to show changed patient.
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Text message was moved successfully");
+			MessageBox.Show("Text message was moved successfully");
 		}
 
 		private void menuItemMarkUnread_Click(object sender,EventArgs e) {
@@ -792,10 +792,10 @@ namespace OpenDental {
 
 		private void menuItemHide_Click(object sender,EventArgs e) {
 			if(!_hasSelectedMessage) {
-				MsgBox.Show(this,"Please select a message before attempting to hide.");
+				MessageBox.Show("Please select a message before attempting to hide.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Hide selected message?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Hide selected message?")) {
 				return;
 			}
 			HideOrUnhideMessages(true);
@@ -803,10 +803,10 @@ namespace OpenDental {
 
 		private void menuItemUnhide_Click(object sender,EventArgs e) {
 			if(!_hasSelectedMessage) {
-				MsgBox.Show(this,"Please select a message before attempting to unhide.");
+				MessageBox.Show("Please select a message before attempting to unhide.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Unhide selected message?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Unhide selected message?")) {
 				return;
 			}
 			HideOrUnhideMessages(false);
@@ -814,7 +814,7 @@ namespace OpenDental {
 
 		private void menuItemBlockNumber_Click(object sender,EventArgs e) {
 			if(!_hasSelectedMessage) {
-				MsgBox.Show(this,"Please select a received or sent message to block.");
+				MessageBox.Show("Please select a received or sent message to block.");
 				return;
 			}
 			string numberToBlock=_selectedMobileNumber;
@@ -834,11 +834,11 @@ namespace OpenDental {
 				
 		private void menuItemSelectPatient_Click(object sender,EventArgs e) {
 			if(!_hasSelectedMessage) {
-				MsgBox.Show(this,"Please select a message first.");
+				MessageBox.Show("Please select a message first.");
 				return;
 			}			
 			if(_selectedPatNum==0 || GetPatientName(_selectedPatNum)==Lan.g(this,"Not found")) {//If the patNum is 0 or patient could not be found.
-				MsgBox.Show(this,"Please select a message with a valid patient attached.");
+				MessageBox.Show("Please select a message with a valid patient attached.");
 				return;
 			}
 			FormOpenDental.S_Contr_PatientSelected(Patients.GetPat(_selectedPatNum),true);
@@ -846,11 +846,11 @@ namespace OpenDental {
 
 		private void butSend_Click(object sender,EventArgs e) {
 			if(!_hasSelectedMessage) {
-				MsgBox.Show(this,"Please select a message thread to reply to.");
+				MessageBox.Show("Please select a message thread to reply to.");
 				return;
 			}
 			if(textReply.Text=="") {
-				MsgBox.Show(this,"Please input reply text first.");
+				MessageBox.Show("Please input reply text first.");
 				return;
 			}
 			long clinicNum=0;
@@ -868,13 +868,13 @@ namespace OpenDental {
 			}
 			if(string.IsNullOrEmpty(_selectedMobileNumber)) {
 				//should never happen.
-				MsgBox.Show(this,"Selected message does not have a valid phone number to send to.");
+				MessageBox.Show("Selected message does not have a valid phone number to send to.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled && clinicNum==0) {
 				clinicNum=PrefC.GetLong(PrefName.TextingDefaultClinicNum);
 				if(clinicNum==0) {
-					MsgBox.Show(this,"No default clinic setup for texting.");
+					MessageBox.Show("No default clinic setup for texting.");
 					return;
 				}
 			}
@@ -914,7 +914,7 @@ namespace OpenDental {
 			}
 			if(isInvalidSelection) {
 				FillGridTextMessages(true);//This ensures that the selected row and highlighted rows are for the same patient as displayed in the grid.
-				MsgBox.Show(this,"Message selection was not showing correctly in the grid.  Selections have been refreshed.  "
+				MessageBox.Show("Message selection was not showing correctly in the grid.  Selections have been refreshed.  "
 					+"Please review selected message thread before sending.");
 				return;
 			}
@@ -926,7 +926,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				if(!FormEServicesSetup.ProcessSendSmsException(ex)) {
-					MsgBox.Show(this,ex.Message);
+					MessageBox.Show(ex.Message);
 				}
 				return;
 			}

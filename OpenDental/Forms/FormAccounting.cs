@@ -388,12 +388,12 @@ namespace OpenDental{
 
 		private void Edit_Click() {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please pick an account first.");
+				MessageBox.Show("Please pick an account first.");
 				return;
 			}
 			long acctNum=PIn.Long(table.Rows[gridMain.GetSelectedIndex()]["AccountNum"].ToString());
 			if(acctNum==0) {
-				MsgBox.Show(this,"This account is generated automatically, and cannot be edited.");
+				MessageBox.Show("This account is generated automatically, and cannot be edited.");
 				return;
 			}
 			Account acct=Accounts.GetAccount(acctNum);
@@ -411,14 +411,14 @@ namespace OpenDental{
 			gridMain.Export(gridMain.Title);
 			//string msg=gridMain.Export(null,new List<Tuple<string,string>>() { Tuple.Create(labelDate.Text,PIn.Date(textDate.Text).ToShortDateString()) });
 			//if(!string.IsNullOrEmpty(msg)) {
-			//	MsgBox.Show(this,msg);
+			//	MessageBox.Show(msg);
 			//}
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			long acctNum=PIn.Long(table.Rows[gridMain.GetSelectedIndex()]["AccountNum"].ToString());
 			if(acctNum==0) {
-				MsgBox.Show(this,"This account is generated automatically, and there is currently no way to view the detail.  It is the sum of all income minus all expenses for all previous years.");
+				MessageBox.Show("This account is generated automatically, and there is currently no way to view the detail.  It is the sum of all income minus all expenses for all previous years.");
 				return;
 			}
 			DateTime asofDate;

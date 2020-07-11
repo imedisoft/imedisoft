@@ -277,7 +277,7 @@ namespace OpenDental{
 				return false;
 			}
 			if(appt.AptStatus==ApptStatus.Complete) {
-				MsgBox.Show("Appointments","Not allowed to move completed appointments.");
+				MessageBox.Show("Not allowed to move completed appointments.");
 				return false;
 			}
 			if(PatRestrictionL.IsRestricted(appt.PatNum,PatRestrict.ApptSchedule)) {
@@ -402,7 +402,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public static PlannedApptStatus CreatePlannedAppt(Patient pat,int itemOrder,List<long> listPreSelectedProcNums=null) {
 			if(pat==null) {
-				MsgBox.Show("Appointments","Error creating planned appointment.  No patient is currently selected.");
+				MessageBox.Show("Error creating planned appointment. No patient is currently selected.");
 				return PlannedApptStatus.Failure;
 			}
 			if(!Security.IsAuthorized(Permissions.AppointmentCreate)) {
@@ -415,7 +415,7 @@ namespace OpenDental{
 				FormOpenDental.S_Contr_PatientSelected(pat,true,false);
 			}
 			if(pat.PatStatus.In(PatientStatus.Archived,PatientStatus.Deceased)) {
-				MsgBox.Show("Appointments","Appointments cannot be scheduled for "+pat.PatStatus.ToString().ToLower()+" patients.");
+				MessageBox.Show("Appointments cannot be scheduled for "+pat.PatStatus.ToString().ToLower()+" patients.");
 				return PlannedApptStatus.Failure;
 			}
 			Appointment AptCur=new Appointment();
@@ -461,19 +461,33 @@ namespace OpenDental{
 
 		/// <summary>Checks for specialty mismatch between pat and op. Then prompts user according to behavior defined by 
 		/// PrefName.ApptSchedEnforceSpecialty.  Returns true if the Appointment is allowed to be scheduled, false otherwise.</summary>
-		public static bool IsSpecialtyMismatchAllowed(long patNum,long clinicNum) {
-			try {
-				Appointments.HasSpecialtyConflict(patNum,clinicNum);//throws exception if we need to prompt user
+		public static bool IsSpecialtyMismatchAllowed(long patNum, long clinicNum)
+		{
+			try
+			{
+				Appointments.HasSpecialtyConflict(patNum, clinicNum);//throws exception if we need to prompt user
 			}
-			catch(ODException odex) {//Warn/Block
-				switch((ApptSchedEnforceSpecialty)odex.ErrorCode) {
+			catch (ODException odex)
+			{
+				switch ((ApptSchedEnforceSpecialty)odex.ErrorCode)
+				{
 					case ApptSchedEnforceSpecialty.Warn:
-						if(!MsgBox.Show("Appointment",MsgBoxButtons.YesNo,odex.Message+"\r\nSchedule appointment anyway?","Specialty Mismatch")){
+						var result = MessageBox.Show(
+							odex.Message + "\r\nSchedule appointment anyway?", "Specialty Mismatch",
+							MessageBoxButtons.YesNo, 
+							MessageBoxIcon.Question);
+
+						if (result == DialogResult.No)
+                        {
 							return false;
-						}
+                        }
 						break;
+
 					case ApptSchedEnforceSpecialty.Block:
-						MsgBox.Show("Appointment",odex.Message,"Specialty Mismatch");
+						MessageBox.Show(odex.Message, "Specialty Mismatch", 
+							MessageBoxButtons.OK, 
+							MessageBoxIcon.Information);
+
 						return false;
 				}
 			}
@@ -499,7 +513,7 @@ namespace OpenDental{
 			else{//if appointment is not Planned
 				switch(AptCur.AptStatus) {
 					case ApptStatus.Complete:
-						MsgBox.Show(owner,"Not allowed to move a completed appointment from here.");
+						MessageBox.Show("Not allowed to move a completed appointment from here.");
 						return false;
 					case ApptStatus.Scheduled:
 						if(!MsgBox.Show(owner,MsgBoxButtons.OKCancel,"Do you really want to move a previously scheduled appointment?")) {

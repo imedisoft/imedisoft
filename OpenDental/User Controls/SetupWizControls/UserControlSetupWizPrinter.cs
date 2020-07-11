@@ -161,15 +161,15 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void labelInfoCompression_Click(object sender,EventArgs e) {
-			MsgBox.Show("FormSetupWizard","Enter a percentage between 0 and 100. Enter 100 for no compression. A typical setting is 40%.");
+			MsgBox.Show("Enter a percentage between 0 and 100. Enter 100 for no compression. A typical setting is 40%.");
 		}
 
 		private void labelInfoDuplex_Click(object sender,EventArgs e) {
-			MsgBox.Show("FormSetupWizard","If this setting causes your scanner to malfunction, use the 'Show Scanner Options Window' instead.");
+			MsgBox.Show("If this setting causes your scanner to malfunction, use the 'Show Scanner Options Window' instead.");
 		}
 
 		private void labelInfoResolution_Click(object sender,EventArgs e) {
-			MsgBox.Show("FormSetupWizard","Enter a dpi value between 50 and 1000. A typical setting is 150 dpi.");
+			MsgBox.Show("Enter a dpi value between 50 and 1000. A typical setting is 150 dpi.");
 		}
 
 		private void butSetScanner_Click(object sender,EventArgs e) {
@@ -195,7 +195,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			if(textScanDocQuality.errorProvider1.GetError(textScanDocQuality)!=""
 				|| textScanDocResolution.errorProvider1.GetError(textScanDocResolution)!="") 
 			{
-				MsgBox.Show("FormSetupWizard","Please fix data entry errors first.");
+				MsgBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(textScanDocQuality.Text=="100"
@@ -208,7 +208,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			}
 			if(checkSimple.Checked && !PrefC.GetBool(PrefName.EasyHidePrinters)) {
 				//if user clicked the simple option
-				if(!MsgBox.Show("FormSetupWizard",true,"Warning! You have selected the easy view option for printers.  This will clear all printing preferences for all computers.  Are you sure you wish to continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning! You have selected the easy view option for printers.  This will clear all printing preferences for all computers.  Are you sure you wish to continue?")) {
 					return false;
 				}
 			}
@@ -220,8 +220,8 @@ namespace OpenDental.User_Controls.SetupWizard {
 			if(checkSimple.Checked && !PrefC.GetBool(PrefName.EasyHidePrinters)) {
 				Printers.ClearAll();
 				Printers.RefreshCache();
-				string printerName = "";
-				if(comboDefault.SelectedIndex==0) {
+                string printerName;
+                if (comboDefault.SelectedIndex==0) {
 					printerName="";
 				}
 				else {

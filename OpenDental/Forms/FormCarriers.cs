@@ -532,7 +532,7 @@ namespace OpenDental{
 			}
 			if(msg.Length>0) {
 				msg.AppendLine(Lans.g(this,"Continue?"));
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,msg.ToString())) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,msg.ToString())) {
 					return;
 				}
 			}
@@ -540,10 +540,10 @@ namespace OpenDental{
 			DataValid.SetInvalid(InvalidType.Prefs);
 			string errorMsg=ItransNCpl.TryCarrierUpdate(false,fieldsToImport);
 			if(!string.IsNullOrEmpty(errorMsg)) {
-				MsgBox.Show(this,errorMsg);
+				MessageBox.Show(errorMsg);
 				return;
 			}
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 			DataValid.SetInvalid(InvalidType.Carriers);
 			FillGrid();
 		}

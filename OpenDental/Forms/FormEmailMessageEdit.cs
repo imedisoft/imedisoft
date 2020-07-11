@@ -616,7 +616,7 @@ namespace OpenDental{
 
 		private void butEditTemplate_Click(object sender,EventArgs e) {
 			if(listTemplates.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.Setup)) {
@@ -745,7 +745,7 @@ namespace OpenDental{
 
 		private void butEditAutograph_Click(object sender,EventArgs e) {
 			if(listAutographs.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			FormEmailAutographEdit FormEAE=new FormEmailAutographEdit(_listEmailAutographs[listAutographs.SelectedIndex]);
@@ -767,12 +767,12 @@ namespace OpenDental{
 					EmailMessages.TryAddTrustDirect(_emailMessage.FromAddress);
 					Cursor=Cursors.Default;
 					if(EmailMessages.GetReceiverUntrustedCount(_emailMessage.FromAddress) >= 0) {
-						MsgBox.Show(this,"Failed to trust sender because a valid certificate could not be located.");
+						MessageBox.Show("Failed to trust sender because a valid certificate could not be located.");
 						return;
 					}
 				}
 				else {
-					MsgBox.Show(this,"Cannot decrypt message from untrusted sender.");
+					MessageBox.Show("Cannot decrypt message from untrusted sender.");
 					return;
 				}
 			}
@@ -801,7 +801,7 @@ namespace OpenDental{
       }
       else{
         if(_emailMessage.PatNum!=0 && !_isDeleteAllowed) {
-          if(MsgBox.Show(this, MsgBoxButtons.YesNo,"Hide this email from the inbox?")) {
+          if(MsgBox.Show(MsgBoxButtons.YesNo,"Hide this email from the inbox?")) {
 						//Forward compatible if we add new HideInFlags.
 						_emailMessage.HideIn=(HideInFlags)Enum.GetValues(typeof(HideInFlags)).OfType<HideInFlags>()
 							.Where(x => !x.In(HideInFlags.None,HideInFlags.AccountCommLog,HideInFlags.AccountProgNotes,HideInFlags.ChartProgNotes)).ToList()
@@ -813,7 +813,7 @@ namespace OpenDental{
           }
         }
         else{
-          if(MsgBox.Show(this,true,"Delete this email?")){
+          if(MsgBox.Show(MsgBoxButtons.YesNo,"Delete this email?")){
             EmailMessages.Delete(_emailMessage);
             HasEmailChanged=true;
             DialogResult=DialogResult.OK;
@@ -951,11 +951,11 @@ namespace OpenDental{
 				return;
 			}
 			if(emailAddressFrom.SMTPserver=="") {
-				MsgBox.Show(this,"The email address in email setup must have an SMTP server.");
+				MessageBox.Show("The email address in email setup must have an SMTP server.");
 				return;
 			}
 			if(emailPreview.ToAddress.Contains(",")) {
-				MsgBox.Show(this,"Multiple recipient addresses not allowed for direct messaging.");
+				MessageBox.Show("Multiple recipient addresses not allowed for direct messaging.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -973,7 +973,7 @@ namespace OpenDental{
 				else {
 					_emailMessage.SentOrReceived=EmailSentOrReceived.SentDirect;
 					EmailMessages.Update(_emailMessage);
-          MsgBox.Show(this,"Sent");
+          MessageBox.Show("Sent");
 				}
 			}
 			catch(Exception ex) {
@@ -1013,15 +1013,15 @@ namespace OpenDental{
       }
       //this will not be available if already sent.
       if(emailPreview.FromAddress==""){ 
-				MsgBox.Show(this,"Please enter a sender address.");
+				MessageBox.Show("Please enter a sender address.");
 				return;
 			}
 			if(emailPreview.ToAddress=="" && emailPreview.CcAddress=="" && emailPreview.BccAddress=="") {
-				MsgBox.Show(this,"Please enter at least one recipient.");
+				MessageBox.Show("Please enter at least one recipient.");
 				return;
 			}
 			if(EhrCCD.HasCcdEmailAttachment(_emailMessage)) {
-				MsgBox.Show(this,"The email has a summary of care attachment which may contain sensitive patient data.  Use the Direct Message button instead.");
+				MessageBox.Show("The email has a summary of care attachment which may contain sensitive patient data.  Use the Direct Message button instead.");
 				return;
 			}
 			EmailAddress emailAddress=GetOutgoingEmailForSending();
@@ -1029,7 +1029,7 @@ namespace OpenDental{
 				return;
 			}
 			if(emailAddress.SMTPserver==""){
-				MsgBox.Show(this,"The email address in email setup must have an SMTP server.");
+				MessageBox.Show("The email address in email setup must have an SMTP server.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -1045,7 +1045,7 @@ namespace OpenDental{
 				}
 				_emailMessage.SentOrReceived=EmailSentOrReceived.Sent;
 				EmailMessages.Update(_emailMessage);
-				MsgBox.Show(this,"Sent");
+				MessageBox.Show("Sent");
 			}
 			catch(Exception ex){
 				Cursor=Cursors.Default;

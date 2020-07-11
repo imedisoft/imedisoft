@@ -457,11 +457,11 @@ namespace OpenDental{
 		private void butDocumentView_Click(object sender,EventArgs e) {
 			Document doc=Documents.GetByNum(PlanCur.DocNum);
 			if(doc.DocNum==0) {
-				MsgBox.Show(this,"Error locating document.");
+				MessageBox.Show("Error locating document.");
 				return;
 			}
 			if(!Documents.DocExists(doc.DocNum)) {
-				MsgBox.Show(this,"Unable to open document.");
+				MessageBox.Show("Unable to open document.");
 				return;
 			}
 			Documents.OpenDoc(doc.DocNum);
@@ -541,11 +541,11 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if( textDateTP.errorProvider1.GetError(textDateTP)!=""
 				){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDateTP.Text==""){
-				MsgBox.Show(this,"Please enter a date first.");
+				MessageBox.Show("Please enter a date first.");
 				return;
 			}
 			PlanCur.DateTP=PIn.Date(textDateTP.Text);

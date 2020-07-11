@@ -26,13 +26,13 @@ namespace OpenDental {
 			if(textWidth.errorProvider1.GetError(textWidth)!=""
 				|| textHeight.errorProvider1.GetError(textHeight)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			int w=PIn.Int(textWidth.Text);
 			int h=PIn.Int(textHeight.Text);
 			if(h>w){
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Width should normally be greater than height.  Continue anyway?")){
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Width should normally be greater than height.  Continue anyway?")){
 					return;
 				}
 			}

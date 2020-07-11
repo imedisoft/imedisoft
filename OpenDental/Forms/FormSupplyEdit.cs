@@ -44,7 +44,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
 				return;
 			}
 			try{
@@ -62,11 +62,11 @@ namespace OpenDental {
 				|| textPrice.errorProvider1.GetError(textPrice)!=""
 				|| textOrderQty.errorProvider1.GetError(textOrderQty)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDescript.Text==""){
-				MsgBox.Show(this,"Please enter a description.");
+				MessageBox.Show("Please enter a description.");
 				return;
 			}
 			SupplyCur.Category=comboCategory.GetSelectedDefNum();

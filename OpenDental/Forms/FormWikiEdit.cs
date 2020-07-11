@@ -125,7 +125,7 @@ namespace OpenDental {
 					&& textContent.SelectionStart <	match.Index+match.Length) 
 				{
 					e.Handled=true;
-					MsgBox.Show(this,"Direct editing of tables is not allowed here.  Use the table button or double click to edit.");
+					MessageBox.Show("Direct editing of tables is not allowed here.  Use the table button or double click to edit.");
 					return;
 				}
 			}
@@ -337,17 +337,17 @@ namespace OpenDental {
         return;
       }
       if(_isInvalidPreview) {
-        MsgBox.Show(this,"This page is in an invalid state and cannot be saved.");
+        MessageBox.Show("This page is in an invalid state and cannot be saved.");
         return;
       }
 			WikiPage wikiPageDB=WikiPages.GetByTitle(WikiPageCur.PageTitle);
 			if(wikiPageDB!=null && WikiPageCur.DateTimeSaved<wikiPageDB.DateTimeSaved) {
 				if(WikiPageCur.IsDraft) {
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"The wiki page has been edited since this draft was last saved.  Overwrite and continue?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The wiki page has been edited since this draft was last saved.  Overwrite and continue?")) {
 						return;
 					}
 				}
-				else if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This page has been modified and saved since it was opened on this computer.  Save anyway?")) {
+				else if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This page has been modified and saved since it was opened on this computer.  Save anyway?")) {
 					return;
 				}
 			}
@@ -355,7 +355,7 @@ namespace OpenDental {
 			string message=Lan.g(this,"This page has the following invalid wiki page link(s):")+"\r\n"+string.Join("\r\n",listInvalidWikiPages.Take(10))+"\r\n"
 				+(listInvalidWikiPages.Count>10 ? "...\r\n\r\n" : "\r\n")
 				+Lan.g(this,"Create the wikipage(s) automatically?");
-			if(listInvalidWikiPages.Count!=0 && MsgBox.Show(this,MsgBoxButtons.YesNo,message)) {
+			if(listInvalidWikiPages.Count!=0 && MsgBox.Show(MsgBoxButtons.YesNo,message)) {
 				foreach(string title in listInvalidWikiPages) {
 					WikiPage wp=new WikiPage();
 					wp.PageTitle=title;
@@ -394,14 +394,14 @@ namespace OpenDental {
 		///<summary>Saves the the currently edited Wikipage as a draft. This method is copied from Save_Click with a few modifications.</summary>
 		private void SaveDraft_Click(bool showMsgBox=true) {
 			if(showMsgBox && WikiPageCur.IsNew) {
-				MsgBox.Show(this,"You may not save a new Wiki page as a draft.  Save the Wiki page, then create a draft.");
+				MessageBox.Show("You may not save a new Wiki page as a draft.  Save the Wiki page, then create a draft.");
 				return;
 			}
 			if(!MarkupL.ValidateMarkup(textContent,true,showMsgBox)) {
 				return;
 			}
       if(showMsgBox && _isInvalidPreview) {
-        MsgBox.Show(this,"This page is in an invalid state and cannot be saved as a draft.");
+        MessageBox.Show("This page is in an invalid state and cannot be saved as a draft.");
         return;
       }
 			WikiPageCur.PageContent=WikiPages.ConvertTitlesToPageNums(textContent.Text);
@@ -634,7 +634,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!WikiPageCur.IsNew && textContent.Text!=WikiPages.GetWikiPageContentWithWikiPageTitles(WikiPageCur.PageContent)){
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Unsaved changes will be lost. Would you like to continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Unsaved changes will be lost. Would you like to continue?")) {
 					e.Cancel=true;
 				}
 			}

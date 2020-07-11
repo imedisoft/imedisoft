@@ -417,35 +417,35 @@ namespace OpenDental{
 				|| textAmount.errorProvider1.GetError(textAmount)!=""
 				|| textQuantity.errorProvider1.GetError(textQuantity)!=""
 				){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textProcCode.Text != "" && listCategory.SelectedIndex != 0){
-				MsgBox.Show(this,"If a procedure code is entered, category must be None.");
+				MessageBox.Show("If a procedure code is entered, category must be None.");
 				return;
 			}
 			//not allowed to set to pat if editing plan only, and no patplanNum is available
 			if(PatPlanNum==0 && checkPat.Checked){
-				MsgBox.Show(this,"Not allowed to check the Pat box because no patient is available.");
+				MessageBox.Show("Not allowed to check the Pat box because no patient is available.");
 				return;
 			}
 			if(listType.SelectedIndex != (int)InsBenefitType.CoInsurance && PIn.Long(textPercent.Text)!=0){
-				MsgBox.Show(this,"Not allowed to enter a percentage unless type is CoInsurance.");
+				MessageBox.Show("Not allowed to enter a percentage unless type is CoInsurance.");
 				return;
 			}
 			if(textProcCode.Text!="" && ProcedureCodes.GetCodeNum(textProcCode.Text)==0){
-				MsgBox.Show(this,"Invalid procedure code.");
+				MessageBox.Show("Invalid procedure code.");
 				return;
 			}
 			if(listType.SelectedIndex==(int)InsBenefitType.WaitingPeriod
 				&& listQuantityQualifier.SelectedIndex!=(int)BenefitQuantity.Months
 				&& listQuantityQualifier.SelectedIndex!=(int)BenefitQuantity.Years)
 			{
-				MsgBox.Show(this,"Waiting period must be months or years.");
+				MessageBox.Show("Waiting period must be months or years.");
 				return;
 			}
 			if((InsBenefitType)listType.SelectedIndex==InsBenefitType.WaitingPeriod && listCategory.SelectedIndex==0 && textProcCode.Text=="") {
-				MsgBox.Show(this,"Waiting period must have a category or a procedure code.");
+				MessageBox.Show("Waiting period must have a category or a procedure code.");
 				return;
 			}
 			if(checkPat.Checked){

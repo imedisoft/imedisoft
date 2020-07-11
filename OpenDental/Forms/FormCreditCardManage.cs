@@ -147,22 +147,18 @@ namespace OpenDental {
 					hasPaySimple=true;
 				}
 				else {//not storing CC numbers and both PayConnect and X-Charge are disabled
-					MsgBox.Show(this,"Not allowed to store credit cards.");
+					MessageBox.Show("Not allowed to store credit cards.");
 					return;
 				}
 				CreditCard creditCardCur=null;
 				if(hasXCharge) {
-					if(ODBuild.IsWeb()) {
-						MsgBox.Show(this,"XCharge is not available while viewing through the web.");
-						return;
-					}
 					Program prog=Programs.GetCur(ProgramName.Xcharge);
 					string path=Programs.GetProgramPath(prog);
 					string xUsername=ProgramProperties.GetPropVal(prog.ProgramNum,"Username",Clinics.ClinicNum).Trim();
 					string xPassword=ProgramProperties.GetPropVal(prog.ProgramNum,"Password",Clinics.ClinicNum).Trim();
 					//Force user to retry entering information until it's correct or they press cancel
 					while(!File.Exists(path) || string.IsNullOrEmpty(xPassword) || string.IsNullOrEmpty(xUsername)) {
-						MsgBox.Show(this,"The Path, Username, and/or Password for X-Charge have not been set or are invalid.");
+						MessageBox.Show("The Path, Username, and/or Password for X-Charge have not been set or are invalid.");
 						if(!Security.IsAuthorized(Permissions.Setup)) {
 							return;
 						}
@@ -183,7 +179,7 @@ namespace OpenDental {
 						File.Delete(resultfile);//delete the old result file.
 					}
 					catch {
-						MsgBox.Show(this,"Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have sufficient permissions.");
+						MessageBox.Show("Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have sufficient permissions.");
 						return;
 					}
 					info.Arguments="";
@@ -256,7 +252,7 @@ namespace OpenDental {
 						}
 					}
 					catch(Exception) {
-						MsgBox.Show(this,"There was a problem adding the credit card.  Please try again.");
+						MessageBox.Show("There was a problem adding the credit card.  Please try again.");
 					}
 				}
 				if(hasPayConnect) {
@@ -289,10 +285,10 @@ namespace OpenDental {
 
 		private void butMoveTo_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()<0) {
-				MsgBox.Show(this,"Please select a card first.");
+				MessageBox.Show("Please select a card first.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Move this credit card information to a different patient account?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Move this credit card information to a different patient account?")) {
 				return;
 			}
 			FormPatientSelect form=new FormPatientSelect();
@@ -305,7 +301,7 @@ namespace OpenDental {
 			creditCard.PatNum=form.SelectedPatNum;
 			CreditCards.Update(creditCard);
 			FillGrid();
-			MsgBox.Show(this,"Credit card moved successfully");
+			MessageBox.Show("Credit card moved successfully");
 			SecurityLogs.MakeLogEntry(Permissions.CreditCardMove,patNumOrig,$"Credit card moved to PatNum: {form.SelectedPatNum}");
 			SecurityLogs.MakeLogEntry(Permissions.CreditCardMove,form.SelectedPatNum,$"Credit card moved from PatNum: {patNumOrig}");
 		}
@@ -313,7 +309,7 @@ namespace OpenDental {
 		private void butUp_Click(object sender,EventArgs e) {
 			int placement=gridMain.GetSelectedIndex();
 			if(placement==-1) {
-				MsgBox.Show(this,"Please select a card first.");
+				MessageBox.Show("Please select a card first.");
 				return;
 			}
 			if(placement==0) {
@@ -342,7 +338,7 @@ namespace OpenDental {
 		private void butDown_Click(object sender,EventArgs e) {
 			int placement=gridMain.GetSelectedIndex();
 			if(placement==-1) {
-				MsgBox.Show(this,"Please select a card first.");
+				MessageBox.Show("Please select a card first.");
 				return;
 			}
 			if(placement==_listCreditCards.Count-1) {

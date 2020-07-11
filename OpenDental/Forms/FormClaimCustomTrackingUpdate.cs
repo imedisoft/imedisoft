@@ -93,18 +93,18 @@ namespace OpenDental {
 		private void butUpdate_Click(object sender,EventArgs e) {
 			if(comboCustomTracking.SelectedIndex==-1) {
 				//Defaults to -1 when editing and old ClaimTracking where TrackingDefNum is 0 ('None') and ClaimTrackingStatusExcludesNone is true.
-				MsgBox.Show(this,"You must specify a Custom Track Status.");
+				MessageBox.Show("You must specify a Custom Track Status.");
 				return;
 			}
 			if(PrefC.GetBool(PrefName.ClaimTrackingRequiresError) 
 				&& ((ODBoxItem<Def>)comboErrorCode.SelectedItem).Tag == null 
 				&& comboErrorCode.Enabled )
 			{
-				MsgBox.Show(this,"You must specify an error code."); //Do they have to specify an error code even if they set the status to None?
+				MessageBox.Show("You must specify an error code."); //Do they have to specify an error code even if they set the status to None?
 				return;
 			}
 			if(comboCustomTracking.GetSelectedDefNum()==0) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Setting the status to none will disable filtering in the Outstanding Claims Report."
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Setting the status to none will disable filtering in the Outstanding Claims Report."
 						+"  Do you wish to set the status of this claim to none?")) {
 					return;
 				}

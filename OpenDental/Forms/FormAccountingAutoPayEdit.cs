@@ -231,7 +231,7 @@ namespace OpenDental{
 
 		private void butRemove_Click(object sender,EventArgs e) {
 			if(listAccounts.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			accountAL.RemoveAt(listAccounts.SelectedIndex);
@@ -249,11 +249,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(comboPayType.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a pay type first.");
+				MessageBox.Show("Please select a pay type first.");
 				return;
 			}
 			if(accountAL.Count==0) {
-				MsgBox.Show(this,"Please add at least one account to the pick list first.");
+				MessageBox.Show("Please add at least one account to the pick list first.");
 				return;
 			}
 			AutoPayCur.PayType=_listPaymentTypeDefs[comboPayType.SelectedIndex].DefNum;

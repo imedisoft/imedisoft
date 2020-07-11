@@ -35,7 +35,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this tax address?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this tax address?")) {
 				return;
 			}
 			Addresses.Delete(AddressCur.AddressNum);

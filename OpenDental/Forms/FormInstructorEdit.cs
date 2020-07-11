@@ -190,7 +190,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 			}
 			else{
-				if(!MsgBox.Show(this,true,"Delete this Instructor?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this Instructor?")){
 					return;
 				}
 				try{

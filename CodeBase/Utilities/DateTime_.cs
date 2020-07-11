@@ -17,9 +17,9 @@ namespace CodeBase {
 
 		///<summary>Call this method to return a custom value for DateTime_.Now. If not called, will return the real DateTime.Now.</summary>
 		public static void SetNow(Func<DateTime> getNow) {
-			if(!ODBuild.IsDebug()) {
-				throw new Exception("Not allowed to change DateTime_.Now in release.");
-			}
+#if !DEBUG
+			throw new Exception("Not allowed to change DateTime_.Now in release.");
+#endif
 			IsNowModified=true;
 			_getNow=getNow;
 		}

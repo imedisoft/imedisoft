@@ -122,7 +122,7 @@ namespace OpenDental {
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(((Popup)gridMain.ListGridRows[e.Row].Tag).PopupLevel==EnumPopupLevel.Automation){
-				MsgBox.Show(this,"To edit automations go to Setup | Automation");
+				MessageBox.Show("To edit automations go to Setup | Automation");
 			}
 			else{
 				FormPopupEdit FormPE=new FormPopupEdit();

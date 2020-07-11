@@ -66,7 +66,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Select a grading scale first.");
+				MessageBox.Show("Select a grading scale first.");
 				return;
 			}
 			SelectedGradingScale=_listGradingScales[gridMain.GetSelectedIndex()];

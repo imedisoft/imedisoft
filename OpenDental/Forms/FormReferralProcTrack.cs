@@ -35,13 +35,13 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			if(textDateTo.errorProvider1.GetError(textDateTo)!="" || textDateFrom.errorProvider1.GetError(textDateFrom)!="") {	//Test To and From dates
-				MsgBox.Show(this,"Please enter valid To and From dates.");
+				MessageBox.Show("Please enter valid To and From dates.");
 				return;
 			}
 			DateFrom=PIn.Date(textDateFrom.Text);
 			DateTo=PIn.Date(textDateTo.Text);
 			if(DateTo<DateFrom) {
-				MsgBox.Show(this,"Date To cannot be before Date From.");
+				MessageBox.Show("Date To cannot be before Date From.");
 				return;
 			}
 //todo: checkbox

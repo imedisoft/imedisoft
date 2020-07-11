@@ -1437,7 +1437,7 @@ namespace OpenDental{
 				gridMain.BeginUpdate();
 				gridMain.ListGridRows.Clear();
 				gridMain.EndUpdate();
-				MsgBox.Show(this,"You must have at least one fee schedule created.");
+				MessageBox.Show("You must have at least one fee schedule created.");
 				return;
 			}
 			int scroll=gridMain.ScrollValue;
@@ -1923,7 +1923,7 @@ namespace OpenDental{
 
 		private void butTools_Click(object sender,System.EventArgs e) {
 			if(_listFeeScheds.Count==0) {
-				MsgBox.Show(this,"At least one fee schedule is required before using Fee Tools.");
+				MessageBox.Show("At least one fee schedule is required before using Fee Tools.");
 				return;
 			}
 			if(_needsSynch){
@@ -1944,10 +1944,10 @@ namespace OpenDental{
 
 		private void butExport_Click(object sender,EventArgs e) {
 			if(ProcedureCodes.GetCount()==0) {
-				MsgBox.Show(this,"No procedurecodes are displayed for export.");
+				MessageBox.Show("No procedurecodes are displayed for export.");
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Only the codes showing in this list will be exported.  Continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Only the codes showing in this list will be exported.  Continue?")) {
 				return;
 			}
 			List<ProcedureCode> listCodes=new List<ProcedureCode>();
@@ -1961,10 +1961,7 @@ namespace OpenDental{
 			}
 			string filename="ProcCodes.xml";
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),filename); 
-			if(ODBuild.IsWeb()) {
-				//file download dialog will come up later, after file is created.
-			}
-			else {
+
 				SaveFileDialog saveDlg=new SaveFileDialog();
 				saveDlg.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
 				saveDlg.FileName=filename;
@@ -1972,17 +1969,14 @@ namespace OpenDental{
 					return;
 				}
 				filePath=saveDlg.FileName;
-			}
+			
 			XmlSerializer serializer=new XmlSerializer(typeof(List<ProcedureCode>));
 			TextWriter writer=new StreamWriter(filePath);
 			serializer.Serialize(writer,listCodes);
 			writer.Close();
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.ExportForDownload(filePath);
-			}
-			else {
-				MsgBox.Show(this,"Exported");
-			}
+
+				MessageBox.Show("Exported");
+			
 		}
 
 		private void butImport_Click(object sender,EventArgs e) {
@@ -2368,7 +2362,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a procedure code first.");
+				MessageBox.Show("Please select a procedure code first.");
 				return;
 			}
 			ListSelectedProcCodes=gridMain.SelectedTags<ProcedureCode>().Select(x => x.Copy()).ToList();

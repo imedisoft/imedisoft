@@ -692,7 +692,7 @@ namespace OpenDental{
 
 		private void butRemoveTrigger_Click(object sender,EventArgs e) {
 			if(listTriggers.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a trigger code first.");
+				MessageBox.Show("Please select a trigger code first.");
 				return;
 			}
 			TriggerList.RemoveAt(listTriggers.SelectedIndex);
@@ -729,7 +729,7 @@ namespace OpenDental{
 
 		private void butRemoveProc_Click(object sender,EventArgs e) {
 			if(listProcs.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a procedure first.");
+				MessageBox.Show("Please select a procedure first.");
 				return;
 			}
 			string[] strArray=RecallTypeCur.Procedures.Split(',');
@@ -751,7 +751,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete this RecallType?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this RecallType?")) {
 				return;
 			}
 			try{
@@ -765,27 +765,27 @@ namespace OpenDental{
 				return;
 			}
 			if(listTriggers.Items.Count>0) {
-				MsgBox.Show(this,"All triggers must first be deleted.");
+				MessageBox.Show("All triggers must first be deleted.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Are you absolutely sure you want to delete all recalls of this type?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Are you absolutely sure you want to delete all recalls of this type?")) {
 				return;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.RecallEdit,0,"Recall type deleted with description '"+RecallTypeCur.Description+"'");
 			Recalls.DeleteAllOfType(RecallTypeCur.RecallTypeNum);
 			CountForType=Recalls.GetCountForType(RecallTypeCur.RecallTypeNum);
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Description cannot be blank.");
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			for(int i=0;i<textPattern.Text.Length;i++) {
 				if(textPattern.Text[i]!='/' && textPattern.Text[i]!='X') {
-					MsgBox.Show(this,"Time Pattern may only contain '/' and 'X'.  Please fix to continue.");
+					MessageBox.Show("Time Pattern may only contain '/' and 'X'.  Please fix to continue.");
 					return;
 				}
 			}
@@ -794,20 +794,20 @@ namespace OpenDental{
 				|| textWeeks.errorProvider1.GetError(textWeeks)!=""
 				|| textDays.errorProvider1.GetError(textDays)!=""
 				){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			//if(RecallTypes.List comboSpecial.SelectedIndex
 			/*
 			if(listTriggers.Items.Count==0 && comboSpecial.SelectedIndex!=2) {//except child prophy
-				if(!MsgBox.Show(this,true,"Warning! clearing all triggers for a recall type will cause all patient recalls of that type to be deleted, even those with notes.  Continue anyway?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Warning! clearing all triggers for a recall type will cause all patient recalls of that type to be deleted, even those with notes.  Continue anyway?")){
 					return;
 				}
 			}*/
 			bool changed=false;
 			if(comboSpecial.SelectedIndex==2){//childProphy
 				if(textRecallAgeAdult.errorProvider1.GetError(textRecallAgeAdult)!=""){
-					MsgBox.Show(this,"Please fix data entry errors first.");
+					MessageBox.Show("Please fix data entry errors first.");
 					return;
 				}
 				if(Prefs.UpdateInt(PrefName.RecallAgeAdult,PIn.Int(textRecallAgeAdult.Text))) {
@@ -905,7 +905,7 @@ namespace OpenDental{
 			}
 			//Ask user to update recalls for patients if they changed the DefaultInterval.
 			if(!RecallTypeCur.IsNew && defaultIntervalOld!=RecallTypeCur.DefaultInterval) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Default interval has been changed.  "
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Default interval has been changed.  "
 					+"Please note that this change will not affect patients with intervals that were set manually.\r\n"
 					+"Reset all other current patient intervals of this type?")) {
 					Recalls.UpdateDefaultIntervalForPatients(RecallTypeCur.RecallTypeNum,defaultIntervalOld,RecallTypeCur.DefaultInterval);

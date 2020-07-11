@@ -443,7 +443,7 @@ namespace OpenDental{
 
 		private void listAlerts_DoubleClick(object sender,EventArgs e) {
 			if(listAlerts.SelectedIndex<0) {
-				MsgBox.Show(this,"Select at least one Alert.");
+				MessageBox.Show("Select at least one Alert.");
 				return;
 			}
 			FormRxAlertEdit FormRAE=new FormRxAlertEdit(RxAlertList[listAlerts.SelectedIndex],RxDefCur);
@@ -509,7 +509,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,true,"Delete this prescription template?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete this prescription template?")){
 				return;
 			}
 			RxDefs.Delete(RxDefCur);
@@ -519,7 +519,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//RxCui is set when butRxNormSelect is clicked.
 			if(CultureInfo.CurrentCulture.Name.EndsWith("US") && RxDefCur.RxCui==0) {//United States
-				if(!MsgBox.Show(this,true,"Warning: RxNorm was not picked.  "
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Warning: RxNorm was not picked.  "
 					+"RxNorm uniquely identifies drugs in the United States and helps you keep your medications organized.  "
 					+"RxNorm is used to send information to and from eRx if you are using or plan to use eRx.\r\n"
 					+"Click OK to continue without an RxNorm, or click Cancel to stay in this window."))

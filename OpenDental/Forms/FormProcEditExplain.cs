@@ -313,16 +313,16 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			if(groupBoxDPC.Enabled){
 				if(radioButtonOther.Checked	&& textExplanation.Text.Trim()=="") {
-					MsgBox.Show(this,"Please explain why the DPC was changed.");
+					MessageBox.Show("Please explain why the DPC was changed.");
 					return;
 				}
 			}
 			else if(textExplanation.Text.Trim()==""){
-				MsgBox.Show(this,"Please explain why the above changes were made.");
+				MessageBox.Show("Please explain why the above changes were made.");
 				return;
 			}
 			if(groupBoxDPC.Enabled && !radioChange) {
-				MsgBox.Show(this,"Please select a reason for DPC change.");
+				MessageBox.Show("Please select a reason for DPC change.");
 				return;
 			}
 			Explanation="Summary of Changes Made:\r\n"+Changes+"\r\nExplanation:\r\n"+textExplanation.Text;

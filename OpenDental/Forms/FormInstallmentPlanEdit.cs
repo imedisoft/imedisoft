@@ -30,7 +30,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you would like to delete this installment plan?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you would like to delete this installment plan?")) {
 				return;
 			}
 			InstallmentPlans.Delete(InstallmentPlanCur.InstallmentPlanNum);
@@ -40,15 +40,15 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDateAgreement.errorProvider1.GetError(textDateAgreement)!=""
 				|| textDateFirstPay.errorProvider1.GetError(textDateFirstPay)!=""){
-				MsgBox.Show(this,"Please enter valid dates.");
+				MessageBox.Show("Please enter valid dates.");
 				return;
 			}
 			if(textMonthlyPayment.errorProvider1.GetError(textMonthlyPayment)!=""){
-				MsgBox.Show(this,"Please enter a valid monthly payment.");
+				MessageBox.Show("Please enter a valid monthly payment.");
 				return;
 			}
 			if(textAPR.errorProvider1.GetError(textAPR)!=""){
-				MsgBox.Show(this,"Please enter a valid annual percentage rate (APR).");
+				MessageBox.Show("Please enter a valid annual percentage rate (APR).");
 				return;
 			}
 			InstallmentPlanCur.DateAgreement=PIn.Date(textDateAgreement.Text);

@@ -144,15 +144,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(date2.SelectionStart<date1.SelectionStart) {
-				MsgBox.Show(this,"End date cannot be before start date.");
+				MessageBox.Show("End date cannot be before start date.");
 				return;
 			}
 			if(!checkAllUsers.Checked && listUser.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"Please select at least one user.");
+				MessageBox.Show("Please select at least one user.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled && !checkAllClinics.Checked && listClin.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"Please select at least one clinic.");
+				MessageBox.Show("Please select at least one clinic.");
 				return;
 			}
 			List<long> listUserNums=new List<long>();

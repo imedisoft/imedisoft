@@ -45,7 +45,7 @@ namespace OpenDental {
 
 		private void FormRxNorms_Shown(object sender,EventArgs e) {
 			if(RxNorms.IsRxNormTableSmall()) {
-				if(MsgBox.Show(this,true,"Incomplete RxNorm list detected.  "
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Incomplete RxNorm list detected.  "
 					+"If you intend to use RxNorm codes, you can download them now by clicking OK.  "
 					+"The RxNorm codes will add about 10 MB to your database size.  Download RxNorm codes?"))
 				{
@@ -113,19 +113,19 @@ namespace OpenDental {
 		}
 
 		//private void butRxNorm_Click(object sender,EventArgs e) {
-		//	//if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will ")) {
+		//	//if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will ")) {
 		//	//	return;
 		//	//}
 		//	Cursor=Cursors.WaitCursor;
 		//	RxNorms.CreateFreshRxNormTableFromZip();
 		//	Cursor=Cursors.Default;
-		//	MsgBox.Show(this,"done");
+		//	MessageBox.Show("done");
 		//	//just making sure it worked:
 		//	/*
 		//	RxNorm rxNorm=RxNorms.GetOne(1);
-		//	MsgBox.Show(this,rxNorm.RxNormNum+" "+rxNorm.RxCui+" "+rxNorm.MmslCode+" "+rxNorm.Description);
-		//	MsgBox.Show(this,RxNorms.GetMmslCodeByRxCui("1000005")+" <-- should be 26420");
-		//	MsgBox.Show(this,RxNorms.GetMmslCodeByRxCui("1000002")+" <-- should be blank");*/
+		//	MessageBox.Show(rxNorm.RxNormNum+" "+rxNorm.RxCui+" "+rxNorm.MmslCode+" "+rxNorm.Description);
+		//	MessageBox.Show(RxNorms.GetMmslCodeByRxCui("1000005")+" <-- should be 26420");
+		//	MessageBox.Show(RxNorms.GetMmslCodeByRxCui("1000002")+" <-- should be blank");*/
 		//}
 
 		private void butNone_Click(object sender,EventArgs e) {
@@ -136,7 +136,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()<0) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			SelectedRxNorm=rxList[gridMain.GetSelectedIndex()];

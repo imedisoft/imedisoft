@@ -699,7 +699,7 @@ namespace OpenDental {
 			}
 			if((Permissions)_clickedPermNode.Tag==Permissions.AccountProcsQuickAdd) {
 				string programName = PrefC.GetString(PrefName.SoftwareName);
-				MsgBox.Show(this,programName+" needs to be restarted on workstations before the changes will take place.");
+				MessageBox.Show(programName+" needs to be restarted on workstations before the changes will take place.");
 			}
 			FillTreePerm();
 		}

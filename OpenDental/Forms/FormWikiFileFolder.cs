@@ -44,22 +44,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(IsFolderMode){
-				if(!ODBuild.IsWeb() && !Directory.Exists(textLink.Text)) {
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Folder does not exist. Continue anyway?")) {
+				if(!Directory.Exists(textLink.Text)) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Folder does not exist. Continue anyway?")) {
 						return;
 					}
-					/*try {
-						Directory.CreateDirectory(textLink.Text);
-					}
-					catch(Exception ex) {
-						MessageBox.Show(this,ex.Message);
-						return;
-					}*/
 				}
 			}
 			else{//file mode
-				if(!ODBuild.IsWeb() && !File.Exists(textLink.Text)) {
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"File does not exist. Continue anyway?")) {
+				if(!File.Exists(textLink.Text)) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"File does not exist. Continue anyway?")) {
 						return;
 					}
 				}

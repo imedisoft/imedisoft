@@ -869,12 +869,6 @@ namespace OpenDentBusiness
 			patientPayPlanDue = 0;
 			dynamicPayPlanDue = 0;
 			balanceForward = 0;
-			bool isReseller = false;//Used to display data in the account module differently when patient is a reseller.
-									//HQ only, find out if this patient is a reseller.
-			if (PrefC.IsODHQ && Resellers.IsResellerFamily(fam.ListPats[0]))
-			{
-				isReseller = true;
-			}
 			DataConnection dcon = new DataConnection();
 			DataTable table = new DataTable("account");
 			if (isComputeAging)
@@ -1267,7 +1261,7 @@ namespace OpenDentBusiness
 				long patNumCur = PIn.Long(rawProcRow["PatNum"].ToString());
 				//for printing statements. Don't show zeros, just blanks.
 				row["InvoiceNum"] = rawProcRow["StatementNum"].ToString() == "0" ? "" : rawProcRow["StatementNum"].ToString();
-				row["patient"] = GetPatName(patNumCur, fam, (isReseller || doIncludePatLName));
+				row["patient"] = GetPatName(patNumCur, fam, doIncludePatLName);
 				row["PatNum"] = patNumCur;
 				row["PayNum"] = 0;
 				row["PayPlanNum"] = 0;
@@ -1366,7 +1360,7 @@ namespace OpenDentBusiness
 					row["description"] += "\r\n" + rawAdj.Rows[i]["AdjNote"].ToString();
 				}
 				long patNumCur = PIn.Long(rawAdj.Rows[i]["PatNum"].ToString());
-				row["patient"] = GetPatName(patNumCur, fam, (isReseller || doIncludePatLName));
+				row["patient"] = GetPatName(patNumCur, fam, doIncludePatLName);
 				row["PatNum"] = patNumCur;
 				row["PayNum"] = 0;
 				row["PayPlanNum"] = 0;
@@ -1981,7 +1975,7 @@ namespace OpenDentBusiness
 				{
 					row["description"] += " " + Lans.g("ContrAccount", "(unsent)");
 				}
-				row["patient"] = GetPatName(patNumCur, fam, isReseller);
+				row["patient"] = GetPatName(patNumCur, fam, false);
 				row["PatNum"] = patNumCur;
 				row["PayNum"] = 0;
 				row["PayPlanNum"] = 0;
@@ -2070,7 +2064,7 @@ namespace OpenDentBusiness
 					}
 					//row["extraDetail"]="";
 					long patNumCur = PIn.Long(rawPayPlan.Rows[i]["PatNum"].ToString());
-					row["patient"] = GetPatName(patNumCur, fam, isReseller);
+					row["patient"] = GetPatName(patNumCur, fam, false);
 					row["PatNum"] = patNumCur;
 					row["PayNum"] = 0;
 					row["PayPlanNum"] = PIn.Long(rawPayPlan.Rows[i]["PayPlanNum"].ToString());
@@ -2188,7 +2182,7 @@ namespace OpenDentBusiness
 					}
 					//row["extraDetail"]="";
 					long patNumCur = PIn.Long(rawPayPlan2.Rows[i]["PatNum"].ToString());
-					row["patient"] = GetPatName(patNumCur, fam, (isReseller || doIncludePatLName));
+					row["patient"] = GetPatName(patNumCur, fam, doIncludePatLName);
 					if (rawPayPlan2.Rows[i]["PlanNum"].ToString() == "0")
 					{ //not an insurance payplan
 					  //The guarantor on the payplancharge is always set to the account it should appear in for patient payment plans.
@@ -2270,7 +2264,7 @@ namespace OpenDentBusiness
 					}
 					//row["extraDetail"]="";
 					long patNumCur = PIn.Long(rawPayPlan3.Rows[i]["PatNum"].ToString());
-					row["patient"] = GetPatName(patNumCur, fam, (isReseller || doIncludePatLName));
+					row["patient"] = GetPatName(patNumCur, fam, doIncludePatLName);
 					if (rawPayPlan3.Rows[i]["PlanNum"].ToString() == "0")
 					{ //not an insurance payplan
 					  //The guarantor on the payplancharge is always set to the account it should appear in for patient payment plans.
@@ -2415,7 +2409,7 @@ namespace OpenDentBusiness
 					row["dateTimeSort"] = PIn.DateT(payplanLinks.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
 					row["description"] = "";
 					long patNumCur = PIn.Long(payplanLinks.Rows[i]["PatNum"].ToString());
-					row["patient"] = GetPatName(patNumCur, fam, (isReseller || doIncludePatLName));
+					row["patient"] = GetPatName(patNumCur, fam, doIncludePatLName);
 					//For insurance payment plans, the charges should appear on the patient's account.
 					row["PatNum"] = patNumCur;
 					row["PayNum"] = 0;

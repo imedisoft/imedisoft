@@ -399,7 +399,7 @@ namespace OpenDental{
 				return;
 			}
 			if(MountDefCur.IsNew){
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete mount?")){
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete mount?")){
 					e.Cancel=true;
 					return;
 				}
@@ -517,7 +517,7 @@ namespace OpenDental{
 		private void butDown_Click(object sender, EventArgs e){
 			int selectedIdx=_selectedIndex;
 			if(selectedIdx==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(selectedIdx==_listMountItemDefs.Count-1) {//at bottom
@@ -536,7 +536,7 @@ namespace OpenDental{
 		private void butUp_Click(object sender, EventArgs e){
 			int selectedIdx=_selectedIndex;
 			if(selectedIdx==-1) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(selectedIdx==0) {//at top
@@ -732,7 +732,7 @@ namespace OpenDental{
 		#region Methods - EventHandlers - DeleteOkCancel
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(!MountDefCur.IsNew){
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete mount?")){
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete mount?")){
 					return;
 				}
 			}
@@ -754,7 +754,7 @@ namespace OpenDental{
 			if(textWidth.errorProvider1.GetError(textWidth)!=""
 				|| textHeight.errorProvider1.GetError(textHeight)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			//Memory issues are the basis of the mount size limit:

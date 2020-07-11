@@ -586,7 +586,7 @@ namespace OpenDental{
 			}
 			else if(TPcur.DocNum>0 && !Documents.DocExists(TPcur.DocNum) && PrefC.GetBool(PrefName.TreatPlanSaveSignedToPdf)) {
 				//Setting SigChanged to True will resave document below.
-				bool doResave=MsgBox.Show(this,MsgBoxButtons.YesNo,"Cannot find saved copy of signed PDF, would you like to resave the document?");
+				bool doResave=MsgBox.Show(MsgBoxButtons.YesNo,"Cannot find saved copy of signed PDF, would you like to resave the document?");
 				_sigChanged=doResave;
 				_hasSigPracticeChanged=doResave;
 			}

@@ -146,7 +146,7 @@ namespace OpenDental{
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			//if(IsSelectionMode){
 			//	if(table.Rows[e.Row]["appointment"].ToString()!=""){
-			//		MsgBox.Show(this,"Already attached to an appointment.");
+			//		MessageBox.Show("Already attached to an appointment.");
 			//		return;
 			//	}
 			//	SelectedReqStudentNum=PIn.PInt(table.Rows[e.Row]["ReqStudentNum"].ToString());
@@ -167,11 +167,11 @@ namespace OpenDental{
 			//not accessible
 			/*if(IsSelectionMode){
 				if(gridMain.GetSelectedIndex()==-1){
-					MsgBox.Show(this,"Please select a requirement first.");
+					MessageBox.Show("Please select a requirement first.");
 					return;
 				}
 				if(table.Rows[gridMain.GetSelectedIndex()]["appointment"].ToString()!="") {
-					MsgBox.Show(this,"Selected requirement is already attached to an appointment.");
+					MessageBox.Show("Selected requirement is already attached to an appointment.");
 					return;
 				}
 				SelectedReqStudentNum=PIn.PInt(table.Rows[gridMain.GetSelectedIndex()]["ReqStudentNum"].ToString());

@@ -59,12 +59,12 @@ namespace OpenDental {
 				return true;
 			}
 			if(wirelessPhone=="") {
-				MsgBox.Show(this,"Please enter a phone number.");
+				MessageBox.Show("Please enter a phone number.");
 				return false;
 			}
 			if(SmsPhones.IsIntegratedTextingEnabled()) {
 				if(!PrefC.HasClinicsEnabled && PrefC.GetDateT(PrefName.SmsContractDate).Year<1880) { //Checking for practice (clinics turned off).
-					MsgBox.Show(this,"Integrated Texting has not been enabled.");
+					MessageBox.Show("Integrated Texting has not been enabled.");
 					return false;
 				}
 				else if(PrefC.HasClinicsEnabled && !Clinics.IsTextingEnabled(clinicNum)) { //Checking for specific clinic.
@@ -74,21 +74,21 @@ namespace OpenDental {
 					}
 					else {
 						//Should never happen. This message is precautionary.
-						MsgBox.Show(this,"The default texting clinic has not been set.");
+						MessageBox.Show("The default texting clinic has not been set.");
 					}
 					return false;
 				}
 			}
 			else if(!Programs.IsEnabled(ProgramName.CallFire)) {
-				MsgBox.Show(this,"CallFire Program Link must be enabled.");
+				MessageBox.Show("CallFire Program Link must be enabled.");
 				return false;
 			}
 			if(patNum!=0 && txtMsgOk==YN.Unknown && PrefC.GetBool(PrefName.TextMsgOkStatusTreatAsNo)){
-				MsgBox.Show(this,"It is not OK to text this patient.");
+				MessageBox.Show("It is not OK to text this patient.");
 				return false;
 			}
 			if(patNum!=0 && txtMsgOk==YN.No) {
-				MsgBox.Show(this,"It is not OK to text this patient.");
+				MessageBox.Show("It is not OK to text this patient.");
 				return false;
 			}
 			if(SmsPhones.IsIntegratedTextingEnabled()) {
@@ -99,14 +99,14 @@ namespace OpenDental {
 				catch(Exception ex) {
 					//ProcessSendSmsException handles the spending limit has been reached error, or returns false if the exception is different.
 					if(!canIncreaseLimit || !FormEServicesSetup.ProcessSendSmsException(ex)) { 
-						MsgBox.Show(this,ex.Message);
+						MessageBox.Show(ex.Message);
 					}
 					return false;
 				}
 			}
 			else {
 			    if(message.Length>160) {//only a limitation for CallFire
-				    MsgBox.Show(this,"Text length must be less than 160 characters.");
+				    MessageBox.Show("Text length must be less than 160 characters.");
 				    return false;
 			    }
 				return SendCallFire(patNum,wirelessPhone,message);  //Can pass in 0 as PatNum if no patient selected.
@@ -125,7 +125,7 @@ namespace OpenDental {
 					"Open Dental");
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Error sending text message.\r\n\r\n"+ex.Message);
+				MessageBox.Show("Error sending text message.\r\n\r\n"+ex.Message);
 				return false;
 			}
 			if(patNum==0) {  //No patient selected, do not make commlog.
@@ -148,15 +148,15 @@ namespace OpenDental {
 
 		private void butSend_Click(object sender,EventArgs e) {
 			if(textMessage.Text=="") {
-				MsgBox.Show(this,"Please enter a message first.");
+				MessageBox.Show("Please enter a message first.");
 				return;
 			}
 			if(radioOther.Checked) {  //No patient selected
 				if(textWirelessPhone.Text=="") {
-					MsgBox.Show(this,"Please enter a phone number first.");
+					MessageBox.Show("Please enter a phone number first.");
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"You do not have a patient selected.  If you are sending a message to an existing "
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You do not have a patient selected.  If you are sending a message to an existing "
 						+"patient you should choose the Patient option and use the find button.  If you proceed no commlog entry "
 						+"will be created and any replies to this message will not be automatically associated with any patient.  Continue?")) {
 					return;
@@ -171,11 +171,11 @@ namespace OpenDental {
 			}
 			else {  //Patient selected
 				if(PatNum==0) {
-					MsgBox.Show(this,"You must first select a patient with the find button, or use the Another Person option.");
+					MessageBox.Show("You must first select a patient with the find button, or use the Another Person option.");
 					return;
 				}
 				if(textWirelessPhone.Text=="") {
-					MsgBox.Show(this,"This patient has no wireless phone entered.  You must add a wireless phone number to their patient account first before "
+					MessageBox.Show("This patient has no wireless phone entered.  You must add a wireless phone number to their patient account first before "
 						+"you can send a text message.");
 					return;
 				}

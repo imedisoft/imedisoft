@@ -24,7 +24,7 @@ namespace OpenDental.Bridges {
 		public static void StartupCheck(){
 			//Skip all if not using Trojan.
 			Program ProgramCur=Programs.GetCur(ProgramName.Trojan);
-			if(!ProgramCur.Enabled || ODBuild.IsWeb()) {
+			if(!ProgramCur.Enabled) {
 				return;
 			}
 			//Ensure that Trojan has a sane install.
@@ -390,7 +390,7 @@ namespace OpenDental.Bridges {
 			}
 			MessageBox.Show("Trojan update found.  Please print or save the text file when it opens, then close it.  You will be given a chance to cancel the update after that.");
 			ODFileUtils.ProcessStart(file);
-			if(!MsgBox.Show("Trojan",true,"Trojan plans will now be updated.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Trojan plans will now be updated.")) {
 				return;
 			}
 			Cursor.Current=Cursors.WaitCursor;

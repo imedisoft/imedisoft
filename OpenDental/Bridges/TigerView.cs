@@ -197,7 +197,7 @@ namespace OpenDental.Bridges {
 		///<summary></summary>
 		public static void StartFileWatcher() {
 			Program prog = Programs.GetCur(ProgramName.TigerView);
-			if(!prog.Enabled || ODBuild.IsWeb()) {
+			if(!prog.Enabled) {
 				return;
 			}
 			List<ProgramProperty> propertiesForProgram =ProgramProperties.GetForProgram(prog.ProgramNum);
@@ -228,11 +228,11 @@ namespace OpenDental.Bridges {
 
 		private static void ProcessFile(string fullPath) {
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MsgBox.Show("TigerView","TigerView is not currently supported when storing images in the database.");
+				MsgBox.Show("TigerView is not currently supported when storing images in the database.");
 				return;
 			}
 			if(CloudStorage.IsCloudStorage) {
-				MsgBox.Show("TigerView","TigerView is not currently supported when storing images in the cloud.");
+				MsgBox.Show("TigerView is not currently supported when storing images in the cloud.");
 				return;
 			}
 			string filename=Path.GetFileName(fullPath);

@@ -317,21 +317,21 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(date2.SelectionStart<date1.SelectionStart) {
-				MsgBox.Show(this,"End date cannot be before start date.");
+				MessageBox.Show("End date cannot be before start date.");
 				return;
 			}
 			if(!checkAllProv.Checked && listProv.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(_hasClinicsEnabled) {
 				if(!checkAllClin.Checked && listClin.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"At least one clinic must be selected.");
+					MessageBox.Show("At least one clinic must be selected.");
 					return;
 				}
 			}
 			if(!checkAllAdjs.Checked && listType.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one type must be selected.");
+				MessageBox.Show("At least one type must be selected.");
 				return;
 			}
 			List<long> listClinicNums=new List<long>();

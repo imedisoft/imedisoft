@@ -48,7 +48,7 @@ namespace OpenDental {
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			MsgBox.Show(this,"Trust added for digital signature.");
+			MessageBox.Show("Trust added for digital signature.");
 			DialogResult=DialogResult.OK;
 		}
 

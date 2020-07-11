@@ -51,12 +51,9 @@ namespace OpenDental {
 			checkBenefitAssumeGeneral.Checked=PrefC.GetBool(PrefName.TreatFinderProcsAllGeneral);
 			checkOutstandingRpDateTab.Checked=PrefC.GetBool(PrefName.OutstandingInsReportDateFilterTab);
 			checkReportDisplayUnearnedTP.Checked=PrefC.GetBool(PrefName.ReportsDoShowHiddenTPPrepayments);
-			if(ODBuild.IsWeb()) {
-				tabControl1.TabPages.Remove(tabReportServer);//Web users can't change their database settings.
-			}
-			else {
+
 				FillReportServer();
-			}
+			
 			userControlReportSetup.InitializeOnStartup(true,_userGroupNum,_isPermissionMode);
 			if(_isPermissionMode) {
 				tabControl1.SelectedIndex=1;

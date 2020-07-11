@@ -229,7 +229,7 @@ namespace OpenDental {
 				AgeCredits = checkAgeCredits.Checked,
 			};
 			if(_agingOptions.AgingInc == (AgingOptions.AgingInclude.None)) {
-				MsgBox.Show(this,"You must select at least one transaction type to include.");
+				MessageBox.Show("You must select at least one transaction type to include.");
 				return;
 			}
 			FillGrid(RpCustomAging.GetAgingList(_agingOptions));
@@ -252,7 +252,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridMain.SelectedGridRows.Count==0) {
-				MsgBox.Show(this,"Please select a patient first.");
+				MessageBox.Show("Please select a patient first.");
 				return;
 			}
 			GotoModule.GotoAccount(((AgingPat)gridMain.SelectedGridRows[0].Tag).Pat.PatNum);
@@ -260,7 +260,7 @@ namespace OpenDental {
 
 		private void butPrint_Click(object sender,EventArgs e) {
 			if(gridMain.ListGridRows.Count==0) {
-				MsgBox.Show(this,"The report has no results to show. Please click 'Refresh' to populate the grid first.");
+				MessageBox.Show("The report has no results to show. Please click 'Refresh' to populate the grid first.");
 				return;
 			}
 			DataTable tableReportCur=new DataTable();

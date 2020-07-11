@@ -82,7 +82,7 @@ namespace OpenDental {
 
 		private void butInsert_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a prompt first.");
+				MessageBox.Show("Please select a prompt first.");
 				return;
 			}
 			string fieldStr=_listAutoNoteControls[gridMain.GetSelectedIndex()].Descript;
@@ -103,7 +103,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this autonote?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this autonote?")){
 				return;
 			}
 			if(IsNew){

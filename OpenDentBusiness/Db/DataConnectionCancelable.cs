@@ -35,11 +35,6 @@ namespace OpenDentBusiness
 			MySqlConnection con = new MySqlConnection();
 			if (isReportServer)
 			{
-				if (ODBuild.IsWeb() && PrefC.ReportingServer.Server != "" && PrefC.ReportingServer.Database != DataConnection.GetDatabaseName())
-				{
-					//Security safeguard to prevent Web users from connecting to another office's database.
-					throw new ODException("Report server database name must match current database.");
-				}
 				con = new MySqlConnection(
 					DataConnection.GetReportConnectionString(
 						PrefC.ReportingServer.Server

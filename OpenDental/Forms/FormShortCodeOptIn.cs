@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		private void FormShortCodeOptIn_Load(object sender,EventArgs e) {
 			if(string.IsNullOrWhiteSpace(_pat?.WirelessPhone??"")) {
-				MsgBox.Show(this,"Patient must have a Wireless Phone.");
+				MessageBox.Show("Patient must have a Wireless Phone.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}

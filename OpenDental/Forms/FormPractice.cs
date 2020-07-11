@@ -796,18 +796,18 @@ namespace OpenDental{
 				return;
 			}
 			if(radioInsBillingProvSpecific.Checked && comboInsBillingProv.SelectedIndex ==-1){
-				MsgBox.Show(this,"You must select a provider.");
+				MessageBox.Show("You must select a provider.");
 				return;
 			}
 			if(comboProv.Items.Count==0){
-				MsgBox.Show(this,"Database must have at least one provider entered, first.");
+				MessageBox.Show("Database must have at least one provider entered, first.");
 				return;
 			}
 			if(comboProv.SelectedIndex==-1){//practice really needs a default prov
 				comboProv.SelectedIndex=0;
 			}
 			if(Providers.GetProv(comboProv.GetSelectedProvNum()).FeeSched==0){
-				MsgBox.Show(this,"The selected provider must have a fee schedule set before they can be the default provider.");
+				MessageBox.Show("The selected provider must have a fee schedule set before they can be the default provider.");
 				return;
 			}
 			bool changed=false;

@@ -145,7 +145,7 @@ namespace OpenDental{
 				return;
 			}
 			if(PrefC.GetLong(PrefName.DefaultUserGroup)==CurGroup.UserGroupNum) {
-				MsgBox.Show(this,"Cannot delete user group that is set as the default user group.");
+				MessageBox.Show("Cannot delete user group that is set as the default user group.");
 				return;
 			}
 			try{
@@ -160,7 +160,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Please enter a description.");
+				MessageBox.Show("Please enter a description.");
 				return;
 			}
 			CurGroup.Description=textDescription.Text;

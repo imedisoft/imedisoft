@@ -1343,7 +1343,7 @@ namespace OpenDental{
 				Program progPayConnect=Programs.GetCur(ProgramName.PayConnect);
 				int billingUseDentalExchangeIdx=PrefC.GetInt(PrefName.BillingUseElectronic);//idx of 1= DentalXChange.
 				if(progPayConnect.Enabled || billingUseDentalExchangeIdx==1) {
-					MsgBox.Show(this,"ClaimConnect, PayConnect, and Electronic Billing credentials are usually all changed at the same time when using DentalXChange.");
+					MessageBox.Show("ClaimConnect, PayConnect, and Electronic Billing credentials are usually all changed at the same time when using DentalXChange.");
 				}
 			}
 			return true;
@@ -1351,86 +1351,80 @@ namespace OpenDental{
 
 		private bool ValidateFields() {
 			if(comboFormat.SelectedIndex==-1) {
-				MsgBox.Show(this,"Invalid Format.");
+				MessageBox.Show("Invalid Format.");
 				return false;
 			}
 			if(comboCommBridge.SelectedIndex==-1) {
-				MsgBox.Show(this,"Invalid Comm Bridge.");
-				return false;
-			}
-			if(ODBuild.IsWeb() 
-				&& Clearinghouses.IsDisabledForWeb(comboFormat.GetSelected<ElectronicClaimFormat>(),comboCommBridge.GetSelected<EclaimsCommBridge>())) 
-			{
-				MsgBox.Show(this,"This clearinghouse is not available while viewing through the web.");
+				MessageBox.Show("Invalid Comm Bridge.");
 				return false;
 			}
 			if(ClinicNum==0) {//HQ
 				if(textDescription.Text=="") {
-					MsgBox.Show(this,"Description cannot be blank.");//HQ
+					MessageBox.Show("Description cannot be blank.");//HQ
 					return false;
 				}
 				if(comboFormat.SelectedIndex==(int)ElectronicClaimFormat.x837D_4010 //HQ
 				|| comboFormat.SelectedIndex==(int)ElectronicClaimFormat.x837D_5010_dental
 				|| comboFormat.SelectedIndex==(int)ElectronicClaimFormat.x837_5010_med_inst) {
 					if(textISA02.Text.Length>10) {
-						MsgBox.Show(this,"ISA02 must be 10 characters or less.");
+						MessageBox.Show("ISA02 must be 10 characters or less.");
 						return false;
 					}
 					if(textISA04.Text.Length>10) {
-						MsgBox.Show(this,"ISA04 must be 10 characters or less.");
+						MessageBox.Show("ISA04 must be 10 characters or less.");
 						return false;
 					}
 					if(textISA05.Text=="") {
-						MsgBox.Show(this,"ISA05 is required.");
+						MessageBox.Show("ISA05 is required.");
 						return false;
 					}
 					if(textISA05.Text!="01" && textISA05.Text!="14" && textISA05.Text!="20" && textISA05.Text!="27" && textISA05.Text!="28"//HQ
 					&& textISA05.Text!="29" && textISA05.Text!="30" && textISA05.Text!="33" && textISA05.Text!="ZZ") {
-						MsgBox.Show(this,"ISA05 is not valid.");
+						MessageBox.Show("ISA05 is not valid.");
 						return false;
 					}
 					if(textISA07.Text=="") {//HQ
-						MsgBox.Show(this,"ISA07 is required.");
+						MessageBox.Show("ISA07 is required.");
 						return false;
 					}
 					if(textISA07.Text!="01" && textISA07.Text!="14" && textISA07.Text!="20" && textISA07.Text!="27" && textISA07.Text!="28"//HQ
 					&& textISA07.Text!="29" && textISA07.Text!="30" && textISA07.Text!="33" && textISA07.Text!="ZZ") {
-						MsgBox.Show(this,"ISA07 not valid.");
+						MessageBox.Show("ISA07 not valid.");
 						return false;
 					}
 					if(textISA08.Text.Length<2) {//HQ
-						MsgBox.Show(this,"ISA08 not valid.");
+						MessageBox.Show("ISA08 not valid.");
 						return false;
 					}
 					if(textISA15.Text!="T" && textISA15.Text!="P") {//HQ
-						MsgBox.Show(this,"ISA15 not valid.");
+						MessageBox.Show("ISA15 not valid.");
 						return false;
 					}
 					if(textGS03.Text.Length<2) {//HQ
-						MsgBox.Show(this,"GS03 is required.");
+						MessageBox.Show("GS03 is required.");
 						return false;
 					}
 					if(textSeparatorData.Text!="" && !Regex.IsMatch(textSeparatorData.Text,"^[0-9A-F]{2}$",RegexOptions.IgnoreCase)) {//HQ
-						MsgBox.Show(this,"Data element separator must be a valid 2 digit hexadecimal number or blank.");
+						MessageBox.Show("Data element separator must be a valid 2 digit hexadecimal number or blank.");
 						return false;
 					}
 					if(textISA16.Text!="" && !Regex.IsMatch(textISA16.Text,"^[0-9A-F]{2}$",RegexOptions.IgnoreCase)) {//HQ
-						MsgBox.Show(this,"Component element separator must be a valid 2 digit hexadecimal number or blank.");
+						MessageBox.Show("Component element separator must be a valid 2 digit hexadecimal number or blank.");
 						return false;
 					}
 					if(textSeparatorSegment.Text!="" && !Regex.IsMatch(textSeparatorSegment.Text,"^[0-9A-F]{2}$",RegexOptions.IgnoreCase)) {//HQ
-						MsgBox.Show(this,"Segment terminator must be a valid 2 digit hexadecimal number or blank.");
+						MessageBox.Show("Segment terminator must be a valid 2 digit hexadecimal number or blank.");
 						return false;
 					}
 					if(comboFormat.SelectedIndex==0) {//HQ
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Format not selected. Claims will not send. Continue anyway?")) {
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Format not selected. Claims will not send. Continue anyway?")) {
 							return false;
 						}
 					}
 				}
 			}//end HQ
 			if(textISA08.Text=="0135WCH00" && !radioSenderOD.Checked) {//Clinic
-				MsgBox.Show(this,"When using Emdeon, this software must be the sender.");
+				MessageBox.Show("When using Emdeon, this software must be the sender.");
 				return false;
 			}
 			if(comboFormat.SelectedIndex==(int)ElectronicClaimFormat.x837D_4010
@@ -1439,41 +1433,41 @@ namespace OpenDental{
 			{//Clinic
 				if(radioSenderBelow.Checked) {
 					if(textSenderTIN.Text.Length<2) {
-						MsgBox.Show(this,"Sender TIN is required.");
+						MessageBox.Show("Sender TIN is required.");
 						return false;
 					}
 					if(textSenderName.Text=="") {
-						MsgBox.Show(this,"Sender Name is required.");
+						MessageBox.Show("Sender Name is required.");
 						return false;
 					}
 					if(!Regex.IsMatch(textSenderTelephone.Text,@"^\d{10}$")) {
-						MsgBox.Show(this,"Sender telephone must be 10 digits with no punctuation.");
+						MessageBox.Show("Sender telephone must be 10 digits with no punctuation.");
 						return false;
 					}
 				}	
 			}
 			//todo: Check all parts of program to allow either trailing slash or not
 			if(checkIsClaimExportAllowed.Checked && textExportPath.Text!="" && !Directory.Exists(textExportPath.Text)) {
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Export path does not exist. Attempt to create?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Export path does not exist. Attempt to create?")) {
 					try{
 						Directory.CreateDirectory(textExportPath.Text);
-						MsgBox.Show(this,"Folder created.");
+						MessageBox.Show("Folder created.");
 					}
 					catch{
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Not able to create folder. Continue anyway?")){
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Not able to create folder. Continue anyway?")){
 							return false;
 						}
 					}
 				}
 			}
 			if(textResponsePath.Text!="" && !Directory.Exists(textResponsePath.Text)) {//Clinic
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Report path does not exist. Attempt to create?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Report path does not exist. Attempt to create?")) {
 					try {
 						Directory.CreateDirectory(textResponsePath.Text);
-						MsgBox.Show(this,"Folder created.");
+						MessageBox.Show("Folder created.");
 					}
 					catch {
-						if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Not able to create folder. Continue anyway?")) {
+						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Not able to create folder. Continue anyway?")) {
 							return false;
 						}
 					}
@@ -1489,7 +1483,7 @@ namespace OpenDental{
 					&& textISA08.Text!="PostnTrack"
 					)
 				{
-					if(!MsgBox.Show(this,true,"Clearinghouse ID not recognized. Continue anyway?")){
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Clearinghouse ID not recognized. Continue anyway?")){
 						return;
 					}
 				}
@@ -1551,7 +1545,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This clearinghouse will be deleted for all clinics.  Continue?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This clearinghouse will be deleted for all clinics.  Continue?")){
 				return;
 			}
 			Clearinghouses.Delete(ClearinghouseHq);

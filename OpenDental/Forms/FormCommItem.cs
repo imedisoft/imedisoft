@@ -97,10 +97,10 @@ namespace OpenDental {
 			textNote.Text=_commlogCur.Note;
 			textNote.SelectionStart=textNote.Text.Length;
 			butEditAutoNote.Visible=GetHasAutoNotePrompt();
-			if(!ODBuild.IsDebug()) {
-				labelCommlogNum.Visible=false;
-				textCommlogNum.Visible=false;
-			}
+#if !DEBUG
+			labelCommlogNum.Visible=false;
+			textCommlogNum.Visible=false;
+#endif
 			textCommlogNum.Text=_commlogCur.CommlogNum.ToString();
 			if(_isPersistent) {
 				PatientChangedEvent.Fired+=PatientChangedEvent_Fired;
@@ -134,7 +134,7 @@ namespace OpenDental {
 			}
 			catch(Exception) {
 				//Currently the only way for this method to fail is when saving the signature.
-				MsgBox.Show(this,"Error saving signature.");
+				MessageBox.Show("Error saving signature.");
 				return false;
 			}
 			return true;
@@ -201,7 +201,7 @@ namespace OpenDental {
 		private bool IsValid(bool showMsg) {
 			if(textDateTime.Text=="") {
 				if(showMsg) {
-					MsgBox.Show(this,"Please enter a date first.");
+					MessageBox.Show("Please enter a date first.");
 				}
 				return false;
 			}
@@ -210,7 +210,7 @@ namespace OpenDental {
 			}
 			catch {
 				if(showMsg) {
-					MsgBox.Show(this,"Date / Time invalid.");
+					MessageBox.Show("Date / Time invalid.");
 				}
 				return false;
 			}
@@ -220,7 +220,7 @@ namespace OpenDental {
 				}
 				catch {
 					if(showMsg) {
-						MsgBox.Show(this,"End date and time invalid.");
+						MessageBox.Show("End date and time invalid.");
 					}
 					return false;
 				}
@@ -397,7 +397,7 @@ namespace OpenDental {
 				return;
 			}
 			//button not enabled if no permission and is invisible for persistent mode.
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			try {

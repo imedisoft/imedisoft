@@ -52,11 +52,11 @@ namespace OpenDental {
 				date=DateTime.Parse(textDate.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Date invalid");
+				MessageBox.Show("Date invalid");
 				return;
 			}
 			if(_snomedGoal==null) {
-				MsgBox.Show(this,"Missing SNOMED CT goal");
+				MessageBox.Show("Missing SNOMED CT goal");
 				return;
 			}
 			_ehrCarePlan.DatePlanned=date;

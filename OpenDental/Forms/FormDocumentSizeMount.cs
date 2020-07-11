@@ -117,12 +117,12 @@ namespace OpenDental {
 				try{
 					_degreesRotated=int.Parse(textDegreesRotated.Text);
 					if(_degreesRotated!=0 && _degreesRotated!=90 && _degreesRotated!=180 && _degreesRotated!=270){
-						MsgBox.Show(this,"Invalid Degrees Rotated.");
+						MessageBox.Show("Invalid Degrees Rotated.");
 						return false;
 					}
 				}
 				catch{
-					MsgBox.Show(this,"Invalid Degrees Rotated.");
+					MessageBox.Show("Invalid Degrees Rotated.");
 					return false;
 				}
 			}
@@ -137,12 +137,12 @@ namespace OpenDental {
 			try{
 				zoom=double.Parse(textZoomFit.Text);
 				if(zoom<1){
-					MsgBox.Show(this,"Zoom must be at least 1, and typically closer to 100.");
+					MessageBox.Show("Zoom must be at least 1, and typically closer to 100.");
 					return;
 				}
 			}
 			catch{
-				MsgBox.Show(this,"Invalid Zoom.");
+				MessageBox.Show("Invalid Zoom.");
 				return;
 			}
 			if(checkIsFlipped.Checked==DocumentCur.IsFlipped

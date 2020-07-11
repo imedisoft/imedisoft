@@ -409,7 +409,7 @@ namespace OpenDental
 			}
 			if(_hasClinicsEnabled) {//Not no clinics.
 				if(!checkAllClinics.Checked && listClinics.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"You must select at least one clinic.");
+					MessageBox.Show("You must select at least one clinic.");
 					return false;
 				}
 			}

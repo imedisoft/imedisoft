@@ -549,7 +549,7 @@ namespace OpenDental{
 					Schedules.SetForDay(_listScheds,_listSchedsOld);
 				}
 				catch(Exception ex) {
-					MsgBox.Show(this,ex.Message);
+					MessageBox.Show(ex.Message);
 					return;
 				}
 			}
@@ -781,7 +781,7 @@ namespace OpenDental{
 				Schedules.SetForDay(_listScheds,_listSchedsOld);
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,ex.Message);
+				MessageBox.Show(ex.Message);
 				return;
 			}
 			_listScheds=Schedules.RefreshDayEditForPracticeProvsEmps(_dateSched,_listProvs.Select(x => x.ProvNum).Where(x => x>0).ToList(),
@@ -809,7 +809,7 @@ namespace OpenDental{
 			if(listErrorMsgs.Count==0 //only perform this check if everything else is okay.
 				&& listProv.SelectedIndices.Count>0 && !listProv.SelectedIndices.Contains(0) //at least one valid provider selected
 				&& listEmp.SelectedIndices.Count>0 && !listEmp.SelectedIndices.Contains(0) //at least one valid employee selected
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"Both providers and employees are selected, would you like to continue?"))
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"Both providers and employees are selected, would you like to continue?"))
 			{
 				return false;
 			}
@@ -940,7 +940,7 @@ namespace OpenDental{
 				Schedules.SetForDay(_listScheds,_listSchedsOld);
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,ex.Message);
+				MessageBox.Show(ex.Message);
 				return;
 			}
 			_dateSched=_dateSched.AddDays(-1);
@@ -959,7 +959,7 @@ namespace OpenDental{
 				Schedules.SetForDay(_listScheds,_listSchedsOld);
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,ex.Message);
+				MessageBox.Show(ex.Message);
 				return;
 			}
 			_dateSched=_dateSched.AddDays(1);
@@ -1008,7 +1008,7 @@ namespace OpenDental{
 				Schedules.SetForDay(_listScheds,_listSchedsOld);
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,ex.Message);
+				MessageBox.Show(ex.Message);
 				return;
 			}
 			if(comboProv.SelectedIndex!=-1

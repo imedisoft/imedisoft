@@ -12,10 +12,11 @@ namespace OpenDentBusiness {
 		
 		private string _endpoint {
 			get {
-				if(ODBuild.IsDebug()) {
-					return "https://localhost:44330/";
-				}
+#if DEBUG
+				return "https://localhost:44330/";
+#else
 				return "https://emailhosting.opendental.cloud:8200/";
+#endif
 			}
 		}
 

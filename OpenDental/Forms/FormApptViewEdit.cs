@@ -1215,11 +1215,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(listProv.SelectedIndices.Count==0){
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(listOps.SelectedIndices.Count==0){// && !checkOnlyScheduledProvs.Checked) {
-				MsgBox.Show(this,"At least one operatory must be selected.");
+				MessageBox.Show("At least one operatory must be selected.");
 				return;
 			}
 			if(textDescription.Text==""){
@@ -1234,7 +1234,7 @@ namespace OpenDental{
 				}
 			}
 			catch{
-				MsgBox.Show(this,"Invalid Minimum Op width.");//seems silly to tell them it could be as high as 2000
+				MessageBox.Show("Invalid Minimum Op width.");//seems silly to tell them it could be as high as 2000
 				return;
 			}
 			if(displayedElementsMain.Count==0){
@@ -1247,7 +1247,7 @@ namespace OpenDental{
 					timeBefore=DateTime.Parse(textBeforeTime.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Time before invalid.");
+					MessageBox.Show("Time before invalid.");
 					return;
 				}
 			}
@@ -1257,7 +1257,7 @@ namespace OpenDental{
 					timeAfter=DateTime.Parse(textAfterTime.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Time after invalid.");
+					MessageBox.Show("Time after invalid.");
 					return;
 				}
 			}
@@ -1270,7 +1270,7 @@ namespace OpenDental{
 					timeScroll=DateTime.Parse(textScrollTime.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Scroll start time invalid.");
+					MessageBox.Show("Scroll start time invalid.");
 					return;
 				}
 			}

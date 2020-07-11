@@ -630,7 +630,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.RefAttachDelete)) {
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Detach Referral?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Detach Referral?")) {
 				return;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.RefAttachDelete,RefAttachCur.PatNum,"Referral attachment deleted for "+Referrals.GetNameFL(RefAttachCur.ReferralNum));

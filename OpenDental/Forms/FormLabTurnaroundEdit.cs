@@ -185,15 +185,15 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDaysActual.errorProvider1.GetError(textDaysActual)!=""
 				|| textDaysPublished.errorProvider1.GetError(textDaysPublished)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(PIn.Long(textDaysActual.Text)==0){
-				MsgBox.Show(this,"Actual Days cannot be zero.");
+				MessageBox.Show("Actual Days cannot be zero.");
 				return;
 			}
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Please enter a description.");
+				MessageBox.Show("Please enter a description.");
 				return;
 			}
 			LabTurnaroundCur.Description=textDescription.Text;

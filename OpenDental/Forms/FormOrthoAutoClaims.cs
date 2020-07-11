@@ -108,10 +108,10 @@ namespace OpenDental {
 
 		private void butGenerateClaims_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Count() < 1) {
-				MsgBox.Show(this,"Please select the rows for which you would like to create procedures and claims.");
+				MessageBox.Show("Please select the rows for which you would like to create procedures and claims.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you want to generate claims and procedures for all patients and insurance plans?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to generate claims and procedures for all patients and insurance plans?")) {
 				return;
 			}
 			List<long> listPlanNums = new List<long>();

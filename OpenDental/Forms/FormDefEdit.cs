@@ -549,12 +549,12 @@ namespace OpenDental {
 				|| DefCur.Category==DefCat.InsurancePaymentType && _defsList.Count(x => x.Category==DefCat.InsurancePaymentType)==1
 				|| DefCur.Category==DefCat.SupplyCats && _defsList.Count(x => x.Category==DefCat.SupplyCats)==1) 
 			{
-				MsgBox.Show(this,"Cannot delete the last definition from this category.");
+				MessageBox.Show("Cannot delete the last definition from this category.");
 				return;
 			}
 			bool isAutoNoteRefresh=false;
 			if(DefCur.Category==DefCat.AutoNoteCats && AutoNotes.GetExists(x => x.Category==DefCur.DefNum)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Deleting this Auto Note Category will uncategorize some auto notes.  Delete anyway?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Deleting this Auto Note Category will uncategorize some auto notes.  Delete anyway?")) {
 					return;
 				}
 				isAutoNoteRefresh=true;
@@ -579,7 +579,7 @@ namespace OpenDental {
 				}
 			}
 			if(textName.Text==""){
-				MsgBox.Show(this,"Name required.");
+				MessageBox.Show("Name required.");
 				return;
 			}
 			switch(DefCur.Category){
@@ -610,14 +610,14 @@ namespace OpenDental {
 				case DefCat.BillingTypes:
 					if(!textValue.Text.ToLower().In("","e","c","ce")) 
 					{
-						MsgBox.Show(this,"Valid values are blank, E, C, or CE.");
+						MessageBox.Show("Valid values are blank, E, C, or CE.");
 						return;
 					}
 					break;
 				case DefCat.ClaimCustomTracking:
 					int value=0;
 					if(!Int32.TryParse(textValue.Text,out value) || value<0) {
-						MsgBox.Show(this,"Days Suppressed must be a valid non-negative number.");
+						MessageBox.Show("Days Suppressed must be a valid non-negative number.");
 						return;
 					}
 					break;
@@ -661,7 +661,7 @@ namespace OpenDental {
 					break;
 				case DefCat.InsurancePaymentType:
 					if(textValue.Text!="" && textValue.Text!="N") {
-						MsgBox.Show(this,"Valid values are blank or N.");
+						MessageBox.Show("Valid values are blank or N.");
 						return;
 					}
 					break;
@@ -673,16 +673,16 @@ namespace OpenDental {
 					break;
 				case DefCat.PaySplitUnearnedType:
 					if(!textValue.Text.ToLower().In("","x")) {
-						MsgBox.Show(this,"Valid values are blank or 'X'");
+						MessageBox.Show("Valid values are blank or 'X'");
 						return;
 					}
 					List<Def> listDefsForUnearnedType=_defsList.FindAll(x => x.Category==DefCat.PaySplitUnearnedType);
 					if(listDefsForUnearnedType.FindAll(x => string.IsNullOrEmpty(x.ItemValue)).Count==1 && DefCur.ItemValue=="" && textValue.Text!="" && !IsNew) {
-						MsgBox.Show(this,"Must have at least one definition that shows in Account.");
+						MessageBox.Show("Must have at least one definition that shows in Account.");
 						return;
 					}
 					else if(listDefsForUnearnedType.FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Count==1 && DefCur.ItemValue!="" && textValue.Text=="") {
-						MsgBox.Show(this,"Must have at least one definition that does not show in Account.");
+						MessageBox.Show("Must have at least one definition that does not show in Account.");
 						return;
 					}
 					break;

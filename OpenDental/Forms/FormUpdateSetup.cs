@@ -471,7 +471,7 @@ namespace OpenDental{
 					Directory.Delete(folderUpdate,true);
 				}
 				catch {
-					MsgBox.Show(this,"Recopy failed.  Please run as administrator then try again.");
+					MessageBox.Show("Recopy failed.  Please run as administrator then try again.");
 					return;
 				}
 			}
@@ -481,7 +481,7 @@ namespace OpenDental{
 				return;
 			}
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Recopied.");
+			MessageBox.Show("Recopied.");
 		}
 
 		private void butChangeTime_Click(object sender,EventArgs e) {
@@ -507,11 +507,11 @@ namespace OpenDental{
 				&& !Regex.IsMatch(textRegKey.Text,@"^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$")
 				&& !Regex.IsMatch(textRegKey.Text,@"^[A-Z0-9]{16}$"))
 			{
-				MsgBox.Show(this,"Invalid registration key format.");
+				MessageBox.Show("Invalid registration key format.");
 				return;
 			}
 			if(textMultiple.Text.Contains(" ")) {
-				MsgBox.Show(this,"No spaces allowed in the database list.");
+				MessageBox.Show("No spaces allowed in the database list.");
 				return;
 			}
 			string regkey="";

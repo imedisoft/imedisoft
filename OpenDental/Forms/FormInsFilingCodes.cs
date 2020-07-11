@@ -272,7 +272,7 @@ namespace OpenDental {
 		private void butUp_Click(object sender,EventArgs e) {
 			int idx=gridMain.GetSelectedIndex();
 			if(idx==-1) {
-				MsgBox.Show(this,"Please select an insurance filing code first.");
+				MessageBox.Show("Please select an insurance filing code first.");
 				return;
 			}
 			if(idx==0) {
@@ -293,7 +293,7 @@ namespace OpenDental {
 		private void butDown_Click(object sender,EventArgs e) {
 			int idx=gridMain.GetSelectedIndex();
 			if(idx==-1) {
-				MsgBox.Show(this,"Please select an insurance filing code first.");
+				MessageBox.Show("Please select an insurance filing code first.");
 				return;
 			}
 			if(idx==_listInsFilingCodes.Count-1) {

@@ -97,7 +97,7 @@ namespace OpenDental {
 				DialogResult=System.Windows.Forms.DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Remove Map Area?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Remove Map Area?")) {
 				return;
 			}
 			MapAreas.Delete(MapItem.MapAreaNum);

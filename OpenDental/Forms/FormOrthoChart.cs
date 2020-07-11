@@ -430,7 +430,7 @@ namespace OpenDental {
 						//The user actually changed the cell's value and we need to change it back and warn them that they don't have permission.
 						gridMain.ListGridRows[e.Row].Cells[e.Col].Text=oldText;
 						gridMain.Invalidate();
-						MsgBox.Show(this,"You need either Ortho Chart Edit (full) or Ortho Chart Edit (same user, signed) to edit this ortho chart.");
+						MessageBox.Show("You need either Ortho Chart Edit (full) or Ortho Chart Edit (same user, signed) to edit this ortho chart.");
 					}
 				}
 			});
@@ -673,11 +673,11 @@ namespace OpenDental {
 
 		private void butUseAutoNote_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedCell.X==-1 || gridMain.SelectedCell.X==0 || gridMain.SelectedCell.X==_sigColIdx) {
-				MsgBox.Show(this,"Please select an editable Ortho Chart cell first.");
+				MessageBox.Show("Please select an editable Ortho Chart cell first.");
 				return;
 			}
 			if(HasPickList(gridMain.ListGridColumns[gridMain.SelectedCell.X].Heading)) {
-				MsgBox.Show(this,"Cannot add auto notes to a field with a pick list.");
+				MessageBox.Show("Cannot add auto notes to a field with a pick list.");
 				return;
 			}
 			FormAutoNoteCompose FormA=new FormAutoNoteCompose();
@@ -703,12 +703,12 @@ namespace OpenDental {
 		private void butChangeUser_Click(object sender,EventArgs e) {
 			int orthoChartRow=gridMain.SelectedCell.Y;
 			if(orthoChartRow==-1) {
-				MsgBox.Show(this,"Please select a ortho chart first.");//This shouldn't happen.
+				MessageBox.Show("Please select a ortho chart first.");//This shouldn't happen.
 				return;
 			}
 			DateTime dateTime=GetOrthoDate(orthoChartRow);
 			if(!CanEditRow(dateTime)) {
-				MsgBox.Show(this,"You need either Ortho Chart Edit (full) or Ortho Chart Edit (same user, signed) to edit this ortho chart.");
+				MessageBox.Show("You need either Ortho Chart Edit (full) or Ortho Chart Edit (same user, signed) to edit this ortho chart.");
 				return;
 			}
 			FormLogOn FormChangeUser=new FormLogOn(isSimpleSwitch:true);
@@ -875,7 +875,7 @@ namespace OpenDental {
 				return;
 			}
 			else if(DialogResult!=DialogResult.OK 
-				&& (_hasChanged || !signatureBoxWrapper.SigChanged) && !MsgBox.Show(this,MsgBoxButtons.YesNo,"Unsaved changes will be lost. Would you like to save changes instead?")) 
+				&& (_hasChanged || !signatureBoxWrapper.SigChanged) && !MsgBox.Show(MsgBoxButtons.YesNo,"Unsaved changes will be lost. Would you like to save changes instead?")) 
 			{
 				return;
 			}

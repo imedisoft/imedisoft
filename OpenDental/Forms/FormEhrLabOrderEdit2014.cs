@@ -395,7 +395,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will delete the entire lab order and all attached lab results. This cannot be undone. Would you like to continue?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will delete the entire lab order and all attached lab results. This cannot be undone. Would you like to continue?")) {
 				return;
 			}
 			EhrLabs.Delete(EhrLabCur.EhrLabNum);

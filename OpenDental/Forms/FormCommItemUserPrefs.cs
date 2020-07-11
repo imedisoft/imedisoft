@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		private void FormCommItemUserPrefs_Load(object sender,EventArgs e) {
 			if(Security.CurUser==null || Security.CurUser.UserNum < 1) {
-				MsgBox.Show(this,"Invalid user currently logged in.  No user preferences can be saved.");
+				MessageBox.Show("Invalid user currently logged in.  No user preferences can be saved.");
 				DialogResult=DialogResult.Abort;
 				return;
 			}

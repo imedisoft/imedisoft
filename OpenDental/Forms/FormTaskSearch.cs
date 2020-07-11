@@ -114,7 +114,7 @@ namespace OpenDental {
 			if(textTaskList.Text!="") {
 				listTaskListNums=TaskLists.GetNumsByDescription(textTaskList.Text,checkReportServer.Checked);
 				if(listTaskListNums.Count==0) {
-					MsgBox.Show(this,"Task List not found.");
+					MessageBox.Show("Task List not found.");
 					return;
 				}
 			}
@@ -124,7 +124,7 @@ namespace OpenDental {
 					listTaskNums=textTaskNum.Text.Split(new[] { ',' },StringSplitOptions.RemoveEmptyEntries).Select(x =>PIn.Long(x)).ToList();
 				}
 				catch {
-					MsgBox.Show(this,"Invalid Task Num format.");
+					MessageBox.Show("Invalid Task Num format.");
 					return;
 				}
 			}
@@ -134,7 +134,7 @@ namespace OpenDental {
 					patNum=PIn.Long(textPatNum.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Invalid PatNum format.");
+					MessageBox.Show("Invalid PatNum format.");
 					return;
 				}
 			}
@@ -156,7 +156,7 @@ namespace OpenDental {
 				FormTE.Show();
 			}
 			else {
-				MsgBox.Show(this,"The task no longer exists.");
+				MessageBox.Show("The task no longer exists.");
 			}
 		}
 

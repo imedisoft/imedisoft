@@ -446,7 +446,7 @@ namespace OpenDental {
 			}
 			Recall recall=Recalls.GetRecall(((PatRowTag)gridRecalls.ListGridRows[e.Row].Tag).PriKeyNum);
 			if(recall==null) {
-				MsgBox.Show(this,"Recall for this patient has been removed.");
+				MessageBox.Show("Recall for this patient has been removed.");
 				FillRecalls();
 				return;
 			}
@@ -524,7 +524,7 @@ namespace OpenDental {
 		private List<long> SchedPatRecall(long recallNum,Patient pat,List<InsSub> subList,List<InsPlan> planList) {
 			try {
 				if(Recalls.HasProphyOrPerioScheduled(_patNumCur)) {
-					MsgBox.Show(this,"Recall has already been scheduled.");
+					MessageBox.Show("Recall has already been scheduled.");
 					FillCurGrid();
 					return new List<long>();
 				}
@@ -573,7 +573,7 @@ namespace OpenDental {
 					+": "+patsRestricted+".");
 			}
 			if(pinAptNums.Count==0) {
-				MsgBox.Show(this,"No recall is due.");
+				MessageBox.Show("No recall is due.");
 				if(doRefreshGrid) {
 					FillCurGrid();
 				}
@@ -606,7 +606,7 @@ namespace OpenDental {
 				return;
 			}
 			if(_isOnSupport!=YN.Yes) {
-				MsgBox.Show(this,"You must be on support to use this feature.");
+				MessageBox.Show("You must be on support to use this feature.");
 				return;
 			}
 			bool needsToBeSignedUp=WebSchedRecalls.TemplatesHaveURLTags();
@@ -615,7 +615,7 @@ namespace OpenDental {
 					"No clinics are signed up for Web Sched Recall. Open Sign Up Portal?" : 
 					"This practice is not signed up for Web Sched Recall. Open Sign Up Portal?";
 				message+="\r\n\r\nAlternatively, you could remove all URL tags from Web Sched text and emails templates to use this feature.";
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,message)) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,message)) {
 					return;
 				}
 				OpenSignupPortal();
@@ -657,14 +657,14 @@ namespace OpenDental {
 				return;
 			}
 			if(!EmailAddresses.ExistsValidEmail()) {
-				MsgBox.Show(this,"You need to enter an SMTP server name in email setup before you can send email.");
+				MessageBox.Show("You need to enter an SMTP server name in email setup before you can send email.");
 				return;
 			}
 			if(PrefC.GetLong(PrefName.RecallStatusEmailed)==0
 				|| PrefC.GetLong(PrefName.RecallStatusTexted)==0
 				|| PrefC.GetLong(PrefName.RecallStatusEmailedTexted)==0) 
 			{
-				MsgBox.Show(this,"You need to set an email status, text status, and email and text status first in the Recall Setup window.");
+				MessageBox.Show("You need to set an email status, text status, and email and text status first in the Recall Setup window.");
 				return;
 			}
 #if !DEBUG
@@ -673,7 +673,7 @@ namespace OpenDental {
 				eServiceSignalSeverity.NotEnabled,
 				eServiceSignalSeverity.Critical)) 
 			{
-				MsgBox.Show(this,"Your eConnector is not currently running. Please enable the eConnector to send Web Sched Recalls.");
+				MessageBox.Show("Your eConnector is not currently running. Please enable the eConnector to send Web Sched Recalls.");
 				return;
 			}
 #endif
@@ -685,7 +685,7 @@ namespace OpenDental {
 					true);
 			}
 			if(gridRecalls.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"No patients prefer contact via email or text.");
+				MessageBox.Show("No patients prefer contact via email or text.");
 				return;
 			}
 			//Now that there are rows guaranteed to be selected, check each row to see if their recall will yield available Web Sched time slots.
@@ -772,11 +772,11 @@ namespace OpenDental {
 				MessageBox.Show(string.Join("\r\n",listSkippedMsgs));
 			}
 			if(gridRecalls.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"No Web Sched emails or texts sent.");
+				MessageBox.Show("No Web Sched emails or texts sent.");
 				return;
 			}
 			#endregion Recall List Validation
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Send Web Sched emails and/or texts to all of the selected patients?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Send Web Sched emails and/or texts to all of the selected patients?")) {
 				return;
 			}
 			Cursor.Current=Cursors.WaitCursor;
@@ -818,7 +818,7 @@ namespace OpenDental {
 				return;
 			}
 		  if(gridRecalls.ListGridRows.Count < 1){
-        MsgBox.Show(this,"There are no Patients in the Recall table.  Must have at least one to run report.");    
+        MessageBox.Show("There are no Patients in the Recall table.  Must have at least one to run report.");    
         return;
       }
 			List<long> recallNums=new List<long>();
@@ -847,7 +847,7 @@ namespace OpenDental {
 					PrintoutOrigin.AtMargin,
 					totalPages:(int)Math.Ceiling((double)addrTable.Rows.Count/30)
 				);
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Change statuses and make commlog entries for all of the selected patients?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Change statuses and make commlog entries for all of the selected patients?")) {
 					ProcessComms(commType,IsRecallGridSelected());
 				}
 				FillCurGrid();
@@ -877,7 +877,7 @@ namespace OpenDental {
 					LabelSingle.PrintText(0,text);
 					patientsPrinted++;
 				}
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Did all the labels finish printing correctly?  Statuses will be changed and commlog entries made for all of the selected patients.  Click Yes only if labels printed successfully.")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Did all the labels finish printing correctly?  Statuses will be changed and commlog entries made for all of the selected patients.  Click Yes only if labels printed successfully.")) {
 					ProcessComms(commType,IsRecallGridSelected());
 				}
 				FillCurGrid();
@@ -917,7 +917,7 @@ namespace OpenDental {
 					orient,
 					totalPages
 				);
-				if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Did all the postcards finish printing correctly?  Statuses will be changed and commlog entries made for all of the selected patients.  Click Yes only if postcards printed successfully.")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Did all the postcards finish printing correctly?  Statuses will be changed and commlog entries made for all of the selected patients.  Click Yes only if postcards printed successfully.")) {
 					ProcessComms(commType,IsRecallGridSelected());
 				}
 				FillCurGrid();
@@ -935,7 +935,7 @@ namespace OpenDental {
 
 		private void butECards_Click(object sender,EventArgs e) {
 			if(!Programs.IsEnabled(ProgramName.Divvy)) {
-				if(MsgBox.Show(this,MsgBoxButtons.OKCancel,"The Divvy Program Link is not enabled. Would you like to enable it now?")) {
+				if(MsgBox.Show(MsgBoxButtons.OKCancel,"The Divvy Program Link is not enabled. Would you like to enable it now?")) {
 					FormProgramLinkEdit FormPE=new FormProgramLinkEdit();
 					FormPE.ProgramCur=Programs.GetCur(ProgramName.Divvy);
 					FormPE.ShowDialog();
@@ -950,7 +950,7 @@ namespace OpenDental {
 				return;
 			}
 			if(PrefC.GetLong(PrefName.RecallStatusMailed)==0) {
-				MsgBox.Show(this,"You need to set a status first in the Recall Setup window.");
+				MessageBox.Show("You need to set a status first in the Recall Setup window.");
 				return;
 			}
 			if(gridRecalls.SelectedIndices.Length==0) {
@@ -961,10 +961,10 @@ namespace OpenDental {
 					true);
 			}
 			if(gridRecalls.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"No patients of mail type.");
+				MessageBox.Show("No patients of mail type.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Send postcards for all of the selected patients?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Send postcards for all of the selected patients?")) {
 				return;
 			}
 			List<long> recallNums=gridRecalls.SelectedTags<PatRowTag>().Select(x => x.PriKeyNum).ToList();
@@ -1068,7 +1068,7 @@ namespace OpenDental {
 				messages+="Exception: "+ex.Message+"\r\nData: "+ex.Data+"\r\n";
 			}
 			messages+="MessageCode: "+returnMessage.MessageCode.ToString();//MessageCode enum. 0=CompletedSuccessfully, 1=CompletedWithErrors, 2=Failure
-			MsgBox.Show(this,"Return Messages: "+returnMessage.Message+"\r\n"+messages);
+			MessageBox.Show("Return Messages: "+returnMessage.Message+"\r\n"+messages);
 			if(returnMessage.MessageCode==DivvyConnect.MessageCode.CompletedSucessfully) {
 				Cursor=Cursors.WaitCursor;
 				ProcessComms((IsRecallGridSelected()?CommItemTypeAuto.RECALL:CommItemTypeAuto.REACT),IsRecallGridSelected(),CommItemMode.Mail);
@@ -1091,7 +1091,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!EmailAddresses.ExistsValidEmail()) {
-				MsgBox.Show(this,"You need to enter an SMTP server name in e-mail setup before you can send e-mail.");
+				MessageBox.Show("You need to enter an SMTP server name in e-mail setup before you can send e-mail.");
 				return;
 			}
 			if(!IsStatusSet(PrefName.RecallStatusEmailed,PrefName.ReactivationStatusEmailed)) {
@@ -1109,7 +1109,7 @@ namespace OpenDental {
 						}
 					}
 					if(_gridCur.SelectedIndices.Length==0){
-						MsgBox.Show(this,"None of the selected patients had email addresses entered.");
+						MessageBox.Show("None of the selected patients had email addresses entered.");
 						return;
 					}
 					if(skipped>0){
@@ -1117,7 +1117,7 @@ namespace OpenDental {
 					}
 				}
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Send email to all of the selected patients?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Send email to all of the selected patients?")) {
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -1619,7 +1619,7 @@ namespace OpenDental {
 
 		private void FillReactivationGrid() {
 			if(!Defs.GetDefsForCategory(DefCat.CommLogTypes).Any(x => x.ItemValue==CommItemTypeAuto.REACT.GetDescription(true))) {
-				MsgBox.Show(this,Lan.g(this,"First you must set up a Reactivation commlog type in definitions"));
+				MessageBox.Show(Lan.g(this,"First you must set up a Reactivation commlog type in definitions"));
 				return;
 			}
 			//Verification
@@ -1766,7 +1766,7 @@ namespace OpenDental {
 		///<summary>Shared functionality with Recalls and Reactivations, be careful when making changes.</summary>
 		private bool IsGridEmpty() {
 			if(_gridCur.ListGridRows.Count<1) {
-				MsgBox.Show(this,"There are no Patients in the table.  Must have at least one.");    
+				MessageBox.Show("There are no Patients in the table.  Must have at least one.");    
         return true;
       }
 			return false;
@@ -1778,7 +1778,7 @@ namespace OpenDental {
 				return true;
 			}
 			if(!IsGridEmpty() && _gridCur.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a patient first.");
+				MessageBox.Show("Please select a patient first.");
 			}
 			return false;
 		}
@@ -1789,7 +1789,7 @@ namespace OpenDental {
 				return false;
 			}
 			if(_gridCur.SelectedIndices.Length>1) {
-				MsgBox.Show(this,"Please select only one patient first.");
+				MessageBox.Show("Please select only one patient first.");
 				return false;
 			}
 			return true;
@@ -1798,7 +1798,7 @@ namespace OpenDental {
 		///<summary>Shared functionality with Recalls and Reactivations, be careful when making changes.</summary>
 		private bool IsStatusSet(PrefName prefNameRecall,PrefName prefNameReactivation) {
 			if((IsRecallGridSelected() && PrefC.GetLong(prefNameRecall)==0) || (IsReactivationGridSelected() && PrefC.GetLong(prefNameReactivation)==0)) {
-				MsgBox.Show(this,$"You need to set a status first in the {(IsRecallGridSelected()?"Recall":"Reactivations")} Setup window.");
+				MessageBox.Show($"You need to set a status first in the {(IsRecallGridSelected()?"Recall":"Reactivations")} Setup window.");
 				return false;
 			}
 			return true;
@@ -1820,10 +1820,10 @@ namespace OpenDental {
 				_gridCur.SetSelected(i,true);
 			}
 			if(_gridCur.SelectedIndices.Length==0){
-				MsgBox.Show(this,$"No patients of {method.ToString()} type.");
+				MessageBox.Show($"No patients of {method.ToString()} type.");
 				return false;
 			}
-			if(doAskPreview && !MsgBox.Show(this,MsgBoxButtons.OKCancel,$"Preview {previewType} for all of the selected patients?")) {
+			if(doAskPreview && !MsgBox.Show(MsgBoxButtons.OKCancel,$"Preview {previewType} for all of the selected patients?")) {
 				return false;
 			}
 			return true;
@@ -1864,7 +1864,7 @@ namespace OpenDental {
 					break;
 				case "SchedFamRecall":
 					if(!Recalls.IsRecallProphyOrPerio(Recalls.GetRecall(_gridCur.SelectedTag<PatRowTag>().PriKeyNum))) {
-						MsgBox.Show(this,"Only recall types of Prophy or Perio can be scheduled for families.");
+						MessageBox.Show("Only recall types of Prophy or Perio can be scheduled for families.");
 						return;
 					}
 					pinAptNums=SchedFamRecall(fam,subList,planList);

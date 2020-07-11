@@ -27,31 +27,40 @@ namespace OpenDentBusiness {
 		///<summary>Throws exception if the response from the server returned an http code of 300 or greater.</summary>
 		public async Task<T> SendRequestAsync<T>(string urlEndpoint,HttpMethod method,AuthenticationHeaderValue authHeaderVal,string body) {
 			string res="";
-			try {
+			try
+			{
 				HttpResponseMessage response;
-				using HttpClient client=new HttpClient();
-				using(HttpRequestMessage request=new HttpRequestMessage(method,urlEndpoint)) {
-					if(authHeaderVal!=null) {
-						request.Headers.Authorization=authHeaderVal;
+				using HttpClient client = new HttpClient();
+				using (HttpRequestMessage request = new HttpRequestMessage(method, urlEndpoint))
+				{
+					if (authHeaderVal != null)
+					{
+						request.Headers.Authorization = authHeaderVal;
 					}
-					request.Content=new StringContent(body,Encoding.UTF8,"application/json");
-					response=await client.SendAsync(request);
+					request.Content = new StringContent(body, Encoding.UTF8, "application/json");
+					response = await client.SendAsync(request);
 				}
-				using(var sr=new StreamReader(response.Content.ReadAsStreamAsync().Result)) {
-					res=sr.ReadToEnd();
+				using (var sr = new StreamReader(response.Content.ReadAsStreamAsync().Result))
+				{
+					res = sr.ReadToEnd();
 				}
 				response.EnsureSuccessStatusCode();//Throws exception if not successful.
-				if(ODBuild.IsDebug() && (typeof(T)==typeof(string))) {//If user wants the entire json response as a string
-					return (T)Convert.ChangeType(res,typeof(T));
+#if DEBUG
+				if ((typeof(T) == typeof(string)))
+				{//If user wants the entire json response as a string
+					return (T)Convert.ChangeType(res, typeof(T));
 				}
+#endif
 				return JsonConvert.DeserializeObject<T>(res);
 			}
-			catch(HttpRequestException hre) {
-				string errorMsg=hre.Message+(string.IsNullOrWhiteSpace(res) ? "" : "\r\nRaw response:\r\n"+res);
-				var errorJson=new ApiResponseError { Message=errorMsg,Response=res };
-				throw new HttpRequestException(JsonConvert.SerializeObject(errorJson),hre);
+			catch (HttpRequestException hre)
+			{
+				string errorMsg = hre.Message + (string.IsNullOrWhiteSpace(res) ? "" : "\r\nRaw response:\r\n" + res);
+				var errorJson = new ApiResponseError { Message = errorMsg, Response = res };
+				throw new HttpRequestException(JsonConvert.SerializeObject(errorJson), hre);
 			}
-			catch(Exception ex) {
+			catch (Exception ex)
+			{
 				//For now, rethrow error and let whoever is expecting errors to handle them.
 				//We may enhance this to care about codes at some point.
 				throw ex;

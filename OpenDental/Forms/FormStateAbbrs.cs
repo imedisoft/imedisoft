@@ -203,7 +203,7 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a state.");
+				MessageBox.Show("Please select a state.");
 				return;
 			}
 			StateAbbrSelected=(StateAbbr)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;

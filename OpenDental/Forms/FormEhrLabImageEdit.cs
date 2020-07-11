@@ -167,7 +167,7 @@ namespace OpenDental {
 				}
 			}
 			if(checkWaitingForImages.Checked && docNums.Count>0) {
-				MsgBox.Show(this,"'Waiting for Images' is only allowed if there are no images currently attached. Detach all images or uncheck 'Waiting for Images'.");
+				MessageBox.Show("'Waiting for Images' is only allowed if there are no images currently attached. Detach all images or uncheck 'Waiting for Images'.");
 				return;
 			}
 			EhrLabImages.InsertAllForLabNum(_ehrLabNum,checkWaitingForImages.Checked,docNums);

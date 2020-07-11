@@ -67,7 +67,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(listOther.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a phone number first.");
+				MessageBox.Show("Please select a phone number first.");
 				return;
 			}
 			PhoneNumbers.DeleteObject(otherList[listOther.SelectedIndex].PhoneNumberNum);

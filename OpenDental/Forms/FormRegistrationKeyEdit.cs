@@ -106,7 +106,7 @@ namespace OpenDental
 				|| textDateEnded.errorProvider1.GetError(textDateEnded) != ""
 				)
 			{
-				MsgBox.Show(this, "Please fix data entry errors first.");
+				MessageBox.Show( "Please fix data entry errors first.");
 				return;
 			}
 			try
@@ -115,7 +115,7 @@ namespace OpenDental
 			}
 			catch
 			{
-				MsgBox.Show(this, "Votes Allotted is invalid.");
+				MessageBox.Show( "Votes Allotted is invalid.");
 				return;
 			}
 			//RegKey.RegKey=textKey.Text;//It's read only.
@@ -141,7 +141,7 @@ namespace OpenDental
 		/// <summary>Inserts RegistrationKey with blank PracticeTitle into bugs database so next time cusotmer hits the update service it will reset their PracticeTitle.</summary>
 		private void butPracticeTitleReset_Click(object sender, EventArgs e)
 		{
-			if (!MsgBox.Show(this, MsgBoxButtons.OKCancel, "Are you sure you want to reset the Practice Title associated with this Registration Key? This should only be done if they are getting a message saying, \"Practice title given does not match the practice title on record,\" when connecting to the Patient Portal. It will be cleared out of the database and filled in with the appropriate Practice Title next time they connect using this Registration Key."))
+			if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Are you sure you want to reset the Practice Title associated with this Registration Key? This should only be done if they are getting a message saying, \"Practice title given does not match the practice title on record,\" when connecting to the Patient Portal. It will be cleared out of the database and filled in with the appropriate Practice Title next time they connect using this Registration Key."))
 			{
 				return;
 			}

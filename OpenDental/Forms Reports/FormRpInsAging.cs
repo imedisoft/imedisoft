@@ -533,19 +533,19 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(!checkBillTypesAll.Checked && listBillType.SelectedIndices.Count==0){
-				MsgBox.Show(this,"At least one billing type must be selected.");
+				MessageBox.Show("At least one billing type must be selected.");
 				return;
 			}
 			if(!checkProvAll.Checked && listProv.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled && !checkAllClin.Checked && listClin.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one clinic must be selected.");
+				MessageBox.Show("At least one clinic must be selected.");
 				return;
 			}
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Invalid date.");
+				MessageBox.Show("Invalid date.");
 				return;
 			}
 			RpAgingParamObject rpo=GetParamsFromForm();

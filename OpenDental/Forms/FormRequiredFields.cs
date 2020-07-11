@@ -340,7 +340,7 @@ namespace OpenDental {
 			}
 			//If any of the selected required fields have a field condition, prompt the user to confirm before deleting the conditions
 			if(_listReqFields.FindAll(x => gridMain.SelectedIndices.Contains(_listReqFields.IndexOf(x))).Any(x => x.ListRequiredFieldConditions.Count>0)
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"Do you want to delete the selected required fields and any conditions from the list?"))
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"Do you want to delete the selected required fields and any conditions from the list?"))
 			{
 				return;
 			}
@@ -361,7 +361,7 @@ namespace OpenDental {
 
 		private void butAdd_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select one required field first.");
+				MessageBox.Show("Please select one required field first.");
 				return;
 			}
 			int mainSelected=gridMain.SelectedIndices[0];
@@ -386,7 +386,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(gridConditions.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a condition first.");
+				MessageBox.Show("Please select a condition first.");
 				return;
 			}
 			RequiredFieldName selectedType;

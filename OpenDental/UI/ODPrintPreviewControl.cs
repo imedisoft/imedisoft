@@ -64,10 +64,6 @@ namespace OpenDental.UI {
 		#endregion
 
 		protected override void OnPaint(PaintEventArgs pevent) {
-			if(!ODBuild.IsWeb()){//Always use base methods when not using web.
-				base.OnPaint(pevent);
-				return;
-			}
 			#region Web specific code
 			//Code is almost identical to base.OnPaint(...) => https://referencesource.microsoft.com/#System.Windows.Forms/winforms/Managed/System/WinForms/Printing/PrintPreviewControl.cs,6256c0e1f6a3124b
 			Brush backBrush=new SolidBrush(BackColor);
@@ -295,14 +291,11 @@ namespace OpenDental.UI {
 				PrintController oldController=Document.PrintController;
 				PreviewPrintController previewController=new PreviewPrintController();
 				previewController.UseAntiAlias=UseAntiAlias;
-				if(ODBuild.IsWeb()) {
-					Document.PrintController=previewController;
-				}
-				else {
+
 					//.Net uses PrintControllerWithStatusDialog which breaks the web.
 					//Document.PrintController=new PrintControllerWithStatusDialog(previewController,"DIALOG TEXT");
 					throw new ODException("You can not use the ODWebPrintPreviewControl when not using WEB");
-				}
+				
 				// Want to make sure we've reverted any security asserts before we call Print -- that calls into user code
 				Document.Print();
 				_arrayPageInfo=previewController.GetPreviewPageInfo();

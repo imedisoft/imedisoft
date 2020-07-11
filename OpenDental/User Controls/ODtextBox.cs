@@ -529,7 +529,7 @@ namespace OpenDental {
 
 		private void menuItem_Click(object sender,System.EventArgs e) {
 			if(ReadOnly && contextMenu.MenuItems.IndexOf((MenuItem)sender)!=14) {//14 = copy.
-				MsgBox.Show(this,"This feature is currently disabled due to this text box being read only.");
+				MessageBox.Show("This feature is currently disabled due to this text box being read only.");
 				return;
 			}
 			switch(contextMenu.MenuItems.IndexOf((MenuItem)sender)) {
@@ -572,7 +572,7 @@ namespace OpenDental {
 					timerSpellCheck.Start();
 					break;
 				case 7://Disable spell check
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will disable spell checking.  To re-enable, go to Setup | Spell Check and check the \"Spell Check Enabled\" box.")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will disable spell checking.  To re-enable, go to Setup | Spell Check and check the \"Spell Check Enabled\" box.")) {
 						break;
 					}
 					Prefs.UpdateBool(PrefName.SpellCheckIsEnabled,false);

@@ -192,11 +192,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textAbbreviation.Text.Contains("?")) {
-				MsgBox.Show(this,"Question mark not allowed in abbreviation.  Use the question mark later when trying to insert a quick note.");
+				MessageBox.Show("Question mark not allowed in abbreviation.  Use the question mark later when trying to insert a quick note.");
 				return;
 			}
 			if(textAbbreviation.Text.Contains("*")) {
-				MsgBox.Show(this,"Asterisk character not allowed in abbreviation.  Use the asterisk later when trying to insert a quick note.");
+				MessageBox.Show("Asterisk character not allowed in abbreviation.  Use the asterisk later when trying to insert a quick note.");
 				return;
 			}
 			QuickNote.Abbreviation=textAbbreviation.Text;

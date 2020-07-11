@@ -45,7 +45,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete entire order?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete entire order?")){
 				return;
 			}
 			SupplyOrders.DeleteObject(SupplyOrderCur);
@@ -58,7 +58,7 @@ namespace OpenDental {
 				|| textShippingCharge.errorProvider1.GetError(textShippingCharge)!=""
 				|| !textDateReceived.IsValid)
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDatePlaced.Text==""){

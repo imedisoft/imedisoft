@@ -199,11 +199,6 @@ namespace OpenDental {
 		#endregion
 
 		private void FormTrojanCollectSetup_Load(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"This program is not available in web mode.");
-				Close();
-				return;
-			}
 			_progCur=Programs.GetCur(ProgramName.TrojanExpressCollect);
 			textExportFolder.Text=ProgramProperties.GetPropVal(_progCur.ProgramNum,"FolderPath");
 			long billtype=PIn.Long(ProgramProperties.GetPropVal(_progCur.ProgramNum,"BillingType"));
@@ -239,15 +234,15 @@ namespace OpenDental {
 				return true;//no need to check for valid fields if program link is disabled
 			}
 			if(!Directory.Exists(textExportFolder.Text)) {
-				MsgBox.Show(this,"Export folder does not exist.");
+				MessageBox.Show("Export folder does not exist.");
 				return false;
 			}
 			if(comboBillType.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a billing type.");
+				MessageBox.Show("Please select a billing type.");
 				return false;
 			}
 			if(!Regex.IsMatch(textPassword.Text,@"^[A-Z]{2}\d{4}$")) {
-				MsgBox.Show(this,"Password is not in correct format. Must be like this: AB1234");
+				MessageBox.Show("Password is not in correct format. Must be like this: AB1234");
 				return false;
 			}
 			return true;

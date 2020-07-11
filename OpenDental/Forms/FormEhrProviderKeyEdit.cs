@@ -25,7 +25,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			EhrProvKeys.Delete(_keyCur.EhrProvKeyNum);
@@ -47,7 +47,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!FormEHR.ProvKeyIsValid(textLName.Text,textFName.Text,PIn.Int(textYear.Text),textKey.Text)) {
-				MsgBox.Show(this,"Invalid provider key");
+				MessageBox.Show("Invalid provider key");
 				return;
 			}
 			_keyCur.LName=textLName.Text;

@@ -105,7 +105,7 @@ namespace OpenDental {
 				if(tempLab!=null) {
 					//Date validation.
 					//if(tempLab.ResultDateTime.CompareTo(listEhrLabs[i].ResultDateTime)<=0) {//string compare dates will return 1+ if tempLab Date is greater.
-					//	MsgBox.Show(this,"This lab already exists in the database and has a more recent timestamp.");
+					//	MessageBox.Show("This lab already exists in the database and has a more recent timestamp.");
 					//	continue;
 					//}
 					//TODO: The code above works, but ignores more recent lab results. Although the lab order my be unchanged there may be updated lab results.

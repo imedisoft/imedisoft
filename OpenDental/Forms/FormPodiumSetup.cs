@@ -49,7 +49,7 @@ namespace OpenDental {
 			}
 			_progCur=Programs.GetCur(ProgramName.Podium);
 			if(_progCur==null) {
-				MsgBox.Show(this,"The Podium bridge is missing from the database.");//should never happen
+				MessageBox.Show("The Podium bridge is missing from the database.");//should never happen
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -86,7 +86,7 @@ namespace OpenDental {
 				_showCommlogsInChartAndAccount=_listProgramProperties.FirstOrDefault(x => x.PropertyDesc==Podium.PropertyDescs.ShowCommlogsInChartAndAccount);
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"You are missing a program property for Podium.  Please contact support to resolve this issue.");
+				MessageBox.Show("You are missing a program property for Podium.  Please contact support to resolve this issue.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -166,7 +166,7 @@ namespace OpenDental {
 
 		private void FillForm() {
 			if(_dictLocationIDs.Count==0) {
-				MsgBox.Show(this,"User can't be clinic restricted.");
+				MessageBox.Show("User can't be clinic restricted.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -212,7 +212,7 @@ namespace OpenDental {
 				}
 			}
 			catch(Exception) {
-				MsgBox.Show(this,"You are missing a program property from the database.  Please call support to resolve this issue.");
+				MessageBox.Show("You are missing a program property from the database.  Please call support to resolve this issue.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -294,7 +294,7 @@ namespace OpenDental {
 				|| textApptTimeArrived.errorProvider1.GetError(textApptTimeArrived)!=""
 				|| textApptTimeDismissed.errorProvider1.GetError(textApptTimeDismissed)!="") 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			SaveProgram();

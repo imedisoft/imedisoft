@@ -85,7 +85,7 @@ namespace OpenDental {
 				}
 			}
 			if(_eBillDefault==null) {
-				MsgBox.Show(this,"The default ebill entry is missing. Run "+nameof(DatabaseMaintenances.EbillMissingDefaultEntry)
+				MessageBox.Show("The default ebill entry is missing. Run "+nameof(DatabaseMaintenances.EbillMissingDefaultEntry)
 					+" in the Database Maintenance Tool before continuing.");
 				DialogResult=DialogResult.Cancel;
 				return;
@@ -238,27 +238,6 @@ namespace OpenDental {
 		}
 		
 		private void listElectBilling_SelectedIndexChanged(object sender,EventArgs e) {
-			//In Web mode do not allow ClaimX or EDS to be selected, provide warning if they are.
-			if(ODBuild.IsWeb()) {
-				string disabledBillingProvider="";
-				if(listElectBilling.SelectedIndex==3) {
-					disabledBillingProvider+="ClaimX";
-				}
-				else if(listElectBilling.SelectedIndex==4) {
-					disabledBillingProvider+="Electronic Dental Services";
-				}
-				if(!string.IsNullOrEmpty(disabledBillingProvider)) {
-					MsgBox.Show(this,disabledBillingProvider+" is not available while viewing through the web.");
-					//Reset to previous default selection if pref wasn't set to ClaimX or EDS
-					int prefBillingtype=PrefC.GetInt(PrefName.BillingUseElectronic);
-					if(prefBillingtype>=0 && prefBillingtype<=2) {
-						listElectBilling.SelectedIndex=prefBillingtype;
-					}
-					else {
-						listElectBilling.SelectedIndex=0;//If their current billing is ClaimX or EDS, set to "No electronic billing" to prevent infinite loop.
-					}
-				}
-			}
 			//If Dental X Change is selected, enable its textboxes and combo.
 			if(listElectBilling.SelectedIndex==1) {
 				comboRemitAddr.Enabled=true;
@@ -309,15 +288,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDays.errorProvider1.GetError(textDays)!=""){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(listElectBilling.SelectedIndex.In(2,3,4) && !Directory.Exists(textStatementURL.Text)){
-				MsgBox.Show(this,"Please choose a valid Output Path.");
+				MessageBox.Show("Please choose a valid Output Path.");
 				return;
 			}
 			if(checkSinglePatient.Checked && checkIntermingled.Checked) {
-				MsgBox.Show(this,"Cannot select both 'Intermingle family members' and 'Single patient only' as defaults.");
+				MessageBox.Show("Cannot select both 'Intermingle family members' and 'Single patient only' as defaults.");
 				return;
 			}
 			string cc="";

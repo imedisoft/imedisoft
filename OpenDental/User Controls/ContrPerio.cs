@@ -1095,7 +1095,7 @@ namespace OpenDental
 			PerioExam perioExamFromDb=PerioExams.GetOnePerioExam(PerioExamCur.PerioExamNum);
 			if(perioExamFromDb==null || PerioExamCur.DateTMeasureEdit!=perioExamFromDb.DateTMeasureEdit) {
 				//something has changed
-				MsgBox.Show(this,"This perio exam has been altered by another user. A new exam has been created and saved.");
+				MessageBox.Show("This perio exam has been altered by another user. A new exam has been created and saved.");
 				PerioExamCur.PerioExamNum=0;
 				PerioExams.Insert(PerioExamCur);
 				List<PerioExam> perioExamList=PerioExams.GetExamsList(PerioExamCur.PatNum);

@@ -63,7 +63,7 @@ namespace OpenDental {
 				_toothChartRelay.IsPerioMode=true;
 			}
 			catch(Exception ex) {//catch is just for old ToothChartWrapper
-				MsgBox.Show(this,ex.Message);
+				MessageBox.Show(ex.Message);
 				DialogResult=DialogResult.Abort;
 				Close();
 				return;
@@ -298,7 +298,7 @@ namespace OpenDental {
 		private void butSave_Click(object sender,EventArgs e) {
 			long defNumToothCharts=Defs.GetImageCat(ImageCategorySpecial.T);
 			if(defNumToothCharts==0) {
-				MsgBox.Show(this,"In Setup, Definitions, Image Categories, a category needs to be set for graphical tooth charts.");
+				MessageBox.Show("In Setup, Definitions, Image Categories, a category needs to be set for graphical tooth charts.");
 				return;
 			}
 			Bitmap bitmap=null;
@@ -320,7 +320,7 @@ namespace OpenDental {
 				g.Dispose();
 				return;
 			}
-			MsgBox.Show(this,"Saved.");
+			MessageBox.Show("Saved.");
 			if(g!=null) {
 				g.Dispose();
 				g=null;

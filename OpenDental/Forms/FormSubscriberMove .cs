@@ -48,7 +48,7 @@ namespace OpenDental {
 
 		private void butViewInsPlanInto_Click(object sender,EventArgs e) {
 			if(_intoInsPlan==null || InsPlans.GetPlan(_intoInsPlan.PlanNum,new List<InsPlan>())==null) {
-				MsgBox.Show(this,"Valid insurance plan not selected.\r\nPlease select a valid insurance plan using the picker button.");
+				MessageBox.Show("Valid insurance plan not selected.\r\nPlease select a valid insurance plan using the picker button.");
 				return;
 			}
 			FormInsPlan formIP=new FormInsPlan(_intoInsPlan,null,null);
@@ -57,7 +57,7 @@ namespace OpenDental {
 
 		private void butViewInsPlanFrom_Click(object sender,EventArgs e) {
 			if(_fromInsPlan==null || InsPlans.GetPlan(_fromInsPlan.PlanNum,new List<InsPlan>())==null) {
-				MsgBox.Show(this,"Valid insurance plan not selected.\r\nPlease select a valid insurance plan using the picker button.");
+				MessageBox.Show("Valid insurance plan not selected.\r\nPlease select a valid insurance plan using the picker button.");
 				return;
 			}
 			FormInsPlan formIP=new FormInsPlan(_fromInsPlan,null,null);
@@ -66,18 +66,18 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(_fromInsPlan==null || InsPlans.GetPlan(_fromInsPlan.PlanNum,new List<InsPlan>())==null) {
-				MsgBox.Show(this,"Please pick a valid plan to move subscribers from.");
+				MessageBox.Show("Please pick a valid plan to move subscribers from.");
 				return;
 			}
 			if(_intoInsPlan==null || InsPlans.GetPlan(_intoInsPlan.PlanNum,new List<InsPlan>())==null) {
-				MsgBox.Show(this,"Please pick a valid plan to move subscribers to.");
+				MessageBox.Show("Please pick a valid plan to move subscribers to.");
 				return;
 			}
 			if(_fromInsPlan.PlanNum==_intoInsPlan.PlanNum) {
-				MsgBox.Show(this,"Can not move a plan into itself.");
+				MessageBox.Show("Can not move a plan into itself.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Moving subscribers is irreversible.  Always make a full backup before moving subscribers.  "
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Moving subscribers is irreversible.  Always make a full backup before moving subscribers.  "
 				+"Patient specific benefits, subscriber notes, benefit notes, and effective dates will not be copied to the other plan."
 				+"\r\n\r\nRunning this tool can take several minutes to run.  We recommend running it after business hours or when network usage is low."
 				+"\r\n\r\nClick OK to continue, or click Cancel to abort.")) 

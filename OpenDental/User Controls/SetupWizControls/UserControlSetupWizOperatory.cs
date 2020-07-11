@@ -17,7 +17,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void UserControlSetupWizOperatory_Load(object sender,EventArgs e) {
 			FillGrid();
 			if(Operatories.GetCount(true)==0) {
-				MsgBox.Show("FormSetupWizard","You have no valid operatories. Please click the Add button to add an operatory.");
+				MsgBox.Show("You have no valid operatories. Please click the Add button to add an operatory.");
 				timer1.Start();
 			}
 		}

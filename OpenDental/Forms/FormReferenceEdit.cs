@@ -68,7 +68,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textRecentDate.errorProvider1.GetError(textRecentDate)!="") {
-				MsgBox.Show(this,"Please enter a valid date.");
+				MessageBox.Show("Please enter a valid date.");
 			}
 			RefCur.DateMostRecent=PIn.Date(textRecentDate.Text);
 			RefCur.IsBadRef=checkBadRef.Checked;

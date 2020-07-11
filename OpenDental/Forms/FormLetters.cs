@@ -341,7 +341,7 @@ namespace OpenDental{
 		///<summary>If the user has selected a letter, and then edited it in the main textbox, this warns them before continuing.</summary>
 		private bool WarnOK(){
 			/*if(bodyChanged){
-				if(!MsgBox.Show(this,true,
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,
 					"Any changes you made to the letter you were working on will be lost.  Do you wish to continue?"))
 				{
 					return false;

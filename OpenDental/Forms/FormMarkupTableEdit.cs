@@ -203,7 +203,7 @@ namespace OpenDental {
 			//Loop through table rows.
 			//  Swap 2 cells.  Remember one of the first as part of the swap.
 			if(gridMain.SelectedCell.X==-1) {
-				MsgBox.Show(this,"Please select a column first.");
+				MessageBox.Show("Please select a column first.");
 				return;
 			}
 			if(gridMain.SelectedCell.X==0) {
@@ -230,7 +230,7 @@ namespace OpenDental {
 
 		private void butColumnRight_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedCell.X==-1) {
-				MsgBox.Show(this,"Please select a column first.");
+				MessageBox.Show("Please select a column first.");
 				return;
 			}
 			if(gridMain.SelectedCell.X==Table.Columns.Count-1) {
@@ -292,11 +292,11 @@ namespace OpenDental {
 
 		private void butColumnDelete_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedCell.X==-1) {
-				MsgBox.Show(this,"Please select a column first.");
+				MessageBox.Show("Please select a column first.");
 				return;
 			}
 			if(gridMain.ListGridColumns.Count==1) {
-				MsgBox.Show(this,"Cannot delete last column.");
+				MessageBox.Show("Cannot delete last column.");
 				return;
 			}
 			ColNames.RemoveAt(gridMain.SelectedCell.X);
@@ -309,7 +309,7 @@ namespace OpenDental {
 
 		private void butRowUp_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedCell.Y==-1) {
-				MsgBox.Show(this,"Please select a row first.");
+				MessageBox.Show("Please select a row first.");
 				return;
 			}
 			if(gridMain.SelectedCell.Y==0) {
@@ -331,7 +331,7 @@ namespace OpenDental {
 			//DataRow row=Table.Rows[i];
 			//Table.Rows.RemoveAt
 			if(gridMain.SelectedCell.Y==-1) {
-				MsgBox.Show(this,"Please select a row first.");
+				MessageBox.Show("Please select a row first.");
 				return;
 			}
 			if(gridMain.SelectedCell.Y==Table.Rows.Count-1) {
@@ -367,11 +367,11 @@ namespace OpenDental {
 
 		private void butRowDelete_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedCell.Y==-1) {
-				MsgBox.Show(this,"Please select a row first.");
+				MessageBox.Show("Please select a row first.");
 				return;
 			}
 			if(gridMain.ListGridRows.Count==1) {
-				MsgBox.Show(this,"Cannot delete last row.");
+				MessageBox.Show("Cannot delete last row.");
 				return;
 			}
 			Table.Rows.RemoveAt(gridMain.SelectedCell.Y);
@@ -383,7 +383,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this entire table?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this entire table?")) {
 				return;
 			}
 			if(IsNew) {
@@ -399,7 +399,7 @@ namespace OpenDental {
 			Point pointStarting=gridMain.SelectedCell;
 			//The point will be set to (-1,-1) if no cell is currently selected.
 			if(pointStarting.X < 0 || pointStarting.Y < 0) {
-				MsgBox.Show(this,"Select a cell to paste clipboard contents into.");
+				MessageBox.Show("Select a cell to paste clipboard contents into.");
 				return;
 			}
 			int colsNeeded=0;
@@ -411,7 +411,7 @@ namespace OpenDental {
 				clipBoardText=ODClipboard.GetText();
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Could not paste contents from the clipboard.  Please try again.");
+				MessageBox.Show("Could not paste contents from the clipboard.  Please try again.");
 				ex.DoNothing();
 				return;
 			}
@@ -444,7 +444,7 @@ namespace OpenDental {
 				}
 			}
 			if(contentExists) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to continue and overwrite existing content?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to continue and overwrite existing content?")){
 					return;
 				}
 			}

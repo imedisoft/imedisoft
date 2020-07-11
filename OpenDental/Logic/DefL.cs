@@ -465,7 +465,7 @@ namespace OpenDental {
 		///<summary>Will attempt to hide the currently selected definition of the ODGrid that is passed in.</summary>
 		public static bool TryHideDefSelectedInGrid(ODGrid gridDefs,DefCatOptions selectedDefCatOpt) {
 			if(gridDefs.GetSelectedIndex()==-1) {
-				MsgBox.Show(_lanThis,"Please select item first,");
+				MsgBox.Show("Please select item first,");
 				return false;
 			}
 			Def defSelected=(Def)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
@@ -482,20 +482,20 @@ namespace OpenDental {
 				return true;
 			}
 			if(!defCatOpt.CanHide || !defCatOpt.CanEditName) {
-				MsgBox.Show(_lanThis,"Definitions of this category cannot be hidden.");
+				MsgBox.Show("Definitions of this category cannot be hidden.");
 				return false;//We should never get here, but if we do, something went wrong because the definition shouldn't have been hideable
 			}
 			//Stop users from hiding the last definition in categories that must have at least one def in them.
 			List<Def> listDefsCurNotHidden=Defs.GetDefsForCategory(defCatOpt.DefCat,true);
 			if(Defs.NeedOneUnhidden(def.Category) && listDefsCurNotHidden.Count==1) {
-				MsgBox.Show(_lanThis,"You cannot hide the last definition in this category.");
+				MsgBox.Show("You cannot hide the last definition in this category.");
 				return false;
 			}
 			if(def.Category==DefCat.ProviderSpecialties
 				&& (Providers.IsSpecialtyInUse(def.DefNum)
 				|| Referrals.IsSpecialtyInUse(def.DefNum))) 
 			{
-				MsgBox.Show(_lanThis,"You cannot hide a specialty if it is in use by a provider or a referral source.");
+				MsgBox.Show("You cannot hide a specialty if it is in use by a provider or a referral source.");
 				return false;
 			}
 			if(Defs.IsDefinitionInUse(def)) {//DefNum will be zero if it is being created but hasn't been saved to DB yet, thus it can't be in use.
@@ -512,7 +512,7 @@ namespace OpenDental {
 					PrefC.GetLong(PrefName.RecurringChargesPayTypeCC),
 					PrefC.GetLong(PrefName.TpUnearnedType)))
 				{
-					MsgBox.Show(_lanThis,"You cannot hide a definition if it is in use within Module Preferences.");
+					MsgBox.Show("You cannot hide a definition if it is in use within Module Preferences.");
 					return false;
 				}
 				else if(def.DefNum.In(
@@ -521,19 +521,19 @@ namespace OpenDental {
 					PrefC.GetLong(PrefName.RecallStatusEmailed),
 					PrefC.GetLong(PrefName.RecallStatusEmailedTexted)))
 				{
-					MsgBox.Show(_lanThis,"You cannot hide a definition that is used as a status in the Setup Recall window.");
+					MsgBox.Show("You cannot hide a definition that is used as a status in the Setup Recall window.");
 					return false;
 				}
 				else if(def.DefNum==PrefC.GetLong(PrefName.WebSchedNewPatConfirmStatus)) {
-					MsgBox.Show(_lanThis,"You cannot hide a definition that is used as an appointment confirmation status in Web Sched New Pat Appt.");
+					MsgBox.Show("You cannot hide a definition that is used as an appointment confirmation status in Web Sched New Pat Appt.");
 					return false;
 				}
 				else if(def.DefNum==PrefC.GetLong(PrefName.WebSchedRecallConfirmStatus)) {
-					MsgBox.Show(_lanThis,"You cannot hide a definition that is used as an appointment confirmation status in Web Sched Recall Appt.");
+					MsgBox.Show("You cannot hide a definition that is used as an appointment confirmation status in Web Sched Recall Appt.");
 					return false;
 				}
 				else if(def.DefNum==PrefC.GetLong(PrefName.PracticeDefaultBillType)) {
-					MsgBox.Show(_lanThis,"You cannot hide a billing type when it is selected as the practice default billing type.");
+					MsgBox.Show("You cannot hide a billing type when it is selected as the practice default billing type.");
 					return false;
 				}
 				else {
@@ -544,11 +544,11 @@ namespace OpenDental {
 			}
 			if(def.Category==DefCat.PaySplitUnearnedType) {
 				if(listDefsCurNotHidden.FindAll(x => string.IsNullOrEmpty(x.ItemValue)).Count==1 && def.ItemValue=="") {
-					MsgBox.Show(_lanThis,"Must have at least one definition that shows in Account");
+					MsgBox.Show("Must have at least one definition that shows in Account");
 					return false;
 				}
 				if(listDefsCurNotHidden.FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Count==1 && def.ItemValue!="") {
-					MsgBox.Show(_lanThis,"Must have at least one definition that does not show in Account");
+					MsgBox.Show("Must have at least one definition that does not show in Account");
 					return false;
 				}
 			}

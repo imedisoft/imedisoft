@@ -237,7 +237,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(OldFieldName!=textName.Text) {
 				if(ApptFieldDefs.GetExists(x => x.FieldName==textName.Text)) {
-					MsgBox.Show(this,"Field name currently being used.");
+					MessageBox.Show("Field name currently being used.");
 					return;
 				}
 			}
@@ -245,7 +245,7 @@ namespace OpenDental{
 			FieldDef.FieldType=(ApptFieldType)comboFieldType.SelectedIndex;
 			if(FieldDef.FieldType==ApptFieldType.PickList) {
 			  if(textPickList.Text=="") {
-			    MsgBox.Show(this,"List cannot be blank.");
+			    MessageBox.Show("List cannot be blank.");
 			    return;
 			  }
 			  FieldDef.PickList=textPickList.Text;

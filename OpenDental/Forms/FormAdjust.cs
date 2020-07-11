@@ -234,7 +234,7 @@ namespace OpenDental {
 				return;
 			}
 			if(OrthoProcLinks.IsProcLinked(formPS.ListSelectedProcs[0].ProcNum)) {
-				MsgBox.Show(this,"Adjustments cannot be attached to a procedure that is linked to an ortho case.");
+				MessageBox.Show("Adjustments cannot be attached to a procedure that is linked to an ortho case.");
 				return;
 			}
 			if(PrefC.GetInt(PrefName.RigorousAdjustments)<2) {//Enforce Linking
@@ -281,11 +281,11 @@ namespace OpenDental {
 				|| textProcDate.errorProvider1.GetError(textProcDate)!=""
 				|| textAmount.errorProvider1.GetError(textAmount)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(PIn.Date(textAdjDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Adjustment date can not be in the future.");
+				MessageBox.Show("Adjustment date can not be in the future.");
 				return;
 			}
 			if(textAmount.Text==""){
@@ -293,7 +293,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!isDiscountPlanAdj && listTypeNeg.SelectedIndex==-1 && listTypePos.SelectedIndex==-1){
-				MsgBox.Show(this,"Please select a type first.");
+				MessageBox.Show("Please select a type first.");
 				return;
 			}
 			if(IsNew && AvaTax.IsEnabled() && listTypePos.SelectedIndex>-1 && 
@@ -303,14 +303,22 @@ namespace OpenDental {
 				return;
 			}
 			if(PrefC.GetInt(PrefName.RigorousAdjustments)==0 && _adjustmentCur.ProcNum==0) {
-				MsgBox.Show(this,"You must attach a procedure to the adjustment.");
+				MessageBox.Show("You must attach a procedure to the adjustment.");
 				return;
 			}
-			if(_adjRemAmt < 0) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Remaining amount is negative.  Continue?","Overpaid Procedure Warning")) {
+
+			if (_adjRemAmt < 0) {
+				var result = MessageBox.Show(this,
+					"Remaining amount is negative. Continue?", "Overpaid Procedure Warning", 
+					MessageBoxButtons.YesNo,
+					MessageBoxIcon.Question);
+
+				if (result == DialogResult.No)
+				{
 					return;
 				}
 			}
+
 			bool changeAdjSplit=false;
 			List<PaySplit> listPaySplitsForAdjust=new List<PaySplit>();
 			if(IsNew){
@@ -340,7 +348,7 @@ namespace OpenDental {
 						}
 					}
 					if(changeAdjSplit
-						&& !MsgBox.Show(this,MsgBoxButtons.OKCancel,"The provider for the associated payment splits will be changed to match the provider on the "
+						&& !MsgBox.Show(MsgBoxButtons.OKCancel,"The provider for the associated payment splits will be changed to match the provider on the "
 						+"adjustment.")) 
 					{
 						return;
@@ -366,7 +374,7 @@ namespace OpenDental {
 				_adjustmentCur.AdjAmt=-PIn.Double(textAmount.Text);
 			}
 			if(_checkZeroAmount && _adjustmentCur.AdjAmt!=0) {
-				MsgBox.Show(this,"Amount has to be 0.00 due to security permission.");
+				MessageBox.Show("Amount has to be 0.00 due to security permission.");
 				return;
 			}
 			_adjustmentCur.AdjNote=textNote.Text;
@@ -400,16 +408,16 @@ namespace OpenDental {
 			}
 			else{
 				if(_listSplitsForAdjustment.Count>0) {
-					MsgBox.Show(this,"Cannot delete adjustment while a payment split is attached.");
+					MessageBox.Show("Cannot delete adjustment while a payment split is attached.");
 					return;
 				}
 				bool isAttachedToPayPlan=PayPlanLinks.GetForFKeyAndLinkType(_adjustmentCur.AdjNum,PayPlanLinkType.Adjustment).Count>0;
 				if(isAttachedToPayPlan) {
-					MsgBox.Show(this,"Cannot delete adjustment that is attached to a dynamic payment plan");
+					MessageBox.Show("Cannot delete adjustment that is attached to a dynamic payment plan");
 					return;
 				}
 				if(_listSplitsForAdjustment.Count>0 
-					&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"There are payment splits associated to this adjustment.  Do you want to continue deleting?")) 
+					&& !MsgBox.Show(MsgBoxButtons.YesNo,"There are payment splits associated to this adjustment.  Do you want to continue deleting?")) 
 				{//There are splits for this adjustment
 					return;
 				}

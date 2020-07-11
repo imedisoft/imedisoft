@@ -50,10 +50,10 @@ namespace OpenDental {
 
 		private void butMerge_Click(object sender,EventArgs e) {
 			if(_referralNumInto==_referralNumFrom) {
-				MsgBox.Show(this,"Cannot merge the same referral.");
+				MessageBox.Show("Cannot merge the same referral.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure?  The results are permanent and cannot be undone.")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure?  The results are permanent and cannot be undone.")) {
 				return;
 			}
 			string differentFields="";
@@ -80,10 +80,10 @@ namespace OpenDental {
 				return;
 			}
 			if(!Referrals.MergeReferrals(_referralNumInto,_referralNumFrom)) {
-				MsgBox.Show(this,"Referrals failed to merge.");
+				MessageBox.Show("Referrals failed to merge.");
 				return;
 			}
-			MsgBox.Show(this,"Referrals merged successfully.");
+			MessageBox.Show("Referrals merged successfully.");
 			string logText=Lan.g(this,"Referral Merge from")
 				+" "+Referrals.GetNameLF(_referralNumFrom)+" "+Lan.g(this,"to")+" "+Referrals.GetNameLF(_referralNumInto)+"\r\n"
 				+Lan.g(this,"Patients attached to this referral")+": "+patAttachCount.ToString();

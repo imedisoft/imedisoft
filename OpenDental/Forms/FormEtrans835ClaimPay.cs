@@ -767,7 +767,7 @@ namespace OpenDental {
 					break;
 				case 10://WO column and not including WOs, so do not let them edit.
 					if(!checkIncludeWOPercCoPay.Checked) {
-						MsgBox.Show(this,"WriteOffs cannot be edited when Include Writeoffs checkbox is not checked.");
+						MessageBox.Show("WriteOffs cannot be edited when Include Writeoffs checkbox is not checked.");
 					}
 					break;
 			}
@@ -957,14 +957,14 @@ namespace OpenDental {
 				return;
 			}
 			//ask user if they want to save the fees
-			if(!MsgBox.Show(this,true,"Save the allowed amounts to the allowed fee schedule?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Save the allowed amounts to the allowed fee schedule?")){
 				return;
 			}
 			//select the feeSchedule
 			long feeSched=-1;
 			feeSched=plan.AllowedFeeSched;
 			if(FeeScheds.GetIsHidden(feeSched)){
-				MsgBox.Show(this,"Allowed fee schedule is hidden, so no changes can be made.");
+				MessageBox.Show("Allowed fee schedule is hidden, so no changes can be made.");
 				return;
 			}
 			Fee feeCur=null;
@@ -1060,7 +1060,7 @@ namespace OpenDental {
 		private void butSplitProcs_Click(object sender,EventArgs e) {
 			List<GridRow> listSelectedPayRows=gridPayments.ListGridRows.Where(x => x.Cells[splitIndex].Text=="X").ToList();//Split column is "checked".
 			if(listSelectedPayRows.Count()==0) {
-				MsgBox.Show(this,"Please use the Split column to select at least one procedure.");
+				MessageBox.Show("Please use the Split column to select at least one procedure.");
 				return;
 			}
 			try{
@@ -1084,11 +1084,11 @@ namespace OpenDental {
 			#region Selection validation
 			//The following logic mimics FormClaimEdit.butSplit_Click(...)
 			if(listSelectedClaimProcs.Any(x => x.ProcNum==0)){
-				MsgBox.Show(this,"Only procedures can be selected.  No total payments allowed.  Deselect all total payments before continuing.");
+				MessageBox.Show("Only procedures can be selected.  No total payments allowed.  Deselect all total payments before continuing.");
 				return;
 			}
 			if(listSelectedClaimProcs.Any(x => x.InsPayAmt!=0)) {
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"All selected procedures must have zero insurance payment amounts.\r\nSet all selected insurance payment amounts to zero?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"All selected procedures must have zero insurance payment amounts.\r\nSet all selected insurance payment amounts to zero?")) {
 					return;
 				}
 				listSelectedClaimProcs.ForEach(x => x.InsPayAmt=0);
@@ -1096,7 +1096,7 @@ namespace OpenDental {
 			//Make sure that there is at least one procedure left on the claim before splitting.
 			//The claim would become orphaned if we allow users to split off all procedures on the claim and DBM would be required to run to clean up.
 			if(gridPayments.ListGridRows.Count==listSelectedClaimProcs.Count) {//All procedures are selected for the split...
-				MsgBox.Show(this,"All procedures were selected.  At least one procedure must remain on this claim after splitting.  Deselect at least one procedure before continuing.");
+				MessageBox.Show("All procedures were selected.  At least one procedure must remain on this claim after splitting.  Deselect at least one procedure before continuing.");
 				return;
 			}
 			#endregion
@@ -1116,7 +1116,7 @@ namespace OpenDental {
 			//Remove all split claimProcs from the internal list, will not show in grid after FillGridProcedures();
 			ListClaimProcsForClaim.RemoveAll(x => listSelectedClaimProcs.Contains(x));
 			FillGridProcedures();
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void butOK_Click(object sender,System.EventArgs e) {
@@ -1142,7 +1142,7 @@ namespace OpenDental {
 			{
 				isPromptNeeded=true;
 			}
-			if(isPromptNeeded && !MsgBox.Show(this,MsgBoxButtons.YesNo,"Some of the EOB totals do not match the totals entered.  Continue?")) {
+			if(isPromptNeeded && !MsgBox.Show(MsgBoxButtons.YesNo,"Some of the EOB totals do not match the totals entered.  Continue?")) {
 				return;
 			}
 			SaveAllowedFees();

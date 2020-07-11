@@ -32,7 +32,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
 				return;
 			}
 			try {
@@ -49,7 +49,7 @@ namespace OpenDental {
 			Icd9Cur.Description=textDescription.Text;
 			if(IsNew) {//Used the "+Add" button to open this form.
 				if(ICD9s.CodeExists(Icd9Cur.ICD9Code)) {//Must enter a unique code.
-					MsgBox.Show(this,"You must choose a unique code.");
+					MessageBox.Show("You must choose a unique code.");
 					return;
 				}
 				ICD9s.Insert(Icd9Cur);

@@ -19,26 +19,29 @@ namespace OpenDental.Bridges{
 		}
 
 		///<summary>Launches the program using a combination of command line characters and the patient.Cur data.</summary>
-		public static void SendData(Program ProgramCur, Patient pat){
-			string path=Programs.GetProgramPath(ProgramCur);
+		public static void SendData(Program ProgramCur, Patient pat)
+		{
+			string path = Programs.GetProgramPath(ProgramCur);
 			//usage: C:\Dxis\Dxis.exe /i /t:UniqueID - Practice Name
 			//The UniqueID can be a combo of patient name and id.  I think we'll combine Lname,Fname,PatNum
-			if(pat==null){
-				MsgBox.Show("Dxis","Please select a patient first.");
+			if (pat == null)
+			{
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
-			List<ProgramProperty> ForProgram =ProgramProperties.GetForProgram(ProgramCur.ProgramNum);
-			string info="/i /t:"+pat.LName+" "+pat.FName+" "+pat.PatNum.ToString()+" - "+PrefC.GetString(PrefName.PracticeTitle);
-			try{
-				Process process=ODFileUtils.ProcessStart(path,info);
+			List<ProgramProperty> ForProgram = ProgramProperties.GetForProgram(ProgramCur.ProgramNum);
+			string info = "/i /t:" + pat.LName + " " + pat.FName + " " + pat.PatNum.ToString() + " - " + PrefC.GetString(PrefName.PracticeTitle);
+			try
+			{
+				Process process = ODFileUtils.ProcessStart(path, info);
 				//Don't wait for exit in WEB mode.  Since it opens a browser tab and then an unrelated process on the client,
 				//we probably don't have a valid process to wait for, and the resources from Open Dental aren't the same resources from Dxis.
-				if(!ODBuild.IsWeb()) {
-					process.WaitForExit();//puts OD in sleep mode because the pano is so resource intensive.
-				}
+
+				process.WaitForExit();//puts OD in sleep mode because the pano is so resource intensive.
 			}
-			catch{
-				MessageBox.Show(path+" is not available.");
+			catch
+			{
+				MessageBox.Show(path + " is not available.");
 			}
 		}
 

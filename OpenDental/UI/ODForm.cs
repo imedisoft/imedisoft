@@ -287,10 +287,7 @@ namespace OpenDental {
 			//Due to a Visual Studio bug, LicenseUsageMode.Designtime gives false positives when a form inherits ODForm.
 			//The help button is too absolute when drawing itself in "Designtime" and will draw over Visual Studio itself and will stay there even after leaving the design file.
 			//Therefore, only execute the Help Menu drawing logic when ODInitialize.Initialize() has been invoked.
-			if(ODBuild.IsWeb()) {
-				//Help button does not currently work with web viewed versions of open dental. Remove for now. 
-				return;
-			}
+
 			if(!ODInitialize.HasInitialized) {
 				return;
 			}

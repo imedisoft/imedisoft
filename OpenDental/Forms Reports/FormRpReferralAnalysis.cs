@@ -363,17 +363,17 @@ namespace OpenDental{
 				return;
 			}
 			if(listProv.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(listProv.SelectedIndices[0]==0 && listProv.SelectedIndices.Count>1) {
-				MsgBox.Show(this,"You cannot select 'All' providers as well as specific providers.");
+				MessageBox.Show("You cannot select 'All' providers as well as specific providers.");
 				return;
 			}
 			DateTime dateFrom=PIn.Date(textDateFrom.Text);
 			DateTime dateTo=PIn.Date(textDateTo.Text);
 			if(dateTo<dateFrom) {
-				MsgBox.Show(this,"To date cannot be before From date.");
+				MessageBox.Show("To date cannot be before From date.");
 				return;
 			}
 			bool hasAllProvs=(listProv.SelectedIndices[0]==0);

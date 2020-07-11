@@ -665,19 +665,19 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(!checkAllProv.Checked && listProv.SelectedIndices.Count==0){
-				MsgBox.Show(this,"At least one provider must be selected.");
+				MessageBox.Show("At least one provider must be selected.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(!checkAllClin.Checked && listClin.SelectedIndices.Count==0) {
-					MsgBox.Show(this,"At least one clinic must be selected.");
+					MessageBox.Show("At least one clinic must be selected.");
 					return;
 				}
 			}
 			dateFrom=dtPickerFrom.Value;
 			dateTo=dtPickerTo.Value;
 			if(dateTo<dateFrom) {
-				MsgBox.Show(this,"To date cannot be before From date.");
+				MessageBox.Show("To date cannot be before From date.");
 				return;
 			}
 			if(radioSimpleReport.Checked || radioDetailedReport.Checked) {

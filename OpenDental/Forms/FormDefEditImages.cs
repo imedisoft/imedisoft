@@ -445,13 +445,13 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(checkHidden.Checked) {
 				if(Defs.IsDefinitionInUse(DefCur)) {
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Warning: This definition is currently in use within the program.")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning: This definition is currently in use within the program.")) {
 						return;
 					}
 				}
 			}
 			if(textName.Text==""){
-				MsgBox.Show(this,"Name required.");
+				MessageBox.Show("Name required.");
 				return;
 			}
 			DefCur.ItemName=textName.Text;
@@ -484,7 +484,7 @@ namespace OpenDental{
 				itemVal+="A";
 			}
 			if(!IsNew && checkExpanded.Checked!=DefCur.ItemValue.Contains("E")) {//If checkbox has been changed since opening form.
-				if(MsgBox.Show(this,true,"Expanded by default option changed.  This change will affect all users.  Continue?")) {
+				if(MsgBox.Show(MsgBoxButtons.YesNo,"Expanded by default option changed.  This change will affect all users.  Continue?")) {
 					//Remove all user specific preferences to enforce the new default.
 					UserOdPrefs.DeleteForFkey(0,UserOdFkeyType.Definition,DefCur.DefNum);
 				}

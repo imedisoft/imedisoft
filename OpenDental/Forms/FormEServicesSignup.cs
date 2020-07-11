@@ -37,12 +37,6 @@ namespace OpenDental {
 			if(_signupOut==null){
 				_signupOut=FormEServicesSetup.GetSignupOut();
 			}
-			if(ODBuild.IsWeb()) {
-				this.ForceBringToFront();
-				Process.Start(_signupOut.SignupPortalUrl);
-				DialogResult=DialogResult.Abort;
-				return;
-			}
 			ODException.SwallowAnyException(() => {
 #if DEBUG
 				_signupOut.SignupPortalUrl=_signupOut.SignupPortalUrl.Replace("https://www.patientviewer.com/SignupPortal/GWT/SignupPortal/SignupPortal.html","http://127.0.0.1:8888/SignupPortal.html");

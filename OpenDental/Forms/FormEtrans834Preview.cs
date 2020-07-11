@@ -222,7 +222,7 @@ namespace OpenDental {
 			{
 				return false;
 			}
-			if(!MsgBox.Show(this,true,"Importing insurance plans is a database intensive operation and can take 10 minutes or more to run.  "
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Importing insurance plans is a database intensive operation and can take 10 minutes or more to run.  "
 				+"It is best to import insurance plans after hours or during another time period when database usage is otherwise low.\r\n"
 				+"Click OK to import insurance plans now, or click Cancel."))
 			{

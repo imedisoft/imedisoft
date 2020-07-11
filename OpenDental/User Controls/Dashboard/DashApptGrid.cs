@@ -186,7 +186,7 @@ namespace OpenDental {
 		///to the user and RefreshAppts will be invoked in order to remove the invalid appt from the UI.</summary>
 		public bool IsSelectedApptOtherNull() {
 			if(SelectedApptOther==null || Appointments.GetOneApt(SelectedApptOther.AptNum)==null) {
-				MsgBox.Show(this,"Selected appointment no longer exists.");
+				MessageBox.Show("Selected appointment no longer exists.");
 				RefreshAppts();
 				return true;
 			}

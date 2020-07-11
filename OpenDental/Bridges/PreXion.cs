@@ -45,7 +45,7 @@ namespace OpenDental.Bridges{
 		public static void SendDataAquire(Program programCur, Patient pat){
 			string path=Programs.GetProgramPath(programCur);
 			if(pat==null) {
-				MsgBox.Show("PreXion Acquire","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			string cmdline="/BRIDGE -pid \"";

@@ -67,7 +67,7 @@ namespace OpenDental {
 
 		private void butOverride_Click(object sender,EventArgs e) {
 			Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName,"");
-			MsgBox.Show(this,"You will be allowed access when you restart.");
+			MessageBox.Show("You will be allowed access when you restart.");
 			DialogResult=DialogResult.Cancel;
 		}
 

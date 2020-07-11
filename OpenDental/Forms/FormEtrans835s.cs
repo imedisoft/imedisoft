@@ -310,7 +310,7 @@ namespace OpenDental {
 			et=Etranss.GetEtrans(et.EtransNum);
 			if(et==null) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"ERA could not be found, it was most likely deleted.");
+				MessageBox.Show("ERA could not be found, it was most likely deleted.");
 				RefreshAndFillGrid();
 				return;
 			}

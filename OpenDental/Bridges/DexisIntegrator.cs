@@ -23,7 +23,7 @@ namespace OpenDental.Bridges {
 		///if the pat has a valid bday and adding it to the commmand won't increase the length of the command to >255 characters.</summary>
 		public static void SendData(Program progCur,Patient pat) {
 			if(pat==null) {
-				MsgBox.Show("DexisIntegrator","Please select a patient first.");
+				MsgBox.Show("Please select a patient first.");
 				return;
 			}
 			try {

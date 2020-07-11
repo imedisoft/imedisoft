@@ -21,7 +21,7 @@ namespace OpenDental {
 		private void FormSheetFieldDefEdit_Load(object sender,EventArgs e) {
 			AvailExamDefs=SheetDefs.GetCustomForType(SheetTypeEnum.ExamSheet);
 			if(AvailExamDefs==null || AvailExamDefs.Count==0) {
-				MsgBox.Show(this,"No custom Exam Sheets are defined.");
+				MessageBox.Show("No custom Exam Sheets are defined.");
 				return;
 			}
 			listExamSheets.Items.Clear();
@@ -77,7 +77,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(listAvailFields.SelectedIndex==-1) {//if there is no selected reportable field
-				MsgBox.Show(this,"You must select a field first.");
+				MessageBox.Show("You must select a field first.");
 				return;
 			}
 			//example:  ExamSheet:NewPatient;Race

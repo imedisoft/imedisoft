@@ -508,7 +508,7 @@ namespace OpenDental{
 				|| textPatAmt.errorProvider1.GetError(textPatAmt)!=""
 				|| !textFeeAllowed.IsValid
 				) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(comboPriority.SelectedIndex==0){

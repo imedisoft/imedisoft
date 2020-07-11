@@ -327,7 +327,7 @@ namespace OpenDental{
 			//if(category==DisplayFieldCategory.OrthoChart) {
 			//  if(ListShowing[e.Row].Description=="") {
 			//    ListShowing[e.Row]=tempField.Copy();
-			//    MsgBox.Show(this,"Description cannot be blank.");
+			//    MessageBox.Show("Description cannot be blank.");
 			//    return;
 			//  }
 			//  for(int i=0;i<ListShowing.Count;i++) {//Check against ListShowing only
@@ -336,14 +336,14 @@ namespace OpenDental{
 			//    }
 			//    if(ListShowing[e.Row].Description==ListShowing[i].Description) {
 			//      ListShowing[e.Row]=tempField;
-			//      MsgBox.Show(this,"That field name already exists.");
+			//      MessageBox.Show("That field name already exists.");
 			//      return;
 			//    }
 			//  }
 			//  for(int i=0;i<AvailList.Count;i++) {//check against AvailList only
 			//    if(ListShowing[e.Row].Description==AvailList[i].Description) {
 			//      ListShowing[e.Row]=tempField;
-			//      MsgBox.Show(this,"That field name already exists.");
+			//      MessageBox.Show("That field name already exists.");
 			//      return;
 			//    }
 			//  }
@@ -360,13 +360,13 @@ namespace OpenDental{
 
 		private void butLeft_Click(object sender,EventArgs e) {
 				//if(listAvailable.SelectedItems.Count==0 && textCustomField.Text=="") {
-				//  MsgBox.Show(this,"Please select an item in the list on the right or create a new field first.");
+				//  MessageBox.Show("Please select an item in the list on the right or create a new field first.");
 				//  return;
 				//}
 				//if(textCustomField.Text!="") {//Add new ortho chart field
 				//  foreach(ToothGridDef defShowing in ListShowing) {
 				//    if(textCustomField.Text==defShowing.NameInternal || textCustomField.Text==defShowing.NameShowing) {
-				//      MsgBox.Show(this,"That field is already displaying.");
+				//      MessageBox.Show("That field is already displaying.");
 				//      return;
 				//    }
 				//  }
@@ -396,13 +396,13 @@ namespace OpenDental{
 
 			//if(category==DisplayFieldCategory.OrthoChart) {//Ortho Chart
 			//  if(listAvailable.SelectedItems.Count==0 && textCustomField.Text=="") {
-			//    MsgBox.Show(this,"Please select an item in the list on the right or create a new field first.");
+			//    MessageBox.Show("Please select an item in the list on the right or create a new field first.");
 			//    return;
 			//  }
 			//  if(textCustomField.Text!="") {//Add new ortho chart field
 			//    for(int i=0;i<ListShowing.Count;i++) {
 			//      if(textCustomField.Text==ListShowing[i].Description) {
-			//        MsgBox.Show(this,"That field is already displaying.");
+			//        MessageBox.Show("That field is already displaying.");
 			//        return;
 			//      }
 			//    }
@@ -431,7 +431,7 @@ namespace OpenDental{
 			//}
 			//else {//All other display field types
 			//  if(listAvailable.SelectedItems.Count==0) {
-			//    MsgBox.Show(this,"Please select an item in the list on the right first.");
+			//    MessageBox.Show("Please select an item in the list on the right first.");
 			//    return;
 			//  }
 			//  DisplayField field;
@@ -446,7 +446,7 @@ namespace OpenDental{
 
 		private void butRight_Click(object sender,EventArgs e) {
 			//if(gridMain.SelectedIndices.Length==0) {
-			//  MsgBox.Show(this,"Please select an item in the grid on the left first.");
+			//  MessageBox.Show("Please select an item in the grid on the left first.");
 			//  return;
 			//}
 			//for(int i=gridMain.SelectedIndices.Length-1;i>=0;i--){//go backwards
@@ -458,7 +458,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender,EventArgs e) {
 			//if(gridMain.SelectedIndices.Length==0) {
-			//  MsgBox.Show(this,"Please select an item in the grid first.");
+			//  MessageBox.Show("Please select an item in the grid first.");
 			//  return;
 			//}
 			//int[] selected=new int[gridMain.SelectedIndices.Length];
@@ -480,7 +480,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender,EventArgs e) {
 			//if(gridMain.SelectedIndices.Length==0) {
-			//  MsgBox.Show(this,"Please select an item in the grid first.");
+			//  MessageBox.Show("Please select an item in the grid first.");
 			//  return;
 			//}
 			//int[] selected=new int[gridMain.SelectedIndices.Length];

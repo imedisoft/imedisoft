@@ -56,7 +56,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			if(RepServ.ReplicationServerNum==PrefC.GetLong(PrefName.ReplicationUserQueryServer)) {//Current report server.
@@ -73,12 +73,12 @@ namespace OpenDental {
 				//I guess we don't need to force descript to have a value
 			}
 			if(textServerId.errorProvider1.GetError(textServerId) != "") {
-				MsgBox.Show(this,"Please fix server_id.");
+				MessageBox.Show("Please fix server_id.");
 				return;
 			}
 			int serverid=PIn.Int(textServerId.Text);
 			if(serverid==0) {
-				MsgBox.Show(this,"Please enter a server_id number greater than zero.");
+				MessageBox.Show("Please enter a server_id number greater than zero.");
 				return;
 			}
 			long rangeStart=0;
@@ -87,7 +87,7 @@ namespace OpenDental {
 					rangeStart=long.Parse(textRangeStart.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Please fix range start.");
+					MessageBox.Show("Please fix range start.");
 					return;
 				}
 			}
@@ -97,12 +97,12 @@ namespace OpenDental {
 					rangeEnd=long.Parse(textRangeEnd.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Please fix range end.");
+					MessageBox.Show("Please fix range end.");
 					return;
 				}
 			}
 			if((textRangeStart.Text !="" || textRangeEnd.Text !="") && rangeEnd-rangeStart<999999) {
-				MsgBox.Show(this,"The end of the range must be at least 999,999 greater than the start of the range.");
+				MessageBox.Show("The end of the range must be at least 999,999 greater than the start of the range.");
 				return;
 			}
 			//Disallow a range that ends after 9 quintillion.  This is because the max value of a long is 9,223,372,036,854,775,807
@@ -112,7 +112,7 @@ namespace OpenDental {
 			//So now the largest random primary key value for any table will be 9 quintillion, which leaves the convert script 200 quadrillion entries
 			//before going out of bounds.
 			if(rangeEnd>9000000000000000000) {
-				MsgBox.Show(this,"The end of the range must be less than or equal to nine quintillion.");
+				MessageBox.Show("The end of the range must be less than or equal to nine quintillion.");
 				return;
 			}
 			RepServ.Descript=textDescript.Text;

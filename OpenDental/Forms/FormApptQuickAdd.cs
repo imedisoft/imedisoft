@@ -53,7 +53,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(listQuickAdd.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"Please select items first.");
+				MessageBox.Show("Please select items first.");
 				return;
 			}
 			SelectedCodeNums=new List<long>();

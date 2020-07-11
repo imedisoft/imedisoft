@@ -277,7 +277,7 @@ namespace OpenDental {
 				return;
 			}
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MsgBox.Show(this,"Images stored directly in database. Export file in order to open with external program.");
+				MessageBox.Show("Images stored directly in database. Export file in order to open with external program.");
 				return;//Documents must be stored in the A to Z Folder to open them outside of Open Dental.  Users can use the export button for now.
 			}
 			if(nodeId.NodeType==EnumNodeType.Mount) {
@@ -297,44 +297,43 @@ namespace OpenDental {
 				//Specifically, multi-page faxes can be viewed more easily by one of our customers using the fax
 				//viewer. On Unix systems, it is imagined that an equivalent viewer will launch to allow the image
 				//to be viewed.
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-					if(ODBuild.IsWeb()) {
-						string tempFile=ImageStore.GetFilePath(nodeDoc,_patFolder);
-						ThinfinityUtils.HandleFile(tempFile);
+				if (PrefC.AtoZfolderUsed == DataStorageType.LocalAtoZ)
+				{
+
+					try
+					{
+						Process.Start(ImageStore.GetFilePath(nodeDoc, _patFolder));
 					}
-					else {
-						try {
-							Process.Start(ImageStore.GetFilePath(nodeDoc,_patFolder));
-						}
-						catch(Exception ex) {
-							MessageBox.Show(ex.Message);
-						}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message);
 					}
+
 				}
-				else {//Cloud
-					//Download document into temp directory for displaying.
-					FormProgress FormP=new FormProgress();
-					FormP.DisplayText="Downloading Document...";
-					FormP.NumberFormat="F";
-					FormP.NumberMultiplication=1;
-					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-					FormP.TickMS=1000;
-					OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(_patFolder.Replace("\\","/")
-						,nodeDoc.FileName
-						,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
+				else
+				{//Cloud
+				 //Download document into temp directory for displaying.
+					FormProgress FormP = new FormProgress();
+					FormP.DisplayText = "Downloading Document...";
+					FormP.NumberFormat = "F";
+					FormP.NumberMultiplication = 1;
+					FormP.MaxVal = 100;//Doesn't matter what this value is as long as it is greater than 0
+					FormP.TickMS = 1000;
+					OpenDentalCloud.Core.TaskStateDownload state = CloudStorage.DownloadAsync(_patFolder.Replace("\\", "/")
+						, nodeDoc.FileName
+						, new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
 					FormP.ShowDialog();
-					if(FormP.DialogResult==DialogResult.Cancel) {
-						state.DoCancel=true;
+					if (FormP.DialogResult == DialogResult.Cancel)
+					{
+						state.DoCancel = true;
 					}
-					else {
-						string tempFile=PrefC.GetRandomTempFile(Path.GetExtension(nodeDoc.FileName));
-						File.WriteAllBytes(tempFile,state.FileContent);
-						if(ODBuild.IsWeb()) {
-							ThinfinityUtils.HandleFile(tempFile);
-						}
-						else {
+					else
+					{
+						string tempFile = PrefC.GetRandomTempFile(Path.GetExtension(nodeDoc.FileName));
+						File.WriteAllBytes(tempFile, state.FileContent);
+
 							Process.Start(tempFile);
-						}
+						
 					}
 				}
 			}
@@ -725,7 +724,7 @@ namespace OpenDental {
 				if(_rectangleCrop.Width<=0 || _rectangleCrop.Height<=0) {
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Crop to Rectangle?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Crop to Rectangle?")) {
 					_rectangleCrop=new Rectangle(0,0,-1,-1);
 					InvalidateSettings(ImageSettingFlags.NONE,false);//Refresh display (since message box was covering).
 					return;
@@ -981,10 +980,10 @@ namespace OpenDental {
 						ToolBarPaste_Click();
 						break;
 					case "Forms":
-						MsgBox.Show(this,"Use the dropdown list.  Add forms to the list by copying image files into your A-Z folder, Forms.  Restart the program to see newly added forms.");
+						MessageBox.Show("Use the dropdown list.  Add forms to the list by copying image files into your A-Z folder, Forms.  Restart the program to see newly added forms.");
 						break;
 					case "Mounts"://future
-						MsgBox.Show(this,"Use the dropdown list.  Manage Mounts from the Setup/Images menu.");
+						MessageBox.Show("Use the dropdown list.  Manage Mounts from the Setup/Images menu.");
 						break;
 					case "Capture":
 						ToolBarCapture_Click();
@@ -1566,7 +1565,7 @@ namespace OpenDental {
 				//more stale with age if the program is left open in the image module for long periods of time.
 				_documentShowing=Documents.GetByNum(nodeIdTag.PriKey,doReturnNullIfNotFound:true);
 				if(_documentShowing==null) {
-					MsgBox.Show(this,"Document has been deleted.");
+					MessageBox.Show("Document has been deleted.");
 					FillTree(false);
 					return;
 				}
@@ -1684,7 +1683,7 @@ namespace OpenDental {
 			if(ToolBarMain.Buttons["Capture"].Pushed) {
 				NodeIdTag nodeIdTag=(NodeIdTag)treeMain.SelectedNode.Tag;
 				if(nodeIdTag.NodeType==EnumNodeType.ApteryxImage) {
-					MsgBox.Show(this,"Cannot capture a read-only image. Please copy/paste or export/import the image you are trying to capture.");
+					MessageBox.Show("Cannot capture a read-only image. Please copy/paste or export/import the image you are trying to capture.");
 					return;
 				}
 				//ComputerPref computerPrefs=ComputerPrefs.GetForLocalComputer();
@@ -1754,7 +1753,7 @@ namespace OpenDental {
 
 		private void ToolBarCopy_Click() {
 			if(treeMain.SelectedNode==null || treeMain.SelectedNode.Tag==null) {
-				MsgBox.Show(this,"Please select a document before copying");
+				MessageBox.Show("Please select a document before copying");
 				return;
 			}
 			Bitmap bitmapCopy=null;
@@ -1782,7 +1781,7 @@ namespace OpenDental {
 					Clipboard.SetDataObject(bitmapCopy);
 				}
 				catch(Exception ex) {
-					MsgBox.Show(this,"Could not copy contents to the clipboard.  Please try again.");
+					MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
 					ex.DoNothing();
 					return;
 				}
@@ -1824,7 +1823,7 @@ namespace OpenDental {
 
 		private void ToolBarExport_Click() {
 			if(treeMain.SelectedNode==null) {
-				MsgBox.Show(this,"Please select an item first.");
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			Document apteryxDoc=null;
@@ -1835,14 +1834,10 @@ namespace OpenDental {
 				apteryxDoc=ImageStore.Import(_bitmapShowing,(Defs.GetDef(DefCat.ImageCats,PIn.Long(imageCat)).DefNum),ImageType.Photo,_patCur); 
 			}
 			if(nodeIdTag.NodeType==EnumNodeType.Category || nodeIdTag.NodeType==EnumNodeType.Mount || nodeIdTag.NodeType==EnumNodeType.None) {
-				MsgBox.Show(this,"Not allowed.");
+				MessageBox.Show("Not allowed.");
 				return;
 			}
 			string fileName="";
-			if(ODBuild.IsWeb()) {
-				ToolBarWebExport(nodeIdTag,apteryxDoc);
-				return;
-			}
 			SaveFileDialog dlg=new SaveFileDialog();
 			dlg.Title="Export a Document";
 			if(nodeIdTag.NodeType.In(EnumNodeType.Doc,EnumNodeType.ApteryxImage)) {
@@ -1860,7 +1855,7 @@ namespace OpenDental {
 				}
 				fileName=dlg.FileName;
 				if(fileName.Length<1) {
-					MsgBox.Show(this,"You must enter a file name.");
+					MessageBox.Show("You must enter a file name.");
 					return;
 				}
 				try {
@@ -1880,7 +1875,7 @@ namespace OpenDental {
 				}
 				fileName=dlg.FileName;
 				if(fileName.Length<1) {
-					MsgBox.Show(this,"You must enter a file name.");
+					MessageBox.Show("You must enter a file name.");
 					return;
 				}
 				try {
@@ -1900,7 +1895,7 @@ namespace OpenDental {
 				}
 				fileName=dlg.FileName;
 				if(fileName.Length<1) {
-					MsgBox.Show(this,"You must enter a file name.");
+					MessageBox.Show("You must enter a file name.");
 					return;
 				}
 				try {
@@ -1962,7 +1957,7 @@ namespace OpenDental {
 			}
 			if(_ehrAmendmentCur!=null) {
 				if(_ehrAmendmentCur.FileName!=null && _ehrAmendmentCur.FileName!="") {
-					if(!MsgBox.Show(this,true,"This will delete your old file. Proceed?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo, "This will delete your old file. Proceed?")) {
 						return;
 					}
 				}
@@ -2116,7 +2111,7 @@ namespace OpenDental {
 				iDataObject=Clipboard.GetDataObject();
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Could not paste contents from the clipboard.  Please try again.");
+				MessageBox.Show("Could not paste contents from the clipboard.  Please try again.");
 				ex.DoNothing();
 				return;
 			}
@@ -2159,7 +2154,7 @@ namespace OpenDental {
 			}
 			else if(nodeIdTag.NodeType==EnumNodeType.Mount && _idxSelectedInMount>=0) {//Pasting into the mount item of the currently selected mount.
 				if(_arrayDocumentsInMount[_idxSelectedInMount]!=null) {
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Do you want to replace the existing item in this mount location?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Do you want to replace the existing item in this mount location?")) {
 						this.Cursor=Cursors.Default;
 						return;
 					}
@@ -2206,7 +2201,7 @@ namespace OpenDental {
 
 		private void ToolBarPrint_Click() {
 			if(treeMain.SelectedNode==null || treeMain.SelectedNode.Tag==null) {
-				MsgBox.Show(this,"Cannot print. No document currently selected.");
+				MessageBox.Show("Cannot print. No document currently selected.");
 				return;
 			}
 			try {
@@ -2214,7 +2209,7 @@ namespace OpenDental {
 				string description=null;
 				NodeIdTag nodeIdTag=(NodeIdTag)treeMain.SelectedNode.Tag;
 				if(nodeIdTag.NodeType==EnumNodeType.ApteryxImage) {
-					MsgBox.Show(this,"Cannot print a read only file. Copy/paste or export/import the file for printing.");
+					MessageBox.Show("Cannot print a read only file. Copy/paste or export/import the file for printing.");
 					return;
 				}
 				if(nodeIdTag.NodeType==EnumNodeType.Eob) {
@@ -2230,43 +2225,47 @@ namespace OpenDental {
 					fileName=_documentShowing.FileName;
 					description=_documentShowing.Description;
 				}
-				if(Path.GetExtension(fileName).ToLower()==".pdf") {//Selected document is PDF, we handle differently than documents that aren't pdf.
-					if(ODBuild.IsWeb()) {
-						ThinfinityUtils.HandleFile(_webBrowserFilePath);//This will do a PDF preview. _webBrowserDocument.ShowPrintPreviewDialog() doesn't work.
-					}
-					else {
-						_webBrowser.ShowPrintPreviewDialog();
-					}
+				if (Path.GetExtension(fileName).ToLower() == ".pdf")
+				{//Selected document is PDF, we handle differently than documents that aren't pdf.
+
+					_webBrowser.ShowPrintPreviewDialog();
+
 				}
-				else {
-					PrintDocument pd=new PrintDocument();//TODO: Implement ODprintout pattern
-					pd.PrintPage+=new PrintPageEventHandler(printDocument_PrintPage);
-					PrintDialog dlg=new PrintDialog();
-					dlg.AllowCurrentPage=false;
-					dlg.AllowPrintToFile=true;
-					dlg.AllowSelection=false;
-					dlg.AllowSomePages=false;
-					dlg.Document=pd;
-					dlg.PrintToFile=false;
-					dlg.ShowHelp=true;
-					dlg.ShowNetwork=true;
-					dlg.UseEXDialog=true; //needed because PrintDialog was not showing on 64 bit Vista systems
-					if(dlg.ShowDialog()==DialogResult.OK) {
-						if(pd.DefaultPageSettings.PrintableArea.Width==0||
-							pd.DefaultPageSettings.PrintableArea.Height==0) {
-							pd.DefaultPageSettings.PaperSize=new PaperSize("default",850,1100);
+				else
+				{
+					PrintDocument pd = new PrintDocument();//TODO: Implement ODprintout pattern
+					pd.PrintPage += new PrintPageEventHandler(printDocument_PrintPage);
+					PrintDialog dlg = new PrintDialog();
+					dlg.AllowCurrentPage = false;
+					dlg.AllowPrintToFile = true;
+					dlg.AllowSelection = false;
+					dlg.AllowSomePages = false;
+					dlg.Document = pd;
+					dlg.PrintToFile = false;
+					dlg.ShowHelp = true;
+					dlg.ShowNetwork = true;
+					dlg.UseEXDialog = true; //needed because PrintDialog was not showing on 64 bit Vista systems
+					if (dlg.ShowDialog() == DialogResult.OK)
+					{
+						if (pd.DefaultPageSettings.PrintableArea.Width == 0 ||
+							pd.DefaultPageSettings.PrintableArea.Height == 0)
+						{
+							pd.DefaultPageSettings.PaperSize = new PaperSize("default", 850, 1100);
 						}
-						pd.OriginAtMargins=true;
-						pd.DefaultPageSettings.Margins=new Margins(50,50,50,50);//Half-inch all around
+						pd.OriginAtMargins = true;
+						pd.DefaultPageSettings.Margins = new Margins(50, 50, 50, 50);//Half-inch all around
 						pd.Print();
-						if(((NodeIdTag)treeMain.SelectedNode.Tag).NodeType==EnumNodeType.Eob) { //This happens when printing an EOB from the Batch Ins Claim
-							SecurityLogs.MakeLogEntry(Permissions.Printing,0,"EOB printed");
+						if (((NodeIdTag)treeMain.SelectedNode.Tag).NodeType == EnumNodeType.Eob)
+						{ //This happens when printing an EOB from the Batch Ins Claim
+							SecurityLogs.MakeLogEntry(Permissions.Printing, 0, "EOB printed");
 						}
-						else if(description=="") {
-							SecurityLogs.MakeLogEntry(Permissions.Printing,_patCur.PatNum,"Patient image "+fileName+" printed");
+						else if (description == "")
+						{
+							SecurityLogs.MakeLogEntry(Permissions.Printing, _patCur.PatNum, "Patient image " + fileName + " printed");
 						}
-						else {
-							SecurityLogs.MakeLogEntry(Permissions.Printing,_patCur.PatNum,"Patient image "+description+" printed");
+						else
+						{
+							SecurityLogs.MakeLogEntry(Permissions.Printing, _patCur.PatNum, "Patient image " + description + " printed");
 						}
 					}
 				}
@@ -2304,7 +2303,7 @@ namespace OpenDental {
 		private void ToolBarScan_Click(string scanType) {
 			if(_ehrAmendmentCur!=null) {
 				if(_ehrAmendmentCur.FileName!=null && _ehrAmendmentCur.FileName!="") {
-					if(!MsgBox.Show(this,true,"This will delete your old file. Proceed?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will delete your old file. Proceed?")) {
 						return;
 					}
 				}
@@ -2317,7 +2316,7 @@ namespace OpenDental {
 			}
 			catch {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"EzTwain4.dll not found.  Please run the setup file in your images folder.");
+				MessageBox.Show("EzTwain4.dll not found.  Please run the setup file in your images folder.");
 				return;
 			}
 			if(IsDisposed) {
@@ -2332,7 +2331,7 @@ namespace OpenDental {
 			EZTwain.SetHideUI(!ComputerPrefs.LocalComputer.ScanDocShowOptions);
 			if(!EZTwain.OpenDefaultSource()) {//if it can't open the scanner successfully
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Default scanner could not be opened.  Check that the default scanner works from Windows Control Panel and from Windows Fax and Scan.");
+				MessageBox.Show("Default scanner could not be opened.  Check that the default scanner works from Windows Control Panel and from Windows Fax and Scan.");
 				return;
 			}
 			EZTwain.SetResolution(ComputerPrefs.LocalComputer.ScanDocResolution);
@@ -2488,7 +2487,7 @@ namespace OpenDental {
 		private void ToolBarScanMulti_Click() {
 			if(_ehrAmendmentCur!=null) {
 				if(_ehrAmendmentCur.FileName!=null && _ehrAmendmentCur.FileName!="") {
-					if(!MsgBox.Show(this,true,"This will delete your old file. Proceed?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will delete your old file. Proceed?")) {
 						return;
 					}
 				}
@@ -2499,7 +2498,7 @@ namespace OpenDental {
 			}
 			catch {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"EzTwain4.dll not found.  Please run the setup file in your images folder.");
+				MessageBox.Show("EzTwain4.dll not found.  Please run the setup file in your images folder.");
 				return;
 			}
 			if(IsDisposed) {
@@ -2514,7 +2513,7 @@ namespace OpenDental {
 			EZTwain.SetHideUI(!ComputerPrefs.LocalComputer.ScanDocShowOptions);
 			EZTwain.PDF_SetCompression((int)this.Handle,(int)ComputerPrefs.LocalComputer.ScanDocQuality);
 			if(!EZTwain.OpenDefaultSource()) {//if it can't open the scanner successfully
-				MsgBox.Show(this,"Default scanner could not be opened.  Check that the default scanner works from Windows Control Panel and from Windows Fax and Scan.");
+				MessageBox.Show("Default scanner could not be opened.  Check that the default scanner works from Windows Control Panel and from Windows Fax and Scan.");
 				Cursor=Cursors.Default;
 				return;
 			}
@@ -3407,16 +3406,16 @@ namespace OpenDental {
 			NodeIdTag nodeIdTag;
 			if(docToDelete==null) {
 				if(treeMain.SelectedNode==null) {
-					MsgBox.Show(this,"No item is currently selected");
+					MessageBox.Show("No item is currently selected");
 					return;//No current selection, or some kind of internal error somehow.
 				}
 				nodeIdTag=(NodeIdTag)treeMain.SelectedNode.Tag;
 				if(nodeIdTag.NodeType==EnumNodeType.None) {
-					MsgBox.Show(this,"No item is currently selected");
+					MessageBox.Show("No item is currently selected");
 					return;//No current selection, or some kind of internal error somehow.
 				}
 				if(nodeIdTag.NodeType==EnumNodeType.Category) {
-					MsgBox.Show(this,"Cannot delete folders");
+					MessageBox.Show("Cannot delete folders");
 					return;
 				}
 			}
@@ -3456,7 +3455,7 @@ namespace OpenDental {
 				List<MountItem> mountItems=MountItems.GetItemsForMount(mountNum);
 				if(_idxSelectedInMount>=0 && _arrayDocumentsInMount[_idxSelectedInMount]!=null) {
 					if(verbose) {
-						if(!MsgBox.Show(this,true,"Delete mount xray image?")) {
+						if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete mount xray image?")) {
 							return;
 						}
 					}
@@ -3473,7 +3472,7 @@ namespace OpenDental {
 				}
 				else {
 					if(verbose) {
-						if(!MsgBox.Show(this,true,"Delete entire mount?")) {
+						if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete entire mount?")) {
 							return;
 						}
 					}
@@ -3487,7 +3486,7 @@ namespace OpenDental {
 			}
 			else if(nodeIdTag.NodeType==EnumNodeType.Doc) {
 				if(verbose) {
-					if(!MsgBox.Show(this,true,"Delete document?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete document?")) {
 						return;
 					}
 				}
@@ -3499,7 +3498,7 @@ namespace OpenDental {
 			}
 			else if(nodeIdTag.NodeType==EnumNodeType.Eob) {
 				if(verbose) {
-					if(!MsgBox.Show(this,true,"Delete EOB?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete EOB?")) {
 						return;
 					}
 				}
@@ -3509,7 +3508,7 @@ namespace OpenDental {
 			}
 			else if(nodeIdTag.NodeType==EnumNodeType.EhrAmend) {
 				if(verbose) {
-					if(!MsgBox.Show(this,true,"Delete amendment?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete amendment?")) {
 						return;
 					}
 				}

@@ -29,7 +29,9 @@ namespace OpenDentBusiness
 				return;
 			}
 			Dictionary<ConnectionNames, CentralConnection> dictHqCentralConnections = null;
-			if (ODBuild.IsDebug() && !ODInitialize.IsRunningInUnitTest)
+
+#if DEBUG
+			if (!ODInitialize.IsRunningInUnitTest)
 			{
 				//The database will typically have connection settings to live databases that should not be used in debug mode.
 				//Use the hard coded connection settings which developers can change as needed.
@@ -74,10 +76,8 @@ namespace OpenDentBusiness
 					#endregion
 				};
 			}
-			else
-			{//Release mode or unit testing
-			 //Get the default connection settings for all databases from the preference table.
-			}
+#endif
+
 			foreach (KeyValuePair<ConnectionNames, CentralConnection> keyValuePair in dictHqCentralConnections)
 			{
 				_dictHqCentralConnections.AddOrUpdate(keyValuePair.Key, keyValuePair.Value, (conNames, conCentral) => { return keyValuePair.Value; });

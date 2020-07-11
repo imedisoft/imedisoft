@@ -463,18 +463,18 @@ namespace OpenDental{
 				if(ComputerPrefCur!=ComputerPrefs.LocalComputer) {
 					_isRemoteEdit=true;
 				}
-				MsgBox.Show(this,"Warning, editing another computers graphical settings should be done from that computer to ensure the selected settings work." 
+				MessageBox.Show("Warning, editing another computers graphical settings should be done from that computer to ensure the selected settings work." 
 					+" We do not recommend editing this way. If you make changes for another computer you should still verifiy that they work on that machine.");
 					SecurityLogs.MakeLogEntry(Permissions.GraphicsRemoteEdit,0,"Edited graphical settings for "+ComputerPrefCur.ComputerName);
 			}
 			Text+=" - "+ComputerPrefCur.ComputerName;
 			if(ComputerPrefCur.ComputerOS==PlatformOD.Undefined){//Remote computer has not updated yet. 
-				MsgBox.Show(this,"Selected computer needs to be updated before being able to remotely change its graphical settings.");
+				MessageBox.Show("Selected computer needs to be updated before being able to remotely change its graphical settings.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
 			if(ComputerPrefCur.ComputerOS==PlatformOD.Unix) {//Force simple mode on Unix systems.
-				MsgBox.Show(this,"Linux users must use simple tooth chart.");
+				MessageBox.Show("Linux users must use simple tooth chart.");
 				radioDirectXChart.Enabled=false;
 				radioOpenGLChart.Enabled=false;
 				group3DToothChart.Enabled=false;

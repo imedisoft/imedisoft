@@ -61,7 +61,7 @@ namespace OpenDental {
 		private void FormAutoNotePromptOneResp_KeyDown(object sender,KeyEventArgs e) {
 			if(e.KeyCode==Keys.Enter) {
 				if(listMain.SelectedIndex==-1) {
-					MsgBox.Show(this,"One response must be selected");
+					MessageBox.Show("One response must be selected");
 					return;
 				}
 				ResultText=listMain.SelectedItem.ToString();
@@ -91,7 +91,7 @@ namespace OpenDental {
 
 		private void butPreview_Click(object sender,EventArgs e) {
 			if(listMain.SelectedIndex==-1) {
-				MsgBox.Show(this,"One response must be selected");
+				MessageBox.Show("One response must be selected");
 				return;
 			}
 			ResultText=listMain.SelectedItem.ToString();
@@ -105,7 +105,7 @@ namespace OpenDental {
 		}
 
 		private void butExit_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Abort autonote entry?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Abort autonote entry?")) {
 				return;
 			}
 			DialogResult=DialogResult.Cancel;

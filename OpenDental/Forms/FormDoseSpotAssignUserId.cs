@@ -66,7 +66,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(_selectedUserNum==0) {
-				MsgBox.Show(this,"Please select a user.");
+				MessageBox.Show("Please select a user.");
 				return;
 			}
 			UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(_selectedUserNum,_programErx.ProgramNum,UserOdFkeyType.Program);

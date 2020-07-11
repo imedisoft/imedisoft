@@ -318,7 +318,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(_evalCur.IsNew || MsgBox.Show(this,MsgBoxButtons.YesNo,"This will delete the evaluation.  Continue?")) {
+			if(_evalCur.IsNew || MsgBox.Show(MsgBoxButtons.YesNo,"This will delete the evaluation.  Continue?")) {
 				Evaluations.Delete(_evalCur.EvaluationNum);
 				DialogResult=DialogResult.Cancel;
 			}
@@ -326,15 +326,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDate.Text=="") {
-				MsgBox.Show(this,"Please enter a date.");
+				MessageBox.Show("Please enter a date.");
 				return;
 			}
 			if(_provStudent==null) {
-				MsgBox.Show(this,"Please attach a student to this evaluation.");
+				MessageBox.Show("Please attach a student to this evaluation.");
 				return;
 			}
 			if(!String.IsNullOrWhiteSpace(textGradeNumberOverride.Text)) {
@@ -343,7 +343,7 @@ namespace OpenDental {
 				//This will need to be taken into account when reporting since it is possible to override one grade column but not the other. i.e. A->B but number stays at 4.
 				float parsed=0;
 				if(!float.TryParse(textGradeNumberOverride.Text,out parsed)) {
-					MsgBox.Show(this,"The override for Overall Grade Number is not a valid number.  Please input a valid number to save the evaluation.");
+					MessageBox.Show("The override for Overall Grade Number is not a valid number.  Please input a valid number to save the evaluation.");
 					return;
 				}
 				_evalCur.OverallGradeNumber=parsed;

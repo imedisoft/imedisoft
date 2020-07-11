@@ -101,11 +101,11 @@ namespace OpenDental {
 
 		private void butRefresh_Click(object sender,EventArgs e) {
 			if(textDateStart.errorProvider1.GetError(textDateStart)!="" || textDateEnd.errorProvider1.GetError(textDateEnd)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDateStart.Text=="" || textDateEnd.Text=="") {
-				MsgBox.Show(this,"Please enter a date.");
+				MessageBox.Show("Please enter a date.");
 				return;
 			}
 			FillGrid();

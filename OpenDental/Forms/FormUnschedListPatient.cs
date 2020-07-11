@@ -60,7 +60,7 @@ namespace OpenDental {
 		private void SetSelectedAppt() {
 			SelectedAppt=gridMain.SelectedTag<Appointment>();
 			if(SelectedAppt==null) {//No row was selected.
-				MsgBox.Show(this,Lan.g(this,"Please select an unscheduled appointment to use."));
+				MessageBox.Show(Lan.g(this,"Please select an unscheduled appointment to use."));
 				return;
 			}
 			DialogResult=DialogResult.OK;

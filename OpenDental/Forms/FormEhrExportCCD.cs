@@ -58,7 +58,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			try {
 				if(textDate.errorProvider1.GetError(textDate)!="") {
-					MsgBox.Show(this,"Invalid date");
+					MessageBox.Show("Invalid date");
 					return;
 				}
 				DateTime date=PIn.Date(textDate.Text);

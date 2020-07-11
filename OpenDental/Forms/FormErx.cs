@@ -42,9 +42,9 @@ namespace OpenDental {
 		public void ComposeNewRxLegacy() {
 			string additionalHeaders="Content-Type: application/x-www-form-urlencoded\r\n";
 			string newCropUrl=Introspection.GetOverride(Introspection.IntrospectionEntity.NewCropRxEntryURL,"https://secure.newcropaccounts.com/interfacev7/rxentry.aspx");
-			if(ODBuild.IsDebug()) {
-				newCropUrl="https://preproduction.newcropaccounts.com/interfaceV7/rxentry.aspx";
-			}
+#if DEBUG
+			newCropUrl="https://preproduction.newcropaccounts.com/interfaceV7/rxentry.aspx";
+#endif
 			browser.Navigate(newCropUrl,"",PostDataBytes,additionalHeaders);
 		}
 

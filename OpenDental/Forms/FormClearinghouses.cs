@@ -474,12 +474,12 @@ namespace OpenDental{
 
 		private void butDefaultDental_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MsgBox.Show(this,"Please select a row first.");
+				MessageBox.Show("Please select a row first.");
 				return;
 			}
 			Clearinghouse ch=_listClearinghousesHq[gridMain.GetSelectedIndex()];
 			if(ch.Eformat==ElectronicClaimFormat.x837_5010_med_inst){//med/inst clearinghouse
-				MsgBox.Show(this,"The selected clearinghouse must first be set to a dental e-claim format.");
+				MessageBox.Show("The selected clearinghouse must first be set to a dental e-claim format.");
 				return;
 			}
 			bool isInvalid=false;
@@ -500,12 +500,12 @@ namespace OpenDental{
 
 		private void butDefaultMedical_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a row first.");
+				MessageBox.Show("Please select a row first.");
 				return;
 			}
 			Clearinghouse ch=_listClearinghousesHq[gridMain.GetSelectedIndex()];
 			if(ch.Eformat!=ElectronicClaimFormat.x837_5010_med_inst){//anything except the med/inst format
-				MsgBox.Show(this,"The selected clearinghouse must first be set to the med/inst e-claim format.");
+				MessageBox.Show("The selected clearinghouse must first be set to the med/inst e-claim format.");
 				return;
 			}
 			bool isInvalid=false;
@@ -526,7 +526,7 @@ namespace OpenDental{
 
 		private void butEligibility_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-					MsgBox.Show(this,"Please select a row first.");
+					MessageBox.Show("Please select a row first.");
 					return;
 			}
 			Clearinghouse ch=_listClearinghousesHq[gridMain.GetSelectedIndex()];
@@ -569,7 +569,7 @@ namespace OpenDental{
 
 		private void butClose_Click(object sender, System.EventArgs e) {
 			if(textReportComputerName.Text.Trim().ToLower()=="localhost" || textReportComputerName.Text.Trim()=="127.0.0.1") {
-				MsgBox.Show(this,"Computer name to fetch new reports from cannot be localhost or 127.0.0.1 or any other loopback address.");
+				MessageBox.Show("Computer name to fetch new reports from cannot be localhost or 127.0.0.1 or any other loopback address.");
 				return;
 			}
 			int reportCheckIntervalMinuteCount=0;
@@ -580,11 +580,11 @@ namespace OpenDental{
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Report check interval must be between 5 and 60 inclusive.");
+				MessageBox.Show("Report check interval must be between 5 and 60 inclusive.");
 				return;
 			}
 			if(radioTime.Checked && (textReportCheckTime.Text=="" || !textReportCheckTime.IsValid)) {
-				MsgBox.Show(this,"Please enter a time to receive reports.");
+				MessageBox.Show("Please enter a time to receive reports.");
 				return;
 			}
 			bool doRestartToShowChanges=false;
@@ -613,7 +613,7 @@ namespace OpenDental{
 				}
 			}
 			if(doRestartToShowChanges) {
-				MsgBox.Show(this,"You will need to restart the program for changes to take effect.");
+				MessageBox.Show("You will need to restart the program for changes to take effect.");
 			}
 			if(doInvalidateCache) {
 				DataValid.SetInvalid(InvalidType.Prefs);
@@ -623,7 +623,7 @@ namespace OpenDental{
 
 		private void FormClearinghouses_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 			if(PrefC.GetLong(PrefName.ClearinghouseDefaultDent)==0){
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"A default clearinghouse should be set. Continue anyway?")){
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"A default clearinghouse should be set. Continue anyway?")){
 					e.Cancel=true;
 					return;
 				}
@@ -636,7 +636,7 @@ namespace OpenDental{
 			Clearinghouse chDent=Clearinghouses.GetClearinghouse(PrefC.GetLong(PrefName.ClearinghouseDefaultDent));
 			if(chDent!=null) {
 				if(chDent.Eformat==ElectronicClaimFormat.x837_5010_med_inst) {//mismatch
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"The default dental clearinghouse should be set to a dental e-claim format.  Continue anyway?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The default dental clearinghouse should be set to a dental e-claim format.  Continue anyway?")) {
 						e.Cancel=true;
 						return;
 					}
@@ -646,7 +646,7 @@ namespace OpenDental{
 			Clearinghouse chMed=Clearinghouses.GetClearinghouse(PrefC.GetLong(PrefName.ClearinghouseDefaultMed));
 			if(chMed!=null) {
 				if(chMed.Eformat!=ElectronicClaimFormat.x837_5010_med_inst) {//mismatch
-					if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"The default medical clearinghouse should be set to a med/inst e-claim format.  Continue anyway?")) {
+					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The default medical clearinghouse should be set to a med/inst e-claim format.  Continue anyway?")) {
 						e.Cancel=true;
 						return;
 					}

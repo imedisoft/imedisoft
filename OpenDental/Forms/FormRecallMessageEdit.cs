@@ -29,7 +29,7 @@ namespace OpenDental {
 				|| _prefName==PrefName.WebSchedSubject) 
 			{
 				if(textMain.Text.Length>200) {
-					MsgBox.Show(this,"Email subjects cannot be longer than 200 characters.");
+					MessageBox.Show("Email subjects cannot be longer than 200 characters.");
 					return;
 				}
 			}
@@ -40,7 +40,7 @@ namespace OpenDental {
 				|| _prefName==PrefName.WebSchedMessage3) 
 			{
 				if(!textMain.Text.Contains("[URL]")
-					&& !MsgBox.Show(this,MsgBoxButtons.OKCancel,urlWarning)) 
+					&& !MsgBox.Show(MsgBoxButtons.OKCancel,urlWarning)) 
 				{
 					return;
 				}
@@ -52,7 +52,7 @@ namespace OpenDental {
 				if(textMain.Text.Contains("[URL]")) {
 					textMain.Text=textMain.Text.Replace("[URL].","[URL] .");//Clicking a link with a period will not get recognized. 
 				}
-				else if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,urlWarning)) {
+				else if(!MsgBox.Show(MsgBoxButtons.OKCancel,urlWarning)) {
 					return;
 				}
 			}

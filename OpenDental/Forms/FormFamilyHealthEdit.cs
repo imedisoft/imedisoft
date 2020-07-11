@@ -43,7 +43,7 @@ namespace OpenDental {
 			//the list should only ever contain one item.
 			DiseaseDef disDef=FormD.ListSelectedDiseaseDefs[0];
 			if(disDef.SnomedCode=="") {
-				MsgBox.Show(this,"Selection must have a SNOMED CT code associated");
+				MessageBox.Show("Selection must have a SNOMED CT code associated");
 				return;
 			}
 			textProblem.Text=disDef.DiseaseName;
@@ -56,7 +56,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			FamilyHealths.Delete(FamilyHealthCur.FamilyHealthNum);
@@ -66,15 +66,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(listRelationship.SelectedIndex<0) {
-				MsgBox.Show(this,"Relationship required.");
+				MessageBox.Show("Relationship required.");
 				return;
 			}
 			if(textName.Text.Trim()=="") {
-				MsgBox.Show(this,"Name required.");
+				MessageBox.Show("Name required.");
 				return;
 			}
 			if(DisDefCur==null) {
-				MsgBox.Show(this,"Problem required.");
+				MessageBox.Show("Problem required.");
 				return;
 			}
 			FamilyHealthCur.DiseaseDefNum=DisDefCur.DiseaseDefNum;

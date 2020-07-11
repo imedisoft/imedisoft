@@ -37,7 +37,7 @@ namespace OpenDental.Bridges{
 					ODFileUtils.ProcessStart(path);
 				}
 				catch{
-					MsgBox.Show("DrCeph","Program path not set properly.");
+					MsgBox.Show("Program path not set properly.");
 					return;
 				}
 				Thread.Sleep(TimeSpan.FromSeconds(4));

@@ -460,7 +460,7 @@ namespace OpenDental{
 			}
 			List<ODTuple<Medication,string>> listImportMeds=new List<ODTuple<Medication,string>>();
 			//Leaving code here to include later when we have developed a default medications list available for download.
-			//if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Click Yes to download and import default medication list.\r\nClick No to import from a file.")) {
+			//if(MsgBox.Show(MsgBoxButtons.YesNo,"Click Yes to download and import default medication list.\r\nClick No to import from a file.")) {
 			//	Cursor=Cursors.WaitCursor;
 			//	listImportMeds=DownloadDefaultMedications();//Import from OpenDental.com
 			//}
@@ -509,14 +509,8 @@ namespace OpenDental{
 				return;
 			}
 			int countExportedMeds=0;
-			string fileName;
-			if(ODBuild.IsWeb()) {
-				fileName="ExportedMedications.txt";
-			}
-			else {
-				//Prompt for file.
-				fileName=GetFilenameFromUser(false);
-			}
+			string fileName=GetFilenameFromUser(false);
+			
 			if(string.IsNullOrEmpty(fileName)) {
 				return;
 			}
@@ -560,7 +554,7 @@ namespace OpenDental{
 				dlg=null;
 			}
 			else if(isImport && !File.Exists(dlg.FileName)){
-				MsgBox.Show(this,"Error accessing file.");
+				MessageBox.Show("Error accessing file.");
 				dlg=null;
 			}
 			Cursor=Cursors.Default;
@@ -593,7 +587,7 @@ namespace OpenDental{
 			Medication med=(Medication)gridAllMedications.ListGridRows[e.Row].Tag;
 			med=Medications.GetMedication(med.MedicationNum);
 			if(med==null) {//Possible to delete the medication from a separate WS while medication loaded in memory.
-				MsgBox.Show(this,"An error occurred loading medication.");
+				MessageBox.Show("An error occurred loading medication.");
 				return;
 			}
 			if(IsSelectionMode){
@@ -612,7 +606,7 @@ namespace OpenDental{
 
 		private void butConvertGeneric_Click(object sender,EventArgs e) {
 			if(gridMissing.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item from the list before attempting to convert.");
+				MessageBox.Show("Please select an item from the list before attempting to convert.");
 				return;
 			}
 			List<MedicationPat> listMedPats=(List<MedicationPat>)gridMissing.ListGridRows[gridMissing.SelectedIndices[0]].Tag;
@@ -622,7 +616,7 @@ namespace OpenDental{
 				listRxCuiMeds=Medications.GetAllMedsByRxCui(listMedPats[0].RxCui);
 				medGeneric=listRxCuiMeds.FirstOrDefault(x => x.MedicationNum==x.GenericNum);
 				if(medGeneric==null && listRxCuiMeds.FirstOrDefault(x => x.MedicationNum!=x.GenericNum)!=null) {//A Brand Medication exists with matching RxCui.
-					MsgBox.Show(this,"A brand medication matching the RxNorm of the selected medication already exists in the medication list.  "
+					MessageBox.Show("A brand medication matching the RxNorm of the selected medication already exists in the medication list.  "
 						+"You cannot create a generic for the selected medication.  Use the Convert to Brand button instead.");
 					return;
 				}
@@ -643,7 +637,7 @@ namespace OpenDental{
 				}
 			}
 			else if(medGeneric!=null &&
-				!MsgBox.Show(this,true,"A generic medication matching the RxNorm of the selected medication already exists in the medication list.  "
+				!MsgBox.Show(MsgBoxButtons.YesNo,"A generic medication matching the RxNorm of the selected medication already exists in the medication list.  "
 					+"Click OK to use the existing medication as the generic for the selected medication, or click Cancel to abort."))
 			{
 				return;
@@ -652,12 +646,12 @@ namespace OpenDental{
 			MedicationPats.UpdateMedicationNumForMany(medGeneric.MedicationNum,listMedPats.Select(x => x.MedicationPatNum).ToList());
 			FillTab();
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void butConvertBrand_Click(object sender,EventArgs e) {
 			if(gridMissing.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item from the list before attempting to convert.");
+				MessageBox.Show("Please select an item from the list before attempting to convert.");
 				return;
 			}
 			List<MedicationPat> listMedPats=(List<MedicationPat>)gridMissing.ListGridRows[gridMissing.SelectedIndices[0]].Tag;
@@ -667,7 +661,7 @@ namespace OpenDental{
 				listRxCuiMeds=Medications.GetAllMedsByRxCui(listMedPats[0].RxCui);
 				medBrand=listRxCuiMeds.FirstOrDefault(x => x.MedicationNum!=x.GenericNum);
 				if(medBrand==null && listRxCuiMeds.FirstOrDefault(x => x.MedicationNum==x.GenericNum)!=null) {//A Generic Medication exists with matching RxCui.
-					MsgBox.Show(this,"A generic medication matching the RxNorm of the selected medication already exists in the medication list.  "
+					MessageBox.Show("A generic medication matching the RxNorm of the selected medication already exists in the medication list.  "
 						+"You cannot create a brand for the selected medication.  Use the Convert to Generic button instead.");
 					return;
 				}
@@ -681,7 +675,7 @@ namespace OpenDental{
 					}
 				}
 				if(medGeneric==null) {
-					MsgBox.Show(this,"Please select a generic medication from the All Medications tab before attempting to convert.  "
+					MessageBox.Show("Please select a generic medication from the All Medications tab before attempting to convert.  "
 						+"The selected medication will be used as the generic medication for the new brand medication.");
 					return;
 				}
@@ -699,7 +693,7 @@ namespace OpenDental{
 				}
 			}
 			else if(medBrand!=null &&
-				!MsgBox.Show(this,true,"A brand medication matching the RxNorm of the selected medication already exists in the medication list.  "
+				!MsgBox.Show(MsgBoxButtons.YesNo,"A brand medication matching the RxNorm of the selected medication already exists in the medication list.  "
 					+"Click OK to use the existing medication as the brand for the selected medication, or click Cancel to abort."))
 			{
 				return;
@@ -708,7 +702,7 @@ namespace OpenDental{
 			MedicationPats.UpdateMedicationNumForMany(medBrand.MedicationNum,listMedPats.Select(x => x.MedicationPatNum).ToList());
 			FillTab();
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {

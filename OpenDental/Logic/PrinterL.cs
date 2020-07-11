@@ -62,24 +62,29 @@ namespace OpenDental {
 		///<param name="printoutOrigin">Defaults to printer default.  Set to AtMargin if the graphics origin starts at the page margins; AtZero if the graphics origin is at the top-left corner of the printable page.</param>
 		///<param name="printoutOrientation">Defaults to printers default value.  Otherwise specify a value for either landscape or portrait.</param>
 		///<returns>Returns true if succesfully printed, or if preview is shown and OK is clicked.</returns>
-		public static bool TryPrintOrDebugRpPreview(PrintPageEventHandler printPageHandler,string auditDescription
-			,PrintoutOrientation printoutOrientation=PrintoutOrientation.Default,PrintSituation printSit=PrintSituation.Default,long auditPatNum=0
-			,Margins margins=null,PrintoutOrigin printoutOrigin=PrintoutOrigin.Default,bool isForcedPreview=false)
+		public static bool TryPrintOrDebugRpPreview(PrintPageEventHandler printPageHandler, string auditDescription
+			, PrintoutOrientation printoutOrientation = PrintoutOrientation.Default, PrintSituation printSit = PrintSituation.Default, long auditPatNum = 0
+			, Margins margins = null, PrintoutOrigin printoutOrigin = PrintoutOrigin.Default, bool isForcedPreview = false)
 		{
-			ODprintout printout=new ODprintout(
+			ODprintout printout = new ODprintout(
 				printPageHandler,
 				printSit,
 				auditPatNum,
 				auditDescription,
 				margins,
 				printoutOrigin,
-				printoutOrientation:printoutOrientation,
-				duplex:Duplex.Default
+				printoutOrientation: printoutOrientation,
+				duplex: Duplex.Default
 			);
-			if(ODBuild.IsDebug() || isForcedPreview) {
+#if DEBUG
+			return RpPreview(printout);
+#else
+			if (isForcedPreview) 
+			{
 				return RpPreview(printout);
 			}
 			return TryPrint(printout);
+#endif
 		}
 
 		///<summary>Attempts to print if in RELEASE mode or if in DEBUG mode will open ODprintout in FormPrintPreview.</summary>
@@ -90,11 +95,11 @@ namespace OpenDental {
 		///<param name="printoutOrigin">Defaults to printer default.  Set to AtMargin if the graphics origin starts at the page margins; AtZero if the graphics origin is at the top-left corner of the printable page.</param>
 		///<param name="printoutOrientation">Defaults to printers default value.  Otherwise specify a value for either landscape or portrait.</param>
 		///<returns>Returns true if succesfully printed, or if preview is shown and OK is clicked.</returns>
-		public static bool TryPrintOrDebugClassicPreview(PrintPageEventHandler printPageEventHandler,string auditDescription,Margins margins=null
-			,int totalPages=1,PrintSituation printSit=PrintSituation.Default,PrintoutOrigin printoutOrigin=PrintoutOrigin.Default
-			,PrintoutOrientation printoutOrientation=PrintoutOrientation.Default,bool isForcedPreview=false,long auditPatNum=0,PaperSize paperSize=null)
+		public static bool TryPrintOrDebugClassicPreview(PrintPageEventHandler printPageEventHandler, string auditDescription, Margins margins = null
+			, int totalPages = 1, PrintSituation printSit = PrintSituation.Default, PrintoutOrigin printoutOrigin = PrintoutOrigin.Default
+			, PrintoutOrientation printoutOrientation = PrintoutOrientation.Default, bool isForcedPreview = false, long auditPatNum = 0, PaperSize paperSize = null)
 		{
-			ODprintout printout=new ODprintout(
+			ODprintout printout = new ODprintout(
 				printPageEventHandler,
 				printSit,
 				auditPatNum,
@@ -103,12 +108,17 @@ namespace OpenDental {
 				printoutOrigin,
 				paperSize,
 				printoutOrientation,
-				totalPages:totalPages
+				totalPages: totalPages
 			);
-			if(ODBuild.IsDebug() || isForcedPreview) {
+#if DEBUG
+			return PreviewClassic(printout);
+#else
+			if (isForcedPreview)
+			{
 				return PreviewClassic(printout);
 			}
 			return TryPrint(printout);
+#endif
 		}
 
 		///<summary>Attempts to print a PrintDocument that has some added functionality.  All printing in Open Dental should use this method (or an ODprintout object) for printing.</summary>
@@ -191,7 +201,7 @@ namespace OpenDental {
 		}
 
 		private static bool SetPrinter(PrinterSettings pSet,PrintSituation printSit,long patNum,string auditDescription) {
-			#region 1 - Set default printer if available from this computer.
+#region 1 - Set default printer if available from this computer.
 			//pSet will always be new when this function is called.
 			//Get the name of the Windows default printer.
 			//This method only works when the pSet is still new.
@@ -208,8 +218,8 @@ namespace OpenDental {
 					pSet.PrinterName=printerName;
 				}
 			}
-			#endregion 1
-			#region 2 - If a printer is set for this situation, and it is in the list of installed printers, use it.
+#endregion 1
+#region 2 - If a printer is set for this situation, and it is in the list of installed printers, use it.
 			if(printSit!=PrintSituation.Default){
 				printerForSit=Printers.GetForSit(printSit);
 				printerName="";
@@ -221,8 +231,8 @@ namespace OpenDental {
 					}
 				}
 			}
-			#endregion 2
-			#region 3 - Present the dialog
+#endregion 2
+#region 3 - Present the dialog
 			if(doPrompt) {
 				PrintDialog dialog=new PrintDialog();
 				dialog.AllowSomePages=true;
@@ -238,7 +248,7 @@ namespace OpenDental {
 					return false;
 				}
 			}
-			#endregion 3
+#endregion 3
 			//Create audit log entry for printing.  PatNum can be 0.
 			if(!string.IsNullOrEmpty(auditDescription)){
 				SecurityLogs.MakeLogEntry(Permissions.Printing,patNum,auditDescription);

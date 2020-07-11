@@ -479,7 +479,7 @@ namespace OpenDental {
 
 		private void menuItemGridGoToAccount_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length!=1) {
-				MsgBox.Show(this,"Please select exactly one patient.");
+				MessageBox.Show("Please select exactly one patient.");
 				return;
 			}
 			DataRow row=(DataRow)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;

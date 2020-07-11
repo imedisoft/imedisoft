@@ -115,7 +115,7 @@ namespace OpenDental.UI{
 			if(_printout==null) {//Old print pattern.
 				//Try to find the printable area.  If there are no printers, it will throw an InvalidPrinterException
 				if(PrinterSettings.InstalledPrinters.Count==0) {
-					MsgBox.Show(this,"Error: No Printers Installed\r\n"+
+					MessageBox.Show("Error: No Printers Installed\r\n"+
 										"If you do have a printer installed, restarting the workstation may solve the problem."
 					);
 					DialogResult=DialogResult.Cancel;

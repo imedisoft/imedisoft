@@ -100,15 +100,15 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDescript.Text.Trim()=="") {
-				MsgBox.Show(this,"Please enter a description.");
+				MessageBox.Show("Please enter a description.");
 				return;
 			}
 			if(_feeSchedCur==null) {
-				MsgBox.Show(this,"Please select a fee schedule.");
+				MessageBox.Show("Please select a fee schedule.");
 				return;
 			}
 			if(comboBoxAdjType.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select an adjustment type.\r\nYou may need to create discount plan adjustment types within definition setup.");
+				MessageBox.Show("Please select an adjustment type.\r\nYou may need to create discount plan adjustment types within definition setup.");
 				return;
 			}
 			DiscountPlanCur.Description=textDescript.Text;

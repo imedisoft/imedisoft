@@ -49,7 +49,7 @@ namespace OpenDental {
 			}
 			if(listProvsKeyed.Count==0) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"No providers found with ehr keys.");
+				MessageBox.Show("No providers found with ehr keys.");
 				return;
 			}
 			for(int i=0;i<listProvsKeyed.Count;i++) {
@@ -66,13 +66,13 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			if(comboProv.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a provider first.");
+				MessageBox.Show("Please select a provider first.");
 				return;
 			}
 			DateTime dateStart=PIn.Date(textDateStart.Text);
 			DateTime dateEnd=PIn.Date(textDateEnd.Text);
 			if(dateStart==DateTime.MinValue || dateEnd==DateTime.MinValue) {
-				MsgBox.Show(this,"Fix date format and try again.");
+				MessageBox.Show("Fix date format and try again.");
 				return;
 			}
 			_dateStart=dateStart;
@@ -136,16 +136,16 @@ namespace OpenDental {
 
 		private void butCreateQRDAs_Click(object sender,EventArgs e) {
 			if(comboProv.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a provider first.");
+				MessageBox.Show("Please select a provider first.");
 				return;
 			}
 			if(listQ==null) {
-				MsgBox.Show(this,"Click Refresh first.");
+				MessageBox.Show("Click Refresh first.");
 				return;
 			}
 			long provSelected=listProvsKeyed[comboProv.SelectedIndex].ProvNum;
 			if(_provNum!=provSelected) {
-				MsgBox.Show(this,"The values in the grid do not apply to the provider selected.  Click Refresh first.");
+				MessageBox.Show("The values in the grid do not apply to the provider selected.  Click Refresh first.");
 				return;
 			}
 			Provider provDefault=Providers.GetProv(PrefC.GetLong(PrefName.PracticeDefaultProv));
@@ -154,13 +154,13 @@ namespace OpenDental {
 			//Prompt user to select the provider to set as the legal authenticator for the QRDA documents.
 			//The Legal Authenticator must have a valid first name, last name, and NPI number and is the "single person legally responsible for the document" and "must be a person".
 			if(provDefault.IsNotPerson) {
-				MsgBox.Show(this,"The practice default provider is marked 'Not a Person'.  Please select the provider legally responsible for the documents.  The provider must have a first name, last name, and NPI number.");
+				MessageBox.Show("The practice default provider is marked 'Not a Person'.  Please select the provider legally responsible for the documents.  The provider must have a first name, last name, and NPI number.");
 				FormProviderPick FormPP=new FormProviderPick();
 				if(FormPP.ShowDialog()!=DialogResult.OK) {
 					return;
 				}
 				if(Providers.GetProv(FormPP.SelectedProvNum).IsNotPerson) {
-					MsgBox.Show(this,"The selected provider was marked 'Not a person'.");
+					MessageBox.Show("The selected provider was marked 'Not a person'.");
 					return;
 				}
 				provNumLegal=FormPP.SelectedProvNum;
@@ -201,12 +201,12 @@ namespace OpenDental {
 				return;
 			}
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"QRDA files have been created within the selected directory.");
+			MessageBox.Show("QRDA files have been created within the selected directory.");
 		}
 
 		private void butSubmit_Click(object sender,EventArgs e) {
 			if(listQ==null) {
-				MsgBox.Show(this,"Click Refresh first.");
+				MessageBox.Show("Click Refresh first.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -240,7 +240,7 @@ namespace OpenDental {
 				return;
 			}
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Sent");
+			MessageBox.Show("Sent");
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

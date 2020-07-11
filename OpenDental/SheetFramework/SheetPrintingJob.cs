@@ -86,53 +86,57 @@ namespace OpenDental {
 		}
 
 		///<summary>Surround with try/catch.</summary>
-		public void PrintBatch(List<Sheet> sheetBatch){
+		public void PrintBatch(List<Sheet> sheetBatch)
+		{
 			//currently no validation for parameters in a batch because of the way it was created.
 			//could validate field names here later.
-			_listSheets=sheetBatch;
-			_sheetsPrinted=0;
-			_pagesPrinted=0;
-			_yPosPrint=0;
-			PrintSituation sit=PrintSituation.Default;
-			switch(sheetBatch[0].SheetType){
+			_listSheets = sheetBatch;
+			_sheetsPrinted = 0;
+			_pagesPrinted = 0;
+			_yPosPrint = 0;
+			PrintSituation sit = PrintSituation.Default;
+			switch (sheetBatch[0].SheetType)
+			{
 				case SheetTypeEnum.LabelPatient:
 				case SheetTypeEnum.LabelCarrier:
 				case SheetTypeEnum.LabelReferral:
-					sit=PrintSituation.LabelSingle;
+					sit = PrintSituation.LabelSingle;
 					break;
 				case SheetTypeEnum.ReferralSlip:
-					sit=PrintSituation.Default;
+					sit = PrintSituation.Default;
 					break;
 				case SheetTypeEnum.RxMulti:
-					sit=PrintSituation.RxMulti;
+					sit = PrintSituation.RxMulti;
 					break;
 			}
 			//Moved Calculate heights here because we need to caluclate height before printing, not while we are printing.
-			foreach(Sheet s in _listSheets) {
-				SheetUtil.CalculateHeights(s,null,null,_isPrinting,_printMargin.Top,_printMargin.Bottom);
+			foreach (Sheet s in _listSheets)
+			{
+				SheetUtil.CalculateHeights(s, null, null, _isPrinting, _printMargin.Top, _printMargin.Bottom);
 			}
-			Margins margins=new Margins(20,20,0,0);
-			int pageCount=0;
-			if(ODBuild.IsDebug()) {
-				foreach(Sheet s in _listSheets) {
-					//SetForceSinglePage(s);
-					SheetUtil.CalculateHeights(s,null,null,_isPrinting,_printMargin.Top,_printMargin.Bottom);
-					pageCount+=Sheets.CalculatePageCount(s,_printMargin);//(_forceSinglePage?1:Sheets.CalculatePageCount(s,_printMargin));
-				}
+			Margins margins = new Margins(20, 20, 0, 0);
+			int pageCount = 0;
+#if DEBUG
+			foreach (Sheet s in _listSheets)
+			{
+				//SetForceSinglePage(s);
+				SheetUtil.CalculateHeights(s, null, null, _isPrinting, _printMargin.Top, _printMargin.Bottom);
+				pageCount += Sheets.CalculatePageCount(s, _printMargin);//(_forceSinglePage?1:Sheets.CalculatePageCount(s,_printMargin));
 			}
-			else {
-				foreach(Sheet s in _listSheets) {
-					s.SheetFields.Sort(OpenDentBusiness.SheetFields.SortDrawingOrderLayers);
-				}
-				margins=new Margins(0,0,0,0);
+#else
+			foreach(Sheet s in _listSheets) 
+			{
+				s.SheetFields.Sort(OpenDentBusiness.SheetFields.SortDrawingOrderLayers);
 			}
+			margins=new Margins(0,0,0,0);
+#endif
 			PrinterL.TryPrintOrDebugClassicPreview(pd_PrintPage,
-				Lan.g(nameof(PrinterL),"Batch of")+" "+sheetBatch[0].Description+" "+Lan.g(nameof(PrinterL),"printed"),
+				Lan.g(nameof(PrinterL), "Batch of") + " " + sheetBatch[0].Description + " " + Lan.g(nameof(PrinterL), "printed"),
 				margins,
 				pageCount,
 				sit,
 				PrintoutOrigin.AtMargin,
-				(sheetBatch[0].IsLandscape?PrintoutOrientation.Landscape:PrintoutOrientation.Portrait)
+				(sheetBatch[0].IsLandscape ? PrintoutOrientation.Landscape : PrintoutOrientation.Portrait)
 			);
 		}
 
@@ -156,7 +160,7 @@ namespace OpenDental {
 			List<List<RxPat>> batches=new List<List<RxPat>>();
 			for(int i = 0;i<listRxs.Count;i++) {
 				if(SheetPrinting.ValidateRxForSheet(listRxs[i])!="") {
-					MsgBox.Show("Sheets","One or more of the selected prescriptions is missing information.\r\nPlease fix and try again.");
+					MsgBox.Show("One or more of the selected prescriptions is missing information.\r\nPlease fix and try again.");
 					return;
 				}
 				if(i>0 && i%batchSize==0) {
@@ -250,9 +254,9 @@ namespace OpenDental {
 			for(int i=0;i<copies;i++) {
 				_listSheets.Add(sheet.Copy());
 			}
-			#if DEBUG
+#if DEBUG
 			isPreviewMode=true;
-			#endif
+#endif
 			int pageCount=0;//Default for ODprintout.
 			if(isPreviewMode) {//pageCount only shows in preview mode.
 				foreach(Sheet s in _listSheets) {
@@ -275,9 +279,9 @@ namespace OpenDental {
 			_isPrinting=false;
 			GC.Collect();//We are done with printing so we can forcefully clean up all the objects and controls that were used in printing.
 		}
-		#endregion Public Methods - Print
+#endregion Public Methods - Print
 
-		#region Private Methods
+#region Private Methods
 		///<summary>Returns a list of the integer values corresponding to the Rx multi defs (1 through 6) found on the MultiRx sheet.
 		///An rx is considered valid if it has ProvNameFL,PatNameFL,PatBirthdate, and Drug</summary>
 		private List<int> GetSheetRxCount(SheetDef sheetDef) {
@@ -482,14 +486,14 @@ namespace OpenDental {
 			}
 			OpenDentBusiness.SheetDrawingJob.DrawHeader(sheet,g,null,_pagesPrinted,_yPosPrint);
 			OpenDentBusiness.SheetDrawingJob.DrawFooter(sheet,g,null,_pagesPrinted,_yPosPrint,_medLab);
-			#if DEBUG
+#if DEBUG
 			if(_printCalibration) {
 				OpenDentBusiness.SheetDrawingJob.DrawCalibration(sheet,g,e,null,null);
 			}
-			#endif
+#endif
 			g.Dispose();
 			g=null;
-			#region Set variables for next page to be printed
+#region Set variables for next page to be printed
 			_yPosPrint+=sheet.HeightPage-_printMargin.Bottom-_printMargin.Top;//move _yPosPrint down equal to the amount of printable area per page.
 			_pagesPrinted++;
 			if(_pagesPrinted<Sheets.CalculatePageCount(sheet,_printMargin)) {
@@ -507,8 +511,8 @@ namespace OpenDental {
 					_sheetsPrinted=0;
 				}
 			}
-			#endregion
+#endregion
 		}
-		#endregion Private Methods	
+#endregion Private Methods	
 	}
 }

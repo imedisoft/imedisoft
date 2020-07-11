@@ -700,7 +700,7 @@ namespace OpenDental{
 			string compName=SystemInformation.ComputerName;
 			if(checkSimple.Checked && !PrefC.GetBool(PrefName.EasyHidePrinters)){
 				//if user clicked the simple option
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Warning!  You have selected the simple interface option."+
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Warning!  You have selected the simple interface option."+
 					"  This will force all computers to use the simple mode."+
 					"  This will also clear all printing preferences for all other computers and set them back to default."+
 					"  Are you sure you wish to continue?"))

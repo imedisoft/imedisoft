@@ -73,7 +73,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!File.Exists(_tempPath)) {
-				MsgBox.Show(this,"Please record a sound first.");
+				MessageBox.Show("Please record a sound first.");
 				return;
 			}
 			try {

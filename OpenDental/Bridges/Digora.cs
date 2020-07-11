@@ -39,7 +39,7 @@ namespace OpenDental.Bridges{
 		//option -r creates patient if not found, -a changes focus to Digora
 		public static void SendData(Program ProgramCur, Patient pat){
 			if(pat==null) {
-				MsgBox.Show("Digora","No patient selected.");
+				MsgBox.Show("No patient selected.");
 				return;
 			}
 			List<ProgramProperty> ForProgram =ProgramProperties.GetForProgram(ProgramCur.ProgramNum);
@@ -57,7 +57,7 @@ namespace OpenDental.Bridges{
 			}
 			catch(Exception) {
 				//The clipboard will sometimes fail to SetText for many different reasons.  Often times another attempt will be successful.
-				MsgBox.Show("Digora","Error accessing the clipboard, please try again.");
+				MsgBox.Show("Error accessing the clipboard, please try again.");
 				return;
 			}
 		}

@@ -243,7 +243,7 @@ namespace CentralManager
 				}
 				Prefs.UpdateString(PrefName.CentralManagerSyncCode, syncCodePref);
 			}
-			if (!ODBuild.IsDebug() && storedVersion.CompareTo(currentVersion) != 0)
+			if (storedVersion.CompareTo(currentVersion) != 0)
 			{
 				OpenDental.MessageBox.Show(Lan.g(this, "Program version") + ": " + currentVersion.ToString() + "\r\n"
 					+ Lan.g(this, "Database version") + ": " + storedVersion.ToString() + "\r\n"
@@ -405,7 +405,7 @@ namespace CentralManager
 		{
 			if (gridConns.SelectedIndices.Count() != 1)
 			{
-				MsgBox.Show(this, "Please select one and only one connection to start transfer.");
+				MsgBox.Show("Please select one and only one connection to start transfer.");
 				return;
 			}
 			//long selectedCentralConnNum=gridConns.SelectedTag<CentralConnection>().CentralConnectionNum;
@@ -414,7 +414,7 @@ namespace CentralManager
 			CentralConnection connSelected = gridConns.SelectedTag<CentralConnection>();
 			if (!connSelected.IsConnectionValid())
 			{
-				MsgBox.Show(this, "Server Offline.  Fix connection and check status again to connect.");
+				MsgBox.Show("Server Offline.  Fix connection and check status again to connect.");
 				return;
 			}
 			FormCentralPatientTransfer FormCentralConnectionPatientTransfer = new FormCentralPatientTransfer(connSelected,
@@ -503,12 +503,12 @@ namespace CentralManager
 			if (!_listGroupPermissions_Reports.Exists(x => x.FKey == _listDisplayReports_ProdInc.FirstOrDefault(y =>
 				   y.InternalName == DisplayReports.ReportNames.ODMoreOptions)?.DisplayReportNum))
 			{
-				MsgBox.Show(this, "You do not have the 'More Options' report permission.");
+				MsgBox.Show("You do not have the 'More Options' report permission.");
 				return;
 			}
 			if (Security.CurUser.ProvNum == 0 && !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true))
 			{
-				MsgBox.Show(this, "The current user needs to have the 'All Providers' permission for this report");
+				MsgBox.Show("The current user needs to have the 'All Providers' permission for this report");
 				return;
 			}
 			List<CentralConnection> listSelectedConn = new List<CentralConnection>();
@@ -518,14 +518,14 @@ namespace CentralManager
 			}
 			if (listSelectedConn.Count == 0)
 			{
-				MsgBox.Show(this, "Please select at least one connection to run this report against.");
+				MsgBox.Show("Please select at least one connection to run this report against.");
 				return;
 			}
 			foreach (CentralConnection conn in listSelectedConn)
 			{
 				if (conn.ConnectionStatus.Contains("OFFLINE"))
 				{
-					MsgBox.Show(this, "One or more connections are offline. Please remove the offline connection to run this report.");
+					MsgBox.Show("One or more connections are offline. Please remove the offline connection to run this report.");
 					return;
 				}
 			}
@@ -1060,13 +1060,13 @@ namespace CentralManager
 		{
 			if (conn.ConnectionStatus.StartsWith("OFFLINE"))
 			{
-				MsgBox.Show(this, "Server Offline.  Fix connection and check status again to connect.");
+				MsgBox.Show("Server Offline.  Fix connection and check status again to connect.");
 				return;
 			}
 			//Only if they are not using dynamic mode is a version mismatch a problem.
 			if (conn.ConnectionStatus != "OK" && !PrefC.GetBool(PrefName.CentralManagerUseDynamicMode))
 			{
-				MsgBox.Show(this, "Version mismatch.  Either update your program or update the remote server's program and check status again to connect.");
+				MsgBox.Show("Version mismatch.  Either update your program or update the remote server's program and check status again to connect.");
 				return;
 			}
 			if (string.IsNullOrEmpty(conn.DatabaseName))

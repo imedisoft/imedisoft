@@ -199,15 +199,15 @@ namespace OpenDental {
 
 		private void butAdd_Click(object sender,EventArgs e) {
 			if(Defs.GetDefsForCategory(DefCat.SupplyCats,true).Count==0) {
-				MsgBox.Show(this,"No supply categories have been created.  Go to the supply inventory window, select categories, and enter at least one supply category first.");
+				MessageBox.Show("No supply categories have been created.  Go to the supply inventory window, select categories, and enter at least one supply category first.");
 				return;
 			}
 			if(_listSuppliers.Count==0) {
-				MsgBox.Show(this,"No suppliers have been created.  Go to the suppliers window to add suppliers first.");
+				MessageBox.Show("No suppliers have been created.  Go to the suppliers window to add suppliers first.");
 				return;
 			}
 			if(comboSuppliers.IsAllSelected || comboSuppliers.SelectedIndices.Count==0){
-				MsgBox.Show(this,"Please select one supplier, first.");//because supplier can't ever change, so they need to be looking at just one supplier.
+				MessageBox.Show("Please select one supplier, first.");//because supplier can't ever change, so they need to be looking at just one supplier.
 				//an enhancement would be to let them pick a supplier for a new supply, but then not edit.
 				return;
 			}
@@ -308,25 +308,25 @@ namespace OpenDental {
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(textFind.Text!=""){
-				MsgBox.Show(this,"Not allowed unless search text is empty.");
+				MessageBox.Show("Not allowed unless search text is empty.");
 				return;
 			}
 			if(!comboSuppliers.IsAllSelected){
-				MsgBox.Show(this,"Not allowed unless All suppliers are selected.");
+				MessageBox.Show("Not allowed unless All suppliers are selected.");
 				return;
 			}
 			List<int> listSelected=gridMain.SelectedIndices.ToList<int>();
 			if(listSelected.Count==0){
-				MsgBox.Show(this,"Please select at least one supply, first.");
+				MessageBox.Show("Please select at least one supply, first.");
 				return;
 			}
 			for(int i=1;i<listSelected.Count;i++) {
 				if(_listSupplies[listSelected[0]].Category != _listSupplies[listSelected[i]].Category){
-					MsgBox.Show(this,"All selected supplies must be in the same category.");
+					MessageBox.Show("All selected supplies must be in the same category.");
 					return;
 				}
 				if(listSelected[i-1]+1 != listSelected[i]){
-					MsgBox.Show(this,"Selection must not have gaps.");//makes my math too hard
+					MessageBox.Show("Selection must not have gaps.");//makes my math too hard
 					return;
 				}
 			}
@@ -334,7 +334,7 @@ namespace OpenDental {
 				return;//already at top
 			}
 			if(_listSupplies[listSelected[0]].Category != _listSupplies[listSelected[0]-1].Category){
-				MsgBox.Show(this,"Already at top of category.");
+				MessageBox.Show("Already at top of category.");
 				return;
 			}
 			//we should only have to move them up one, but there could be hidden supplies that would require moving up more.
@@ -364,25 +364,25 @@ namespace OpenDental {
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(textFind.Text!=""){
-				MsgBox.Show(this,"Not allowed unless search text is empty.");
+				MessageBox.Show("Not allowed unless search text is empty.");
 				return;
 			}
 			if(!comboSuppliers.IsAllSelected){
-				MsgBox.Show(this,"Not allowed unless All suppliers are selected.");
+				MessageBox.Show("Not allowed unless All suppliers are selected.");
 				return;
 			}
 			List<int> listSelected=gridMain.SelectedIndices.ToList<int>();
 			if(listSelected.Count==0){
-				MsgBox.Show(this,"Please select at least one supply, first.");
+				MessageBox.Show("Please select at least one supply, first.");
 				return;
 			}
 			for(int i=1;i<listSelected.Count;i++) {
 				if(_listSupplies[listSelected[0]].Category != _listSupplies[listSelected[i]].Category){
-					MsgBox.Show(this,"All selected supplies must be in the same category.");
+					MessageBox.Show("All selected supplies must be in the same category.");
 					return;
 				}
 				if(listSelected[i-1]+1 != listSelected[i]){
-					MsgBox.Show(this,"Selection must not have gaps.");//makes my math too hard
+					MessageBox.Show("Selection must not have gaps.");//makes my math too hard
 					return;
 				}
 			}
@@ -391,7 +391,7 @@ namespace OpenDental {
 			}
 			if(_listSupplies[listSelected[listSelected.Count-1]].Category 
 				!= _listSupplies[listSelected[listSelected.Count-1]+1].Category){
-				MsgBox.Show(this,"Already at bottom of category.");
+				MessageBox.Show("Already at bottom of category.");
 				return;
 			}
 			int countMove=_listSupplies[listSelected[listSelected.Count-1]+1].ItemOrder-_listSupplies[listSelected[listSelected.Count-1]].ItemOrder;//example 5-4=1
@@ -448,7 +448,7 @@ namespace OpenDental {
 
 		private void butPrint_Click(object sender,EventArgs e) {
 			if(gridMain.ListGridRows.Count<1) {
-				MsgBox.Show(this,"Supply list is Empty.");
+				MessageBox.Show("Supply list is Empty.");
 				return;
 			}
 			pagesPrinted=0;
@@ -460,7 +460,7 @@ namespace OpenDental {
 		private void butCreateOrders_Click(object sender,EventArgs e) {
 			//Not visible in IsSelectMode
 			if(gridMain.SelectedIndices.Length==0){
-				MsgBox.Show(this,"Please select supplies, first.");
+				MessageBox.Show("Please select supplies, first.");
 				return;
 			}
 			//they are not ordered by supplier, so we need to keep track of a local list of orders
@@ -568,7 +568,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//only visible in select mode
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a supply from the list first.");
+				MessageBox.Show("Please select a supply from the list first.");
 				return;
 			}
 			ListSuppliesSelected=new List<Supply>();

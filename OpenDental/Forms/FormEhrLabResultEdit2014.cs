@@ -463,7 +463,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Delete Lab Result?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete Lab Result?")) {
 				return;
 			}
 			//TODO: Actually delete lab result?

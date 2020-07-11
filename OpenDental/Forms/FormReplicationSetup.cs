@@ -160,11 +160,11 @@ namespace OpenDental {
 
 		private void butSynch_Click(object sender,EventArgs e) {
 			if(textUsername.Text=="") {
-				MsgBox.Show(this,"Please enter a username first.");
+				MessageBox.Show("Please enter a username first.");
 				return;
 			}
 			if(_listReplicationServers.Count==0) {
-				MsgBox.Show(this,"Please add at servers to the list first.");
+				MessageBox.Show("Please add at servers to the list first.");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;

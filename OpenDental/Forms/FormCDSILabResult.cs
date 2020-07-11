@@ -34,7 +34,7 @@ namespace OpenDental {
 			comboComparator.SelectedIndex=0;//not sure if this code works. Test it.
 			_listUCUM=Ucums.GetAll();
 			if(_listUCUM.Count==0) {
-				MsgBox.Show(this,"Units of measure have not been imported. Go to the code system importer window to import UCUM codes to continue.");
+				MessageBox.Show("Units of measure have not been imported. Go to the code system importer window to import UCUM codes to continue.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -95,7 +95,7 @@ namespace OpenDental {
 		private void butOk_Click(object sender,EventArgs e) {
 			ResultCDSITriggerText=textLoinc.Text;/* +";";
 			if(!checkAllResults.Checked && textObsValue.Text=="" && textSnomed.Text=="") {
-				MsgBox.Show(this,"Please select a valid lab result comparison.");
+				MessageBox.Show("Please select a valid lab result comparison.");
 				return;//should never happen.  Somehow they have an invalid comparison set up.
 			}
 			else if(checkAllResults.Checked && textObsValue.Text=="" && textSnomed.Text=="") {
@@ -108,7 +108,7 @@ namespace OpenDental {
 				ResultCDSITriggerText+=textSnomed.Text+";";//leave units blank to signify snomed.
 			}
 			else {
-				MsgBox.Show(this,"Please select a valid lab result comparison.");
+				MessageBox.Show("Please select a valid lab result comparison.");
 				return;//should never happen.  Somehow they have an invalid comparison set up.
 			}*/
 			DialogResult=DialogResult.OK;

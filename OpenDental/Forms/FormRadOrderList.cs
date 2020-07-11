@@ -91,7 +91,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a radiology order first.");
+				MessageBox.Show("Please select a radiology order first.");
 				return;
 			}
 			Procedure proc=(Procedure)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
@@ -103,7 +103,7 @@ namespace OpenDental {
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a radiology order first.");
+				MessageBox.Show("Please select a radiology order first.");
 				return;
 			}
 			Procedure proc=(Procedure)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
@@ -112,7 +112,7 @@ namespace OpenDental {
 
 		private void butSelected_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select at least one radiology order to approve.");
+				MessageBox.Show("Please select at least one radiology order to approve.");
 				return;
 			}
 			List<Procedure> listSelectedProcs=new List<Procedure>();
@@ -126,7 +126,7 @@ namespace OpenDental {
 		}
 
 		private void butAll_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Approve all radiology orders?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Approve all radiology orders?")) {
 				return;
 			}
 			Procedures.UpdateCpoeForProcs(_listNonCpoeProcs.Select(x => x.ProcNum).Distinct().ToList(),true);

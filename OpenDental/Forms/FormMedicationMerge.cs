@@ -57,7 +57,7 @@ namespace OpenDental {
 			string msgText="";
 			if(textMedNumInto.Text==textMedNumFrom.Text) {
 				//do not attempt a merge if the same medication was selected twice, or if one of the fields is blank.
-				MsgBox.Show(this,"You must select two different medications to merge.");
+				MessageBox.Show("You must select two different medications to merge.");
 				return;
 			}
 			if(_medFrom.MedicationNum==_medFrom.GenericNum && _medInto.MedicationNum!=_medInto.GenericNum) {
@@ -76,7 +76,7 @@ namespace OpenDental {
 				differentFields+="\r\n"+Lan.g(this,"RxCui");
 			}
 			long numPats=Medications.CountPats(_medFrom.MedicationNum);
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure?  The results are permanent and cannot be undone.")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure?  The results are permanent and cannot be undone.")) {
 				return;
 			}
 			msgText="";
@@ -96,7 +96,7 @@ namespace OpenDental {
 			textMedNumFrom.Clear();
 			textMedNameFrom.Clear();
 			textGenNumFrom.Clear();
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 			DataValid.SetInvalid(InvalidType.Medications);
 			CheckUIState();
 		}

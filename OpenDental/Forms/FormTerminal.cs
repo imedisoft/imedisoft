@@ -200,7 +200,7 @@ namespace OpenDental {
 				iBox.setTitle(Lan.g(this,"Kiosk Session Name"));
 				iBox.ShowDialog();
 				while(iBox.DialogResult==DialogResult.OK && TerminalActives.IsCompClientNameInUse(Environment.MachineName,iBox.textResult.Text)) {
-					MsgBox.Show(this,"The name entered is invalid or already in use.");
+					MessageBox.Show("The name entered is invalid or already in use.");
 					iBox.ShowDialog();
 				}
 				if(iBox.DialogResult!=DialogResult.OK) {
@@ -411,7 +411,7 @@ namespace OpenDental {
 				iBox.setTitle(Lan.g(this,"Kiosk Password"));
 				iBox.ShowDialog();
 				while(iBox.DialogResult==DialogResult.OK && iBox.textResult.Text!=PrefC.GetString(PrefName.TerminalClosePassword)) {
-					MsgBox.Show(this,"Invalid Password");
+					MessageBox.Show("Invalid Password");
 					iBox.textResult.Text="";
 					iBox.ShowDialog();
 				}

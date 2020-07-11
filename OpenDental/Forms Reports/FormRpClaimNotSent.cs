@@ -302,15 +302,15 @@ namespace OpenDental{
 		private bool ValidateFilters() {
 			//ODDateRangePicker only does the bare minimum for date validation
 			if(odDateRangePicker.GetDateTimeFrom()==DateTime.MinValue || odDateRangePicker.GetDateTimeTo()==DateTime.MinValue) {
-				MsgBox.Show(this,"Please enter valid dates.");
+				MessageBox.Show("Please enter valid dates.");
 				return false;
 			}
 			if(_endDate<_startDate) {
-				MsgBox.Show(this,"End date cannot be before start date.");
+				MessageBox.Show("End date cannot be before start date.");
 				return false;
 			}
 			if(PrefC.HasClinicsEnabled && comboClinicMulti.ListSelectedClinicNums.Count==0) {
-				MsgBox.Show(this,"At least one clinic must be selected.");
+				MessageBox.Show("At least one clinic must be selected.");
 				return false;
 			}
 			_startDate=odDateRangePicker.GetDateTimeFrom();
@@ -379,7 +379,7 @@ namespace OpenDental{
 			}
 			Claim claim=Claims.GetClaim(((UnsentInsClaim)gridMain.ListGridRows[e.Row].Tag).ClaimNum);
 			if(claim==null) {
-				MsgBox.Show(this,"The claim has been deleted.");
+				MessageBox.Show("The claim has been deleted.");
 				FillGrid();
 				return;
 			}

@@ -321,7 +321,7 @@ namespace OpenDental{
 				DateTime.Parse(textTimeEntry.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Please enter a valid Date/Time.");
+				MessageBox.Show("Please enter a valid Date/Time.");
 				return;
 			}
 			TimeSpan hoursEntered=TimeSpan.FromHours(0);
@@ -337,11 +337,11 @@ namespace OpenDental{
 				}
 			}
 			catch {
-				MsgBox.Show(this,"Please enter valid Hours and Minutes.");
+				MessageBox.Show("Please enter valid Hours and Minutes.");
 				return;
 			}
 			if(checkOvertime.Checked && comboPTO.SelectedIndex!=0) {
-				MsgBox.Show(this,"Overtime Adjustments must have PTO Type set to 'None'.\r\n"
+				MessageBox.Show("Overtime Adjustments must have PTO Type set to 'None'.\r\n"
 					+"Please select 'None' for PTO Type or uncheck Overtime Adjustment.");
 				return;
 			}

@@ -513,7 +513,7 @@ namespace OpenDental {
 				}
 				else if(IsORU_R01message(strFilePathAttach)) {
 					if(DataConnection.DBtype==DatabaseType.Oracle) {
-						MsgBox.Show(this,"Labs not supported with Oracle.  Opening raw file instead.");
+						MessageBox.Show("Labs not supported with Oracle.  Opening raw file instead.");
 					}
 					else {
 						FormEhrLabOrderImport FormELOI =new FormEhrLabOrderImport();
@@ -531,7 +531,7 @@ namespace OpenDental {
 		
 		private void ButAdd_Click(object sender, EventArgs e){
 			if(!gridAttachments.AddButtonEnabled) {
-				MsgBox.Show(this,"Attachments cannot be modified on historical email.");
+				MessageBox.Show("Attachments cannot be modified on historical email.");
 				return;
 			}
 			_emailMessage.Attachments.AddRange(EmailAttachL.PickAttachments(_patCur));
@@ -731,7 +731,7 @@ namespace OpenDental {
 					EmailAddressPreview=emailAccountSelected;
 				}
 				else {
-					MsgBox.Show(this,"Error selecting email account.");
+					MessageBox.Show("Error selecting email account.");
 					return null;
 				}
 				textFromAddress.Text=EmailAddressPreview.GetFrom();

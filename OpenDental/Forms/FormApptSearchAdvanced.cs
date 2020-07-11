@@ -31,7 +31,7 @@ namespace OpenDental {
 			Lan.F(this);
 			_appt=Appointments.GetOneApt(apptNum);
 			if(_appt==null) {
-				MsgBox.Show(this,"Invalid appointment on the Pinboard.");
+				MessageBox.Show("Invalid appointment on the Pinboard.");
 				DialogResult=DialogResult.Abort;
 				return;
 			}
@@ -173,7 +173,7 @@ namespace OpenDental {
 			#region validation
 			if(startDate.Year < 1880 || endDate.Year < 1880) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Invalid date selection.");
+				MessageBox.Show("Invalid date selection.");
 				return;
 			}
 			TimeSpan beforeTime=new TimeSpan(0);
@@ -183,7 +183,7 @@ namespace OpenDental {
 				}
 				catch {
 					Cursor=Cursors.Default;
-					MsgBox.Show(this,"Invalid 'Starting before' time.");
+					MessageBox.Show("Invalid 'Starting before' time.");
 					return;
 				}
 			}
@@ -194,13 +194,13 @@ namespace OpenDental {
 				}
 				catch {
 					Cursor=Cursors.Default;
-					MsgBox.Show(this,"Invalid 'Starting after' time.");
+					MessageBox.Show("Invalid 'Starting after' time.");
 					return;
 				}
 			}
 			if(comboBoxMultiProv.SelectedTags<Provider>().Contains(null) && comboBlockout.GetSelectedDefNum()==0) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"Please pick a provider or a blockout type.");
+				MessageBox.Show("Please pick a provider or a blockout type.");
 				return;
 			}
 			#endregion
@@ -342,7 +342,7 @@ namespace OpenDental {
 		private void butSearch_Click(object sender,EventArgs e) { 
 			//validate that there is an appointment on the pinboard. 
 			if(_appt.AptNum<=0) {
-				MsgBox.Show(this,"Invalid appointments on pinboard.");
+				MessageBox.Show("Invalid appointments on pinboard.");
 				return;
 			}
 			DoSearch();

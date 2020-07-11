@@ -889,7 +889,7 @@ namespace OpenDental{
 				return;
 			}
 			if(checkShowClinicSchedules.Checked) {
-				MsgBox.Show(this,"Schedules cannot be edited in clinic view mode");
+				MessageBox.Show("Schedules cannot be edited in clinic view mode");
 				return;
 			}
 			int clickedCol=e.Col;
@@ -907,7 +907,7 @@ namespace OpenDental{
 			//MessageBox.Show(selectedDate.ToShortDateString());
 			if(PrefC.HasClinicsEnabled) {
 				if(comboClinic.SelectedClinicNum==-1) {
-					MsgBox.Show(this,"Please select a clinic.");
+					MessageBox.Show("Please select a clinic.");
 					return;
 				}
 			}
@@ -953,15 +953,15 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedCell.X==-1) {
-				MsgBox.Show(this,"Please select a date first.");
+				MessageBox.Show("Please select a date first.");
 				return;
 			}
 			if(_provsChanged) {
-				MsgBox.Show(this,"Provider or Employee selection has been changed.  Please refresh first.");
+				MessageBox.Show("Provider or Employee selection has been changed.  Please refresh first.");
 				return;
 			}
 			if(HaveDatesChanged) {
-				MsgBox.Show(this,"Dates have changed, refresh before continuing.");
+				MessageBox.Show("Dates have changed, refresh before continuing.");
 				return;
 			}
 			int startI=1;
@@ -996,7 +996,7 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedCell.X==-1){
-				MsgBox.Show(this,"Please select a date first.");
+				MessageBox.Show("Please select a date first.");
 				return;
 			}
 			if((listBoxEmps.SelectedIndices.Count==1 && listBoxEmps.SelectedIndices.Contains(0)//'none' selected only
@@ -1004,11 +1004,11 @@ namespace OpenDental{
 				&& (listBoxProvs.SelectedIndices.Count==1 && listBoxProvs.SelectedIndices.Contains(0)//'none' selected only
 				|| listBoxProvs.SelectedIndices.Count==0))//Nothing selected 
 			{
-				MsgBox.Show(this,"No providers or employees have been selected.");
+				MessageBox.Show("No providers or employees have been selected.");
 				return;
 			}
 			if(HaveDatesChanged) {
-				MsgBox.Show(this,"Dates have changed, refresh before continuing.");
+				MessageBox.Show("Dates have changed, refresh before continuing.");
 				return;
 			}
 			int selectedCol=gridMain.SelectedCell.X;
@@ -1025,7 +1025,7 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedCell.X==-1) {
-				MsgBox.Show(this,"Please select a date first.");
+				MessageBox.Show("Please select a date first.");
 				return;
 			}
 			if((listBoxEmps.SelectedIndices.Count==1 && listBoxEmps.SelectedIndices.Contains(0)//'none' selected only
@@ -1033,11 +1033,11 @@ namespace OpenDental{
 				&& (listBoxProvs.SelectedIndices.Count==1 && listBoxProvs.SelectedIndices.Contains(0)//'none' selected only
 				|| listBoxProvs.SelectedIndices.Count==0))//Nothing selected 
 			{
-				MsgBox.Show(this,"No providers or employees have been selected.");
+				MessageBox.Show("No providers or employees have been selected.");
 				return;
 			}
 			if(HaveDatesChanged) {
-				MsgBox.Show(this,"Dates have changed, refresh before continuing.");
+				MessageBox.Show("Dates have changed, refresh before continuing.");
 				return;
 			}
 			int startI=1;
@@ -1059,15 +1059,15 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedCell.X==-1) {
-				MsgBox.Show(this,"Please select a date first.");
+				MessageBox.Show("Please select a date first.");
 				return;
 			}
 			if(_dateCopyStart.Year<1880) {
-				MsgBox.Show(this,"Please copy a selection to the clipboard first.");
+				MessageBox.Show("Please copy a selection to the clipboard first.");
 				return;
 			}
 			if(_provsChanged){
-				MsgBox.Show(this,"Provider or Employee selection has been changed.  Please refresh first.");
+				MessageBox.Show("Provider or Employee selection has been changed.  Please refresh first.");
 				return;
 			}
 			//calculate which day or week is currently selected.
@@ -1097,7 +1097,7 @@ namespace OpenDental{
 			}
 			//it's not allowed to paste back over the same day or week.
 			if(dateSelectedStart==_dateCopyStart) {
-				MsgBox.Show(this,"Not allowed to paste back onto the same date as is on the clipboard.");
+				MessageBox.Show("Not allowed to paste back onto the same date as is on the clipboard.");
 				return;
 			}
 			Action actionCloseScheduleProgress=ODProgress.Show(ODEventType.Schedule,typeof(ScheduleEvent));
@@ -1117,7 +1117,7 @@ namespace OpenDental{
 					{
 						return;
 					}
-					if(listBoxProvs.SelectedIndices.Count > countDistinctProvNums && !MsgBox.Show(this,MsgBoxButtons.YesNo,
+					if(listBoxProvs.SelectedIndices.Count > countDistinctProvNums && !MsgBox.Show(MsgBoxButtons.YesNo,
 						"One or more selected providers do not have schedules for the date range copied to the Clipboard Contents. "
 						+"These providers will have their schedules removed wherever pasted.  Continue?")) 
 					{
@@ -1181,7 +1181,7 @@ namespace OpenDental{
 				listSchedulesToInsert.Add(sched);
 			}
 			if(isHoliday) {
-				MsgBox.Show(this,"One or more holidays exist in the destination date range.  These will not be replaced.  "
+				MessageBox.Show("One or more holidays exist in the destination date range.  These will not be replaced.  "
 					+"To replace them, remove holiday schedules from the destination date range and repeat this process.");
 			}
 			Schedules.Insert(false,true,listSchedulesToInsert.ToArray());
@@ -1214,27 +1214,27 @@ namespace OpenDental{
 				repeatCount=PIn.Int(textRepeat.Text);
 			}
 			catch{
-				MsgBox.Show(this,"Please fix number box first.");
+				MessageBox.Show("Please fix number box first.");
 				return;
 			}
 			if(repeatCount>1250 && !isWeek) {
-				MsgBox.Show(this,"Please enter a number of days less than 1250.");
+				MessageBox.Show("Please enter a number of days less than 1250.");
 				return;
 			}
 			if(repeatCount>250 && isWeek) {
-				MsgBox.Show(this,"Please enter a number of weeks less than 250.");
+				MessageBox.Show("Please enter a number of weeks less than 250.");
 				return;
 			}
 			if(gridMain.SelectedCell.X==-1) {
-				MsgBox.Show(this,"Please select a date first.");
+				MessageBox.Show("Please select a date first.");
 				return;
 			}
 			if(_dateCopyStart.Year<1880) {
-				MsgBox.Show(this,"Please copy a selection to the clipboard first.");
+				MessageBox.Show("Please copy a selection to the clipboard first.");
 				return;
 			}
 			if(_provsChanged) {
-				MsgBox.Show(this,"Provider or Employee selection has been changed.  Please refresh first.");
+				MessageBox.Show("Provider or Employee selection has been changed.  Please refresh first.");
 				return;
 			}
 			Action actionCloseScheduleProgress=ODProgress.Show(ODEventType.Schedule,typeof(ScheduleEvent));
@@ -1279,7 +1279,7 @@ namespace OpenDental{
 					{
 						return;
 					}
-					if(listBoxProvs.SelectedIndices.Count > countDistinctProvNums && !MsgBox.Show(this,MsgBoxButtons.YesNo,
+					if(listBoxProvs.SelectedIndices.Count > countDistinctProvNums && !MsgBox.Show(MsgBoxButtons.YesNo,
 						"One or more selected providers do not have schedules for the date range copied to the Clipboard Contents. "
 						+"These providers will have their schedules removed wherever pasted.  Continue?")) 
 					{
@@ -1393,7 +1393,7 @@ namespace OpenDental{
 				}
 			}
 			if(isHoliday) {
-				MsgBox.Show(this,"One or more holidays exist in the destination date range.  These will not be replaced.  "
+				MessageBox.Show("One or more holidays exist in the destination date range.  These will not be replaced.  "
 					+"To replace them, remove holiday schedules from the destination date range and repeat this process.");
 			}
 			Schedules.DeleteMany(listSchedulesToDelete);

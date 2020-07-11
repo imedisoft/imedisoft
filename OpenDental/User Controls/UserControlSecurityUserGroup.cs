@@ -418,7 +418,7 @@ namespace OpenDental {
 
 		private void butEditGroup_Click(object sender,EventArgs e) {
 			if(listUserGroupTabUserGroups.SelectedIndex==-1) {
-				MsgBox.Show(this,"Please select a User Group to edit.");
+				MessageBox.Show("Please select a User Group to edit.");
 				return;
 			}
 			//Call an event that bubbles back up to the calling Form.

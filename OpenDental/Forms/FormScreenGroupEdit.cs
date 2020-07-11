@@ -695,7 +695,7 @@ namespace OpenDental{
 
 		private void StartScreensForPats() {
 			if(_listScreenPats.Count==0) {
-				MsgBox.Show(this,"No patients for screening.");
+				MessageBox.Show("No patients for screening.");
 				return;
 			}
 			FormScreenEdit FormSE=new FormScreenEdit();
@@ -838,7 +838,7 @@ namespace OpenDental{
 					Screens.CreateScreenFromSheet(sheet,screen);
 					//Now try and process the screening chart for treatment planned sealants.
 					if(ProcedureCodes.GetCodeNum("D1351")==0) {
-						MsgBox.Show(this,"The required sealant code is not present in the database.  The screening chart will not be processed.");
+						MessageBox.Show("The required sealant code is not present in the database.  The screening chart will not be processed.");
 						break;
 					}
 					//Process both TP and Compl charts.
@@ -870,7 +870,7 @@ namespace OpenDental{
 		private void ViewScreenForPatWithSheets(OpenDentBusiness.Screen screenCur) {
 			Sheet sheet=Sheets.GetSheet(screenCur.SheetNum);
 			if(sheet==null) {
-				MsgBox.Show(this,"Sheet no longer exists.  It may have been deleted from the Chart Module.");
+				MessageBox.Show("Sheet no longer exists.  It may have been deleted from the Chart Module.");
 				return;
 			}
 			List<SheetField> listChartOrigVals=new List<SheetField>();
@@ -892,7 +892,7 @@ namespace OpenDental{
 					return;
 				}
 				if(ProcedureCodes.GetCodeNum("D1351")==0) {
-					MsgBox.Show(this,"The required sealant code is not present in the database.  The screening chart will not be processed.");
+					MessageBox.Show("The required sealant code is not present in the database.  The screening chart will not be processed.");
 					return;
 				}
 				long provNum=0;
@@ -1010,7 +1010,7 @@ namespace OpenDental{
 			if(FormPS.DialogResult==DialogResult.OK) {
 				ScreenPat screenPat=_listScreenPats.FirstOrDefault(x => x.PatNum==FormPS.SelectedPatNum);
 				if(screenPat!=null) {
-					MsgBox.Show(this,"Cannot add patient already in screen group.");
+					MessageBox.Show("Cannot add patient already in screen group.");
 					for(int i=0;i<_listScreenPats.Count;i++) {
 						if(_listScreenPats[i].ScreenPatNum==screenPat.ScreenPatNum) {
 							gridScreenPats.SetSelected(i,true);
@@ -1032,7 +1032,7 @@ namespace OpenDental{
 		
 		private void butRemovePat_Click(object sender,EventArgs e) {
 			if(gridScreenPats.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a patient to remove first.");
+				MessageBox.Show("Please select a patient to remove first.");
 				return;
 			}
 			_listScreenPats.RemoveAt(gridScreenPats.GetSelectedIndex());
@@ -1040,7 +1040,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Are you sure you want to delete this screening group? All screenings in this group will be deleted.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Are you sure you want to delete this screening group? All screenings in this group will be deleted.")) {
 				return;
 			}
 			ScreenGroups.Delete(_screenGroup);//Also deletes screens.
@@ -1049,7 +1049,7 @@ namespace OpenDental{
 
 		private void butStartScreens_Click(object sender,EventArgs e) {
 			if(_listScreenPats.Count==0) {
-				MsgBox.Show(this,"No patients to screen.");
+				MessageBox.Show("No patients to screen.");
 				return;
 			}
 			if(PrefC.GetBool(PrefName.ScreeningsUseSheets)) {
@@ -1062,7 +1062,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(textDescription.Text=="") {
-				MsgBox.Show(this,"Description field cannot be blank.");
+				MessageBox.Show("Description field cannot be blank.");
 				textDescription.Focus();
 				return;
 			}

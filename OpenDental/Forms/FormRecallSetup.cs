@@ -941,19 +941,19 @@ namespace OpenDental{
 				|| textDaysFirstReminder.errorProvider1.GetError(textDaysFirstReminder)!=""
 				|| textDaysSecondReminder.errorProvider1.GetError(textDaysSecondReminder)!=""
 				|| textMaxReminders.errorProvider1.GetError(textMaxReminders)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			//We changed the text box to a ValidNum, which prevents it from ever being blank, so this message will never fire.
 			//if(textDaysFirstReminder.Text=="") {
-			//	if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Initial Reminder box should not be blank, or the recall list will be blank.")) {
+			//	if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Initial Reminder box should not be blank, or the recall list will be blank.")) {
 			//		return;
 			//	}
 			//}
 			if(textPostcardsPerSheet.Text!="1"
 				&& textPostcardsPerSheet.Text!="3"
 				&& textPostcardsPerSheet.Text!="4") {
-				MsgBox.Show(this,"The value in postcards per sheet must be 1, 3, or 4");
+				MessageBox.Show("The value in postcards per sheet must be 1, 3, or 4");
 				return;
 			}
 			if(comboStatusMailedRecall.SelectedIndex==-1
@@ -961,13 +961,13 @@ namespace OpenDental{
 				|| comboStatusTextedRecall.SelectedIndex==-1
 				|| comboStatusEmailTextRecall.SelectedIndex==-1) 
 			{
-				MsgBox.Show(this,"All status options on the left must be set.");
+				MessageBox.Show("All status options on the left must be set.");
 				return;
 			}
 			//End of Validation
 			if(Prefs.UpdateString(PrefName.RecallPostcardsPerSheet,textPostcardsPerSheet.Text)) {
 				if(textPostcardsPerSheet.Text=="1") {
-					MsgBox.Show(this,"If using 1 postcard per sheet, you must adjust the position, and also the preview will not work");
+					MessageBox.Show("If using 1 postcard per sheet, you must adjust the position, and also the preview will not work");
 				}
 			}
 			Prefs.UpdateBool(PrefName.RecallCardsShowReturnAdd,checkReturnAdd.Checked);

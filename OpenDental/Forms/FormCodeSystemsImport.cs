@@ -126,7 +126,7 @@ namespace OpenDental {
 
 		private void Download() {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show("CodeSystemImporter","No code systems selected.");
+				MsgBox.Show("No code systems selected.");
 				return;
 			}
 			_mapCodeSystemStatus.Clear();
@@ -321,7 +321,7 @@ Use of SNOMED CT in Open Dental "+programVersion+@" is governed by the condition
 					MsgBoxCopyPaste FormMBCP=new MsgBoxCopyPaste(EULA);
 					FormMBCP.ShowDialog();
 					if(FormMBCP.DialogResult!=DialogResult.OK) {
-						MsgBox.Show("CodeSystemImporter","SNOMED CT codes will not be imported.");
+						MsgBox.Show("SNOMED CT codes will not be imported.");
 						return false;//next selected index
 					}
 					break;
@@ -407,7 +407,7 @@ We have included third party content that allows use and distribution at least f
 					MsgBoxCopyPaste FormLoincEula=new MsgBoxCopyPaste(LoincEULA);
 					FormLoincEula.ShowDialog();
 					if(FormLoincEula.DialogResult!=DialogResult.OK) {
-						MsgBox.Show("CodeSystemImporter","LOINC codes will not be imported.");
+						MsgBox.Show("LOINC codes will not be imported.");
 						return false;//next selected index
 					}
 					#region External Loinc copyrights
@@ -473,7 +473,7 @@ Copyright ©NPUAP, used with permission of the National Pressure Ulcer Advisory 
 					MsgBoxCopyPaste FormLoincEula2=new MsgBoxCopyPaste(externalCopyright);
 					FormLoincEula2.ShowDialog();
 					if(FormLoincEula2.DialogResult!=DialogResult.OK) {
-						MsgBox.Show("CodeSystemImporter","LOINC codes will not be imported.");
+						MsgBox.Show("LOINC codes will not be imported.");
 						return false;//next selected index
 					}
 					break;
@@ -508,7 +508,7 @@ If the master term dictionary or software program containing the UCUM table, UCU
 					MsgBoxCopyPaste FormUcumEULA=new MsgBoxCopyPaste(UcumEULA);
 					FormUcumEULA.ShowDialog();
 					if(FormUcumEULA.DialogResult!=DialogResult.OK) {
-						MsgBox.Show("CodeSystemImporter","UCUM codes will not be imported.");
+						MsgBox.Show("UCUM codes will not be imported.");
 						return false;//next selected index
 					}
 					break;
@@ -944,7 +944,7 @@ If the master term dictionary or software program containing the UCUM table, UCU
 				}
 				return;
 			}
-			if(MsgBox.Show("CodeSystemImporter",true,"Import in progress. Would you like to abort?")) {
+			if(MsgBox.Show(MsgBoxButtons.OKCancel, "Import in progress. Would you like to abort?")) {
 				//User wants abort the threads.
 				UpdateCodeSystemThread.StopAll();
 				_hasDownloaded=false;

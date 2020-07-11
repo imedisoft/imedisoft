@@ -37,10 +37,6 @@ namespace OpenDental{
 				}
 				return;
 			}
-			if(ODBuild.IsWeb() && prog.ProgName.In(Programs.GetListDisabledForWeb().Select(x => x.ToString()))) {
-				MsgBox.Show("ProgramLinks","Bridge is not available while viewing through the web.");
-				return;//bridge is not available for web users at this time. 
-			}
 			if(prog.ProgName==ProgramName.ActeonImagingSuite.ToString()) {
 				ActeonImagingSuite.SendData(prog,pat);
 				return;

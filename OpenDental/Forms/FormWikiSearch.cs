@@ -112,12 +112,12 @@ namespace OpenDental {
 			}
 			wikiPageTitleSelected=listWikiPageTitles[gridMain.SelectedIndices[0]];
 			if(WikiPages.GetByTitle(wikiPageTitleSelected)!=null) {
-				MsgBox.Show(this,"Selected page has already been restored.");//should never happen.
+				MessageBox.Show("Selected page has already been restored.");//should never happen.
 				return;
 			}
 			WikiPage wikiPageRestored=WikiPages.GetByTitle(listWikiPageTitles[gridMain.SelectedIndices[0]],isDeleted:true);
 			if(wikiPageRestored==null) {
-				MsgBox.Show(this,"Selected page has already been restored.");//should never happen.
+				MessageBox.Show("Selected page has already been restored.");//should never happen.
 				return;
 			}
 			WikiPages.WikiPageRestore(wikiPageRestored,Security.CurUser.UserNum);

@@ -334,7 +334,7 @@ namespace OpenDental {
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			//This does not automatically select a referral when in selection mode; it just lets user edit.
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a referral first");
+				MessageBox.Show("Please select a referral first");
 				return;
 			}
 			FormReferralEdit FormRE = new FormReferralEdit(listRef[e.Row]);
@@ -350,7 +350,7 @@ namespace OpenDental {
 		private void butAdd_Click(object sender,System.EventArgs e) {
 			Referral refCur=new Referral();
 			bool referralIsNew=true;
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Is the referral source an existing patient?"))	{
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Is the referral source an existing patient?"))	{
 				FormPatientSelect FormPS=new FormPatientSelect();
 				FormPS.SelectionModeOnly=true;
 				FormPS.ShowDialog();
@@ -372,7 +372,7 @@ namespace OpenDental {
 			}
 			if(IsSelectionMode) {
 				if(IsDoctorSelectionMode && !FormRE2.RefCur.IsDoctor) {
-					MsgBox.Show(this,"Please select a doctor referral.");
+					MessageBox.Show("Please select a doctor referral.");
 					gridMain.SetSelected(false);//Remove selection to prevent caching issue on OK click.  This line is an attempted fix.
 					FillTable();
 					return;
@@ -418,11 +418,11 @@ namespace OpenDental {
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(IsSelectionMode) {
 				if(gridMain.GetSelectedIndex()==-1) {
-					MsgBox.Show(this,"Please select a referral first");
+					MessageBox.Show("Please select a referral first");
 					return;
 				}
 				if(IsDoctorSelectionMode && listRef[gridMain.GetSelectedIndex()].IsDoctor==false) {
-					MsgBox.Show(this,"Please select a doctor referral.");
+					MessageBox.Show("Please select a doctor referral.");
 					return;
 				}
 				SelectedReferral=(Referral)listRef[gridMain.GetSelectedIndex()];

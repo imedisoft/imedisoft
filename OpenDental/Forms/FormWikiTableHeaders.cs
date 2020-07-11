@@ -50,11 +50,11 @@ namespace OpenDental {
 					ColWidths[i]=PIn.Int(gridMain.ListGridRows[1].Cells[i].Text);
 				}
 				catch {
-					MsgBox.Show(this,"Please enter only positive integer widths in the 2nd row");
+					MessageBox.Show("Please enter only positive integer widths in the 2nd row");
 					return;
 				}
 				if(ColWidths[i]<1) {
-					MsgBox.Show(this,"Please enter only positive integer widths in the 2nd row");
+					MessageBox.Show("Please enter only positive integer widths in the 2nd row");
 					return;
 				}
 			}

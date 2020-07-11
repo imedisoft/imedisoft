@@ -45,7 +45,7 @@ namespace OpenDental {
 		private void listBoxAlertTypes_MouseClick(object sender,MouseEventArgs e) {
 			if(_categoryCur.IsHQCategory) {
 				InitAlertTypeSelections();
-				MsgBox.Show(this,"You can only edit custom alert categories.");
+				MessageBox.Show("You can only edit custom alert categories.");
 			}
 		}
 
@@ -73,7 +73,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure you would like to delete this?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you would like to delete this?")) {
 				return;
 			}
 			AlertCategoryLinks.DeleteForCategory(_categoryCur.AlertCategoryNum);

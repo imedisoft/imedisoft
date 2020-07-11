@@ -181,7 +181,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			string[] fieldsSelected=new string[listSelect.SelectedItems.Count+listSelect2.SelectedItems.Count]; 
 			if(listSelect.SelectedItems.Count==0 && listSelect2.SelectedItems.Count==0){
-				MsgBox.Show(this,"At least one field must be selected.");
+				MessageBox.Show("At least one field must be selected.");
 				return;
 			}
 			listSelect.SelectedItems.CopyTo(fieldsSelected,0);

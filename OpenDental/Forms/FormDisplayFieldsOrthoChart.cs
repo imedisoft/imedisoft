@@ -437,7 +437,7 @@ namespace OpenDental{
 
 		private void butLeft_Click(object sender,EventArgs e) {
 			if(listAvailable.SelectedItems.Count==0 && textCustomField.Text=="") {
-				MsgBox.Show(this,"Please select an item in the list on the right or create a new field first.");
+				MessageBox.Show("Please select an item in the list on the right or create a new field first.");
 				return;
 			}
 			OrthoChartTabFields orthoChartTabFields=GetSelectedFields();
@@ -445,7 +445,7 @@ namespace OpenDental{
 				//Block adding new field if already showing.
 				for(int i=0;i<orthoChartTabFields.ListDisplayFields.Count;i++) {
 					if(textCustomField.Text==orthoChartTabFields.ListDisplayFields[i].Description) {
-						MsgBox.Show(this,"That field is already displaying.");
+						MessageBox.Show("That field is already displaying.");
 						return;
 					}
 				}
@@ -484,7 +484,7 @@ namespace OpenDental{
 
 		private void butRight_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid on the left first.");
+				MessageBox.Show("Please select an item in the grid on the left first.");
 				return;
 			}
 			List<DisplayField> listRemovedFields=new List<DisplayField>();
@@ -531,7 +531,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			if(gridMain.SelectedIndices[0]==0) {
@@ -554,7 +554,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an item in the grid first.");
+				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
 			OrthoChartTabFields orthoChartTabFields=GetSelectedFields();

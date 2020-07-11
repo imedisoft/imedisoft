@@ -863,11 +863,11 @@ namespace OpenDental{
 				|| textLastStatement.errorProvider1.GetError(textLastStatement)!=""
 				)
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(listBillType.SelectedIndices.Count==0) {
-				MsgBox.Show(this,"Please select at least one billing type first.");
+				MessageBox.Show("Please select at least one billing type first.");
 				return;
 			}
 			string selectedBillingTypes="";//indicates all.
@@ -1117,7 +1117,7 @@ namespace OpenDental{
 		}
 
 		private void butUndo_Click(object sender,EventArgs e) {
-			MsgBox.Show(this,"When the billing list comes up, use the radio button at the top to show the 'Sent' bills.\r\nThen, change their status back to unsent.\r\nYou can edit them as a group using the button at the right.");
+			MessageBox.Show("When the billing list comes up, use the radio button at the top to show the 'Sent' bills.\r\nThen, change their status back to unsent.\r\nYou can edit them as a group using the button at the right.");
 			DialogResult=DialogResult.OK;//will trigger ContrStaff to bring up the billing window
 		}
 
@@ -1196,7 +1196,7 @@ namespace OpenDental{
 				|| textDateEnd.errorProvider1.GetError(textDateEnd)!=""
 				)
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(PrefC.GetBool(PrefName.AgingIsEnterprise)) {
@@ -1220,7 +1220,7 @@ namespace OpenDental{
 				&& Security.IsAuthorized(Permissions.Setup,true)
 				&& PrefC.GetDate(PrefName.DateLastAging) < DateTime.Today.AddDays(-15)) 
 			{
-				MsgBox.Show(this,"Last aging date seems old, so you will now be given a chance to update it.  The billing process will continue whether or not aging gets updated.");
+				MessageBox.Show("Last aging date seems old, so you will now be given a chance to update it.  The billing process will continue whether or not aging gets updated.");
 				FormAging FormA=new FormAging();
 				FormA.BringToFront();
 				FormA.ShowDialog();
@@ -1423,7 +1423,7 @@ namespace OpenDental{
 			}
 			if(listPatAging.Count==0){
 				if(!suppressPopup) {
-					MsgBox.Show(this,"List of created bills is empty.");
+					MessageBox.Show("List of created bills is empty.");
 				}
 				else {
 					_popUpMessage+=Lan.g(this,"List of created bills is empty.")+"\r\n";

@@ -134,7 +134,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textFieldDate.errorProvider1.GetError(textFieldDate)!="") {
-				MsgBox.Show(this,"Invalid date");
+				MessageBox.Show("Invalid date");
 				return;
 			}
 			_fieldCur.FieldValue=textFieldDate.Text;

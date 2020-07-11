@@ -65,15 +65,15 @@ namespace OpenDental {
 
 		private void butSend_Click(object sender,EventArgs e) {
 			if(!SmsPhones.IsIntegratedTextingEnabled()) {
-				MsgBox.Show(this,"Integrated Texting has not been enabled.");
+				MessageBox.Show("Integrated Texting has not been enabled.");
 				return;
 			}
 			if(textMessage.Text=="") {
-				MsgBox.Show(this,"Please enter a message first.");
+				MessageBox.Show("Please enter a message first.");
 				return;
 			}
 			if(textMessage.Text.ToLower().Contains("[date]") || textMessage.Text.ToLower().Contains("[time]")) {
-				MsgBox.Show(this,"Please replace or remove the [Date] and [Time] tags.");
+				MessageBox.Show("Please replace or remove the [Date] and [Time] tags.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled && !Clinics.IsTextingEnabled(_clinicNum)) { //Checking for specific clinic.
@@ -82,7 +82,7 @@ namespace OpenDental {
 				}
 				else {
 					//Should never happen. This message is precautionary.
-					MsgBox.Show(this,"The default texting clinic has not been set.");
+					MessageBox.Show("The default texting clinic has not been set.");
 				}
 				return;
 			}

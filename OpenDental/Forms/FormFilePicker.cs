@@ -79,12 +79,9 @@ namespace OpenDental {
 			}
 			string tempFile=ODFileUtils.CreateRandomFile(Path.GetTempPath(),Path.GetExtension(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text));
 			File.WriteAllBytes(tempFile,state.FileContent);
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.HandleFile(tempFile);
-			}
-			else {
+
 				System.Diagnostics.Process.Start(tempFile);
-			}
+			
 		}
 
 		private void butImport_Click(object sender,EventArgs e) {
@@ -175,7 +172,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select at least one file.");
+				MessageBox.Show("Please select at least one file.");
 				return;
 			}
 			//Add all selected files to the list to be returned

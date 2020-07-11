@@ -455,7 +455,7 @@ namespace OpenDental{
 		private void checkLocked_Click(object sender,EventArgs e) {
 			if(checkLocked.Checked){
 				if(textTarget.Text != textSum.Text){
-					MsgBox.Show(this,"Target change must match sum of transactions.");
+					MessageBox.Show("Target change must match sum of transactions.");
 					checkLocked.Checked=false;
 					return;
 				}
@@ -489,7 +489,7 @@ namespace OpenDental{
 				|| textStart.errorProvider1.GetError(textStart)!=""
 				|| textEnd.errorProvider1.GetError(textEnd)!=""
 				) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			ReconcileCur.DateReconcile=PIn.Date(textDate.Text);
@@ -540,7 +540,7 @@ namespace OpenDental{
 			//string msg=
 			gridMain.Export(gridMain.Title);//listOtherDetails:listOtherDetails);
 			//if(!string.IsNullOrEmpty(msg)) {
-			//	MsgBox.Show(this,msg);
+			//	MessageBox.Show(msg);
 			//}
 		}
 

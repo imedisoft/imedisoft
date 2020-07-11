@@ -305,7 +305,7 @@ namespace OpenDental {
 
 		private void butGroupObservations_Click(object sender,EventArgs e) {
 			if(gridObservations.SelectedIndices.Length<2) {
-				MsgBox.Show(this,"Two or more observations must be selected.");
+				MessageBox.Show("Two or more observations must be selected.");
 				return;
 			}
 			VaccineObs vaccineObsGroup=(VaccineObs)gridObservations.ListGridRows[gridObservations.SelectedIndices[0]].Tag;
@@ -316,7 +316,7 @@ namespace OpenDental {
 
 		private void butUngroupObservations_Click(object sender,EventArgs e) {
 			if(gridObservations.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"At least one observation must be selected.");
+				MessageBox.Show("At least one observation must be selected.");
 				return;
 			}
 			for(int i=0;i<gridObservations.SelectedIndices.Length;i++) {

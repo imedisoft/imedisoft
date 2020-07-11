@@ -386,7 +386,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Please enter text first");
+				MessageBox.Show("Please enter text first");
 				return;
 			}
 			//PatNum cannot be set

@@ -989,7 +989,7 @@ namespace OpenDental{
 				SecurityLogs.MakeLogEntry(Permissions.DepositSlips,0,Lan.g(this,"Deposit slip sent to QuickBooks.")+"\r\n"
 					+Lan.g(this,"Deposit date")+": "+_depositCur.DateDeposit.ToShortDateString()+" "+Lan.g(this,"for")+" "+_depositCur.Amount.ToString("c"));
 				Cursor.Current=Cursors.Default;
-				MsgBox.Show(this,"Deposit successfully sent to QuickBooks.");
+				MessageBox.Show("Deposit successfully sent to QuickBooks.");
 				butSendQB.Enabled=false;//Don't let user send same deposit more than once.  
 			}
 			catch(Exception ex) {
@@ -1014,11 +1014,11 @@ namespace OpenDental{
 		///<summary>Saves the selected rows to database.</summary>
 		private bool SaveToDB(){
 			if(textDate.errorProvider1.GetError(textDate)!=""){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(IsNew && gridPat.SelectedIndices.Length==0 && gridIns.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select at least one payment for this deposit first.");
+				MessageBox.Show("Please select at least one payment for this deposit first.");
 				return false;
 			}
 			//Prevent backdating----------------------------------------------------------------------------------------
@@ -1037,12 +1037,12 @@ namespace OpenDental{
 			}
 			if(IsNew){
 				if(gridPat.SelectedIndices.Length+gridIns.SelectedIndices.Length>18 && IsQuickBooks) {
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"No more than 18 items will fit on a QuickBooks deposit slip. Continue anyway?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"No more than 18 items will fit on a QuickBooks deposit slip. Continue anyway?")) {
 						return false;
 					}
 				}
 				else if(gridPat.SelectedIndices.Length+gridIns.SelectedIndices.Length>32) {
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"No more than 32 items will fit on a deposit slip. Continue anyway?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"No more than 32 items will fit on a deposit slip. Continue anyway?")) {
 						return false;
 					}
 				}
@@ -1069,7 +1069,7 @@ namespace OpenDental{
 			}
 			if(IsNew && !_hasBeenSavedToDB){
 				if(Accounts.DepositsLinked() && _depositCur.Amount>0
-					&& IsQuickBooks && !ODBuild.IsWeb() && !CreateDepositQB(true)) //Create a deposit in QuickBooks
+					&& IsQuickBooks && !CreateDepositQB(true)) //Create a deposit in QuickBooks
 				{
 					return false;
 				}
@@ -1166,10 +1166,6 @@ namespace OpenDental{
 		}
 
 		private void butSendQB_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"QuickBooks is not available while viewing through the web.");
-				return;
-			}
 			DateTime date=PIn.Date(textDate.Text);//We use security on the date showing.
 			if(!Security.IsAuthorized(Permissions.DepositSlips,date)) {
 				return;
@@ -1180,7 +1176,7 @@ namespace OpenDental{
 
 		private void butPrint_Click(object sender, System.EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(IsNew){
@@ -1218,7 +1214,7 @@ namespace OpenDental{
 		
 		private void butPDF_Click(object sender,EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(IsNew){
@@ -1254,17 +1250,14 @@ namespace OpenDental{
 			SheetUtil.CalculateHeights(sheet);
 			string filePathAndName=PrefC.GetRandomTempFile(".pdf");
 			SheetPrinting.CreatePdf(sheet,filePathAndName,null);
-			if(ODBuild.IsWeb()) {
-				ThinfinityUtils.HandleFile(filePathAndName);
-			}
-			else {
+
 				Process.Start(filePathAndName);
-			}
+			
 		}
 
 		private void butEmailPDF_Click(object sender,EventArgs e) {
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(IsNew) {
@@ -1319,7 +1312,7 @@ namespace OpenDental{
 		///<summary>Remember that this can only happen if IsNew</summary>
 		private void butRefresh_Click(object sender, System.EventArgs e) {
 			if(textDateStart.errorProvider1.GetError(textDate)!=""){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(listInsPayType.SelectedIndices.Count==0 && listPayType.SelectedIndices.Count==0) {
@@ -1350,7 +1343,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete?")) {
 				return;
 			}
 			//If deposit is attached to a transaction which is more than 48 hours old, then not allowed to delete.
@@ -1358,11 +1351,11 @@ namespace OpenDental{
 			Transaction trans=Transactions.GetAttachedToDeposit(_depositCur.DepositNum);
 			if(trans != null){
 				if(trans.DateTimeEntry < MiscData.GetNowDateTime().AddDays(-2) ){
-					MsgBox.Show(this,"Not allowed to delete.  This deposit is already attached to an accounting transaction.  You will need to detach it from within the accounting section of the program.");
+					MessageBox.Show("Not allowed to delete.  This deposit is already attached to an accounting transaction.  You will need to detach it from within the accounting section of the program.");
 					return;
 				}
 				if(Transactions.IsReconciled(trans)) {
-					MsgBox.Show(this,"Not allowed to delete.  This deposit is attached to an accounting transaction that has been reconciled.  You will need to detach it from within the accounting section of the program.");
+					MessageBox.Show("Not allowed to delete.  This deposit is attached to an accounting transaction that has been reconciled.  You will need to detach it from within the accounting section of the program.");
 					return;
 				}
 				try{

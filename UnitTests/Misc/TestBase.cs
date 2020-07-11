@@ -61,9 +61,9 @@ namespace UnitTests {
 				//2- if a test fails, we may want to look at the data in the db to see why it failed.
 				UnitTestsCore.DatabaseTools.ClearDb();
 			}
-			if(!ODBuild.IsDebug()) {
-				throw new Exception("Active solution configuration must be set to Debug for running unit tests.");
-			}
+#if !DEBUG
+			throw new Exception("Active solution configuration must be set to Debug for running unit tests.");
+#endif
 			CreateAndSetUnitTestUser();
 			RevertMiddleTierSettingsIfNeeded();//Set initial connection
 		}

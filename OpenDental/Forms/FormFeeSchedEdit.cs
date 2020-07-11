@@ -209,12 +209,12 @@ namespace OpenDental{
 
 		private void checkIsGlobal_Click(object sender,EventArgs e) {
 			if(checkIsGlobal.Checked) {//Checking IsGlobal (They want to delete their local fees for the feeschedule and use the HQ ones)
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Checking this option will use the global HQ fees and hide any clinic or provider specific fees.  Are you sure?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Checking this option will use the global HQ fees and hide any clinic or provider specific fees.  Are you sure?")) {
 					checkIsGlobal.Checked=false;
 				}
 			}
 			else {//Unchecking IsGlobal (They want to create local fees for the feeschedule and override the HQ ones)
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Unchecking this option will allow:"+Environment.NewLine
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Unchecking this option will allow:"+Environment.NewLine
 					+"Fees to be different for other clinics or other providers for this same fee schedule. Are you sure?"))
 				{
 					checkIsGlobal.Checked=true;
@@ -234,7 +234,7 @@ namespace OpenDental{
 			if(listInsPlanForFeeSched.Count > 0) {
 				string insPlanMsg = Lan.g(this,"This fee schedule is tied to")+" "
 					+listInsPlanForFeeSched.Count+" "+Lan.g(this,"insurance plans.")+" "+Lan.g(this,"Continue?");
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,insPlanMsg)) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,insPlanMsg)) {
 					checkIsHidden.Checked=false;
 					return;
 				}
@@ -266,14 +266,14 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MsgBox.Show(this,"Description cannot be blank.");
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			//We do not allow global fee schedules to be associated to FeeSchedGroups.
 			//Prevent a fee sched that is associated to a group to be turned into a global fee schedule.
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && checkIsGlobal.Checked) {
 				if(FeeSchedGroups.GetAllForFeeSched(FeeSchedCur.FeeSchedNum).Count()>0) {
-					MsgBox.Show(this,"Not allowed to make Fee Schedule global, a Fee Schedule Group exists for this Fee Schedule.");
+					MessageBox.Show("Not allowed to make Fee Schedule global, a Fee Schedule Group exists for this Fee Schedule.");
 					return;
 				}
 			}

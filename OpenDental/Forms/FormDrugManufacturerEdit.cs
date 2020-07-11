@@ -27,7 +27,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			try {
@@ -42,14 +42,14 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textManufacturerName.Text=="" || textManufacturerCode.Text=="") {
-				MsgBox.Show(this,"Bank fields are not allowed.");
+				MessageBox.Show("Bank fields are not allowed.");
 				return;
 			}
 			DrugManufacturerCur.ManufacturerName=textManufacturerName.Text;
 			DrugManufacturerCur.ManufacturerCode=textManufacturerCode.Text;
 			if(IsNew) {
 				if(DrugManufacturers.GetExists(x => x.ManufacturerCode==textManufacturerCode.Text)) {
-					MsgBox.Show(this,"Manufacturer with this code already exists.");
+					MessageBox.Show("Manufacturer with this code already exists.");
 					return;
 				}
 				DrugManufacturers.Insert(DrugManufacturerCur);

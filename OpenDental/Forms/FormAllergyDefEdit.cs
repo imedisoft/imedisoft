@@ -61,11 +61,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDescription.Text.Trim()=="") {
-				MsgBox.Show(this,"Description cannot be blank.");
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			if(textUnii.Text!="" && textMedication.Text!="") {
-				MsgBox.Show(this,"Only one code is allowed per allergy def.");
+				MessageBox.Show("Only one code is allowed per allergy def.");
 				return;
 			}
 			string validChars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -80,7 +80,7 @@ namespace OpenDental {
 				return;
 			}
 			if(textUnii.Text!="" && textUnii.Text.Length!=10) {
-				MsgBox.Show(this,"UNII code must be 10 characters in length.");
+				MessageBox.Show("UNII code must be 10 characters in length.");
 				return;
 			}
 			AllergyDefCur.Description=textDescription.Text;
@@ -105,7 +105,7 @@ namespace OpenDental {
 					AllergyDefs.Delete(AllergyDefCur.AllergyDefNum);
 				}
 				else {
-					MsgBox.Show(this,"Cannot delete allergies in use.");
+					MessageBox.Show("Cannot delete allergies in use.");
 					return;
 				}
 			}

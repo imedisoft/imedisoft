@@ -32,28 +32,28 @@ namespace OpenDental.UI {
 		#region EventHandlers
 		///<summary></summary>
 		[Category("Action"),Description("Occurs when an item is single clicked.")]
-		public event ODButtonPanelEventHandler ItemClick=null;
+		public event ODButtonPanelEventHandler ItemClick;
 		///<summary></summary>
 		[Category("Action"),Description("Occurs when a button item is single clicked.")]
-		public event ODButtonPanelEventHandler ItemClickBut=null;
+		public event ODButtonPanelEventHandler ItemClickBut;
 		///<summary></summary>
 		[Category("Action"),Description("Occurs when a label item is single clicked.")]
-		public event ODButtonPanelEventHandler ItemClickLabel=null;
+		public event ODButtonPanelEventHandler ItemClickLabel;
 		///<summary></summary>
 		[Category("Action"),Description("Occurs when a row is single clicked.")]
-		public event ODButtonPanelEventHandler RowClick=null;
+		public event ODButtonPanelEventHandler RowClick;
 		///<summary></summary>
 		[Category("Action"),Description("Occurs when an item is double clicked.")]
-		public event ODButtonPanelEventHandler ItemDoubleClick=null;
+		public event ODButtonPanelEventHandler ItemDoubleClick;
 		///<summary></summary>
 		[Category("Action"),Description("Occurs when a button item is double clicked.")]
-		public event ODButtonPanelEventHandler ItemDoubleClickBut=null;
+		public event ODButtonPanelEventHandler ItemDoubleClickBut;
 		///<summary></summary>
 		[Category("Action"),Description("Occurs when a label item is double clicked.")]
-		public event ODButtonPanelEventHandler ItemDoubleClickLabel=null;
+		public event ODButtonPanelEventHandler ItemDoubleClickLabel;
 		///<summary></summary>
 		[Category("Action"),Description("Occurs when a row is double clicked.")]
-		public event ODButtonPanelEventHandler RowDoubleClick=null;
+		public event ODButtonPanelEventHandler RowDoubleClick;
 		#endregion
 
 		public ODButtonPanel() {

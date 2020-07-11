@@ -491,23 +491,23 @@ namespace OpenDental{
 				|| _listInputControls.Where(x => x is ValidTime)
 				.Any(x => !((ValidTime)x).IsValid)) 
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(_listInputControls.OfType<ComboBoxPlus>().Any(x=>!x.SelectionModeMulti && x.SelectedIndex==-1)) {//single selection
-				MsgBox.Show(this,"Please make a selection.");
+				MessageBox.Show("Please make a selection.");
 				return;
 			}
 			if(_listInputControls.OfType<ComboBoxPlus>().Any(x=>x.SelectionModeMulti && x.SelectedIndices.Count==0)) {//multi selection
-				MsgBox.Show(this,"Please make at least one selection.");
+				MessageBox.Show("Please make at least one selection.");
 				return;
 			}
 			if(_listInputControls.OfType<CheckBox>().ToList().Count>1 && _listInputControls.OfType<CheckBox>().Where(x => x.Checked).Count()==0) {
-				MsgBox.Show(this,"Please make a selection.");
+				MessageBox.Show("Please make a selection.");
 				return;
 			}
 			if(_listInputControls.OfType<CheckBox>().ToList().Count>1 && _listInputControls.OfType<CheckBox>().Where(x => x.Checked).Count()>1) {
-				MsgBox.Show(this,"Can only make one selection.");
+				MessageBox.Show("Can only make one selection.");
 				return;
 			}
 			if(_onOkClick!=null && !_onOkClick(textResult.Text)) {

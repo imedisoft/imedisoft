@@ -23,7 +23,7 @@ namespace OpenDental {
 			Text="Incoming links to "+PageTitleCur;
 			FillGrid();
 			if(ListWikiPages.Count==0) {
-				MsgBox.Show(this,"This page has no incoming links.");
+				MessageBox.Show("This page has no incoming links.");
 				Close();
 			}
 		}

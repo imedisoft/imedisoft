@@ -502,10 +502,10 @@ namespace OpenDental{
 			}
 			Cursor=Cursors.Default;
 			if(medIsInFormulary){
-				MsgBox.Show(this,"This medication is in the selected formulary.");
+				MessageBox.Show("This medication is in the selected formulary.");
 			}
 			else {
-				MsgBox.Show(this,"This medication is not in the selected forumulary.");
+				MessageBox.Show("This medication is not in the selected forumulary.");
 			}
 		}*/
 
@@ -529,7 +529,7 @@ namespace OpenDental{
 			FormMedicationEdit FormME=new FormMedicationEdit();
 			Medication med=Medications.GetMedication(MedicationPatCur.MedicationNum);//The edit button is not visible if MedicationNum=0.
 			if(med==null) {//Possible to delete the medication from a separate WS while medication loaded in memory.
-				MsgBox.Show(this,"An error occurred loading medication.");
+				MessageBox.Show("An error occurred loading medication.");
 				return;
 			}
 			FormME.MedicationCur=med;
@@ -549,7 +549,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Remove this medication from this patient?  Patient notes will be lost.")){
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Remove this medication from this patient?  Patient notes will be lost.")){
 				return;
 			}
 			MedicationPats.Delete(MedicationPatCur);
@@ -567,12 +567,12 @@ namespace OpenDental{
 			if(textDateStart.errorProvider1.GetError(textDateStart)!=""
 				|| textDateStop.errorProvider1.GetError(textDateStop)!=""
 				) {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(IsNewMedOrder) {
 				if(textPatNote.Text=="" || textDateStart.Text=="") {
-					MsgBox.Show(this,"For a new medical order, instructions and a start date are required.");
+					MessageBox.Show("For a new medical order, instructions and a start date are required.");
 					return;
 				}
 			}

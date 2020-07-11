@@ -23,7 +23,7 @@ namespace OpenDental {
 				textPageTitle.Text=PageTitle;
 			}
 			if(textPageTitle.Text=="Home") {//TODO later:replace this with a dynamic "Home" pagename lookup like: PrefC.GetString(PrefName.WikiHomePage);
-				MsgBox.Show(this,"Cannot rename the default homepage.");
+				MessageBox.Show("Cannot rename the default homepage.");
 				//butOK.Enabled=false;
 				//textPageTitle.Enabled=false;
 				DialogResult=DialogResult.Cancel;//user doesn't need to see this form
@@ -32,7 +32,7 @@ namespace OpenDental {
 
 		private bool ValidateTitle() {
 			if(textPageTitle.Text=="") {
-				MsgBox.Show(this,"Page title cannot be empty.");
+				MessageBox.Show("Page title cannot be empty.");
 				return false;
 			}
 			if(textPageTitle.Text==PageTitle) {
@@ -51,7 +51,7 @@ namespace OpenDental {
 			}
 			WikiPage wp=WikiPages.GetByTitle(textPageTitle.Text);//this is case insensitive, so it won't let you name it the same as another page even if capitalization is different.
 			if(wp!=null){
-				MsgBox.Show(this,"Page title already exists.");
+				MessageBox.Show("Page title already exists.");
 				return false;
 			}
 			return true;

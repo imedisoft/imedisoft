@@ -128,15 +128,11 @@ namespace OpenDental {
 
 		private void ButLog_Click(object sender,EventArgs e) {
 			if(_isMonitoring) {
-				MsgBox.Show(this,"Stop monitoring queries before creating a log.");
+				MessageBox.Show("Stop monitoring queries before creating a log.");
 				return;
 			}
 			if(_dictQueries.Count==0) {
-				MsgBox.Show(this,"No queries in the Query Feed to log.");
-				return;
-			}
-			if(ODBuild.IsWeb()) {
-				MsgBox.Show(this,"Logging not supported for the Web version at this time.");
+				MessageBox.Show("No queries in the Query Feed to log.");
 				return;
 			}
 			if(!MsgBox.Show(MsgBoxButtons.YesNo,Lan.g(this,"Log all queries to a file?  Total query count")+$": {_dictQueries.Count.ToString("N0")}")) {
@@ -168,7 +164,7 @@ namespace OpenDental {
 				MsgBox.Show(Lan.g(this,"Error creating log file")+$":\r\n{ex.Message}");
 				return;
 			}
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Log file created.  Would you like to open the file?")) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Log file created.  Would you like to open the file?")) {
 				try {
 					FileAtoZ.StartProcessRelative(logFolderPath,logFileName);
 				}
@@ -180,16 +176,16 @@ namespace OpenDental {
 
 		private void ButCopy_Click(object sender,EventArgs e) {
 			if(_dbQueryObjCur==null) {
-				MsgBox.Show(this,"Select a row from the Query Feed.");
+				MessageBox.Show("Select a row from the Query Feed.");
 				return;
 			}
 			try {
 				ODClipboard.SetClipboard(_dbQueryObjCur.ToString());
-				MsgBox.Show(this,"Copied");
+				MessageBox.Show("Copied");
 			}
 			catch(Exception ex) {
 				ex.DoNothing();
-				MsgBox.Show(this,"Could not copy contents to clipboard.  Please try again.");
+				MessageBox.Show("Could not copy contents to clipboard.  Please try again.");
 			}
 		}
 

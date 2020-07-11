@@ -245,7 +245,7 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.Lab:
 						if(DataConnection.DBtype==DatabaseType.Oracle) {
-							MsgBox.Show(this,"Labs not supported with Oracle");
+							MessageBox.Show("Labs not supported with Oracle");
 							break;
 						}
 						FormEhrLabOrders FormLP=new FormEhrLabOrders();
@@ -340,7 +340,7 @@ namespace OpenDental {
 					case EhrMeasureType.CPOE_RadiologyOrdersOnly:
 					case EhrMeasureType.CPOE_LabOrdersOnly:
 						if(DataConnection.DBtype==DatabaseType.Oracle) {
-							MsgBox.Show(this,"Labs not supported with Oracle");
+							MessageBox.Show("Labs not supported with Oracle");
 							break;
 						}
 						FormEhrLabOrders FormLab=new FormEhrLabOrders();
@@ -350,7 +350,7 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.LabImages:
 						if(DataConnection.DBtype==DatabaseType.Oracle) {
-							MsgBox.Show(this,"Labs not supported with Oracle");
+							MessageBox.Show("Labs not supported with Oracle");
 							break;
 						}
 						FormEhrLabOrders FormLO=new FormEhrLabOrders();
@@ -453,7 +453,7 @@ namespace OpenDental {
 								refattach.RefDate=DateTimeOD.Today;
 								if(FormRS.SelectedReferral.IsDoctor) {//whether using ehr or not
 									//we're not going to ask.  That's stupid.
-									//if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Is this an incoming transition of care from another provider?")){
+									//if(MsgBox.Show(MsgBoxButtons.YesNo,"Is this an incoming transition of care from another provider?")){
 									refattach.IsTransitionOfCare=true;
 								}
 								int order=0;
@@ -493,7 +493,7 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.CPOE_RadiologyOrdersOnly:
 						if(DataConnection.DBtype==DatabaseType.Oracle) {
-							MsgBox.Show(this,"Labs not supported with Oracle");
+							MessageBox.Show("Labs not supported with Oracle");
 							break;
 						}
 						//As of v15.4 we started storing radiology orders at the procedure level by flagging the procedure itself as IsCpoe.

@@ -486,11 +486,11 @@ namespace OpenDental{
 					}
 					dates+="\r\n"+listVitals[i].DateTaken.ToShortDateString();
 				}
-				MsgBox.Show(this,"Not allowed to delete this problem.  It is attached to "+listVitals.Count.ToString()+"vital sign exams with dates including:"+dates+".");
+				MessageBox.Show("Not allowed to delete this problem.  It is attached to "+listVitals.Count.ToString()+"vital sign exams with dates including:"+dates+".");
 				return;
 			}
 			else {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 					return;
 				}
 			}
@@ -503,7 +503,7 @@ namespace OpenDental{
 			if(textDateStart.errorProvider1.GetError(textDateStart)!=""
 				|| textDateStop.errorProvider1.GetError(textDateStop)!="")
 			{
-				MsgBox.Show(this,"Please fix date.");
+				MessageBox.Show("Please fix date.");
 				return;
 			}
 			DiseaseCur.DateStart=PIn.Date(textDateStart.Text);
@@ -550,7 +550,7 @@ namespace OpenDental{
 					}
 					//If vitalsign exam is now outside the dates of the problem, tell the user they must fix the dates of the pregnancy dx
 					if(dates.Length>0) {
-						MsgBox.Show(this,"This problem is attached to 1 or more vital sign exams as a pregnancy diagnosis with dates:"+dates+"\r\nNot allowed to change the active dates of the diagnosis to be outside the dates of the exam(s).  You must first remove the diagnosis from the vital sign exam(s).");
+						MessageBox.Show("This problem is attached to 1 or more vital sign exams as a pregnancy diagnosis with dates:"+dates+"\r\nNot allowed to change the active dates of the diagnosis to be outside the dates of the exam(s).  You must first remove the diagnosis from the vital sign exam(s).");
 						return;
 					}
 				}

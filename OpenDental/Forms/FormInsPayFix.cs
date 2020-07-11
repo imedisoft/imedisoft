@@ -19,7 +19,7 @@ namespace OpenDental {
 		private void butRun_Click(object sender,EventArgs e) {
 			List<ClaimPaySplit> splits=Claims.GetInsPayNotAttachedForFixTool();
 			if(splits.Count==0) {
-				MsgBox.Show(this,"There are currently no insurance payments that are not attached to an insurance check.");
+				MessageBox.Show("There are currently no insurance payments that are not attached to an insurance check.");
 				DialogResult=DialogResult.OK;//Close the window because there is nothing else to do
 				return;
 			}

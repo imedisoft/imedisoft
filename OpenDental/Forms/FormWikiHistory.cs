@@ -134,7 +134,7 @@ namespace OpenDental {
 				//DialogResult=DialogResult.OK;
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Revert page to currently selected revision?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Revert page to currently selected revision?")) {
 				return;
 			}
 			WikiPage wikiPageNew = WikiPageHists.RevertFrom(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag as WikiPageHist);

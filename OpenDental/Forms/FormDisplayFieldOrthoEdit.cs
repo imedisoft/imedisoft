@@ -463,7 +463,7 @@ namespace OpenDental{
 
 		private void checkSignature_CheckedChanged(object sender,EventArgs e) {
 			if(checkSignature.Checked && textPickList.Text != "") {
-				MsgBox.Show(this,"To make this display field a signature field, remove the pick list values first.");
+				MessageBox.Show("To make this display field a signature field, remove the pick list values first.");
 				checkSignature.Checked=false;
 				return;
 			}
@@ -475,17 +475,17 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textWidth.errorProvider1.GetError(textWidth)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textInternalName.Text.Trim()=="") {
-				MsgBox.Show(this,"Internal Name cannot be blank.");
+				MessageBox.Show("Internal Name cannot be blank.");
 				return;
 			}
 			//Verify that the user did not change the field name to the same name as another field.
 			DisplayField displayFieldOther=_listAllFields.FirstOrDefault(x => x!=_fieldCur && x.Description==_fieldCur.Description);
 			if(displayFieldOther!=null) {
-				MsgBox.Show(this,"An ortho chart field with that Internal Name already exists.");
+				MessageBox.Show("An ortho chart field with that Internal Name already exists.");
 				return;
 			}
 			_fieldCur.Description=textInternalName.Text;

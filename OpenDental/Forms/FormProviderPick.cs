@@ -354,7 +354,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a provider first.");
+				MessageBox.Show("Please select a provider first.");
 				return;
 			}
 			SelectedProvNum=PIn.Long(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag.ToString());

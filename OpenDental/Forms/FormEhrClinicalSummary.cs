@@ -148,7 +148,7 @@ namespace OpenDental {
 			newMeasureEvent.PatNum=PatCur.PatNum;
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			FillGridEHRMeasureEvents();//This will cause the measure event to show in the grid below the popup message on the next line.  Reassures the user that the event was immediately recorded.
-			MsgBox.Show(this,"Clinical Summary Sent");
+			MessageBox.Show("Clinical Summary Sent");
 		}
 
 		private void butShowXhtml_Click(object sender,EventArgs e) {

@@ -140,7 +140,7 @@ namespace OpenDental {
 				txMonths=PIn.Byte(textAutoOrthoMonthsTreat.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Please enter a number between 0 and 255.");
+				MessageBox.Show("Please enter a number between 0 and 255.");
 				return;
 			}
 			_patientNoteCur.OrthoMonthsTreatOverride=txMonths;
@@ -165,7 +165,7 @@ namespace OpenDental {
 				dateOrthoPlacement=PIn.Date(textDateAutoOrthoPlacement.Text);
 			}
 			catch {
-				MsgBox.Show(this,"Invalid date.");
+				MessageBox.Show("Invalid date.");
 				return;
 			}
 			_patientNoteCur.DateOrthoPlacementOverride=dateOrthoPlacement;
@@ -182,7 +182,7 @@ namespace OpenDental {
 			RefreshOrthoCasesGridRows();
 			OrthoProcLink debondProcLink=OrthoProcLinks.GetByType(selectedOrthoCase.OrthoCaseNum,OrthoProcType.Debond);
 			if(debondProcLink!=null) {//If link exists debond proc must be complete
-				MsgBox.Show(this,"The activated Ortho Case has a completed debond procedure. This procedure must be detached before others can be added.");
+				MessageBox.Show("The activated Ortho Case has a completed debond procedure. This procedure must be detached before others can be added.");
 			}
 		}
 
@@ -426,7 +426,7 @@ namespace OpenDental {
 			else if(table.Rows[e.Row]["AdjNum"].ToString()!="0"){
 				Adjustment adj=Adjustments.GetOne(PIn.Long(table.Rows[e.Row]["AdjNum"].ToString()));
 				if(adj==null) {
-					MsgBox.Show(this,"The adjustment has been deleted.");//Don't return. Fall through to the refresh. 
+					MessageBox.Show("The adjustment has been deleted.");//Don't return. Fall through to the refresh. 
 				}
 				else { 
 					FormAdjust formAdj=new FormAdjust(_patCur,adj);
@@ -449,7 +449,7 @@ namespace OpenDental {
 				}
 				Claim claim=Claims.GetClaim(PIn.Long(table.Rows[e.Row]["ClaimNum"].ToString()));
 				if(claim==null) {
-					MsgBox.Show(this,"The claim has been deleted.");
+					MessageBox.Show("The claim has been deleted.");
 				}
 				else {
 					Patient pat=_famCur.GetPatient(claim.PatNum);
@@ -461,7 +461,7 @@ namespace OpenDental {
 			else if(table.Rows[e.Row]["StatementNum"].ToString()!="0"){
 				Statement stmt=Statements.GetStatement(PIn.Long(table.Rows[e.Row]["StatementNum"].ToString()));
 				if(stmt==null) {
-					MsgBox.Show(this,"The statement has been deleted");//Don't return. Fall through to the refresh. 
+					MessageBox.Show("The statement has been deleted");//Don't return. Fall through to the refresh. 
 				}
 				else { 
 					FormStatementOptions formSO=new FormStatementOptions();
@@ -472,7 +472,7 @@ namespace OpenDental {
 			else if(table.Rows[e.Row]["PayPlanNum"].ToString()!="0"){
 				PayPlan payplan=PayPlans.GetOne(PIn.Long(table.Rows[e.Row]["PayPlanNum"].ToString()));
 				if(payplan==null) {
-					MsgBox.Show(this,"This pay plan has been deleted by another user.");
+					MessageBox.Show("This pay plan has been deleted by another user.");
 				}
 				else {
 					if(payplan.IsDynamic) {
@@ -520,7 +520,7 @@ namespace OpenDental {
 			}
 			AutoOrthoPat orthoPatCur=(AutoOrthoPat)gridAutoOrtho.ListGridRows[e.Row].Tag;
 			if(orthoPatCur.InsPlan.OrthoType!=OrthoClaimType.InitialPlusPeriodic) {
-				MsgBox.Show(this,"To view this setup window, the insurance plan must be set to have an Ortho Claim Type of Initial Plus Periodic.");
+				MessageBox.Show("To view this setup window, the insurance plan must be set to have an Ortho Claim Type of Initial Plus Periodic.");
 				return;
 			}
 			FormOrthoPat formOrthoPat=new FormOrthoPat(orthoPatCur.PatPlan,orthoPatCur.InsPlan,orthoPatCur.CarrierName,orthoPatCur.SubID,orthoPatCur.DefaultFee);
@@ -537,7 +537,7 @@ namespace OpenDental {
 				Commlog commlogCur=
 					Commlogs.GetOne(PIn.Long(_dataSetMain.Tables["Commlog"].Rows[row]["CommlogNum"].ToString()));
 				if(commlogCur==null) {
-					MsgBox.Show(this,"This commlog has been deleted by another user.");
+					MessageBox.Show("This commlog has been deleted by another user.");
 					ModuleSelected(_patCur.PatNum);
 				}
 				else {
@@ -592,7 +592,7 @@ namespace OpenDental {
 
 		private void gridPatInfo_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(TerminalActives.PatIsInUse(_patCur.PatNum)) {
-				MsgBox.Show(this,"Patient is currently entering info at a reception terminal.  Please try again later.");
+				MessageBox.Show("Patient is currently entering info at a reception terminal.  Please try again later.");
 				return;
 			}
 			if(gridPatInfo.ListGridRows[e.Row].Tag is PatFieldDef) {//patfield for an existing PatFieldDef
@@ -621,7 +621,7 @@ namespace OpenDental {
 			if(selectedRow["PayPlanNum"].ToString()!="0") {//Payment plan
 				PayPlan payPlan=PayPlans.GetOne(PIn.Long(selectedRow["PayPlanNum"].ToString()));
 				if(payPlan==null) {
-					MsgBox.Show(this,"This pay plan has been deleted by another user.");
+					MessageBox.Show("This pay plan has been deleted by another user.");
 				}
 				else {
 					if(payPlan.IsDynamic) {
@@ -667,7 +667,7 @@ namespace OpenDental {
 			}
 			Payment paymentForSplit=Payments.GetPayment(paySplit.PayNum);
 			if(paymentForSplit==null) {
-				MsgBox.Show(this,"Payment does not exist.");
+				MessageBox.Show("Payment does not exist.");
 				return;
 			}
 			FormPayment formPayment=new FormPayment(_patCur,_famCur,paymentForSplit,false);
@@ -720,7 +720,7 @@ namespace OpenDental {
 				}
 			}
 			if(medSubNum==0){
-				MsgBox.Show(this,"Patient does not have medical insurance.");
+				MessageBox.Show("Patient does not have medical insurance.");
 				return;
 			}
 			DataTable table=_dataSetMain.Tables["account"];
@@ -743,7 +743,7 @@ namespace OpenDental {
 					}
 				}
 				if(gridAccount.SelectedIndices.Length==0){//if still none selected
-					MsgBox.Show(this,"Please select procedures first.");
+					MessageBox.Show("Please select procedures first.");
 					return;
 				}
 			}
@@ -754,7 +754,7 @@ namespace OpenDental {
 				}
 			}
 			if(!allAreProcedures){
-				MsgBox.Show(this,"You can only select procedures.");
+				MessageBox.Show("You can only select procedures.");
 				return;
 			}
 			//Medical claims are slightly different so we'll just manually create the CreateClaimDataWrapper needed for creating the claim.
@@ -814,7 +814,7 @@ namespace OpenDental {
 			if(PatPlans.GetOrdinal(PriSecMed.Primary,createClaimDataWrapper.ClaimData.ListPatPlans,createClaimDataWrapper.ClaimData.ListInsPlans
 				,createClaimDataWrapper.ClaimData.ListInsSubs)==0)
 			{
-				MsgBox.Show(this,"The patient does not have any dental insurance plans.");
+				MessageBox.Show("The patient does not have any dental insurance plans.");
 				return;
 			}
 			Claim claimCur=new Claim();
@@ -849,7 +849,7 @@ namespace OpenDental {
 			if(PatPlans.GetOrdinal(PriSecMed.Secondary,createClaimDataWrapper.ClaimData.ListPatPlans,createClaimDataWrapper.ClaimData.ListInsPlans
 				,createClaimDataWrapper.ClaimData.ListInsSubs)==0)
 			{
-				MsgBox.Show(this,"Patient does not have secondary insurance.");
+				MessageBox.Show("Patient does not have secondary insurance.");
 				return;
 			}
 			Claim claimCur=new Claim();
@@ -964,7 +964,7 @@ namespace OpenDental {
 					gridAccount.SetSelected(i,true);
 				}
 				if(gridAccount.SelectedIndices.Length==0) {//if still none selected
-					MsgBox.Show(this,"Please select procedures, adjustments or payment plan charges first.");
+					MessageBox.Show("Please select procedures, adjustments or payment plan charges first.");
 					return;
 				}
 			}
@@ -984,19 +984,19 @@ namespace OpenDental {
 					&& row["AdjNum"].ToString()=="0"
 					&& row["PayPlanChargeNum"].ToString()=="0") //the selected item is neither a procedure nor an adjustment
 				{
-					MsgBox.Show(this,"You can only select procedures, payment plan charges or adjustments.");
+					MessageBox.Show("You can only select procedures, payment plan charges or adjustments.");
 					gridAccount.SetSelected(false);
 					return;
 				}
 				if(row["ProcNum"].ToString()!="0") {//the selected item is a proc
 					Procedure proc=Procedures.GetOneProc(PIn.Long(row["ProcNum"].ToString()),false);
 					if(proc.PatNum!=_patCur.PatNum) {
-						MsgBox.Show(this,"You can only select procedures, payment plan charges or adjustments for the current patient on an invoice.");
+						MessageBox.Show("You can only select procedures, payment plan charges or adjustments for the current patient on an invoice.");
 						gridAccount.SetSelected(false);
 						return;
 					}
 					if(proc.StatementNum!=0) {
-						MsgBox.Show(this,"Selected procedure(s) are already attached to an invoice.");
+						MessageBox.Show("Selected procedure(s) are already attached to an invoice.");
 						gridAccount.SetSelected(false);
 						return;
 					}
@@ -1004,17 +1004,17 @@ namespace OpenDental {
 				else if(row["PayPlanChargeNum"].ToString()!="0") {
 					PayPlanCharge ppCharge=PayPlanCharges.GetOne(PIn.Long(row["PayPlanChargeNum"].ToString()));
 					if(ppCharge.PatNum!=_patCur.PatNum){
-						MsgBox.Show(this,"You can only select procedures, payment plan charges or adjustments for a single patient on an invoice.");
+						MessageBox.Show("You can only select procedures, payment plan charges or adjustments for a single patient on an invoice.");
 						gridAccount.SetSelected(false);
 						return;
 					}
 					if(ppCharge.ChargeType!=PayPlanChargeType.Debit) {
-						MsgBox.Show(this,"You can only select payment plans charges that are debits.");
+						MessageBox.Show("You can only select payment plans charges that are debits.");
 						gridAccount.SetSelected(false);
 						return;
 					}
 					if(ppCharge.StatementNum!=0) {
-						MsgBox.Show(this,"Selected payment plan charges(s) are already attached to an invoice.");
+						MessageBox.Show("Selected payment plan charges(s) are already attached to an invoice.");
 						gridAccount.SetSelected(false);
 						return;
 					}							
@@ -1022,16 +1022,16 @@ namespace OpenDental {
 				else{//the selected item must be an adjustment
 					Adjustment adj=Adjustments.GetOne(PIn.Long(row["AdjNum"].ToString()));
 					if(adj.AdjDate.Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-						MsgBox.Show(this,"Adjustments cannot be made for future dates");
+						MessageBox.Show("Adjustments cannot be made for future dates");
 						return;
 					}
 					if(adj.PatNum!=_patCur.PatNum) {
-						MsgBox.Show(this,"You can only select procedures, payment plan charges or adjustments for a single patient on an invoice.");
+						MessageBox.Show("You can only select procedures, payment plan charges or adjustments for a single patient on an invoice.");
 						gridAccount.SetSelected(false);
 						return;
 					}
 					if(adj.StatementNum!=0) {
-						MsgBox.Show(this,"Selected adjustment(s) are already attached to an invoice.");
+						MessageBox.Show("Selected adjustment(s) are already attached to an invoice.");
 						gridAccount.SetSelected(false);
 						return;
 					}
@@ -1069,7 +1069,7 @@ namespace OpenDental {
 					Procedure oldProc=proc.Copy();
 					proc.StatementNum=stmt.StatementNum;
 					if(proc.ProcStatus==ProcStat.C && proc.ProcDate.Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-						MsgBox.Show(this,"Completed procedures cannot be set for future dates.");
+						MessageBox.Show("Completed procedures cannot be set for future dates.");
 						return;
 					}
 					Procedures.Update(proc,oldProc);
@@ -1092,7 +1092,7 @@ namespace OpenDental {
 						Procedure oldProc=newProc.Copy();
 						newProc.StatementNum=stmt.StatementNum;
 						if(newProc.ProcStatus==ProcStat.C && newProc.ProcDate.Date>DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-							MsgBox.Show(this,"Procedures cannot be set for future dates.");
+							MessageBox.Show("Procedures cannot be set for future dates.");
 							return;
 						}
 						Procedures.Update(newProc,oldProc);
@@ -1143,14 +1143,14 @@ namespace OpenDental {
 					gridAccount.SetSelected(i,true);
 				}
 				if(gridAccount.SelectedIndices.Length==0) {//if still none selected
-					MsgBox.Show(this,"Please select procedures, adjustments, payments, or claims first.");
+					MessageBox.Show("Please select procedures, adjustments, payments, or claims first.");
 					return;
 				}
 			}
 			#endregion Autoselect Today's Procedures
 			//guaranteed to have rows selected from here down, verify they are allowed transactions
 			if(gridAccount.SelectedIndices.Any(x => table.Rows[x]["StatementNum"].ToString()!="0" || table.Rows[x]["PayPlanNum"].ToString()!="0")) {
-				MsgBox.Show(this,"You can only select procedures, adjustments, payments, and claims.");
+				MessageBox.Show("You can only select procedures, adjustments, payments, and claims.");
 				gridAccount.SetSelected(false);
 				return;
 			}
@@ -1164,7 +1164,7 @@ namespace OpenDental {
 				.Select(x => PIn.Long(table.Rows[x]["ClaimNum"].ToString())).ToList();
 			//prevent user from selecting a claimpayment that is not associated with any of the selected procs
 			if(listPayClaimNums.Any(x => !listProcClaimNums.Contains(x))) {
-				MsgBox.Show(this,"You can only select claim payments for the selected procedures.");
+				MessageBox.Show("You can only select claim payments for the selected procedures.");
 				gridAccount.SetSelected(false);
 				return;
 			}
@@ -1216,7 +1216,7 @@ namespace OpenDental {
 			if(gridAccount.SelectedIndices.Length>0) {
 				//guaranteed to have rows selected from here down, verify they are allowed transactions
 				if(gridAccount.SelectedIndices.Any(x => table.Rows[x]["StatementNum"].ToString()!="0" || table.Rows[x]["PayPlanNum"].ToString()!="0")) {
-					MsgBox.Show(this,"You can only select procedures, adjustments, payments, and claims.");
+					MessageBox.Show("You can only select procedures, adjustments, payments, and claims.");
 					gridAccount.SetSelected(false);
 					return;
 				}
@@ -1229,7 +1229,7 @@ namespace OpenDental {
 					.Select(x => PIn.Long(table.Rows[x]["ClaimNum"].ToString())).ToList();
 				//prevent user from selecting a claimpayment that is not associatede with any of the selected procs
 				if(listPayClaimNums.Any(x => !listProcClaimNums.Contains(x))) {
-					MsgBox.Show(this,"You can only select claim payments for the selected procedures.");
+					MessageBox.Show("You can only select claim payments for the selected procedures.");
 					gridAccount.SetSelected(false);
 					return;
 				}
@@ -1272,7 +1272,7 @@ namespace OpenDental {
 		private void menuItemQuickProcs_Click(object sender,EventArgs e) {
 			if(!Security.IsAuthorized(Permissions.AccountProcsQuickAdd,true)) {
 				//only happens if permissions are changed after the program is opened or a different user logs in
-				MsgBox.Show(this,"Not authorized for Quick Procs.");
+				MessageBox.Show("Not authorized for Quick Procs.");
 				return;
 			}
 			//One of the QuickCharge menu items was clicked.
@@ -1283,7 +1283,7 @@ namespace OpenDental {
 			string[] arrayProcCodes=defQuickCharge.ItemValue.Split(',');
 			if(arrayProcCodes.Length==0) {
 				//No items entered into the definition category.  Notify the user.
-				MsgBox.Show(this,"There are no Quick Charge items in Setup | Definitions.  There must be at least one in order to use the Quick Charge drop down menu.");
+				MessageBox.Show("There are no Quick Charge items in Setup | Definitions.  There must be at least one in order to use the Quick Charge drop down menu.");
 			}
 			List<string> listProcCodesAdded=new List<string>();
 			Provider patProv=Providers.GetProv(_patCur.PriProv);
@@ -1368,7 +1368,7 @@ namespace OpenDental {
 
 		private void menuItemRepeatSignupPortal_Click(object sender,EventArgs e) {
 			if(_patCur==null) {
-				MsgBox.Show(this,"A customer must be selected first.");
+				MessageBox.Show("A customer must be selected first.");
 				return;
 			}
 			List<RegistrationKey> listRegKeys=RegistrationKeys.GetForPatient(_patCur.PatNum)
@@ -1376,7 +1376,7 @@ namespace OpenDental {
 				.OrderBy(x => x.RegKey)
 				.ToList();
 			if(listRegKeys.Count<1) {
-				MsgBox.Show(this,"No registration keys found for this customer's family.");
+				MessageBox.Show("No registration keys found for this customer's family.");
 				return;
 			}
 			RegistrationKey regKey;
@@ -1433,7 +1433,7 @@ namespace OpenDental {
 
 		private void menuItemSalesTax_Click(object sender,EventArgs e) {
 			if(gridAccount.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select at least one procedure.");
+				MessageBox.Show("Please select at least one procedure.");
 				return;
 			}
 			DataTable table=_dataSetMain.Tables["account"];
@@ -1446,7 +1446,7 @@ namespace OpenDental {
 			}
 			List<OrthoProcLink> listOrthoProcLinks=OrthoProcLinks.GetManyForProcs(listSelectedProcNums);
 			if(listOrthoProcLinks.Count>0) {
-				MsgBox.Show(this,"One or more of the selected procedures cannot be adjusted because it is attached to an ortho case." +
+				MessageBox.Show("One or more of the selected procedures cannot be adjusted because it is attached to an ortho case." +
 					" Please deselect these items and try again.");
 				return;
 			}
@@ -1727,7 +1727,7 @@ namespace OpenDental {
 						}
 						bool isTsiPayment=(TsiTransLogs.IsTransworldEnabled(_patCur.ClinicNum)
 							&& Patients.IsGuarCollections(_patCur.Guarantor,includeSuspended:false)
-							&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"The guarantor of this family has been sent to TSI for a past due balance.  "
+							&& !MsgBox.Show(MsgBoxButtons.YesNo,"The guarantor of this family has been sent to TSI for a past due balance.  "
 								+"Is the payment you are applying directly from the debtor or guarantor?\r\n\r\n"
 								+"Yes - this payment is directly from the debtor/guarantor\r\n\r\n"
 								+"No - this payment is from TSI"));
@@ -1735,7 +1735,7 @@ namespace OpenDental {
 							_famCur.ListPats.Length>1 ? (new InputBoxParam(InputBoxType.CheckBox,"",Lan.g(this," - Prefer this patient"),new Size(120,20))) : null }
 							,new Func<string, bool>((text) => {
 								if(text=="") {
-									MsgBox.Show(this,"Please enter a value.");
+									MessageBox.Show("Please enter a value.");
 									return false;//Should stop user from continuing to payment window.
 								}
 								return true;//Allow user to the payment window.
@@ -1989,7 +1989,7 @@ namespace OpenDental {
 
 		private void toolBarButInstallPlan_Click() {
 			if(InstallmentPlans.GetOneForFam(_patCur.Guarantor)!=null) {
-				MsgBox.Show(this,"Family already has an installment plan.");
+				MessageBox.Show("Family already has an installment plan.");
 				return;
 			}
 			InstallmentPlan installPlan=new InstallmentPlan();
@@ -2072,7 +2072,7 @@ namespace OpenDental {
 			}
 			formPayment.ListEntriesPayFirst=listAcctEntries;
 			if(paymentCur.PayDate.Date>DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed) && !PrefC.GetBool(PrefName.AccountAllowFutureDebits)) {
-				MsgBox.Show(this,"Payments cannot be in the future.");
+				MessageBox.Show("Payments cannot be in the future.");
 				return;
 			}
 			paymentCur.PayAmt=payAmt;
@@ -2122,7 +2122,7 @@ namespace OpenDental {
 		private void toolBarButQuickProcs_Click() {
 			if(!Security.IsAuthorized(Permissions.AccountProcsQuickAdd,true)) {
 				//only happens if permissions are changed after the program is opened. (Very Rare)
-				MsgBox.Show(this,"Not authorized for Quick Procs.");
+				MessageBox.Show("Not authorized for Quick Procs.");
 				return;
 			}
 			//Main QuickCharge button was clicked.  Create a textbox that can be entered so users can insert manually entered proc codes.
@@ -2221,7 +2221,7 @@ namespace OpenDental {
 			}
 			catch(ApplicationException ex) {
 				if(ex.Message=="Missing codenum") {
-					MsgBox.Show(this,$"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
+					MessageBox.Show($"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
 					_patCur=null;
 					_dataSetMain=null;
 					return;
@@ -3393,7 +3393,7 @@ namespace OpenDental {
 		private bool AddProcAndValidate(string procString,Provider patProv) {
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(procString);
 			if(procCode.CodeNum==0) {
-				MsgBox.Show(this,"Invalid Procedure Code: "+procString);
+				MessageBox.Show("Invalid Procedure Code: "+procString);
 				return false; //Invalid ProcCode string manually entered.
 			}
 			Procedure proc=new Procedure();
@@ -3615,7 +3615,7 @@ namespace OpenDental {
 				docc=ImageStore.Import(tempPath,category,Patients.GetPat(stmt.PatNum));
 			}
 			catch {
-				MsgBox.Show(this,"Error saving document.");
+				MessageBox.Show("Error saving document.");
 				//this.Cursor=Cursors.Default;
 				return;
 			}
@@ -3722,7 +3722,7 @@ namespace OpenDental {
 			Plugins.HookAddCode(this,"ContrAccount.AddAdjustmentToSelectedProcsHelper_beginning",_patCur,gridPayPlan);
 			bool isTsiAdj=(TsiTransLogs.IsTransworldEnabled(_patCur.ClinicNum)
 				&& Patients.IsGuarCollections(_patCur.Guarantor)
-				&& !MsgBox.Show(this,MsgBoxButtons.YesNo,"The guarantor of this family has been sent to TSI for a past due balance.  "
+				&& !MsgBox.Show(MsgBoxButtons.YesNo,"The guarantor of this family has been sent to TSI for a past due balance.  "
 					+"Is this an adjustment applied by the office?\r\n\r\n"
 					+"Yes - this is an adjustment applied by the office\r\n\r\n"
 					+"No - this adjustment is the result of a payment received from TSI"));
@@ -3731,7 +3731,7 @@ namespace OpenDental {
 			for(int i=0;i<gridAccount.SelectedIndices.Length;i++){
 				long procNumCur=PIn.Long(tableAcct.Rows[gridAccount.SelectedIndices[i]]["ProcNum"].ToString());
 				if(procNumCur==0){
-					MsgBox.Show(this,"You can only select procedures.");
+					MessageBox.Show("You can only select procedures.");
 					return;
 				}
 				listSelectedProcNums.Add(procNumCur);
@@ -3755,7 +3755,7 @@ namespace OpenDental {
 				if(gridAccount.SelectedGridRows.Count==1) {
 					OrthoProcLink orthoProcLink=OrthoProcLinks.GetByProcNum(PIn.Long(tableAcct.Rows[gridAccount.SelectedIndices[0]]["ProcNum"].ToString()));
 					if(orthoProcLink!=null) {
-						MsgBox.Show(this,"Procedures linked to ortho cases cannot be adjusted.");
+						MessageBox.Show("Procedures linked to ortho cases cannot be adjusted.");
 						return;
 					}
 					adjustmentCur.ProcNum=PIn.Long(tableAcct.Rows[gridAccount.SelectedIndices[0]]["ProcNum"].ToString());
@@ -3800,7 +3800,7 @@ namespace OpenDental {
 					+Lan.g(this,"Yes - Create the payment plan, send a suspend message to TSI, and change the guarantor's billing type to")+" "
 						+billingType+".\r\n\r\n"
 					+Lan.g(this,"No - Do not create the payment plan and allow TSI to continue managing the account.");
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,msg)) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,msg)) {
 					return;
 				}
 			}
@@ -3884,7 +3884,7 @@ namespace OpenDental {
 		//    PatientNoteCur.CCExpiration=new DateTime();//Allow the experation date to be deleted.
 		//  } 
 		//  else {
-		//    MsgBox.Show(this,"Expiration format invalid.");
+		//    MessageBox.Show("Expiration format invalid.");
 		//  }
 		//  PatientNotes.Update(PatientNoteCur,PatCur.Guarantor);
 		//}

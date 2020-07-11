@@ -269,7 +269,7 @@ namespace OpenDental {
 
 		private void butAddNew_Click(object sender,EventArgs e) {
 			if(gridMedImport.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"A row must be selected to add");
+				MessageBox.Show("A row must be selected to add");
 				return;
 			}
 			MedicationPat medP;
@@ -298,7 +298,7 @@ namespace OpenDental {
 
 		private void butAddExist_Click(object sender,EventArgs e) {
 			if(gridMedExisting.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"A row must be selected to add");
+				MessageBox.Show("A row must be selected to add");
 				return;
 			}
 			MedicationPat medP;
@@ -332,7 +332,7 @@ namespace OpenDental {
 
 		private void butRemoveRec_Click(object sender,EventArgs e) {
 			if(gridMedReconcile.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"A row must be selected to remove");
+				MessageBox.Show("A row must be selected to remove");
 				return;
 			}
 			MedicationPat medP;
@@ -345,7 +345,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(_listMedicationPatReconcile.Count==0) {
-				if(!MsgBox.Show(this,true,"The reconcile list is empty which will cause all existing medications to be removed.  Continue?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"The reconcile list is empty which will cause all existing medications to be removed.  Continue?")) {
 					return;
 				}
 			}

@@ -43,10 +43,10 @@ namespace OpenDental {
 
 		private void butMerge_Click(object sender,EventArgs e) {
 			if(_defNumInto==_defNumFrom) { 
-				MsgBox.Show(this,"Cannot merge the same Image Category. Please update either the merge Into field or the merge From field.");
+				MessageBox.Show("Cannot merge the same Image Category. Please update either the merge Into field or the merge From field.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Are you sure? The results are permanent and cannot be undone.")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure? The results are permanent and cannot be undone.")) {
 				return;
 			}
 			try {
@@ -58,7 +58,7 @@ namespace OpenDental {
 			}
 			Defs.HideDef(Defs.GetDef(DefCat.ImageCats,_defNumFrom));
 			DataValid.SetInvalid(InvalidType.Defs);
-			MsgBox.Show(this,"Image Categories merged successfully.");
+			MessageBox.Show("Image Categories merged successfully.");
 			string logText=Lan.g(this,"Image Category Merge from")
 				+" "+Defs.GetName(DefCat.ImageCats,_defNumFrom)+" "+Lan.g(this,"to")+" "+Defs.GetName(DefCat.ImageCats,_defNumInto);
 			//Make log entry here.

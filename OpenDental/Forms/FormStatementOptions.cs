@@ -922,7 +922,7 @@ namespace OpenDental{
 
 		private void checkIsSent_Click(object sender,EventArgs e) {
 			if(initiallySent && !checkIsSent.Checked){//user unchecks the Sent box in order to edit
-				if(!MsgBox.Show(this,true,"Warning.  This will immediately delete the archived copy of the statement.  Continue anyway?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Warning.  This will immediately delete the archived copy of the statement.  Continue anyway?")){
 					checkIsSent.Checked=true;
 					return;
 				}
@@ -991,7 +991,7 @@ namespace OpenDental{
 				Patient pat=Patients.GetPat(StmtCur.PatNum);
 				string patFolder=ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath());
 				if(!FileAtoZ.Exists(ImageStore.GetFilePath(Documents.GetByNum(StmtCur.DocNum),patFolder))) { 
-					MsgBox.Show(this,"File not found: " + Documents.GetByNum(StmtCur.DocNum).FileName);
+					MessageBox.Show("File not found: " + Documents.GetByNum(StmtCur.DocNum).FileName);
 					return;
 				}
 			}
@@ -1011,7 +1011,7 @@ namespace OpenDental{
 				if(initiallySent && checkIsSent.Checked && StmtCur.DocNum==0 
 					&& !StmtCur.IsInvoice)//for invoice, we don't notify user that it's a recreation
 				{
-					MsgBox.Show(this,"There was no archived image of this statement.  The printout will be based on current data.");
+					MessageBox.Show("There was no archived image of this statement.  The printout will be based on current data.");
 				}
 				//So create an archive
 				if(listMode.SelectedIndex==(int)StatementMode.Email) {
@@ -1098,7 +1098,7 @@ namespace OpenDental{
 				docc=ImageStore.Import(tempPath,category,Patients.GetPat(StmtCur.PatNum));
 			}
 			catch {
-				MsgBox.Show(this,"Error saving document.");
+				MessageBox.Show("Error saving document.");
 				//this.Cursor=Cursors.Default;
 				return false;
 			}
@@ -1158,7 +1158,7 @@ namespace OpenDental{
 			if(StmtCur.DocNum!=0 && checkIsSent.Checked) {
 				//remail existing archive pdf?
 				//or maybe tell user they can't do that?
-				MsgBox.Show(this,"Statement has already been sent.");
+				MessageBox.Show("Statement has already been sent.");
 				return;
 			}
 			else {//was not initially sent, or else user has unchecked the sent box
@@ -1244,7 +1244,7 @@ namespace OpenDental{
 				docc=ImageStore.Import(tempPath,category,Patients.GetPat(StmtCur.PatNum));
 			}
 			catch {
-				MsgBox.Show(this,"Error saving document.");
+				MessageBox.Show("Error saving document.");
 				return false;
 			}
 			docc.ImgType=ImageType.Document;
@@ -1273,7 +1273,7 @@ namespace OpenDental{
 			string fileName=DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
 			string filePathAndName=ODFileUtils.CombinePaths(attachPath,fileName);
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase){
-				MsgBox.Show(this,"Could not create email because no AtoZ folder.");
+				MessageBox.Show("Could not create email because no AtoZ folder.");
 				return false;
 			}
 			Patient pat=Patients.GetPat(StmtCur.PatNum);
@@ -1340,7 +1340,7 @@ namespace OpenDental{
 			if(StmtCur.DocNum!=0 && checkIsSent.Checked) {//initiallySent && checkIsSent.Checked){
 				string billingType=PrefC.GetString(PrefName.BillingUseElectronic);
 				if(StmtCur.Mode_==StatementMode.Electronic && (billingType=="1" || billingType=="3") && !PrefC.GetBool(PrefName.BillingElectCreatePDF)) {
-					MsgBox.Show(this,"PDF's are not saved for electronic billing.  Unable to view.");
+					MessageBox.Show("PDF's are not saved for electronic billing.  Unable to view.");
 					return;
 				}
 				else {
@@ -1432,20 +1432,20 @@ namespace OpenDental{
 		private void butPatPortal_Click(object sender,EventArgs e) {
 			if(!Defs.GetDefsForCategory(DefCat.ImageCats,true).Any(x => x.ItemValue.Contains(ImageCategorySpecial.L.ToString())
 				&& x.ItemValue.Contains(ImageCategorySpecial.S.ToString()))) {
-				MsgBox.Show(this,"There is no image category for Patient Portal and Statements in Setup | Definitions | Image Categories. "
+				MessageBox.Show("There is no image category for Patient Portal and Statements in Setup | Definitions | Image Categories. "
 					+"There must be at least one to send portal statements.");
 				return;
 			}
 			if(UserWebs.GetByFKeyAndType(StmtCur.PatNum,UserWebFKeyType.PatientPortal)==null) {
-				MsgBox.Show(this,"This patient does not have Online Access to the Patient Portal.");
+				MessageBox.Show("This patient does not have Online Access to the Patient Portal.");
 				return;
 			}
 			//After checking the preference, CreatePdfForSheet() is called, which will try to create a pdf of the sheet
 			if(!CreatePdfForSheet()) {
-				MsgBox.Show(this,"There was an error creating a PDF for this patient");
+				MessageBox.Show("There was an error creating a PDF for this patient");
 				return;
 			}
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Send an email to the patient notifying them that a statement in available?")) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Send an email to the patient notifying them that a statement in available?")) {
 				Patient pat=Patients.GetPat(StmtCur.PatNum);
 				EmailMessage message=Statements.GetEmailMessageForPortalStatement(StmtCur,pat);
 				FormEmailMessageEdit FormE=new FormEmailMessageEdit(message,EmailAddresses.GetByClinic(pat.ClinicNum));
@@ -1721,7 +1721,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(!MsgBox.Show(this,true,"Delete?")){
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete?")){
 				return;
 			}
 			try { 
@@ -1757,7 +1757,7 @@ namespace OpenDental{
 			isError=false;
 			if(textDate.Text==""){//not allowed to be blank.  Other two dates are allowed to be blank.
 				if(StmtList==null){//if editing a List, blank indicates dates vary.
-					MsgBox.Show(this,"Please enter a Date.");
+					MessageBox.Show("Please enter a Date.");
 					return false;
 				}
 			}
@@ -1770,7 +1770,7 @@ namespace OpenDental{
 				}
 			}
 			if(isError){
-				MsgBox.Show(this,"Please fix Date.");
+				MessageBox.Show("Please fix Date.");
 				return false;
 			}
 			//Validate DateStart-------------------------------------------------------------------------------
@@ -1792,7 +1792,7 @@ namespace OpenDental{
 				}
 			}
 			if(isError){
-				MsgBox.Show(this,"Please fix Start Date.");
+				MessageBox.Show("Please fix Start Date.");
 				return false;
 			}
 			//Validate DateEnd-------------------------------------------------------------------------------
@@ -1814,14 +1814,14 @@ namespace OpenDental{
 				}
 			}
 			if(isError){
-				MsgBox.Show(this,"Please fix End Date.");
+				MessageBox.Show("Please fix End Date.");
 				return false;
 			}
 			//if(  textDateStart.Text .errorProvider1.GetError(textDateStart)!=""
 			//	|| textDateEnd.errorProvider1.GetError(textDateEnd)!=""
 			//	|| textDate.errorProvider1.GetError(textDate)!="")
 			//{
-			//	MsgBox.Show(this,"Please fix data entry errors first.");
+			//	MessageBox.Show("Please fix data entry errors first.");
 			//	return false;
 			//}
 			if(StmtList==null){

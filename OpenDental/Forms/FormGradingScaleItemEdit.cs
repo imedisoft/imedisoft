@@ -33,12 +33,12 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textGradeNumber.Text=="") {
-				MsgBox.Show(this,"Grade Number is a required field and cannot be empty.");
+				MessageBox.Show("Grade Number is a required field and cannot be empty.");
 				return;
 			}
 			float gradeNumber=0;//Just a placeholder
 			if(!float.TryParse(textGradeNumber.Text,out gradeNumber)) {//Fills gradeNumber
-				MsgBox.Show(this,"Grade Number is not in a valid format. Please type in a number.");
+				MessageBox.Show("Grade Number is not in a valid format. Please type in a number.");
 				return;
 			}
 			

@@ -282,7 +282,7 @@ namespace OpenDental {
 				FillGrid();
 			}
 			catch{
-				MsgBox.Show(this,"This feature won't work until you install Microsoft dotNET 3.5.");
+				MessageBox.Show("This feature won't work until you install Microsoft dotNET 3.5.");
 			}
 		}
 
@@ -440,7 +440,7 @@ namespace OpenDental {
 			string warning="The majority of feature requests that users submit are duplicates of existing requests.  "
 				+"Please take the time to do a thorough search for different keywords and become familiar with similar requests before adding one of your own.  "
 				+"Continue?";
-			if(!IsSelectionMode && !MsgBox.Show(this,MsgBoxButtons.OKCancel,warning)) {
+			if(!IsSelectionMode && !MsgBox.Show(MsgBoxButtons.OKCancel,warning)) {
 				return;
 			}
 			FormRequestEdit FormR=new FormRequestEdit();
@@ -479,7 +479,7 @@ namespace OpenDental {
 
 		private void butEdit_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a feature request.");
+				MessageBox.Show("Please select a feature request.");
 				return;
 			}
 			ODDataRow gridRow=(ODDataRow)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
@@ -495,7 +495,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select a feature request.");
+				MessageBox.Show("Please select a feature request.");
 				return;
 			}
 			SelectedFeatureNum=PIn.Long(table.Rows[gridMain.GetSelectedIndex()]["RequestId"]);

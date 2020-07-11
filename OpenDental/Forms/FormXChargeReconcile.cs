@@ -31,7 +31,7 @@ namespace OpenDental {
 			}
 			if(!File.Exists(Dlg.FileName)) {
 				Cursor=Cursors.Default;
-				MsgBox.Show(this,"File not found");
+				MessageBox.Show("File not found");
 				return;
 			}
 			XChargeTransaction trans=new XChargeTransaction();
@@ -90,7 +90,7 @@ namespace OpenDental {
 				}
 			}
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 		}
 
 		private void butViewImported_Click(object sender,EventArgs e) {

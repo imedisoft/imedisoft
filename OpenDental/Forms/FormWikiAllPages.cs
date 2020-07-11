@@ -119,7 +119,7 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MsgBox.Show(this,"Please select a page first.");
+				MessageBox.Show("Please select a page first.");
 				return;
 			}
 			if(OwnerForm!=null && !OwnerForm.IsDisposed) {

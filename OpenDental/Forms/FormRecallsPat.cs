@@ -139,7 +139,7 @@ namespace OpenDental {
 		private void butPerio_Click(object sender,EventArgs e) {
 			//make sure we have both special types properly setup.
 			if(!RecallTypes.PerioAndProphyBothHaveTriggers()){
-				MsgBox.Show(this,"Prophy and Perio special recall types are not setup properly.  They must both exist, and they must both have a trigger.");
+				MessageBox.Show("Prophy and Perio special recall types are not setup properly.  They must both exist, and they must both have a trigger.");
 				return;
 			}
 			if(IsPerio){
@@ -210,7 +210,7 @@ namespace OpenDental {
 				}
 			}
 			if(prophyCount>1) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Multiple prophy and/or perio recalls detected.  A patient should have only one prophy or perio recall, and the calculations will not work correctly otherwise.  Continue anyway?")){
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Multiple prophy and/or perio recalls detected.  A patient should have only one prophy or perio recall, and the calculations will not work correctly otherwise.  Continue anyway?")){
 					e.Cancel=true;
 				}
 			}

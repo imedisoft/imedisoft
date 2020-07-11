@@ -26,11 +26,6 @@ namespace OpenDental {
 
 		private void FormEtrans834Import_Load(object sender,EventArgs e) {
 			textImportPath.Text=PrefC.GetString(PrefName.Ins834ImportPath);
-			if(ODBuild.IsWeb()) {
-				//Not implemented yet for OD Cloud
-				textImportPath.Text="";
-				textImportPath.Enabled=false;
-			}
 			FillGridInsPlanFiles();
 		}
 
@@ -172,12 +167,12 @@ namespace OpenDental {
 				return;//Force the user to wait until the window has finished loading/refreshing, because we need to know which file to import.
 			}
 			if(!Directory.Exists(textImportPath.Text)) {
-				MsgBox.Show(this,"Invalid import path.");
+				MessageBox.Show("Invalid import path.");
 				return;
 			}
 			Prefs.UpdateString(PrefName.Ins834ImportPath,textImportPath.Text);
 			if(_x834selected==null) {
-				MsgBox.Show(this,"No files to import.");
+				MessageBox.Show("No files to import.");
 				return;
 			}
 			FormE834P=new FormEtrans834Preview(new X834(_x834selected));

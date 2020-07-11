@@ -358,7 +358,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 			}
 			else {
-				if(!MsgBox.Show(this,true,"Delete?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Delete?")) {
 					return;
 				}
 				SigButDefs.Delete(_sigButDefCur);//also deletes elements
@@ -368,11 +368,11 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textSynchIcon.errorProvider1.GetError(textSynchIcon)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textButtonText.Text=="") {
-				MsgBox.Show(this,"Please enter a text description first.");
+				MessageBox.Show("Please enter a text description first.");
 				return;
 			}
 			if(textSynchIcon.Text=="") {

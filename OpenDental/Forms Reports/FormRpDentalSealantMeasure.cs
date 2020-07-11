@@ -20,7 +20,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//create the report
 			if(textYear.errorProvider1.GetError(textYear)!="") {
-				MsgBox.Show(this,"Please enter a valid year.");
+				MessageBox.Show("Please enter a valid year.");
 				return;
 			}
 			//The query shows, per provider, two numbers with a percentage.  Then there is a totals row at the bottom.

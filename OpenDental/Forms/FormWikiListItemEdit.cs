@@ -95,7 +95,7 @@ namespace OpenDental {
 				return;
 			}
 			//maybe require all empty or admin priv
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete this list item and all references to it?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this list item and all references to it?")) {
 				return;
 			}
 			WikiLists.DeleteItem(WikiListCurName,ItemNum,ListColumnHeaders.ElementAtOrDefault(0)?.ColName);

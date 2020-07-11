@@ -334,7 +334,7 @@ namespace OpenDental{
 			ClaimSendQueueItem[] arrQueueList=Claims.GetQueueList(ClaimCur.ClaimNum,ClaimCur.ClinicNum,0);
 			if(arrQueueList==null || arrQueueList.Length==0) {
 				//Similar to how we handle clicking Payment As Total button when claim no longer exists in the database.
-				MsgBox.Show(this,"Claim has been deleted by another user.");
+				MessageBox.Show("Claim has been deleted by another user.");
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -473,7 +473,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public void FillForm(){
 			if(ClaimCur==null) {
-				MsgBox.Show(this, "This Claim has been deleted by another user.");
+				MessageBox.Show( "This Claim has been deleted by another user.");
 				DialogResult=DialogResult.Cancel;
 				this.Close();
 				return;
@@ -924,7 +924,7 @@ namespace OpenDental{
 		private void butRecalc_Click(object sender, System.EventArgs e) {
 			if(PatPlans.GetCountForPatAndInsSub(ClaimCur.InsSubNum,ClaimCur.PatNum)==0) {//If the plan has been dropped
 				//Don't let the user recalculate estimates.  Our estimate calculation code would zero all claimproc insurance estimate amounts.
-				MsgBox.Show(this,"You cannot recalculate estimates for an insurance plan that has been dropped.");
+				MessageBox.Show("You cannot recalculate estimates for an insurance plan that has been dropped.");
 				return;
 			}
 			if(!ClaimIsValid()){
@@ -1052,7 +1052,7 @@ namespace OpenDental{
 			if(_listClaimProcsForClaim.Any(x => x.Status.In(ClaimProcStatus.Estimate
 				,ClaimProcStatus.CapComplete,ClaimProcStatus.CapEstimate,ClaimProcStatus.Adjustment,ClaimProcStatus.InsHist)))
 			{
-				MsgBox.Show(this,"One or more claim procedures have an invalid status.");
+				MessageBox.Show("One or more claim procedures have an invalid status.");
 			}
 			_listClaimProcsForClaim=listClaimProcIntermingle;//Now _listClaimProcsForClaim matches the grid order.
 			if(ClaimCur.ClaimType=="Cap"){
@@ -1122,7 +1122,7 @@ namespace OpenDental{
 				string pathAndFileName=ODFileUtils.CombinePaths(patFolder,claimAttachCur.ActualFileName,'/');
 				if(!CloudStorage.FileExists(pathAndFileName)) {
 					//Couldn't find file, display message and return
-					MsgBox.Show(this,"File no longer exists.");
+					MessageBox.Show("File no longer exists.");
 					return;
 				}
 				//found it, download and display
@@ -1141,12 +1141,9 @@ namespace OpenDental{
 				}
 				string tempFile=PrefC.GetRandomTempFile(Path.GetExtension(pathAndFileName));
 				File.WriteAllBytes(tempFile,state.FileContent);
-				if(ODBuild.IsWeb()) {
-					ThinfinityUtils.HandleFile(tempFile);
-				}
-				else {
+
 					Process.Start(tempFile);
-				}
+				
 			}
 			else {//Local storage
 				string pathAndFileName=ODFileUtils.CombinePaths(patFolder,claimAttachCur.ActualFileName);
@@ -1155,7 +1152,7 @@ namespace OpenDental{
 				}
 				catch(Exception ex) {
 					ex.DoNothing();
-					MsgBox.Show(this,"Could not open the attachment.");
+					MessageBox.Show("Could not open the attachment.");
 				}
 			}
 		}
@@ -1359,7 +1356,7 @@ namespace OpenDental{
 			}
 			if(!doubleClickWarningAlreadyDisplayed){
 				doubleClickWarningAlreadyDisplayed=true;
-				if(!MsgBox.Show(this,true,"If you are trying to enter payment information, please use the payments buttons at the upper right.\r\nThen, don't forget to finish by creating the check using the button below this section.\r\nYou should probably click cancel unless you are just editing estimates.\r\nContinue anyway?")){
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"If you are trying to enter payment information, please use the payments buttons at the upper right.\r\nThen, don't forget to finish by creating the check using the button below this section.\r\nYou should probably click cancel unless you are just editing estimates.\r\nContinue anyway?")){
 					return;
 				}
 			}
@@ -1518,7 +1515,7 @@ namespace OpenDental{
 				long orthoAutoCodeNum = InsPlans.GetOrthoAutoProc(planCur);
 				//if all the procedures on this claim are ortho auto procedures...
 				if(_listClaimProcsForClaim.All(x => Procedures.GetProcFromList(ProcList,x.ProcNum).CodeNum == orthoAutoCodeNum)) {
-					MsgBox.Show(this,"You may not attach payments to this claim. Please attach this payment to the claim with the original banding procedure.");
+					MessageBox.Show("You may not attach payments to this claim. Please attach this payment to the claim with the original banding procedure.");
 					return;
 				}
 			}
@@ -1674,7 +1671,7 @@ namespace OpenDental{
 					}
 				}
 				if(listOrthoAutoGridRows.Count>0) {
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"You have selected an ortho auto procedure with consolidated insurance payments turned on. "
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"You have selected an ortho auto procedure with consolidated insurance payments turned on. "
 						+"Payments for this procedure must be made to the claim with the original banding procedure. Would you like to go to that claim now?"))
 					{
 						return;
@@ -1682,7 +1679,7 @@ namespace OpenDental{
 					//get the most recent claim marked as ortho with an ortho banding proc on it.
 					Claim claimBanding =Claims.GetOrthoBandingClaim(PatCur.PatNum,planCur.PlanNum);
 					if(claimBanding==null) {
-						MsgBox.Show(this,"The claim with the original banding procedure was not marked as received or could not be found."
+						MessageBox.Show("The claim with the original banding procedure was not marked as received or could not be found."
 							+"\r\nPlease manually add the payment to that claim.");
 					}
 					else {//Show the claim edit window and have the insurance payment window automatically show.
@@ -1788,14 +1785,14 @@ namespace OpenDental{
 		private void menuItemAddAdj_Click(object sender,EventArgs e) {
 			//check to make sure one and only one row is selected
 			if(gridProc.SelectedGridRows.Count!=1) {
-				MsgBox.Show(this,"Select one procedure to add an adjustment.");
+				MessageBox.Show("Select one procedure to add an adjustment.");
 				return;
 			}
 			long procNum=((ClaimProc)gridProc.SelectedGridRows[0].Tag).ProcNum;
 			Procedure procForAdj=new Procedure();
 			procForAdj=Procedures.GetOneProc(procNum,false);
 			if(procForAdj.ProcStatus!=ProcStat.C) {
-				MsgBox.Show(this,"Adjustments may only be added to completed procedures.");
+				MessageBox.Show("Adjustments may only be added to completed procedures.");
 				return;
 			}
 			Adjustment adj=new Adjustment();
@@ -1891,7 +1888,7 @@ namespace OpenDental{
 				}
 			}
 			if(!hasProcLeft) {//All procedures are selected for the split...
-				MsgBox.Show(this,"At least one procedure needs to remain on this claim in order to split it.");
+				MessageBox.Show("At least one procedure needs to remain on this claim in order to split it.");
 				return;
 			}
 			//Selection validation logic ensures these are only procs that are eligible to split from this claim.
@@ -1910,7 +1907,7 @@ namespace OpenDental{
 			ClaimPayment claimPaymentCur=null;
 			switch(listClaimPayments.Count) {
 				case 0:
-					MsgBox.Show(this,"There are no EOBs for this claim.");
+					MessageBox.Show("There are no EOBs for this claim.");
 					return;
 				case 1:
 					claimPaymentCur=listClaimPayments[0];
@@ -2000,7 +1997,7 @@ namespace OpenDental{
 			}
 			if(PrefC.GetBool(PrefName.ClaimPaymentBatchOnly)) {
 				//Is there a permission in the manage module that would block this behavior? Are we sending the user into a TRAP?!
-				MsgBox.Show(this,"Please use Batch Insurance in Manage Module to Finalize Payments.");
+				MessageBox.Show("Please use Batch Insurance in Manage Module to Finalize Payments.");
 				return;
 			}
 			if(!ClaimIsValid()) {
@@ -2176,7 +2173,7 @@ namespace OpenDental{
 		private void butAttachPerio_Click(object sender,EventArgs e) {
 			//Patient PatCur=Patients.GetPat(PatNum);
 			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MsgBox.Show(this,"Error. Not using AtoZ images folder.");
+				MessageBox.Show("Error. Not using AtoZ images folder.");
 				return;
 			}
 			ContrPerio gridP=new ContrPerio();
@@ -2245,16 +2242,6 @@ namespace OpenDental{
 		}
 
 		private void butExport_Click(object sender,EventArgs e) {
-			if(ODBuild.IsWeb()) {
-				for(int i=0;i<ClaimCur.Attachments.Count;i++) {
-					string fileName=PatCur.FName+PatCur.LName+PatCur.PatNum+"_"+i+Path.GetExtension(ClaimCur.Attachments[i].ActualFileName);
-					string tempPath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
-					string currentPath=FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),ClaimCur.Attachments[i].ActualFileName);
-					FileAtoZ.Copy(currentPath,tempPath,FileAtoZSourceDestination.AtoZToLocal,"Exporting attachment...");
-					ThinfinityUtils.ExportForDownload(tempPath);
-				}
-				return;
-			}
 			string exportPath=PrefC.GetString(PrefName.ClaimAttachExportPath);
 			if(!Directory.Exists(exportPath)){
 				if(MessageBox.Show(Lan.g(this,"The claim export path no longer exists at:")+" "+exportPath+"\r\n"
@@ -2289,7 +2276,7 @@ namespace OpenDental{
 					return;
 				}				
 			}
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 		}
 
 		private void contextMenuAttachments_Popup(object sender,EventArgs e) {
@@ -2467,7 +2454,7 @@ namespace OpenDental{
 			else {
 				message="The "+message+" attached to this claim has a Term Date past the Date of Service for this claim.";
 			}
-			MsgBox.Show(this,message);
+			MessageBox.Show(message);
 			return false;
 		}
 
@@ -2479,7 +2466,7 @@ namespace OpenDental{
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && ClaimCur.ClaimType=="PreAuth") {
 				for(int i=0;i<PatPlanList.Count;i++) {
 					if(PatPlanList[i].InsSubNum==ClaimCur.InsSubNum && PatPlanList[i].Ordinal!=1) {
-						MsgBox.Show(this,"Preauthorizations for secondary insurance cannot be sent because there is no supported format.");
+						MessageBox.Show("Preauthorizations for secondary insurance cannot be sent because there is no supported format.");
 						return;
 					}
 				}
@@ -2494,16 +2481,16 @@ namespace OpenDental{
 			UpdateClaim();
 			ClaimSendQueueItem[] listQueue=Claims.GetQueueList(ClaimCur.ClaimNum,ClaimCur.ClinicNum,0);
 			if(listQueue.IsNullOrEmpty()) {//Happens if the Claim has been deleted.
-				MsgBox.Show(this, "Unable to find claim data.  Exit claim window and try again.");
+				MessageBox.Show( "Unable to find claim data.  Exit claim window and try again.");
 				return;
 			}
 			if(listQueue[0].NoSendElect==NoSendElectType.NoSendElect) {
-				MsgBox.Show(this,"This carrier is marked to not receive e-claims.");
+				MessageBox.Show("This carrier is marked to not receive e-claims.");
 				//Later: we need to let user send anyway, using all 0's for electronic id.
 				return;
 			}
 			if(listQueue[0].NoSendElect==NoSendElectType.NoSendSecondaryElect && listQueue[0].Ordinal!=1) {
-				MsgBox.Show(this,"This carrier is marked to only receive primary insurance e-claims.");
+				MessageBox.Show("This carrier is marked to only receive primary insurance e-claims.");
 				return;
 			}
 			long clinicNum=0;
@@ -2512,10 +2499,6 @@ namespace OpenDental{
 			}
 			Clearinghouse clearinghouseHq=ClearinghouseL.GetClearinghouseHq(listQueue[0].ClearinghouseNum);
 			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,clinicNum);
-			if(ODBuild.IsWeb() && Clearinghouses.IsDisabledForWeb(clearinghouseClin)) {
-				MessageBox.Show(Lans.g("Eclaims","This clearinghouse is not available while viewing through the web."));
-				return;
-			}
 			//string warnings;
 			//string missingData=
 			listQueue[0]=Eclaims.GetMissingData(clearinghouseClin,listQueue[0]);
@@ -2532,11 +2515,11 @@ namespace OpenDental{
 					};
 					ClaimConnect.ValidateClaimResponse response=ClaimConnect.ValidateClaim(ClaimCur,true);
 					if(response.IsAttachmentRequired) {
-						if(MsgBox.Show(this,MsgBoxButtons.YesNo,"An attachment is required for this claim. Would you like to open the claim attachment form?")) {
+						if(MsgBox.Show(MsgBoxButtons.YesNo,"An attachment is required for this claim. Would you like to open the claim attachment form?")) {
 							FormClaimAttachment.Open(ClaimCur,actionOnOk);
 							return;
 						}
-						else if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to continue sending the claim?")) {
+						else if(!MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to continue sending the claim?")) {
 							return;
 						}
 					}
@@ -2544,13 +2527,13 @@ namespace OpenDental{
 				catch(ODException ex) {
 					//ODExceptions should have already been translated to reduce the number of times a message needs translating
 					MessageBox.Show(ex.Message);
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to continue sending the claim?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to continue sending the claim?")) {
 						return;
 					}
 				}
 				catch(Exception ex) {
 					FriendlyException.Show(ex.Message,ex);
-					if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Would you like to continue sending the claim?")) {
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to continue sending the claim?")) {
 						return;
 					}
 				}
@@ -2627,7 +2610,7 @@ namespace OpenDental{
 		private void butHistory_Click(object sender,EventArgs e) {
 			List<Etrans> etransList=Etranss.GetHistoryOneClaim(ClaimCur.ClaimNum);
 			if(etransList.Count==0) {
-				MsgBox.Show(this,"No history found of sent e-claim.");
+				MessageBox.Show("No history found of sent e-claim.");
 				return;
 			}
 			FormEtransEdit FormE=new FormEtransEdit();
@@ -2670,7 +2653,7 @@ namespace OpenDental{
 		///<summary>Opens FormClaimAttachment. This form is used for managing attachments to send to DentalXChange.</summary>
 		private void buttonClaimAttachment_Click(object sender,EventArgs e) {
 			if(IsNew) {//Must have a claim object to do claim attachments
-				MsgBox.Show(this,"The claim must be saved before you can start adding attachments.");
+				MessageBox.Show("The claim must be saved before you can start adding attachments.");
 				return;
 			}
 			if(comboClaimStatus.SelectedIndex==2) {//Waiting to send claim
@@ -2684,7 +2667,7 @@ namespace OpenDental{
 				//There is no benefit to the user by attaching and sending files to DXC if the carrier cannot send an electronic claim within Open Dental.
 				//If it is determined later that there is a desire to allow these carriers in, we can simply remove this block.
 				if(!listQueue[0].CanSendElect) {
-					MsgBox.Show(this,"Carrier is not set to Send Claims Electronically.");
+					MessageBox.Show("Carrier is not set to Send Claims Electronically.");
 					return;
 				}
 				Clearinghouse clearinghouseHq=ClearinghouseL.GetClearinghouseHq(listQueue[0].ClearinghouseNum);
@@ -2695,7 +2678,7 @@ namespace OpenDental{
 					return;
 				}
 			}
-			if(MsgBox.Show(this,true,"This will close the claim edit window without saving any changes. Continue?")) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"This will close the claim edit window without saving any changes. Continue?")) {
 				FormClaimAttachment.Open(ClaimCur);
 				DialogResult=DialogResult.Cancel;
 			}
@@ -2745,7 +2728,7 @@ namespace OpenDental{
 				|| textDateOther.errorProvider1.GetError(textDateOther)!=""
 				)
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			//We are not sure how these text boxes can have invalid values, but we have received many bug submissions.
@@ -2754,7 +2737,7 @@ namespace OpenDental{
 			}
 			catch(Exception ex) {
 				ex.DoNothing();
-				MsgBox.Show(this,"Please enter a valid value for Ortho Months Total.");
+				MessageBox.Show("Please enter a valid value for Ortho Months Total.");
 				return false;
 			}
 			try {
@@ -2762,7 +2745,7 @@ namespace OpenDental{
 			}
 			catch(Exception ex) {
 				ex.DoNothing();
-				MsgBox.Show(this,"Please enter a valid value for Ortho Months Remaining.");
+				MessageBox.Show("Please enter a valid value for Ortho Months Remaining.");
 				return false;
 			}
 			bool isSentOrReceived=comboClaimStatus.SelectedIndex.In(4,5);//sent,received
@@ -2791,11 +2774,11 @@ namespace OpenDental{
 				return true;//skip this entire method
 			}
 			if(textCanadianAccidentDate.errorProvider1.GetError(textCanadianAccidentDate)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(textCanadianAccidentDate.Text!="" && DateTime.Parse(textCanadianAccidentDate.Text).Date>DateTime.Today) {
-				MsgBox.Show(this,"Accident date cannot be a date in the future.");
+				MessageBox.Show("Accident date cannot be a date in the future.");
 				return false;
 			}
 			string warning="";
@@ -2906,14 +2889,14 @@ namespace OpenDental{
 				textCanadaTreatDuration.Text!="" && textCanadaNumPaymentsAnticipated.Text!="" && 
 				textCanadaAnticipatedPayAmount.Text!="") {
 				if(textDateCanadaEstTreatStartDate.errorProvider1.GetError(textDateCanadaEstTreatStartDate)!="") {
-					MsgBox.Show(this,"Please fix data entry errors first.");
+					MessageBox.Show("Please fix data entry errors first.");
 					return false;
 				}
 				try {
 					Double.Parse(textCanadaInitialPayment.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Invalid initial payment amount.");
+					MessageBox.Show("Invalid initial payment amount.");
 					return false;
 				}
 				byte payCycle=0;
@@ -2921,32 +2904,32 @@ namespace OpenDental{
 					payCycle=byte.Parse(textCanadaExpectedPayCycle.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Invalid expected payment cycle.");
+					MessageBox.Show("Invalid expected payment cycle.");
 					return false;
 				}
 				if(payCycle<1 || payCycle>4) {
-					MsgBox.Show(this,"Expected payment cycle must be a value between 1 and 4.");
+					MessageBox.Show("Expected payment cycle must be a value between 1 and 4.");
 					return false;
 				}
 				try {
 					byte.Parse(textCanadaTreatDuration.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Invalid treatment duration.");
+					MessageBox.Show("Invalid treatment duration.");
 					return false;
 				}
 				try {
 					byte.Parse(textCanadaNumPaymentsAnticipated.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Invalid number of payments anticipated.");
+					MessageBox.Show("Invalid number of payments anticipated.");
 					return false;
 				}
 				try {
 					Double.Parse(textCanadaAnticipatedPayAmount.Text);
 				}
 				catch {
-					MsgBox.Show(this,"Invalid anticipated pay amount.");
+					MessageBox.Show("Invalid anticipated pay amount.");
 					return false;
 				}
 			}
@@ -3276,11 +3259,11 @@ namespace OpenDental{
 				}
 			}
 			if(paymentIsAttached){
-				MsgBox.Show(this,"You cannot delete this claim while any insurance checks are attached.  You will have to detach all insurance checks first.");
+				MessageBox.Show("You cannot delete this claim while any insurance checks are attached.  You will have to detach all insurance checks first.");
 				return;
 			}
 			if(claimInsPayAttached){
-				MsgBox.Show(this,"You cannot delete this claim while there are insurance payments.  Set all Insurance Paid amounts to zero first.");
+				MessageBox.Show("You cannot delete this claim while there are insurance payments.  Set all Insurance Paid amounts to zero first.");
 				return;
 			}
 			if(ClaimCur.ClaimStatus=="R"){
@@ -3393,7 +3376,7 @@ namespace OpenDental{
 					}
 				}
 				if(!allReceived){
-					if(!MsgBox.Show(this,true,"All items will be marked received.  Continue?")){
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"All items will be marked received.  Continue?")){
 						return;
 					}
 					for(int i=0;i<_listClaimProcsForClaim.Count;i++){
@@ -3422,7 +3405,7 @@ namespace OpenDental{
 					//Too dangerous to automatically set items not received because I would have to check for attachments to checks, etc.
 					//Also too annoying to block user.
 					//So just warn user.
-					if(!MsgBox.Show(this,true,"Some of the items are marked received.  This is not a good idea since it will cause them to show in the Account as a 'payment'.  Continue anyway?")){
+					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Some of the items are marked received.  This is not a good idea since it will cause them to show in the Account as a 'payment'.  Continue anyway?")){
 						return;
 					}
 				}
@@ -3460,7 +3443,7 @@ namespace OpenDental{
 					try {
 						ClaimConnect.ValidateClaimResponse response=ClaimConnect.ValidateClaim(ClaimCur,true);
 						if(response.IsAttachmentRequired) {
-							if(MsgBox.Show(this,MsgBoxButtons.YesNo,"An attachment is required for this claim. Would you like to open the claim attachment form?")) {
+							if(MsgBox.Show(MsgBoxButtons.YesNo,"An attachment is required for this claim. Would you like to open the claim attachment form?")) {
 								FormClaimAttachment.Open(ClaimCur);
 							}
 						}
@@ -3472,7 +3455,7 @@ namespace OpenDental{
 						FriendlyException.Show(ex.Message,ex);
 					}
 				}
-				//if(MsgBox.Show(this,true,"Send electronic claim immediately?")){
+				//if(MsgBox.Show(MsgBoxButtons.YesNo,"Send electronic claim immediately?")){
 				//	List<ClaimSendQueueItem> queueItems=new List<ClaimSendQueueItem>();
 				//	queueItems.Add(listQueue[0]);
 				//	Eclaims.Eclaims.SendBatches(queueItems);//this also calls SetClaimSentOrPrinted which creates the etrans entry.
@@ -3515,7 +3498,7 @@ namespace OpenDental{
 				return;
 			}
 			if(ClaimCur.InsPayAmt>0) {
-				MsgBox.Show(this,"Not allowed to cancel because an insurance payment was entered.  Either click OK, or zero out the insurance payments.");
+				MessageBox.Show("Not allowed to cancel because an insurance payment was entered.  Either click OK, or zero out the insurance payments.");
 				e.Cancel=true;
 				return;
 			}

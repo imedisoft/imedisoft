@@ -94,7 +94,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridAdjusts.SelectedIndices.Length<1) {
-				MsgBox.Show(this,"Please select an adjustment first or press Cancel.");
+				MessageBox.Show("Please select an adjustment first or press Cancel.");
 				return;
 			}
 			SelectedAdj=(Adjustment)gridAdjusts.SelectedTag<AccountEntry>().Tag;

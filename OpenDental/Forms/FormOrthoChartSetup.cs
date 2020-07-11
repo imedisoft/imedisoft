@@ -99,7 +99,7 @@ namespace OpenDental {
 				}
 			}
 			if(!isVisible) {
-				MsgBox.Show(this,"At least one tab must not be hidden.");
+				MessageBox.Show("At least one tab must not be hidden.");
 				return;
 			}
 			OrthoChartTabs.Sync(_listNewOrthoChartTabs,_listDbOrthoChartTabs);

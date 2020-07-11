@@ -105,7 +105,7 @@ namespace OpenDental {
 		///and then refreshes the grid so that the user can see that they are "taking care" of the conflicts.</summary>
 		private void SendPinboard_Click() {
 			if(gridConflicts.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			List<long> listSelectedAptNums=new List<long>();
@@ -123,7 +123,7 @@ namespace OpenDental {
 		
 		private void SelectPatient_Click() {
 			if(gridConflicts.SelectedIndices.Length==0) {
-				MsgBox.Show(this,"Please select an appointment first.");
+				MessageBox.Show("Please select an appointment first.");
 				return;
 			}
 			//If multiple selected, just take the last one to remain consistent with SendPinboard_Click.

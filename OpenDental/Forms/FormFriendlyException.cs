@@ -70,7 +70,7 @@ namespace OpenDental {
 				ODClipboard.SetClipboard(content);
 			}
 			catch(Exception ex) {
-				MsgBox.Show(this,"Could not copy contents to the clipboard. Please try again.");
+				MessageBox.Show("Could not copy contents to the clipboard. Please try again.");
 				ex.DoNothing();
 			}
 		}

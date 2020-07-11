@@ -31,7 +31,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(listBoxPick.SelectedItems.Count==0) {
-				MsgBox.Show(this,"Please select an item in the list first.");
+				MessageBox.Show("Please select an item in the list first.");
 				return;
 			}
 			_field.FieldValue=listBoxPick.SelectedItem.ToString();

@@ -177,7 +177,7 @@ namespace OpenDental {
 			}
 			long numberSent=_listPatientsSelected.Count;
 			string templateName=_templateCur.TemplateName;
-			MsgBox.Show(this,$"Sent to {numberSent} patients with template: \"{templateName}\" for group: \"{promotionName}\".");
+			MessageBox.Show($"Sent to {numberSent} patients with template: \"{templateName}\" for group: \"{promotionName}\".");
 			DialogResult=DialogResult.OK;
 		}
 

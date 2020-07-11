@@ -95,7 +95,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AxInterop.WMPLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="CDT">
       <HintPath>..\Required dlls\CDT.dll</HintPath>
     </Reference>
@@ -103,9 +102,6 @@
     <Reference Include="Health.Direct.Common, Version=1.2.0.8, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Required dlls\Health.Direct.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.WMPLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Interop.Word, Version=8.2.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
@@ -156,7 +152,6 @@
       <HintPath>..\OpenDentalCloud\bin\Debug\OpenDentalCloud.dll</HintPath>
     </Reference>
     <Reference Include="OpenDentalGraph, Version=16.1.1.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="OpenDentalHelp, Version=19.3.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="PdfSharp, Version=1.2.1269.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Required dlls\PdfSharp.dll</HintPath>

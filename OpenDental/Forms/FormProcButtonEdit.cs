@@ -389,7 +389,7 @@ namespace OpenDental{
 				pictureBox.Image=Image.FromFile(dlg.FileName);
 			}
 			catch{
-				MsgBox.Show(this,"Error loading file.");
+				MessageBox.Show("Error loading file.");
 			}
 		}
 

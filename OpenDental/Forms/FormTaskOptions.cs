@@ -42,7 +42,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			if(!(textStartDate.errorProvider1.GetError(textStartDate)=="")) {
 				if(checkShowFinished.Checked) {
-					MsgBox.Show(this,"Invalid finished task start date");
+					MessageBox.Show("Invalid finished task start date");
 					return;
 				}
 				else {

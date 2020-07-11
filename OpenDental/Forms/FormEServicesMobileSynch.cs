@@ -26,13 +26,11 @@ namespace OpenDental {
 
 	public partial class FormEServicesMobileSynch:ODForm {
 		private static MobileWeb.Mobile mb=new MobileWeb.Mobile();
-		private static int _batchSize=100;
+		//private static int _batchSize=100;
 		///<summary>This variable prevents the synching methods from being called when a previous synch is in progress.</summary>
 		private static bool _isSynching;
 		///<summary>This variable prevents multiple error message boxes from popping up if mobile synch server is not available.</summary>
 		private static bool _isServerAvail=true;
-		///<summary>If this variable is true then records are uploaded one at a time so that an error in uploading can be traced down to a single record</summary>
-		private static bool _isTroubleshootMode=false;
 		private static FormProgress FormP;
 		
 		public FormEServicesMobileSynch() {
@@ -69,7 +67,7 @@ namespace OpenDental {
 				return;
 			}
 			Cursor=Cursors.Default;
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 		}
 
 		///<summary>Returns false if validation failed.  This also makes sure the web service exists, the customer is paid, and the registration key is correct.</summary>
@@ -77,12 +75,12 @@ namespace OpenDental {
 			//validation
 			if(textSynchMinutes.errorProvider1.GetError(textSynchMinutes)!=""
 				||textDateBefore.errorProvider1.GetError(textDateBefore)!="") {
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			//yes, workstation is allowed to be blank.  That's one way for user to turn off auto synch.
 			//if(textMobileSynchWorkStation.Text=="") {
-			//	MsgBox.Show(this,"WorkStation cannot be empty");
+			//	MessageBox.Show("WorkStation cannot be empty");
 			//	return false;
 			//}
 			// the text field is read because the keyed in values have not been saved yet
@@ -93,11 +91,11 @@ namespace OpenDental {
 			// if this is not done then an old non-functional url prevents any new url from being saved.
 			Prefs.UpdateString(PrefName.MobileSyncServerURL,textMobileSyncServerURL.Text);
 			if(!TestWebServiceExists()) {
-				MsgBox.Show(this,"Web service not found.");
+				MessageBox.Show("Web service not found.");
 				return false;
 			}
 			if(mb.GetCustomerNum(PrefC.GetString(PrefName.RegistrationKey))==0) {
-				MsgBox.Show(this,"Registration key is incorrect.");
+				MessageBox.Show("Registration key is incorrect.");
 				return false;
 			}
 			if(!VerifyPaidCustomer()) {
@@ -108,23 +106,23 @@ namespace OpenDental {
 			//So I rewrote it all.  New error messages say exactly what's wrong with it.
 			if(textMobileUserName.Text!="") {//allowed to be blank
 				if(textMobileUserName.Text.Length<10) {
-					MsgBox.Show(this,"User Name must be at least 10 characters long.");
+					MessageBox.Show("User Name must be at least 10 characters long.");
 					return false;
 				}
 				if(!Regex.IsMatch(textMobileUserName.Text,"[A-Z]+")) {
-					MsgBox.Show(this,"User Name must contain an uppercase letter.");
+					MessageBox.Show("User Name must contain an uppercase letter.");
 					return false;
 				}
 				if(!Regex.IsMatch(textMobileUserName.Text,"[a-z]+")) {
-					MsgBox.Show(this,"User Name must contain an lowercase letter.");
+					MessageBox.Show("User Name must contain an lowercase letter.");
 					return false;
 				}
 				if(!Regex.IsMatch(textMobileUserName.Text,"[0-9]+")) {
-					MsgBox.Show(this,"User Name must contain a number.");
+					MessageBox.Show("User Name must contain a number.");
 					return false;
 				}
 				if(!Regex.IsMatch(textMobileUserName.Text,"[^0-9a-zA-Z]+")) {//absolutely anything except number, lower or upper.
-					MsgBox.Show(this,"User Name must contain punctuation or symbols.");
+					MessageBox.Show("User Name must contain punctuation or symbols.");
 					return false;
 				}
 			}
@@ -163,11 +161,11 @@ namespace OpenDental {
 			if(!SavePrefs()) {
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete all your data from our server?  This happens automatically before a full synch.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete all your data from our server?  This happens automatically before a full synch.")) {
 				return;
 			}
 			mb.DeleteAllRecords(PrefC.GetString(PrefName.RegistrationKey));
-			MsgBox.Show(this,"Done");
+			MessageBox.Show("Done");
 		}
 
 		private void butFullSync_Click(object sender,EventArgs e) {
@@ -175,10 +173,10 @@ namespace OpenDental {
 				return;
 			}
 			if(_isSynching) {
-				MsgBox.Show(this,"A Synch is in progress at the moment. Please try again later.");
+				MessageBox.Show("A Synch is in progress at the moment. Please try again later.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"This will be time consuming. Continue anyway?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will be time consuming. Continue anyway?")) {
 				return;
 			}
 			//for full synch, delete all records then repopulate.
@@ -191,11 +189,11 @@ namespace OpenDental {
 				return;
 			}
 			if(_isSynching) {
-				MsgBox.Show(this,"A Synch is in progress at the moment. Please try again later.");
+				MessageBox.Show("A Synch is in progress at the moment. Please try again later.");
 				return;
 			}
 			if(PrefC.GetDate(PrefName.MobileExcludeApptsBeforeDate).Year<1880) {
-				MsgBox.Show(this,"Full synch has never been run before.");
+				MessageBox.Show("Full synch has never been run before.");
 				return;
 			}
 			DateTime changedSince=PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun);
@@ -204,10 +202,10 @@ namespace OpenDental {
 
 		private void ShowProgressForm(DateTime changedSince) {
 			if(checkTroubleshooting.Checked) {
-				_isTroubleshootMode=true;
+				//_isTroubleshootMode=true;
 			}
 			else {
-				_isTroubleshootMode=false;
+				//_isTroubleshootMode=false;
 			}
 			DateTime timeSynchStarted=MiscData.GetNowDateTime();
 			FormP=new FormProgress();
@@ -514,7 +512,7 @@ namespace OpenDental {
 			if(!isPaidCustomer) {
 				textSynchMinutes.Text="0";
 				Prefs.UpdateInt(PrefName.MobileSyncIntervalMinutes,0);
-				MsgBox.Show(this,"This feature requires a separate monthly payment.  Please call customer support.");
+				MessageBox.Show("This feature requires a separate monthly payment.  Please call customer support.");
 				return false;
 			}
 			return true;

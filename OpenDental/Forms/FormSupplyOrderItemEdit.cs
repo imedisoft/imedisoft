@@ -63,7 +63,7 @@ namespace OpenDental {
 			if(textQty.errorProvider1.GetError(textQty)!=""
 				|| textPrice.errorProvider1.GetError(textPrice)!="")
 			{
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			SupplyOrderItemCur.Qty=PIn.Int(textQty.Text);

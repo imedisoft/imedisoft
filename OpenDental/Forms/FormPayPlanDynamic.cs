@@ -377,7 +377,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				ex.DoNothing();
-				MsgBox.Show(this,"Unexpected error getting the terms from the window.");
+				MessageBox.Show("Unexpected error getting the terms from the window.");
 				return false;
 			}
 			return true;
@@ -555,7 +555,7 @@ namespace OpenDental {
 			textTotalPrincipal.Text=_sumAttachedProduction.ToString("f");
 			FillProduction();
 			if(countSkipped>0) {
-				MsgBox.Show(this,"Procedures can only be attached to one payment plan at a time.");
+				MessageBox.Show("Procedures can only be attached to one payment plan at a time.");
 			}
 		}
 
@@ -586,10 +586,10 @@ namespace OpenDental {
 
 		private void ButDeleteProduction_Click(object sender,EventArgs e) {
 			if(gridLinkedProduction.SelectedIndices.Count() <= 0) {
-				MsgBox.Show(this,"Please select an item from the grid to remove.");
+				MessageBox.Show("Please select an item from the grid to remove.");
 				return;
 			}
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"The selected item will be permanently deleted from the Dynamic Payment Plan.\r\n"
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"The selected item will be permanently deleted from the Dynamic Payment Plan.\r\n"
 				+"This cannot be undone. Continue?"))
 			{
 				return;
@@ -630,7 +630,7 @@ namespace OpenDental {
 				_listPayPlanChargesDb.RemoveAll(x => x.PayPlanChargeNum.In(listPayPlanChargeNumsDeleting));
 			}
 			if(countInvalid>0) {
-				MsgBox.Show(this,"Some production was not able to be removed due to having patient payments attached. Remove those first.");
+				MessageBox.Show("Some production was not able to be removed due to having patient payments attached. Remove those first.");
 			}
 			FillProduction();
 			FillCharges();
@@ -675,11 +675,11 @@ namespace OpenDental {
 
 		private void butChangeGuar_Click(object sender,System.EventArgs e) {
 			if(PayPlans.GetAmtPaid(_payPlanCur)!=0) {
-				MsgBox.Show(this,"Not allowed to change the guarantor because payments are attached.");
+				MessageBox.Show("Not allowed to change the guarantor because payments are attached.");
 				return;
 			}
 			if(_listPayPlanChargesDb.Count>0) {
-				MsgBox.Show(this,"Not allowed to change the guarantor when charges have been created.");
+				MessageBox.Show("Not allowed to change the guarantor when charges have been created.");
 				return;
 			}
 			FormPatientSelect formPatientSelect=new FormPatientSelect();
@@ -758,40 +758,40 @@ namespace OpenDental {
 				return false;
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
-				MsgBox.Show(this,"Payment plan date cannot be set for the future.");
+				MessageBox.Show("Payment plan date cannot be set for the future.");
 				return false;
 			}
 			if(textTotalPrincipal.Text=="" || PIn.Double(textTotalPrincipal.Text)==0) {
-				MsgBox.Show(this,"Please attach production to this payment plan.");
+				MessageBox.Show("Please attach production to this payment plan.");
 				return false;
 			}
 			if(textDateFirstPay.Text=="" || (PIn.Date(textDateFirstPay.Text).Date < DateTime.Today && _payPlanCur.IsNew)) {
-				MsgBox.Show(this,"Please enter a date on or after today for the date of the first payment.");
+				MessageBox.Show("Please enter a date on or after today for the date of the first payment.");
 				return false;
 			}
 			if(textPaymentCount.Text=="" && textPeriodPayment.Text=="") {
 				//message box also used when butRecalculate is clicked
-				MsgBox.Show(this,"Please enter a term or payment amount first.");
+				MessageBox.Show("Please enter a term or payment amount first.");
 				return false;
 			}
 			if(textPaymentCount.Text=="" && PIn.Double(textPeriodPayment.Text)==0) {
-				MsgBox.Show(this,"Payment cannot be 0.");
+				MessageBox.Show("Payment cannot be 0.");
 				return false;
 			}
 			if(textPaymentCount.Text!="" && textPeriodPayment.Text!="") {
-				MsgBox.Show(this,"Please choose either Number of Payments or Payment Amt.");
+				MessageBox.Show("Please choose either Number of Payments or Payment Amt.");
 				return false;
 			}
 			if(textPeriodPayment.Text=="" && PIn.Long(textPaymentCount.Text) < 1) {
-				MsgBox.Show(this,"Term cannot be less than 1.");
+				MessageBox.Show("Term cannot be less than 1.");
 				return false;
 			}
 			if(PIn.Double(textTotalPrincipal.Text)-PIn.Double(textDownPayment.Text) < 0) {
-				MsgBox.Show(this,"Down payment must be less than or equal to total amount.");
+				MessageBox.Show("Down payment must be less than or equal to total amount.");
 				return false;
 			}
 			if(!PIn.Double(textAPR.Text).IsZero() && checkProductionLock.Checked==false) {
-				MsgBox.Show(this,"Payment plans with APR must be locked. Remove the APR or check the box for Full Lock.");
+				MessageBox.Show("Payment plans with APR must be locked. Remove the APR or check the box for Full Lock.");
 				return false;
 			}
 			return true;
@@ -831,7 +831,7 @@ namespace OpenDental {
 				DataRow bundledClaimProc=(DataRow)gridCharges.ListGridRows[e.Row].Tag;
 				Claim claimCur=Claims.GetClaim(PIn.Long(bundledClaimProc["ClaimNum"].ToString()));
 				if(claimCur==null) {
-					MsgBox.Show(this,"The claim has been deleted.");
+					MessageBox.Show("The claim has been deleted.");
 				}
 				else {
 					if(!Security.IsAuthorized(Permissions.ClaimView)) {
@@ -860,7 +860,7 @@ namespace OpenDental {
 			if((entry.AmountOriginal.IsEqual(overrideVal))) {//attempting to set override
 				//de-register the event so it doesn't get called after the message box shows.
 				gridLinkedProduction.CellLeave -= new ODGridClickEventHandler(this.gridLinkedProduction_CellLeave);
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"You are attempting to set an override for this entry which will prevent the row " +
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"You are attempting to set an override for this entry which will prevent the row " +
 					"from auto updating. Do you want to set the override?")) 
 				{
 					gridLinkedProduction.CellLeave += new ODGridClickEventHandler(this.gridLinkedProduction_CellLeave);
@@ -1060,7 +1060,7 @@ namespace OpenDental {
 		}
 
 		private void butCloseOut_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Closing out this payment plan will remove interest from all future charges "
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Closing out this payment plan will remove interest from all future charges "
 				+"and make them due immediately.  Do you want to continue?"))
 			{
 				return;
@@ -1148,14 +1148,14 @@ namespace OpenDental {
 		private bool SaveData(bool isPrinting=false,bool isUiValid=true) {
 			if(PayPlans.GetOne(_payPlanCur.PayPlanNum)==null) {
 				//The payment plan no longer exists in the database. 
-				MsgBox.Show(this,"This payment plan has been deleted by another user.");
+				MessageBox.Show("This payment plan has been deleted by another user.");
 				return false;
 			}
 			if(textAPR.Text=="") {
 				textAPR.Text="0";
 			}
 			if(gridCharges.ListGridRows.Count==0) {
-				MsgBox.Show(this,"An amortization schedule must be created first.");
+				MessageBox.Show("An amortization schedule must be created first.");
 				return false;
 			}
 			if(!isUiValid || !TryGetTermsFromUI(out PayPlanTerms terms)) {//also validates terms
@@ -1222,7 +1222,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,System.EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete payment plan?  All debits and credits will also be deleted.")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete payment plan?  All debits and credits will also be deleted.")) {
 				return;
 			}
 			try {

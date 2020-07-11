@@ -1425,7 +1425,7 @@ namespace OpenDental {
 		#region Referral
 		private void butReferredFrom_Click(object sender,EventArgs e) {
 			Referral refCur=new Referral();
-			if(MsgBox.Show(this,MsgBoxButtons.YesNo,"Is the referral source an existing patient?")) {//patient referral
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Is the referral source an existing patient?")) {//patient referral
 				FormPatientSelect FormPS=new FormPatientSelect();
 				FormPS.SelectionModeOnly=true;
 				FormPS.ShowDialog();
@@ -2073,12 +2073,12 @@ namespace OpenDental {
 				|| textBirthdate4.errorProvider1.GetError(textBirthdate4)!=""
 				|| textBirthdate5.errorProvider1.GetError(textBirthdate5)!=""
 				){
-				MsgBox.Show(this,"Please fix data entry errors first.");
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			//no validation on birthdate reasonableness.
 			if(textLName1.Text=="" || textFName1.Text==""){
-				MsgBox.Show(this,"Guarantor name must be entered.");
+				MessageBox.Show("Guarantor name must be entered.");
 				return;
 			}
 			if(PrefC.HasClinicsEnabled
@@ -2086,24 +2086,24 @@ namespace OpenDental {
 				|| comboClinic3.IsNothingSelected ||comboClinic4.IsNothingSelected
 				|| comboClinic5.IsNothingSelected)) 
 			{
-				MsgBox.Show(this,"Valid clinic must be selected.");
+				MessageBox.Show("Valid clinic must be selected.");
 				return;
 			}
 			#region Validate Insurance Subscribers
 			if((comboSubscriber1.SelectedIndex==2 || comboSubscriber2.SelectedIndex==2) && (textFName2.Text=="" || textLName2.Text=="")) {
-				MsgBox.Show(this,"Subscriber must have name entered.");
+				MessageBox.Show("Subscriber must have name entered.");
 				return;
 			}
 			if((comboSubscriber1.SelectedIndex==3 || comboSubscriber2.SelectedIndex==3) && (textFName3.Text=="" || textLName3.Text=="")) {
-				MsgBox.Show(this,"Subscriber must have name entered.");
+				MessageBox.Show("Subscriber must have name entered.");
 				return;
 			}
 			if((comboSubscriber1.SelectedIndex==4 || comboSubscriber2.SelectedIndex==4) && (textFName4.Text=="" || textLName4.Text=="")) {
-				MsgBox.Show(this,"Subscriber must have name entered.");
+				MessageBox.Show("Subscriber must have name entered.");
 				return;
 			}
 			if((comboSubscriber1.SelectedIndex==5 || comboSubscriber2.SelectedIndex==5) && (textFName5.Text=="" || textLName5.Text=="")) {
-				MsgBox.Show(this,"Subscriber must have name entered.");
+				MessageBox.Show("Subscriber must have name entered.");
 				return;
 			}
 			#endregion Validate Insurance Subscribers
@@ -2128,7 +2128,7 @@ namespace OpenDental {
 				|| textCarrier1.Text!="")
 			{
 				if(!insComplete1) {
-					MsgBox.Show(this,"Subscriber, Subscriber ID, and Carrier are all required fields if adding insurance.");
+					MessageBox.Show("Subscriber, Subscriber ID, and Carrier are all required fields if adding insurance.");
 					return;
 				}
 			}
@@ -2137,7 +2137,7 @@ namespace OpenDental {
 				|| textCarrier2.Text!="")
 			{
 				if(!insComplete2) {
-					MsgBox.Show(this,"Subscriber, Subscriber ID, and Carrier are all required fields if adding insurance.");
+					MessageBox.Show("Subscriber, Subscriber ID, and Carrier are all required fields if adding insurance.");
 					return;
 				}
 			}
@@ -2148,7 +2148,7 @@ namespace OpenDental {
 				|| checkInsOne5.Checked)
 			{
 				if(!insComplete1) {
-					MsgBox.Show(this,"Subscriber, Subscriber ID, and Carrier are all required fields if adding insurance.");
+					MessageBox.Show("Subscriber, Subscriber ID, and Carrier are all required fields if adding insurance.");
 					return;
 				}
 			}
@@ -2159,7 +2159,7 @@ namespace OpenDental {
 				|| checkInsTwo5.Checked)
 			{
 				if(!insComplete2) {
-					MsgBox.Show(this,"Subscriber, Subscriber ID, and Carrier are all required fields if adding insurance.");
+					MessageBox.Show("Subscriber, Subscriber ID, and Carrier are all required fields if adding insurance.");
 					return;
 				}
 			}
@@ -2172,7 +2172,7 @@ namespace OpenDental {
 					&& !checkInsOne4.Checked
 					&& !checkInsOne5.Checked)
 				{
-					MsgBox.Show(this,"Insurance information has been filled in, but has not been assigned to any patients.");
+					MessageBox.Show("Insurance information has been filled in, but has not been assigned to any patients.");
 					return;
 				}
 				if(checkInsOne1.Checked && (textLName1.Text=="" || textFName1.Text=="")//Insurance1 assigned to invalid patient1
@@ -2181,7 +2181,7 @@ namespace OpenDental {
 					|| checkInsOne4.Checked && (textLName4.Text=="" || textFName4.Text=="")//Insurance1 assigned to invalid patient4
 					|| checkInsOne5.Checked && (textLName5.Text=="" || textFName5.Text=="")) //Insurance1 assigned to invalid patient5
 				{
-					MsgBox.Show(this,"Insurance information 1 has been filled in, but has been assigned to a patient with no name.");
+					MessageBox.Show("Insurance information 1 has been filled in, but has been assigned to a patient with no name.");
 					return;
 				}
 			}
@@ -2191,7 +2191,7 @@ namespace OpenDental {
 					&& !checkInsTwo3.Checked
 					&& !checkInsTwo4.Checked
 					&& !checkInsTwo5.Checked) {
-					MsgBox.Show(this,"Insurance information 2 has been filled in, but has not been assigned to any patients.");
+					MessageBox.Show("Insurance information 2 has been filled in, but has not been assigned to any patients.");
 					return;
 				}
 				if(checkInsTwo1.Checked && (textLName1.Text=="" || textFName1.Text=="")//Insurance2 assigned to invalid patient1
@@ -2200,7 +2200,7 @@ namespace OpenDental {
 					|| checkInsTwo4.Checked && (textLName4.Text=="" || textFName4.Text=="")//Insurance2 assigned to invalid patient4
 					|| checkInsTwo5.Checked && (textLName5.Text=="" || textFName5.Text=="")) //Insurance2 assigned to invalid patient5
 				{
-					MsgBox.Show(this,"Insurance information 2 has been filled in, but has been assigned to a patient with no name.");
+					MessageBox.Show("Insurance information 2 has been filled in, but has been assigned to a patient with no name.");
 					return;
 				}
 			}
@@ -2213,7 +2213,7 @@ namespace OpenDental {
 					|| (comboClinic4.SelectedClinicNum==0 && textLName4.Text!="" && textFName4.Text!="")
 					|| (comboClinic5.SelectedClinicNum==0 && textLName5.Text!="" && textFName5.Text!="")) 
 				{
-					MsgBox.Show(this,"Current settings for clinics do not allow patients to be added to the 'Unassigned' clinic. Please select a clinic.");
+					MessageBox.Show("Current settings for clinics do not allow patients to be added to the 'Unassigned' clinic. Please select a clinic.");
 					return;
 				}
 			}
@@ -2225,13 +2225,13 @@ namespace OpenDental {
 					|| (comboPriProv4.SelectedIndex==0 && textLName4.Text!="" && textFName4.Text!="")
 					|| (comboPriProv5.SelectedIndex==0 && textLName5.Text!="" && textFName5.Text!="")) 
 				{
-					MsgBox.Show(this,"Primary provider must be set.");
+					MessageBox.Show("Primary provider must be set.");
 					return;
 				}
 			}
 			bool hasSavedMissingFields=false;
 			if(_isMissingRequiredFields) {
-				if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Required fields are missing or incorrect.  Click OK to save anyway or Cancel to return and "
+				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Required fields are missing or incorrect.  Click OK to save anyway or Cancel to return and "
 						+"finish editing patient information.")) {
 					_isValidating=true;
 					SetRequiredFields();

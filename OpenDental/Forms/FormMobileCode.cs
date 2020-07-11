@@ -38,22 +38,22 @@ namespace OpenDental {
 		///<summary>Verifies the given unlockCode and Invokes _unlockGeneratedFuc before setting the form locked.</summary>
 		private void VerifyAndSetUnlockCode(string unlockCode) {
 			if(unlockCode.IsNullOrEmpty()) {
-				MsgBox.Show(this,"Unlock code is empty.");
+				MessageBox.Show("Unlock code is empty.");
 				return;
 			}	
 			if(unlockCode.Length!=6) {//Verify that code is valid.
-				MsgBox.Show(this,"Unlock code must be 6 characters.");
+				MessageBox.Show("Unlock code must be 6 characters.");
 				return;
 			}
 			if(MobileDataBytes.IsValidUnlockCode(unlockCode)) {//Code alreay in use.
-				MsgBox.Show(this,"Please choose another unlock code.");
+				MessageBox.Show("Please choose another unlock code.");
 				return;
 			}
 			if(!TryInvoke(unlockCode,out _mobileDataByte)) {
 				return;
 			}
 			if(!MobileDataBytes.IsValidUnlockCode(unlockCode)) {//Verify that code made it into db.
-				MsgBox.Show(this,"Unlock code invalid.");
+				MessageBox.Show("Unlock code invalid.");
 				return;
 			}
 			SetFormLocked(unlockCode);

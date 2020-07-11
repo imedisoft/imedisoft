@@ -42,7 +42,7 @@ namespace OpenDental {
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,MsgBoxButtons.OKCancel,"Delete?")) {
+			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
 			if(TaskNoteCur.IsNew) {
@@ -68,11 +68,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textNote.Text=="") {
-				MsgBox.Show(this,"Please enter a note, or delete this entry.");
+				MessageBox.Show("Please enter a note, or delete this entry.");
 				return;
 			}
 			if(Tasks.IsTaskDeleted(TaskNoteCur.TaskNum)) {  //If this is for a new task we do have a valid TaskNum because of pre-insert
-				MsgBox.Show(this,"The task for this note was deleted.");
+				MessageBox.Show("The task for this note was deleted.");
 				return;//Don't allow user to create orphaned notes, or try to edit a tasknote that was probably deleted too.
 			}
 			//We need the old datetime to check if the user made any changes.  We overrite TaskNoteCur's date time below so need to get it here.
@@ -81,7 +81,7 @@ namespace OpenDental {
 				TaskNoteCur.DateTimeNote=DateTime.Parse(textDateTime.Text);
 			}
 			catch{
-				MsgBox.Show(this,"Please fix date.");
+				MessageBox.Show("Please fix date.");
 				return;
 			}
 			if(TaskNoteCur.IsNew) {

@@ -294,7 +294,7 @@ namespace OpenDental {
 				if(sourceNode.Parent==null) {//already at the root node, nothing to do
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,"Move the selected "+(sourceNode.Tag is AutoNote?"Auto Note":"category")+" to the root level?")) {
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Move the selected "+(sourceNode.Tag is AutoNote?"Auto Note":"category")+" to the root level?")) {
 					return;
 				}
 				if(sourceNode.Tag is Def) {
@@ -311,7 +311,7 @@ namespace OpenDental {
 				if(!IsValidDestination(sourceNode,destNode,sourceNode.Tag is Def)) {
 					return;
 				}
-				if(!MsgBox.Show(this,MsgBoxButtons.YesNo,
+				if(!MsgBox.Show(MsgBoxButtons.YesNo,
 					"Move the selected "+(sourceNode.Tag is AutoNote?"Auto Note":"category")+(destNode==null?" to the root level":"")+"?"))
 				{
 					return;

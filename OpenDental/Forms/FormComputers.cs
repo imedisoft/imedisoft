@@ -346,11 +346,11 @@ namespace OpenDental{
 		///<summary>Set graphics for selected computer to simple.  Makes audit log entry.</summary>
 		private void butSetSimpleGraphics_Click(object sender,EventArgs e) {
 			if(listComputer.SelectedIndex==-1) {
-				MsgBox.Show(this,"You must select a computer name first.");
+				MessageBox.Show("You must select a computer name first.");
 				return;
 			}
 			ComputerPrefs.SetToSimpleGraphics(_listComputers[listComputer.SelectedIndex].CompName);
-			MsgBox.Show(this,"Done.");
+			MessageBox.Show("Done.");
 			SecurityLogs.MakeLogEntry(Permissions.GraphicsEdit,0,"Set the graphics for computer "+_listComputers[listComputer.SelectedIndex].CompName+" to simple");
 		}
 
