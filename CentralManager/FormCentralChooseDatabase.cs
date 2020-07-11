@@ -185,21 +185,19 @@ namespace OpenDental {
 		#endregion
 
 		private void butOK_Click(object sender, System.EventArgs e) {
-			string originalURI=RemotingClient.ServerURI;
-			RemotingClient.ServerURI=textURI.Text;
-			try {
-				string password=textPassword2.Text;
-				string username=textUser2.Text;
-				Userod user=Security.LogInWeb(username,password,"",Application.ProductVersion,false);
-				Security.CurUser=user;
-				Security.PasswordTyped=password;
-				RemotingClient.RemotingRole=RemotingRole.ClientWeb;
-			}
-			catch(Exception ex) {
-				RemotingClient.ServerURI=originalURI;
-				MessageBox.Show(ex.Message);
-				return;
-			}
+			//try {
+			//	string password=textPassword2.Text;
+			//	string username=textUser2.Text;
+			//	Userod user=Security.LogInWeb(username,password,"",Application.ProductVersion,false);
+			//	Security.CurUser=user;
+			//	Security.PasswordTyped=password;
+			//	RemotingClient.RemotingRole=RemotingRole.ClientWeb;
+			//}
+			//catch(Exception ex) {
+			//	RemotingClient.ServerURI=originalURI;
+			//	MessageBox.Show(ex.Message);
+			//	return;
+			//}
 			DialogResult=DialogResult.OK;
     }
 

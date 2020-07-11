@@ -124,12 +124,9 @@ namespace CentralManager {
 			CentralConnection connection=(CentralConnection)odThread.Parameters[0];
 			List<CentralUserData> listCentralUserData=(List<CentralUserData>)odThread.Parameters[1];
 			string serverName="";
-			if(connection.ServiceURI!="") {
-				serverName=connection.ServiceURI;
-			}
-			else {
+
 				serverName=connection.ServerName+", "+connection.DatabaseName;
-			}
+			
 			if(!CentralConnectionHelper.SetCentralConnection(connection,false)) {//No updating the cache since we're going to be connecting to multiple remote servers at the same time.
 				odThread.Tag=new List<string>() { serverName+"\r\n","","" };
 				connection.ConnectionStatus="OFFLINE";
@@ -226,12 +223,9 @@ namespace CentralManager {
 			CentralConnection connection=(CentralConnection)odThread.Parameters[0];
 			List<CentralUserData> listCentralUserData=(List<CentralUserData>)odThread.Parameters[1];
 			string serverName="";
-			if(connection.ServiceURI!="") {
-				serverName=connection.ServiceURI;
-			}
-			else {
+
 				serverName=connection.ServerName+", "+connection.DatabaseName;
-			}
+			
 			if(!CentralConnectionHelper.SetCentralConnection(connection,false)) {//No updating the cache since we're going to be connecting to multiple remote servers at the same time.
 				odThread.Tag=new List<string>() { serverName+"\r\n","","" };
 				connection.ConnectionStatus="OFFLINE";
@@ -320,12 +314,9 @@ namespace CentralManager {
 		private static void ConnectAndSyncLocks(ODThread odThread) {
 			CentralConnection connection=(CentralConnection)odThread.Parameters[0];
 			string serverName="";
-			if(connection.ServiceURI!="") {
-				serverName=connection.ServiceURI;
-			}
-			else {
+
 				serverName=connection.ServerName+", "+connection.DatabaseName;
-			}
+			
 			if(!CentralConnectionHelper.SetCentralConnection(connection,false)) {//No updating the cache since we're going to be connecting to multiple remote servers at the same time.				
 				odThread.Tag=new List<string>() { serverName+"\r\n","","" };
 				connection.ConnectionStatus="OFFLINE";

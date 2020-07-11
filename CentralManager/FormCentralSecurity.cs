@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.CEMT.Forms;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -100,7 +101,7 @@ namespace CentralManager {
 			FormCU.ShowDialog();
 			if(FormCU.DialogResult == DialogResult.OK) {//update to reflect changes that were made in FormUserEdit.
 				userControlSecurityTabs.FillGridUsers();//New user is not in grid yet, add them.
-				userControlSecurityTabs.SelectedUser=FormCU.UserCur;//Selects the user that was just added in the grid.
+				// TODO: userControlSecurityTabs.SelectedUser=FormCU.UserCur;//Selects the user that was just added in the grid.
 				userControlSecurityTabs.RefreshUserTabGroups();//Previously selected users User Groups are still selected, refresh for UserCur.
 			}
 		}

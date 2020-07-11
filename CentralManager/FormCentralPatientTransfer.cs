@@ -43,12 +43,9 @@ namespace CentralManager {
 			GridRow row;
 			foreach(CentralConnection conn in _listConnectionsToTransferTo) {
 				row=new GridRow();
-				if(conn.DatabaseName=="") {//uri
-					row.Cells.Add(conn.ServiceURI);
-				}
-				else {
+
 					row.Cells.Add(conn.ServerName+", "+conn.DatabaseName);
-				}
+				
 				row.Cells.Add(conn.Note);
 				row.Cells.Add(conn.ConnectionStatus);
 				row.Tag=conn;

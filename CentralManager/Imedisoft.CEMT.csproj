@@ -8,8 +8,8 @@
     <ProjectGuid>{10BFA78E-E5FE-4209-8347-AD0EC8B3F064}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CentralManager</RootNamespace>
-    <AssemblyName>CentralManager</AssemblyName>
+    <RootNamespace>Imedisoft.CEMT</RootNamespace>
+    <AssemblyName>CEMT</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -73,6 +73,9 @@
     <Compile Include="FormCentralConnectionGroups.Designer.cs">
       <DependentUpon>FormCentralConnectionGroups.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormCentralLogOn.Designer.cs">
+      <DependentUpon>FormCentralLogOn.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormCentralPatientTransfer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,22 +100,22 @@
     <Compile Include="FormCentralProdInc.Designer.cs">
       <DependentUpon>FormCentralProdInc.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralPasswordCheck.cs">
+    <Compile Include="Forms\FormCentralPasswordCheck.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralPasswordCheck.designer.cs">
+    <Compile Include="Forms\FormCentralPasswordCheck.Designer.cs">
       <DependentUpon>FormCentralPasswordCheck.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralPasswordChange.cs">
+    <Compile Include="Forms\FormCentralPasswordChange.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralPasswordChange.designer.cs">
+    <Compile Include="Forms\FormCentralPasswordChange.Designer.cs">
       <DependentUpon>FormCentralPasswordChange.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralConnectionEdit.cs">
+    <Compile Include="Forms\FormCentralConnectionEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralConnectionEdit.designer.cs">
+    <Compile Include="Forms\FormCentralConnectionEdit.Designer.cs">
       <DependentUpon>FormCentralConnectionEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="FormCentralManager.cs">
@@ -139,22 +142,22 @@
     <Compile Include="FormCentralUserEdit.Designer.cs">
       <DependentUpon>FormCentralUserEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralUserGroupEdit.cs">
+    <Compile Include="Forms\FormCentralUserGroupEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralUserGroupEdit.Designer.cs">
+    <Compile Include="Forms\FormCentralUserGroupEdit.Designer.cs">
       <DependentUpon>FormCentralUserGroupEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralUserGroups.cs">
+    <Compile Include="Forms\FormCentralUserGroups.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralUserGroups.Designer.cs">
+    <Compile Include="Forms\FormCentralUserGroups.Designer.cs">
       <DependentUpon>FormCentralUserGroups.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralUserPasswordEdit.cs">
+    <Compile Include="Forms\FormCentralUserPasswordEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralUserPasswordEdit.Designer.cs">
+    <Compile Include="Forms\FormCentralUserPasswordEdit.Designer.cs">
       <DependentUpon>FormCentralUserPasswordEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="FormCentralConnections.cs">
@@ -163,15 +166,23 @@
     <Compile Include="FormCentralConnections.Designer.cs">
       <DependentUpon>FormCentralConnections.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralLogOn.cs">
+    <Compile Include="Forms\FormCentralLogOn.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormCentralChooseDatabase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\FormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="WindowInfo.cs" />
     <EmbeddedResource Include="FormCentralConnectionGroupEdit.resx">
       <DependentUpon>FormCentralConnectionGroupEdit.cs</DependentUpon>
@@ -191,15 +202,15 @@
     <EmbeddedResource Include="FormCentralProdInc.resx">
       <DependentUpon>FormCentralProdInc.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralPasswordCheck.resx">
+    <EmbeddedResource Include="Forms\FormCentralPasswordCheck.resx">
       <DependentUpon>FormCentralPasswordCheck.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralPasswordChange.resx">
+    <EmbeddedResource Include="Forms\FormCentralPasswordChange.resx">
       <DependentUpon>FormCentralPasswordChange.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralConnectionEdit.resx">
+    <EmbeddedResource Include="Forms\FormCentralConnectionEdit.resx">
       <DependentUpon>FormCentralConnectionEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -218,16 +229,16 @@
     <EmbeddedResource Include="FormCentralUserEdit.resx">
       <DependentUpon>FormCentralUserEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralUserGroupEdit.resx">
+    <EmbeddedResource Include="Forms\FormCentralUserGroupEdit.resx">
       <DependentUpon>FormCentralUserGroupEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralUserGroups.resx">
+    <EmbeddedResource Include="Forms\FormCentralUserGroups.resx">
       <DependentUpon>FormCentralUserGroups.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralUserPasswordEdit.resx">
+    <EmbeddedResource Include="Forms\FormCentralUserPasswordEdit.resx">
       <DependentUpon>FormCentralUserPasswordEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralLogOn.resx">
+    <EmbeddedResource Include="Forms\FormCentralLogOn.resx">
       <DependentUpon>FormCentralLogOn.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -238,13 +249,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -265,6 +270,10 @@
       <Project>{29c41020-4411-41f2-9061-9b71b5b32b5d}</Project>
       <Name>xDataConnectionBase</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">
+      <Project>{063eccee-21c7-4300-b616-2f256ff12fce}</Project>
+      <Name>Imedisoft.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ODR\xODR.csproj">
       <Project>{84688345-BB6A-4F2F-8672-A82B52FD433B}</Project>
       <Name>xODR</Name>
@@ -281,6 +290,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

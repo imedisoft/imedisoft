@@ -1,156 +1,215 @@
-﻿using OpenDental;
-using OpenDentBusiness;
+﻿using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using CodeBase;
 
-namespace CentralManager {
-	public partial class FormCentralUserEdit:Form {
-		public Userod UserCur;
-		private List<AlertSub> _listAlertSubsOld;
+namespace Imedisoft.CEMT.Forms
+{
+    public partial class FormCentralUserEdit : FormBase
+	{
+		private readonly Userod user;
+		private List<AlertSub> oldAlertSubscriptions;
 		private bool _isFillingList;
 
-		public FormCentralUserEdit(Userod user) {
+		public FormCentralUserEdit(Userod user)
+		{
 			InitializeComponent();
-			UserCur=user.Copy();
-		}		
 
-		private void FormCentralUserEdit_Load(object sender,EventArgs e) {
-			checkIsHidden.Checked=UserCur.IsHidden;
-			textUserName.Text=UserCur.UserName;
-			List<UserGroup> listUserGroups=UserGroups.GetDeepCopy();
-			_isFillingList=true;
-			for(int i = 0;i < listUserGroups.Count;i++) {
-				UserGroup groupCur=listUserGroups[i];
-				ODBoxItem<UserGroup> boxItemGroup = new ODBoxItem<UserGroup>(groupCur.Description,groupCur);
-				listUserGroup.Items.Add(boxItemGroup);
-				if(UserCur.IsInUserGroup(groupCur.UserGroupNum)){
-					listUserGroup.SetSelected(i,true);
-				}
+			this.user = user.Copy();
+		}
+
+		private void FormCentralUserEdit_Load(object sender, EventArgs e)
+		{
+			checkIsHidden.Checked = user.IsHidden;
+			usernameTextBox.Text = user.UserName;
+
+			_isFillingList = true;
+
+			var userGroups = UserGroups.GetDeepCopy();
+			foreach (var userGroup in userGroups)
+            {
+				var index = userGroupsListBox.Items.Add(userGroup);
+
+				if (user.IsInUserGroup(userGroup.UserGroupNum))
+                {
+					userGroupsListBox.SetSelected(index, true);
+                }
+            }
+
+
+			if (userGroupsListBox.SelectedIndex == -1)
+			{//never allowed to delete last group, so this won't fail
+				userGroupsListBox.SelectedIndex = 0;
 			}
-			if(listUserGroup.SelectedIndex==-1){//never allowed to delete last group, so this won't fail
-				listUserGroup.SelectedIndex=0;
-			}
-			_isFillingList=false;
+
+			_isFillingList = false;
 			securityTreeUser.FillTreePermissionsInitial();
 			RefreshUserTree();
-			if(UserCur.PasswordHash==""){
-				butPassword.Text="Create Password";
+
+			if (user.PasswordHash == "")
+			{
+				passwordButton.Text = "Create Password";
 			}
-			_listAlertSubsOld=AlertSubs.GetAllForUser(Security.CurUser.UserNum);
+
+			oldAlertSubscriptions = AlertSubs.GetAllForUser(Security.CurUser.UserNum);
 			listAlertSubMulti.Items.Clear();
-			string[] arrayAlertTypes=Enum.GetNames(typeof(AlertType));
-			for(int i=0;i<arrayAlertTypes.Length;i++){
+			string[] arrayAlertTypes = Enum.GetNames(typeof(AlertType));
+			for (int i = 0; i < arrayAlertTypes.Length; i++)
+			{
 				listAlertSubMulti.Items.Add(arrayAlertTypes[i]);
-				listAlertSubMulti.SetSelected(i,_listAlertSubsOld.Exists(x => x.Type==(AlertType)i));
+				listAlertSubMulti.SetSelected(i, oldAlertSubscriptions.Exists(x => x.Type == (AlertType)i));
 			}
-			if(UserCur.IsNew) {
-				butUnlock.Visible=false;
-			}
-		}
-
-		///<summary>Refreshes the security tree in the "Users" tab.</summary>
-		private void RefreshUserTree() {
-			securityTreeUser.FillForUserGroup(listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.UserGroupNum).ToList());
-		}
-
-		private void listUserGroup_SelectedIndexChanged(object sender,EventArgs e) {
-			if(_isFillingList) {
-				return;
-			}
-			RefreshUserTree();
-		}
-
-		private void butPassword_Click(object sender,EventArgs e) {
-			bool isCreate=false;
-			if(string.IsNullOrEmpty(UserCur.PasswordHash)) {
-				isCreate=true;
-			}
-			FormCentralUserPasswordEdit FormCPE=new FormCentralUserPasswordEdit(isCreate,UserCur.UserName);
-			FormCPE.IsInSecurityWindow=true;
-			FormCPE.ShowDialog();
-			if(FormCPE.DialogResult==DialogResult.Cancel){
-				return;
-			}
-			UserCur.LoginDetails=FormCPE.LoginDetails;
-			if(UserCur.PasswordHash==""){
-				butPassword.Text="Create Password";
-			}
-			else{
-				butPassword.Text="Change Password";
+			if (user.IsNew)
+			{
+				unlockButton.Visible = false;
 			}
 		}
 
-		private void butUnlock_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(this,true,"Users can become locked when invalid credentials have been entered several times in a row.\r\n"
-				+"Unlock this user so that more log in attempts can be made?")) 
+		private void RefreshUserTree()
+		{
+			securityTreeUser.FillForUserGroup(
+				userGroupsListBox.SelectedItems.OfType<UserGroup>()
+					.Select(userGroup => userGroup.UserGroupNum)
+					.ToList());
+		}
+
+		private void UserGroupsListBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (_isFillingList)
 			{
 				return;
 			}
-			UserCur.DateTFail=DateTime.MinValue;
-			UserCur.FailedAttempts=0;
-			try {
-				Userods.Update(UserCur);//This will also commit other things about the user if they've changed.  Oh well.
-				MsgBox.Show(this,"User has been unlocked.");
+
+			RefreshUserTree();
+		}
+
+		private void PasswordButton_Click(object sender, EventArgs e)
+		{
+			bool isCreate = false;
+			if (string.IsNullOrEmpty(user.PasswordHash))
+			{
+				isCreate = true;
 			}
-			catch(Exception) {
-				MsgBox.Show(this,"There was a problem unlocking this user.  Please call support or wait the allotted lock time.");
+
+			using (var formCentralUserPasswordEdit = new FormCentralUserPasswordEdit(user.UserName, isCreate, true))
+			{
+				if (formCentralUserPasswordEdit.ShowDialog() == DialogResult.Cancel)
+				{
+					return;
+				}
+
+				user.LoginDetails = formCentralUserPasswordEdit.LoginDetails;
+			}
+
+			passwordButton.Text = 
+				string.IsNullOrEmpty(user.PasswordHash) ? 
+					"Create Password" : 
+					"Change Password";
+		}
+
+		private void UnlockButton_Click(object sender, EventArgs e)
+		{
+			var result = MessageBox.Show(this, 
+				"Users can become locked when invalid credentials have been entered several times in a row.\r\n" +
+				"Unlock this user so that more log in attempts can be made?", "CEMT", 
+				MessageBoxButtons.YesNo, 
+				MessageBoxIcon.Question);
+
+			if (result == DialogResult.No)
+            {
+				return;
+            }
+
+			user.DateTFail = DateTime.MinValue;
+			user.FailedAttempts = 0;
+
+			try
+			{
+				Userods.Update(user);
+
+				MessageBox.Show(this, 
+					"User has been unlocked.", "CEMT", 
+					MessageBoxButtons.OK,
+					MessageBoxIcon.Information);
+			}
+			catch
+			{
+				ShowError("There was a problem unlocking this user. Please call support or wait the allotted lock time.");
 			}
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			if(textUserName.Text=="") {
-				OpenDental.MessageBox.Show(this,"Please enter a username.");
+		private void AcceptButton_Click(object sender, EventArgs e)
+		{
+			var username = usernameTextBox.Text.Trim();
+			if (username.Length == 0)
+			{
+				ShowError("Please enter a username.");
 				return;
 			}
-			if(listUserGroup.SelectedItems.Count == 0) {
-				OpenDental.MessageBox.Show(this,"Every user must be associated to at least one User Group.");
+
+			if (userGroupsListBox.SelectedItems.Count == 0)
+			{
+				ShowError("Every user must be associated to at least one User Group.");
 				return;
 			}
-			List<AlertSub> listAlertSubsCur=new List<AlertSub>();
-			foreach(int index in listAlertSubMulti.SelectedIndices) {
-				AlertSub alertSub=new AlertSub();
-				alertSub.ClinicNum=0;
-				alertSub.UserNum=Security.CurUser.UserNum;
-				alertSub.Type=(AlertType)index;
-				listAlertSubsCur.Add(alertSub);
+
+			var alertSubscriptions = new List<AlertSub>();
+
+			foreach (int index in listAlertSubMulti.SelectedIndices)
+			{
+                var alertSub = new AlertSub
+                {
+                    ClinicNum = 0,
+                    UserNum = Security.CurUser.UserNum,
+                    Type = (AlertType)index
+                };
+                alertSubscriptions.Add(alertSub);
 			}
-			AlertSubs.Sync(listAlertSubsCur,_listAlertSubsOld);
-			UserCur.IsHidden=checkIsHidden.Checked;
-			UserCur.UserName=textUserName.Text;
-			if(UserCur.UserNum==Security.CurUser.UserNum) {
-				Security.CurUser.UserName=textUserName.Text;
+
+			AlertSubs.Sync(alertSubscriptions, oldAlertSubscriptions);
+
+			user.IsHidden = checkIsHidden.Checked;
+			user.UserName = username;
+			user.EmployeeNum = 0;
+			user.ProvNum = 0;
+			user.ClinicNum = 0;
+			user.ClinicIsRestricted = false;
+
+			if (user.UserNum == Security.CurUser.UserNum)
+			{
+				Security.CurUser.UserName = username;
 				//They changed their logged in user's information.  Update for when they sync then attempt to connect to remote DB.
 			}
-			UserCur.EmployeeNum=0;
-			UserCur.ProvNum=0;
-			UserCur.ClinicNum=0;
-			UserCur.ClinicIsRestricted=false;
-			try{
-				if(UserCur.IsNew){
-					//also updates the user's UserNumCEMT to be the user's usernum.
-					long userNum=Userods.Insert(UserCur,listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.UserGroupNum).ToList(),true);
+
+			try
+			{
+				if (user.IsNew)
+				{
+					long userNum = Userods.Insert(user, 
+						userGroupsListBox.SelectedItems.OfType<UserGroup>().Select(x => x.UserGroupNum).ToList(),
+						true);
 				}
-				else{
-					Userods.Update(UserCur,listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.UserGroupNum).ToList());
+				else
+				{
+					Userods.Update(user, 
+						userGroupsListBox.SelectedItems.OfType<UserGroup>().Select(x => x.UserGroupNum).ToList());
 				}
 			}
-			catch(Exception ex){
-				OpenDental.MessageBox.Show(ex.Message);
+			catch (Exception exception)
+			{
+                ShowError(exception.Message);
 				return;
 			}
+
 			Cache.Refresh(InvalidType.Security);
-			DialogResult=DialogResult.OK;
+
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
-		}
-	}
+        private void checkIsHidden_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+    }
 }

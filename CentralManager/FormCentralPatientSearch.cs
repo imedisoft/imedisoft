@@ -54,12 +54,9 @@ namespace CentralManager {
 			for(int i=0;i<ListConnsOK.Count;i++) {
 				//Filter the threads by their connection name
 				string connName="";
-				if(ListConnsOK[i].DatabaseName=="") {//uri
-					connName=ListConnsOK[i].ServiceURI;
-				}
-				else {
+
 					connName=ListConnsOK[i].ServerName+", "+ListConnsOK[i].DatabaseName;
-				}
+				
 				if(!connName.Contains(textConn.Text)) {
 					//Do NOT spawn a thread to go fetch data for this connection because the user has filtered it out.
 					//Increment the completed thread count and continue.
@@ -86,12 +83,9 @@ namespace CentralManager {
 			CentralConnection connection=(CentralConnection)odThread.Parameters[0];
 			//Filter the threads by their connection name
 			string connName="";
-			if(connection.DatabaseName=="") {//uri
-				connName=connection.ServiceURI;
-			}
-			else {
+
 				connName=connection.ServerName+", "+connection.DatabaseName;
-			}
+			
 			if(!CentralConnectionHelper.SetCentralConnection(connection,false)) {
 				lock(_lockObj) {
 					_invalidConnsLog+="\r\n"+connName;
