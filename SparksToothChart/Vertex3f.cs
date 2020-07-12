@@ -1,39 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace SparksToothChart
+{
+    public class Vertex3f
+	{
+		public float X, Y, Z;
 
-namespace SparksToothChart {
-	///<summary></summary>
-	public class Vertex3f {
-		public float X;
-		public float Y;
-		public float Z;
-
-		public Vertex3f() {
-
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Vertex3f"/> class.
+		/// </summary>
+		public Vertex3f()
+		{
 		}
 
-		public Vertex3f(float x,float y,float z) {
-			X=x;
-			Y=y;
-			Z=z;
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Vertex3f"/> class.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="z"></param>
+		public Vertex3f(float x, float y, float z)
+		{
+			X = x;
+			Y = y;
+			Z = z;
 		}
 
-		public float[] GetFloatArray() {
-			float[] retVal=new float[3];
-			retVal[0]=X;
-			retVal[1]=Y;
-			retVal[2]=Z;
-			return retVal;
-		}
+		/// <summary>
+		/// Returns the vertex as a array of floats.
+		/// </summary>
+		public float[] GetFloatArray() => new float[3] { X, Y, Z };
 
-		public override string ToString() {
-			return X.ToString()+","+Y.ToString()+","+Z.ToString();
-		}
-
-		public Vertex3f Copy() {
-			Vertex3f vf=new Vertex3f(this.X,this.Y,this.Z);
-			return vf;
-		}
+		/// <summary>
+		/// Returns a string representation of the vertex.
+		/// </summary>
+		public override string ToString() => X.ToString() + "," + Y.ToString() + "," + Z.ToString();
 	}
 }

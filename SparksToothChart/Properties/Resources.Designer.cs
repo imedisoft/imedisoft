@@ -63,6 +63,36 @@ namespace SparksToothChart.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] CursorColorChanger {
+            get {
+                object obj = ResourceManager.GetObject("CursorColorChanger", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] CursorEraseCircle {
+            get {
+                object obj = ResourceManager.GetObject("CursorEraseCircle", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] CursorPen {
+            get {
+                object obj = ResourceManager.GetObject("CursorPen", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] implant {
             get {
                 object obj = ResourceManager.GetObject("implant", resourceCulture);

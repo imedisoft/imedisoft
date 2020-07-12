@@ -1,3 +1,5 @@
+using OpenDentBusiness;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,13 +8,11 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using SharpDX.Direct3D9;
-using OpenDentBusiness;
-using CodeBase;
 
-namespace SparksToothChart {
+namespace SparksToothChart
+{
 
-	public partial class ToothChartDirectX:Control {
+    public partial class ToothChartDirectX:Control {
 		#region Fields - Public
 		///<summary>DirectX handle to this control.</summary>
 		public Device device=null;
