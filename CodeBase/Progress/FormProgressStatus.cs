@@ -103,7 +103,7 @@ namespace CodeBase {
 
 		private void butCopyToClipboard_Click(object sender,EventArgs e) {
 			try {
-				ODClipboard.SetClipboard(textHistoryMsg.Text);
+				ODClipboard.Text=textHistoryMsg.Text;
 				MessageBox.Show("Copied");
 			}
 			catch(Exception) {

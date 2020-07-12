@@ -1612,7 +1612,7 @@ namespace OpenDental.UI {
 		private void OnCopyCellClick(object sender,EventArgs e) {
 			try {
 				string copyText = ListGridRows[_mouseDownRow].Cells[_mouseDownCol].Text;
-				ODClipboard.SetClipboard(copyText);
+				ODClipboard.Text = copyText;
 			}
 			catch {
 				//show a message box?

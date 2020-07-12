@@ -559,7 +559,7 @@ namespace OpenDental {
 				#endregion
 			}
 			else {
-				_threadFilter.Wakeup();
+				_threadFilter.WakeUp();
 			}
 		}
 		

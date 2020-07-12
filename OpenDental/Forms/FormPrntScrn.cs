@@ -251,7 +251,7 @@ namespace OpenDental{
 
 		private void FormPrntScrn_Load(object sender, System.EventArgs e) {
 			try{
-			  imageTemp=ODClipboard.GetImage();
+			  imageTemp=ODClipboard.Image;
 				setImageSize();
         PrintReport(true);  //sets image as preview document
 			}

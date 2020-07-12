@@ -320,7 +320,7 @@ namespace OpenDental {
 		}
 
 		private void butCopyToClipboard_Click(object sender,EventArgs e) {
-			ODClipboard.SetClipboard(textHostedUrlPortal.Text);
+			ODClipboard.Text = textHostedUrlPortal.Text;
 		}
 
 		private void butNavigateTo_Click(object sender,EventArgs e) {

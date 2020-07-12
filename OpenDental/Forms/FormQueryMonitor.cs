@@ -180,7 +180,7 @@ namespace OpenDental {
 				return;
 			}
 			try {
-				ODClipboard.SetClipboard(_dbQueryObjCur.ToString());
+				ODClipboard.Text = _dbQueryObjCur.ToString();
 				MessageBox.Show("Copied");
 			}
 			catch {

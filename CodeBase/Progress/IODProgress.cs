@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
-namespace CodeBase {
-	public interface IODProgress { 
+namespace CodeBase
+{
+    public interface IODProgress { 
 		///<summary>Used within translations as the sender object</summary>
 		string LanThis { get; set; }
 

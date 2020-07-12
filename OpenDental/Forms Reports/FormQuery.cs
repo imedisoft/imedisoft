@@ -99,7 +99,7 @@ namespace OpenDental{
 
 		private void butCopy_Click(object sender, System.EventArgs e){
 			try {
-				ODClipboard.SetClipboard(textQuery.Text);
+				ODClipboard.Text = textQuery.Text;
 			}
 			catch {
 				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");

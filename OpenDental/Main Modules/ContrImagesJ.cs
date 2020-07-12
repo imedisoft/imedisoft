@@ -2729,7 +2729,7 @@ namespace OpenDental{
 			Bitmap bitmapPaste;
 			string[] fileNames=null;
 			try {
-				bitmapPaste=ODClipboard.GetImage();
+				bitmapPaste = ODClipboard.Image;
 				if(bitmapPaste==null && Clipboard.ContainsFileDropList()) {
 					IDataObject iDataObject=Clipboard.GetDataObject();
 					if(iDataObject.GetDataPresent(DataFormats.FileDrop)) {

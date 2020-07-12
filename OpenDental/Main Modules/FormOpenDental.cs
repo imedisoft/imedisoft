@@ -6936,10 +6936,13 @@ namespace OpenDental{
 				}
 			}
 			catch {
+
 			}
 			FormUAppoint.AbortThread();
-			ODThread.QuitSyncAllOdThreads();
-			if(Security.CurUser!=null) {
+
+			ODThread.QuitSyncThreadsByGroupName(0, "");
+
+			if (Security.CurUser!=null) {
 				try {
 					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,"User: "+Security.CurUser.UserName+" has logged off.");
 					Clinics.LogOff();

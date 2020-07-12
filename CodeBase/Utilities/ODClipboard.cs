@@ -6,30 +6,31 @@ namespace CodeBase
     public class ODClipboard
 	{
 		/// <summary>
-		/// Writes the text to the user's clipboard.
+		/// Gets or sets the clipboard value of the user as text.
 		/// </summary>
-		public static void SetClipboard(string text) => Clipboard.SetText(text);
+		public static string Text
+        {
+			get => Clipboard.GetText();
+			set => Clipboard.SetText(value);
+        }
 
 		/// <summary>
-		/// Gets the contents of the user's clipboard as text.
+		/// Gets the contents of the clipboard as an image.
 		/// </summary>
-		public static string GetText() => Clipboard.GetText();
+		public static Bitmap Image
+        {
+            get
+            {
+				IDataObject iDataObject = Clipboard.GetDataObject();
 
-		/// <summary>
-		/// Gets the contents of the user's clipboard as an image.
-		/// Returns null if the clipboard does not contain an image.
-		/// </summary>
-		public static Bitmap GetImage()
-		{
-			IDataObject iDataObject = Clipboard.GetDataObject();
+				Bitmap bitmapPaste = null;
+				if (iDataObject.GetDataPresent(DataFormats.Bitmap))
+				{
+					bitmapPaste = (Bitmap)iDataObject.GetData(DataFormats.Bitmap);
+				}
 
-			Bitmap bitmapPaste = null;
-			if (iDataObject.GetDataPresent(DataFormats.Bitmap))
-			{
-				bitmapPaste = (Bitmap)iDataObject.GetData(DataFormats.Bitmap);
+				return bitmapPaste;
 			}
-
-			return bitmapPaste;
-		}
+        }
 	}
 }

@@ -841,9 +841,6 @@ namespace OpenDental {
 				}
 			}
 			checkSubmitExceptions.Checked=PrefC.GetBool(PrefName.SendUnhandledExceptionsToHQ);
-			if(PrefC.IsCloudMode) {
-				textWebServiceServerName.ReadOnly=true;
-			}
 		}
 
 		private void butLanguages_Click(object sender,EventArgs e) {

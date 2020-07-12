@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace CodeBase
 {
-	public static class ODUIExtensions
+    public static class ODUIExtensions
 	{
 		/// <summary>
 		/// Returns the tag of the selected item.
@@ -21,8 +20,6 @@ namespace CodeBase
 			return default;
 		}
 
-		#region listBox
-		
 		/// <summary>
 		/// Sets the selected item(s) that match the func passed in. Will only work if the Items in the ListBox are ODBoxItems.
 		/// </summary>
@@ -107,17 +104,16 @@ namespace CodeBase
 		/// </summary>
 		public static List<T> GetListSelected<T>(this ListBox listBox)
 		{
-			List<T> listSelected = new List<T>();
+			var selected = new List<T>();
 			foreach (object selectedItem in listBox.SelectedItems)
 			{
 				if (selectedItem is ODBoxItem<T>)
 				{
-					listSelected.Add((selectedItem as ODBoxItem<T>).Tag);
+					selected.Add((selectedItem as ODBoxItem<T>).Tag);
 				}
 			}
-			return listSelected;
+			return selected;
 		}
-		#endregion listBox
 
 		/// <summary>
 		/// Gets all controls and their children controls recursively.

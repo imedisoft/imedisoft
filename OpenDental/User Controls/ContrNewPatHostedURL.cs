@@ -176,7 +176,7 @@ namespace OpenDental.User_Controls {
 
 		private void butCopy_Click(object sender,EventArgs e) {
 			try {
-				ODClipboard.SetClipboard(textSchedulingURL.Text);
+				ODClipboard.Text = textSchedulingURL.Text;
 			}
 			catch(Exception ex) {
 				FriendlyException.Show(Lan.g(this,"Unable to copy to clipboard."),ex);

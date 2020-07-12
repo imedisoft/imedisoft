@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace CodeBase {
-	public interface IODEvent {
+﻿namespace CodeBase
+{
+    public interface IODEvent
+	{
 		void FireEvent(ODEventArgs e);
 	}
 }

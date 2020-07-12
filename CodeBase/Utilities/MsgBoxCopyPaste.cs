@@ -214,7 +214,7 @@ namespace CodeBase{
 
 		private void butCopyAll_Click(object sender,EventArgs e) {
 			try {
-				ODClipboard.SetClipboard(textMain.Text);
+				ODClipboard.Text = textMain.Text;
 			}
 			catch{
 				MessageBox.Show("Could not copy contents to the clipboard. Please try again.");

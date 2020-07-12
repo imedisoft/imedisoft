@@ -67,7 +67,7 @@ namespace OpenDental {
 		private void butCopyAll_Click(object sender,EventArgs e) {
 			try {
 				string content=this.Text+"\r\n"+textDetails.Text+GetQueryText();
-				ODClipboard.SetClipboard(content);
+				ODClipboard.Text = content;
 			}
 			catch {
 				MessageBox.Show("Could not copy contents to the clipboard. Please try again.");

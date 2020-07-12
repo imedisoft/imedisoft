@@ -1860,7 +1860,7 @@ namespace OpenDental {
 
 		private void butCopy_Click(object sender,EventArgs e) {
 			try {
-				ODClipboard.SetClipboard(CreateCopyTask());
+				ODClipboard.Text = CreateCopyTask();
 			}
 			catch {
 				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");

@@ -1,56 +1,75 @@
-﻿using System;
-
-namespace CodeBase {
-	///<summary>Helper class to allow multiple areas of the program to subscribe to various events which they care about.</summary>
-	public class ODEvent {
-		///<summary>Occurs when any developer calls Fire().  Can happen from anywhere in the program.
-		///Consumers of "global" ODEvents need to register for this handler because this will be the event that mainly gets fired.</summary>
+﻿namespace CodeBase
+{
+    /// <summary>
+    /// Helper class to allow multiple areas of the program to subscribe to various events which they care about.
+    /// </summary>
+    public class ODEvent
+	{
+		/// <summary>
+		/// Occurs when any developer calls Fire().
+		/// Can happen from anywhere in the program.
+		/// Consumers of "global" ODEvents need to register for this handler because this will be the event that mainly gets fired.
+		/// </summary>
 		public static event ODEventHandler Fired;
 
-		///<summary>Triggers the global Fired event to get called with the passed in arguments.</summary>
-		public static void Fire(ODEventType odEventType,object tag) {
-			Fired?.Invoke(new ODEventArgs(odEventType,tag));
+		/// <summary>
+		/// Triggers the global Fired event to get called with the passed in arguments.
+		/// </summary>
+		public static void Fire(ODEventType odEventType, object tag)
+		{
+			Fired?.Invoke(new ODEventArgs(odEventType, tag));
 		}
 	}
 
-	///<summary>Arguments specifically designed for use in ODEvent.</summary>
-	public class ODEventArgs {
-		private object _tag;
-		private ODEventType _eventType=ODEventType.Undefined;
+	/// <summary>
+	/// Arguments specifically designed for use in ODEvent.
+	/// </summary>
+	public class ODEventArgs
+	{
+        /// <summary>
+        /// A generic object related to the event, such as a Commlog object.
+        /// Can be null.
+        /// </summary>
+        public object Tag { get; }
 
-		///<summary>A generic object related to the event, such as a Commlog object.  Can be null.</summary>
-		public object Tag {
-			get {
-				return _tag;
-			}
+        /// <summary>
+        /// Used to uniquly identify this ODEvent for consumers.
+        /// And event type of Undefined will be treated as a generic ODEvent.
+        /// </summary>
+        public ODEventType EventType { get; } = ODEventType.Undefined;
+
+        /// <summary>
+        /// Used when an ODEvent is needed but no object is needed in the consuming class.
+        /// </summary>
+        public ODEventArgs(ODEventType eventType) : this(eventType, null)
+		{
 		}
 
-		///<summary>Used to uniquly identify this ODEvent for consumers.  And event type of Undefined will be treated as a generic ODEvent.</summary>
-		public ODEventType EventType {
-			get {
-				return _eventType;
-			}
-		}
-
-		///<summary>Used when an ODEvent is needed but no object is needed in the consuming class.</summary>
-		public ODEventArgs(ODEventType eventType) : this(eventType,null) {
-		}
-
-		///<summary>Creates an ODEventArg with the specified ODEventType and Tag passed in that is designed to be Fired to a progress window.</summary>
-		///<param name="eventType">Progress windows registered to this ODEventType will consume this event arg and act upon the tag accordingly.
-		///An event type of Undefined will be treated as a generic ODEvent.</param>
-		///<param name="tag">Tag can be set to anything that the consumer may need.  E.g. a string for FormProgressStatus to show to users.</param>
-		public ODEventArgs(ODEventType eventType,object tag) {
-			_tag=tag;
-			_eventType=eventType;
+		/// <summary>
+		/// Creates an ODEventArg with the specified ODEventType and Tag passed in that is designed to be Fired to a progress window.
+		/// </summary>
+		/// <param name="eventType">
+		/// Progress windows registered to this ODEventType will consume this event arg and act upon the tag accordingly. 
+		/// An event type of Undefined will be treated as a generic ODEvent.
+		/// </param>
+		/// <param name="tag">
+		/// Tag can be set to anything that the consumer may need. E.g. a string for FormProgressStatus to show to users.
+		/// </param>
+		public ODEventArgs(ODEventType eventType, object tag)
+		{
+			Tag = tag;
+			EventType = eventType;
 		}
 	}
 
-	///<summary>Only used for ODEvent.  Not necessary to reference this delegate directly.</summary>
+	/// <summary>
+	/// Only used for ODEvent. Not necessary to reference this delegate directly.
+	/// </summary>
 	public delegate void ODEventHandler(ODEventArgs e);
 
 	///<summary>Progress windows will be monitoring for these specific event types.</summary>
-	public enum ODEventType {
+	public enum ODEventType
+	{
 		///<summary>0 - The event type has not been set.  Treated as a generic ODEvent.</summary>
 		Undefined,
 		///<summary>1 - The program is shutting down.</summary>

@@ -198,7 +198,6 @@
     <Compile Include="Controls\OpenGLWinFormsControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\ODErrorProvider.cs" />
     <Compile Include="Controls\PrintPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -238,7 +237,6 @@
     </Compile>
     <Compile Include="Utilities\DateTime_.cs" />
     <Compile Include="Utilities\ODClipboard.cs" />
-    <Compile Include="Utilities\SymbolExtensions.cs" />
     <Compile Include="Utilities\DateDefaultToday.cs" />
     <Compile Include="Utilities\DateRange.cs" />
     <Compile Include="Utilities\DateTimeOD.cs" />
@@ -269,7 +267,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Utilities\ODThread.cs" />
-    <Compile Include="Utilities\ODThreadAbs.cs" />
     <Compile Include="Utilities\ODUIExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -118,7 +118,7 @@ namespace OpenDental {
 			if(_listOdThreadsRunOnce.Any(x => x.GroupName==threadName.GetDescription())) {
 				return true;
 			}
-			List<ODThread> listThreads=ODThread.GetThreadsByGroupName(threadName.GetDescription());
+			List<ODThread> listThreads=ODThread.GetThreadsByGroupName(threadName.GetDescription()).ToList();
 			return !listThreads.IsNullOrEmpty();
 		}		
 

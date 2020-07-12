@@ -206,7 +206,7 @@ namespace OpenDental {
 		///<summary>Allows users to paste an image from their clipboard. Throws if the content on the clipboard is not a supported image format.</summary>
 		private void ButPasteImage_Click(object sender,EventArgs e) {
 			try{
-				Image imageClipboard=ODClipboard.GetImage();
+				Image imageClipboard = ODClipboard.Image;
 				if(imageClipboard!=null) {
 					ShowImageAttachmentItemEdit(imageClipboard);
 				}

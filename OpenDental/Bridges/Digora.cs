@@ -53,7 +53,7 @@ namespace OpenDental.Bridges{
 			}
 			info+="\" -r -a";
 			try {
-				ODClipboard.SetClipboard(info);
+				ODClipboard.Text = info;
 			}
 			catch(Exception) {
 				//The clipboard will sometimes fail to SetText for many different reasons.  Often times another attempt will be successful.

@@ -408,7 +408,7 @@ namespace OpenDental {
 			List<List<string>> listTblBuilder = new List<List<string>>();//tableBuilder[Y][X] to access cell.
 			string clipBoardText;
 			try {
-				clipBoardText=ODClipboard.GetText();
+				clipBoardText = ODClipboard.Text;
 			}
 			catch {
 				MessageBox.Show("Could not paste contents from the clipboard.  Please try again.");
