@@ -113,8 +113,7 @@ namespace ServiceManager {
 			try {
 				service=ServicesHelper.GetServiceByServiceName(serviceName);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			if(service!=null) {
 				HadServiceInstalled=true;//We verified that the service was successfully installed

@@ -364,7 +364,6 @@
     <Compile Include="Data Interface\EmailHostingTemplates.cs" />
     <Compile Include="Data Interface\PromotionLogs.cs" />
     <Compile Include="Data Interface\Promotions.cs" />
-    <Compile Include="Db\DatabaseRecordBuilder.cs" />
     <Compile Include="Email\EmailHosting\Account\AccountApi.cs" />
     <Compile Include="Email\EmailHosting\Account\AccountApiMock.cs" />
     <Compile Include="Email\EmailHosting\Account\IAccountApi.cs" />
@@ -1101,11 +1100,8 @@
     <Compile Include="Db Multi Table\EhrPatListElement.cs" />
     <Compile Include="Db Multi Table\QualityMeasure.cs" />
     <Compile Include="Db Multi Table\QualityMeasures.cs" />
-    <Compile Include="Db\DbSchemaCol.cs" />
     <Compile Include="Db\OdDbType.cs" />
-    <Compile Include="Db\PoIn.cs" />
     <Compile Include="Db\SchemaCrudProposedTest.cs" />
-    <Compile Include="Db\SchemaCrudTest.cs" />
     <Compile Include="TableTypes\PatientPortalInvite.cs" />
     <Compile Include="Web References\DentalxchangePartnerService\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -1380,7 +1376,6 @@
     <Compile Include="Data Interface\Userods.cs" />
     <Compile Include="Remoting\Meth.cs" />
     <Compile Include="Db\DbHelper.cs" />
-    <Compile Include="Db\DbSchema.cs" />
     <Compile Include="Misc\HouseCallsQueries.cs" />
     <Compile Include="Misc\LetterMergesQueries.cs" />
     <Compile Include="Db\OdSqlParameter.cs" />

@@ -83,8 +83,7 @@ namespace OpenDental {
 				try {
 					wikiImagePath=WikiPages.GetWikiPath();//this also creates folder if it's missing.
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					//do nothing, the wikiImagePath is only important if the user adds an image to the wiki page and is checked below
 				}
 				matches=Regex.Matches(textContent.Text,@"\[\[(img:).*?\]\]");// [[img:myimage.jpg]]
@@ -114,8 +113,7 @@ namespace OpenDental {
 				try {
 					emailImagePath=ImageStore.GetEmailImagePath();
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 				matches=Regex.Matches(textContent.Text,@"\[\[(img:).*?\]\]");
 				if(isForSaving) {

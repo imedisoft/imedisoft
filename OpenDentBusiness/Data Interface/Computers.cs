@@ -132,9 +132,6 @@ namespace OpenDentBusiness{
 			
 			//heartbeat is every three minutes.  We'll allow four to be generous.
 			string command="SELECT * FROM computer WHERE LastHeartBeat > SUBTIME(NOW(),'00:04:00')";
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				command="SELECT * FROM computer WHERE LastHeartBeat > SYSDATE - (4/1440)";
-			}
 			return Crud.ComputerCrud.SelectMany(command);
 		}
 
@@ -173,9 +170,6 @@ namespace OpenDentBusiness{
 		///Oracle is not supported and will throw an exception to have the customer call us to add support.</summary>
 		public static List<string> GetServiceInfo() {
 			
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				throw new Exception(Lans.g("Computer","Currently not Oracle compatible.  Please call support."));
-			}
 			List<string> retVal=new List<string>();
 			DataTable table=Db.GetTable("SHOW VARIABLES WHERE Variable_name='socket'");//service name
 			if(table.Rows.Count>0) {

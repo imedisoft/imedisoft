@@ -415,8 +415,7 @@ namespace OpenDentBusiness{
 			try {
 				GetDirectAgentForEmailAddress(strSenderAddress);//This line is where the refresh occurs.
 			}
-			catch(Exception ex) {//Likely a permission issue
-				ex.DoNothing();
+			catch {//Likely a permission issue
 			}
 		}
 
@@ -1417,9 +1416,9 @@ namespace OpenDentBusiness{
 					//and save them separately as attachments.
 					bitmap=FileAtoZ.GetImage(FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),sourceFileName));
 				}
-				catch(Exception ex) {
+				catch {
 					//Something went wrong fetching image from file. Attempt to get from mimeEntityForImage, in case we didn't extract it during download.
-					ex.DoNothing();
+
 					if(!IsMimeEntityBase64(mimeEntityForImage)) {
 						return null;
 					}
@@ -1684,8 +1683,7 @@ namespace OpenDentBusiness{
 				GetDirectAgentForEmailAddress(strAddressTest);//Force the cert stores to be refreshed within our DirectAgent instance.
 				return true;
 			}
-			catch(Exception ex) {//Likely a network issue (FindPublicCertForAddress) or a permissions issue opening the anchors store.
-				ex.DoNothing();
+			catch {//Likely a network issue (FindPublicCertForAddress) or a permissions issue opening the anchors store.
 				return false;
 			}
 		}
@@ -1713,16 +1711,15 @@ namespace OpenDentBusiness{
 			try {
 				address=new MailAddress(emailAddress);
 			}
-			catch(Exception ex) {//This can happen if emailAddress is not formatted according to the email standard.
-				ex.DoNothing();
+			catch {//This can happen if emailAddress is not formatted according to the email standard.
 				return null;
 			}
 			X509Certificate2Collection privCerts=null;
 			try {
 				privCerts=new EmailPrivateResolver().GetCertificates(address);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();//The private certificate store either does not exist or the user does not have read permission.  Probably does not exist.
+			catch {
+				//The private certificate store either does not exist or the user does not have read permission.  Probably does not exist.
 			}
 			if(privCerts==null || privCerts.Count==0) {
 				return null;

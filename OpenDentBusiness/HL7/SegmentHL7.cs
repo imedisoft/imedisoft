@@ -127,8 +127,8 @@ namespace OpenDentBusiness.HL7 {
 				try {
 					retval=Int32.Parse(Fields[SequenceNumIndex].FullText);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
+
 					//do nothing, the sequence num will remain -1
 				}
 				return retval;

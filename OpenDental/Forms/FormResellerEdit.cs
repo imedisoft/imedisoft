@@ -216,8 +216,7 @@ namespace OpenDental {
 			try {
 				billingType=comboBillingType.GetSelectedDefNum();
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				MessageBox.Show("Billing Type is invalid.");
 				return;
 			}

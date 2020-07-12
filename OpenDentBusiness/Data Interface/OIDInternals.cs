@@ -117,16 +117,10 @@ namespace OpenDentBusiness{
 					continue;//DB contains a row for this enum value.
 				}
 				//Insert missing row with blank OID.
-				if(DataConnection.DBtype==DatabaseType.MySql) {
 						command="INSERT INTO oidinternal (IDType,IDRoot) "
 						+"VALUES('"+((IdentifierType)i).ToString()+"','')";
 						Db.NonQ32(command);
-				}
-				else {//oracle
-					command="INSERT INTO oidinternal (OIDInternalNum,IDType,IDRoot) "
-						+"VALUES((SELECT MAX(OIDInternalNum)+1 FROM oidinternal),'"+((IdentifierType)i).ToString()+"','')";
-					Db.NonQ32(command);
-				}
+
 			}
 		}
 

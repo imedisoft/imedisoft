@@ -374,8 +374,7 @@ namespace OpenDental{
 					}
 					ctrl.Enabled=false;
 				}
-				catch(Exception e) {//Just in case.
-					e.DoNothing();
+				catch {//Just in case.
 				}
 			}
 		}
@@ -1150,8 +1149,7 @@ namespace OpenDental{
 				try {
 					Process.Start(pathAndFileName);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					MessageBox.Show("Could not open the attachment.");
 				}
 			}
@@ -2735,16 +2733,14 @@ namespace OpenDental{
 			try {
 				PIn.Byte(textOrthoTotalM.Text);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				MessageBox.Show("Please enter a valid value for Ortho Months Total.");
 				return false;
 			}
 			try {
 				PIn.Byte(textOrthoRemainM.Text);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				MessageBox.Show("Please enter a valid value for Ortho Months Remaining.");
 				return false;
 			}

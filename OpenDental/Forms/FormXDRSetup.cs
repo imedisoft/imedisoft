@@ -82,8 +82,7 @@ namespace OpenDental {
 					_dictLocationIDs.Add(ppCur.ClinicNum,ppCur);
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				MessageBox.Show("You are missing a program property for XDR.  Please contact support to resolve this issue.");
 				DialogResult=DialogResult.Cancel;
 				return;

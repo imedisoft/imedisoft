@@ -204,8 +204,7 @@ namespace OpenDental.Bridges {
 					Rootobject<ApteryxImage> rootImage=JsonConvert.DeserializeObject<Rootobject<ApteryxImage>>(serverResp,settings);//get limited image info
 					listImages.AddRange(rootImage.Records);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 			}
 			if(newNextRecord>0 && newNextRecord<PIn.Long(parseResp["TotalRecords"].ToString())){ 

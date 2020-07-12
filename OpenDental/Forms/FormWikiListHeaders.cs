@@ -151,7 +151,7 @@ namespace OpenDental {
 					return;
 				}
 				//Check for reserved words--------------------------------------------------------------------------------
-				if(DbHelper.isMySQLReservedWord(colName)) {
+				if(DbHelper.IsMySQLReservedWord(colName)) {
 					MessageBox.Show(Lan.g(this,"Column name is a reserved word in MySQL")+": "+colName);
 					return;
 				}

@@ -10,12 +10,11 @@ using DataConnectionBase;
 
 namespace UnitTests {
 	public class CoreTypesT {
-		/// <summary></summary>
-		public static string CreateTempTable(string serverAddr, string port, string userName, string password, bool isOracle) {
+		public static string CreateTempTable(string serverAddr, string port, string userName, string password) {
 			string retVal="";
-			UnitTestsCore.DatabaseTools.SetDbConnection(TestBase.UnitTestDbName,serverAddr,port,userName,password,isOracle);
+			UnitTestsCore.DatabaseTools.SetDbConnection(TestBase.UnitTestDbName,serverAddr,port,userName,password);
 			string command;
-			if(DataConnection.DBtype==DatabaseType.MySql) {
+
 				command="DROP TABLE IF EXISTS tempcore";
 				DataCore.NonQ(command);
 				command=@"CREATE TABLE tempcore (
@@ -34,43 +33,16 @@ namespace UnitTests {
 					VarCharTest varchar(255) NOT NULL
 					) DEFAULT CHARSET=utf8";
 				DataCore.NonQ(command);
-			}
-			else {//oracle
-				command="BEGIN EXECUTE IMMEDIATE 'DROP TABLE tempcore'; EXCEPTION WHEN OTHERS THEN NULL; END;";
-				DataCore.NonQ(command);
-				command=@"CREATE TABLE tempcore (
-					TempCoreNum number(20),
-					TimeOfDayTest date DEFAULT TO_DATE('0001-01-01','YYYY-MM-DD'),
-					TimeStampTest timestamp DEFAULT TO_DATE('0001-01-01','YYYY-MM-DD'),
-					DateTest date DEFAULT TO_DATE('0001-01-01','YYYY-MM-DD'),
-					DateTimeTest date DEFAULT TO_DATE('0001-01-01','YYYY-MM-DD'),
-					TimeSpanTest varchar2(255),
-					CurrencyTest number(38,8),
-					BoolTest number(3),
-					TextTinyTest varchar2(255),
-					TextSmallTest varchar2(4000),
-					TextMediumTest clob,
-					TextLargeTest clob,
-					VarCharTest varchar2(255)
-					)";
-				DataCore.NonQ(command);
-			}
-			if(DataConnection.DBtype==DatabaseType.MySql) {
+			
+
 				command="DROP TABLE IF EXISTS tempgroupconcat";
 				DataCore.NonQ(command);
 				command=@"CREATE TABLE tempgroupconcat (
 					Names varchar(255)
 					) DEFAULT CHARSET=utf8";
 				DataCore.NonQ(command);
-			}
-			else {//oracle
-				command="BEGIN EXECUTE IMMEDIATE 'DROP TABLE tempgroupconcat'; EXCEPTION WHEN OTHERS THEN NULL; END;";
-				DataCore.NonQ(command);
-				command=@"CREATE TABLE tempgroupconcat (
-					Names varchar2(255)
-					)";
-				DataCore.NonQ(command);
-			}
+			
+
 			retVal+="Temp tables created.\r\n";
 			//retVal+="Temp tables cannot yet be created.\r\n";
 			return retVal;
@@ -300,7 +272,7 @@ namespace UnitTests {
 			retVal+="Clob, Rick Roller: Passed.\r\n";
 			//SHOW CREATE TABLE -----------------------------------------------------------------------
 			//This command is needed in order to perform a backup.
-			if(DataConnection.DBtype==DatabaseType.MySql) {
+
 				command="SHOW CREATE TABLE account";
 				table=DataCore.GetTable(command);
 				string createResult=PIn.ByteArray(table.Rows[0][1]);
@@ -308,10 +280,7 @@ namespace UnitTests {
 					throw new Exception();
 				}
 				retVal+="SHOW CREATE TABLE: Passed.\r\n";
-			}
-			else {
-				retVal+="SHOW CREATE TABLE: Not applicable to Oracle.\r\n";
-			}
+
 			//Single Command Split-------------------------------------------------------------------------
 			varchar1="';\"";
 			varchar2=";'';;;;\"\"\"\"'asdfsadsdaf'";
@@ -339,18 +308,12 @@ namespace UnitTests {
 			DataCore.NonQ(command);
 			retVal+="Multi-Non-Queries: Passed.\r\n";
 			//Cleanup---------------------------------------------------------------------------------------
-			if(DataConnection.DBtype==DatabaseType.MySql) {
+
 				command="DROP TABLE IF EXISTS tempcore";
 				DataCore.NonQ(command);
 				command="DROP TABLE IF EXISTS tempgroupconcat";
 				DataCore.NonQ(command);
-			}
-			else {
-				command="BEGIN EXECUTE IMMEDIATE 'DROP TABLE tempcore'; EXCEPTION WHEN OTHERS THEN NULL; END;";
-				DataCore.NonQ(command);
-				command="BEGIN EXECUTE IMMEDIATE 'DROP TABLE tempgroupconcat'; EXCEPTION WHEN OTHERS THEN NULL; END;";
-				DataCore.NonQ(command);
-			}
+
 			retVal+="CoreTypes test done.\r\n";
 			return retVal;
 		}

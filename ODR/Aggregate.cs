@@ -1,52 +1,58 @@
-using System;
-using System.Windows.Forms;
-using OpenDentBusiness;
-
-namespace ODR{
-	///<summary></summary>
-	public class Aggregate{
+namespace ODR
+{
+    public class Aggregate
+	{
 		private static decimal runningSum;
 		private static string groupByVal;
 
-		///<summary></summary>
-		public static string RunningSum(string groupBy,string addValue){
-			decimal num=PIn.Decimal(addValue);
-			if(groupByVal==null || groupBy!=groupByVal){//if new or changed group
-				runningSum=0;
+		///<summary>Used to test the sign on debits and credits for the five different account types.  Pass in a number in string format.  Like "2", for example.</summary>
+		public static bool AccountDebitIsPos(string accountType)
+		{
+			switch (accountType)
+			{
+				case "0"://asset
+				case "4"://expense
+					return true;
+
+				case "1"://liability
+				case "2"://equity //because liabilities and equity are treated the same
+				case "3"://revenue
+					return false;
 			}
-			groupByVal=groupBy;
-			runningSum+=num;
-			return runningSum.ToString("F");
+			return true;
 		}
 
-		///<summary></summary>
-		public static string RunningSumForAccounts(object groupBy, object debitAmt, object creditAmt, object acctType) {
-			if(debitAmt==null || creditAmt==null){
+		public static string RunningSumForAccounts(object groupBy, object debitAmt, object creditAmt, object acctType)
+		{
+			if (debitAmt == null || creditAmt == null)
+			{
 				return 0.ToString("N");
 			}
-			try {
+			try
+			{
 				//Cannot read debitAmt and creditAmt as decimals because it makes the general ledger detail report fail.  Simply cast as decimals when doing mathematical operations.
-				double debit=(double)debitAmt;//PIn.PDouble(debitAmt);
-				double credit=(double)creditAmt;//PIn.PDouble(creditAmt)
-				if(groupByVal==null || groupBy.ToString()!=groupByVal) {//if new or changed group
-					runningSum=0;
+				double debit = (double)debitAmt;//PIn.PDouble(debitAmt);
+				double credit = (double)creditAmt;//PIn.PDouble(creditAmt)
+				if (groupByVal == null || groupBy.ToString() != groupByVal)
+				{//if new or changed group
+					runningSum = 0;
 				}
-				groupByVal=groupBy.ToString();
-				if(TestValue.AccountDebitIsPos(acctType.ToString())) {
-					runningSum+=(decimal)debit-(decimal)credit;
+
+				groupByVal = groupBy.ToString();
+				if (AccountDebitIsPos(acctType.ToString()))
+				{
+					runningSum += (decimal)debit - (decimal)credit;
 				}
-				else {
-					runningSum+=(decimal)credit-(decimal)debit;
+				else
+				{
+					runningSum += (decimal)credit - (decimal)debit;
 				}
 				return runningSum.ToString("N");
 			}
-			catch {
+			catch
+			{
 				return 0.ToString("N");
 			}
 		}
-
 	}
-
-	
-
 }

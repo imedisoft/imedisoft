@@ -16,8 +16,8 @@ namespace OpenDental.UI.Voice {
 				_voiceController.SpeechRecognized+=_voiceController_SpeechRecognized;
 				_voiceController.StartListening();
 			}
-			catch(Exception ex) {
-				ex.DoNothing();//The user can just click on the dialog box instead.
+			catch {
+				//The user can just click on the dialog box instead.
 			}
 		}
 

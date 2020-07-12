@@ -342,8 +342,7 @@ namespace OpenDental {
 			}
 			//Creating and sending Attachments will sometimes time out when an arbirtrarily large group of attachments are being sent, 
 			//at which point each attachment should be sent individually.
-			catch(TimeoutException ex) {
-				ex.DoNothing();
+			catch(TimeoutException) {
 				ODProgress.ShowAction(() => { BatchSendAttachments(); },"Sending attachments timed out. Attempting to send individually. Please wait.");
 			}
 			catch(ODException ex) {

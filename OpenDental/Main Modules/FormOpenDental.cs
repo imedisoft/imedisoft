@@ -456,8 +456,8 @@ namespace OpenDental{
 			while(true) {//Most users will loop through once.  If user tries to connect to a db with replication failure, they will loop through again.
 				if(chooseDatabaseInfo.NoShow==YN.Yes) {
 					try {
-						CentralConnections.TryToConnect(chooseDatabaseInfo.CentralConnectionCur,chooseDatabaseInfo.DbType,
-							chooseDatabaseInfo.ConnectionString,noShowOnStartup:(chooseDatabaseInfo.NoShow==YN.Yes),chooseDatabaseInfo.ListAdminCompNames,
+						CentralConnections.TryToConnect(chooseDatabaseInfo.CentralConnectionCur,
+							chooseDatabaseInfo.ConnectionString,(chooseDatabaseInfo.NoShow==YN.Yes),chooseDatabaseInfo.ListAdminCompNames,
 							isCommandLineArgs:(CommandLineArgs.Length!=0),useDynamicMode:chooseDatabaseInfo.UseDynamicMode);
 						UserOdPrefL.SetThemeForUserIfNeeded();
 					}
@@ -824,7 +824,7 @@ namespace OpenDental{
 			if(!PrefL.CheckMySqlVersion(isSilentUpdate)){
 				return false;
 			}
-			if(DataConnection.DBtype==DatabaseType.MySql) {
+
 				try {
 					MiscData.SetSqlMode();
 				}
@@ -850,7 +850,7 @@ namespace OpenDental{
 						return false;//Either the user canceled out of the window or clicked the override button which 
 					}
 				}
-			}
+			
 			//if RemotingRole.ClientWeb, version will have already been checked at login, so no danger here.
 			//ClientWeb version can be older than this version, but that will be caught in a moment.
 			if(isSilentUpdate) {
@@ -1218,8 +1218,7 @@ namespace OpenDental{
 						}
 					}
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					MessageBox.Show("Failed to retrieve custom reports.");
 				}
 			}
@@ -2579,8 +2578,7 @@ namespace OpenDental{
 							try {
 								PaintOnIcon(butDef.SynchIcon,Color.White);
 							}
-							catch(Exception ex) {
-								ex.DoNothing();
+							catch {
 								hadErrorPainting=true;
 							}
 						}
@@ -2605,8 +2603,7 @@ namespace OpenDental{
 							try {
 								PaintOnIcon(butDef.SynchIcon,color);
 							}
-							catch(Exception ex) {
-								ex.DoNothing();
+							catch {
 								hadErrorPainting=true;
 							}
 						}
@@ -3423,8 +3420,7 @@ namespace OpenDental{
 			try {
 				return moduleBar.SelectedModule.ToString();//.Buttons[moduleBar.SelectedIndex].Caption;
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				return "";
 			}
 		}
@@ -3644,30 +3640,6 @@ namespace OpenDental{
 			Plugins.HookAddCode(this,"FormOpenDental_KeyDown_end",e);
 		}
 
-		///<summary>Gets the encrypted connection string for the Oracle database from a config file.</summary>
-		public bool GetOraConfig() {
-			if(!File.Exists("ODOraConfig.xml")) {
-				return false;
-			}
-			try {
-				XmlDocument document=new XmlDocument();
-				document.Load("ODOraConfig.xml");
-				XPathNavigator Navigator=document.CreateNavigator();
-				XPathNavigator nav;
-				nav=Navigator.SelectSingleNode("//DatabaseConnection");
-				if(nav!=null) {
-					connStr=nav.SelectSingleNode("ConnectionString").Value;
-					key=nav.SelectSingleNode("Key").Value;
-				}
-				DataConnection.DBtype=DatabaseType.Oracle;
-				return true;
-			}
-			catch(Exception ex) {
-				MessageBox.Show(ex.Message);
-				return false;
-			}
-		}
-
 		///<summary>Decrypt the connection string and try to connect to the database directly. Only called if using a connection string and ChooseDatabase is not to be shown. Must call GetOraConfig first.</summary>
 		public bool TryWithConnStr() {
 			DataConnection dcon=new DataConnection();
@@ -3744,8 +3716,7 @@ namespace OpenDental{
 				SetTimersAndThreads(true);//Safe to start timers since this method was invoked on the main thread if required.
 				Security.DateTimeLastActivity=DateTime.Now;
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				throw;
 			}
 			finally {
@@ -4915,10 +4886,6 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.UserQuery)) {
 				return;
 			}
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				MessageBox.Show("Not allowed while using Oracle.");
-				return;
-			}
 			if(Security.IsAuthorized(Permissions.UserQueryAdmin,true)) {
 				SecurityLogs.MakeLogEntry(Permissions.UserQuery,0,Lan.g(this,"User query form accessed."));
 				if(_formUserQuery==null || _formUserQuery.IsDisposed) {
@@ -5371,10 +5338,6 @@ namespace OpenDental{
 		}
 
 		private void menuItemAutoClosePayPlans_Click(object sender,EventArgs e) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				MessageBox.Show("Tool does not currently support Oracle.  Please call support to see if you need this fix.");
-				return;
-			}
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
@@ -6529,8 +6492,7 @@ namespace OpenDental{
 									+Lan.g(this,"has logged on automatically via ActiveDirectory."));
 						}
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 						ShowLogOn();
 						Security.IsUserLoggedIn=true;
 						return;
@@ -6924,9 +6886,8 @@ namespace OpenDental{
 					//Allow the program to close quietly, but send us at HQ a bug report so we can look into the problem.
 					//BugSubmissions.SubmitException(ex,patNumCur:CurPatNum);
 				}
-				catch (Exception exp)
+				catch
 				{
-					exp.DoNothing();
 				}
 			}
 		}
@@ -6974,8 +6935,7 @@ namespace OpenDental{
 					ComputerPrefs.Update(ComputerPrefs.LocalComputer);
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			FormUAppoint.AbortThread();
 			ODThread.QuitSyncAllOdThreads();
@@ -6984,8 +6944,7 @@ namespace OpenDental{
 					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,"User: "+Security.CurUser.UserName+" has logged off.");
 					Clinics.LogOff();
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 			}
 			//Per https://docs.microsoft.com/en-us/dotnet/api/microsoft.win32.systemevents.sessionswitch?view=netframework-4.7.2 we need to unsubscribe 

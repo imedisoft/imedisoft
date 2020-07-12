@@ -117,12 +117,12 @@ namespace OpenDental.Reporting.Allocators {
 		#endregion
 
 		#region SQL Interaction Methods
-		public static string CreatTableString(DatabaseType type1) {
+		public static string CreatTableString() {
 			// Note command to create table
 			// //Db.NonQ(MyAllocator1_ProviderPayment.CreatTableString());
 			// Put here for reference not for implementation of code. CreatTableString does not check for existance of table.
 			string command = "";
-			if(type1 == DatabaseType.MySql) {
+
 				command = "CREATE TABLE " + TABLENAME + " ("
 			   + @"AllocNum INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 					AllocType TINYINT,
@@ -136,9 +136,7 @@ namespace OpenDental.Reporting.Allocators {
 					IsFullyAllocated TINYINT
 					)
 					DEFAULT CHARSET=utf8";
-			}
-			//else if (type1 == OpenDentBusiness.DatabaseType.Oracle)
-			//;// not implemented yet
+
 			return command;
 
 
@@ -174,15 +172,15 @@ namespace OpenDental.Reporting.Allocators {
 				+ "PayTableSource, PaySourceNum, AllocToTableSource, AllocToSourceNum, Amount, IsFullyAllocated) VALUES ";
 		}
 
-		public static string Create_AP_temp_table_string(DatabaseType type1) {
+		public static string Create_AP_temp_table_string() {
 			string command = "";
-			if(type1 == DatabaseType.MySql) {
+
 				command = "CREATE TABLE " + TABLENAME + "_temp \n(\n"
 					+ "   tempIndex INT NOT NULL AUTO_INCREMENT PRIMARY KEY, \n"
 					+ "   Guarantor bigint NOT NULL, \n"
 					+ "   AllocStatus TINYINT\n)\n"
 					+ "DEFAULT CHARSET=utf8";
-			}
+			
 			//else if(type1 == OpenDentBusiness.DatabaseType.Oracle)
 			//	;// not implemented yet
 			return command;
@@ -273,7 +271,7 @@ namespace OpenDental.Reporting.Allocators {
 					+ "according to the rules in MyAllocator1.\n\n"
 					+ "Do you want to create this table?"),Lan.g(this,"Create Table"),MessageBoxButtons.YesNoCancel);
 				if(dr == DialogResult.Yes) {
-					Db.NonQOld(MyAllocator1_ProviderPayment.CreatTableString(DatabaseType.MySql));
+					Db.NonQOld(MyAllocator1_ProviderPayment.CreatTableString());
 				}
 			}
 			rValOK_TO_RUN = TableExists(TABLENAME);
@@ -320,8 +318,8 @@ namespace OpenDental.Reporting.Allocators {
 					Db.NonQOld(dropCommand);
 					dropCommand = "DROP TABLE " + TABLENAME;
 					Db.NonQOld(dropCommand);
-					Db.NonQOld(CreatTableString(DatabaseType.MySql));
-					Db.NonQOld(Create_AP_temp_table_string(DatabaseType.MySql));
+					Db.NonQOld(CreatTableString());
+					Db.NonQOld(Create_AP_temp_table_string());
 				}
 				if(dr == DialogResult.No) // Don't want to start over 
 				{
@@ -336,7 +334,7 @@ namespace OpenDental.Reporting.Allocators {
 			}
 			else // Temp table does not exists so create it!
 			{
-				Db.NonQOld(Create_AP_temp_table_string(DatabaseType.MySql));
+				Db.NonQOld(Create_AP_temp_table_string());
 			}
 			#endregion
 			//  Here is what needs to be done:

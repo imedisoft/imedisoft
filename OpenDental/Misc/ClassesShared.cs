@@ -94,9 +94,6 @@ namespace OpenDental {
 		///Set isSilent to true to suppress the failure message boxes.  However, the progress window will always be shown.
 		///Returns false if making a backup failed.</summary>
 		public static bool MakeABackup(bool isSilent,BackupLocation backupLocation,bool isSecurityLogged=true) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return false;//Because MiscData.MakeABackup() is not yet Oracle compatible.
-			}
 #if DEBUG
 			switch(MessageBox.Show("Would you like to make a backup of the DB?","DEBUG ONLY",MessageBoxButtons.YesNoCancel)) {
 				case DialogResult.Cancel:

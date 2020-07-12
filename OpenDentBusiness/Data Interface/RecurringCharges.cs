@@ -326,8 +326,8 @@ namespace OpenDentBusiness {
 					string xPath=Programs.GetProgramPath(Programs.GetCur(ProgramName.Xcharge));
 					File.WriteAllText(ODFileUtils.CombinePaths(Path.GetDirectoryName(xPath),"RecurringChargeResult.txt"),strBuilderResultFileXCharge.ToString());
 				}
-				catch(Exception ex) {
-					ex.DoNothing();//Do nothing cause this is just for internal use.
+				catch {
+					//Do nothing cause this is just for internal use.
 				}
 			}
 			if(strBuilderResultFilePayConnect.Length > 0) {
@@ -339,8 +339,8 @@ namespace OpenDentBusiness {
 					}
 					FileAtoZ.WriteAllText(payConnectResultFile,strBuilderResultFilePayConnect.ToString());
 				}
-				catch(Exception ex) {
-					ex.DoNothing();//Do nothing cause this is just for internal use.
+				catch {
+					//Do nothing cause this is just for internal use.
 				}
 			}
 			if(strBuilderResultFilePaySimple.Length > 0) {
@@ -352,8 +352,8 @@ namespace OpenDentBusiness {
 					}
 					FileAtoZ.WriteAllText(paySimpleResultFile,strBuilderResultFilePaySimple.ToString());
 				}
-				catch(Exception ex) {
-					ex.DoNothing();//Do nothing cause this is just for internal use.
+				catch {
+					//Do nothing cause this is just for internal use.
 				}
 			}
 		}

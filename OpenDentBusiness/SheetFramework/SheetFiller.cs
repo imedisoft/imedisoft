@@ -3201,8 +3201,7 @@ namespace OpenDentBusiness {
 								}
 							}
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
 							field.FieldValue=PrefC.GetString(PrefName.PatientPortalURL);
 						}
 						break;

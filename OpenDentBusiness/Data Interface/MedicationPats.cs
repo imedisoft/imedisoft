@@ -128,10 +128,9 @@ namespace OpenDentBusiness{
 						rxPat.ErxGuid=Erx.OpenDentalErxPrefix+medPatNumAsInt;
 						RxPats.Update(rxPat);
 					}
-					catch(Exception ex) {
+					catch {
 						//If we cannot downgrade a long to an int for the ErxGuid we can simply ignore trying to update the rxPat.
 						//This is because this medication would never be sent to eRx because we would attempt this downgrade again in the exact same manner.
-						ex.DoNothing();
 					}
 				}
 			}

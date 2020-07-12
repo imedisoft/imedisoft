@@ -359,8 +359,7 @@ namespace UpdateFileCopier {
 						Process.Start(Path.Combine(_destDirectory,"OpenDental.exe"));
 					}
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 				Application.Exit();//To close the form.
 			}

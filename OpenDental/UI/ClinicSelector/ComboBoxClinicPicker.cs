@@ -707,8 +707,8 @@ namespace OpenDental.UI {
 					SelectedClinicNum=Clinics.ClinicNum;
 				}
 			}
-			catch(Exception e){
-				e.DoNothing();
+			catch{
+
 			}
 			Invalidate();
 		}

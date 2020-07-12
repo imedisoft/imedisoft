@@ -1267,8 +1267,7 @@ namespace OpenDental {
 					try {
 						_dictTaskLists.Add(taskList.TaskListNum,taskList);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 					}
 				}
 			}

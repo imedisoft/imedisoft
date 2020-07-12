@@ -1,8 +1,10 @@
 ﻿using System;
 
-namespace DataConnectionBase {
+namespace DataConnectionBase
+{
 	///<summary>Helper object that holds metadata regarding a query that was executed by the program.</summary>
-	public class DbQueryObj {
+	public class DbQueryObj
+	{
 		///<summary>A globally unique identifier for this particular query.  Useful for updating DateTimeStop when query finishes executing.</summary>
 		public Guid GUID;
 		///<summary>The full text of the query that was executed.</summary>
@@ -17,9 +19,12 @@ namespace DataConnectionBase {
 		public string MethodName;
 
 		///<summary>Returns the difference between DateTimeStop and DateTimeStart if both are valid date times.</summary>
-		public TimeSpan Elapsed {
-			get {
-				if(DateTimeStart==DateTime.MinValue || DateTimeStop==DateTime.MinValue) {
+		public TimeSpan Elapsed
+		{
+			get
+			{
+				if (DateTimeStart == DateTime.MinValue || DateTimeStop == DateTime.MinValue)
+				{
 					return TimeSpan.MinValue;
 				}
 				return (DateTimeStop - DateTimeStart);
@@ -27,22 +32,25 @@ namespace DataConnectionBase {
 		}
 
 		///<summary>Creates a query object that stores the command passed in and automatically sets a GUID and DateTimeStart.</summary>
-		public DbQueryObj(string command) {
-			GUID=Guid.NewGuid();
-			Command=command;
-			DateTimeInit=DateTime.Now;
+		public DbQueryObj(string command)
+		{
+			GUID = Guid.NewGuid();
+			Command = command;
+			DateTimeInit = DateTime.Now;
 		}
 
 		///<summary>A string representation of what this query object should look like in the log file.</summary>
-		public override string ToString() {
-			return $"# GUID: {(GUID==null ? "NULL" : GUID.ToString())}{(string.IsNullOrEmpty(MethodName)?"":$"  Method Name: {MethodName}")}\r\n"
-				+$"# DateTimeStart: {DateTimeStart.ToString("MM/dd/yyyy hh:mm:ss.fffffff tt")}\r\n"
-				+$"# DateTimeStop: {((DateTimeStop==DateTime.MinValue)?"Still Running":DateTimeStop.ToString("MM/dd/yyyy hh:mm:ss.fffffff tt"))}\r\n"
-				+$"# Elapsed: {Elapsed.ToString("G")}\r\n"
-				+$"{Command}";//Not starting this line with # makes a nice visual break between queries.
+		public override string ToString()
+		{
+			return $"# GUID: {(GUID == null ? "NULL" : GUID.ToString())}{(string.IsNullOrEmpty(MethodName) ? "" : $"  Method Name: {MethodName}")}\r\n"
+				+ $"# DateTimeStart: {DateTimeStart.ToString("MM/dd/yyyy hh:mm:ss.fffffff tt")}\r\n"
+				+ $"# DateTimeStop: {((DateTimeStop == DateTime.MinValue) ? "Still Running" : DateTimeStop.ToString("MM/dd/yyyy hh:mm:ss.fffffff tt"))}\r\n"
+				+ $"# Elapsed: {Elapsed.ToString("G")}\r\n"
+				+ $"{Command}";//Not starting this line with # makes a nice visual break between queries.
 		}
 
-		public DbQueryObj Copy() {
+		public DbQueryObj Copy()
+		{
 			return (DbQueryObj)this.MemberwiseClone();
 		}
 	}

@@ -66,8 +66,8 @@ namespace OpenDental {
 						// TODO: BugSubmissions.SubmitException(e,out displayMsg,threadName,FormOpenDental.CurPatNum,formOD.GetSelectedModuleName());
 					}
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
+
 				}
 				FriendlyException.Show((displayMsg.IsNullOrEmpty()) ? "Critical Error: "+e.Message : displayMsg,e,"Quit");
 				formOD.ProcessKillCommand();
@@ -80,7 +80,7 @@ namespace OpenDental {
 			});
 			//OpenDentalCloud.dll references Dropbox.Api.dll which references Newtonsoft.Json.dll version 7.0.0.0. Sometimes it also says it can't find 
 			//9.0.0.0.
-			ODInitialize.FixNewtonsoft(ODFileUtils.CombinePaths(AppDomain.CurrentDomain.BaseDirectory,"Newtonsoft.Json.dll"));
+			//ODInitialize.FixNewtonsoft(ODFileUtils.CombinePaths(AppDomain.CurrentDomain.BaseDirectory,"Newtonsoft.Json.dll"));
 			Application.Run(formOD);
 		}
 	}

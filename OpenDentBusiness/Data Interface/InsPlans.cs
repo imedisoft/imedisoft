@@ -42,12 +42,8 @@ namespace OpenDentBusiness {
 			plan.SecUserNumEntry=Security.CurUser.UserNum;
 			long planNum=0;
 			InsPlan planOld=plan.Copy();
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				planNum=Crud.InsPlanCrud.Insert(plan);//Oracle ALWAYS uses existing PKs because they do not support auto-incrementing.
-			}
-			else {
-				planNum=Crud.InsPlanCrud.Insert(plan,useExistingPK);
-			}
+			planNum=Crud.InsPlanCrud.Insert(plan,useExistingPK);
+			
 			if(planOld.PlanNum==0) {
 				InsEditLogs.MakeLogEntry(plan,null,InsEditLogType.InsPlan,plan.SecUserNumEntry);
 			}

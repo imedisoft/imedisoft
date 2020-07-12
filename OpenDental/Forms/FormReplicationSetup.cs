@@ -176,7 +176,7 @@ namespace OpenDental {
 				string compName=_listReplicationServers[i].Descript;
 				dc=new DataConnection();
 				try {
-					dc.SetDb(compName,databaseNameOriginal,textUsername.Text,textPassword.Text,"","",DataConnection.DBtype);
+					dc.SetDb(compName,databaseNameOriginal,textUsername.Text,textPassword.Text,"","");
 					//Connection is considered to be successfull at this point. Now restart the slave process to force replication.
 					string command="STOP SLAVE; START SLAVE; SHOW SLAVE STATUS;";
 					DataTable slaveStatus=dc.GetTable(command);
@@ -216,7 +216,7 @@ namespace OpenDental {
 				try {
 					//Reconnect back to original database.
 					dc=new DataConnection();
-					dc.SetDb(compNameOriginal,databaseNameOriginal,textUsername.Text,textPassword.Text,"","",DataConnection.DBtype);
+					dc.SetDb(compNameOriginal,databaseNameOriginal,textUsername.Text,textPassword.Text,"","");
 					isReconnectSuccessful=true;//No exception thrown, leave while loop.
 				}
 				catch(Exception ex) {

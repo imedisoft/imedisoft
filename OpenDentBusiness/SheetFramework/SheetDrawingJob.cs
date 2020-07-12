@@ -780,8 +780,8 @@ namespace OpenDentBusiness {
 								bmpOriginal=new Bitmap(Image.FromStream(stream));
 								bmpOriginalFormat=ImageFormat.Bmp;
 							}
-							catch(Exception ex) {
-								ex.DoNothing();
+							catch {
+
 								return;//If the image is not an actual image file, leave the image field blank.
 							}
 						}

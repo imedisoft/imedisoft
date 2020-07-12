@@ -788,9 +788,6 @@ namespace OpenDentBusiness {
 		///<summary>Returns false if the synch is in the process of running.</summary>
 		public static bool SynchAllPatients(bool doThrowException=false) {
 			
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				throw new ApplicationException("SynchAllPatients is not Oracle compatible, please call support.");
-			}
 			if(_odThreadQueueData!=null) {
 				return false;
 			}
@@ -871,8 +868,7 @@ namespace OpenDentBusiness {
 							dictPatBatchData=_queueBatchData.Dequeue();
 						}
 					}
-					catch(Exception ex) {//queue must be empty even though we just checked it before entering the while loop, just loop again and wait if necessary
-						ex.DoNothing();
+					catch {//queue must be empty even though we just checked it before entering the while loop, just loop again and wait if necessary
 						continue;
 					}
 					//not likely to happen, this is checked when filling the queue, but just in case
@@ -1032,11 +1028,10 @@ namespace OpenDentBusiness {
 					#endregion Insert New Recalls
 				}
 			}
-			catch(Exception ex) {
+			catch {
 				if(doThrowException) {
 					throw;
 				}
-				ex.DoNothing();
 			}
 			finally {
 				_odThreadQueueData?.QuitAsync();
@@ -1132,8 +1127,7 @@ namespace OpenDentBusiness {
 					}
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();//if error happens, just swallow the error and kill the thread
+			catch {
 			}
 			finally {//always make sure to notify the main thread that the thread is done so the main thread doesn't wait for eternity
 				if(odThread.Name=="RecallSyncQueueDataThread") {
@@ -1810,8 +1804,7 @@ namespace OpenDentBusiness {
 						try {
 							recent.ReminderType=Lans.g(lanThis,PIn.Enum<CommItemMode>(PIn.Int(row["CommMode"].ToString())).GetDescription());
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
 							recent.ReminderType=Lans.g(lanThis,"UNKNOWN");
 						}
 						break;
@@ -1992,7 +1985,7 @@ namespace OpenDentBusiness {
 					AlertItems.Insert(alert);
 				});
 				thread.Name="FinishWebSchedRecallAppt";
-				thread.AddExceptionHandler(e => e.DoNothing());
+				thread.AddExceptionHandler(e => { });
 				thread.Start(true);
 				if(RunWebSchedSynchronously) {
 					thread.Join(Timeout.Infinite);

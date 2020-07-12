@@ -228,8 +228,7 @@ namespace OpenDentBusiness{
 				result=WebServiceMainHQProxy.GetWebServiceMainHQInstance()
 					.SmsSend(PayloadHelper.CreatePayload(strbuild.ToString(),eServiceCode.IntegratedTexting));
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				throw new Exception("Unable to send using web service.");
 			}
 			XmlDocument doc=new XmlDocument();

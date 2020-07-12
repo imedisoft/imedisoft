@@ -88,9 +88,7 @@ namespace OpenDental {
 				for(int j=0;j<appointmentList.Rows.Count;j++){
 					string aptNum=POut.Long(PIn.Long(appointmentList.Rows[j][0].ToString()));
 					string datesql="CURDATE()";
-					if(DataConnection.DBtype==DatabaseType.Oracle){
-						datesql="(SELECT CURRENT_DATE FROM dual)";
-					}
+
 					command="SELECT "+
 						"TRIM((SELECT f.FieldValue FROM patfield f WHERE f.PatNum=p.PatNum AND "+
 							"LOWER(f.FieldName)=LOWER('"+patientsIdNumberStr+"') "+DbHelper.LimitAnd(1)+")) PCIN, "+//Patient's Care ID Number

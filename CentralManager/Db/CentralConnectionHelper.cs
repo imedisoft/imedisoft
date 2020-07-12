@@ -98,9 +98,8 @@ namespace CentralManager
 				}
 				try
 				{
-					DataConnection.DBtype = DatabaseType.MySql;
 					DataConnection dcon = new DataConnection();
-					dcon.SetDbT(computerName, database, user, password, "", "", DataConnection.DBtype);
+					dcon.SetDbT(computerName, database, user, password, "", "");
 					if (refreshCache)
 					{
 						Cache.Refresh(InvalidType.AllLocal);

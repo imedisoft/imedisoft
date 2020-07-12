@@ -617,7 +617,6 @@ namespace CentralManager
 			}
 			catch (Exception ex)
 			{
-				ex.DoNothing();
 				odThread.Tag = new object[] { connection, "OFFLINE: " + ex.Message.Left(100) };//Can't connect
 			}
 		}
@@ -885,7 +884,6 @@ namespace CentralManager
 				document.Load(xmlPath);
 				XPathNavigator Navigator = document.CreateNavigator();
 				XPathNavigator nav;
-				DataConnection.DBtype = DatabaseType.MySql;
 				//See if there's a DatabaseConnection
 				nav = Navigator.SelectSingleNode("//DatabaseConnection");
 				if (nav == null)
@@ -917,7 +915,6 @@ namespace CentralManager
 				Application.Exit();
 				return false;
 			}
-			DataConnection.DBtype = DatabaseType.MySql;
 			DataConnection dcon = new DataConnection();
 			//Try to connect to the database directly
 			if (middleTier != "")
@@ -933,7 +930,7 @@ namespace CentralManager
 			{
 				try
 				{
-					dcon.SetDb(computerName, database, user, password, "", "", DataConnection.DBtype);
+					dcon.SetDb(computerName, database, user, password, "", "");
 
 					FormCentralLogOn FormCLO = new FormCentralLogOn();
 					if (FormCLO.ShowDialog() != DialogResult.OK)

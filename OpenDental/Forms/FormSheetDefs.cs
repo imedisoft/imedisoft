@@ -358,8 +358,7 @@ namespace OpenDental{
 				try {
 					grid2.SetSelected(selectedIndex,true);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 			}
 		}

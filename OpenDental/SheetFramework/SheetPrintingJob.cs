@@ -80,8 +80,8 @@ namespace OpenDental {
 				//If we were unable to create the printdocument this will throw an exception.
 				TryPrint(sheet,dataSet,copies,isRxControlled,stmt,medLab,isPrintDocument,isPreviewMode);
 			}
-			catch(InvalidPrinterException ex) {//Dont catch other exceptions so that customer calls and we can be aware.
-				ex.DoNothing();//Error msg shown, see TryPrint(...)
+			catch(InvalidPrinterException) {//Dont catch other exceptions so that customer calls and we can be aware.
+				//Error msg shown, see TryPrint(...)
 			}
 		}
 

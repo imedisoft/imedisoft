@@ -1478,8 +1478,7 @@ namespace OpenDental.UI {
 					return;
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				return;
 			}
 			//ODGrids are not only used within the Open Dental project.  Often times they are used in projects that do not have a DB connection.
@@ -1489,8 +1488,8 @@ namespace OpenDental.UI {
 				//It is not worth it to force users to log off and back on again, or to run the link removal code below EVERY time, even if the pref is disabled.
 				doWikiLogic=PrefC.GetBool(PrefName.WikiDetectLinks);//if this fails then we do not have a pref table or a wiki, so don't bother going with this part.
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
+
 			}
 			removeContextMenuLinks();
 			int rowClick = PointToRow(_mouseClickLocation.Y);
@@ -1528,8 +1527,8 @@ namespace OpenDental.UI {
 						MailAddress emailAddress=new MailAddress(match);
 						continue;//'match' is a valid email address, which at this time we don't want to create a ContextMenu Web link for.
 					}
-					catch(FormatException fe) {
-						fe.DoNothing();//Not a valid email address format, so it should be a web link.  Carry on to creating the item in the ContextMenu.
+					catch {
+						//Not a valid email address format, so it should be a web link.  Carry on to creating the item in the ContextMenu.
 					}
 					string title=match;
 					if(title.Length>=25) {
@@ -1582,8 +1581,7 @@ namespace OpenDental.UI {
 					return;
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				return;
 			}
 			if(this.ContextMenu==null) {

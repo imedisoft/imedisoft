@@ -107,8 +107,7 @@ namespace OpenDentBusiness.Eclaims {
 					try {
 						fileList=ch.ls(retrievePath);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 						//Try again with the path as described in the documentation.
 						retrievePath=homeDir+"OXi_"+clearinghouseClin.LoginID+"_out/";
 						fileList=ch.ls(retrievePath);
@@ -186,8 +185,8 @@ namespace OpenDentBusiness.Eclaims {
 					try {
 						fileList=ch.ls(uploadPath);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
+
 						//Try again with the path as described in the documentation.
 						uploadPath=homeDir+"OXi_"+clearinghouseClin.LoginID+"_in/";
 						fileList=ch.ls(uploadPath);

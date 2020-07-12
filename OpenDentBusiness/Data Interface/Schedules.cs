@@ -1587,12 +1587,8 @@ namespace OpenDentBusiness{
 				}
 				command+="AND employee.EmployeeNum IN ("+string.Join(",",listEmps.Select(x => x.EmployeeNum))+") ";
 			}
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command+="GROUP BY schedule.ScheduleNum ";
-			}
-			else {
-				command+="GROUP BY employee.EmployeeNum,StartTime,StopTime,FName,Note,schedule.ScheduleNum,LName ";
-			}
+			command+="GROUP BY schedule.ScheduleNum ";
+
 			//Sort by Emp num so that sort is deterministic
 			command+="ORDER BY FName,LName,employee.EmployeeNum,StartTime";//order by FName for display, LName and EmployeeNum for emps with same FName
 			DataTable raw=Db.GetTable(command);

@@ -101,9 +101,8 @@ namespace OpenDental{
 			try {
 				ODClipboard.SetClipboard(textQuery.Text);
 			}
-			catch(Exception ex) {
+			catch {
 				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
-				ex.DoNothing();
 			}
 		}
 
@@ -265,9 +264,8 @@ namespace OpenDental{
 			try {
 				iData=Clipboard.GetDataObject();
 			}
-			catch(Exception ex) {
+			catch {
 				MessageBox.Show("Could not paste contents from the clipboard.  Please try again.");
-				ex.DoNothing();
 				return;
 			}
 			if(iData.GetDataPresent(DataFormats.Text)){
@@ -903,17 +901,6 @@ namespace OpenDental{
 			_reportSimpleGrid=new ReportSimpleGrid();
 			_reportSimpleGrid.Query=textQuery.Text;
 			_reportSimpleGrid.IsSqlValidated=isSqlValidated;
-			if(DataConnection.DBtype==DatabaseType.Oracle) { //Can't cancel User queries for Oracle. this is still from the main thread so we should be ok.
-				try {
-					if(isSqlValidated || Db.IsSqlAllowed(_reportSimpleGrid.Query)) { //Throws Exception
-						SubmitQuery();
-					}
-				}
-				catch(Exception e){
-					FriendlyException.Show(Lan.g(this,"Error submitting query."),e);
-				}
-				return;
-			}
 			_tableHuman=null;
 			LayoutHelperForState(QueryExecuteState.Executing);
 			_queryExceptionStateCur=QueryExceptionState.Throw;
@@ -1117,8 +1104,7 @@ namespace OpenDental{
 				_serverThreadID=0;
 				FillForm();
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 			}
 		}
 

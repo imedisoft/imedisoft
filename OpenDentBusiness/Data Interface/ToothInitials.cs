@@ -141,7 +141,7 @@ namespace OpenDentBusiness{
 					pri.Add(initialList[i].ToothNum);
 				}
 			}
-			return pri.AsEnumerable<string>().ToList();
+			return pri.OfType<string>().ToList();
 		}
 
 		///<summary>Loops through supplied initial list to see if the specified tooth is already marked as missing or hidden.

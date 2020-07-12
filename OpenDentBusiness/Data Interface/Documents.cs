@@ -309,8 +309,8 @@ namespace OpenDentBusiness {
 				try {
 					Directory.CreateDirectory(thumbPath);
 				} 
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
+
 					return NoAvailablePhoto(size);
 				}
 			}
@@ -326,12 +326,12 @@ namespace OpenDentBusiness {
 						return (Bitmap)Bitmap.FromFile(thumbFileName);
 					}
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
+
 					try {
 						File.Delete(thumbFileName); //File may be invalid, corrupted, or unavailable. This was a bug in previous versions.
-					} catch(Exception ex2) {
-						ex2.DoNothing();
+					} catch {
+		
 						//we tried our best, and it just wasn't good enough
 					}
 				}
@@ -342,8 +342,7 @@ namespace OpenDentBusiness {
 			try {
 				fullImage=ImageHelper.GetFullImage(doc,patFolder);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				return NoAvailablePhoto(size);
 			}
 			#endregion Full Image
@@ -353,8 +352,8 @@ namespace OpenDentBusiness {
 				try {
 					thumbBitmap.Save(thumbFileName);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
+
 					//Oh well, we can regenerate it next time if we have to!
 				}
 			}

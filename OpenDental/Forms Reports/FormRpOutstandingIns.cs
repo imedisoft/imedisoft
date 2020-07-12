@@ -1034,9 +1034,8 @@ namespace OpenDental
 					{
 						dateSuppressed = claimCur.DateLog.AddDays(claimCur.DaysSuppressed);
 					}
-					catch (ArgumentOutOfRangeException ex)
+					catch (ArgumentOutOfRangeException)
 					{//Custom Claim Tracking def.ValueString is way too big (observed bug) or way too small.
-						ex.DoNothing();
 						dateSuppressed = DateTime.MaxValue;//Likely due to the Days Suppressed value intended to be some far off unimaginable day.
 					}
 					if (dateSuppressed > DateTime.Today)

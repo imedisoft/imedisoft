@@ -250,12 +250,11 @@ namespace OpenDental {
 					DrawButton(_listButtons[i],isHot,isPressed,isSelected,pe.Graphics);
 				}
 			}
-			catch(Exception ex) {
+			catch {
 				//We had one customer who was receiving overflow exceptions because the ClientRetangle provided by the system was invalid,
 				//due to a graphics device hardware state change when loading the Dexis client application via our Dexis bridge.
 				//If we receive an invalid ClientRectangle, then we will simply not draw the button for a frame or two until the system has initialized.
 				//A couple of frames later the system should return to normal operation and we will be able to draw the button again.
-				ex.DoNothing();
 			}
 			// Calling the base class OnPaint
 			base.OnPaint(pe);

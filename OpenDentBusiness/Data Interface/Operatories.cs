@@ -143,8 +143,8 @@ namespace OpenDentBusiness{
 						table.Rows[i]["IsInHQView"]=POut.Bool(listOperatories[i].IsInHQView);
 					}
 				}
-				catch(Exception e) {
-					e.DoNothing();
+				catch {
+
 				}
 				return table;
 			}

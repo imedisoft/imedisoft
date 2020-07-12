@@ -1505,12 +1505,7 @@ namespace OpenDentBusiness
 			{
 				#region sheet
 				string sigPresentCase = "AVG(CASE WHEN FieldValue!='' THEN 1 ELSE 0 END) AS SigPresent ";
-				//Oracle cannot use CLOB columns when DISTINCT, ORDER BY, or GROUP BY is used.
-				//Since we only care about the sheer presence of data, we'll look at the first character (or byte) of the CLOB column by using SUBSTR.
-				if (DataConnection.DBtype == DatabaseType.Oracle)
-				{
-					sigPresentCase = "AVG(CASE WHEN DBMS_LOB.SUBSTR(FieldValue,1)!='' THEN 1 ELSE 0 END) AS SigPresent ";
-				}
+
 				command = "SELECT PatNum,Description,sheet.SheetNum,sheet.DocNum,DateTimeSheet,SheetType," + sigPresentCase
 					+ "FROM sheet "
 					+ "LEFT JOIN sheetfield ON sheet.SheetNum=sheetfield.SheetNum "
@@ -1691,15 +1686,7 @@ namespace OpenDentBusiness
 				+ "LEFT JOIN appointment ON appointment.NextAptNum=plannedappt.AptNum AND appointment.NextAptNum!=0 "
 				+ "LEFT JOIN procedurelog ON procedurelog.PlannedAptNum=plannedappt.AptNum	AND procedurelog.ProcStatus=" + POut.Int((int)ProcStat.C) + " "
 				+ "WHERE plannedappt.PatNum=" + POut.Long(patNum) + " ";
-			if (DataConnection.DBtype == DatabaseType.MySql)
-			{
-				command += "GROUP BY plannedappt.AptNum ";
-			}
-			else
-			{
-				command += "GROUP BY plannedappt.AptNum,ItemOrder,PlannedApptNum,appointment.AptDateTime,"
-				+ "appointment.Pattern,appointment.AptStatus,appointment.AptNum ";
-			}
+			command += "GROUP BY plannedappt.AptNum ";
 			command += "ORDER BY ItemOrder";
 			//plannedappt.AptNum does refer to the planned appt, but the other fields in the result are for the linked scheduled appt.
 			DataTable rawPlannedAppts = dcon.GetTable(command);

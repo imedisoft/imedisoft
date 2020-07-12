@@ -135,10 +135,9 @@ namespace OpenDental {
 						odPictureBox.Invalidate();
 					}
 				}
-				catch(Exception ex) {
+				catch {
 					labelThumbnail.Visible=false;
 					odPictureBox.Visible=false;
-					ex.DoNothing();
 				}
 			}
 			else {

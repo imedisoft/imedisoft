@@ -99,8 +99,7 @@ namespace CodeBase {
 						}
 				}
 			}
-			catch(Exception e) {
-					e.DoNothing();
+			catch {
 			}
 			//Return blank if we couldn't find a method name that wasn't ourself in the first 5 frames
 			return "";
@@ -121,8 +120,7 @@ namespace CodeBase {
 				}
 				Logger.WriteLine(log,subDirectory);
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 			}
 		}
 
@@ -330,10 +328,9 @@ namespace CodeBase {
 						//Throws exception if directory is not empty. That's what we want.
 						Directory.Delete(diCur,false);
 					}
-					catch(IOException e) {
+					catch(IOException) {
 						//Directory is most likely not empty. 
 						//It is much faster to try to delete the directory and have it fail than to query the diretory for existing files beforehand.
-						e.DoNothing();
 					}
 					catch(Exception e) {
 						//If we get here then a directory that should have been deleted was not deleted.
@@ -561,18 +558,22 @@ namespace CodeBase {
 		}
 
 		///<summary>Gets the name of the method that is calling WriteLine().</summary>
-		private string GetCallingMethod() {
-			try {
-				for(int i=1;i<4;i++) {//Start at stackframe(1) because 0 is the parent of this method.		
-					StackFrame frame=new StackFrame(i);
-					System.Reflection.MethodBase method=frame.GetMethod();
-					if(!method.Name.ToLower().Contains("writeline")) {
-						return method.ReflectedType.FullName+"."+method.Name;
+		private string GetCallingMethod()
+		{
+			try
+			{
+				for (int i = 1; i < 4; i++)
+				{//Start at stackframe(1) because 0 is the parent of this method.		
+					StackFrame frame = new StackFrame(i);
+					System.Reflection.MethodBase method = frame.GetMethod();
+					if (!method.Name.ToLower().Contains("writeline"))
+					{
+						return method.ReflectedType.FullName + "." + method.Name;
 					}
 				}
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch
+			{
 			}
 			//Return blank if we couldn't find a method name that wasn't ourself in the first 5 frames
 			return "";

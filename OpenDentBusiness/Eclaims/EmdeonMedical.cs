@@ -136,8 +136,8 @@ namespace OpenDentBusiness.Eclaims {
 							}
 							File.Delete(reportFilePath);
 						}
-						catch(Exception ex) {
-							ex.DoNothing();//Could not be deleted.  Not a big deal, because at least we were able to extract it, making it available for import.
+						catch {
+							//Could not be deleted.  Not a big deal, because at least we were able to extract it, making it available for import.
 						}
 						if(errorMsg!="") {
 							throw new ODException(errorMsg);

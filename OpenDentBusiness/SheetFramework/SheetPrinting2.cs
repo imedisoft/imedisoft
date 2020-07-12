@@ -192,8 +192,7 @@ namespace OpenDentBusiness{
 							continue;
 						}
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 						continue;//If the image is not an actual image file, leave the image field blank.
 					}
 				}

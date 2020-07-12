@@ -100,8 +100,8 @@ namespace OpenDentBusiness {
 					try {
 						imagePath=ImageStore.GetEmailImagePath();
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
+
 						throw;
 					}
 					string fullPath=FileAtoZ.CombinePaths(imagePath,POut.String(imgName));
@@ -163,8 +163,7 @@ namespace OpenDentBusiness {
 					try {
 						wikiPath=WikiPages.GetWikiPath();
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 						throw;
 					}
 					string fullPath=FileAtoZ.CombinePaths(wikiPath,POut.String(imgName));

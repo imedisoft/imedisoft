@@ -62,9 +62,6 @@ namespace OpenDentBusiness {
 			tableTotals.Columns.Add("famBal");
 			DataRow row;
 			string datesql="CURDATE()";//This is used to find out how much people owe currently and has nothing to do with the selected range
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				datesql="(SELECT CURRENT_DATE FROM dual)";
-			}
 			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
 				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
 			);

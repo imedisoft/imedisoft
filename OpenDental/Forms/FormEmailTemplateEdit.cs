@@ -491,8 +491,7 @@ namespace OpenDental {
 					webBrowserHtml.DocumentText=_htmlDocument;
 					webBrowserHtml.BringToFront();
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					//invalid preview
 				}
 			}

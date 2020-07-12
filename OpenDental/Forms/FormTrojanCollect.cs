@@ -547,8 +547,7 @@ namespace OpenDental {
 			try {
 				File.Delete(ODFileUtils.CombinePaths(folderPath,"TROBEN.HB"));
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				Cursor=Cursors.Default;
 				MessageBox.Show("There was an error attempting to delete a file from the export folder path.  Check folder permissions and/or try running as administrator.");
 				return;
@@ -601,8 +600,7 @@ namespace OpenDental {
 			try {
 				File.AppendAllText(ODFileUtils.CombinePaths(folderPath,outputFile),str.ToString());
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				Cursor=Cursors.Default;
 				MessageBox.Show("There was an error writing to the export file.  Check folder permissions and/or try running as administrator.");
 				return;

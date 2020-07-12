@@ -220,8 +220,7 @@ namespace OpenDental {
 						textExportFolder.Text=fb.SelectedPath;
 					}
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					MessageBox.Show(Lan.g(this,"There was an error showing the Browse window.")+"\r\n"
 						+Lan.g(this,"Try running as an Administrator or manually typing in a path."));
 					return;

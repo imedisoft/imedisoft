@@ -71,8 +71,7 @@ namespace OpenDental.Bridges{
 					ODFileUtils.WriteAllTextThenStart(linkage,strb.ToString(),path);
 					return;
 				}
-				catch(Exception e) {
-					e.DoNothing();
+				catch{
 				}
 			}
 			try {

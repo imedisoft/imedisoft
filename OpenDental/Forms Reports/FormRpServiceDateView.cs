@@ -129,8 +129,7 @@ namespace OpenDental {
 			try {
 				File.Delete(tempFile); //cleanup the temp file.
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			MessageBox.Show("PDF saved successfully.");
 		}

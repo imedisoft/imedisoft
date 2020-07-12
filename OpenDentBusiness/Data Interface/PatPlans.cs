@@ -425,9 +425,6 @@ namespace OpenDentBusiness{
 		///<summary>Gets all patplans with DateNextClaims that are today or in the past.</summary>
 		public static DataTable GetOutstandingOrtho() {
 			
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				throw new ApplicationException("Currently not Oracle compatible.  Please call support.");
-			}
 			byte orthoMonthsTreat=PrefC.GetByte(PrefName.OrthoDefaultMonthsTreat);
 			long orthoDefaultAutoCodeNum=PrefC.GetLong(PrefName.OrthoAutoProcCodeNum);
 			List<long> listOrthoBandingCodeNums = ProcedureCodes.GetOrthoBandingCodeNums();

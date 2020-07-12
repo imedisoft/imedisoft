@@ -136,7 +136,7 @@ namespace OpenDental {
 				}
 			});
 			_threadRefresh.Name=name;
-			_threadRefresh.AddExceptionHandler(ex => ex.DoNothing());//Don't crash program on Dashboard data fetching failure.
+			_threadRefresh.AddExceptionHandler(ex => { });//Don't crash program on Dashboard data fetching failure.
 			_threadRefresh.AddExitHandler(new ODThread.WorkerDelegate((o) => postProcess?.Invoke()));
 			_threadRefresh.Start();
 		}

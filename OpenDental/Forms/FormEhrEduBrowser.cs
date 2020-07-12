@@ -25,8 +25,7 @@ namespace OpenDental {
 			try {
 				webBrowser1.Url=new Uri(ResourceURL);
 			}
-			catch(UriFormatException ex) {
-				ex.DoNothing();
+			catch(UriFormatException) {
 				MessageBox.Show("The specified URL is in an incorrect format.  Did you include the http:// ?");
 				DialogResult=DialogResult.Cancel;
 			}

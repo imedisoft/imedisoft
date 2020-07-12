@@ -221,8 +221,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							patNum=PIn.Long(pidSeg.GetFieldComponent(fieldDefCur.OrdinalPos));
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
+
 							//do nothing, patNum will remain 0
 						}
 						continue;
@@ -647,8 +647,7 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							dataSubType=(DataSubtype)Enum.Parse(typeof(DataSubtype),obxSeg.GetFieldComponent(fieldDefCur.OrdinalPos,2),true);
 						}
-						catch(Exception ex){
-							ex.DoNothing();
+						catch{
 							dataSubType=DataSubtype.Unknown;
 						}
 						_medLabResultCur.ObsSubType=dataSubType;
@@ -968,8 +967,7 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							File.Delete(embeddedFile);//Clean up the temp file, only one copy will exist in the patient's image folder
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
 							//do nothing, file could be in use or there is not sufficient permissions, just leave it in the image folder as unassigned
 						}
 					}

@@ -1310,12 +1310,12 @@ namespace OpenDentBusiness
 			return patient;
 		}
 
-		///<summary>Returns a Family object for the supplied patNum.  Use Family.GetPatient to extract the desired patient from the family.</summary>
-		public static Family GetFamily(long patNum)
-		{
-			//No need to check RemotingRole; no call to db.
-			return ODMethodsT.Coalesce(GetFamilies(new List<long>() { patNum }).FirstOrDefault(), new Family());
-		}
+		/// <summary>
+		/// Returns a Family object for the supplied patNum.
+		/// Use Family.GetPatient to extract the desired patient from the family.
+		/// </summary>
+		public static Family GetFamily(long patNum) 
+			=> GetFamilies(new List<long>() { patNum }).FirstOrDefault() ?? new Family();
 
 		public static List<Family> GetFamilies(List<long> listPatNums)
 		{
@@ -1779,11 +1779,6 @@ namespace OpenDentBusiness
 		///Note: some of the clauses in the snippet are dependent on join clauses of the query constructed in GetPtDataTable().</summary>
 		private static string GetExactMatchSnippet(PtTableSearchParams args)
 		{
-			//No need to check RemotingRole; private method and no call to db.
-			if (DataConnection.DBtype != DatabaseType.MySql)
-			{//Oracle
-				return "'0'";
-			}
 			List<string> listClauses = new List<string>();
 			listClauses.Add(string.IsNullOrEmpty(args.LName) ? "" : "(patient.LName='" + args.LName + "')");
 			listClauses.Add(string.IsNullOrEmpty(args.FName) ? "" : "(patient.FName='" + args.FName + "')");
@@ -2016,18 +2011,11 @@ namespace OpenDentBusiness
 			}
 			command += @"patient.FName,patient.Preferred";
 			//Probably an unnecessary MySQL / Oracle split but I didn't want to affect the old GROUP BY functionality for MySQL just be Oracle is lame.
-			if (DataConnection.DBtype == DatabaseType.MySql)
-			{
+
 				command += @"
 					HAVING ((StartBal>0.005 OR StartBal<-0.005) OR (AfterIns>0.005 OR AfterIns<-0.005))
 					ORDER BY IsNotGuar,Birthdate,ProvNum,FName,Preferred";
-			}
-			else
-			{//Oracle.
-				command += @",(CASE WHEN Guarantor!=patient.PatNum THEN 1 ELSE 0 END),Birthdate
-					HAVING ((SUM(AmtBal)>0.005 OR SUM(AmtBal)<-0.005) OR (SUM(AmtBal-tempfambal.InsEst)>0.005 OR SUM(AmtBal-tempfambal.InsEst)<-0.005))
-					ORDER BY IsNotGuar,patient.Birthdate,tempfambal.ProvNum,patient.FName,patient.Preferred";
-			}
+
 			return Db.GetTable(command);
 		}
 
@@ -2464,11 +2452,6 @@ namespace OpenDentBusiness
 			List<long> listPendingInsPatNums, List<long> listUnsentPatNums, SerializableDictionary<long, List<PatAgingTransaction>> dictPatAgingTransactions,
 			bool excludeNoTil = false, bool excludeNotBilledSince = false, bool isFinanceBilling = false)
 		{
-			if (DataConnection.DBtype != DatabaseType.MySql)
-			{
-				//We are going to purposefully throw an exception so that users will call in and complain.
-				throw new ApplicationException(Lans.g("Patients", "Aging not currently supported by Oracle.  Please call us for support."));
-			}
 			List<int> listPatStatusExclude = new List<int>();
 			listPatStatusExclude.Add((int)PatientStatus.Deleted);//Always hide deleted.
 			if (excludeInactive)
@@ -3466,13 +3449,12 @@ namespace OpenDentBusiness
 				{
 					isMergeSuccessful = MergeTwoPatientPointOfNoReturn(patTo, patFrom, patFieldsToDelete, patFieldsToUpdate);
 				}
-				catch (Exception ex)
+				catch 
 				{
 					if (retryCount <= 0)
 					{
 						throw;//Throw exception after retrying 5 times.
 					}
-					ex.DoNothing();
 				}
 			}
 			return isMergeSuccessful;
@@ -3691,11 +3673,6 @@ namespace OpenDentBusiness
 			//merge of the records between the two accounts.			
 			for (int i = 0; i < patNumForeignKeys.Length; i++)
 			{
-				if (DataConnection.DBtype == DatabaseType.Oracle
-					&& patNumForeignKeys[i] == "ehrlab.PatNum") //Oracle does not currently support EHR labs.
-				{
-					continue;
-				}
 				string[] tableAndKeyName = patNumForeignKeys[i].Split(new char[] { '.' });
 				command = "UPDATE " + tableAndKeyName[0]
 					+ " SET " + tableAndKeyName[1] + "=" + POut.Long(patTo)
@@ -4586,10 +4563,6 @@ namespace OpenDentBusiness
 		///at most numPerGroup patients (the last group could, of course, have fewer in it).</summary>
 		public static List<long> GetPatNumMaxForGroups(int numPerGroup, List<PatientStatus> listPatStatuses)
 		{
-			if (DataConnection.DBtype == DatabaseType.Oracle)
-			{
-				throw new ApplicationException("GetPatNumMaxForGroups is not Oracle compatible.  Please call support.");
-			}
 			List<long> retval = new List<long>();
 			if (numPerGroup < 1)
 			{
@@ -4886,9 +4859,9 @@ namespace OpenDentBusiness
 						SmsPhone = SmsToMobiles.ConvertPhoneToInternational(SmsPhone, curCulture, smsPhoneCountryCode);
 						IsSmsPhoneFormatOk = true;
 					}
-					catch (Exception e)
+					catch 
 					{ //Formatting for sms failed to set to empty so we don't try to use it.
-						e.DoNothing();
+
 						SmsPhone = "";
 					}
 				}

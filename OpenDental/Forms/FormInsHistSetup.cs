@@ -145,9 +145,8 @@ namespace OpenDental {
 					return;
 				}
 			}
-			catch(Exception ex) {
+			catch {
 				//We don't want a full exception, just a popup.  OK_Click will block them from putting invalid data in the db.
-				ex.DoNothing();
 				MessageBox.Show("Invalid date.");
 			}
 		}
@@ -186,9 +185,8 @@ namespace OpenDental {
 				try {
 					Procedures.Delete(proc.ProcNum);
 				}
-				catch(Exception ex) {
+				catch {
 					//Tried deleting the procedure. Do nothing. 
-					ex.DoNothing();
 				}
 			}
 			DialogResult=DialogResult.OK;

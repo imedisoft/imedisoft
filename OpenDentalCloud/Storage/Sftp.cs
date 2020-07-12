@@ -305,8 +305,7 @@ namespace OpenDentalCloud {
 					client.Disconnect();
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			return retval;
 		}

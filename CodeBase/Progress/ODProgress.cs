@@ -174,7 +174,7 @@ namespace CodeBase {
 				FormPB.ShowDialog();//We cannot utilize the "owner" overload because that would cause a cross threaded exception.
 			});
 			odThread.SetApartmentState(ApartmentState.STA);//This is required for ReportComplex due to the history UI elements.
-			odThread.AddExceptionHandler(e => e.DoNothing());//The progress window had an exception... Not worth crashing the program over this.
+			odThread.AddExceptionHandler(e => { });//The progress window had an exception... Not worth crashing the program over this.
 			odThread.Name=threadName;
 			odThread.Start();
 			//Force the calling thread to wait for the progress window to actually show to the user before continuing.

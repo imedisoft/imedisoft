@@ -1,74 +1,67 @@
 using CodeBase;
 using DataConnectionBase;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Management;
 using System.Net;
 using System.Reflection;
-using Microsoft.VisualBasic.Devices;
-using System.Management;
-using System.Linq;
 
 namespace OpenDentBusiness
 {
-
-	///<summary>Miscellaneous database functions.</summary>
-	public class MiscData
+    /// <summary>
+    /// Miscellaneous database functions.
+    /// </summary>
+    public class MiscData
 	{
-
-		///<summary>Gets the current date/Time direcly from the server.  Mostly used to prevent uesr from altering the workstation date to bypass security.</summary>
+		/// <summary>
+		/// Gets the current date/Time direcly from the server.
+		/// Mostly used to prevent uesr from altering the workstation date to bypass security.
+		/// </summary>
 		public static DateTime GetNowDateTime()
 		{
-			string command = "SELECT NOW()";
-			if (DataConnection.DBtype == DatabaseType.Oracle)
-			{
-				command = "SELECT CURRENT_TIMESTAMP FROM DUAL";
-			}
-			DataTable table = Db.GetTable(command);
-			return PIn.DateT(table.Rows[0][0].ToString());
+			return SIn.DateT(Db.GetScalar("SELECT NOW()"));
 		}
 
-		///<summary>Gets the current date/Time with milliseconds directly from server.  In Mysql we must query the server until the second rolls over, which may take up to one second.  Used to confirm synchronization in time for EHR.</summary>
+		/// <summary>
+		/// Gets the current date/Time with milliseconds directly from server.
+		/// In Mysql we must query the server until the second rolls over, which may take up to one second.
+		/// Used to confirm synchronization in time for EHR.
+		/// </summary>
 		public static DateTime GetNowDateTimeWithMilli()
 		{
-			string command;
-			string dbtime;
-			if (DataConnection.DBtype == DatabaseType.MySql)
+			// Only up to 1 second precision pre-Mysql 5.6.4. Does not round milliseconds.
+			int secondInit = GetNowDateTime().Second;
+			int secondCur;
+
+			//Continue querying server for current time until second changes (milliseconds will be close to 0)
+			DateTime time;
+			do
 			{
-				command = "SELECT NOW()"; //Only up to 1 second precision pre-Mysql 5.6.4.  Does not round milliseconds.
-				dbtime = Db.GetScalar(command);
-				int secondInit = PIn.DateT(dbtime).Second;
-				int secondCur;
-				//Continue querying server for current time until second changes (milliseconds will be close to 0)
-				do
-				{
-					dbtime = Db.GetScalar(command);
-					secondCur = PIn.DateT(dbtime).Second;
-				}
-				while (secondInit == secondCur);
+				time = GetNowDateTime();
+				secondCur = time.Second;
 			}
-			else
-			{
-				command = "SELECT CURRENT_TIMESTAMP(3) FROM DUAL"; //Timestamp with milliseconds
-				dbtime = Db.GetScalar(command);
-			}
-			return PIn.DateT(dbtime);
+			while (secondInit == secondCur);
+
+			return time;
 		}
 
-		///<summary>Used in MakeABackup to ensure a unique backup database name.</summary>
-		private static bool Contains(string[] arrayToSearch, string valueToTest)
+		/// <summary>
+		/// Used in MakeABackup to ensure a unique backup database name.
+		/// </summary>
+		private static bool Contains(string[] haystack, string needle)
 		{
-			//No need to check RemotingRole; no call to db.
-			string compare;
-			for (int i = 0; i < arrayToSearch.Length; i++)
+            for (int i = 0; i < haystack.Length; i++)
 			{
-				compare = arrayToSearch[i];
-				if (arrayToSearch[i] == valueToTest)
+				if (haystack[i] == needle)
 				{
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -101,7 +94,7 @@ namespace OpenDentBusiness
 			//we have to be careful to throw an exception if the backup is failing.
 			using DataConnection dcon = new DataConnection();
 			//if they provided a different server where they want their backup to be, we need a separate connection for that
-			using DataConnection dconBackupServer = useSameServer ? new DataConnection() : new DataConnection(serverName, "", user, pass, DatabaseType.MySql);
+			using DataConnection dconBackupServer = useSameServer ? new DataConnection() : new DataConnection(serverName, "", user, pass);
 			//Check that the backup server does not already contain this database
 			string command = "SELECT database()";
 			DataTable table = dcon.GetTable(command);
@@ -129,7 +122,7 @@ namespace OpenDentBusiness
 			DataConnection.CommandTimeout = 43200;//12 hours, because backup commands may take longer to run.
 			try
 			{
-				using DataConnection dconBackupServerNoTimout = useSameServer ? new DataConnection(newDb) : new DataConnection(serverName, newDb, user, pass, DatabaseType.MySql);
+				using DataConnection dconBackupServerNoTimout = useSameServer ? new DataConnection(newDb) : new DataConnection(serverName, newDb, user, pass);
 				foreach (DataRow row in table.Rows)
 				{
 					string tableName = row[0].ToString();
@@ -196,19 +189,8 @@ namespace OpenDentBusiness
 
 		public static string GetCurrentDatabase()
 		{
-			string command = "SELECT database()";
-			DataTable table = Db.GetTable(command);
-			return PIn.String(table.Rows[0][0].ToString());
-		}
-
-		/// <summary>
-		/// Returns the name of the archive database based on the current connection settings.
-		/// E.g. if the current database that is connected is called 'opendental182' then the archive name will be 'opendental182_archive'
-		/// </summary>
-		public static string GetArchiveDatabaseName()
-		{
-			//No need to check RemotingRole; no call to db.
-			return GetCurrentDatabase() + "_archive";
+			DataTable table = Db.GetTable("SELECT database()");
+			return SIn.String(table.Rows[0][0].ToString());
 		}
 
 		/// <summary>
@@ -217,9 +199,9 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static string GetMySqlVersion()
 		{
-			string command = "SELECT @@version";
-			DataTable table = Db.GetTable(command);
-			string version = PIn.String(table.Rows[0][0].ToString());
+			DataTable table = Db.GetTable("SELECT @@version");
+			string version = SIn.String(table.Rows[0][0].ToString());
+
 			string[] arrayVersion = version.Split('.');
 			try
 			{
@@ -247,55 +229,63 @@ namespace OpenDentBusiness
 				rawHostName = rawHostName.Split(':')[0];//This could be a human readable name, or it might be "localhost" or "127.0.0.1" or another IP address.
 			}
 			string retval = "";
+
 			try
 			{
 				retval = Dns.GetHostEntry(rawHostName).HostName;//Return the human readable name (full domain name) corresponding to the rawHostName.
 			}
-			catch (Exception ex)
+			catch
 			{
-				ex.DoNothing();
 			}
+
 			return retval;
 		}
 
-		///<summary>Returns the current value in the GLOBAL max_allowed_packet variable.
-		///max_allowed_packet is stored as an integer in multiples of 1,024 with a min value of 1,024 and a max value of 1,073,741,824.</summary>
+		/// <summary>
+		/// Returns the current value in the GLOBAL max_allowed_packet variable.
+		/// max_allowed_packet is stored as an integer in multiples of 1,024 with a min value of 1,024 and a max value of 1,073,741,824.
+		/// </summary>
 		public static int GetMaxAllowedPacket()
 		{
 			int maxAllowedPacket = 0;
+
 			//The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
-			string command = "SHOW GLOBAL VARIABLES WHERE Variable_name='max_allowed_packet'";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Db.GetTable("SHOW GLOBAL VARIABLES WHERE Variable_name='max_allowed_packet'");
 			if (table.Rows.Count > 0)
 			{
-				maxAllowedPacket = PIn.Int(table.Rows[0]["Value"].ToString());
+				maxAllowedPacket = SIn.Int(table.Rows[0]["Value"].ToString());
 			}
+
 			return maxAllowedPacket;
 		}
 
-		///<summary>Sets the global MySQL variable max_allowed_packet to the passed in size (in bytes).
-		///Returns the results of GetMaxAllowedPacket() after running the SET GLOBAL command.</summary>
+		/// <summary>
+		/// Sets the global MySQL variable max_allowed_packet to the passed in size (in bytes).
+		/// Returns the results of GetMaxAllowedPacket() after running the SET GLOBAL command.
+		/// </summary>
 		public static int SetMaxAllowedPacket(int sizeBytes)
 		{
 			//As of MySQL 5.0.84 the session level max_allowed_packet variable is read only so we only need to change the global.
-			string command = "SET GLOBAL max_allowed_packet=" + POut.Int(sizeBytes);
-			Db.NonQ(command);
+			Db.NonQ("SET GLOBAL max_allowed_packet=" + SOut.Int(sizeBytes));
 			return GetMaxAllowedPacket();
 		}
 
-		///<summary>Returns a collection of unique AtoZ folders for the array of dbnames passed in.  It will not include the current AtoZ folder for this database, even if shared by another db.  This is used for the feature that updates multiple databases simultaneously.</summary>
+		/// <summary>
+		/// Returns a collection of unique AtoZ folders for the array of dbnames passed in.
+		/// It will not include the current AtoZ folder for this database, even if shared by another db.
+		/// This is used for the feature that updates multiple databases simultaneously.
+		/// </summary>
 		public static List<string> GetAtoZforDb(string[] dbNames)
 		{
 			List<string> retval = new List<string>();
-			DataConnection dcon = null;
-			string atozName;
+            string atozName;
 			string atozThisDb = PrefC.GetString(PrefName.DocPath);
 			for (int i = 0; i < dbNames.Length; i++)
 			{
 				try
 				{
-					dcon = new DataConnection(dbNames[i]);
-					string command = "SELECT ValueString FROM preference WHERE PrefName='DocPath'";
+                    DataConnection dcon = new DataConnection(dbNames[i]);
+                    string command = "SELECT ValueString FROM preference WHERE PrefName='DocPath'";
 					atozName = dcon.GetScalar(command);
 					if (retval.Contains(atozName))
 					{
@@ -317,15 +307,15 @@ namespace OpenDentBusiness
 
 		public static void LockWorkstationsForDbs(string[] dbNames)
 		{
-			DataConnection dcon = null;
-			for (int i = 0; i < dbNames.Length; i++)
+            for (int i = 0; i < dbNames.Length; i++)
 			{
 				try
 				{
-					dcon = new DataConnection(dbNames[i]);
-					string command = "UPDATE preference SET ValueString ='" + POut.String(Environment.MachineName)
-						+ "' WHERE PrefName='UpdateInProgressOnComputerName'";
-					dcon.NonQ(command);
+                    var dcon = new DataConnection(dbNames[i]);
+
+					dcon.NonQ(
+						"UPDATE preference SET ValueString ='" + SOut.String(Environment.MachineName) +
+						"' WHERE PrefName='UpdateInProgressOnComputerName'");
 				}
 				catch { }
 			}
@@ -333,15 +323,15 @@ namespace OpenDentBusiness
 
 		public static void UnlockWorkstationsForDbs(string[] dbNames)
 		{
-			DataConnection dcon = null;
-			for (int i = 0; i < dbNames.Length; i++)
+            for (int i = 0; i < dbNames.Length; i++)
 			{
 				try
 				{
-					dcon = new DataConnection(dbNames[i]);
-					string command = "UPDATE preference SET ValueString =''"
-						+ " WHERE PrefName='UpdateInProgressOnComputerName'";
-					dcon.NonQ(command);
+                    var dcon = new DataConnection(dbNames[i]);
+
+					dcon.NonQ(
+						"UPDATE preference SET ValueString ='' " +
+						"WHERE PrefName='UpdateInProgressOnComputerName'");
 				}
 				catch { }
 			}
@@ -349,23 +339,12 @@ namespace OpenDentBusiness
 
 		public static void SetSqlMode()
 		{
-			try
-			{
-				if (PrefC.IsCloudMode)
-				{
-					return;
-				}
-			}
-			catch (Exception ex)
-			{
-				ex.DoNothing();//This method might get called before the DatabaseMode preference is added.
-			}
-
-			//The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
+			// The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
 			string command = "SHOW GLOBAL VARIABLES WHERE Variable_name='sql_mode'";
 			DataTable table = Db.GetTable(command);
-			//We want to run the SET GLOBAL command when no rows were returned (above query failed) or if the sql_mode is not blank or NO_AUTO_CREATE_USER
-			//(set to something that could cause errors).
+			
+			// We want to run the SET GLOBAL command when no rows were returned (above query failed) or if the sql_mode is not blank or NO_AUTO_CREATE_USER
+			// (set to something that could cause errors).
 			if (table.Rows.Count < 1 || (table.Rows[0]["Value"].ToString() != "" && table.Rows[0]["Value"].ToString().ToUpper() != "NO_AUTO_CREATE_USER"))
 			{
 				command = "SET GLOBAL sql_mode=''";//in case user did not use our my.ini file.  http://www.opendental.com/manual/mysqlservervariables.html

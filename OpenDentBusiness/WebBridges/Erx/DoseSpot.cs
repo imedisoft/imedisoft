@@ -35,8 +35,8 @@ namespace OpenDentBusiness {
 				try {
 					retVal=PIn.Long(rootExternal.Substring(rootExternal.LastIndexOf(".")+1));
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch{
+
 				}
 				return retVal;
 			}
@@ -305,9 +305,9 @@ namespace OpenDentBusiness {
 						}
 						rx.ErxPharmacyInfo=dictPharmacyNames[medication.PharmacyId.Value];
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
-						//Do nothing.  It was a nicety anyways.
+					catch {
+
+		
 					}
 				}
 				rx.PatNum=patNum;
@@ -442,8 +442,7 @@ namespace OpenDentBusiness {
 					//Casting a long to an int sucks but I can't think of any other unique identifier.
 					medCur.SelfReportedMedicationId=(int)medPat.MedicationPatNum;
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					continue;
 				}
 				medCur.Status=DoseSpotService.PatientMedicationStatusType.Inactive;
@@ -787,8 +786,8 @@ namespace OpenDentBusiness {
 					Cache.Refresh(InvalidType.ClinicErxs);
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
+
 				//Failed to contact server and/or update clinicerx row at ODHQ. We will simply use what we already know in the local database.
 			}
 		}
@@ -1543,9 +1542,9 @@ namespace OpenDentBusiness {
 					string errorMsg=wex.Message+(string.IsNullOrWhiteSpace(res) ? "" : "\r\nRaw response:\r\n"+res);
 					throw new Exception(errorMsg,wex);//If it got this far and haven't rethrown, simply throw the entire exception.
 				}
-				catch(Exception ex) {
+				catch {
 					//WebClient returned an http status code >= 300
-					ex.DoNothing();
+
 					//For now, rethrow error and let whoever is expecting errors to handle them.
 					//We may enhance this to care about codes at some point.
 					throw;
@@ -1665,8 +1664,7 @@ namespace OpenDentBusiness {
 				//Taken from the SOAP implementation, no better way to do this.
 				medSelfReported.SelfReportedMedicationId=(int)medPat.MedicationPatNum;
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			//Set the DisplayName.
 			if(String.IsNullOrEmpty(medPat.MedDescript) && medPat.MedicationNum!=0) {

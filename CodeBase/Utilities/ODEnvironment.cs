@@ -1,39 +1,35 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.ServiceProcess;
-using System.Text;
-using System.Text.RegularExpressions;
 
-namespace CodeBase{
-  public class ODEnvironment{
+namespace CodeBase
+{
+    public class ODEnvironment
+	{
 		///<summary>Constant that represnets number of milliseconds that can elapse between a first click and a second click 
 		///for OD to consider the mouse action a double-click.
 		///Currently used in ODGrid when HasDistinctClickEvents is true.
 		///Eventually we may want to add pref to allow the user to set this.</summary>
-		public const int DoubleClickTime=200;
+		public const int DoubleClickTime = 200;
+		
 		///<summary>Reflects the state of the laptop or slate mode, 0 for Slate Mode and non-zero otherwise.
 		///When this system metric changes, the system sends a broadcast message via WM_SETTINGCHANGE with "ConvertibleSlateMode" in the LPARAM.
 		///Note that this system metric doesn't apply to desktop PCs. In that case, use GetAutoRotationState.
 		///See https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getsystemmetrics for details.
 		///Not supported in Windows CE.</summary>
-		private const int SM_CONVERTIBLESLATEMODE=0x2003;
+		private const int SM_CONVERTIBLESLATEMODE = 0x2003;
+		
 		///<summary>Nonzero if the current operating system is the Windows XP Tablet PC edition or if the current operating system is Windows Vista or Windows 7
 		///and the Tablet PC Input service is started; otherwise, 0. The SM_DIGITIZER setting indicates the type of digitizer input supported by a device 
 		///running Windows 7 or Windows Server 2008 R2. For more information, see Remarks.
 		///See https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getsystemmetrics for details.
 		///Not supported in Windows CE.</summary>
-		private const int SM_TABLETPC=86;
+		private const int SM_TABLETPC = 86;
 
 		#region Tablet Mode
-		[DllImport("user32.dll",SetLastError=true,CharSet=CharSet.Auto,EntryPoint="GetSystemMetrics")]
+		[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto, EntryPoint = "GetSystemMetrics")]
 		///<summary>Retrieves the specified system metric or system configuration setting. Note that all dimensions retrieved by GetSystemMetrics are in 
 		///pixels. The system metric or configuration setting to be retrieved. This parameter can be one of the following values. Note that all SM_CX* 
 		///values are widths and all SM_CY* values are heights. Also note that all settings designed to return Boolean data represent TRUE as any nonzero 
@@ -43,11 +39,14 @@ namespace CodeBase{
 
 		///<summary>Indicates if the current device is running in Windows Tablet mode and does not have a physical keyboard attached.
 		///Returns false if any errors occurred while trying to query system metrics for information so that calling entities default to Desktop mode.</summary>
-		public static bool IsTabletMode {
-			get {
-				bool isTableMode=false;
-				ODException.SwallowAnyException(() => {
-					isTableMode=QueryTabletMode();
+		public static bool IsTabletMode
+		{
+			get
+			{
+				bool isTableMode = false;
+				ODException.SwallowAnyException(() =>
+				{
+					isTableMode = QueryTabletMode();
 				});
 				return isTableMode;
 			}
@@ -60,9 +59,11 @@ namespace CodeBase{
 		///Windows Vista Ultimate—are licensed to use the optional component. Tablet PC Input Service is running. Tablet PC Input Service is a new 
 		///service for Windows Vista that controls Tablet PC input.
 		///See https://docs.microsoft.com/en-us/windows/desktop/tablet/determining-whether-a-pc-is-a-tablet-pc for details.</summary>
-		private static bool IsTabletPC {
-			get {
-				return (GetSystemMetrics(SM_TABLETPC)!=0);
+		private static bool IsTabletPC
+		{
+			get
+			{
+				return (GetSystemMetrics(SM_TABLETPC) != 0);
 			}
 		}
 
@@ -73,116 +74,116 @@ namespace CodeBase{
 		///that the Tablet PC is currently detached from a hardware keyboard.  An example is a Windows Surface with a detachable keyboard.  When the 
 		///keyboard is attached, though the device is a still a Tablet PC, it is functioning like a laptop, therefore Slate mode is off.  When the 
 		///keyboard is detached, the device is functioning as a tablet, i.e. in slate mode.</summary>
-		private static bool QueryTabletMode() {
-			return IsTabletPC && (GetSystemMetrics(SM_CONVERTIBLESLATEMODE)==0);
+		private static bool QueryTabletMode()
+		{
+			return IsTabletPC && (GetSystemMetrics(SM_CONVERTIBLESLATEMODE) == 0);
 		}
 		#endregion
 
-		//public static bool Is64BitOperatingSystem(){
-		//  string arch="";
-		//  try{
-		//      arch=Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
-		//  }catch{
-		//      //May fail if the environemnt variable is not present on the target machine (i.e. Unix).
-		//  }
-		//  bool retVal=Regex.IsMatch(arch,".*64.*");
-		//  return retVal; 
-		//}
-
-		///<summary>Will return true if the provided id matches the local computer name or a local IPv4 or IPv6 address. Will return false if id is 'localhost' or '127.0.0.1'. Returns false in all other cases.</summary>
-		public static bool IdIsThisComputer(string id){
-			id=id.ToLower();
+		/// <summary>
+		/// Will return true if the provided id matches the local computer name or a local IPv4 or IPv6 address.
+		/// Will return false if id is 'localhost' or '127.0.0.1'.
+		/// Returns false in all other cases.
+		/// </summary>
+		public static bool IdIsThisComputer(string id)
+		{
+			id = id.ToLower();
 			//Compare ID against the local host name.
-			if(Environment.MachineName.ToLower()==id){
-			  return true;
+			if (Environment.MachineName.ToLower() == id)
+			{
+				return true;
 			}
 			IPHostEntry iphostentry;
-			try {
-				iphostentry=Dns.GetHostEntry(Environment.MachineName);
+			try
+			{
+				iphostentry = Dns.GetHostEntry(Environment.MachineName);
 			}
-			catch {
+			catch
+			{
 				return false;
 			}
 			//Check against the local computer's IP addresses (does not include 127.0.0.1). Includes IPv4 and IPv6.
-			foreach(IPAddress ipaddress in iphostentry.AddressList){
-			  if(ipaddress.ToString()==id){
-			    return true;
-			  }
+			foreach (IPAddress ipaddress in iphostentry.AddressList)
+			{
+				if (ipaddress.ToString() == id)
+				{
+					return true;
+				}
 			}
 			return false;
 		}
 
-		///<summary>Will return true if the provided servername matches the local computer name or a local IPv4 or IPv6 address.  Will return true if servername is 'localhost' or '127.0.0.1'.  Returns false in all other cases.</summary>
-		public static bool IsRunningOnDbServer(string servername) {
-			servername=servername.ToLower();
+		/// <summary>
+		/// Will return true if the provided servername matches the local computer name or a local IPv4 or IPv6 address.
+		/// Will return true if servername is 'localhost' or '127.0.0.1'.
+		/// Returns false in all other cases.
+		/// </summary>
+		public static bool IsRunningOnDbServer(string servername)
+		{
+			servername = servername.ToLower();
 			//Compare servername against the local host name.  Also check if the servername is "localhost".
-			if(Environment.MachineName.ToLower()==servername || servername=="localhost") {
+			if (Environment.MachineName.ToLower() == servername || servername == "localhost")
+			{
 				return true;
 			}
 			//Check to see if the servername is an ipaddress that is a loopback (127.XXX.XXX.XXX).  Catches failure in parsing.
-			try {
-				if(IPAddress.IsLoopback(IPAddress.Parse(servername))) {
+			try
+			{
+				if (IPAddress.IsLoopback(IPAddress.Parse(servername)))
+				{
 					return true;
 				}
 			}
-			catch { }	//not a valid IP address
+			catch { }   //not a valid IP address
 			IPHostEntry iphostentry;
-			try {
-				iphostentry=Dns.GetHostEntry(Environment.MachineName);
+			try
+			{
+				iphostentry = Dns.GetHostEntry(Environment.MachineName);
 			}
-			catch {
+			catch
+			{
 				return false;
 			}
 			//Check against the local computer's IP addresses (does not include 127.0.0.1). Includes IPv4 and IPv6.
-			foreach(IPAddress ipaddress in iphostentry.AddressList) {
-				if(ipaddress.ToString()==servername) {
+			foreach (IPAddress ipaddress in iphostentry.AddressList)
+			{
+				if (ipaddress.ToString() == servername)
+				{
 					return true;
 				}
 			}
 			return false;
 		}
 
-		///<summary>Returns true if the current application is running as an administrator.  Otherwise; false.  Throws exceptions.</summary>
-		public static bool IsRunningAsAdministrator() {
-			using(WindowsIdentity identity=WindowsIdentity.GetCurrent()) {
-				WindowsPrincipal principal=new WindowsPrincipal(identity);
-				return principal.IsInRole(WindowsBuiltInRole.Administrator);
-			}
-		}
-
-		///<summary>Returns an IPv4 address for the local machine. Returns an empty string if one cannot be found.</summary>
-		public static string GetLocalIPAddress() {
+		/// <summary>
+		/// Returns an IPv4 address for the local machine.
+		/// Returns an empty string if one cannot be found.
+		/// </summary>
+		public static string GetLocalIPAddress()
+		{
 			IPHostEntry iphostentry;
-			try {
-				iphostentry=Dns.GetHostEntry(Environment.MachineName);
+			try
+			{
+				iphostentry = Dns.GetHostEntry(Environment.MachineName);
 			}
-			catch {
+			catch
+			{
 				return "";
 			}
-			foreach(IPAddress ip in iphostentry.AddressList) {
-				if(ip.AddressFamily==AddressFamily.InterNetwork) {
+			foreach (IPAddress ip in iphostentry.AddressList)
+			{
+				if (ip.AddressFamily == AddressFamily.InterNetwork)
+				{
 					return ip.ToString();
 				}
 			}
 			return "";
 		}
 
-		///<summary>Returns the default gateway for the local machine. Returns an empty string if one cannot be found.</summary>
-		public static string GetDefaultGateway() {
-			IPAddress defaultGateway=NetworkInterface.GetAllNetworkInterfaces()
-				.Where(x => x.OperationalStatus==OperationalStatus.Up)
-				.Where(x => x.NetworkInterfaceType!=NetworkInterfaceType.Loopback)
-				.SelectMany(x => x.GetIPProperties()?.GatewayAddresses)
-				.Select(x => x?.Address)
-				.Where(x => x!=null)
-				.Where(x => x.AddressFamily==AddressFamily.InterNetwork)
-				.FirstOrDefault();
-			return defaultGateway?.ToString()??"";
-		}
-
 		///<summary>This method checks the product version of the kernel32.dll to determine if the current OS is running Windows 7 or not.
 		///Throws exceptions by default.  Pass false to swallow all exceptions.</summary>
-		public static bool IsWindows7(bool hasExceptions=true) {
+		public static bool IsWindows7(bool hasExceptions = true)
+		{
 			//For more information see https://www.geoffchappell.com/studies/windows/win32/kernel32/history/index.htm
 			/*****************************************************************************************************************
 			File Version		File Header		Date Stamp				File Size		Package
@@ -221,13 +222,16 @@ namespace CodeBase{
 			10.0.10240.16384	559F3B86		(9th July 2015)			624,312			Windows 10
 			******************************************************************************************************************/
 			Version version;
-			try {
-				string pathToKernel32Dll=ODFileUtils.CombinePaths(Environment.GetFolderPath(Environment.SpecialFolder.System),"kernel32.dll");
-				FileVersionInfo versionInfo=FileVersionInfo.GetVersionInfo(pathToKernel32Dll);
-				version=new Version(versionInfo.ProductVersion);
+			try
+			{
+				string pathToKernel32Dll = ODFileUtils.CombinePaths(Environment.GetFolderPath(Environment.SpecialFolder.System), "kernel32.dll");
+				FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(pathToKernel32Dll);
+				version = new Version(versionInfo.ProductVersion);
 			}
-			catch(Exception ex) {
-				if(hasExceptions) {
+			catch (Exception ex)
+			{
+				if (hasExceptions)
+				{
 					throw ex;
 				}
 				return false;
@@ -235,7 +239,7 @@ namespace CodeBase{
 			//Windows 7 editions will always start with 6.1:
 			//6.1.7600.16385 - Windows 7
 			//6.1.7601.17514 - Windows 7 SP1
-			return (version.Major==6 && version.Minor==1);//Build and Revision do not matter at this time.
+			return (version.Major == 6 && version.Minor == 1);//Build and Revision do not matter at this time.
 		}
 	}
 }

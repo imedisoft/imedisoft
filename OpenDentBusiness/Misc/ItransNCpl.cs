@@ -80,8 +80,7 @@ namespace OpenDentBusiness {
 			try {
 				iTransNCpl=JsonConvert.DeserializeObject<ItransNCpl>(json);//Deserialize n-cpl.json
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				return Lans.g("Clearinghouse","Failed to import json.");
 			}
 			List<CanadianNetwork> listCanadianNetworks=CanadianNetworks.GetDeepCopy();
@@ -141,8 +140,7 @@ namespace OpenDentBusiness {
 					try {
 						Carriers.Insert(carrierNew);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 					}
 					#endregion
 					continue;
@@ -207,8 +205,7 @@ namespace OpenDentBusiness {
 				}
 				Carriers.Update(odCarrier,odCarrierOld,userNum);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 		}
 

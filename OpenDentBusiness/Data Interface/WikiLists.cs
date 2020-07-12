@@ -245,12 +245,7 @@ namespace OpenDentBusiness{
 			if(!tableNew.Columns.Contains(priKeyColNameOrig)) {//if new table doesn't contain a PK based on the old table name, make the first column the nameNew+"Num" PK column
 				priKeyColNameOrig=POut.String(tableNew.Columns[0].ColumnName);
 			}
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command="ALTER TABLE wikilist_"+POut.String(nameNew)+" CHANGE "+priKeyColNameOrig+" "+POut.String(nameNew)+"Num bigint NOT NULL auto_increment PRIMARY KEY";
-			}
-			else {
-				command="RENAME COLUMN wikilist_"+POut.String(nameNew)+"."+priKeyColNameOrig+" TO "+POut.String(nameNew)+"Num"; 
-			}
+			command="ALTER TABLE wikilist_"+POut.String(nameNew)+" CHANGE "+priKeyColNameOrig+" "+POut.String(nameNew)+"Num bigint NOT NULL auto_increment PRIMARY KEY";
 			Db.NonQ(command);
 			command="UPDATE wikilistheaderwidth SET ListName='"+POut.String(nameNew)+"' WHERE ListName='"+POut.String(nameOriginal)+"'";
 			Db.NonQ(command);

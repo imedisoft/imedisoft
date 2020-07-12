@@ -60,8 +60,7 @@ namespace OpenDental {
 				SwapPatPicture(() => ImageHelper.GetThumbnail(fullImage,Math.Min(sheetField.Width,sheetField.Height)));
 				fullImage.Dispose();
 			}
-			catch(Exception e){
-				e.DoNothing();
+			catch{
 				_patPicture?.Dispose();
 				_patPicture=null;//Something went wrong retrieving the image.  Default to "Patient Picture Unavailable".
 			}

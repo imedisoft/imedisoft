@@ -20,21 +20,6 @@ namespace CodeBase {
 			return Math.Abs(val)<=0.0000001f;
 		}
 
-		///<summary>Used to check if a floating point number is "equal" to zero based on some epsilon. 
-		/// Epsilon is 0.0000001f and will return true if the absolute value of the double is less than that.</summary>
-		public static bool IsZero(this float val) {
-			return Math.Abs(val)<=0.0000001f;
-		}
-
-		public static bool IsEqual(this float val,float val2) {
-			return IsZero(val-val2);
-		}
-
-		///<summary>Returns true if the number contains a partial cent. E.g.: "0.035" returns true, "0.03" returns false.</summary>
-		public static bool HasPartialCent(this float val) {
-			return Math.Round(val,2)!=Math.Round(val,3); 
-		}
-
 		public static bool IsEqual(this double val,double val2) {
 			return IsZero(val-val2);
 		}
@@ -367,8 +352,7 @@ namespace CodeBase {
 				dictOrig.CompareDictionary(dictFinal,funcCompare);
 				return true;
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 			}
 			return false;
 		}
@@ -431,8 +415,7 @@ namespace CodeBase {
 					try {
 						property.SetValue(sourceObj,property.GetValue(sourceObj,null),null);
 					}
-					catch(Exception e) { //For Get-only-properties.
-						e.DoNothing();
+					catch { //For Get-only-properties.
 					} 
 				}
 			}
@@ -452,8 +435,7 @@ namespace CodeBase {
 				first.CompareList(second,funcCompare);
 				return true;
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 			}
 			return false;
 		}

@@ -103,10 +103,10 @@ namespace OpenDentBusiness {
 					string errorMsg = wex.Message + (string.IsNullOrWhiteSpace(res) ? "" : "\r\nRaw response:\r\n" + res);
 					throw new Exception(errorMsg, wex);//If we got this far and haven't rethrown, simply throw the entire exception.
 				}
-				catch (Exception ex)
+				catch 
 				{
 					//WebClient returned an http status code >= 300
-					ex.DoNothing();
+
 					//For now, rethrow error and let whoever is expecting errors to handle them.
 					//We may enhance this to care about codes at some point.
 					throw;
@@ -132,8 +132,7 @@ namespace OpenDentBusiness {
 				try {
 					response=(T)xmlSerializer.Deserialize(reader);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					reader.Close();
 					//Responses from PDMP Logicoy have contained "xsi:type" attributes in the Pmp node.  This causes deserialization to fail.  
 					//Removing it has been the only thing that has worked in our extensive testing when this occurs.

@@ -184,14 +184,13 @@ namespace OpenDentBusiness.Eclaims
 				return;
 			}
 			try{
-				ODFileUtils.ProcessStart(clearinghouseClin.ClientProgram,doWaitForODCloudClientResponse:true);
+				ODFileUtils.ProcessStart(clearinghouseClin.ClientProgram);
 			}
 			catch(ODException odEx) {
 				MessageBox.Show(odEx.Message);
 			}
-			catch(Exception ex) {
+			catch {
 				MessageBox.Show(Lans.g("Eclaims","Client program could not be started.  It may already be running. You must open your client program to finish sending claims."));
-				ex.DoNothing();
 			}
 		}
 

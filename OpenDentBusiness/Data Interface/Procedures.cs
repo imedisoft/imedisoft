@@ -845,58 +845,44 @@ namespace OpenDentBusiness {
 		///is 500, the returned list would have 2 values in it, 500 and 1000. Each number is the max ProcNum such that if you selected the procedures with
 		///ProcNum greater than the previous entry (or greater than 0 if it is the first entry) and less than or equal to the current entry you would get
 		///at most numPerGroup procedures (the last group could, of course, have fewer in it).</summary>
-		public static List<long> GetProcNumMaxForGroups(int numPerGroup,List<ProcStat> listProcStatuses,long clinicNum) {
-			
-			_totCount=0;
-			List<long> retval=new List<long>();
-			if(numPerGroup<1) {
+		public static List<long> GetProcNumMaxForGroups(int numPerGroup, List<ProcStat> listProcStatuses, long clinicNum)
+		{
+
+			_totCount = 0;
+			List<long> retval = new List<long>();
+			if (numPerGroup < 1)
+			{
 				return retval;
 			}
-			List<string> listWhereClauses=new List<string>();
-			if(listProcStatuses!=null && listProcStatuses.Count>0) {
-				listWhereClauses.Add("ProcStatus IN("+string.Join(",",listProcStatuses.Select(x => POut.Int((int)x)))+")");
+			List<string> listWhereClauses = new List<string>();
+			if (listProcStatuses != null && listProcStatuses.Count > 0)
+			{
+				listWhereClauses.Add("ProcStatus IN(" + string.Join(",", listProcStatuses.Select(x => POut.Int((int)x))) + ")");
 			}
-			if(PrefC.HasClinicsEnabled && clinicNum>-1) {
-				listWhereClauses.Add("ClinicNum="+POut.Long(clinicNum));
+			if (PrefC.HasClinicsEnabled && clinicNum > -1)
+			{
+				listWhereClauses.Add("ClinicNum=" + POut.Long(clinicNum));
 			}
-			string whereClause="";
-			if(listWhereClauses.Count>0) {
-				whereClause="WHERE "+string.Join(" AND ",listWhereClauses)+" ";
+			string whereClause = "";
+			if (listWhereClauses.Count > 0)
+			{
+				whereClause = "WHERE " + string.Join(" AND ", listWhereClauses) + " ";
 			}
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				string command="SET @row=0,@maxProcNum=0;"
-					+"SELECT procNum,@row totalCount FROM ("
-						+"SELECT @row:=@row+1 rowNum,@maxProcNum:=ProcNum procNum FROM ("
-							+"SELECT ProcNum FROM procedurelog "+whereClause+"ORDER BY ProcNum"
-						+") a"
-					+") b "
-					+"WHERE procNum=@maxProcNum OR rowNum%"+numPerGroup+"=0";
-				DataTable tableCur=Db.GetTable(command);
-				if(tableCur.Rows.Count>0) {
-					_totCount=PIn.Int(tableCur.Rows[0]["totalCount"].ToString());
-					retval=tableCur.Select().Select(x => PIn.Long(x["procNum"].ToString())).ToList();
-				}
+
+			string command = "SET @row=0,@maxProcNum=0;"
+				+ "SELECT procNum,@row totalCount FROM ("
+					+ "SELECT @row:=@row+1 rowNum,@maxProcNum:=ProcNum procNum FROM ("
+						+ "SELECT ProcNum FROM procedurelog " + whereClause + "ORDER BY ProcNum"
+					+ ") a"
+				+ ") b "
+				+ "WHERE procNum=@maxProcNum OR rowNum%" + numPerGroup + "=0";
+			DataTable tableCur = Db.GetTable(command);
+			if (tableCur.Rows.Count > 0)
+			{
+				_totCount = PIn.Int(tableCur.Rows[0]["totalCount"].ToString());
+				retval = tableCur.Select().Select(x => PIn.Long(x["procNum"].ToString())).ToList();
 			}
-			else {//oracle
-				//different strategy for oracle, but not used for MySQL because it's much slower
-				long groupMaxPatNum;
-				int groupNum=0;
-				do {
-					groupMaxPatNum=0;
-					string command="SELECT MAX(ProcNum) procNumMax,COUNT(*) groupCount FROM ("
-						+DbHelper.LimitOrderByOffset("SELECT ProcNum FROM procedurelog "+whereClause+"ORDER BY ProcNum",numPerGroup,groupNum)+") patNumGroup";
-					DataTable tableCur=Db.GetTable(command);//increase timeout to 5 minutes for this query
-					if(tableCur.Rows.Count==0) {
-						break;
-					}
-					groupMaxPatNum=PIn.Long(tableCur.Rows[0]["procNumMax"].ToString());
-					if(groupMaxPatNum>0) {
-						retval.Add(groupMaxPatNum);
-					}
-					_totCount+=PIn.Int(tableCur.Rows[0]["groupCount"].ToString());
-					groupNum+=numPerGroup;
-				} while(groupMaxPatNum>0);
-			}
+
 			return retval;
 		}
 
@@ -1621,9 +1607,8 @@ namespace OpenDentBusiness {
 			try {
 				Procedures.Delete(procLab.ProcNum);
 			}
-			catch(Exception ex) {
+			catch {
 				//The lab procedure could be attached to a claim or adjustment. If so, it seems harmless to keep the procedure around with a $0 fee.
-				ex.DoNothing();
 				if(procLab.ProcFee.IsEqual(0)) {
 					return;
 				}
@@ -2281,16 +2266,13 @@ namespace OpenDentBusiness {
 						+"INNER JOIN inssub ON inssub.InsSubNum=patplan.InsSubNum "
 						+"INNER JOIN insplan ON insplan.PlanNum=inssub.PlanNum AND insplan.IsMedical "
 						+"GROUP BY patplan.PatNum ";
-				if(DataConnection.DBtype==DatabaseType.MySql) {
-					command+="ORDER BY NULL";
-				}
+				command+="ORDER BY NULL";
 				command+=") medplan ON medplan.PatNum=patplan.PatNum AND medplan.Ordinal=patplan.Ordinal "
 					+"INNER JOIN inssub ON inssub.InsSubNum=patplan.InsSubNum "
 					+"INNER JOIN insplan ON insplan.PlanNum=inssub.PlanNum "
 					+"GROUP BY patplan.PatNum ";
-				if(DataConnection.DBtype==DatabaseType.MySql) {
-					command+="ORDER BY NULL";
-				}
+				command+="ORDER BY NULL";
+				
 				dictPatNumMedFeeSchedNum=Db.GetTable(command).Select()
 					.ToDictionary(x => PIn.Long(x["PatNum"].ToString()),x => PIn.Long(x["medFeeSched"].ToString()));
 			}
@@ -2328,8 +2310,7 @@ namespace OpenDentBusiness {
 							#endif
 						}
 					}
-					catch(Exception ex) {//queue must be empty even though we just checked it before entering the while loop, just loop again and wait if necessary
-						ex.DoNothing();
+					catch {//queue must be empty even though we just checked it before entering the while loop, just loop again and wait if necessary
 						continue;
 					}
 					batchNumber++;
@@ -2477,8 +2458,7 @@ namespace OpenDentBusiness {
 				FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper("Fees Updated Successfully",
 						progressBarEventType:ProgBarEventType.TextMsg));
 			}//end of try
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			finally {
 				_odThreadQueueData?.QuitAsync();
@@ -2572,8 +2552,7 @@ namespace OpenDentBusiness {
 							,progressBarEventType:ProgBarEventType.TextMsg));
 				}));
 			}
-			catch(Exception ex) {
-				ex.DoNothing();//if error happens, just swallow the error and kill the thread
+			catch {
 			}
 			finally {//always make sure to notify the main thread that the thread is done so the main thread doesn't wait for eternity
 				_isQueueDone=true;

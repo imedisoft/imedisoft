@@ -69,9 +69,8 @@ namespace OpenDental {
 				string content=this.Text+"\r\n"+textDetails.Text+GetQueryText();
 				ODClipboard.SetClipboard(content);
 			}
-			catch(Exception ex) {
+			catch {
 				MessageBox.Show("Could not copy contents to the clipboard. Please try again.");
-				ex.DoNothing();
 			}
 		}
 

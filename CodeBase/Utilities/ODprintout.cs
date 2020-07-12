@@ -69,13 +69,11 @@ namespace CodeBase {
 					}
 				}
 				catch(InvalidPrinterException ex) {//No printers installed.
-					ex.DoNothing();
 					SettingsErrorCode=PrintoutErrorCode.InvalidPrinterSettings;
 					ErrorEx=ex;
 					return false;
 				}
 				catch(Win32Exception wex) {
-					wex.DoNothing();
 					SettingsErrorCode=PrintoutErrorCode.PrinterConnectionError;
 					ErrorEx=wex;
 					return false;
@@ -98,8 +96,7 @@ namespace CodeBase {
 				try {
 					return (new PrintDocument().DefaultPageSettings.PaperSize);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					return new PaperSize("default",850,1100);
 				}
 			}

@@ -10,9 +10,9 @@ using CodeBase;
 namespace UnitTests {
 	///<summary>Contains the queries, scripts, and tools to clear the database of data from previous unitTest runs.</summary>
 	class DatabaseTools {
-		public static string FreshFromDump(string serverAddr,string port,string userName,string password,bool isOracle) {
+		public static string FreshFromDump(string serverAddr,string port,string userName,string password) {
 			Security.CurUser=Security.CurUser??new Userod();
-			if(!isOracle) {
+
 				string command="DROP DATABASE IF EXISTS "+TestBase.UnitTestDbName;
 				try {
 					DataCore.NonQ(command);
@@ -22,7 +22,7 @@ namespace UnitTests {
 				}
 				command="CREATE DATABASE "+TestBase.UnitTestDbName;
 				DataCore.NonQ(command);
-				UnitTestsCore.DatabaseTools.SetDbConnection(TestBase.UnitTestDbName,serverAddr,port,userName,password,false);
+				UnitTestsCore.DatabaseTools.SetDbConnection(TestBase.UnitTestDbName,serverAddr,port,userName,password);
 				command=Properties.Resources.dump;
 				DataCore.NonQ(command);
 				string toVersion=Assembly.GetAssembly(typeof(OpenDental.PrefL)).GetName().Version.ToString();
@@ -41,16 +41,7 @@ namespace UnitTests {
 				command="UPDATE userod SET Password='qhd+xdy/iMpe3xcjbBmB6A==' WHERE UserNum=1";//sets Password to 'pass' for middle tier testing.
 				DataCore.NonQ(command);
 				AddCdcrecCodes();
-			}
-			else {
-				//This stopped working. Might look into it later: for now manually create the unittest db
 
-				//Make sure the command CREATE OR REPLACE DIRECTORY dmpdir AS 'c:\oraclexe\app\tmp'; was run
-				//and there is an opendental user with matching username/pass 
-				//The unittest.dmp was taken from a fresh unittest db created from the code above.  No need to alter it further. 
-				//string command=@"impdp opendental/opendental DIRECTORY=dmpdir DUMPFILE=unittest.dmp TABLE_EXISTS_ACTION=replace LOGFILE=impschema.log";
-				//ExecuteCommand(command);
-			}
 		return "Fresh database loaded from sql dump.\r\n";
 		}
 

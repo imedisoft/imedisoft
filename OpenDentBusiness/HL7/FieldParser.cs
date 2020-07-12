@@ -26,16 +26,14 @@ namespace OpenDentBusiness.HL7 {
 				month=PIn.Int(str.Substring(4,2));
 				day=PIn.Int(str.Substring(6,2));
 			}
-			catch(Exception ex) {//PIn.Int could fail if not able to parse into an Int32
-				ex.DoNothing();
+			catch {//PIn.Int could fail if not able to parse into an Int32
 				return DateTime.MinValue;
 			}
 			if(str.Length>=10) {
 				try {
 					hour=PIn.Int(str.Substring(8,2));
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					//do nothing, hour will remain 0
 				}
 			}
@@ -43,8 +41,7 @@ namespace OpenDentBusiness.HL7 {
 				try {
 					minute=PIn.Int(str.Substring(10,2));
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					//do nothing, minute will remain 0
 				}
 			}
@@ -212,8 +209,8 @@ namespace OpenDentBusiness.HL7 {
 							provNum=PIn.Long(strProvId);//if component is empty string, provNum will be 0
 						}
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
+
 						//PIn.Long failed to convert the component to a long, provNum will remain 0 and we will attempt to get by name and abbr below
 					}
 				}
@@ -251,8 +248,7 @@ namespace OpenDentBusiness.HL7 {
 							provNum=PIn.Long(strProvId);//if component is empty string, provNum will be 0
 						}
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 						//PIn.Long failed to convert the component to a long, provNum will remain 0 and we will attempt to get by name and abbr below
 					}
 				}

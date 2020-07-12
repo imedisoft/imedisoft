@@ -102,7 +102,7 @@ namespace CodeBase {
 			try {
 				FormPB.InvokeIfRequired(() => dialogResult=funcShowOverProgress(FormPB));
 			}
-			catch(ObjectDisposedException ode) {
+			catch(ObjectDisposedException) {
 				//Explicitly catch object disposed exceptions due to rare race conditions.
 				//The active progress window that was just showing could have been placed on the "invoke stack" for close and disposal prior to our invoke.
 				//The active progress window would successfully close and dispose first and then FormPB would be a reference to a disposed window
@@ -110,7 +110,6 @@ namespace CodeBase {
 				//No error should be thrown in this scenario and instead we should retry this method because the active progress window could be different.
 				//E.g. there will be a different active progress window if multiple progress windows were showing at the same time
 				//OR we we eventually get back to the main thread which will not require invoking over to a progress window at all.
-				ode.DoNothing();
 				dialogResult=ShowHelper(funcShowOverProgress,funcShow);//Recursive call on purpose.
 			}
 			return dialogResult;

@@ -168,9 +168,8 @@ namespace OpenDental {
 				try {
 					ctrl.Enabled=false;
 				}
-				catch(Exception ex) {
+				catch{
 					//Some controls do not support being disabled.  E.g. the WebBrowser control will throw an exception here.
-					ex.DoNothing();
 				}
 			}
 		}

@@ -49,14 +49,7 @@ namespace OpenDentBusiness {
 				command+="AND patient.ClinicNum IN("+String.Join(",",listClinicNums)+") ";
 			}
 			command+="AND patient.BillingType IN("+String.Join(",",listBillingTypes)+") ";
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command+="GROUP BY patient.PatNum";
-			}
-			else {//Oracle
-				command+=@"GROUP BY patient.PatNum,patient.LName,patient.FName,patient.MiddleI,patient.Preferred,carrier.CarrierName
-					,patient.BillingType,patient.PriProv,patient.SecProv,patient.HmPhone,patient.WkPhone,patient.WirelessPhone
-					,patient.Address,patient.Address2,patient.City,patient.State,patient.Zip,patient.ClinicNum";
-			}
+			command+="GROUP BY patient.PatNum";
 			if(!hasClinicsEnabled) {
 				command+=" ORDER BY provider.Abbr,patient.LName,patient.FName";
 			}

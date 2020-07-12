@@ -578,8 +578,11 @@ namespace OpenDentBusiness {
 		DatabaseMaintenanceDisableOptimize,
 		///<summary>bool. Set to false by default. If true, database maintenance will skip table checks.</summary>
 		DatabaseMaintenanceSkipCheckTable,
+
 		///<summary>Uses <see cref="DatabaseModeEnum"/>. Defaults to 'Normal'.</summary>
+		[Obsolete]
 		DatabaseMode,
+
 		DataBaseVersion,
 		DateDepositsStarted,
 		DateLastAging,
@@ -2105,10 +2108,12 @@ namespace OpenDentBusiness {
 	}
 
 	///<summary>How this database is being hosted.</summary>
+	[Obsolete]
 	public enum DatabaseModeEnum {
 		///<summary>Customer is hosting their own database.</summary>
 		Normal,
 		///<summary>Open Dental is hosting the database.</summary>
+		[Obsolete]
 		Cloud,
 	}
 

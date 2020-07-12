@@ -149,8 +149,7 @@ namespace OpenDental.Bridges {
 					throw new ODException(Lan.g("Guru","MedVisorInterface.MVStart() returned with an error code of:")+$" {errorNum}");
 				}
 			}
-			catch(DllNotFoundException e) {
-				e.DoNothing();
+			catch(DllNotFoundException) {
 				MessageBox.Show(Lans.g("Guru","Could not find MedVisorInterface.dll. Verify that Guru is installed."));
 				return;
 			}

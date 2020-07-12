@@ -238,19 +238,14 @@
     </Compile>
     <Compile Include="Utilities\DateTime_.cs" />
     <Compile Include="Utilities\ODClipboard.cs" />
-    <Compile Include="Utilities\ODCloudClient.cs" />
     <Compile Include="Utilities\SymbolExtensions.cs" />
-    <Compile Include="Utilities\ConvertWebCore.cs" />
     <Compile Include="Utilities\DateDefaultToday.cs" />
     <Compile Include="Utilities\DateRange.cs" />
     <Compile Include="Utilities\DateTimeOD.cs" />
-    <Compile Include="Utilities\EmailUtils.cs" />
     <Compile Include="Progress\IODProgress.cs" />
     <Compile Include="Utilities\LoggerOld.cs" />
-    <Compile Include="Utilities\ODClassExtensions.cs" />
     <Compile Include="Utilities\ODInitialize.cs" />
     <Compile Include="Utilities\ODInvokeExtensions.cs" />
-    <Compile Include="Utilities\ODNonNullable.cs" />
     <Compile Include="Utilities\DateSpan.cs" />
     <Compile Include="Utilities\LimitedSizeQueue.cs" />
     <Compile Include="Utilities\ODBoxItem.cs" />
@@ -258,7 +253,6 @@
     <Compile Include="Utilities\ODNetworkConnection.cs" />
     <Compile Include="Utilities\ODprintout.cs" />
     <Compile Include="Utilities\ODTuple.cs" />
-    <Compile Include="Utilities\PasswordVaultWrapper.cs" />
     <Compile Include="Utilities\ServicesHelper.cs" />
     <Compile Include="Utilities\WindowsApiWrapper.cs" />
     <Compile Include="Utilities\ODPrimitiveExtensions.cs" />

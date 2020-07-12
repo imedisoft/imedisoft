@@ -305,7 +305,8 @@ namespace OpenDental{
 				try {
 					System.Diagnostics.Process.Start(filename);
 				}
-				catch(Exception ex) { ex.DoNothing(); }
+				catch { 
+				}
 			}
 		}
 

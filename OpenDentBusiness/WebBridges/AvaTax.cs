@@ -283,12 +283,12 @@ namespace OpenDentBusiness {
 				TransactionModel result=Client.CreateTransaction("Lines",builder.GetCreateTransactionModel());
 				return result.totalTax.Value;
 			}
-			catch(Exception ex) {
+			catch {
 				_logger.WriteLine($"Error getting estimate from Avatax for PatNum: {patNum}",LogLevel.Error);
 				if(hasExceptions) {
-					throw ex;//Loses call stack, but everywhere that catches this only cares about the message.
+					throw;//Loses call stack, but everywhere that catches this only cares about the message.
 				}
-				ex.DoNothing();
+				
 				//For now we just enter $0 because we don't have any proc or adjustment to attach this to, and we already have logging for errors
 				return 0;
 			}

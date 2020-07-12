@@ -37,14 +37,8 @@ namespace OpenDentBusiness
 			}
 			queryAg += " patName,guarAging.Bal_0_30,guarAging.Bal_31_60,guarAging.Bal_61_90,guarAging.BalOver90,guarAging.BalTotal,"
 				+ "guarAging.InsWoEst,guarAging.InsPayEst,guarAging.BalTotal-guarAging.InsPayEst-guarAging.InsWoEst AS ";
-			if (DataConnection.DBtype == DatabaseType.MySql)
-			{
-				queryAg += "$pat";
-			}
-			else
-			{ //Oracle needs quotes.
-				queryAg += "\"$pat\"";
-			}
+			queryAg += "$pat";
+
 			//Must select "blankCol" for use with reportComplex to fix spacing of final column
 			queryAg += (rpo.HasDateLastPay ? ",'' blankCol,guarAging.DateLastPay " : " ")
 				+ "FROM ("

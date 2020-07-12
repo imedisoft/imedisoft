@@ -50,7 +50,7 @@ namespace OpenDental {
 			//Format input as it would be saved in the database--------------------------------------------
 			inputListName.textResult.Text=inputListName.textResult.Text.ToLower().Replace(" ","");
 			//Validate list name---------------------------------------------------------------------------
-			if(DbHelper.isMySQLReservedWord(inputListName.textResult.Text)) {
+			if(DbHelper.IsMySQLReservedWord(inputListName.textResult.Text)) {
 				//Can become an issue when retrieving column header names.
 				MessageBox.Show("List name is a reserved word in MySQL.");
 				return;

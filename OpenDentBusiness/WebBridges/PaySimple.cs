@@ -1129,9 +1129,9 @@ namespace OpenDentBusiness {
 						string errorMsg=wex.Message+(string.IsNullOrWhiteSpace(res) ? "" : "\r\nRaw response:\r\n"+res);
 						throw new Exception(errorMsg,wex);//If it got this far and haven't rethrown, simply throw the entire exception.
 					}
-					catch(Exception ex) {
+					catch {
 						//WebClient returned an http status code >= 300
-						ex.DoNothing();
+
 						//For now, rethrow error and let whoever is expecting errors to handle them.
 						//We may enhance this to care about codes at some point.
 						throw;
@@ -1380,12 +1380,11 @@ namespace OpenDentBusiness {
 					//Purposefully not Lans.g and throwing PaySimpleException.  I don't want this to look like a generic exception being caught.
 					throw new PaySimpleException(strbError.ToString(),errors.ErrorCode,listErrorMessages);
 				}
-				catch(PaySimpleException ex) {
-					ex.DoNothing();
+				catch(PaySimpleException) {
 					throw;//Re-throw the stringbuilder above.
 				}
-				catch(Exception e) {
-					e.DoNothing();//The calling method should throw if this doesn't.
+				catch {
+
 				}
 			}
 

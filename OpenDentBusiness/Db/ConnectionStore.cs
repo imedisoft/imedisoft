@@ -225,7 +225,7 @@ namespace OpenDentBusiness
 		/// <typeparam name="ITEMTYPE">The type of item defined by the given IConnectionFile type.</typeparam>
 		/// <param name="fullPath">Full file path to the xml file.</param>
 		/// <param name="fGetConnectionFromItem">Function that will take in an instance of ITEMTYPE and return an instance of CentralConnection.</param>
-		private static Dictionary<ConnectionNames, OpenDentBusiness.CentralConnection> InitConnectionsFromXmlFile<FILETYPE, ITEMTYPE>(string fullPath, Func<ITEMTYPE, CentralConnection> fGetConnectionFromItem) where FILETYPE : IConnectionFile<ITEMTYPE>
+		private static Dictionary<ConnectionNames, CentralConnection> InitConnectionsFromXmlFile<FILETYPE, ITEMTYPE>(string fullPath, Func<ITEMTYPE, CentralConnection> fGetConnectionFromItem) where FILETYPE : IConnectionFile<ITEMTYPE>
 		{
 			if (HasAnyEntries)
 			{ //Prevent re-entry. Only want to run this once.
@@ -257,7 +257,7 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Get a central connection by name.</summary>
-		public static OpenDentBusiness.CentralConnection GetConnection(ConnectionNames name)
+		public static CentralConnection GetConnection(ConnectionNames name)
 		{
 			Dictionary<ConnectionNames, OpenDentBusiness.CentralConnection> dict = _dictCentConnSafe;
 			if (dict == null || !dict.ContainsKey(name))
@@ -281,29 +281,29 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Sets the connection of the current thread to the ConnectionName indicated. Connection details will be retrieved from ConnectionStore.xml.</summary>
-		public static OpenDentBusiness.CentralConnection SetDb(ConnectionNames dbName, bool skipValidation = false)
+		public static CentralConnection SetDb(ConnectionNames dbName, bool skipValidation = false)
 		{
 			CentralConnection conn = GetConnection(dbName);
 			_currentConnection = dbName;
 			
-			new DataConnection().SetDb(conn.ServerName, conn.DatabaseName, conn.MySqlUser, conn.MySqlPassword, "", "", DatabaseType.MySql, skipValidation);
+			new DataConnection().SetDb(conn.ServerName, conn.DatabaseName, conn.MySqlUser, conn.MySqlPassword, "", "", skipValidation);
 			
 			return conn;
 		}
 
 		///<summary>Sets the connection of the current thread to the ConnectionName indicated. Connection details will be retrieved from ConnectionStore.xml.</summary>
-		public static OpenDentBusiness.CentralConnection SetDbT(ConnectionNames dbName, DataConnection dataConn = null)
+		public static CentralConnection SetDbT(ConnectionNames dbName, DataConnection dataConn = null)
 		{
 			dataConn = dataConn ?? new DataConnection();
 			OpenDentBusiness.CentralConnection conn = GetConnection(dbName);
 			_currentConnectionT = dbName;
 			if (!string.IsNullOrEmpty(conn.ConnectionString))
 			{
-				dataConn.SetDbT(conn.ConnectionString, "", DatabaseType.MySql);
+				dataConn.SetDbT(conn.ConnectionString, "");
 			}
 			else
 			{
-				dataConn.SetDbT(conn.ServerName, conn.DatabaseName, conn.MySqlUser, conn.MySqlPassword, "", "", DatabaseType.MySql, true);
+				dataConn.SetDbT(conn.ServerName, conn.DatabaseName, conn.MySqlUser, conn.MySqlPassword, "", "", true);
 			}
 			return conn;
 		}
@@ -393,20 +393,6 @@ namespace OpenDentBusiness
 			public string DatabaseType;
 			///<summary>Must deserialize to a ConnectionNames enum value.</summary>
 			public string Note;
-
-			[XmlIgnore]
-			public DatabaseType DbType
-			{
-				get
-				{
-					DatabaseType dbType;
-					if (!Enum.TryParse<DatabaseType>(this.DatabaseType, out dbType))
-					{
-						dbType = DataConnectionBase.DatabaseType.MySql;
-					}
-					return dbType;
-				}
-			}
 		}
 	}
 }

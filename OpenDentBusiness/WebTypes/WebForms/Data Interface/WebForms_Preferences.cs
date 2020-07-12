@@ -24,8 +24,8 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 				SheetsSynchProxy.UrlOverride=urlOverride;//SheetsSynchProxy.GetWebServiceInstance() gracefully handles null.
 				retVal=WebSerializer.DeserializeTag<bool>(SheetsSynchProxy.GetWebServiceInstance().SetPreferences(payload),"Success");
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
+
 			}
 			return retVal;
 		}
@@ -42,8 +42,8 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 				string payload=PayloadHelper.CreatePayloadWebHostSynch(regKey,new PayloadItem(regKey,"RegKey"));
 				pref=WebSerializer.DeserializeTag<WebForms_Preference>(SheetsSynchProxy.GetWebServiceInstance().GetPreferences(payload),"Success");
 			}
-			catch (Exception ex) {
-				ex.DoNothing();
+			catch  {
+
 				return false;
 			}
 			return true;

@@ -138,7 +138,7 @@ namespace OpenDental {
 			List<Clinic> listClinicsTo=listTo.AllTags<Clinic>();
 			List<Clinic> listMoved=new List<Clinic>();
 			//We go through the listFrom and find the SelectedIndicies. Then, remove them from the listFrom and add them to listTo after.
-			foreach(int index in listFrom.SelectedIndices.AsEnumerable<int>().OrderByDescending(x => x)) {
+			foreach(int index in listFrom.SelectedIndices.OfType<int>().OrderByDescending(x => x)) {
 				Clinic clinic=((ODBoxItem<Clinic>)listFrom.Items[index]).Tag;
 				listFrom.Items.RemoveAt(index);
 				listMoved.Add(clinic);

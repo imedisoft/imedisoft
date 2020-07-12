@@ -190,14 +190,8 @@ namespace OpenDentBusiness{
 			if(listClinicNums!=null && listClinicNums.Count>0) {
 				command+="AND pat.ClinicNum IN ("+string.Join(",",listClinicNums.Select(x => POut.Long(x)))+") ";
 			}
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command+="GROUP BY cc.CreditCardNum) ";
-			}
-			else {//Oracle
-				command+="GROUP BY cc.CreditCardNum,cc.PatNum,"+DbHelper.Concat("pat.LName","', '","pat.FName")+",PatName,guar.BalTotal-guar.InsEst,"
-					+"cc.Address,pat.Address,cc.Zip,pat.Zip,cc.XChargeToken,cc.CCNumberMasked,cc.CCExpiration,cc.ChargeAmt,cc.PayPlanNum,cc.DateStop,PayPlanPatNum,"
-					+"pat.ClinicNum,cc.Procedures,pat.BillingCycleDay,pat.Guarantor,cc.PayConnectToken,cc.PayConnectTokenExp,cc.PaySimpleToken) ";
-			}
+			command+="GROUP BY cc.CreditCardNum) ";
+
 			#endregion
 			command+="UNION ALL ";
 			#region Payment Plans
@@ -224,14 +218,7 @@ namespace OpenDentBusiness{
 			if(listClinicNums!=null && listClinicNums.Count>0) {
 				command+="AND ppc.maxClinicNum IN ("+string.Join(",",listClinicNums.Select(x => POut.Long(x)))+") ";
 			}
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command+="GROUP BY cc.CreditCardNum ";
-			}
-			else {//Oracle
-				command+="GROUP BY cc.CreditCardNum,cc.PatNum,"+DbHelper.Concat("pat.LName","', '","pat.FName")+",PatName,guar.BalTotal-guar.InsEst,"
-					+"cc.Address,pat.Address,cc.Zip,pat.Zip,cc.XChargeToken,cc.CCNumberMasked,cc.CCExpiration,cc.ChargeAmt,cc.PayPlanNum,cc.DateStop,PayPlanPatNum,"
-					+"ClinicNum,cc.Procedues,pat.BillingCycleDay,pat.Guarantor,cc.PayConnectToken,cc.PayConnectTokenExp,cc.PaySimpleToken ";
-			}
+			command+="GROUP BY cc.CreditCardNum ";
 			command+="HAVING PayPlanDueCalc>0)";//don't show cc's attached to payplans when the payplan has nothing due
 			#endregion
 			//Now we have all the results for payments and payment plans, so do an obvious filter. A more thorough filter happens later.

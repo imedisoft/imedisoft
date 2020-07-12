@@ -2160,7 +2160,7 @@ namespace OpenDental{
 			//TODO: overload to show generic picker for feeschedgroups.
 			if(pickerButton==butPickClinic1) {
 				if(checkGroups1.Checked){
-					listGroupsToShow=(comboFeeSchedGroup1.Items.AsEnumerable<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
+					listGroupsToShow=(comboFeeSchedGroup1.Items.OfType<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
 					isPickingFeeSchedGroup=true;
 				}
 				else {
@@ -2169,7 +2169,7 @@ namespace OpenDental{
 			}
 			else if(pickerButton==butPickClinic2) {
 				if(checkGroups2.Checked) {
-					listGroupsToShow=(comboFeeSchedGroup2.Items.AsEnumerable<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
+					listGroupsToShow=(comboFeeSchedGroup2.Items.OfType<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
 					isPickingFeeSchedGroup=true;
 				}
 				else {
@@ -2178,7 +2178,7 @@ namespace OpenDental{
 			}
 			else if(pickerButton==butPickClinic3) {
 				if(checkGroups3.Checked) {
-					listGroupsToShow=(comboFeeSchedGroup3.Items.AsEnumerable<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
+					listGroupsToShow=(comboFeeSchedGroup3.Items.OfType<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
 					isPickingFeeSchedGroup=true;
 				}
 				else {

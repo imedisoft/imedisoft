@@ -451,8 +451,7 @@ namespace OpenDentBusiness{
 				InsSubs.Delete(sub.InsSubNum);
 				SecurityLogs.MakeLogEntry(Permissions.InsPlanEditSub,subscriberNum,"Deleted inssub with invalid insplan attached.");
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				//Create blank insplan and attach to inssub
 				InsSubs.AssignBlankPlanToInsSub(sub);
 				SecurityLogs.MakeLogEntry(Permissions.InsPlanEditSub,subscriberNum,"Inssub with invalid insplan found, attached blank insplan.");

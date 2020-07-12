@@ -22,8 +22,6 @@ namespace UnitTests {
 		protected Logger.IWriteLine _log;
 		///<summary>Put this in the watch window to see the logger results.</summary>
 		protected string _logStr="";
-		///<summary>Indicates whether the user wanted to run all tests against Middle Tier.</summary>
-		private static bool _runAllAgainstMiddleTier=false;
 
 		public static string UnitTestDbName {
 			get {
@@ -51,9 +49,9 @@ namespace UnitTests {
 		public static void Initialize(TestContext context) {
 			ODInitialize.IsRunningInUnitTest=true;//Causes FormFriendlyException to throw rather than displaying a MessageBox.
 			ODInitialize.Initialize();
-			if(!UnitTestsCore.DatabaseTools.SetDbConnection(UnitTestDbName,"localhost","3306","root","",false)) {//Put this in a config file in the future.
-				UnitTestsCore.DatabaseTools.SetDbConnection("","localhost","3306","root","",false);
-				DatabaseTools.FreshFromDump("localhost","3306","root","",false);//this also sets database to be unittest.
+			if(!UnitTestsCore.DatabaseTools.SetDbConnection(UnitTestDbName,"localhost","3306","root","")) {//Put this in a config file in the future.
+				UnitTestsCore.DatabaseTools.SetDbConnection("","localhost","3306","root","");
+				DatabaseTools.FreshFromDump("localhost","3306","root","");//this also sets database to be unittest.
 			}
 			else {
 				//Clear the database before running the unittests (instead of after) for two reasons
@@ -73,23 +71,11 @@ namespace UnitTests {
 			PrefT.RevertPrefChanges();
 		}
 
-		protected static void RunTestsAgainstMiddleTier() {
-			RunTestsAgainstMiddleTier(new OpenDentBusiness.WebServices.OpenDentalServerMockIIS());
-		}
-
-		protected static void RunTestsAgainstMiddleTier(OpenDentBusiness.WebServices.OpenDentalServerMockIIS mockServer) {
-		}
-
 		protected static void RunTestsAgainstDirectConnection() {
 			OpenDentBusiness.WebServices.OpenDentalServerProxy.MockOpenDentalServerCur=null;
 		}
 
 		protected static void RevertMiddleTierSettingsIfNeeded() {
-			//If they want to run all tests against middle tier, do not revert.
-			if(_runAllAgainstMiddleTier) {
-				RunTestsAgainstMiddleTier();//Reset settings to default.
-				return;
-			}
 			RunTestsAgainstDirectConnection();
 		}
 

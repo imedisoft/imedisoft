@@ -478,15 +478,8 @@ namespace OpenDentBusiness {
 				{
 					return;//Do not run this process again.
 				}
-				string command="";
-				if(DataConnection.DBtype==DatabaseType.MySql) {//easier to read that using the DbHelper Functions and it also matches the ConvertDB3 script
-					command="DELETE FROM signalod WHERE SigDateTime < DATE_ADD(NOW(),INTERVAL -2 DAY)";//Itypes only older than 2 days
-					Db.NonQ(command);
-				}
-				else {//oracle
-					command="DELETE FROM signalod WHERE SigDateTime < CURRENT_TIMESTAMP -2";//Itypes only older than 2 days
-					Db.NonQ(command);
-				}
+				string command="DELETE FROM signalod WHERE SigDateTime < DATE_ADD(NOW(),INTERVAL -2 DAY)";//Itypes only older than 2 days
+				Db.NonQ(command);
 				SigMessages.ClearOldSigMessages();//Clear messaging buttons which use to be stored in the signal table.
 				//SigElements.DeleteOrphaned();
 				Prefs.UpdateDateT(PrefName.SignalLastClearedDate,MiscData.GetNowDateTime());//Set Last cleared to now.

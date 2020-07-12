@@ -194,9 +194,9 @@ namespace OpenDentBusiness{
 		public static UserOdPref GetFirstOrNewByUserAndFkeyType(long userNum,UserOdFkeyType fkeyType) {
 			
 			string command = "SELECT * FROM userodpref WHERE UserNum="+POut.Long(userNum)+" AND FkeyType="+POut.Int((int)fkeyType)+" LIMIT 1";
-			return ODMethodsT.Coalesce(
+			return 
 				//Get the db value if it exists.
-				Crud.UserOdPrefCrud.SelectOne(command),
+				Crud.UserOdPrefCrud.SelectOne(command) ??
 				//Create a new instance if db value does not exist.
 				new UserOdPref() {
 					IsNew=true,
@@ -206,7 +206,7 @@ namespace OpenDentBusiness{
 					UserNum=userNum,
 					ValueString="",
 					ClinicNum=0,
-				});
+				};
 		}
 
 		///<summary>Will return a list of UserOdPrefs corresponding to the usernum/fkey/fkeytype combination given.</summary>
@@ -226,9 +226,9 @@ namespace OpenDentBusiness{
 			string command="SELECT * FROM userodpref WHERE UserNum="+POut.Long(userNum)
 				+" AND Fkey="+POut.Long(fkey)+" AND FkeyType="+POut.Int((int)fkeyType)
 				+" AND ClinicNum="+POut.Long(clinicNum);
-			return ODMethodsT.Coalesce(
+			return 
 				//Get the db value if it exists.
-				Crud.UserOdPrefCrud.SelectOne(command),
+				Crud.UserOdPrefCrud.SelectOne(command) ??
 				//Create a new instance if db value does not exist.
 				new UserOdPref() {
 					IsNew=true,
@@ -238,7 +238,7 @@ namespace OpenDentBusiness{
 					UserNum=userNum,
 					ValueString="",
 					ClinicNum=clinicNum,
-				});
+				};
 		}
 		public static List<UserOdPref> GetAllByFkeyAndFkeyType(long fkey,UserOdFkeyType fkeyType) {
 			

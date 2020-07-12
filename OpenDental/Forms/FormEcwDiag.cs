@@ -79,8 +79,7 @@ namespace OpenDental {
 			try {
 				MySql.Data.MySqlClient.MySqlHelper.ExecuteDataRow(connString,"SELECT VERSION();");//meaningless query to test connection.
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				textLog.Text+="Cannot detect eCW server named \""+server+"\".\r\n";
 				Cursor=Cursors.Default;
 				return;
@@ -484,8 +483,7 @@ namespace OpenDental {
 			try {
 				arbitraryStringName.Append(e.KeyChar);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				//fail VERY silently. Mwa Ha Ha.
 			}
 			if(arbitraryStringName.ToString().EndsWith("X")) {//Clear string if (upper case) 'X' is pressed.

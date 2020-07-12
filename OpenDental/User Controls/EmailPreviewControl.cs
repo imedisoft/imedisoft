@@ -272,8 +272,7 @@ namespace OpenDental {
 				webBrowser.DocumentText=HtmlText;
 				webBrowser.BringToFront();
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				//invalid preview
 			}
 		}
@@ -512,15 +511,11 @@ namespace OpenDental {
 					}
 				}
 				else if(IsORU_R01message(strFilePathAttach)) {
-					if(DataConnection.DBtype==DatabaseType.Oracle) {
-						MessageBox.Show("Labs not supported with Oracle.  Opening raw file instead.");
-					}
-					else {
 						FormEhrLabOrderImport FormELOI =new FormEhrLabOrderImport();
 						FormELOI.Hl7LabMessage=FileAtoZ.ReadAllText(strFilePathAttach);
 						FormELOI.ShowDialog();
 						return;
-					}
+					
 				}
 				FileAtoZ.OpenFile(FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),emailAttach.ActualFileName),emailAttach.DisplayedFileName);
 			}
@@ -550,8 +545,7 @@ namespace OpenDental {
 					return false;
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				return false;
 			}
 			return true;

@@ -706,8 +706,7 @@ namespace OpenDental{
 				try {
 					ctrl.Enabled=false;
 				}
-				catch(Exception e) {//Just in case.
-					e.DoNothing();
+				catch {//Just in case.
 				}
 			}
 		}

@@ -67,9 +67,7 @@ namespace OpenDentBusiness {
 				+whereClin
 				+claimFilter
 				+" GROUP BY claim.ClaimNum";
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				command+=",claim.Status,patient.LName,patient.FName,patient.MiddleI,carrier.CarrierName,claim.ClaimFee,claim.ClaimNum,claim.PatNum";
-			}
+
 			command+=" ORDER BY claim.DateService";
 			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
 		}

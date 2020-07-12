@@ -28,7 +28,7 @@ namespace UnitTests.ODThread_Tests {
 		public void TearDownTest() {
 			RevertMiddleTierSettingsIfNeeded();
 			//Some weird database connection stuff happens in this class so set the main db connection back to the UnitTest db.
-			UnitTestsCore.DatabaseTools.SetDbConnection(UnitTestDbName,false);
+			UnitTestsCore.DatabaseTools.SetDbConnection(UnitTestDbName);
 		}
 
 		///<summary>This method will execute only once, just after all tests in this class have run.
@@ -52,7 +52,7 @@ namespace UnitTests.ODThread_Tests {
 				ODThread odThreadParent=new ODThread(workerParent => {
 					//The parent thread needs to connect to a database that the main thread is not connected to.
 					CreateDatabaseIfNeeded(databaseName);
-					new DataConnection().SetDbT("localhost",databaseName,"root","","","",DatabaseType.MySql);
+					new DataConnection().SetDbT("localhost",databaseName,"root","","","");
 					VerifyCurrentDatabaseName(databaseName);
 					//Now the parent should spawn a child thread which should default to the thread specific database connection from the parent.
 					ODThread odThreadChild=new ODThread(workerChild => {
@@ -99,7 +99,7 @@ namespace UnitTests.ODThread_Tests {
 					ODThread odThreadChangeDb=new ODThread(workerChild => {
 						//The parent thread needs to call SetDb on a different database than the main thread is connected to.
 						CreateDatabaseIfNeeded(databaseName);
-						new DataConnection().SetDb("localhost",databaseName,"root","","","",DatabaseType.MySql);
+						new DataConnection().SetDb("localhost",databaseName,"root","","","");
 						VerifyCurrentDatabaseName(databaseName);
 					});
 					odThreadChangeDb.AddExceptionHandler(e => ex=e);
@@ -171,9 +171,9 @@ namespace UnitTests.ODThread_Tests {
 				try {
 					Thread.Sleep(TimeSpan.FromMinutes(10));
 				}
-				catch(Exception ex) {
+				catch {
 					//The thread abort exception will come in here. Because of some code in this exception, a different type of exception is thrown.
-					ex.DoNothing();
+	
 					throw new Exception("Exception that is not a ThreadAbortException");
 				}
 			});

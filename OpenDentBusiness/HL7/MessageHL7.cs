@@ -75,22 +75,20 @@ namespace OpenDentBusiness.HL7 {
 					try {
 						MsgType=(MessageTypeHL7)Enum.Parse(typeof(MessageTypeHL7),msgtype,true);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 						MsgType=MessageTypeHL7.NotDefined;
 					}
 					try {
 						EventType=(EventTypeHL7)Enum.Parse(typeof(EventTypeHL7),evnttype,true);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
+
 						EventType=EventTypeHL7.NotDefined;
 					}
 					try {
 						MsgStructure=(MessageStructureHL7)Enum.Parse(typeof(MessageStructureHL7),msgStructure,true);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 						MsgStructure=MessageStructureHL7.NotDefined;
 					}
 				}

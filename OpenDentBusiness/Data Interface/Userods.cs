@@ -582,21 +582,12 @@ namespace OpenDentBusiness
 				mysqlUserLow = navConn.SelectSingleNode("UserLow").Value;
 				mysqlPasswordLow = navConn.SelectSingleNode("PasswordLow").Value;
 			}
-			XPathNavigator dbTypeNav = navConn.SelectSingleNode("DatabaseType");
-			DatabaseType dbtype = DatabaseType.MySql;
-			if (dbTypeNav != null)
-			{
-				if (dbTypeNav.Value == "Oracle")
-				{
-					dbtype = DatabaseType.Oracle;
-				}
-			}
 			DataConnection dcon = new DataConnection();
 			if (connString != "")
 			{
 				try
 				{
-					dcon.SetDb(connString, "", dbtype);
+					dcon.SetDb(connString, "");
 				}
 				catch (Exception e)
 				{
@@ -607,7 +598,7 @@ namespace OpenDentBusiness
 			{
 				try
 				{
-					dcon.SetDb(server, database, mysqlUser, mysqlPassword, mysqlUserLow, mysqlPasswordLow, dbtype);
+					dcon.SetDb(server, database, mysqlUser, mysqlPassword, mysqlUserLow, mysqlPasswordLow);
 				}
 				catch (Exception e)
 				{

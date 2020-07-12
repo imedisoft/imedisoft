@@ -35,8 +35,7 @@ namespace UnitTests.Reports_Tests {
 				,"root"
 				,""
 				,USER_LOW_NAME
-				,USER_LOW_PASS
-				,DatabaseType.MySql);
+				,USER_LOW_PASS);
 		}
 
 		[TestInitialize]

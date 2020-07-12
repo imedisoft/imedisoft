@@ -1078,16 +1078,8 @@ namespace OpenDentBusiness
 			{
 				command += "AND procedurelog.ProcNum IN (" + procNumsForLimited + ") ";
 			}
-			if (DataConnection.DBtype == DatabaseType.Oracle)
-			{
-				command += "GROUP BY procedurelog.ClinicNum,procedurelog.BaseUnits,procedurelog.BillingNote,procedurecode.CodeNum,procedurecode.AbbrDesc,"
-					+ "Descript,LaymanTerm,procedurelog.MedicalCode,procedurelog.PatNum,ProcCode,procedurelog.ProcDate,ProcFee,procedurelog.ProcNum,"
-					+ "procedurelog.ProcNumLab,procedurelog.ProvNum,procedurelog.Surf,ToothNum,ToothRange,UnitQty,procedurelog.StatementNum ";
-			}
-			else
-			{//mysql. Including Descript in the GROUP BY causes mysql to lock up sometimes.  Unsure why.
-				command += "GROUP BY procedurelog.ProcNum ";
-			}
+			command += "GROUP BY procedurelog.ProcNum ";
+			
 			if (isInvoice)
 			{
 				//different query here.  Include all column names.
@@ -2013,11 +2005,6 @@ namespace OpenDentBusiness
 				+ "LEFT JOIN carrier ON carrier.CarrierNum=insplan.CarrierNum "
 				+ "WHERE payplan.PatNum IN (" + familyPatNums + ") OR payplan.Guarantor IN (" + familyPatNums + ") "
 				+ "GROUP BY payplan.PayPlanNum";
-			if (DataConnection.DBtype == DatabaseType.Oracle)
-			{
-				command += ",payplan.CompletedAmt,payplan.Guarantor,payplan.PatNum,payplan.PayPlanDate,payplan.PlanNum,"
-					+ "payplan.IsClosed,payplan.PlanCategory";
-			}
 			DataTable rawPayPlan = new DataTable();
 			if (!isInvoice && stmt.StatementType != StmtType.LimitedStatement)
 			{

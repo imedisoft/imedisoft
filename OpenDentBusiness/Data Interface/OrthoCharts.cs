@@ -43,12 +43,8 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT * FROM orthochart WHERE PatNum ="+POut.Long(patNum);
 			//FieldValue='' were stored as a result of a bug. DBM now removes those rows from the DB. This prevents them from being seen until DBM is run.
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command+=" AND FieldValue!=''";
-			}
-			else {//Oracle
-				command+=" AND FieldValue IS NOT NULL";//Empty VARCHAR2 cells are treated as NULL.  Yup...
-			}
+			command+=" AND FieldValue!=''";
+
 			return Crud.OrthoChartCrud.SelectMany(command);
 		}
 
@@ -249,8 +245,7 @@ namespace OpenDentBusiness{
 					return retVal;
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			#endregion
 			#region Depricated, log written in english
@@ -262,8 +257,7 @@ namespace OpenDentBusiness{
 					}
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			#endregion
 			#region Depricated, log written in current culture
@@ -276,8 +270,7 @@ namespace OpenDentBusiness{
 					}
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			#endregion
 			#region Depricated, log written in non-english non-current culture

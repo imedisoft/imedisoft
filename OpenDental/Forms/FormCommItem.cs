@@ -381,7 +381,7 @@ namespace OpenDental {
 					labelSavedManually.Visible=false;
 				});
 			});
-			odThread.AddExceptionHandler((e) => e.DoNothing());
+			odThread.AddExceptionHandler((e) => { });
 			odThread.Start();
 		}
 

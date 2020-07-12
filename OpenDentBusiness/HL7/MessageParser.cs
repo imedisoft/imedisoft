@@ -95,8 +95,8 @@ namespace OpenDentBusiness.HL7 {
 					try {
 						patNum=PIn.Long(msg.Segments[pidOrder].GetField(patNumOrdinal).ToString());
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
+
 						//do nothing, patNum will remain 0
 					}
 				}
@@ -136,8 +136,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							checkDigit=PIn.Int(fieldPatIds.GetComponentVal(1));
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
+
 							//checkDigit will remain -1
 						}
 						//if using the M10 or M11 check digit algorithm and it passes the respective test, or not using either algorithm, then use the ID
@@ -154,8 +154,8 @@ namespace OpenDentBusiness.HL7 {
 								try {
 									patNumFromIds=PIn.Long(fieldPatIds.GetComponentVal(0));
 								}
-								catch(Exception ex) {
-									ex.DoNothing();
+								catch {
+
 									//do nothing, patNumFromList will remain 0
 								}
 							}
@@ -185,8 +185,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							checkDigit=PIn.Int(fieldPatIds.ListRepeatFields[r].GetComponentVal(1));
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
+
 							//checkDigit will remain -1
 						}
 						if(fieldPatIds.ListRepeatFields[r].GetComponentVal(2).ToLower()=="m10"
@@ -205,8 +205,8 @@ namespace OpenDentBusiness.HL7 {
 								try {
 									patNumFromIds=PIn.Long(fieldPatIds.ListRepeatFields[r].GetComponentVal(0));
 								}
-								catch(Exception ex) {
-									ex.DoNothing();
+								catch {
+
 									//do nothing, patNumFromList will remain 0
 								}
 							}
@@ -342,8 +342,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							aptNum=PIn.Long(msg.Segments[segOrder].GetFieldComponent(aptNumOrdinal,0).ToString());
 						}
-						catch(Exception ex) {//PIn.Long will throw an exception if a value is not able to be parsed into a long
-							ex.DoNothing();
+						catch {//PIn.Long will throw an exception if a value is not able to be parsed into a long
+
 							//do nothing, aptNum will remain 0
 						}
 						break;
@@ -744,8 +744,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							rxnorm=PIn.Long(seg.GetFieldComponent(intItemOrder,0));
 						}
-						catch(Exception ex) {//PIn.Long throws an exception if converting to an Int64 fails
-							ex.DoNothing();
+						catch {//PIn.Long throws an exception if converting to an Int64 fails
+
 							//do nothing, rxnorm will remain 0
 						}
 						continue;
@@ -799,8 +799,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							aptNum=PIn.Long(seg.GetFieldComponent(intItemOrder,0));
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
+
 							//do nothing, aptNum will remain 0
 						}
 						if(apt!=null && apt.AptNum!=aptNum) {
@@ -913,8 +913,8 @@ namespace OpenDentBusiness.HL7 {
 				try {
 					guarPatNum=PIn.Long(seg.GetFieldFullText(guarPatNumOrdinal));
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
+
 					//do nothing, guarPatNum will remain 0
 				}
 			}
@@ -933,8 +933,8 @@ namespace OpenDentBusiness.HL7 {
 					try {
 						intCheckDigit=PIn.Int(fieldGuarIds.GetComponentVal(1));
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
+
 						//checkDigit will remain -1
 					}
 					//if using the M10 or M11 check digit algorithm and it passes the respective test, or not using either algorithm
@@ -952,8 +952,8 @@ namespace OpenDentBusiness.HL7 {
 							try {
 								guarPatNumFromIds=PIn.Long(fieldGuarIds.GetComponentVal(0));
 							}
-							catch(Exception ex) {
-								ex.DoNothing();
+							catch {
+
 								//do nothing, guarPatNumFromList will remain 0
 							}
 						}
@@ -979,8 +979,8 @@ namespace OpenDentBusiness.HL7 {
 					try {
 						intCheckDigit=PIn.Int(fieldGuarIds.ListRepeatFields[r].GetComponentVal(1));
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
+
 						//checkDigit will remain -1
 					}
 					if(fieldGuarIds.ListRepeatFields[r].GetComponentVal(2).ToLower()=="m10"
@@ -998,8 +998,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							guarPatNumFromIds=PIn.Long(fieldGuarIds.ListRepeatFields[r].GetComponentVal(0));
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
+
 							//do nothing, guarPatNumFromList will remain 0
 						}
 					}
@@ -1340,8 +1340,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							rxnorm=PIn.Long(seg.GetFieldComponent(intItemOrder,0));
 						}
-						catch(Exception ex) {//PIn.Long throws an exception if converting to an Int64 fails
-							ex.DoNothing();
+						catch {//PIn.Long throws an exception if converting to an Int64 fails
+
 							//do nothing, rxnorm will remain 0
 						}
 						continue;
@@ -1480,8 +1480,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							patNumFromPid=PIn.Long(seg.GetFieldComponent(itemOrder));
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
+
 							//do nothing, patNumFromPID will remain 0
 						}
 						if(patNumFromPid!=0 && pat.PatNum!=patNumFromPid) {
@@ -1563,8 +1563,8 @@ namespace OpenDentBusiness.HL7 {
 							try {
 								intCheckDigit=PIn.Int(fieldCur.GetComponentVal(1));
 							}
-							catch(Exception ex) {
-								ex.DoNothing();
+							catch {
+
 								//checkDigit will remain -1
 							}
 							//if using the M10 or M11 check digit algorithm and it passes the respective test, or not using either algorithm, then use the ID
@@ -1606,8 +1606,8 @@ namespace OpenDentBusiness.HL7 {
 							try {
 								intCheckDigit=PIn.Int(fieldCur.ListRepeatFields[r].GetComponentVal(1));
 							}
-							catch(Exception ex) {
-								ex.DoNothing();
+							catch {
+
 								//checkDigit will remain -1
 							}
 							if(fieldCur.ListRepeatFields[r].GetComponentVal(2).ToLower()=="m10"
@@ -2029,8 +2029,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							intGradeLevel=PIn.Int(seg.GetFieldComponent(itemOrder));
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
+
 							//if parsing field to int fails, do nothing
 							continue;
 						}
@@ -2085,8 +2085,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							intPatUrgency=PIn.Int(seg.GetFieldComponent(itemOrder));//if field is empty, PIn.Int will return 0 which will be the Unknown default urgency
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch {
+
 							//do nothing, patUrgency will remain -1
 						}
 						if(intPatUrgency>-1 && intPatUrgency<4) {//only cast to enum if 0-3
@@ -2136,8 +2136,8 @@ namespace OpenDentBusiness.HL7 {
 						try {
 							aptNum=PIn.Long(seg.GetFieldComponent(itemOrder));
 						}
-						catch(Exception ex) {
-							ex.DoNothing();
+						catch{
+
 							//do nothing, aptNum will remain 0
 						}
 						if(apt!=null && apt.AptNum!=aptNum) {

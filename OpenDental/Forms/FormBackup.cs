@@ -679,8 +679,8 @@ namespace OpenDental {
 					string officeData=PayloadHelper.CreatePayload(new List<PayloadItem>() { pliStatus,pliAdminUserName },eServiceCode.SupplementalBackup);
 					WebServiceMainHQProxy.GetWebServiceMainHQInstance().SetSupplementalBackupStatus(officeData);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();//Internet probably is unavailble right now.
+				catch {
+					//Internet probably is unavailble right now.
 				}
 				SecurityLogs.MakeLogEntry(Permissions.SupplementalBackup,0,
 					"Supplemental backup has been "+(checkSupplementalBackupEnabled.Checked?"Enabled":"Disabled")+".");

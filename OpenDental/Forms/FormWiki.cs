@@ -162,9 +162,7 @@ namespace OpenDental {
 			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"In-Links"),9,"","Inc Links"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Add"),10,"","Add"));
-			if(DataConnection.DBtype==DatabaseType.MySql) {//not supported in oracle.
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Lists"),13,"","Lists"));
-			}
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Lists"),13,"","Lists"));
 			//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"All Pages"),11,"","All Pages"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Search"),12,"","Search"));
 		}
@@ -563,8 +561,7 @@ namespace OpenDental {
 				try {
 					System.Diagnostics.Process.Start(fileName);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 				e.Cancel=true;
 				return;
@@ -579,8 +576,7 @@ namespace OpenDental {
 				try {
 					System.Diagnostics.Process.Start(folderName);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 				e.Cancel=true;
 				return;
@@ -595,8 +591,7 @@ namespace OpenDental {
 				try {
 					FileAtoZ.StartProcess(fileName);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 				e.Cancel=true;
 				return;
@@ -611,8 +606,7 @@ namespace OpenDental {
 				try {
 					FileAtoZ.OpenDirectory(folderName);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 				e.Cancel=true;
 				return;
@@ -621,8 +615,7 @@ namespace OpenDental {
 				try {
 					System.Diagnostics.Process.Start(e.Url.ToString());
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 				e.Cancel=true;//Stops the page from loading in FormWiki.
 				return;

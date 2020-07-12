@@ -59,12 +59,8 @@ namespace OpenDentBusiness{
 			string command="INSERT INTO ehrpatient (PatNum,MotherMaidenFname,MotherMaidenLname,VacShareOk,MedicaidState,SexualOrientation,GenderIdentity,"
 				+"SexualOrientationNote,GenderIdentityNote) "
 				+"VALUES("+POut.Long(patNum)+",'','',0,'','','','','')";//VacShareOk cannot be NULL for Oracle.
-				if(DataConnection.DBtype==DatabaseType.MySql) {
-					//We may need to do this in Oracle in the future as well.
-					//If using Replication, then we need to watch for duplicate errors, because the insert is lazy.
-					//Replication servers can insert a patient note with a primary key belonging to another replication server's key range.
-					command+=" ON DUPLICATE KEY UPDATE PatNum='"+patNum+"'";
-				}
+				command+=" ON DUPLICATE KEY UPDATE PatNum='"+patNum+"'";
+				
 				Db.NonQ(command);
 			//}
 			//catch (Exception ex){

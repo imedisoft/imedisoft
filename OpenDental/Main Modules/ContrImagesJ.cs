@@ -2115,8 +2115,7 @@ namespace OpenDental{
 					//so it will get deleted later (either when switching preview images or closing Open Dental
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				//An exception can happen if they do not have Adobe Acrobat Reader version 8.0 or later installed.
 			}
 		}
@@ -2359,9 +2358,8 @@ namespace OpenDental{
 				dataObject.SetData(DataFormats.FileDrop,stringArray);
 				Clipboard.SetDataObject(dataObject);
 			}
-			catch(Exception ex) {
+			catch {
 				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
-				ex.DoNothing();
 				return;
 			}
 			//Can't do this, or the clipboard object goes away.
@@ -2740,9 +2738,8 @@ namespace OpenDental{
 					}
 				}
 			}
-			catch(Exception ex) {
+			catch {
 				MessageBox.Show("Could not paste contents from the clipboard.  Please try again.");
-				ex.DoNothing();
 				return;
 			}
 			if(bitmapPaste==null){

@@ -635,8 +635,7 @@ namespace OpenDental{
 					try {
 						File.Delete(tempFilePath);//Clean up the temp file
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 					}
 				}
 				catch(Exception ex) {

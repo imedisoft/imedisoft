@@ -216,9 +216,8 @@ namespace CodeBase{
 			try {
 				ODClipboard.SetClipboard(textMain.Text);
 			}
-			catch(Exception ex) {
+			catch{
 				MessageBox.Show("Could not copy contents to the clipboard. Please try again.");
-				ex.DoNothing();
 			}
 		}
 

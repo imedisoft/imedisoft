@@ -87,8 +87,7 @@ namespace OpenDentBusiness
 					try {
 						DateInterchange=DateTime.ParseExact(segment.Get(9)+segment.Get(10),"yyMMddHHmm",CultureInfo.CurrentCulture.DateTimeFormat);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 						DateInterchange=DateTime.MinValue;
 					}
 				}

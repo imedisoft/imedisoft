@@ -31,11 +31,8 @@ namespace OpenDentBusiness
 				+ (SELECT COUNT(*) FROM claimproc)
 				+ (SELECT COUNT(*) FROM payplan)
 				+ (SELECT COUNT(*) FROM payplancharge)) * 0.0042680625638876 AgingInMilliseconds";
-			if (DataConnection.DBtype == DatabaseType.Oracle)
-			{
-				command += " FROM dual";//Oracle requires a FROM clause be present.
-			}
-			return PIn.Double(Db.GetScalar(command));
+
+			return SIn.Double(Db.GetScalar(command));
 		}
 
 		///<summary>This runs aging for all patients.  If using monthly aging, it always just runs the aging as of the last date again.  If using daily
@@ -93,7 +90,6 @@ namespace OpenDentBusiness
 		///<para>4) PayPlanDue includes all payplan charges minus credits. If historical, PayPlanDue excludes charges and credits after AsOfDate.</para></summary>
 		public static void ComputeAging(List<long> listGuarantorNums, DateTime asOfDate)
 		{
-			bool isMySqlDb = (DataConnection.DBtype == DatabaseType.MySql);
 			string command = "";
 			if (PrefC.GetBool(PrefName.AgingIsEnterprise))
 			{
@@ -151,9 +147,8 @@ namespace OpenDentBusiness
 					+ "BalTotal   = 0,"
 					+ "PayPlanDue = 0;";
 				}
-				command += (isMySqlDb ? "UPDATE patient p," : "MERGE INTO patient p USING ")
+				command += "UPDATE patient p,"
 					+ "(" + GetAgingGuarTransQuery(asOfDate, listGuarantorNums) + ") famSums "
-					+ (isMySqlDb ? "" : "ON (p.Guarantor=famSums.PatNum) WHEN MATCHED THEN UPDATE ")
 					//Update the patient table based on the family amounts summed from 'famSums', and distribute the payments into the oldest balances first.
 					+ "SET p.BalOver90=(CASE WHEN p.Guarantor != p.PatNum THEN 0 "//zero out non-guarantors
 						+ "ELSE ROUND(CASE WHEN famSums.TotalCredits >= famSums.ChargesOver90 THEN 0 "//over 90 day bal paid in full
@@ -180,7 +175,7 @@ namespace OpenDentBusiness
 						+ "ELSE ROUND(famSums.InsPayEst+famSums.InsWoEst,3) END),"
 					+ "p.PayPlanDue=(CASE WHEN p.Guarantor != p.PatNum THEN 0 "//zero out non-guarantors
 						+ "ELSE ROUND(famSums.PayPlanDue,3) END)"
-					+ (isMySqlDb ? " WHERE p.Guarantor=famSums.PatNum" : "");//Aging calculations only apply to guarantors, zero out non-guarantor bals
+					+ " WHERE p.Guarantor=famSums.PatNum";//Aging calculations only apply to guarantors, zero out non-guarantor bals
 				#endregion Not Using FamAging Table
 			}
 			Db.NonQ(command);
@@ -477,8 +472,7 @@ namespace OpenDentBusiness
 				+ (payPlanVersionCur == PayPlanVersions.AgeCreditsAndDebits ? "LEFT JOIN payplan pp ON cp.PayPlanNum=pp.PayPlanNum " : "")
 				+ "WHERE cp.status IN (0,1,4,5,7) "//NotReceived,Received,Supplemental,CapClaim,CapComplete
 				+ (isAllPats ? "" : ("AND cp.PatNum IN (" + familyPatNums + ") "))
-				//efficiency improvement for MySQL only.
-				+ (DataConnection.DBtype == DatabaseType.MySql ? "HAVING TranAmount != 0 OR InsWoEst != 0 OR InsPayEst != 0 " : "");
+				+ "HAVING TranAmount != 0 OR InsWoEst != 0 OR InsPayEst != 0 ";
 			#endregion Regular Claimproc By DateCP
 			#region Original and Current Writeoff/Delta
 			//Only included if writeoffs are aged.  Requires joining to the claimsnapshot table.
@@ -503,7 +497,7 @@ namespace OpenDentBusiness
 					+ "LEFT JOIN claimsnapshot css ON cp.ClaimProcNum=css.ClaimProcNum "
 					+ "WHERE cp.status IN (0,1,4,5,7) "//NotReceived,Received,Supplemental,CapClaim,CapComplete
 					+ (isAllPats ? "" : ("AND cp.PatNum IN (" + familyPatNums + ") "))
-					+ (DataConnection.DBtype == DatabaseType.MySql ? "HAVING TranAmount != 0 OR InsWoEst != 0 " : "")//efficiency improvement for MySQL only.
+					+ "HAVING TranAmount != 0 OR InsWoEst != 0 "
 					+ "UNION ALL "
 					//This union is for Rcvd claims with snapshots only and is the claimproc w/o's - snapshot w/o's (delta) using DateCp
 					+ "SELECT 'Writeoff' TranType,cp.ClaimProcNum PriKey,cp.PatNum,cp.DateCP TranDate,"//use DateCP
@@ -516,7 +510,7 @@ namespace OpenDentBusiness
 					+ "INNER JOIN claimsnapshot css ON cp.ClaimProcNum=css.ClaimProcNum "
 					+ "WHERE cp.status IN (1,4,5,7) "//Received,Supplemental,CapClaim,CapComplete
 					+ (isAllPats ? "" : ("AND cp.PatNum IN (" + familyPatNums + ") "))
-					+ (DataConnection.DBtype == DatabaseType.MySql ? "HAVING TranAmount != 0 " : "");//efficiency improvement for MySQL only.
+					+ "HAVING TranAmount != 0 ";
 			}
 			#endregion Original and Current Writeoff/Delta
 			#endregion Insurance Payments and WriteOffs, PayPlan Ins Payments, and InsPayEst

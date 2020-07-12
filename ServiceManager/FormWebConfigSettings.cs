@@ -47,8 +47,7 @@ namespace ServiceManager {
 				comboLogLevel.Items.AddRange(Enum.GetNames(typeof(LogLevel)));//Isn't included in FreeDentalConfig, but is needed for the web service.
 				comboLogLevel.SelectedItem=comboLogLevel.Items[0];
 			}
-			catch(Exception ex) {//FreeDentalConfig didn't load correctly
-				ex.DoNothing();
+			catch {//FreeDentalConfig didn't load correctly
 				textServer.Text="localhost";
 				textDatabase.Text="opendental";
 				textUser.Text="root";
@@ -58,8 +57,6 @@ namespace ServiceManager {
 				comboLogLevel.Items.AddRange(Enum.GetNames(typeof(LogLevel)));
 				comboLogLevel.SelectedItem=comboLogLevel.Items[0];
 			}
-			comboDatabaseType.Items.AddRange(Enum.GetNames(typeof(DatabaseType)));
-			comboDatabaseType.SelectedIndex=0;//MySQL
 		}
 
 		private void textPassword_TextChanged(object sender,EventArgs e) {
@@ -75,8 +72,7 @@ namespace ServiceManager {
 		public bool TestConnection() {
 			DataConnection con=new DataConnection();
 			try {
-				con.SetDb(textServer.Text,textDatabase.Text,textUser.Text,textPassword.Text,textUserLow.Text,textPasswordLow.Text,
-					(DatabaseType)comboDatabaseType.SelectedIndex);
+				con.SetDb(textServer.Text,textDatabase.Text,textUser.Text,textPassword.Text,textUserLow.Text,textPasswordLow.Text);
 				return true;
 			}
 			catch(Exception ex) {

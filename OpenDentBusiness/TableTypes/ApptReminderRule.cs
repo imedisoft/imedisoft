@@ -364,7 +364,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Gets the first Enum T with a ShortCodeAttribute such that SmsMessageSouce matches the given value.</summary>
 		public static T GetFirstOrDefault<T>(SmsMessageSource smsMessageSource) where T:Enum {
-			return Enum.GetValues(typeof(T)).AsEnumerable<T>()
+			return Enum.GetValues(typeof(T)).OfType<T>()
 				.FirstOrDefault(x => x.GetAttributeOrDefault<ShortCodeAttribute>().SmsMessageSource.Contains(smsMessageSource));
 		}
 	}

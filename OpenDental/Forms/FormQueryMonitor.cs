@@ -183,8 +183,7 @@ namespace OpenDental {
 				ODClipboard.SetClipboard(_dbQueryObjCur.ToString());
 				MessageBox.Show("Copied");
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				MessageBox.Show("Could not copy contents to clipboard.  Please try again.");
 			}
 		}

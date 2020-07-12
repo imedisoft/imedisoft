@@ -57,10 +57,7 @@ namespace OpenDentBusiness{
 				+"WHERE patient.SuperFamily IN("+string.Join(",",listSuperFamNums.Select(x => POut.Long(x)))+") "
 				+"AND patient.HasSuperBilling=1 "
 				+"GROUP BY installmentplan.PatNum";
-			if(DataConnection.DBtype!=DatabaseType.MySql) {
-				command+=",installmentplan.InstallmentPlanNum,installmentplan.DateAgreement,installmentplan.DateFirstPayment"
-					+",installmentplan.MonthlyPayment,installmentplan.APR,installmentplan.Note,patient.SuperFamily";
-			}
+
 			DataTable table=Db.GetTable(command);
 			List<InstallmentPlan> listInstallmentPlans=Crud.InstallmentPlanCrud.TableToList(table);
 			SerializableDictionary<long,List<InstallmentPlan>> dictPlans=new SerializableDictionary<long,List<InstallmentPlan>>();

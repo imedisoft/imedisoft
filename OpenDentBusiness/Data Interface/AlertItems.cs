@@ -214,35 +214,32 @@ namespace OpenDentBusiness{
 		#endregion
 
 		///<summary>Returns a list of AlertItems for the given clinicNum.  Doesn't include alerts that are assigned to other users.</summary>
-		public static List<AlertItem> RefreshForClinicAndTypes(long clinicNum,List<AlertType> listAlertTypes=null){
-			
-			if(listAlertTypes==null || listAlertTypes.Count==0) {
+		public static List<AlertItem> RefreshForClinicAndTypes(long clinicNum, List<AlertType> listAlertTypes = null)
+		{
+
+			if (listAlertTypes == null || listAlertTypes.Count == 0)
+			{
 				return new List<AlertItem>();
 			}
-			long provNum=0;
-			if(Security.CurUser!=null && Userods.IsUserCpoe(Security.CurUser)) {
-				provNum=Security.CurUser.ProvNum;
+			long provNum = 0;
+			if (Security.CurUser != null && Userods.IsUserCpoe(Security.CurUser))
+			{
+				provNum = Security.CurUser.ProvNum;
 			}
-			long curUserNum=0;
-			if(Security.CurUser!=null) {
-				curUserNum=Security.CurUser.UserNum;
+			long curUserNum = 0;
+			if (Security.CurUser != null)
+			{
+				curUserNum = Security.CurUser.UserNum;
 			}
-			string command="";
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command="SELECT * FROM alertitem "
-					+"WHERE Type IN ("+String.Join(",",listAlertTypes.Cast<int>().ToList())+") "
-					+"AND (UserNum=0 OR UserNum="+POut.Long(curUserNum)+") "
-					//For AlertType.RadiologyProcedures we only care if the alert is associated to the current logged in provider.
-					//When provNum is 0 the initial WHEN check below will not bring any rows by definition of the FKey column.
-					+"AND (CASE TYPE WHEN "+POut.Int((int)AlertType.RadiologyProcedures)+" THEN FKey="+POut.Long(provNum)+" "
-					+"ELSE ClinicNum = "+POut.Long(clinicNum)+" OR ClinicNum=-1 END)";
-			}
-			else {//oracle
-				//Case statements cannot change column return results unless they are within the SELECT case.
-				command="SELECT AlertItemNum,CASE Type WHEN 3 THEN ClinicNum ELSE 0 END ClinicNum,Description,Type,Severity,Actions,FormToOpen,CASE Type WHEN 3 THEN 0 ELSE FKey END FKey,ItemValue "
-					+"FROM alertitem "
-					+"WHERE Type IN ("+String.Join(",",listAlertTypes.Cast<int>().ToList())+") ";
-			}
+			string command = "";
+			command = "SELECT * FROM alertitem "
+				+ "WHERE Type IN (" + String.Join(",", listAlertTypes.Cast<int>().ToList()) + ") "
+				+ "AND (UserNum=0 OR UserNum=" + POut.Long(curUserNum) + ") "
+				//For AlertType.RadiologyProcedures we only care if the alert is associated to the current logged in provider.
+				//When provNum is 0 the initial WHEN check below will not bring any rows by definition of the FKey column.
+				+ "AND (CASE TYPE WHEN " + POut.Int((int)AlertType.RadiologyProcedures) + " THEN FKey=" + POut.Long(provNum) + " "
+				+ "ELSE ClinicNum = " + POut.Long(clinicNum) + " OR ClinicNum=-1 END)";
+
 			return Crud.AlertItemCrud.SelectMany(command);
 		}
 

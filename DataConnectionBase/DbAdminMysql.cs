@@ -24,7 +24,7 @@ namespace DataConnectionBase {
 			}
 			DataConnection con=null;
 			try {
-				con=new DataConnection(server,"mysql",adminUserName,password,DatabaseType.MySql);
+				con=new DataConnection(server,"mysql",adminUserName,password);
 			}
 			catch(Exception ex) {
 				throw new ODException("Failed to connect with user '"+adminUserName+"' and password '"+password+"': "+ex.Message);

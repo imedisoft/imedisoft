@@ -598,8 +598,7 @@ namespace OpenDental {
 					try {
 						xhtml=MarkupEdit.TranslateToXhtml(_templateCur.BodyHTML,true,false,true);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();
+					catch {
 						if(!MsgBox.Show(MsgBoxButtons.YesNo,"There was an issue rendering your email.  If you use this template, you may send malformed emails to " +
 							"every selected patient. Do you want to continue saving?")) 
 						{

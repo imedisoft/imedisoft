@@ -451,8 +451,7 @@ namespace OpenDental{
 				}
 				MessageBox.Show("Exported");
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				MessageBox.Show("Export failed.  This could be due to lack of permissions in the designated folder.");
 			}
 		}

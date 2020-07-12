@@ -1193,8 +1193,8 @@ namespace OpenDental{
 					try {
 						File.Delete(tempPdfFile);
 					}
-					catch(Exception ex) {
-						ex.DoNothing();//Will most likely get cleaned up when the user closes OD.
+					catch {
+						//Will most likely get cleaned up when the user closes OD.
 					}
 				}
 				#endregion

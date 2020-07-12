@@ -127,16 +127,10 @@ namespace OpenDentBusiness {
 				//Get all ack'd messages older than two days.
 				string command="";
 				DataTable table;
-				if(DataConnection.DBtype==DatabaseType.MySql) {//easier to read that using the DbHelper Functions
-					command="SELECT SigMessageNum FROM sigmessage WHERE AckDateTime > "+POut.DateT(new DateTime(1880,1,1))+" "
-						+"AND AckDateTime < DATE_ADD(NOW(),INTERVAL -2 DAY)";
-					table=Db.GetTable(command);
-				}
-				else {//oracle
-					command="SELECT SigMessageNum FROM sigmessage WHERE AckDateTime > "+POut.DateT(new DateTime(1880,1,1))+" "
-						+"AND AckDateTime < CURRENT_TIMESTAMP -2";
-					table=Db.GetTable(command);
-				}
+				command="SELECT SigMessageNum FROM sigmessage WHERE AckDateTime > "+POut.DateT(new DateTime(1880,1,1))+" "
+					+"AND AckDateTime < DATE_ADD(NOW(),INTERVAL -2 DAY)";
+				table=Db.GetTable(command);
+
 				if(table.Rows.Count < 1) {
 					return;//Nothing to delete.
 				}

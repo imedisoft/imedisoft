@@ -56,10 +56,6 @@ namespace OpenDental
 			textPassword.PasswordChar = (textPassword.Text == "" ? default(char) : '*');
 			textUser2.Text = Model.CentralConnectionCur.OdUser;
 			textPassword2.Text = Model.CentralConnectionCur.OdPassword;
-			if (listType.Items.Count > 0 && listType.Items.Count >= 2)
-			{
-				listType.SelectedIndex = (int)Model.DbType;
-			}
 			textConnectionString.Text = Model.ConnectionString;
 			checkNoShow.Checked = (Model.NoShow == YN.Yes);
 			if (Model.AllowAutoLogin)
@@ -88,7 +84,6 @@ namespace OpenDental
 			Model.NoShow = (checkNoShow.Checked ? YN.Yes : YN.No);
 			Model.CentralConnectionCur.OdUser = textUser2.Text;
 			Model.CentralConnectionCur.OdPassword = textPassword2.Text;
-			Model.DbType = (listType.SelectedIndex == 1 ? DatabaseType.Oracle : DatabaseType.MySql);
 			Model.ConnectionString = textConnectionString.Text;
 			//Only save AutoLogin if connecting to MT and AutoLogin box is checked.
 			Model.CentralConnectionCur.IsAutomaticLogin = (checkBoxAutomaticLogin.Checked && checkConnectServer.Checked);
@@ -104,7 +99,7 @@ namespace OpenDental
 		private void FillComboDatabases()
 		{
 			comboDatabase.Items.Clear();
-			comboDatabase.Items.AddRange(CentralConnections.GetDatabases(Model.CentralConnectionCur, Model.DbType));
+			comboDatabase.Items.AddRange(CentralConnections.GetDatabases(Model.CentralConnectionCur));
 		}
 
 		private void comboDatabase_DropDown(object sender, EventArgs e)
@@ -163,7 +158,7 @@ namespace OpenDental
 			SyncModelWithUI();
 			try
 			{
-				CentralConnections.TryToConnect(Model.CentralConnectionCur, Model.DbType, Model.ConnectionString, noShowOnStartup: (Model.NoShow == YN.Yes),
+				CentralConnections.TryToConnect(Model.CentralConnectionCur, Model.ConnectionString, Model.NoShow == YN.Yes,
 					Model.ListAdminCompNames, useDynamicMode: Model.UseDynamicMode, allowAutoLogin: Model.AllowAutoLogin);
 			}
 			catch (Exception ex)
@@ -205,8 +200,6 @@ namespace OpenDental
 		public bool IsAccessedFromMainMenu;
 		///<summary>When silently running GetConfig() without showing UI, this gets set to true if either NoShowOnStartup or UsingEcw is found in config file.</summary>
 		public YN NoShow;
-		///<summary></summary>
-		public DatabaseType DbType;
 		///<summary>Stored so that they don't get deleted when re-writing the FreeDentalConfig file.</summary>
 		public List<string> ListAdminCompNames = new List<string>();
 		///<summary>Defaults to true. Allows the user to choose whether or not they can select 'Log me in automatically.'</summary>
@@ -227,7 +220,7 @@ namespace OpenDental
 			if (string.IsNullOrEmpty(databaseName))
 			{
 				CentralConnections.GetChooseDatabaseConnectionSettings(out chooseDatabaseInfo.CentralConnectionCur, out chooseDatabaseInfo.ConnectionString
-					, out chooseDatabaseInfo.NoShow, out chooseDatabaseInfo.DbType, out chooseDatabaseInfo.ListAdminCompNames, out chooseDatabaseInfo.UseDynamicMode
+					, out chooseDatabaseInfo.NoShow, out chooseDatabaseInfo.ListAdminCompNames, out chooseDatabaseInfo.UseDynamicMode
 					, out chooseDatabaseInfo.AllowAutoLogin);
 			}
 			//Command line args should always trump settings from the config file.

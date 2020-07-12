@@ -44,8 +44,7 @@ namespace OpenDentalGraph {
 							break;
 					}
 				}
-				catch(Exception e) {
-					e.DoNothing();					
+				catch {			
 				}
 				panelDraw.Invalidate();
 			}

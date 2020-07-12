@@ -304,8 +304,8 @@ namespace SparksToothChart {
 					return;
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
+
 				//The device can be null if the previous attempt to reinitialize failed.
 			}
 			//Either the device is null or was lost.
@@ -317,16 +317,16 @@ namespace SparksToothChart {
 				Invalidate();
 				return;
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch{
+
 			}
 			//Resetting the device failed.  Try to recreate the device (more overhead).
 			try {
 				Reinitialize();
 				Invalidate();
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
+
 				//This can happen in uncommon cases when the user unlocks their computer and left the chart open, or
 				//when someone RDPs into the computer in question when the Chart module is already open (limited memory resources, RDP is a memory hog).
 				//We swallow the error here so that the user is not kicked out of the program.  Better to have the red X over the chart then
@@ -364,8 +364,8 @@ namespace SparksToothChart {
 			try {
 				Render();
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
+
 				//Rendering failed because our device is invalid. Reinitialize the device and cached objects and force the control to be rerendered.
 				ReinitailizeIfNeeded();
 			}

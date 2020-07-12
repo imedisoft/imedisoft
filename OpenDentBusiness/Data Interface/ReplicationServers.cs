@@ -125,9 +125,6 @@ namespace OpenDentBusiness{
 		///<summary>Gets the MySQL server_id variable for the current connection.</summary>
 		public static long GetServer_id() {
 			
-			if(DataConnection.DBtype!=DatabaseType.MySql) {
-				return 0;
-			}
 			string command="SHOW VARIABLES LIKE 'server_id'";
 			DataTable table=Db.GetTable(command);
 			return PIn.Long(table.Rows[0][1].ToString());

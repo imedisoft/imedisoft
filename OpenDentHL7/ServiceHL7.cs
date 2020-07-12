@@ -74,7 +74,6 @@ namespace OpenDentHL7 {
 			}
 			XPathNavigator Navigator=document.CreateNavigator();
 			XPathNavigator nav;
-			DataConnection.DBtype=DatabaseType.MySql;
 			nav=Navigator.SelectSingleNode("//DatabaseConnection");
 			string computerName=nav.SelectSingleNode("ComputerName").Value;
 			string database=nav.SelectSingleNode("Database").Value;
@@ -93,7 +92,7 @@ namespace OpenDentHL7 {
 			DataConnection dcon=new DataConnection();
 			//Try to connect to the database directly
 			try {
-				dcon.SetDb(computerName,database,user,password,"","",DataConnection.DBtype);
+				dcon.SetDb(computerName,database,user,password,"","");
 			}
 			catch {//(Exception ex){
 				throw new ApplicationException("Connection to database failed.");
@@ -271,8 +270,7 @@ namespace OpenDentHL7 {
 					msgArchiveProcessedPath=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"MedLabHL7","Processed").Replace("\\","/");
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				//if the above fails, clear out the paths, the messages will not be archived
 				msgArchivePath="";
 				msgArchiveProcessedPath="";
@@ -375,8 +373,7 @@ namespace OpenDentHL7 {
 			try {//test to see if the path specified is a valid path, otherwise revert to the default root directory
 				fileList=chsftp.ls(resultsPath);//if this throws an exception, it is probably because the directory specified doesn't exist
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				EventLog.WriteEntry("OpenDentHL7","Could not locate the results directory specified in the enabled SFTP HL7 definition.  "
 					+"Retrieving files from the root directory instead.",EventLogEntryType.Information);
 				resultsPath=".";
@@ -440,8 +437,7 @@ namespace OpenDentHL7 {
 									CloudStorage.Upload(msgArchivePath,fileName,Encoding.ASCII.GetBytes(sb.ToString()));
 								}
 							}
-							catch(Exception ex) {
-								ex.DoNothing();
+							catch {
 								//do nothing, don't archive the message, might be a permission issue
 							}
 						}
@@ -465,8 +461,8 @@ namespace OpenDentHL7 {
 								File.Move(msgArchiveFilePath,msgArchiveFilePathProcessed);
 								MedLabs.UpdateFileNames(medLabNumList,ODFileUtils.CombinePaths("MedLabHL7","Processed",Path.GetFileName(msgArchiveFilePathProcessed)));
 							}
-							catch(Exception ex) {
-								ex.DoNothing();
+							catch {
+								
 								//do nothing, the file will remain in the root location
 							}
 						}

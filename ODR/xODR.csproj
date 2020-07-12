@@ -171,27 +171,14 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Aggregate.cs" />
-    <Compile Include="MakeReadableDefNum.cs" />
-    <Compile Include="GetData.cs" />
-    <Compile Include="Format.cs" />
     <Compile Include="TestValue.cs" />
-    <Compile Include="DataConnection.cs" />
     <Compile Include="FormParameterInput.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MakeReadable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MakeReadablePatNum.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Parameter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ParameterCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Query.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ValidDate.cs">
@@ -228,7 +215,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeBase\xCodeBase.csproj">

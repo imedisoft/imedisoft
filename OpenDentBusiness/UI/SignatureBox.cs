@@ -129,9 +129,8 @@ namespace OpenDental.UI {
 				}
 				Invalidate();
 			}
-			catch(Exception e) {
-				e.DoNothing();
-				//this will leave the list with zero points
+			catch {
+
 			}
 		}
 
@@ -260,10 +259,13 @@ namespace OpenDental.UI {
 			if(!IsDigitalSignature()) {
 				return "";
 			}
-			try {
-				return Encoding.UTF8.GetString(pointList.SelectMany(x => new[] { x.X,x.Y }).Where(x=>x>int.MinValue).Select(x=>(byte)x).ToArray());
+			try
+			{
+				return Encoding.UTF8.GetString(pointList.SelectMany(x => new[] { x.X, x.Y }).Where(x => x > int.MinValue).Select(x => (byte)x).ToArray());
 			}
-			catch(Exception ex) { ex.DoNothing(); }
+			catch
+			{
+			}
 			return "";
 		}
 

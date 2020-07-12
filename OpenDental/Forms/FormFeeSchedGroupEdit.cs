@@ -173,7 +173,7 @@ namespace OpenDental {
 			string gridTitle=Lan.g(this,"Fee Schedules");
 			FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 			if(form.ShowDialog()==DialogResult.OK) {
-				comboFeeSched.SelectedIndex=comboFeeSched.Items.IndexOf((comboFeeSched.Items.AsEnumerable<ODBoxItem<FeeSched>>().Where(x => x.Tag.FeeSchedNum==((FeeSched)form.ListSelectedTags[0]).FeeSchedNum).First()));
+				comboFeeSched.SelectedIndex=comboFeeSched.Items.IndexOf((comboFeeSched.Items.OfType<ODBoxItem<FeeSched>>().Where(x => x.Tag.FeeSchedNum==((FeeSched)form.ListSelectedTags[0]).FeeSchedNum).First()));
 			}
 		}
 

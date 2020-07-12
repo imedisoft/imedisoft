@@ -375,8 +375,7 @@ namespace OpenDental {
 					terms.PayCount=0;
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				MessageBox.Show("Unexpected error getting the terms from the window.");
 				return false;
 			}

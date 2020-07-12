@@ -47,7 +47,7 @@ namespace OpenDental {
 			_threadBalancer=new ODThread(ThreadWorker);
 			_threadBalancer.Tag=datePicker.Value;
 			_threadBalancer.Name="FamilyBalancerThread";
-			_threadBalancer.AddExceptionHandler(ex => ex.DoNothing());
+			_threadBalancer.AddExceptionHandler(ex => { });
 		}
 
 		private bool IsValid() {

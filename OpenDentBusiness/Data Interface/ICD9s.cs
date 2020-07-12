@@ -206,9 +206,6 @@ namespace OpenDentBusiness{
 		///<summary>Returns true if descriptions have not been updated to non-Caps Lock.  Always returns false if not MySQL.</summary>
 		public static bool IsOldDescriptions() {
 			
-			if(DataConnection.DBtype!=DatabaseType.MySql) {
-				return false;
-			}
 			string command=@"SELECT COUNT(*) FROM icd9 WHERE BINARY description = UPPER(description)";//count rows that are all caps
 			if(PIn.Int(Db.GetScalar(command))>10000) {//"Normal" DB should have 4, might be more if hand entered, over 10k means it is the old import.
 				return true;

@@ -17,12 +17,7 @@ namespace UnitTestsCore
 		{
 			try
 			{
-				string command = "";
-				if (DataConnection.DBtype == DatabaseType.MySql)
-				{
-					command = "DELETE FROM signalod";
-					DataCore.NonQ(command);
-				}
+				DataCore.NonQ("DELETE FROM signalod");
 			}
 			catch
 			{
@@ -34,20 +29,18 @@ namespace UnitTestsCore
 		/// </summary>
 		public static List<Signalod> GetAllSignalods()
 		{
-			List<Signalod> listSignals = null;
-			try
+            List<Signalod> listSignals;
+
+            try
 			{
-				string command = "";
-				if (DataConnection.DBtype == DatabaseType.MySql)
-				{
-					command = "SELECT * FROM signalod";
-					listSignals = OpenDentBusiness.Crud.SignalodCrud.TableToList(DataCore.GetTable(command));
-				}
+				listSignals = OpenDentBusiness.Crud.SignalodCrud.TableToList(
+					DataCore.GetTable("SELECT * FROM signalod"));
 			}
 			catch
 			{
 				listSignals = new List<Signalod>();
 			}
+
 			return listSignals;
 		}
 	}

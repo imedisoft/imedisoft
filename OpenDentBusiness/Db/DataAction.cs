@@ -188,26 +188,26 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Perform the given action in the context of the given connectionString db.</summary>
-		public static void Run(Action a, string connectionString, DatabaseType dbType = DatabaseType.MySql)
+		public static void Run(Action a, string connectionString)
 		{
-			GetT(new Func<object>(() => { a(); return null; }), connectionString, dbType);
+			GetT(new Func<object>(() => { a(); return null; }), connectionString);
 		}
 
 		///<summary>Perform the given action in the context of the given connectionString db.</summary>
-		public static void Run(Action a, string server, string db, string user, string password, string userLow, string passLow, DatabaseType dbType = DatabaseType.MySql)
+		public static void Run(Action a, string server, string db, string user, string password, string userLow, string passLow)
 		{
-			GetT(new Func<object>(() => { a(); return null; }), server, db, user, password, userLow, passLow, dbType);
+			GetT(new Func<object>(() => { a(); return null; }), server, db, user, password, userLow, passLow);
 		}
 
 		///<summary>Perform the given function in the context of the given connectionString db and return a T.</summary>
-		public static T GetT<T>(Func<T> fn, string connectionString, DatabaseType dbType = DatabaseType.MySql)
+		public static T GetT<T>(Func<T> fn, string connectionString)
 		{
 			T ret = default(T);
 			ExecuteThread(new ODThread((o) =>
 			{
 				using (DataConnection dataConn = new DataConnection())
 				{
-					dataConn.SetDbT(connectionString, "", dbType);
+					dataConn.SetDbT(connectionString, "");
 					ret = fn();
 				}
 			}));
@@ -215,14 +215,14 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Perform the given function in the context of the given connectionString db and return a T.</summary>
-		public static T GetT<T>(Func<T> fn, string server, string db, string user, string password, string userLow, string passLow, DatabaseType dbType = DatabaseType.MySql)
+		public static T GetT<T>(Func<T> fn, string server, string db, string user, string password, string userLow, string passLow)
 		{
 			T ret = default(T);
 			ExecuteThread(new ODThread((o) =>
 			{
 				using (DataConnection dataConn = new DataConnection())
 				{
-					dataConn.SetDbT(server, db, user, password, userLow, passLow, dbType, true);
+					dataConn.SetDbT(server, db, user, password, userLow, passLow, true);
 					ret = fn();
 				}
 			}));

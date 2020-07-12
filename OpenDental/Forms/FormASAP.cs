@@ -1599,8 +1599,7 @@ namespace OpenDental {
 				try {
 					ThreadWebSchedSignupsExitHandler();
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 			}));
 			_threadWebSchedSignups.Name="CheckWebSchedSignups";

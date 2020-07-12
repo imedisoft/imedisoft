@@ -144,14 +144,8 @@ namespace OpenDentBusiness{
 		///<summary>Get all payment plans for this patient with the insurance plan identified by PlanNum and InsSubNum attached (marked used for tracking expected insurance payments) that have not been paid in full.  Only returns plans with no claimprocs currently attached or claimprocs from the claim identified by the claimNum sent in attached.  If claimNum is 0 all payment plans with planNum, insSubNum, and patNum not paid in full will be returned.</summary>
 		public static List<PayPlan> GetValidInsPayPlans(long patNum,long planNum,long insSubNum,long claimNum) {
 			
-			string command="";
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command+="SELECT payplan.*,MAX(claimproc.ClaimNum) ClaimNum";
-			}
-			else {
-				command+="SELECT payplan.PayPlanNum,payplan.PatNum,payplan.Guarantor,payplan.PayPlanDate,"
-					+"payplan.APR,payplan.Note,payplan.PlanNum,payplan.CompletedAmt,payplan.InsSubNum,MAX(claimproc.ClaimNum) ClaimNum";
-			}
+			string command="SELECT payplan.*,MAX(claimproc.ClaimNum) ClaimNum";
+
 			command+=" FROM payplan"
 				+" LEFT JOIN claimproc ON claimproc.PayPlanNum=payplan.PayPlanNum"
 				+" WHERE payplan.PatNum="+POut.Long(patNum)
@@ -160,13 +154,7 @@ namespace OpenDentBusiness{
 			if(claimNum>0) {
 				command+=" AND (claimproc.ClaimNum IS NULL OR claimproc.ClaimNum="+POut.Long(claimNum)+")";//payplans with no claimprocs attached or only claimprocs from the same claim
 			}
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command+=" GROUP BY payplan.PayPlanNum";
-			}
-			else {
-				command+=" GROUP BY payplan.PayPlanNum,payplan.PatNum,payplan.Guarantor,payplan.PayPlanDate,"
-					+"payplan.APR,payplan.Note,payplan.PlanNum,payplan.CompletedAmt,payplan.InsSubNum";
-			}
+			command+=" GROUP BY payplan.PayPlanNum";
 			command+=" HAVING payplan.CompletedAmt>SUM(COALESCE(claimproc.InsPayAmt,0))";//has not been paid in full yet
 			if(claimNum==0) {//if current claimproc is not attached to a claim, do not return payplans with claimprocs from existing claims already attached
 				command+=" AND (MAX(claimproc.ClaimNum) IS NULL OR MAX(claimproc.ClaimNum)=0)";

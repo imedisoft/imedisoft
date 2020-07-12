@@ -114,8 +114,7 @@ namespace OpenDental {
 				}
 				tmpImg=null;
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 				picturePreview.Image=null;
 				picturePreview.Invalidate();				
 			}

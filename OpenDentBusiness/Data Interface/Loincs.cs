@@ -123,14 +123,9 @@ namespace OpenDentBusiness{
 		///<summary></summary>
 		public static List<Loinc> GetBySearchString(string searchText) {
 			 
-			string command;
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command="SELECT * FROM loinc WHERE LoincCode LIKE '%"+POut.String(searchText)+"%' OR NameLongCommon LIKE '%"+POut.String(searchText)
+			string command="SELECT * FROM loinc WHERE LoincCode LIKE '%"+POut.String(searchText)+"%' OR NameLongCommon LIKE '%"+POut.String(searchText)
 					+"%' ORDER BY RankCommonTests=0, RankCommonTests";//common tests are at top of list.
-			}
-			else {//oracle
-				command="SELECT * FROM loinc WHERE LoincCode LIKE '%"+POut.String(searchText)+"%' OR NameLongCommon LIKE '%"+POut.String(searchText)+"%'";
-			}
+
 			return Crud.LoincCrud.SelectMany(command);
 		}
 
@@ -168,14 +163,15 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>CAUTION, this empties the entire loinc table. "DELETE FROM loinc"</summary>
-		public static void DeleteAll() {
-			
-			string command="DELETE FROM loinc";
+		public static void DeleteAll()
+		{
+
+			string command = "DELETE FROM loinc";
 			Db.NonQ(command);
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command="ALTER TABLE loinc AUTO_INCREMENT = 1";//resets the primary key to start counting from 1 again.
-				Db.NonQ(command);
-			}
+
+			command = "ALTER TABLE loinc AUTO_INCREMENT = 1";//resets the primary key to start counting from 1 again.
+			Db.NonQ(command);
+
 			return;
 		}
 

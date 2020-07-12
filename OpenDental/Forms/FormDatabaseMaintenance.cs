@@ -1001,9 +1001,7 @@ namespace OpenDental {
 			FillGrid();
 			FillGridHidden();
 			FillGridOld();
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				butRemoveNulls.Visible=false;
-			}
+
 			textBoxUpdateInProg.Text=PrefC.GetString(PrefName.UpdateInProgressOnComputerName);
 			if(string.IsNullOrWhiteSpace(textBoxUpdateInProg.Text)) {
 				butClearUpdateInProgress.Enabled=false;
@@ -1258,10 +1256,6 @@ namespace OpenDental {
 		}
 
 		private void butEtrans_Click(object sender,EventArgs e) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				MessageBox.Show("Tool does not currently support Oracle.  Please call support to see if you need this fix.");
-				return;
-			}
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will clear out etrans message text entries over a year old.  An automatic backup of the database will be created before deleting any entries.  This process may take a while to run depending on the size of your database.  Continue?")) {
 				return;
 			}

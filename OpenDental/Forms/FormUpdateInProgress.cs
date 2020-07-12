@@ -50,8 +50,7 @@ namespace OpenDental {
 					butOverride.Visible=true;
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();	//When updating to a version with a new computer pref column, the crud knows about the column before the database does.
+			catch {
 			}
 			labelWarning.Text=warningString;
 		}

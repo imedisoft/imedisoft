@@ -24,8 +24,8 @@ namespace OpenDental {
 			try {
 				FillHiddenPrefs();
 			}
-			catch(Exception ex) {
-				ex.DoNothing();//Suppress unhandled exceptions from hidden preferences, since they are read only.
+			catch {
+				//Suppress unhandled exceptions from hidden preferences, since they are read only.
 			}
 		}
 
@@ -166,8 +166,7 @@ namespace OpenDental {
 				Pref hiddenPref=Prefs.GetOne(pref);
 				return hiddenPref.ValueString;
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				return null;
 			}
 		}
@@ -219,10 +218,10 @@ namespace OpenDental {
 				DataConnection dcon;
 				//use the one table that we know exists
 				if(textMysqlUser.Text=="") {
-					dcon=new DataConnection(textServerName.Text,"mysql","root",textMysqlPass.Text,DatabaseType.MySql);
+					dcon=new DataConnection(textServerName.Text,"mysql","root",textMysqlPass.Text);
 				}
 				else {
-					dcon=new DataConnection(textServerName.Text,"mysql",textMysqlUser.Text,textMysqlPass.Text,DatabaseType.MySql);
+					dcon=new DataConnection(textServerName.Text,"mysql",textMysqlUser.Text,textMysqlPass.Text);
 				}
 				string command="SHOW DATABASES";
 				//if this next step fails, table will simply have 0 rows
@@ -380,8 +379,7 @@ namespace OpenDental {
 						throw new Exception();
 					}
 				}
-				catch(Exception e) {
-					e.DoNothing();
+				catch {
 					errorMsg+="Log off after minutes is invalid. Must be a positive number.\r\n";
 				}
 			}

@@ -45,8 +45,7 @@ namespace CodeBase {
 					return true;
 				}
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			return false;
 		}
@@ -63,16 +62,18 @@ namespace CodeBase {
 		}
 
 		///<summary>Returns true if the service was able to uninstall successfully.</summary>
-		public static bool Uninstall(ServiceController service) {
-			try {
+		public static bool Uninstall(ServiceController service)
+		{
+			try
+			{
 				string standardOutput;
 				int exitCode;
-				Uninstall(service.ServiceName,out standardOutput,out exitCode);
+				Uninstall(service.ServiceName, out standardOutput, out exitCode);
 				//Check to see if the service was successfully removed.
-				return (GetServiceByServiceName(service.ServiceName)!=null);
+				return (GetServiceByServiceName(service.ServiceName) != null);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch
+			{
 			}
 			return false;
 		}
@@ -293,8 +294,7 @@ namespace CodeBase {
 				try {
 					SetSecurityDescriptorToAllowEveryoneToManageService(service);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 				}
 			}
 		}
@@ -437,8 +437,7 @@ namespace CodeBase {
 				}
 				return false;
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 			}
 			//Querying the registry failed so let's try querying Window Management Interface (WMI).
 			//If this throws also then let it throw. It means we absolutely cannot determine that status of this service.

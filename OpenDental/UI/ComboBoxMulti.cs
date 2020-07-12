@@ -373,7 +373,7 @@ namespace OpenDental.UI {
 			if(_threadCheckKeyboard==null) {
 				//When DroppedDown, will update input flags for auto collapsing.
 				_threadCheckKeyboard=new ODThread(100,WorkerThread_KeyboardListener);
-				_threadCheckKeyboard.AddExceptionHandler((ex) => ex.DoNothing());
+				_threadCheckKeyboard.AddExceptionHandler((ex) => { });
 				_threadCheckKeyboard.Start();
 			}
 		}

@@ -37,8 +37,7 @@ namespace OpenDentBusiness.WebTypes {
 			try {
 				return JsonConvert.DeserializeObject<List<EConnectorRequest>>(jsonString,_jsonSettings)??new List<EConnectorRequest>();
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				return new List<EConnectorRequest>();
 			}
 		}
@@ -57,8 +56,8 @@ namespace OpenDentBusiness.WebTypes {
 					.Select(x => x.First()).ToList();
 				return listRequestsOut;
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
+
 			}
 			return listRequestsIn;
 		}

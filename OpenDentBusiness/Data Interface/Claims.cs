@@ -166,13 +166,9 @@ namespace OpenDentBusiness{
 				+" AND insplan.PlanNum = claim.PlanNum"
 				+" AND insplan.CarrierNum = carrier.CarrierNum"
 				+" AND claimproc.ClaimPaymentNum = "+claimPaymentNum+" ";
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command+="GROUP BY claim.ClaimNum ";
-			}
-			else {//oracle
-				command+="GROUP BY claim.DateService,claim.ProvTreat,"+DbHelper.Concat("patient.LName","', '","patient.FName")
-					+",carrier.CarrierName,claim.ClaimNum,claimproc.ClaimPaymentNum,claim.PatNum,ClaimFee,clinic.Description,PaymentRow ";
-			}
+			command+="GROUP BY claim.ClaimNum ";
+			
+
 			command+="ORDER BY claimproc.PaymentRow";
 			DataTable table=Db.GetTable(command);
 			return ClaimPaySplitTableToList(table);

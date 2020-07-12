@@ -185,7 +185,7 @@ namespace UnitTests.AccountModules_Tests {
 			DataTable account=AccountModules.GetAccount(families.MyFamily.Guarantor.PatNum,_stmt).Tables["account"];
 			//Assert
 			Assert.AreEqual(2,account.Rows.Count);
-			DataRow rowPayment=account.Rows.AsEnumerable<DataRow>().First(x => PIn.Long(x["PayPlanNum"].ToString())==0 && PIn.Long(x["PayNum"].ToString())!=0);
+			DataRow rowPayment=account.Rows.OfType<DataRow>().First(x => PIn.Long(x["PayPlanNum"].ToString())==0 && PIn.Long(x["PayNum"].ToString())!=0);
 			Assert.AreEqual(families.MyFamily.Guarantor.PatNum,PIn.Long(rowPayment["PatNum"].ToString()));
 			Assert.AreEqual(pay.Payment.PayNum,PIn.Long(rowPayment["PayNum"].ToString()));			
 			Assert.AreEqual((decimal)pay.ListPaySplits.First(x => x.PatNum==families.MyFamily.Guarantor.PatNum).SplitAmt//One split is inside the family.
@@ -207,7 +207,7 @@ namespace UnitTests.AccountModules_Tests {
 			DataTable account=AccountModules.GetAccount(families.MyFamily.Guarantor.PatNum,_stmt).Tables["account"];
 			//Assert
 			Assert.AreEqual(2,account.Rows.Count);//Payment row and PayPlan row
-			DataRow rowPayment=account.Rows.AsEnumerable<DataRow>().First(x => PIn.Long(x["PayPlanNum"].ToString())==0 && PIn.Long(x["PayNum"].ToString())!=0);
+			DataRow rowPayment=account.Rows.OfType<DataRow>().First(x => PIn.Long(x["PayPlanNum"].ToString())==0 && PIn.Long(x["PayNum"].ToString())!=0);
 			Assert.AreEqual(families.MyFamily.Guarantor.PatNum,PIn.Long(rowPayment["PatNum"].ToString()));
 			Assert.AreEqual(pay.Payment.PayNum,PIn.Long(rowPayment["PayNum"].ToString()));			
 			Assert.AreEqual((decimal)pay.ListPaySplits.First(x => x.PatNum==families.MyFamily.Guarantor.PatNum).SplitAmt//One split is inside the family.

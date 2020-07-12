@@ -74,7 +74,7 @@ namespace OpenDental {
 			if(isSilent) {
 				ODThread threadSilent=new ODThread((o) => WebServiceMainHQProxy.GetWebServiceMainHQInstance()
 					.SetSmsPatientPhoneOptIn(PayloadHelper.CreatePayload(listPayloadItems,eServiceCode.IntegratedTexting)));
-				threadSilent.AddExceptionHandler((ex) => ex.DoNothing());
+				threadSilent.AddExceptionHandler((ex) => { });
 				threadSilent.Name="ShortCodeOptIn";
 				threadSilent.Start();
 				return true;

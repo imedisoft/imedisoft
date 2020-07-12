@@ -14,7 +14,7 @@ namespace OpenDentBusiness.WebServices
 		/// Optionally pass in database connection settings to override using the parent thread database context.
 		/// </summary>
 		public OpenDentalServerMockIIS(
-			string server = "", string db = "", string user = "", string password = "", string userLow = "", string passLow = "", DatabaseType dbType = DatabaseType.MySql)
+			string server = "", string db = "", string user = "", string password = "", string userLow = "", string passLow = "")
 		{
 		}
 

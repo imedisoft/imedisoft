@@ -51,8 +51,7 @@ namespace UnitTests.ProgramProperties_Tests {
 			try {
 				ProgramProperties.Delete(prop);
 			}
-			catch (Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			ProgramProperties.RefreshCache();//Make sure data is as current as it can be.
 			//Ensure it was deleted.
@@ -71,8 +70,8 @@ namespace UnitTests.ProgramProperties_Tests {
 			try {
 				ProgramProperties.Delete(prop);
 			}
-			catch (Exception ex) {
-				ex.DoNothing();
+			catch {
+
 			}
 			ProgramProperties.RefreshCache();//Make sure data is as current as it can be.
 			//Ensure it was NOT deleted since the description is most certainly not in GetDeletablePropertyDescriptions().

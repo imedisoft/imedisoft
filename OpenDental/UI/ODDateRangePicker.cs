@@ -91,8 +91,7 @@ namespace OpenDental.UI {
 				}
 				return dateTime.AddHours(23).AddMinutes(59).AddSeconds(59);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				if(isDefaultMaxDateT) {
 					return DateTime.MaxValue;
 				}

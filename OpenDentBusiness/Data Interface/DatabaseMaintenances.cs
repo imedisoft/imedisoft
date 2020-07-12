@@ -129,12 +129,6 @@ namespace OpenDentBusiness {
 		///<summary></summary>
 		[DbmMethodAttr]
 		public static string MySQLServerOptionsValidate(bool verbose,DbmMode modeCur) {
-			if(PrefC.IsCloudMode) {
-				return "";//Cloud hosted Open Dental databases don't have permission to call SET GLOBAL, also the MySQL variables can be assumed to be correct, since we host it.
-			}
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command="SHOW GLOBAL VARIABLES LIKE 'sql_mode'";
 			DataTable table=Db.GetTable(command);
 			if(table.Rows.Count<1||table.Columns.Count<2) {//user may not have permission to access global variables?
@@ -168,8 +162,7 @@ namespace OpenDentBusiness {
 						log+=Lans.g("FormDatabaseMaintenance","The MySQL server variable 'sql_mode' has been changed from")+" "+sqlmodeDisplay+" "
 							+Lans.g("FormDatabaseMaintenance","to blank")+".\r\n";
 					}
-					catch(Exception ex) {
-						ex.DoNothing();//prevent vs warning
+					catch {
 						log+=Lans.g("FormDatabaseMaintenance","Unable to set the MySQL server variable 'sql_mode', probably due to permissions")+".  "
 							+Lans.g("FormDatabaseMaintenance","The sql_mode must be blank or NO_AUTO_CREATE_USER and is currently set to")
 							+" "+sqlmodeDisplay+".\r\n";
@@ -183,9 +176,6 @@ namespace OpenDentBusiness {
 		public static ODTuple<string,bool> MySQLTables(bool verbose,DbmMode modeCur) {
 			string log="";
 			bool success=true;
-			if(DataConnection.DBtype!=DatabaseType.MySql) {
-				return new ODTuple<string, bool>("",success);
-			}
 			if(PrefC.GetBool(PrefName.DatabaseMaintenanceSkipCheckTable)) {
 				return new ODTuple<string,bool>("",success);
 			}
@@ -243,9 +233,6 @@ namespace OpenDentBusiness {
 		public static string RepairAndOptimize(bool isLogged=false) {
 			StringBuilder retVal=new StringBuilder();
 			DataTable tableLog=null;
-			if(DataConnection.DBtype!=DatabaseType.MySql) {
-				return "";
-			}
 			string command="SHOW FULL TABLES WHERE Table_type='BASE TABLE';";//Tables, not views.  Does not work in MySQL 4.1, however we test for MySQL version >= 5.0 in PrefL.
 			DataTable table=Db.GetTable(command);
 			string[] tableNames=new string[table.Rows.Count];
@@ -286,9 +273,6 @@ namespace OpenDentBusiness {
 		///As documented online, https://dev.mysql.com/doc/refman/5.6/en/optimize-table.html, MySQL 5.6 supports the optimize
 		///command for MyISAM, InnoDB and Archive tables only.</summary>
 		public static string OptimizeTable(string tableName,bool hasResult = false,bool canOptimizeInnodb=false) {
-			if(DataConnection.DBtype!=DatabaseType.MySql) {
-				return "";
-			}
 			string retVal="";
 			if(PrefC.GetBool(PrefName.RandomPrimaryKeys)) {
 				retVal=tableName+" "+Lans.g("MiscData","skipped due to using random primary keys.");
@@ -330,9 +314,6 @@ namespace OpenDentBusiness {
 		///<summary>also checks patient.AddrNote</summary>
 		[DbmMethodAttr]
 		public static string SpecialCharactersInNotes(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string log="";
 			//this will run for fix or check, but will only fix if the special char button is used 
 			//Fix code is in a dedicated button "Spec Char"
@@ -643,9 +624,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string AppointmentCompleteWithTpAttached(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command="SELECT DISTINCT appointment.PatNum, "+DbHelper.Concat("LName","\", \"","FName")+" AS PatName, AptDateTime "
 				+"FROM appointment "
 				+"INNER JOIN patient ON patient.PatNum=appointment.PatNum "
@@ -1005,9 +983,6 @@ namespace OpenDentBusiness {
 		///<summary>For appointments that have more than one AppointmentCreate audit entry, deletes all but the newest.</summary>
 		[DbmMethodAttr]
 		public static string AuditTrailDeleteDuplicateApptCreate(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command="SELECT securitylog.* "
 				+"FROM securitylog "
 				+"INNER JOIN ("
@@ -1347,9 +1322,6 @@ namespace OpenDentBusiness {
 		public static string CanadaCarriersCdaMissingInfo(bool verbose,DbmMode modeCur) {
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				return Lans.g("FormDatabaseMaintenance","Skipped. Local computer region must be set to Canada to run.");
-			}
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
 			}
 			string command="SELECT CanadianNetworkNum FROM canadiannetwork WHERE Abbrev='TELUS B' LIMIT 1";
 			long canadianNetworkNumTelusB=PIn.Long(Db.GetScalar(command));
@@ -1776,9 +1748,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimWithInvalidProvTreat(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string log="";
 			string command="SELECT * FROM claim WHERE ProvTreat > 0 AND ProvTreat NOT IN (SELECT ProvNum FROM provider);";
 			List<Claim> listClaims=Crud.ClaimCrud.SelectMany(command);
@@ -1808,9 +1777,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClaimWriteoffSum(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			//Sums for each claim---------------------------------------------------------------------
 			string command=@"SELECT claim.ClaimNum,SUM(claimproc.WriteOff) sumwo,claim.WriteOff
 				FROM claim,claimproc
@@ -1855,9 +1821,6 @@ namespace OpenDentBusiness {
 		///<summary>Finds claimpayments where the CheckAmt!=SUM(InsPayAmt) for the claimprocs attached to the claimpayment.  Manual fix.</summary>
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ClaimPaymentCheckAmt(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			//because of the way this is grouped, it will just get one of many patients for each
 			string command=@"SELECT claimproc.ClaimPaymentNum,ROUND(SUM(InsPayAmt),2) _sumpay,ROUND(CheckAmt,2) _checkamt,claimproc.PatNum
 					FROM claimpayment,claimproc
@@ -2211,7 +2174,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string ClaimProcDeleteDuplicateEstimateForSameInsPlan(bool verbose,DbmMode modeCur) {
 			string command;
-			if(DataConnection.DBtype==DatabaseType.MySql) {
+
 				//Get all the claimproc estimates that already have a claimproc marked as received from the same InsPlan.
 				command="SELECT cp.ClaimProcNum FROM claimproc cp USE KEY(PRIMARY)"
 				+" INNER JOIN claimproc cp2 ON cp2.PatNum=cp.PatNum"
@@ -2221,18 +2184,8 @@ namespace OpenDentBusiness {
 				+" AND cp2.Status="+POut.Int((int)ClaimProcStatus.Received)
 				+" WHERE cp.Status="+POut.Int((int)ClaimProcStatus.Estimate)
 				+" AND cp.ClaimNum=0";//Make sure the estimate is not already attached to a claim somehow.
-			}
-			else {//oracle
-						//Get all the claimproc estimates that already have a claimproc marked as received from the same InsPlan.
-				command="SELECT cp.ClaimProcNum FROM claimproc cp"
-				+" INNER JOIN claimproc cp2 ON cp2.PatNum=cp.PatNum"
-				+" AND cp2.PlanNum=cp.PlanNum"    //The same insurance plan
-				+" AND cp2.InsSubNum=cp.InsSubNum"//for the same subscriber
-				+" AND cp2.ProcNum=cp.ProcNum"    //for the same procedure.
-				+" AND cp2.Status="+POut.Int((int)ClaimProcStatus.Received)
-				+" WHERE cp.Status="+POut.Int((int)ClaimProcStatus.Estimate)
-				+" AND cp.ClaimNum=0";//Make sure the estimate is not already attached to a claim somehow.
-			}
+			
+
 			DataTable table=Db.GetTable(command);
 			string log="";
 			switch(modeCur) {
@@ -2726,9 +2679,6 @@ namespace OpenDentBusiness {
 		
 		[DbmMethodAttr(HasBreakDown=true,HasPatNum=true)]
 		public static string ClaimProcWithInvalidClaimNum(bool verbose,DbmMode modeCur,long patNum=0) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string log="";
 			string command;
 			string patWhere=(patNum>0 ? "AND claimproc.PatNum="+POut.Long(patNum)+" " : "");
@@ -2974,9 +2924,6 @@ namespace OpenDentBusiness {
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {
 				return Lans.g("FormDatabaseMaintenance","Skipped. Local computer region must be set to Canada to run.");
 			}
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			//Look at the comments for claimProc.DateEntry, if not set then the claimProc has no financial meaning yet.
 			string command=@"SELECT claimproc.*
 				FROM claimproc 
@@ -3140,9 +3087,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ClockEventInFuture(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -3203,9 +3147,6 @@ namespace OpenDentBusiness {
 		///<summary>Finds deposits where there are attached payments and the deposit amount does not equal the sum of the attached payment amounts.</summary>
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string DepositsWithIncorrectAmount(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			//only deposits with payments attached (INNER JOIN) where sum of payment amounts don't match the deposit amount
 			//deposits with positive amount but no payments attached (LEFT JOIN...) is handled in a separate DBM above
 			string command=@"SELECT deposit.DepositNum,deposit.Amount,deposit.DateDeposit,SUM(payments.amt) _sum
@@ -3253,9 +3194,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string DiseaseWithInvalidDiseaseDef(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string log="";
 			string command=@"SELECT DiseaseNum,DiseaseDefNum FROM disease WHERE DiseaseDefNum NOT IN(SELECT DiseaseDefNum FROM diseasedef)";
 			DataTable table=Db.GetTable(command);
@@ -3526,9 +3464,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string FeeDeleteDuplicates(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command="SELECT FeeNum,FeeSched,CodeNum,Amount,ClinicNum,ProvNum FROM fee "
 				+"GROUP BY FeeSched,CodeNum,ClinicNum,ProvNum HAVING COUNT(CodeNum)>1";
 			DataTable table=Db.GetTable(command);
@@ -3582,9 +3517,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string FeeDeleteForInvalidProc(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command=@"SELECT FeeNum,FeeSched,fee.CodeNum AS 'CodeNum' FROM fee 
 									LEFT JOIN procedurecode ON fee.CodeNum=procedurecode.CodeNum 
 									WHERE procedurecode.CodeNum IS NULL";
@@ -4312,9 +4244,6 @@ namespace OpenDentBusiness {
 		///<summary>Checks for situations where there are valid InsSubNums, but mismatched PlanNums.</summary>
 		[DbmMethodAttr(HasBreakDown=true,HasPatNum=true)]
 		public static string InsSubNumMismatchPlanNum(bool verbose,DbmMode modeCur,long patNumSpecific=0) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string log="";
 			//Not going to validate the following tables because they do not have an InsSubNum column: appointmentx2, benefit.
 			//This DBM assumes that the inssub table is correct because that's what we're comparing against.
@@ -4758,9 +4687,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string LabCaseWithInvalidLaboratory(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string log="";
 			string command;
 			switch(modeCur) {
@@ -4877,9 +4803,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string MessageButtonDuplicateButtonIndex(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string queryStr="SELECT COUNT(*) NumFound,SigButDefNum,ButtonIndex,ComputerName FROM sigbutdef GROUP BY ComputerName,ButtonIndex HAVING COUNT(*) > 1";
 			DataTable table=Db.GetTable(queryStr);
 			int numFound=table.Select().Sum(x => PIn.Int(x["NumFound"].ToString())-1);//sum the duplicates; one in each group is valid.
@@ -5028,9 +4951,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown=true)]
 		public static string PatFieldsDeleteDuplicates(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			//This code is only needed for older db's. New DB's created after 12.2.30 and 12.3.2 shouldn't need this.
 			string command=@"DROP TABLE IF EXISTS tempduplicatepatfields";
 			Db.NonQ(command);
@@ -5405,9 +5325,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PatientPriProvHidden(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command=@"
 				SELECT provider.ProvNum,provider.Abbr
 				FROM provider
@@ -5599,9 +5516,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PatPlanOrdinalDuplicates(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command="SELECT patient.PatNum,patient.LName,patient.FName,COUNT(*) "
 				+"FROM patplan "
 				+"INNER JOIN patient ON patient.PatNum=patplan.PatNum "
@@ -5865,9 +5779,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PayPlanChargeProvNum(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command="SELECT pat.PatNum AS 'PatNum',pat.LName AS 'PatLName',pat.FName AS 'PatFName',guar.PatNum AS 'GuarNum',guar.LName AS 'GuarLName',guar.FName AS 'GuarFName',payplan.PayPlanDate "
 				+"FROM payplancharge "
 				+"LEFT JOIN payplan ON payplancharge.PayPlanNum=payplan.PayPlanNum "
@@ -5966,9 +5877,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PaySplitAttachedToDeletedProc(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command="SELECT CONCAT(pat.LName,' ',pat.FName) AS 'PatientName', payment.PatNum, payment.PayDate, payment.PayAmt, "
 				+"paysplit.DatePay, procedurecode.AbbrDesc, CONCAT(splitpat.FName,' ',splitpat.LName) AS 'SplitPatientName', paysplit.SplitAmt "
 				+"FROM paysplit "
@@ -6132,9 +6040,6 @@ namespace OpenDentBusiness {
 					}
 					break;
 				case DbmMode.Fix:
-					if(DataConnection.DBtype==DatabaseType.Oracle) {
-						return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-					}
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command=@"SELECT *,SUM(SplitAmt) SplitAmt_ 
@@ -6514,12 +6419,7 @@ namespace OpenDentBusiness {
 			else {
 				log+=Lans.g("FormDatabaseMaintenance","No default provider set.")+"\r\n";
 				if(modeCur!=DbmMode.Check) {
-					if(DataConnection.DBtype==DatabaseType.Oracle) {
-						command="SELECT ProvNum FROM provider WHERE IsHidden=0 ORDER BY itemorder";
-					}
-					else {//MySQL
-						command="SELECT provnum FROM provider WHERE IsHidden=0 ORDER BY itemorder LIMIT 1";
-					}
+					command="SELECT provnum FROM provider WHERE IsHidden=0 ORDER BY itemorder LIMIT 1";
 					table=Db.GetTable(command);
 					command="UPDATE preference SET valuestring='"+table.Rows[0][0].ToString()+"' WHERE prefname='PracticeDefaultProv'";
 					Db.NonQ(command);
@@ -6718,10 +6618,6 @@ namespace OpenDentBusiness {
 							+"WHERE procedurelog.AptNum=appointment.AptNum AND procedurelog.PatNum != appointment.PatNum";
 			switch(modeCur) {
 				case DbmMode.Check:
-					if(DataConnection.DBtype==DatabaseType.Oracle) {
-						command="SELECT ProcNum FROM procedurelog p "
-							+"WHERE (SELECT COUNT(*) FROM appointment a WHERE p.AptNum=a.AptNum AND p.PatNum!=a.PatNum AND ROWNUM<=1)>0";
-					}
 					int numFound=Db.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures attached to appointments with incorrect patient: ")+numFound+"\r\n";
@@ -6754,11 +6650,6 @@ namespace OpenDentBusiness {
 							AND procedurelog.ProcStatus=2";//only detach completed procs 
 			switch(modeCur) {
 				case DbmMode.Check:
-					if(DataConnection.DBtype==DatabaseType.Oracle) {
-						command=@"SELECT ProcNum FROM procedurelog p
-							WHERE p.ProcStatus=2 AND 
-							(SELECT COUNT(*) FROM appointment a WHERE a.AptNum=p.AptNum AND TO_DATE(p.ProcDate)!=TO_DATE(a.AptDateTime) AND ROWNUM<=1)>0";
-					}
 					int numFound=Db.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures which are attached to appointments with mismatched dates: ")+numFound+"\r\n";
@@ -7083,9 +6974,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProcedurelogToothNums(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			if(modeCur==DbmMode.Breakdown) {
 				return "";
 			}
@@ -7416,9 +7304,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string ProgramPropertiesMissingForClinic(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			//X-Charge and PayConnect are currently the only program links that use ClinicNum.
 			string progNumStr=POut.Long(Programs.GetProgramNum(ProgramName.Xcharge))+","+POut.Long(Programs.GetProgramNum(ProgramName.PayConnect));
 			string command="SELECT DISTINCT pphq.*,clinic.ClinicNum missingClinicNum "//Distinct in case there are duplicate prog props with a ClinicNum 0.
@@ -7551,9 +7436,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string RecallDuplicatesWarn(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			if(RecallTypes.PerioType<1 || RecallTypes.ProphyType<1) {
 				return Lans.g("FormDatabaseMaintenance","Warning!  Recall types not set up properly.  There must be at least one of each type: perio and prophy.")+"\r\n";
 			}
@@ -8133,9 +8015,6 @@ namespace OpenDentBusiness {
 
 		[DbmMethodAttr]
 		public static string TasksCompletedWithInvalidFinishDateTime(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command="SELECT task.TaskNum,IFNULL(MAX(tasknote.DateTimeNote),task.DateTimeEntry) AS DateTimeNoteMax "
 				+"FROM task "
 				+"LEFT JOIN tasknote ON task.TaskNum=tasknote.TaskNum "
@@ -8375,9 +8254,6 @@ namespace OpenDentBusiness {
 		/// <summary>Only one user of a given UserName may be unhidden at a time. Warn the user and instruct them to hide extras.</summary>
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string UserodDuplicateUser(bool verbose,DbmMode modeCur) {
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return Lans.g("FormDatabaseMaintenance","Currently not Oracle compatible.  Please call support.");
-			}
 			string command="SELECT UserName FROM userod WHERE IsHidden=0 GROUP BY UserName HAVING Count(*)>1;";
 			DataTable table=Db.GetTable(command);
 			if(table.Rows.Count==0 && !verbose) {
@@ -8692,10 +8568,6 @@ HAVING cnt>1";
 
 		///<summary>Makes a backup of the database, clears out etransmessagetext entries over a year old, and then runs optimize on just the etransmessagetext table.  Customers were calling in with the complaint that their etransmessagetext table is too big so we added this tool.</summary>
 		public static void ClearOldEtransMessageText() {
-			//Make a backup of DB before we change anything, especially because we will be running optimize at the end.
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				return; //Several issues need to be addressed before supporting Oracle.  E.g. backing up, creating temporary tables with globally unique identifiers, etc.
-			}
 			//Unlink etrans records from their etransmessagetext records if older than 1 year.
 			//We want to keep the 835's around, because they are financial documents which the user may want to reference from the claim edit window later.
 			string command="UPDATE etrans "
@@ -8814,7 +8686,7 @@ HAVING cnt>1";
 					errorCount++;
 				}
 			}
-			if(DataConnection.DBtype==DatabaseType.MySql && tableEmailMessageNums.Rows.Count!=noChangeCount) {//Using MySQL and something actually changed.
+			if(tableEmailMessageNums.Rows.Count!=noChangeCount) {//Using MySQL and something actually changed.
 				DatabaseMaintEvent.Fire(ODEventType.DatabaseMaint,Lans.g("DatabaseMaintenance","Optimizing the email message table..."));
 				OptimizeTable("emailmessage");
 			}

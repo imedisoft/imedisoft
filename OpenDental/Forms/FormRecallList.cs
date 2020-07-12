@@ -52,8 +52,7 @@ namespace OpenDental {
 				try {
 					return _gridCur==gridReminders?_gridCur.SelectedTag<Recalls.RecallRecent>().PatNum:_gridCur.SelectedTag<PatRowTag>().PatNum;
 				}
-				catch(Exception e) {
-					e.DoNothing();
+				catch{
 					return 0;
 				}
 			}
@@ -562,8 +561,7 @@ namespace OpenDental {
 					//Passes in -1 as the RecallNum. This will create an appointment for either a Perio or Prophy recall type only. 
 					apt=AppointmentL.CreateRecallApt(fam.ListPats[i],planList,-1,subList);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					continue;
 				}
 				pinAptNums.Add(apt.AptNum);

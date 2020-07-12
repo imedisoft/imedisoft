@@ -170,7 +170,7 @@ namespace OpenDentBusiness.Email {
 				gService.Users.Messages.Send(gmailMessage,address.EmailUsername).Execute();
 			}
 			catch(GoogleApiException gae) {
-				gae.DoNothing();
+
 				//This will bubble up to the UI level and be caught in a copypaste box.
 				throw new Exception("Unable to authenticate with Google: "+gae.Message);
 			}

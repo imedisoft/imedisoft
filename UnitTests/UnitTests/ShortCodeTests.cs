@@ -166,7 +166,7 @@ namespace UnitTests {
 
 		private List<ShortCodeAttribute> GetAllShortCodeAttributes() {
 			return Enum.GetValues(typeof(ShortCodeTypeFlag))
-				.AsEnumerable<ShortCodeTypeFlag>()
+				.OfType<ShortCodeTypeFlag>()
 				.Where(x => x!=ShortCodeTypeFlag.None)
 				.Select(x => x.GetAttributeOrDefault<ShortCodeAttribute>())
 				.ToList();

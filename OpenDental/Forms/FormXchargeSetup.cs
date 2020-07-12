@@ -631,8 +631,7 @@ namespace OpenDental{
 			try {
 				ProgramProperties.GetPayConnectPatPortalCreds(clinicNum,out payConnectProps);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			string msg="Online payments is already enabled for PayConnect and must be disabled in order to use XWeb online payments.  "
 				+"Would you like to disable PayConnect online payments?";

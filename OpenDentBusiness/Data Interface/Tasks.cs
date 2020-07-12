@@ -439,15 +439,7 @@ namespace OpenDentBusiness{
 		public static List<Task> RefreshUserNew(long userNum,GlobalTaskFilterType globalFilterType,List<long> listFilterFkey=null) {
 			
 			string command="";
-			if(DataConnection.DBtype==DatabaseType.MySql) {
-				command="SELECT task.*,1 AS IsUnread,";//we fill the IsUnread column with 1's because we already know that they are all unread
-			}
-			else {//Oracle
-				//Since this statement has a GROUP BY clause and the table has a clob column, we have to do some Oracle magic with the descript column.
-				command="SELECT task.TaskNum,task.TaskListNum,task.DateTask,task.KeyNum,(SELECT Descript FROM task taskdesc WHERE task.TaskNum=taskdesc.TaskNum) Descript,task.TaskStatus"
-					+",task.IsRepeating,task.DateType,task.FromNum,task.ObjectType,task.DateTimeEntry,task.UserNum,task.DateTimeFinished"
-					+",1 AS IsUnread,";//we fill the IsUnread column with 1's because we already know that they are all unread
-			}
+			command="SELECT task.*,1 AS IsUnread,";//we fill the IsUnread column with 1's because we already know that they are all unread
 			command+="tasklist.Descript ParentDesc, "	/*Renamed to keep same column name as old query*/
 					+"patient.LName,patient.FName,patient.Preferred, "
 					+"COALESCE(MAX(tasknote.DateTimeNote),task.DateTimeEntry) AS 'LastUpdated' "

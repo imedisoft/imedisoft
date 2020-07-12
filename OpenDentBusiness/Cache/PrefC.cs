@@ -97,8 +97,7 @@ namespace OpenDentBusiness {
 				}
 				return _isVerboseLoggingSession==YN.Yes;
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 				return false;
 			}			
 		}
@@ -132,8 +131,7 @@ namespace OpenDentBusiness {
 				try {
 					DateTime.Today.ToString(format);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					format="d";//Default to "d" which is equivalent to .ToShortDateString()
 				}
 				return format;
@@ -384,6 +382,7 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Returns true if the database hosted by Open Dental.</summary>
+		[Obsolete]
 		public static bool IsCloudMode {
 			get {
 				return PrefC.GetInt(PrefName.DatabaseMode)==(int)DatabaseModeEnum.Cloud;

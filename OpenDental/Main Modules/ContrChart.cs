@@ -6352,8 +6352,8 @@ namespace OpenDental {
 				try {
 					LoadData.ToothChartBM=_toothChartRelay.GetBitmap();
 				}
-				catch(Exception ex) {
-					ex.DoNothing();//Failing to get the toothchart bitmap would only mean being unable to update the Patient Dashboard.  Since this is a fairly
+				catch {
+					//Failing to get the toothchart bitmap would only mean being unable to update the Patient Dashboard.  Since this is a fairly
 					//rare exception, we can consider this to be not important enough to crash the program; the next module refresh should update the view.
 				}
 			}
@@ -7474,8 +7474,7 @@ namespace OpenDental {
 					doseSpotUserID=DoseSpot.GetUserID(Security.CurUser,clinicNum);
 					DoseSpot.GetClinicIdAndKey(clinicNum,doseSpotUserID,null,null,out doseSpotClinicID,out doseSpotClinicKey);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch{
 					SetErxButtonNotification(-1,-1,-1,true);
 					return;
 				}
@@ -7484,8 +7483,7 @@ namespace OpenDental {
 					DoseSpot.GetPrescriberNotificationCounts(doseSpotClinicID,doseSpotClinicKey,doseSpotUserID,out countRefillRequests,out countErrors,out countPendingPrescriptions);
 					SetErxButtonNotification(countRefillRequests,countErrors,countPendingPrescriptions,false);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch (Exception ex) {
 					SetErxButtonNotification(-1,-1,-1,true,(ex is ODException odex && odex.ErrorCodeAsEnum==ODException.ErrorCodes.DoseSpotNotAuthorized));
 				}
 				try {
@@ -7495,8 +7493,7 @@ namespace OpenDental {
 						DoseSpot.SetMedicationHistConsent(_patCur,clinicNum);
 					}
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					SetErxButtonNotification(countRefillRequests,countErrors,countPendingPrescriptions,true);
 				}
 				try {
@@ -7507,8 +7504,7 @@ namespace OpenDental {
 						ModuleSelectedDoseSpot();
 					}
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					SetErxButtonNotification(countRefillRequests,countErrors,countPendingPrescriptions,true);
 				}
 			});
@@ -8701,8 +8697,7 @@ namespace OpenDental {
 						}
 					}
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					//Failed to contact server and/or update provider IsEnabled statuses.  We will simply use what we already know in the local database.
 				}
 			}

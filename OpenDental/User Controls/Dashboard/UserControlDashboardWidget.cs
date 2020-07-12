@@ -92,8 +92,7 @@ namespace OpenDental {
 			try {
 				_sheetDefWidget=SheetDefs.GetSheetDef(_sheetDefWidget.SheetDefNum);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				this.InvokeIfRequired(() => CloseWidget());
 				return false;
 			}

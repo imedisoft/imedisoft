@@ -196,8 +196,7 @@ namespace OpenDentBusiness{
 			try {
 				referral=GetReferral(referralNum);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 			}
 			return (referral!=null);
 		}

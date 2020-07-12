@@ -1086,9 +1086,6 @@ namespace OpenDental {
                 + "patient.Address,patient.Address2,patient.City,patient.State,patient.Zip, "//4-9
                 + "patient.Guarantor,"//10
                 + "'' FamList ";//placeholder column: 11 for patient names and dates. If empty, then only single patient will print
-			if(DataConnection.DBtype == DatabaseType.Oracle) {
-				command += ",CASE WHEN patient.PatNum=patient.Guarantor THEN 1 ELSE 0 END AS isguarantor ";
-			}
 			command += "FROM patient ";
 			return command;
 		}

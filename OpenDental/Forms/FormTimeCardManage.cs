@@ -987,8 +987,7 @@ namespace OpenDental {
 						errorsForEmployee+=errorIndent+"Payroll ID not between 51 and 999999.\r\n";
 					}
 				}
-				catch (Exception ex){
-					ex.DoNothing();
+				catch {
 					//same error message as above.
 					errorsForEmployee+=errorIndent+"Payroll ID not between 51 and 999999.\r\n";
 				}

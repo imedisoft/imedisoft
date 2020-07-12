@@ -887,8 +887,8 @@ namespace OpenDental{
 				try {
 					Process.Start("http://www.opendental.com/manual/transworldsystems.html");
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
+
 					MessageBox.Show("Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet and then try again.");
 				}
 				return;

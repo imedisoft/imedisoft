@@ -38,7 +38,7 @@ namespace OpenDental {
 
 		private List<Clinic> _promoListClinics {	
 			get {	
-				return comboClinicMassEmail.Items.AsEnumerable<ODBoxItem<Clinic>>().Select(x => x.Tag).ToList(); 
+				return comboClinicMassEmail.Items.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag).ToList(); 
 			}
 		}
 		

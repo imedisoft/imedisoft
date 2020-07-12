@@ -145,8 +145,7 @@ namespace OpenDental {
 			try {
 				labelDateCustom.Text=DateTime.Now.ToString(textDateCustom.Text);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				labelDateCustom.Text="";
 			}
 		}
@@ -169,8 +168,7 @@ namespace OpenDental {
 				try {
 					DateTime.Today.ToString(textDateCustom.Text);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					isValidFormat=false;
 				}
 				if(!isValidFormat) {

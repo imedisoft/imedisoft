@@ -496,8 +496,7 @@ namespace OpenDental {
 				List<RxPat> listRx=(List<RxPat>)(object)triggerObj;
 				return listRx.Any(x => x.IsProcRequired);
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 				return false;
 			}
 		}
@@ -509,8 +508,7 @@ namespace OpenDental {
 				List<RxPat> listRx=(List<RxPat>)(object)triggerObj;
 				return listRx.Any(x => x.IsControlled);
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 				return false;
 			}
 		}
@@ -521,8 +519,7 @@ namespace OpenDental {
 				List<RxPat> listRx=(List<RxPat>)(object)triggerObj;
 				return listRx.Any(x => !String.IsNullOrWhiteSpace(x.PatientInstruction));
 			}
-			catch(Exception e) {
-				e.DoNothing();
+			catch {
 				return false;
 			}
 		}

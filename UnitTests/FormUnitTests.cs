@@ -53,12 +53,12 @@ namespace UnitTests {
 				if(serverPort=="") {
 					serverPort="3306";
 				}
-				if(!UnitTestsCore.DatabaseTools.SetDbConnection("",serverAddr,serverPort,textUserName.Text,textPassword.Text,_isOracle)) {
+				if(!UnitTestsCore.DatabaseTools.SetDbConnection("",serverAddr,serverPort,textUserName.Text,textPassword.Text)) {
 					OpenDental.MessageBox.Show("Could not connect");
 					return;
 				}
 			}
-			DatabaseTools.FreshFromDump(textAddr.Text,textPort.Text,textUserName.Text,textPassword.Text,_isOracle);
+			DatabaseTools.FreshFromDump(textAddr.Text,textPort.Text,textUserName.Text,textPassword.Text);
 			textResults.Text+="Fresh database loaded from sql dump.";
 			Cursor=Cursors.Default;
 		}
@@ -92,7 +92,7 @@ namespace UnitTests {
 			Cursor=Cursors.WaitCursor;
 			textResults.Text="";
 			Application.DoEvents();
-			textResults.Text+=CoreTypesT.CreateTempTable(textAddr.Text,textPort.Text,textUserName.Text,textPassword.Text,_isOracle);
+			//textResults.Text+=CoreTypesT.CreateTempTable(textAddr.Text,textPort.Text,textUserName.Text,textPassword.Text,_isOracle);
 			Application.DoEvents();
 			textResults.Text+=CoreTypesT.RunAll();
 			//}

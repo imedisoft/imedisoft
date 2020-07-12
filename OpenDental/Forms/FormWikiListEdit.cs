@@ -230,7 +230,7 @@ namespace OpenDental {
 				MessageBox.Show("List name cannot be blank.");
 				return;
 			}
-			if(DbHelper.isMySQLReservedWord(newListName)) {
+			if(DbHelper.IsMySQLReservedWord(newListName)) {
 				//Can become an issue when retrieving column header names.
 				MessageBox.Show("List name is a MySQL reserved word.");
 				return;

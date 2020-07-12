@@ -14,10 +14,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns a list of clinics that are associated to any clones of the master patient passed in (patNumFrom).
 		///This method will include the clinic for the master patient passed in.</summary>
 		public static List<Clinic> GetClinicsForClones(long patNumFrom) {
-			
-			if(DataConnection.DBtype==DatabaseType.Oracle) {
-				throw new ApplicationException("GetClinicsForClones is not currently Oracle compatible.  Please call support.");
-			}
+
 			//Always include the master patient's clinic.
 			List<long> listPatNumClones=new List<long>() { patNumFrom };
 			//Get all clones (PatNumTos) that are associated to the master patient passed in (patNumFrom).

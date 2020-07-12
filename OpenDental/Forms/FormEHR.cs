@@ -244,10 +244,6 @@ namespace OpenDental {
 						FillGridMu();
 						break;
 					case EhrMeasureType.Lab:
-						if(DataConnection.DBtype==DatabaseType.Oracle) {
-							MessageBox.Show("Labs not supported with Oracle");
-							break;
-						}
 						FormEhrLabOrders FormLP=new FormEhrLabOrders();
 						FormLP.PatCur=PatCur;
 						FormLP.ShowDialog();
@@ -339,20 +335,12 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.CPOE_RadiologyOrdersOnly:
 					case EhrMeasureType.CPOE_LabOrdersOnly:
-						if(DataConnection.DBtype==DatabaseType.Oracle) {
-							MessageBox.Show("Labs not supported with Oracle");
-							break;
-						}
 						FormEhrLabOrders FormLab=new FormEhrLabOrders();
 						FormLab.PatCur=PatCur;
 						FormLab.ShowDialog();
 						FillGridMu();
 						break;
 					case EhrMeasureType.LabImages:
-						if(DataConnection.DBtype==DatabaseType.Oracle) {
-							MessageBox.Show("Labs not supported with Oracle");
-							break;
-						}
 						FormEhrLabOrders FormLO=new FormEhrLabOrders();
 						FormLO.PatCur=PatCur;
 						FormLO.ShowDialog();
@@ -492,10 +480,6 @@ namespace OpenDental {
 						//Redundant now that everything is done from one window
 						break;
 					case EhrMeasureType.CPOE_RadiologyOrdersOnly:
-						if(DataConnection.DBtype==DatabaseType.Oracle) {
-							MessageBox.Show("Labs not supported with Oracle");
-							break;
-						}
 						//As of v15.4 we started storing radiology orders at the procedure level by flagging the procedure itself as IsCpoe.
 						//Show the radiology order window which will be the best way for the provider to mark "radiology orders" as CPOE.
 						FormRadOrderList FormROL=new FormRadOrderList(Security.CurUser);

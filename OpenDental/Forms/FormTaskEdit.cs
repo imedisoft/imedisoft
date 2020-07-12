@@ -1862,9 +1862,8 @@ namespace OpenDental {
 			try {
 				ODClipboard.SetClipboard(CreateCopyTask());
 			}
-			catch(Exception ex) {
+			catch {
 				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
-				ex.DoNothing();
 				return;
 			}
 			Tasks.TaskEditCreateLog(Lan.g(this,"Copied Task Note"),_taskCur);

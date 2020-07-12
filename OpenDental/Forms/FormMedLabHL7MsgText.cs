@@ -32,8 +32,7 @@ namespace OpenDental {
 			try {
 				msgText=File.ReadAllText(ListFileNamesDatesMod[listFileNames.SelectedIndex][0]);
 			}
-			catch(Exception ex) {
-				ex.DoNothing();
+			catch {
 				Cursor=Cursors.Default;
 				MessageBox.Show("The selected file could not be read.");
 				return;

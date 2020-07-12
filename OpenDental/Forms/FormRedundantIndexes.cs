@@ -87,8 +87,7 @@ namespace OpenDental {
 				try {
 					SaveLogToFile(logText);
 				}
-				catch(Exception ex) {
-					ex.DoNothing();
+				catch {
 					msgBox=new MsgBoxCopyPaste(Lan.g(this,"Could not create or modify the log file. Copy and paste the following queries into a text file and "
 						+"save it in case you ever want to undo the actions performed by this tool.")+"\r\n\r\n"+logText);
 					msgBox.ShowDialog();
