@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using CodeBase;
+using DataConnectionBase;
 
 namespace OpenDentBusiness {
 
@@ -58,11 +59,11 @@ namespace OpenDentBusiness {
 		public static string GenerateUpdate(long patNum,string clientID,TsiTransType transType,double transAmount,double newBal) {
 			string[] fieldVals=new string[6] {
 				clientID,
-				POut.Long(patNum),
+                SOut.Long(patNum),
 				transType.ToString(),
 				DateTime.Today.ToString("MMddyyyy"),
-				POut.Double(Math.Abs(transAmount)),//msgs sent with pos amt, Transworld uses tran type to determine whether it increases or decreases amt owed
-				POut.Double(newBal)
+                SOut.Double(Math.Abs(transAmount)),//msgs sent with pos amt, Transworld uses tran type to determine whether it increases or decreases amt owed
+				SOut.Double(newBal)
 			};
 			return fieldVals.Aggregate((a,b) => (a??"")+"|"+(b??""));
 		}
@@ -131,17 +132,15 @@ namespace OpenDentBusiness {
 			return retval;
 		}
 
-		///<summary>Returns display name of 3 letter language abbr or custom language name if not found.  Will return empty string, not null.</summary>
-		private static string gGetLanguageString(string language) {
-			string retval="";
-			CultureInfo culture=CodeBase.MiscUtils.GetCultureFromThreeLetter(language);
-			if(culture==null) {//custom language or language is null or empty
-				retval=language;
-			}
-			else {
-				retval=culture.DisplayName;
-			}
-			return retval??"";
+		/// <summary>
+		/// Returns display name of 3 letter language abbr or custom language name if not found.
+		/// Will return empty string, not null.
+		/// </summary>
+		private static string gGetLanguageString(string language)
+		{
+			CultureInfo culture = MiscUtils.GetCultureFromThreeLetter(language);
+
+			return culture == null ? language : culture.DisplayName;
 		}
 
 		public static string GetPlacementFileHeader() {

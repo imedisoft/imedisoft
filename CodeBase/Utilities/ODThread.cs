@@ -522,9 +522,9 @@ namespace CodeBase
 		///If the timeout is reached, all threads will be killed and their corresponding actions will not complete.  This can leave data in an 
 		///undefined state, for example, if an action times out before instantiating an object, the object will be null.
 		///Throws exception on main thread if any action throws and unhandled exception and no onException was provided.</summary>
-		public static void RunParallel(List<Action> listActions, TimeSpan timeout, int numThreads = 0, ExceptionDelegate onException = null)
+		public static void RunParallel(List<Action> listActions, TimeSpan timeout, int numThreads = 0, ExceptionDelegate exceptionHandler = null)
 		{
-			RunParallel(listActions, (int)timeout.TotalMilliseconds, numThreads, onException);
+			RunParallel(listActions, (int)timeout.TotalMilliseconds, numThreads, exceptionHandler);
 		}
 
 		///<summary>Spread the given actions over the given numThreads. Blocks until threads have completed or timeout is reached.

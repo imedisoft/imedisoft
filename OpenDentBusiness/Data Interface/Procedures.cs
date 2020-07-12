@@ -2450,7 +2450,7 @@ namespace OpenDentBusiness {
 				}))).ToList();
 				#endregion Create List of Actions
 				ODThread.RunParallel(listActions,TimeSpan.FromMinutes(30)
-					,onException:new ODThread.ExceptionDelegate((ex) => {
+					,exceptionHandler:new ODThread.ExceptionDelegate((ex) => {
 						//Notify the user what went wrong via the text box.
 						FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper("Error updating ProcFee: "+ex.Message
 							,progressBarEventType:ProgBarEventType.TextMsg));
@@ -2546,7 +2546,7 @@ namespace OpenDentBusiness {
 					}
 				})).ToList();
 				#endregion Create List of Actions
-				ODThread.RunParallel(listActions,TimeSpan.FromMinutes(30),onException:new ODThread.ExceptionDelegate((ex) => {
+				ODThread.RunParallel(listActions,TimeSpan.FromMinutes(30), exceptionHandler: new ODThread.ExceptionDelegate((ex) => {
 						//Notify the user what went wrong via the text box.
 						FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper("Error getting TP procedures batch: "+ex.Message
 							,progressBarEventType:ProgBarEventType.TextMsg));

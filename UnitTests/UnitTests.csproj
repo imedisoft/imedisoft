@@ -264,7 +264,6 @@
     <Compile Include="IntegrationTests\FormTaskEditTests.cs" />
     <Compile Include="IntegrationTests\UserControlTasksTests.cs" />
     <Compile Include="Misc\FeeTestBase.cs" />
-    <Compile Include="Misc\SchemaT.cs" />
     <Compile Include="UnitTests\ODInstallerTests.cs" />
     <Compile Include="UnitTests\FriendlyExceptionTests.cs" />
     <Compile Include="UnitTests\DataConnectionTests.cs" />

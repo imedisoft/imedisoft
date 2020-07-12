@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 using System.Linq;
 
 namespace OpenDentBusiness{
-	/// <summary></summary>
+
 	public class Tooth{
-		///<summary></summary>
+
 		public Tooth(){
 			
 		}

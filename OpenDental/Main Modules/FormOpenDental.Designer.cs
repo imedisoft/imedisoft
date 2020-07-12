@@ -1535,7 +1535,6 @@ namespace OpenDental{
 			// 
 			// menuItemWiki
 			// 
-			this.menuItemWiki.Index = 29;
 			this.menuItemWiki.Shortcut = System.Windows.Forms.Shortcut.CtrlShiftW;
 			this.menuItemWiki.Text = "Wiki";
 			this.menuItemWiki.Click += new System.EventHandler(this.menuItemWiki_Click);

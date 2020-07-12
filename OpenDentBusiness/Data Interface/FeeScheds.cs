@@ -438,7 +438,7 @@ namespace OpenDentBusiness{
 					}
 				})).ToList();
 				ODThread.RunParallel(listActions,TimeSpan.FromHours(3),
-					onException:new ODThread.ExceptionDelegate((ex) => {
+					exceptionHandler:new ODThread.ExceptionDelegate((ex) => {
 						//Notify the user what went wrong via the text box.
 						progress.Fire(ODEventType.FeeSched,new ProgressBarHelper("Error updating writeoffs: "+ex.Message,
 							progressBarEventType:ProgBarEventType.TextMsg));

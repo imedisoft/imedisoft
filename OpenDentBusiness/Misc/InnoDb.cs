@@ -12,7 +12,6 @@ namespace OpenDentBusiness
 {
 	public class InnoDb
 	{
-
 		/// <summary>
 		/// Returns the default storage engine.
 		/// </summary>
@@ -29,8 +28,8 @@ namespace OpenDentBusiness
 			}
 			catch // MySQL 5.6 and higher
 			{
-				DataTable table = Db.GetTable("SHOW ENGINES");
-				foreach (DataRow row in table.Rows)
+				var dataTable = Db.GetTable("SHOW ENGINES");
+				foreach (DataRow row in dataTable.Rows)
 				{
 					if (row["Engine"].ToString().ToLower() == "innodb" && 
 						row["Support"].ToString().ToLower().In("yes", "default"))
@@ -51,6 +50,7 @@ namespace OpenDentBusiness
 				SUM(CASE WHEN information_schema.tables.engine='InnoDB' THEN 1 ELSE 0 END) AS 'innodb'
 				FROM information_schema.tables
 				WHERE table_schema=(SELECT DATABASE())";
+
 			DataTable results = Db.GetTable(command);
 			string retval = Lans.g("FormInnoDb", "Number of MyISAM tables: ");
 			retval += Lans.g("FormInnoDb", results.Rows[0]["myisam"].ToString()) + "\r\n";
@@ -65,9 +65,8 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static string GetInnodbTableNames()
 		{
-			//Using COUNT(*) with INFORMATION_SCHEMA is buggy.  It can return "1" even if no results.
 			string command = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables "
-				+ "WHERE TABLE_SCHEMA='" + POut.String(DataConnection.GetDatabaseName()) + "' "
+				+ "WHERE TABLE_SCHEMA='" + SOut.String(DataConnection.GetDatabaseName()) + "' "
 				+ "AND TABLE_NAME!='phone' "//this table is used internally at OD HQ, and is always innodb.
 				+ "AND ENGINE NOT LIKE 'MyISAM'";
 			DataTable table = Db.GetTable(command);

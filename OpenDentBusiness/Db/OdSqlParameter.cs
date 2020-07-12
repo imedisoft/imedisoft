@@ -46,11 +46,12 @@ namespace OpenDentBusiness
 
 		public MySqlParameter GetMySqlParameter()
 		{
-			MySqlParameter param = new MySqlParameter();
-			param.ParameterName = DbHelper.ParamChar + this.ParameterName;
-			param.Value = Value;
-			param.MySqlDbType = GetMySqlDbType();
-			return param;
+            return new MySqlParameter
+            {
+                ParameterName = DbHelper.ParamChar + ParameterName,
+                Value = Value,
+                MySqlDbType = GetMySqlDbType()
+            };
 		}
 	}
 }

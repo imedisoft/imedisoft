@@ -14,16 +14,6 @@ namespace OpenDentBusiness
     /// </summary>
     public class DbHelper
 	{
-		/// <summary>
-		/// Helper method that is only useful for Oracle. 
-		/// This method is really just here for exposure for the lack of Oracle functionality.
-		/// Oracle will cut up a section of the CLOB column using SUBSTR. 
-		/// The portion is dictated by starting at startIndex for substringLength chars.
-		/// When using MySQL you simply order by the column name because it is smart enough to allow users to ORDER BY 'text' data type.
-		/// </summary>
-		public static string ClobOrderBy(string columnName, int startIndex = 1, int substringLength = 1000) 
-			=> columnName;
-
 		public static string LimitAnd(int n) 
 			=> "LIMIT " + n;
 
@@ -33,12 +23,8 @@ namespace OpenDentBusiness
 		public static string LimitOrderBy(string query, int n) 
 			=> query + " LIMIT " + n;
 
-		public static string LimitOrderByOffset(string query, int n, int offset) 
-			=> query + " LIMIT " + offset + "," + n;
-
 		public static string Concat(params string[] values) 
 			=> "CONCAT("+ string.Join(",", values) + ")";
-
 
 		/// <summary>
 		/// Specify column for equivalent of "GROUP_CONCAT(column)" in MySQL.
@@ -65,25 +51,42 @@ namespace OpenDentBusiness
 			}
 		}
 
-		///<summary>If the MySQL variable eq_range_index_dive_limit exists (MySQL 5.6 and above) and is set to a value>0, this will break a query with
-		///eq_range_index_dive_limit or more items in an IN clause into multiple statements separated by either a UNION ALL for SELECT statements or a
-		///semicolon for UPDATE/DELETE statements.  Prior to splitting up the list of items in the argsLists, a DISTINCT is applied to remove duplicates.
-		///The query string should contain a "{n}" value in the "IN ()" clause, where n is the list order in the argsLists parameter that will replace the
-		///"{n}" value in the string.  The isSelect parameter determines whether to separate by UNION ALL or a semicolon.
-		///<para>CAUTION, this method could cause unexpected results due to the potential of breaking up the query into mulitple queries.
-		///E.g. A query uses a DISTINCT or a GROUP BY on a separate column than the column having the IN applied to.  Or if multiple IN clauses are
-		///present and a row is a match due to more than one clause, and the update is incremental in nature, the row could be updated more than once.</para>
-		///<para>Example use: DbHelper.WhereIn("UPDATE procedurelog SET StatementNum=0 WHERE StatementNum IN ({0})",false,listStatementNums.Select(x => POut.Long(x)).ToList());</para></summary>
+		/// <summary>
+		/// If the MySQL variable eq_range_index_dive_limit exists (MySQL 5.6 and above) and is set to a value>0, this will break a query with 
+		/// eq_range_index_dive_limit or more items in an IN clause into multiple statements separated by either a UNION ALL for SELECT statements or a
+		/// semicolon for UPDATE/DELETE statements. 
+		/// 
+		/// Prior to splitting up the list of items in the argsLists, a DISTINCT is applied to remove duplicates.
+		/// 
+		/// The query string should contain a "{n}" value in the "IN ()" clause, where n is the list 
+		/// order in the argsLists parameter that will replace the "{n}" value in the string.
+		/// 
+		/// The isSelect parameter determines whether to separate by UNION ALL or a semicolon.
+		/// 
+		///		<para>
+		///			CAUTION, this method could cause unexpected results due to the potential of breaking up the 
+		///			query into mulitple queries. E.g. A query uses a DISTINCT or a GROUP BY on a separate 
+		///			column than the column having the IN applied to.  Or if multiple IN clauses are present and
+		///			a row is a match due to more than one clause, and the update is incremental in nature, the 
+		///			row could be updated more than once.
+		///		</para>
+		///		<para>
+		///			Example use: 
+		///		</para>
+		///		<code>
+		///			DbHelper.WhereIn("UPDATE procedurelog SET StatementNum=0 WHERE StatementNum IN ({0})", false, listStatementNums.Select(x => POut.Long(x)).ToList());
+		///		</code>
+		///	</summary>
 		public static string WhereIn(string query, bool isSelect = true, params List<string>[] argLists)
 		{
-			//The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
-			string command = "SHOW GLOBAL VARIABLES WHERE Variable_name='eq_range_index_dive_limit'";
-			DataTable table = Db.GetTable(command);
+			// The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
+			DataTable table = Db.GetTable("SHOW GLOBAL VARIABLES WHERE Variable_name='eq_range_index_dive_limit'");
 			int maxInValCount = 0;
 			if (table.Rows.Count > 0)
 			{
 				maxInValCount = PIn.Int(table.Rows[0]["Value"].ToString()) - 1;
 			}
+
 			List<string> listQueries = new List<string>() { query };
 			for (int i = 0; i < argLists.Length; i++)
 			{
@@ -108,7 +111,9 @@ namespace OpenDentBusiness
 				}
 				listQueries = listQs;
 			}
-			string separator = (isSelect ? " UNION ALL " : ";");
+
+			string separator = isSelect ? " UNION ALL " : ";";
+
 			return string.Join(separator, listQueries);
 		}
 

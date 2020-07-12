@@ -82,7 +82,7 @@ namespace CentralManager
 				odThread.Start(false);
 			}
 			ODThread.JoinThreadsByGroupName(Timeout.Infinite, "Search");
-			List<ODThread> listThreads = ODThread.GetThreadsByGroupName("Search");
+			List<ODThread> listThreads = ODThread.GetThreadsByGroupName("Search").ToList();
 			List<long> listConnNums = new List<long>();
 			for (int i = 0; i < listThreads.Count; i++)
 			{
@@ -118,7 +118,7 @@ namespace CentralManager
 				odThread.Start(false);
 			}
 			ODThread.JoinThreadsByGroupName(Timeout.Infinite, "Verify");
-			List<ODThread> listComplThreads = ODThread.GetThreadsByGroupName("Verify");
+			List<ODThread> listComplThreads = ODThread.GetThreadsByGroupName("Verify").ToList();
 			for (int i = 0; i < listComplThreads.Count; i++)
 			{
 				object[] obj = (object[])listComplThreads[i].Tag;
@@ -216,7 +216,7 @@ namespace CentralManager
 			{
 				return;//Don't do any of the below
 			}
-			ODThread.QuitSyncAllOdThreads();
+			ODThread.QuitSyncThreadsByGroupName(0, "");
 			foreach (CentralConnection conn in _listConnsAll)
 			{//Reflect connection status changes in the database.
 				CentralConnections.UpdateStatus(conn);

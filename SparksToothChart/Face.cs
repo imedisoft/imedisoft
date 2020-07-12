@@ -35,10 +35,10 @@ namespace SparksToothChart
 
 		public Face Copy()
 		{
-            return new Face
-            {
-                IndexList = new List<int>(this.IndexList)
-            };
+			var face = new Face();
+			face.IndexList.AddRange(IndexList);
+
+			return face;
 		}
 	}
 }

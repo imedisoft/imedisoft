@@ -30,7 +30,7 @@ namespace OpenDentBusiness{
 
 		private class EmailAutographCache : CacheListAbs<EmailAutograph> {
 			protected override List<EmailAutograph> GetCacheFromDb() {
-				string command="SELECT * FROM emailautograph ORDER BY "+DbHelper.ClobOrderBy("Description");
+				string command="SELECT * FROM emailautograph ORDER BY Description";
 				return Crud.EmailAutographCrud.SelectMany(command);
 			}
 			protected override List<EmailAutograph> TableToList(DataTable table) {

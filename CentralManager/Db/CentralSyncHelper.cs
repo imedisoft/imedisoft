@@ -93,7 +93,7 @@ namespace CentralManager {
 				odThread.Start(false);
 			}
 			ODThread.JoinThreadsByGroupName(Timeout.Infinite,"Sync");
-			List<ODThread> listComplThreads=ODThread.GetThreadsByGroupName("Sync");
+			List<ODThread> listComplThreads=ODThread.GetThreadsByGroupName("Sync").ToList();
 			for(int i=0;i<listComplThreads.Count;i++) {
 				if(listComplThreads[i].Tag==null) {
 					continue;//Failed due to lacking credentials

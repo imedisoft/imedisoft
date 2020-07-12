@@ -76,16 +76,6 @@ namespace UnitTests {
 		#endregion
 
 		private void butSchema_Click(object sender,EventArgs e) {
-			Cursor=Cursors.WaitCursor;
-			textResults.Text="";
-			Application.DoEvents();
-			if(radioSchema1.Checked) {
-				textResults.Text+=SchemaT.TestProposedCrud(textAddr.Text,textPort.Text,textUserName.Text,textPassword.Text,_isOracle);
-			}
-			else {
-				textResults.Text+=SchemaT.CompareProposedToGenerated(_isOracle);
-			}
-			Cursor=Cursors.Default;
 		}
 
 		private void butCore_Click(object sender,EventArgs e) {

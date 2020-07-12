@@ -437,7 +437,6 @@
     <Compile Include="Db Multi Table\FamilyAccount.cs" />
     <Compile Include="Data Interface\FeeSchedGroups.cs" />
     <Compile Include="Eclaims\EdsMedical.cs" />
-    <Compile Include="Data Interface\LoginAttempts.cs" />
     <Compile Include="Data Interface\OrthoCases.cs" />
     <Compile Include="Data Interface\OrthoPlanLinks.cs" />
     <Compile Include="Data Interface\OrthoProcLinks.cs" />
@@ -469,7 +468,6 @@
     <Compile Include="Db Multi Table\PayPlanEdit.cs" />
     <Compile Include="Logic\CodeMapping.cs" />
     <Compile Include="Logic\USlocales.cs" />
-    <Compile Include="Misc\ConvertDatabases.cs" />
     <Compile Include="Misc\Authentication.cs" />
     <Compile Include="Misc\FHIRUtils.cs" />
     <Compile Include="Misc\Introspection.cs" />
@@ -1101,7 +1099,6 @@
     <Compile Include="Db Multi Table\QualityMeasure.cs" />
     <Compile Include="Db Multi Table\QualityMeasures.cs" />
     <Compile Include="Db\OdDbType.cs" />
-    <Compile Include="Db\SchemaCrudProposedTest.cs" />
     <Compile Include="TableTypes\PatientPortalInvite.cs" />
     <Compile Include="Web References\DentalxchangePartnerService\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -1361,7 +1358,6 @@
     <Compile Include="Remoting\DataTransferObject.cs" />
     <Compile Include="Db\Enumerations.cs" />
     <Compile Include="Data Interface\Lans.cs" />
-    <Compile Include="Logic\aaLogic.cs" />
     <Compile Include="Db Multi Table\AccountModules.cs" />
     <Compile Include="Data Interface\Appointments.cs" />
     <Compile Include="Logic\BenefitLogic.cs" />

@@ -190,7 +190,7 @@ namespace CentralManager {
 				odThread.Start(false);
 			}
 			ODThread.JoinThreadsByGroupName(Timeout.Infinite,"ConnectAndReportDaily");
-			List<ODThread> listThreads=ODThread.GetThreadsByGroupName("ConnectAndReportDaily");
+			List<ODThread> listThreads=ODThread.GetThreadsByGroupName("ConnectAndReportDaily").ToList();
 			for(int i=0;i<listThreads.Count;i++) {
 				object[] obj=(object[])listThreads[i].Tag;
 				DataSet data=(DataSet)obj[0];
@@ -354,7 +354,7 @@ namespace CentralManager {
 				odThread.Start(false);
 			}
 			ODThread.JoinThreadsByGroupName(Timeout.Infinite,"ConnectAndReportMonthly");
-			List<ODThread> listThreads=ODThread.GetThreadsByGroupName("ConnectAndReportMonthly");
+			List<ODThread> listThreads=ODThread.GetThreadsByGroupName("ConnectAndReportMonthly").ToList();
 			for(int i=0;i<listThreads.Count;i++) {
 				object[] obj=(object[])listThreads[i].Tag;
 				DataSet data=(DataSet)obj[0];
@@ -534,7 +534,7 @@ namespace CentralManager {
 				odThread.Start(false);
 			}
 			ODThread.JoinThreadsByGroupName(Timeout.Infinite,"ConnectAndReportAnnual");
-			List<ODThread> listThreads=ODThread.GetThreadsByGroupName("ConnectAndReportAnnual");
+			List<ODThread> listThreads=ODThread.GetThreadsByGroupName("ConnectAndReportAnnual").ToList();
 			for(int i=0;i<listThreads.Count;i++) {
 				object[] obj=(object[])listThreads[i].Tag;
 				DataSet data=(DataSet)obj[0];
@@ -679,7 +679,7 @@ namespace CentralManager {
 				odThread.Start(false);
 			}
 			ODThread.JoinThreadsByGroupName(Timeout.Infinite,"ConnectAndReportProvider");
-			List<ODThread> listThreads=ODThread.GetThreadsByGroupName("ConnectAndReportProvider");
+			List<ODThread> listThreads=ODThread.GetThreadsByGroupName("ConnectAndReportProvider").ToList();
 			for(int i=0;i<listThreads.Count;i++) {
 				object[] obj=(object[])listThreads[i].Tag;
 				DataSet data=(DataSet)obj[0];

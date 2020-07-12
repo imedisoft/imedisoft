@@ -1692,16 +1692,10 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>List of typically available database names. Used in conjunction with ConnectionStore.GetConnection().</summary>
-	public enum ConnectionNames {
+	public enum ConnectionNames
+	{
 		///<summary>No database connection.</summary>
 		None,
-		///<summary>HQ serviceshq.</summary>
-		ServicesHQ,
-		///<summary>HQ bugs.</summary>
-		BugsHQ,
-		///<summary>HQ customers. This may be filled from a config file or if the config file does not include it, it will be filled from the preference
-		///table.</summary>
-		CustomersHQ,
 		///<summary>Only used when running in DEBUG demo mode. The OD proper database which holds demo data.</summary>
 		DentalOffice,
 		///<summary>The OD proper database connection that is comprised of preferences via the currently connected database.</summary>

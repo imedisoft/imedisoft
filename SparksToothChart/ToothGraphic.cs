@@ -915,12 +915,16 @@ namespace SparksToothChart
 			return VertexNormals.Count - 1;
 		}
 
-		///<summary>For any given tooth, there may only be one line in the returned list, or some teeth might have a few lines representing the root canals.</summary>
+		/// <summary>
+		/// For any given tooth, there may only be one line in the returned list, or some teeth might have a few lines representing the root canals.
+		/// </summary>
 		public List<LineSimple> GetRctLines()
 		{
 			List<LineSimple> retVal = new List<LineSimple>();
 			LineSimple line;
+
 			#region Permanent Teeth
+
 			#region Maxillary/Upper
 			if (ToothID == "1")
 			{
@@ -1111,6 +1115,7 @@ namespace SparksToothChart
 				retVal.Add(line);
 			}
 			#endregion Maxillary/Upper
+
 			#region Mandibular/Lower
 			if (ToothID == "25" || ToothID == "26")
 			{
@@ -1265,7 +1270,10 @@ namespace SparksToothChart
 				retVal.Add(line);
 			}
 			#endregion Mandibular/Lower
+
 			#endregion Permanent Teeth
+
+
 			#region Primary Teeth
 			#region Maxillary/Upper
 			if (ToothID == "A")
@@ -1472,6 +1480,7 @@ namespace SparksToothChart
 			}
 			#endregion Mandibular/Lower
 			#endregion Primary Teeth
+
 			return retVal;
 		}
 

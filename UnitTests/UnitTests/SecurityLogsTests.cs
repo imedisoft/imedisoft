@@ -98,7 +98,7 @@ namespace UnitTests.SecurityLogs_Tests
 				listActions.Add(() => SecurityLogs.MakeLogEntry(Permissions.Accounting, patient.PatNum, "", 0, DateTime.Now.AddDays(-7)));
 			}
 			//Parallel threads do not support Middle Tier mode when unit testing due to how we have to fake being both the client and the server.
-			ODThread.RunParallel(listActions, onException: (ex) =>
+			ODThread.RunParallel(listActions, exceptionHandler: (ex) =>
 			{
 				Assert.Fail(ex.Message);
 			});
@@ -119,7 +119,7 @@ namespace UnitTests.SecurityLogs_Tests
 				listActions.Add(() => SecurityLogs.MakeLogEntry(Permissions.Accounting, patient.PatNum, "", 0, DateTime.Now.AddDays(-7)));
 			}
 			//Parallel threads do not support Middle Tier mode when unit testing due to how we have to fake being both the client and the server.
-			ODThread.RunParallel(listActions, onException: (ex) =>
+			ODThread.RunParallel(listActions, exceptionHandler: (ex) =>
 			{
 				PrefT.UpdateBool(PrefName.RandomPrimaryKeys, false);
 				Assert.Fail(ex.Message);

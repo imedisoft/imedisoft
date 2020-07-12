@@ -75,10 +75,7 @@ namespace OpenDentBusiness
 		/// Returns the SQLParam as a WHERE clause. Do not modify this method. 
 		/// Many implementers will rely on exactly this ToString() implementation. EG, string.Join().
 		/// </summary>
-		public override string ToString()
-		{
-			return _whereClause;
-		}
+		public override string ToString() => _whereClause;
 
 		/// <summary>
 		/// POuts the passed in value in the appropriate manner.
@@ -150,14 +147,19 @@ namespace OpenDentBusiness
 	{
 		[Description("=")]
 		Equals,
+
 		[Description("!=")]
 		NotEquals,
+
 		[Description(">")]
 		GreaterThan,
+
 		[Description(">=")]
 		GreaterThanOrEqual,
+
 		[Description("<")]
 		LessThan,
+
 		[Description("<=")]
 		LessThanOrEqual,
 	}
