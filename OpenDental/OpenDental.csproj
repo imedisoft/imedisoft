@@ -51,7 +51,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>OpenDental.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -64,7 +65,8 @@
     <WarningLevel>3</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>OpenDental.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'LinuxRelease|AnyCPU' ">
@@ -76,7 +78,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>OpenDental.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -89,7 +92,8 @@
     <ErrorReport>prompt</ErrorReport>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>OpenDental.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -104,7 +108,8 @@
     <DefineConstants>
     </DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>OpenDental.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <DocumentationFile>bin\Release\OpenDental.XML</DocumentationFile>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
@@ -117,7 +122,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>OpenDental.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup />
@@ -4905,7 +4911,6 @@
     <Compile Include="ReportingComplex\ReportObjectCollection.cs" />
     <Compile Include="ReportingComplex\Section.cs" />
     <Compile Include="ReportingComplex\SectionCollection.cs" />
-    <Compile Include="Settings.cs" />
     <Compile Include="SheetFramework\LabelSingle.cs" />
     <Compile Include="Misc\ObjectDateComparer.cs" />
     <Compile Include="Misc\Pop3.cs" />
@@ -8360,7 +8365,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Properties\app.manifest" />
-    <None Include="OpenDental.ruleset" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -9327,7 +9331,6 @@
     <None Include="ReportingForRdl\Allocators\MyAllocator1\SupportingCode\EPP_ClassDiagram.cd" />
     <None Include="Resources\arrowDownTriangle.gif" />
     <None Include="Resources\arrowUpTriangle.gif" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\Med History.gif" />
     <None Include="Resources\notify.wav" />
     <None Include="Resources\printPreview20.gif" />
