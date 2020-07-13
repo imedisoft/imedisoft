@@ -40,20 +40,20 @@ namespace OpenDental {
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			//Get list of contents in directory of textPath.Text
-			OpenDentalCloud.Core.TaskStateListFolders state=CloudStorage.ListFolderContents(textPath.Text);
-			List<string> listFiles=state.ListFolderPathsDisplay;
-			for(int i=0;i<listFiles.Count;i++){
-				row=new GridRow();
-				row.Cells.Add(Path.GetFileName(listFiles[i]));	
-				gridMain.ListGridRows.Add(row);
-			}
+			//OpenDentalCloud.Core.TaskStateListFolders state=CloudStorage.ListFolderContents(textPath.Text);
+			//List<string> listFiles=state.ListFolderPathsDisplay;
+			//for(int i=0;i<listFiles.Count;i++){
+			//	row=new GridRow();
+			//	row.Cells.Add(Path.GetFileName(listFiles[i]));	
+			//	gridMain.ListGridRows.Add(row);
+			//}
 			gridMain.EndUpdate();
 		}
 
 		private void butGo_Click(object sender,EventArgs e) {
 			//Refresh the grid contents to show whatever is in the Path textbox.
-			if(!textPath.Text.Contains(ImageStore.GetPreferredAtoZpath())) {
-				textPath.Text=ImageStore.GetPreferredAtoZpath();//They deleted the path for some reason.  It must have at least the base path.
+			if(!textPath.Text.Contains(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath())) {
+				textPath.Text= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();//They deleted the path for some reason.  It must have at least the base path.
 			}
 			FillGrid();
 		}
@@ -64,23 +64,23 @@ namespace OpenDental {
 			if(!gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text.Contains(".")) {//File path doesn't contain an extension and thus is a subfolder.
 				return;
 			}
-			FormProgress FormP=new FormProgress();
-			FormP.DisplayText="Downloading...";
-			FormP.NumberFormat="F";
-			FormP.NumberMultiplication=1;
-			FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-			FormP.TickMS=1000;
-			OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(textPath.Text
-				,Path.GetFileName(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text)
-				,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-			if(FormP.ShowDialog()==DialogResult.Cancel) {
-				state.DoCancel=true;
-				return;
-			}
-			string tempFile=ODFileUtils.CreateRandomFile(Path.GetTempPath(),Path.GetExtension(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text));
-			File.WriteAllBytes(tempFile,state.FileContent);
+			//FormProgress FormP=new FormProgress();
+			//FormP.DisplayText="Downloading...";
+			//FormP.NumberFormat="F";
+			//FormP.NumberMultiplication=1;
+			//FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
+			//FormP.TickMS=1000;
+			//OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(textPath.Text
+			//	,Path.GetFileName(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text)
+			//	,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
+			//if(FormP.ShowDialog()==DialogResult.Cancel) {
+			//	state.DoCancel=true;
+			//	return;
+			//}
+			//string tempFile=ODFileUtils.CreateRandomFile(Path.GetTempPath(),Path.GetExtension(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text));
+			//File.WriteAllBytes(tempFile,state.FileContent);
 
-				System.Diagnostics.Process.Start(tempFile);
+			//	System.Diagnostics.Process.Start(tempFile);
 			
 		}
 
@@ -92,7 +92,7 @@ namespace OpenDental {
 				return;
 			}
 			foreach(string fileName in dlg.FileNames) {
-				FileAtoZ.Copy(fileName,FileAtoZ.CombinePaths(textPath.Text,Path.GetFileName(fileName)),FileAtoZSourceDestination.LocalToAtoZ);
+				FileAtoZ.Copy(fileName,FileAtoZ.CombinePaths(textPath.Text,Path.GetFileName(fileName)));
 			}
 			FillGrid();
 		}
@@ -117,33 +117,33 @@ namespace OpenDental {
 			//Determine if it's a folder or a file that was clicked
 			//If a folder, do nothing
 			//If a file, download a thumbnail and display it
-			if(ImageStore.HasImageExtension(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text)) {
-				try {
-					//Place thumbnail within odPictureox to display
-					OpenDentalCloud.Core.TaskStateThumbnail state=CloudStorage.GetThumbnail(textPath.Text,gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text);
-					if(state==null || state.FileContent==null || state.FileContent.Length<2) {
-						labelThumbnail.Visible=true;
-						odPictureBox.Visible=false;
-					}
-					else {
-						labelThumbnail.Visible=false;
-						odPictureBox.Visible=true;
-						using(MemoryStream stream=new MemoryStream(state.FileContent)) {
-							_thumbnail=new Bitmap(Image.FromStream(stream));
-						}
-						odPictureBox.Image=_thumbnail;
-						odPictureBox.Invalidate();
-					}
-				}
-				catch {
-					labelThumbnail.Visible=false;
-					odPictureBox.Visible=false;
-				}
-			}
-			else {
-				labelThumbnail.Visible=false;
-				odPictureBox.Visible=false;
-			}
+			//if(ImageStore.HasImageExtension(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text)) {
+			//	try {
+			//		//Place thumbnail within odPictureox to display
+			//		OpenDentalCloud.Core.TaskStateThumbnail state=CloudStorage.GetThumbnail(textPath.Text,gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text);
+			//		if(state==null || state.FileContent==null || state.FileContent.Length<2) {
+			//			labelThumbnail.Visible=true;
+			//			odPictureBox.Visible=false;
+			//		}
+			//		else {
+			//			labelThumbnail.Visible=false;
+			//			odPictureBox.Visible=true;
+			//			using(MemoryStream stream=new MemoryStream(state.FileContent)) {
+			//				_thumbnail=new Bitmap(Image.FromStream(stream));
+			//			}
+			//			odPictureBox.Image=_thumbnail;
+			//			odPictureBox.Invalidate();
+			//		}
+			//	}
+			//	catch {
+			//		labelThumbnail.Visible=false;
+			//		odPictureBox.Visible=false;
+			//	}
+			//}
+			//else {
+			//	labelThumbnail.Visible=false;
+			//	odPictureBox.Visible=false;
+			//}
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {

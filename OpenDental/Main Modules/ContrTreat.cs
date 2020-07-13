@@ -2121,9 +2121,7 @@ namespace OpenDental{
 			Random rnd=new Random();
 			string fileName=DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
 			string filePathAndName=FileAtoZ.CombinePaths(attachPath,fileName);
-			if(CloudStorage.IsCloudStorage) {
-				filePathAndName=PrefC.GetRandomTempFile("pdf");//Save the pdf to a temp file and then upload it the Email Attachment folder later.
-			}
+
 			if(gridPlans.SelectedIndices[0]>0 //not the default plan.
 				&& PrefC.GetBool(PrefName.TreatPlanSaveSignedToPdf) //preference enabled
 			  && _listTreatPlans[gridPlans.SelectedIndices[0]].Signature!="" //and document is signed
@@ -2153,10 +2151,7 @@ namespace OpenDental{
 				pdfRenderer.RenderDocument();
 				pdfRenderer.PdfDocument.Save(filePathAndName);
 			}
-			//Process.Start(filePathAndName);
-			if(CloudStorage.IsCloudStorage) {
-				FileAtoZ.Copy(filePathAndName,FileAtoZ.CombinePaths(attachPath,fileName),FileAtoZSourceDestination.LocalToAtoZ);
-			}
+
 			EmailMessage message=new EmailMessage();
 			message.PatNum=PatCur.PatNum;
 			message.ToAddress=PatCur.Email;
@@ -3583,12 +3578,9 @@ namespace OpenDental{
 			//Gauranteed to have at least one image category at this point.
 			//Saving pdf to tempfile first simplifies this code, but can use extra bandwidth copying the file to and from the temp directory/Open Dent imgs.
 			string tempFile=PrefC.GetRandomTempFile(".pdf");
-			string rawBase64="";
+
 			if(DoPrintUsingSheets()) {
 				SheetPrinting.CreatePdf(sheet,tempFile,null);
-				if(PrefC.AtoZfolderUsed!=DataStorageType.LocalAtoZ) {
-					rawBase64=Convert.ToBase64String(System.IO.File.ReadAllBytes(tempFile));//Todo test this
-				}
 			}
 			else {//classic TPs
 				MigraDoc.Rendering.PdfDocumentRenderer pdfRenderer;
@@ -3596,14 +3588,8 @@ namespace OpenDental{
 				pdfRenderer.Document=CreateDocument();
 				pdfRenderer.RenderDocument();
 				pdfRenderer.Save(tempFile);
-				if(PrefC.AtoZfolderUsed!=DataStorageType.LocalAtoZ) {
-					using(MemoryStream stream=new MemoryStream()) {
-						pdfRenderer.Save(stream,false);
-						rawBase64=Convert.ToBase64String(stream.ToArray());
-						stream.Close();
-					}
-				}
 			}
+
 			foreach(long docCategory in categories) {//usually only one, but do allow them to be saved once per image category.
 				OpenDentBusiness.Document docSave=new Document();
 				docSave.DocNum=Documents.Insert(docSave);
@@ -3613,31 +3599,14 @@ namespace OpenDental{
 				docSave.PatNum=PatCur.PatNum;
 				docSave.DocCategory=docCategory;
 				docSave.Description=fileName;//no extension.
-				docSave.RawBase64=rawBase64;//blank if using AtoZfolder
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-					string filePath=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());
+
+					string filePath=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 					while(File.Exists(filePath+"\\"+fileName+".pdf")) {
 						fileName+="x";
 					}
 					File.Copy(tempFile,filePath+"\\"+fileName+".pdf");
-				}
-				else if(CloudStorage.IsCloudStorage) {
-					//Upload file to patient's AtoZ folder
-					FormProgress FormP=new FormProgress();
-					FormP.DisplayText="Uploading Treatment Plan...";
-					FormP.NumberFormat="F";
-					FormP.NumberMultiplication=1;
-					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-					FormP.TickMS=1000;
-					OpenDentalCloud.Core.TaskStateUpload state=CloudStorage.UploadAsync(ImageStore.GetPatientFolder(PatCur,"")
-						,fileName+".pdf"
-						,File.ReadAllBytes(tempFile)
-						,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-					if(FormP.ShowDialog()==DialogResult.Cancel) {
-						state.DoCancel=true;
-						break;
-					}
-				}
+				
+
 				docSave.FileName=fileName+".pdf";//file extension used for both DB images and AtoZ images
 				Documents.Update(docSave);
 				retVal.Add(docSave);

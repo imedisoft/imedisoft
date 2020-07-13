@@ -13,6 +13,7 @@ using Ionic.Zip;
 using MySql.Data.MySqlClient;
 using OpenDentBusiness;
 using System.Net;
+using OpenDental.Forms;
 
 namespace OpenDental {
 	public class PrefL {
@@ -42,15 +43,15 @@ namespace OpenDental {
 		///<returns>Returns true if the update files were successfully copied into the database.</returns>
 		public static bool CopyFromHereToUpdateFiles(Version versionCurrent,bool isSilent,bool hasAtoZ,bool hasConcatFiles,Form currentForm) {
 			#region Get Valid AtoZ path
-			if(hasAtoZ && PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-				string prefImagePath=ImageStore.GetPreferredAtoZpath();
+			if(hasAtoZ) {
+				string prefImagePath= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
 				if(prefImagePath==null || !Directory.Exists(prefImagePath)) {//AtoZ folder not found
 					if(isSilent) {
 						FormOpenDental.ExitCode=300;//AtoZ folder not found (Warning)
 						return false;
 					}
-					FormPath FormP=new FormPath();
-					FormP.IsStartingUp=true;
+					FormPath FormP=new FormPath(true);
+
 					FormP.ShowDialog();
 					if(FormP.DialogResult!=DialogResult.OK) {
 						MsgBox.Show("Invalid A to Z path.  Closing program.");
@@ -79,8 +80,8 @@ namespace OpenDental {
 			#region Delete Old UpdateFiles Folders
 			string folderTempUpdateFiles=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),"UpdateFiles");
 			string folderAtoZUpdateFiles="";
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && hasAtoZ) {
-				folderAtoZUpdateFiles=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"UpdateFiles");
+			if(hasAtoZ) {
+				folderAtoZUpdateFiles=ODFileUtils.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),"UpdateFiles");
 			}
 			ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Removing old update files..."));
 			//Try to delete the UpdateFiles folder from both the AtoZ share and the local TEMP dir.
@@ -702,7 +703,7 @@ namespace OpenDental {
 				return;
 			}
 			FolderBrowserDialog dlg=new FolderBrowserDialog();
-			dlg.SelectedPath=ImageStore.GetPreferredAtoZpath();
+			dlg.SelectedPath= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
 			dlg.Description=Lan.G("Prefs","Setup.exe will be downloaded to the folder you select below");
 			if(dlg.ShowDialog()!=DialogResult.OK) {
 				return;//app will exit
@@ -859,62 +860,27 @@ namespace OpenDental {
 				return;
 			}
 			//copy to second destination directory
-			if(!CloudStorage.IsCloudStorage) {
-				if(destinationPath2!=null && destinationPath2!="") {
-					if(File.Exists(destinationPath2)) {
-						try {
-							File.Delete(destinationPath2);
-						}
-						catch(Exception ex) {
-							FriendlyException.Show(Lan.G("FormUpdate","Error deleting file:")+"\r\n"+ex.Message,ex);
-							MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
-							Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName,"");
-							return;
-						}
+
+			if (destinationPath2 != null && destinationPath2 != "")
+			{
+				if (File.Exists(destinationPath2))
+				{
+					try
+					{
+						File.Delete(destinationPath2);
 					}
-					File.Copy(destinationPath,destinationPath2);
-				}
-			}
-			else {//Cloud storing
-				OpenDentalCloud.Core.TaskStateUpload state=null;
-				byte[] arrayBytes=File.ReadAllBytes(destinationPath);
-				FormP=new FormProgress();
-				FormP.DisplayText=Lan.G("FormUpdate","Uploading Setup File...");//Upload unversioned setup file to AtoZ main folder.
-				FormP.NumberFormat="F";
-				FormP.NumberMultiplication=1;
-				FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-				FormP.TickMS=1000;
-				state=CloudStorage.UploadAsync(
-					CloudStorage.AtoZPath
-					,Path.GetFileName(destinationPath)
-					,arrayBytes
-					,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-				if(FormP.ShowDialog()==DialogResult.Cancel) {
-					state.DoCancel=true;
-					MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
-					Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName,"");
-					return;
-				}
-				if(destinationPath2!=null && destinationPath2!="") {//Upload a copy of the Setup.exe to a versioned setup file to SetupFiles folder.  Not always used.
-					FormP=new FormProgress();
-					FormP.DisplayText=Lan.G("FormUpdate","Uploading Setup File SetupFiles folder...");
-					FormP.NumberFormat="F";
-					FormP.NumberMultiplication=1;
-					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-					FormP.TickMS=1000;
-					state=CloudStorage.UploadAsync(
-						ODFileUtils.CombinePaths(CloudStorage.AtoZPath,"SetupFiles")
-						,Path.GetFileName(destinationPath2)
-						,arrayBytes
-						,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-					if(FormP.ShowDialog()==DialogResult.Cancel) {
-						state.DoCancel=true;
+					catch (Exception ex)
+					{
+						FriendlyException.Show(Lan.G("FormUpdate", "Error deleting file:") + "\r\n" + ex.Message, ex);
 						MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
-						Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName,"");
+						Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");
 						return;
 					}
 				}
+				File.Copy(destinationPath, destinationPath2);
 			}
+			
+
 			//copy the Setup.exe to the AtoZ folders for the other db's.
 			List<string> atozNameList=MiscData.GetAtoZforDb(dblist);
 			for(int i=0;i<atozNameList.Count;i++) {
@@ -1102,57 +1068,57 @@ namespace OpenDental {
 				Cache.Refresh(InvalidType.Prefs);
 			}
 			if(storedVersion>currentVersion) {
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-					string setupBinPath=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"Setup.exe");
-					if(File.Exists(setupBinPath)) {
-						if(MessageBox.Show("You are attempting to run version "+currentVersion.ToString(3)+",\r\n"
-							+"But the database "+database+"\r\n"
-							+"is already using version "+storedVersion.ToString(3)+".\r\n"
-							+"A newer version must have already been installed on at least one computer.\r\n"  
-							+"The setup program stored in your A to Z folder will now be launched.\r\n"
-							+"Or, if you hit Cancel, then you will have the option to download again."
-							,"",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
-							if(MessageBox.Show("Download again?","",MessageBoxButtons.OKCancel)
-								==DialogResult.OK) {
-								FormUpdate FormU=new FormUpdate();
-								FormU.ShowDialog();
-							}
-							Application.Exit();
-							return false;
-						}
-						try {
-							Process.Start(setupBinPath);
-						}
-						catch {
-							MessageBox.Show("Could not launch Setup.exe");
-						}
-					}
-					else if(MessageBox.Show("A newer version has been installed on at least one computer,"+
-							"but Setup.exe could not be found in any of the following paths: "+
-							ImageStore.GetPreferredAtoZpath()+".  Download again?","",MessageBoxButtons.OKCancel)==DialogResult.OK) {
-						FormUpdate FormU=new FormUpdate();
-						FormU.ShowDialog();
-					}
-				}
-				else {//Not using image path.
-					//perform program update automatically.
-					string patchName="Setup.exe";
-					string updateUri=PrefC.GetString(PrefName.UpdateWebsitePath);
-					string updateCode=PrefC.GetString(PrefName.UpdateCode);
-					string updateInfoMajor="";
-					string updateInfoMinor="";
-					if(ShouldDownloadUpdate(updateUri,updateCode,out updateInfoMajor,out updateInfoMinor)) {
-						if(MessageBox.Show(updateInfoMajor+Lan.G("Prefs","Perform program update now?"),"",
-							MessageBoxButtons.YesNo)==DialogResult.Yes) {
-							string tempFile=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),patchName);//Resort to a more common temp file name.
-							DownloadInstallPatchFromURI(updateUri+updateCode+"/"+patchName,//Source URI
-								tempFile,true,true,null);//Local destination file.
-							if(File.Exists(tempFile)) {//If user canceld in DownloadInstallPatchFromURI file will not exist.
-								File.Delete(tempFile);//Cleanup install file.
-							}
-						}
-					}
-				}
+				//if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
+				//	string setupBinPath=ODFileUtils.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),"Setup.exe");
+				//	if(File.Exists(setupBinPath)) {
+				//		if(MessageBox.Show("You are attempting to run version "+currentVersion.ToString(3)+",\r\n"
+				//			+"But the database "+database+"\r\n"
+				//			+"is already using version "+storedVersion.ToString(3)+".\r\n"
+				//			+"A newer version must have already been installed on at least one computer.\r\n"  
+				//			+"The setup program stored in your A to Z folder will now be launched.\r\n"
+				//			+"Or, if you hit Cancel, then you will have the option to download again."
+				//			,"",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
+				//			if(MessageBox.Show("Download again?","",MessageBoxButtons.OKCancel)
+				//				==DialogResult.OK) {
+				//				FormUpdate FormU=new FormUpdate();
+				//				FormU.ShowDialog();
+				//			}
+				//			Application.Exit();
+				//			return false;
+				//		}
+				//		try {
+				//			Process.Start(setupBinPath);
+				//		}
+				//		catch {
+				//			MessageBox.Show("Could not launch Setup.exe");
+				//		}
+				//	}
+				//	else if(MessageBox.Show("A newer version has been installed on at least one computer,"+
+				//			"but Setup.exe could not be found in any of the following paths: "+
+				//			OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()+".  Download again?","",MessageBoxButtons.OKCancel)==DialogResult.OK) {
+				//		FormUpdate FormU=new FormUpdate();
+				//		FormU.ShowDialog();
+				//	}
+				//}
+				//else {//Not using image path.
+				//	//perform program update automatically.
+				//	string patchName="Setup.exe";
+				//	string updateUri=PrefC.GetString(PrefName.UpdateWebsitePath);
+				//	string updateCode=PrefC.GetString(PrefName.UpdateCode);
+				//	string updateInfoMajor="";
+				//	string updateInfoMinor="";
+				//	if(ShouldDownloadUpdate(updateUri,updateCode,out updateInfoMajor,out updateInfoMinor)) {
+				//		if(MessageBox.Show(updateInfoMajor+Lan.G("Prefs","Perform program update now?"),"",
+				//			MessageBoxButtons.YesNo)==DialogResult.Yes) {
+				//			string tempFile=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),patchName);//Resort to a more common temp file name.
+				//			DownloadInstallPatchFromURI(updateUri+updateCode+"/"+patchName,//Source URI
+				//				tempFile,true,true,null);//Local destination file.
+				//			if(File.Exists(tempFile)) {//If user canceld in DownloadInstallPatchFromURI file will not exist.
+				//				File.Delete(tempFile);//Cleanup install file.
+				//			}
+				//		}
+				//	}
+				//}
 				Application.Exit();//always exits, whether launch of setup worked or not
 				return false;
 			}

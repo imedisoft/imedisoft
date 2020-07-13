@@ -174,9 +174,8 @@ namespace OpenDentBusiness{
 			foreach(string relativePath in listMedLabs.Select(x => x.FileName).Distinct().ToList()) {
 				string fileTextCur="";
 				try {
-					if(PrefC.AtoZfolderUsed!=DataStorageType.InDatabase) {
-						fileTextCur=FileAtoZ.ReadAllText(FileAtoZ.CombinePaths(ImageStore.GetPreferredAtoZpath(),relativePath));
-					}
+					fileTextCur=FileAtoZ.ReadAllText(FileAtoZ.CombinePaths(FileAtoZ.GetPreferredAtoZpath(),relativePath));
+					
 				}
 				catch {
 					//To avoid a warning message.  The ex is needed to ensure all exceptions are caught.
@@ -227,7 +226,7 @@ namespace OpenDentBusiness{
 					continue;
 				}
 				try {
-					ImageStore.DeleteDocuments(new List<Document> { doc },ImageStore.GetPatientFolder(docPat,ImageStore.GetPreferredAtoZpath()));
+					ImageStore.DeleteDocuments(new List<Document> { doc },ImageStore.GetPatientFolder(docPat, FileAtoZ.GetPreferredAtoZpath()));
 				}
 				catch {
 					//To avoid a warning message.  The ex is needed to ensure all exceptions are caught.

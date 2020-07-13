@@ -41,13 +41,6 @@ namespace OpenDentBusiness {
 			}
 		}
 
-		///<summary>This property is just a shortcut to this pref to make typing faster.  This pref is used a lot.</summary>
-		public static DataStorageType AtoZfolderUsed {
-			get {
-				return PIn.Enum<DataStorageType>(GetInt(PrefName.AtoZfolderUsed));
-			}
-		}
-
 		///<summary>This property returns true if the preference for clinics is on and there is at least one non-hidden clinic.</summary>
 		public static bool HasClinicsEnabled {
 			get {

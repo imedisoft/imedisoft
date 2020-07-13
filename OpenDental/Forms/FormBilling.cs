@@ -1027,7 +1027,7 @@ namespace OpenDental{
 					fam=Patients.GetFamily(stmt.PatNum);
 				}
 				pat=fam.GetPatient(stmt.PatNum);
-				patFolder=ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath());
+				patFolder=ImageStore.GetPatientFolder(pat, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 				dataSet=AccountModules.GetStatementDataSet(stmt,isComputeAging);
 				if(comboEmailFrom.SelectedIndex==0) { //clinic/practice default
 					emailAddress=EmailAddresses.GetByClinic(pat.ClinicNum);
@@ -1098,29 +1098,14 @@ namespace OpenDental{
 				//imageStore = OpenDental.Imaging.ImageStore.GetImageStore(pat);
 				//If stmt.DocNum==0, savedPdfPath will be "".  A blank savedPdfPath is fine for electronic statements.
 				Document docStmt=Documents.GetByNum(stmt.DocNum);
-				if(CloudStorage.IsCloudStorage) {
-					if(tempPdfFile != "")
-						savedPdfPath=tempPdfFile;//To save time by not having to download it.
-					else {
-						savedPdfPath=PrefC.GetRandomTempFile("pdf");
-						FileAtoZ.Copy(ImageStore.GetFilePath(docStmt,patFolder),savedPdfPath,FileAtoZSourceDestination.AtoZToLocal,uploadMessage:"Downloading statement...");
-					}
-				}
-				else {
+
 					savedPdfPath=ImageStore.GetFilePath(docStmt,patFolder);//savedPdfPath is just the filename when using DataStorageType.InDatabase
-				}
+				
 				if(stmt.Mode_==StatementMode.InPerson || stmt.Mode_==StatementMode.Mail) {
 					_hasToShowPdf=true;
-					if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-						byte[] rawData=Convert.FromBase64String(docStmt.RawBase64);
-						using(Stream stream=new MemoryStream(rawData)) {
-							inputDocument=PdfReader.Open(stream,PdfDocumentOpenMode.Import);
-							stream.Close();
-						}
-					}
-					else {
+
 						inputDocument=PdfReader.Open(savedPdfPath,PdfDocumentOpenMode.Import);
-					}
+					
 					for(int idx = 0;idx<inputDocument.PageCount;idx++) {
 						page=inputDocument.Pages[idx];
 						outputDocument.AddPage(page);
@@ -1147,12 +1132,9 @@ namespace OpenDental{
 					rnd=new Random();
 					fileName=DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
 					filePathAndName=FileAtoZ.CombinePaths(attachPath,fileName);
-					if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-						ImageStore.Export(filePathAndName,docStmt,pat);
-					}
-					else {
-						FileAtoZ.Copy(savedPdfPath,filePathAndName,FileAtoZSourceDestination.LocalToAtoZ,uploadMessage:"Uploading statement...");
-					}
+
+						FileAtoZ.Copy(savedPdfPath,filePathAndName/*,FileAtoZSourceDestination.LocalToAtoZ,uploadMessage:"Uploading statement..."*/);
+					
 					//Process.Start(filePathAndName);
 					_progExtended.Fire(new ODEventArgs(ODEventType.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"40%",40,100,ProgBarStyle.Blocks,"3")));
 					message=Statements.GetEmailMessageForStatement(stmt,pat);

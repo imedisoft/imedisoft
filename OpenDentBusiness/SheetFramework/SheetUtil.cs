@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
+using OpenDentBusiness.FileIO;
 using OpenDentBusiness.SheetFramework;
 using OpenDentBusiness.WebTypes.WebForms;
 
@@ -39,7 +40,7 @@ namespace OpenDentBusiness{
 								break;
 							}
 							Document patDoc=Documents.GetByNum(PIn.Long(field.FieldValue));
-							List<string> paths=Documents.GetPaths(new List<long> { patDoc.DocNum },ImageStore.GetPreferredAtoZpath());
+							List<string> paths=Documents.GetPaths(new List<long> { patDoc.DocNum }, FileAtoZ.GetPreferredAtoZpath());
 							if(paths.Count < 1) {//No path was found so we cannot draw the image.
 								continue;
 							}
@@ -53,12 +54,7 @@ namespace OpenDentBusiness{
 					if(field.FieldName=="Patient Info.gif") {
 						continue;
 					}
-					if(CloudStorage.IsCloudStorage) {
-						if(CloudStorage.FileExists(filePathAndName)) {
-							continue;
-						}
-					}
-					else if(File.Exists(filePathAndName)) {
+					if(File.Exists(filePathAndName)) {
 						continue;
 					}
 					else {//img doesn't exist or we do not have access to it.
@@ -452,14 +448,8 @@ namespace OpenDentBusiness{
 		///<summary>Typically returns something similar to \\SERVER\OpenDentImages\SheetImages</summary>
 		public static string GetImagePath(){
 			string imagePath;
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				throw new ApplicationException("Must be using AtoZ folders.");
-			}
-			imagePath=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"SheetImages");
-			if(CloudStorage.IsCloudStorage) {
-				imagePath=imagePath.Replace("\\","/");
-			}
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && !Directory.Exists(imagePath)) {
+			imagePath=ODFileUtils.CombinePaths(FileAtoZ.GetPreferredAtoZpath(),"SheetImages");
+			if(!Directory.Exists(imagePath)) {
 				Directory.CreateDirectory(imagePath);
 			}
 			return imagePath;
@@ -494,15 +484,9 @@ namespace OpenDentBusiness{
 		///<summary>Typically returns something similar to \\SERVER\OpenDentImages\SheetImages</summary>
 		public static string GetPatImagePath() {
 			string imagePath;
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				throw new ApplicationException("Must be using AtoZ folders.");
-			}
-			imagePath=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"SheetPatImages");
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && !Directory.Exists(imagePath)) {
+			imagePath=ODFileUtils.CombinePaths(FileAtoZ.GetPreferredAtoZpath(),"SheetPatImages");
+			if(!Directory.Exists(imagePath)) {
 				Directory.CreateDirectory(imagePath);
-			}
-			if(CloudStorage.IsCloudStorage) {
-				imagePath=imagePath.Replace("\\","/");
 			}
 			return imagePath;
 		}

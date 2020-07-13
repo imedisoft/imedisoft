@@ -625,7 +625,7 @@ namespace OpenDental{
 					Object oFileName=tempFilePath;
 					WrdApp.ActiveDocument.SaveAs(oFileName);//save the document to temp location
 					Document doc=SaveToImageFolder(tempFilePath,letterCur);
-					string patFolder=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());
+					string patFolder=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 					string fileName=ImageStore.GetFilePath(doc,patFolder);
 					if(!FileAtoZ.Exists(fileName)) {
 						throw new ApplicationException(Lans.g("LetterMerge","Error opening document"+" "+doc.FileName));
@@ -698,9 +698,6 @@ namespace OpenDental{
 				return new Document();
 			}
 			string rawBase64="";
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				rawBase64=Convert.ToBase64String(File.ReadAllBytes(fileSourcePath));
-			}
 			Document docSave=new Document();
 			docSave.DocNum=Documents.Insert(docSave);
 			docSave.ImgType=ImageType.Document;
@@ -708,10 +705,9 @@ namespace OpenDental{
 			docSave.PatNum=PatCur.PatNum;
 			docSave.DocCategory=letterCur.ImageFolder;
 			docSave.Description=letterCur.Description+docSave.DocNum;//no extension.
-			docSave.RawBase64=rawBase64;//blank if using AtoZfolder
 			docSave.FileName=ODFileUtils.CleanFileName(docSave.Description)+GetFileExtensionForWordDoc(fileSourcePath);
-			string fileDestPath=ImageStore.GetFilePath(docSave,ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath()));
-			FileAtoZ.Copy(fileSourcePath,fileDestPath,FileAtoZSourceDestination.LocalToAtoZ);
+			string fileDestPath=ImageStore.GetFilePath(docSave,ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()));
+			FileAtoZ.Copy(fileSourcePath,fileDestPath);
 			Documents.Update(docSave);
 			return docSave;
 		}

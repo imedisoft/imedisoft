@@ -106,10 +106,7 @@ namespace OpenDental {
 			string tempFile=PrefC.GetRandomTempFile(".pdf");
 			CreatePDF(tempFile);
 			Patient patCur=_fam.GetPatient(PatNum);
-			string rawBase64="";
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				rawBase64=Convert.ToBase64String(File.ReadAllBytes(tempFile));
-			}
+
 			Document docSave=new Document();
 			docSave.DocNum=Documents.Insert(docSave);
 			docSave.ImgType=ImageType.Document;
@@ -117,13 +114,13 @@ namespace OpenDental {
 			docSave.PatNum=PatNum;
 			docSave.DocCategory=listImageCatDefs.FirstOrDefault().DefNum;
 			docSave.Description=$"ServiceDateView"+docSave.DocNum+$"{docSave.DateCreated.Year}_{docSave.DateCreated.Month}_{docSave.DateCreated.Day}";
-			docSave.RawBase64=rawBase64;//blank if using AtoZfolder
+
 			string fileName=ODFileUtils.CleanFileName(docSave.Description);
-			string filePath=ImageStore.GetPatientFolder(patCur,ImageStore.GetPreferredAtoZpath());
+			string filePath=ImageStore.GetPatientFolder(patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 			while(FileAtoZ.Exists(FileAtoZ.CombinePaths(filePath,fileName+".pdf"))) {
 				fileName+="x";
 			}
-			FileAtoZ.Copy(tempFile,ODFileUtils.CombinePaths(filePath,fileName+".pdf"),FileAtoZSourceDestination.LocalToAtoZ);
+			FileAtoZ.Copy(tempFile,ODFileUtils.CombinePaths(filePath,fileName+".pdf"));
 			docSave.FileName=fileName+".pdf";//file extension used for both DB images and AtoZ images
 			Documents.Update(docSave);
 			try {

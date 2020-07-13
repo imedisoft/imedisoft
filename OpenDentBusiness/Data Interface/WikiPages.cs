@@ -305,13 +305,9 @@ namespace OpenDentBusiness{
 
 		///<summary>Surround with try/catch.  Typically returns something similar to \\SERVER\OpenDentImages\Wiki</summary>
 		public static string GetWikiPath() {
-			//No need to check RemotingRole; no call to db.
 			string wikiPath;
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				throw new ApplicationException(Lans.g("WikiPages","Must be using AtoZ folders."));
-			}
-			wikiPath=CloudStorage.PathTidy(Path.Combine(ImageStore.GetPreferredAtoZpath(),"Wiki"));
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && !Directory.Exists(wikiPath)) {
+			wikiPath=Path.Combine(FileAtoZ.GetPreferredAtoZpath(),"Wiki");
+			if(!Directory.Exists(wikiPath)) {
 				Directory.CreateDirectory(wikiPath);
 			}
 			return wikiPath;

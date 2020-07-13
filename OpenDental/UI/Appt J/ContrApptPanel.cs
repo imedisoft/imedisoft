@@ -3952,13 +3952,12 @@ namespace OpenDental.UI{
 			Bitmap bitmapPatPict=null;
 			if(showingPatientPicture) {
 				string imageFolder=dataRow["ImageFolder"].ToString();
-				if(imageFolder!=""
-					&& (PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ || CloudStorage.IsCloudStorage))//Do not use patient image when A to Z folders are disabled.
+				if(imageFolder!="")//Do not use patient image when A to Z folders are disabled.
 				{
 					try {
 						long patNum=PIn.Long(dataRow["PatNum"].ToString());
 						Documents.GetPatPict(patNum,
-							ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),
+							ODFileUtils.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),
 								imageFolder.Substring(0,1).ToUpper(),
 								imageFolder,""),
 								out bitmapPatPict);

@@ -380,7 +380,7 @@ namespace OpenDental{
 			textDate.Text=_documentCur.DateCreated.ToShortDateString();
 			textTime.Text=_documentCur.DateCreated.ToLongTimeString();
 			textDescript.Text=_documentCur.Description;
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
+
 				string patFolder;
 				if(!TryGetPatientFolder(out patFolder)) {
 					return;
@@ -390,20 +390,7 @@ namespace OpenDental{
 					FileInfo fileInfo=new FileInfo(textFileName.Text);
 					textSize.Text=fileInfo.Length.ToString("n0");
 				}
-			}
-			else if(CloudStorage.IsCloudStorage) {
-				string patFolder;
-				if(!TryGetPatientFolder(out patFolder)) {
-					return;
-				}
-				textFileName.Text=ODFileUtils.CombinePaths(patFolder,_documentCur.FileName,'/');
-			}
-			else {
-				labelFileName.Visible=false;
-				textFileName.Visible=false;
-				butOpen.Visible=false;
-				textSize.Text=_documentCur.RawBase64.Length.ToString("n0");
-			}
+
 			textToothNumbers.Text=Tooth.FormatRangeForDisplay(_documentCur.ToothNumbers);
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
 				labelToothNums.Visible=false;
@@ -423,7 +410,7 @@ namespace OpenDental{
 		private bool TryGetPatientFolder(out string patFolder,bool isFormClosedOnError=true) {
 			patFolder="";
 			try {
-				patFolder=ImageStore.GetPatientFolder(_patCur,ImageStore.GetPreferredAtoZpath());
+				patFolder=ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 			}
 			catch(Exception ex) {
 				FriendlyException.Show(ex.Message,ex);
@@ -437,35 +424,8 @@ namespace OpenDental{
 		}
 
 		private void butOpen_Click(object sender,EventArgs e) {
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-				System.Diagnostics.Process.Start("Explorer",Path.GetDirectoryName(textFileName.Text));
-			}
-			else if(CloudStorage.IsCloudStorage) {//First download, then open
-				FormProgress FormP=new FormProgress();
-				FormP.DisplayText="Downloading...";
-				FormP.NumberFormat="F";
-				FormP.NumberMultiplication=1;
-				FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-				FormP.TickMS=1000;
-				string patFolder;
-				if(!TryGetPatientFolder(out patFolder,false)) {
-					return;
-				}
-				OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(patFolder
-					,_documentCur.FileName
-					,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-				FormP.ShowDialog();
-				if(FormP.DialogResult==DialogResult.Cancel) {
-					state.DoCancel=true;
-					return;
-				}
-				//Create temp file here or create the file with the actual name?  Changes made when opening the file won't be saved, so I think temp file is best.
-				string tempFile=PrefC.GetRandomTempFile(Path.GetExtension(_documentCur.FileName));
-				File.WriteAllBytes(tempFile,state.FileContent);
-
-					System.Diagnostics.Process.Start(tempFile);
-				
-			}
+			System.Diagnostics.Process.Start("Explorer",Path.GetDirectoryName(textFileName.Text));
+			
 		}
 
 		private void butCropReset_Click(object sender, EventArgs e){

@@ -43,21 +43,9 @@ namespace OpenDental {
 							img=OpenDentBusiness.Properties.Resources.Patient_Info;
 							imgFormat=img.RawFormat;
 						}
-						else if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && File.Exists(filePathAndName)) {
+						else if(File.Exists(filePathAndName)) {
 							img=Image.FromFile(filePathAndName);
 							imgFormat=img.RawFormat;
-						}
-						else if(CloudStorage.IsCloudStorage) {
-							OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.Download(filePath,fileName);
-							if(state==null || state.FileContent==null) {
-								throw new Exception(Lan.G(CloudStorage.LanThis,"Unable to download image."));
-							}
-							else {
-								using(MemoryStream stream=new MemoryStream(state.FileContent)) {
-									img=new Bitmap(Image.FromStream(stream));
-								}
-								imgFormat=ImageFormat.Bmp;
-							}
 						}
 						if(img==null) {//Image is missing
 							throw new ODException($"The file {fileName} could not be found in {filePath}");

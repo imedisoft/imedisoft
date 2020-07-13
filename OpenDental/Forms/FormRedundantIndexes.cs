@@ -100,12 +100,6 @@ namespace OpenDental {
 		///<summary>Adds the logText to a centralized log file for the current day if the current data storage type is LocalAtoZ.
 		///Throws exceptions to be displayed to the user.</summary>
 		private void SaveLogToFile(string logText) {
-			//No need to check RemotingRole; no call to db.
-			if(PrefC.AtoZfolderUsed!=DataStorageType.LocalAtoZ) {
-				//If docs are stored in DB, we don't want to create a file because the user has no way to access it.
-				//We also skip any cloud storage at this time, could enhance later to include.
-				return; //Don't make a log.
-			}
 			string machineName="~INVALID~";
 			ODException.SwallowAnyException(() => { machineName=Environment.MachineName; });
 			try {
@@ -122,7 +116,7 @@ namespace OpenDental {
 		}
 
 		private string GetLogFilePath() {
-			string path=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"DropIndexLogs");
+			string path=ODFileUtils.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),"DropIndexLogs");
 			try {
 				if(!Directory.Exists(path)) {
 					Directory.CreateDirectory(path);//Create DropIndexLogs folder if it doesn't exist

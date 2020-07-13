@@ -56,6 +56,7 @@ using OpenDental.Bridges;
 using OpenDentBusiness.WebServiceMainHQ;
 using ServiceManager;
 using System.DirectoryServices;
+using OpenDental.Forms;
 #if EHRTEST
 using EHR;
 #endif
@@ -620,19 +621,18 @@ namespace OpenDental{
 			}
 			BeginODDashboardStarterThread();
 			FillSignalButtons();
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-				string prefImagePath=ImageStore.GetPreferredAtoZpath();
+
+				string prefImagePath= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
 				if(prefImagePath==null || !Directory.Exists(prefImagePath)) {//AtoZ folder not found
 					//Cache.Refresh(InvalidType.Security);
-					FormPath FormP=new FormPath();
-					FormP.IsStartingUp=true;
+					FormPath FormP=new FormPath(true);
 					FormP.ShowDialog();
 					if(FormP.DialogResult!=DialogResult.OK) {
 						MessageBox.Show("Invalid A to Z path.  Closing program.");
 						Application.Exit();
 					}
 				}
-			}
+			
 			IsTreatPlanSortByTooth=PrefC.GetBool(PrefName.TreatPlanSortByTooth); //not a great place for this, but we don't have a better alternative.
 			if(userControlTasks1.Visible) {
 				userControlTasks1.InitializeOnStartup();
@@ -1179,32 +1179,39 @@ namespace OpenDental{
 		}
 
 		///<summary>Sets up the custom reports list in the main menu when certain requirements are met, or disables the custom reports menu item when those same conditions are not met. This function is called during initialization, and on the event that the A to Z folder usage has changed.</summary>
-		private void CheckCustomReports(){
+		private void CheckCustomReports()
+		{
 			menuItemCustomReports.MenuItems.Clear();
 			//Try to load custom reports, but only if using the A to Z folders.
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-				try {
-					string imagePath=ImageStore.GetPreferredAtoZpath();
-					string reportFolderName=PrefC.GetString(PrefName.ReportFolderName);
-					string reportDir=ODFileUtils.CombinePaths(imagePath,reportFolderName);
-					if(Directory.Exists(reportDir)) {
-						DirectoryInfo infoDir=new DirectoryInfo(reportDir);
-						FileInfo[] filesRdl=infoDir.GetFiles("*.rdl");
-						for(int i=0;i<filesRdl.Length;i++) {
-							string itemName=Path.GetFileNameWithoutExtension(filesRdl[i].Name);
-							menuItemCustomReports.MenuItems.Add(itemName,new System.EventHandler(this.menuItemRDLReport_Click));
-						}
+
+			try
+			{
+				string imagePath = OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
+				string reportFolderName = PrefC.GetString(PrefName.ReportFolderName);
+				string reportDir = ODFileUtils.CombinePaths(imagePath, reportFolderName);
+				if (Directory.Exists(reportDir))
+				{
+					DirectoryInfo infoDir = new DirectoryInfo(reportDir);
+					FileInfo[] filesRdl = infoDir.GetFiles("*.rdl");
+					for (int i = 0; i < filesRdl.Length; i++)
+					{
+						string itemName = Path.GetFileNameWithoutExtension(filesRdl[i].Name);
+						menuItemCustomReports.MenuItems.Add(itemName, new System.EventHandler(this.menuItemRDLReport_Click));
 					}
 				}
-				catch {
-					MessageBox.Show("Failed to retrieve custom reports.");
-				}
 			}
-			if(menuItemCustomReports.MenuItems.Count==0) {
-				menuItemCustomReports.Visible=false;
+			catch
+			{
+				MessageBox.Show("Failed to retrieve custom reports.");
 			}
-			else {
-				menuItemCustomReports.Visible=true;
+
+			if (menuItemCustomReports.MenuItems.Count == 0)
+			{
+				menuItemCustomReports.Visible = false;
+			}
+			else
+			{
+				menuItemCustomReports.Visible = true;
 			}
 		}
 
@@ -3931,10 +3938,6 @@ namespace OpenDental{
 		}
 
 		private void menuItemClaimForms_Click(object sender, System.EventArgs e) {
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase){
-				MessageBox.Show("Claim Forms feature is unavailable when data path A to Z folder is disabled.");
-				return;
-			}
 			if(!Security.IsAuthorized(Permissions.Setup)){
 				return;
 			}
@@ -4916,7 +4919,7 @@ namespace OpenDental{
 			//the image path should exist.
 			FormReportCustom FormR=new FormReportCustom();
 			FormR.SourceFilePath=
-				ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),PrefC.GetString(PrefName.ReportFolderName),((MenuItem)sender).Text+".rdl");
+				ODFileUtils.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),PrefC.GetString(PrefName.ReportFolderName),((MenuItem)sender).Text+".rdl");
 			FormR.ShowDialog();
 		}
 

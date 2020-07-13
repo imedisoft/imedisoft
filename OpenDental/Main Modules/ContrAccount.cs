@@ -3627,7 +3627,7 @@ namespace OpenDental {
 			//	ImageStore.UpdatePatient = new FileStore.UpdatePatientDelegate(Patients.Update);
 			//}
 			Patient guarantor=Patients.GetPat(stmt.PatNum);
-			string guarFolder=ImageStore.GetPatientFolder(guarantor,ImageStore.GetPreferredAtoZpath());
+			string guarFolder=ImageStore.GetPatientFolder(guarantor, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 			//OpenDental.Imaging.ImageStoreBase imageStore = OpenDental.Imaging.ImageStore.GetImageStore(guar);
 			if(stmt.Mode_==StatementMode.Email) {
 				if(!Security.IsAuthorized(Permissions.EmailSend)) {
@@ -3638,7 +3638,7 @@ namespace OpenDental {
 				Random rnd=new Random();
 				string fileName=DateTime.Now.ToString("yyyyMMdd")+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
 				string filePathAndName=FileAtoZ.CombinePaths(attachPath,fileName);
-				FileAtoZ.Copy(ImageStore.GetFilePath(Documents.GetByNum(stmt.DocNum),guarFolder),filePathAndName,FileAtoZSourceDestination.AtoZToAtoZ);
+				FileAtoZ.Copy(ImageStore.GetFilePath(Documents.GetByNum(stmt.DocNum),guarFolder),filePathAndName);
 				//Process.Start(filePathAndName);
 				EmailMessage message=Statements.GetEmailMessageForStatement(stmt,guarantor);
 				EmailAttach attach=new EmailAttach();
@@ -3655,7 +3655,7 @@ namespace OpenDental {
 					if(stmt.DocNum!=0) {
 						//delete the pdf
 						pat=Patients.GetPat(stmt.PatNum);
-						patFolder=ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath());
+						patFolder=ImageStore.GetPatientFolder(pat, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 						List<Document> listDocs=new List<Document>();
 						listDocs.Add(Documents.GetByNum(stmt.DocNum));
 						try {

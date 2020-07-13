@@ -143,7 +143,7 @@ namespace OpenDental {
 							continue;//skip this file.
 					}
 				}
-				FileAtoZ.Copy(fileName,destinationPath,FileAtoZSourceDestination.LocalToAtoZ);
+				FileAtoZ.Copy(fileName,destinationPath);
 			}
 			FillGrid();
 			if(openFD.FileNames.Length==1) {//if importing exactly one image, select it upon returning.

@@ -1,4 +1,5 @@
 using CodeBase;
+using OpenDentBusiness.FileIO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -438,7 +439,7 @@ namespace OpenDentBusiness
 				{
 					//deleted the pdf
 					Patient pat = Patients.GetPat(stmt.PatNum);
-					string patFolder = ImageStore.GetPatientFolder(pat, ImageStore.GetPreferredAtoZpath());
+					string patFolder = ImageStore.GetPatientFolder(pat, FileAtoZ.GetPreferredAtoZpath());
 					List<Document> listdocs = new List<Document>();
 					listdocs.Add(Documents.GetByNum(stmt.DocNum, true));
 					ImageStore.DeleteDocuments(listdocs, patFolder);//May throw if document is in use.

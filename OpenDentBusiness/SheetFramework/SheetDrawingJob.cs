@@ -1,5 +1,6 @@
 ﻿using CodeBase;
 using OpenDental.UI;
+using OpenDentBusiness.FileIO;
 using OpenDentBusiness.SheetFramework;
 using PdfSharp;
 using PdfSharp.Drawing;
@@ -743,7 +744,7 @@ namespace OpenDentBusiness {
 							break;
 						}
 						Document patDoc=Documents.GetByNum(PIn.Long(field.FieldValue));
-						List<string> paths=Documents.GetPaths(new List<long> { patDoc.DocNum },ImageStore.GetPreferredAtoZpath());
+						List<string> paths=Documents.GetPaths(new List<long> { patDoc.DocNum }, FileAtoZ.GetPreferredAtoZpath());
 						if(paths.Count < 1) {//No path was found so we cannot draw the image.
 							return;
 						}
@@ -758,34 +759,6 @@ namespace OpenDentBusiness {
 				if(field.FieldName=="Patient Info.gif") {
 					bmpOriginal=OpenDentBusiness.Properties.Resources.Patient_Info;
 					bmpOriginalFormat=ImageFormat.Gif;
-				}
-				else if(CloudStorage.IsCloudStorage) {
-					//FormProgress FormP=new FormProgress();
-					//FormP.DisplayText=Lan.g(CloudStorage.LanThis,"Downloading...");
-					//FormP.NumberFormat="F";
-					//FormP.NumberMultiplication=1;
-					//FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-					//FormP.TickMS=1000;
-					OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.Download(SheetUtil.GetImagePath(),field.FieldName);
-					//if(FormP.ShowDialog()==DialogResult.Cancel) {
-					//	state.DoCancel=true;
-					//	return;
-					//}
-					if(state==null || state.FileContent==null) {
-						return;//Unable to download the image
-					}
-					else {
-						using(MemoryStream stream=new MemoryStream(state.FileContent)) {
-							try {
-								bmpOriginal=new Bitmap(Image.FromStream(stream));
-								bmpOriginalFormat=ImageFormat.Bmp;
-							}
-							catch {
-
-								return;//If the image is not an actual image file, leave the image field blank.
-							}
-						}
-					}
 				}
 				else if(File.Exists(filePathAndName)) {//Local AtoZ
 					try {

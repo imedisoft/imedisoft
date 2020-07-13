@@ -1295,7 +1295,7 @@ namespace OpenDental{
 			string tempFile=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),sheetName);
 			string filePathAndName=FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),sheetName);
 			SheetPrinting.CreatePdf(sheet,tempFile,null);
-			FileAtoZ.Copy(tempFile,filePathAndName,FileAtoZSourceDestination.LocalToAtoZ);
+			FileAtoZ.Copy(tempFile,filePathAndName);
 			EmailMessage message=new EmailMessage();
 			EmailAddress address=EmailAddresses.GetByClinic(Clinics.ClinicNum);
 			message.FromAddress=address.GetFrom();

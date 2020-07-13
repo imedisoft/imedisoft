@@ -38,16 +38,12 @@ namespace OpenDental {
 				return;
 			}
 			if(sheet.DocNum!=0) {
-				if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-					MsgBox.Show("Unable to view saved sheet when storing images in database.");
-					return;
-				}
 				Document sheetDoc=Documents.GetByNum(sheet.DocNum,true);
 				if(sheetDoc==null) {
 					MsgBox.Show("Saved sheet no longer exists.");
 					return;
 				}
-				string patFolder=ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath());
+				string patFolder=ImageStore.GetPatientFolder(pat, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 				FileAtoZ.OpenFile(ImageStore.GetFilePath(sheetDoc,patFolder));
 			}
 			else {

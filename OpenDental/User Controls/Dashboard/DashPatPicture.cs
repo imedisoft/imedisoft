@@ -48,15 +48,14 @@ namespace OpenDental {
 		}
 
 		public void RefreshData(Patient pat,SheetField sheetField) {
-			if(pat==null || 
-				PrefC.AtoZfolderUsed==DataStorageType.InDatabase)//Do not use patient image when A to Z folders are disabled.
+			if(pat==null)//Do not use patient image when A to Z folders are disabled.
 			{
 				return;
 			}
 			try{
 				_docPatPicture=Documents.GetByNum(PIn.Long(sheetField.FieldValue),true);
 				//GetFullImage applies cropping/transposing/etc...
-				Bitmap fullImage=ImageHelper.GetFullImage(_docPatPicture,ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath()));
+				Bitmap fullImage=ImageHelper.GetFullImage(_docPatPicture,ImageStore.GetPatientFolder(pat, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()));
 				SwapPatPicture(() => ImageHelper.GetThumbnail(fullImage,Math.Min(sheetField.Width,sheetField.Height)));
 				fullImage.Dispose();
 			}

@@ -564,6 +564,9 @@
     <Compile Include="Forms\FormEServicesSignup.designer.cs">
       <DependentUpon>FormEServicesSignup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormPath.Designer.cs">
+      <DependentUpon>FormPath.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormRedundantIndexes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -9488,6 +9491,10 @@
     <ProjectReference Include="..\DataConnectionBase\xDataConnectionBase.csproj">
       <Project>{29c41020-4411-41f2-9061-9b71b5b32b5d}</Project>
       <Name>xDataConnectionBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Imedisoft.Translation\Imedisoft.Translation.csproj">
+      <Project>{3218c76d-d512-43ce-a588-5e136df5888a}</Project>
+      <Name>Imedisoft.Translation</Name>
     </ProjectReference>
     <ProjectReference Include="..\ODR\xODR.csproj">
       <Project>{84688345-BB6A-4F2F-8672-A82B52FD433B}</Project>

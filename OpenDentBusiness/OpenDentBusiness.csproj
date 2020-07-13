@@ -1648,7 +1648,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-    <Compile Include="WebBridges\CloudStorage.cs" />
     <Compile Include="WebBridges\Dropbox.cs" />
     <Compile Include="WebBridges\Erx\DoseSpot.cs" />
     <Compile Include="WebBridges\Erx\Erx.cs" />

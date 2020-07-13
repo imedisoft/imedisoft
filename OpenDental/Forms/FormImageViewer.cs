@@ -154,12 +154,12 @@ namespace OpenDental{
 			displayedDoc=thisDocument;
 			List<long> docNums=new List<long>();
 			docNums.Add(thisDocument.DocNum);
-			string fileName=CloudStorage.PathTidy(Documents.GetPaths(docNums,ImageStore.GetPreferredAtoZpath())[0]);
+			string fileName=Documents.GetPaths(docNums, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath())[0];
 			if(!FileAtoZ.Exists(fileName)) {
 				MessageBox.Show(fileName+" +"+Lan.G(this,"could not be found."));
 				return;
 			}
-			ImageCurrent=(Bitmap)FileAtoZ.GetImage(fileName);
+			ImageCurrent= FileAtoZ.GetImage(fileName);
 			DisplayImage();
 		}
 

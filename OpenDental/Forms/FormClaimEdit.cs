@@ -1114,45 +1114,22 @@ namespace OpenDental{
 			gridSent.EndUpdate();
 		}
 
-		private void gridSent_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			ClaimAttach claimAttachCur=(ClaimAttach)gridSent.ListGridRows[e.Row].Tag;
-			string patFolder=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());
-			if(CloudStorage.IsCloudStorage) {
-				string pathAndFileName=ODFileUtils.CombinePaths(patFolder,claimAttachCur.ActualFileName,'/');
-				if(!CloudStorage.FileExists(pathAndFileName)) {
-					//Couldn't find file, display message and return
-					MessageBox.Show("File no longer exists.");
-					return;
-				}
-				//found it, download and display
-				//This chunk of code was pulled from FormFilePicker.cs
-				FormProgress FormP=new FormProgress();
-				FormP.DisplayText="Downloading...";
-				FormP.NumberFormat="F";
-				FormP.NumberMultiplication=1;
-				FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-				FormP.TickMS=1000;
-				TaskStateDownload state=CloudStorage.DownloadAsync(patFolder,claimAttachCur.ActualFileName,
-					new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-				if(FormP.ShowDialog()==DialogResult.Cancel) {
-					state.DoCancel=true;
-					return;
-				}
-				string tempFile=PrefC.GetRandomTempFile(Path.GetExtension(pathAndFileName));
-				File.WriteAllBytes(tempFile,state.FileContent);
+		private void gridSent_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			ClaimAttach claimAttachCur = (ClaimAttach)gridSent.ListGridRows[e.Row].Tag;
+			string patFolder = ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 
-					Process.Start(tempFile);
-				
+
+			string pathAndFileName = ODFileUtils.CombinePaths(patFolder, claimAttachCur.ActualFileName);
+			try
+			{
+				Process.Start(pathAndFileName);
 			}
-			else {//Local storage
-				string pathAndFileName=ODFileUtils.CombinePaths(patFolder,claimAttachCur.ActualFileName);
-				try {
-					Process.Start(pathAndFileName);
-				}
-				catch {
-					MessageBox.Show("Could not open the attachment.");
-				}
+			catch
+			{
+				MessageBox.Show("Could not open the attachment.");
 			}
+
 		}
 
 		private void ClaimProcRowHelper(GridRow row,ClaimProc claimProcCur) {
@@ -2169,11 +2146,6 @@ namespace OpenDental{
 		}
 
 		private void butAttachPerio_Click(object sender,EventArgs e) {
-			//Patient PatCur=Patients.GetPat(PatNum);
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MessageBox.Show("Error. Not using AtoZ images folder.");
-				return;
-			}
 			ContrPerio gridP=new ContrPerio();
 			gridP.BackColor = System.Drawing.SystemColors.Window;
 			gridP.Size = new System.Drawing.Size(595,665);
@@ -2201,32 +2173,8 @@ namespace OpenDental{
 			string attachPath=EmailAttaches.GetAttachPath();
 			string newPath=ODFileUtils.CombinePaths(attachPath,newName);
 			try {
-				if(CloudStorage.IsCloudStorage) {
-					FormProgress FormP=new FormProgress();
-					FormP.DisplayText="Uploading...";
-					FormP.NumberFormat="F";
-					FormP.NumberMultiplication=1;
-					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-					FormP.TickMS=1000;
-					OpenDentalCloud.Core.TaskStateUpload state=null;
-					using(MemoryStream ms=new MemoryStream()) {
-						bitmapBig.Save(ms,System.Drawing.Imaging.ImageFormat.Bmp);
-						state=CloudStorage.UploadAsync(
-							CloudStorage.AtoZPath+"/EmailAttachments"
-							,newName
-							,ms.ToArray()
-							,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-					}
-					FormP.ShowDialog();
-					if(FormP.DialogResult==DialogResult.Cancel) {
-						state.DoCancel=true;
-						return;
-					}
-					//Upload was successful, so continue attaching
-				}
-				else { 
 					bitmapBig.Save(newPath);
-				}
+				
 			}
 			catch(Exception ex) {
 				MessageBox.Show(ex.Message);
@@ -2266,7 +2214,7 @@ namespace OpenDental{
 					return;
 				}
 				try {
-					FileAtoZ.Copy(curAttachPath,newFilePath,FileAtoZSourceDestination.AtoZToLocal,"Downloading file...");
+					FileAtoZ.Copy(curAttachPath,newFilePath);
 				}
 				catch {
 					MessageBox.Show(Lan.G(this,"The attachment")+" "+curAttachPath+" "

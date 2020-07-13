@@ -62,67 +62,77 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>If this is middle tier, pass in null.</summary>
-		public static void LoadAllPlugins(Form host) {
-			List<PluginContainer> listPlugins=new List<PluginContainer>();
+		public static void LoadAllPlugins(Form host)
+		{
+			List<PluginContainer> listPlugins = new List<PluginContainer>();
 			//Loop through all programs that are enabled with a plug-in dll name set.
-			foreach(Program program in Programs.GetWhere(x => x.Enabled && !string.IsNullOrEmpty(x.PluginDllName))) {
-				string dllPath=ODFileUtils.CombinePaths(Application.StartupPath,program.PluginDllName);
+			foreach (Program program in Programs.GetWhere(x => x.Enabled && !string.IsNullOrEmpty(x.PluginDllName)))
+			{
+				string dllPath = ODFileUtils.CombinePaths(Application.StartupPath, program.PluginDllName);
 
 				//Check for the versioning trigger.
 				//For example, the plug-in might be entered as MyPlugin[VersionMajMin].dll. The bracketed section will be removed when loading the dll.
 				//So it will look for MyPlugin.dll as the dll to load. However, before it loads, it will look for a similar dll with a version number.
 				//For example, if using version 14.3.23, it would look for MyPlugin14.3.dll. 
 				//If that file is found, it would replace MyPlugin.dll with the contents of MyPlugin14.3.dll, and then it would load MyPlugin.dll as normal.
-				if(dllPath.Contains("[VersionMajMin]")) {
-					Version vers=Assembly.GetAssembly(typeof(Db)).GetName().Version;
-					string dllPathWithVersion=dllPath.Replace("[VersionMajMin]",vers.Major.ToString()+"."+vers.Minor.ToString());
-					dllPath=dllPath.Replace("[VersionMajMin]","");//now stripped clean
-					if(File.Exists(dllPathWithVersion)) {
-						File.Copy(dllPathWithVersion,dllPath,true);
+				if (dllPath.Contains("[VersionMajMin]"))
+				{
+					Version vers = Assembly.GetAssembly(typeof(Db)).GetName().Version;
+					string dllPathWithVersion = dllPath.Replace("[VersionMajMin]", vers.Major.ToString() + "." + vers.Minor.ToString());
+					dllPath = dllPath.Replace("[VersionMajMin]", "");//now stripped clean
+					if (File.Exists(dllPathWithVersion))
+					{
+						File.Copy(dllPathWithVersion, dllPath, true);
 					}
-					else{
+					else
+					{
 						//try the Plugins folder
-						if(PrefC.AtoZfolderUsed!=DataStorageType.InDatabase) {//must have an AtoZ folder to check
-							string dllPathVersionCentral=FileAtoZ.CombinePaths(ImageStore.GetPreferredAtoZpath(),"Plugins",
-								program.PluginDllName.Replace("[VersionMajMin]",vers.Major.ToString()+"."+vers.Minor.ToString()));
-							if(FileAtoZ.Exists(dllPathVersionCentral)) {
-								FileAtoZ.Copy(dllPathVersionCentral,dllPath,FileAtoZSourceDestination.AtoZToLocal,doOverwrite:true);
-							}
+						string dllPathVersionCentral = 
+							FileAtoZ.CombinePaths(FileAtoZ.GetPreferredAtoZpath(), "Plugins",
+								program.PluginDllName.Replace("[VersionMajMin]", vers.Major.ToString() + "." + vers.Minor.ToString()));
+
+						if (FileAtoZ.Exists(dllPathVersionCentral))
+						{
+							FileAtoZ.Copy(dllPathVersionCentral, dllPath, true);
 						}
+
 					}
 				}
 				//We now know the exact name of the dll for the plug-in.  Check to see if it is present.
-				if(!File.Exists(dllPath)) {
+				if (!File.Exists(dllPath))
+				{
 					continue;//Nothing to do.
 				}
 				//The dll was found, try and load it in.
-				PluginBase plugin=null;
-				Assembly ass=null;
-				string assName="";
-				try {
-					ass=Assembly.LoadFile(dllPath);
-					assName=Path.GetFileNameWithoutExtension(dllPath);
-					string typeName=assName+".Plugin";
-					Type type=ass.GetType(typeName);
-					plugin=(PluginBase)Activator.CreateInstance(type);
-					plugin.Host=host;
+				PluginBase plugin = null;
+				Assembly ass = null;
+				string assName = "";
+				try
+				{
+					ass = Assembly.LoadFile(dllPath);
+					assName = Path.GetFileNameWithoutExtension(dllPath);
+					string typeName = assName + ".Plugin";
+					Type type = ass.GetType(typeName);
+					plugin = (PluginBase)Activator.CreateInstance(type);
+					plugin.Host = host;
 				}
-				catch(Exception ex) {
-					
-						//Notify the user that their plug-in is not loaded.
-						MessageBox.Show("Error loading Plugin:"+program.PluginDllName+"\r\n"+ex.Message);
-					
+				catch (Exception ex)
+				{
+
+					//Notify the user that their plug-in is not loaded.
+					MessageBox.Show("Error loading Plugin:" + program.PluginDllName + "\r\n" + ex.Message);
+
 					continue;//Don't add it to plugin list.
 				}
 				//The plug-in was successfully loaded and will start getting hook notifications.  Add it to the list of loaded plug-ins.
-				PluginContainer container=new PluginContainer();
-				container.Plugin=plugin;
-				container.ProgramNum=program.ProgramNum;
-				container.Assemb=ass;
-				container.Name=assName;
+				PluginContainer container = new PluginContainer();
+				container.Plugin = plugin;
+				container.ProgramNum = program.ProgramNum;
+				container.Assemb = ass;
+				container.Name = assName;
 				listPlugins.Add(container);
 			}
-			ListPlugins=listPlugins;
+			ListPlugins = listPlugins;
 		}
 
 		///<summary>Returns null if no plugin assembly loaded with the given name.

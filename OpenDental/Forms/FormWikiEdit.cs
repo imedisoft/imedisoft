@@ -485,17 +485,7 @@ namespace OpenDental {
 
 		private void File_Link_Click() {
 			string fileLink;
-			if(CloudStorage.IsCloudStorage) {
-				FormFilePicker FormFP=new FormFilePicker(WikiPages.GetWikiPath());
-				FormFP.DoHideLocalButton=true;
-				FormFP.ShowDialog();
-				if(FormFP.DialogResult!=DialogResult.OK) {
-					return;
-				}
-				fileLink=FormFP.SelectedFiles[0];
-				textContent.SelectedText="[[filecloud:"+fileLink+"]]";
-			}
-			else {//Not cloud
+
 				FormWikiFileFolder FormWFF=new FormWikiFileFolder();
 				FormWFF.ShowDialog();
 				if(FormWFF.DialogResult!=DialogResult.OK) {
@@ -503,22 +493,13 @@ namespace OpenDental {
 				}
 				fileLink=FormWFF.SelectedLink;
 				textContent.SelectedText="[[file:"+fileLink+"]]";
-			}
+			
 			textContent.SelectionLength=0;
 			//RefreshHtml();
 		}
 
 		private void Folder_Link_Click() {
-			if(CloudStorage.IsCloudStorage) {
-				FormFilePicker FormFP=new FormFilePicker(CloudStorage.PathTidy(WikiPages.GetWikiPath()));
-				FormFP.DoHideLocalButton=true;
-				FormFP.ShowDialog();
-				if(FormFP.DialogResult!=DialogResult.OK) {
-					return;
-				}
-				textContent.SelectedText="[[foldercloud:"+FormFP.SelectedFiles[0]+"]]";
-			}
-			else {
+
 				FormWikiFileFolder formWFF=new FormWikiFileFolder();
 				formWFF.IsFolderMode=true;
 				formWFF.ShowDialog();
@@ -526,7 +507,7 @@ namespace OpenDental {
 					return;
 				}
 				textContent.SelectedText="[[folder:"+formWFF.SelectedLink+"]]";
-			}
+			
 			textContent.SelectionLength=0;
 			//RefreshHtml();
 		}

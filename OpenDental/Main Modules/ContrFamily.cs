@@ -460,17 +460,16 @@ namespace OpenDental{
 		private void FillPatientPicture(){
 			picturePat.Image=null;
 			picturePat.TextNullImage=Lan.G(this,"Patient Picture Unavailable");
-			if(PatCur==null || 
-				PrefC.AtoZfolderUsed==DataStorageType.InDatabase){//Do not use patient image when A to Z folders are disabled.
+			if(PatCur==null){//Do not use patient image when A to Z folders are disabled.
 				return;
 			}
 			try{
 				Bitmap patPict;
 				if(_loadData.HasPatPict==YN.Unknown) {
-					Documents.GetPatPict(PatCur.PatNum,ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath()),out patPict);
+					Documents.GetPatPict(PatCur.PatNum,ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),out patPict);
 				}
 				else {
-					Documents.GetPatPict(PatCur.PatNum,ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath()),_loadData.PatPict,out patPict);
+					Documents.GetPatPict(PatCur.PatNum,ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),_loadData.PatPict,out patPict);
 				}
 				picturePat.Image=patPict;
 			}
@@ -484,21 +483,6 @@ namespace OpenDental{
 				return;
 			}
 			InitializedOnStartup=true;
-			//tbFamily.InstantClasses();
-			//cannot use Lan.F(this);
-			Lan.C(this,new Control[]
-				{
-					//butPatEdit,
-					//butEditPriCov,
-					//butEditPriPlan,
-					//butEditSecCov,
-					//butEditSecPlan,
-					gridFamily,
-					gridRecall,
-					gridPat,
-					gridSuperFam,
-					gridIns,
-				});
 			LayoutToolBar();
 			//gridPat.Height=this.ClientRectangle.Bottom-gridPat.Top-2;
 		}

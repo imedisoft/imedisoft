@@ -42,7 +42,7 @@ namespace OpenDental{
 			InitializeComponent();
 			DocCur=docCur;
 			PatCur=pat;
-			PatFolder=ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath());
+			PatFolder=ImageStore.GetPatientFolder(pat,OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 			Lan.F(this);
 		}
 
@@ -161,7 +161,7 @@ namespace OpenDental{
 			IsStartingUp=true;
 			textNote.Text=DocCur.Note;
 			signatureBoxWrapper.SignatureMode=UI.SignatureBoxWrapper.SigMode.Document;
-			string keyData=ImageStore.GetHashString(DocCur,PatFolder);
+			string keyData=ImageStore.GetHashString(DocCur);
 			signatureBoxWrapper.FillSignature(DocCur.SigIsTopaz,keyData,DocCur.Signature);
 			IsStartingUp=false;
 		}
@@ -177,7 +177,7 @@ namespace OpenDental{
 
 		private void SaveSignature() {
 			if(SigChanged) {
-				string keyData=ImageStore.GetHashString(DocCur,PatFolder);
+				string keyData=ImageStore.GetHashString(DocCur);
 				DocCur.Signature=signatureBoxWrapper.GetSignature(keyData);
 				DocCur.SigIsTopaz=signatureBoxWrapper.GetSigIsTopaz();
 			}

@@ -1768,9 +1768,9 @@ namespace OpenDental {
 				g.DrawString(text,fontSubHeading,Brushes.Black,center-g.MeasureString(text,fontSubHeading).Width/2,yPos);
 				yPos+=20;
 				//Patient images are not shown when the A to Z folders are disabled.
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ || CloudStorage.IsCloudStorage) {
+	
 					Bitmap patPicture;
-					bool patientPictExists=Documents.GetPatPict(_patCur.PatNum,ImageStore.GetPatientFolder(_patCur,ImageStore.GetPreferredAtoZpath()),out patPicture);
+					bool patientPictExists=Documents.GetPatPict(_patCur.PatNum,ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),out patPicture);
 					if(patPicture!=null) {//Successfully loaded a patient picture?
 						Bitmap thumbnail=ImageHelper.GetThumbnail(patPicture,80);
 						g.DrawImage(thumbnail,center-40,yPos);
@@ -1781,7 +1781,7 @@ namespace OpenDental {
 					yPos+=30;
 					_headingPrinted=true;
 					_headingPrintH=yPos;
-				}
+				
 			}
 			#endregion
 			yPos=gridProg.PrintPage(g,_pagesPrinted,bounds,_headingPrintH);
@@ -6104,10 +6104,6 @@ namespace OpenDental {
 			_arrayListVisImages=new ArrayList();
 			listViewImages.Items.Clear();
 			imageListThumbnails.Images.Clear();
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				//Don't show any images if there is no document path.
-				return;
-			}
 			if(_patCur==null) {
 				return;
 			}
@@ -7544,11 +7540,11 @@ namespace OpenDental {
 			_listClaimProcHists=LoadData.ListClaimProcHists;
 //todo: track down where this is altered.  Optimize for eCW:
 			_patientNoteCur=LoadData.PatNote;
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ || CloudStorage.IsCloudStorage) {
+
 				ODException.SwallowAnyException(() => {
-					_patFolder=ImageStore.GetPatientFolder(_patCur,ImageStore.GetPreferredAtoZpath());
+					_patFolder=ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 				});
-			}
+			
 			_arrayDocuments=LoadData.ArrDocuments;			
 			StartXVWebThread();
 //todo: might change for planned appt:

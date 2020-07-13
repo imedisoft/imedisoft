@@ -642,20 +642,9 @@ namespace OpenDentBusiness{
 				string imageDir=ImageStore.GetEmailImagePath();
 				string imagePathLocal=FileAtoZ.CombinePaths(imageDir,imgName);
 				imgName=HttpUtility.UrlEncode(imgName);//File names with spaces won't show as embedded image without doing this.
-				if(CloudStorage.IsCloudStorage) {
-					if(areImagesDownloaded) {
-						imagePathLocal=imagePath; //temp file has already been created when selecting image, use the path to the temp file. 
-					}
-					else {
-						//The attachment needs to be a local file, so we download the images to temp files.	
-						string tempFile=PrefC.GetRandomTempFile(Path.GetExtension(imagePathLocal));
-						FileAtoZ.Copy(FileAtoZ.CombinePaths(imageDir,imagePath),tempFile,FileAtoZSourceDestination.AtoZToLocal);
-						imagePathLocal=tempFile;
-					}
-				}
-				else if(!FileAtoZ.Exists(imagePathLocal) && FileAtoZ.Exists(imagePath)){
+				if(!FileAtoZ.Exists(imagePathLocal) && FileAtoZ.Exists(imagePath)){
 					//File is not in OpenDentImages folder, but is elsewhere locally, so copy it there.
-					FileAtoZ.Copy(imagePath,imagePathLocal,FileAtoZSourceDestination.AtoZToLocal);
+					FileAtoZ.Copy(imagePath,imagePathLocal);
 				}	
 				else if(!FileAtoZ.Exists(imagePathLocal) && !FileAtoZ.Exists(imagePath)){
 					//File not found.  Leave the <img src="filename"></img> alone.  This will either be an internet hosted image or a broken image link.
@@ -1515,14 +1504,8 @@ namespace OpenDentBusiness{
 			string attachPath=EmailAttaches.GetAttachPath();
 			foreach(EmailAttach attach in odMessage.Attachments) {
 				string attachFullPath;
-				if(CloudStorage.IsCloudStorage) {
-					OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.Download(attachPath,attach.ActualFileName);
-					attachFullPath=PrefC.GetRandomTempFile(Path.GetExtension(attach.ActualFileName));
-					File.WriteAllBytes(attachFullPath,state.FileContent);
-				}
-				else {
-					attachFullPath=ODFileUtils.CombinePaths(attachPath,attach.ActualFileName);
-				}
+				attachFullPath=ODFileUtils.CombinePaths(attachPath,attach.ActualFileName);
+				
 				listFilePaths.Add(new ODTuple<string,string>(attachFullPath,attach.DisplayedFileName));
 			}
 			return listFilePaths;

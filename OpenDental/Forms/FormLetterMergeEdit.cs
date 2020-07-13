@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using System.Collections.Generic;
+using OpenDental.Forms;
 
 namespace OpenDental{
 	/// <summary>

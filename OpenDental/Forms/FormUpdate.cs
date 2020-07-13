@@ -299,18 +299,15 @@ namespace OpenDental {
 			fileNameWithVers=fileNameWithVers.Replace("F","");//6.9.23
 			fileNameWithVers=fileNameWithVers.Replace(".","_");//6_9_23
 			fileNameWithVers="Setup_"+fileNameWithVers+".exe";//Setup_6_9_23.exe
-			string destDir=ImageStore.GetPreferredAtoZpath();
+			string destDir= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
 			string destPath2=null;
 			if(destDir==null) {//Not using A to Z folders?
 				destDir=PrefC.GetTempFolderPath();
 			}
 			else {//using A to Z folders.
 				destPath2=ODFileUtils.CombinePaths(destDir,"SetupFiles");
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && !Directory.Exists(destPath2)) {
+				if(!Directory.Exists(destPath2)) {
 					Directory.CreateDirectory(destPath2);
-				}
-				else if(CloudStorage.IsCloudStorage) {
-					destDir=PrefC.GetTempFolderPath();//Cloud needs it to be downloaded to a local temp folder
 				}
 				destPath2=ODFileUtils.CombinePaths(destPath2,fileNameWithVers);
 			}
@@ -436,8 +433,8 @@ namespace OpenDental {
 				return;
 			}
 			string patchName="Setup.exe";
-			string destDir=ImageStore.GetPreferredAtoZpath();
-			if(destDir==null || CloudStorage.IsCloudStorage) {
+			string destDir= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
+			if(destDir==null) {
 				destDir=PrefC.GetTempFolderPath();
 			}
 			PrefL.DownloadInstallPatchFromURI(textWebsitePath.Text+textUpdateCode.Text+"/"+patchName,//Source URI

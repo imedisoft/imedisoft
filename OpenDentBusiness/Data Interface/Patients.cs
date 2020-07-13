@@ -3628,18 +3628,6 @@ namespace OpenDentBusiness
 				ehrPatFrom.PatNum = patientTo.PatNum;
 				EhrPatients.Update(ehrPatFrom); //Bring the patfrom entry over to the new.
 			}
-			//Move the patient documents if they are stored in the database.
-			//We do not have to worry about documents having the same name when storing within the database, only physical documents need to be renamed.
-			//Physical documents are handled on the client side (not here) due to middle tier issues.
-			if (PrefC.AtoZfolderUsed == DataStorageType.InDatabase)
-			{
-				//Storing documents in the database.  Simply update the PatNum column accordingly. 
-				//This query cannot be ran below where all the other tables are handled dyncamically because we do NOT want to update the PatNums in the case that documents are stored physically.
-				command = "UPDATE document "
-					+ "SET PatNum=" + POut.Long(patTo) + " "
-					+ "WHERE PatNum=" + POut.Long(patFrom);
-				Db.NonQ(command);
-			}
 			//If the 'patFrom' had any ties to guardians, they should be deleted to prevent duplicate entries.
 			command = "DELETE FROM guardian"
 				+ " WHERE PatNumChild=" + POut.Long(patFrom)

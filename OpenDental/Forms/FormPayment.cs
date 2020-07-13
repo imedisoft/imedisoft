@@ -478,9 +478,6 @@ namespace OpenDental {
 			if(!EmailAddresses.ExistsValidEmail()) {
 				errors.Add(Lan.G(this,"SMTP server name missing in e-mail setup."));
 			}
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase){
-				errors.Add(Lan.G(this,"No AtoZ folder."));
-			}
 			if(errors.Count>0) {
 				MessageBox.Show(this,Lan.G(this,"The following errors need to be resolved before creating an email")+":\r\n"+string.Join("\r\n",errors));
 				return;
@@ -493,7 +490,7 @@ namespace OpenDental {
 			pdfRenderer.Document=CreatePDFDoc(_paymentCur.Receipt);
 			pdfRenderer.RenderDocument();
 			pdfRenderer.PdfDocument.Save(tempFile);
-			FileAtoZ.Copy(tempFile,FileAtoZ.CombinePaths(attachPath,Path.GetFileName(tempFile)),FileAtoZSourceDestination.LocalToAtoZ);
+			FileAtoZ.Copy(tempFile,FileAtoZ.CombinePaths(attachPath,Path.GetFileName(tempFile)));
 			EmailMessage message=new EmailMessage();
 			message.PatNum=_paymentCur.PatNum;
 			message.ToAddress=_patCur.Email;

@@ -331,10 +331,10 @@ namespace OpenDentBusiness {
 				}
 			}
 			if(strBuilderResultFilePayConnect.Length > 0) {
-				string payConnectResultDir=FileAtoZ.CombinePaths(ImageStore.GetPreferredAtoZpath(),"PayConnect");
+				string payConnectResultDir=FileAtoZ.CombinePaths(FileAtoZ.GetPreferredAtoZpath(),"PayConnect");
 				string payConnectResultFile=FileAtoZ.CombinePaths(payConnectResultDir,"RecurringChargeResult.txt");
 				try {
-					if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && !Directory.Exists(payConnectResultDir)) {
+					if(!Directory.Exists(payConnectResultDir)) {
 						Directory.CreateDirectory(payConnectResultDir);
 					}
 					FileAtoZ.WriteAllText(payConnectResultFile,strBuilderResultFilePayConnect.ToString());
@@ -344,10 +344,10 @@ namespace OpenDentBusiness {
 				}
 			}
 			if(strBuilderResultFilePaySimple.Length > 0) {
-				string paySimpleResultDir=FileAtoZ.CombinePaths(ImageStore.GetPreferredAtoZpath(),"PaySimple");
+				string paySimpleResultDir=FileAtoZ.CombinePaths(FileAtoZ.GetPreferredAtoZpath(),"PaySimple");
 				string paySimpleResultFile=FileAtoZ.CombinePaths(paySimpleResultDir,"RecurringChargeResult.txt");
 				try {
-					if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && !Directory.Exists(paySimpleResultDir)) {
+					if(!Directory.Exists(paySimpleResultDir)) {
 						Directory.CreateDirectory(paySimpleResultDir);
 					}
 					FileAtoZ.WriteAllText(paySimpleResultFile,strBuilderResultFilePaySimple.ToString());

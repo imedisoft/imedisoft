@@ -170,7 +170,7 @@ namespace OpenDentBusiness{
 							break;
 						}
 						Document patDoc=Documents.GetByNum(PIn.Long(field.FieldValue));
-						List<string> paths=Documents.GetPaths(new List<long> { patDoc.DocNum },ImageStore.GetPreferredAtoZpath());
+						List<string> paths=Documents.GetPaths(new List<long> { patDoc.DocNum }, FileAtoZ.GetPreferredAtoZpath());
 						if(paths.Count < 1) {//No path was found so we cannot draw the image.
 							continue;
 						}
@@ -184,17 +184,6 @@ namespace OpenDentBusiness{
 				#region Load the image into bmpOriginal
 				if(field.FieldName=="Patient Info.gif") {
 					bmpOriginal=OpenDentBusiness.Properties.Resources.Patient_Info;
-				}
-				else if(CloudStorage.IsCloudStorage) {
-					try {
-						bmpOriginal=FileAtoZ.GetImage(filePathAndName);
-						if(bmpOriginal==null) {
-							continue;
-						}
-					}
-					catch {
-						continue;//If the image is not an actual image file, leave the image field blank.
-					}
 				}
 				else if(File.Exists(filePathAndName)) {//Local AtoZ
 					try {

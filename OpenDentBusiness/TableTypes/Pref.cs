@@ -292,18 +292,15 @@ namespace OpenDentBusiness {
 		ArManagerExcludedAgeOfAccount,
 		///<summary>The template that is used when manually texting patients on the ASAP list.</summary>
 		ASAPTextTemplate,
-		///<summary>Missing in general.  Only used by OD HQ.  The application the Asterisk server uses for conference rooms. 
-		///Value can be either 'Meetme' or 'ConfBridge'.</summary>
-		AsteriskConferenceApplication,
-		///<summary>Only used by OD HQ.  This is a strange preference because it isn't used in the typical cache fashion.
-		///HQ directly queries this preference very often in order to see if the PhoneTrackingServer has gone down.</summary>
-		AsteriskServerHeartbeat,
-		///<summary>Used by OD HQ.  Not added to db convert script.  Used to store the IP address of the asterisk phone server for the phone comms and voice mails.</summary>
-		AsteriskServerIp,
+		
 		///<summary>Deprecated, but must remain here to avoid breaking updates.</summary>
+		[Obsolete]
 		AtoZfolderNotRequired,
+		
 		///<summary>Enum - Enumerations.DataStorageType.  Normally 1 (AtoZ).  This used to be called AtoZfolderNotRequired, but that name was confusing.</summary>
+		[Obsolete]
 		AtoZfolderUsed,
+		
 		///<summary>The number of audit trail entries that are displayed in the grid.</summary>
 		AuditTrailEntriesDisplayed,
 		///<summary>No UI for this pref. The number of clinics to run in parallel for AutoComm (eConfirms, eReminders, WebSchedRecall, etc.). If

@@ -1679,18 +1679,6 @@ namespace OpenDentBusiness{
 		Google
 	}
 
-	///<summary></summary>
-	public enum DataStorageType {
-		///<summary>0</summary>
-		InDatabase,
-		///<summary>1</summary>
-		LocalAtoZ,
-		///<summary>2</summary>
-		DropboxAtoZ,
-		///<summary>3</summary>
-		SftpAtoZ
-	}
-
 	///<summary>List of typically available database names. Used in conjunction with ConnectionStore.GetConnection().</summary>
 	public enum ConnectionNames
 	{

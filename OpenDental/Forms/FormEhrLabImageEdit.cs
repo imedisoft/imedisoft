@@ -32,7 +32,7 @@ namespace OpenDental {
 			this.SetDesktopLocation(DesktopLocation.X,0);			
 			checkWaitingForImages.Checked=EhrLabImages.IsWaitingForImages(_ehrLabNum);
 			_listPatientDocuments=new List<Document>(Documents.GetAllWithPat(_patNum));
-			_patFolder=ImageStore.GetPatientFolder(Patients.GetPat(_patNum),ImageStore.GetPreferredAtoZpath());//This is where the pat folder gets created if it does not yet exist.			
+			_patFolder=ImageStore.GetPatientFolder(Patients.GetPat(_patNum), OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());//This is where the pat folder gets created if it does not yet exist.			
 			_listAttached=EhrLabImages.Refresh(_ehrLabNum);
 			FillGrid();
 		}

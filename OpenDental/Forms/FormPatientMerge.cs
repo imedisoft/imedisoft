@@ -125,12 +125,12 @@ namespace OpenDental {
 				//This has to happen in the UI because the middle tier server might not have access to the image share.
 				//If the users are storing images within the database, those images have already been taken care of in the merge method above.
 				int fileCopyFailures=0;
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
+
 					#region Copy AtoZ Documents
 					//Move the patient documents within the 'patFrom' A to Z folder to the 'patTo' A to Z folder.
 					//We have to be careful here of documents with the same name. We have to rename such documents
 					//so that no documents are overwritten/lost.
-					string atoZpath=ImageStore.GetPreferredAtoZpath();
+					string atoZpath= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
 					string atozFrom=ImageStore.GetPatientFolder(_patFrom,atoZpath);
 					string atozTo=ImageStore.GetPatientFolder(_patTo,atoZpath);
 					string[] fromFiles=Directory.GetFiles(atozFrom);
@@ -177,35 +177,8 @@ namespace OpenDental {
 						}
 					}
 					#endregion Copy AtoZ Documents
-				}//end if AtoZFolderUsed
-				else if(CloudStorage.IsCloudStorage) {
-					string atozFrom=ImageStore.GetPatientFolder(_patFrom,"");
-					string atozTo=ImageStore.GetPatientFolder(_patTo,"");
-					if(atozFrom==atozTo) {
-						//Very rarely, two patients have the same image folder.  PatFrom and PatTo both have Documents that point to the same file.  Since we 
-						//are about to copy the image file for PatFrom to PatTo's directory and delete the file from PatFrom's directory, we would break the 
-						//file reference for PatTo's Document.  In this case, skip deleting the original file, since PatTo's Document still references it.
-						Documents.MergePatientDocuments(_patFrom.PatNum,_patTo.PatNum);
-					}
-					else {
-						FormProgress FormP=new FormProgress();
-						FormP.DisplayText="Moving Documents...";
-						FormP.NumberFormat="F";
-						FormP.NumberMultiplication=1;
-						FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-						FormP.TickMS=1000;
-						OpenDentalCloud.Core.TaskStateMove state=CloudStorage.MoveAsync(atozFrom
-							,atozTo
-							,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-						if(FormP.ShowDialog()==DialogResult.Cancel) {
-							state.DoCancel=true;
-							fileCopyFailures=state.CountTotal-state.CountSuccess;
-						}
-						else {
-							fileCopyFailures=state.CountFailed;
-						}
-					}
-				}
+
+
 				Cursor=Cursors.Default;
 				if(fileCopyFailures>0) {
 					MessageBox.Show(Lan.G(this,"Some files belonging to the from patient were not copied.")+"\r\n"

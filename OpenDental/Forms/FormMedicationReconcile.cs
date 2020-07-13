@@ -134,17 +134,13 @@ namespace OpenDental {
 		}
 
 		private void butPickRxListImage_Click(object sender,EventArgs e) {	
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MessageBox.Show("This option is not supported with images stored in the database.");
-				return;
-			}
 			FormImageSelect formIS=new FormImageSelect();
 			formIS.PatNum=PatCur.PatNum;
 			formIS.ShowDialog();
 			if(formIS.DialogResult!=DialogResult.OK) {
 				return;
 			}		
-			string patFolder=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());
+			string patFolder=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 			Document doc=Documents.GetByNum(formIS.SelectedDocNum);
 			if(!ImageStore.HasImageExtension(doc.FileName)) {
 				MessageBox.Show("The selected file is not a supported image type.");
@@ -154,30 +150,9 @@ namespace OpenDental {
 			if(BitmapOriginal!=null) {
 				BitmapOriginal.Dispose();
 			}
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
+
 				BitmapOriginal=ImageStore.OpenImage(doc,patFolder);
-			}
-			else {
-				FormProgress FormP=new FormProgress();
-				FormP.DisplayText="Downloading Image...";
-				FormP.NumberFormat="F";
-				FormP.NumberMultiplication=1;
-				FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-				FormP.TickMS=1000;
-				OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(patFolder
-					,doc.FileName
-					,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-				FormP.ShowDialog();
-				if(FormP.DialogResult==DialogResult.Cancel) {
-					state.DoCancel=true;
-					return;
-				}
-				else { 
-					using (MemoryStream ms=new MemoryStream(state.FileContent)) {
-						BitmapOriginal=new Bitmap(ms);
-					}
-				}
-			}
+
 			Bitmap bitmap=ImageHelper.ApplyDocumentSettingsToImage(doc,BitmapOriginal,ImageSettingFlags.ALL);
 			pictBox.BackgroundImage=bitmap;
 			resizePictBox();

@@ -743,63 +743,52 @@ namespace OpenDental{
 		}
 
 		///<summary>Gets the image from the A to Z folder. Will return null if the file is not found.</summary>
-		private Image GetImage(ClaimFormItem claimFormItem,out string extension) {
-			extension="";
-			Image img=null;
-			if(claimFormItem.ImageFileName=="ADA2006.gif") {
-				img=CDT.Class1.GetADA2006();
-				extension=".gif";
+		private Image GetImage(ClaimFormItem claimFormItem, out string extension)
+		{
+			extension = "";
+			Image img = null;
+			if (claimFormItem.ImageFileName == "ADA2006.gif")
+			{
+				img = CDT.Class1.GetADA2006();
+				extension = ".gif";
 			}
-			else if(claimFormItem.ImageFileName=="ADA2012.gif") {
-				img=CDT.Class1.GetADA2012();
-				extension=".gif";
+			else if (claimFormItem.ImageFileName == "ADA2012.gif")
+			{
+				img = CDT.Class1.GetADA2012();
+				extension = ".gif";
 			}
-			else if(claimFormItem.ImageFileName=="ADA2012_J430D.gif") {
-				img=CDT.Class1.GetADA2012_J430D();
-				extension=".gif";
+			else if (claimFormItem.ImageFileName == "ADA2012_J430D.gif")
+			{
+				img = CDT.Class1.GetADA2012_J430D();
+				extension = ".gif";
 			}
-			else if(claimFormItem.ImageFileName=="ADA2018_J432.gif") {
-				img=CDT.Class1.GetADA2018_J432();
-				extension=".gif";
+			else if (claimFormItem.ImageFileName == "ADA2018_J432.gif")
+			{
+				img = CDT.Class1.GetADA2018_J432();
+				extension = ".gif";
 			}
-			else if(claimFormItem.ImageFileName=="ADA2019_J430.gif") {
-				img=CDT.Class1.GetADA2019_J430();
-				extension=".gif";
+			else if (claimFormItem.ImageFileName == "ADA2019_J430.gif")
+			{
+				img = CDT.Class1.GetADA2019_J430();
+				extension = ".gif";
 			}
-			else if(claimFormItem.ImageFileName=="1500_02_12.gif") {
-				img=Properties.Resources._1500_02_12;
-				extension=".gif";
+			else if (claimFormItem.ImageFileName == "1500_02_12.gif")
+			{
+				img = Properties.Resources._1500_02_12;
+				extension = ".gif";
 			}
-			else {
-				string fileName=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),claimFormItem.ImageFileName);
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-					if(!File.Exists(fileName)) {
-						return null;
-					}
-					img=Image.FromFile(fileName);
-					extension=Path.GetExtension(fileName);
+			else
+			{
+				string fileName = ODFileUtils.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(), claimFormItem.ImageFileName);
+
+				if (!File.Exists(fileName))
+				{
+					return null;
 				}
-				else if(CloudStorage.IsCloudStorage) {
-					FormProgress FormP=new FormProgress();
-					FormP.DisplayText="Downloading...";
-					FormP.NumberFormat="F";
-					FormP.NumberMultiplication=1;
-					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-					FormP.TickMS=1000;
-					OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(ImageStore.GetPreferredAtoZpath()
-								,claimFormItem.ImageFileName
-								,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-					FormP.ShowDialog();
-					if(FormP.DialogResult==DialogResult.Cancel) {
-						state.DoCancel=true;
-						return null;
-					}
-					//Download was successful
-					using(MemoryStream stream=new MemoryStream(state.FileContent)) {
-						img=Image.FromStream(stream);
-						extension=Path.GetExtension(fileName);
-					}
-				}
+				img = Image.FromFile(fileName);
+				extension = Path.GetExtension(fileName);
+
+
 			}
 			return img;
 		}
@@ -1385,7 +1374,7 @@ namespace OpenDental{
 					if(!_claimFormCur.PrintImages){
 						continue;
 					}
-					string fileName=FileAtoZ.CombinePaths(ImageStore.GetPreferredAtoZpath(),_claimFormCur.Items[i].ImageFileName);
+					string fileName=FileAtoZ.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),_claimFormCur.Items[i].ImageFileName);
 					Image thisImage=null;
 					switch(_claimFormCur.Items[i].ImageFileName) {
 						case "ADA2006.gif":

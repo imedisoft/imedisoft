@@ -144,15 +144,9 @@ namespace OpenDental{
 
 		private void SaveAttachment(){
 			Patient PatCur=Patients.GetPat(PatNum);
-			//if(PatCur.ImageFolder=="") {
-			//	MessageBox.Show("Invalid patient image folder.");
-			//	return;
-			//}
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MessageBox.Show("Error. Not using AtoZ images folder.");
-				return;
-			}
-			string patfolder=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());
+
+
+			string patfolder=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 				//ODFileUtils.CombinePaths(
 				//FormPath.GetPreferredImagePath(),PatCur.ImageFolder.Substring(0,1).ToUpper(),PatCur.ImageFolder);
 			//if(!Directory.Exists(patfolder)) {
@@ -170,10 +164,7 @@ namespace OpenDental{
 				+Path.GetExtension(oldPath);
 			string attachPath=EmailAttaches.GetAttachPath();
 			string newPath=ODFileUtils.CombinePaths(attachPath,newName);
-			if(CloudStorage.IsCloudStorage) {
-				oldPath=oldPath.Replace("\\","/");
-				newPath=newPath.Replace("\\","/");
-			}
+
 			try {
 				if(ImageHelper.HasImageExtension(oldPath)) {
 					if(doc.CropH !=0
@@ -183,50 +174,15 @@ namespace OpenDental{
 						|| doc.DegreesRotated !=0
 						|| doc.IsFlipped
 						|| doc.WindowingMax !=0
-						|| doc.WindowingMin !=0
-						|| CloudStorage.IsCloudStorage) 
+						|| doc.WindowingMin !=0) 
 					{
 						//this does result in a significantly larger images size if jpg.  A later optimization would recompress it.
 						Bitmap bitmapold=null;
-						if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
+
 							bitmapold=(Bitmap)Bitmap.FromFile(oldPath);
 							Bitmap bitmapnew=ImageHelper.ApplyDocumentSettingsToImage(doc,bitmapold,ImageSettingFlags.ALL);
 							bitmapnew.Save(newPath);
-						}
-						else if(CloudStorage.IsCloudStorage) {
-							//First, download the file. 
-							FormProgress FormP=new FormProgress();
-							FormP.DisplayText="Downloading Image...";
-							FormP.NumberFormat="F";
-							FormP.NumberMultiplication=1;
-							FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-							FormP.TickMS=1000;
-							OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(patfolder
-								,doc.FileName
-								,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-							FormP.ShowDialog();
-							if(FormP.DialogResult==DialogResult.Cancel) {
-								state.DoCancel=true;
-								return;
-							}
-							//Successfully downloaded, now do stuff with state.FileContent
-							FormP=new FormProgress();
-							FormP.DisplayText="Uploading Image for Claim Attach...";
-							FormP.NumberFormat="F";
-							FormP.NumberMultiplication=1;
-							FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-							FormP.TickMS=1000;
-							OpenDentalCloud.Core.TaskStateUpload state2=CloudStorage.UploadAsync(attachPath
-								,newName
-								,state.FileContent
-								,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-							FormP.ShowDialog();
-							if(FormP.DialogResult==DialogResult.Cancel) {
-								state2.DoCancel=true;
-								return;
-							}
-							//Upload was successful
-						}
+						
 					}
 					else {
 						File.Copy(oldPath,newPath);

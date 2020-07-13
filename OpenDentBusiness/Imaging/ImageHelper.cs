@@ -358,7 +358,7 @@ namespace OpenDentBusiness {
 			}
 			string fullName=ODFileUtils.CombinePaths(patientFolder,shortFileName);
 			//If the document no longer exists, then there is no corresponding thumbnail image.
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && !File.Exists(fullName)) {
+			if(!File.Exists(fullName)) {
 				throw new ODException("No image file found for document.");
 			}
 			//If the specified document is not an image return 'not available'.
@@ -366,20 +366,9 @@ namespace OpenDentBusiness {
 				throw new ODException("Document is not associated to an image file format.");
 			}
 			Bitmap sourceImage=null;
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
+
 				sourceImage=new Bitmap(fullName);
-			}
-			else {//Cloud
-				OpenDentalCloud.Core.TaskStateThumbnail state=CloudStorage.GetThumbnail(patientFolder,shortFileName);
-				if(state.FileContent!=null) {
-					using(MemoryStream stream=new MemoryStream(state.FileContent)) {
-						sourceImage=new Bitmap(Image.FromStream(stream));
-					}
-				}
-				else {
-					sourceImage=new Bitmap(1,1);
-				}
-			}
+
 			Bitmap fullImage=ImageHelper.ApplyDocumentSettingsToImage(doc,sourceImage,ImageSettingFlags.ALL);
 			sourceImage.Dispose();
 			return fullImage;

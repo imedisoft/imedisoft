@@ -105,13 +105,6 @@ namespace OpenDentBusiness {
 						throw;
 					}
 					string fullPath=FileAtoZ.CombinePaths(imagePath,POut.String(imgName));
-					if(CloudStorage.IsCloudStorage) {				
-						//WebBrowser needs to have a local file to open, so we download the images to temp files.	
-						OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.Download(Path.GetDirectoryName(fullPath),Path.GetFileName(fullPath));
-						string tempFile=PrefC.GetRandomTempFile(Path.GetExtension(fullPath));
-						File.WriteAllBytes(tempFile,state.FileContent);
-						fullPath=tempFile;
-					}
 					s=s.Replace(match.Value,"<img src=\""+fullPath+"\"></img>");//"\" />");
 				}
 				return s;
@@ -167,13 +160,6 @@ namespace OpenDentBusiness {
 						throw;
 					}
 					string fullPath=FileAtoZ.CombinePaths(wikiPath,POut.String(imgName));
-					if(CloudStorage.IsCloudStorage) {				
-						//WebBrowser needs to have a local file to open, so we download the images to temp files.	
-						OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.Download(Path.GetDirectoryName(fullPath),Path.GetFileName(fullPath));
-						string tempFile=PrefC.GetRandomTempFile(Path.GetExtension(fullPath));
-						File.WriteAllBytes(tempFile,state.FileContent);
-						fullPath=tempFile;
-					}
 					s=s.Replace(match.Value,"<img src=\"file:///"+fullPath.Replace("\\","/")+"\"></img>");
 				}
 				//[[keywords: key1, key2, etc.]]------------------------------------------------------------------------------------------------
@@ -196,13 +182,13 @@ namespace OpenDentBusiness {
 				//[[filecloud:AtoZ/SheetImages/happyclown.jpg]]------------------------------------------------------------------------------------------------
 				matches=Regex.Matches(s,_odWikiFilecloud);
 				foreach(Match match in matches) {
-					string fileName=CloudStorage.PathTidy(match.Value.Replace("[[filecloud:","").TrimEnd(']'));
+					string fileName=match.Value.Replace("[[filecloud:","").TrimEnd(']');
 					s=s.Replace(match.Value,"<a href=\"wikifilecloud:"+fileName+"\">filecloud:"+fileName+"</a>");
 				}
 				//[[foldercloud:AtoZ/PenguinPictures/]]------------------------------------------------------------------------------------------------
 				matches=Regex.Matches(s,_odWikiFoldercloud);
 				foreach(Match match in matches) {
-					string folderName=CloudStorage.PathTidy(match.Value.Replace("[[foldercloud:","").TrimEnd(']'));
+					string folderName=match.Value.Replace("[[foldercloud:","").TrimEnd(']');
 					s=s.Replace(match.Value,"<a href=\"foldercloud:"+folderName+"\">foldercloud:"+folderName+"</a>");
 				}
 			}

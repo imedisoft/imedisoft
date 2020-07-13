@@ -60,7 +60,7 @@ namespace OpenDental {
 				return;
 			}
 			FolderBrowserDialog dlg=new FolderBrowserDialog();
-			dlg.SelectedPath=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());//Default to patient image folder.
+			dlg.SelectedPath=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());//Default to patient image folder.
 			DialogResult result=dlg.ShowDialog();
 			if(result!=DialogResult.OK) {
 				return;
@@ -117,13 +117,12 @@ namespace OpenDental {
 				attachCcd.DisplayedFileName="ccd.xml";
 				attachCcd.ActualFileName=DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".xml";
 				listAttachments.Add(attachCcd);
-				FileAtoZ.WriteAllText(FileAtoZ.CombinePaths(attachPath,attachCcd.ActualFileName),FormEEC.CCD,"Uploading Attachment for Clinical Summary...");			
+				FileAtoZ.WriteAllText(FileAtoZ.CombinePaths(attachPath,attachCcd.ActualFileName),FormEEC.CCD/*,"Uploading Attachment for Clinical Summary..."*/);			
 				EmailAttach attachSs=new EmailAttach();//Style sheet attachment.
 				attachSs.DisplayedFileName="ccd.xsl";
 				attachSs.ActualFileName=attachCcd.ActualFileName.Substring(0,attachCcd.ActualFileName.Length-4)+".xsl";//Same base name as the CCD.  The base names must match or the file will not display properly in internet browsers.
 				listAttachments.Add(attachSs);
-				FileAtoZ.WriteAllText(FileAtoZ.CombinePaths(attachPath,attachSs.ActualFileName),FormEHR.GetEhrResource("CCD"),
-					"Uploading Attachment for Clinical Summary...");
+				FileAtoZ.WriteAllText(FileAtoZ.CombinePaths(attachPath,attachSs.ActualFileName),FormEHR.GetEhrResource("CCD")/*,"Uploading Attachment for Clinical Summary..."*/);
 				//Create and save the webmail message containing the attachments.
 				EmailMessage msgWebMail=new EmailMessage();				
 				msgWebMail.FromAddress=prov.GetFormalName();

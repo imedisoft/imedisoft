@@ -1119,20 +1119,11 @@ namespace OpenDental {
 			//Format Email
 			fileName=DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
 			filePathAndName=FileAtoZ.CombinePaths(attachPath,fileName);
-			string pdfFile;
-			if(CloudStorage.IsCloudStorage) {
-				pdfFile=PrefC.GetRandomTempFile("pdf");
-			}
-			else {
-				pdfFile=filePathAndName;
-			}
+			string pdfFile=filePathAndName;
+			
 			if(!string.IsNullOrEmpty(_tempPdfFile) && File.Exists(_tempPdfFile)) {
-				if(CloudStorage.IsCloudStorage) {
-					pdfFile=_tempPdfFile;
-				}
-				else {
-					File.Copy(_tempPdfFile,pdfFile);
-				}
+				File.Copy(_tempPdfFile,pdfFile);
+				
 			}
 			else if(IsStatement) {
 				SheetPrinting.CreatePdf(SheetCur,pdfFile,Stmt,_dataSet,MedLabCur);
@@ -1140,9 +1131,7 @@ namespace OpenDental {
 			else {
 				SheetPrinting.CreatePdf(SheetCur,pdfFile,Stmt,MedLabCur);
 			}
-			if(CloudStorage.IsCloudStorage) {
-				FileAtoZ.Copy(pdfFile,filePathAndName,FileAtoZSourceDestination.LocalToAtoZ);
-			}
+
 			message=new EmailMessage();
 			message.Subject=subject;
 			string shortFileName=Regex.Replace(SheetCur.Description.ToString(), @"[^\w'@-_()&]", "");
@@ -1716,60 +1705,47 @@ namespace OpenDental {
 		}
 
 		///<summary>Save the document as PDF in every non-hidden image category with the supplied usage.  genericFileName should typically relate to the SheetType.</summary>
-		private bool SaveAsDocument(char charUsage,string genericFileName="") {
+		private bool SaveAsDocument(char charUsage, string genericFileName = "")
+		{
 			//Get all ImageCat defs for our usage that are not hidden.
-			List<Def> listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true).Where(x => x.ItemValue.Contains(charUsage.ToString())).ToList();
-			if(listImageCatDefs.IsNullOrEmpty()) {
+			List<Def> listImageCatDefs = Defs.GetDefsForCategory(DefCat.ImageCats, true).Where(x => x.ItemValue.Contains(charUsage.ToString())).ToList();
+			if (listImageCatDefs.IsNullOrEmpty())
+			{
 				return true;
 			}
-			Patient patCur=Patients.GetPat(SheetCur.PatNum);
-			string tempFile=PrefC.GetRandomTempFile(".pdf");
-			string rawBase64="";
-			SheetPrinting.CreatePdf(SheetCur,tempFile,null);
-			if(PrefC.AtoZfolderUsed!=DataStorageType.LocalAtoZ) {
-				rawBase64=Convert.ToBase64String(System.IO.File.ReadAllBytes(tempFile));//Todo test this
-			}
-			foreach(Def docCategory in listImageCatDefs) {//usually only one, but do allow them to be saved once per image category.
-				OpenDentBusiness.Document docSave=new Document();
-				docSave.DocNum=Documents.Insert(docSave);
-				string fileName=genericFileName+docSave.DocNum;
-				docSave.ImgType=ImageType.Document;
-				docSave.DateCreated=DateTime.Now;
-				docSave.PatNum=patCur.PatNum;
-				docSave.DocCategory=docCategory.DefNum;
-				docSave.Description=fileName;//no extension.
-				docSave.RawBase64=rawBase64;//blank if using AtoZfolder
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-					string filePath=ImageStore.GetPatientFolder(patCur,ImageStore.GetPreferredAtoZpath());
-					while(File.Exists(filePath+"\\"+fileName+".pdf")) {
-						fileName+="x";
-					}
-					File.Copy(tempFile,filePath+"\\"+fileName+".pdf");
+			Patient patCur = Patients.GetPat(SheetCur.PatNum);
+			string tempFile = PrefC.GetRandomTempFile(".pdf");
+
+			SheetPrinting.CreatePdf(SheetCur, tempFile, null);
+
+			foreach (Def docCategory in listImageCatDefs)
+			{//usually only one, but do allow them to be saved once per image category.
+				OpenDentBusiness.Document docSave = new Document();
+				docSave.DocNum = Documents.Insert(docSave);
+				string fileName = genericFileName + docSave.DocNum;
+				docSave.ImgType = ImageType.Document;
+				docSave.DateCreated = DateTime.Now;
+				docSave.PatNum = patCur.PatNum;
+				docSave.DocCategory = docCategory.DefNum;
+				docSave.Description = fileName;//no extension.
+
+				string filePath = ImageStore.GetPatientFolder(patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
+				while (File.Exists(filePath + "\\" + fileName + ".pdf"))
+				{
+					fileName += "x";
 				}
-				else if(CloudStorage.IsCloudStorage) {
-					//Upload file to patient's AtoZ folder
-					FormProgress FormP=new FormProgress();
-					FormP.DisplayText="Uploading Treatment Plan...";
-					FormP.NumberFormat="F";
-					FormP.NumberMultiplication=1;
-					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-					FormP.TickMS=1000;
-					OpenDentalCloud.Core.TaskStateUpload state=CloudStorage.UploadAsync(ImageStore.GetPatientFolder(patCur,"")
-						,fileName+".pdf"
-						,File.ReadAllBytes(tempFile)
-						,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-					if(FormP.ShowDialog()==DialogResult.Cancel) {
-						state.DoCancel=true;
-						break;
-					}
-				}
-				docSave.FileName=fileName+".pdf";//file extension used for both DB images and AtoZ images
+				File.Copy(tempFile, filePath + "\\" + fileName + ".pdf");
+
+
+				docSave.FileName = fileName + ".pdf";//file extension used for both DB images and AtoZ images
 				Documents.Update(docSave);
 			}
-			try {
+			try
+			{
 				File.Delete(tempFile); //cleanup the temp file.
 			}
-			catch {
+			catch
+			{
 			}
 			return true;
 		}

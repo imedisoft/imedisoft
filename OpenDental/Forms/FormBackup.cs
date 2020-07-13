@@ -109,8 +109,7 @@ namespace OpenDental {
 		}
 
 		private bool ShouldUseAtoZFolder() {
-			return (PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ //&& !usesInternalImages 
-				&& !checkExcludeImages.Checked);
+			return (!checkExcludeImages.Checked);
 		}
 
 		private void butBrowseFrom_Click(object sender, System.EventArgs e) {
@@ -287,7 +286,7 @@ namespace OpenDental {
 			//A to Z folder------------------------------------------------------------------------------------
 			try {
 				if(ShouldUseAtoZFolder()) {
-					string atozFull=ODFileUtils.RemoveTrailingSeparators(ImageStore.GetPreferredAtoZpath());
+					string atozFull=ODFileUtils.RemoveTrailingSeparators(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 					string atozDir=atozFull.Substring(atozFull.LastIndexOf(Path.DirectorySeparatorChar)+1);//OpenDentalData
 					Invoke(new PassProgressDelegate(PassProgressToDialog),new object[] { 0,
 					Lan.G(this,"Calculating size of files in A to Z folder."),

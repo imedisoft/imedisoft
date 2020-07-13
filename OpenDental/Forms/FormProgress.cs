@@ -6,11 +6,13 @@ using System.IO;
 using System.Windows.Forms;
 using OpenDentBusiness;
 
-namespace OpenDental{
+namespace OpenDental
+{
 	/// <summary>
 	/// Summary description for FormBasicTemplate.
 	/// </summary>
-	public class FormProgress : ODForm, IProgressHandler {
+	public class FormProgress : ODForm, IProgressHandler
+	{
 		private OpenDental.UI.Button butCancel;
 		private System.Windows.Forms.ProgressBar progressBar1;
 		private System.Windows.Forms.Label label1;
@@ -34,32 +36,32 @@ namespace OpenDental{
 		///<summary>Sets the number of milliseconds between ticks.  Default is 0.  If 0, then a value of 200 will be used.</summary>
 		public int TickMS;
 
-		public FormProgress(bool showCancelButton=true,double maxVal=100,int numberMultiplication=100,string numFormat="F") 
+		public FormProgress(bool showCancelButton = true, double maxVal = 100, int numberMultiplication = 100, string numFormat = "F")
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			MaxVal=maxVal;
-			NumberMultiplication=numberMultiplication;
-			NumberFormat=numFormat;
+			MaxVal = maxVal;
+			NumberMultiplication = numberMultiplication;
+			NumberFormat = numFormat;
 			Lan.F(this);
-			butCancel.Visible=showCancelButton;
+			butCancel.Visible = showCancelButton;
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if(components != null)
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -150,89 +152,85 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormProgress_Load(object sender, System.EventArgs e) {
-			progressBar1.Maximum=(int)(MaxVal*NumberMultiplication);
-			labelError.Visible=false;
-			if(TickMS>0) {
-				timer1.Interval=TickMS;
+		private void FormProgress_Load(object sender, System.EventArgs e)
+		{
+			progressBar1.Maximum = (int)(MaxVal * NumberMultiplication);
+			labelError.Visible = false;
+			if (TickMS > 0)
+			{
+				timer1.Interval = TickMS;
 			}
-			string progress=DisplayText.Replace("?currentVal",CurrentVal.ToString(NumberFormat));
-			progress=progress.Replace("?maxVal",MaxVal.ToString(NumberFormat));
-			labelProgress.Text=progress;
+			string progress = DisplayText.Replace("?currentVal", CurrentVal.ToString(NumberFormat));
+			progress = progress.Replace("?maxVal", MaxVal.ToString(NumberFormat));
+			labelProgress.Text = progress;
 		}
-		
+
 		///<summary>Happens every TickMS milliseconds.  Default is 200ms.</summary>
-		private void timer1_Tick(object sender, System.EventArgs e) {
-			Cursor=Cursors.Default;
-			if(!string.IsNullOrEmpty(ErrorMessage)) {
-				labelError.Visible=true;
-				labelError.Text=ErrorMessage;
+		private void timer1_Tick(object sender, System.EventArgs e)
+		{
+			Cursor = Cursors.Default;
+			if (!string.IsNullOrEmpty(ErrorMessage))
+			{
+				labelError.Visible = true;
+				labelError.Text = ErrorMessage;
 				//and this form will also not close because the currentVal will never reach the maxVal.
 			}
 			//progress bar shows 0 maxVal size
-			progressBar1.Maximum=(int)(MaxVal*NumberMultiplication);
-			string progress=DisplayText.Replace("?currentVal",CurrentVal.ToString(NumberFormat));
-			progress=progress.Replace("?maxVal",MaxVal.ToString(NumberFormat));
-			labelProgress.Text=progress;
-				//=((double)CurrentVal/1024).ToString("F")+" MB of "
-				//+((double)MaxVal/1024).ToString("F")+" MB copied"; 
-			if(CurrentVal<MaxVal){
-				progressBar1.Value=(int)(CurrentVal*(double)NumberMultiplication);
+			progressBar1.Maximum = (int)(MaxVal * NumberMultiplication);
+			string progress = DisplayText.Replace("?currentVal", CurrentVal.ToString(NumberFormat));
+			progress = progress.Replace("?maxVal", MaxVal.ToString(NumberFormat));
+			labelProgress.Text = progress;
+			//=((double)CurrentVal/1024).ToString("F")+" MB of "
+			//+((double)MaxVal/1024).ToString("F")+" MB copied"; 
+			if (CurrentVal < MaxVal)
+			{
+				progressBar1.Value = (int)(CurrentVal * (double)NumberMultiplication);
 			}
-			else{
+			else
+			{
 				//must be done.
 				//progressBar1.Value=progressBar1.Maximum;
-				DialogResult=DialogResult.OK;
+				DialogResult = DialogResult.OK;
 			}
 		}
 
-		private void butCancel_Click(object sender, System.EventArgs e) {
-			Cursor=Cursors.Default;//probably not needed
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, System.EventArgs e)
+		{
+			Cursor = Cursors.Default;//probably not needed
+			DialogResult = DialogResult.Cancel;
 		}
 
 		///<summary>OnProgress can be used if the progress is going to be updated from the business layer (not from Open Dental).</summary>
-		public void OnProgress(double newCurVal,string newDisplayText,double newMaxVal,string errorMessage) {
-			CurrentVal=newCurVal;
-			DisplayText=newDisplayText;
-			MaxVal=newMaxVal;
-			ErrorMessage=errorMessage;
-		}
-		
-		public void UpdateBytesRead(long numBytes) {
-			CurrentVal=numBytes / (1024 * 1024.0);
+		public void OnProgress(double newCurVal, string newDisplayText, double newMaxVal, string errorMessage)
+		{
+			CurrentVal = newCurVal;
+			DisplayText = newDisplayText;
+			MaxVal = newMaxVal;
+			ErrorMessage = errorMessage;
 		}
 
-		public void DisplayError(string error) {
-			ErrorMessage=error;
+		public void UpdateBytesRead(long numBytes)
+		{
+			CurrentVal = numBytes / (1024 * 1024.0);
 		}
 
-		public void CloseProgress() {
-			CurrentVal=MaxVal;
+		public void DisplayError(string error)
+		{
+			ErrorMessage = error;
+		}
+
+		public void CloseProgress()
+		{
+			CurrentVal = MaxVal;
 		}
 	}
 
-	///<summary></summary>
-	public delegate void PassProgressDelegate(double newCurVal,string newDisplayText,double newMaxVal,string errorMessage);
+	public delegate void PassProgressDelegate(double newCurVal, string newDisplayText, double newMaxVal, string errorMessage);
+
+	public interface IProgressHandler
+	{
+		void UpdateBytesRead(long numBytes);
+		void DisplayError(string error);
+		void CloseProgress();
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

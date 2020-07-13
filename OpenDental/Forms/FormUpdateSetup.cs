@@ -410,9 +410,6 @@ namespace OpenDental{
 			checkShowMsi.Checked=PrefC.GetBool(PrefName.UpdateShowMsiButtons);
 			_updateTime=PrefC.GetDateT(PrefName.UpdateDateTime);
 			textUpdateTime.Text=_updateTime.ToString();
-			if(PrefC.AtoZfolderUsed!=DataStorageType.LocalAtoZ) {
-				labelRecopy.Text=@"Recopy all of the files from C:\Program Files\Open Dental\ into a special place in the database for future use in updating other computers.";
-			}
 		}
 
 		private void butRecopy_Click(object sender,EventArgs e) {

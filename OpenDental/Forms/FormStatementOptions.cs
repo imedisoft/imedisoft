@@ -939,7 +939,7 @@ namespace OpenDental{
 				//Delete the archived copy of the statement
 				if(StmtCur.DocNum!=0){
 					Patient pat=Patients.GetPat(StmtCur.PatNum);
-					string patFolder=ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath());
+					string patFolder=ImageStore.GetPatientFolder(pat, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 					List<Document> listdocs=new List<Document>();
 					listdocs.Add(Documents.GetByNum(StmtCur.DocNum,true));
 					try {
@@ -989,7 +989,7 @@ namespace OpenDental{
 			//check if file is available to print if it was already created.  Does not affect first time printing.
 			if(StmtCur.DocNum!=0 && checkIsSent.Checked) {
 				Patient pat=Patients.GetPat(StmtCur.PatNum);
-				string patFolder=ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath());
+				string patFolder=ImageStore.GetPatientFolder(pat, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 				if(!FileAtoZ.Exists(ImageStore.GetFilePath(Documents.GetByNum(StmtCur.DocNum),patFolder))) { 
 					MessageBox.Show("File not found: " + Documents.GetByNum(StmtCur.DocNum).FileName);
 					return;
@@ -1272,50 +1272,12 @@ namespace OpenDental{
 			Random rnd=new Random();
 			string fileName=DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
 			string filePathAndName=ODFileUtils.CombinePaths(attachPath,fileName);
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase){
-				MessageBox.Show("Could not create email because no AtoZ folder.");
-				return false;
-			}
+
 			Patient pat=Patients.GetPat(StmtCur.PatNum);
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-				string oldPath=ODFileUtils.CombinePaths(ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath()),Documents.GetByNum(StmtCur.DocNum).FileName);
+
+				string oldPath=ODFileUtils.CombinePaths(ImageStore.GetPatientFolder(pat, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),Documents.GetByNum(StmtCur.DocNum).FileName);
 				File.Copy(oldPath,filePathAndName);
-			}
-			else {//Cloud
-				FormProgress FormP=new FormProgress();
-				FormP.DisplayText="Downloading patient statement...";
-				FormP.NumberFormat="F";
-				FormP.NumberMultiplication=1;
-				FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-				FormP.TickMS=1000;
-				OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(ImageStore.GetPatientFolder(pat,ImageStore.GetPreferredAtoZpath())
-					,Documents.GetByNum(StmtCur.DocNum).FileName
-					,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-				if(FormP.ShowDialog()==DialogResult.Cancel) {
-					state.DoCancel=true;
-					return false;
-				}
-				else {
-					//Do stuff with state.FileContent
-					FormP=new FormProgress();
-					FormP.DisplayText="Uploading patient email...";
-					FormP.NumberFormat="F";
-					FormP.NumberMultiplication=1;
-					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-					FormP.TickMS=1000;
-					OpenDentalCloud.Core.TaskStateUpload state2=CloudStorage.UploadAsync(attachPath
-						,fileName
-						,state.FileContent
-						,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-					if(FormP.ShowDialog()==DialogResult.Cancel) {
-						state2.DoCancel=true;
-						return false;
-					}
-					else {
-						//Upload was successful
-					}
-				}
-			}
+			
 			//Process.Start(filePathAndName);
 			EmailMessage message=Statements.GetEmailMessageForStatement(StmtCur,pat);
 			EmailAttach attach=new EmailAttach();
@@ -1414,7 +1376,7 @@ namespace OpenDental{
 
 		///<summary>Opens the saved PDF for the document.</summary>
 		private void LaunchArchivedPdf(Patient patCur) {
-			string patFolder=ImageStore.GetPatientFolder(patCur,ImageStore.GetPreferredAtoZpath());
+			string patFolder=ImageStore.GetPatientFolder(patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 			Document doc=Documents.GetByNum(StmtCur.DocNum);
 			string fileName=ImageStore.GetFilePath(doc,patFolder);
 			if(!FileAtoZ.Exists(fileName)) {

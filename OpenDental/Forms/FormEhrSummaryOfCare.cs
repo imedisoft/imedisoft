@@ -186,7 +186,7 @@ namespace OpenDental {
 				return;
 			}
 			FolderBrowserDialog dlg=new FolderBrowserDialog();
-			dlg.SelectedPath=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());//Default to patient image folder.
+			dlg.SelectedPath=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());//Default to patient image folder.
 			DialogResult result=dlg.ShowDialog();
 			if(result!=DialogResult.OK) {
 				return;

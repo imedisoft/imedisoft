@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using CodeBase;
+using OpenDentBusiness.FileIO;
 
 namespace OpenDentBusiness.HL7 {
 	///<summary>This is the engine that will parse our incoming HL7 messages for MedLab interfaces.</summary>
@@ -860,62 +861,76 @@ namespace OpenDentBusiness.HL7 {
 		///base64 text version of the PDF.  Then converts the base64 string into a PDF file and stores it in the patients image folder.  This will use
 		///the image category stored in the def, or if not set in the def it will use the first image category in the list.  An entry is then made in
 		///the document table and the DocNum for the imported PDF is stored in the MedLabResult.DocNum field.</summary>
-		public static void ProcessZEF(HL7DefSegment segDef,List<SegmentHL7> listSegs) {
+		public static void ProcessZEF(HL7DefSegment segDef, List<SegmentHL7> listSegs)
+		{
 			//first make sure the list of segments is complete by ordering them by sequence number, ZEF.1, and making sure there are no gaps in the sequence
-			int sequenceNumIndex=-1;
-			int base64TextIndex=-1;
-			for(int i=0;i<segDef.hl7DefFields.Count;i++) {
-				if(segDef.hl7DefFields[i].FieldName=="sequenceNum") {
-					sequenceNumIndex=segDef.hl7DefFields[i].OrdinalPos;
+			int sequenceNumIndex = -1;
+			int base64TextIndex = -1;
+			for (int i = 0; i < segDef.hl7DefFields.Count; i++)
+			{
+				if (segDef.hl7DefFields[i].FieldName == "sequenceNum")
+				{
+					sequenceNumIndex = segDef.hl7DefFields[i].OrdinalPos;
 					continue;
 				}
-				if(segDef.hl7DefFields[i].FieldName=="base64File") {
-					base64TextIndex=segDef.hl7DefFields[i].OrdinalPos;
+				if (segDef.hl7DefFields[i].FieldName == "base64File")
+				{
+					base64TextIndex = segDef.hl7DefFields[i].OrdinalPos;
 					continue;
 				}
 			}
-			if(listSegs.Count>1 && sequenceNumIndex<0) {//cannot determine the order of the segs without a sequenceNum field, so don't process the ZEFs
-				EventLog.WriteEntry("MedLabHL7","The ZEF segment definition in the enabled MedLab HL7 definition does not contain a sequenceNum field.  "
-					+"Since the segments cannot be ordered without the sequenceNum field, the ZEF segments were not processed.",EventLogEntryType.Information);
+			if (listSegs.Count > 1 && sequenceNumIndex < 0)
+			{//cannot determine the order of the segs without a sequenceNum field, so don't process the ZEFs
+				EventLog.WriteEntry("MedLabHL7", "The ZEF segment definition in the enabled MedLab HL7 definition does not contain a sequenceNum field.  "
+					+ "Since the segments cannot be ordered without the sequenceNum field, the ZEF segments were not processed.", EventLogEntryType.Information);
 				return;
 			}
-			if(base64TextIndex<0) {//cannot process the ZEF segs if there is no base64File field to process
-				EventLog.WriteEntry("MedLabHL7","The ZEF segment definition in the enabled MedLab HL7 definition does not contain a base64File field.  "
-					+"Since the PDF file is generated from the base64 text, the ZEF segments were not processed.",EventLogEntryType.Information);
+			if (base64TextIndex < 0)
+			{//cannot process the ZEF segs if there is no base64File field to process
+				EventLog.WriteEntry("MedLabHL7", "The ZEF segment definition in the enabled MedLab HL7 definition does not contain a base64File field.  "
+					+ "Since the PDF file is generated from the base64 text, the ZEF segments were not processed.", EventLogEntryType.Information);
 				return;
 			}
-			foreach(SegmentHL7 seg in listSegs) {
-				seg.SequenceNumIndex=sequenceNumIndex;
+			foreach (SegmentHL7 seg in listSegs)
+			{
+				seg.SequenceNumIndex = sequenceNumIndex;
 				//the seq num is a field in the seg that we attempt to parse to an int, but parsing may fail and the seq num will be -1
-				if(listSegs.Count>1 && seg.SequenceNum<0) {
-					EventLog.WriteEntry("MedLabHL7","A ZEF segment had a sequence number that was invalid or not present.  "
-						+"The ZEF segments were not processed and the embedded PDF was not created.");
+				if (listSegs.Count > 1 && seg.SequenceNum < 0)
+				{
+					EventLog.WriteEntry("MedLabHL7", "A ZEF segment had a sequence number that was invalid or not present.  "
+						+ "The ZEF segments were not processed and the embedded PDF was not created.");
 					return;
 				}
 			}
-			if(listSegs.Count>1) {//only sort the segs and validate the sequential order of the sequence numbers if there are more than one ZEF segment
-				//sort the segments by sequence number
-				try {
+			if (listSegs.Count > 1)
+			{//only sort the segs and validate the sequential order of the sequence numbers if there are more than one ZEF segment
+			 //sort the segments by sequence number
+				try
+				{
 					listSegs.Sort(SortSegsBySeqNum);
 				}
-				catch(Exception ex) {
-					EventLog.WriteEntry("MedLabHL7",ex.Message,EventLogEntryType.Information);
+				catch (Exception ex)
+				{
+					EventLog.WriteEntry("MedLabHL7", ex.Message, EventLogEntryType.Information);
 					return;
 				}
 			}
 			//Loop through ZEF segments and make sure the sequence numbers are sequential, no segments are missing
 			//Append all repetitions together into a single base64 text string to generate the PDF from
-			StringBuilder sb=new StringBuilder();
-			for(int i=0;i<listSegs.Count;i++) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < listSegs.Count; i++)
+			{
 				sb.Append(listSegs[i].GetFieldComponent(base64TextIndex));
-				if(i==0) {
+				if (i == 0)
+				{
 					continue;
 				}
 				//If only one ZEF segment the following if statement won't run
-				if(listSegs[i].SequenceNum!=listSegs[i-1].SequenceNum+1) {//i>=1, so index i-1 is guaranteed to exist
-					//if the current sequence number is not the previous sequence number plus 1, there must be a missing ZEF segment
-					EventLog.WriteEntry("MedLabHL7","The MedLab HL7 message was missing ZEF segment(s) based on missing sequence numbers.  "
-						+"The ZEF segments were not processed and the embedded PDF was not created.");
+				if (listSegs[i].SequenceNum != listSegs[i - 1].SequenceNum + 1)
+				{//i>=1, so index i-1 is guaranteed to exist
+				 //if the current sequence number is not the previous sequence number plus 1, there must be a missing ZEF segment
+					EventLog.WriteEntry("MedLabHL7", "The MedLab HL7 message was missing ZEF segment(s) based on missing sequence numbers.  "
+						+ "The ZEF segments were not processed and the embedded PDF was not created.");
 					return;
 				}
 			}
@@ -925,63 +940,61 @@ namespace OpenDentBusiness.HL7 {
 			//Save PDF in the image folder in the MedLabEmbeddedFiles directory or in the document table if storing images in the db
 			//If a pat has been located, move the embedded PDF into the pat's image folder or assign document.PatNum=PatCur.PatNum if storing images in db
 			//If a pat has not been located, move the PDF into the MedLabEmbeddedFiles\Unassigned dir or leave document.PatNum=0 if storing images in db
-			Document doc=new Document();
-			doc.FileName=".pdf";
-			doc.ImgType=ImageType.Document;
-			doc.DateCreated=DateTime.Now;
-			doc.DocCategory=Defs.GetFirstForCategory(DefCat.ImageCats,true).DefNum;//put it in the first category
-			if(_defCur.LabResultImageCat>0) {//if category is set for the def, use that image category
-				doc.DocCategory=_defCur.LabResultImageCat;
+			Document doc = new Document();
+			doc.FileName = ".pdf";
+			doc.ImgType = ImageType.Document;
+			doc.DateCreated = DateTime.Now;
+			doc.DocCategory = Defs.GetFirstForCategory(DefCat.ImageCats, true).DefNum;//put it in the first category
+			if (_defCur.LabResultImageCat > 0)
+			{//if category is set for the def, use that image category
+				doc.DocCategory = _defCur.LabResultImageCat;
 			}
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {//saving to db
-				doc.RawBase64=sb.ToString();
-				if(_patCur==null) {
-					//doc.PatNum will be 0 until the user manually attaches to a patient
-					doc.DocNum=Documents.Insert(doc);//filename will remain ".pdf" until the user manually attaches to a patient
+
+			string embeddedFile = "";
+			try
+			{
+				string embeddedFilePath = ODFileUtils.CombinePaths(FileAtoZ.GetPreferredAtoZpath(), "MedLabEmbeddedFiles");
+				if (!Directory.Exists(embeddedFilePath))
+				{
+					Directory.CreateDirectory(embeddedFilePath);
 				}
-				else {
-					doc.PatNum=_patCur.PatNum;
-					doc.DocNum=Documents.Insert(doc,_patCur);//this assigns a filename and saves to db
+				else
+				{//Cloud, create random temp folder
+					embeddedFilePath = PrefC.GetTempFolderPath();
 				}
-			}
-			else {//Using AtoZ folder (or Cloud)--------------------------------------------------------------------
-				string embeddedFile="";
-				try {
-					string embeddedFilePath=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"MedLabEmbeddedFiles");
-					if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && !Directory.Exists(embeddedFilePath)) {
-						Directory.CreateDirectory(embeddedFilePath);
-					}
-					else {//Cloud, create random temp folder
-						embeddedFilePath=PrefC.GetTempFolderPath();
-					}
-					embeddedFile=ODFileUtils.CreateRandomFile(embeddedFilePath,".pdf");
-					byte[] byteArray=Convert.FromBase64String(sb.ToString());
-					File.WriteAllBytes(embeddedFile,byteArray);
-					if(_patCur==null) {
-						doc.FileName=Path.GetFileName(embeddedFile);
-						doc.DocNum=Documents.Insert(doc);//PatNum will be 0, this will indicate that we should look in the MedLabEmbeddedFiles folder for the PDF
-					}
-					else {
-						//This will upload to Dropbox from the temp file created above if using dropbox.
-						doc=ImageStore.Import(embeddedFile,doc.DocCategory,_patCur);
-						try {
-							File.Delete(embeddedFile);//Clean up the temp file, only one copy will exist in the patient's image folder
-						}
-						catch {
-							//do nothing, file could be in use or there is not sufficient permissions, just leave it in the image folder as unassigned
-						}
-					}
+				embeddedFile = ODFileUtils.CreateRandomFile(embeddedFilePath, ".pdf");
+				byte[] byteArray = Convert.FromBase64String(sb.ToString());
+				File.WriteAllBytes(embeddedFile, byteArray);
+				if (_patCur == null)
+				{
+					doc.FileName = Path.GetFileName(embeddedFile);
+					doc.DocNum = Documents.Insert(doc);//PatNum will be 0, this will indicate that we should look in the MedLabEmbeddedFiles folder for the PDF
 				}
-				catch(Exception ex) {
-					Documents.Delete(doc);//delete the doc since the MedLabResult will not be pointing to it
-					//The file may exist in the MedLabEmbeddedFiles directory, but no OD object will be referencing it.  It would have to be recreated from the
-					//HL7 message or manually imported into the patient's image folder.
-					EventLog.WriteEntry("MedLabHL7","Error saving the embedded PDF when processing a MedLab HL7 message.\r\nThe PDF located here "+embeddedFile
-						+" will need to be manually imported into the correct patient's image folder.\r\n"+ex.Message,EventLogEntryType.Information);
-					return;
+				else
+				{
+					//This will upload to Dropbox from the temp file created above if using dropbox.
+					doc = ImageStore.Import(embeddedFile, doc.DocCategory, _patCur);
+					try
+					{
+						File.Delete(embeddedFile);//Clean up the temp file, only one copy will exist in the patient's image folder
+					}
+					catch
+					{
+						//do nothing, file could be in use or there is not sufficient permissions, just leave it in the image folder as unassigned
+					}
 				}
 			}
-			_medLabResultCur.DocNum=doc.DocNum;
+			catch (Exception ex)
+			{
+				Documents.Delete(doc);//delete the doc since the MedLabResult will not be pointing to it
+									  //The file may exist in the MedLabEmbeddedFiles directory, but no OD object will be referencing it.  It would have to be recreated from the
+									  //HL7 message or manually imported into the patient's image folder.
+				EventLog.WriteEntry("MedLabHL7", "Error saving the embedded PDF when processing a MedLab HL7 message.\r\nThe PDF located here " + embeddedFile
+					+ " will need to be manually imported into the correct patient's image folder.\r\n" + ex.Message, EventLogEntryType.Information);
+				return;
+			}
+
+			_medLabResultCur.DocNum = doc.DocNum;
 		}
 
 		///<summary>Inserts any MedLabFacility objects not in the database.  Creates a dictionary linking the facilityIDs to a list of MedLabFacilityNums.

@@ -1005,31 +1005,8 @@ namespace OpenDental {
 			else if(sheetFieldDef.FieldName=="Patient Info.gif") {
 				img=OpenDentBusiness.Properties.Resources.Patient_Info;
 			}
-			else if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && File.Exists(filePathAndName)) {
+			else if(File.Exists(filePathAndName)) {
 				img=Image.FromFile(filePathAndName);
-			}
-			else if(CloudStorage.IsCloudStorage) {
-				FormProgress FormP=new FormProgress();
-				FormP.DisplayText=Lan.G(CloudStorage.LanThis,"Downloading...");
-				FormP.NumberFormat="F";
-				FormP.NumberMultiplication=1;
-				FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-				FormP.TickMS=1000;
-				OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(SheetUtil.GetImagePath(),sheetFieldDef.FieldName,
-					new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-				if(FormP.ShowDialog()==DialogResult.Cancel) {
-					state.DoCancel=true;
-					return;
-				}
-				if(state==null || state.FileContent==null) {
-					img=null;
-				}
-				else {
-					using(MemoryStream stream=new MemoryStream(state.FileContent)) {
-						img=new Bitmap(Image.FromStream(stream));
-						sheetFieldDef.ImageField=new Bitmap(Image.FromStream(stream));//So it doesn't have to be downloaded again the next time.
-					}
-				}
 			}
 			else {
 #if DEBUG
@@ -1691,10 +1668,6 @@ namespace OpenDental {
 		}
 
 		private void butAddImage_Click(object sender,EventArgs e) {
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MessageBox.Show("Not allowed because not using AtoZ folder");
-				return;
-			}
 			CreateSheetFieldDef(SheetFieldType.Image);
 		}
 
@@ -1758,10 +1731,6 @@ namespace OpenDental {
 		}
 
 		private void butAddPatImage_Click(object sender,EventArgs e) {
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MessageBox.Show("Not allowed because not using AtoZ folder");
-				return;
-			}
 			CreateSheetFieldDef(SheetFieldType.PatImage);
 		}
 

@@ -65,12 +65,6 @@ namespace OpenDentBusiness {
 		///<summary>Adds the logText to a centralized log file for the current day if the current data storage type is LocalAtoZ.
 		///Throws exceptions to be displayed to the user.</summary>
 		public static void SaveLogToFile(string logText) {
-			//No need to check RemotingRole; no call to db.
-			if(PrefC.AtoZfolderUsed!=DataStorageType.LocalAtoZ) {
-				//If docs are stored in DB, we don't want to create a file because the user has no way to access it.
-				//We also skip any cloud storage at this time, could enhance later to include.
-				return; //Don't make a log.
-			}
 			string machineName="~INVALID~";
 			ODException.SwallowAnyException(() => { machineName=Environment.MachineName; });
 			StringBuilder strB=new StringBuilder();
@@ -80,7 +74,7 @@ namespace OpenDentBusiness {
 			strB.AppendLine();//New line.
 			strB.Append(logText);
 			strB.AppendLine(Lans.g("FormDatabaseMaintenance","Done"));
-			string path=CodeBase.ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"DBMLogs");
+			string path=CodeBase.ODFileUtils.CombinePaths(FileAtoZ.GetPreferredAtoZpath(),"DBMLogs");
 			try {
 				if(!Directory.Exists(path)) {
 					Directory.CreateDirectory(path);//Create DBM Logs folder if it does not exist.
@@ -8702,7 +8696,7 @@ HAVING cnt>1";
 		public static string CleanUpAttachmentsRootDirectiory() {
 			StringBuilder strBuildResult=new StringBuilder();
 			try {
-				char separator=CloudStorage.DirectorySeparatorChar;
+				char separator=Path.DirectorySeparatorChar;
 				string attachPath=EmailAttaches.GetAttachPath();
 				List<string> listFileNames=FileAtoZ.GetFilesInDirectory(attachPath);
 				strBuildResult.AppendLine($"Total files in folder '{attachPath}': {listFileNames.Count}");

@@ -31,10 +31,7 @@ namespace OpenDental {
 
 		private void FormMedLabEdit_Load(object sender,EventArgs e) {
 			_medLabCur=ListMedLabs[0];
-			if(PrefC.AtoZfolderUsed!=DataStorageType.LocalAtoZ) {
-				butShowHL7.Visible=false;//messages are not archived if storing images in the database
-				labelShowHL7.Visible=false;
-			}
+
 			//list of MedLabFacilityNums used by all results, the position in the list will be the facility id
 			//also fills the classwide variable _listResults used in FillGridResults
 			_listFacilities=MedLabFacilities.GetFacilityList(ListMedLabs,out _listResults);
@@ -366,28 +363,10 @@ namespace OpenDental {
 			docc.DateCreated=DateTime.Now;
 			Documents.Update(docc);
 			string filePathAndName="";
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-				string patFolder=ImageStore.GetPatientFolder(Patients.GetPat(_medLabCur.PatNum),ImageStore.GetPreferredAtoZpath());
+
+				string patFolder=ImageStore.GetPatientFolder(Patients.GetPat(_medLabCur.PatNum), OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 				filePathAndName=ODFileUtils.CombinePaths(patFolder,docc.FileName);
-			}
-			else if(CloudStorage.IsCloudStorage) {
-				FormProgress FormP=new FormProgress();
-				FormP.DisplayText="Downloading...";
-				FormP.NumberFormat="F";
-				FormP.NumberMultiplication=1;
-				FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-				FormP.TickMS=1000;
-				OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.DownloadAsync(
-					ImageStore.GetPatientFolder(Patients.GetPat(_medLabCur.PatNum),ImageStore.GetPreferredAtoZpath())
-					,docc.FileName
-					,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-				if(FormP.ShowDialog()==DialogResult.Cancel) {
-					state.DoCancel=true;
-					return;
-				}
-				filePathAndName=PrefC.GetRandomTempFile(Path.GetExtension(docc.FileName));
-				File.WriteAllBytes(filePathAndName,state.FileContent);
-			}
+
 			Cursor=Cursors.Default;
 			if(filePathAndName!="") {
 
@@ -402,7 +381,7 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			List<string[]> listFileNamesDateMod=new List<string[]>();
 			for(int i=0;i<ListMedLabs.Count;i++) {
-				string filePath=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),ListMedLabs[i].FileName);
+				string filePath=ODFileUtils.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),ListMedLabs[i].FileName);
 				bool isFileAdded=false;
 				for(int j=0;j<listFileNamesDateMod.Count;j++) {
 					if(listFileNamesDateMod[j][0]==filePath) {
@@ -442,8 +421,8 @@ namespace OpenDental {
 			MedLabs.UpdateAllPatNums(ListMedLabs.Select(x => x.MedLabNum).ToList(),PatCur.PatNum);
 			string atozFrom="";
 			string atozTo="";
-			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-				string atozPath=ImageStore.GetPreferredAtoZpath();
+
+				string atozPath= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
 				//if patOld is null, the file was placed into the image folder in a directory named MedLabEmbeddedFiles, not a patient's image folder
 				if(patOld==null) {
 					atozFrom=ODFileUtils.CombinePaths(atozPath,"MedLabEmbeddedFiles");
@@ -452,11 +431,7 @@ namespace OpenDental {
 					atozFrom=ImageStore.GetPatientFolder(patOld,atozPath);
 				}
 				atozTo=ImageStore.GetPatientFolder(PatCur,atozPath);
-			}
-			else if(CloudStorage.IsCloudStorage) {
-				atozFrom=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"MedLabEmbeddedFiles",'/');
-				atozTo=ImageStore.GetPatientFolder(PatCur,"");
-			}
+
 			//get list of all DocNums of files referenced by MedLabResults which were embedded in the MedLab HL7 message as base64 text
 			//in order to move the file (if not storing images in db) and assign (or reassign) the FileName
 			List<long> listDocNums=ListMedLabs
@@ -469,7 +444,7 @@ namespace OpenDental {
 			for(int i=0;i<listDocs.Count;i++) {
 				Document doc=listDocs[i];
 				string destFileName=Documents.GetUniqueFileNameForPatient(PatCur,doc.DocNum,Path.GetExtension(doc.FileName));
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
+
 					string fromFilePath=ODFileUtils.CombinePaths(atozFrom,doc.FileName);
 					if(!File.Exists(fromFilePath)) {
 						//the DocNum in the MedLabResults table is pointing to a file that either doesn't exist or is not accessible, can't move/copy it
@@ -504,20 +479,7 @@ namespace OpenDental {
 						//Just skip deleting the file, which means there could be an image in the old pat's folder that may need to be deleted manually
 						fileMoveFailures++;
 					}
-				}
-				else if(CloudStorage.IsCloudStorage) {
-					//move files around in the cloud
-					FormProgress FormP=new FormProgress(false);
-					FormP.DisplayText="Uploading...";
-					FormP.NumberFormat="F";
-					FormP.NumberMultiplication=1;
-					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
-					FormP.TickMS=1000;
-					OpenDentalCloud.Core.TaskStateMove state=CloudStorage.MoveAsync(atozFrom
-						,atozTo
-						,new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-					FormP.ShowDialog();//Don't allow users to cancel from here due to the limitations of the current feature for figuring out which files were moved successfully.
-				}
+				
 				//if we get here the file was copied successfully or not storing images in the database, so update the document row
 				//Safe to update the document FileName and PatNum to PatCur and new file name
 				doc.PatNum=PatCur.PatNum;

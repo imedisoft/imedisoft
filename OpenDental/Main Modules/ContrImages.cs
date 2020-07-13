@@ -276,65 +276,35 @@ namespace OpenDental {
 			if(nodeId.NodeType==EnumNodeType.None) {
 				return;
 			}
-			if(PrefC.AtoZfolderUsed==DataStorageType.InDatabase) {
-				MessageBox.Show("Images stored directly in database. Export file in order to open with external program.");
-				return;//Documents must be stored in the A to Z Folder to open them outside of Open Dental.  Users can use the export button for now.
-			}
-			if(nodeId.NodeType==EnumNodeType.Mount) {
+			if (nodeId.NodeType == EnumNodeType.Mount)
+			{
 				//Do nothing.  Must be consistent with how Docs are edited, so must use the Info button.
 				//FormMountEdit fme=new FormMountEdit(_mountSelected);
 				//fme.ShowDialog();//Edits the MountSelected object directly and updates and changes to the database as well.
 				//FillDocList(true);//Refresh tree in case description for the mount changed.
 				//return;
 			}
-			else if(nodeId.NodeType==EnumNodeType.Doc) {
-				Document nodeDoc=Documents.GetByNum(nodeId.PriKey);
-				string ext=ImageStore.GetExtension(nodeDoc);
-				if(ext==".jpg" || ext==".jpeg" || ext==".gif") {
+			else if (nodeId.NodeType == EnumNodeType.Doc)
+			{
+				Document nodeDoc = Documents.GetByNum(nodeId.PriKey);
+				string ext = ImageStore.GetExtension(nodeDoc);
+				if (ext == ".jpg" || ext == ".jpeg" || ext == ".gif")
+				{
 					return;
 				}
 				//We allow anything which ends with a different extention to be viewed in the windows fax viewer.
 				//Specifically, multi-page faxes can be viewed more easily by one of our customers using the fax
 				//viewer. On Unix systems, it is imagined that an equivalent viewer will launch to allow the image
 				//to be viewed.
-				if (PrefC.AtoZfolderUsed == DataStorageType.LocalAtoZ)
+
+
+				try
 				{
-
-					try
-					{
-						Process.Start(ImageStore.GetFilePath(nodeDoc, _patFolder));
-					}
-					catch (Exception ex)
-					{
-						MessageBox.Show(ex.Message);
-					}
-
+					Process.Start(ImageStore.GetFilePath(nodeDoc, _patFolder));
 				}
-				else
-				{//Cloud
-				 //Download document into temp directory for displaying.
-					FormProgress FormP = new FormProgress();
-					FormP.DisplayText = "Downloading Document...";
-					FormP.NumberFormat = "F";
-					FormP.NumberMultiplication = 1;
-					FormP.MaxVal = 100;//Doesn't matter what this value is as long as it is greater than 0
-					FormP.TickMS = 1000;
-					OpenDentalCloud.Core.TaskStateDownload state = CloudStorage.DownloadAsync(_patFolder.Replace("\\", "/")
-						, nodeDoc.FileName
-						, new OpenDentalCloud.ProgressHandler(FormP.OnProgress));
-					FormP.ShowDialog();
-					if (FormP.DialogResult == DialogResult.Cancel)
-					{
-						state.DoCancel = true;
-					}
-					else
-					{
-						string tempFile = PrefC.GetRandomTempFile(Path.GetExtension(nodeDoc.FileName));
-						File.WriteAllBytes(tempFile, state.FileContent);
-
-							Process.Start(tempFile);
-						
-					}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
 				}
 			}
 		}
@@ -1316,24 +1286,8 @@ namespace OpenDental {
 				button=new ODToolBarButton(Lan.G(this,"Templates"),-1,"","Forms");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				menuForms=new ContextMenu();
-				string formDir=FileAtoZ.CombinePaths(ImageStore.GetPreferredAtoZpath(),"Forms");
-				if(CloudStorage.IsCloudStorage) {
-					//Running this asynchronously to not slowdown start up time.
-					ODThread odThreadTemplate=new ODThread((o) => {
-						OpenDentalCloud.Core.TaskStateListFolders state=CloudStorage.ListFolderContents(formDir);
-						foreach(string fileName in state.ListFolderPathsDisplay) {
-							if(InvokeRequired) {
-								Invoke((Action)delegate () {
-									menuForms.MenuItems.Add(Path.GetFileName(fileName),new EventHandler(menuForms_Click));
-								});
-							}
-						}
-					});
-					//Swallow all exceptions and allow thread to exit gracefully.
-					odThreadTemplate.AddExceptionHandler(new ODThread.ExceptionDelegate((Exception ex) => { }));
-					odThreadTemplate.Start(true);
-				}
-				else {//Not cloud
+				string formDir=FileAtoZ.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),"Forms");
+
 					if(Directory.Exists(formDir)) {
 						DirectoryInfo dirInfo=new DirectoryInfo(formDir);
 						FileInfo[] fileInfos=dirInfo.GetFiles();
@@ -1343,7 +1297,7 @@ namespace OpenDental {
 							}
 						}
 					}
-				}
+				
 				button.DropDownMenu=menuForms;
 				ToolBarMain.Buttons.Add(button);
 				button=new ODToolBarButton(Lan.G(this,"Mounts"),-1,"","Mounts");
@@ -1533,11 +1487,8 @@ namespace OpenDental {
 			else if(nodeIdTag.NodeType==EnumNodeType.Eob) {
 				EobAttach eob=EobAttaches.GetOne(nodeIdTag.PriKey);
 				Action actionCloseDownloadProgress=null;
-				if(CloudStorage.IsCloudStorage) {
-					actionCloseDownloadProgress=ODProgress.Show(ODEventType.ContrImages,startingMessage:Lan.G("ContrImages","Downloading..."));
-				}
 				try {
-					_arrayBitmapsRaw=ImageStore.OpenImagesEob(eob,localPathCloud);
+					_arrayBitmapsRaw=ImageStore.OpenImagesEob(eob);
 					actionCloseDownloadProgress?.Invoke();
 				}
 				catch(ApplicationException ex) {
@@ -1570,13 +1521,10 @@ namespace OpenDental {
 				}
 				_idxSelectedInMount=0;
 				Action actionCloseDownloadProgress=null;
-				if(CloudStorage.IsCloudStorage) {
-					actionCloseDownloadProgress=ODProgress.Show(ODEventType.ContrImages,startingMessage:Lan.G("ContrImages","Downloading..."));
-				}
 				//ImagesCur contains BitMaps of selected images if they are found.  ImagesCur is used to display images in the main window in a later method.
 				//PDF files will always return null.
 				List<Document> listDocs=new List<Document>() { _documentShowing };
-				_arrayBitmapsRaw=ImageStore.OpenImages(listDocs.ToArray(),_patFolder,localPathCloud);
+				_arrayBitmapsRaw=ImageStore.OpenImages(listDocs.ToArray(),_patFolder);
 				//Diverges slightly from the normal use of this event, in that it is fired from SelectTreeNode() rather than ModuleSelected.  Appropriate
 				//here because this is the only data in ContrImages that might affect the PatientDashboard, and there is no "LoadData" in this Module.
 				PatientDashboardDataEvent.Fire(ODEventType.ModuleSelected
@@ -1616,10 +1564,7 @@ namespace OpenDental {
 				_arrayDocumentsInMount=Documents.GetDocumentsForMountItems(_listMountItems);
 				_idxSelectedInMount=-1;//No selection to start.
 				Action actionCloseDownloadProgress=null;
-				if(CloudStorage.IsCloudStorage) {
-					actionCloseDownloadProgress=ODProgress.Show(ODEventType.ContrImages,startingMessage:Lan.G("ContrImages","Downloading..."));
-				}
-				_arrayBitmapsRaw=ImageStore.OpenImages(_arrayDocumentsInMount,_patFolder,localPathCloud);
+				_arrayBitmapsRaw=ImageStore.OpenImages(_arrayDocumentsInMount,_patFolder);
 				actionCloseDownloadProgress?.Invoke();
 				_mountShowing=Mounts.GetByNum(nodeIdTag.PriKey);
 				_bitmapShowing=new Bitmap(_mountShowing.Width,_mountShowing.Height);
@@ -1982,9 +1927,6 @@ namespace OpenDental {
 			if(_claimPaymentNum!=0) {//eob
 				EobAttach eob=null;
 				Action actionCloseUploadProgress=null;
-				if(CloudStorage.IsCloudStorage) {
-					actionCloseUploadProgress=ODProgress.Show(ODEventType.ContrImages,startingMessage:Lan.G("ContrImages","Uploading..."));
-				}
 				for(int i=0;i<fileNames.Length;i++) {
 					try {
 						eob=ImageStore.ImportEobAttach(fileNames[i],_claimPaymentNum);
@@ -2006,9 +1948,6 @@ namespace OpenDental {
 			else if(_ehrAmendmentCur!=null) {
 				string amdFilename=_ehrAmendmentCur.FileName;
 				Action actionCloseUploadProgress=null;
-				if(CloudStorage.IsCloudStorage) {
-					actionCloseUploadProgress=ODProgress.Show(ODEventType.ContrImages,startingMessage:Lan.G("ContrImages","Uploading..."));
-				}
 				for(int i=0;i<fileNames.Length;i++) {
 					try {
 						_ehrAmendmentCur=ImageStore.ImportAmdAttach(fileNames[i],_ehrAmendmentCur);
@@ -2032,9 +1971,6 @@ namespace OpenDental {
 			else {//regular Images module
 				Document doc=null;
 				Action actionCloseUploadProgress=null;
-				if(CloudStorage.IsCloudStorage) {
-					actionCloseUploadProgress=ODProgress.Show(ODEventType.ContrImages,startingMessage:Lan.G("ContrImages","Uploading..."));
-				}
 				for(int i=0;i<fileNames.Length;i++) {
 					try {
 						doc=ImageStore.Import(fileNames[i],GetCurrentCategory(),_patCur);//Makes log
@@ -2567,8 +2503,7 @@ namespace OpenDental {
 					FillTree(false);
 					SelectTreeNode(GetTreeNode(MakeIdEob(eob.EobAttachNum)));
 				}
-				ImageStore.TryDeleteFile(tempFile
-					,actInUseException:(msg) => MsgBox.Show(msg)//Informs user when a 'file is in use' exception occurs.
+				ImageStore.TryDeleteFile(tempFile,(msg) => MsgBox.Show(msg)//Informs user when a 'file is in use' exception occurs.
 				);
 			}
 			else if(_ehrAmendmentCur!=null) {//amendment
@@ -2587,7 +2522,7 @@ namespace OpenDental {
 					SelectTreeNode(GetTreeNode(MakeIdAmd(_ehrAmendmentCur.EhrAmendmentNum)));
 				}
 				ImageStore.TryDeleteFile(tempFile
-					,actInUseException:(msg) => MsgBox.Show(msg)//Informs user when a 'file is in use' exception occurs.
+					,(msg) => MsgBox.Show(msg)//Informs user when a 'file is in use' exception occurs.
 				);
 			}
 			else {//regular Images module
@@ -2615,7 +2550,7 @@ namespace OpenDental {
 					}
 				}
 				ImageStore.TryDeleteFile(tempFile
-					,actInUseException:(msg) => MsgBox.Show(msg)//Informs user when a 'file is in use' exception occurs.
+					,(msg) => MsgBox.Show(msg)//Informs user when a 'file is in use' exception occurs.
 				);
 				//Reselect the last successfully added node when necessary. js This code seems to be copied from import multi.  Simplify it.
 				if(doc!=null && !MakeIdDoc(doc.DocNum).Equals(nodeIdTag)) {
@@ -2734,15 +2669,12 @@ namespace OpenDental {
 			}
 			_familyCur=Patients.GetFamily(patNum);
 			_patCur=_familyCur.GetPatient(patNum);
-			_patFolder=ImageStore.GetPatientFolder(_patCur,ImageStore.GetPreferredAtoZpath());//This is where the pat folder gets created if it does not yet exist.
+			_patFolder=ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());//This is where the pat folder gets created if it does not yet exist.
 			if(_patNumLastSecurityLog!=patNum) {
 				SecurityLogs.MakeLogEntry(Permissions.ImagesModule,patNum,"");
 				_patNumLastSecurityLog=patNum;
 			}
 			Action actionClosing=null;
-			if(CloudStorage.IsCloudStorage) {
-				actionClosing=ODProgress.Show(ODEventType.ContrImages,startingMessage:Lan.G(this,"Loading..."));
-			}
 			ImageStore.AddMissingFilesToDatabase(_patCur);
 			actionClosing?.Invoke();
 		}
@@ -2862,23 +2794,8 @@ namespace OpenDental {
 				_webBrowser.Size=pictureBoxMain.Size;
 				_webBrowser.Location=pictureBoxMain.Location;
 				string pdfFilePath="";
-				if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {
-					pdfFilePath=ODFileUtils.CombinePaths(atoZFolder,atoZFileName);
-				}
-				else if(CloudStorage.IsCloudStorage) {
-					if(localPath!="") {
-						pdfFilePath=localPath;
-					}
-					else {
-						//Download PDF into temp directory for displaying.
-						pdfFilePath=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),_documentShowing.DocNum+(_patCur!=null ? _patCur.PatNum.ToString() : "")+".pdf");
-						FileAtoZ.Download(FileAtoZ.CombinePaths(atoZFolder,atoZFileName),pdfFilePath,downloadMessage);
-					}
-				}
-				else {
-					pdfFilePath=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),_documentShowing.DocNum+(_patCur!=null ? _patCur.PatNum.ToString() : "")+".pdf");
-					File.WriteAllBytes(pdfFilePath,Convert.FromBase64String(_documentShowing.RawBase64));
-				}
+				pdfFilePath=ODFileUtils.CombinePaths(atoZFolder,atoZFileName);
+
 				if(!File.Exists(pdfFilePath)) {
 					MessageBox.Show(Lan.G(this,"File not found")+": " + atoZFileName);
 				}
@@ -3136,7 +3053,7 @@ namespace OpenDental {
 		}
 
 		private string GetHashString(Document doc) {
-			return ImageStore.GetHashString(doc,_patFolder);
+			return ImageStore.GetHashString(doc);
 		}
 
 		private void UpdateUserOdPrefForImageCat(long defNum,bool isExpand) {
@@ -3542,7 +3459,7 @@ namespace OpenDental {
 					doc=apteryxDoc;
 				}
 				tempFilePath=ODFileUtils.CombinePaths(Path.GetTempPath(),doc.FileName);
-				docPath=FileAtoZ.CombinePaths(ImageStore.GetPatientFolder(_patCur,ImageStore.GetPreferredAtoZpath()),doc.FileName);
+				docPath=FileAtoZ.CombinePaths(ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),doc.FileName);
 			}
 			else if(nodeIdTag.NodeType==EnumNodeType.Eob) {
 				EobAttach eob=EobAttaches.GetOne(nodeIdTag.PriKey);
@@ -3555,7 +3472,7 @@ namespace OpenDental {
 				docPath=ODFileUtils.CombinePaths(ImageStore.GetAmdFolder(),amd.FileName);
 			}
 			if(!string.IsNullOrEmpty(docPath)) {
-				FileAtoZ.Copy(docPath,tempFilePath,FileAtoZSourceDestination.AtoZToLocal,"Exporting file...");
+				FileAtoZ.Copy(docPath,tempFilePath/*,FileAtoZSourceDestination.AtoZToLocal,"Exporting file..."*/);
 				ThinfinityUtils.ExportForDownload(tempFilePath);
 			}
 			else {

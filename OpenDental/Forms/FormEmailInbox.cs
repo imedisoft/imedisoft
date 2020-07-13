@@ -676,7 +676,7 @@ namespace OpenDental {
 				}
 				string smimeP7sFilePath=FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),emailMessage.Attachments[i].ActualFileName);
 				string localFile=PrefC.GetRandomTempFile(".p7s");
-				FileAtoZ.Copy(smimeP7sFilePath,localFile,FileAtoZSourceDestination.AtoZToLocal);
+				FileAtoZ.Copy(smimeP7sFilePath,localFile);
 				X509Certificate2 certSig=EmailMessages.GetEmailSignatureFromSmimeP7sFile(localFile);
 				FormEmailDigitalSignature form=new FormEmailDigitalSignature(certSig);
 				if(form.ShowDialog()==DialogResult.OK) {
