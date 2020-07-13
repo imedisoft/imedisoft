@@ -247,16 +247,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SmsToMobile into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SmsToMobile smsToMobile,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO smstomobile (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				smsToMobile.SmsToMobileNum=ReplicationServers.GetKeyNoCache("smstomobile","SmsToMobileNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SmsToMobileNum,";
 			}
 			command+="PatNum,GuidMessage,GuidBatch,SmsPhoneNumber,MobilePhoneNumber,IsTimeSensitive,MsgType,MsgText,SmsStatus,MsgParts,MsgChargeUSD,ClinicNum,CustErrorText,DateTimeSent,DateTimeTerminated,IsHidden,MsgDiscountUSD) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(smsToMobile.SmsToMobileNum)+",";
 			}
 			command+=
@@ -282,7 +282,7 @@ namespace OpenDentBusiness.Crud{
 				smsToMobile.MsgText="";
 			}
 			OdSqlParameter paramMsgText=new OdSqlParameter("paramMsgText",OdDbType.Text,POut.StringNote(smsToMobile.MsgText));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramMsgText);
 			}
 			else {

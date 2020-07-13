@@ -177,16 +177,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one WikiListHeaderWidth into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(WikiListHeaderWidth wikiListHeaderWidth,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO wikilistheaderwidth (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				wikiListHeaderWidth.WikiListHeaderWidthNum=ReplicationServers.GetKeyNoCache("wikilistheaderwidth","WikiListHeaderWidthNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="WikiListHeaderWidthNum,";
 			}
 			command+="ListName,ColName,ColWidth,PickList) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(wikiListHeaderWidth.WikiListHeaderWidthNum)+",";
 			}
 			command+=
@@ -198,7 +198,7 @@ namespace OpenDentBusiness.Crud{
 				wikiListHeaderWidth.PickList="";
 			}
 			OdSqlParameter paramPickList=new OdSqlParameter("paramPickList",OdDbType.Text,POut.StringParam(wikiListHeaderWidth.PickList));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramPickList);
 			}
 			else {

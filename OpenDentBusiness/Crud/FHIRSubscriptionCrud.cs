@@ -142,16 +142,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one FHIRSubscription into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(FHIRSubscription fHIRSubscription,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO fhirsubscription (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				fHIRSubscription.FHIRSubscriptionNum=ReplicationServers.GetKeyNoCache("fhirsubscription","FHIRSubscriptionNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="FHIRSubscriptionNum,";
 			}
 			command+="Criteria,Reason,SubStatus,ErrorNote,ChannelType,ChannelEndpoint,ChannelPayLoad,ChannelHeader,DateEnd,APIKeyHash) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(fHIRSubscription.FHIRSubscriptionNum)+",";
 			}
 			command+=
@@ -169,7 +169,7 @@ namespace OpenDentBusiness.Crud{
 				fHIRSubscription.ErrorNote="";
 			}
 			OdSqlParameter paramErrorNote=new OdSqlParameter("paramErrorNote",OdDbType.Text,POut.StringParam(fHIRSubscription.ErrorNote));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramErrorNote);
 			}
 			else {

@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one InsFilingCode into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(InsFilingCode insFilingCode,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO insfilingcode (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				insFilingCode.InsFilingCodeNum=ReplicationServers.GetKeyNoCache("insfilingcode","InsFilingCodeNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="InsFilingCodeNum,";
 			}
 			command+="Descript,EclaimCode,ItemOrder,GroupType) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(insFilingCode.InsFilingCodeNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(insFilingCode.EclaimCode)+"',"
 				+    POut.Int   (insFilingCode.ItemOrder)+","
 				+    POut.Long  (insFilingCode.GroupType)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -182,16 +182,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Userod into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Userod userod,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO userod (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				userod.UserNum=ReplicationServers.GetKeyNoCache("userod","UserNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="UserNum,";
 			}
 			command+="UserName,Password,UserGroupNum,EmployeeNum,ClinicNum,ProvNum,IsHidden,TaskListInBox,AnesthProvType,DefaultHidePopups,PasswordIsStrong,ClinicIsRestricted,InboxHidePopups,UserNumCEMT,DateTFail,FailedAttempts,DomainUser,IsPasswordResetRequired,MobileWebPin,MobileWebPinFailedAttempts,DateTLastLogin) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(userod.UserNum)+",";
 			}
 			command+=
@@ -216,7 +216,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(userod.MobileWebPin)+"',"
 				+    POut.Byte  (userod.MobileWebPinFailedAttempts)+","
 				+    POut.DateT (userod.DateTLastLogin)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

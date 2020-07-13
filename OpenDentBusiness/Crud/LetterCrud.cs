@@ -110,16 +110,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Letter into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Letter letter,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO letter (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				letter.LetterNum=ReplicationServers.GetKeyNoCache("letter","LetterNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="LetterNum,";
 			}
 			command+="Description,BodyText) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(letter.LetterNum)+",";
 			}
 			command+=
@@ -129,7 +129,7 @@ namespace OpenDentBusiness.Crud{
 				letter.BodyText="";
 			}
 			OdSqlParameter paramBodyText=new OdSqlParameter("paramBodyText",OdDbType.Text,POut.StringParam(letter.BodyText));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramBodyText);
 			}
 			else {

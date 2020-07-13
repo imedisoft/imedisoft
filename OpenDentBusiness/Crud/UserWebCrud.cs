@@ -193,16 +193,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one UserWeb into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(UserWeb userWeb,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO userweb (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				userWeb.UserWebNum=ReplicationServers.GetKeyNoCache("userweb","UserWebNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="UserWebNum,";
 			}
 			command+="FKey,FKeyType,UserName,Password,PasswordResetCode,RequireUserNameChange,DateTimeLastLogin,RequirePasswordChange) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(userWeb.UserWebNum)+",";
 			}
 			command+=
@@ -214,7 +214,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Bool  (userWeb.RequireUserNameChange)+","
 				+    POut.DateT (userWeb.DateTimeLastLogin)+","
 				+    POut.Bool  (userWeb.RequirePasswordChange)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

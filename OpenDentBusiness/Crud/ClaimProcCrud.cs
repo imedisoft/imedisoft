@@ -328,16 +328,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ClaimProc into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ClaimProc claimProc,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO claimproc (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				claimProc.ClaimProcNum=ReplicationServers.GetKeyNoCache("claimproc","ClaimProcNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ClaimProcNum,";
 			}
 			command+="ProcNum,ClaimNum,PatNum,ProvNum,FeeBilled,InsPayEst,DedApplied,Status,InsPayAmt,Remarks,ClaimPaymentNum,PlanNum,DateCP,WriteOff,CodeSent,AllowedOverride,Percentage,PercentOverride,CopayAmt,NoBillIns,PaidOtherIns,BaseEst,CopayOverride,ProcDate,DateEntry,LineNumber,DedEst,DedEstOverride,InsEstTotal,InsEstTotalOverride,PaidOtherInsOverride,EstimateNote,WriteOffEst,WriteOffEstOverride,ClinicNum,InsSubNum,PaymentRow,PayPlanNum,ClaimPaymentTracking,SecUserNumEntry,SecDateEntry,DateSuppReceived,DateInsFinalized,IsTransfer) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(claimProc.ClaimProcNum)+",";
 			}
 			command+=
@@ -386,7 +386,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Date  (claimProc.DateSuppReceived)+","
 				+    POut.Date  (claimProc.DateInsFinalized)+","
 				+    POut.Bool  (claimProc.IsTransfer)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

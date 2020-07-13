@@ -227,16 +227,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Recall into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Recall recall,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO recall (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				recall.RecallNum=ReplicationServers.GetKeyNoCache("recall","RecallNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="RecallNum,";
 			}
 			command+="PatNum,DateDueCalc,DateDue,DatePrevious,RecallInterval,RecallStatus,Note,IsDisabled,RecallTypeNum,DisableUntilBalance,DisableUntilDate,DateScheduled,Priority) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(recall.RecallNum)+",";
 			}
 			command+=
@@ -258,7 +258,7 @@ namespace OpenDentBusiness.Crud{
 				recall.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(recall.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

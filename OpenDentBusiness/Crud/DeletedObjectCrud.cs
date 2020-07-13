@@ -166,23 +166,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DeletedObject into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DeletedObject deletedObject,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO deletedobject (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				deletedObject.DeletedObjectNum=ReplicationServers.GetKeyNoCache("deletedobject","DeletedObjectNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DeletedObjectNum,";
 			}
 			command+="ObjectNum,ObjectType) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(deletedObject.DeletedObjectNum)+",";
 			}
 			command+=
 				     POut.Long  (deletedObject.ObjectNum)+","
 				+    POut.Int   ((int)deletedObject.ObjectType)+")";
 				//DateTStamp can only be set by MySQL
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

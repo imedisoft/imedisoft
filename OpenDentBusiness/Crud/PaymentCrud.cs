@@ -261,16 +261,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Payment into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Payment payment,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO payment (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				payment.PayNum=ReplicationServers.GetKeyNoCache("payment","PayNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PayNum,";
 			}
 			command+="PayType,PayDate,PayAmt,CheckNum,BankBranch,PayNote,IsSplit,PatNum,ClinicNum,DateEntry,DepositNum,Receipt,IsRecurringCC,SecUserNumEntry,PaymentSource,ProcessStatus,RecurringChargeDate,ExternalId,PaymentStatus) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(payment.PayNum)+",";
 			}
 			command+=
@@ -302,7 +302,7 @@ namespace OpenDentBusiness.Crud{
 				payment.Receipt="";
 			}
 			OdSqlParameter paramReceipt=new OdSqlParameter("paramReceipt",OdDbType.Text,POut.StringParam(payment.Receipt));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramPayNote,paramReceipt);
 			}
 			else {

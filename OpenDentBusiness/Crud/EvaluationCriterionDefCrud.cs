@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EvaluationCriterionDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EvaluationCriterionDef evaluationCriterionDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO evaluationcriteriondef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				evaluationCriterionDef.EvaluationCriterionDefNum=ReplicationServers.GetKeyNoCache("evaluationcriteriondef","EvaluationCriterionDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EvaluationCriterionDefNum,";
 			}
 			command+="EvaluationDefNum,CriterionDescript,IsCategoryName,GradingScaleNum,ItemOrder,MaxPointsPoss) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(evaluationCriterionDef.EvaluationCriterionDefNum)+",";
 			}
 			command+=
@@ -141,7 +141,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (evaluationCriterionDef.GradingScaleNum)+","
 				+    POut.Int   (evaluationCriterionDef.ItemOrder)+","
 				+    POut.Float (evaluationCriterionDef.MaxPointsPoss)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

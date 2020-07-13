@@ -138,16 +138,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PatPlan into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PatPlan patPlan,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO patplan (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				patPlan.PatPlanNum=ReplicationServers.GetKeyNoCache("patplan","PatPlanNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PatPlanNum,";
 			}
 			command+="PatNum,Ordinal,IsPending,Relationship,PatID,InsSubNum,OrthoAutoFeeBilledOverride,OrthoAutoNextClaimDate,SecDateTEntry) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(patPlan.PatPlanNum)+",";
 			}
 			command+=
@@ -161,7 +161,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Date  (patPlan.OrthoAutoNextClaimDate)+","
 				+    DbHelper.Now()+")";
 				//SecDateTEdit can only be set by MySQL
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

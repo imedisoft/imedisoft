@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ProcButtonQuick into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ProcButtonQuick procButtonQuick,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO procbuttonquick (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				procButtonQuick.ProcButtonQuickNum=ReplicationServers.GetKeyNoCache("procbuttonquick","ProcButtonQuickNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProcButtonQuickNum,";
 			}
 			command+="Description,CodeValue,Surf,YPos,ItemOrder,IsLabel) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(procButtonQuick.ProcButtonQuickNum)+",";
 			}
 			command+=
@@ -141,7 +141,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   (procButtonQuick.YPos)+","
 				+    POut.Int   (procButtonQuick.ItemOrder)+","
 				+    POut.Bool  (procButtonQuick.IsLabel)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

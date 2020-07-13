@@ -183,16 +183,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PromotionLog into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PromotionLog promotionLog,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO promotionlog (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				promotionLog.PromotionLogNum=ReplicationServers.GetKeyNoCache("promotionlog","PromotionLogNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PromotionLogNum,";
 			}
 			command+="PromotionNum,PatNum,EmailMessageNum,EmailHostingFK,DateTimeSent,PromotionStatus) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(promotionLog.PromotionLogNum)+",";
 			}
 			command+=
@@ -202,7 +202,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (promotionLog.EmailHostingFK)+","
 				+    POut.DateT (promotionLog.DateTimeSent)+","
 				+    POut.Int   ((int)promotionLog.PromotionStatus)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

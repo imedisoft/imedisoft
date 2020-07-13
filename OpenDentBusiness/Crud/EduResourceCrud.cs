@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EduResource into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EduResource eduResource,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO eduresource (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				eduResource.EduResourceNum=ReplicationServers.GetKeyNoCache("eduresource","EduResourceNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EduResourceNum,";
 			}
 			command+="DiseaseDefNum,MedicationNum,LabResultID,LabResultName,LabResultCompare,ResourceUrl,SmokingSnoMed) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(eduResource.EduResourceNum)+",";
 			}
 			command+=
@@ -146,7 +146,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(eduResource.LabResultCompare)+"',"
 				+"'"+POut.String(eduResource.ResourceUrl)+"',"
 				+"'"+POut.String(eduResource.SmokingSnoMed)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

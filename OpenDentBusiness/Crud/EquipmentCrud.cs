@@ -170,16 +170,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Equipment into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Equipment equipment,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO equipment (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				equipment.EquipmentNum=ReplicationServers.GetKeyNoCache("equipment","EquipmentNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EquipmentNum,";
 			}
 			command+="Description,SerialNumber,ModelYear,DatePurchased,DateSold,PurchaseCost,MarketValue,Location,DateEntry,ProvNumCheckedOut,DateCheckedOut,DateExpectedBack,DispenseNote,Status) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(equipment.EquipmentNum)+",";
 			}
 			command+=
@@ -213,7 +213,7 @@ namespace OpenDentBusiness.Crud{
 				equipment.Status="";
 			}
 			OdSqlParameter paramStatus=new OdSqlParameter("paramStatus",OdDbType.Text,POut.StringParam(equipment.Status));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDescription,paramLocation,paramDispenseNote,paramStatus);
 			}
 			else {

@@ -163,22 +163,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one TaskUnread into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(TaskUnread taskUnread,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO taskunread (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				taskUnread.TaskUnreadNum=ReplicationServers.GetKeyNoCache("taskunread","TaskUnreadNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="TaskUnreadNum,";
 			}
 			command+="TaskNum,UserNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(taskUnread.TaskUnreadNum)+",";
 			}
 			command+=
 				     POut.Long  (taskUnread.TaskNum)+","
 				+    POut.Long  (taskUnread.UserNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

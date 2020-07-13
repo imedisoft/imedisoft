@@ -158,16 +158,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one JournalEntry into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(JournalEntry journalEntry,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO journalentry (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				journalEntry.JournalEntryNum=ReplicationServers.GetKeyNoCache("journalentry","JournalEntryNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="JournalEntryNum,";
 			}
 			command+="TransactionNum,AccountNum,DateDisplayed,DebitAmt,CreditAmt,Memo,Splits,CheckNumber,ReconcileNum,SecUserNumEntry,SecDateTEntry,SecUserNumEdit) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(journalEntry.JournalEntryNum)+",";
 			}
 			command+=
@@ -192,7 +192,7 @@ namespace OpenDentBusiness.Crud{
 				journalEntry.Splits="";
 			}
 			OdSqlParameter paramSplits=new OdSqlParameter("paramSplits",OdDbType.Text,POut.StringParam(journalEntry.Splits));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramMemo,paramSplits);
 			}
 			else {

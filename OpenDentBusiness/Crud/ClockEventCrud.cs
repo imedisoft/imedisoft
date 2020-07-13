@@ -162,16 +162,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ClockEvent into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ClockEvent clockEvent,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO clockevent (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				clockEvent.ClockEventNum=ReplicationServers.GetKeyNoCache("clockevent","ClockEventNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ClockEventNum,";
 			}
 			command+="EmployeeNum,TimeEntered1,TimeDisplayed1,ClockStatus,Note,TimeEntered2,TimeDisplayed2,OTimeHours,OTimeAuto,Adjust,AdjustAuto,AdjustIsOverridden,Rate2Hours,Rate2Auto,ClinicNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(clockEvent.ClockEventNum)+",";
 			}
 			command+=
@@ -194,7 +194,7 @@ namespace OpenDentBusiness.Crud{
 				clockEvent.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(clockEvent.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

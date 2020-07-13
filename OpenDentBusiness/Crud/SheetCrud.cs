@@ -178,16 +178,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Sheet into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Sheet sheet,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO sheet (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				sheet.SheetNum=ReplicationServers.GetKeyNoCache("sheet","SheetNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SheetNum,";
 			}
 			command+="SheetType,PatNum,DateTimeSheet,FontSize,FontName,Width,Height,IsLandscape,InternalNote,Description,ShowInTerminal,IsWebForm,IsMultiPage,IsDeleted,SheetDefNum,DocNum,ClinicNum,DateTSheetEdited,HasMobileLayout) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(sheet.SheetNum)+",";
 			}
 			command+=
@@ -214,7 +214,7 @@ namespace OpenDentBusiness.Crud{
 				sheet.InternalNote="";
 			}
 			OdSqlParameter paramInternalNote=new OdSqlParameter("paramInternalNote",OdDbType.Text,POut.StringParam(sheet.InternalNote));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramInternalNote);
 			}
 			else {

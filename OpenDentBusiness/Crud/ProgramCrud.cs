@@ -150,16 +150,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Program into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Program program,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO program (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				program.ProgramNum=ReplicationServers.GetKeyNoCache("program","ProgramNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProgramNum,";
 			}
 			command+="ProgName,ProgDesc,Enabled,Path,CommandLine,Note,PluginDllName,ButtonImage,FileTemplate,FilePath) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(program.ProgramNum)+",";
 			}
 			command+=
@@ -185,7 +185,7 @@ namespace OpenDentBusiness.Crud{
 				program.FileTemplate="";
 			}
 			OdSqlParameter paramFileTemplate=new OdSqlParameter("paramFileTemplate",OdDbType.Text,POut.StringParam(program.FileTemplate));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote,paramButtonImage,paramFileTemplate);
 			}
 			else {

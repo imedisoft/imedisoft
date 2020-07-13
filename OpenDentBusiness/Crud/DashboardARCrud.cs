@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DashboardAR into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DashboardAR dashboardAR,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO dashboardar (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				dashboardAR.DashboardARNum=ReplicationServers.GetKeyNoCache("dashboardar","DashboardARNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DashboardARNum,";
 			}
 			command+="DateCalc,BalTotal,InsEst) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(dashboardAR.DashboardARNum)+",";
 			}
 			command+=
 				     POut.Date  (dashboardAR.DateCalc)+","
 				+"'"+POut.Double(dashboardAR.BalTotal)+"',"
 				+"'"+POut.Double(dashboardAR.InsEst)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

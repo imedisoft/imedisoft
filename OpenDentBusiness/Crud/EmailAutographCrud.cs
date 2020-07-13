@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EmailAutograph into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EmailAutograph emailAutograph,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO emailautograph (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				emailAutograph.EmailAutographNum=ReplicationServers.GetKeyNoCache("emailautograph","EmailAutographNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EmailAutographNum,";
 			}
 			command+="Description,EmailAddress,AutographText) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(emailAutograph.EmailAutographNum)+",";
 			}
 			command+=
@@ -142,7 +142,7 @@ namespace OpenDentBusiness.Crud{
 				emailAutograph.AutographText="";
 			}
 			OdSqlParameter paramAutographText=new OdSqlParameter("paramAutographText",OdDbType.Text,POut.StringParam(emailAutograph.AutographText));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDescription,paramAutographText);
 			}
 			else {

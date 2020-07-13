@@ -262,16 +262,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one InsPlan into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(InsPlan insPlan,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO insplan (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				insPlan.PlanNum=ReplicationServers.GetKeyNoCache("insplan","PlanNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PlanNum,";
 			}
 			command+="GroupName,GroupNum,PlanNote,FeeSched,PlanType,ClaimFormNum,UseAltCode,ClaimsUseUCR,CopayFeeSched,EmployerNum,CarrierNum,AllowedFeeSched,TrojanID,DivisionNo,IsMedical,FilingCode,DentaideCardSequence,ShowBaseUnits,CodeSubstNone,IsHidden,MonthRenew,FilingCodeSubtype,CanadianPlanFlag,CanadianDiagnosticCode,CanadianInstitutionCode,RxBIN,CobRule,SopCode,SecUserNumEntry,SecDateEntry,HideFromVerifyList,OrthoType,OrthoAutoProcFreq,OrthoAutoProcCodeNumOverride,OrthoAutoFeeBilled,OrthoAutoClaimDaysWait,BillingType,HasPpoSubstWriteoffs,ExclusionFeeRule) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(insPlan.PlanNum)+",";
 			}
 			command+=
@@ -319,7 +319,7 @@ namespace OpenDentBusiness.Crud{
 				insPlan.PlanNote="";
 			}
 			OdSqlParameter paramPlanNote=new OdSqlParameter("paramPlanNote",OdDbType.Text,POut.StringParam(insPlan.PlanNote));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramPlanNote);
 			}
 			else {

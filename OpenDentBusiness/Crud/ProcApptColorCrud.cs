@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ProcApptColor into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ProcApptColor procApptColor,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO procapptcolor (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				procApptColor.ProcApptColorNum=ReplicationServers.GetKeyNoCache("procapptcolor","ProcApptColorNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProcApptColorNum,";
 			}
 			command+="CodeRange,ShowPreviousDate,ColorText) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(procApptColor.ProcApptColorNum)+",";
 			}
 			command+=
 				 "'"+POut.String(procApptColor.CodeRange)+"',"
 				+    POut.Bool  (procApptColor.ShowPreviousDate)+","
 				+    POut.Int   (procApptColor.ColorText.ToArgb())+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -202,16 +202,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Referral into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Referral referral,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO referral (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				referral.ReferralNum=ReplicationServers.GetKeyNoCache("referral","ReferralNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ReferralNum,";
 			}
 			command+="LName,FName,MName,SSN,UsingTIN,Specialty,ST,Telephone,Address,Address2,City,Zip,Note,Phone2,IsHidden,NotPerson,Title,EMail,PatNum,NationalProvID,Slip,IsDoctor,IsTrustedDirect,IsPreferred) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(referral.ReferralNum)+",";
 			}
 			command+=
@@ -244,7 +244,7 @@ namespace OpenDentBusiness.Crud{
 				referral.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(referral.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

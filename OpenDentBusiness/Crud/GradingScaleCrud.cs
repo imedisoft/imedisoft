@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one GradingScale into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(GradingScale gradingScale,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO gradingscale (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				gradingScale.GradingScaleNum=ReplicationServers.GetKeyNoCache("gradingscale","GradingScaleNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="GradingScaleNum,";
 			}
 			command+="ScaleType,Description) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(gradingScale.GradingScaleNum)+",";
 			}
 			command+=
 				     POut.Int   ((int)gradingScale.ScaleType)+","
 				+"'"+POut.String(gradingScale.Description)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

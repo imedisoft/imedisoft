@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ProcMultiVisit into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ProcMultiVisit procMultiVisit,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO procmultivisit (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				procMultiVisit.ProcMultiVisitNum=ReplicationServers.GetKeyNoCache("procmultivisit","ProcMultiVisitNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProcMultiVisitNum,";
 			}
 			command+="GroupProcMultiVisitNum,ProcNum,ProcStatus,IsInProcess,SecDateTEntry) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(procMultiVisit.ProcMultiVisitNum)+",";
 			}
 			command+=
@@ -141,7 +141,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Bool  (procMultiVisit.IsInProcess)+","
 				+    DbHelper.Now()+")";
 				//SecDateTEdit can only be set by MySQL
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

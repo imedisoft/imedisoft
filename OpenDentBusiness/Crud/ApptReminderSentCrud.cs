@@ -186,16 +186,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ApptReminderSent into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ApptReminderSent apptReminderSent,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO apptremindersent (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				apptReminderSent.ApptReminderSentNum=ReplicationServers.GetKeyNoCache("apptremindersent","ApptReminderSentNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ApptReminderSentNum,";
 			}
 			command+="ApptNum,ApptDateTime,DateTimeSent,TSPrior,ApptReminderRuleNum,IsSmsSent,IsEmailSent) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(apptReminderSent.ApptReminderSentNum)+",";
 			}
 			command+=
@@ -206,7 +206,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (apptReminderSent.ApptReminderRuleNum)+","
 				+    POut.Bool  (apptReminderSent.IsSmsSent)+","
 				+    POut.Bool  (apptReminderSent.IsEmailSent)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

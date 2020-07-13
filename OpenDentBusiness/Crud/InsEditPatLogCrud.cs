@@ -198,16 +198,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one InsEditPatLog into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(InsEditPatLog insEditPatLog,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO inseditpatlog (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				insEditPatLog.InsEditPatLogNum=ReplicationServers.GetKeyNoCache("inseditpatlog","InsEditPatLogNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="InsEditPatLogNum,";
 			}
 			command+="FKey,LogType,FieldName,OldValue,NewValue,UserNum,ParentKey,Description) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(insEditPatLog.InsEditPatLogNum)+",";
 			}
 			command+=
@@ -220,7 +220,7 @@ namespace OpenDentBusiness.Crud{
 				//DateTStamp can only be set by MySQL
 				+    POut.Long  (insEditPatLog.ParentKey)+","
 				+"'"+POut.String(insEditPatLog.Description)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

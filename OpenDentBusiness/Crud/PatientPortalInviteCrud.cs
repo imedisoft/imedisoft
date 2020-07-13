@@ -211,16 +211,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PatientPortalInvite into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PatientPortalInvite patientPortalInvite,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO patientportalinvite (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				patientPortalInvite.PatientPortalInviteNum=ReplicationServers.GetKeyNoCache("patientportalinvite","PatientPortalInviteNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PatientPortalInviteNum,";
 			}
 			command+="PatNum,AptNum,ClinicNum,DateTimeEntry,TSPrior,EmailSendStatus,EmailMessageNum,TemplateEmail,TemplateEmailSubj,Note) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(patientPortalInvite.PatientPortalInviteNum)+",";
 			}
 			command+=
@@ -242,7 +242,7 @@ namespace OpenDentBusiness.Crud{
 				patientPortalInvite.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(patientPortalInvite.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramTemplateEmail,paramNote);
 			}
 			else {

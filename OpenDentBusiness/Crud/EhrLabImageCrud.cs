@@ -107,22 +107,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EhrLabImage into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EhrLabImage ehrLabImage,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO ehrlabimage (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				ehrLabImage.EhrLabImageNum=ReplicationServers.GetKeyNoCache("ehrlabimage","EhrLabImageNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EhrLabImageNum,";
 			}
 			command+="EhrLabNum,DocNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(ehrLabImage.EhrLabImageNum)+",";
 			}
 			command+=
 				     POut.Long  (ehrLabImage.EhrLabNum)+","
 				+    POut.Long  (ehrLabImage.DocNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

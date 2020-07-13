@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one LetterMerge into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(LetterMerge letterMerge,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO lettermerge (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				letterMerge.LetterMergeNum=ReplicationServers.GetKeyNoCache("lettermerge","LetterMergeNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="LetterMergeNum,";
 			}
 			command+="Description,TemplateName,DataFileName,Category,ImageFolder) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(letterMerge.LetterMergeNum)+",";
 			}
 			command+=
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(letterMerge.DataFileName)+"',"
 				+    POut.Long  (letterMerge.Category)+","
 				+    POut.Long  (letterMerge.ImageFolder)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

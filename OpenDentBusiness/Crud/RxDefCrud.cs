@@ -138,16 +138,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one RxDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(RxDef rxDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO rxdef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				rxDef.RxDefNum=ReplicationServers.GetKeyNoCache("rxdef","RxDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="RxDefNum,";
 			}
 			command+="Drug,Sig,Disp,Refills,Notes,IsControlled,RxCui,IsProcRequired,PatientInstruction) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(rxDef.RxDefNum)+",";
 			}
 			command+=
@@ -164,7 +164,7 @@ namespace OpenDentBusiness.Crud{
 				rxDef.PatientInstruction="";
 			}
 			OdSqlParameter paramPatientInstruction=new OdSqlParameter("paramPatientInstruction",OdDbType.Text,POut.StringParam(rxDef.PatientInstruction));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramPatientInstruction);
 			}
 			else {

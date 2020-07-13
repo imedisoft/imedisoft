@@ -146,16 +146,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Pharmacy into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Pharmacy pharmacy,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO pharmacy (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				pharmacy.PharmacyNum=ReplicationServers.GetKeyNoCache("pharmacy","PharmacyNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PharmacyNum,";
 			}
 			command+="PharmID,StoreName,Phone,Fax,Address,Address2,City,State,Zip,Note) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(pharmacy.PharmacyNum)+",";
 			}
 			command+=
@@ -174,7 +174,7 @@ namespace OpenDentBusiness.Crud{
 				pharmacy.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(pharmacy.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

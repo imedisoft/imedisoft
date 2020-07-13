@@ -123,16 +123,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one OIDExternal into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(OIDExternal oIDExternal,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO oidexternal (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				oIDExternal.OIDExternalNum=ReplicationServers.GetKeyNoCache("oidexternal","OIDExternalNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="OIDExternalNum,";
 			}
 			command+="IDType,IDInternal,IDExternal,rootExternal) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(oIDExternal.OIDExternalNum)+",";
 			}
 			command+=
@@ -140,7 +140,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (oIDExternal.IDInternal)+","
 				+"'"+POut.String(oIDExternal.IDExternal)+"',"
 				+"'"+POut.String(oIDExternal.rootExternal)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

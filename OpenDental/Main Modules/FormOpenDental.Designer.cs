@@ -777,7 +777,6 @@ namespace OpenDental{
 			// 
 			this.menuItemReplication.Index = 3;
 			this.menuItemReplication.Text = "Replication";
-			this.menuItemReplication.Click += new System.EventHandler(this.menuItemReplication_Click);
 			// 
 			// menuItemEasy
 			// 

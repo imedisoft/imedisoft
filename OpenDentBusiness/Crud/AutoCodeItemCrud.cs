@@ -108,23 +108,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one AutoCodeItem into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(AutoCodeItem autoCodeItem,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO autocodeitem (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				autoCodeItem.AutoCodeItemNum=ReplicationServers.GetKeyNoCache("autocodeitem","AutoCodeItemNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AutoCodeItemNum,";
 			}
 			command+="AutoCodeNum,OldCode,CodeNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(autoCodeItem.AutoCodeItemNum)+",";
 			}
 			command+=
 				     POut.Long  (autoCodeItem.AutoCodeNum)+","
 				+"'"+POut.String(autoCodeItem.OldCode)+"',"
 				+    POut.Long  (autoCodeItem.CodeNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

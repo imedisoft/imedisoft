@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one MountDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(MountDef mountDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO mountdef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				mountDef.MountDefNum=ReplicationServers.GetKeyNoCache("mountdef","MountDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="MountDefNum,";
 			}
 			command+="Description,ItemOrder,Width,Height,ColorBack) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(mountDef.MountDefNum)+",";
 			}
 			command+=
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   (mountDef.Width)+","
 				+    POut.Int   (mountDef.Height)+","
 				+    POut.Int   (mountDef.ColorBack.ToArgb())+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

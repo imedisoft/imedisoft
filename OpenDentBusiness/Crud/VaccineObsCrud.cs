@@ -134,16 +134,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one VaccineObs into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(VaccineObs vaccineObs,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO vaccineobs (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				vaccineObs.VaccineObsNum=ReplicationServers.GetKeyNoCache("vaccineobs","VaccineObsNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="VaccineObsNum,";
 			}
 			command+="VaccinePatNum,ValType,IdentifyingCode,ValReported,ValCodeSystem,VaccineObsNumGroup,UcumCode,DateObs,MethodCode) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(vaccineObs.VaccineObsNum)+",";
 			}
 			command+=
@@ -156,7 +156,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(vaccineObs.UcumCode)+"',"
 				+    POut.Date  (vaccineObs.DateObs)+","
 				+"'"+POut.String(vaccineObs.MethodCode)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

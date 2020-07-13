@@ -178,16 +178,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ProgramProperty into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ProgramProperty programProperty,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO programproperty (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				programProperty.ProgramPropertyNum=ReplicationServers.GetKeyNoCache("programproperty","ProgramPropertyNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProgramPropertyNum,";
 			}
 			command+="ProgramNum,PropertyDesc,PropertyValue,ComputerName,ClinicNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(programProperty.ProgramPropertyNum)+",";
 			}
 			command+=
@@ -196,7 +196,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(programProperty.PropertyValue)+"',"
 				+"'"+POut.String(programProperty.ComputerName)+"',"
 				+    POut.Long  (programProperty.ClinicNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

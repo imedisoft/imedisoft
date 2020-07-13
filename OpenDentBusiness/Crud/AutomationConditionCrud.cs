@@ -112,16 +112,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one AutomationCondition into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(AutomationCondition automationCondition,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO automationcondition (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				automationCondition.AutomationConditionNum=ReplicationServers.GetKeyNoCache("automationcondition","AutomationConditionNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AutomationConditionNum,";
 			}
 			command+="AutomationNum,CompareField,Comparison,CompareString) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(automationCondition.AutomationConditionNum)+",";
 			}
 			command+=
@@ -129,7 +129,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   ((int)automationCondition.CompareField)+","
 				+    POut.Int   ((int)automationCondition.Comparison)+","
 				+"'"+POut.String(automationCondition.CompareString)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

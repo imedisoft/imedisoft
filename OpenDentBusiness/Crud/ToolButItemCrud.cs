@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ToolButItem into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ToolButItem toolButItem,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO toolbutitem (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				toolButItem.ToolButItemNum=ReplicationServers.GetKeyNoCache("toolbutitem","ToolButItemNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ToolButItemNum,";
 			}
 			command+="ProgramNum,ToolBar,ButtonText) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(toolButItem.ToolButItemNum)+",";
 			}
 			command+=
 				     POut.Long  (toolButItem.ProgramNum)+","
 				+    POut.Int   ((int)toolButItem.ToolBar)+","
 				+"'"+POut.String(toolButItem.ButtonText)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

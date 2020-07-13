@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one FormPat into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(FormPat formPat,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO formpat (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				formPat.FormPatNum=ReplicationServers.GetKeyNoCache("formpat","FormPatNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="FormPatNum,";
 			}
 			command+="PatNum,FormDateTime) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(formPat.FormPatNum)+",";
 			}
 			command+=
 				     POut.Long  (formPat.PatNum)+","
 				+    POut.DateT (formPat.FormDateTime)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one OrthoSchedule into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(OrthoSchedule orthoSchedule,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO orthoschedule (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				orthoSchedule.OrthoScheduleNum=ReplicationServers.GetKeyNoCache("orthoschedule","OrthoScheduleNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="OrthoScheduleNum,";
 			}
 			command+="BandingDateOverride,DebondDateOverride,BandingAmount,VisitAmount,DebondAmount,IsActive) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(orthoSchedule.OrthoScheduleNum)+",";
 			}
 			command+=
@@ -146,7 +146,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.Double(orthoSchedule.DebondAmount)+"',"
 				+    POut.Bool  (orthoSchedule.IsActive)+")";
 				//SecDateTEdit can only be set by MySQL
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

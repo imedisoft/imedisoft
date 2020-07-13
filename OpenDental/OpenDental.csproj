@@ -815,9 +815,6 @@
     <Compile Include="Forms\FormReactivationSetup.designer.cs">
       <DependentUpon>FormReactivationSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormRegistrationKeyEdit.designer.cs">
-      <DependentUpon>FormRegistrationKeyEdit.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormSheetFieldBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -929,7 +926,6 @@
       <DependentUpon>ComboBoxJ.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Dpi.cs" />
-    <Compile Include="UI\FolderBrowserDialog.cs" />
     <Compile Include="UI\ImagesModule\PanelImagesModule.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1732,12 +1728,6 @@
     </Compile>
     <Compile Include="Forms\FormSpellChecker.designer.cs">
       <DependentUpon>FormSpellChecker.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\BasicTemplate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\BasicTemplate.designer.cs">
-      <DependentUpon>BasicTemplate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormConnectionLost.cs">
       <SubType>Form</SubType>
@@ -3644,18 +3634,6 @@
     <Compile Include="Forms\FormEtrans270EBraw.designer.cs">
       <DependentUpon>FormEtrans270EBraw.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormReplicationEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormReplicationEdit.designer.cs">
-      <DependentUpon>FormReplicationEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormReplicationSetup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormReplicationSetup.designer.cs">
-      <DependentUpon>FormReplicationSetup.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormDefEditImages.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -4149,16 +4127,10 @@
     <Compile Include="Forms\FormReportsMore.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormRegistrationKeyEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\FormReqNeededEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormReqNeededs.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormRegistrationKey.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormBlockoutCutCopyPaste.cs">
@@ -5900,9 +5872,6 @@
     <EmbeddedResource Include="Forms\FormSpellChecker.resx">
       <DependentUpon>FormSpellChecker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BasicTemplate.resx">
-      <DependentUpon>BasicTemplate.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormConnectionLost.resx">
       <DependentUpon>FormConnectionLost.cs</DependentUpon>
     </EmbeddedResource>
@@ -7130,20 +7099,12 @@
       <DependentUpon>FormReportsMore.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormRegistrationKeyEdit.resx">
-      <DependentUpon>FormRegistrationKeyEdit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormReqNeededEdit.resx">
       <DependentUpon>FormReqNeededEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormReqNeededs.resx">
       <DependentUpon>FormReqNeededs.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormRegistrationKey.resx">
-      <DependentUpon>FormRegistrationKey.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormBlockoutCutCopyPaste.resx">
@@ -8550,7 +8511,6 @@
     <Compile Include="UI\ImagesModule\WindowingSlider.Designer.cs">
       <DependentUpon>WindowingSlider.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\GridColumnTypeConverter.cs" />
     <Compile Include="UI\LightSignalGrid.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -9083,14 +9043,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormEtrans270EBraw.resx">
       <DependentUpon>FormEtrans270EBraw.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormReplicationEdit.resx">
-      <DependentUpon>FormReplicationEdit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormReplicationSetup.resx">
-      <DependentUpon>FormReplicationSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormDefEditImages.resx">

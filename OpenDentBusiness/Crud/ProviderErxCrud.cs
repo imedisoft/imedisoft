@@ -138,16 +138,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ProviderErx into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ProviderErx providerErx,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO providererx (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				providerErx.ProviderErxNum=ReplicationServers.GetKeyNoCache("providererx","ProviderErxNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProviderErxNum,";
 			}
 			command+="PatNum,NationalProviderID,IsEnabled,IsIdentifyProofed,IsSentToHq,IsEpcs,ErxType,UserId,AccountId,RegistrationKeyNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(providerErx.ProviderErxNum)+",";
 			}
 			command+=
@@ -161,7 +161,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(providerErx.UserId)+"',"
 				+"'"+POut.String(providerErx.AccountId)+"',"
 				+    POut.Long  (providerErx.RegistrationKeyNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

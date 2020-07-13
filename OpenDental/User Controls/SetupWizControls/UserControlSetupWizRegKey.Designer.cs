@@ -73,7 +73,6 @@
 			this.butChangeRegKey.Size = new System.Drawing.Size(67, 23);
 			this.butChangeRegKey.TabIndex = 54;
 			this.butChangeRegKey.Text = "Change";
-			this.butChangeRegKey.Click += new System.EventHandler(this.butChangeRegKey_Click);
 			// 
 			// label4
 			// 

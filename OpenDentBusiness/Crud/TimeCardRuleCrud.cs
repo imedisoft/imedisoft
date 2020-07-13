@@ -183,16 +183,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one TimeCardRule into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(TimeCardRule timeCardRule,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO timecardrule (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				timeCardRule.TimeCardRuleNum=ReplicationServers.GetKeyNoCache("timecardrule","TimeCardRuleNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="TimeCardRuleNum,";
 			}
 			command+="EmployeeNum,OverHoursPerDay,AfterTimeOfDay,BeforeTimeOfDay,IsOvertimeExempt,MinClockInTime) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(timeCardRule.TimeCardRuleNum)+",";
 			}
 			command+=
@@ -202,7 +202,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Time  (timeCardRule.BeforeTimeOfDay)+","
 				+    POut.Bool  (timeCardRule.IsOvertimeExempt)+","
 				+    POut.Time  (timeCardRule.MinClockInTime)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

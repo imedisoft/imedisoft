@@ -104,22 +104,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one AlertRead into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(AlertRead alertRead,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO alertread (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				alertRead.AlertReadNum=ReplicationServers.GetKeyNoCache("alertread","AlertReadNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AlertReadNum,";
 			}
 			command+="AlertItemNum,UserNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(alertRead.AlertReadNum)+",";
 			}
 			command+=
 				     POut.Long  (alertRead.AlertItemNum)+","
 				+    POut.Long  (alertRead.UserNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

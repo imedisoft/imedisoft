@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one WikiPageHist into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(WikiPageHist wikiPageHist,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO wikipagehist (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				wikiPageHist.WikiPageNum=ReplicationServers.GetKeyNoCache("wikipagehist","WikiPageNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="WikiPageNum,";
 			}
 			command+="UserNum,PageTitle,PageContent,DateTimeSaved,IsDeleted) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(wikiPageHist.WikiPageNum)+",";
 			}
 			command+=
@@ -144,7 +144,7 @@ namespace OpenDentBusiness.Crud{
 				wikiPageHist.PageContent="";
 			}
 			OdSqlParameter paramPageContent=new OdSqlParameter("paramPageContent",OdDbType.Text,POut.StringParam(wikiPageHist.PageContent));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramPageContent);
 			}
 			else {

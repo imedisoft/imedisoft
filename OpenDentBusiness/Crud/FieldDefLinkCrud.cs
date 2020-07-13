@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one FieldDefLink into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(FieldDefLink fieldDefLink,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO fielddeflink (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				fieldDefLink.FieldDefLinkNum=ReplicationServers.GetKeyNoCache("fielddeflink","FieldDefLinkNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="FieldDefLinkNum,";
 			}
 			command+="FieldDefNum,FieldDefType,FieldLocation) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(fieldDefLink.FieldDefLinkNum)+",";
 			}
 			command+=
 				     POut.Long  (fieldDefLink.FieldDefNum)+","
 				+    POut.Int   ((int)fieldDefLink.FieldDefType)+","
 				+    POut.Int   ((int)fieldDefLink.FieldLocation)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

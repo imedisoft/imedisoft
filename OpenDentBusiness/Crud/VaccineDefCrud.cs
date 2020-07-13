@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one VaccineDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(VaccineDef vaccineDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO vaccinedef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				vaccineDef.VaccineDefNum=ReplicationServers.GetKeyNoCache("vaccinedef","VaccineDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="VaccineDefNum,";
 			}
 			command+="CVXCode,VaccineName,DrugManufacturerNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(vaccineDef.VaccineDefNum)+",";
 			}
 			command+=
 				 "'"+POut.String(vaccineDef.CVXCode)+"',"
 				+"'"+POut.String(vaccineDef.VaccineName)+"',"
 				+    POut.Long  (vaccineDef.DrugManufacturerNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

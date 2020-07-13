@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Ucum into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Ucum ucum,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO ucum (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				ucum.UcumNum=ReplicationServers.GetKeyNoCache("ucum","UcumNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="UcumNum,";
 			}
 			command+="UcumCode,Description,IsInUse) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(ucum.UcumNum)+",";
 			}
 			command+=
 				 "'"+POut.String(ucum.UcumCode)+"',"
 				+"'"+POut.String(ucum.Description)+"',"
 				+    POut.Bool  (ucum.IsInUse)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

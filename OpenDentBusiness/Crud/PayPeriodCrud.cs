@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PayPeriod into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PayPeriod payPeriod,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO payperiod (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				payPeriod.PayPeriodNum=ReplicationServers.GetKeyNoCache("payperiod","PayPeriodNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PayPeriodNum,";
 			}
 			command+="DateStart,DateStop,DatePaycheck) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(payPeriod.PayPeriodNum)+",";
 			}
 			command+=
 				     POut.Date  (payPeriod.DateStart)+","
 				+    POut.Date  (payPeriod.DateStop)+","
 				+    POut.Date  (payPeriod.DatePaycheck)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

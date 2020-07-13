@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DashboardLayout into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DashboardLayout dashboardLayout,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO dashboardlayout (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				dashboardLayout.DashboardLayoutNum=ReplicationServers.GetKeyNoCache("dashboardlayout","DashboardLayoutNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DashboardLayoutNum,";
 			}
 			command+="UserNum,UserGroupNum,DashboardTabName,DashboardTabOrder,DashboardRows,DashboardColumns,DashboardGroupName) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(dashboardLayout.DashboardLayoutNum)+",";
 			}
 			command+=
@@ -146,7 +146,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   (dashboardLayout.DashboardRows)+","
 				+    POut.Int   (dashboardLayout.DashboardColumns)+","
 				+"'"+POut.String(dashboardLayout.DashboardGroupName)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

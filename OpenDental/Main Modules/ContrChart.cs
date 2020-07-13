@@ -623,13 +623,6 @@ namespace OpenDental {
 					ModuleSelected(_patCur.PatNum);
 					return;
 				}
-				if(gridPtInfo.ListGridRows[e.Row].Tag.GetType()==typeof(RegistrationKey)) {
-					FormRegistrationKeyEdit formRKE=new FormRegistrationKeyEdit();
-					formRKE.RegKey=(RegistrationKey)gridPtInfo.ListGridRows[e.Row].Tag;
-					formRKE.ShowDialog();
-					FillPtInfo();
-					return;
-				}
 				if(gridPtInfo.ListGridRows[e.Row].Tag.ToString()=="EhrProvKeys") {
 					FormEhrProvKeysCustomer formEhrPKC=new FormEhrProvKeysCustomer();
 					formEhrPKC.Guarantor=_patCur.Guarantor;

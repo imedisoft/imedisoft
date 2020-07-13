@@ -124,16 +124,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Allergy into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Allergy allergy,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO allergy (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				allergy.AllergyNum=ReplicationServers.GetKeyNoCache("allergy","AllergyNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AllergyNum,";
 			}
 			command+="AllergyDefNum,PatNum,Reaction,StatusIsActive,DateAdverseReaction,SnomedReaction) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(allergy.AllergyNum)+",";
 			}
 			command+=
@@ -144,7 +144,7 @@ namespace OpenDentBusiness.Crud{
 				//DateTStamp can only be set by MySQL
 				+    POut.Date  (allergy.DateAdverseReaction)+","
 				+"'"+POut.String(allergy.SnomedReaction)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

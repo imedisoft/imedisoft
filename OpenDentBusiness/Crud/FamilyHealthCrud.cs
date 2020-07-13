@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one FamilyHealth into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(FamilyHealth familyHealth,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO familyhealth (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				familyHealth.FamilyHealthNum=ReplicationServers.GetKeyNoCache("familyhealth","FamilyHealthNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="FamilyHealthNum,";
 			}
 			command+="PatNum,Relationship,DiseaseDefNum,PersonName) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(familyHealth.FamilyHealthNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   ((int)familyHealth.Relationship)+","
 				+    POut.Long  (familyHealth.DiseaseDefNum)+","
 				+"'"+POut.String(familyHealth.PersonName)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

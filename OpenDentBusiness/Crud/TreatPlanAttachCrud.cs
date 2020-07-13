@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one TreatPlanAttach into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(TreatPlanAttach treatPlanAttach,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO treatplanattach (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				treatPlanAttach.TreatPlanAttachNum=ReplicationServers.GetKeyNoCache("treatplanattach","TreatPlanAttachNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="TreatPlanAttachNum,";
 			}
 			command+="TreatPlanNum,ProcNum,Priority) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(treatPlanAttach.TreatPlanAttachNum)+",";
 			}
 			command+=
 				     POut.Long  (treatPlanAttach.TreatPlanNum)+","
 				+    POut.Long  (treatPlanAttach.ProcNum)+","
 				+    POut.Long  (treatPlanAttach.Priority)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

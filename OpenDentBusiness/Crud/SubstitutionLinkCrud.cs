@@ -173,16 +173,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SubstitutionLink into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SubstitutionLink substitutionLink,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO substitutionlink (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				substitutionLink.SubstitutionLinkNum=ReplicationServers.GetKeyNoCache("substitutionlink","SubstitutionLinkNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SubstitutionLinkNum,";
 			}
 			command+="PlanNum,CodeNum,SubstitutionCode,SubstOnlyIf) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(substitutionLink.SubstitutionLinkNum)+",";
 			}
 			command+=
@@ -190,7 +190,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (substitutionLink.CodeNum)+","
 				+"'"+POut.String(substitutionLink.SubstitutionCode)+"',"
 				+    POut.Int   ((int)substitutionLink.SubstOnlyIf)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

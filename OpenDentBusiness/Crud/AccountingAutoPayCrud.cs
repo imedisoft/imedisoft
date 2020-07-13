@@ -104,22 +104,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one AccountingAutoPay into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(AccountingAutoPay accountingAutoPay,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO accountingautopay (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				accountingAutoPay.AccountingAutoPayNum=ReplicationServers.GetKeyNoCache("accountingautopay","AccountingAutoPayNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AccountingAutoPayNum,";
 			}
 			command+="PayType,PickList) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(accountingAutoPay.AccountingAutoPayNum)+",";
 			}
 			command+=
 				     POut.Long  (accountingAutoPay.PayType)+","
 				+"'"+POut.String(accountingAutoPay.PickList)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

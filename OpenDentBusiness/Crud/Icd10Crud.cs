@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Icd10 into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Icd10 icd10,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO icd10 (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				icd10.Icd10Num=ReplicationServers.GetKeyNoCache("icd10","Icd10Num");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="Icd10Num,";
 			}
 			command+="Icd10Code,Description,IsCode) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(icd10.Icd10Num)+",";
 			}
 			command+=
 				 "'"+POut.String(icd10.Icd10Code)+"',"
 				+"'"+POut.String(icd10.Description)+"',"
 				+"'"+POut.String(icd10.IsCode)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

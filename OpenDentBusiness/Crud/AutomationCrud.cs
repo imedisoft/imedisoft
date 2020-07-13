@@ -148,16 +148,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Automation into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Automation automation,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO automation (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				automation.AutomationNum=ReplicationServers.GetKeyNoCache("automation","AutomationNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AutomationNum,";
 			}
 			command+="Description,Autotrigger,ProcCodes,AutoAction,SheetDefNum,CommType,MessageContent,AptStatus,AppointmentTypeNum,PatStatus) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(automation.AutomationNum)+",";
 			}
 			command+=
@@ -183,7 +183,7 @@ namespace OpenDentBusiness.Crud{
 				automation.MessageContent="";
 			}
 			OdSqlParameter paramMessageContent=new OdSqlParameter("paramMessageContent",OdDbType.Text,POut.StringParam(automation.MessageContent));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDescription,paramProcCodes,paramMessageContent);
 			}
 			else {

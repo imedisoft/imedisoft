@@ -138,16 +138,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Evaluation into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Evaluation evaluation,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO evaluation (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				evaluation.EvaluationNum=ReplicationServers.GetKeyNoCache("evaluation","EvaluationNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EvaluationNum,";
 			}
 			command+="InstructNum,StudentNum,SchoolCourseNum,EvalTitle,DateEval,GradingScaleNum,OverallGradeShowing,OverallGradeNumber,Notes) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(evaluation.EvaluationNum)+",";
 			}
 			command+=
@@ -164,7 +164,7 @@ namespace OpenDentBusiness.Crud{
 				evaluation.Notes="";
 			}
 			OdSqlParameter paramNotes=new OdSqlParameter("paramNotes",OdDbType.Text,POut.StringParam(evaluation.Notes));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNotes);
 			}
 			else {

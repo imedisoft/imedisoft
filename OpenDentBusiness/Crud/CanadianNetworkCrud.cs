@@ -112,16 +112,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one CanadianNetwork into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(CanadianNetwork canadianNetwork,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO canadiannetwork (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				canadianNetwork.CanadianNetworkNum=ReplicationServers.GetKeyNoCache("canadiannetwork","CanadianNetworkNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CanadianNetworkNum,";
 			}
 			command+="Abbrev,Descript,CanadianTransactionPrefix,CanadianIsRprHandler) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(canadianNetwork.CanadianNetworkNum)+",";
 			}
 			command+=
@@ -129,7 +129,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(canadianNetwork.Descript)+"',"
 				+"'"+POut.String(canadianNetwork.CanadianTransactionPrefix)+"',"
 				+    POut.Bool  (canadianNetwork.CanadianIsRprHandler)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

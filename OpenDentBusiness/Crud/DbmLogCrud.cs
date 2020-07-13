@@ -190,16 +190,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DbmLog into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DbmLog dbmLog,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO dbmlog (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				dbmLog.DbmLogNum=ReplicationServers.GetKeyNoCache("dbmlog","DbmLogNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DbmLogNum,";
 			}
 			command+="UserNum,FKey,FKeyType,ActionType,DateTimeEntry,MethodName,LogText) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(dbmLog.DbmLogNum)+",";
 			}
 			command+=
@@ -214,7 +214,7 @@ namespace OpenDentBusiness.Crud{
 				dbmLog.LogText="";
 			}
 			OdSqlParameter paramLogText=new OdSqlParameter("paramLogText",OdDbType.Text,POut.StringParam(dbmLog.LogText));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramLogText);
 			}
 			else {

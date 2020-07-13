@@ -178,16 +178,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Vitalsign into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Vitalsign vitalsign,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO vitalsign (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				vitalsign.VitalsignNum=ReplicationServers.GetKeyNoCache("vitalsign","VitalsignNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="VitalsignNum,";
 			}
 			command+="PatNum,Height,Weight,BpSystolic,BpDiastolic,DateTaken,HasFollowupPlan,IsIneligible,Documentation,ChildGotNutrition,ChildGotPhysCouns,WeightCode,HeightExamCode,WeightExamCode,BMIExamCode,EhrNotPerformedNum,PregDiseaseNum,BMIPercentile,Pulse) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(vitalsign.VitalsignNum)+",";
 			}
 			command+=
@@ -214,7 +214,7 @@ namespace OpenDentBusiness.Crud{
 				vitalsign.Documentation="";
 			}
 			OdSqlParameter paramDocumentation=new OdSqlParameter("paramDocumentation",OdDbType.Text,POut.StringParam(vitalsign.Documentation));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDocumentation);
 			}
 			else {

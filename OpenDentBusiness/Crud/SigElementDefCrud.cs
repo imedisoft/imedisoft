@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SigElementDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SigElementDef sigElementDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO sigelementdef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				sigElementDef.SigElementDefNum=ReplicationServers.GetKeyNoCache("sigelementdef","SigElementDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SigElementDefNum,";
 			}
 			command+="LightRow,LightColor,SigElementType,SigText,Sound,ItemOrder) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(sigElementDef.SigElementDefNum)+",";
 			}
 			command+=
@@ -149,7 +149,7 @@ namespace OpenDentBusiness.Crud{
 				sigElementDef.Sound="";
 			}
 			OdSqlParameter paramSound=new OdSqlParameter("paramSound",OdDbType.Text,POut.StringParam(sigElementDef.Sound));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramSound);
 			}
 			else {

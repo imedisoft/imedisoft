@@ -163,22 +163,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SecurityLogHash into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SecurityLogHash securityLogHash,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO securityloghash (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				securityLogHash.SecurityLogHashNum=ReplicationServers.GetKeyNoCache("securityloghash","SecurityLogHashNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SecurityLogHashNum,";
 			}
 			command+="SecurityLogNum,LogHash) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(securityLogHash.SecurityLogHashNum)+",";
 			}
 			command+=
 				     POut.Long  (securityLogHash.SecurityLogNum)+","
 				+"'"+POut.String(securityLogHash.LogHash)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -140,16 +140,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one CentralConnection into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(CentralConnection centralConnection,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO centralconnection (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				centralConnection.CentralConnectionNum=ReplicationServers.GetKeyNoCache("centralconnection","CentralConnectionNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CentralConnectionNum,";
 			}
 			command+="ServerName,DatabaseName,MySqlUser,MySqlPassword,OdUser,OdPassword,Note,ItemOrder,ConnectionStatus,HasClinicBreakdownReports) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(centralConnection.CentralConnectionNum)+",";
 			}
 			command+=
@@ -167,7 +167,7 @@ namespace OpenDentBusiness.Crud{
 				centralConnection.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(centralConnection.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

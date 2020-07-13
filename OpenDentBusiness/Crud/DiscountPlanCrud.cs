@@ -112,16 +112,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DiscountPlan into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DiscountPlan discountPlan,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO discountplan (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				discountPlan.DiscountPlanNum=ReplicationServers.GetKeyNoCache("discountplan","DiscountPlanNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DiscountPlanNum,";
 			}
 			command+="Description,FeeSchedNum,DefNum,IsHidden) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(discountPlan.DiscountPlanNum)+",";
 			}
 			command+=
@@ -129,7 +129,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (discountPlan.FeeSchedNum)+","
 				+    POut.Long  (discountPlan.DefNum)+","
 				+    POut.Bool  (discountPlan.IsHidden)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

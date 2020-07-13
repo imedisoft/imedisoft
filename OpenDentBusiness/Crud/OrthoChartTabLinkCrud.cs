@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one OrthoChartTabLink into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(OrthoChartTabLink orthoChartTabLink,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO orthocharttablink (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				orthoChartTabLink.OrthoChartTabLinkNum=ReplicationServers.GetKeyNoCache("orthocharttablink","OrthoChartTabLinkNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="OrthoChartTabLinkNum,";
 			}
 			command+="ItemOrder,OrthoChartTabNum,DisplayFieldNum,ColumnWidthOverride) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(orthoChartTabLink.OrthoChartTabLinkNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (orthoChartTabLink.OrthoChartTabNum)+","
 				+    POut.Long  (orthoChartTabLink.DisplayFieldNum)+","
 				+    POut.Int   (orthoChartTabLink.ColumnWidthOverride)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

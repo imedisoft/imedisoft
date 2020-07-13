@@ -138,16 +138,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EServiceSignal into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EServiceSignal eServiceSignal,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO eservicesignal (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				eServiceSignal.EServiceSignalNum=ReplicationServers.GetKeyNoCache("eservicesignal","EServiceSignalNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EServiceSignalNum,";
 			}
 			command+="ServiceCode,ReasonCategory,ReasonCode,Severity,Description,SigDateTime,Tag,IsProcessed) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(eServiceSignal.EServiceSignalNum)+",";
 			}
 			command+=
@@ -167,7 +167,7 @@ namespace OpenDentBusiness.Crud{
 				eServiceSignal.Tag="";
 			}
 			OdSqlParameter paramTag=new OdSqlParameter("paramTag",OdDbType.Text,POut.StringParam(eServiceSignal.Tag));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDescription,paramTag);
 			}
 			else {

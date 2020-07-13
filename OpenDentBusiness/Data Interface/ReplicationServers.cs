@@ -9,7 +9,7 @@ using CodeBase;
 using DataConnectionBase;
 
 namespace OpenDentBusiness{
-	///<summary></summary>
+	[Obsolete]
 	public class ReplicationServers{
 		#region Get Methods
 		#endregion

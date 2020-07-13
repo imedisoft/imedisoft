@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EmailTemplate into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EmailTemplate emailTemplate,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO emailtemplate (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				emailTemplate.EmailTemplateNum=ReplicationServers.GetKeyNoCache("emailtemplate","EmailTemplateNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EmailTemplateNum,";
 			}
 			command+="Subject,BodyText,Description,TemplateType) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(emailTemplate.EmailTemplateNum)+",";
 			}
 			command+=
@@ -155,7 +155,7 @@ namespace OpenDentBusiness.Crud{
 				emailTemplate.Description="";
 			}
 			OdSqlParameter paramDescription=new OdSqlParameter("paramDescription",OdDbType.Text,POut.StringParam(emailTemplate.Description));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramSubject,paramBodyText,paramDescription);
 			}
 			else {

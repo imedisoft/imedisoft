@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one FHIRContactPoint into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(FHIRContactPoint fHIRContactPoint,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO fhircontactpoint (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				fHIRContactPoint.FHIRContactPointNum=ReplicationServers.GetKeyNoCache("fhircontactpoint","FHIRContactPointNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="FHIRContactPointNum,";
 			}
 			command+="FHIRSubscriptionNum,ContactSystem,ContactValue,ContactUse,ItemOrder,DateStart,DateEnd) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(fHIRContactPoint.FHIRContactPointNum)+",";
 			}
 			command+=
@@ -146,7 +146,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   (fHIRContactPoint.ItemOrder)+","
 				+    POut.Date  (fHIRContactPoint.DateStart)+","
 				+    POut.Date  (fHIRContactPoint.DateEnd)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

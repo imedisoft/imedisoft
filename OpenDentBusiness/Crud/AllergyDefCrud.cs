@@ -120,16 +120,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one AllergyDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(AllergyDef allergyDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO allergydef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				allergyDef.AllergyDefNum=ReplicationServers.GetKeyNoCache("allergydef","AllergyDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AllergyDefNum,";
 			}
 			command+="Description,IsHidden,SnomedType,MedicationNum,UniiCode) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(allergyDef.AllergyDefNum)+",";
 			}
 			command+=
@@ -139,7 +139,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   ((int)allergyDef.SnomedType)+","
 				+    POut.Long  (allergyDef.MedicationNum)+","
 				+"'"+POut.String(allergyDef.UniiCode)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

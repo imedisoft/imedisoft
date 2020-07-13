@@ -260,16 +260,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one MedLab into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(MedLab medLab,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO medlab (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				medLab.MedLabNum=ReplicationServers.GetKeyNoCache("medlab","MedLabNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="MedLabNum,";
 			}
 			command+="ProvNum,SendingApp,SendingFacility,PatNum,PatIDLab,PatIDAlt,PatAge,PatAccountNum,PatFasting,SpecimenID,SpecimenIDFiller,ObsTestID,ObsTestDescript,ObsTestLoinc,ObsTestLoincText,DateTimeCollected,TotalVolume,ActionCode,ClinicalInfo,DateTimeEntered,OrderingProvNPI,OrderingProvLocalID,OrderingProvLName,OrderingProvFName,SpecimenIDAlt,DateTimeReported,ResultStatus,ParentObsID,ParentObsTestID,NotePat,NoteLab,FileName,OriginalPIDSegment) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(medLab.MedLabNum)+",";
 			}
 			command+=
@@ -318,7 +318,7 @@ namespace OpenDentBusiness.Crud{
 				medLab.OriginalPIDSegment="";
 			}
 			OdSqlParameter paramOriginalPIDSegment=new OdSqlParameter("paramOriginalPIDSegment",OdDbType.Text,POut.StringParam(medLab.OriginalPIDSegment));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNotePat,paramNoteLab,paramOriginalPIDSegment);
 			}
 			else {

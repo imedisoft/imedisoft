@@ -156,16 +156,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ClaimPayment into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ClaimPayment claimPayment,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO claimpayment (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				claimPayment.ClaimPaymentNum=ReplicationServers.GetKeyNoCache("claimpayment","ClaimPaymentNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ClaimPaymentNum,";
 			}
 			command+="CheckDate,CheckAmt,CheckNum,BankBranch,Note,ClinicNum,DepositNum,CarrierName,DateIssued,IsPartial,PayType,SecUserNumEntry,SecDateEntry,PayGroup) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(claimPayment.ClaimPaymentNum)+",";
 			}
 			command+=
@@ -184,7 +184,7 @@ namespace OpenDentBusiness.Crud{
 				+    DbHelper.Now()+","
 				//SecDateTEdit can only be set by MySQL
 				+    POut.Long  (claimPayment.PayGroup)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

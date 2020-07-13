@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ProcButton into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ProcButton procButton,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO procbutton (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				procButton.ProcButtonNum=ReplicationServers.GetKeyNoCache("procbutton","ProcButtonNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProcButtonNum,";
 			}
 			command+="Description,ItemOrder,Category,ButtonImage,IsMultiVisit) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(procButton.ProcButtonNum)+",";
 			}
 			command+=
@@ -144,7 +144,7 @@ namespace OpenDentBusiness.Crud{
 				procButton.ButtonImage="";
 			}
 			OdSqlParameter paramButtonImage=new OdSqlParameter("paramButtonImage",OdDbType.Text,POut.StringParam(procButton.ButtonImage));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramButtonImage);
 			}
 			else {

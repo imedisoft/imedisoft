@@ -243,16 +243,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PaySplit into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PaySplit paySplit,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO paysplit (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				paySplit.SplitNum=ReplicationServers.GetKeyNoCache("paysplit","SplitNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SplitNum,";
 			}
 			command+="SplitAmt,PatNum,ProcDate,PayNum,IsDiscount,DiscountType,ProvNum,PayPlanNum,DatePay,ProcNum,DateEntry,UnearnedType,ClinicNum,SecUserNumEntry,FSplitNum,AdjNum,PayPlanChargeNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(paySplit.SplitNum)+",";
 			}
 			command+=
@@ -274,7 +274,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (paySplit.FSplitNum)+","
 				+    POut.Long  (paySplit.AdjNum)+","
 				+    POut.Long  (paySplit.PayPlanChargeNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

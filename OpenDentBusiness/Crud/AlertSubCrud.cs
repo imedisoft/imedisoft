@@ -112,16 +112,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one AlertSub into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(AlertSub alertSub,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO alertsub (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				alertSub.AlertSubNum=ReplicationServers.GetKeyNoCache("alertsub","AlertSubNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AlertSubNum,";
 			}
 			command+="UserNum,ClinicNum,Type,AlertCategoryNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(alertSub.AlertSubNum)+",";
 			}
 			command+=
@@ -129,7 +129,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (alertSub.ClinicNum)+","
 				+    POut.Int   ((int)alertSub.Type)+","
 				+    POut.Long  (alertSub.AlertCategoryNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -414,16 +414,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EhrLabResult into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EhrLabResult ehrLabResult,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO ehrlabresult (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				ehrLabResult.EhrLabResultNum=ReplicationServers.GetKeyNoCache("ehrlabresult","EhrLabResultNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EhrLabResultNum,";
 			}
 			command+="EhrLabNum,SetIdOBX,ValueType,ObservationIdentifierID,ObservationIdentifierText,ObservationIdentifierCodeSystemName,ObservationIdentifierIDAlt,ObservationIdentifierTextAlt,ObservationIdentifierCodeSystemNameAlt,ObservationIdentifierTextOriginal,ObservationIdentifierSub,ObservationValueCodedElementID,ObservationValueCodedElementText,ObservationValueCodedElementCodeSystemName,ObservationValueCodedElementIDAlt,ObservationValueCodedElementTextAlt,ObservationValueCodedElementCodeSystemNameAlt,ObservationValueCodedElementTextOriginal,ObservationValueDateTime,ObservationValueTime,ObservationValueComparator,ObservationValueNumber1,ObservationValueSeparatorOrSuffix,ObservationValueNumber2,ObservationValueNumeric,ObservationValueText,UnitsID,UnitsText,UnitsCodeSystemName,UnitsIDAlt,UnitsTextAlt,UnitsCodeSystemNameAlt,UnitsTextOriginal,referenceRange,AbnormalFlags,ObservationResultStatus,ObservationDateTime,AnalysisDateTime,PerformingOrganizationName,PerformingOrganizationNameAssigningAuthorityNamespaceId,PerformingOrganizationNameAssigningAuthorityUniversalId,PerformingOrganizationNameAssigningAuthorityUniversalIdType,PerformingOrganizationIdentifierTypeCode,PerformingOrganizationIdentifier,PerformingOrganizationAddressStreet,PerformingOrganizationAddressOtherDesignation,PerformingOrganizationAddressCity,PerformingOrganizationAddressStateOrProvince,PerformingOrganizationAddressZipOrPostalCode,PerformingOrganizationAddressCountryCode,PerformingOrganizationAddressAddressType,PerformingOrganizationAddressCountyOrParishCode,MedicalDirectorID,MedicalDirectorLName,MedicalDirectorFName,MedicalDirectorMiddleNames,MedicalDirectorSuffix,MedicalDirectorPrefix,MedicalDirectorAssigningAuthorityNamespaceID,MedicalDirectorAssigningAuthorityUniversalID,MedicalDirectorAssigningAuthorityIDType,MedicalDirectorNameTypeCode,MedicalDirectorIdentifierTypeCode) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(ehrLabResult.EhrLabResultNum)+",";
 			}
 			command+=
@@ -490,7 +490,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(ehrLabResult.MedicalDirectorAssigningAuthorityIDType)+"',"
 				+"'"+POut.String(ehrLabResult.MedicalDirectorNameTypeCode.ToString())+"',"
 				+"'"+POut.String(ehrLabResult.MedicalDirectorIdentifierTypeCode.ToString())+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

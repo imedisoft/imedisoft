@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DrugManufacturer into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DrugManufacturer drugManufacturer,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO drugmanufacturer (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				drugManufacturer.DrugManufacturerNum=ReplicationServers.GetKeyNoCache("drugmanufacturer","DrugManufacturerNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DrugManufacturerNum,";
 			}
 			command+="ManufacturerName,ManufacturerCode) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(drugManufacturer.DrugManufacturerNum)+",";
 			}
 			command+=
 				 "'"+POut.String(drugManufacturer.ManufacturerName)+"',"
 				+"'"+POut.String(drugManufacturer.ManufacturerCode)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

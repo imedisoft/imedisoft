@@ -278,16 +278,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Provider into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Provider provider,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO provider (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				provider.ProvNum=ReplicationServers.GetKeyNoCache("provider","ProvNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProvNum,";
 			}
 			command+="Abbr,ItemOrder,LName,FName,MI,Suffix,FeeSched,Specialty,SSN,StateLicense,DEANum,IsSecondary,ProvColor,IsHidden,UsingTIN,BlueCrossID,SigOnFile,MedicaidID,OutlineColor,SchoolClassNum,NationalProvID,CanadianOfficeNum,AnesthProvType,TaxonomyCodeOverride,IsCDAnet,EcwID,StateRxID,IsNotPerson,StateWhereLicensed,EmailAddressNum,IsInstructor,EhrMuStage,ProvNumBillingOverride,CustomID,ProvStatus,IsHiddenReport,IsErxEnabled,SchedNote,Birthdate,WebSchedDescript,WebSchedImageLocation,HourlyProdGoalAmt,DateTerm) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(provider.ProvNum)+",";
 			}
 			command+=
@@ -339,7 +339,7 @@ namespace OpenDentBusiness.Crud{
 				provider.WebSchedDescript="";
 			}
 			OdSqlParameter paramWebSchedDescript=new OdSqlParameter("paramWebSchedDescript",OdDbType.Text,POut.StringParam(provider.WebSchedDescript));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramWebSchedDescript);
 			}
 			else {

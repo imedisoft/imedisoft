@@ -148,16 +148,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ApptView into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ApptView apptView,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO apptview (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				apptView.ApptViewNum=ReplicationServers.GetKeyNoCache("apptview","ApptViewNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ApptViewNum,";
 			}
 			command+="Description,ItemOrder,RowsPerIncr,OnlyScheduledProvs,OnlySchedBeforeTime,OnlySchedAfterTime,StackBehavUR,StackBehavLR,ClinicNum,ApptTimeScrollStart,IsScrollStartDynamic,IsApptBubblesDisabled,WidthOpMinimum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(apptView.ApptViewNum)+",";
 			}
 			command+=
@@ -174,7 +174,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Bool  (apptView.IsScrollStartDynamic)+","
 				+    POut.Bool  (apptView.IsApptBubblesDisabled)+","
 				+    POut.Int   (apptView.WidthOpMinimum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -170,16 +170,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one AutoNote into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(AutoNote autoNote,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO autonote (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				autoNote.AutoNoteNum=ReplicationServers.GetKeyNoCache("autonote","AutoNoteNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AutoNoteNum,";
 			}
 			command+="AutoNoteName,MainText,Category) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(autoNote.AutoNoteNum)+",";
 			}
 			command+=
@@ -190,7 +190,7 @@ namespace OpenDentBusiness.Crud{
 				autoNote.MainText="";
 			}
 			OdSqlParameter paramMainText=new OdSqlParameter("paramMainText",OdDbType.Text,POut.StringParam(autoNote.MainText));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramMainText);
 			}
 			else {

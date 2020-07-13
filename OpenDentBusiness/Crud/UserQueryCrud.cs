@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one UserQuery into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(UserQuery userQuery,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO userquery (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				userQuery.QueryNum=ReplicationServers.GetKeyNoCache("userquery","QueryNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="QueryNum,";
 			}
 			command+="Description,FileName,QueryText,IsReleased,IsPromptSetup) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(userQuery.QueryNum)+",";
 			}
 			command+=
@@ -144,7 +144,7 @@ namespace OpenDentBusiness.Crud{
 				userQuery.QueryText="";
 			}
 			OdSqlParameter paramQueryText=new OdSqlParameter("paramQueryText",OdDbType.Text,POut.StringParam(userQuery.QueryText));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramQueryText);
 			}
 			else {

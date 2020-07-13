@@ -174,16 +174,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Loinc into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Loinc loinc,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO loinc (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				loinc.LoincNum=ReplicationServers.GetKeyNoCache("loinc","LoincNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="LoincNum,";
 			}
 			command+="LoincCode,Component,PropertyObserved,TimeAspct,SystemMeasured,ScaleType,MethodType,StatusOfCode,NameShort,ClassType,UnitsRequired,OrderObs,HL7FieldSubfieldID,ExternalCopyrightNotice,NameLongCommon,UnitsUCUM,RankCommonTests,RankCommonOrders) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(loinc.LoincNum)+",";
 			}
 			command+=
@@ -209,7 +209,7 @@ namespace OpenDentBusiness.Crud{
 				loinc.ExternalCopyrightNotice="";
 			}
 			OdSqlParameter paramExternalCopyrightNotice=new OdSqlParameter("paramExternalCopyrightNotice",OdDbType.Text,POut.StringParam(loinc.ExternalCopyrightNotice));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramExternalCopyrightNotice);
 			}
 			else {

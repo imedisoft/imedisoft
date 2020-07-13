@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Cvx into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Cvx cvx,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO cvx (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				cvx.CvxNum=ReplicationServers.GetKeyNoCache("cvx","CvxNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CvxNum,";
 			}
 			command+="CvxCode,Description,IsActive) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(cvx.CvxNum)+",";
 			}
 			command+=
 				 "'"+POut.String(cvx.CvxCode)+"',"
 				+"'"+POut.String(cvx.Description)+"',"
 				+"'"+POut.String(cvx.IsActive)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

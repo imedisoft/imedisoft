@@ -165,16 +165,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EhrLabResultsCopyTo into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EhrLabResultsCopyTo ehrLabResultsCopyTo,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO ehrlabresultscopyto (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				ehrLabResultsCopyTo.EhrLabResultsCopyToNum=ReplicationServers.GetKeyNoCache("ehrlabresultscopyto","EhrLabResultsCopyToNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EhrLabResultsCopyToNum,";
 			}
 			command+="EhrLabNum,CopyToID,CopyToLName,CopyToFName,CopyToMiddleNames,CopyToSuffix,CopyToPrefix,CopyToAssigningAuthorityNamespaceID,CopyToAssigningAuthorityUniversalID,CopyToAssigningAuthorityIDType,CopyToNameTypeCode,CopyToIdentifierTypeCode) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(ehrLabResultsCopyTo.EhrLabResultsCopyToNum)+",";
 			}
 			command+=
@@ -190,7 +190,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(ehrLabResultsCopyTo.CopyToAssigningAuthorityIDType)+"',"
 				+"'"+POut.String(ehrLabResultsCopyTo.CopyToNameTypeCode.ToString())+"',"
 				+"'"+POut.String(ehrLabResultsCopyTo.CopyToIdentifierTypeCode.ToString())+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

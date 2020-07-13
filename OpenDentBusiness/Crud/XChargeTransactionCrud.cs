@@ -154,16 +154,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one XChargeTransaction into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(XChargeTransaction xChargeTransaction,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO xchargetransaction (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				xChargeTransaction.XChargeTransactionNum=ReplicationServers.GetKeyNoCache("xchargetransaction","XChargeTransactionNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="XChargeTransactionNum,";
 			}
 			command+="TransType,Amount,CCEntry,PatNum,Result,ClerkID,ResultCode,Expiration,CCType,CreditCardNum,BatchNum,ItemNum,ApprCode,TransactionDateTime) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(xChargeTransaction.XChargeTransactionNum)+",";
 			}
 			command+=
@@ -181,7 +181,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(xChargeTransaction.ItemNum)+"',"
 				+"'"+POut.String(xChargeTransaction.ApprCode)+"',"
 				+    POut.DateT (xChargeTransaction.TransactionDateTime)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

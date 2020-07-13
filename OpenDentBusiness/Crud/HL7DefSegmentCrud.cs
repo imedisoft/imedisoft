@@ -135,16 +135,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one HL7DefSegment into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(HL7DefSegment hL7DefSegment,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO hl7defsegment (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				hL7DefSegment.HL7DefSegmentNum=ReplicationServers.GetKeyNoCache("hl7defsegment","HL7DefSegmentNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="HL7DefSegmentNum,";
 			}
 			command+="HL7DefMessageNum,ItemOrder,CanRepeat,IsOptional,SegmentName,Note) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(hL7DefSegment.HL7DefSegmentNum)+",";
 			}
 			command+=
@@ -158,7 +158,7 @@ namespace OpenDentBusiness.Crud{
 				hL7DefSegment.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(hL7DefSegment.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

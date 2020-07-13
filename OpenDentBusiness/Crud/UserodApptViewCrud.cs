@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one UserodApptView into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(UserodApptView userodApptView,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO userodapptview (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				userodApptView.UserodApptViewNum=ReplicationServers.GetKeyNoCache("userodapptview","UserodApptViewNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="UserodApptViewNum,";
 			}
 			command+="UserNum,ClinicNum,ApptViewNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(userodApptView.UserodApptViewNum)+",";
 			}
 			command+=
 				     POut.Long  (userodApptView.UserNum)+","
 				+    POut.Long  (userodApptView.ClinicNum)+","
 				+    POut.Long  (userodApptView.ApptViewNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

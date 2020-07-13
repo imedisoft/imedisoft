@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one StateAbbr into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(StateAbbr stateAbbr,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO stateabbr (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				stateAbbr.StateAbbrNum=ReplicationServers.GetKeyNoCache("stateabbr","StateAbbrNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="StateAbbrNum,";
 			}
 			command+="Description,Abbr,MedicaidIDLength) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(stateAbbr.StateAbbrNum)+",";
 			}
 			command+=
 				 "'"+POut.String(stateAbbr.Description)+"',"
 				+"'"+POut.String(stateAbbr.Abbr)+"',"
 				+    POut.Int   (stateAbbr.MedicaidIDLength)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

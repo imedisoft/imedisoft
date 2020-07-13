@@ -188,16 +188,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one FamAging into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(FamAging famAging,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO famaging (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				famAging.PatNum=ReplicationServers.GetKeyNoCache("famaging","PatNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PatNum,";
 			}
 			command+="Bal_0_30,Bal_31_60,Bal_61_90,BalOver90,InsEst,BalTotal,PayPlanDue) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(famAging.PatNum)+",";
 			}
 			command+=
@@ -208,7 +208,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.Double(famAging.InsEst)+"',"
 				+"'"+POut.Double(famAging.BalTotal)+"',"
 				+"'"+POut.Double(famAging.PayPlanDue)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

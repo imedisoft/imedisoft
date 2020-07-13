@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EClipboardSheetDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EClipboardSheetDef eClipboardSheetDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO eclipboardsheetdef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				eClipboardSheetDef.EClipboardSheetDefNum=ReplicationServers.GetKeyNoCache("eclipboardsheetdef","EClipboardSheetDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EClipboardSheetDefNum,";
 			}
 			command+="SheetDefNum,ClinicNum,ResubmitInterval,ItemOrder) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(eClipboardSheetDef.EClipboardSheetDefNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (eClipboardSheetDef.ClinicNum)+","
 				+"'"+POut.Long(eClipboardSheetDef.ResubmitInterval.Ticks)+"',"
 				+    POut.Int   (eClipboardSheetDef.ItemOrder)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

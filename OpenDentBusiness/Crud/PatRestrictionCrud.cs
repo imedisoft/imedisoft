@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PatRestriction into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PatRestriction patRestriction,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO patrestriction (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				patRestriction.PatRestrictionNum=ReplicationServers.GetKeyNoCache("patrestriction","PatRestrictionNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PatRestrictionNum,";
 			}
 			command+="PatNum,PatRestrictType) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(patRestriction.PatRestrictionNum)+",";
 			}
 			command+=
 				     POut.Long  (patRestriction.PatNum)+","
 				+    POut.Int   ((int)patRestriction.PatRestrictType)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SchoolClass into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SchoolClass schoolClass,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO schoolclass (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				schoolClass.SchoolClassNum=ReplicationServers.GetKeyNoCache("schoolclass","SchoolClassNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SchoolClassNum,";
 			}
 			command+="GradYear,Descript) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(schoolClass.SchoolClassNum)+",";
 			}
 			command+=
 				     POut.Int   (schoolClass.GradYear)+","
 				+"'"+POut.String(schoolClass.Descript)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

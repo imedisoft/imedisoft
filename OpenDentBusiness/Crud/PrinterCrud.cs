@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Printer into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Printer printer,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO printer (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				printer.PrinterNum=ReplicationServers.GetKeyNoCache("printer","PrinterNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PrinterNum,";
 			}
 			command+="ComputerNum,PrintSit,PrinterName,DisplayPrompt) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(printer.PrinterNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   ((int)printer.PrintSit)+","
 				+"'"+POut.String(printer.PrinterName)+"',"
 				+    POut.Bool  (printer.DisplayPrompt)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

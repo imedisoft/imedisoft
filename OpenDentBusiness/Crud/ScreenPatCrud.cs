@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ScreenPat into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ScreenPat screenPat,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO screenpat (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				screenPat.ScreenPatNum=ReplicationServers.GetKeyNoCache("screenpat","ScreenPatNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ScreenPatNum,";
 			}
 			command+="PatNum,ScreenGroupNum,SheetNum,PatScreenPerm) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(screenPat.ScreenPatNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (screenPat.ScreenGroupNum)+","
 				+    POut.Long  (screenPat.SheetNum)+","
 				+    POut.Int   ((int)screenPat.PatScreenPerm)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

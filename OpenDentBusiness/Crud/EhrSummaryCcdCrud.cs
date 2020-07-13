@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EhrSummaryCcd into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EhrSummaryCcd ehrSummaryCcd,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO ehrsummaryccd (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				ehrSummaryCcd.EhrSummaryCcdNum=ReplicationServers.GetKeyNoCache("ehrsummaryccd","EhrSummaryCcdNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EhrSummaryCcdNum,";
 			}
 			command+="PatNum,DateSummary,ContentSummary,EmailAttachNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(ehrSummaryCcd.EhrSummaryCcdNum)+",";
 			}
 			command+=
@@ -139,7 +139,7 @@ namespace OpenDentBusiness.Crud{
 				ehrSummaryCcd.ContentSummary="";
 			}
 			OdSqlParameter paramContentSummary=new OdSqlParameter("paramContentSummary",OdDbType.Text,POut.StringParam(ehrSummaryCcd.ContentSummary));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramContentSummary);
 			}
 			else {

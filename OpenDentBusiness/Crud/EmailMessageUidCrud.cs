@@ -110,16 +110,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EmailMessageUid into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EmailMessageUid emailMessageUid,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO emailmessageuid (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				emailMessageUid.EmailMessageUidNum=ReplicationServers.GetKeyNoCache("emailmessageuid","EmailMessageUidNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EmailMessageUidNum,";
 			}
 			command+="MsgId,RecipientAddress) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(emailMessageUid.EmailMessageUidNum)+",";
 			}
 			command+=
@@ -129,7 +129,7 @@ namespace OpenDentBusiness.Crud{
 				emailMessageUid.MsgId="";
 			}
 			OdSqlParameter paramMsgId=new OdSqlParameter("paramMsgId",OdDbType.Text,POut.StringParam(emailMessageUid.MsgId));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramMsgId);
 			}
 			else {

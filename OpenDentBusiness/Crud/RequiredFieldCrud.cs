@@ -115,22 +115,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one RequiredField into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(RequiredField requiredField,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO requiredfield (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				requiredField.RequiredFieldNum=ReplicationServers.GetKeyNoCache("requiredfield","RequiredFieldNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="RequiredFieldNum,";
 			}
 			command+="FieldType,FieldName) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(requiredField.RequiredFieldNum)+",";
 			}
 			command+=
 				     POut.Int   ((int)requiredField.FieldType)+","
 				+"'"+POut.String(requiredField.FieldName.ToString())+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

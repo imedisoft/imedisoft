@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace OpenDental.UI {
 	//Jordan is the only one allowed to edit this file.
+	//Don't tell me what to do, your not my mom.
 
 	///<summary>Custom button used extensively throughout OD. Typically shows an image and text.  Image is usually 22x22.  Height is usually 24.</summary>
 	public partial class Button : System.Windows.Forms.Button {
@@ -412,8 +413,4 @@ namespace OpenDental.UI {
 		#endregion Method - OnPaint
 
 	}
-
 }
-
-//[\t ]+this\.\w+\.AdjustImageLocation ?= ?new System\.Drawing\.Point\(0,0\);\r\n
-//this.butOK.AdjustImageLocation = new System.Drawing.Point(0, 0);

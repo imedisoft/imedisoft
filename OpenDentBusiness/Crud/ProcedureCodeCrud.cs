@@ -330,16 +330,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ProcedureCode into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ProcedureCode procedureCode,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO procedurecode (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				procedureCode.CodeNum=ReplicationServers.GetKeyNoCache("procedurecode","CodeNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CodeNum,";
 			}
 			command+="ProcCode,Descript,AbbrDesc,ProcTime,ProcCat,TreatArea,NoBillIns,IsProsth,DefaultNote,IsHygiene,GTypeNum,AlternateCode1,MedicalCode,IsTaxed,PaintType,GraphicColor,LaymanTerm,IsCanadianLab,PreExisting,BaseUnits,SubstitutionCode,SubstOnlyIf,IsMultiVisit,DrugNDC,RevenueCodeDefault,ProvNumDefault,CanadaTimeUnits,IsRadiology,DefaultClaimNote,DefaultTPNote,BypassGlobalLock,TaxCode) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(procedureCode.CodeNum)+",";
 			}
 			command+=
@@ -388,7 +388,7 @@ namespace OpenDentBusiness.Crud{
 				procedureCode.DefaultTPNote="";
 			}
 			OdSqlParameter paramDefaultTPNote=new OdSqlParameter("paramDefaultTPNote",OdDbType.Text,POut.StringParam(procedureCode.DefaultTPNote));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDefaultNote,paramDefaultClaimNote,paramDefaultTPNote);
 			}
 			else {

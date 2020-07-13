@@ -210,16 +210,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EhrTrigger into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EhrTrigger ehrTrigger,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO ehrtrigger (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				ehrTrigger.EhrTriggerNum=ReplicationServers.GetKeyNoCache("ehrtrigger","EhrTriggerNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EhrTriggerNum,";
 			}
 			command+="Description,ProblemSnomedList,ProblemIcd9List,ProblemIcd10List,ProblemDefNumList,MedicationNumList,RxCuiList,CvxList,AllergyDefNumList,DemographicsList,LabLoincList,VitalLoincList,Instructions,Bibliography,Cardinality) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(ehrTrigger.EhrTriggerNum)+",";
 			}
 			command+=
@@ -290,7 +290,7 @@ namespace OpenDentBusiness.Crud{
 				ehrTrigger.Bibliography="";
 			}
 			OdSqlParameter paramBibliography=new OdSqlParameter("paramBibliography",OdDbType.Text,POut.StringParam(ehrTrigger.Bibliography));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramProblemSnomedList,paramProblemIcd9List,paramProblemIcd10List,paramProblemDefNumList,paramMedicationNumList,paramRxCuiList,paramCvxList,paramAllergyDefNumList,paramDemographicsList,paramLabLoincList,paramVitalLoincList,paramInstructions,paramBibliography);
 			}
 			else {

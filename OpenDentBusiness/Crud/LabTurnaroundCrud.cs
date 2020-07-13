@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one LabTurnaround into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(LabTurnaround labTurnaround,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO labturnaround (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				labTurnaround.LabTurnaroundNum=ReplicationServers.GetKeyNoCache("labturnaround","LabTurnaroundNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="LabTurnaroundNum,";
 			}
 			command+="LaboratoryNum,Description,DaysPublished,DaysActual) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(labTurnaround.LabTurnaroundNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(labTurnaround.Description)+"',"
 				+    POut.Int   (labTurnaround.DaysPublished)+","
 				+    POut.Int   (labTurnaround.DaysActual)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

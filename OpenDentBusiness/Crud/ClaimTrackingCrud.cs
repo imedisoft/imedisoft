@@ -137,16 +137,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ClaimTracking into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ClaimTracking claimTracking,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO claimtracking (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				claimTracking.ClaimTrackingNum=ReplicationServers.GetKeyNoCache("claimtracking","ClaimTrackingNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ClaimTrackingNum,";
 			}
 			command+="ClaimNum,TrackingType,UserNum,Note,TrackingDefNum,TrackingErrorDefNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(claimTracking.ClaimTrackingNum)+",";
 			}
 			command+=
@@ -161,7 +161,7 @@ namespace OpenDentBusiness.Crud{
 				claimTracking.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(claimTracking.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

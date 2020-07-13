@@ -266,16 +266,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PayPlan into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PayPlan payPlan,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO payplan (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				payPlan.PayPlanNum=ReplicationServers.GetKeyNoCache("payplan","PayPlanNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PayPlanNum,";
 			}
 			command+="PatNum,Guarantor,PayPlanDate,APR,Note,PlanNum,CompletedAmt,InsSubNum,PaySchedule,NumberOfPayments,PayAmt,DownPayment,IsClosed,Signature,SigIsTopaz,PlanCategory,IsDynamic,ChargeFrequency,DatePayPlanStart,IsLocked,DateInterestStart) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(payPlan.PayPlanNum)+",";
 			}
 			command+=
@@ -308,7 +308,7 @@ namespace OpenDentBusiness.Crud{
 				payPlan.Signature="";
 			}
 			OdSqlParameter paramSignature=new OdSqlParameter("paramSignature",OdDbType.Text,POut.StringParam(payPlan.Signature));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote,paramSignature);
 			}
 			else {

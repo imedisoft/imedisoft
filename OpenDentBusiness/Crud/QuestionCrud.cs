@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Question into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Question question,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO question (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				question.QuestionNum=ReplicationServers.GetKeyNoCache("question","QuestionNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="QuestionNum,";
 			}
 			command+="PatNum,ItemOrder,Description,Answer,FormPatNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(question.QuestionNum)+",";
 			}
 			command+=
@@ -152,7 +152,7 @@ namespace OpenDentBusiness.Crud{
 				question.Answer="";
 			}
 			OdSqlParameter paramAnswer=new OdSqlParameter("paramAnswer",OdDbType.Text,POut.StringParam(question.Answer));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDescription,paramAnswer);
 			}
 			else {

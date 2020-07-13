@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ICD9 into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ICD9 iCD9,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO icd9 (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				iCD9.ICD9Num=ReplicationServers.GetKeyNoCache("icd9","ICD9Num");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ICD9Num,";
 			}
 			command+="ICD9Code,Description) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(iCD9.ICD9Num)+",";
 			}
 			command+=
 				 "'"+POut.String(iCD9.ICD9Code)+"',"
 				+"'"+POut.String(iCD9.Description)+"')";
 				//DateTStamp can only be set by MySQL
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

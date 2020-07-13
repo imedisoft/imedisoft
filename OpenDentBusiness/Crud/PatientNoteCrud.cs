@@ -174,16 +174,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PatientNote into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PatientNote patientNote,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO patientnote (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				patientNote.PatNum=ReplicationServers.GetKeyNoCache("patientnote","PatNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PatNum,";
 			}
 			command+="FamFinancial,ApptPhone,Medical,Service,MedicalComp,Treatment,ICEName,ICEPhone,OrthoMonthsTreatOverride,DateOrthoPlacementOverride,SecDateTEntry,Consent) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(patientNote.PatNum)+",";
 			}
 			command+=
@@ -224,7 +224,7 @@ namespace OpenDentBusiness.Crud{
 				patientNote.Treatment="";
 			}
 			OdSqlParameter paramTreatment=new OdSqlParameter("paramTreatment",OdDbType.Text,POut.StringNote(patientNote.Treatment));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramFamFinancial,paramApptPhone,paramMedical,paramService,paramMedicalComp,paramTreatment);
 			}
 			else {

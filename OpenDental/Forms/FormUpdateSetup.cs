@@ -135,8 +135,6 @@ namespace OpenDental{
 			this.textRegKey.ReadOnly = true;
 			this.textRegKey.Size = new System.Drawing.Size(193, 20);
 			this.textRegKey.TabIndex = 40;
-			this.textRegKey.TextChanged += new System.EventHandler(this.textRegKey_TextChanged);
-			this.textRegKey.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textRegKey_KeyUp);
 			// 
 			// label2
 			// 
@@ -310,7 +308,6 @@ namespace OpenDental{
 			this.butChangeRegKey.Size = new System.Drawing.Size(67, 23);
 			this.butChangeRegKey.TabIndex = 50;
 			this.butChangeRegKey.Text = "Change";
-			this.butChangeRegKey.Click += new System.EventHandler(this.butChangeRegKey_Click);
 			// 
 			// butOK
 			// 
@@ -409,57 +406,12 @@ namespace OpenDental{
 			textWebProxyAddress.Text=PrefC.GetString(PrefName.UpdateWebProxyAddress);
 			textWebProxyUserName.Text=PrefC.GetString(PrefName.UpdateWebProxyUserName);
 			textWebProxyPassword.Text=PrefC.GetString(PrefName.UpdateWebProxyPassword);
-			string regkey=PrefC.GetString(PrefName.RegistrationKey);
-			if(regkey.Length==16){
-				textRegKey.Text=regkey.Substring(0,4)+"-"+regkey.Substring(4,4)+"-"+regkey.Substring(8,4)+"-"+regkey.Substring(12,4);
-			}
-			else{
-				textRegKey.Text=regkey;
-			}
 			textMultiple.Text=PrefC.GetString(PrefName.UpdateMultipleDatabases);
 			checkShowMsi.Checked=PrefC.GetBool(PrefName.UpdateShowMsiButtons);
 			_updateTime=PrefC.GetDateT(PrefName.UpdateDateTime);
 			textUpdateTime.Text=_updateTime.ToString();
 			if(PrefC.AtoZfolderUsed!=DataStorageType.LocalAtoZ) {
 				labelRecopy.Text=@"Recopy all of the files from C:\Program Files\Open Dental\ into a special place in the database for future use in updating other computers.";
-			}
-		}
-
-		private void textRegKey_KeyUp(object sender,KeyEventArgs e) {
-			int cursor=textRegKey.SelectionStart;
-			//textRegKey.Text=textRegKey.Text.ToUpper();
-			int length=textRegKey.Text.Length;
-			if(Regex.IsMatch(textRegKey.Text,@"^[A-Z0-9]{5}$")) {
-				textRegKey.Text=textRegKey.Text.Substring(0,4)+"-"+textRegKey.Text.Substring(4);
-			}
-			else if(Regex.IsMatch(textRegKey.Text,@"^[A-Z0-9]{4}-[A-Z0-9]{5}$")) {
-				textRegKey.Text=textRegKey.Text.Substring(0,9)+"-"+textRegKey.Text.Substring(9);
-			}
-			else if(Regex.IsMatch(textRegKey.Text,@"^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{5}$")) {
-				textRegKey.Text=textRegKey.Text.Substring(0,14)+"-"+textRegKey.Text.Substring(14);
-			}
-			if(textRegKey.Text.Length>length) {
-				cursor++;
-			}
-			textRegKey.SelectionStart=cursor;
-		}
-
-		private void textRegKey_TextChanged(object sender,EventArgs e) {
-			int cursor=textRegKey.SelectionStart;
-			textRegKey.Text=textRegKey.Text.ToUpper();
-			textRegKey.SelectionStart=cursor;
-		}
-
-		private void butChangeRegKey_Click(object sender,EventArgs e) {
-			FormRegistrationKey formR=new FormRegistrationKey();
-			formR.ShowDialog();
-			DataValid.SetInvalid(InvalidType.Prefs);
-			string regkey=PrefC.GetString(PrefName.RegistrationKey);
-			if(regkey.Length==16){
-				textRegKey.Text=regkey.Substring(0,4)+"-"+regkey.Substring(4,4)+"-"+regkey.Substring(8,4)+"-"+regkey.Substring(12,4);
-			}
-			else{
-				textRegKey.Text=regkey;
 			}
 		}
 
@@ -531,10 +483,6 @@ namespace OpenDental{
 				| Prefs.UpdateString(PrefName.UpdateWebProxyPassword,textWebProxyPassword.Text)
 				| Prefs.UpdateString(PrefName.UpdateMultipleDatabases,textMultiple.Text)) 
 			{
-				refreshCache=true;
-			}
-			if(Prefs.UpdateString(PrefName.RegistrationKey,regkey)) {
-				FormOpenDental.RegKeyIsForTesting=PrefL.IsRegKeyForTesting();
 				refreshCache=true;
 			}
 			if(refreshCache) {

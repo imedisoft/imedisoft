@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SupplyOrderItem into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SupplyOrderItem supplyOrderItem,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO supplyorderitem (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				supplyOrderItem.SupplyOrderItemNum=ReplicationServers.GetKeyNoCache("supplyorderitem","SupplyOrderItemNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SupplyOrderItemNum,";
 			}
 			command+="SupplyOrderNum,SupplyNum,Qty,Price) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(supplyOrderItem.SupplyOrderItemNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (supplyOrderItem.SupplyNum)+","
 				+    POut.Int   (supplyOrderItem.Qty)+","
 				+"'"+POut.Double(supplyOrderItem.Price)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

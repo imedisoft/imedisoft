@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ReqNeeded into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ReqNeeded reqNeeded,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO reqneeded (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				reqNeeded.ReqNeededNum=ReplicationServers.GetKeyNoCache("reqneeded","ReqNeededNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ReqNeededNum,";
 			}
 			command+="Descript,SchoolCourseNum,SchoolClassNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(reqNeeded.ReqNeededNum)+",";
 			}
 			command+=
 				 "'"+POut.String(reqNeeded.Descript)+"',"
 				+    POut.Long  (reqNeeded.SchoolCourseNum)+","
 				+    POut.Long  (reqNeeded.SchoolClassNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

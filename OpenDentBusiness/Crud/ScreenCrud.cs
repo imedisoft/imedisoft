@@ -166,16 +166,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Screen into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Screen screen,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO screen (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				screen.ScreenNum=ReplicationServers.GetKeyNoCache("screen","ScreenNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ScreenNum,";
 			}
 			command+="Gender,RaceOld,GradeLevel,Age,Urgency,HasCaries,NeedsSealants,CariesExperience,EarlyChildCaries,ExistingSealants,MissingAllTeeth,Birthdate,ScreenGroupNum,ScreenGroupOrder,Comments,ScreenPatNum,SheetNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(screen.ScreenNum)+",";
 			}
 			command+=
@@ -196,7 +196,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(screen.Comments)+"',"
 				+    POut.Long  (screen.ScreenPatNum)+","
 				+    POut.Long  (screen.SheetNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

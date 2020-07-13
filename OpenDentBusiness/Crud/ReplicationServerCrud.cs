@@ -130,16 +130,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ReplicationServer into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ReplicationServer replicationServer,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO replicationserver (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				replicationServer.ReplicationServerNum=ReplicationServers.GetKeyNoCache("replicationserver","ReplicationServerNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ReplicationServerNum,";
 			}
 			command+="Descript,ServerId,RangeStart,RangeEnd,AtoZpath,UpdateBlocked,SlaveMonitor) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(replicationServer.ReplicationServerNum)+",";
 			}
 			command+=
@@ -154,7 +154,7 @@ namespace OpenDentBusiness.Crud{
 				replicationServer.Descript="";
 			}
 			OdSqlParameter paramDescript=new OdSqlParameter("paramDescript",OdDbType.Text,POut.StringParam(replicationServer.Descript));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDescript);
 			}
 			else {

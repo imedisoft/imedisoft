@@ -128,16 +128,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ClaimSnapshot into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ClaimSnapshot claimSnapshot,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO claimsnapshot (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				claimSnapshot.ClaimSnapshotNum=ReplicationServers.GetKeyNoCache("claimsnapshot","ClaimSnapshotNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ClaimSnapshotNum,";
 			}
 			command+="ProcNum,ClaimType,Writeoff,InsPayEst,Fee,DateTEntry,ClaimProcNum,SnapshotTrigger) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(claimSnapshot.ClaimSnapshotNum)+",";
 			}
 			command+=
@@ -149,7 +149,7 @@ namespace OpenDentBusiness.Crud{
 				+    DbHelper.Now()+","
 				+    POut.Long  (claimSnapshot.ClaimProcNum)+","
 				+    POut.Int   ((int)claimSnapshot.SnapshotTrigger)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

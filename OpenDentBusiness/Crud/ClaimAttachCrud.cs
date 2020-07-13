@@ -108,23 +108,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ClaimAttach into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ClaimAttach claimAttach,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO claimattach (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				claimAttach.ClaimAttachNum=ReplicationServers.GetKeyNoCache("claimattach","ClaimAttachNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ClaimAttachNum,";
 			}
 			command+="ClaimNum,DisplayedFileName,ActualFileName) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(claimAttach.ClaimAttachNum)+",";
 			}
 			command+=
 				     POut.Long  (claimAttach.ClaimNum)+","
 				+"'"+POut.String(claimAttach.DisplayedFileName)+"',"
 				+"'"+POut.String(claimAttach.ActualFileName)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

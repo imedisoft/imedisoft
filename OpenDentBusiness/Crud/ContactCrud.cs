@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Contact into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Contact contact,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO contact (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				contact.ContactNum=ReplicationServers.GetKeyNoCache("contact","ContactNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ContactNum,";
 			}
 			command+="LName,FName,WkPhone,Fax,Category,Notes) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(contact.ContactNum)+",";
 			}
 			command+=
@@ -149,7 +149,7 @@ namespace OpenDentBusiness.Crud{
 				contact.Notes="";
 			}
 			OdSqlParameter paramNotes=new OdSqlParameter("paramNotes",OdDbType.Text,POut.StringParam(contact.Notes));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNotes);
 			}
 			else {

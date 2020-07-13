@@ -163,22 +163,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ProcGroupItem into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ProcGroupItem procGroupItem,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO procgroupitem (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				procGroupItem.ProcGroupItemNum=ReplicationServers.GetKeyNoCache("procgroupitem","ProcGroupItemNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProcGroupItemNum,";
 			}
 			command+="ProcNum,GroupNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(procGroupItem.ProcGroupItemNum)+",";
 			}
 			command+=
 				     POut.Long  (procGroupItem.ProcNum)+","
 				+    POut.Long  (procGroupItem.GroupNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

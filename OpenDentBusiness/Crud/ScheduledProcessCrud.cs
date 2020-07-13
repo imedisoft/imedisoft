@@ -132,16 +132,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ScheduledProcess into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ScheduledProcess scheduledProcess,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO scheduledprocess (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				scheduledProcess.ScheduledProcessNum=ReplicationServers.GetKeyNoCache("scheduledprocess","ScheduledProcessNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ScheduledProcessNum,";
 			}
 			command+="ScheduledAction,TimeToRun,FrequencyToRun,LastRanDateTime) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(scheduledProcess.ScheduledProcessNum)+",";
 			}
 			command+=
@@ -149,7 +149,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.DateT (scheduledProcess.TimeToRun)+","
 				+"'"+POut.String(scheduledProcess.FrequencyToRun.ToString())+"',"
 				+    POut.DateT (scheduledProcess.LastRanDateTime)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

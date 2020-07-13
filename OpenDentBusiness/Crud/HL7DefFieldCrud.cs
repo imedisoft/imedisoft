@@ -135,16 +135,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one HL7DefField into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(HL7DefField hL7DefField,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO hl7deffield (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				hL7DefField.HL7DefFieldNum=ReplicationServers.GetKeyNoCache("hl7deffield","HL7DefFieldNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="HL7DefFieldNum,";
 			}
 			command+="HL7DefSegmentNum,OrdinalPos,TableId,DataType,FieldName,FixedText) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(hL7DefField.HL7DefFieldNum)+",";
 			}
 			command+=
@@ -158,7 +158,7 @@ namespace OpenDentBusiness.Crud{
 				hL7DefField.FixedText="";
 			}
 			OdSqlParameter paramFixedText=new OdSqlParameter("paramFixedText",OdDbType.Text,POut.StringParam(hL7DefField.FixedText));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramFixedText);
 			}
 			else {

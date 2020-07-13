@@ -208,16 +208,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EhrMeasureEvent into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EhrMeasureEvent ehrMeasureEvent,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO ehrmeasureevent (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				ehrMeasureEvent.EhrMeasureEventNum=ReplicationServers.GetKeyNoCache("ehrmeasureevent","EhrMeasureEventNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EhrMeasureEventNum,";
 			}
 			command+="DateTEvent,EventType,PatNum,MoreInfo,CodeValueEvent,CodeSystemEvent,CodeValueResult,CodeSystemResult,FKey,DateStartTobacco,TobaccoCessationDesire) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(ehrMeasureEvent.EhrMeasureEventNum)+",";
 			}
 			command+=
@@ -232,7 +232,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (ehrMeasureEvent.FKey)+","
 				+    POut.Date  (ehrMeasureEvent.DateStartTobacco)+","
 				+    POut.Byte  (ehrMeasureEvent.TobaccoCessationDesire)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

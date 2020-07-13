@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DocumentMisc into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DocumentMisc documentMisc,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO documentmisc (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				documentMisc.DocMiscNum=ReplicationServers.GetKeyNoCache("documentmisc","DocMiscNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DocMiscNum,";
 			}
 			command+="DateCreated,FileName,DocMiscType,RawBase64) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(documentMisc.DocMiscNum)+",";
 			}
 			command+=
@@ -139,7 +139,7 @@ namespace OpenDentBusiness.Crud{
 				documentMisc.RawBase64="";
 			}
 			OdSqlParameter paramRawBase64=new OdSqlParameter("paramRawBase64",OdDbType.Text,POut.StringParam(documentMisc.RawBase64));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramRawBase64);
 			}
 			else {

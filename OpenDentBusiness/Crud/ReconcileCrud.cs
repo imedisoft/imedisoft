@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Reconcile into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Reconcile reconcile,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO reconcile (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				reconcile.ReconcileNum=ReplicationServers.GetKeyNoCache("reconcile","ReconcileNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ReconcileNum,";
 			}
 			command+="AccountNum,StartingBal,EndingBal,DateReconcile,IsLocked) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(reconcile.ReconcileNum)+",";
 			}
 			command+=
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.Double(reconcile.EndingBal)+"',"
 				+    POut.Date  (reconcile.DateReconcile)+","
 				+    POut.Bool  (reconcile.IsLocked)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

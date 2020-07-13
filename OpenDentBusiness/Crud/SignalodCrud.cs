@@ -201,16 +201,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Signalod into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Signalod signalod,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO signalod (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				signalod.SignalNum=ReplicationServers.GetKeyNoCache("signalod","SignalNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SignalNum,";
 			}
 			command+="DateViewing,SigDateTime,FKey,FKeyType,IType,RemoteRole,MsgValue) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(signalod.SignalNum)+",";
 			}
 			command+=
@@ -225,7 +225,7 @@ namespace OpenDentBusiness.Crud{
 				signalod.MsgValue="";
 			}
 			OdSqlParameter paramMsgValue=new OdSqlParameter("paramMsgValue",OdDbType.Text,POut.StringParam(signalod.MsgValue));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramMsgValue);
 			}
 			else {

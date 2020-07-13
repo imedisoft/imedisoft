@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Guardian into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Guardian guardian,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO guardian (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				guardian.GuardianNum=ReplicationServers.GetKeyNoCache("guardian","GuardianNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="GuardianNum,";
 			}
 			command+="PatNumChild,PatNumGuardian,Relationship,IsGuardian) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(guardian.GuardianNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (guardian.PatNumGuardian)+","
 				+    POut.Int   ((int)guardian.Relationship)+","
 				+    POut.Bool  (guardian.IsGuardian)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -219,16 +219,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Adjustment into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Adjustment adjustment,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO adjustment (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				adjustment.AdjNum=ReplicationServers.GetKeyNoCache("adjustment","AdjNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AdjNum,";
 			}
 			command+="AdjDate,AdjAmt,PatNum,AdjType,ProvNum,AdjNote,ProcDate,ProcNum,DateEntry,ClinicNum,StatementNum,SecUserNumEntry,TaxTransID) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(adjustment.AdjNum)+",";
 			}
 			command+=
@@ -248,7 +248,7 @@ namespace OpenDentBusiness.Crud{
 				adjustment.AdjNote="";
 			}
 			OdSqlParameter paramAdjNote=new OdSqlParameter("paramAdjNote",OdDbType.Text,POut.StringNote(adjustment.AdjNote));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramAdjNote);
 			}
 			else {

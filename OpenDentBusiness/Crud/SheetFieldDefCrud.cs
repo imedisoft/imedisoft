@@ -214,16 +214,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SheetFieldDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SheetFieldDef sheetFieldDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO sheetfielddef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				sheetFieldDef.SheetFieldDefNum=ReplicationServers.GetKeyNoCache("sheetfielddef","SheetFieldDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SheetFieldDefNum,";
 			}
 			command+="SheetDefNum,FieldType,FieldName,FieldValue,FontSize,FontName,FontIsBold,XPos,YPos,Width,Height,GrowthBehavior,RadioButtonValue,RadioButtonGroup,IsRequired,TabOrder,ReportableName,TextAlign,IsPaymentOption,IsLocked,ItemColor,TabOrderMobile,UiLabelMobile,UiLabelMobileRadioButton,LayoutMode,Language) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(sheetFieldDef.SheetFieldDefNum)+",";
 			}
 			command+=
@@ -265,7 +265,7 @@ namespace OpenDentBusiness.Crud{
 				sheetFieldDef.UiLabelMobileRadioButton="";
 			}
 			OdSqlParameter paramUiLabelMobileRadioButton=new OdSqlParameter("paramUiLabelMobileRadioButton",OdDbType.Text,POut.StringParam(sheetFieldDef.UiLabelMobileRadioButton));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramFieldValue,paramUiLabelMobile,paramUiLabelMobileRadioButton);
 			}
 			else {

@@ -146,16 +146,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one MedicationPat into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(MedicationPat medicationPat,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO medicationpat (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				medicationPat.MedicationPatNum=ReplicationServers.GetKeyNoCache("medicationpat","MedicationPatNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="MedicationPatNum,";
 			}
 			command+="PatNum,MedicationNum,PatNote,DateStart,DateStop,ProvNum,MedDescript,RxCui,ErxGuid,IsCpoe) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(medicationPat.MedicationPatNum)+",";
 			}
 			command+=
@@ -174,7 +174,7 @@ namespace OpenDentBusiness.Crud{
 				medicationPat.PatNote="";
 			}
 			OdSqlParameter paramPatNote=new OdSqlParameter("paramPatNote",OdDbType.Text,POut.StringParam(medicationPat.PatNote));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramPatNote);
 			}
 			else {

@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Sop into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Sop sop,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO sop (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				sop.SopNum=ReplicationServers.GetKeyNoCache("sop","SopNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SopNum,";
 			}
 			command+="SopCode,Description) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(sop.SopNum)+",";
 			}
 			command+=
 				 "'"+POut.String(sop.SopCode)+"',"
 				+"'"+POut.String(sop.Description)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

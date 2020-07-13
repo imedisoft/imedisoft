@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one CovSpan into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(CovSpan covSpan,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO covspan (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				covSpan.CovSpanNum=ReplicationServers.GetKeyNoCache("covspan","CovSpanNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CovSpanNum,";
 			}
 			command+="CovCatNum,FromCode,ToCode) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(covSpan.CovSpanNum)+",";
 			}
 			command+=
 				     POut.Long  (covSpan.CovCatNum)+","
 				+"'"+POut.String(covSpan.FromCode)+"',"
 				+"'"+POut.String(covSpan.ToCode)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

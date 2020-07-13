@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one LoginAttempt into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(LoginAttempt loginAttempt,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO loginattempt (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				loginAttempt.LoginAttemptNum=ReplicationServers.GetKeyNoCache("loginattempt","LoginAttemptNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="LoginAttemptNum,";
 			}
 			command+="UserName,LoginType,DateTFail) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(loginAttempt.LoginAttemptNum)+",";
 			}
 			command+=
 				 "'"+POut.String(loginAttempt.UserName)+"',"
 				+    POut.Int   ((int)loginAttempt.LoginType)+","
 				+    DbHelper.Now()+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

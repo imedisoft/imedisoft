@@ -186,16 +186,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one TreatPlan into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(TreatPlan treatPlan,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO treatplan (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				treatPlan.TreatPlanNum=ReplicationServers.GetKeyNoCache("treatplan","TreatPlanNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="TreatPlanNum,";
 			}
 			command+="PatNum,DateTP,Heading,Note,Signature,SigIsTopaz,ResponsParty,DocNum,TPStatus,SecUserNumEntry,SecDateEntry,UserNumPresenter,TPType,SignaturePractice,DateTSigned,DateTPracticeSigned,SignatureText,SignaturePracticeText) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(treatPlan.TreatPlanNum)+",";
 			}
 			command+=
@@ -230,7 +230,7 @@ namespace OpenDentBusiness.Crud{
 				treatPlan.SignaturePractice="";
 			}
 			OdSqlParameter paramSignaturePractice=new OdSqlParameter("paramSignaturePractice",OdDbType.Text,POut.StringParam(treatPlan.SignaturePractice));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote,paramSignature,paramSignaturePractice);
 			}
 			else {

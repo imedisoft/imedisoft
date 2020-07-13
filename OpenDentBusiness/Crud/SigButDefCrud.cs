@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SigButDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SigButDef sigButDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO sigbutdef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				sigButDef.SigButDefNum=ReplicationServers.GetKeyNoCache("sigbutdef","SigButDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SigButDefNum,";
 			}
 			command+="ButtonText,ButtonIndex,SynchIcon,ComputerName,SigElementDefNumUser,SigElementDefNumExtra,SigElementDefNumMsg) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(sigButDef.SigButDefNum)+",";
 			}
 			command+=
@@ -146,7 +146,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (sigButDef.SigElementDefNumUser)+","
 				+    POut.Long  (sigButDef.SigElementDefNumExtra)+","
 				+    POut.Long  (sigButDef.SigElementDefNumMsg)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

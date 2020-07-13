@@ -131,16 +131,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EhrLabClinicalInfo into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EhrLabClinicalInfo ehrLabClinicalInfo,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO ehrlabclinicalinfo (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				ehrLabClinicalInfo.EhrLabClinicalInfoNum=ReplicationServers.GetKeyNoCache("ehrlabclinicalinfo","EhrLabClinicalInfoNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EhrLabClinicalInfoNum,";
 			}
 			command+="EhrLabNum,ClinicalInfoID,ClinicalInfoText,ClinicalInfoCodeSystemName,ClinicalInfoIDAlt,ClinicalInfoTextAlt,ClinicalInfoCodeSystemNameAlt,ClinicalInfoTextOriginal) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(ehrLabClinicalInfo.EhrLabClinicalInfoNum)+",";
 			}
 			command+=
@@ -152,7 +152,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(ehrLabClinicalInfo.ClinicalInfoTextAlt)+"',"
 				+"'"+POut.String(ehrLabClinicalInfo.ClinicalInfoCodeSystemNameAlt)+"',"
 				+"'"+POut.String(ehrLabClinicalInfo.ClinicalInfoTextOriginal)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

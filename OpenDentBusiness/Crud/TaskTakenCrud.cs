@@ -102,21 +102,21 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one TaskTaken into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(TaskTaken taskTaken,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO tasktaken (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				taskTaken.TaskTakenNum=ReplicationServers.GetKeyNoCache("tasktaken","TaskTakenNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="TaskTakenNum,";
 			}
 			command+="TaskNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(taskTaken.TaskTakenNum)+",";
 			}
 			command+=
 				     POut.Long  (taskTaken.TaskNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

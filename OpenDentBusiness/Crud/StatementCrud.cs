@@ -309,16 +309,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Statement into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Statement statement,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO statement (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				statement.StatementNum=ReplicationServers.GetKeyNoCache("statement","StatementNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="StatementNum,";
 			}
 			command+="PatNum,SuperFamily,DateSent,DateRangeFrom,DateRangeTo,Note,NoteBold,Mode_,HidePayment,SinglePatient,Intermingled,IsSent,DocNum,IsReceipt,IsInvoice,IsInvoiceCopy,EmailSubject,EmailBody,IsBalValid,InsEst,BalTotal,StatementType,ShortGUID,StatementURL,StatementShortURL,SmsSendStatus) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(statement.StatementNum)+",";
 			}
 			command+=
@@ -361,7 +361,7 @@ namespace OpenDentBusiness.Crud{
 				statement.EmailBody="";
 			}
 			OdSqlParameter paramEmailBody=new OdSqlParameter("paramEmailBody",OdDbType.Text,POut.StringParam(statement.EmailBody));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote,paramNoteBold,paramEmailBody);
 			}
 			else {

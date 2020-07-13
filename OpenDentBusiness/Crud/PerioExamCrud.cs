@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PerioExam into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PerioExam perioExam,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO perioexam (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				perioExam.PerioExamNum=ReplicationServers.GetKeyNoCache("perioexam","PerioExamNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PerioExamNum,";
 			}
 			command+="PatNum,ExamDate,ProvNum,DateTMeasureEdit) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(perioExam.PerioExamNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Date  (perioExam.ExamDate)+","
 				+    POut.Long  (perioExam.ProvNum)+","
 				+    DbHelper.Now()+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

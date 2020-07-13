@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one FeeSchedGroup into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(FeeSchedGroup feeSchedGroup,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO feeschedgroup (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				feeSchedGroup.FeeSchedGroupNum=ReplicationServers.GetKeyNoCache("feeschedgroup","FeeSchedGroupNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="FeeSchedGroupNum,";
 			}
 			command+="Description,FeeSchedNum,ClinicNums) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(feeSchedGroup.FeeSchedGroupNum)+",";
 			}
 			command+=
 				 "'"+POut.String(feeSchedGroup.Description)+"',"
 				+    POut.Long  (feeSchedGroup.FeeSchedNum)+","
 				+"'"+POut.String(feeSchedGroup.ClinicNums)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

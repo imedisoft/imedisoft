@@ -154,16 +154,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one InsSub into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(InsSub insSub,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO inssub (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				insSub.InsSubNum=ReplicationServers.GetKeyNoCache("inssub","InsSubNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="InsSubNum,";
 			}
 			command+="PlanNum,Subscriber,DateEffective,DateTerm,ReleaseInfo,AssignBen,SubscriberID,BenefitNotes,SubscNote,SecUserNumEntry,SecDateEntry) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(insSub.InsSubNum)+",";
 			}
 			command+=
@@ -187,7 +187,7 @@ namespace OpenDentBusiness.Crud{
 				insSub.SubscNote="";
 			}
 			OdSqlParameter paramSubscNote=new OdSqlParameter("paramSubscNote",OdDbType.Text,POut.StringParam(insSub.SubscNote));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramBenefitNotes,paramSubscNote);
 			}
 			else {

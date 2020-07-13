@@ -1,41 +1,59 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenDental.UI.Voice {
-	///<summary>Represents one command that a user can give.</summary>
-	public class VoiceCommand {
-		///<summary>The list of input commands that will trigger this action.</summary>
+namespace OpenDental.UI.Voice
+{
+    /// <summary>
+	/// Represents one command that a user can give.
+	/// </summary>
+    public class VoiceCommand
+	{
+		/// <summary>
+		/// The list of input commands that will trigger this action.
+		/// </summary>
 		public List<string> Commands;
-		///<summary>The action to be performed when this command is given.</summary>
+
+		/// <summary>
+		/// The action to be performed when this command is given.
+		/// </summary>
 		public VoiceCommandAction ActionToPerform;
-		///<summary>The areas of the program where this command can be used.</summary>
+
+		/// <summary>
+		/// The areas of the program where this command can be used.
+		/// </summary>
 		public List<VoiceCommandArea> ListAreas;
-		///<summary>The verbal feedback that will be given when this command is executed.</summary>
-		public string Response {
-			get {
-				return _response??ActionToPerform.ToString();
-			}
-			set {
-				_response=value;
-			}
+
+		/// <summary>
+		/// The verbal feedback that will be given when this command is executed.
+		/// </summary>
+		public string Response
+		{
+			get => _response ?? ActionToPerform.ToString();
+			set => _response = value;
 		}
-		///<summary>Whether or not the Response should be spoken when this command is executed.</summary>
-		public bool DoSayResponse=true;
-		///<summary>The verbal feedback that will be given when this command is executed.</summary>
+
+		/// <summary>
+		/// Whether or not the Response should be spoken when this command is executed.
+		/// </summary>
+		public bool DoSayResponse = true;
+
+		/// <summary>
+		/// The verbal feedback that will be given when this command is executed.
+		/// </summary>
 		private string _response;
 
-		public VoiceCommand Copy() {
-			VoiceCommand command=(VoiceCommand)MemberwiseClone();
-			command.Commands=Commands.ToList();
-			command.ListAreas=ListAreas.ToList();
+		public VoiceCommand Copy()
+		{
+			VoiceCommand command = (VoiceCommand)MemberwiseClone();
+			command.Commands = Commands.ToList();
+			command.ListAreas = ListAreas.ToList();
 			return command;
 		}
 	}
 
 	///<summary>All the different actions that can be executed.</summary>
-	public enum VoiceCommandAction {
+	public enum VoiceCommandAction
+	{
 		CreatePerioExam,
 		One,
 		Two,
@@ -1532,8 +1550,9 @@ namespace OpenDental.UI.Voice {
 		No,
 		ResumePath,
 	}
-	
-	public enum VoiceCommandArea {
+
+	public enum VoiceCommandArea
+	{
 		Global,
 		PerioChart,
 		FormOpenDental,

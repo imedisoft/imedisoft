@@ -150,16 +150,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one RefAttach into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(RefAttach refAttach,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO refattach (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				refAttach.RefAttachNum=ReplicationServers.GetKeyNoCache("refattach","RefAttachNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="RefAttachNum,";
 			}
 			command+="ReferralNum,PatNum,ItemOrder,RefDate,RefType,RefToStatus,Note,IsTransitionOfCare,ProcNum,DateProcComplete,ProvNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(refAttach.RefAttachNum)+",";
 			}
 			command+=
@@ -179,7 +179,7 @@ namespace OpenDentBusiness.Crud{
 				refAttach.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(refAttach.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

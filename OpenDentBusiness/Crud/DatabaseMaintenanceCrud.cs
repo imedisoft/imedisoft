@@ -112,16 +112,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DatabaseMaintenance into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DatabaseMaintenance databaseMaintenance,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO databasemaintenance (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				databaseMaintenance.DatabaseMaintenanceNum=ReplicationServers.GetKeyNoCache("databasemaintenance","DatabaseMaintenanceNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DatabaseMaintenanceNum,";
 			}
 			command+="MethodName,IsHidden,IsOld,DateLastRun) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(databaseMaintenance.DatabaseMaintenanceNum)+",";
 			}
 			command+=
@@ -129,7 +129,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Bool  (databaseMaintenance.IsHidden)+","
 				+    POut.Bool  (databaseMaintenance.IsOld)+","
 				+    POut.DateT (databaseMaintenance.DateLastRun)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

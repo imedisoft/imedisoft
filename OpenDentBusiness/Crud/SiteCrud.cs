@@ -138,16 +138,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Site into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Site site,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO site (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				site.SiteNum=ReplicationServers.GetKeyNoCache("site","SiteNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SiteNum,";
 			}
 			command+="Description,Note,Address,Address2,City,State,Zip,ProvNum,PlaceService) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(site.SiteNum)+",";
 			}
 			command+=
@@ -164,7 +164,7 @@ namespace OpenDentBusiness.Crud{
 				site.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(site.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

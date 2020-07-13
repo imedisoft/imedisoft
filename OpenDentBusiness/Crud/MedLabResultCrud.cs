@@ -197,16 +197,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one MedLabResult into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(MedLabResult medLabResult,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO medlabresult (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				medLabResult.MedLabResultNum=ReplicationServers.GetKeyNoCache("medlabresult","MedLabResultNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="MedLabResultNum,";
 			}
 			command+="MedLabNum,ObsID,ObsText,ObsLoinc,ObsLoincText,ObsIDSub,ObsValue,ObsSubType,ObsUnits,ReferenceRange,AbnormalFlag,ResultStatus,DateTimeObs,FacilityID,DocNum,Note) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(medLabResult.MedLabResultNum)+",";
 			}
 			command+=
@@ -234,7 +234,7 @@ namespace OpenDentBusiness.Crud{
 				medLabResult.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(medLabResult.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramObsValue,paramNote);
 			}
 			else {

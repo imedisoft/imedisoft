@@ -75,9 +75,9 @@ namespace OpenDental{
 		private Bitmap bitmapIcon;
 		///<summary>A list of button definitions for this computer.  These button defs display in the lightSignalGrid1 control.</summary>
 		private SigButDef[] SigButDefList;
-		/// <summary>Added these 3 fields for Oracle encrypted connection string</summary>
-		private string connStr;
+		
 		private string key;
+
 		private bool IsMouseDownOnSplitter;
 		private Point PointSplitterOriginalLocation;
 		private Point PointOriginalMouse;
@@ -101,8 +101,6 @@ namespace OpenDental{
 		private Dictionary<string,object> dictTaskListPrefsCache=new Dictionary<string,object>();
 		///<summary>This is used to determine how Open Dental closed.  If this is set to anything but 0 then some kind of error occurred and Open Dental was forced to close.  Currently only used when updating Open Dental silently.</summary>
 		public static int ExitCode=0;
-		///<summary>Will be set to true if the STOP SLAVE SQL was run on the replication server for which the local replication monitor is watching. Replicaiton is NOT broken when this flag is true, because the user can re-enable replicaiton using the START SLAVE SQL without any ill effects. This flag is used to display a warning to the user, but will not ever block the user from using OD.</summary>
-		private bool _isReplicationSlaveStopped=false;
 		///<summary>A specific reference to the "Text" button.  This special reference helps us preserve the notification text on the button after setup is modified.</summary>
 		private ODToolBarButton _butText;
 		///<summary>A specific reference to the "Task" button. This special reference helps us refresh the notification text on the button after the user changes.</summary>
@@ -533,14 +531,7 @@ namespace OpenDental{
 					Application.Exit();//Exits with ExitCode=0
 					return;
 				}
-				if(ReplicationServers.Server_id!=0 && ReplicationServers.Server_id==PrefC.GetLong(PrefName.ReplicationFailureAtServer_id)) {
-					MessageBox.Show("This database is temporarily unavailable.  Please connect instead to your alternate database at the other location.");
-					chooseDatabaseInfo.NoShow=YN.No;//This ensures they will get a choose db window next time through the loop.
-					ReplicationServers.Server_id=-1;
-					formSplash.Close();
-					formSplash=new FormSplash();//force the splash screen to show again.
-					continue;
-				}
+
 				break;
 			}
 			Logger.DoVerboseLogging=PrefC.IsVerboseLoggingSession;
@@ -873,20 +864,7 @@ namespace OpenDental{
 			if(!PrefL.CheckProgramVersion(this,isSilentUpdate,chooseDatabaseInfo)){
 				return false;
 			}
-			if(!FormRegistrationKey.ValidateKey(PrefC.GetString(PrefName.RegistrationKey))){
-				if(isSilentUpdate) {
-					ExitCode=311;//Registration Key could not be validated
-					Environment.Exit(ExitCode);
-					return false;
-				}
-				FormRegistrationKey FormR=new FormRegistrationKey();
-				FormR.ShowDialog();
-				if(FormR.DialogResult!=DialogResult.OK){
-					Environment.Exit(ExitCode);
-					return false;
-				}
-				Cache.Refresh(InvalidType.Prefs);
-			}
+
 			//This must be done at startup in case the user does not perform any action to save something to temp file.
 			//This will cause slowdown, but only for the first week.
 			if(DateTime.Today<PrefC.GetDate(PrefName.TempFolderDateFirstCleaned).AddDays(7)) {
@@ -3345,20 +3323,18 @@ namespace OpenDental{
 				UserControlTasks.RefreshTasksForAllInstances(listSignalTasks);
 			}
 		}
-		
-		///<summary></summary>
+
 		public void ProcessKillCommand() {
 			//It is crucial that every form be forcefully closed so that they do not stay connected to a database that has been updated to a more recent version.
 			CloseOpenForms(true);
 			Application.Exit();//This will call FormOpenDental's closing event which will clean up all threads that are currently running.
 		}
 
-		///<summary></summary>
 		public static void S_ProcessKillCommand() {
 			_formOpenDentalS.ProcessKillCommand();
 		}
 
-		private void myOutlookBar_ButtonClicked(object sender, OpenDental.ButtonClicked_EventArgs e){
+		private void myOutlookBar_ButtonClicked(object sender, ButtonClicked_EventArgs e){
 			switch(moduleBar.SelectedModule){
 				case EnumModuleType.Appointments:
 					if(!Security.IsAuthorized(Permissions.AppointmentsModule)){
@@ -3638,26 +3614,6 @@ namespace OpenDental{
 				FormRE.ShowDialog();
 			}
 			Plugins.HookAddCode(this,"FormOpenDental_KeyDown_end",e);
-		}
-
-		///<summary>Decrypt the connection string and try to connect to the database directly. Only called if using a connection string and ChooseDatabase is not to be shown. Must call GetOraConfig first.</summary>
-		public bool TryWithConnStr() {
-			DataConnection dcon=new DataConnection();
-			try {
-				if(connStr!=null) {
-#if ORA_DB
-					OD_CRYPTO.Decryptor crypto=new OD_CRYPTO.Decryptor();
-					dconnStr=crypto.Decrypt(connStr,key);
-					crypto=null;
-					dcon.SetDb(dconnStr,"",DatabaseType.Oracle);
-#endif
-				}
-				return true;
-			}
-			catch(Exception ex) {
-				MessageBox.Show(ex.Message);
-				return false;
-			}
 		}
 
 		///<summary>This method stops all (local) timers and displays a connection lost window that will let users attempt to reconnect.
@@ -4468,15 +4424,6 @@ namespace OpenDental{
 			FormReactivationSetup FormRS=new FormReactivationSetup();
 			FormRS.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Reactivation");	
-		}
-
-		private void menuItemReplication_Click(object sender,EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.ReplicationSetup)) {
-				return;
-			}
-			FormReplicationSetup FormRS=new FormReplicationSetup();
-			FormRS.ShowDialog();
-			SecurityLogs.MakeLogEntry(Permissions.ReplicationSetup,0,"Replication setup.");
 		}
 		
 		private void menuItemReports_Click(object sender,EventArgs e) {

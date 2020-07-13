@@ -108,23 +108,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Cdcrec into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Cdcrec cdcrec,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO cdcrec (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				cdcrec.CdcrecNum=ReplicationServers.GetKeyNoCache("cdcrec","CdcrecNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CdcrecNum,";
 			}
 			command+="CdcrecCode,HeirarchicalCode,Description) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(cdcrec.CdcrecNum)+",";
 			}
 			command+=
 				 "'"+POut.String(cdcrec.CdcrecCode)+"',"
 				+"'"+POut.String(cdcrec.HeirarchicalCode)+"',"
 				+"'"+POut.String(cdcrec.Description)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

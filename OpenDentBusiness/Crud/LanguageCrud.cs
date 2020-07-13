@@ -126,16 +126,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Language into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Language language,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO language (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				language.LanguageNum=ReplicationServers.GetKeyNoCache("language","LanguageNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="LanguageNum,";
 			}
 			command+="EnglishComments,ClassType,English,IsObsolete) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(language.LanguageNum)+",";
 			}
 			command+=
@@ -155,7 +155,7 @@ namespace OpenDentBusiness.Crud{
 				language.English="";
 			}
 			OdSqlParameter paramEnglish=new OdSqlParameter("paramEnglish",OdDbType.Text,POut.StringParam(language.English));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramEnglishComments,paramClassType,paramEnglish);
 			}
 			else {

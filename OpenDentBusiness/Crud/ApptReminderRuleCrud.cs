@@ -246,16 +246,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ApptReminderRule into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ApptReminderRule apptReminderRule,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO apptreminderrule (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				apptReminderRule.ApptReminderRuleNum=ReplicationServers.GetKeyNoCache("apptreminderrule","ApptReminderRuleNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ApptReminderRuleNum,";
 			}
 			command+="TypeCur,TSPrior,SendOrder,IsSendAll,TemplateSMS,TemplateEmailSubject,TemplateEmail,ClinicNum,TemplateSMSAggShared,TemplateSMSAggPerAppt,TemplateEmailSubjAggShared,TemplateEmailAggShared,TemplateEmailAggPerAppt,DoNotSendWithin,IsEnabled,TemplateAutoReply,TemplateAutoReplyAgg,IsAutoReplyEnabled,Language,EmailTemplateType,AggEmailTemplateType,TemplateComeInMessage) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(apptReminderRule.ApptReminderRuleNum)+",";
 			}
 			command+=
@@ -325,7 +325,7 @@ namespace OpenDentBusiness.Crud{
 				apptReminderRule.TemplateComeInMessage="";
 			}
 			OdSqlParameter paramTemplateComeInMessage=new OdSqlParameter("paramTemplateComeInMessage",OdDbType.Text,POut.StringParam(apptReminderRule.TemplateComeInMessage));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramTemplateSMS,paramTemplateEmailSubject,paramTemplateEmail,paramTemplateSMSAggShared,paramTemplateSMSAggPerAppt,paramTemplateEmailSubjAggShared,paramTemplateEmailAggShared,paramTemplateEmailAggPerAppt,paramTemplateAutoReply,paramTemplateAutoReplyAgg,paramTemplateComeInMessage);
 			}
 			else {

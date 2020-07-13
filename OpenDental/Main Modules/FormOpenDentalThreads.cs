@@ -66,7 +66,6 @@ namespace OpenDental {
 				BeginEServiceMonitorThread();
 				BeginLogOffThread();
 				BeginODServiceMonitorThread();
-				BeginReplicationMonitorThread();
 				BeginUpdateFormTextThread();
 				BeginWebSyncThread();
 				BeginComputerHeartbeatThread();
@@ -709,78 +708,6 @@ namespace OpenDental {
 
 		#endregion
 
-		#region ReplicationMonitorThread
-
-		///<summary>Begins the thread that checks for replication status. Ran every ten seconds.</summary>
-		private void BeginReplicationMonitorThread() {
-			if(IsThreadAlreadyRunning(FormODThreadNames.ReplicationMonitor)) {
-				return;
-			}
-			ODThread odThread=new ODThread((int)TimeSpan.FromSeconds(10).TotalMilliseconds,(o) => { ReplicationMonitorWorker(o); });
-			odThread.AddExceptionHandler((ex) => { });
-			odThread.GroupName=FormODThreadNames.ReplicationMonitor.GetDescription();
-			odThread.Name=FormODThreadNames.ReplicationMonitor.GetDescription();
-			odThread.Start();
-		}
-
-		///<summary>Used to monitor replication.</summary>
-		private void ReplicationMonitorWorker(ODThread o) {
-			if(ReplicationServers.GetCount()==0) {//List will be automatically refreshed if null.
-				return;//user must not be using any replication
-			}
-			bool isSlaveMonitor=ReplicationServers.GetExists(x => x.SlaveMonitor.ToString()==Dns.GetHostName());
-			if(!isSlaveMonitor) {
-				return;
-			}
-			DataTable table=ReplicationServers.GetSlaveStatus();
-			if(table.Rows.Count==0) {
-				return;
-			}
-			string replicatedDbs=table.Rows[0]["Replicate_Do_Db"].ToString().ToLower();
-			string dbName=DataConnection.GetDatabaseName().ToLower();
-			//If multiple databases are being replicated, Replicate_Do_Db will contain the databases separated by a comma. Keep in mind that a database
-			//name can contain a comma.
-			bool isDbReplicated=(!dbName.Contains(',') && replicatedDbs.Split(',').Contains(dbName))
-				|| (dbName.Contains(',') && replicatedDbs.Contains(dbName));
-			if(!isDbReplicated) {
-				return;//if the database we're connected to is not even involved in replication
-			}
-			string statusSqlRunning=table.Rows[0]["Slave_SQL_Running"].ToString().ToUpper();
-			string statusIoRunning=table.Rows[0]["Slave_IO_Running"].ToString().ToUpper();
-			if(statusSqlRunning=="YES" && statusIoRunning=="YES") {
-				_isReplicationSlaveStopped=false;
-				return;
-			}
-			if(table.Rows[0]["Last_Errno"].ToString()=="0" && table.Rows[0]["Last_Error"].ToString()=="") {
-				//The slave SQL is not running, but there was not an error.
-				//This happens when the slave is manually stopped with an SQL statement, but stopping the slave does not hurt anything, so we should not prevent the user from using OD.
-				if(!_isReplicationSlaveStopped) {
-					this.Invoke(() => {
-						_isReplicationSlaveStopped=true;
-						MessageBox.Show(Lan.g(this,"Warning: Replication data receive is off at server ")+ReplicationServers.GetForLocalComputer().Descript+".\r\n"
-							+Lan.g(this,"The server will not receive updates until the slave is started again.")+"\r\n"
-							+Lan.g(this,"Contact your IT admin to run the SQL command START SLAVE."));
-					});
-				}
-				return;
-			}
-			//Shut down all copies of OD and set ReplicationFailureAtServer_id to this server_id
-			//No workstations will be able to connect to this single server while this flag is set.
-			Prefs.UpdateLong(PrefName.ReplicationFailureAtServer_id,ReplicationServers.Server_id);
-			//shut down all workstations on all servers
-			Signalods.SignalLastRefreshed=MiscData.GetNowDateTime().AddSeconds(5);
-			Signalod sig=new Signalod();
-			sig.IType=InvalidType.ShutDownNow;
-			Signalods.Insert(sig);
-			Computers.ClearAllHeartBeats(Environment.MachineName);//always assume success
-			o.QuitAsync();//Quitting the thread here will quit it once this method exits (after the invoke returns).
-			this.Invoke(() => {
-				MessageBox.Show("This database is temporarily unavailable.  Please connect instead to your alternate database at the other location.");
-				Application.Exit();
-			});
-		}
-
-		#endregion
 		#region ShutdownThread
 
 		///<summary>Begins a thread that shutsdown Open Dental.</summary>

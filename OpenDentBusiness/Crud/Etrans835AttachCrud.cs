@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Etrans835Attach into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Etrans835Attach etrans835Attach,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO etrans835attach (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				etrans835Attach.Etrans835AttachNum=ReplicationServers.GetKeyNoCache("etrans835attach","Etrans835AttachNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="Etrans835AttachNum,";
 			}
 			command+="EtransNum,ClaimNum,ClpSegmentIndex,DateTimeEntry) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(etrans835Attach.Etrans835AttachNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (etrans835Attach.ClaimNum)+","
 				+    POut.Int   (etrans835Attach.ClpSegmentIndex)+","
 				+    DbHelper.Now()+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

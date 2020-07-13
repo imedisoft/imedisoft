@@ -146,16 +146,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Employee into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Employee employee,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO employee (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				employee.EmployeeNum=ReplicationServers.GetKeyNoCache("employee","EmployeeNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EmployeeNum,";
 			}
 			command+="LName,FName,MiddleI,IsHidden,ClockStatus,PhoneExt,PayrollID,WirelessPhone,EmailWork,EmailPersonal,IsFurloughed,IsWorkingHome) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(employee.EmployeeNum)+",";
 			}
 			command+=
@@ -171,7 +171,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(employee.EmailPersonal)+"',"
 				+    POut.Bool  (employee.IsFurloughed)+","
 				+    POut.Bool  (employee.IsWorkingHome)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

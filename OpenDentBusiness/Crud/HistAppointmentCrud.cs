@@ -254,16 +254,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one HistAppointment into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(HistAppointment histAppointment,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO histappointment (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				histAppointment.HistApptNum=ReplicationServers.GetKeyNoCache("histappointment","HistApptNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="HistApptNum,";
 			}
 			command+="HistUserNum,HistDateTStamp,HistApptAction,ApptSource,AptNum,PatNum,AptStatus,Pattern,Confirmed,TimeLocked,Op,Note,ProvNum,ProvHyg,AptDateTime,NextAptNum,UnschedStatus,IsNewPatient,ProcDescript,Assistant,ClinicNum,IsHygiene,DateTStamp,DateTimeArrived,DateTimeSeated,DateTimeDismissed,InsPlan1,InsPlan2,DateTimeAskedToArrive,ProcsColored,ColorOverride,AppointmentTypeNum,SecUserNumEntry,SecDateTEntry,Priority,ProvBarText,PatternSecondary) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(histAppointment.HistApptNum)+",";
 			}
 			command+=
@@ -312,7 +312,7 @@ namespace OpenDentBusiness.Crud{
 				histAppointment.ProcsColored="";
 			}
 			OdSqlParameter paramProcsColored=new OdSqlParameter("paramProcsColored",OdDbType.Text,POut.StringParam(histAppointment.ProcsColored));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote,paramProcsColored);
 			}
 			else {

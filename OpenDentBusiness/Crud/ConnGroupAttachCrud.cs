@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ConnGroupAttach into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ConnGroupAttach connGroupAttach,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO conngroupattach (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				connGroupAttach.ConnGroupAttachNum=ReplicationServers.GetKeyNoCache("conngroupattach","ConnGroupAttachNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ConnGroupAttachNum,";
 			}
 			command+="ConnectionGroupNum,CentralConnectionNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(connGroupAttach.ConnGroupAttachNum)+",";
 			}
 			command+=
 				     POut.Long  (connGroupAttach.ConnectionGroupNum)+","
 				+    POut.Long  (connGroupAttach.CentralConnectionNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

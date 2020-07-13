@@ -232,16 +232,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one TsiTransLog into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(TsiTransLog tsiTransLog,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO tsitranslog (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				tsiTransLog.TsiTransLogNum=ReplicationServers.GetKeyNoCache("tsitranslog","TsiTransLogNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="TsiTransLogNum,";
 			}
 			command+="PatNum,UserNum,TransType,TransDateTime,DemandType,ServiceCode,ClientId,TransAmt,AccountBalance,FKeyType,FKey,RawMsgText,TransJson,ClinicNum,AggTransLogNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(tsiTransLog.TsiTransLogNum)+",";
 			}
 			command+=
@@ -264,7 +264,7 @@ namespace OpenDentBusiness.Crud{
 				tsiTransLog.TransJson="";
 			}
 			OdSqlParameter paramTransJson=new OdSqlParameter("paramTransJson",OdDbType.Text,POut.StringParam(tsiTransLog.TransJson));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramTransJson);
 			}
 			else {

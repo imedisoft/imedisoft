@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DisplayReport into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DisplayReport displayReport,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO displayreport (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				displayReport.DisplayReportNum=ReplicationServers.GetKeyNoCache("displayreport","DisplayReportNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DisplayReportNum,";
 			}
 			command+="InternalName,ItemOrder,Description,Category,IsHidden,IsVisibleInSubMenu) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(displayReport.DisplayReportNum)+",";
 			}
 			command+=
@@ -141,7 +141,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   ((int)displayReport.Category)+","
 				+    POut.Bool  (displayReport.IsHidden)+","
 				+    POut.Bool  (displayReport.IsVisibleInSubMenu)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

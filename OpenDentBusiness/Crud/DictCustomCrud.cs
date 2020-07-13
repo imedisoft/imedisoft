@@ -100,21 +100,21 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one DictCustom into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(DictCustom dictCustom,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO dictcustom (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				dictCustom.DictCustomNum=ReplicationServers.GetKeyNoCache("dictcustom","DictCustomNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DictCustomNum,";
 			}
 			command+="WordText) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(dictCustom.DictCustomNum)+",";
 			}
 			command+=
 				 "'"+POut.String(dictCustom.WordText)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

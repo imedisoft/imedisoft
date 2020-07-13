@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Def into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Def def,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO definition (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				def.DefNum=ReplicationServers.GetKeyNoCache("definition","DefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DefNum,";
 			}
 			command+="Category,ItemOrder,ItemName,ItemValue,ItemColor,IsHidden) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(def.DefNum)+",";
 			}
 			command+=
@@ -141,7 +141,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(def.ItemValue)+"',"
 				+    POut.Int   (def.ItemColor.ToArgb())+","
 				+    POut.Bool  (def.IsHidden)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

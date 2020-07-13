@@ -174,16 +174,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Task into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Task task,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO task (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				task.TaskNum=ReplicationServers.GetKeyNoCache("task","TaskNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="TaskNum,";
 			}
 			command+="TaskListNum,DateTask,KeyNum,Descript,TaskStatus,IsRepeating,DateType,FromNum,ObjectType,DateTimeEntry,UserNum,DateTimeFinished,PriorityDefNum,ReminderGroupId,ReminderType,ReminderFrequency,DateTimeOriginal) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(task.TaskNum)+",";
 			}
 			command+=
@@ -209,7 +209,7 @@ namespace OpenDentBusiness.Crud{
 				task.Descript="";
 			}
 			OdSqlParameter paramDescript=new OdSqlParameter("paramDescript",OdDbType.Text,POut.StringParam(task.Descript));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDescript);
 			}
 			else {

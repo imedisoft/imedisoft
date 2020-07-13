@@ -202,16 +202,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ProcTP into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ProcTP procTP,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO proctp (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				procTP.ProcTPNum=ReplicationServers.GetKeyNoCache("proctp","ProcTPNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ProcTPNum,";
 			}
 			command+="TreatPlanNum,PatNum,ProcNumOrig,ItemOrder,Priority,ToothNumTP,Surf,ProcCode,Descript,FeeAmt,PriInsAmt,SecInsAmt,PatAmt,Discount,Prognosis,Dx,ProcAbbr,SecUserNumEntry,SecDateEntry,FeeAllowed,TaxAmt,ProvNum,DateTP,ClinicNum,CatPercUCR) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(procTP.ProcTPNum)+",";
 			}
 			command+=
@@ -241,7 +241,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Date  (procTP.DateTP)+","
 				+    POut.Long  (procTP.ClinicNum)+","
 				+"'"+POut.Double(procTP.CatPercUCR)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

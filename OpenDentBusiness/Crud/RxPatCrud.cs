@@ -190,16 +190,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one RxPat into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(RxPat rxPat,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO rxpat (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				rxPat.RxNum=ReplicationServers.GetKeyNoCache("rxpat","RxNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="RxNum,";
 			}
 			command+="PatNum,RxDate,Drug,Sig,Disp,Refills,ProvNum,Notes,PharmacyNum,IsControlled,SendStatus,RxCui,DosageCode,ErxGuid,IsErxOld,ErxPharmacyInfo,IsProcRequired,ProcNum,DaysOfSupply,PatientInstruction,ClinicNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(rxPat.RxNum)+",";
 			}
 			command+=
@@ -229,7 +229,7 @@ namespace OpenDentBusiness.Crud{
 				rxPat.PatientInstruction="";
 			}
 			OdSqlParameter paramPatientInstruction=new OdSqlParameter("paramPatientInstruction",OdDbType.Text,POut.StringParam(rxPat.PatientInstruction));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramPatientInstruction);
 			}
 			else {

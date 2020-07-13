@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EmailAttach into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EmailAttach emailAttach,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO emailattach (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				emailAttach.EmailAttachNum=ReplicationServers.GetKeyNoCache("emailattach","EmailAttachNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EmailAttachNum,";
 			}
 			command+="EmailMessageNum,DisplayedFileName,ActualFileName,EmailTemplateNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(emailAttach.EmailAttachNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(emailAttach.DisplayedFileName)+"',"
 				+"'"+POut.String(emailAttach.ActualFileName)+"',"
 				+    POut.Long  (emailAttach.EmailTemplateNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -112,16 +112,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ApptFieldDef into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ApptFieldDef apptFieldDef,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO apptfielddef (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				apptFieldDef.ApptFieldDefNum=ReplicationServers.GetKeyNoCache("apptfielddef","ApptFieldDefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ApptFieldDefNum,";
 			}
 			command+="FieldName,FieldType,PickList) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(apptFieldDef.ApptFieldDefNum)+",";
 			}
 			command+=
@@ -132,7 +132,7 @@ namespace OpenDentBusiness.Crud{
 				apptFieldDef.PickList="";
 			}
 			OdSqlParameter paramPickList=new OdSqlParameter("paramPickList",OdDbType.Text,POut.StringParam(apptFieldDef.PickList));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramPickList);
 			}
 			else {

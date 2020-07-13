@@ -138,16 +138,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one LabPanel into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(LabPanel labPanel,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO labpanel (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				labPanel.LabPanelNum=ReplicationServers.GetKeyNoCache("labpanel","LabPanelNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="LabPanelNum,";
 			}
 			command+="PatNum,RawMessage,LabNameAddress,SpecimenCondition,SpecimenSource,ServiceId,ServiceName,MedicalOrderNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(labPanel.LabPanelNum)+",";
 			}
 			command+=
@@ -164,7 +164,7 @@ namespace OpenDentBusiness.Crud{
 				labPanel.RawMessage="";
 			}
 			OdSqlParameter paramRawMessage=new OdSqlParameter("paramRawMessage",OdDbType.Text,POut.StringParam(labPanel.RawMessage));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramRawMessage);
 			}
 			else {

@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one InsFilingCodeSubtype into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(InsFilingCodeSubtype insFilingCodeSubtype,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO insfilingcodesubtype (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				insFilingCodeSubtype.InsFilingCodeSubtypeNum=ReplicationServers.GetKeyNoCache("insfilingcodesubtype","InsFilingCodeSubtypeNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="InsFilingCodeSubtypeNum,";
 			}
 			command+="InsFilingCodeNum,Descript) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(insFilingCodeSubtype.InsFilingCodeSubtypeNum)+",";
 			}
 			command+=
 				     POut.Long  (insFilingCodeSubtype.InsFilingCodeNum)+","
 				+"'"+POut.String(insFilingCodeSubtype.Descript)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

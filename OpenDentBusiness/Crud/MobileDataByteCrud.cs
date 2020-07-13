@@ -138,16 +138,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one MobileDataByte into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(MobileDataByte mobileDataByte,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO mobiledatabyte (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				mobileDataByte.MobileDataByteNum=ReplicationServers.GetKeyNoCache("mobiledatabyte","MobileDataByteNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="MobileDataByteNum,";
 			}
 			command+="RawBase64Data,RawBase64Code,RawBase64Tag,PatNum,ActionType,DateTimeEntry,DateTimeExpires) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(mobileDataByte.MobileDataByteNum)+",";
 			}
 			command+=
@@ -170,7 +170,7 @@ namespace OpenDentBusiness.Crud{
 				mobileDataByte.RawBase64Tag="";
 			}
 			OdSqlParameter paramRawBase64Tag=new OdSqlParameter("paramRawBase64Tag",OdDbType.Text,POut.StringParam(mobileDataByte.RawBase64Tag));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramRawBase64Data,paramRawBase64Code,paramRawBase64Tag);
 			}
 			else {

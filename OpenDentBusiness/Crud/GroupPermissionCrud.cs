@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one GroupPermission into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(GroupPermission groupPermission,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO grouppermission (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				groupPermission.GroupPermNum=ReplicationServers.GetKeyNoCache("grouppermission","GroupPermNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="GroupPermNum,";
 			}
 			command+="NewerDate,NewerDays,UserGroupNum,PermType,FKey) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(groupPermission.GroupPermNum)+",";
 			}
 			command+=
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (groupPermission.UserGroupNum)+","
 				+    POut.Int   ((int)groupPermission.PermType)+","
 				+    POut.Long  (groupPermission.FKey)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

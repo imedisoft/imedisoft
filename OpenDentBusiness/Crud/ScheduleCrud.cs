@@ -212,16 +212,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Schedule into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Schedule schedule,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO schedule (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				schedule.ScheduleNum=ReplicationServers.GetKeyNoCache("schedule","ScheduleNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ScheduleNum,";
 			}
 			command+="SchedDate,StartTime,StopTime,SchedType,ProvNum,BlockoutType,Note,Status,EmployeeNum,ClinicNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(schedule.ScheduleNum)+",";
 			}
 			command+=
@@ -240,7 +240,7 @@ namespace OpenDentBusiness.Crud{
 				schedule.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(schedule.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

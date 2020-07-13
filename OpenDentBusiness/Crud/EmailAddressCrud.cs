@@ -142,16 +142,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EmailAddress into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EmailAddress emailAddress,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO emailaddress (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				emailAddress.EmailAddressNum=ReplicationServers.GetKeyNoCache("emailaddress","EmailAddressNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EmailAddressNum,";
 			}
 			command+="SMTPserver,EmailUsername,EmailPassword,ServerPort,UseSSL,SenderAddress,Pop3ServerIncoming,ServerPortIncoming,UserNum,AccessToken,RefreshToken) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(emailAddress.EmailAddressNum)+",";
 			}
 			command+=
@@ -166,7 +166,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (emailAddress.UserNum)+","
 				+"'"+POut.String(emailAddress.AccessToken)+"',"
 				+"'"+POut.String(emailAddress.RefreshToken)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

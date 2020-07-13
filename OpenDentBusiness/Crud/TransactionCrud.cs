@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Transaction into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Transaction transaction,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO transaction (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				transaction.TransactionNum=ReplicationServers.GetKeyNoCache("transaction","TransactionNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="TransactionNum,";
 			}
 			command+="DateTimeEntry,UserNum,DepositNum,PayNum,SecUserNumEdit) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(transaction.TransactionNum)+",";
 			}
 			command+=
@@ -141,7 +141,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (transaction.PayNum)+","
 				+    POut.Long  (transaction.SecUserNumEdit)+")";
 				//SecDateTEdit can only be set by MySQL
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

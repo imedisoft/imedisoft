@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one OrthoPlanLink into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(OrthoPlanLink orthoPlanLink,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO orthoplanlink (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				orthoPlanLink.OrthoPlanLinkNum=ReplicationServers.GetKeyNoCache("orthoplanlink","OrthoPlanLinkNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="OrthoPlanLinkNum,";
 			}
 			command+="OrthoCaseNum,LinkType,FKey,IsActive,SecDateTEntry,SecUserNumEntry) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(orthoPlanLink.OrthoPlanLinkNum)+",";
 			}
 			command+=
@@ -141,7 +141,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Bool  (orthoPlanLink.IsActive)+","
 				+    DbHelper.Now()+","
 				+    POut.Long  (orthoPlanLink.SecUserNumEntry)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -162,16 +162,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one OrthoCase into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(OrthoCase orthoCase,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO orthocase (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				orthoCase.OrthoCaseNum=ReplicationServers.GetKeyNoCache("orthocase","OrthoCaseNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="OrthoCaseNum,";
 			}
 			command+="PatNum,ProvNum,ClinicNum,Fee,FeeInsPrimary,FeePat,BandingDate,DebondDate,DebondDateExpected,IsTransfer,OrthoType,SecDateTEntry,SecUserNumEntry,IsActive,FeeInsSecondary) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(orthoCase.OrthoCaseNum)+",";
 			}
 			command+=
@@ -191,7 +191,7 @@ namespace OpenDentBusiness.Crud{
 				//SecDateTEdit can only be set by MySQL
 				+    POut.Bool  (orthoCase.IsActive)+","
 				+"'"+POut.Double(orthoCase.FeeInsSecondary)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

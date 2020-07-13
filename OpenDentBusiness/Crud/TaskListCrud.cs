@@ -138,16 +138,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one TaskList into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(TaskList taskList,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO tasklist (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				taskList.TaskListNum=ReplicationServers.GetKeyNoCache("tasklist","TaskListNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="TaskListNum,";
 			}
 			command+="Descript,Parent,DateTL,IsRepeating,DateType,FromNum,ObjectType,DateTimeEntry,GlobalTaskFilterType,TaskListStatus) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(taskList.TaskListNum)+",";
 			}
 			command+=
@@ -161,7 +161,7 @@ namespace OpenDentBusiness.Crud{
 				+    DbHelper.Now()+","
 				+    POut.Int   ((int)taskList.GlobalTaskFilterType)+","
 				+    POut.Int   ((int)taskList.TaskListStatus)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

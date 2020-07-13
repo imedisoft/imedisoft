@@ -150,16 +150,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Dunning into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Dunning dunning,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO dunning (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				dunning.DunningNum=ReplicationServers.GetKeyNoCache("dunning","DunningNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="DunningNum,";
 			}
 			command+="DunMessage,BillingType,AgeAccount,InsIsPending,MessageBold,EmailSubject,EmailBody,DaysInAdvance,ClinicNum,IsSuperFamily) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(dunning.DunningNum)+",";
 			}
 			command+=
@@ -185,7 +185,7 @@ namespace OpenDentBusiness.Crud{
 				dunning.EmailBody="";
 			}
 			OdSqlParameter paramEmailBody=new OdSqlParameter("paramEmailBody",OdDbType.Text,POut.StringParam(dunning.EmailBody));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramDunMessage,paramMessageBold,paramEmailBody);
 			}
 			else {

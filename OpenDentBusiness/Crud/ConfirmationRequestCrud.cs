@@ -339,16 +339,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ConfirmationRequest into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ConfirmationRequest confirmationRequest,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO confirmationrequest (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				confirmationRequest.ConfirmationRequestNum=ReplicationServers.GetKeyNoCache("confirmationrequest","ConfirmationRequestNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ConfirmationRequestNum,";
 			}
 			command+="ClinicNum,IsForSms,IsForEmail,PatNum,ApptNum,PhonePat,DateTimeConfirmExpire,SecondsFromEntryToExpire,ShortGUID,ConfirmCode,MsgTextToMobileTemplate,MsgTextToMobile,EmailSubjTemplate,EmailSubj,EmailTextTemplate,EmailText,DateTimeEntry,DateTimeConfirmTransmit,DateTimeRSVP,RSVPStatus,ResponseDescript,GuidMessageToMobile,GuidMessageFromMobile,ShortGuidEmail,AptDateTimeOrig,TSPrior,SmsSentOk,EmailSentOk,DoNotResend,ApptReminderRuleNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(confirmationRequest.ConfirmationRequestNum)+",";
 			}
 			command+=
@@ -418,7 +418,7 @@ namespace OpenDentBusiness.Crud{
 				confirmationRequest.GuidMessageFromMobile="";
 			}
 			OdSqlParameter paramGuidMessageFromMobile=new OdSqlParameter("paramGuidMessageFromMobile",OdDbType.Text,POut.StringParam(confirmationRequest.GuidMessageFromMobile));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramMsgTextToMobileTemplate,paramMsgTextToMobile,paramEmailSubjTemplate,paramEmailSubj,paramEmailTextTemplate,paramEmailText,paramResponseDescript,paramGuidMessageToMobile,paramGuidMessageFromMobile);
 			}
 			else {

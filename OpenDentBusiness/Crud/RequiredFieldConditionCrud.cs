@@ -127,16 +127,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one RequiredFieldCondition into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(RequiredFieldCondition requiredFieldCondition,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO requiredfieldcondition (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				requiredFieldCondition.RequiredFieldConditionNum=ReplicationServers.GetKeyNoCache("requiredfieldcondition","RequiredFieldConditionNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="RequiredFieldConditionNum,";
 			}
 			command+="RequiredFieldNum,ConditionType,Operator,ConditionValue,ConditionRelationship) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(requiredFieldCondition.RequiredFieldConditionNum)+",";
 			}
 			command+=
@@ -145,7 +145,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   ((int)requiredFieldCondition.Operator)+","
 				+"'"+POut.String(requiredFieldCondition.ConditionValue)+"',"
 				+    POut.Int   ((int)requiredFieldCondition.ConditionRelationship)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

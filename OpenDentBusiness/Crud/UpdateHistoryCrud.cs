@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one UpdateHistory into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(UpdateHistory updateHistory,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO updatehistory (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				updateHistory.UpdateHistoryNum=ReplicationServers.GetKeyNoCache("updatehistory","UpdateHistoryNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="UpdateHistoryNum,";
 			}
 			command+="DateTimeUpdated,ProgramVersion) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(updateHistory.UpdateHistoryNum)+",";
 			}
 			command+=
 				     DbHelper.Now()+","
 				+"'"+POut.String(updateHistory.ProgramVersion)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

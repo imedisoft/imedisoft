@@ -120,16 +120,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one AppointmentType into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(AppointmentType appointmentType,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO appointmenttype (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				appointmentType.AppointmentTypeNum=ReplicationServers.GetKeyNoCache("appointmenttype","AppointmentTypeNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AppointmentTypeNum,";
 			}
 			command+="AppointmentTypeName,AppointmentTypeColor,ItemOrder,IsHidden,Pattern,CodeStr) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(appointmentType.AppointmentTypeNum)+",";
 			}
 			command+=
@@ -139,7 +139,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Bool  (appointmentType.IsHidden)+","
 				+"'"+POut.String(appointmentType.Pattern)+"',"
 				+"'"+POut.String(appointmentType.CodeStr)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

@@ -48,21 +48,6 @@ namespace OpenDental.User_Controls.SetupWizard {
 			//}
 		}
 
-		private void butChangeRegKey_Click(object sender,EventArgs e) {
-			FormRegistrationKey formR = new FormRegistrationKey();
-			formR.ShowDialog();
-			DataValid.SetInvalid(InvalidType.Prefs);
-			string regkey = PrefC.GetString(PrefName.RegistrationKey);
-			if(regkey.Length==16) {
-				textRegKey.Text=regkey.Substring(0,4)+"-"+regkey.Substring(4,4)+"-"+regkey.Substring(8,4)+"-"+regkey.Substring(12,4);
-			}
-			else {
-				textRegKey.Text=regkey;
-			}
-			IsDone=!string.IsNullOrEmpty(textRegKey.Text);
-			groupProcTools.Enabled=IsDone;
-		}
-
 		private void butAdvanced_Click(object sender,EventArgs e) {
 			new FormUpdateSetup().ShowDialog();
 			FillControls();

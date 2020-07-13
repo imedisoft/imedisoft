@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one MedLabFacAttach into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(MedLabFacAttach medLabFacAttach,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO medlabfacattach (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				medLabFacAttach.MedLabFacAttachNum=ReplicationServers.GetKeyNoCache("medlabfacattach","MedLabFacAttachNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="MedLabFacAttachNum,";
 			}
 			command+="MedLabNum,MedLabResultNum,MedLabFacilityNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(medLabFacAttach.MedLabFacAttachNum)+",";
 			}
 			command+=
 				     POut.Long  (medLabFacAttach.MedLabNum)+","
 				+    POut.Long  (medLabFacAttach.MedLabResultNum)+","
 				+    POut.Long  (medLabFacAttach.MedLabFacilityNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

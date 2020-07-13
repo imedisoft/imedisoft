@@ -150,16 +150,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one InsVerifyHist into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(InsVerifyHist insVerifyHist,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO insverifyhist (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				insVerifyHist.InsVerifyHistNum=ReplicationServers.GetKeyNoCache("insverifyhist","InsVerifyHistNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="InsVerifyHistNum,";
 			}
 			command+="VerifyUserNum,InsVerifyNum,DateLastVerified,UserNum,VerifyType,FKey,DefNum,DateLastAssigned,Note,DateTimeEntry,HoursAvailableForVerification,SecDateTEdit) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(insVerifyHist.InsVerifyHistNum)+",";
 			}
 			command+=
@@ -179,7 +179,7 @@ namespace OpenDentBusiness.Crud{
 				insVerifyHist.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringNote(insVerifyHist.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

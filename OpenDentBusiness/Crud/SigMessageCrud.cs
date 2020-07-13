@@ -142,16 +142,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SigMessage into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SigMessage sigMessage,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO sigmessage (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				sigMessage.SigMessageNum=ReplicationServers.GetKeyNoCache("sigmessage","SigMessageNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SigMessageNum,";
 			}
 			command+="ButtonText,ButtonIndex,SynchIcon,FromUser,ToUser,MessageDateTime,AckDateTime,SigText,SigElementDefNumUser,SigElementDefNumExtra,SigElementDefNumMsg) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(sigMessage.SigMessageNum)+",";
 			}
 			command+=
@@ -166,7 +166,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (sigMessage.SigElementDefNumUser)+","
 				+    POut.Long  (sigMessage.SigElementDefNumExtra)+","
 				+    POut.Long  (sigMessage.SigElementDefNumMsg)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

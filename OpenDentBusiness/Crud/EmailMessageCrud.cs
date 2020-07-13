@@ -202,16 +202,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EmailMessage into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EmailMessage emailMessage,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO emailmessage (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				emailMessage.EmailMessageNum=ReplicationServers.GetKeyNoCache("emailmessage","EmailMessageNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EmailMessageNum,";
 			}
 			command+="PatNum,ToAddress,FromAddress,Subject,BodyText,MsgDateTime,SentOrReceived,RecipientAddress,RawEmailIn,ProvNumWebMail,PatNumSubj,CcAddress,BccAddress,HideIn,AptNum,UserNum,HtmlType,SecDateTEntry) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(emailMessage.EmailMessageNum)+",";
 			}
 			command+=
@@ -262,7 +262,7 @@ namespace OpenDentBusiness.Crud{
 				emailMessage.BccAddress="";
 			}
 			OdSqlParameter paramBccAddress=new OdSqlParameter("paramBccAddress",OdDbType.Text,POut.StringParam(emailMessage.BccAddress));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramToAddress,paramFromAddress,paramSubject,paramBodyText,paramRawEmailIn,paramCcAddress,paramBccAddress);
 			}
 			else {

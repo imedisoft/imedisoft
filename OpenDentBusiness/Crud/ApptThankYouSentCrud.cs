@@ -303,16 +303,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ApptThankYouSent into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ApptThankYouSent apptThankYouSent,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO apptthankyousent (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				apptThankYouSent.ApptThankYouSentNum=ReplicationServers.GetKeyNoCache("apptthankyousent","ApptThankYouSentNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ApptThankYouSentNum,";
 			}
 			command+="ApptNum,ApptDateTime,ApptSecDateTEntry,TSPrior,ApptReminderRuleNum,SmsSentStatus,EmailSentStatus,IsForSms,IsForEmail,ClinicNum,PatNum,PhonePat,ResponseDescript,GuidMessageToMobile,MsgTextToMobileTemplate,MsgTextToMobile,EmailSubjTemplate,EmailSubj,EmailTextTemplate,EmailText,DateTimeThankYouTransmit,ShortGuidEmail,ShortGUID,DoNotResend) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(apptThankYouSent.ApptThankYouSentNum)+",";
 			}
 			command+=
@@ -372,7 +372,7 @@ namespace OpenDentBusiness.Crud{
 				apptThankYouSent.EmailText="";
 			}
 			OdSqlParameter paramEmailText=new OdSqlParameter("paramEmailText",OdDbType.Text,POut.StringParam(apptThankYouSent.EmailText));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramResponseDescript,paramGuidMessageToMobile,paramMsgTextToMobileTemplate,paramMsgTextToMobile,paramEmailSubjTemplate,paramEmailSubj,paramEmailTextTemplate,paramEmailText);
 			}
 			else {

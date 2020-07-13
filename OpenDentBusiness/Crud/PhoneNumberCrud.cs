@@ -173,16 +173,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one PhoneNumber into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(PhoneNumber phoneNumber,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO phonenumber (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				phoneNumber.PhoneNumberNum=ReplicationServers.GetKeyNoCache("phonenumber","PhoneNumberNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="PhoneNumberNum,";
 			}
 			command+="PatNum,PhoneNumberVal,PhoneNumberDigits,PhoneType) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(phoneNumber.PhoneNumberNum)+",";
 			}
 			command+=
@@ -190,7 +190,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(phoneNumber.PhoneNumberVal)+"',"
 				+"'"+POut.String(phoneNumber.PhoneNumberDigits)+"',"
 				+    POut.Int   ((int)phoneNumber.PhoneType)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

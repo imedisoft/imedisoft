@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Hcpcs into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Hcpcs hcpcs,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO hcpcs (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				hcpcs.HcpcsNum=ReplicationServers.GetKeyNoCache("hcpcs","HcpcsNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="HcpcsNum,";
 			}
 			command+="HcpcsCode,DescriptionShort) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(hcpcs.HcpcsNum)+",";
 			}
 			command+=
 				 "'"+POut.String(hcpcs.HcpcsCode)+"',"
 				+"'"+POut.String(hcpcs.DescriptionShort)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

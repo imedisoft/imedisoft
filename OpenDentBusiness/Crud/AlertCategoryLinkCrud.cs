@@ -104,22 +104,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one AlertCategoryLink into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(AlertCategoryLink alertCategoryLink,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO alertcategorylink (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				alertCategoryLink.AlertCategoryLinkNum=ReplicationServers.GetKeyNoCache("alertcategorylink","AlertCategoryLinkNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="AlertCategoryLinkNum,";
 			}
 			command+="AlertCategoryNum,AlertType) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(alertCategoryLink.AlertCategoryLinkNum)+",";
 			}
 			command+=
 				     POut.Long  (alertCategoryLink.AlertCategoryNum)+","
 				+    POut.Int   ((int)alertCategoryLink.AlertType)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

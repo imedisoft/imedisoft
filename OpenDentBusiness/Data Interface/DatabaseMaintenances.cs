@@ -274,9 +274,6 @@ namespace OpenDentBusiness {
 		///command for MyISAM, InnoDB and Archive tables only.</summary>
 		public static string OptimizeTable(string tableName,bool hasResult = false,bool canOptimizeInnodb=false) {
 			string retVal="";
-			if(PrefC.GetBool(PrefName.RandomPrimaryKeys)) {
-				retVal=tableName+" "+Lans.g("MiscData","skipped due to using random primary keys.");
-			}
 			string command;
 			if(!canOptimizeInnodb) {
 				//Check to see if the table has its storage engine set to InnoDB.

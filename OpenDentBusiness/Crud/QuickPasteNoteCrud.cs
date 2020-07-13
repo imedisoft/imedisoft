@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one QuickPasteNote into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(QuickPasteNote quickPasteNote,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO quickpastenote (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				quickPasteNote.QuickPasteNoteNum=ReplicationServers.GetKeyNoCache("quickpastenote","QuickPasteNoteNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="QuickPasteNoteNum,";
 			}
 			command+="QuickPasteCatNum,ItemOrder,Note,Abbreviation) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(quickPasteNote.QuickPasteNoteNum)+",";
 			}
 			command+=
@@ -139,7 +139,7 @@ namespace OpenDentBusiness.Crud{
 				quickPasteNote.Note="";
 			}
 			OdSqlParameter paramNote=new OdSqlParameter("paramNote",OdDbType.Text,POut.StringParam(quickPasteNote.Note));
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command,paramNote);
 			}
 			else {

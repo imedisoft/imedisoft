@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one EhrMeasure into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(EhrMeasure ehrMeasure,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO ehrmeasure (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				ehrMeasure.EhrMeasureNum=ReplicationServers.GetKeyNoCache("ehrmeasure","EhrMeasureNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="EhrMeasureNum,";
 			}
 			command+="MeasureType,Numerator,Denominator) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(ehrMeasure.EhrMeasureNum)+",";
 			}
 			command+=
 				     POut.Int   ((int)ehrMeasure.MeasureType)+","
 				+    POut.Int   (ehrMeasure.Numerator)+","
 				+    POut.Int   (ehrMeasure.Denominator)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

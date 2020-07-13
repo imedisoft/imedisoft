@@ -102,21 +102,21 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one SmsBlockPhone into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(SmsBlockPhone smsBlockPhone,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO smsblockphone (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				smsBlockPhone.SmsBlockPhoneNum=ReplicationServers.GetKeyNoCache("smsblockphone","SmsBlockPhoneNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="SmsBlockPhoneNum,";
 			}
 			command+="BlockWirelessNumber) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(smsBlockPhone.SmsBlockPhoneNum)+",";
 			}
 			command+=
 				 "'"+POut.String(smsBlockPhone.BlockWirelessNumber)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

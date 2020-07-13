@@ -136,16 +136,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ChartView into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ChartView chartView,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO chartview (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				chartView.ChartViewNum=ReplicationServers.GetKeyNoCache("chartview","ChartViewNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ChartViewNum,";
 			}
 			command+="Description,ItemOrder,ProcStatuses,ObjectTypes,ShowProcNotes,IsAudit,SelectedTeethOnly,OrionStatusFlags,DatesShowing,IsTpCharting) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(chartView.ChartViewNum)+",";
 			}
 			command+=
@@ -159,7 +159,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   ((int)chartView.OrionStatusFlags)+","
 				+    POut.Int   ((int)chartView.DatesShowing)+","
 				+    POut.Bool  (chartView.IsTpCharting)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

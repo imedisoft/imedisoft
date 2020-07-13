@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one LetterMergeField into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(LetterMergeField letterMergeField,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO lettermergefield (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				letterMergeField.FieldNum=ReplicationServers.GetKeyNoCache("lettermergefield","FieldNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="FieldNum,";
 			}
 			command+="LetterMergeNum,FieldName) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(letterMergeField.FieldNum)+",";
 			}
 			command+=
 				     POut.Long  (letterMergeField.LetterMergeNum)+","
 				+"'"+POut.String(letterMergeField.FieldName)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

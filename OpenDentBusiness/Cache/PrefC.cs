@@ -23,13 +23,19 @@ namespace OpenDentBusiness {
 			}
 		}
 
-		///<summary>Logical shortcut to the ClaimPaymentNoShowZeroDate pref.  Returns 0001-01-01 if pref is disabled.</summary>
-		public static DateTime DateClaimReceivedAfter {
-			get {
-				DateTime date=DateTime.MinValue;
-				int days=GetInt(PrefName.ClaimPaymentNoShowZeroDate);
-				if(days>=0) {
-					date=DateTime.Today.AddDays(-days);
+		/// <summary
+		/// >Logical shortcut to the ClaimPaymentNoShowZeroDate pref.
+		/// Returns 0001-01-01 if pref is disabled.
+		/// </summary>
+		public static DateTime DateClaimReceivedAfter
+		{
+			get
+			{
+				DateTime date = DateTime.MinValue;
+				int days = GetInt(PrefName.ClaimPaymentNoShowZeroDate);
+				if (days >= 0)
+				{
+					date = DateTime.Today.AddDays(-days);
 				}
 				return date;
 			}

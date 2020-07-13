@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one RecallType into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(RecallType recallType,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO recalltype (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				recallType.RecallTypeNum=ReplicationServers.GetKeyNoCache("recalltype","RecallTypeNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="RecallTypeNum,";
 			}
 			command+="Description,DefaultInterval,TimePattern,Procedures,AppendToSpecial) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(recallType.RecallTypeNum)+",";
 			}
 			command+=
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(recallType.TimePattern)+"',"
 				+"'"+POut.String(recallType.Procedures)+"',"
 				+    POut.Bool  (recallType.AppendToSpecial)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

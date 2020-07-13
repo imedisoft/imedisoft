@@ -106,22 +106,22 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one RecallTrigger into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(RecallTrigger recallTrigger,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO recalltrigger (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				recallTrigger.RecallTriggerNum=ReplicationServers.GetKeyNoCache("recalltrigger","RecallTriggerNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="RecallTriggerNum,";
 			}
 			command+="RecallTypeNum,CodeNum) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(recallTrigger.RecallTriggerNum)+",";
 			}
 			command+=
 				     POut.Long  (recallTrigger.RecallTypeNum)+","
 				+    POut.Long  (recallTrigger.CodeNum)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

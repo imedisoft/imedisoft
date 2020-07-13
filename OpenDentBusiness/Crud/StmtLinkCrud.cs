@@ -110,23 +110,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one StmtLink into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(StmtLink stmtLink,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO stmtlink (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				stmtLink.StmtLinkNum=ReplicationServers.GetKeyNoCache("stmtlink","StmtLinkNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="StmtLinkNum,";
 			}
 			command+="StatementNum,StmtLinkType,FKey) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(stmtLink.StmtLinkNum)+",";
 			}
 			command+=
 				     POut.Long  (stmtLink.StatementNum)+","
 				+    POut.Int   ((int)stmtLink.StmtLinkType)+","
 				+    POut.Long  (stmtLink.FKey)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

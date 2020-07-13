@@ -1277,10 +1277,15 @@ namespace OpenDentBusiness {
 		QuickBooksIncomeAccount,
 		///<summary>Date when user upgraded to or past 15.4.1 and started using ADA procedures to count CPOE radiology orders for EHR.</summary>
 		RadiologyDateStartedUsing154,
-		///<summary>Boolean.  True if random primary keys have been turned on. There is no interface to change this preference because as of 17.2, all users of
-		///replication must use primary key offset instead of random primary keys.
+		
+		
+		/// <summary>Boolean.  True if random primary keys have been turned on. There is no interface to change this preference because as of 17.2, all users of
+		/// replication must use primary key offset instead of random primary keys.
 		///Causes all CRUD classes to look for an unused random PK before inserting instead of leaving it up to auto incrementing.</summary>
+		[Obsolete]
 		RandomPrimaryKeys,
+		
+		
 		///<summary>Integer. Indicated by number of days between contact attempts.</summary>
 		[PrefName(ValueType=PrefValueType.LONG_NEG_ONE_AS_ZERO)]
 		ReactivationContactInterval,
@@ -1382,8 +1387,14 @@ namespace OpenDentBusiness {
 		///<summary>Bool, 0 by default.  When true, uses the transaction date for the recurring charge payment date.
 		///When false, the recurring charge date will be used as the recurring charge payment date.</summary>
 		RecurringChargesUseTransDate,
+		
+		[Obsolete]
 		RegistrationKey,
+
+		[Obsolete]
 		RegistrationKeyIsDisabled,
+
+
 		RegistrationNumberClaim,
 		RenaissanceLastBatchNumber,
 		///<summary>Bool, false by default.  When true, the repeating charges tool will run automatically on a daily basis.</summary>
@@ -1400,10 +1411,23 @@ namespace OpenDentBusiness {
 		RepeatingChargesRunAging,
 		///<summary>Bool, 0 by default. When on, the user will be prompted to overwrite existing blockouts when making a new blockout that overlaps the existing ones.</summary>
 		ReplaceExistingBlockout,
-		///<summary>If replication has failed, this indicates the server_id.  No computer will be able to connect to this single server until this flag is cleared.</summary>
+		
+		
+		/// <summary>
+		/// If replication has failed, this indicates the server_id. 
+		/// No computer will be able to connect to this single server until this flag is cleared.
+		/// </summary>
+		[Obsolete("Support for replication is being removed. Replication should be handled by the database, not by us.")]
 		ReplicationFailureAtServer_id,
-		///<summary>The PK of the replication server that is flagged as the "report server".  If using replication, "create table" or "drop table" commands can only be executed within the user query window when connected to this server.</summary>
+		
+		/// <summary>
+		/// The PK of the replication server that is flagged as the "report server". 
+		/// If using replication, "create table" or "drop table" commands can only be executed within the user query 
+		/// window when connected to this server.
+		/// </summary>
+		[Obsolete("Support for replication is being removed. Replication should be handled by the database, not by us.")]
 		ReplicationUserQueryServer,
+		
 		ReportFolderName,
 		///<summary>When using a distinct reporting server, stores the server name.</summary>
 		ReportingServerCompName,

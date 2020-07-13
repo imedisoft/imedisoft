@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one CustReference into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(CustReference custReference,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO custreference (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				custReference.CustReferenceNum=ReplicationServers.GetKeyNoCache("custreference","CustReferenceNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CustReferenceNum,";
 			}
 			command+="PatNum,DateMostRecent,Note,IsBadRef) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(custReference.CustReferenceNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Date  (custReference.DateMostRecent)+","
 				+"'"+POut.String(custReference.Note)+"',"
 				+    POut.Bool  (custReference.IsBadRef)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

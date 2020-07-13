@@ -168,23 +168,23 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one CommOptOut into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(CommOptOut commOptOut,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO commoptout (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				commOptOut.CommOptOutNum=ReplicationServers.GetKeyNoCache("commoptout","CommOptOutNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CommOptOutNum,";
 			}
 			command+="PatNum,CommType,CommMode) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(commOptOut.CommOptOutNum)+",";
 			}
 			command+=
 				     POut.Long  (commOptOut.PatNum)+","
 				+    POut.Int   ((int)commOptOut.CommType)+","
 				+    POut.Int   ((int)commOptOut.CommMode)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

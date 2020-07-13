@@ -122,16 +122,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Reseller into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Reseller reseller,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO reseller (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				reseller.ResellerNum=ReplicationServers.GetKeyNoCache("reseller","ResellerNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ResellerNum,";
 			}
 			command+="PatNum,UserName,ResellerPassword,BillingType,VotesAllotted,Note) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(reseller.ResellerNum)+",";
 			}
 			command+=
@@ -141,7 +141,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (reseller.BillingType)+","
 				+    POut.Int   (reseller.VotesAllotted)+","
 				+"'"+POut.String(reseller.Note)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

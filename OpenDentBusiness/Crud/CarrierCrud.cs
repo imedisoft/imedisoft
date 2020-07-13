@@ -188,16 +188,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one Carrier into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(Carrier carrier,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO carrier (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				carrier.CarrierNum=ReplicationServers.GetKeyNoCache("carrier","CarrierNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CarrierNum,";
 			}
 			command+="CarrierName,Address,Address2,City,State,Zip,Phone,ElectID,NoSendElect,IsCDA,CDAnetVersion,CanadianNetworkNum,IsHidden,CanadianEncryptionMethod,CanadianSupportedTypes,SecUserNumEntry,SecDateEntry,TIN,CarrierGroupName,ApptTextBackColor,IsCoinsuranceInverted,TrustedEtransFlags) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(carrier.CarrierNum)+",";
 			}
 			command+=
@@ -224,7 +224,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   (carrier.ApptTextBackColor.ToArgb())+","
 				+    POut.Bool  (carrier.IsCoinsuranceInverted)+","
 				+    POut.Int   ((int)carrier.TrustedEtransFlags)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

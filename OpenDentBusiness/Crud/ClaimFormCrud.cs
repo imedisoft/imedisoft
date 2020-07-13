@@ -136,16 +136,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ClaimForm into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ClaimForm claimForm,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO claimform (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				claimForm.ClaimFormNum=ReplicationServers.GetKeyNoCache("claimform","ClaimFormNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ClaimFormNum,";
 			}
 			command+="Description,IsHidden,FontName,FontSize,UniqueID,PrintImages,OffsetX,OffsetY,Width,Height) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(claimForm.ClaimFormNum)+",";
 			}
 			command+=
@@ -159,7 +159,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   (claimForm.OffsetY)+","
 				+    POut.Int   (claimForm.Width)+","
 				+    POut.Int   (claimForm.Height)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

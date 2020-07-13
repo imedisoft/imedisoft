@@ -227,16 +227,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ComputerPref into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ComputerPref computerPref,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO computerpref (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				computerPref.ComputerPrefNum=ReplicationServers.GetKeyNoCache("computerpref","ComputerPrefNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ComputerPrefNum,";
 			}
 			command+="ComputerName,GraphicsUseHardware,GraphicsSimple,SensorType,SensorBinned,SensorPort,SensorExposure,GraphicsDoubleBuffering,PreferredPixelFormatNum,AtoZpath,TaskKeepListHidden,TaskDock,TaskX,TaskY,DirectXFormat,ScanDocSelectSource,ScanDocShowOptions,ScanDocDuplex,ScanDocGrayscale,ScanDocResolution,ScanDocQuality,ClinicNum,ApptViewNum,RecentApptView,PatSelectSearchMode,NoShowLanguage,NoShowDecimal,ComputerOS,HelpButtonXAdjustment,GraphicsUseDirectX11) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(computerPref.ComputerPrefNum)+",";
 			}
 			command+=
@@ -270,7 +270,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(computerPref.ComputerOS.ToString())+"',"
 				+"'"+POut.Double(computerPref.HelpButtonXAdjustment)+"',"
 				+    POut.Int   ((int)computerPref.GraphicsUseDirectX11)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

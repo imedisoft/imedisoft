@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one CovCat into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(CovCat covCat,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO covcat (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				covCat.CovCatNum=ReplicationServers.GetKeyNoCache("covcat","CovCatNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CovCatNum,";
 			}
 			command+="Description,DefaultPercent,CovOrder,IsHidden,EbenefitCat) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(covCat.CovCatNum)+",";
 			}
 			command+=
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Byte  (covCat.CovOrder)+","
 				+    POut.Bool  (covCat.IsHidden)+","
 				+    POut.Int   ((int)covCat.EbenefitCat)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

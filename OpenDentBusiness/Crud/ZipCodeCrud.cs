@@ -114,16 +114,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one ZipCode into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(ZipCode zipCode,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO zipcode (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				zipCode.ZipCodeNum=ReplicationServers.GetKeyNoCache("zipcode","ZipCodeNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="ZipCodeNum,";
 			}
 			command+="ZipCodeDigits,City,State,IsFrequent) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(zipCode.ZipCodeNum)+",";
 			}
 			command+=
@@ -131,7 +131,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(zipCode.City)+"',"
 				+"'"+POut.String(zipCode.State)+"',"
 				+    POut.Bool  (zipCode.IsFrequent)+")";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {

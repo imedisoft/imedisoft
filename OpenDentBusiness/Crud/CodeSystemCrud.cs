@@ -118,16 +118,16 @@ namespace OpenDentBusiness.Crud{
 
 		///<summary>Inserts one CodeSystem into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
 		public static long InsertNoCache(CodeSystem codeSystem,bool useExistingPK) {
-			bool isRandomKeys=Prefs.GetBoolNoCache(PrefName.RandomPrimaryKeys);
+			
 			string command="INSERT INTO codesystem (";
-			if(!useExistingPK && isRandomKeys) {
+			if(!useExistingPK) {
 				codeSystem.CodeSystemNum=ReplicationServers.GetKeyNoCache("codesystem","CodeSystemNum");
 			}
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+="CodeSystemNum,";
 			}
 			command+="CodeSystemName,VersionCur,VersionAvail,HL7OID,Note) VALUES(";
-			if(isRandomKeys || useExistingPK) {
+			if(useExistingPK) {
 				command+=POut.Long(codeSystem.CodeSystemNum)+",";
 			}
 			command+=
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(codeSystem.VersionAvail)+"',"
 				+"'"+POut.String(codeSystem.HL7OID)+"',"
 				+"'"+POut.String(codeSystem.Note)+"')";
-			if(useExistingPK || isRandomKeys) {
+			if(useExistingPK) {
 				Db.NonQ(command);
 			}
 			else {
