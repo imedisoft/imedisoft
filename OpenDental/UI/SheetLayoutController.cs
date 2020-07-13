@@ -198,7 +198,7 @@ namespace OpenDental {
 			foreach(SheetFieldDef fillFieldDef in listFillDownDefs) {
 				Control control=GetControlForField(fillFieldDef,dictionaryControls);
 				int gridMaxX=(control.Location.X+control.Width);
-				foreach(Control controlIntersect in listDynmaicControls.FindAll(x => x!=control && x.Bounds.IntersectsWith(control.Bounds))) {
+				foreach(Control controlIntersect in listDynmaicControls.FindAll(x => x!= null && x!=control && x.Bounds.IntersectsWith(control.Bounds))) {
 					int diff=(gridMaxX-controlIntersect.Location.X)+1;
 					controlIntersect.Location=new Point(controlIntersect.Location.X+diff,controlIntersect.Location.Y);
 				}
@@ -212,8 +212,8 @@ namespace OpenDental {
 				.FindAll(x => x.LayoutMode==sheetFieldLayoutModeCur && x.GrowthBehavior.In(GrowthBehaviorEnum.FillDownFitColumns,GrowthBehaviorEnum.FillDown))
 				.OrderBy(x => x.YPos)
 				.ToList();
-			List<Control> listDynamicControls=_sheetDefDynamicLayoutCur.SheetFieldDefs.FindAll(x => x.LayoutMode==sheetFieldLayoutModeCur)
-				.Select(x => GetControlForField(x,dictControls)).ToList();
+			List<Control> listDynamicControls = _sheetDefDynamicLayoutCur.SheetFieldDefs.FindAll(x => x.LayoutMode == sheetFieldLayoutModeCur)
+				.Select(x => GetControlForField(x, dictControls)).Where(x => x != null).ToList();
 			//tabProc might be overlaping controls vertically below because tabProcs has two different heights depending on state.
 			//We only expect there to be one field with FillDownFitColumns growth behavior, however we loop in case more are added later.
 			foreach(SheetFieldDef fillFieldDef in listFillDownDefs) {
