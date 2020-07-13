@@ -135,31 +135,31 @@ namespace CodeBase {
 			return attr.Description;
 		}
 
-		///<summary>Returns the attribute for the enum value if available. If not, returns the default value for the attribute.</summary>
-		public static T GetAttributeOrDefault<T>(this Enum value) where T:Attribute,new() {
-			Type type=value.GetType();
-			string name=Enum.GetName(type,value);
-			if(name==null) {
-				return new T();
-			}
-			FieldInfo field=type.GetField(name);
-			if(field==null) {
-				return new T();
-			}
-			T attr=Attribute.GetCustomAttribute(field,typeof(T)) as T;
-			if(attr==null) {
-				return new T();
-			}
-			return attr;
-		}
+		/// <summary>
+		/// Returns the attribute for the enum value if available. If not, returns the default value for the attribute.
+		/// </summary>
+		public static T GetAttributeOrDefault<T>(this Enum value) where T : Attribute, new()
+		{
+			Type type = value.GetType();
 
-		///<summary>Returns true if the enum value matches any of the flags passed in.</summary>
-		public static bool HasAnyFlag(this Enum value,params Enum[] flags) {
-			long valLong=Convert.ToInt64(value);
-			if(valLong==0) {
-				return flags.Contains(value);
+			string name = Enum.GetName(type, value);
+			if (name == null)
+			{
+				return new T();
 			}
-			return flags.Any(x => (valLong & Convert.ToInt64(x)) > 0);
+
+			FieldInfo field = type.GetField(name);
+			if (field == null)
+			{
+				return new T();
+			}
+
+			if (!(Attribute.GetCustomAttribute(field, typeof(T)) is T attribute))
+			{
+				return new T();
+			}
+
+			return attribute;
 		}
 
 		///<summary>Returns the enum value with the passed in flags added.</summary>
@@ -233,16 +233,6 @@ namespace CodeBase {
 			return dateT;
 		}
 
-		///<summary>Returns true if the difference between now and the given datetime is greater than the timeSpan.</summary>
-		public static bool IsOlderThan(this DateTime dateT,TimeSpan timeSpan) {
-			return (DateTime_.Now-dateT) > timeSpan;
-		}
-
-		///<summary>Returns true if the difference between now and the given datetime is less than the timeSpan.</summary>
-		public static bool IsNewerThan(this DateTime dateT,TimeSpan timeSpan) {
-			return (DateTime_.Now-dateT) < timeSpan;
-		}
-
 		///<summary>Use regular expressions to do an in-situ string replacement. Default behavior is case insensitive.</summary>
 		/// <param name="pattern">Must be a REGEX compatible pattern.</param>
 		/// <param name="replacement">The string that should be used to replace each occurance of the pattern.</param>
@@ -278,26 +268,6 @@ namespace CodeBase {
 				value+="\r\n";
 			}
 			return value+addition;
-		}
-
-		///<summary>Returns everything in the string after the "beforeThis" string. Throws if "beforeThis" is not present in the string.</summary>
-		///<exception cref="IndexOutOfRangeException" />
-		public static string SubstringBefore(this string value,string beforeThis) {
-			return value.Substring(0,value.IndexOf(beforeThis));
-		}
-
-		///<summary>Returns everything in the value string before the targetCount number of target string.
-		///TargetCount is 1 based.
-		///Returns empty string if not found or if targetCount is greater then the number of occurances of target in value.</summary>
-		public static string SubstringBefore(this string value,char target,int targetCount) {
-			if(string.IsNullOrEmpty(value)) {
-				return value;
-			}
-			List<string> listValues=value.Split(target).ToList();
-			if(listValues.Count<targetCount) {//targetCount is greater then the number of occurances of target in value.
-				return value;
-			}
-			return string.Join(target.ToString(),listValues.GetRange(0,targetCount));
 		}
 
 		///<summary>Returns everything in the string after the "afterThis" string. Throws if "afterThis" is not present in the string.</summary>
@@ -344,53 +314,47 @@ namespace CodeBase {
 			}
 		}
 
-		///<summary>Compares the current dictionary to the dictionary passed in. Returns true if all keys and values match, otherwise returns false.
-		///Requires the implementer to provide a func that will handle the comparison of individual "items" (within the TValue object).
-		///Returns true if dictionaries are the same, otherwise returns false.</summary>
-		public static bool TryCompareDictionary<TKey, TValue>(this IDictionary<TKey,TValue> dictOrig,IDictionary<TKey,TValue> dictFinal,Func<TValue,TValue,bool> funcCompare) {
-			try {
-				dictOrig.CompareDictionary(dictFinal,funcCompare);
-				return true;
-			}
-			catch {
-			}
-			return false;
-		}
-
-		///<summary>Returns true if the IEnumerable is null or the count is equal to 0.</summary>
-		///<param name="enumerable">The enumerable.</param>
-		public static bool IsNullOrEmpty<TSource>(this IEnumerable<TSource> enumerable) {
-			return (enumerable==null || enumerable.Count()==0);
-		}
+		/// <summary>
+		/// Returns true if the specified <see cref="IEnumerable{T}"/> is null or empty.
+		/// </summary>
+		/// <param name="enumerable">The enumerable.</param>
+		public static bool IsNullOrEmpty<TSource>(this IEnumerable<TSource> enumerable) 
+			=> enumerable == null || enumerable.Count() == 0;
 
 		///<summary>Compares 2 lists. Returns true if size and items are exactly the same in each list. 
 		///Uses .Equals() of the given TSource type to compare so beware if comparing anything but primitives.
 		///Throws if all list items match, otherwise returns silently.
 		///<see cref="http://stackoverflow.com/a/5620298"/></summary>
 		///<typeparam name="TSource">The type being compared. Will use .Equals() to compare, of funcCompare if provided.</typeparam>
-		public static void CompareList<TSource>(this IEnumerable<TSource> first,IEnumerable<TSource> second,Func<TSource,TSource,bool> funcCompare = null) {
-			if(first.Count()!=second.Count()) { //In case there are duplicates in either list.
-				throw new Exception("Item count mismatch");
-			}
+		public static void CompareList<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second, Func<TSource, TSource, bool> funcCompare = null)
+		{
+			if (first.Count() != second.Count()) throw new Exception("Item count mismatch");
+			
+
 			//No duplicates so any non-intersecting items indicates not a match.
-			if(funcCompare==null) { //Use the default comparison func (usually for primitives only).
-				if(first.Except(second).Union(second.Except(first)).Count()==0) {
+			if (funcCompare == null)
+			{ //Use the default comparison func (usually for primitives only).
+				if (first.Except(second).Union(second.Except(first)).Count() == 0)
+				{
 					return; //Match.
 				}
 			}
-			else { //Use the custom comparison func.
-				ODEqualityComparer<TSource> compare=new ODEqualityComparer<TSource>(funcCompare);
-				if(first.Except(second,compare).Union(second.Except(first,compare)).Count()==0) {
+			else
+			{ //Use the custom comparison func.
+				ODEqualityComparer<TSource> compare = new ODEqualityComparer<TSource>(funcCompare);
+				if (first.Except(second, compare).Union(second.Except(first, compare)).Count() == 0)
+				{
 					return; //Match.
 				}
 			}
 			throw new Exception("Items do not match");
 		}
 
-		///<summary>Convert to single items of type TTarge to a List of type TTarget containing 1 element: item.</summary>
-		public static List<TTarget> SingleItemToList<TTarget>(this TTarget item) {
-			return new List<TTarget>() { item };
-		}
+		/// <summary>
+		/// Convert to single items of type TTarge to a List of type TTarget containing 1 element: item.
+		/// </summary>
+		public static List<T> SingleItemToList<T>(this T self) => new List<T>() { self };
+		
 
 		///<summary>Deep copy each list items of the source list to a new list instance of the target return type. Property values will be shallow-copied if specified.</summary>
 		public static List<TTarget> DeepCopyList<TSource, TTarget>(this List<TSource> source,bool shallowCopyProperties=true) where TTarget : TSource {
@@ -425,53 +389,35 @@ namespace CodeBase {
 			return targetObj;
 		}
 
-		///<summary>Compares 2 lists. Returns true if size and items are exactly the same in each list. 
-		///Uses .Equals() of the given TSource type to compare so beware if comparing anything but primitives.
-		///Returns true if lists are the same, otherwise returns false.
-		///<see cref="http://stackoverflow.com/a/5620298"/></summary>
-		///<typeparam name="TSource">The type being compared. Will use .Equals() to compare.</typeparam>
-		public static bool TryCompareList<TSource>(this IEnumerable<TSource> first,IEnumerable<TSource> second,Func<TSource,TSource,bool> funcCompare=null) {
-			try {
-				first.CompareList(second,funcCompare);
-				return true;
-			}
-			catch {
-			}
-			return false;
-		}
+		/// <summary>
+		/// Allows for custom comparison of TSource. Implements IEqualityComparer, which is required by LINQ for inline comparisons.
+		/// </summary>
+		public class ODEqualityComparer<T> : IEqualityComparer<T>
+		{
+			private readonly Func<T, T, bool> predicate;
 
-		///<summary>Allows for custom comparison of TSource. Implements IEqualityComparer, which is required by LINQ for inline comparisons.</summary>
-		public class ODEqualityComparer<TSource>:IEqualityComparer<TSource> {
-			private Func<TSource,TSource,bool> _funcCompare;
-
-			public ODEqualityComparer(Func<TSource,TSource,bool> funcCompare) {
-				this._funcCompare=funcCompare;
+			public ODEqualityComparer(Func<T, T, bool> predicate)
+			{
+                this.predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
 			}
 
-			public bool Equals(TSource x,TSource y) {
-				return _funcCompare(x,y);
-			}
+			public bool Equals(T x, T y) => predicate(x, y);
 
-			public int GetHashCode(TSource obj) {				
-				//Do not use obj.GetHashCode(). This will return a non-determinant value and cause .Equals() to be skipped in most cases.
-				//Always return the same value (0 is acceptable). This will defer to the Equals override as the tie-breaker, which is what we want in this case.
-				return 0;
-			}
+			public int GetHashCode(T obj) => 0;
 		}
 	}
 
-	public class ShortDescriptionAttribute:Attribute {
-		public ShortDescriptionAttribute() : this("") {
-
-		}
-		public ShortDescriptionAttribute(string shortDesc) {
-			ShortDesc=shortDesc;
+	public class ShortDescriptionAttribute : Attribute
+	{
+		public ShortDescriptionAttribute()
+		{
 		}
 
-		private string _shortDesc="";
-		public string ShortDesc {
-			get { return _shortDesc; }
-			set { _shortDesc=value; }
+		public ShortDescriptionAttribute(string shortDesc)
+		{
+			ShortDesc = shortDesc;
 		}
-	}
+
+        public string ShortDesc { get; set; } = "";
+    }
 }

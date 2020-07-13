@@ -5,35 +5,46 @@ using System.Drawing;
 using System.Text;
 using CodeBase;
 
-namespace OpenDentBusiness {
-	///<summary>Stores small bits of data for a wide variety of purposes.  Any data that's too small to warrant its own table will usually end up here.</summary>
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// Stores small bits of data for a wide variety of purposes.
+	/// Any data that's too small to warrant its own table will usually end up here.
+	/// </summary>
 	[Serializable]
-	[CrudTable(TableName="preference")]
-	public class Pref:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+	[CrudTable(TableName = "preference")]
+	public class Pref : TableBase
+	{
+		[CrudColumn(IsPriKey = true)]
 		public long PrefNum;
-		///<summary>The text 'key' in the key/value pairing.</summary>
+
+		/// <summary>
+		/// The text 'key' in the key/value pairing.
+		/// </summary>
 		public string PrefName;
-		///<summary>The stored value.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
+
+		/// <summary>
+		/// The stored value.
+		/// </summary>
+		[CrudColumn(SpecialType = CrudSpecialColType.TextIsClob)]
 		public string ValueString;
-		///<summary>Documentation on usage and values of each pref.  Mostly deprecated now in favor of using XML comments in the code.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
+
+		/// <summary>
+		/// Documentation on usage and values of each pref.  Mostly deprecated now in favor of using XML comments in the code.
+		/// </summary>
+		[CrudColumn(SpecialType = CrudSpecialColType.TextIsClob)]
 		public string Comments;
 
-		///<summary>Returns a copy of the pref.</summary>
-		public Pref Copy() {
-			return (Pref)this.MemberwiseClone();
-		}
+		public Pref Copy() => (Pref)MemberwiseClone();
 	}
 
 	///<summary>Because this enum is stored in the database as strings rather than as numbers, we can do the order alphabetically.  
 	///Deprecated preferences will start with "Deprecated" in the summary section.
 	///Preferences that are missing in general will start with "Missing in general" in the summary section.</summary>
-	public enum PrefName {
+	public enum PrefName
+	{
 		///<summary>ONLY USED FOR PREF-BOUND UI ELEMENTS or as temporary in memory place holder.  Never in the DB.</summary>
-		[PrefName(ValueType=PrefValueType.NONE)]
+		[PrefName(ValueType = PrefValueType.NONE)]
 		NotApplicable,
 		AccountingCashIncomeAccount,
 		///<summary>The default cash payment type used to determine the CashSumTotal for deposit slips.</summary>
@@ -50,10 +61,10 @@ namespace OpenDentBusiness {
 		AccountShowPaymentNums,
 		///<summary>Show questionnaire button in account module toolbar. Feature is obsolete and can only be accessed by users that had this 
 		///preference turned on prior to its removal from the Show Features window.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		AccountShowQuestionnaire,
 		///<summary>DEPRECATED - Use Trojan ProgramLink instead.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL),Obsolete("This preference has been deprecated. Do not use.",true)]
+		[PrefName(ValueType = PrefValueType.BOOL), Obsolete("This preference has been deprecated. Do not use.", true)]
 		AccountShowTrojanExpressCollect,
 		ADAComplianceDateTime,
 		ADAdescriptionsReset,
@@ -72,11 +83,11 @@ namespace OpenDentBusiness {
 		///<summary>If true, aging will use the intermediate table famaging for calculating aging.</summary>
 		AgingIsEnterprise,
 		///<summary>DEPRECATED.  Use AgingProcLifo instead.</summary>
-		[Obsolete("This preference has been deprecated. Do not use.",true)]
+		[Obsolete("This preference has been deprecated. Do not use.", true)]
 		AgingNegativeAdjsByAdjDate,
 		///<summary>YN_DEFAULT_FALSE, 0-unknown,1-yes,2-no.
 		///For job 14902 - "Aging of AR change:  LIFO negative adjustments to (within) attached procedure and positive adjustments."</summary>
-		[PrefName(ValueType=PrefValueType.YN_DEFAULT_FALSE)]
+		[PrefName(ValueType = PrefValueType.YN_DEFAULT_FALSE)]
 		AgingProcLifo,
 		///<summary>This pref is hidden, so no UI to enable this feature.  If this is true, there will be a checkbox in the aging report window to age
 		///patient payments to payment plans.  Aging patient payments to payment plans will only work if the completed amounts on the payment plans are 0.
@@ -184,7 +195,7 @@ namespace OpenDentBusiness {
 		///<summary>Keeps the waiting room indicator times current.  Initially 1.</summary>
 		ApptModuleRefreshesEveryMinute,
 		///<summary>Deprecated</summary>
-		[Obsolete("This preference has been deprecated. Do not use.",true)]
+		[Obsolete("This preference has been deprecated. Do not use.", true)]
 		ApptModuleUses2019Overhaul,
 		///<summary>Boolean.  False by default.  If true, prevents from making changes (breaking, deleting, sending to unscheduled, changing status) 
 		///to completed appointments. The completed appointment MUST have completed procedures attached. If false, does nothing.</summary>
@@ -221,7 +232,7 @@ namespace OpenDentBusiness {
 		///operatory assigned to a clinic for a patient with a specialty that does not exist in the list of that clinic's specialties..</summary>
 		ApptSchedEnforceSpecialty,
 		///<summary>YN_DEFAULT_TRUE, 0-unknown,1-yes,2-no. Defaults to allow overlap because blocking it is annoying.</summary>
-		[PrefName(ValueType=PrefValueType.YN_DEFAULT_TRUE)]
+		[PrefName(ValueType = PrefValueType.YN_DEFAULT_TRUE)]
 		ApptsAllowOverlap,
 		///<summary>Bool; True by default. When true, new appointments require at least one procedure to be attached.</summary>
 		ApptsRequireProc,
@@ -236,25 +247,25 @@ namespace OpenDentBusiness {
 		ApptThankYouCalendarTitle,
 		///<summary>Date, MinDate by default.  The Date that was set within the "Archive entries on or before:" field within the Archive tab of the 
 		///Backup window when the archive process was last ran successfully.</summary>
-		[PrefName(ValueType=PrefValueType.DATE)]
+		[PrefName(ValueType = PrefValueType.DATE)]
 		ArchiveDate,
 		///<summary>In FormBackup the remove old data tab, if true make a backup when the user runs remove old data.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		ArchiveDoBackupFirst,
 		///<summary>String of random alpha-numeric characters that represents a synced key between an OD database and its specific archive database.</summary>
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		ArchiveKey,
 		///<summary>Obfuscated password for the database user that will be used when directly connecting to the archive server. Not actually the hash.</summary>
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		ArchivePassHash,
 		///<summary>The name of the server where the archive database should be located.</summary>
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		ArchiveServerName,
 		///<summary>DEPRECATED.  Archiving with Middle Tier connection never fully implemented.  Here was the original intent behind the preference:
 		///URI to a Middle Tier web service that is connected to the database where archives should be made.</summary>
 		ArchiveServerURI,
 		///<summary>The user name for the database user that will be used when directly connecting to the archive server.</summary>
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		ArchiveUserName,
 		///<summary>Default billing types selected when loading the Unsent Tab of the Accounts Receivable Manager.</summary>
 		ArManagerBillingTypes,
@@ -292,15 +303,15 @@ namespace OpenDentBusiness {
 		ArManagerExcludedAgeOfAccount,
 		///<summary>The template that is used when manually texting patients on the ASAP list.</summary>
 		ASAPTextTemplate,
-		
+
 		///<summary>Deprecated, but must remain here to avoid breaking updates.</summary>
 		[Obsolete]
 		AtoZfolderNotRequired,
-		
+
 		///<summary>Enum - Enumerations.DataStorageType.  Normally 1 (AtoZ).  This used to be called AtoZfolderNotRequired, but that name was confusing.</summary>
 		[Obsolete]
 		AtoZfolderUsed,
-		
+
 		///<summary>The number of audit trail entries that are displayed in the grid.</summary>
 		AuditTrailEntriesDisplayed,
 		///<summary>No UI for this pref. The number of clinics to run in parallel for AutoComm (eConfirms, eReminders, WebSchedRecall, etc.). If
@@ -316,24 +327,24 @@ namespace OpenDentBusiness {
 		/// <summary>Enum - AutoSplitPreference. Deprecated. 
 		/// Defaults to Adjustments (1). Used to choose order to apply unattached credits to adjustments in account module. </summary>
 		AutoSplitLogic,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BackupExcludeImageFolder,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		BackupFromPath,
 		BackupReminderLastDateRun,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		BackupRestoreAtoZToPath,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		BackupRestoreFromPath,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		BackupRestoreToPath,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		BackupToPath,
 		BadDebtAdjustmentTypes,
 		BalancesDontSubtractIns,
 		BankAddress,
 		BankRouting,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		BillingAgeOfAccount,
 		BillingChargeAdjustmentType,
 		BillingChargeAmount,
@@ -346,7 +357,7 @@ namespace OpenDentBusiness {
 		///<summary>The statement modes that will also receive a text message. Stored as a comma-separated list of integers where each item is the integer
 		///value of the StatementMode enum.</summary>
 		BillingDefaultsModesToText,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		BillingDefaultsNote,
 		/// <summary>Boolean, false by default. Indicates if billing statements default to single patients(true) or guarantors(false).</summary>
 		BillingDefaultsSinglePatient,
@@ -378,30 +389,30 @@ namespace OpenDentBusiness {
 		BillingElectVendorPMSCode,
 		BillingEmailBodyText,
 		BillingEmailSubject,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BillingExcludeBadAddresses,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BillingExcludeIfUnsentProcs,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BillingExcludeInactive,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BillingExcludeInsPending,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		BillingExcludeLessThan,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BillingExcludeNegative,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BillingIgnoreInPerson,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BillingIncludeChanged,
 		///<summary>Used with repeat charges to apply repeat charges to patient accounts on billing cycle date.</summary>
 		BillingUseBillingCycleDay,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		BillingSelectBillingTypes,
 		///<summary>Boolean.  Defaults to true.  Determines if the billing window shows progress when sending statements.</summary>
 		BillingShowSendProgress,
 		///<summary>Boolean. Allows option to show activity on statements since the last $0 balance on the account (or family).</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BillingShowTransSinceBalZero,
 		///<summary>0=no,1=EHG,2=POS(xml file),3=ClaimX(xml file),4=EDS(xml file)</summary>
 		BillingUseElectronic,
@@ -417,10 +428,10 @@ namespace OpenDentBusiness {
 		///<summary>Boolean.  0 by default.  When true, makes an adjustment when an appointment is broken.</summary>
 		BrokenApptAdjustment,
 		///<summary>Boolean. 0 by default. Require user to break scheduled appt before moving to a new day, the pinboard, the unscheduled list or deleting.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		BrokenApptRequiredOnMove,
 		///<summary>Boolean.  True by default.  When true, Canadian PPO insurance plans create estimates for labs (default behavior for category percentage plans).</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		CanadaCreatePpoLabEst,
 		///<summary>For Ontario Dental Association fee schedules.</summary>
 		CanadaODAMemberNumber,
@@ -576,10 +587,6 @@ namespace OpenDentBusiness {
 		///<summary>bool. Set to false by default. If true, database maintenance will skip table checks.</summary>
 		DatabaseMaintenanceSkipCheckTable,
 
-		///<summary>Uses <see cref="DatabaseModeEnum"/>. Defaults to 'Normal'.</summary>
-		[Obsolete]
-		DatabaseMode,
-
 		DataBaseVersion,
 		DateDepositsStarted,
 		DateLastAging,
@@ -615,64 +622,64 @@ namespace OpenDentBusiness {
 		///<summary>The ICD Diagnosis Code version primarily used by the practice.  Value of '9' for ICD-9, and '10' for ICD-10.</summary>
 		DxIcdVersion,
 		///<summary>The last known date and time that the dynamic payplan service ran.</summary>
-		[PrefName(ValueType=PrefValueType.DATETIME)]
+		[PrefName(ValueType = PrefValueType.DATETIME)]
 		DynamicPayPlanLastDateTime,
 		///<summary>Defaults to 9AM.  The time the user has specified that they would like the service to run on each day.</summary>
-		[PrefName(ValueType=PrefValueType.DATETIME)]
+		[PrefName(ValueType = PrefValueType.DATETIME)]
 		DynamicPayPlanRunTime,
 		///<summary>The date and time that the service started running today. Will be blank if not currently running.</summary>
-		[PrefName(ValueType=PrefValueType.DATETIME)]
+		[PrefName(ValueType = PrefValueType.DATETIME)]
 		DynamicPayPlanStartDateTime,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyBasicModules,
 		/// <summary>Depricated.</summary>
 		EasyHideAdvancedIns,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyHideCapitation,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyHideClinical,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyHideDentalSchools,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyHideHospitals,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyHideInsurance,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyHideMedicaid,
 		EasyHidePrinters,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyHidePublicHealth,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyHideRepeatCharges,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EasyNoClinics,
 		EclaimsSeparateTreatProv,
 		///<summary>Boolean, true by default. Basically enables eClipboard/self-check in. If this is true users can self-check in using the offices
 		///set up devices.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EClipboardAllowSelfCheckIn,
 		///<summary>Boolean, false by default. When true, allows patients on tablets to take a picture of themselves on check-in.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EClipboardAllowSelfPortraitOnCheckIn,
 		///<summary>Boolean, true by default. If this is true, when the patient status is changed to the waiting room status, we will check if there
 		///are any forms defined in the office eClipboard settings that the patient is due to fill out and attach those forms to the patient.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EClipboardCreateMissingFormsOnCheckIn,
 		///<summary>Plain text, this is the message we want to show users after they have used the self check-in feature.</summary>
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		EClipboardMessageComplete,
 		///<summary>Boolean, false by default. If this is true, when the front desk manually changes patient status to the waiting room status, this
 		///will cause the kiosk manager to automatically pop-up so that the office staff can decide if they want to send the patient to kiosk or 
 		///eClipboard mode.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EClipboardPopupKioskOnCheckIn,
 		///<summary>Boolean, true by default. If this is true and the office is using self check-in, if the patient has any "kiosk" forms on their
 		///account, we will display those forms on their device for them to fill out.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EClipboardPresentAvailableFormsOnCheckIn,
 		///<summary>Boolean. Note that this is actually ONLY a clinic pref, as it is meaningless for the default clinic and practices without
 		///clinics. Indicates whether or not we should remove a clinics other EClipboard related clinic preferences.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EClipboardUseDefaults,
 		///<summary>The ClinicNums that are signed up for eClipboard. Checked and set periodically by the eConnector. In a comma-delimited list. An 
 		///empty string indicates no clinics are signed up.</summary>
@@ -708,7 +715,7 @@ namespace OpenDentBusiness {
 		///<summary>String provides template for any email correspondence methods participating in Email Disclaimer. Must include [PostalAddress] tag.</summary>
 		EmailDisclaimerTemplate,
 		///<summary>Deprecated.  Not used anywhere. Email messages are retreived from Open Dental Service.</summary>
-		[Obsolete("This preference has been deprecated. Do not use.",true)]
+		[Obsolete("This preference has been deprecated. Do not use.", true)]
 		EmailInboxComputerName,
 		///<summary>Time interval in minutes describing how often to automatically check the email inbox for new messages. Default is 5 minutes.</summary>
 		EmailInboxCheckInterval,
@@ -740,7 +747,7 @@ namespace OpenDentBusiness {
 		///<summary>Boolean, false by default. When true the Appointment 'None' View will not be selected by default when there is at least one existing 
 		///Appointment view. False preserves current behavior - ie: Appointment 'None' View displays on first load of a clinic for a brand
 		///new user in a clinic.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EnterpriseNoneApptViewDefaultDisabled,
 		EraAllowTotalPayments,
 		///<summary>Boolean, false by default.  When true then there will be 1 page per each claim paid for an ERA header and ERA claim paid on printouts.</summary>
@@ -750,7 +757,7 @@ namespace OpenDentBusiness {
 		EraIncludeWOPercCoPay,
 		///<summary>Boolean, false by default.  When true FormEtrans835 allows the user to filter by Control ID and shows the value in a grid column.
 		///Otherwise Control ID UI is not visable and can not be used.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		EraShowControlIdFilter,
 		ExportPath,
 		///<summary>Allows guarantor access to all family health information in the patient portal.  Default is 1.</summary>
@@ -798,7 +805,7 @@ namespace OpenDentBusiness {
 		///2 = Document tree folders persistent expand/collapse per user.</summary>
 		ImagesModuleTreeIsCollapsed,
 		///<summary>Use the old Images module, prior to the 2020 overhaul.  Required for Suni capture and Apteryx XVWeb bridge. False by default. The only interface for changing this is by enabling/disabling Suni and XVWeb bridges.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		ImagesModuleUsesOld2020,
 		ImageWindowingMax,
 		ImageWindowingMin,
@@ -807,10 +814,10 @@ namespace OpenDentBusiness {
 		///E.g. the Korean symbol '역' (dur) will not display correctly inside ODTextBoxes without this set to true.</summary>
 		ImeCompositionCompatibility,
 		///<summary>Boolean.  False by default.  When true, when importing 834s, all patient plans that are not in the 834 will be replaced for the patient.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		Ins834DropExistingPatPlans,
 		Ins834ImportPath,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		Ins834IsPatientCreate,
 		///<summary>Comma delimited list of procedure codes that represent bitewing codes.  Defaults to D codes for all users.</summary>
 		InsBenBWCodes,
@@ -975,7 +982,7 @@ namespace OpenDentBusiness {
 		///<summary>Deprecated. Always false.</summary>
 		[Obsolete]
 		MiddleTierCacheFees,
-		[Description("Mobile Unlock Codes auto generate"),PrefName(ValueType=PrefValueType.BOOL)]
+		[Description("Mobile Unlock Codes auto generate"), PrefName(ValueType = PrefValueType.BOOL)]
 		MobileAutoUnlockCode,
 		MobileSyncDateTimeLastRun,
 		///<summary>Used one time after the conversion to 7.9 for initial synch of the provider table.</summary>
@@ -1033,7 +1040,7 @@ namespace OpenDentBusiness {
 		///<summary>User-defined automatic ortho claim procedure.  D8670.auto by default. Can be overridden at the insplan level.</summary>
 		OrthoAutoProcCodeNum,
 		///<summary>User-defined comma separated string of procedure codes that can be attached to ortho cases as banding procedures</summary>
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		OrthoBandingCodes,
 		///<summary>When turned on, ortho case information is shown in the ortho chart.</summary>
 		OrthoCaseInfoInOrthoChart,
@@ -1042,7 +1049,7 @@ namespace OpenDentBusiness {
 		///<summary>When true, ortho claims' "OrthoDate" will be automatically set to the patient's first ortho procedure when created.</summary>
 		OrthoClaimUseDatePlacement,
 		///<summary>User-defined comma separated string of procedure codes that can be attached to ortho cases as debond procedures</summary>
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		OrthoDebondCodes,
 		///<summary>Byte, 24 by default.  The default number of months ortho treatments last.  Overridden by patientnote.OrthoMonthsTreat.</summary>
 		OrthoDefaultMonthsTreat,
@@ -1054,7 +1061,7 @@ namespace OpenDentBusiness {
 		///DatePlacement is the ProcDate of the first completed procedure that is associated to any of the procedure codes in this list.</summary>
 		OrthoPlacementProcsList,
 		///<summary>User-defined comma separated string of procedure codes that can be attached to ortho cases as visit procedures</summary>
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		OrthoVisitCodes,
 		///<summary>Enum:RpOutstandingIns.DateFilterTab. Defaults to DaysOld. Determines which date filter tab to default load in Outstanding Insurance 
 		///Report.</summary>
@@ -1075,7 +1082,7 @@ namespace OpenDentBusiness {
 		///<summary>Defaults to 0 - Unknown using the YN enum, which will behave the same as if it's set to 2 - No using the YN enum.  If set to 1 - Yes
 		///using the YN enum, the patient table phone number values will be synced to the phonenumber table, and stored in the PhoneNumberDigits column
 		///with non-digit chars stripped out.  The select patient query will use the phonenumber table when searching for a pat by phone number.</summary>
-		[PrefName(ValueType=PrefValueType.YN_DEFAULT_FALSE)]
+		[PrefName(ValueType = PrefValueType.YN_DEFAULT_FALSE)]
 		PatientPhoneUsePhonenumberTable,
 		///<summary>Boolean.  Defaults to false. Used for the clinicpref table, in addition to the preference table. When true, this practice or 
 		///clinic is enabled to send Patient Portal Invites.</summary>
@@ -1093,7 +1100,7 @@ namespace OpenDentBusiness {
 		///<summary>Boolean. Defaults to false. When false: User can see patients not in their list of restricted clinics when they select clinics="All"
 		///in FromPatientSelect.cs. When true: Clinics="All" list in FormPatientSelect.cs will only show patients who have had an appointment at 
 		///user's unrestricted clinics or are assigned to one of the user's list of unrestricted clinics.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		PatientSelectFilterRestrictedClinics,
 		///<summary>1 by default.  The minimum allowed value is 1, maximum allowed is 10.  The minimum number of characters entered into a textbox in the
 		///patient select window before triggering a search and fill grid.  With every textbox text changed event, compares the textbox text length to
@@ -1109,7 +1116,7 @@ namespace OpenDentBusiness {
 		///clears the search fields, the previous search results will remain in the grid.  The grid will be refilled when data is entered.</summary>
 		PatientSelectSearchWithEmptyParams,
 		///<summary>Boolean. True by default. When true, automatically 'shows inactive patients' in the patient selection window.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		PatientSelectShowInactive,
 		PatientSelectUseFNameForPreferred,
 		///<summary>Boolean. This is the default for new computers, otherwise it uses the computerpref PatSelectSearchMode.</summary>
@@ -1125,7 +1132,7 @@ namespace OpenDentBusiness {
 		///<summary>0 by default.1=Prompt users to select payment type when creating new Payments.</summary>
 		PaymentsPromptForPayType,
 		///<summary>Bool, false by default.  When true, limit income transfers to the amount of associated patient payments.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		PaymentsTransferPatientIncomeOnly,
 		///<summary>PayClinicSetting enum. 0 by default. 0=SelectedClinic, 1=PatientDefaultClinic, 2=SelectedExceptHQ</summary>
 		PaymentClinicSetting,
@@ -1207,7 +1214,7 @@ namespace OpenDentBusiness {
 		PregnancyDefaultCodeValue,
 		PregnancyDefaultCodeSystem,
 		///<summary>YN_DEFAULT_FALSE. Indicates whether prepayments are allowed on TP procedures.</summary>
-		[PrefName(ValueType=PrefValueType.YN_DEFAULT_FALSE)]
+		[PrefName(ValueType = PrefValueType.YN_DEFAULT_FALSE)]
 		PrePayAllowedForTpProcs,
 		///<summary>FK to definition.DefNum for PaySplitUnearnedType defcat (29)</summary>
 		PrepaymentUnearnedType,
@@ -1274,51 +1281,51 @@ namespace OpenDentBusiness {
 		QuickBooksIncomeAccount,
 		///<summary>Date when user upgraded to or past 15.4.1 and started using ADA procedures to count CPOE radiology orders for EHR.</summary>
 		RadiologyDateStartedUsing154,
-		
-		
+
+
 		/// <summary>Boolean.  True if random primary keys have been turned on. There is no interface to change this preference because as of 17.2, all users of
 		/// replication must use primary key offset instead of random primary keys.
 		///Causes all CRUD classes to look for an unused random PK before inserting instead of leaving it up to auto incrementing.</summary>
 		[Obsolete]
 		RandomPrimaryKeys,
-		
-		
+
+
 		///<summary>Integer. Indicated by number of days between contact attempts.</summary>
-		[PrefName(ValueType=PrefValueType.LONG_NEG_ONE_AS_ZERO)]
+		[PrefName(ValueType = PrefValueType.LONG_NEG_ONE_AS_ZERO)]
 		ReactivationContactInterval,
 		///<summary> long. -1=infinite, 0=zero; if stored as -1, displays as "".</summary>
-		[PrefName(ValueType=PrefValueType.LONG_NEG_ONE_AS_BLANK)]
+		[PrefName(ValueType = PrefValueType.LONG_NEG_ONE_AS_BLANK)]
 		ReactivationCountContactMax,
 		///<summary>Defaults to 1095.  -1 indicates min for all dates</summary>
-		[PrefName(ValueType=PrefValueType.LONG_NEG_ONE_AS_BLANK)]
+		[PrefName(ValueType = PrefValueType.LONG_NEG_ONE_AS_BLANK)]
 		ReactivationDaysPast,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		ReactivationEmailFamMsg,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		ReactivationEmailMessage,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		ReactivationEmailSubject,
 		///<summary>Boolean. False by default.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		ReactivationGroupByFamily,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		ReactivationPostcardFamMsg,
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		ReactivationPostcardMessage,
 		///<summary>Integer.  3 by default.</summary>
-		[PrefName(ValueType=PrefValueType.LONG_NEG_ONE_AS_BLANK)]
+		[PrefName(ValueType = PrefValueType.LONG_NEG_ONE_AS_BLANK)]
 		ReactivationPostcardsPerSheet,
 		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefCat.</summary>
-		[PrefName(ValueType=PrefValueType.LONG)]
+		[PrefName(ValueType = PrefValueType.LONG)]
 		ReactivationStatusEmailed,
 		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefCat.</summary>
-		[PrefName(ValueType=PrefValueType.LONG)]
+		[PrefName(ValueType = PrefValueType.LONG)]
 		ReactivationStatusEmailedTexted,
 		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefCat.</summary>
-		[PrefName(ValueType=PrefValueType.LONG)]
+		[PrefName(ValueType = PrefValueType.LONG)]
 		ReactivationStatusMailed,
 		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefCat.</summary>
-		[PrefName(ValueType=PrefValueType.LONG)]
+		[PrefName(ValueType = PrefValueType.LONG)]
 		ReactivationStatusTexted,
 		RecallAdjustDown,
 		RecallAdjustRight,
@@ -1384,7 +1391,7 @@ namespace OpenDentBusiness {
 		///<summary>Bool, 0 by default.  When true, uses the transaction date for the recurring charge payment date.
 		///When false, the recurring charge date will be used as the recurring charge payment date.</summary>
 		RecurringChargesUseTransDate,
-		
+
 		[Obsolete]
 		RegistrationKey,
 
@@ -1408,15 +1415,15 @@ namespace OpenDentBusiness {
 		RepeatingChargesRunAging,
 		///<summary>Bool, 0 by default. When on, the user will be prompted to overwrite existing blockouts when making a new blockout that overlaps the existing ones.</summary>
 		ReplaceExistingBlockout,
-		
-		
+
+
 		/// <summary>
 		/// If replication has failed, this indicates the server_id. 
 		/// No computer will be able to connect to this single server until this flag is cleared.
 		/// </summary>
 		[Obsolete("Support for replication is being removed. Replication should be handled by the database, not by us.")]
 		ReplicationFailureAtServer_id,
-		
+
 		/// <summary>
 		/// The PK of the replication server that is flagged as the "report server". 
 		/// If using replication, "create table" or "drop table" commands can only be executed within the user query 
@@ -1424,7 +1431,7 @@ namespace OpenDentBusiness {
 		/// </summary>
 		[Obsolete("Support for replication is being removed. Replication should be handled by the database, not by us.")]
 		ReplicationUserQueryServer,
-		
+
 		ReportFolderName,
 		///<summary>When using a distinct reporting server, stores the server name.</summary>
 		ReportingServerCompName,
@@ -1488,7 +1495,7 @@ namespace OpenDentBusiness {
 		///<summary>Set to 0 to disable auto logoff.</summary>
 		SecurityLogOffAfterMinutes,
 		///<summary>Boolean.  False by default.  Allows users to set their own automatic logoff times.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		SecurityLogOffAllowUserOverride,
 		SecurityLogOffWithWindows,
 		///<summary>Indicates if emails should be sent from a different process when sending through the eConnector. Stored using the YN enum. 0 is
@@ -1574,22 +1581,22 @@ namespace OpenDentBusiness {
 		ShowAllocateUnearnedPaymentPrompt,
 		///<summary>Set to 0 by default. Preference that controls if the auto deposit group box shows or not in FormClaimPayEdit.cs</summary>
 		ShowAutoDeposit,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		ShowFeatureEhr,
 		///<summary>Set to 0 by default. Controls if the Enterprise Setup Window will be available.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		ShowFeatureEnterprise,
 		///<summary>Set to 1 by default.  Shows a button in Edit Patient Information that lets users launch Google Maps.</summary>
 		ShowFeatureGoogleMaps,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		ShowFeatureMedicalInsurance,
 		///<summary>Set to 1 to enable the Synch Clone button in the Family module which allows users to create and synch clones of patients.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		ShowFeaturePatientClone,
 		///<summary>Set to 1 to enable the Reactivations tab in the Recall list.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		ShowFeatureReactivations,
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		ShowFeatureSuperfamilies,
 		///<summary>Set to 0 by default.  For enterprise users.  When enabled users can setup Fee Schedule Groups so that whenever a Fee Schedule in a clinic is edited 
 		///it will automatically update that fee schedule for the other clinics in that group.</summary>
@@ -1621,7 +1628,7 @@ namespace OpenDentBusiness {
 		StatementAccountsUseChartNumber,
 		StatementsCalcDueDate,
 		///<summary>Deprecated. Not used anywhere. This preference was only used with non-sheet statements.</summary>
-		[Obsolete("This preference has been deprecated. Do not use.",true)]
+		[Obsolete("This preference has been deprecated. Do not use.", true)]
 		StatementShowCreditCard,
 		///<summary>Show payment notes.</summary>
 		StatementShowNotes,
@@ -1631,7 +1638,7 @@ namespace OpenDentBusiness {
 		///<summary>Deprecated.  Not used anywhere.</summary>
 		StatementSummaryShowInsInfo,
 		///<summary>Deprecated.  Not used anywhere. All statements now use sheets.</summary>
-		[Obsolete("This preference has been deprecated. Do not use.",true)]
+		[Obsolete("This preference has been deprecated. Do not use.", true)]
 		StatementsUseSheets,
 		///<summary>Used by OD HQ. Indicates whether WebCamOD applications should be sending their images to the server or not.</summary>
 		StopWebCamSnapshot,
@@ -1643,16 +1650,16 @@ namespace OpenDentBusiness {
 		SuperFamNewPatAddIns,
 		///<summary>Defaults to true, unless BackupReminderLastDateRun is disabled (more than a decade into the future).
 		///When true, supplemental backups will be executed from the eConnector and copied to HQ as a last resort recovery solution.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		SupplementalBackupEnabled,
 		///<summary>Defaults to MinVal (0001-01-01 00:00:00).  Last date and time supplemental backup was successful.</summary>
-		[PrefName(ValueType=PrefValueType.DATETIME)]
+		[PrefName(ValueType = PrefValueType.DATETIME)]
 		SupplementalBackupDateLastComplete,
 		///<summary>Blank by default.	 Designed to be set to a network path (UNC) to another computer on the network.
 		///A local copy of the supplemental backup file will be placed here as a secondary measure for last resort recovery.
 		///A copy of the supplemental backup will be placed here before uploading to HQ.
 		///This way customers with databases larger than 1GB can make use of our backup system.</summary>
-		[PrefName(ValueType=PrefValueType.STRING)]
+		[PrefName(ValueType = PrefValueType.STRING)]
 		SupplementalBackupNetworkPath,
 		TaskAncestorsAllSetInVersion55,
 		TaskListAlwaysShowsAtBottom,
@@ -1685,7 +1692,7 @@ namespace OpenDentBusiness {
 		///<summary>bool</summary>
 		TimeCardsUseDecimalInsteadOfColon,
 		///<summary>Users can not edit their own time card for past pay periods.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		TimecardUsersCantEditPastPayPeriods,
 		TimecardUsersDontEditOwnCard,
 		///<summary>Boolean, false by default. When enabled, main title of FormOpenDental uses clinic abbr instead of description</summary>
@@ -1720,7 +1727,7 @@ namespace OpenDentBusiness {
 		TreatPlanItemized,
 		TreatPlanPriorityForDeclined,
 		///<summary>True by default. Prompt user with name suggestion when saving a treatment plan.</summary>
-		[PrefName(ValueType=PrefValueType.BOOL)]
+		[PrefName(ValueType = PrefValueType.BOOL)]
 		TreatPlanPromptSave,
 		///<summary>When a TP is signed a PDF will be generated and saved. If disabled, TPs will be redrawn with current data (pre 15.4 behavior).</summary>
 		TreatPlanSaveSignedToPdf,
@@ -1756,16 +1763,16 @@ namespace OpenDentBusiness {
 		//INSERT INTO preference(PrefName,ValueString) VALUES ('VoicemailTime','');
 		//INSERT INTO preference(PrefName,ValueString) VALUES ('HQSerializedMapContainers','');
 		///<summary>DEPRECATED.  Moved to the Trojan Express Collect program link properties.</summary>
-		[Obsolete("This preference has been deprecated. Do not use.",true)]
+		[Obsolete("This preference has been deprecated. Do not use.", true)]
 		TrojanExpressCollectBillingType,
 		///<summary>DEPRECATED.  Moved to the Trojan Express Collect program link properties.</summary>
-		[Obsolete("This preference has been deprecated. Do not use.",true)]
+		[Obsolete("This preference has been deprecated. Do not use.", true)]
 		TrojanExpressCollectPassword,
 		///<summary>DEPRECATED.  Moved to the Trojan Express Collect program link properties.</summary>
-		[Obsolete("This preference has been deprecated. Do not use.",true)]
+		[Obsolete("This preference has been deprecated. Do not use.", true)]
 		TrojanExpressCollectPath,
 		///<summary>DEPRECATED.  Moved to the Trojan Express Collect program link properties.</summary>
-		[Obsolete("This preference has been deprecated. Do not use.",true)]
+		[Obsolete("This preference has been deprecated. Do not use.", true)]
 		TrojanExpressCollectPreviousFileNumber,
 		///<summary>Can be any int.  Defaults to 0.</summary>
 		UnschedDaysFuture,
@@ -1910,7 +1917,7 @@ namespace OpenDentBusiness {
 		/// <summary>String, the webforms url that should be launched after a new patient signs up using web sched.</summary>
 		WebSchedNewPatWebFormsURL,
 		///<summary>Enum: WebSchedProviderRules 0=FirstAvailable, 1=PrimaryProvider, 2=SecondaryProvider, 3=LastSeenHygienist</summary>
-		[PrefName(ValueType=PrefValueType.INT)]
+		[PrefName(ValueType = PrefValueType.INT)]
 		WebSchedProviderRule,
 		///<summary>Int, 0 indicates we do not do anything beyond appointment rules in Web Sched Recall to block double-booking.
 		///1 indicates we do not allow double booking at all.  This preference can be enhanced in the future to be an enum.</summary>
@@ -1983,80 +1990,83 @@ namespace OpenDentBusiness {
 		XRayExposureLevel
 	}
 
-	public static class PrefNameExtensions {
-		public static PrefValueType GetValueType(this PrefName prefName) {
-			return prefName.GetAttributeOrDefault<PrefNameAttribute>().ValueType;
+	public static class PrefNameExtensions
+	{
+		public static PrefValueType GetValueType(this PrefName preferenceName)
+		{
+			return preferenceName.GetAttributeOrDefault<PrefNameAttribute>().ValueType;
 		}
 
-		public static string GetValueAsText(this PrefName prefName) {
-			switch(prefName.GetValueType()) {
+		public static string GetValueAsText(this PrefName preferenceName)
+		{
+			switch (preferenceName.GetValueType())
+			{
 				case PrefValueType.NONE:
 				case PrefValueType.STRING:
-					return PrefC.GetString(prefName);
+					return PrefC.GetString(preferenceName);
+
 				case PrefValueType.LONG:
-					return POut.Long(PrefC.GetLong(prefName));
+					return POut.Long(PrefC.GetLong(preferenceName));
+
 				case PrefValueType.LONG_NEG_ONE_AS_ZERO:
-					return PrefC.GetLongHideNegOne(prefName,true);
+					return PrefC.GetLongHideNegOne(preferenceName, true);
+
 				case PrefValueType.LONG_NEG_ONE_AS_BLANK:
-					return PrefC.GetLongHideNegOne(prefName);
+					return PrefC.GetLongHideNegOne(preferenceName);
 			}
-			return PrefC.GetString(prefName);
+			return PrefC.GetString(preferenceName);
 		}
 
-		public static bool Update(this PrefName prefName,object value) {
-			switch(prefName.GetValueType()) {
-				case PrefValueType.NONE: 
-					return false; //nothing to save
-				case PrefValueType.BOOL: 
-					return Prefs.UpdateBool(prefName,PIn.Bool(value.ToString()));
+		public static bool Update(this PrefName preferenceName, object value)
+		{
+			switch (preferenceName.GetValueType())
+			{
+				case PrefValueType.NONE:
+					return false;
+
+				case PrefValueType.BOOL:
+					return Prefs.UpdateBool(preferenceName, PIn.Bool(value.ToString()));
+
 				case PrefValueType.ENUM:
 				case PrefValueType.INT:
 				case PrefValueType.COLOR:
 				case PrefValueType.YN_DEFAULT_FALSE:
 				case PrefValueType.YN_DEFAULT_TRUE:
-					return Prefs.UpdateInt(prefName,PIn.Int(value.ToString()));
+					return Prefs.UpdateInt(preferenceName, PIn.Int(value.ToString()));
+
 				case PrefValueType.LONG:
-					return Prefs.UpdateLong(prefName,PIn.Long(value.ToString()));
+					return Prefs.UpdateLong(preferenceName, PIn.Long(value.ToString()));
+
 				case PrefValueType.LONG_NEG_ONE_AS_ZERO:
 				case PrefValueType.LONG_NEG_ONE_AS_BLANK:
-					return Prefs.UpdateLongAsNegOne(prefName,value.ToString());
+					return Prefs.UpdateLongAsNegOne(preferenceName, value.ToString());
+
 				case PrefValueType.DOUBLE:
-					return Prefs.UpdateDouble(prefName,PIn.Double(value.ToString()));
+					return Prefs.UpdateDouble(preferenceName, PIn.Double(value.ToString()));
+
 				case PrefValueType.DATE:
 				case PrefValueType.DATETIME:
-					return Prefs.UpdateDateT(prefName,(DateTime)value);
+					return Prefs.UpdateDateT(preferenceName, (DateTime)value);
+
 				case PrefValueType.STRING:
 				default:
-					return Prefs.UpdateString(prefName,value.ToString());
+					return Prefs.UpdateString(preferenceName, value.ToString());
 			}
 		}
 	}
 
-	///<summary>PrefName-related attributes.</summary>
-	public class PrefNameAttribute:Attribute {
-		private PrefValueType _valueType=PrefValueType.NONE;
-		private PrefName _fkeyPrefName=PrefName.NotApplicable;
-		
-		public PrefValueType ValueType{
-			get{
-				return _valueType;
-			}
-			set{
-				_valueType=value;
-			}
-		}
+	/// <summary>
+	/// PrefName-related attributes.
+	/// </summary>
+	public class PrefNameAttribute : Attribute
+	{
+		public PrefValueType ValueType { get; set; } = PrefValueType.NONE;
 
-		public PrefName FKeyPrefName{
-			get{
-				return _fkeyPrefName;
-			}
-			set{
-				_fkeyPrefName=value;
-			}
-		}
+		public PrefName FKeyPrefName { get; set; } = PrefName.NotApplicable;
 	}
 
-	public enum PrefValueType{
+	public enum PrefValueType
+	{
 		NONE,
 		BOOL,
 		STRING,
@@ -2070,101 +2080,156 @@ namespace OpenDentBusiness {
 		DATE,
 		DATETIME,
 		COLOR,
-		///<summary>Uses YN enum. 0=Unknown,1=Yes, or 2=No. If 0-Unknown, then this defaults to true. Y and N are considered overrides. This allows us to change the default behavior while still preserving user choices by changing type to YN_DEFAULT_FALSE.  This is overkill for most prefs, and bool is usually preferred.</summary>
+		
+		/// <summary>
+		/// Uses YN enum. 0=Unknown,1=Yes, or 2=No. If 0-Unknown, then this defaults to true. Y and N are considered overrides.
+		/// This allows us to change the default behavior while still preserving user choices by changing type to YN_DEFAULT_FALSE.
+		/// This is overkill for most prefs, and bool is usually preferred.
+		/// </summary>
 		YN_DEFAULT_TRUE,
-		///<summary>Uses YN enum. 0=Unknown,1=Yes, or 2=No. If 0-Unknown, then this defaults to false. Y and N are considered overrides. This allows us to change the default behavior while still preserving user choices by changing type to YN_DEFAULT_TRUE.  This is overkill for most prefs, and bool is usually preferred.</summary>
+		
+		/// <summary>
+		/// Uses YN enum. 0=Unknown,1=Yes, or 2=No. If 0-Unknown, then this defaults to false. Y and N are considered overrides.
+		/// This allows us to change the default behavior while still preserving user choices by changing type to YN_DEFAULT_TRUE.
+		/// This is overkill for most prefs, and bool is usually preferred.
+		/// </summary>
 		YN_DEFAULT_FALSE
 	}
 
-	///<summary>Used by pref "AppointmentSearchBehavior". </summary>
-	public enum SearchBehaviorCriteria {
-		///<summary>0 - Based only on provider availability from the schedule.</summary>
+	/// <summary>
+	/// Used by pref "AppointmentSearchBehavior".
+	/// </summary>
+	public enum SearchBehaviorCriteria
+	{
+		/// <summary>
+		/// Based only on provider availability from the schedule.
+		/// </summary>
 		[Description("Provider Time")]
 		ProviderTime,
-		///<summary>1 - Based on provider schedule availability as well as the availabilty of their operatory (dynamic or directly assigned).</summary>
+		
+		/// <summary>
+		/// Based on provider schedule availability as well as the availabilty of their operatory (dynamic or directly assigned).
+		/// </summary>
 		[Description("Provider Time Operatory")]
 		ProviderTimeOperatory,
 	}
 
-	///<summary>Used by pref "AccountingSoftware".  0=OpenDental, 1=QuickBooks</summary>
-	public enum AccountingSoftware {
+	/// <summary>
+	/// Used by pref "AccountingSoftware"
+	/// </summary>
+	public enum AccountingSoftware
+	{
 		OpenDental,
 		QuickBooks
 	}
 
-	public enum RigorousAccounting {
-		///<summary>0 - Auto-splitting payments and enforcing paysplit validity is enforced.</summary>
+	public enum RigorousAccounting
+	{
+		/// <summary>
+		/// Auto-splitting payments and enforcing paysplit validity is enforced.
+		/// </summary>
 		[Description("Enforce Fully")]
 		EnforceFully,
-		///<summary>1 - Auto-splitting payments is done, paysplit validity isn't enforced.</summary>
+
+		/// <summary>
+		/// Auto-splitting payments is done, paysplit validity isn't enforced.
+		/// </summary>
 		[Description("Auto-Split Only")]
 		AutoSplitOnly,
-		///<summary>2 - Neither auto-splitting nor paysplit validity is enforced.</summary>
+
+		/// <summary>
+		/// Neither auto-splitting nor paysplit validity is enforced.
+		/// </summary>
 		[Description("Don't Enforce")]
 		DontEnforce
 	}
 
-	public enum RigorousAdjustments {
-		///<summary>0 - Automatically link adjustments and procedures, adjustment linking enforced.</summary>
+	public enum RigorousAdjustments
+	{
+		/// <summary>
+		/// Automatically link adjustments and procedures, adjustment linking enforced.
+		/// </summary>
 		[Description("Enforce Fully")]
 		EnforceFully,
-		///<summary>1 - Adjustment links are made automatically, but it can be edited.</summary>
+
+		/// <summary>
+		/// Adjustment links are made automatically, but it can be edited.
+		/// </summary>
 		[Description("Link Only")]
 		LinkOnly,
-		///<summary>2 - Adjustment links aren't made, nor are they enforced.</summary>
+
+		/// <summary>
+		/// Adjustment links aren't made, nor are they enforced.
+		/// </summary>
 		[Description("Don't Enforce")]
 		DontEnforce
 	}
 
-	///<summary>Used by pref "WebSchedProviderRule". Determines how Web Sched will decide on what provider time slots to show patients.</summary>
-	public enum WebSchedProviderRules {
-		///<summary>0 - Dynamically picks the first available provider based on the time slot picked by the patient.</summary>
+	///<summary>
+	///Used by pref "WebSchedProviderRule". Determines how Web Sched will decide on what provider time slots to show patients.
+	///</summary>
+	public enum WebSchedProviderRules
+	{
+		/// <summary>
+		/// Dynamically picks the first available provider based on the time slot picked by the patient.
+		/// </summary>
 		FirstAvailable,
-		///<summary>1 - Only shows time slots that are available via the patient's primary provider.</summary>
+
+		/// <summary>
+		/// Only shows time slots that are available via the patient's primary provider.
+		/// </summary>
 		PrimaryProvider,
-		///<summary>2 - Only shows time slots that are available via the patient's secondary provider.</summary>
+
+		/// <summary>
+		/// Only shows time slots that are available via the patient's secondary provider.
+		/// </summary>
 		SecondaryProvider,
-		///<summary>3 - Only shows time slots that are available via the patient's last seen hygienist.</summary>
+
+		/// <summary>
+		/// Only shows time slots that are available via the patient's last seen hygienist.
+		/// </summary>
 		LastSeenHygienist
 	}
 
-	///<summary>How this database is being hosted.</summary>
-	[Obsolete]
-	public enum DatabaseModeEnum {
-		///<summary>Customer is hosting their own database.</summary>
-		Normal,
-		///<summary>Open Dental is hosting the database.</summary>
-		[Obsolete]
-		Cloud,
-	}
-
-	public enum PPOWriteoffDateCalc {
-		/// <summary>0 - Use the insurance payment date when dating writeoff estimates and adjustments in reports. </summary>
+	public enum PPOWriteoffDateCalc
+	{
+		/// <summary>
+		/// Use the insurance payment date when dating writeoff estimates and adjustments in reports.
+		/// </summary>
 		[Description("Insurance Pay Date")]
 		InsPayDate,
-		/// <summary>1 - Use the date of the procedure when dating writeoff estimates and adjustments in reports.</summary>
+		
+		/// <summary>
+		/// Use the date of the procedure when dating writeoff estimates and adjustments in reports.
+		/// </summary>
 		[Description("Procedure Date")]
 		ProcDate,
-		/// <summary>2 - Uses initial claim date for writeoff estimates and insurance payment date for writeoff adjustments in reports.</summary>
+
+		/// <summary>
+		/// Uses initial claim date for writeoff estimates and insurance payment date for writeoff adjustments in reports.
+		/// </summary>
 		[Description("Initial Claim Date/Ins Pay Date")]
 		ClaimPayDate
 	}
 
-	///<summary>Different options for electronic statements.  Descriptions taken from the FormBillingDefaults</summary>
-	public enum BillingUseElectronicEnum {
-		///<summary>0 - Not using electronic statements.</summary>
+	/// <summary>
+	/// Different options for electronic statements.
+	/// Descriptions taken from the FormBillingDefaults.
+	/// </summary>
+	public enum BillingUseElectronicEnum
+	{
 		[Description("No electronic billing")]
 		None,
-		///<summary>1.</summary>
+
 		[Description("Dental X Change")]
 		EHG,
-		///<summary>2 - (xml file).</summary>
+
 		[Description("Output to file")]
 		POS,
-		///<summary>3 - (xml file).</summary>
+
 		[Description("ClaimX / ExtraDent")]
 		ClaimX,
-		///<summary>4 - (xml file).</summary>
+
 		[Description("EDS")]
 		EDS,
 	}

@@ -591,7 +591,7 @@ So, ""Hello"".";
 			string tempFile=PrefC.GetRandomTempFile(".jpg");
 			string filePath=ImageStore.GetEmailImagePath();
 			string newFileAndPathName=FileAtoZ.CombinePaths(filePath,System.IO.Path.GetFileName(tempFile));
-			FileAtoZ.Copy(tempFile,newFileAndPathName,FileAtoZSourceDestination.AtoZToLocal);
+			FileAtoZ.Copy(tempFile,newFileAndPathName);
 			Assert.IsTrue(FileAtoZ.Exists(newFileAndPathName));
 			string localPath=@"<html><head><title>Email Stuff</head><body><img src="""+tempFile+@"""/></body></html>";
 			string actualLocalPath=EmailMessages.FindAndReplaceImageTagsWithAttachedImage(localPath.ToString(),false,out List<string> listLocalImagePaths);

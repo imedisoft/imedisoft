@@ -793,87 +793,84 @@ namespace OpenDental{
 			}
 		}
 
-		private bool PrefsStartup() {
-			//Default usePreviousVersions to false as this is only called after Open Dental is already fully functional. No versions will have changed
-			//by the time this is called.
-			return PrefsStartup(false,null);
-		}
-
-		///<summary>Returns false if it can't complete a conversion, find datapath, or validate registration key. A silent update will have no UI elements appear. model stores all the info used within the choose database window. Stores all information entered within the window.</summary>
-		private bool PrefsStartup(bool isSilentUpdate,ChooseDatabaseInfo chooseDatabaseInfo){
-			try {
+		/// <summary>
+		/// Returns false if it can't complete a conversion, find datapath, or validate registration key.
+		/// A silent update will have no UI elements appear. model stores all the info used within the choose database window.
+		/// Stores all information entered within the window.
+		/// </summary>
+		private bool PrefsStartup(bool isSilentUpdate = false, ChooseDatabaseInfo chooseDatabaseInfo = null)
+		{
+			try
+			{
 				Cache.Refresh(InvalidType.Prefs);
 			}
-			catch(Exception ex) {
-				if(isSilentUpdate) {
-					ExitCode=100;//Database could not be accessed for cache refresh
+			catch (Exception ex)
+			{
+				if (isSilentUpdate)
+				{
+					ExitCode = 100;//Database could not be accessed for cache refresh
 					Environment.Exit(ExitCode);
 					return false;
 				}
 				MessageBox.Show(ex.Message);
 				return false;//shuts program down.
 			}
-			if(!PrefL.CheckMySqlVersion(isSilentUpdate)){
+
+			if (!PrefL.CheckMySqlVersion(isSilentUpdate))
+			{
 				return false;
 			}
 
-				try {
-					MiscData.SetSqlMode();
-				}
-				catch {
-					if(isSilentUpdate) {
-						ExitCode=111;//Global SQL mode could not be set
-						Environment.Exit(ExitCode);
-						return false;
-					}
-					MessageBox.Show("Unable to set global sql mode.  User probably does not have enough permission.");
-					return false;
-				}
-				string updateComputerName=PrefC.GetStringSilent(PrefName.UpdateInProgressOnComputerName);
-				if(updateComputerName != "" && Environment.MachineName.ToUpper() != updateComputerName.ToUpper()) {
-					if(isSilentUpdate) {
-						ExitCode=120;//Computer trying to access DB during update
-						Environment.Exit(ExitCode);
-						return false;
-					}
-					FormUpdateInProgress formUIP=new FormUpdateInProgress(updateComputerName);
-					DialogResult result=formUIP.ShowDialog();
-					if(result!=DialogResult.OK) {
-						return false;//Either the user canceled out of the window or clicked the override button which 
-					}
-				}
-			
-			//if RemotingRole.ClientWeb, version will have already been checked at login, so no danger here.
-			//ClientWeb version can be older than this version, but that will be caught in a moment.
-			if(isSilentUpdate) {
-				if(!PrefL.ConvertDB(true,Application.ProductVersion,this,false)) {//refreshes Prefs if converted successfully.
-					if(ExitCode==0) {//Unknown error occurred
-						ExitCode=200;//Convert Database has failed during execution (Unknown Error)
-					}
+			try
+			{
+				MiscData.SetSqlMode();
+			}
+			catch
+			{
+				if (isSilentUpdate)
+				{
+					ExitCode = 111;//Global SQL mode could not be set
 					Environment.Exit(ExitCode);
 					return false;
 				}
+				MessageBox.Show("Unable to set global sql mode.  User probably does not have enough permission.");
+				return false;
 			}
-			else {
-				if(!PrefL.ConvertDB(this,chooseDatabaseInfo?.UseDynamicMode??false)) {//refreshes Prefs if converted successfully.
+
+			string updateComputerName = PrefC.GetStringSilent(PrefName.UpdateInProgressOnComputerName);
+			if (updateComputerName != "" && Environment.MachineName.ToUpper() != updateComputerName.ToUpper())
+			{
+				if (isSilentUpdate)
+				{
+					ExitCode = 120;//Computer trying to access DB during update
+					Environment.Exit(ExitCode);
 					return false;
 				}
+				FormUpdateInProgress formUIP = new FormUpdateInProgress(updateComputerName);
+				DialogResult result = formUIP.ShowDialog();
+				if (result != DialogResult.OK)
+				{
+					return false;//Either the user canceled out of the window or clicked the override button which 
+				}
 			}
-			if(!isSilentUpdate) {
-				PrefL.MySqlVersion55Remind();
-			}
-			if(!PrefL.CheckProgramVersion(this,isSilentUpdate,chooseDatabaseInfo)){
+
+			if (!isSilentUpdate) PrefL.MySqlVersion55Remind();
+
+			if (!PrefL.CheckProgramVersion(isSilentUpdate))
+			{
 				return false;
 			}
 
 			//This must be done at startup in case the user does not perform any action to save something to temp file.
 			//This will cause slowdown, but only for the first week.
-			if(DateTime.Today<PrefC.GetDate(PrefName.TempFolderDateFirstCleaned).AddDays(7)) {
+			if (DateTime.Today < PrefC.GetDate(PrefName.TempFolderDateFirstCleaned).AddDays(7))
+			{
 				PrefC.GetTempFolderPath();//We don't care about the return value.  Just trying to trigger the one-time cleanup and create the temp/opendental directory.
 			}
+
 			Lans.RefreshCache();//automatically skips if current culture is en-US
 			LanguageForeigns.RefreshCache();//automatically skips if current culture is en-US
-			//menuItemMergeDatabases.Visible=PrefC.GetBool(PrefName.RandomPrimaryKeys");
+											//menuItemMergeDatabases.Visible=PrefC.GetBool(PrefName.RandomPrimaryKeys");
 			return true;
 		}
 
@@ -2882,12 +2879,6 @@ namespace OpenDental{
 			if(!string.IsNullOrEmpty(updateComputerName)) {
 				errorMsg=Lan.G(this,"An update is in progress on workstation")+": '"+updateComputerName+"'.\r\n\r\n"
 					+Lan.G(this,"You will have to restart")+" "+PrefC.GetString(PrefName.SoftwareName)+" "+Lan.G(this,"once the update has finished.");
-				return false;
-			}
-			if(PrefC.GetBool(PrefName.CorruptedDatabase)) {
-				//only happens if the UpdateInProgressOnComputerName is blank and the CorruptedDatabase flag is set, i.e. an update has failed
-				errorMsg=Lan.G(this,"Your database is corrupted because an update failed.  Please contact us.  This database is unusable and you will "
-					+"need to restore from a backup.");
 				return false;
 			}
 			return true;

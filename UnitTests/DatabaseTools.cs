@@ -26,10 +26,6 @@ namespace UnitTests {
 				command=Properties.Resources.dump;
 				DataCore.NonQ(command);
 				string toVersion=Assembly.GetAssembly(typeof(OpenDental.PrefL)).GetName().Version.ToString();
-				//MessageBox.Show(Application.ProductVersion+" - "+
-				if(!PrefL.ConvertDB(true,toVersion,null,false)) {
-					throw new Exception("Wrong version.");
-				}
 				ProcedureCodes.TcodesClear();
 				FormProcCodes.ImportProcCodes("",CDT.Class1.GetADAcodes(),"");//IF THIS LINE CRASHES:
 				//Go to Solution, Configuration Manager.  Exclude UnitTest project from build.

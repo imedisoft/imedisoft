@@ -124,17 +124,6 @@ namespace OpenDentBusiness
                             MySqlUser = PrefC.ReportingServer.Server == "" ? DataConnection.GetMysqlUser() : PrefC.ReportingServer.MySqlUser,
                             MySqlPassword = PrefC.ReportingServer.Server == "" ? DataConnection.GetMysqlPass() : PrefC.ReportingServer.MySqlPass
                         };
-
-                        // no ternary operator because URI will be blank if they're not using a middle tier reporting server.
-                        // cn.ServiceURI = PrefC.ReportingServer.URI;
-                        // Connection string is not currently supported for report servers.
-                        // If ServerName is null or empty, then the current instance of Open Dental is utilizing a connection string.
-                        // The connection string should be preserved in order for reports to continue to work for non-report server queries.
-                        if (string.IsNullOrEmpty(cn.ServerName))
-						{
-							cn.ConnectionString = PrefC.ReportingServer.ConnectionString == "" ? 
-								DataConnection.GetConnectionString() : PrefC.ReportingServer.ConnectionString;
-						}
 					});
 
 					// Not already there so add it once.
