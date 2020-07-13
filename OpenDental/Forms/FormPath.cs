@@ -1,15 +1,13 @@
-using CodeBase;
+using OpenDental;
 using OpenDentBusiness;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
+using MessageBox = OpenDental.MessageBox;
 
-namespace OpenDental.Forms
+namespace Imedisoft.Forms
 {
-    public partial class FormPath : ODForm
+    public partial class FormPath : FormBase
 	{
 		private readonly bool notConfigured;
 
@@ -31,7 +29,6 @@ namespace OpenDental.Forms
 			// Verify user has Setup permission to change paths, after user has logged in.
 			if (!notConfigured && !Security.IsAuthorized(Permissions.Setup))
 			{
-				
 				acceptButton.Enabled = false;
 			}
 
@@ -43,17 +40,23 @@ namespace OpenDental.Forms
 
 			if (notConfigured)
 			{
-				MessageBox.Show("Could not find the path for the AtoZ folder.");
+				Show();
+
+				MessageBox.Show(this, 
+					"Could not find the path for storing images and documents.", "Imedisoft", 
+					MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 				if (Security.CurUser == null || !Security.IsAuthorized(Permissions.Setup))
 				{
-					//The user is still allowed to set the "Path override for this computer", thus the user has a way to temporariliy get into OD in worst case.
-					//For example, if the primary folder path is wrong or has changed, the user can set the path override for this computer to get into OD, then
-					//can to to Setup | Data Paths to fix the primary path.
+					// The user is still allowed to set the "Path override for this computer", thus the user has a way to temporariliy get into OD in worst case.
+					// For example, if the primary folder path is wrong or has changed, the user can set the path override for this computer to get into OD, then
+					// can to to Setup | Data Paths to fix the primary path.
 					DisableMostControls();
+
 					localPathTextBox.ReadOnly = false;
 					localPathButton.Enabled = true;
-					ActiveControl = localPathTextBox;//Focus on textLocalPath, since this is the only textbox the user can edit in this case.
+
+					ActiveControl = localPathTextBox;
 				}
 			}
 		}
@@ -79,13 +82,13 @@ namespace OpenDental.Forms
 		{
 			try
 			{
-				using (var f = new FolderBrowserDialog())
+				using (var folderBrowserDialog = new FolderBrowserDialog())
 				{
-					f.SelectedPath = "C:\\";
+					folderBrowserDialog.SelectedPath = "C:\\";
 
-					if (f.ShowDialog(this) == DialogResult.OK)
+					if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
 					{
-						textBox.Text = f.SelectedPath;
+						textBox.Text = folderBrowserDialog.SelectedPath;
 					}
 				}
 			}
@@ -111,28 +114,46 @@ namespace OpenDental.Forms
 
 		private void AcceptButton_Click(object sender, EventArgs e)
 		{
-			if (localPathTextBox.Text != "")
-			{
-				if (OpenDentBusiness.FileIO.FileAtoZ.GetValidPathFromString(localPathTextBox.Text) == null)
-				{
-					MessageBox.Show(
-						"The path override for this computer is invalid. " +
-						"The folder must exist and must contain all 26 A through Z folders.");
+			bool TryCreateDirectory(string path)
+            {
+                try
+                {
+					if (!Directory.Exists(path))
+					{
+						Directory.CreateDirectory(path);
+					}
 
-					return;
+					return true;
 				}
+                catch (Exception exception)
+                {
+					MessageBox.Show(this,
+						exception.Message, "Imedisoft", 
+						MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+				return false;
 			}
+
+			var path = localPathTextBox.Text.Trim();
+			if (path.Length > 0)
+            {
+				if (!TryCreateDirectory(path))
+                {
+					return;
+                }
+            }
 			else
-			{
-				if (OpenDentBusiness.FileIO.FileAtoZ.GetValidPathFromString(pathTextBox.Text) == null)
-				{
-					MessageBox.Show(
-						"The path is invalid. " +
-						"The folder must exist and must contain all 26 A through Z folders.");
-
-					return;
-				}
-			}
+            {
+				path = pathTextBox.Text.Trim();
+				if (path.Length > 0)
+                {
+					if (!TryCreateDirectory(path))
+                    {
+						return;
+                    }
+                }
+            }
 
 			if (Prefs.UpdateString(PrefName.DocPath, pathTextBox.Text) |
 				Prefs.UpdateString(PrefName.ExportPath, exportPathTextBox.Text) |
@@ -141,11 +162,11 @@ namespace OpenDental.Forms
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 
-			if (OpenDentBusiness.FileIO.FileAtoZ.LocalAtoZpath != localPathTextBox.Text)
-			{//if local path changed
-				OpenDentBusiness.FileIO.FileAtoZ.LocalAtoZpath = localPathTextBox.Text;
-				//ComputerPref compPref=ComputerPrefs.GetForLocalComputer();
-				ComputerPrefs.LocalComputer.AtoZpath = OpenDentBusiness.FileIO.FileAtoZ.LocalAtoZpath;
+			if (OpenDentBusiness.FileIO.FileAtoZ.LocalAtoZpath != path)
+			{
+				ComputerPrefs.LocalComputer.AtoZpath = 
+					OpenDentBusiness.FileIO.FileAtoZ.LocalAtoZpath = path;
+
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
 			}
 

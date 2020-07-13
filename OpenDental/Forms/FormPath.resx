@@ -117,17 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="fb.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <data name="exportPathLabel.Text" xml:space="preserve">
-    <value>Export Path (Optional): for exporting tables. If you use a network path (like \\SERVER\ImedisoftExport), the data will be exported to one central computer. But it is usually easier to use a local path (like C:\ImedisoftExport), and the data will be stored on the local hard drive of the computer you export on. The folder will be created later if it does not exist.</value>
+    <value>For exporting tables. If you use a network path (like \\SERVER\ImedisoftExport), the data will be exported to one central computer. But it is usually easier to use a local path (like C:\ImedisoftExport), and the data will be stored on the local hard drive of the computer you export on. The folder will be created later if it does not exist.</value>
   </data>
-  <data name="storageInfoLabel.Text" xml:space="preserve">
+  <data name="pathLabel.Text" xml:space="preserve">
     <value>This path is the same for every computer. If you have only one computer, then the folder can be local (like C:\ImedisoftImages), otherwise it should be a folder shared on the network (like \\SERVER\ImedisoftImages)</value>
   </data>
   <data name="letterMergePathLabel.Text" xml:space="preserve">
-    <value>Letter Merge Path (Optional): The location where your letter templates are stored. Letters are usually stored in one central location, so use a network path (like \\SERVER\ImedisoftLetters). Don't forget to share the folder so all the computers can access it. However, if you only have one computer with no network, then use a local path (like C:\ImedisoftLetters). </value>
+    <value>The location where your letter templates are stored. Letters are usually stored in one central location, so use a network path (like \\SERVER\ImedisoftLetters). Don't forget to share the folder so all the computers can access it. However, if you only have one computer with no network, then use a local path (like C:\ImedisoftLetters). </value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>60</value>

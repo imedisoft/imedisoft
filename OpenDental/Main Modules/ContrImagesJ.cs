@@ -88,7 +88,7 @@ namespace OpenDental{
 		#region Constructor
 		public ContrImagesJ(){
 			InitializeComponent();
-			_cursorPan=new Cursor(GetType(),"CursorPalm.cur");
+			// TODO: _cursorPan=new Cursor(GetType(),"CursorPalm.cur");
 			panelMain.Cursor=_cursorPan;
 			panelMain.MouseWheel += panelMain_MouseWheel;
 			try {

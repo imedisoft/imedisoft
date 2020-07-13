@@ -40,18 +40,14 @@ namespace OpenDentBusiness.FileIO
 				}
 				catch
 				{
-					// fails when loading plugins after switching to version 15.1 because of schema change.
 					LocalAtoZpath = "";
 				}
 			}
 
-			//Override path.  Because it overrides all other paths, we evaluate it first.
-			if (!string.IsNullOrEmpty(LocalAtoZpath))
-			{
-				return LocalAtoZpath.Trim();
-			}
+			// Override path. Because it overrides all other paths, we evaluate it first.
+			if (!string.IsNullOrEmpty(LocalAtoZpath)) return LocalAtoZpath.Trim();
 
-			//use this to handle possible multiple paths separated by semicolons.
+			// Use this to handle possible multiple paths separated by semicolons.
 			return GetValidPathFromString(PrefC.GetString(PrefName.DocPath))?.Trim();
 		}
 
