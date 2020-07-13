@@ -22,12 +22,12 @@ namespace OpenDental{
 			HeadingIsPresent=true;
 			InstantClassesPar();
 			SetRowHeight(0,9,14);
-			Heading=Lan.g("TableClearinghouses","Clearinghouses");
-			Fields[0]=Lan.g("TableClearinghouses","Description");
-			Fields[1]=Lan.g("TableClearinghouses","Export Path");
-			Fields[2]=Lan.g("TableClearinghouses","Format");
-			Fields[3]=Lan.g("TableClearinghouses","Is Default");
-			Fields[4]=Lan.g("TableClearinghouses","Payors");
+			Heading=Lan.G("TableClearinghouses","Clearinghouses");
+			Fields[0]=Lan.G("TableClearinghouses","Description");
+			Fields[1]=Lan.G("TableClearinghouses","Export Path");
+			Fields[2]=Lan.G("TableClearinghouses","Format");
+			Fields[3]=Lan.G("TableClearinghouses","Is Default");
+			Fields[4]=Lan.G("TableClearinghouses","Payors");
 			ColWidth[0]=150;
 			ColWidth[1]=230;
 			ColWidth[2]=110;

@@ -33,14 +33,14 @@ namespace OpenDental {
 			}
 			checkEnabled.Checked=_progCur.Enabled;
 			if(!PrefC.HasClinicsEnabled) {//clinics are not enabled, use ClinicNum 0 to indicate 'Headquarters' or practice level program properties
-				checkEnabled.Text=Lan.g(this,"Enabled");
-				groupClinicSettings.Text=Lan.g(this,"Transworld Settings");
+				checkEnabled.Text=Lan.G(this,"Enabled");
+				groupClinicSettings.Text=Lan.G(this,"Transworld Settings");
 				labelClinicEnable.Visible=false;
-				groupSendActivity.Text=Lan.g(this,"Account Activity Updates");//remove '(affects all clinics)' from text
+				groupSendActivity.Text=Lan.G(this,"Account Activity Updates");//remove '(affects all clinics)' from text
 				_selectedClinicNum=0;
 			}
 			else {//Using clinics
-				groupClinicSettings.Text=Lan.g(this,"Transworld Clinic Settings");
+				groupClinicSettings.Text=Lan.G(this,"Transworld Clinic Settings");
 				//if Transworld is enabled and the user is restricted to a clinic, don't allow the user to disable for all clinics
 				if(Security.CurUser.ClinicIsRestricted) {
 					if(checkEnabled.Checked) {

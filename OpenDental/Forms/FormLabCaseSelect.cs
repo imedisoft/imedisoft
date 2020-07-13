@@ -152,13 +152,13 @@ namespace OpenDental{
 			labCaseList=LabCases.GetForPat(PatNum,IsPlanned);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableLabCaseSelect","Date Created"),80);
+			GridColumn col=new GridColumn(Lan.G("TableLabCaseSelect","Date Created"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableLabCaseSelect","Lab"),100);
+			col=new GridColumn(Lan.G("TableLabCaseSelect","Lab"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableLabCaseSelect","Phone"),100);
+			col=new GridColumn(Lan.G("TableLabCaseSelect","Phone"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableLabCaseSelect","Instructions"),200);
+			col=new GridColumn(Lan.G("TableLabCaseSelect","Instructions"),200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -170,7 +170,7 @@ namespace OpenDental{
 				row.Cells.Add(dateCreated.ToString("ddd")+" "+dateCreated.ToShortDateString()+" "+dateCreated.ToShortTimeString());
 				lab=Laboratories.GetOne(labCase.LaboratoryNum);
 				if(lab==null) {//Lab wasn't found in the db, but we only require the LabCaseNum later.
-					row.Cells.Add(Lan.g(this,"Lab Not Found"));
+					row.Cells.Add(Lan.G(this,"Lab Not Found"));
 					row.Cells.Add("");
 				}
 				else {

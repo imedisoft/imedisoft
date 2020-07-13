@@ -311,14 +311,14 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			if(!PrefC.GetBool(PrefName.EasyHideDentalSchools)) {
-				col=new GridColumn(Lan.g("TableProviders","ProvNum"),60);
+				col=new GridColumn(Lan.G("TableProviders","ProvNum"),60);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("TableProviders","Abbrev"),80);
+			col=new GridColumn(Lan.G("TableProviders","Abbrev"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProviders","LName"),100);
+			col=new GridColumn(Lan.G("TableProviders","LName"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProviders","FName"),100);
+			col=new GridColumn(Lan.G("TableProviders","FName"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

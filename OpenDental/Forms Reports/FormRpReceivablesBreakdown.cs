@@ -220,7 +220,7 @@ namespace OpenDental {
 		private void FormRpReceivablesBreakdown_Load(object sender,EventArgs e) {
 			_listProvs=Providers.GetListReports();
 			radioWriteoffPay.Checked = true;
-			listProv.Items.Add(Lan.g(this,"Practice"));
+			listProv.Items.Add(Lan.G(this,"Practice"));
 			for(int i = 0;i < _listProvs.Count;i++) {
 				listProv.Items.Add(_listProvs[i].GetLongDesc());
 			}
@@ -496,8 +496,8 @@ namespace OpenDental {
 					Font boldFont = new Font("Tahoma",9,FontStyle.Bold);
 					Font fontTitle = new Font("Tahoma",17,FontStyle.Bold);
 					Font fontSubTitle = new Font("Tahoma",10,FontStyle.Bold);
-					report.ReportName=Lan.g(this,"Receivables Breakdown");
-					report.AddTitle("Title",Lan.g(this,"Receivables Breakdown"),fontTitle);
+					report.ReportName=Lan.G(this,"Receivables Breakdown");
+					report.AddTitle("Title",Lan.G(this,"Receivables Breakdown"),fontTitle);
 					report.AddSubTitle("PracticeTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 					report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToString("d"),fontSubTitle);
 					string provNames = "";
@@ -513,7 +513,7 @@ namespace OpenDental {
 					}
 					report.AddSubTitle("Provider SubTitle",provNames);
 					int[] summaryGroups1 = {1};
-					QueryObject query=report.AddQuery(TableQ,Lan.g(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
+					QueryObject query=report.AddQuery(TableQ,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
 					query.AddColumn("Date",72,FieldValueType.Date);
 					query.AddColumn("Production",80,FieldValueType.Number);
 					query.GetColumnDetail("Production").ContentAlignment=ContentAlignment.MiddleRight;

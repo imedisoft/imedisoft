@@ -37,13 +37,13 @@ namespace OpenDental.User_Controls.SetupWizard {
 			Color colorNeedsAttn = OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col = new GridColumn(Lan.g(this,"Last Name"),135);
+			GridColumn col = new GridColumn(Lan.G(this,"Last Name"),135);
 			gridMain.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.g(this,"First Name"),135);
+			col = new GridColumn(Lan.G(this,"First Name"),135);
 			gridMain.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.g(this,"MI"),65);
+			col = new GridColumn(Lan.G(this,"MI"),65);
 			gridMain.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.g(this,"Payroll ID"),105);
+			col = new GridColumn(Lan.G(this,"Payroll ID"),105);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

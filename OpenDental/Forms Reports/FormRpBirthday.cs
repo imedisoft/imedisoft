@@ -257,7 +257,7 @@ namespace OpenDental
 
 		private void butLeft_Click(object sender, System.EventArgs e) {
 			if(!validDateFrom.IsValid || !validDateTo.IsValid) {
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			DateTime dateFrom=PIn.Date(validDateFrom.Text);
@@ -282,7 +282,7 @@ namespace OpenDental
 
 		private void butRight_Click(object sender, System.EventArgs e) {
 			if(!validDateFrom.IsValid || !validDateTo.IsValid) {
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			DateTime dateFrom=PIn.Date(validDateFrom.Text);
@@ -391,7 +391,7 @@ namespace OpenDental
 			}
 			int totalPages=(int)Math.Ceiling((double)BirthdayTable.Rows.Count/(double)PrefC.GetLong(PrefName.RecallPostcardsPerSheet));
 			PrinterL.TryPreview(pdCards_PrintPage,
-				Lan.g(this,"Birthday report postcards printed"),
+				Lan.G(this,"Birthday report postcards printed"),
 				PrintSituation.Postcard,
 				new Margins(0,0,0,0),
 				PrintoutOrigin.AtMargin,
@@ -501,8 +501,8 @@ namespace OpenDental
 			Font font=new Font("Tahoma",9);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.g(this,"Birthdays");
-			report.AddTitle("Title",Lan.g(this,"Birthdays"),fontTitle);
+			report.ReportName=Lan.G(this,"Birthdays");
+			report.AddTitle("Title",Lan.G(this,"Birthdays"),fontTitle);
 			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString(),fontSubTitle);
 			QueryObject query=report.AddQuery(RpBirthday.GetBirthdayTable(dateFrom,dateTo),"","",SplitByKind.None,1,true);

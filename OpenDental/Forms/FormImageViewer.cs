@@ -156,7 +156,7 @@ namespace OpenDental{
 			docNums.Add(thisDocument.DocNum);
 			string fileName=CloudStorage.PathTidy(Documents.GetPaths(docNums,ImageStore.GetPreferredAtoZpath())[0]);
 			if(!FileAtoZ.Exists(fileName)) {
-				MessageBox.Show(fileName+" +"+Lan.g(this,"could not be found."));
+				MessageBox.Show(fileName+" +"+Lan.G(this,"could not be found."));
 				return;
 			}
 			ImageCurrent=(Bitmap)FileAtoZ.GetImage(fileName);
@@ -194,7 +194,7 @@ namespace OpenDental{
 				zoomFactor=1;
 			}
 			catch(Exception exception) {
-				MessageBox.Show(Lan.g(this,exception.Message));
+				MessageBox.Show(Lan.G(this,exception.Message));
 				ImageCurrent=null;
 				renderImage=null;
 			}
@@ -224,9 +224,9 @@ namespace OpenDental{
 		public void LayoutToolBar(){
 			//ODToolBarButton button;
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",0,Lan.g(this,"Zoom In"),"ZoomIn"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,Lan.g(this,"Zoom Out"),"ZoomOut"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"White"),-1,Lan.g(this,"Clear screen to solid white"),"White"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",0,Lan.G(this,"Zoom In"),"ZoomIn"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,Lan.G(this,"Zoom Out"),"ZoomOut"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"White"),-1,Lan.G(this,"Clear screen to solid white"),"White"));
 			ToolBarMain.Invalidate();
 		}
 

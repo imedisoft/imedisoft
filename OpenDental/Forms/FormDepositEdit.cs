@@ -740,7 +740,7 @@ namespace OpenDental{
 				}
 				else {
 					comboDepositAccount.Enabled=false;
-					labelDepositAccount.Text=Lan.g(this,"Deposited into Account");
+					labelDepositAccount.Text=Lan.G(this,"Deposited into Account");
 					List<JournalEntry> jeL=JournalEntries.GetForTrans(trans.TransactionNum);
 					for(int i=0;i<jeL.Count;i++) {
 						if(Accounts.GetAccount(jeL[i].AccountNum).AcctType==AccountType.Asset) {
@@ -845,17 +845,17 @@ namespace OpenDental{
 			Patient[] pats=Patients.GetMultPats(patNums);
 			gridPat.BeginUpdate();
 			gridPat.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableDepositSlipPat","Date"),80);
+			GridColumn col=new GridColumn(Lan.G("TableDepositSlipPat","Date"),80);
 			gridPat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipPat","Patient"),150);
+			col=new GridColumn(Lan.G("TableDepositSlipPat","Patient"),150);
 			gridPat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipPat","Type"),70);
+			col=new GridColumn(Lan.G("TableDepositSlipPat","Type"),70);
 			gridPat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipPat","Check Number"),95);
+			col=new GridColumn(Lan.G("TableDepositSlipPat","Check Number"),95);
 			gridPat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipPat","Bank-Branch"),80);
+			col=new GridColumn(Lan.G("TableDepositSlipPat","Bank-Branch"),80);
 			gridPat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipPat","Amount"),80);
+			col=new GridColumn(Lan.G("TableDepositSlipPat","Amount"),80);
 			gridPat.ListGridColumns.Add(col);
 			gridPat.ListGridRows.Clear();
 			OpenDental.UI.GridRow row;
@@ -873,17 +873,17 @@ namespace OpenDental{
 			//Fill Insurance Payment Grid-------------------------------------
 			gridIns.BeginUpdate();
 			gridIns.ListGridColumns.Clear();
-			col=new GridColumn(Lan.g("TableDepositSlipIns","Date"),80);
+			col=new GridColumn(Lan.G("TableDepositSlipIns","Date"),80);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipIns","Carrier"),150);
+			col=new GridColumn(Lan.G("TableDepositSlipIns","Carrier"),150);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipIns","Type"),70);
+			col=new GridColumn(Lan.G("TableDepositSlipIns","Type"),70);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipIns","Check Number"),95);
+			col=new GridColumn(Lan.G("TableDepositSlipIns","Check Number"),95);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipIns","Bank-Branch"),80);
+			col=new GridColumn(Lan.G("TableDepositSlipIns","Bank-Branch"),80);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableDepositSlipIns","Amount"),90);
+			col=new GridColumn(Lan.G("TableDepositSlipIns","Amount"),90);
 			gridIns.ListGridColumns.Add(col);
 			gridIns.ListGridRows.Clear();
 			for(int i=0;i<ClaimPayList.Length;i++){
@@ -986,8 +986,8 @@ namespace OpenDental{
 					,_depositCur.Amount
 					,textMemo.Text
 					,classRef);//if classRef=="" then it will be safely ignored here
-				SecurityLogs.MakeLogEntry(Permissions.DepositSlips,0,Lan.g(this,"Deposit slip sent to QuickBooks.")+"\r\n"
-					+Lan.g(this,"Deposit date")+": "+_depositCur.DateDeposit.ToShortDateString()+" "+Lan.g(this,"for")+" "+_depositCur.Amount.ToString("c"));
+				SecurityLogs.MakeLogEntry(Permissions.DepositSlips,0,Lan.G(this,"Deposit slip sent to QuickBooks.")+"\r\n"
+					+Lan.G(this,"Deposit date")+": "+_depositCur.DateDeposit.ToShortDateString()+" "+Lan.G(this,"for")+" "+_depositCur.Amount.ToString("c"));
 				Cursor.Current=Cursors.Default;
 				MessageBox.Show("Deposit successfully sent to QuickBooks.");
 				butSendQB.Enabled=false;//Don't let user send same deposit more than once.  
@@ -996,15 +996,15 @@ namespace OpenDental{
 				Cursor.Current=Cursors.Default;
 				if(allowContinue) {
 					if(MessageBox.Show(ex.Message+"\r\n\r\n"
-						+Lan.g(this,"A deposit has not been created in QuickBooks, continue anyway?")
-						,Lan.g(this,"QuickBooks Deposit Create Failed")
+						+Lan.G(this,"A deposit has not been created in QuickBooks, continue anyway?")
+						,Lan.G(this,"QuickBooks Deposit Create Failed")
 						,MessageBoxButtons.YesNo)!=DialogResult.Yes)
 					{
 						return false;
 					}
 				}
 				else {
-					MessageBox.Show(ex.Message,Lan.g(this,"QuickBooks Deposit Create Failed"));
+					MessageBox.Show(ex.Message,Lan.G(this,"QuickBooks Deposit Create Failed"));
 					return false;
 				}
 			}
@@ -1052,7 +1052,7 @@ namespace OpenDental{
 			if(listSelectedPayNums.Count>0) {
 				int alreadyAttached=Payments.GetCountAttachedToDeposit(listSelectedPayNums,_depositCur.DepositNum);//Depositnum might be 0
 				if(alreadyAttached>0) {
-					MessageBox.Show(this,alreadyAttached+" "+Lan.g(this,"patient payments are already attached to another deposit")+".");
+					MessageBox.Show(this,alreadyAttached+" "+Lan.G(this,"patient payments are already attached to another deposit")+".");
 					//refresh
 					return false;
 				}
@@ -1062,7 +1062,7 @@ namespace OpenDental{
 			if(listSelectedClaimPaymentNums.Count>0) {
 				int alreadyAttached=ClaimPayments.GetCountAttachedToDeposit(listSelectedClaimPaymentNums,_depositCur.DepositNum);//Depositnum might be 0
 				if(alreadyAttached>0) {
-					MessageBox.Show(this,alreadyAttached+" "+Lan.g(this,"insurance payments are already attached to another deposit")+".");
+					MessageBox.Show(this,alreadyAttached+" "+Lan.G(this,"insurance payments are already attached to another deposit")+".");
 					//refresh
 					return false;
 				}
@@ -1392,10 +1392,10 @@ namespace OpenDental{
 					//first the deposit entry
 					JournalEntry je=new JournalEntry();
 					je.AccountNum=DepositAccounts[comboDepositAccount.SelectedIndex];
-					je.CheckNumber=Lan.g(this,"DEP");
+					je.CheckNumber=Lan.G(this,"DEP");
 					je.DateDisplayed=_depositCur.DateDeposit;//it would be nice to add security here.
 					je.DebitAmt=_depositCur.Amount;
-					je.Memo=Lan.g(this,"Deposit");
+					je.Memo=Lan.G(this,"Deposit");
 					je.Splits=Accounts.GetDescript(PrefC.GetLong(PrefName.AccountingIncomeAccount));
 					je.TransactionNum=trans.TransactionNum;
 					JournalEntries.Insert(je);
@@ -1405,7 +1405,7 @@ namespace OpenDental{
 					//je.CheckNumber=;
 					je.DateDisplayed=_depositCur.DateDeposit;//it would be nice to add security here.
 					je.CreditAmt=_depositCur.Amount;
-					je.Memo=Lan.g(this,"Deposit");
+					je.Memo=Lan.G(this,"Deposit");
 					je.Splits=Accounts.GetDescript(DepositAccounts[comboDepositAccount.SelectedIndex]);
 					je.TransactionNum=trans.TransactionNum;
 					JournalEntries.Insert(je);

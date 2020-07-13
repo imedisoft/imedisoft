@@ -80,8 +80,8 @@ namespace OpenDental.User_Controls {
 		}
 
 		private void FillControl() {
-			labelClinicName.Text=Signup.ClinicNum!=0 ? Clinics.GetDesc(Signup.ClinicNum) : Lan.g(this,"Headquarters");
-			labelEnabled.Text=Signup.IsEnabled ? Lan.g(this,"Enabled") : Lan.g(this,"Disabled");
+			labelClinicName.Text=Signup.ClinicNum!=0 ? Clinics.GetDesc(Signup.ClinicNum) : Lan.G(this,"Headquarters");
+			labelEnabled.Text=Signup.IsEnabled ? Lan.G(this,"Enabled") : Lan.G(this,"Disabled");
 			FillGrid();
 		}
 
@@ -89,15 +89,15 @@ namespace OpenDental.User_Controls {
 			gridOptions.BeginUpdate();
 			//Columns
 			gridOptions.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Allow Children"),95,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn(Lan.G(this,"Allow Children"),95,HorizontalAlignment.Center);
 			gridOptions.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Show Pre-Screen Questions"),180,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Show Pre-Screen Questions"),180,HorizontalAlignment.Center);
 			gridOptions.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Verify Email"),85,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Verify Email"),85,HorizontalAlignment.Center);
 			gridOptions.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Verify Text"),85,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Verify Text"),85,HorizontalAlignment.Center);
 			gridOptions.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Launch WebForm on Complete"),200,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Launch WebForm on Complete"),200,HorizontalAlignment.Center);
 			gridOptions.ListGridColumns.Add(col);
 			//Rows
 			gridOptions.ListGridRows.Clear();
@@ -179,7 +179,7 @@ namespace OpenDental.User_Controls {
 				ODClipboard.Text = textSchedulingURL.Text;
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"Unable to copy to clipboard."),ex);
+				FriendlyException.Show(Lan.G(this,"Unable to copy to clipboard."),ex);
 			}
 		}
 

@@ -160,7 +160,7 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			//First column will always be the date.  gridMain_CellLeave() depends on this fact.
-			col=new GridColumn(Lan.g(this,"Date"),70);
+			col=new GridColumn(Lan.G(this,"Date"),70);
 			gridMain.ListGridColumns.Add(col);
 			foreach(DisplayField field in listSelectedTabDisplayFields) {
 				string columnHeader=string.IsNullOrEmpty(field.DescriptionOverride) ? field.Description : field.DescriptionOverride;
@@ -269,45 +269,45 @@ namespace OpenDental {
 			GridRow row = new GridRow();
 			DateTime firstOrthoProc = Procedures.GetFirstOrthoProcDate(_patNoteCur);
 			if(firstOrthoProc!=DateTime.MinValue) {
-				row.Cells.Add(Lan.g(this,"Total Tx Time")+": "); //Number of Years/Months/Days since the first ortho procedure on this account
+				row.Cells.Add(Lan.G(this,"Total Tx Time")+": "); //Number of Years/Months/Days since the first ortho procedure on this account
 				DateSpan dateSpan=new DateSpan(firstOrthoProc,DateTimeOD.Today);
 				string strDateDiff="";
 				if(dateSpan.YearsDiff!=0) {
-					strDateDiff+=dateSpan.YearsDiff+" "+Lan.g(this,"year"+(dateSpan.YearsDiff==1 ? "" : "s"));
+					strDateDiff+=dateSpan.YearsDiff+" "+Lan.G(this,"year"+(dateSpan.YearsDiff==1 ? "" : "s"));
 				}
 				if(dateSpan.MonthsDiff!=0) {
 					if(strDateDiff!="") {
 						strDateDiff+=", ";
 					}
-					strDateDiff+=dateSpan.MonthsDiff+" "+Lan.g(this,"month"+(dateSpan.MonthsDiff==1 ? "" : "s"));
+					strDateDiff+=dateSpan.MonthsDiff+" "+Lan.G(this,"month"+(dateSpan.MonthsDiff==1 ? "" : "s"));
 				}
 				if(dateSpan.DaysDiff!=0 || strDateDiff=="") {
 					if(strDateDiff!="") {
 						strDateDiff+=", ";
 					}
-					strDateDiff+=dateSpan.DaysDiff+" "+Lan.g(this,"day"+(dateSpan.DaysDiff==1 ? "" : "s"));
+					strDateDiff+=dateSpan.DaysDiff+" "+Lan.G(this,"day"+(dateSpan.DaysDiff==1 ? "" : "s"));
 				}
 				row.Cells.Add(strDateDiff);
 				gridOrtho.ListGridRows.Add(row);
 				row = new GridRow();
-				row.Cells.Add(Lan.g(this,"Date Start")+": "); //Date of the first ortho procedure on this account
+				row.Cells.Add(Lan.G(this,"Date Start")+": "); //Date of the first ortho procedure on this account
 				row.Cells.Add(firstOrthoProc.ToShortDateString());
 				gridOrtho.ListGridRows.Add(row);
 
 				row = new GridRow();
-				row.Cells.Add(Lan.g(this,"Tx Months Total")+": "); //this patient's OrthoClaimMonthsTreatment, or the practice default if 0.
+				row.Cells.Add(Lan.G(this,"Tx Months Total")+": "); //this patient's OrthoClaimMonthsTreatment, or the practice default if 0.
 				int txMonthsTotal=(_patNoteCur.OrthoMonthsTreatOverride==-1?PrefC.GetByte(PrefName.OrthoDefaultMonthsTreat):_patNoteCur.OrthoMonthsTreatOverride);
 				row.Cells.Add(txMonthsTotal.ToString());
 				gridOrtho.ListGridRows.Add(row);
 
 				row = new GridRow();
 				int txTimeInMonths=dateSpan.YearsDiff * 12 + dateSpan.MonthsDiff + (dateSpan.DaysDiff < 15? 0: 1);
-				row.Cells.Add(Lan.g(this,"Months in Treatment")+": "); //idk what the difference between this and 'Total Tx Time' is.
+				row.Cells.Add(Lan.G(this,"Months in Treatment")+": "); //idk what the difference between this and 'Total Tx Time' is.
 				row.Cells.Add(txTimeInMonths.ToString());
 				gridOrtho.ListGridRows.Add(row);
 
 				row = new GridRow();
-				row.Cells.Add(Lan.g(this,"Months Rem")+": "); //Months Total - Total Tx Time
+				row.Cells.Add(Lan.G(this,"Months Rem")+": "); //Months Total - Total Tx Time
 				row.Cells.Add(Math.Max(0,txMonthsTotal-txTimeInMonths).ToString());
 				gridOrtho.ListGridRows.Add(row);
 
@@ -315,7 +315,7 @@ namespace OpenDental {
 			else {
 				row = new GridRow();
 				row.Cells.Add(""); //idk what the difference between this and 'Total Tx Time' is.
-				row.Cells.Add(Lan.g(this,"No ortho procedures charted")+".");
+				row.Cells.Add(Lan.G(this,"No ortho procedures charted")+".");
 				gridOrtho.ListGridRows.Add(row);
 			}
 			gridOrtho.EndUpdate();
@@ -481,7 +481,7 @@ namespace OpenDental {
 				if(signatureBoxWrapper.IsValid) {
 					gridMain.ListGridRows[gridRow].ColorBackG=Color.FromArgb(0,245,165);//A lighter version of Color.MediumSpringGreen
 					if(_sigColIdx > 0) {//User might be vieweing a tab that does not have the signature column.  Greater than 0 because index 0 is a Date column.
-						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text=Lan.g(this,"Valid");
+						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text=Lan.G(this,"Valid");
 						//Only display user if the signature is valid.
 						long userNum=_dictOrthoCharts[orthoDate].Where(x => x.FieldName==sigColumnName).Select(x => x.UserNum).FirstOrDefault();
 						textUser.Text=Userods.GetName(userNum);
@@ -490,7 +490,7 @@ namespace OpenDental {
 				else {
 					gridMain.ListGridRows[gridRow].ColorBackG=Color.FromArgb(255,140,143);//A darker version of Color.LightPink
 					if(_sigColIdx > 0) {//User might be vieweing a tab that does not have the signature column.  Greater than 0 because index 0 is a Date column.
-						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text=Lan.g(this,"Invalid");
+						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text=Lan.G(this,"Invalid");
 					}
 				}
 				if(hasRefresh) {
@@ -736,7 +736,7 @@ namespace OpenDental {
 					DateTime.MinValue,DateTime.Today);
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"There was a problem loading the Audit Trail."),ex);
+				FriendlyException.Show(Lan.G(this,"There was a problem loading the Audit Trail."),ex);
 				return;
 			}
 			SortedDictionary<DateTime,List<SecurityLog>> dictDatesOfServiceLogEntries=new SortedDictionary<DateTime,List<SecurityLog>>();
@@ -790,7 +790,7 @@ namespace OpenDental {
 #endif
 			}
 			catch {
-				MessageBox.Show(Lan.g(this,"Printer not available"));
+				MessageBox.Show(Lan.G(this,"Printer not available"));
 			}
 		}
 

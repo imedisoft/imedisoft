@@ -745,8 +745,8 @@ namespace OpenDental {
 				}
 			}
 			if(_listFeeScheds.Count==0) {//No fee schedules in the database so set the first item to none.
-				comboFeeSched.Items.Add(Lan.g(this,"None"));
-				comboFeeSchedTo.Items.Add(Lan.g(this,"None"));
+				comboFeeSched.Items.Add(Lan.G(this,"None"));
+				comboFeeSchedTo.Items.Add(Lan.G(this,"None"));
 			}
 			if(comboFeeSched.SelectedIndex==-1) {
 				comboFeeSched.SelectedIndex=0;
@@ -765,8 +765,8 @@ namespace OpenDental {
 				FillFeeSchedGroupComboBox(comboGroupTo,_listFeeScheds[comboFeeSchedTo.SelectedIndex].FeeSchedNum,feeSchedGroupToNum);
 			}
 			//Providers
-			comboProvider.Items.Add(Lan.g(this,"None"));
-			comboProviderTo.Items.Add(Lan.g(this,"None"));
+			comboProvider.Items.Add(Lan.G(this,"None"));
+			comboProviderTo.Items.Add(Lan.G(this,"None"));
 			for(int i=0;i<_listProvs.Count;i++) {
 				comboProvider.Items.Add(_listProvs[i].Abbr);
 				comboProviderTo.Items.Add(_listProvs[i].Abbr);
@@ -876,16 +876,16 @@ namespace OpenDental {
 			string logText="";
 			foreach(long clinicNum in listClinicNums) {
 				Fees.DeleteFees(feeSchedNum,clinicNum,provNum);
-				logText+=Lan.g(this,"Procedures for Fee Schedule")+" "+FeeScheds.GetDescription(feeSchedNum);
+				logText+=Lan.G(this,"Procedures for Fee Schedule")+" "+FeeScheds.GetDescription(feeSchedNum);
 				if(PrefC.HasClinicsEnabled) {
 					if(Clinics.GetAbbr(Clinics.ClinicNum)=="") {
-						logText+=Lan.g(this," at Headquarters");
+						logText+=Lan.G(this," at Headquarters");
 					}
 					else {
-						logText+=Lan.g(this," at clinic")+" "+Clinics.GetAbbr(Clinics.ClinicNum);
+						logText+=Lan.G(this," at clinic")+" "+Clinics.GetAbbr(Clinics.ClinicNum);
 					}
 				}
-				logText+=" "+Lan.g(this,"were all cleared.")+"\r\n";
+				logText+=" "+Lan.G(this,"were all cleared.")+"\r\n";
 			}
 			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,logText);
 			//	});
@@ -1060,7 +1060,7 @@ namespace OpenDental {
 						FeeSchedEvent.Fire(ODEventType.FeeSched,"Modifying fees, please wait...");
 					}
 				},
-				startingMessage:Lan.g(this,"Preparing to modify fees")+"...",
+				startingMessage:Lan.G(this,"Preparing to modify fees")+"...",
 				eventType:typeof(FeeSchedEvent),
 				odEventType:ODEventType.FeeSched);
 			MessageBox.Show("Done.");
@@ -1188,7 +1188,7 @@ namespace OpenDental {
 				() => {
 					FeeScheds.ExportFeeSchedule(feeSched.FeeSchedNum,clinicNum,provNum,filePath);
 				},
-				startingMessage:Lan.g(this,"Preparing to export fees")+"...",
+				startingMessage:Lan.G(this,"Preparing to export fees")+"...",
 				progStyle:ProgressBarStyle.Continuous,
 				eventType:typeof(FeeSchedEvent),
 				odEventType:ODEventType.FeeSched);
@@ -1327,7 +1327,7 @@ namespace OpenDental {
 				//Send the message and get the result-------------------------------------------------------------------------------------
 				string result="";
 				try {
-					FeeSchedEvent.Fire(ODEventType.FeeSched,Lan.g(this,"Retrieving fee schedule")+"...");
+					FeeSchedEvent.Fire(ODEventType.FeeSched,Lan.G(this,"Retrieving fee schedule")+"...");
 					result=updateService.RequestFeeSched(strbuild.ToString());
 				}
 				catch(Exception ex) {
@@ -1368,7 +1368,7 @@ namespace OpenDental {
 				feeData=Encoding.UTF8.GetString(feeDataBytes);
 			}
 			else {
-				FeeSchedEvent.Fire(ODEventType.FeeSched,Lan.g(this,"Downloading fee schedule")+"...");
+				FeeSchedEvent.Fire(ODEventType.FeeSched,Lan.G(this,"Downloading fee schedule")+"...");
 				string tempFile=PrefC.GetRandomTempFile(".tmp");
 				WebClient myWebClient=new WebClient();
 				try {
@@ -1376,7 +1376,7 @@ namespace OpenDental {
 				}
 				catch(Exception ex) {
 					actionCloseFeeSchedImportCanadaProgress?.Invoke();
-					MessageBox.Show(Lan.g(this,"Failed to download fee schedule file")+": "+ex.Message);
+					MessageBox.Show(Lan.G(this,"Failed to download fee schedule file")+": "+ex.Message);
 					Cursor=Cursors.Default;
 					return;
 				}
@@ -1428,7 +1428,7 @@ namespace OpenDental {
 				return;
 			}
 			ODProgressExtended progExtended=new ODProgressExtended(ODEventType.FeeSched,new FeeSchedEvent(),this,
-				tag:new ProgressBarHelper("Fee Schedule Update Progress",progressBarEventType:ProgBarEventType.Header),cancelButtonText:Lan.g(this,"Close"));
+				tag:new ProgressBarHelper("Fee Schedule Update Progress",progressBarEventType:ProgBarEventType.Header),cancelButtonText:Lan.G(this,"Close"));
 			Cursor=Cursors.WaitCursor;
 			List<Fee> listFeesHQ=Fees.GetByClinicNum(0);//All HQ fees
 			try {
@@ -1521,10 +1521,10 @@ namespace OpenDental {
 			if(indexPrevClinic>-1 //only true if clinics are enabled, the user is not restricted, updating all clinics, and the pref has been set from previous run
 				&& listWriteoffClinics.Count>indexPrevClinic+1) //we will skip indexPrevClinic+1 items and there needs to be at least one more clinic to process
 			{
-				string msgText=Lan.g(this,"This tool was paused or interrupted during a previous run.  Would you like to resume the previous run?")+"\r\n\r\n"
-					+Lan.g(this,"Yes - Run the tool beginning where the previous run left off.")+"\r\n\r\n"
-					+Lan.g(this,"No - Run the tool for all clinics and replace the previous run progress with the progress of this run.")+"\r\n\r\n"
-					+Lan.g(this,"Cancel - Don't run the tool and retain the previous run progress.");
+				string msgText=Lan.G(this,"This tool was paused or interrupted during a previous run.  Would you like to resume the previous run?")+"\r\n\r\n"
+					+Lan.G(this,"Yes - Run the tool beginning where the previous run left off.")+"\r\n\r\n"
+					+Lan.G(this,"No - Run the tool for all clinics and replace the previous run progress with the progress of this run.")+"\r\n\r\n"
+					+Lan.G(this,"Cancel - Don't run the tool and retain the previous run progress.");
 				DialogResult diagRes=MessageBox.Show(this,msgText,"",MessageBoxButtons.YesNoCancel);
 				if(diagRes==DialogResult.Cancel) {
 					return;
@@ -1537,8 +1537,8 @@ namespace OpenDental {
 				}
 			}
 			ODProgressExtended progress=new ODProgressExtended(ODEventType.FeeSched,new FeeSchedEvent(),this,
-				tag:new ProgressBarHelper(Lan.g(this,"Write-off Update Progress"),progressBarEventType:ProgBarEventType.Header),
-				cancelButtonText:Lan.g(this,"Close"));
+				tag:new ProgressBarHelper(Lan.G(this,"Write-off Update Progress"),progressBarEventType:ProgBarEventType.Header),
+				cancelButtonText:Lan.G(this,"Close"));
 			progress.Fire(ODEventType.FeeSched,new ProgressBarHelper("","0%",0,100,ProgBarStyle.Blocks,"WriteoffProgress"));
 			Cursor=Cursors.WaitCursor;
 			try {
@@ -1581,7 +1581,7 @@ namespace OpenDental {
 			if(checkShowGroups.Checked) {
 				List<FeeSchedGroup> listGroupsToShow= comboGroup.Items.OfType<ODBoxItem<FeeSchedGroup>>().Select(x => x.Tag).ToList(); ;
 				List<GridColumn> listColumnHeaders=new List<GridColumn>() {
-					new GridColumn(Lan.g(this,"Description"),50){ IsWidthDynamic=true }
+					new GridColumn(Lan.G(this,"Description"),50){ IsWidthDynamic=true }
 				};
 				List<GridRow> listRowValues=new List<GridRow>();
 				listGroupsToShow.ForEach(x => {
@@ -1589,8 +1589,8 @@ namespace OpenDental {
 					row.Tag=x;
 					listRowValues.Add(row);
 				});
-				string formTitle=Lan.g(this,"Fee Schedule Group Picker");
-				string gridTitle=Lan.g(this,"Fee Schedule Groups");
+				string formTitle=Lan.G(this,"Fee Schedule Group Picker");
+				string gridTitle=Lan.G(this,"Fee Schedule Groups");
 				FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 				if(form.ShowDialog()==DialogResult.OK) {
 					comboGroup.SelectedIndex=listGroupsToShow.FindIndex((x => x.FeeSchedGroupNum==((FeeSchedGroup)form.ListSelectedTags[0]).FeeSchedGroupNum));
@@ -1605,7 +1605,7 @@ namespace OpenDental {
 			if(checkShowGroups.Checked) {
 				List<FeeSchedGroup> listGroupsToShow=(comboGroupTo.Items.OfType<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
 				List<GridColumn> listColumnHeaders=new List<GridColumn>() {
-					new GridColumn(Lan.g(this,"Description"),50){ IsWidthDynamic=true }
+					new GridColumn(Lan.G(this,"Description"),50){ IsWidthDynamic=true }
 				};
 				List<GridRow> listRowValues=new List<GridRow>();
 				listGroupsToShow.ForEach(x => {
@@ -1613,8 +1613,8 @@ namespace OpenDental {
 					row.Tag=x;
 					listRowValues.Add(row);
 				});
-				string formTitle=Lan.g(this,"Fee Schedule Group Picker");
-				string gridTitle=Lan.g(this,"Fee Schedule Groups");
+				string formTitle=Lan.G(this,"Fee Schedule Group Picker");
+				string gridTitle=Lan.G(this,"Fee Schedule Groups");
 				FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 				if(form.ShowDialog()==DialogResult.OK) {
 					comboGroupTo.SelectedIndex=listGroupsToShow.FindIndex((x => x.FeeSchedGroupNum==((FeeSchedGroup)form.ListSelectedTags[0]).FeeSchedGroupNum));

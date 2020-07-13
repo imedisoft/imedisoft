@@ -156,7 +156,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(string.IsNullOrEmpty(textDate.Text) || textDate.errorProvider1.GetError(textDate)!=""){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			PerioExamCur.ExamDate=PIn.Date(textDate.Text);

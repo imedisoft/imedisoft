@@ -175,7 +175,7 @@ namespace OpenDental {
 			string bullet="  - ";//should be used at the beggining of every warning/error
 			//Patient information-------------------------------------------------------------------------------------------------
 			if(PatCur==null) {//should never happen
-				warnings+=bullet+Lan.g(this,"No patient selected.")+"\r\n";
+				warnings+=bullet+Lan.G(this,"No patient selected.")+"\r\n";
 			}
 			else {
 				try {
@@ -183,35 +183,35 @@ namespace OpenDental {
 				}
 				catch {
 
-					warnings+=bullet+Lan.g(this,"Birthday.")+"\r\n";
+					warnings+=bullet+Lan.G(this,"Birthday.")+"\r\n";
 				}
 				if(PatCur.Birthdate==DateTime.MinValue) {
-					warnings+=bullet+Lan.g(this,"Patient does not have a valid birthday.")+"\r\n";
+					warnings+=bullet+Lan.G(this,"Patient does not have a valid birthday.")+"\r\n";
 				}
 			}
 			//Provider information------------------------------------------------------------------------------------------------
 			if(ProvCur==null) {
-				warnings+=bullet+Lan.g(this,"No provider selected.")+"\r\n";
+				warnings+=bullet+Lan.G(this,"No provider selected.")+"\r\n";
 			}
 			else {
 				if(textProvID.Text=="") {
-					warnings+=bullet+Lan.g(this,"No povider ID.")+"\r\n";
+					warnings+=bullet+Lan.G(this,"No povider ID.")+"\r\n";
 				}
 			}
 			//Organization information--------------------------------------------------------------------------------------------
 			if(textOrgName.Text=="") {
-				warnings+=bullet+Lan.g(this,"No organization name.")+"\r\n";
+				warnings+=bullet+Lan.G(this,"No organization name.")+"\r\n";
 			}
 			if(textOrgID.Text=="") {
-				warnings+=bullet+Lan.g(this,"No organization ID.")+"\r\n";
+				warnings+=bullet+Lan.G(this,"No organization ID.")+"\r\n";
 			}
 			//Encounter information-----------------------------------------------------------------------------------------------
 			if(textEncLocID.Text=="") {
-				warnings+=bullet+Lan.g(this,"No encounter location ID.")+"\r\n";
+				warnings+=bullet+Lan.G(this,"No encounter location ID.")+"\r\n";
 			}
 			//Requestor information-----------------------------------------------------------------------------------------------
 			if(radioReqPat.Checked && radioRecProv.Checked) {
-				warnings+=bullet+Lan.g(this,"It is uncommon for the requestor to be the patient and the recipient to be the provider.")+"\r\n";
+				warnings+=bullet+Lan.G(this,"It is uncommon for the requestor to be the patient and the recipient to be the provider.")+"\r\n";
 			}
 			//Recipient information-----------------------------------------------------------------------------------------------
 			//Problem, Medication, Lab Result information-------------------------------------------------------------------------
@@ -265,17 +265,17 @@ namespace OpenDental {
 			//}
 			//Generate messagebox-------------------------------------------------------------------------------------------------
 			if(errors!="") {
-				message+=Lan.g(this,"The following errors must be corrected in order to comply with HL7 standard:")+"\r\n";
+				message+=Lan.G(this,"The following errors must be corrected in order to comply with HL7 standard:")+"\r\n";
 				message+=errors;
 				message+="\r\n";
 			}
 			if(warnings!="") {
-				message+=Lan.g(this,"Fixing the following warnings may provide better knowledge request results:")+"\r\n";
+				message+=Lan.G(this,"Fixing the following warnings may provide better knowledge request results:")+"\r\n";
 				message+=warnings;
 				message+="\r\n";
 			}
 			if(message!="") {
-				message+=Lan.g(this,"Would you like to continue anyways?");
+				message+=Lan.G(this,"Would you like to continue anyways?");
 				if(MessageBox.Show(message,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 					return false;
 				}

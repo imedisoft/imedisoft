@@ -64,7 +64,7 @@ namespace OpenDental {
 		private void SyncHiddenProgramProperties() {
 			//Get the users total list of unrestricted clinics, then acquire their list of ProgramProperties so we can tell which PL buttons 
 			//should be hidden based upon the ProgramProperty PropertyDesc indicator. 
-			List<Clinic> listUserClinics=Clinics.GetForUserod(Security.CurUser,doIncludeHQ:true,hqClinicName:Lan.g(this,"HQ"));
+			List<Clinic> listUserClinics=Clinics.GetForUserod(Security.CurUser,doIncludeHQ:true,hqClinicName:Lan.G(this,"HQ"));
 			//Get the cached list of button hiding ProgramProperties for clinics this user has access to, i.e. the "Old" list.
 			List<ProgramProperty> listHiddenForUserOld=ProgramProperties.GetForProgram(_progNumCur)
 				.Where(x => x.PropertyDesc==ProgramProperties.PropertyDescs.ClinicHideButton 

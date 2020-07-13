@@ -68,7 +68,7 @@ namespace OpenDental {
 			}
 			List<int> listSelectedIndices=new List<int>();
 			comboBoxMultiProv.Items.Clear();
-			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(Lan.g(this,"None"),null));//tag=null
+			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(Lan.G(this,"None"),null));//tag=null
 			foreach(Provider prov in listProvsForClinic) {
 				int index=comboBoxMultiProv.Items.Count;
 				ODBoxItem<Provider> boxProvItem=new ODBoxItem<Provider>(prov.GetLongDesc(),prov);
@@ -146,11 +146,11 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(gridMain.TranslationName,"Day"),85);
+			GridColumn col=new GridColumn(Lan.G(gridMain.TranslationName,"Day"),85);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Date"),85,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Date"),85,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Time"),85,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Time"),85,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

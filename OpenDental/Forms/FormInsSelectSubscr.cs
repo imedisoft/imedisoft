@@ -137,11 +137,11 @@ namespace OpenDental{
 				plan=InsPlans.GetPlan(SubList[i].PlanNum,planList);
 				str=InsPlans.GetCarrierName(SubList[i].PlanNum,planList);
 				if(plan.GroupNum!="") {
-					str+=Lan.g(this," group:")+plan.GroupNum;
+					str+=Lan.G(this," group:")+plan.GroupNum;
 				}
 				int countPatPlans=PatPlans.GetCountBySubNum(SubList[i].InsSubNum);
 				if(countPatPlans==0) {
-					str+=" "+Lan.g(this,"(not in use)");
+					str+=" "+Lan.G(this,"(not in use)");
 				}
 				listPlans.Items.Add(str);
 			}

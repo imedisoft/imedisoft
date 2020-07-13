@@ -61,20 +61,20 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g(this,"Clinic"),100);
+				col=new GridColumn(Lan.G(this,"Clinic"),100);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(this,"Date Time Created"),150);
+			col=new GridColumn(Lan.G(this,"Date Time Created"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Appt Date Time"),150);
+			col=new GridColumn(Lan.G(this,"Appt Date Time"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Patient Name"),150);
+			col=new GridColumn(Lan.G(this,"Patient Name"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Patient DOB"),100);
+			col=new GridColumn(Lan.G(this,"Patient DOB"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Confirmation Status"),150);
+			col=new GridColumn(Lan.G(this,"Confirmation Status"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Appt Note"),300);
+			col=new GridColumn(Lan.G(this,"Appt Note"),300);
 			gridMain.ListGridColumns.Add(col);
 			//Rows
 			gridMain.ListGridRows.Clear();

@@ -229,7 +229,7 @@ namespace OpenDental {
 		///<summary>Method to create a FormProgress. Set isSingleFile to false if copying or moving a folder.</summary>
 		private static FormProgress CreateFormProgress(string displayMessage,bool isFolder=false) {
 			FormProgress FormP=new FormProgress();
-			FormP.DisplayText=Lan.g(CloudStorage.LanThis,displayMessage);
+			FormP.DisplayText=Lan.G(CloudStorage.LanThis,displayMessage);
 			if(isFolder) {
 				FormP.NumberFormat="";//Display whole numbers
 			}

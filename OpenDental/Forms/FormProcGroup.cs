@@ -914,10 +914,10 @@ namespace OpenDental{
 							break;
 						case "Stat":
 							if(ProcMultiVisits.IsProcInProcess(ProcList[i].ProcNum)) {
-								row.Cells.Add(Lan.g("enumProcStat",ProcStatExt.InProcess));
+								row.Cells.Add(Lan.G("enumProcStat",ProcStatExt.InProcess));
 							}
 							else {
-								row.Cells.Add(Lan.g("enumProcStat",ProcList[i].ProcStatus.ToString()));
+								row.Cells.Add(Lan.G("enumProcStat",ProcList[i].ProcStatus.ToString()));
 							}
 							break;
 						case "Prov":
@@ -1035,15 +1035,15 @@ namespace OpenDental{
 			gridPlanned.BeginUpdate();
 			gridPlanned.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TablePlannedAppts","#"),15,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TablePlannedAppts","#"),15,HorizontalAlignment.Center);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePlannedAppts","Min"),25);
+			col=new GridColumn(Lan.G("TablePlannedAppts","Min"),25);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePlannedAppts","Procedures"),160);
+			col=new GridColumn(Lan.G("TablePlannedAppts","Procedures"),160);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePlannedAppts","Note"),115);
+			col=new GridColumn(Lan.G("TablePlannedAppts","Note"),115);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePlannedAppts","SchedBy"),50);
+			col=new GridColumn(Lan.G("TablePlannedAppts","SchedBy"),50);
 			gridPlanned.ListGridColumns.Add(col);
 			gridPlanned.ListGridRows.Clear();
 			GridRow row;
@@ -1280,7 +1280,7 @@ namespace OpenDental{
 				}
 			}
 			else {
-				MessageBox.Show(Lan.g(this,"No Auto Note available to edit."));
+				MessageBox.Show(Lan.G(this,"No Auto Note available to edit."));
 			}
 		}
 
@@ -1429,7 +1429,7 @@ namespace OpenDental{
 				return;
 			}
 			//Log entry does not show procstatus because group notes don't technically have a status, always EC.
-			SecurityLogs.MakeLogEntry(Permissions.ProcDelete,PatCur.PatNum,Lan.g(this,"Invalidated: ")+
+			SecurityLogs.MakeLogEntry(Permissions.ProcDelete,PatCur.PatNum,Lan.G(this,"Invalidated: ")+
 				ProcedureCodes.GetStringProcCode(GroupCur.CodeNum).ToString()+", "+GroupCur.ProcDate.ToShortDateString());
 			DialogResult=DialogResult.OK;
 		}
@@ -1519,7 +1519,7 @@ namespace OpenDental{
 				SaveSignature();
 			}
 			catch(Exception ex){
-				MessageBox.Show(Lan.g(this,"Error saving signature.")+"\r\n"+ex.Message);
+				MessageBox.Show(Lan.G(this,"Error saving signature.")+"\r\n"+ex.Message);
 			}
 			Procedures.Update(GroupCur,GroupOld);
 			for(int i=0;i<ProcList.Count;i++){
@@ -1545,7 +1545,7 @@ namespace OpenDental{
 				Procedures.Delete(GroupCur.ProcNum);
 			}
 			catch(Exception ex){
-				MessageBox.Show(ex.Message+"\r\n"+Lan.g(this,"Please call support."));//GroupNotes should never fail deletion.
+				MessageBox.Show(ex.Message+"\r\n"+Lan.G(this,"Please call support."));//GroupNotes should never fail deletion.
 				return;
 			}
 			for(int i=0;i<GroupItemList.Count;i++){

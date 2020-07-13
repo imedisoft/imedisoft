@@ -17,11 +17,11 @@ namespace OpenDental{
 			ShowScroll=true;
 			FieldsArePresent=true;
 			HeadingIsPresent=true;
-			Heading=Lan.g("TableCommLog","Communications Log - Appointment Scheduling");
+			Heading=Lan.G("TableCommLog","Communications Log - Appointment Scheduling");
 			InstantClassesPar();
 			SetRowHeight(0,49,14);
-			Fields[0]=Lan.g("TableCommLog","Date");
-			Fields[1]=Lan.g("TableCommLog","Note");
+			Fields[0]=Lan.G("TableCommLog","Date");
+			Fields[1]=Lan.G("TableCommLog","Note");
 			//Fields[2]=Lan.g("TableCommLog","-Insurance Est");
 			//Fields[3]=Lan.g("TableCommLog","=Amount Due");
 			ColWidth[0]=70;

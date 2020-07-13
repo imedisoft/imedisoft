@@ -549,8 +549,8 @@ namespace OpenDental{
 
 		///<summary>Fills the employee box based on what clinic is selected.  Set selectAll to true to have all employees in the list box selected by default.</summary>
 		private void FillEmployeesAndProviders() {
-			tabPageEmp.Text=Lan.g(this,"Employees")+" (0)";
-			tabPageProv.Text=Lan.g(this,"Providers")+" (0)";
+			tabPageEmp.Text=Lan.G(this,"Employees")+" (0)";
+			tabPageProv.Text=Lan.G(this,"Providers")+" (0)";
 			//Seed emp list and prov list with a dummy emp/prov with 'none' for the field that fills the list, FName and Abbr respectively.
 			//That way we don't have to add/subtract one in order when selecting from the list based on selected indexes.
 			_listEmps=new List<Employee>() { new Employee() { EmployeeNum=0,FName="none" } };
@@ -627,13 +627,13 @@ namespace OpenDental{
 		private bool ValidateInputs(bool isQuiet=false) {
 			List<string> listErrorMsgs=new List<string>();
 			if(textDateFrom.errorProvider1.GetError(textDateFrom)!="" || textDateTo.errorProvider1.GetError(textDateTo)!="") {
-				listErrorMsgs.Add(Lan.g(this,"Please fix date errors first."));
+				listErrorMsgs.Add(Lan.G(this,"Please fix date errors first."));
 			}
 			if(listBoxProvs.SelectedIndices.Count>1 && listBoxProvs.SelectedIndices.Contains(0)) {//'none' selected with additional provs
-				listErrorMsgs.Add(Lan.g(this,"Invalid selection of providers."));
+				listErrorMsgs.Add(Lan.G(this,"Invalid selection of providers."));
 			}
 			if(listBoxEmps.SelectedIndices.Count>1 && listBoxEmps.SelectedIndices.Contains(0)) {//'none' selected with additional emps
-				listErrorMsgs.Add(Lan.g(this,"Invalid selection of employees."));
+				listErrorMsgs.Add(Lan.G(this,"Invalid selection of employees."));
 			}
 			if(listErrorMsgs.Count > 0 && !isQuiet) {
 				MessageBox.Show(string.Join("\r\n",listErrorMsgs));
@@ -700,17 +700,17 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			if(checkWeekend.Checked && checkWeekend.CheckState!=CheckState.Indeterminate) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableSchedule","Sunday"),50){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSchedule","Sunday"),50){ IsWidthDynamic=true });
 			}
 			if(checkWeekend.CheckState!=CheckState.Indeterminate) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableSchedule","Monday"),50){ IsWidthDynamic=true });
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableSchedule","Tuesday"),50){ IsWidthDynamic=true });
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableSchedule","Wednesday"),50){ IsWidthDynamic=true });
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableSchedule","Thursday"),50){ IsWidthDynamic=true });
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableSchedule","Friday"),50){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSchedule","Monday"),50){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSchedule","Tuesday"),50){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSchedule","Wednesday"),50){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSchedule","Thursday"),50){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSchedule","Friday"),50){ IsWidthDynamic=true });
 			}
 			if(checkWeekend.Checked){
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableSchedule","Saturday"),50){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSchedule","Saturday"),50){ IsWidthDynamic=true });
 			}
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -810,11 +810,11 @@ namespace OpenDental{
 		}
 
 		private void listProv_SelectedIndexChanged(object sender,EventArgs e) {
-			tabPageProv.Text=Lan.g(this,"Providers")+" ("+listBoxProvs.SelectedIndices.OfType<int>().Count(x => x>0)+")";
+			tabPageProv.Text=Lan.G(this,"Providers")+" ("+listBoxProvs.SelectedIndices.OfType<int>().Count(x => x>0)+")";
 		}
 
 		private void listEmp_SelectedIndexChanged(object sender,EventArgs e) {
-			tabPageEmp.Text=Lan.g(this,"Employees")+" ("+listBoxEmps.SelectedIndices.OfType<int>().Count(x => x>0)+")";
+			tabPageEmp.Text=Lan.G(this,"Employees")+" ("+listBoxEmps.SelectedIndices.OfType<int>().Count(x => x>0)+")";
 		}
 
 		///<summary>Double click on listBoxProvs or listBoxEmps triggers a refresh</summary>
@@ -823,9 +823,9 @@ namespace OpenDental{
 		}
 
 		private void comboClinic_SelectionChangeCommitted(object sender,EventArgs e) {
-			comboClinic.Text=Lan.g(this,"Show Practice Notes");
+			comboClinic.Text=Lan.G(this,"Show Practice Notes");
 			if(comboClinic.SelectedClinicNum>0) {
-				comboClinic.Text=Lan.g(this,"Show Practice and Clinic Notes");
+				comboClinic.Text=Lan.G(this,"Show Practice and Clinic Notes");
 			}
 			FillEmployeesAndProviders();
 			if(checkShowClinicSchedules.Checked) {
@@ -980,8 +980,8 @@ namespace OpenDental{
 			List<long> listEmployeeNums;
 			GetSelectedProvidersEmployeesAndClinic(out listProvNums,out listEmployeeNums);
 			if(listProvNums.Count>0) {
-				if(MessageBox.Show(Lan.g(this,"Delete schedules for")+" "+listProvNums.Distinct().Count()+" "
-					+Lan.g(this,"provider(s) for the selected week?"),"",MessageBoxButtons.YesNo)!=DialogResult.Yes) 
+				if(MessageBox.Show(Lan.G(this,"Delete schedules for")+" "+listProvNums.Distinct().Count()+" "
+					+Lan.G(this,"provider(s) for the selected week?"),"",MessageBoxButtons.YesNo)!=DialogResult.Yes) 
 				{
 					return;
 				}
@@ -1112,8 +1112,8 @@ namespace OpenDental{
 				if(listProvNums.Count > 0) {
 					int countDistinctProvNums=listSchedulesToCopy.Where(x => x.ProvNum!=0).Select(y => y.ProvNum).Distinct().Count();
 					actionCloseScheduleProgress?.Invoke();
-					if(MessageBox.Show(Lan.g(this,"Replace schedules for")+" "+countDistinctProvNums+" "
-						+Lan.g(this,"provider(s)?"),"",MessageBoxButtons.YesNo)!=DialogResult.Yes) 
+					if(MessageBox.Show(Lan.G(this,"Replace schedules for")+" "+countDistinctProvNums+" "
+						+Lan.G(this,"provider(s)?"),"",MessageBoxButtons.YesNo)!=DialogResult.Yes) 
 					{
 						return;
 					}
@@ -1137,8 +1137,8 @@ namespace OpenDental{
 					,listIgnoreProvNums:(checkReplace.Checked ? listProvNums : null));
 				if(listOverlappingProvNums.Count>0) {
 					actionCloseScheduleProgress?.Invoke();
-					if(MessageBox.Show(Lan.g(this,"Overlapping provider schedules detected, would you like to continue anyway?")
-						+"\r\n"+Lan.g(this,"Providers affected")
+					if(MessageBox.Show(Lan.G(this,"Overlapping provider schedules detected, would you like to continue anyway?")
+						+"\r\n"+Lan.G(this,"Providers affected")
 						+":\r\n  "+string.Join("\r\n  ",listOverlappingProvNums.Select(x=>Providers.GetLongDesc(x))),"",MessageBoxButtons.YesNo)!=DialogResult.Yes) 
 					{
 						return;
@@ -1274,8 +1274,8 @@ namespace OpenDental{
 				if(listProvNums.Count > 0) {
 					int countDistinctProvNums=listSchedulesToCopy.Where(x => x.ProvNum!=0).Select(y => y.ProvNum).Distinct().Count();
 					actionCloseScheduleProgress?.Invoke();
-					if(MessageBox.Show(Lan.g(this,"Replace schedules for")+" "+countDistinctProvNums+" "
-						+Lan.g(this,"provider(s)?"),"",MessageBoxButtons.YesNo)==DialogResult.No) 
+					if(MessageBox.Show(Lan.G(this,"Replace schedules for")+" "+countDistinctProvNums+" "
+						+Lan.G(this,"provider(s)?"),"",MessageBoxButtons.YesNo)==DialogResult.No) 
 					{
 						return;
 					}
@@ -1330,8 +1330,8 @@ namespace OpenDental{
 				}
 				if(listOverlappingProvNums.Count > 0) {
 					actionCloseScheduleProgress?.Invoke();
-					if(MessageBox.Show(Lan.g(this,"Overlapping provider schedules detected, would you like to continue anyway?")
-						+"\r\n"+Lan.g(this,"Providers affected")
+					if(MessageBox.Show(Lan.G(this,"Overlapping provider schedules detected, would you like to continue anyway?")
+						+"\r\n"+Lan.G(this,"Providers affected")
 						+":\r\n  "+string.Join("\r\n  ",listOverlappingProvNums.Select(x=>Providers.GetLongDesc(x))),"",MessageBoxButtons.YesNo)!=DialogResult.Yes) 
 					{
 						return;
@@ -1419,7 +1419,7 @@ namespace OpenDental{
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Staff schedule printed"));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Staff schedule printed"));
 		}
 
 		private void pd_PrintPage(object sender,PrintPageEventArgs e) {
@@ -1433,7 +1433,7 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Schedule");
+				text=Lan.G(this,"Schedule");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				//yPos+=(int)g.MeasureString(text,headingFont).Height;
 				//text=textDateFrom.Text+" "+Lan.g(this,"to")+" "+textDateTo.Text;

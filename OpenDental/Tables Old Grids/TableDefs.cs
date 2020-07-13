@@ -25,10 +25,10 @@ namespace OpenDental{
 			ColWidth[1]=170;
 			ColWidth[2]=50;
 			ColWidth[3]=40;
-			Fields[0]=Lan.g("TableDefs","Name");
-			Fields[1]=Lan.g("TableDefs","Value");
-			Fields[2]=Lan.g("TableDefs","Color");
-			Fields[3]=Lan.g("TableDefs","Hide");
+			Fields[0]=Lan.G("TableDefs","Name");
+			Fields[1]=Lan.G("TableDefs","Value");
+			Fields[2]=Lan.G("TableDefs","Color");
+			Fields[3]=Lan.G("TableDefs","Hide");
 			LayoutTables();
 		}
 

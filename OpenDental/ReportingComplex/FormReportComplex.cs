@@ -184,22 +184,22 @@ namespace OpenDental.ReportingComplex {
 		///<summary>Causes the toolbar to be laid out again.</summary>
 		public void LayoutToolBar(){
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Print"),0,"","Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print"),0,"","Print"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,Lan.g(this,"Go Back One Page"),"Back"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,Lan.G(this,"Go Back One Page"),"Back"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.PageNav) {Text="/",Tag="PageNum" });
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,Lan.g(this,"Go Forward One Page"),"Fwd"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,Lan.G(this,"Go Forward One Page"),"Fwd"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 			ToolBarMain.Buttons.Add(new ODToolBarButton("",4,"","ZoomIn"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton("",5,"","ZoomOut"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton("100",-1,"","ZoomReset"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-      ODToolBarButton butWrapText=new ODToolBarButton(Lan.g(this,"Wrap Text"),-1,Lan.g(this,"Wrap Text In Columns"),"WrapText");
+      ODToolBarButton butWrapText=new ODToolBarButton(Lan.G(this,"Wrap Text"),-1,Lan.G(this,"Wrap Text In Columns"),"WrapText");
       butWrapText.Style=ODToolBarButtonStyle.ToggleButton;
       butWrapText.Pushed=_isWrappingText;
       ToolBarMain.Buttons.Add(butWrapText);
       ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Export"),3,"","Export"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Export"),3,"","Export"));
       ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 			//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Close"),-1,Lan.g(this,"Close This Window"),"Close"));
 			//ToolBarMain.Invalidate();
@@ -224,10 +224,10 @@ namespace OpenDental.ReportingComplex {
 		}
 		
 		private bool ResetODprintout(){
-			ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.g("ReportComplex","Retrieving Printer Settings")+"...");
+			ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.G("ReportComplex","Retrieving Printer Settings")+"...");
 			_printout=PrinterL.CreateODprintout(
 				pd2_PrintPage,
-				auditDescription:Lan.g(this,"Report printed ")+_myReport.ReportName,
+				auditDescription:Lan.G(this,"Report printed ")+_myReport.ReportName,
 				printoutOrientation:(_myReport.IsLandscape?PrintoutOrientation.Landscape:PrintoutOrientation.Default),
 				margins:new Margins(0,0,0,0),
 				printoutOrigin:PrintoutOrigin.AtMargin,
@@ -244,7 +244,7 @@ namespace OpenDental.ReportingComplex {
 			_rowsPrinted=0;
 			_totalRowsPrinted=0;
 			_pagesPrinted=0;
-			ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.g("ReportComplex","Calculating Row Heights")+"...");
+			ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.G("ReportComplex","Calculating Row Heights")+"...");
 			foreach(ReportObject reportObject in _myReport.ReportObjects) {
 				if(reportObject.ObjectType==ReportObjectType.QueryObject) {
 					QueryObject queryObject=(QueryObject)reportObject;
@@ -309,8 +309,8 @@ namespace OpenDental.ReportingComplex {
 			}
 			else {//If we reach the end of the document, OR the end of the specificed range, stop printed. Otherwise, continue.
 				ev.HasMorePages=true;
-				ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.g("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
-					+Lan.g("ReportComplex","Page Printed. Preparing Next Page")+"...");
+				ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.G("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
+					+Lan.G("ReportComplex","Page Printed. Preparing Next Page")+"...");
 			}
 		}
 
@@ -321,7 +321,7 @@ namespace OpenDental.ReportingComplex {
 			//Is a printable page if we're printing (or viewing) all pages, or only printing the pages between the FromPage and ToPage designated by the user.
 			bool isPrintablePage=ev.PageSettings.PrinterSettings.PrintRange==PrintRange.AllPages
 				|| (ev.PageSettings.PrinterSettings.FromPage<=_currentPage && ev.PageSettings.PrinterSettings.ToPage>=_currentPage);
-			ReportComplexEvent.Fire(ODEventType.ReportComplex,new ProgressBarHelper(Lan.g("ReportComplex","Printing Page")+" "+(_currentPage)+"..."
+			ReportComplexEvent.Fire(ODEventType.ReportComplex,new ProgressBarHelper(Lan.G("ReportComplex","Printing Page")+" "+(_currentPage)+"..."
 				,"",_totalRowsPrinted,_myReport.TotalRows,ProgBarStyle.Blocks));
 			//Note that the locations of the reportObjects are not absolute.  They depend entirely upon the margins.  When the report is initially created, it is pushed up against the upper and the left.
 			Graphics grfx=ev.Graphics;
@@ -371,8 +371,8 @@ namespace OpenDental.ReportingComplex {
 				//if no sections have been printed yet, print a report header.
 				if(_lastSectionPrinted==AreaSectionType.None) {
 					if(_myReport.Sections.Contains(AreaSectionType.ReportHeader)) {
-						ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.g("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
-							+Lan.g("ReportComplex","Printing Report Header")+"...");
+						ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.G("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
+							+Lan.G("ReportComplex","Printing Report Header")+"...");
 						section=_myReport.Sections[AreaSectionType.ReportHeader];
 						PrintSection(grfx,section,xPos,yPos,isPrintablePage);
 						yPos+=section.Height;
@@ -390,8 +390,8 @@ namespace OpenDental.ReportingComplex {
 				}
 				//always print a page header if it exists
 				if(_myReport.Sections.Contains(AreaSectionType.PageHeader)) {
-					ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.g("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
-						+Lan.g("ReportComplex","Printing Page Header")+"...");
+					ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.G("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
+						+Lan.G("ReportComplex","Printing Page Header")+"...");
 					section=_myReport.Sections[AreaSectionType.PageHeader];
 					PrintSection(grfx,section,xPos,yPos,isPrintablePage);
 					yPos+=section.Height;
@@ -407,8 +407,8 @@ namespace OpenDental.ReportingComplex {
 				//print the reportfooter section if there is room
 				if(isRoomForReportFooter){
 					if(_myReport.Sections.Contains(AreaSectionType.ReportFooter)) {
-						ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.g("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
-							+Lan.g("ReportComplex","Printing Report Footer")+"...");
+						ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.G("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
+							+Lan.G("ReportComplex","Printing Report Footer")+"...");
 						section=_myReport.Sections[AreaSectionType.ReportFooter];
 						PrintSection(grfx,section,xPos,yPos,isPrintablePage);
 						yPos+=section.Height;
@@ -418,8 +418,8 @@ namespace OpenDental.ReportingComplex {
 				}
 				//print the pagefooter
 				if(_myReport.Sections.Contains(AreaSectionType.PageFooter)) {
-					ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.g("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
-						+Lan.g("ReportComplex","Printing Page Footer")+"...");
+					ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.G("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
+						+Lan.G("ReportComplex","Printing Page Footer")+"...");
 					section=_myReport.Sections[AreaSectionType.PageFooter];
 					yPos=yLimit-section.Height;
 					PrintSection(grfx,section,xPos,yPos,isPrintablePage);
@@ -487,7 +487,7 @@ namespace OpenDental.ReportingComplex {
 						RectangleF layoutRect=new RectangleF(xPos+fieldObject.Location.X
 							,yPos+fieldObject.Location.Y
 							,fieldObject.Size.Width,fieldObject.Size.Height);
-						g.DrawString(Lan.g(this,"Page")+" "+_currentPage,fieldObject.Font,Brushes.Black,layoutRect,strFormat);
+						g.DrawString(Lan.G(this,"Page")+" "+_currentPage,fieldObject.Font,Brushes.Black,layoutRect,strFormat);
 					}
 					#endregion FieldObject
 					#region BoxObject
@@ -570,8 +570,8 @@ namespace OpenDental.ReportingComplex {
 		///done ahead of time.  The number of rows printed so far is kept global so that it can be used in calculating the layout of this section.
 		///Prints a blank section if isPrintablePage=false.</summary>
 		private void PrintQuerySection(Graphics g,Section section,int xPos,int yPos,bool isPrintablePage) {
-			ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.g("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
-				+Lan.g("ReportComplex","Printing Query Section")+"...");
+			ReportComplexEvent.Fire(ODEventType.ReportComplex,Lan.G("ReportComplex","Printing Page")+" "+(_currentPage)+" - "
+				+Lan.G("ReportComplex","Printing Query Section")+"...");
 			section.Height=0;
 			ReportObject textObject;
 			ReportObject lineObject;
@@ -1229,11 +1229,11 @@ namespace OpenDental.ReportingComplex {
 				}//using
 			}
 			catch {
-				MessageBox.Show(Lan.g(this,"File in use by another program.  Close and try again."));
+				MessageBox.Show(Lan.G(this,"File in use by another program.  Close and try again."));
 				return;
 			}
 
-				MessageBox.Show(Lan.g(this,"File created successfully"));
+				MessageBox.Show(Lan.G(this,"File created successfully"));
 			
 		}
 

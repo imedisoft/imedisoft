@@ -88,7 +88,7 @@ namespace OpenDental{
 				//Create an alert for the user to know they may need to restart the eConnector if they are subscribed to eServices
 				AlertItems.Insert(new AlertItem()
 				{
-					Description=Lan.g(this,"Clinic Feature Changed, you may need to restart the eConnector if you are subscribed to eServices"),
+					Description=Lan.G(this,"Clinic Feature Changed, you may need to restart the eConnector if you are subscribed to eServices"),
 					Type=AlertType.ClinicsChanged,
 					Severity=SeverityType.Low,
 					Actions=ActionType.OpenForm | ActionType.MarkAsRead | ActionType.Delete,

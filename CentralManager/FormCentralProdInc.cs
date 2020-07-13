@@ -93,18 +93,18 @@ namespace CentralManager {
 			if(radioDaily.Checked || radioProvider.Checked) {
 				textDateFrom.Text=DateTime.Today.ToShortDateString();
 				textDateTo.Text=DateTime.Today.ToShortDateString();
-				butThis.Text=Lan.g(this,"Today");
+				butThis.Text=Lan.G(this,"Today");
 			}
 			else if(radioMonthly.Checked) {
 				textDateFrom.Text=new DateTime(DateTime.Today.Year,DateTime.Today.Month,1).ToShortDateString();
 				textDateTo.Text=new DateTime(DateTime.Today.Year,DateTime.Today.Month
 					,DateTime.DaysInMonth(DateTime.Today.Year,DateTime.Today.Month)).ToShortDateString();
-				butThis.Text=Lan.g(this,"This Month");
+				butThis.Text=Lan.G(this,"This Month");
 			}
 			else {//annual
 				textDateFrom.Text=new DateTime(DateTime.Today.Year,1,1).ToShortDateString();
 				textDateTo.Text=new DateTime(DateTime.Today.Year,12,31).ToShortDateString();
-				butThis.Text=Lan.g(this,"This Year");
+				butThis.Text=Lan.G(this,"This Year");
 			}
 		}
 
@@ -116,7 +116,7 @@ namespace CentralManager {
 			if(textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				) {
-				OpenDental.MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				OpenDental.MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			_dateFrom=PIn.Date(textDateFrom.Text);
@@ -149,7 +149,7 @@ namespace CentralManager {
 			if(textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				) {
-				OpenDental.MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				OpenDental.MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			_dateFrom=PIn.Date(textDateFrom.Text);
@@ -204,15 +204,15 @@ namespace CentralManager {
 				listThreads[i].QuitSync(Timeout.Infinite);
 			}
 			report.ReportName="DailyP&I";
-			report.AddTitle("Title",Lan.g(this,"Daily Production and Income"));
+			report.AddTitle("Title",Lan.G(this,"Daily Production and Income"));
 			report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle));
 			string dateRangeStr=_dateFrom.ToShortDateString()+" - "+_dateTo.ToShortDateString();
 			if(_dateFrom.Date==_dateTo.Date) {
 				dateRangeStr=_dateFrom.ToShortDateString();//Do not show a date range for the same day...
 			}
 			report.AddSubTitle("Date",dateRangeStr);
-			report.AddSubTitle("Providers",Lan.g(this,"All Providers"));
-			report.AddSubTitle("Clinics",Lan.g(this,"All Clinics"));
+			report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
+			report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
 			QueryObject query=null;
 			//Per connection, add each table and split on clinic.  We also need to make a totals table that will be total per clinic per connection.
 			DataTable connectionTotals=new DataTable("Totals");
@@ -324,8 +324,8 @@ namespace CentralManager {
 				//to the need to add and subtract from multiple columns at the same time.
 				DataTable tableTotals=new DataTable("TotalProdAndInc");
 				tableTotals.Columns.Add("Summary");
-				tableTotals.Rows.Add(Lan.g(this,"Total Production (Production + Adjustments - Writeoffs):")+" "+totalProduction.ToString("c"));
-				tableTotals.Rows.Add(Lan.g(this,"Total Income (Pt Income + Ins Income):")+" "+totalIncome.ToString("c"));
+				tableTotals.Rows.Add(Lan.G(this,"Total Production (Production + Adjustments - Writeoffs):")+" "+totalProduction.ToString("c"));
+				tableTotals.Rows.Add(Lan.G(this,"Total Income (Pt Income + Ins Income):")+" "+totalIncome.ToString("c"));
 				//Add tableTotals to the report.
 				//No column name and no header because we want to display this table to NOT look like a table.
 				query=report.AddQuery(tableTotals,"","",SplitByKind.None,2,false);
@@ -368,9 +368,9 @@ namespace CentralManager {
 				listThreads[i].QuitSync(Timeout.Infinite);
 			}
 			report.ReportName="MonthlyP&I";
-			report.AddTitle("Title",Lan.g(this,"Monthly Production and Income"));
+			report.AddTitle("Title",Lan.G(this,"Monthly Production and Income"));
 			report.AddSubTitle("Date",_dateFrom.ToShortDateString()+" - "+_dateTo.ToShortDateString());
-			report.AddSubTitle("Clinics",Lan.g(this,"All Clinics"));
+			report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
 			QueryObject query;
 			DataSet dsTotal=new DataSet();//Totals dataset for all connections, it contains a totals table per connection.  We use this later for a summary section.
 			int queryObjectNum=0;
@@ -548,11 +548,11 @@ namespace CentralManager {
 				listThreads[i].QuitSync(Timeout.Infinite);
 			}
 			report.ReportName="Appointments";
-			report.AddTitle("Title",Lan.g(this,"Annual Production and Income"));
+			report.AddTitle("Title",Lan.G(this,"Annual Production and Income"));
 			report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",_dateFrom.ToShortDateString()+" - "+_dateTo.ToShortDateString());
-			report.AddSubTitle("Providers",Lan.g(this,"All Providers"));
-			report.AddSubTitle("Clinics",Lan.g(this,"All Clinics"));
+			report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
+			report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
 			//setup query
 			QueryObject query;
 			DataSet dsTotal=new DataSet();
@@ -694,11 +694,11 @@ namespace CentralManager {
 				listThreads[i].QuitSync(Timeout.Infinite);
 			}
 			report.ReportName="Provider P&I";
-			report.AddTitle("Title",Lan.g(this,"Provider Production and Income"));
+			report.AddTitle("Title",Lan.G(this,"Provider Production and Income"));
 			report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",_dateFrom.ToShortDateString()+" - "+_dateTo.ToShortDateString());
-			report.AddSubTitle("Providers",Lan.g(this,"All Providers"));
-			report.AddSubTitle("Clinics",Lan.g(this,"All Clinics"));
+			report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
+			report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
 			//setup query
 			QueryObject query;
 			DataSet dsTotal=new DataSet();

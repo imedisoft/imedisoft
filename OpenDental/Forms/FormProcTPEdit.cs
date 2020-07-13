@@ -463,7 +463,7 @@ namespace OpenDental{
 				butOK.Enabled=false;
 				butDelete.Enabled=false;
 			}
-			comboPriority.Items.Add(Lan.g(this,"none"));
+			comboPriority.Items.Add(Lan.G(this,"none"));
 			comboPriority.SelectedIndex=0;
 			_listTxPriorityDefs=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
 			for(int i=0;i<_listTxPriorityDefs.Count;i++){

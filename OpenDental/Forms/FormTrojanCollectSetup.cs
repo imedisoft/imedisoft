@@ -214,15 +214,15 @@ namespace OpenDental {
 			if(string.IsNullOrEmpty(selectedPath) || !Directory.Exists(selectedPath)) {
 				selectedPath="C:\\";
 			}
-			using(FolderBrowserDialog fb=new FolderBrowserDialog() { SelectedPath=selectedPath,Description=Lan.g(this,"Select Export Folder Location") }) {
+			using(FolderBrowserDialog fb=new FolderBrowserDialog() { SelectedPath=selectedPath,Description=Lan.G(this,"Select Export Folder Location") }) {
 				try {
 					if(fb.ShowDialog()==DialogResult.OK) {
 						textExportFolder.Text=fb.SelectedPath;
 					}
 				}
 				catch {
-					MessageBox.Show(Lan.g(this,"There was an error showing the Browse window.")+"\r\n"
-						+Lan.g(this,"Try running as an Administrator or manually typing in a path."));
+					MessageBox.Show(Lan.G(this,"There was an error showing the Browse window.")+"\r\n"
+						+Lan.G(this,"Try running as an Administrator or manually typing in a path."));
 					return;
 				}
 			}

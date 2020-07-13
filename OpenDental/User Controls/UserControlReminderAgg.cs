@@ -67,7 +67,7 @@ namespace OpenDental {
 			else if(tabTemplates.SelectedTab==tabArrivalTemplate) {
 				listTagsAvailable.RemoveAll(x => x.In(ListTagsExludedFromArrivalResponseComeIn));
 			}
-			return Lan.g(this,"Use the following replacement tags to customize messages: ")
+			return Lan.G(this,"Use the following replacement tags to customize messages: ")
 				 +string.Join(", ",listTagsAvailable);
 		}
 
@@ -106,57 +106,57 @@ namespace OpenDental {
 			List<string> errors=new List<string>();
 			if(Rule.TypeCur==ApptReminderType.Arrival) {
 				if(string.IsNullOrWhiteSpace(textSMSAggShared.Text)) {
-					errors.Add(groupBoxSMSAggShared.Text+Lan.g(this," cannot be blank."));
+					errors.Add(groupBoxSMSAggShared.Text+Lan.G(this," cannot be blank."));
 				}
 				if(ListTagsExludedFromArrivalResponseComeIn.Any(x => x.ToLower().Trim().In(textArrivalResponse.Text.ToLower()))
 					|| ListTagsExludedFromArrivalResponseComeIn.Any(x => x.ToLower().Trim().In(textComeIn.Text.ToLower()))) 
 				{
 					//Not allowed to use [Arrived] in Arrival Response or ComeIn messages.
-					errors.Add(groupArrivedReply.Text+Lan.g(this," and ")+groupComeIn.Text
-						+Lan.g(this," cannot contain ")+string.Join(",",ListTagsExludedFromArrivalResponseComeIn));
+					errors.Add(groupArrivedReply.Text+Lan.G(this," and ")+groupComeIn.Text
+						+Lan.G(this," cannot contain ")+string.Join(",",ListTagsExludedFromArrivalResponseComeIn));
 				}
 				if(!textSMSAggShared.Text.ToLower().Contains(OpenDentBusiness.AutoComm.ArrivalsTagReplacer.ARRIVED_TAG.ToLower())) {
-					errors.Add(groupBoxSMSAggShared.Text+Lan.g(this,$" must contain the \"{OpenDentBusiness.AutoComm.ArrivalsTagReplacer.ARRIVED_TAG}\" tag."));
+					errors.Add(groupBoxSMSAggShared.Text+Lan.G(this,$" must contain the \"{OpenDentBusiness.AutoComm.ArrivalsTagReplacer.ARRIVED_TAG}\" tag."));
 				}
 				return errors;//Arrival Response and ComeIn templates are allowed to be blank, so we can just return here.
 			}
 			if(Rule.TypeCur!=ApptReminderType.PatientPortalInvite) {
 				if(string.IsNullOrWhiteSpace(textSMSAggShared.Text)) {
-					errors.Add(Lan.g(this,"Text message cannot be blank."));
+					errors.Add(Lan.G(this,"Text message cannot be blank."));
 				}
 				if(!textSMSAggShared.Text.ToLower().Contains("[appts]")) {
-					errors.Add(Lan.g(this,"Text message must contain the \"[Appts]\" tag."));
+					errors.Add(Lan.G(this,"Text message must contain the \"[Appts]\" tag."));
 				}
 				if(!_templateEmailAggShared.ToLower().Contains("[appts]")) {
-					errors.Add(Lan.g(this,"Email message must contain the \"[Appts]\" tag."));
+					errors.Add(Lan.G(this,"Email message must contain the \"[Appts]\" tag."));
 				}
 			}
 			if(string.IsNullOrWhiteSpace(textEmailSubjAggShared.Text)) {
-				errors.Add(Lan.g(this,"Email subject cannot be blank."));
+				errors.Add(Lan.G(this,"Email subject cannot be blank."));
 			}
 			if(string.IsNullOrWhiteSpace(_templateEmailAggShared)) {
-				errors.Add(Lan.g(this,"Email message cannot be blank."));
+				errors.Add(Lan.G(this,"Email message cannot be blank."));
 			}	
 			if(Rule.TypeCur==ApptReminderType.ConfirmationFutureDay) {
 				if(_templateEmailAggShared.ToLower().Contains("[confirmcode]")) {
-					errors.Add(Lan.g(this,"Confirmation emails should not contain the \"[ConfirmCode]\" tag."));
+					errors.Add(Lan.G(this,"Confirmation emails should not contain the \"[ConfirmCode]\" tag."));
 				}
 				if(!_templateEmailAggShared.ToLower().Contains("[confirmurl]")) {
-					errors.Add(Lan.g(this,"Confirmation emails must contain the \"[ConfirmURL]\" tag."));
+					errors.Add(Lan.G(this,"Confirmation emails must contain the \"[ConfirmURL]\" tag."));
 				}
 				if(string.IsNullOrWhiteSpace(textSingleAutoReply.Text)) {
-					errors.Add(Lan.g(this,"Single auto reply text cannot be blank."));
+					errors.Add(Lan.G(this,"Single auto reply text cannot be blank."));
 				}
 				if(string.IsNullOrWhiteSpace(textAggregateAutoReply.Text)) {
-					errors.Add(Lan.g(this,"Aggregate auto reply text cannot be blank."));
+					errors.Add(Lan.G(this,"Aggregate auto reply text cannot be blank."));
 				}
 				List<string> listInvalidTags=ListTagsExludedFromAutoReply.FindAll(x => textSingleAutoReply.Text.ToLower().Contains(x.ToLower()));
 				if(listInvalidTags.Count>0) {
-					errors.Add(Lan.g(this,"Single auto reply text contains invalid tags:\r\n"+$"  {string.Join(", ",listInvalidTags)}"));
+					errors.Add(Lan.G(this,"Single auto reply text contains invalid tags:\r\n"+$"  {string.Join(", ",listInvalidTags)}"));
 				}
 				listInvalidTags=ListTagsExludedFromAutoReply.FindAll(x => textAggregateAutoReply.Text.ToLower().Contains(x.ToLower()));
 				if(listInvalidTags.Count>0) {
-					errors.Add(Lan.g(this,"Aggregate auto reply text contains invalid tags:\r\n"+$"  {string.Join(", ",listInvalidTags)}"));
+					errors.Add(Lan.G(this,"Aggregate auto reply text contains invalid tags:\r\n"+$"  {string.Join(", ",listInvalidTags)}"));
 				}
 			}
 			if(Rule.TypeCur==ApptReminderType.ScheduleThankYou) {
@@ -164,26 +164,26 @@ namespace OpenDental {
 				string addToCalTag=ApptThankYouSents.ADD_TO_CALENDAR.ToLower();
 				if(!PrefC.GetBool(PrefName.ApptConfirmAutoSignedUp)) {
 					if(textSMSAggPerAppt.Text.ToLower().Contains(addToCalTag)) {
-						errors.Add(Lan.g(this,"Automated Thank-You texts cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
-							+Lan.g(this," when not signed up for eConfirmations."));
+						errors.Add(Lan.G(this,"Automated Thank-You texts cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
+							+Lan.G(this," when not signed up for eConfirmations."));
 					}
 					if(textEmailAggPerAppt.Text.ToLower().Contains(addToCalTag)) {
-						errors.Add(Lan.g(this,"Automated Thank-You emails cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
-							+Lan.g(this," when not signed up for eConfirmations."));
+						errors.Add(Lan.G(this,"Automated Thank-You emails cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
+							+Lan.G(this," when not signed up for eConfirmations."));
 					}
 				}
 				//Shared templates cannot use [AddToCalendar] tag.
 				if(textSMSAggShared.Text.ToLower().Contains(addToCalTag)) {
-					errors.Add(Lan.g(this,"Automated Thank-You Aggregated SMS Template cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
-						+Lan.g(this,". Use Per Appointment instead."));
+					errors.Add(Lan.G(this,"Automated Thank-You Aggregated SMS Template cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
+						+Lan.G(this,". Use Per Appointment instead."));
 				}
 				if(_templateEmailAggShared.ToLower().Contains(addToCalTag)) {
-					errors.Add(Lan.g(this,"Automated Thank-You Aggregated E-mail Template cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
-						+Lan.g(this,". Use Per Appointment instead."));
+					errors.Add(Lan.G(this,"Automated Thank-You Aggregated E-mail Template cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
+						+Lan.G(this,". Use Per Appointment instead."));
 				}
 			}
 			if(PrefC.GetBool(PrefName.EmailDisclaimerIsOn) && !_templateEmailAggShared.ToLower().Contains("[emaildisclaimer]")) {
-				errors.Add(Lan.g(this,"Email must contain the \"[EmailDisclaimer]\" tag."));
+				errors.Add(Lan.G(this,"Email must contain the \"[EmailDisclaimer]\" tag."));
 			}
 			return errors;
 

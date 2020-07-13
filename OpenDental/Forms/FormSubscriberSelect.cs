@@ -146,7 +146,7 @@ namespace OpenDental{
 				if(PatientLinks.WasPatientMerged(FamCur.ListPats[i].PatNum,_listMergeLinks)) {
 					continue;//Don't show merged patients
 				}
-				listPats.Items.Add(new ODBoxItem<Patient>(FamCur.ListPats[i].GetNameFL()+" ("+Lan.g("enumPatientStatus",
+				listPats.Items.Add(new ODBoxItem<Patient>(FamCur.ListPats[i].GetNameFL()+" ("+Lan.G("enumPatientStatus",
 					FamCur.ListPats[i].PatStatus.GetDescription())+")",FamCur.ListPats[i]));
 			}
 		}

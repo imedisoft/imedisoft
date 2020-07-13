@@ -66,7 +66,7 @@ namespace OpenDental {
 					row.Cells.Add(user.UserName);
 				}
 				else {
-					row.Cells.Add(Lan.g(this,"Unknown")+"("+POut.Long(logCur.UserNum)+")");//Unable to find the corresponding user.
+					row.Cells.Add(Lan.G(this,"Unknown")+"("+POut.Long(logCur.UserNum)+")");//Unable to find the corresponding user.
 				}
 				row.Cells.Add(logCur.LogType.ToString());
 				row.Cells.Add(logCur.FKey.ToString());

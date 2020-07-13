@@ -36,10 +36,10 @@ namespace OpenDental{
 			}
 			if(recallCur==null){
 				//Typically never happens because everyone has a recall.  However, it can happen when patients have custom recalls due
-				throw new ApplicationException(Lan.g("AppointmentL","No special type recall is due."));
+				throw new ApplicationException(Lan.G("AppointmentL","No special type recall is due."));
 			}
 			if(recallCur.DateScheduled.Date>DateTime.Today) {
-				throw new ApplicationException(Lan.g("AppointmentL","Recall has already been scheduled for ")+recallCur.DateScheduled.ToShortDateString());
+				throw new ApplicationException(Lan.G("AppointmentL","Recall has already been scheduled for ")+recallCur.DateScheduled.ToShortDateString());
 			}
 			Appointment aptCur=new Appointment();
 			aptCur.AptDateTime=aptDateTime;		
@@ -215,7 +215,7 @@ namespace OpenDental{
 				commlogCur.PatNum=pat.PatNum;
 				commlogCur.CommDateTime=DateTime.Now;
 				commlogCur.CommType=Commlogs.GetTypeAuto(CommItemTypeAuto.APPT);
-				commlogCur.Note=Lan.g("Appointment","Appt BROKEN for")+" "+appt.ProcDescript+"  "+appt.AptDateTime.ToString();
+				commlogCur.Note=Lan.G("Appointment","Appt BROKEN for")+" "+appt.ProcDescript+"  "+appt.AptDateTime.ToString();
 				commlogCur.Mode_=CommItemMode.None;
 				commlogCur.UserNum=Security.CurUser.UserNum;
 				commlogCur.IsNew=true;
@@ -366,8 +366,8 @@ namespace OpenDental{
 			//Make the appointment in memory
 			Appointment apptCur=Appointments.MakeNewAppointment(PatCur,apptDateTime,opNum,useApptDrawingSettings);
 			if(PatCur.AskToArriveEarly>0 && useApptDrawingSettings) {
-				MessageBox.Show(Lan.g("FormApptsOther","Ask patient to arrive")+" "+PatCur.AskToArriveEarly
-					+" "+Lan.g("FormApptsOther","minutes early at")+" "+apptCur.DateTimeAskedToArrive.ToShortTimeString()+".");
+				MessageBox.Show(Lan.G("FormApptsOther","Ask patient to arrive")+" "+PatCur.AskToArriveEarly
+					+" "+Lan.G("FormApptsOther","minutes early at")+" "+apptCur.DateTimeAskedToArrive.ToShortTimeString()+".");
 			}
 			return apptCur;
 		}
@@ -388,7 +388,7 @@ namespace OpenDental{
 			//Notify the user that the currently selected patient has been merged before and then ask them if they want to switch to the correct patient.
 			foreach(Patient pat in listPats) {
 				if(pat.PatStatus.In(PatientStatus.Patient,PatientStatus.Inactive)
-					&& (MessageBox.Show(Lan.g("ContrAppt","The currently selected patient has been merged into another patient.\r\n"
+					&& (MessageBox.Show(Lan.G("ContrAppt","The currently selected patient has been merged into another patient.\r\n"
 					+"Switch to patient")+" "+pat.GetNameLF()+" #"+pat.PatNum.ToString()+"?","",MessageBoxButtons.YesNo)==DialogResult.Yes)) 
 				{
 					newPatCur=pat;

@@ -20,7 +20,7 @@ namespace OpenDental {
 
 		private void FormDunningSetup_Load(object sender,EventArgs e) {
 			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
-			listBill.Items.Add("("+Lan.g(this,"all")+")");
+			listBill.Items.Add("("+Lan.G(this,"all")+")");
 			listBill.SetSelected(0,true);
 			listBill.Items.AddRange(_listBillingTypeDefs.Select(x => x.ItemName).ToArray());
 			comboClinics.SelectedClinicNum=Clinics.ClinicNum;
@@ -54,25 +54,25 @@ namespace OpenDental {
 			foreach(Dunning dunnCur in listSubDunnings) {
 				row=new GridRow();
 				if(dunnCur.BillingType==0){
-					row.Cells.Add(Lan.g(this,"all"));
+					row.Cells.Add(Lan.G(this,"all"));
 				}
 				else{
 					row.Cells.Add(Defs.GetName(DefCat.BillingTypes,dunnCur.BillingType));
 				}
 				if(dunnCur.AgeAccount==0){
-					row.Cells.Add(Lan.g(this,"any"));
+					row.Cells.Add(Lan.G(this,"any"));
 				}
 				else{
-					row.Cells.Add(Lan.g(this,"Over ")+dunnCur.AgeAccount.ToString());
+					row.Cells.Add(Lan.G(this,"Over ")+dunnCur.AgeAccount.ToString());
 				}
 				if(dunnCur.InsIsPending==YN.Yes) {
-					row.Cells.Add(Lan.g(this,"Y"));
+					row.Cells.Add(Lan.G(this,"Y"));
 				}
 				else if(dunnCur.InsIsPending==YN.No) {
-					row.Cells.Add(Lan.g(this,"N"));
+					row.Cells.Add(Lan.G(this,"N"));
 				}
 				else {//YN.Unknown
-					row.Cells.Add(Lan.g(this,"any"));
+					row.Cells.Add(Lan.G(this,"any"));
 				}
 				row.Cells.Add(dunnCur.DunMessage);
 				row.Cells.Add(new GridCell(dunnCur.MessageBold) { Bold=YN.Yes,ColorText=Color.DarkRed });

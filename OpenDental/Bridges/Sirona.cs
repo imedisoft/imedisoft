@@ -136,7 +136,7 @@ namespace OpenDental.Bridges {
 					OpenDentBusiness.Shared.Sirona.WriteToSendBoxFile(path,listIniLines);
 				}
 				catch(Exception ex) {
-					FriendlyException.Show(Lan.g("Sirona","Error preparing Sidexis for patient message."),ex);
+					FriendlyException.Show(Lan.G("Sirona","Error preparing Sidexis for patient message."),ex);
 					return;
 				}
 			}//if patient is loaded

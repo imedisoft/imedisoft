@@ -625,7 +625,7 @@ namespace OpenDental{
 			}
 			Clinic clinic=Clinics.GetFirstOrDefault(x => x.EmailAddressNum==_emailAddressCur.EmailAddressNum);
 			if(clinic!=null) {
-				MessageBox.Show(Lan.g(this,"Cannot delete the email address because it is used by clinic")+" "+clinic.Description);
+				MessageBox.Show(Lan.G(this,"Cannot delete the email address because it is used by clinic")+" "+clinic.Description);
 				return;
 			}
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this email address?")) {
@@ -674,7 +674,7 @@ namespace OpenDental{
 					return;
 				}
 				if(string.IsNullOrWhiteSpace(inputbox.textResult.Text)) {
-					throw new ODException(Lan.g(this,"There was no authorization code entered."));
+					throw new ODException(Lan.G(this,"There was no authorization code entered."));
 				}
 				string authCode=inputbox.textResult.Text;
 				GoogleToken tokens=Google.MakeAccessTokenRequest(authCode);

@@ -50,7 +50,7 @@ namespace OpenDental {
 					//FinalizedSomeDetached and FinalizedAllDetached are shown via Finalized.
 					continue;
 				}
-				listStatus.Items.Add(Lan.g(this,status.GetDescription()));
+				listStatus.Items.Add(Lan.G(this,status.GetDescription()));
 				bool isSelected=true;
 				if(status==X835Status.Finalized) {
 					isSelected=false;
@@ -112,7 +112,7 @@ namespace OpenDental {
 			textControlId.Visible=PrefC.GetBool(PrefName.EraShowControlIdFilter);
 			Action actionCloseProgress=null;
 			if(isRefreshNeeded) {
-				actionCloseProgress=ODProgress.Show(ODEventType.Etrans,typeof(EtransEvent),Lan.g(this,"Gathering data")+"...");
+				actionCloseProgress=ODProgress.Show(ODEventType.Etrans,typeof(EtransEvent),Lan.G(this,"Gathering data")+"...");
 				_dictEtrans835s.Clear();
 				_dictEtransClaims.Clear();
 				List <Etrans835Attach> listAttached=Etrans835Attaches.GetForEtrans(_listAllEtrans.Select(x => x.EtransNum).ToArray());
@@ -127,7 +127,7 @@ namespace OpenDental {
 						dictEtransMessages=EtransMessageTexts.GetMessageTexts(_listAllEtrans.GetRange(rowCur,range).Select(x => x.EtransMessageTextNum).ToList(),false);
 					}
 					rowCur++;
-					EtransEvent.Fire(ODEventType.Etrans,Lan.g(this,"Processing 835: ")+": "+rowCur+" out of "+_listAllEtrans.Count);
+					EtransEvent.Fire(ODEventType.Etrans,Lan.G(this,"Processing 835: ")+": "+rowCur+" out of "+_listAllEtrans.Count);
 					List <Etrans835Attach> listAttachedTo835=listAttached.FindAll(x => x.EtransNum==etrans.EtransNum);
 					X835 x835=new X835(etrans,dictEtransMessages[etrans.EtransMessageTextNum],etrans.TranSetId835,listAttachedTo835,true);
 					_dictEtrans835s.Add(etrans.EtransNum,x835);
@@ -136,9 +136,9 @@ namespace OpenDental {
 					list835ClaimMatches.AddRange(listClaimMatches);
 				}
 				#region Set 835 unattached in batch and build _dictEtransClaims and _dictClaimPayCheckNums.
-				EtransEvent.Fire(ODEventType.Etrans,Lan.g(this,"Gathering internal claim matches."));
+				EtransEvent.Fire(ODEventType.Etrans,Lan.G(this,"Gathering internal claim matches."));
 				List<long> listClaimNums=Claims.GetClaimFromX12(list835ClaimMatches);//Can return null.
-				EtransEvent.Fire(ODEventType.Etrans,Lan.g(this,"Building data sets."));
+				EtransEvent.Fire(ODEventType.Etrans,Lan.G(this,"Building data sets."));
 				int claimIndexCur=0;
 				List<long> listMatchedClaimNums=new List<long>();
 				foreach(Etrans etrans in _listAllEtrans) {
@@ -165,25 +165,25 @@ namespace OpenDental {
 					}
 					#endregion
 				}
-				EtransEvent.Fire(ODEventType.Etrans,Lan.g(this,"Filling Grid."));
+				EtransEvent.Fire(ODEventType.Etrans,Lan.G(this,"Filling Grid."));
 				#endregion
 			}
 			gridMain.BeginUpdate();
 			#region Initilize columns
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableEtrans835s","Patient Name"),250));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableEtrans835s","Carrier Name"),190));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableEtrans835s","Status"),80));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableEtrans835s","Date"),80,GridSortingStrategy.DateParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableEtrans835s","Amount"),80,GridSortingStrategy.AmountParse));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Patient Name"),250));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Carrier Name"),190));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Status"),80));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Date"),80,GridSortingStrategy.DateParse));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Amount"),80,GridSortingStrategy.AmountParse));
 			if(PrefC.HasClinicsEnabled) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableEtrans835s","Clinic"),70));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Clinic"),70));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableEtrans835s","Code"),37,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Code"),37,HorizontalAlignment.Center));
 			if(PrefC.GetBool(PrefName.EraShowControlIdFilter)) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableEtrans835s","ControlID"),70){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","ControlID"),70){ IsWidthDynamic=true });
 			}
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableEtrans835s","Note"),250){ IsWidthDynamic=true,DynamicWeight=2 });
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Note"),250){ IsWidthDynamic=true,DynamicWeight=2 });
 			#endregion
 			gridMain.ListGridRows.Clear();
 			foreach(Etrans etrans in _listAllEtrans) {
@@ -239,14 +239,14 @@ namespace OpenDental {
 					string clinicAbbr="";
 					if(listClinicNums.Count==1) {
 						if(listClinicNums[0]==0) {
-							clinicAbbr=Lan.g(this,"Unassigned");
+							clinicAbbr=Lan.G(this,"Unassigned");
 						}
 						else {
 							clinicAbbr=Clinics.GetAbbr(listClinicNums[0]);
 						}
 					}
 					else if(listClinicNums.Count>1) {
-						clinicAbbr="("+Lan.g(this,"Multiple")+")";
+						clinicAbbr="("+Lan.G(this,"Multiple")+")";
 					}
 					row.Cells.Add(clinicAbbr);
 				}
@@ -267,7 +267,7 @@ namespace OpenDental {
 		private string GetStringStatus(long etransNum) {
 			List<Claim> listValidClaims=_dictEtransClaims[etransNum].FindAll(x => x!=null);
 			//Either description tag or enum.ToString().
-			return Lan.g(this,_dictEtrans835s[etransNum].GetStatus(listValidClaims,_listAllClaimProcs,_listAllAttaches).GetDescription());
+			return Lan.G(this,_dictEtrans835s[etransNum].GetStatus(listValidClaims,_listAllClaimProcs,_listAllAttaches).GetDescription());
 		}
 
 		///<summary>Called when we need to filter the current in memory contents in _listEtrans. Calls FillGrid()</summary>

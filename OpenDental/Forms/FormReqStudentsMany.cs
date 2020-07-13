@@ -176,13 +176,13 @@ namespace OpenDental{
 			table=ReqStudents.RefreshManyStudents(schoolClass,schoolCourse);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableReqStudentMany","Last"),100);
+			GridColumn col=new GridColumn(Lan.G("TableReqStudentMany","Last"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableReqStudentMany","First"),100);
+			col=new GridColumn(Lan.G("TableReqStudentMany","First"),100);
 			gridMain.ListGridColumns.Add(col);
 			//col=new ODGridColumn(Lan.g("TableReqStudentMany","Total"),50);
 			//gridMain.Columns.Add(col);
-			col=new GridColumn(Lan.g("TableReqStudentMany","Done"),50);
+			col=new GridColumn(Lan.G("TableReqStudentMany","Done"),50);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

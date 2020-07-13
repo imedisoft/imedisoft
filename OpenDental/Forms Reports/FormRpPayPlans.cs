@@ -321,7 +321,7 @@ namespace OpenDental
 			else {
 				_listClinics=Clinics.GetForUserod(Security.CurUser);
 				if(!Security.CurUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.g(this,"Unassigned"));
+					listClin.Items.Add(Lan.G(this,"Unassigned"));
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -442,8 +442,8 @@ namespace OpenDental
 			Font font=new Font("Tahoma",9);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.g(this,"PaymentPlans");
-			report.AddTitle("Title",Lan.g(this,"Payment Plans"),fontTitle);
+			report.ReportName=Lan.G(this,"PaymentPlans");
+			report.AddTitle("Title",Lan.G(this,"Payment Plans"),fontTitle);
 			report.AddSubTitle("PracticeTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			if(checkHasDateRange.Checked) {
 				report.AddSubTitle("Date SubTitle",dateStart.Value.ToShortDateString()+" - "+dateEnd.Value.ToShortDateString(),fontSubTitle);

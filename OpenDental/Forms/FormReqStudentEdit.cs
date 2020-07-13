@@ -356,14 +356,14 @@ namespace OpenDental{
 			Appointment apt=Appointments.GetOneApt(ReqCur.AptNum);
 			if(apt!=null) {
 				if(apt.AptStatus==ApptStatus.UnschedList) {
-					textAppointment.Text=Lan.g(this,"Unscheduled");
+					textAppointment.Text=Lan.G(this,"Unscheduled");
 				}
 				else {
 					textAppointment.Text=apt.AptDateTime.ToShortDateString()+" "+apt.AptDateTime.ToShortTimeString();
 				}
 				textAppointment.Text+=", "+apt.ProcDescript;
 			}
-			comboInstructor.Items.Add(Lan.g(this,"None"));
+			comboInstructor.Items.Add(Lan.G(this,"None"));
 			comboInstructor.SelectedIndex=0;
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {

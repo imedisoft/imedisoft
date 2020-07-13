@@ -28,7 +28,7 @@ namespace OpenDental {
 			textSubject.Text=_templateCur.Subject;
 			userControlEmailTemplate1.RefreshView(_templateCur.BodyPlainText,_templateCur.BodyHTML,_templateCur.EmailTemplateType);
 			labelReplacedData.ForeColor=Color.Firebrick;
-			labelReplacedData.Text=Lan.g(this,"Without replaced data");
+			labelReplacedData.Text=Lan.G(this,"Without replaced data");
 		}
 
 		private void checkDisplay_Click(object sender,EventArgs e) {
@@ -39,7 +39,7 @@ namespace OpenDental {
 			}
 			if(checkDisplay.Checked) {
 				labelReplacedData.ForeColor=Color.LimeGreen;
-				labelReplacedData.Text=Lan.g(this,"With replaced data");
+				labelReplacedData.Text=Lan.G(this,"With replaced data");
 				FormMassEmail.PatientInfo pat=_listPatientsSelected.First(x => x.PatNum==_patSelected.PatNum);
 				Patient guarantor=Patients.GetPat(_patSelected.Guarantor);
 				Appointment apt=Appointments.GetOneApt(pat.NextAptNum);
@@ -71,7 +71,7 @@ namespace OpenDental {
 			}
 			else {
 				labelReplacedData.ForeColor=Color.Firebrick;
-				labelReplacedData.Text=Lan.g(this,"Without replaced data");
+				labelReplacedData.Text=Lan.G(this,"Without replaced data");
 				//Refresh view with the original un-replaced values. 
 				userControlEmailTemplate1.RefreshView(_templateCur.BodyPlainText,_templateCur.BodyHTML,_templateCur.EmailTemplateType);
 				textSubject.Text=_templateCur.Subject;
@@ -114,7 +114,7 @@ namespace OpenDental {
 		private void butPatientSelect_Click(object sender,EventArgs e) {
 			//Build our grid to display for the form we are about to show the user. 
 			List<UI.GridColumn> listColumns=new List<UI.GridColumn>();
-			listColumns.Add(new UI.GridColumn(Lan.g(this,"Patient"),0));
+			listColumns.Add(new UI.GridColumn(Lan.G(this,"Patient"),0));
 			List<UI.GridRow> listRows=new List<UI.GridRow>();
 			foreach(FormMassEmail.PatientInfo patient in _listPatientsSelected) {
 				UI.GridRow row=new UI.GridRow();
@@ -122,7 +122,7 @@ namespace OpenDental {
 				row.Tag=patient;
 				listRows.Add(row);
 			}
-			FormGridSelection formGridSelection=new FormGridSelection(listColumns,listRows,Lan.g(this,"Select Patient"),Lan.g(this,"Select Patient"));
+			FormGridSelection formGridSelection=new FormGridSelection(listColumns,listRows,Lan.G(this,"Select Patient"),Lan.G(this,"Select Patient"));
 			if(formGridSelection.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
@@ -134,7 +134,7 @@ namespace OpenDental {
 		}
 
 		private void butSendEmails_Click(object sender,EventArgs e) {
-			string message=Lan.g(this,"Are you sure you want to send this email to ")+_listPatientsSelected.Count+Lan.g(this," patients?");
+			string message=Lan.G(this,"Are you sure you want to send this email to ")+_listPatientsSelected.Count+Lan.G(this," patients?");
 			if(MessageBox.Show(message,"",MessageBoxButtons.YesNo)==DialogResult.No) {
 				return;
 			}

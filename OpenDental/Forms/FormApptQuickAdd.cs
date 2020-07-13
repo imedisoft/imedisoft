@@ -43,7 +43,7 @@ namespace OpenDental {
 			for(int i=0;i<procCodeStrArray.Length;i++) {
 				codeNum=ProcedureCodes.GetCodeNum(procCodeStrArray[i]);
 				if(codeNum==0){
-					MessageBox.Show(Lan.g(this,"Definition contains invalid code: ")+procCodeStrArray[i]);
+					MessageBox.Show(Lan.G(this,"Definition contains invalid code: ")+procCodeStrArray[i]);
 					return;
 				}
 				SelectedCodeNums.Add(codeNum);
@@ -64,7 +64,7 @@ namespace OpenDental {
 				for(int i=0;i<procCodeStrArray.Length;i++) {
 					codeNum=ProcedureCodes.GetCodeNum(procCodeStrArray[i]);
 					if(codeNum==0) {
-						MessageBox.Show(Lan.g(this,"Definition contains invalid code: ")+procCodeStrArray[i]);
+						MessageBox.Show(Lan.G(this,"Definition contains invalid code: ")+procCodeStrArray[i]);
 						return;
 					}
 					SelectedCodeNums.Add(codeNum);

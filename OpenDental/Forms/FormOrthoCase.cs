@@ -139,13 +139,13 @@ namespace OpenDental {
 			gridOrthoSchedule.BeginUpdate();
 			gridOrthoSchedule.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TableOrthoSchedule","Procedure"),80);
+			col=new GridColumn(Lan.G("TableOrthoSchedule","Procedure"),80);
 			gridOrthoSchedule.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOrthoSchedule","Percent"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableOrthoSchedule","Percent"),60,HorizontalAlignment.Right);
 			gridOrthoSchedule.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOrthoSchedule","Amount"),80,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableOrthoSchedule","Amount"),80,HorizontalAlignment.Right);
 			gridOrthoSchedule.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOrthoSchedule","Date Completed"),90,HorizontalAlignment.Right){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G("TableOrthoSchedule","Date Completed"),90,HorizontalAlignment.Right){ IsWidthDynamic=true };
 			gridOrthoSchedule.ListGridColumns.Add(col);
 			gridOrthoSchedule.EndUpdate();
 		}

@@ -236,7 +236,7 @@ namespace OpenDental{
 			listDefCatsOrdered = listDefCatsOrdered.OrderBy(x => x.DefCat.GetDescription()).ToList(); //orders alphabetically.
 			ODBoxItem<DefCatOptions> defCatItem;
 			foreach(DefCatOptions defCOpt in listDefCatsOrdered) {
-				defCatItem=new ODBoxItem<DefCatOptions>(Lan.g(this,defCOpt.DefCat.GetDescription()),defCOpt);
+				defCatItem=new ODBoxItem<DefCatOptions>(Lan.G(this,defCOpt.DefCat.GetDescription()),defCOpt);
 				listCategory.Items.Add(defCatItem);
 				if(_initialCat == defCOpt.DefCat) {
 					listCategory.SelectedItem=defCatItem;

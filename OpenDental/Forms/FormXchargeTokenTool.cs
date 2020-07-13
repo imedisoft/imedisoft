@@ -68,17 +68,17 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormXChargeTest","PatNum"),80);
+			GridColumn col=new GridColumn(Lan.G("FormXChargeTest","PatNum"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormXChargeTest","First"),120);
+			col=new GridColumn(Lan.G("FormXChargeTest","First"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormXChargeTest","Last"),120);
+			col=new GridColumn(Lan.G("FormXChargeTest","Last"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormXChargeTest","CCNumberMasked"),150);
+			col=new GridColumn(Lan.G("FormXChargeTest","CCNumberMasked"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormXChargeTest","Exp"),50);
+			col=new GridColumn(Lan.G("FormXChargeTest","Exp"),50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormXChargeTest","Token"),100);
+			col=new GridColumn(Lan.G("FormXChargeTest","Token"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -25,13 +25,13 @@ namespace OpenDental.Bridges {
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormTrophyNamePick","FolderName"),100);
+			GridColumn col=new GridColumn(Lan.G("FormTrophyNamePick","FolderName"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormTrophyNamePick","Last Name"),120);
+			col=new GridColumn(Lan.G("FormTrophyNamePick","Last Name"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormTrophyNamePick","First Name"),120);
+			col=new GridColumn(Lan.G("FormTrophyNamePick","First Name"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormTrophyNamePick","Birthdate"),80);
+			col=new GridColumn(Lan.G("FormTrophyNamePick","Birthdate"),80);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

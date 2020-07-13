@@ -472,7 +472,7 @@ namespace OpenDental{
 				return;//should never happen
 			}
 			if(PrefC.HasClinicsEnabled) {
-				groupPaySettings.Text=Lan.g(this,"Clinic Payment Settings");
+				groupPaySettings.Text=Lan.G(this,"Clinic Payment Settings");
 				if(Security.CurUser.ClinicIsRestricted) {
 					//if program link is enabled, disable the enable check box so the restricted user cannot disable for all clinics
 					checkEnabled.Enabled=!_progCur.Enabled;
@@ -481,9 +481,9 @@ namespace OpenDental{
 				_clinicNumRevert=Clinics.ClinicNum;
 			}
 			else {//clinics not enabled
-				checkEnabled.Text=Lan.g(this,"Enabled");
+				checkEnabled.Text=Lan.G(this,"Enabled");
 				labelClinicEnable.Visible=false;
-				groupPaySettings.Text=Lan.g(this,"Payment Settings");
+				groupPaySettings.Text=Lan.G(this,"Payment Settings");
 			}
 			checkEnabled.Checked=_progCur.Enabled;
 			textPath.Text=_progCur.Path;

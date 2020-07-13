@@ -645,7 +645,7 @@ namespace OpenDental{
 		///<summary>Called every time local data is changed from any workstation.  Refreshes priority lists and lays out the toolbar.</summary>
 		public void InitializeLocalData() {
 			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
-			listDefs.Insert(0,new Def { DefNum=0,ItemName=Lan.g(this,"no priority") });
+			listDefs.Insert(0,new Def { DefNum=0,ItemName=Lan.G(this,"no priority") });
 			listSetPr.Items.Clear();
 			foreach(Def def in listDefs) {
 				listSetPr.Items.Add(new ODBoxItem<Def>(def.ItemName,def));
@@ -667,13 +667,13 @@ namespace OpenDental{
 		public void LayoutToolBar(){
 			ToolBarMain.Buttons.Clear();
 			//ODToolBarButton button;
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"PreAuthorization"),-1,"","PreAuth"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Discount"),-1,"","Discount"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Update Fees"),1,"","Update"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"PreAuthorization"),-1,"","PreAuth"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Discount"),-1,"","Discount"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Update Fees"),1,"","Update"));
 			//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Save TP"),3,"","Create"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Print TP"),2,"","Print"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Email TP"),-1,"","Email"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Sign TP"),-1,"","Sign"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print TP"),2,"","Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Email TP"),-1,"","Email"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Sign TP"),-1,"","Sign"));
 			ProgramL.LoadToolbar(ToolBarMain,ToolBarsAvail.TreatmentPlanModule);
 			ToolBarMain.Invalidate();
 			Plugins.HookAddCode(this,"ContrTreat.LayoutToolBar_end",PatCur);
@@ -856,13 +856,13 @@ namespace OpenDental{
 		private void FillPlans(bool doRefreshData=true){
 			gridPlans.BeginUpdate();
 			gridPlans.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableTPList","Date"),70);
+			GridColumn col=new GridColumn(Lan.G("TableTPList","Date"),70);
 			gridPlans.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTPList","Status"),50);
+			col=new GridColumn(Lan.G("TableTPList","Status"),50);
 			gridPlans.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTPList","Heading"),230);
+			col=new GridColumn(Lan.G("TableTPList","Heading"),230);
 			gridPlans.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTPList","Signed"),76,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableTPList","Signed"),76,HorizontalAlignment.Center);
 			gridPlans.ListGridColumns.Add(col);
 			gridPlans.ListGridRows.Clear();
 			if(PatCur==null){
@@ -904,7 +904,7 @@ namespace OpenDental{
 				row.Cells.Add(treatPlanCur.TPStatus.ToString());
 				str=treatPlanCur.Heading;
 				if(treatPlanCur.ResponsParty!=0){
-					str+="\r\n"+Lan.g(this,"Responsible Party: ")+Patients.GetLim(treatPlanCur.ResponsParty).GetNameLF();
+					str+="\r\n"+Lan.G(this,"Responsible Party: ")+Patients.GetLim(treatPlanCur.ResponsParty).GetNameLF();
 				}
 				row.Cells.Add(str);
 				hasPracticeSig=sheetTP?.SheetFields?.Any(x => x.FieldType==SheetFieldType.SigBoxPractice)??false;
@@ -1064,7 +1064,7 @@ namespace OpenDental{
 				if(checkShowSubtotals.Checked &&
 					 (i==ProcTPSelectList.Length-1 || ProcTPSelectList[i+1].Priority!=ProcTPSelectList[i].Priority)) {
 					row=new TpRow();
-					row.Description=Lan.g("TableTP","Subtotal");
+					row.Description=Lan.G("TableTP","Subtotal");
 					row.Fee=subfee;
 					row.PriIns=subpriIns;
 					row.SecIns=subsecIns;
@@ -1095,7 +1095,7 @@ namespace OpenDental{
 			if((_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus==TreatPlanStatus.Saved 
 				&& _listTreatPlans[gridPlans.SelectedIndices[0]].Signature!="") 
 				|| (_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus==TreatPlanStatus.Inactive 
-				&& _listTreatPlans[gridPlans.SelectedIndices[0]].Heading==Lan.g("TreatPlan","Unassigned")))
+				&& _listTreatPlans[gridPlans.SelectedIndices[0]].Heading==Lan.G("TreatPlan","Unassigned")))
 			{
 				textNote.ReadOnly=true;
 			}
@@ -1104,7 +1104,7 @@ namespace OpenDental{
 			}
 			if(checkShowTotals.Checked) {
 				row=new TpRow();
-				row.Description=Lan.g("TableTP","Total");
+				row.Description=Lan.G("TableTP","Total");
 				row.Fee=totFee;
 				row.PriIns=totPriIns;
 				row.SecIns=totSecIns;
@@ -1490,8 +1490,8 @@ namespace OpenDental{
 							break;
 						case "Fee":
 							if(checkShowFees.Checked) {
-								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.g("TableTP","Total")
-									|| RowsMain[i].Description.ToString()==Lan.g("TableTP","Subtotal")) 
+								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.G("TableTP","Total")
+									|| RowsMain[i].Description.ToString()==Lan.G("TableTP","Subtotal")) 
 								{
 									row.Cells.Add(RowsMain[i].Fee.ToString("F"));
 								}
@@ -1503,8 +1503,8 @@ namespace OpenDental{
 						case "Pri Ins":
 						case "DPlan":
 							if(checkShowIns.Checked) {
-								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.g("TableTP","Total")
-									|| RowsMain[i].Description.ToString()==Lan.g("TableTP","Subtotal")) 
+								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.G("TableTP","Total")
+									|| RowsMain[i].Description.ToString()==Lan.G("TableTP","Subtotal")) 
 								{
 									row.Cells.Add(RowsMain[i].PriIns.ToString("F"));
 								}
@@ -1515,8 +1515,8 @@ namespace OpenDental{
 							break;
 						case "Sec Ins":
 							if(checkShowIns.Checked) {
-								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.g("TableTP","Total")
-									|| RowsMain[i].Description.ToString()==Lan.g("TableTP","Subtotal")) 
+								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.G("TableTP","Total")
+									|| RowsMain[i].Description.ToString()==Lan.G("TableTP","Subtotal")) 
 								{
 									row.Cells.Add(RowsMain[i].SecIns.ToString("F"));
 								}
@@ -1527,8 +1527,8 @@ namespace OpenDental{
 							break;
 						case "Discount":
 							if(checkShowDiscount.Checked) {
-								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.g("TableTP","Total")
-									|| RowsMain[i].Description.ToString()==Lan.g("TableTP","Subtotal"))
+								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.G("TableTP","Total")
+									|| RowsMain[i].Description.ToString()==Lan.G("TableTP","Subtotal"))
 								{
 									row.Cells.Add(RowsMain[i].Discount.ToString("F"));
 								}
@@ -1539,8 +1539,8 @@ namespace OpenDental{
 							break;
 						case "Pat":
 							if(checkShowIns.Checked || checkShowDiscount.Checked || hasSalesTax) {
-								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.g("TableTP","Total")
-									|| RowsMain[i].Description.ToString()==Lan.g("TableTP","Subtotal")) 
+								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.G("TableTP","Total")
+									|| RowsMain[i].Description.ToString()==Lan.G("TableTP","Subtotal")) 
 								{
 									row.Cells.Add(RowsMain[i].Pat.ToString("F"));
 								}
@@ -1602,7 +1602,7 @@ namespace OpenDental{
 							break;
 						case DisplayFields.InternalNames.TreatmentPlanModule.CatPercUCR:
 							if(PrefC.GetBool(PrefName.TreatPlanItemized) 
-								|| RowsMain[i].Description.ToString().In(Lan.g("TableTP","Total"),Lan.g("TableTP","Subtotal"))) 
+								|| RowsMain[i].Description.ToString().In(Lan.G("TableTP","Total"),Lan.G("TableTP","Subtotal"))) 
 							{
 								row.Cells.Add(RowsMain[i].CatPercUCR.ToString("F"));
 							}
@@ -1658,11 +1658,11 @@ namespace OpenDental{
     private void FillPreAuth(){
 			gridPreAuth.BeginUpdate();
 			gridPreAuth.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TablePreAuth","Date Sent"),80);
+			GridColumn col=new GridColumn(Lan.G("TablePreAuth","Date Sent"),80);
 			gridPreAuth.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePreAuth","Carrier"),100);
+			col=new GridColumn(Lan.G("TablePreAuth","Carrier"),100);
 			gridPreAuth.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePreAuth","Status"),53);
+			col=new GridColumn(Lan.G("TablePreAuth","Status"),53);
 			gridPreAuth.ListGridColumns.Add(col);
 			gridPreAuth.ListGridRows.Clear();
       if(PatCur==null){
@@ -2046,7 +2046,7 @@ namespace OpenDental{
 			#region FuchsOptionOn
 			if(PrefC.GetBool(PrefName.FuchsOptionsOn)) {
 				if(checkShowDiscount.Checked || checkShowIns.Checked) {
-					if(MessageBox.Show(this,string.Format(Lan.g(this,"Do you want to remove insurance estimates and discounts from printed treatment plan?")),"Open Dental",MessageBoxButtons.YesNo,MessageBoxIcon.Question) != DialogResult.No) {
+					if(MessageBox.Show(this,string.Format(Lan.G(this,"Do you want to remove insurance estimates and discounts from printed treatment plan?")),"Open Dental",MessageBoxButtons.YesNo,MessageBoxIcon.Question) != DialogResult.No) {
 						checkShowDiscount.Checked=false;
 						checkShowIns.Checked=false;
 						FillMain();
@@ -2108,7 +2108,7 @@ namespace OpenDental{
 			#region FuchsOptionOn
 			if(PrefC.GetBool(PrefName.FuchsOptionsOn)) {
 				if(checkShowDiscount.Checked || checkShowIns.Checked) {
-					if(MessageBox.Show(this,string.Format(Lan.g(this,"Do you want to remove insurance estimates and discounts from e-mailed treatment plan?")),"Open Dental",MessageBoxButtons.YesNo,MessageBoxIcon.Question) != DialogResult.No) {
+					if(MessageBox.Show(this,string.Format(Lan.G(this,"Do you want to remove insurance estimates and discounts from e-mailed treatment plan?")),"Open Dental",MessageBoxButtons.YesNo,MessageBoxIcon.Question) != DialogResult.No) {
 						checkShowDiscount.Checked=false;
 						checkShowIns.Checked=false;
 						FillMain();
@@ -2162,7 +2162,7 @@ namespace OpenDental{
 			message.ToAddress=PatCur.Email;
 			EmailAddress address=EmailAddresses.GetByClinic(PatCur.ClinicNum);
 			message.FromAddress=address.GetFrom();
-			message.Subject=Lan.g(this,"Treatment Plan");
+			message.Subject=Lan.G(this,"Treatment Plan");
 			EmailAttach attach=new EmailAttach();
 			attach.DisplayedFileName="TreatmentPlan.pdf";
 			attach.ActualFileName=fileName;
@@ -2424,7 +2424,7 @@ namespace OpenDental{
 							priIns=(decimal)ClaimProcs.GetInsEstTotal(claimproc);
 							double ded=ClaimProcs.GetDeductibleDisplay(claimproc);
 							if(ded>0) {
-								showPriDeduct="\r\n"+Lan.g(this,"Pri Deduct Applied: ")+ded.ToString("c");
+								showPriDeduct="\r\n"+Lan.G(this,"Pri Deduct Applied: ")+ded.ToString("c");
 							}
 						}
 						else {
@@ -2451,7 +2451,7 @@ namespace OpenDental{
 							secIns=(decimal)ClaimProcs.GetInsEstTotal(claimproc);
 							decimal ded=(decimal)ClaimProcs.GetDeductibleDisplay(claimproc);
 							if(ded>0) {
-								showSecDeduct="\r\n"+Lan.g(this,"Sec Deduct Applied: ")+ded.ToString("c");
+								showSecDeduct="\r\n"+Lan.G(this,"Sec Deduct Applied: ")+ded.ToString("c");
 							}
 						}
 						else {
@@ -2576,7 +2576,7 @@ namespace OpenDental{
 				if(checkShowSubtotals.Checked &&
 					 (i==listProcForTP.Count-1 || listTreatPlanAttaches.FirstOrDefault(x => x.ProcNum==listProcForTP[i+1].ProcNum).Priority!=procTP.Priority)) {
 					row=new TpRow();
-					row.Description=Lan.g("TableTP","Subtotal");
+					row.Description=Lan.G("TableTP","Subtotal");
 					row.Fee=subfee;
 					row.PriIns=subpriIns;
 					row.SecIns=subsecIns;
@@ -2608,7 +2608,7 @@ namespace OpenDental{
 			if((_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus==TreatPlanStatus.Saved 
 					&& _listTreatPlans[gridPlans.SelectedIndices[0]].Signature!="") 
 				|| (_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus==TreatPlanStatus.Inactive 
-					&& _listTreatPlans[gridPlans.SelectedIndices[0]].Heading==Lan.g(this,"Unassigned"))) 
+					&& _listTreatPlans[gridPlans.SelectedIndices[0]].Heading==Lan.G(this,"Unassigned"))) 
 			{
 				textNote.ReadOnly=true;
 			}
@@ -2618,7 +2618,7 @@ namespace OpenDental{
 			#region Totals
 			if(checkShowTotals.Checked) {
 				TpRow row=new TpRow();
-				row.Description=Lan.g("TableTP","Total");
+				row.Description=Lan.G("TableTP","Total");
 				row.Fee=totFee;
 				row.PriIns=totPriIns;
 				row.SecIns=totSecIns;
@@ -2677,7 +2677,7 @@ namespace OpenDental{
 		/// <summary>Returns in-memory TreatPlan representing the current treatplan. For displaying current treat-plan before saving it.</summary>
 		private TreatPlan GetCurrentTPHelper() {
 			TreatPlan retVal=new TreatPlan();
-			retVal.Heading=Lan.g(this,"Proposed Treatment Plan");
+			retVal.Heading=Lan.G(this,"Proposed Treatment Plan");
 			retVal.DateTP=DateTimeOD.Today;
 			retVal.PatNum=PatCur.PatNum;
 			retVal.Note=PrefC.GetString(PrefName.TreatmentPlanNote);
@@ -2796,7 +2796,7 @@ namespace OpenDental{
 			par.AddLineBreak();
 			if(gridPlans.SelectedIndices[0]>0){//not the default plan
 				if(_listTreatPlans[gridPlans.SelectedIndices[0]].ResponsParty!=0){
-					text=Lan.g(this,"Responsible Party: ")
+					text=Lan.G(this,"Responsible Party: ")
 						+Patients.GetLim(_listTreatPlans[gridPlans.SelectedIndices[0]].ResponsParty).GetNameFL();
 					par.AddText(text);
 					par.AddLineBreak();
@@ -2817,10 +2817,10 @@ namespace OpenDental{
 			if(!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
 			{	
 				frame=MigraDocHelper.CreateContainer(section);
-				MigraDocHelper.DrawString(frame,Lan.g(this,"Your")+"\r\n"+Lan.g(this,"Right"),bodyFontx,
+				MigraDocHelper.DrawString(frame,Lan.G(this,"Your")+"\r\n"+Lan.G(this,"Right"),bodyFontx,
 					new RectangleF(widthDoc/2-_toothChartRelay.Width/2-50,_toothChartRelay.Height/2-10,50,100));
 				MigraDocHelper.DrawBitmap(frame,_bitmapToothChart,widthDoc/2-_toothChartRelay.Width/2,0);
-				MigraDocHelper.DrawString(frame,Lan.g(this,"Your")+"\r\n"+Lan.g(this,"Left"),bodyFontx,
+				MigraDocHelper.DrawString(frame,Lan.G(this,"Your")+"\r\n"+Lan.G(this,"Left"),bodyFontx,
 					new RectangleF(widthDoc/2+_toothChartRelay.Width/2+17,_toothChartRelay.Height/2-10,50,100));
 				if(checkShowCompleted.Checked) {
 					List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors,true);
@@ -2828,24 +2828,24 @@ namespace OpenDental{
 					float xPos=225;
 					MigraDocHelper.FillRectangle(frame,listDefs[3].ItemColor,xPos,yPos,14,14);
 					xPos+=16;
-					MigraDocHelper.DrawString(frame,Lan.g(this,"Existing"),bodyFontx,xPos,yPos);
+					MigraDocHelper.DrawString(frame,Lan.G(this,"Existing"),bodyFontx,xPos,yPos);
 					Graphics g=this.CreateGraphics();//for measuring strings.
-					xPos+=(int)g.MeasureString(Lan.g(this,"Existing"),bodyFont).Width+23;
+					xPos+=(int)g.MeasureString(Lan.G(this,"Existing"),bodyFont).Width+23;
 					//The Complete work is actually a combination of EC and C. Usually same color.
 					//But just in case they are different, this will show it.
 					MigraDocHelper.FillRectangle(frame,listDefs[2].ItemColor,xPos,yPos,7,14);
 					xPos+=7;
 					MigraDocHelper.FillRectangle(frame,listDefs[1].ItemColor,xPos,yPos,7,14);
 					xPos+=9;
-					MigraDocHelper.DrawString(frame,Lan.g(this,"Complete"),bodyFontx,xPos,yPos);
-					xPos+=(int)g.MeasureString(Lan.g(this,"Complete"),bodyFont).Width+23;
+					MigraDocHelper.DrawString(frame,Lan.G(this,"Complete"),bodyFontx,xPos,yPos);
+					xPos+=(int)g.MeasureString(Lan.G(this,"Complete"),bodyFont).Width+23;
 					MigraDocHelper.FillRectangle(frame,listDefs[4].ItemColor,xPos,yPos,14,14);
 					xPos+=16;
-					MigraDocHelper.DrawString(frame,Lan.g(this,"Referred Out"),bodyFontx,xPos,yPos);
-					xPos+=(int)g.MeasureString(Lan.g(this,"Referred Out"),bodyFont).Width+23;
+					MigraDocHelper.DrawString(frame,Lan.G(this,"Referred Out"),bodyFontx,xPos,yPos);
+					xPos+=(int)g.MeasureString(Lan.G(this,"Referred Out"),bodyFont).Width+23;
 					MigraDocHelper.FillRectangle(frame,listDefs[0].ItemColor,xPos,yPos,14,14);
 					xPos+=16;
-					MigraDocHelper.DrawString(frame,Lan.g(this,"Treatment Planned"),bodyFontx,xPos,yPos);
+					MigraDocHelper.DrawString(frame,Lan.G(this,"Treatment Planned"),bodyFontx,xPos,yPos);
 					g.Dispose();
 				}
 			}	
@@ -2870,21 +2870,21 @@ namespace OpenDental{
 				gridFamIns.ListGridColumns.Clear();
 				GridColumn col=new GridColumn("",140);
 				gridFamIns.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Primary"),70,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G(this,"Primary"),70,HorizontalAlignment.Right);
 				gridFamIns.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Secondary"),70,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G(this,"Secondary"),70,HorizontalAlignment.Right);
 				gridFamIns.ListGridColumns.Add(col);
 				gridFamIns.ListGridRows.Clear();
 				GridRow row;
 				//Annual Family Max--------------------------
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,"Family Maximum"));
+				row.Cells.Add(Lan.G(this,"Family Maximum"));
 				row.Cells.Add(POut.Double(userControlFamIns.FamPriMax));
 				row.Cells.Add(POut.Double(userControlFamIns.FamSecMax));
 				gridFamIns.ListGridRows.Add(row);
 				//Family Deductible--------------------------
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,"Family Deductible"));
+				row.Cells.Add(Lan.G(this,"Family Deductible"));
 				row.Cells.Add(POut.Double(userControlFamIns.FamPriDed));
 				row.Cells.Add(POut.Double(userControlFamIns.FamSecDed));
 				gridFamIns.ListGridRows.Add(row);
@@ -2892,7 +2892,7 @@ namespace OpenDental{
 				MigraDocHelper.InsertSpacer(section,15);
 				par=section.AddParagraph();
 				par.Format.Alignment=ParagraphAlignment.Center;
-				par.AddFormattedText(Lan.g(this,"Family Insurance Benefits"),totalFontx);
+				par.AddFormattedText(Lan.G(this,"Family Insurance Benefits"),totalFontx);
 				MigraDocHelper.InsertSpacer(section,2);
 				MigraDocHelper.DrawGrid(section,gridFamIns);
 				gridFamIns.Dispose();
@@ -2904,44 +2904,44 @@ namespace OpenDental{
 				gridIns.ListGridColumns.Clear();
 				col=new GridColumn("",140);
 				gridIns.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Primary"),70,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G(this,"Primary"),70,HorizontalAlignment.Right);
 				gridIns.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Secondary"),70,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G(this,"Secondary"),70,HorizontalAlignment.Right);
 				gridIns.ListGridColumns.Add(col);
 				gridIns.ListGridRows.Clear();
 				//Annual Max--------------------------
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,"Annual Maximum"));
+				row.Cells.Add(Lan.G(this,"Annual Maximum"));
 				row.Cells.Add(POut.Double(userControlIndIns.PriMax));
 				row.Cells.Add(POut.Double(userControlIndIns.SecMax));
 				gridIns.ListGridRows.Add(row);
 				//Deductible--------------------------
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,"Deductible"));
+				row.Cells.Add(Lan.G(this,"Deductible"));
 				row.Cells.Add(POut.Double(userControlIndIns.PriDed));
 				row.Cells.Add(POut.Double(userControlIndIns.SecDed));
 				gridIns.ListGridRows.Add(row);
 				//Deductible Remaining--------------------------
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,"Deductible Remaining"));
+				row.Cells.Add(Lan.G(this,"Deductible Remaining"));
 				row.Cells.Add(POut.Double(userControlIndIns.PriDedRem));
 				row.Cells.Add(POut.Double(userControlIndIns.SecDedRem));
 				gridIns.ListGridRows.Add(row);
 				//Insurance Used--------------------------
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,"Insurance Used"));
+				row.Cells.Add(Lan.G(this,"Insurance Used"));
 				row.Cells.Add(POut.Double(userControlIndIns.PriUsed));
 				row.Cells.Add(POut.Double(userControlIndIns.SecUsed));
 				gridIns.ListGridRows.Add(row);
 				//Pending--------------------------
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,"Pending"));
+				row.Cells.Add(Lan.G(this,"Pending"));
 				row.Cells.Add(POut.Double(userControlIndIns.PriPend));
 				row.Cells.Add(POut.Double(userControlIndIns.SecPend));
 				gridIns.ListGridRows.Add(row);
 				//Remaining--------------------------
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,"Remaining"));
+				row.Cells.Add(Lan.G(this,"Remaining"));
 				row.Cells.Add(POut.Double(userControlIndIns.PriRem));
 				row.Cells.Add(POut.Double(userControlIndIns.SecRem));
 				gridIns.ListGridRows.Add(row);
@@ -2950,7 +2950,7 @@ namespace OpenDental{
 				MigraDocHelper.InsertSpacer(section,15);
 				par=section.AddParagraph();
 				par.Format.Alignment=ParagraphAlignment.Center;
-				par.AddFormattedText(Lan.g(this,"Individual Insurance Benefits"),totalFontx);
+				par.AddFormattedText(Lan.G(this,"Individual Insurance Benefits"),totalFontx);
 				MigraDocHelper.InsertSpacer(section,2);
 				MigraDocHelper.DrawGrid(section,gridIns);
 				gridIns.Dispose();
@@ -3364,7 +3364,7 @@ namespace OpenDental{
 						treatPlanHeading+=$" ({fileNum+1})";
 					}
 				}
-				InputBox inputHeadingName=new InputBox(Lan.g(this,$"Save Treatment Plan as"),treatPlanHeading);
+				InputBox inputHeadingName=new InputBox(Lan.G(this,$"Save Treatment Plan as"),treatPlanHeading);
 				if(inputHeadingName.ShowDialog()!=DialogResult.OK) {
 					return;
 				}
@@ -3683,7 +3683,7 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedIndices.All(x => gridMain.ListGridRows[x].Tag==null)) {
-				MessageBox.Show(Lan.g(this,"Please select procedures first."));
+				MessageBox.Show(Lan.G(this,"Please select procedures first."));
 				return;
 			}
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canada

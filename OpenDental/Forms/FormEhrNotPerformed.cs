@@ -129,7 +129,7 @@ namespace OpenDental {
 			for(int i=0;i<Enum.GetNames(typeof(EhrNotPerformedItem)).Length;i++) {
 				listItems.Add(Enum.GetNames(typeof(EhrNotPerformedItem))[i]);
 			}
-			InputBox chooseItem=new InputBox(Lan.g(this,"Select the item not being performed from the list below."),listItems);
+			InputBox chooseItem=new InputBox(Lan.G(this,"Select the item not being performed from the list below."),listItems);
 			if(chooseItem.ShowDialog()!=DialogResult.OK) {
 				return;
 			}

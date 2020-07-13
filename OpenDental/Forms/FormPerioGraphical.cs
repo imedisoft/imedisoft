@@ -230,7 +230,7 @@ namespace OpenDental {
 
 		private void butPrint_Click(object sender,EventArgs e) {
 			PrinterL.TryPrint(pd2_PrintPage,
-				Lan.g(this,"Graphical perio chart printed"),
+				Lan.G(this,"Graphical perio chart printed"),
 				_patCur.PatNum,
 				PrintSituation.TPPerio,
 				new Margins(0,0,0,0),
@@ -258,7 +258,7 @@ namespace OpenDental {
 			SizeF sizeFPage=new SizeF(marginBounds.Width,marginBounds.Height);
 			SizeF sizeStr;
 			Font font=new Font("Arial",15);
-			string titleStr=Lan.g(this,"Periodontal Examination");
+			string titleStr=Lan.G(this,"Periodontal Examination");
 			sizeStr=g.MeasureString(titleStr,font);
 			g.DrawString(titleStr,font,Brushes.Black,new PointF(sizeFPage.Width/2f-sizeStr.Width/2f,y));
 			y+=sizeStr.Height;
@@ -314,7 +314,7 @@ namespace OpenDental {
 				ImageStore.Import(bitmap,defNumToothCharts,ImageType.Photo,_patCur);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Unable to save file: ") + ex.Message);
+				MessageBox.Show(Lan.G(this,"Unable to save file: ") + ex.Message);
 				bitmap.Dispose();
 				bitmap=null;
 				g.Dispose();

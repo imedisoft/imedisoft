@@ -29,14 +29,14 @@ namespace OpenDental {
 			_isTrusted=(EmailMessages.GetReceiverUntrustedCount(signedByAddress)==-1);
 			if(_isTrusted) {
 				butTrust.Visible=false;
-				textTrustStatus.Text=Lan.g(this,"Trusted");
-				textTrustExplanation.Text=Lan.g(this,"Encrypted email and EHR Direct messaging are currently enabled for the signer.");
+				textTrustStatus.Text=Lan.G(this,"Trusted");
+				textTrustExplanation.Text=Lan.G(this,"Encrypted email and EHR Direct messaging are currently enabled for the signer.");
 			}
 			else {
 				butTrust.Visible=true;
-				textTrustStatus.Text=Lan.g(this,"Untrusted or invalid");
-				textTrustExplanation.Text=Lan.g(this,"Encrypted email and EHR Direct messaging will not work until this digital signature is trusted by you.")+"  "
-					+Lan.g(this,"Click the Trust button to add trust for this digital signature.");
+				textTrustStatus.Text=Lan.G(this,"Untrusted or invalid");
+				textTrustExplanation.Text=Lan.G(this,"Encrypted email and EHR Direct messaging will not work until this digital signature is trusted by you.")+"  "
+					+Lan.G(this,"Click the Trust button to add trust for this digital signature.");
 			}
 		}
 

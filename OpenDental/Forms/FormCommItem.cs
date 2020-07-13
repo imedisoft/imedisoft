@@ -48,10 +48,10 @@ namespace OpenDental {
 				}
 			}
 			for(int i=0;i<Enum.GetNames(typeof(CommItemMode)).Length;i++){
-				listMode.Items.Add(Lan.g("enumCommItemMode",Enum.GetNames(typeof(CommItemMode))[i]));
+				listMode.Items.Add(Lan.G("enumCommItemMode",Enum.GetNames(typeof(CommItemMode))[i]));
 			}
 			for(int i=0;i<Enum.GetNames(typeof(CommSentOrReceived)).Length;i++) {
-				listSentOrReceived.Items.Add(Lan.g("enumCommSentOrReceived",Enum.GetNames(typeof(CommSentOrReceived))[i]));
+				listSentOrReceived.Items.Add(Lan.G("enumCommSentOrReceived",Enum.GetNames(typeof(CommSentOrReceived))[i]));
 			}
 
 				labelDateTimeEnd.Visible=false;
@@ -79,8 +79,8 @@ namespace OpenDental {
 				labelCommlogNum.Visible=false;
 				textCommlogNum.Visible=false;
 				butUserPrefs.Visible=true;
-				butOK.Text=Lan.g(this,"Create");
-				butCancel.Text=Lan.g(this,"Close");
+				butOK.Text=Lan.G(this,"Create");
+				butCancel.Text=Lan.G(this,"Close");
 				butDelete.Visible=false;
 			}
 			if(_commlogOld.IsNew && PrefC.GetBool(PrefName.CommLogAutoSave)) {
@@ -301,7 +301,7 @@ namespace OpenDental {
 				textCommlogNum.Text=this._commlogCur.CommlogNum.ToString();
 				butCancel.Enabled=false;
 			}
-			this.Text=Lan.g(this,"Communication Item - Saved:")+" "+DateTime.Now;
+			this.Text=Lan.G(this,"Communication Item - Saved:")+" "+DateTime.Now;
 		}
 
 		private void butUserPrefs_Click(object sender,EventArgs e) {
@@ -340,7 +340,7 @@ namespace OpenDental {
 				}
 			}
 			else {
-				MessageBox.Show(Lan.g(this,"No Auto Note available to edit."));
+				MessageBox.Show(Lan.G(this,"No Auto Note available to edit."));
 			}
 		}
 

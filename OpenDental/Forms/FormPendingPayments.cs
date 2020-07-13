@@ -72,16 +72,16 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g(this,"Clinic"),100);
+				col=new GridColumn(Lan.G(this,"Clinic"),100);
 				gridMain.ListGridColumns.Add(col);
 			}			
-			col=new GridColumn(Lan.g(this,"Patient"),110);
+			col=new GridColumn(Lan.G(this,"Patient"),110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Date"),70);
+			col=new GridColumn(Lan.G(this,"Date"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Amount"),70,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Amount"),70,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Note"),200);
+			col=new GridColumn(Lan.G(this,"Note"),200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -89,7 +89,7 @@ namespace OpenDental {
 				row=new GridRow();
 				if(PrefC.HasClinicsEnabled) {
 					string clinicAbbr=Clinics.GetAbbr(pay.ClinicNum);
-					row.Cells.Add(clinicAbbr=="" ? Lan.g(this,"Unassigned") : clinicAbbr );
+					row.Cells.Add(clinicAbbr=="" ? Lan.G(this,"Unassigned") : clinicAbbr );
 				}
 				row.Cells.Add(Patients.GetOnePat(_arrayPats,pay.PatNum).GetNameLFnoPref());
 				row.Cells.Add(pay.PayDate.ToShortDateString());
@@ -103,11 +103,11 @@ namespace OpenDental {
 
 		public void FillClinics() {
 			_listClinics=Clinics.GetForUserod(Security.CurUser);
-			comboClinic.Items.Add(Lan.g(this,"All"));
+			comboClinic.Items.Add(Lan.G(this,"All"));
 			comboClinic.SelectedIndex=0;
 			int offset=1;
 			if(!Security.CurUser.ClinicIsRestricted) {
-				comboClinic.Items.Add(Lan.g(this,"Unassigned"));
+				comboClinic.Items.Add(Lan.G(this,"Unassigned"));
 				offset++;
 			}
 			_listClinics.ForEach(x => comboClinic.Items.Add(x.Abbr));

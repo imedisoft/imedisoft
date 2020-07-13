@@ -594,9 +594,9 @@ namespace OpenDental{
 			Plugins.HookAddCode(this,"FormProgramLinkEdit.FillGrid_GetProgramProperties",ProgramPropertiesForProgram,ProgramCur);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Property"),260);
+			GridColumn col=new GridColumn(Lan.G(this,"Property"),260);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Value"),130);
+			col=new GridColumn(Lan.G(this,"Value"),130);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -708,8 +708,8 @@ namespace OpenDental{
 			try {
 				Image importedImg=Image.FromFile(dlg.FileName);
 				if(importedImg.Size!=new Size(22,22)) {
-					MessageBox.Show(Lan.g(this,"Required image dimensions are 22x22.")
-						+"\r\n"+Lan.g(this,"Selected image dimensions are")+": "+importedImg.Size.Width+"x"+importedImg.Size.Height);
+					MessageBox.Show(Lan.G(this,"Required image dimensions are 22x22.")
+						+"\r\n"+Lan.G(this,"Selected image dimensions are")+": "+importedImg.Size.Width+"x"+importedImg.Size.Height);
 					return;
 				}
 				pictureBox.Image=importedImg;
@@ -780,7 +780,7 @@ namespace OpenDental{
 				MessageBox.Show("Not allowed to delete a program link with an internal name.");
 				return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Delete this program link?"),"",MessageBoxButtons.OKCancel)
+			if(MessageBox.Show(Lan.G(this,"Delete this program link?"),"",MessageBoxButtons.OKCancel)
 				!=DialogResult.OK){
 				return;
 			}
@@ -793,7 +793,7 @@ namespace OpenDental{
 		private void butClinicLink_Click(object sender,EventArgs e) {
 			//Get the users total list of unrestricted clinics, then acquire their list of ProgramProperties so we can tell which PL buttons 
 			//should be hidden based upon ProgramProperty.PropertyDesc/ClinicNum. 
-			List<Clinic> listClinics=Clinics.GetForUserod(Security.CurUser,doIncludeHQ:true,hqClinicName:Lan.g(this,"HQ"));//Include HQ if user not restricted.
+			List<Clinic> listClinics=Clinics.GetForUserod(Security.CurUser,doIncludeHQ:true,hqClinicName:Lan.G(this,"HQ"));//Include HQ if user not restricted.
 			//Filter the list of all Hidden button ProgramProperties down to the clinics the user has access to.  This will be passed to FormProgramLinkHideClinics.
 			List<ProgramProperty> listPropsForUser=ProgramProperties.GetForProgram(ProgramCur.ProgramNum)
 				.Where(x =>  x.PropertyDesc==ProgramProperties.PropertyDescs.ClinicHideButton 
@@ -815,7 +815,7 @@ namespace OpenDental{
 					dllPath = dllPath.Replace("[VersionMajMin]","");//now stripped clean
 				}
 				if(!File.Exists(dllPath)) {
-					MessageBox.Show(Lan.g(this,"Dll file not found:")+" "+dllPath);
+					MessageBox.Show(Lan.G(this,"Dll file not found:")+" "+dllPath);
 					return;
 				}
 			}

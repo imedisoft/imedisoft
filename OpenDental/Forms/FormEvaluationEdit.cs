@@ -67,18 +67,18 @@ namespace OpenDental {
 		private void FillGridCriterion() {
 			gridCriterion.BeginUpdate();
 			gridCriterion.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormEvaluationEdit","Description"),150);
+			GridColumn col=new GridColumn(Lan.G("FormEvaluationEdit","Description"),150);
 			gridCriterion.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormEvaluationEdit","Grading Scale"),90);
+			col=new GridColumn(Lan.G("FormEvaluationEdit","Grading Scale"),90);
 			gridCriterion.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormEvaluationEdit","Showing"),60);
+			col=new GridColumn(Lan.G("FormEvaluationEdit","Showing"),60);
 			gridCriterion.ListGridColumns.Add(col);
 			//This column is directly referenced later.  If the order of the columns changes then the direct reference must also change.
-			col=new GridColumn(Lan.g("FormEvaluationEdit","Number"),60);
+			col=new GridColumn(Lan.G("FormEvaluationEdit","Number"),60);
 			col.IsEditable=true;
 			gridCriterion.ListGridColumns.Add(col);
 			//This column is directly referenced later.  If the order of the columns changes then the direct reference must also change.
-			col=new GridColumn(Lan.g("FormEvaluationEdit","Note"),120);
+			col=new GridColumn(Lan.G("FormEvaluationEdit","Note"),120);
 			col.IsEditable=true;
 			gridCriterion.ListGridColumns.Add(col);
 			gridCriterion.ListGridRows.Clear();
@@ -119,7 +119,7 @@ namespace OpenDental {
 		private void FillGridGradingWithWeighted(long gradingScaleNum) {
 			gridGrades.BeginUpdate();
 			gridGrades.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormEvaluationEdit","Max Point Value"),100,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn(Lan.G("FormEvaluationEdit","Max Point Value"),100,HorizontalAlignment.Center);
 			gridGrades.ListGridColumns.Add(col);
 			gridGrades.ListGridRows.Clear();
 			GridRow row=new GridRow();
@@ -135,7 +135,7 @@ namespace OpenDental {
 		private void FillGridGradingWithPercentage(long gradingScaleNum) {
 			gridGrades.BeginUpdate();
 			gridGrades.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormEvaluationEdit","Percentage"),100,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn(Lan.G("FormEvaluationEdit","Percentage"),100,HorizontalAlignment.Center);
 			gridGrades.ListGridColumns.Add(col);
 			gridGrades.ListGridRows.Clear();
 			GridRow row=new GridRow();
@@ -143,7 +143,7 @@ namespace OpenDental {
 				gridGrades.EndUpdate();
 				return;
 			}
-			row.Cells.Add(Lan.g("FormEvaluationEdit","0 to 100"));
+			row.Cells.Add(Lan.G("FormEvaluationEdit","0 to 100"));
 			gridGrades.ListGridRows.Add(row);
 			gridGrades.EndUpdate();
 		}
@@ -151,11 +151,11 @@ namespace OpenDental {
 		private void FillGridGradingWithPickList(long gradingScaleNum) {
 			gridGrades.BeginUpdate();
 			gridGrades.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormEvaluationEdit","Number"),60);
+			GridColumn col=new GridColumn(Lan.G("FormEvaluationEdit","Number"),60);
 			gridGrades.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormEvaluationEdit","Showing"),60);
+			col=new GridColumn(Lan.G("FormEvaluationEdit","Showing"),60);
 			gridGrades.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormEvaluationEdit","Description"),150);
+			col=new GridColumn(Lan.G("FormEvaluationEdit","Description"),150);
 			gridGrades.ListGridColumns.Add(col);
 			gridGrades.ListGridRows.Clear();
 			GridRow row=new GridRow();

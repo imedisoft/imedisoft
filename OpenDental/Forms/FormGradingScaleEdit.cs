@@ -23,7 +23,7 @@ namespace OpenDental {
 		private void FormGradingScaleEdit_Load(object sender,EventArgs e) {
 			comboScaleType.SelectedIndex=-1;
 			for(int i=0;i<Enum.GetNames(typeof(EnumScaleType)).Length;i++) {
-				comboScaleType.Items.Add(Lan.g("FormGradingScaleEdit",Enum.GetNames(typeof(EnumScaleType))[i]));
+				comboScaleType.Items.Add(Lan.G("FormGradingScaleEdit",Enum.GetNames(typeof(EnumScaleType))[i]));
 				if(i==(int)_gradingScaleCur.ScaleType) {
 					comboScaleType.SelectedIndex=i;
 				}
@@ -40,7 +40,7 @@ namespace OpenDental {
 				//Locking grading scales from being edited is necessary with the current schema since changing grading scales that are in use 
 				//would result in changing grades for previously filled out evaluations. 
 				//This could be changed later by creating copies of grading scales and attaching them to the evaluation/criterion similarly to evaluationdefs.
-				labelWarning.Text=Lan.g(this,"Grading scale is not editable.  It is currently in use by an evaluation.");
+				labelWarning.Text=Lan.G(this,"Grading scale is not editable.  It is currently in use by an evaluation.");
 				labelWarning.Visible=true;
 				_isEditable=false;
 				butAdd.Enabled=false;
@@ -55,11 +55,11 @@ namespace OpenDental {
 			_listGradingScaleItems=GradingScaleItems.Refresh(_gradingScaleCur.GradingScaleNum);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormGradingScaleEdit","Shown"),60);
+			GridColumn col=new GridColumn(Lan.G("FormGradingScaleEdit","Shown"),60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormGradingScaleEdit","Number"),60);
+			col=new GridColumn(Lan.G("FormGradingScaleEdit","Number"),60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormGradingScaleEdit","Description"),160);
+			col=new GridColumn(Lan.G("FormGradingScaleEdit","Description"),160);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

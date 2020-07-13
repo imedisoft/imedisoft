@@ -146,7 +146,7 @@ namespace OpenDental{
 			Lan.F(this);
 			//ProvCur=provCur;
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				labelNPI.Text=Lan.g(this,"CDA Number");
+				labelNPI.Text=Lan.G(this,"CDA Number");
 			}
 			else{
 				labelCanadianOfficeNum.Visible=false;
@@ -1540,7 +1540,7 @@ namespace OpenDental{
 			listSpecialty.Items.Clear();
 			Def[] specDefs=Defs.GetDefsForCategory(DefCat.ProviderSpecialties,true).ToArray();
 			for(int i=0;i<specDefs.Length;i++) {
-				listSpecialty.Items.Add(Lan.g("enumDentalSpecialty",specDefs[i].ItemName));
+				listSpecialty.Items.Add(Lan.G("enumDentalSpecialty",specDefs[i].ItemName));
 				if(i==0 || ProvCur.Specialty==specDefs[i].DefNum) {//default to the first item in the list
 					listSpecialty.SelectedIndex=i;
 				}
@@ -1646,10 +1646,10 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(tbProvIdent.SelectedRow==-1){
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Delete the selected Provider Identifier?"),"",
+			if(MessageBox.Show(Lan.G(this,"Delete the selected Provider Identifier?"),"",
 				MessageBoxButtons.OKCancel)!=DialogResult.OK)
 			{
 				return;
@@ -1748,7 +1748,7 @@ namespace OpenDental{
 				return;
 			}
 			if(textAbbr.Text=="") {
-				MessageBox.Show(Lan.g(this,"Abbreviation not allowed to be blank."));
+				MessageBox.Show(Lan.G(this,"Abbreviation not allowed to be blank."));
 				return;
 			}
 			if(textSSN.Text.Contains("-")) {
@@ -1952,7 +1952,7 @@ namespace OpenDental{
 				#region Date Term Check
 				if(ProvCur.DateTerm.Year > 1880 && ProvCur.DateTerm < DateTime.Now) {
 					List<ClaimPaySplit> listClaimPaySplits=Claims.GetOutstandingClaimsByProvider(ProvCur.ProvNum,ProvCur.DateTerm);
-					StringBuilder claimMessage=new StringBuilder(Lan.g(this,"Clinic\tPatNum\tPatient Name\tDate of Service\tClaim Status\tFee\tCarrier")+"\r\n");
+					StringBuilder claimMessage=new StringBuilder(Lan.G(this,"Clinic\tPatNum\tPatient Name\tDate of Service\tClaim Status\tFee\tCarrier")+"\r\n");
 					foreach(ClaimPaySplit claimPaySplit in listClaimPaySplits) {
 						claimMessage.Append(claimPaySplit.ClinicDesc+"\t"
 							+POut.Long(claimPaySplit.PatNum)+"\t"
@@ -1977,7 +1977,7 @@ namespace OpenDental{
 						claimMessage.AppendLine(claimPaySplit.FeeBilled+"\t"+claimPaySplit.Carrier);
 					}
 					MsgBoxCopyPaste msg=new MsgBoxCopyPaste(claimMessage.ToString());
-					msg.Text=Lan.g(this,"Outstanding Claims for the Provider Whose Term Has Expired");
+					msg.Text=Lan.G(this,"Outstanding Claims for the Provider Whose Term Has Expired");
 					if(listClaimPaySplits.Count > 0) {
 						msg.ShowDialog();
 					}

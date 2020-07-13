@@ -777,10 +777,10 @@ namespace OpenDental {
 			textMainWindowTitle.Text=PrefC.GetString(PrefName.MainWindowTitle);
 			checkUseClinicAbbr.Checked=PrefC.GetBool(PrefName.TitleBarClinicUseAbbr);
 			checkTitleBarShowSpecialty.Checked=PrefC.GetBool(PrefName.TitleBarShowSpecialty);
-			comboShowID.Items.Add(Lan.g(this,"None"));
-			comboShowID.Items.Add(Lan.g(this,"PatNum"));
-			comboShowID.Items.Add(Lan.g(this,"ChartNumber"));
-			comboShowID.Items.Add(Lan.g(this,"Birthdate"));
+			comboShowID.Items.Add(Lan.G(this,"None"));
+			comboShowID.Items.Add(Lan.G(this,"PatNum"));
+			comboShowID.Items.Add(Lan.G(this,"ChartNumber"));
+			comboShowID.Items.Add(Lan.G(this,"Birthdate"));
 			comboShowID.SelectedIndex=PrefC.GetInt(PrefName.ShowIDinTitleBar);
 			checkImeCompositionCompatibility.Checked=PrefC.GetBool(PrefName.ImeCompositionCompatibility);
 			checkTitleBarShowSite.Checked=PrefC.GetBool(PrefName.TitleBarShowSite);
@@ -801,11 +801,11 @@ namespace OpenDental {
 				textLanguageAndRegion.Text=PrefC.GetLanguageAndRegion().DisplayName;
 			}
 			else {
-				textLanguageAndRegion.Text=Lan.g(this,"None");
+				textLanguageAndRegion.Text=Lan.G(this,"None");
 			}
 			textNumDecimals.Text=CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalDigits.ToString();
 			_trackLastClinicBy=new List<string> { "None","Workstation","User" };//must be in english because these values are stored in DB.
-			_trackLastClinicBy.ForEach(x => comboTrackClinic.Items.Add(Lan.g(this,x)));//translation is for display only.
+			_trackLastClinicBy.ForEach(x => comboTrackClinic.Items.Add(Lan.G(this,x)));//translation is for display only.
 			comboTrackClinic.SelectedIndex=_trackLastClinicBy.FindIndex(x => x==PrefC.GetString(PrefName.ClinicTrackLast));
 			if(comboTrackClinic.SelectedIndex==-1) {
 				comboTrackClinic.SelectedIndex=0;
@@ -858,7 +858,7 @@ namespace OpenDental {
 				textLanguageAndRegion.Text=PrefC.GetLanguageAndRegion().DisplayName;
 			}
 			else {
-				textLanguageAndRegion.Text=Lan.g(this,"None");
+				textLanguageAndRegion.Text=Lan.G(this,"None");
 			}
 		}
 
@@ -874,12 +874,12 @@ namespace OpenDental {
 		private void checkUseFamAgingTable_Click(object sender,EventArgs e) {
 			if(checkAgingIsEnterprise.Checked && !PrefC.GetBool(PrefName.AgingIsEnterprise)) {
 				//Enabling feature that is turned off according to pref table.
-				string msgTxt=Lan.g(this,"In order to enable enterprise aging, enter the password from our manual below.");
+				string msgTxt=Lan.G(this,"In order to enable enterprise aging, enter the password from our manual below.");
 				if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
 					//Conditional warning that only affects Monthly Aging customers.
-					msgTxt+="\r\n"+Lan.g(this,"Note: This will change your aging from calculated monthly to calculated daily.");
+					msgTxt+="\r\n"+Lan.G(this,"Note: This will change your aging from calculated monthly to calculated daily.");
 				}
-				InputBox iBox=new InputBox(msgTxt) { Text=Lan.g(this,"Enter Password") };
+				InputBox iBox=new InputBox(msgTxt) { Text=Lan.G(this,"Enter Password") };
 				iBox.ShowDialog();
 				if(iBox.DialogResult!=DialogResult.OK) {
 					checkAgingIsEnterprise.Checked=false;
@@ -914,7 +914,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textAuditEntries.errorProvider1.GetError(textAuditEntries)!="" || !textAlertInterval.IsValid || !textInactiveAlert.IsValid) {
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			if(string.IsNullOrWhiteSpace(textSigInterval.Text) && PrefC.GetLong(PrefName.ProcessSigsIntervalInSecs)!=0) {

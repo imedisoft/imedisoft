@@ -179,15 +179,15 @@ namespace OpenDental{
 					string errorMessage=Clearinghouses.RetrieveAndImport(clearinghouseClin,false,progressbar);
 					progressbar.UpdateProgressDetailed("",tagString:"reports",percentVal:"100%",barVal:100);
 					if(errorMessage=="") {
-						progressbar.UpdateProgress(Lan.g(this,"Retrieval and import successful"));
+						progressbar.UpdateProgress(Lan.G(this,"Retrieval and import successful"));
 					}
 					else {
 						progressbar.UpdateProgress(errorMessage);
 					}
-					progressbar.UpdateProgress(Lan.g(this,"Done"));
+					progressbar.UpdateProgress(Lan.G(this,"Done"));
 				}
 				else{
-					progressbar.UpdateProgress(Lan.g(this,"No need to retrieve. Available reports are automatically downloaded every three minutes."));
+					progressbar.UpdateProgress(Lan.G(this,"No need to retrieve. Available reports are automatically downloaded every three minutes."));
 				}
 				progressbar.OnProgressDone();
 				return;
@@ -195,7 +195,7 @@ namespace OpenDental{
 			if(clearhouseHq.CommBridge==EclaimsCommBridge.None || clearhouseHq.CommBridge==EclaimsCommBridge.Renaissance 
 				|| clearhouseHq.CommBridge==EclaimsCommBridge.RECS) 
 			{
-				progressbar.UpdateProgress(Lan.g(this,"No built-in functionality for retrieving reports from this clearinghouse."));
+				progressbar.UpdateProgress(Lan.G(this,"No built-in functionality for retrieving reports from this clearinghouse."));
 				progressbar.OnProgressDone();
 				return;
 			}
@@ -206,7 +206,7 @@ namespace OpenDental{
 				//Since the dentalxchange website was successfully launched in this scenario, the user does not need any further notification.
 			}
 			else if(errorMesssage=="") {
-				progressbar.UpdateProgress(Lan.g(this,"Retrieve and import successful."));
+				progressbar.UpdateProgress(Lan.G(this,"Retrieve and import successful."));
 			}
 			else {
 				progressbar.UpdateProgress(Lans.g(progressbar.LanThis,"Error Log:")+"\r\n"+errorMesssage);

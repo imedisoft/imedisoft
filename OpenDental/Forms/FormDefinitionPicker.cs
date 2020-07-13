@@ -64,10 +64,10 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(gridMain.TranslationName,"Definition"),200));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(gridMain.TranslationName,"ItemValue"),70));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"Definition"),200));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"ItemValue"),70));
 			if(HasShowHiddenOption) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g(gridMain.TranslationName,"Hidden"),20){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"Hidden"),20){ IsWidthDynamic=true });
 			}
 			gridMain.ListGridRows.Clear();
 			GridRow row;

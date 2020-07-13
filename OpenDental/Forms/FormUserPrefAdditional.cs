@@ -30,9 +30,9 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			gridUserProperties.BeginUpdate();
 			gridUserProperties.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableUserPrefProperties","Clinic"),120);
+			GridColumn col=new GridColumn(Lan.G("TableUserPrefProperties","Clinic"),120);
 			gridUserProperties.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableUserPrefProperties","DoseSpot User ID"),120,true);
+			col=new GridColumn(Lan.G("TableUserPrefProperties","DoseSpot User ID"),120,true);
 			gridUserProperties.ListGridColumns.Add(col);
 			gridUserProperties.ListGridRows.Clear();
 			GridRow row;

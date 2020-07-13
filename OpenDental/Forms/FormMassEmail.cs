@@ -165,7 +165,7 @@ namespace OpenDental {
 			textAgeTo.Text="110";
 			//patient billing type list box
 			listBoxPatBillingType.Items.Clear();
-			listBoxPatBillingType.Items.Add(new ODBoxItem<Def>(Lan.g(this,"All"),new Def()));
+			listBoxPatBillingType.Items.Add(new ODBoxItem<Def>(Lan.G(this,"All"),new Def()));
 			foreach(Def billingType in Defs.GetDefsForCategory(DefCat.BillingTypes)) {
 				listBoxPatBillingType.Items.Add(new ODBoxItem<Def>(billingType.ItemName,billingType));
 			}

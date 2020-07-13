@@ -64,9 +64,9 @@ namespace OpenDental {
 			gridGroups.BeginUpdate();
 			gridGroups.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Group Name"),200);
+			col=new GridColumn(Lan.G(this,"Group Name"),200);
 			gridGroups.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Fee Schedule"),75);
+			col=new GridColumn(Lan.G(this,"Fee Schedule"),75);
 			gridGroups.ListGridColumns.Add(col);
 			gridGroups.ListGridRows.Clear();
 			GridRow row;
@@ -88,9 +88,9 @@ namespace OpenDental {
 			gridClinics.BeginUpdate();
 			gridClinics.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Abbr"),100){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G(this,"Abbr"),100){ IsWidthDynamic=true };
 			gridClinics.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),100){ IsWidthDynamic=true,DynamicWeight=2 };
+			col=new GridColumn(Lan.G(this,"Description"),100){ IsWidthDynamic=true,DynamicWeight=2 };
 			gridClinics.ListGridColumns.Add(col);
 			gridClinics.ListGridRows.Clear();
 			GridRow row;

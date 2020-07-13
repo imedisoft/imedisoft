@@ -15,9 +15,9 @@ namespace OpenDental {
 			for(int i=0;i<Enum.GetNames(typeof(AmendmentSource)).Length;i++) {
 				comboSource.Items.Add(Enum.GetNames(typeof(AmendmentSource))[i]);
 			}
-			listAmdStatus.Items.Add(Lan.g(this,"Requested"));
-			listAmdStatus.Items.Add(Lan.g(this,"Accepted"));
-			listAmdStatus.Items.Add(Lan.g(this,"Denied"));
+			listAmdStatus.Items.Add(Lan.G(this,"Requested"));
+			listAmdStatus.Items.Add(Lan.G(this,"Accepted"));
+			listAmdStatus.Items.Add(Lan.G(this,"Denied"));
 			if(EhrAmendmentCur.IsNew) {
 				return;
 			}

@@ -1,281 +1,274 @@
-using System;
-using System.Drawing;
-using System.Globalization;
-using System.Windows.Forms;
+using OpenDental.UI;
 using OpenDentBusiness;
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	///<summary>Lan is short for language.  Used to translate text to another language.</summary>
-	public class Lan{
+namespace OpenDental
+{
+    /// <summary>
+    /// Lan is short for language.
+    /// Used to translate text to another language.
+    /// </summary>
+    public class Lan
+	{
+		/// <summary>
+		/// Converts a string to the current language.
+		/// </summary>
+		public static string G(string classType, string text) 
+			=> Lans.ConvertString(classType, text);
 
-		//strings-----------------------------------------------
-		///<summary>Converts a string to the current language.</summary>
-		public static string g(string classType,string text) {
-			string retVal=Lans.ConvertString(classType,text);
-			return retVal;
-		}
+		/// <summary>
+		/// Converts a string to the current language.
+		/// </summary>
+		public static string G(object sender, string text) 
+			=> Lans.ConvertString(sender?.GetType().Name ?? "All", text);
 
-		///<summary>Converts a string to the current language.</summary>
-		public static string g(object sender,string text) {
-			string classType=(sender==null ? "All": sender.GetType().Name);
-			string retVal=Lans.ConvertString(classType,text);
-			return retVal;
-		}
+		/// <summary>
+		/// Translates the text of all menu items to another language.
+		/// </summary>
+		public static void C(Control sender, params Menu[] menus) 
+			=> C(sender?.GetType().Name ?? "All", menus);
 
-		///<summary>C is for control. Translates the text of all menu items to another language.</summary>
-		public static void C(Control sender,params Menu[] arrayMenus) {
-			string classType=(sender==null ? "All": sender.GetType().Name);
-			C(classType,arrayMenus);
-		}
-
-		///<summary>C is for control. Translates the text of all menu items to another language.</summary>
-		public static void C(string classType,params Menu[] arrayMenus) {
-			foreach(Menu mainMenu in arrayMenus) {
-				foreach(MenuItem menuItem in mainMenu.MenuItems) {
-					TranslateMenuItems(classType,menuItem);
+		/// <summary>
+		/// Translates the text of all menu items to another language.
+		/// </summary>
+		public static void C(string classType, params Menu[] menus)
+		{
+			foreach (Menu mainMenu in menus)
+			{
+				foreach (MenuItem menuItem in mainMenu.MenuItems)
+				{
+					TranslateMenuItems(classType, menuItem);
 				}
 			}
 		}
 
-		///<summary>This is recursive</summary>
-		private static void TranslateMenuItems(string classType,MenuItem menuItem) {
-			//first translate any child menuItems
-			foreach(MenuItem menuItemCur in menuItem.MenuItems) {
-				TranslateMenuItems(classType,menuItemCur);
+		/// <summary>
+		/// This is recursive
+		/// </summary>
+		private static void TranslateMenuItems(string classType, MenuItem menuItem)
+		{
+			foreach (MenuItem subMenuItem in menuItem.MenuItems)
+			{
+				TranslateMenuItems(classType, subMenuItem);
 			}
-			//then this menuitem
-			menuItem.Text=Lans.ConvertString(classType,menuItem.Text);
+
+			menuItem.Text = Lans.ConvertString(classType, menuItem.Text);
 		}
 
-		///<summary>C is for control. Translates the text of all context menu strip items to another language.</summary>
-		public static void C(Control sender,params ContextMenuStrip[] arrayMenus) {
-			string classType=(sender==null ? "All": sender.GetType().Name);
-			C(classType,arrayMenus);
-		}
-
-		///<summary>C is for control. Translates the text of all context menu strip items to another language.</summary>
-		public static void C(string classType,params ContextMenuStrip[] arrayMenus) {
-			foreach(ContextMenuStrip mainMenu in arrayMenus) {
-				foreach(ToolStripMenuItem menuItem in mainMenu.Items) {
-					TranslateToolStripMenuItems(classType,menuItem);
+		/// <summary>
+		/// Translates the text of all context menu strip items to another language.
+		/// </summary>
+		public static void C(string classType, params ContextMenuStrip[] contextMenuStrips)
+		{
+			foreach (var contextMenuStrip in contextMenuStrips)
+			{
+				foreach (ToolStripMenuItem toolStripItem in contextMenuStrip.Items)
+				{
+					TranslateToolStripMenuItems(classType, toolStripItem);
 				}
 			}
 		}
 
-		///<summary>This is recursive</summary>
-		private static void TranslateToolStripMenuItems(string classType,ToolStripMenuItem toolStripMenuItem) {
-			//first translate any drop down items
-			foreach(ToolStripMenuItem dropDownItem in toolStripMenuItem.DropDownItems) {
-				TranslateToolStripMenuItems(classType,dropDownItem);
+		/// <summary>
+		/// This is recursive
+		/// </summary>
+		private static void TranslateToolStripMenuItems(string classType, ToolStripMenuItem toolStripMenuItem)
+		{
+			foreach (ToolStripMenuItem dropDownItem in toolStripMenuItem.DropDownItems)
+			{
+				TranslateToolStripMenuItems(classType, dropDownItem);
 			}
-			//then this tool strip menu item
-			toolStripMenuItem.Text=Lans.ConvertString(classType,toolStripMenuItem.Text);
+
+			toolStripMenuItem.Text = Lans.ConvertString(classType, toolStripMenuItem.Text);
 		}
 
-		//controls-----------------------------------------------
-		///<summary></summary>
-		public static void C(string classType,params Control[] arrayControls) {
-			C(classType,arrayControls,false);
+		public static void C(string classType, params Control[] controls) 
+			=> C(classType, controls, false);
+
+		public static void C(Control sender, params Control[] controls) 
+			=> C(sender, controls, false);
+		
+		public static void C(Control sender, Control[] controls, bool recursive) 
+			=> C(sender?.GetType().Name ?? "All", controls, recursive);
+		
+		public static void C(string classType, Control[] controls, bool recursive)
+		{
+			foreach (var ctrl in controls)
+			{
+				if (ctrl.GetType() == typeof(UI.ODGrid))
+				{
+					TranslateGrid(ctrl);
+				}
+				else
+				{
+					ctrl.Text = Lans.ConvertString(classType, ctrl.Text);
+					if (recursive)
+					{
+						Cchildren(classType, ctrl);
+					}
+				}
+			}
 		}
 
-		///<summary></summary>
-		public static void C(Control sender,params Control[] arrayControls) {
-			C(sender,arrayControls,false);
+		/// <summary>
+		/// This is recursive, but a little simpler than Fchildren.
+		/// </summary>
+		private static void Cchildren(string classType, Control parent)
+		{
+			foreach (Control ctrl in parent.Controls)
+			{
+				if (ctrl.HasChildren)
+				{
+					Cchildren(classType, ctrl);
+				}
+
+				ctrl.Text = Lans.ConvertString(classType, ctrl.Text);
+			}
 		}
 
-		///<summary></summary>
-		public static void C(Control sender,Control[] arrayControls,bool isRecursive) {
-			string classType=(sender==null ? "All": sender.GetType().Name);
-			C(classType,arrayControls,isRecursive);
+		private static void TranslateGrid(Control ctrl)
+		{
+			if (ctrl.GetType() != typeof(UI.ODGrid))
+			{
+				return;
+			}
+
+			var grid = (ODGrid)ctrl;
+
+			grid.Title = Lans.ConvertString(grid.TranslationName, grid.Title);
+			foreach (GridColumn gridColumn in grid.ListGridColumns)
+			{
+				gridColumn.Heading = Lans.ConvertString(grid.TranslationName, gridColumn.Heading);
+			}
+
+			if (grid.ContextMenu != null)
+			{
+				C(grid.TranslationName, grid.ContextMenu);
+			}
+
+			if (grid.ContextMenuStrip != null)
+			{
+				C(grid.TranslationName, grid.ContextMenuStrip);
+			}
 		}
 
-		///<summary></summary>
-		public static void C(string classType,Control[] arrayControls,bool isRecursive) {
-			foreach(Control contr in arrayControls) {
-				if(contr.GetType()==typeof(UI.ODGrid)) {
-					TranslateGrid(contr);
+		public static void C(string classType, params TabControl[] tabControls)
+		{
+			foreach (var tabControl in tabControls)
+			{
+				foreach (TabPage tabPage in tabControl.TabPages)
+				{
+					tabPage.Text = Lans.ConvertString(classType, tabPage.Text);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Translates the following controls on the entire form: title Text, labels, buttons, groupboxes, checkboxes, radiobuttons, ODGrid.
+		/// </summary>
+		public static void F(Form sender) 
+			=> F(sender, new Control[] { });
+
+		/// <summary>
+		/// Translates the following controls on the entire form: title Text, labels, buttons, groupboxes, checkboxes, radiobuttons, ODGrid.
+		/// 
+		/// Can include a list of controls to exclude. Also puts all the correct controls into the All category (OK,Cancel,Close,Delete,etc).
+		/// </summary>
+		public static void F(Form sender, params Control[] exclusions)
+		{
+			if (CultureInfo.CurrentCulture.Name == "en-US") return;
+
+			// First translate the main title Text on the form:
+			if (!exclusions.Contains(sender))
+			{
+				sender.Text = Lans.ConvertString(sender.GetType().Name, sender.Text);
+			}
+
+			// Then launch the recursive function for all child controls
+			Fchildren(sender, sender, exclusions);
+		}
+
+		/// <summary>
+		/// Translates all children of the given control except those in the exclusions list.
+		/// </summary>
+		private static void Fchildren(Form sender, Control parent, params Control[] exclusions)
+		{
+			foreach (Control ctrl in parent.Controls)
+			{
+				Type type = ctrl.GetType();
+
+				// Any controls with children of their own.  First so that we always translate children.
+				if (ctrl.HasChildren)
+				{
+					Fchildren(sender, ctrl, exclusions);
+				}
+
+				// Do not process if the control is excluded...
+				if (exclusions != null && exclusions.Contains(ctrl))
+				{
 					continue;
 				}
-				contr.Text=Lans.ConvertString(classType,contr.Text);
-				if(isRecursive) {
-					Cchildren(classType,contr);
+
+				// Test to see if the control supports the .Text property.
+				// Every control will have a .Text property present but some controls will purposefully throw a NotSupportedException (e.g. WebBrowser).
+				try
+				{
+					ctrl.Text = ctrl.Text;
+				}
+				catch (Exception)
+				{
+					continue; // We cannot translate this control so move on.
+				}
+
+				if (type == typeof(GroupBox))
+				{
+					TranslateControl(sender.GetType().Name, ctrl);
+				}
+				else if (ctrl.GetType() == typeof(UI.ODGrid))
+				{
+					TranslateGrid(ctrl);
+				}
+				else if (type == typeof(TabControl))
+				{
+					// Translate all tab pages on the tab control.
+					C(sender.GetType().Name, (TabControl)ctrl);
+				}
+				else
+				{
+					// Generically try to translate all orther controls not specifically mentioned above.
+					TranslateControl(sender.GetType().Name, ctrl);
 				}
 			}
 		}
 
-		///<summary>This is recursive, but a little simpler than Fchildren.</summary>
-		private static void Cchildren(string classType,Control parent) {
-			foreach(Control contr in parent.Controls) {
-				if(contr.HasChildren) {
-					Cchildren(classType,contr);
-				}
-				contr.Text=Lans.ConvertString(classType,contr.Text);
-			}
-		}
-
-		private static void TranslateGrid(Control contr) {
-			if(contr.GetType()!=typeof(UI.ODGrid)) {
-				return;
-			}
-			UI.ODGrid grid=((UI.ODGrid)contr);
-			grid.Title=Lans.ConvertString(grid.TranslationName,grid.Title);
-			foreach(UI.GridColumn col in grid.ListGridColumns) {
-				col.Heading=Lans.ConvertString(grid.TranslationName,col.Heading);
-			}
-			if(grid.ContextMenu!=null) {
-				C(grid.TranslationName,grid.ContextMenu);
-			}
-			if(grid.ContextMenuStrip!=null) {
-				C(grid.TranslationName,grid.ContextMenuStrip);
-			}
-		}
-
-		//tab conrol-----------------------------------------------------------------------------------
-		///<summary></summary>
-		public static void C(Control sender,params TabControl[] arrayTabControls) {
-			string classType=(sender==null ? "All": sender.GetType().Name);
-			C(classType,arrayTabControls);
-		}
-
-		///<summary></summary>
-		public static void C(string classType,params TabControl[] arrayTabControls) {
-			foreach(TabControl tabControl in arrayTabControls) {
-				foreach(TabPage tabPage in tabControl.TabPages) {
-					tabPage.Text=Lans.ConvertString(classType,tabPage.Text);
-				}
-			}
-		}
-
-		//forms----------------------------------------------------------------------------------------
-		///<summary>F is for Form. Translates the following controls on the entire form: title Text, labels, buttons, groupboxes, checkboxes, radiobuttons, ODGrid.  Can include a list of controls to exclude. Also puts all the correct controls into the All category (OK,Cancel,Close,Delete,etc).</summary>
-		public static void F(Form sender) {
-			F(sender,new Control[] { });
-		}
-
-		///<summary>F is for Form. Translates the following controls on the entire form: title Text, labels, buttons, groupboxes, checkboxes, radiobuttons, ODGrid.  Can include a list of controls to exclude. Also puts all the correct controls into the All category (OK,Cancel,Close,Delete,etc).</summary>
-		public static void F(Form sender,params Control[] exclusions) {
-			if(CultureInfo.CurrentCulture.Name=="en-US") {
-				return;
-			}
-			if(CultureInfo.CurrentCulture.TextInfo.IsRightToLeft) {
-				sender.RightToLeft=RightToLeft.Yes;
-				sender.RightToLeftLayout=true;
-			}
-			//first translate the main title Text on the form:
-			if(!Contains(exclusions,sender)) {
-				sender.Text=Lans.ConvertString(sender.GetType().Name,sender.Text);
-			}
-			//then launch the recursive function for all child controls
-			Fchildren(sender,sender,exclusions);
-		}
-
-		///<summary>Returns true if the contrToFind exists in the supplied contrArray. Used to check the exclusion list of F.</summary>
-		private static bool Contains(Control[] contrArray,Control contrToFind) {
-			for(int i=0;i<contrArray.Length;i++) {
-				if(contrArray[i]==contrToFind) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		///<summary>Called from F and also recursively. Translates all children of the given control except those in the exclusions list.</summary>
-		private static void Fchildren(Form sender,Control parent,params Control[] exclusions) {
-			foreach(Control contr in parent.Controls) {
-				Type contrType=contr.GetType();
-				//Any controls with children of their own.  First so that we always translate children.
-				if(contr.HasChildren) {
-					Fchildren(sender,contr,exclusions);
-				}
-				//Process contr
-				if(exclusions!=null && Contains(exclusions,contr)) {
-					continue;//Do not translate contr because it is excluded.
-				}
-				//Test to see if the control supports the .Text property.
-				//Every control will have a .Text property present but some controls will purposefully throw a NotSupportedException (e.g. WebBrowser).
-				try {
-					contr.Text=contr.Text;
-				}
-				catch(Exception) {
-					continue;//We cannot translate this control so move on.
-				}
-				if(contrType==typeof(GroupBox)) {
-					ShiftChildControls(contr);
-					TranslateControl(sender.GetType().Name,contr);
-				}
-				else if(contr.GetType()==typeof(UI.ODGrid)) {
-					TranslateGrid(contr);
-				}
-				else if(contrType==typeof(Panel)) {
-					ShiftChildControls(contr);
-				}
-				else if(contrType==typeof(TabControl)) {
-					//Translate all tab pages on the tab control.
-					C(sender.GetType().Name,(TabControl)contr);
-				}
-				else {
-					//Generically try to translate all orther controls not specifically mentioned above.
-					TranslateControl(sender.GetType().Name,contr);
-				}
-			}
-		}
-
-		private static void TranslateControl(string classType,Control contr) {
-			if(contr.Text=="OK"
-					|| contr.Text=="&OK"
-					|| contr.Text=="Cancel"
-					|| contr.Text=="&Cancel"
-					|| contr.Text=="Close"
-					|| contr.Text=="&Close"
-					|| contr.Text=="Add"
-					|| contr.Text=="&Add"
-					|| contr.Text=="Delete"
-					|| contr.Text=="&Delete"
-					|| contr.Text=="Up"
-					|| contr.Text=="&Up"
-					|| contr.Text=="Down"
-					|| contr.Text=="&Down"
-					|| contr.Text=="Print"
-					|| contr.Text=="&Print") 
+		private static void TranslateControl(string classType, Control ctrl)
+		{
+			if (ctrl.Text == "OK" || 
+				ctrl.Text == "&OK" || 
+				ctrl.Text == "Cancel" || 
+				ctrl.Text == "&Cancel" || 
+				ctrl.Text == "Close" || 
+				ctrl.Text == "&Close" || 
+				ctrl.Text == "Add" || 
+				ctrl.Text == "&Add" || 
+				ctrl.Text == "Delete" || 
+				ctrl.Text == "&Delete" || 
+				ctrl.Text == "Up" || 
+				ctrl.Text == "&Up" || 
+				ctrl.Text == "Down" || 
+				ctrl.Text == "&Down" || 
+				ctrl.Text == "Print" || 
+				ctrl.Text == "&Print")
 			{
-				//Maintain the same translation text for the most common text throughout the entire program.
-				contr.Text=Lans.ConvertString("All",contr.Text);
+				ctrl.Text = Lans.ConvertString("All", ctrl.Text);
 			}
-			else {
-				contr.Text=Lans.ConvertString(classType,contr.Text);
-			}
-		}
-
-		///<summary>Shift specific controls to the right for certain cultures (not USA).</summary>
-		private static void ShiftChildControls(Control contr) {
-			if(!CultureInfo.CurrentCulture.TextInfo.IsRightToLeft) {
-				return;
-			}
-			foreach(Control child in contr.Controls) {
-				child.Location=new Point(contr.Width-child.Width-child.Left,child.Top);
+			else
+			{
+				ctrl.Text = Lans.ConvertString(classType, ctrl.Text);
 			}
 		}
-
-		public static string[] TranslateArray(string classType,string[] strings){
-			string[] retVal=new string[strings.Length];
-			for(int i=0;i<strings.Length;i++){
-				retVal[i]=g(classType,strings[i]);
-			}
-			return retVal;
-		}
-
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -629,7 +629,7 @@ namespace OpenDental {
 					FormQ=new FormQuery(null,true);
 					FormQ.textQuery.Text=FormQF.UserQueryCur.QueryText;
 					FormQ.textTitle.Text=FormQF.UserQueryCur.FileName;
-					SecurityLogs.MakeLogEntry(Permissions.UserQuery,0,Lan.g(this,"User query form accessed."));
+					SecurityLogs.MakeLogEntry(Permissions.UserQuery,0,Lan.G(this,"User query form accessed."));
 					FormQ.ShowDialog();
 				}
 			}

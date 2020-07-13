@@ -61,7 +61,7 @@ namespace OpenDental {
 					for(int i=0;i<listEhrCodes.Count;i++) {
 						listCodeDescripts.Add(listEhrCodes[i].CodeValue+" - "+listEhrCodes[i].Description);
 					}
-					InputBox chooseItem=new InputBox(Lan.g(this,"Select the "+Enum.GetNames(typeof(EhrNotPerformedItem))[SelectedItemIndex]+" not being performed from the list below."),listCodeDescripts);
+					InputBox chooseItem=new InputBox(Lan.G(this,"Select the "+Enum.GetNames(typeof(EhrNotPerformedItem))[SelectedItemIndex]+" not being performed from the list below."),listCodeDescripts);
 					if(SelectedItemIndex==(int)EhrNotPerformedItem.InfluenzaVaccination) {
 						//chooseItem.comboSelection.DropDownWidth=730;
 					}

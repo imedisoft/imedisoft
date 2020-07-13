@@ -21,11 +21,11 @@ namespace OpenDental{
 			HeadingIsPresent=false;
 			InstantClassesPar();
 			SetRowHeight(0,19,14);
-			Fields[0]=Lan.g("TableContacts","Last Name");
-			Fields[1]=Lan.g("TableContacts","First Name");
-			Fields[2]=Lan.g("TableContacts","Wk Phone");
-			Fields[3]=Lan.g("TableContacts","Fax");
-			Fields[4]=Lan.g("TableContacts","Notes");
+			Fields[0]=Lan.G("TableContacts","Last Name");
+			Fields[1]=Lan.G("TableContacts","First Name");
+			Fields[2]=Lan.G("TableContacts","Wk Phone");
+			Fields[3]=Lan.G("TableContacts","Fax");
+			Fields[4]=Lan.G("TableContacts","Notes");
 			ColWidth[0]=120;
 			ColWidth[1]=100;
 			ColWidth[2]=90;

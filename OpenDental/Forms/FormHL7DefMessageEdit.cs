@@ -25,10 +25,10 @@ namespace OpenDental {
 		private void FormHL7DefMessageEdit_Load(object sender,EventArgs e) {
 			FillGrid();
 			for(int i=1;i<Enum.GetNames(typeof(MessageTypeHL7)).Length;i++) {//Start at enum 1, 0 is NotDefined and is not displayed for user to select.  Used for unsupported message types
-				comboMsgType.Items.Add(Lan.g("enumMessageTypeHL7",Enum.GetName(typeof(MessageTypeHL7), i).ToString()));
+				comboMsgType.Items.Add(Lan.G("enumMessageTypeHL7",Enum.GetName(typeof(MessageTypeHL7), i).ToString()));
 			}
 			for(int i=1;i<Enum.GetNames(typeof(MessageStructureHL7)).Length;i++) {//start at enum 1, 0 is NotDefined and is not displayed for user to select.  Used for unsupported message structures
-				comboMessageStructure.Items.Add(Lan.g("enumMessageStructureHL7",Enum.GetName(typeof(MessageStructureHL7),i).ToString()));
+				comboMessageStructure.Items.Add(Lan.G("enumMessageStructureHL7",Enum.GetName(typeof(MessageStructureHL7),i).ToString()));
 			}
 			if(HL7DefMesCur!=null) {
 				comboMsgType.SelectedIndex=(int)HL7DefMesCur.MessageType-1;//enum 0 is the NotDefined message type and is not in the list to select, so minus 1
@@ -48,7 +48,7 @@ namespace OpenDental {
 				butDelete.Enabled=false;
 				labelDelete.Visible=true;
 				if(InternalType==HL7InternalType.MedLabv2_3) {
-					labelDelete.Text=Lan.g(this,"The messages and segments, and their item orders cannot be modified in a MedLabv2_3 definition.");
+					labelDelete.Text=Lan.G(this,"The messages and segments, and their item orders cannot be modified in a MedLabv2_3 definition.");
 				}
 			}
 		}
@@ -59,21 +59,21 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Seg"),35);
+			GridColumn col=new GridColumn(Lan.G(this,"Seg"),35);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Order"),40,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Order"),40,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Can Repeat"),73,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Can Repeat"),73,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Is Optional"),67,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Is Optional"),67,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Note"),100);
+			col=new GridColumn(Lan.G(this,"Note"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			if(HL7DefMesCur!=null && HL7DefMesCur.hl7DefSegments!=null) {
 				for(int i=0;i<HL7DefMesCur.hl7DefSegments.Count;i++) {
 					GridRow row=new GridRow();
-					row.Cells.Add(Lan.g("enumSegmentNameHL7",HL7DefMesCur.hl7DefSegments[i].SegmentName.ToString()));
+					row.Cells.Add(Lan.G("enumSegmentNameHL7",HL7DefMesCur.hl7DefSegments[i].SegmentName.ToString()));
 					row.Cells.Add(HL7DefMesCur.hl7DefSegments[i].ItemOrder.ToString());
 					row.Cells.Add(HL7DefMesCur.hl7DefSegments[i].CanRepeat?"X":"");
 					row.Cells.Add(HL7DefMesCur.hl7DefSegments[i].IsOptional?"X":"");

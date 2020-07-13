@@ -25,7 +25,7 @@ namespace OpenDental {
 		private void FormHL7DefSegmentEdit_Load(object sender,EventArgs e) {
 			FillGrid();
 			for(int i=0;i<Enum.GetNames(typeof(SegmentNameHL7)).Length;i++) {
-				comboSegmentName.Items.Add(Lan.g("enumSegmentNameHL7",Enum.GetName(typeof(SegmentNameHL7),i).ToString()));
+				comboSegmentName.Items.Add(Lan.G("enumSegmentNameHL7",Enum.GetName(typeof(SegmentNameHL7),i).ToString()));
 			}
 			if(HL7DefSegCur!=null) {
 				comboSegmentName.SelectedIndex=(int)HL7DefSegCur.SegmentName;
@@ -40,7 +40,7 @@ namespace OpenDental {
 				labelDelete.Visible=true;
 				butAdd.Enabled=false;
 				if(InternalType==HL7InternalType.MedLabv2_3) {
-					labelDelete.Text=Lan.g(this,"The segments and their item orders cannot be modified in a MedLabv2_3 definition.");
+					labelDelete.Text=Lan.G(this,"The segments and their item orders cannot be modified in a MedLabv2_3 definition.");
 				}
 			}
 		}
@@ -51,15 +51,15 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Field Name"),140);
+			GridColumn col=new GridColumn(Lan.G(this,"Field Name"),140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Fixed Text"),240);
+			col=new GridColumn(Lan.G(this,"Fixed Text"),240);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Type"),40);
+			col=new GridColumn(Lan.G(this,"Type"),40);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Order"),40,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Order"),40,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Table ID"),75);
+			col=new GridColumn(Lan.G(this,"Table ID"),75);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			if(HL7DefSegCur!=null && HL7DefSegCur.hl7DefFields!=null) {
@@ -67,7 +67,7 @@ namespace OpenDental {
 					GridRow row=new GridRow();
 					row.Cells.Add(HL7DefSegCur.hl7DefFields[i].FieldName);
 					row.Cells.Add(HL7DefSegCur.hl7DefFields[i].FixedText);
-					row.Cells.Add(Lan.g("enumDataTypeHL7",HL7DefSegCur.hl7DefFields[i].DataType.ToString()));
+					row.Cells.Add(Lan.G("enumDataTypeHL7",HL7DefSegCur.hl7DefFields[i].DataType.ToString()));
 					row.Cells.Add(HL7DefSegCur.hl7DefFields[i].OrdinalPos.ToString());
 					row.Cells.Add(HL7DefSegCur.hl7DefFields[i].TableId);
 					gridMain.ListGridRows.Add(row);

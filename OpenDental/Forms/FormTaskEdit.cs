@@ -1384,7 +1384,7 @@ namespace OpenDental {
 				}
 			}
 			for(int i=0;i<Enum.GetNames(typeof(TaskDateType)).Length;i++) {
-				comboDateType.Items.Add(Lan.g("enumTaskDateType",Enum.GetNames(typeof(TaskDateType))[i]));
+				comboDateType.Items.Add(Lan.G("enumTaskDateType",Enum.GetNames(typeof(TaskDateType))[i]));
 				if((int)_taskCur.DateType==i) {
 					comboDateType.SelectedIndex=i;
 				}
@@ -1398,7 +1398,7 @@ namespace OpenDental {
 			}
 			listObjectType.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(TaskObjectType)).Length;i++) {
-				listObjectType.Items.Add(Lan.g("enumTaskObjectType",Enum.GetNames(typeof(TaskObjectType))[i]));
+				listObjectType.Items.Add(Lan.G("enumTaskObjectType",Enum.GetNames(typeof(TaskObjectType))[i]));
 			}
 			_listTaskPriorities=Defs.GetDefsForCategory(DefCat.TaskPriorities,true);//Fill list with non-hidden priorities.
 			//There must be at least one priority in Setup | Definitions.  Do not let them load the task edit window without at least one priority.
@@ -1439,7 +1439,7 @@ namespace OpenDental {
 						butReply.Visible=false;
 					}
 				}
-				labelReply.Text=Lan.g(this,"(Send to ")+Userods.GetName(_replyToUserNum)+")";
+				labelReply.Text=Lan.G(this,"(Send to ")+Userods.GetName(_replyToUserNum)+")";
 			}
 			if(!Security.IsAuthorized(Permissions.TaskEdit,true)){
 				butAudit.Visible=false;
@@ -1503,11 +1503,11 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Date Time"),120);
+			GridColumn col=new GridColumn(Lan.G(this,"Date Time"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"User"),80);
+			col=new GridColumn(Lan.G(this,"User"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Note"),400);
+			col=new GridColumn(Lan.G(this,"Note"),400);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -1618,7 +1618,7 @@ namespace OpenDental {
 			else if(_taskCur.ObjectType==TaskObjectType.Patient) {
 				listObjectType.SelectedIndex=1;
 				panelObject.Visible=true;
-				labelObjectDesc.Text=Lan.g(this,"Patient Name");
+				labelObjectDesc.Text=Lan.G(this,"Patient Name");
 				if(_taskCur.KeyNum>0) {
 					_taskCur.PatientName=Patients.GetPat(_taskCur.KeyNum).GetNameLF();
 					textObjectDesc.Text=_taskCur.PatientName+" - "+_taskCur.KeyNum; ;
@@ -1630,11 +1630,11 @@ namespace OpenDental {
 			else if(_taskCur.ObjectType==TaskObjectType.Appointment) {
 				listObjectType.SelectedIndex=2;
 				panelObject.Visible=true;
-				labelObjectDesc.Text=Lan.g(this,"Appointment Desc");
+				labelObjectDesc.Text=Lan.G(this,"Appointment Desc");
 				if(_taskCur.KeyNum>0) {
 					Appointment AptCur=Appointments.GetOneApt(_taskCur.KeyNum);
 					if(AptCur==null) {
-						textObjectDesc.Text=Lan.g(this,"(appointment deleted)");
+						textObjectDesc.Text=Lan.G(this,"(appointment deleted)");
 					}
 					else {
 						textObjectDesc.Text=Patients.GetPat(AptCur.PatNum).GetNameLF()
@@ -1682,35 +1682,35 @@ namespace OpenDental {
 			}
 			else if(taskReminderType==TaskReminderType.Daily) {
 				if(reminderFrequency==1) {
-					labelRemindFrequency.Text=Lan.g(this,"Day");
+					labelRemindFrequency.Text=Lan.G(this,"Day");
 				}
 				else {
-					labelRemindFrequency.Text=Lan.g(this,"Days");
+					labelRemindFrequency.Text=Lan.G(this,"Days");
 				}
 			}
 			else if(taskReminderType==TaskReminderType.Weekly) {
 				panelReminderDays.Visible=true;
 				if(reminderFrequency==1) {
-					labelRemindFrequency.Text=Lan.g(this,"Week");
+					labelRemindFrequency.Text=Lan.G(this,"Week");
 				}
 				else {
-					labelRemindFrequency.Text=Lan.g(this,"Weeks");
+					labelRemindFrequency.Text=Lan.G(this,"Weeks");
 				}
 			}
 			else if(taskReminderType==TaskReminderType.Monthly) {
 				if(reminderFrequency==1) {
-					labelRemindFrequency.Text=Lan.g(this,"Month");
+					labelRemindFrequency.Text=Lan.G(this,"Month");
 				}
 				else {
-					labelRemindFrequency.Text=Lan.g(this,"Months");
+					labelRemindFrequency.Text=Lan.G(this,"Months");
 				}
 			}
 			else if(taskReminderType==TaskReminderType.Yearly) {
 				if(reminderFrequency==1) {
-					labelRemindFrequency.Text=Lan.g(this,"Year");
+					labelRemindFrequency.Text=Lan.G(this,"Year");
 				}
 				else {
-					labelRemindFrequency.Text=Lan.g(this,"Years");
+					labelRemindFrequency.Text=Lan.G(this,"Years");
 				}
 			}
 		}
@@ -1866,13 +1866,13 @@ namespace OpenDental {
 				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
 				return;
 			}
-			Tasks.TaskEditCreateLog(Lan.g(this,"Copied Task Note"),_taskCur);
+			Tasks.TaskEditCreateLog(Lan.G(this,"Copied Task Note"),_taskCur);
 		}
 
 		private string CreateCopyTask() {
 			string taskText=
-				Lan.g(this,"Tasknum")+" #"+_taskCur.TaskNum //tasknum
-				+((_taskCur.ObjectType==TaskObjectType.Patient && _taskCur.KeyNum!=0) ? (" - "+Lan.g(this,"Patnum")+" #"+_taskCur.KeyNum) : ("")) //patnum
+				Lan.G(this,"Tasknum")+" #"+_taskCur.TaskNum //tasknum
+				+((_taskCur.ObjectType==TaskObjectType.Patient && _taskCur.KeyNum!=0) ? (" - "+Lan.G(this,"Patnum")+" #"+_taskCur.KeyNum) : ("")) //patnum
 				+"\r\n"+_taskCur.DateTimeEntry.ToShortDateString() //date
 				+" "+_taskCur.DateTimeEntry.ToShortTimeString() //time
 				+(textObjectDesc.Visible?" - "+textObjectDesc.Text:"")//patient name, time, etc
@@ -2145,15 +2145,15 @@ namespace OpenDental {
 					butOK.Enabled=false;
 					butSend.Enabled=false;
 					butAddNote.Enabled=false;
-					Text+=" - {"+Lan.g(this,"Deleted")+"}";
+					Text+=" - {"+Lan.G(this,"Deleted")+"}";
 					return;
 				}
 				//TaskListNum=-1 is only possible if it's new.  This will never get hit if it's new.
 				if(_taskCur.TaskListNum==0) {
-					Tasks.TaskEditCreateLog(Lan.g(this,"Deleted task"),_taskCur);
+					Tasks.TaskEditCreateLog(Lan.G(this,"Deleted task"),_taskCur);
 				}
 				else {
-					string logText=Lan.g(this,"Deleted task from tasklist");
+					string logText=Lan.G(this,"Deleted task from tasklist");
 					TaskList tList=TaskLists.GetOne(_taskCur.TaskListNum);
 					if(tList!=null) {
 						logText+=" "+tList.Descript;
@@ -2304,7 +2304,7 @@ namespace OpenDental {
 		private void SetFormToDeletedMode() {
 				_isTaskDeleted=true;
 				labelTaskChanged.Visible=true;
-				labelTaskChanged.Text=Lan.g(this,"The task has been deleted");
+				labelTaskChanged.Text=Lan.G(this,"The task has been deleted");
 				DisableMostControls();//Set form into a "read-only" mode to allow user to copy text only.
 		}
 		
@@ -2448,7 +2448,7 @@ namespace OpenDental {
 				}
 			}
 			else {
-				MessageBox.Show(Lan.g(this,"No Auto Note available to edit."));
+				MessageBox.Show(Lan.G(this,"No Auto Note available to edit."));
 			}
 		}
 

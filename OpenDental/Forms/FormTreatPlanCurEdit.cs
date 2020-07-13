@@ -48,8 +48,8 @@ namespace OpenDental {
 			textHeading.Text=TreatPlanCur.Heading;
 			textNote.Text=TreatPlanCur.Note;
 			FillGrids();
-			if(TreatPlanCur.TPStatus==TreatPlanStatus.Inactive && TreatPlanCur.Heading==Lan.g("TreatPlan","Unassigned")) {
-				gridTP.Title=Lan.g("TreatPlan","Unassigned Procedures");
+			if(TreatPlanCur.TPStatus==TreatPlanStatus.Inactive && TreatPlanCur.Heading==Lan.G("TreatPlan","Unassigned")) {
+				gridTP.Title=Lan.G("TreatPlan","Unassigned Procedures");
 				labelHeading.Visible=false;
 				textHeading.Visible=false;
 				labelNote.Visible=false;
@@ -77,13 +77,13 @@ namespace OpenDental {
 		private void FillGrid(ref ODGrid grid) {
 			grid.BeginUpdate();
 			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn(Lan.g(this,"Status"),40));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g(this,"Tth"),30));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g(this,"Surf"),40));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g(this,"Code"),40));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g(this,"Description"),195));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g(this,"TPs"),35));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g(this,"Apt"),40));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Status"),40));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Tth"),30));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Surf"),40));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Code"),40));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Description"),195));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"TPs"),35));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Apt"),40));
 			grid.ListGridRows.Clear();
 			GridRow row;
 			List<Procedure> listProcs;
@@ -240,18 +240,18 @@ namespace OpenDental {
 
 		private void butMakeActive_Click(object sender,EventArgs e) {
 			_makeActive=true;//affects the OK click
-			if(TreatPlanCur.TPStatus==TreatPlanStatus.Inactive && TreatPlanCur.Heading==Lan.g("TreatPlan","Unassigned")) {
+			if(TreatPlanCur.TPStatus==TreatPlanStatus.Inactive && TreatPlanCur.Heading==Lan.G("TreatPlan","Unassigned")) {
 				_treatPlanUnassigned=new TreatPlan();
-				TreatPlanCur.Heading=Lan.g("TreatPlan","Active Treatment Plan");
+				TreatPlanCur.Heading=Lan.G("TreatPlan","Active Treatment Plan");
 				textHeading.Text=TreatPlanCur.Heading;
 			}
-			if(TreatPlanCur.TPStatus==TreatPlanStatus.Inactive && TreatPlanCur.Heading==Lan.g("TreatPlan","Inactive Treatment Plan")) {
-				TreatPlanCur.Heading=Lan.g("TreatPlan","Active Treatment Plan");
+			if(TreatPlanCur.TPStatus==TreatPlanStatus.Inactive && TreatPlanCur.Heading==Lan.G("TreatPlan","Inactive Treatment Plan")) {
+				TreatPlanCur.Heading=Lan.G("TreatPlan","Active Treatment Plan");
 				textHeading.Text=TreatPlanCur.Heading;
 			}
 			TreatPlanCur.TPStatus=TreatPlanStatus.Active;
 			butMakeActive.Enabled=false;
-			gridTP.Title=Lan.g("TreatPlan","Treatment Planned Procedures");
+			gridTP.Title=Lan.G("TreatPlan","Treatment Planned Procedures");
 			labelHeading.Visible=true;
 			textHeading.Visible=true;
 			labelNote.Visible=true;

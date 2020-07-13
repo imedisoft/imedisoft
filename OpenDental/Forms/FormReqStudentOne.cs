@@ -111,7 +111,7 @@ namespace OpenDental{
 				//butCancel.Text=Lan.g(this,"Close");
 			//}
 			prov=Providers.GetProv(ProvNum);
-			Text=Lan.g(this,"Student Requirements - ")+Providers.GetLongDesc(ProvNum);
+			Text=Lan.G(this,"Student Requirements - ")+Providers.GetLongDesc(ProvNum);
 			FillGrid();
 		}
 
@@ -119,15 +119,15 @@ namespace OpenDental{
 			table=ReqStudents.RefreshOneStudent(ProvNum);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableReqStudentOne","Course"),100);
+			GridColumn col=new GridColumn(Lan.G("TableReqStudentOne","Course"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableReqStudentOne","Requirement"),200);
+			col=new GridColumn(Lan.G("TableReqStudentOne","Requirement"),200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableReqStudentOne","Done"),40);
+			col=new GridColumn(Lan.G("TableReqStudentOne","Done"),40);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableReqStudentOne","Patient"),140);
+			col=new GridColumn(Lan.G("TableReqStudentOne","Patient"),140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableReqStudentOne","Appointment"),190);
+			col=new GridColumn(Lan.G("TableReqStudentOne","Appointment"),190);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

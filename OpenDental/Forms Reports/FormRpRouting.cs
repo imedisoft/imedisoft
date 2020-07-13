@@ -278,7 +278,7 @@ namespace OpenDental {
 				labelClin.Visible=false;
 			}
 			else {
-				_listClinics=Clinics.GetForUserod(Security.CurUser,true,Lan.g(this,"Unassigned"));
+				_listClinics=Clinics.GetForUserod(Security.CurUser,true,Lan.G(this,"Unassigned"));
 				foreach(Clinic clinic in _listClinics) {
 					listClin.Items.Add(clinic.Abbr);
 					listClin.SetSelected(listClin.Items.Count-1,(Clinics.ClinicNum!=0 && Clinics.ClinicNum==clinic.ClinicNum));
@@ -363,7 +363,7 @@ namespace OpenDental {
 				return;
 			}
 			if(textDate.Text.Length==0){
-				MessageBox.Show(Lan.g(this,"Date is required."));
+				MessageBox.Show(Lan.G(this,"Date is required."));
 				return;
 			}
 			date=PIn.Date(textDate.Text);

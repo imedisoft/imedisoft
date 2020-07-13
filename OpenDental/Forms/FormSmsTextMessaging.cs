@@ -151,7 +151,7 @@ namespace OpenDental {
 		///<summary>Passively load _dictPatNames from db if entry is not already found.</summary>
 		private string GetPatientName(long patNum) {
 			AddPatientNames(new List<long>() { patNum });
-			return _dictPatNames.ContainsKey(patNum) ? _dictPatNames[patNum] : Lan.g(this,"Not found");
+			return _dictPatNames.ContainsKey(patNum) ? _dictPatNames[patNum] : Lan.G(this,"Not found");
 		}
 		///<summary>Safe to call this for any number of PatNums. Will only go to db if given PatNum(s) not already found in _dictPatNames.</summary>
 		private void AddPatientNames(List<long> listPatNums) {
@@ -272,7 +272,7 @@ namespace OpenDental {
 		}
 
 		private void FillGridTextMessagesGroupedNo(int sortByColIdx,bool isSortAsc,long selectedPatNum,SmsToMobile selectedSmsToMobile,SmsFromMobile selectedSmsFromMobile) {
-			gridMessages.Title=Lan.g(this,"Text Messages - Right click for options - Unread messages always shown");
+			gridMessages.Title=Lan.G(this,"Text Messages - Right click for options - Unread messages always shown");
 			gridMessages.BeginUpdate();
 			gridMessages.ListGridRows.Clear();
 			gridMessages.ListGridColumns.Clear();
@@ -300,15 +300,15 @@ namespace OpenDental {
 					row.Bold=true;
 				}
 				row.Cells.Add(smsFromMobile.DateTimeReceived.ToString());//DateTime
-				row.Cells.Add(Lan.g(this,"Received"));//Type
+				row.Cells.Add(Lan.G(this,"Received"));//Type
 				row.Cells.Add(SmsFromMobiles.GetSmsFromStatusDescript(smsFromMobile.SmsStatus));//Status
 				row.Cells.Add(smsFromMobile.MatchCount.ToString());//#Phone Matches
 				row.Cells.Add(smsFromMobile.MobilePhoneNumber);//Patient Phone
-				row.Cells.Add(smsFromMobile.PatNum==0 ? Lan.g(this,"Unassigned") : GetPatientName(smsFromMobile.PatNum));//Patient
+				row.Cells.Add(smsFromMobile.PatNum==0 ? Lan.G(this,"Unassigned") : GetPatientName(smsFromMobile.PatNum));//Patient
 				row.Cells.Add("0.00");//Cost
 				if(PrefC.HasClinicsEnabled) {
 					if(smsFromMobile.ClinicNum==0) {
-						row.Cells.Add(PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.g(this,"Practice")+")");
+						row.Cells.Add(PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.G(this,"Practice")+")");
 					}
 					else { 
 						Clinic clinic=Clinics.GetClinic(smsFromMobile.ClinicNum);
@@ -331,18 +331,18 @@ namespace OpenDental {
 					UI.GridRow row=new UI.GridRow();
 					row.Tag=smsToMobile;
 					row.Cells.Add(smsToMobile.DateTimeSent.ToString());//DateTime
-					row.Cells.Add(Lan.g(this,"Sent"));//Type
+					row.Cells.Add(Lan.G(this,"Sent"));//Type
 					string smsStatus=smsToMobile.SmsStatus.ToString(); //Default to the actual status.
 					switch(smsToMobile.SmsStatus) {
 						case SmsDeliveryStatus.DeliveryConf:
 						case SmsDeliveryStatus.DeliveryUnconf:
 							//Treated the same as far as the user is concerned.
-							smsStatus=Lan.g(this,"Delivered");
+							smsStatus=Lan.G(this,"Delivered");
 							break;
 						case SmsDeliveryStatus.FailWithCharge:
 						case SmsDeliveryStatus.FailNoCharge:
 							//Treated the same as far as the user is concerned.
-							smsStatus=Lan.g(this,"Failed");
+							smsStatus=Lan.G(this,"Failed");
 							break;
 					}
 					row.Cells.Add(smsStatus);//Status
@@ -352,7 +352,7 @@ namespace OpenDental {
 					row.Cells.Add(smsToMobile.MsgChargeUSD.ToString("f"));//Cost
 					if(PrefC.HasClinicsEnabled) {
 						if(smsToMobile.ClinicNum==0) {
-							row.Cells.Add(PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.g(this,"Practice")+")");
+							row.Cells.Add(PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.G(this,"Practice")+")");
 						}
 						else { 
 							Clinic clinic=Clinics.GetClinic(smsToMobile.ClinicNum);
@@ -393,18 +393,18 @@ namespace OpenDental {
 				case SmsDeliveryStatus.DeliveryConf:
 				case SmsDeliveryStatus.DeliveryUnconf:
 					//Treated the same as far as the user is concerned.
-					return Lan.g(this,"Delivered");
+					return Lan.G(this,"Delivered");
 				case SmsDeliveryStatus.FailWithCharge:
 				case SmsDeliveryStatus.FailNoCharge:
 					//Treated the same as far as the user is concerned.
-					return Lan.g(this,"Failed");
+					return Lan.G(this,"Failed");
 			}
 			//Default to the actual status.
 			return smsStatus.ToString();
 		}
 
 		private void FillGridTextMessagesGroupedYes(int sortByColIdx,bool isSortAsc,long selectedPatNum,TextMessageGrouped selectedSmsGroup) {
-			gridMessages.Title=Lan.g(this,"Text Messages - Grouped by "+(radioGroupByPatient.Checked ? "patient" : "phone number"));
+			gridMessages.Title=Lan.G(this,"Text Messages - Grouped by "+(radioGroupByPatient.Checked ? "patient" : "phone number"));
 			gridMessages.BeginUpdate();
 			gridMessages.ListGridRows.Clear();
 			gridMessages.ListGridColumns.Clear();
@@ -465,11 +465,11 @@ namespace OpenDental {
 					PatNum=x.First().PatNum,
 					ClinicNum=x.First().ClinicNum,
 					ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? PrefC.GetString(PrefName.PracticeTitle)+
-						" ("+Lan.g(this,"Practice")+")" : Clinics.GetClinic(x.First().ClinicNum).Abbr) : "",
-					PatName=x.First().PatNum==0 ? Lan.g(this,"Unassigned") : GetPatientName(x.First().PatNum),
+						" ("+Lan.G(this,"Practice")+")" : Clinics.GetClinic(x.First().ClinicNum).Abbr) : "",
+					PatName=x.First().PatNum==0 ? Lan.G(this,"Unassigned") : GetPatientName(x.First().PatNum),
 					TextMsg=x.First().MsgText,
 					HasUnread=x.Any(y => y.SmsStatus==SmsFromStatus.ReceivedUnread),
-					Status=Lan.g(this,"Rcv")+" - "+SmsFromMobiles.GetSmsFromStatusDescript(x.First().SmsStatus),
+					Status=Lan.G(this,"Rcv")+" - "+SmsFromMobiles.GetSmsFromStatusDescript(x.First().SmsStatus),
 					ListToMobile=new List<SmsToMobile>(),
 					ListFromMobile=x.ToList(),
 				}).ToList();
@@ -484,12 +484,12 @@ namespace OpenDental {
 						PatPhone=x.First().MobilePhoneNumber,
 						PatNum=x.First().PatNum,
 						ClinicNum=x.First().ClinicNum,
-						ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.g(this,"Practice")+")"
+						ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.G(this,"Practice")+")"
 							: Clinics.GetClinic(x.First().ClinicNum).Abbr) : "",
-						PatName=x.First().PatNum==0 ? Lan.g(this,"Unassigned") : GetPatientName(x.First().PatNum),
+						PatName=x.First().PatNum==0 ? Lan.G(this,"Unassigned") : GetPatientName(x.First().PatNum),
 						TextMsg=x.First().MsgText,
 						HasUnread=false,
-						Status=Lan.g(this,"Sent")+" - "+GetDeliverStatus(x.First().SmsStatus),
+						Status=Lan.G(this,"Sent")+" - "+GetDeliverStatus(x.First().SmsStatus),
 						ListFromMobile=new List<SmsFromMobile>(),
 						ListToMobile=x.ToList(),
 					}).ToList();
@@ -512,10 +512,10 @@ namespace OpenDental {
 
 		private void FillGridMessageThread() {
 			if(_selectedPatNum==0) {
-				Text=Lan.g(this,"Text Messaging");
+				Text=Lan.G(this,"Text Messaging");
 			}
 			else {
-				Text=Lan.g(this,"Text Messaging - Patient:")+" "+GetPatientName(_selectedPatNum);
+				Text=Lan.G(this,"Text Messaging - Patient:")+" "+GetPatientName(_selectedPatNum);
 			}
 			labelPatientsForPhone.Visible=false;
 			if(_selectedPatNum==0 && _selectedSmsGroup==null) { //A message with no patNum was selected and is not a group, or nothing is selected at all.
@@ -657,8 +657,8 @@ namespace OpenDental {
 					var latestToMobile=smsGroup.ListToMobile.OrderByDescending(x => x.DateTimeSent).FirstOrDefault()??new SmsToMobile() {DateTimeSent=DateTime.MinValue };
 					gridMessages.ListGridRows[gridMessages.SelectedIndices[0]].Cells[_columnStatusIdx].Text=
 						latestFromMobile.DateTimeReceived>latestToMobile.DateTimeSent ? 
-							Lan.g(this,"Rcv")+" - "+SmsFromMobiles.GetSmsFromStatusDescript(SmsFromStatus.ReceivedRead) : 
-							Lan.g(this,"Sent")+" - "+GetDeliverStatus(latestToMobile.SmsStatus);
+							Lan.G(this,"Rcv")+" - "+SmsFromMobiles.GetSmsFromStatusDescript(SmsFromStatus.ReceivedRead) : 
+							Lan.G(this,"Sent")+" - "+GetDeliverStatus(latestToMobile.SmsStatus);
 				}
 				else if(tag is SmsFromMobile) {
 					SmsFromMobile smsFrom=(SmsFromMobile)tag;
@@ -818,11 +818,11 @@ namespace OpenDental {
 				return;
 			}
 			string numberToBlock=_selectedMobileNumber;
-			string question=Lan.g(this,"Block incoming texts from")+" "+numberToBlock+"? "+Lan.g(this,"This cannot be undone.");
+			string question=Lan.G(this,"Block incoming texts from")+" "+numberToBlock+"? "+Lan.G(this,"This cannot be undone.");
 			if(_selectedPatNum!=0) {
 				Patient pat=Patients.GetPat(_selectedPatNum);
 				if(pat!=null) {
-					question+="\r\n"+Lan.g(this,"This phone number is attached to patient")+" "+pat.GetNameFLnoPref()+".";
+					question+="\r\n"+Lan.G(this,"This phone number is attached to patient")+" "+pat.GetNameFLnoPref()+".";
 				}
 			}
 			if(MessageBox.Show(question,"",MessageBoxButtons.YesNo)==DialogResult.No) {
@@ -837,7 +837,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a message first.");
 				return;
 			}			
-			if(_selectedPatNum==0 || GetPatientName(_selectedPatNum)==Lan.g(this,"Not found")) {//If the patNum is 0 or patient could not be found.
+			if(_selectedPatNum==0 || GetPatientName(_selectedPatNum)==Lan.G(this,"Not found")) {//If the patNum is 0 or patient could not be found.
 				MessageBox.Show("Please select a message with a valid patient attached.");
 				return;
 			}

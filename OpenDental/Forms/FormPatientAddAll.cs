@@ -165,21 +165,21 @@ namespace OpenDental {
 			listPosition2.SelectedIndex = 1;
 			if (PrefC.GetBool(PrefName.PriProvDefaultToSelectProv))
 			{
-				comboPriProv1.Items.Add(Lan.g(this, "Select Provider"));
-				comboPriProv2.Items.Add(Lan.g(this, "Select Provider"));
-				comboPriProv3.Items.Add(Lan.g(this, "Select Provider"));
-				comboPriProv4.Items.Add(Lan.g(this, "Select Provider"));
-				comboPriProv5.Items.Add(Lan.g(this, "Select Provider"));
+				comboPriProv1.Items.Add(Lan.G(this, "Select Provider"));
+				comboPriProv2.Items.Add(Lan.G(this, "Select Provider"));
+				comboPriProv3.Items.Add(Lan.G(this, "Select Provider"));
+				comboPriProv4.Items.Add(Lan.G(this, "Select Provider"));
+				comboPriProv5.Items.Add(Lan.G(this, "Select Provider"));
 			}
-			comboSecProv1.Items.Add(Lan.g(this, "none"));
+			comboSecProv1.Items.Add(Lan.G(this, "none"));
 			comboSecProv1.SelectedIndex = 0;
-			comboSecProv2.Items.Add(Lan.g(this, "none"));
+			comboSecProv2.Items.Add(Lan.G(this, "none"));
 			comboSecProv2.SelectedIndex = 0;
-			comboSecProv3.Items.Add(Lan.g(this, "none"));
+			comboSecProv3.Items.Add(Lan.G(this, "none"));
 			comboSecProv3.SelectedIndex = 0;
-			comboSecProv4.Items.Add(Lan.g(this, "none"));
+			comboSecProv4.Items.Add(Lan.G(this, "none"));
 			comboSecProv4.SelectedIndex = 0;
-			comboSecProv5.Items.Add(Lan.g(this, "none"));
+			comboSecProv5.Items.Add(Lan.G(this, "none"));
 			comboSecProv5.SelectedIndex = 0;
 			_listProviders = Providers.GetDeepCopy(true);
 			for (int i = 0; i < _listProviders.Count; i++)
@@ -249,13 +249,13 @@ namespace OpenDental {
 
 			if (CultureInfo.CurrentCulture.Name.EndsWith("CA"))
 			{//Canadian. en-CA or fr-CA
-				labelSSN.Text = Lan.g(this, "SIN");
-				labelZip.Text = Lan.g(this, "Postal Code");
-				labelST.Text = Lan.g(this, "Province");
+				labelSSN.Text = Lan.G(this, "SIN");
+				labelZip.Text = Lan.G(this, "Postal Code");
+				labelST.Text = Lan.G(this, "Province");
 			}
 			if (CultureInfo.CurrentCulture.Name.EndsWith("GB"))
 			{//en-GB
-				labelZip.Text = Lan.g(this, "Postcode");
+				labelZip.Text = Lan.G(this, "Postcode");
 				labelST.Text = "";//no such thing as state in GB
 			}
 			_listZipCodes = ZipCodes.GetDeepCopy(true);
@@ -342,7 +342,7 @@ namespace OpenDental {
 							if(textAddrNotes.Text=="") {
 								_isMissingRequiredFields=true;
 								if(_isValidating) {
-									_errorProv.SetError(textAddrNotes,Lan.g(this,"Text box cannot be blank"));
+									_errorProv.SetError(textAddrNotes,Lan.G(this,"Text box cannot be blank"));
 								}
 							}
 							else {
@@ -421,7 +421,7 @@ namespace OpenDental {
 						}
 						break;
 					case RequiredFieldName.Gender:
-						string strErrorMsg=Lan.g(this,"Gender cannot be 'Unknown'.");
+						string strErrorMsg=Lan.G(this,"Gender cannot be 'Unknown'.");
 						SetRequiredListControl(labelGenPos,listGender1,areConditionsMet,2,strErrorMsg,ErrorIconAlignment.BottomLeft);
 						SetRequiredListControlNonGuarantor(labelGenPos,textFName2,textLName2,listGender2,areConditionsMet,2,strErrorMsg,ErrorIconAlignment.BottomLeft);
 						SetRequiredListControlNonGuarantor(labelGenPos,textFName3,textLName3,listGender3,areConditionsMet,2,strErrorMsg,ErrorIconAlignment.BottomLeft);
@@ -504,7 +504,7 @@ namespace OpenDental {
 						if(textState.Text!=""	&& !StateAbbrs.IsValidAbbr(textState.Text)) {
 							_isMissingRequiredFields=true;
 							if(_isValidating) {
-								_errorProv.SetError(textState,Lan.g(this,"Invalid state abbreviation"));
+								_errorProv.SetError(textState,Lan.G(this,"Invalid state abbreviation"));
 							}
 						}
 						break;
@@ -1513,8 +1513,8 @@ namespace OpenDental {
 			int selectedIndex2=comboSubscriber2.SelectedIndex;
 			comboSubscriber1.Items.Clear();
 			comboSubscriber2.Items.Clear();
-			comboSubscriber1.Items.Add(Lan.g(this,"none"));
-			comboSubscriber2.Items.Add(Lan.g(this,"none"));
+			comboSubscriber1.Items.Add(Lan.G(this,"none"));
+			comboSubscriber2.Items.Add(Lan.G(this,"none"));
 			string str;
 			for(int i=0;i<5;i++){
 				str=(i+1).ToString()+" - ";
@@ -2258,8 +2258,8 @@ namespace OpenDental {
 						|| patList[j].Birthdate.Year<1880
 						|| listPatsAdding[i].Birthdate.Year<1880) 
 					{
-						string msgText=Lan.g(this,"Patient")+" '"+listPatsAdding[i].LName+", "+listPatsAdding[i].FName+"' "
-							+Lan.g(this,"may already exist. Continue anyway?");
+						string msgText=Lan.G(this,"Patient")+" '"+listPatsAdding[i].LName+", "+listPatsAdding[i].FName+"' "
+							+Lan.G(this,"may already exist. Continue anyway?");
 						if(MessageBox.Show(msgText,"Potential Duplicate Patient",MessageBoxButtons.OKCancel) != DialogResult.OK) {
 							return;
 						}

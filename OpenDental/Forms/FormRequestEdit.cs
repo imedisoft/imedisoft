@@ -184,7 +184,7 @@ namespace OpenDental {
 					//users not allowed to edit
 					if((ApprovalEnum)approval!=ApprovalEnum.New){
 						_canResubmit=true;
-						butOK.Text=Lan.g(this,"Resubmit");
+						butOK.Text=Lan.G(this,"Resubmit");
 					}
 					butDelete.Visible=true;
 				}
@@ -360,9 +360,9 @@ namespace OpenDental {
 			ODDataTable table=new ODDataTable(node.InnerXml);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableRequestDiscuss","Date"),70);
+			GridColumn col=new GridColumn(Lan.G("TableRequestDiscuss","Date"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRequestDiscuss","Note"),200);
+			col=new GridColumn(Lan.G("TableRequestDiscuss","Note"),200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -24,7 +24,7 @@ namespace OpenDental {
 			UserListOld=Userods.GetDeepCopy(true);
 			TrunkList=TaskLists.RefreshMainTrunk(Security.CurUser.UserNum,TaskType.All)
 				.FindAll(x => x.TaskListStatus==TaskListStatusEnum.Active);
-			listMain.Items.Add(Lan.g(this,"none"));
+			listMain.Items.Add(Lan.G(this,"none"));
 			for(int i=0;i<TrunkList.Count;i++){
 				listMain.Items.Add(TrunkList[i].Descript);
 			}
@@ -35,9 +35,9 @@ namespace OpenDental {
 			//doesn't refresh from db because nothing actually gets saved until we hit the OK button.
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableTaskSetup","User"),100);
+			GridColumn col=new GridColumn(Lan.G("TableTaskSetup","User"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTaskSetup","Inbox"),100);
+			col=new GridColumn(Lan.G("TableTaskSetup","Inbox"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

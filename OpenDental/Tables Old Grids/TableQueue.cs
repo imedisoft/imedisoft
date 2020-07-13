@@ -19,11 +19,11 @@ namespace OpenDental{
 			HeadingIsPresent=false;
 			InstantClassesPar();
 			SetRowHeight(0,19,14);
-			Fields[0]=Lan.g("TableQueue","Patient Name");
-			Fields[1]=Lan.g("TableQueue","Carrier Name");
-			Fields[2]=Lan.g("TableQueue","Clearinghouse");
-			Fields[3]=Lan.g("TableQueue","Status");
-			Fields[4]=Lan.g("TableQueue","Missing Info");
+			Fields[0]=Lan.G("TableQueue","Patient Name");
+			Fields[1]=Lan.G("TableQueue","Carrier Name");
+			Fields[2]=Lan.G("TableQueue","Clearinghouse");
+			Fields[3]=Lan.G("TableQueue","Status");
+			Fields[4]=Lan.G("TableQueue","Missing Info");
 			ColWidth[0]=130;
 			ColWidth[1]=170;
 			ColWidth[2]=120;

@@ -65,11 +65,11 @@ namespace OpenDental {
 
 		///<summary>Visually filters gridMain.  Tag is preserved so that double clicking and editing can still work.</summary>
 		private void FilterGrid() {
-			labelSearch.Text=Lan.g(this,"Search");
+			labelSearch.Text=Lan.G(this,"Search");
 			labelSearch.ForeColor=Color.Black;
 			List<string> searchTerms=textSearch.Text.Split(' ').Where(x => !string.IsNullOrEmpty(x)).ToList();
 			if(!_arraySearchColIdxs.IsNullOrEmpty()) {//adv search has been used, search specific columns selected
-				labelSearch.Text=Lan.g(this,"Advanced Search");
+				labelSearch.Text=Lan.G(this,"Advanced Search");
 				labelSearch.ForeColor=Color.Red;
 			}
 			if(string.IsNullOrEmpty(textSearch.Text)) {

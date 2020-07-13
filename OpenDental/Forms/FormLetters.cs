@@ -251,11 +251,11 @@ namespace OpenDental{
 			str.Append(DateTimeOD.Today.ToLongDateString() + "\r\n");
 			//referral RE
 			if (ReferralCur != null) {
-				str.Append(Lan.g(this, "RE Patient: ") + PatCur.GetNameFL() + "\r\n");
+				str.Append(Lan.G(this, "RE Patient: ") + PatCur.GetNameFL() + "\r\n");
 			}
 			str.Append("\r\n");
 			//greeting
-			str.Append(Lan.g(this, "Dear "));
+			str.Append(Lan.G(this, "Dear "));
 			if (ReferralCur == null) {
 				if (CultureInfo.CurrentCulture.Name == "en-GB") {
 					if (PatCur.Salutation != "")
@@ -289,7 +289,7 @@ namespace OpenDental{
 				str.Append("\r\n\r\nYours sincerely,\r\n\r\n\r\n\r\n");
 			}
 			else {
-				str.Append("\r\n\r\n" + Lan.g(this, "Sincerely,") + "\r\n\r\n\r\n\r\n");
+				str.Append("\r\n\r\n" + Lan.G(this, "Sincerely,") + "\r\n\r\n\r\n\r\n");
 			}
 			str.Append(PrefC.GetString(PrefName.PracticeTitle));
 			textBody.Text = str.ToString();
@@ -310,7 +310,7 @@ namespace OpenDental{
 			if(!WarnOK())
 				return;
 			if(listLetters.SelectedIndex==-1){
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
       FormLetterEdit FormLE=new FormLetterEdit();
@@ -321,10 +321,10 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(listLetters.SelectedIndex==-1){
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Delete letter permanently for all patients?"),"",MessageBoxButtons.OKCancel)
+			if(MessageBox.Show(Lan.G(this,"Delete letter permanently for all patients?"),"",MessageBoxButtons.OKCancel)
 				!=DialogResult.OK){
 				return;
 			}

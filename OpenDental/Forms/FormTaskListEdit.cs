@@ -277,7 +277,7 @@ namespace OpenDental{
 				textDateTL.Text=Cur.DateTL.ToShortDateString();
 			}
 			for(int i=0;i<Enum.GetNames(typeof(TaskDateType)).Length;i++){
-				listDateType.Items.Add(Lan.g("enumTaskDateType",Enum.GetNames(typeof(TaskDateType))[i]));
+				listDateType.Items.Add(Lan.G("enumTaskDateType",Enum.GetNames(typeof(TaskDateType))[i]));
 				if((int)Cur.DateType==i){
 					listDateType.SelectedIndex=i;
 				}
@@ -297,7 +297,7 @@ namespace OpenDental{
 				}
 			}
 			for(int i=0;i<Enum.GetNames(typeof(TaskObjectType)).Length;i++){
-				listObjectType.Items.Add(Lan.g("enumTaskObjectType",Enum.GetNames(typeof(TaskObjectType))[i]));
+				listObjectType.Items.Add(Lan.G("enumTaskObjectType",Enum.GetNames(typeof(TaskObjectType))[i]));
 				if((int)Cur.ObjectType==i){
 					listObjectType.SelectedIndex=i;
 				}
@@ -311,12 +311,12 @@ namespace OpenDental{
 				labelGlobalFilter.Visible=false;
 				return;
 			}
-			comboGlobalFilter.Items.Add(Lan.g(this,GlobalTaskFilterType.Default.GetDescription()),GlobalTaskFilterType.Default);
-			comboGlobalFilter.Items.Add(Lan.g(this,GlobalTaskFilterType.None.GetDescription()),GlobalTaskFilterType.None);
+			comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.Default.GetDescription()),GlobalTaskFilterType.Default);
+			comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.None.GetDescription()),GlobalTaskFilterType.None);
 			if(PrefC.HasClinicsEnabled) {
-				comboGlobalFilter.Items.Add(Lan.g(this,GlobalTaskFilterType.Clinic.GetDescription()),GlobalTaskFilterType.Clinic);
+				comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.Clinic.GetDescription()),GlobalTaskFilterType.Clinic);
 				if(Defs.GetDefsForCategory(DefCat.Regions).Count>0) {
-					comboGlobalFilter.Items.Add(Lan.g(this,GlobalTaskFilterType.Region.GetDescription()),GlobalTaskFilterType.Region);
+					comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.Region.GetDescription()),GlobalTaskFilterType.Region);
 				}
 			}
 			comboGlobalFilter.SetSelectedEnum(Cur.GlobalTaskFilterType);
@@ -334,7 +334,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(  textDateTL.errorProvider1.GetError(textDateTL)!=""
 				){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			Cur.Descript=textDescript.Text;
@@ -348,7 +348,7 @@ namespace OpenDental{
 			try{
 				if(IsNew) {
 					TaskLists.Insert(Cur);
-					SecurityLogs.MakeLogEntry(Permissions.TaskListCreate,0,Cur.Descript+" "+Lan.g(this,"added"));
+					SecurityLogs.MakeLogEntry(Permissions.TaskListCreate,0,Cur.Descript+" "+Lan.G(this,"added"));
 				}
 				else {
 					TaskLists.Update(Cur);

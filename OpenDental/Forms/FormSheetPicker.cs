@@ -47,7 +47,7 @@ namespace OpenDental {
 						listSheets.Add(listMedSheets[i]);
 					}
 				}
-				labelSheetType.Text=Lan.g(this,"Patient Forms and Medical Histories");//Change name?
+				labelSheetType.Text=Lan.G(this,"Patient Forms and Medical Histories");//Change name?
 				if(PrefC.GetBool(PrefName.PatientFormsShowConsent)) {//only if they want to see consent forms with patient forms.
 					if(listConSheets.Count==0) {//use internal consent forms
 						listSheets.Add(SheetsInternal.GetSheetDef(SheetInternalType.Consent));
@@ -57,11 +57,11 @@ namespace OpenDental {
 							listSheets.Add(listConSheets[i]);
 						}
 					}
-					labelSheetType.Text=Lan.g(this,"Patient, Consent, and Medical History Forms");
+					labelSheetType.Text=Lan.G(this,"Patient, Consent, and Medical History Forms");
 				}
 			}
 			else {
-				labelSheetType.Text=Lan.g("enumSheetTypeEnum",SheetType.ToString());
+				labelSheetType.Text=Lan.G("enumSheetTypeEnum",SheetType.ToString());
 				butTerminal.Visible=false;
 				labelTerminal.Visible=false;
 			}

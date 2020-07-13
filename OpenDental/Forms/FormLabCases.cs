@@ -256,20 +256,20 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TableLabCases","Appt Date Time"),120);
+			col=new GridColumn(Lan.G("TableLabCases","Appt Date Time"),120);
 			col.SortingStrategy=GridSortingStrategy.DateParse;
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableLabCases","Procedures"),200);
+			col=new GridColumn(Lan.G("TableLabCases","Procedures"),200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableLabCases","Patient"),120);
+			col=new GridColumn(Lan.G("TableLabCases","Patient"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableLabCases","Status"),100);
+			col=new GridColumn(Lan.G("TableLabCases","Status"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableLabCases","Lab"),75);
+			col=new GridColumn(Lan.G("TableLabCases","Lab"),75);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableLabCases","Lab Phone"),100);
+			col=new GridColumn(Lan.G("TableLabCases","Lab Phone"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableLabCases","Instructions"),100);
+			col=new GridColumn(Lan.G("TableLabCases","Instructions"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -375,7 +375,7 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Lab Cases");
+				text=Lan.G(this,"Lab Cases");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				headingPrinted=true;
@@ -400,7 +400,7 @@ namespace OpenDental{
 			}
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Lab case list printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Lab case list printed"),PrintoutOrientation.Landscape);
 		}
 
 

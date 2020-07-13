@@ -134,7 +134,7 @@ namespace OpenDental{
 			DataTable tableIncome=Accounts.GetAccountTotalByType(monthCalendarStart.SelectionStart,monthCalendarEnd.SelectionStart, AccountType.Income);
 			DataTable tableExpenses=Accounts.GetAccountTotalByType(monthCalendarStart.SelectionStart,monthCalendarEnd.SelectionStart, AccountType.Expense);
 			report.ReportName="Profit & Loss Statement";
-			report.AddTitle("Title",Lan.g(this,"Profit & Loss Statement"),fontTitle);
+			report.AddTitle("Title",Lan.G(this,"Profit & Loss Statement"),fontTitle);
 			report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date",monthCalendarStart.SelectionStart.ToShortDateString()+" - "+monthCalendarEnd.SelectionStart.ToShortDateString(),fontSubTitle);
 			//setup query

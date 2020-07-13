@@ -40,7 +40,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRpReferrals(){
 			InitializeComponent();
-			Text=Lan.g(this,"Referral Report");
+			Text=Lan.G(this,"Referral Report");
       ALrefSelect=new ArrayList();
 			ALrefFilter=new ArrayList();
       Fill();
@@ -424,7 +424,7 @@ namespace OpenDental{
           comboBox.Items.Clear();
 					Def[] specDefs=Defs.GetDefsForCategory(DefCat.ProviderSpecialties,true).ToArray();
 					for(int i=0;i<specDefs.Length;i++) {
-						comboBox.Items.Add(Lan.g("enumDentalSpecialty",specDefs[i].ItemName));
+						comboBox.Items.Add(Lan.G("enumDentalSpecialty",specDefs[i].ItemName));
 					}
 					break;
    		  case "UsingTIN":

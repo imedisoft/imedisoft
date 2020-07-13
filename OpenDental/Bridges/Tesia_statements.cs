@@ -68,7 +68,7 @@ namespace OpenDental.Bridges {
 			//Account summary-----------------------------------------------------------------------
 			writer.WriteStartElement("AccountSummary");
 			if(PrefC.GetLong(PrefName.StatementsCalcDueDate)==-1){
-				writer.WriteElementString("DueDate",Lan.g("FormRpStatement","Upon Receipt"));
+				writer.WriteElementString("DueDate",Lan.G("FormRpStatement","Upon Receipt"));
 			}
 			else{
 				DateTime dueDate=DateTime.Today.AddDays(PrefC.GetLong(PrefName.StatementsCalcDueDate));

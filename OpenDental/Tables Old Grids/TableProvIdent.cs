@@ -22,9 +22,9 @@ namespace OpenDental
 			InstantClassesPar();
 			SetRowHeight(0,19,14);
 			//Heading=Lan.g("TableQueue","Provider Identifiers");
-			Fields[0]=Lan.g("TableQueue","Payor ID");
-			Fields[1]=Lan.g("TableQueue","Type");
-			Fields[2]=Lan.g("TableQueue","ID Number");
+			Fields[0]=Lan.G("TableQueue","Payor ID");
+			Fields[1]=Lan.G("TableQueue","Type");
+			Fields[2]=Lan.G("TableQueue","ID Number");
 			ColWidth[0]=90;
 			ColWidth[1]=110;
 			ColWidth[2]=100;

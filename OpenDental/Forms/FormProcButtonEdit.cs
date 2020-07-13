@@ -334,10 +334,10 @@ namespace OpenDental{
 			AutoCodes.RefreshCache();
       ProcButtonItems.RefreshCache();     
       if(IsNew){
-        this.Text=Lan.g(this,"Add Procedure Button");
+        this.Text=Lan.G(this,"Add Procedure Button");
       }
       else{
-        this.Text=Lan.g(this,"Edit Procedure Button");
+        this.Text=Lan.G(this,"Edit Procedure Button");
       }
 			textDescript.Text=ProcButtonCur.Description;
 			_listProcButtonCatDefs=Defs.GetDefsForCategory(DefCat.ProcButtonCats,true);
@@ -383,7 +383,7 @@ namespace OpenDental{
 			try{
 				Image importedImg=Image.FromFile(dlg.FileName);
 				if(importedImg.Size!=new Size(20,20)) {
-					MessageBox.Show(Lan.g(this,"Image should be 20x20. Image selected was: ")+importedImg.Size.Width+"x"+importedImg.Size.Height);
+					MessageBox.Show(Lan.G(this,"Image should be 20x20. Image selected was: ")+importedImg.Size.Width+"x"+importedImg.Size.Height);
 					return;
 				}
 				pictureBox.Image=Image.FromFile(dlg.FileName);
@@ -416,7 +416,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
       if(listADA.SelectedIndex < 0){
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
       }
       listADA.Items.RemoveAt(listADA.SelectedIndex);        
@@ -424,19 +424,19 @@ namespace OpenDental{
 
 	 	private void butOK_Click(object sender, System.EventArgs e) {
       if(textDescript.Text==""){
-				MessageBox.Show(Lan.g(this,"You must type in a description."));
+				MessageBox.Show(Lan.G(this,"You must type in a description."));
 				return; 
       }
 			if(listADA.Items.Count==0  && listAutoCodes.SelectedIndices.Count==0){
-        MessageBox.Show(Lan.g(this,"You must pick at least one Auto Code or Procedure Code."));
+        MessageBox.Show(Lan.G(this,"You must pick at least one Auto Code or Procedure Code."));
         return;
       }
 		foreach(int index in listAutoCodes.SelectedIndices){
 				AutoCode autoCode=_listShortDeep[index];
 				if(AutoCodeItems.GetListForCode(autoCode.AutoCodeNum).Count==0) {
 					//This AutoCode was saved with no AutoCodeItems attached, which is invalid.
-					MessageBox.Show(this,Lan.g(this,"The following AutoCode has no associated Procedure Codes: ")+"\r\n"+autoCode.Description+"\r\n"
-						+Lan.g(this,"AutoCode must be setup correctly before it can be used with a Quick Proc Button."));
+					MessageBox.Show(this,Lan.G(this,"The following AutoCode has no associated Procedure Codes: ")+"\r\n"+autoCode.Description+"\r\n"
+						+Lan.G(this,"AutoCode must be setup correctly before it can be used with a Quick Proc Button."));
 					return;
 				}
 			}

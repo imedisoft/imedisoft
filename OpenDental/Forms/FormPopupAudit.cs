@@ -28,15 +28,15 @@ namespace OpenDental {
 			ListPopupAud=Popups.GetArchivesForPopup(PopupCur.PopupNum);
 			gridPopupAudit.BeginUpdate();
 			gridPopupAudit.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TablePopupsForFamily","Create Date"),140);
+			GridColumn col=new GridColumn(Lan.G("TablePopupsForFamily","Create Date"),140);
 			gridPopupAudit.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePopupsForFamily","Edit Date"),140);
+			col=new GridColumn(Lan.G("TablePopupsForFamily","Edit Date"),140);
 			gridPopupAudit.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePopupsForFamily","Level"),80);
+			col=new GridColumn(Lan.G("TablePopupsForFamily","Level"),80);
 			gridPopupAudit.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePopupsForFamily","Disabled"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TablePopupsForFamily","Disabled"),60,HorizontalAlignment.Center);
 			gridPopupAudit.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePopupsForFamily","Popup Message"),100);
+			col=new GridColumn(Lan.G("TablePopupsForFamily","Popup Message"),100);
 			gridPopupAudit.ListGridColumns.Add(col);
 			gridPopupAudit.ListGridRows.Clear();
 			GridRow row;
@@ -54,7 +54,7 @@ namespace OpenDental {
 				else {
 					row.Cells.Add(ListPopupAud[i-1].DateTimeEntry.ToString());//Gets the previous DateTimeEntry to show as the last edit date.
 				}
-				row.Cells.Add(Lan.g("enumEnumPopupLevel",ListPopupAud[i].PopupLevel.ToString()));
+				row.Cells.Add(Lan.G("enumEnumPopupLevel",ListPopupAud[i].PopupLevel.ToString()));
 				row.Cells.Add(ListPopupAud[i].IsDisabled?"X":"");
 				row.Cells.Add(ListPopupAud[i].Description);
 				gridPopupAudit.ListGridRows.Add(row);

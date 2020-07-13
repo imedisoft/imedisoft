@@ -36,9 +36,9 @@ namespace OpenDental {
 			_listSheetDefs=SheetDefs.GetDeepCopy(false).FindAll(x => SheetDefs.IsDashboardType(x)==_isOpenedFromDashboardSetup);
 			gridCustomSheet.BeginUpdate();
 			gridCustomSheet.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableSheetDef","Description"),170);
+			GridColumn col=new GridColumn(Lan.G("TableSheetDef","Description"),170);
 			gridCustomSheet.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableSheetDef","Type"),100);
+			col=new GridColumn(Lan.G("TableSheetDef","Type"),100);
 			gridCustomSheet.ListGridColumns.Add(col);
 			gridCustomSheet.ListGridRows.Clear();
 			GridRow row;
@@ -66,7 +66,7 @@ namespace OpenDental {
 					sheetImagesPath=SheetUtil.GetImagePath();
 				});
 				StringBuilder strBuilder=new StringBuilder();
-				strBuilder.AppendLine(Lan.g(this,"The following images will need to be manually imported with the same file name when importing this "
+				strBuilder.AppendLine(Lan.G(this,"The following images will need to be manually imported with the same file name when importing this "
 					+"sheet to a new environment."));
 				strBuilder.AppendLine();
 				listFieldDefImages.ForEach(x => strBuilder.AppendLine(ODFileUtils.CombinePaths(sheetImagesPath,x.FieldName)));

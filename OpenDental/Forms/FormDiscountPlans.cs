@@ -29,12 +29,12 @@ namespace OpenDental {
 			listDiscountPlans.Sort(DiscountPlanComparer);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableDiscountPlans","Description"),200));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableDiscountPlans","Fee Schedule"),170));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableDiscountPlans","Adjustment Type"),checkShowHidden.Checked ? 150 : 170 ));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableDiscountPlans","Pats"),40));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableDiscountPlans","Description"),200));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableDiscountPlans","Fee Schedule"),170));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableDiscountPlans","Adjustment Type"),checkShowHidden.Checked ? 150 : 170 ));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableDiscountPlans","Pats"),40));
 			if(checkShowHidden.Checked) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableDiscountPlans","Hidden"),20,HorizontalAlignment.Center));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableDiscountPlans","Hidden"),20,HorizontalAlignment.Center));
 			}
 			gridMain.ListGridRows.Clear();
 			GridRow row;

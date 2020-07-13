@@ -151,7 +151,7 @@ namespace OpenDental{
 
 		private void FormPayPlanSelect_Load(object sender, System.EventArgs e) {
 			if(_includeNone) {
-				this.Text=Lan.g(this,"Attach to payment plan?");
+				this.Text=Lan.G(this,"Attach to payment plan?");
 				labelExpl.Visible=true;
 				butNone.Visible=true;
 			}
@@ -185,7 +185,7 @@ namespace OpenDental{
 				row.Cells.Add(planCur.PayPlanDate.ToShortDateString());//date
 				row.Cells.Add(patCur.LName+", "+patCur.FName);//patient			
 				if(planCur.PlanCategory==0) {
-					row.Cells.Add(Lan.g(this,"None"));
+					row.Cells.Add(Lan.G(this,"None"));
 				}
 				else {
 					row.Cells.Add(Defs.GetDef(DefCat.PayPlanCategories,planCur.PlanCategory).ItemName);
@@ -222,7 +222,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MessageBox.Show(Lan.g(this,"Please select a payment plan first."));
+				MessageBox.Show(Lan.G(this,"Please select a payment plan first."));
 				return;
 			}
 			SelectedPayPlanNum=(long)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;

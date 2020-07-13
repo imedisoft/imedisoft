@@ -108,7 +108,7 @@ namespace OpenDental {
 				FillUiForSavedPayPlan();
 			}
 			if(_payPlanCur.IsClosed) {
-				butOK.Text=Lan.g(this,"Reopen");
+				butOK.Text=Lan.G(this,"Reopen");
 				butDelete.Enabled=false;
 				butClosePlan.Enabled=false;
 				labelClosed.Visible=true;
@@ -185,21 +185,21 @@ namespace OpenDental {
 			int widthClinic=140;
 			int widthDesc=(PrefC.HasClinicsEnabled ? 170 : 170 + widthClinic);
 			GridColumn col;
-			col=new GridColumn(Lan.g(gridLinkedProduction.TranslationName,"Date\r\nAdded"),70,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Date\r\nAdded"),70,HorizontalAlignment.Center);
 			gridLinkedProduction.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridLinkedProduction.TranslationName,"Date"),70,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Date"),70,HorizontalAlignment.Center);
 			gridLinkedProduction.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridLinkedProduction.TranslationName,"Provider"),70);
+			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Provider"),70);
 			gridLinkedProduction.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g(gridLinkedProduction.TranslationName,"Clinic"),widthClinic);
+				col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Clinic"),widthClinic);
 				gridLinkedProduction.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(gridLinkedProduction.TranslationName,"Description"),widthDesc);
+			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Description"),widthDesc);
 			gridLinkedProduction.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridLinkedProduction.TranslationName,"Amount"),60,HorizontalAlignment.Right);//amount from production value.
+			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Amount"),60,HorizontalAlignment.Right);//amount from production value.
 			gridLinkedProduction.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridLinkedProduction.TranslationName,"Amount")+"\r\n"+Lan.g(gridLinkedProduction.TranslationName,"Attached"),60,HorizontalAlignment.Right,true);
+			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Amount")+"\r\n"+Lan.G(gridLinkedProduction.TranslationName,"Attached"),60,HorizontalAlignment.Right,true);
 			gridLinkedProduction.ListGridColumns.Add(col);
 			gridLinkedProduction.ListGridRows.Clear();
 			foreach(PayPlanProductionEntry entry in _listPayPlanProductionEntries) {
@@ -242,21 +242,21 @@ namespace OpenDental {
 			GridColumn col;
 			//If this column is changed from a date column then the comparer method (ComparePayPlanRows) needs to be updated.
 			//If changes are made to the order of the grid, changes need to also be made for butPrint_Click
-			col=new GridColumn(Lan.g("PayPlanAmortization","Date"),64,HorizontalAlignment.Center);//0
+			col=new GridColumn(Lan.G("PayPlanAmortization","Date"),64,HorizontalAlignment.Center);//0
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Provider"),50);//1
+			col=new GridColumn(Lan.G("PayPlanAmortization","Provider"),50);//1
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Description"),147);//2
+			col=new GridColumn(Lan.G("PayPlanAmortization","Description"),147);//2
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Principal"),75,HorizontalAlignment.Right);//3
+			col=new GridColumn(Lan.G("PayPlanAmortization","Principal"),75,HorizontalAlignment.Right);//3
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Interest"),67,HorizontalAlignment.Right);//4
+			col=new GridColumn(Lan.G("PayPlanAmortization","Interest"),67,HorizontalAlignment.Right);//4
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Due"),75,HorizontalAlignment.Right);//5
+			col=new GridColumn(Lan.G("PayPlanAmortization","Due"),75,HorizontalAlignment.Right);//5
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Payment"),75,HorizontalAlignment.Right);//6
+			col=new GridColumn(Lan.G("PayPlanAmortization","Payment"),75,HorizontalAlignment.Right);//6
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Balance"),70,HorizontalAlignment.Right);//7
+			col=new GridColumn(Lan.G("PayPlanAmortization","Balance"),70,HorizontalAlignment.Right);//7
 			gridCharges.ListGridColumns.Add(col);
 			gridCharges.ListGridRows.Clear();
 			List<PayPlanCharge> listChargesExpected=new List<PayPlanCharge>();
@@ -753,7 +753,7 @@ namespace OpenDental {
 				|| textCompletedAmt.errorProvider1.GetError(textCompletedAmt)!=""
 				) 
 			{
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return false;
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
@@ -907,7 +907,7 @@ namespace OpenDental {
 		}
 
 		private void ButPrintProduction_Click(object sender,EventArgs e) {
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Attached PayPlan Production printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Attached PayPlan Production printed"),PrintoutOrientation.Landscape);
 		}
 
 		private void pd_PrintPage(object sender,PrintPageEventArgs e) {
@@ -924,7 +924,7 @@ namespace OpenDental {
 			int headingPrintH=0;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Payment Plan Credits");
+				text=Lan.G(this,"Payment Plan Credits");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				text=DateTime.Today.ToShortDateString();
@@ -944,7 +944,7 @@ namespace OpenDental {
 			}
 			else {
 				e.HasMorePages=false;
-				text=Lan.g(this,"Total")+": "+_sumAttachedProduction.ToString("c");
+				text=Lan.G(this,"Total")+": "+_sumAttachedProduction.ToString("c");
 				g.DrawString(text,subHeadingFont,Brushes.Black,center+gridLinkedProduction.Width/2-g.MeasureString(text,subHeadingFont).Width-10,yPos);
 			}
 			g.Dispose();
@@ -965,7 +965,7 @@ namespace OpenDental {
 				Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 				Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 				ReportComplex report=new ReportComplex(false,false);
-				report.AddTitle("Title",Lan.g(this,"Payment Plan Terms"),fontTitle);
+				report.AddTitle("Title",Lan.G(this,"Payment Plan Terms"),fontTitle);
 				report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 				report.AddSubTitle("Date SubTitle",DateTime.Today.ToShortDateString(),fontSubTitle);
 				AreaSectionType sectType=AreaSectionType.ReportHeader;
@@ -1119,10 +1119,10 @@ namespace OpenDental {
 
 		private void SetNote() {
 			textNote.Text=_payPlanCur.Note+DateTime.Today.ToShortDateString()
-				+" - "+Lan.g(this,"Date of Agreement")+": "+textDate.Text
-				+", "+Lan.g(this,"Total Amount")+": "+textTotalPrincipal.Text
-				+", "+Lan.g(this,"APR")+": "+textAPR.Text
-				+", "+Lan.g(this,"Total Cost of Loan")+": "+textTotalCost.Text;
+				+" - "+Lan.G(this,"Date of Agreement")+": "+textDate.Text
+				+", "+Lan.G(this,"Total Amount")+": "+textTotalPrincipal.Text
+				+", "+Lan.G(this,"APR")+": "+textAPR.Text
+				+", "+Lan.G(this,"Total Cost of Loan")+": "+textTotalCost.Text;
 		}
 
 		///<summary>Creates a new sheet from a given Pay plan.</summary>

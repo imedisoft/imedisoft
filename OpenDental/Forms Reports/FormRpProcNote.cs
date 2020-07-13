@@ -332,36 +332,36 @@ namespace OpenDental{
 			//Columns
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Date"),80);
+			col=new GridColumn(Lan.G(this,"Date"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Patient Name"),120);
+			col=new GridColumn(Lan.G(this,"Patient Name"),120);
 			gridMain.ListGridColumns.Add(col);
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
-				col=new GridColumn(Lan.g(this,"Code"),150);
+				col=new GridColumn(Lan.G(this,"Code"),150);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Description"),220);
+				col=new GridColumn(Lan.G(this,"Description"),220);
 				gridMain.ListGridColumns.Add(col);
 			}
 			else {
-				col=new GridColumn(Lan.g(this,"Code"),150);
+				col=new GridColumn(Lan.G(this,"Code"),150);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Description"),220);
+				col=new GridColumn(Lan.G(this,"Description"),220);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Tth"),30);
+				col=new GridColumn(Lan.G(this,"Tth"),30);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Surf"),40);
+				col=new GridColumn(Lan.G(this,"Surf"),40);
 				gridMain.ListGridColumns.Add(col);
 			}
 			if(includeUnsignedNotes || includeNoNotes) {
-				col=new GridColumn(Lan.g(this,"Incomplete"),80);
+				col=new GridColumn(Lan.G(this,"Incomplete"),80);
 				gridMain.ListGridColumns.Add(col);
 			}
 			if(includeNoNotes) {
-				col=new GridColumn(Lan.g(this,"No Note"),60);
+				col=new GridColumn(Lan.G(this,"No Note"),60);
 				gridMain.ListGridColumns.Add(col);
 			}
 			if(includeUnsignedNotes) {
-				col=new GridColumn(Lan.g(this,"Unsigned"),70);
+				col=new GridColumn(Lan.G(this,"Unsigned"),70);
 				gridMain.ListGridColumns.Add(col);
 			}
 			//Rows
@@ -471,7 +471,7 @@ namespace OpenDental{
 		private void butPrint_Click(object sender,EventArgs e) {
 			_pagesPrinted=0;
 			_headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Incomplete Procedure Notes report printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Incomplete Procedure Notes report printed"),PrintoutOrientation.Landscape);
 		}  
 		
 		private void pd_PrintPage(object sender,PrintPageEventArgs e) {
@@ -484,22 +484,22 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!_headingPrinted) {
-				text=Lan.g(this,"Incomplete Procedure Notes");
+				text=Lan.G(this,"Incomplete Procedure Notes");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				text=PrefC.GetString(PrefName.PracticeTitle);
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				if(comboProvs.IsAllSelected){
-					text=Lan.g(this,"All Providers");
+					text=Lan.G(this,"All Providers");
 				}
 				else {
-					text=Lan.g(this,"For Providers:")+" "+string.Join(",",GetListSelectedProvNums().Select(provNum => Providers.GetAbbr(provNum)));
+					text=Lan.G(this,"For Providers:")+" "+string.Join(",",GetListSelectedProvNums().Select(provNum => Providers.GetAbbr(provNum)));
 				}
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				if(comboClinics.ListSelectedClinicNums.Count==0 || comboClinics.IsAllSelected) {//No clinics selected or 'All' selected
-					text=Lan.g(this,"All Clinics");
+					text=Lan.G(this,"All Clinics");
 				}
 				else {
 					text="For Clinics: "+comboClinics.GetStringSelectedClinics();

@@ -189,7 +189,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textTitle.Text==""){
-				MessageBox.Show(Lan.g(this,"Please enter a title first."));
+				MessageBox.Show(Lan.G(this,"Please enter a title first."));
 				return;
 			}
 			UserQueryCur.Description=textTitle.Text;

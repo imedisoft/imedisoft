@@ -132,8 +132,8 @@ namespace OpenDental {
 			if(Security.CurUser==null) {
 				return;
 			}
-			tabUser.Text=Lan.g(this,"for ")+Security.CurUser.UserName;
-			tabNew.Text=Lan.g(this,"New for ")+Security.CurUser.UserName;
+			tabUser.Text=Lan.G(this,"for ")+Security.CurUser.UserName;
+			tabNew.Text=Lan.G(this,"New for ")+Security.CurUser.UserName;
 			if(PrefC.GetBool(PrefName.TasksShowOpenTickets)) {
 				if(!tabContr.TabPages.Contains(tabOpenTickets)) {
 					tabContr.TabPages.Insert(2,tabOpenTickets);
@@ -282,7 +282,7 @@ namespace OpenDental {
 			if(countSet==-1) {
 				countSet=Tasks.GetCountOpenTickets(Security.CurUser.UserNum);
 			}
-			tabOpenTickets.Text=Lan.g(this,"Open Tasks")+" ("+countSet.ToString()+")";
+			tabOpenTickets.Text=Lan.G(this,"Open Tasks")+" ("+countSet.ToString()+")";
 		}
 
 		///<summary>Called whenever PatientTickets tab is refreshed to set the count at the top.  Also called from InitializeOnStartup.  In that case, we don't know what the count should be, so we pass in a -1.</summary>
@@ -293,7 +293,7 @@ namespace OpenDental {
 			if(countSet==-1 && FormOpenDental.CurPatNum!=0) {
 				countSet=Tasks.GetCountPatientTickets(FormOpenDental.CurPatNum);
 			}
-			tabPatientTickets.Text=Lan.g(this,"Patient Tasks")+" ("+(countSet==-1?"0":countSet.ToString())+")";
+			tabPatientTickets.Text=Lan.G(this,"Patient Tasks")+" ("+(countSet==-1?"0":countSet.ToString())+")";
 		}
 
 		public void ClearLogOff() {
@@ -349,19 +349,19 @@ namespace OpenDental {
 		public void LayoutToolBar() {
 			ToolBarMain.Buttons.Clear();
 			ODToolBarButton butOptions=new ODToolBarButton();
-			butOptions.Text=Lan.g(this,"Options");
-			butOptions.ToolTipText=Lan.g(this,"Set session specific task options.");
+			butOptions.Text=Lan.G(this,"Options");
+			butOptions.ToolTipText=Lan.G(this,"Set session specific task options.");
 			butOptions.Tag="Options";
 			ToolBarMain.Buttons.Add(butOptions);
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Add Task List"),0,"","AddList"));
-			ODToolBarButton butTask=new ODToolBarButton(Lan.g(this,"Add Task"),1,"","AddTask");
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Add Task List"),0,"","AddList"));
+			ODToolBarButton butTask=new ODToolBarButton(Lan.G(this,"Add Task"),1,"","AddTask");
 			butTask.Style=ODToolBarButtonStyle.DropDownButton;
 			butTask.DropDownMenu=menuTask;
 			ToolBarMain.Buttons.Add(butTask);
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Search"),-1,"","Search"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Search"),-1,"","Search"));
 			ODToolBarButton button=new ODToolBarButton();
-			button.Text=Lan.g(this,"Manage Blocks");
-			button.ToolTipText=Lan.g(this,"Manage which task lists will have popups blocked even when subscribed.");
+			button.Text=Lan.G(this,"Manage Blocks");
+			button.ToolTipText=Lan.G(this,"Manage which task lists will have popups blocked even when subscribed.");
 			button.Tag="BlockSubsc";
 			button.Pushed=Security.CurUser.DefaultHidePopups;
 			ToolBarMain.Buttons.Add(button);
@@ -519,8 +519,8 @@ namespace OpenDental {
 		///<summary>Allows the user to temporarily select a different Clinic to filter by.  Only allows user choices from unrestricted Clinics.</summary>
 		private void menuItemFilterClinic_Click(object sender,EventArgs e) {
 			List<GridColumn> listGridCols=new List<GridColumn>() {
-				new GridColumn(Lan.g(this,"Abbr"),70),
-				new GridColumn(Lan.g(this,"Description"),100,HorizontalAlignment.Left){ IsWidthDynamic=true }
+				new GridColumn(Lan.G(this,"Abbr"),70),
+				new GridColumn(Lan.G(this,"Description"),100,HorizontalAlignment.Left){ IsWidthDynamic=true }
 			};
 			List<GridRow> listGridRows=new List<GridRow>();
 			Clinics.GetAllForUserod(Security.CurUser).ForEach(x => {//Only Clinics the user has access to.
@@ -539,7 +539,7 @@ namespace OpenDental {
 		///unrestricted clinics.</summary>
 		private void menuItemFilterRegion_Click(object sender,EventArgs e) {
 			List<GridColumn> listGridCols=new List<GridColumn>() {
-				new GridColumn(Lan.g(this,"Name"),70),
+				new GridColumn(Lan.G(this,"Name"),70),
 			};
 			List<GridRow> listGridRows=new List<GridRow>();
 			//Regions associated to clinics that the user has access to (unrestricted).
@@ -903,19 +903,19 @@ namespace OpenDental {
 			col.ImageList=imageListTree;
 			gridMain.ListGridColumns.Add(col);//Checkbox column
 			if(tabContr.SelectedTab==tabNew && !PrefC.GetBool(PrefName.TasksNewTrackedByUser)) {//The old way
-				col=new GridColumn(Lan.g("TableTasks","Read"),35,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G("TableTasks","Read"),35,HorizontalAlignment.Center);
 				//col.ImageList=imageListTree;
 				gridMain.ListGridColumns.Add(col);
 			}
 			if(tabContr.SelectedTab==tabNew || tabContr.SelectedTab==tabOpenTickets || tabContr.SelectedTab==tabPatientTickets) {
-				col=new GridColumn(Lan.g("TableTasks","Task List"),90);
+				col=new GridColumn(Lan.G("TableTasks","Task List"),90);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(this,"+/-"),17,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"+/-"),17,HorizontalAlignment.Center);
 			col.CustomClickEvent+=GridHeaderClickEvent;
 			gridMain.ListGridColumns.Add(col);
 
-			col=new GridColumn(Lan.g("TableTasks","Description"),200);//any width
+			col=new GridColumn(Lan.G("TableTasks","Description"),200);//any width
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -934,7 +934,7 @@ namespace OpenDental {
 						dateStr=_listTaskLists[i].DateTL.ToShortDateString()+" - ";
 					}
 					else if(_listTaskLists[i].DateType==TaskDateType.Week) {
-						dateStr=Lan.g(this,"Week of")+" "+_listTaskLists[i].DateTL.ToShortDateString()+" - ";
+						dateStr=Lan.G(this,"Week of")+" "+_listTaskLists[i].DateTL.ToShortDateString()+" - ";
 					}
 					else if(_listTaskLists[i].DateType==TaskDateType.Month) {
 						dateStr=_listTaskLists[i].DateTL.ToString("MMMM")+" - ";
@@ -971,7 +971,7 @@ namespace OpenDental {
 							dateStr+=_listTasks[i].DateTask.ToShortDateString()+" - ";
 						}
 						else if(_listTasks[i].DateType==TaskDateType.Week) {
-							dateStr+=Lan.g(this,"Week of")+" "+_listTasks[i].DateTask.ToShortDateString()+" - ";
+							dateStr+=Lan.G(this,"Week of")+" "+_listTasks[i].DateTask.ToShortDateString()+" - ";
 						}
 						else if(_listTasks[i].DateType==TaskDateType.Month) {
 							dateStr+=_listTasks[i].DateTask.ToString("MMMM")+" - ";
@@ -983,7 +983,7 @@ namespace OpenDental {
 				}
 				objDesc="";
 				if(_listTasks[i].TaskStatus==TaskStatusEnum.Done){
-					objDesc=Lan.g(this,"Done:")+_listTasks[i].DateTimeFinished.ToShortDateString()+" - ";
+					objDesc=Lan.G(this,"Done:")+_listTasks[i].DateTimeFinished.ToShortDateString()+" - ";
 				}
 				if(_listTasks[i].ObjectType==TaskObjectType.Patient) {
 					if(_listTasks[i].KeyNum!=0) {
@@ -1148,18 +1148,18 @@ namespace OpenDental {
 			}
 			string taskListDescript="";
 			if(tabContr.SelectedTab==tabNew) {//Special case tab. All grid rows are guaranteed to be task so we manually set values.
-				taskListDescript=Lan.g(this,"New for")+" "+Security.CurUser.UserName;
+				taskListDescript=Lan.G(this,"New for")+" "+Security.CurUser.UserName;
 			}
 			else if(_listTaskListTreeHistory.Count>0){//Not in main trunk
 				taskListDescript=_listTaskListTreeHistory[_listTaskListTreeHistory.Count-1].Descript;
 			}
 			if(taskListDescript=="") {//Should only happen when at main trunk.
-				ControlParentTitle=Lan.g(this,"Tasks");
+				ControlParentTitle=Lan.G(this,"Tasks");
 			}
 			else {
 				int tasksNewCount=_listTaskLists.Sum(x => x.NewTaskCount);
 				tasksNewCount+=_listTasks.Sum(x => x.TaskStatus==TaskStatusEnum.New?1:0);
-				ControlParentTitle=Lan.g(this,"Tasks")+" - "+taskListDescript+" ("+tasksNewCount.ToString()+")";
+				ControlParentTitle=Lan.G(this,"Tasks")+" - "+taskListDescript+" ("+tasksNewCount.ToString()+")";
 			}
 			FillGridEvent.Invoke(this,new EventArgs());
 		}
@@ -1899,7 +1899,7 @@ namespace OpenDental {
 			openedForm.Activate();
 			//String should not be changed.  Used for auditing triage tasks.
 			openedForm.AddNoteToTaskAndEdit("Returned call. ");
-			Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.g(this,"Automatically added task note")+": Returned Call",Tasks.GetOne(openedForm.TaskNumCur));
+			Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.G(this,"Automatically added task note")+": Returned Call",Tasks.GetOne(openedForm.TaskNumCur));
 		}
 
 		private void Goto_Clicked() {
@@ -2093,11 +2093,11 @@ namespace OpenDental {
 				List<TaskList> tsklsts=TaskLists.RefreshChildren(taskListToDelete.TaskListNum,Security.CurUser.UserNum,0,TaskType.All);
 				int countHiddenTasks=tsklsts.Sum(x => x.NewTaskCount)+tsks.Count-taskListToDelete.NewTaskCount;
 				if(tsks.Count>0 || tsklsts.Count>0){
-					MessageBox.Show(Lan.g(this,"Not allowed to delete a list unless it's empty.  This task list contains:")+"\r\n"
-						+tsks.FindAll(x => String.IsNullOrEmpty(x.ReminderGroupId)).Count+" "+Lan.g(this,"normal tasks")+"\r\n"
-						+tsks.FindAll(x => !String.IsNullOrEmpty(x.ReminderGroupId)).Count+" "+Lan.g(this,"reminder tasks")+"\r\n"
-						+countHiddenTasks+" "+Lan.g(this,"filtered tasks")+"\r\n"
-						+tsklsts.Count+" "+Lan.g(this,"task lists"));
+					MessageBox.Show(Lan.G(this,"Not allowed to delete a list unless it's empty.  This task list contains:")+"\r\n"
+						+tsks.FindAll(x => String.IsNullOrEmpty(x.ReminderGroupId)).Count+" "+Lan.G(this,"normal tasks")+"\r\n"
+						+tsks.FindAll(x => !String.IsNullOrEmpty(x.ReminderGroupId)).Count+" "+Lan.G(this,"reminder tasks")+"\r\n"
+						+countHiddenTasks+" "+Lan.G(this,"filtered tasks")+"\r\n"
+						+tsklsts.Count+" "+Lan.G(this,"task lists"));
 					return;
 				}
 				if(TaskLists.GetMailboxUserNum(taskListToDelete.TaskListNum)!=0) {
@@ -2143,10 +2143,10 @@ namespace OpenDental {
 					return;
 				}
 				if(_clickedTask.TaskListNum==0) {
-					Tasks.TaskEditCreateLog(Lan.g(this,"Deleted task"),_clickedTask);
+					Tasks.TaskEditCreateLog(Lan.G(this,"Deleted task"),_clickedTask);
 				}
 				else {
-					string logText=Lan.g(this,"Deleted task from tasklist");
+					string logText=Lan.G(this,"Deleted task from tasklist");
 					TaskList tList=TaskLists.GetOne(_clickedTask.TaskListNum);
 					if(tList!=null) {
 						logText+=" "+tList.Descript;

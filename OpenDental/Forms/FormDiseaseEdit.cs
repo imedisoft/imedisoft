@@ -456,7 +456,7 @@ namespace OpenDental{
 			comboEhrFunctionalStatus.Items.Clear();
 			string[] arrayFunctionalStatusNames=Enum.GetNames(typeof(FunctionalStatus));
 			for(int i=0;i<arrayFunctionalStatusNames.Length;i++) {
-				comboEhrFunctionalStatus.Items.Add(Lan.g(this,arrayFunctionalStatusNames[i]));
+				comboEhrFunctionalStatus.Items.Add(Lan.G(this,arrayFunctionalStatusNames[i]));
 			}
 			comboEhrFunctionalStatus.SelectedIndex=(int)DiseaseCur.FunctionStatus;//The default value is 'Problem'
 		}

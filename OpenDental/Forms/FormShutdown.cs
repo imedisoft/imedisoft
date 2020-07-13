@@ -24,7 +24,7 @@ namespace OpenDental {
 				listMain.Items.Add(runningComps[i]);
 			}
 			if(IsUpdate) {
-				butShutdown.Text=Lan.g(this,"Continue");
+				butShutdown.Text=Lan.G(this,"Continue");
 			}
 		}
 

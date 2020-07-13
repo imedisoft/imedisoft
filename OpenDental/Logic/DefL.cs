@@ -229,8 +229,8 @@ namespace OpenDental {
 						defCOption.EnableColor=true;
 						defCOption.EnableValue=true;
 						defCOption.DoShowItemOrderInValue=true;
-						defCOption.ValueText=Lan.g(_lanThis,"Internal Priority");
-						defCOption.HelpText=Lan.g(_lanThis,"Displayed order should match order of priority of treatment.  They are used in Treatment Plan and Chart "
+						defCOption.ValueText=Lan.G(_lanThis,"Internal Priority");
+						defCOption.HelpText=Lan.G(_lanThis,"Displayed order should match order of priority of treatment.  They are used in Treatment Plan and Chart "
 							+"modules. They can be simple numbers or descriptive abbreviations 7 letters or less.  Changes affect all procedures where the "
 							+"definition is used.  'Internal Priority' does not show, but is used for list order and for automated selection of which procedures "
 							+"are next in a planned appointment.");
@@ -259,37 +259,37 @@ namespace OpenDental {
 		private static string GetItemDescForImages(string itemValue) {
 			List<string> listVals=new List<string>();
 			if(itemValue.Contains("X")) {
-				listVals.Add(Lan.g(_lanThis,"ChartModule"));
+				listVals.Add(Lan.G(_lanThis,"ChartModule"));
 			}
 			if(itemValue.Contains("F")) {
-				listVals.Add(Lan.g(_lanThis,"PatientForm"));
+				listVals.Add(Lan.G(_lanThis,"PatientForm"));
 			}
 			if(itemValue.Contains("P")){
-				listVals.Add(Lan.g(_lanThis,"PatientPic"));
+				listVals.Add(Lan.G(_lanThis,"PatientPic"));
 			}
 			if(itemValue.Contains("S")){
-				listVals.Add(Lan.g(_lanThis,"Statement"));
+				listVals.Add(Lan.G(_lanThis,"Statement"));
 			}
 			if(itemValue.Contains("T")){
-				listVals.Add(Lan.g(_lanThis,"ToothChart"));
+				listVals.Add(Lan.G(_lanThis,"ToothChart"));
 			}
 			if(itemValue.Contains("R")) {
-				listVals.Add(Lan.g(_lanThis,"TreatPlans"));
+				listVals.Add(Lan.G(_lanThis,"TreatPlans"));
 			}
 			if(itemValue.Contains("L")) {
-				listVals.Add(Lan.g(_lanThis,"PatientPortal"));
+				listVals.Add(Lan.G(_lanThis,"PatientPortal"));
 			}
 			if(itemValue.Contains("A")) {
-				listVals.Add(Lan.g(_lanThis,"PayPlans"));
+				listVals.Add(Lan.G(_lanThis,"PayPlans"));
 			}
 			if(itemValue.Contains("C")) {
-				listVals.Add(Lan.g(_lanThis,"ClaimAttachments"));
+				listVals.Add(Lan.G(_lanThis,"ClaimAttachments"));
 			}
 			if(itemValue.Contains("B")) {
-				listVals.Add(Lan.g(_lanThis,"LabCases"));
+				listVals.Add(Lan.G(_lanThis,"LabCases"));
 			}
 			if(itemValue.Contains("U")) {
-				listVals.Add(Lan.g(_lanThis,"AutoSaveForms"));
+				listVals.Add(Lan.G(_lanThis,"AutoSaveForms"));
 			}
 			return string.Join(", ",listVals);
 		}
@@ -304,13 +304,13 @@ namespace OpenDental {
 			gridDefs.BeginUpdate();
 			gridDefs.ListGridColumns.Clear();
 			GridColumn col;
-			col = new GridColumn(Lan.g("TableDefs","Name"),190);
+			col = new GridColumn(Lan.G("TableDefs","Name"),190);
 			gridDefs.ListGridColumns.Add(col);
 			col = new GridColumn(selectedDefCatOpt.ValueText,190);
 			gridDefs.ListGridColumns.Add(col);
-			col = new GridColumn(selectedDefCatOpt.EnableColor ? Lan.g("TableDefs","Color") : "",40);
+			col = new GridColumn(selectedDefCatOpt.EnableColor ? Lan.G("TableDefs","Color") : "",40);
 			gridDefs.ListGridColumns.Add(col);
-			col = new GridColumn(selectedDefCatOpt.CanHide ? Lan.g("TableDefs","Hide") : "",30,HorizontalAlignment.Center);
+			col = new GridColumn(selectedDefCatOpt.CanHide ? Lan.G("TableDefs","Hide") : "",30,HorizontalAlignment.Center);
 			gridDefs.ListGridColumns.Add(col);
 			gridDefs.ListGridRows.Clear();
 			GridRow row;
@@ -323,7 +323,7 @@ namespace OpenDental {
 					row.Cells.Add(defCur.ItemName);
 				}
 				else {//Users cannot edit the item name so let them translate them.
-					row.Cells.Add(Lan.g("FormDefinitions",defCur.ItemName));//Doesn't use 'this' so that renaming the form doesn't change the translation
+					row.Cells.Add(Lan.G("FormDefinitions",defCur.ItemName));//Doesn't use 'this' so that renaming the form doesn't change the translation
 				}
 				if(selectedDefCatOpt.DefCat==DefCat.ImageCats) {
 					row.Cells.Add(GetItemDescForImages(defCur.ItemValue));
@@ -565,7 +565,7 @@ namespace OpenDental {
 
 		public static bool UpClick(ODGrid gridDefs) {
 			if(gridDefs.GetSelectedIndex()==-1){
-				MessageBox.Show(Lan.g("Defs","Please select an item first."));
+				MessageBox.Show(Lan.G("Defs","Please select an item first."));
 				return false;
 			}
 			if(gridDefs.GetSelectedIndex()==0) {
@@ -583,7 +583,7 @@ namespace OpenDental {
 
 		public static bool DownClick(ODGrid gridDefs) {
 			if(gridDefs.GetSelectedIndex()==-1){
-				MessageBox.Show(Lan.g("Defs","Please select an item first."));
+				MessageBox.Show(Lan.G("Defs","Please select an item first."));
 				return false;
 			}
 			if(gridDefs.GetSelectedIndex()==gridDefs.ListGridRows.Count-1) {

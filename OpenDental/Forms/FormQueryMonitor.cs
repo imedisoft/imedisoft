@@ -52,11 +52,11 @@ namespace OpenDental {
 		private void FillGridColumns() {
 			gridFeed.BeginUpdate();
 			gridFeed.ListGridColumns.Clear();
-			gridFeed.ListGridColumns.Add(new GridColumn(Lan.g(gridFeed.TranslationName,"Command"),100){ IsWidthDynamic=true });
+			gridFeed.ListGridColumns.Add(new GridColumn(Lan.G(gridFeed.TranslationName,"Command"),100){ IsWidthDynamic=true });
 			gridFeed.ListGridColumns.Add(new GridColumn(
-				Lan.g(gridFeed.TranslationName,"DateTimeStart"),125,HorizontalAlignment.Center,GridSortingStrategy.DateParse)
+				Lan.G(gridFeed.TranslationName,"DateTimeStart"),125,HorizontalAlignment.Center,GridSortingStrategy.DateParse)
 			);
-			gridFeed.ListGridColumns.Add(new GridColumn(Lan.g(gridFeed.TranslationName,"Elapsed"),100,HorizontalAlignment.Center));
+			gridFeed.ListGridColumns.Add(new GridColumn(Lan.G(gridFeed.TranslationName,"Elapsed"),100,HorizontalAlignment.Center));
 			gridFeed.EndUpdate();
 		}
 
@@ -135,7 +135,7 @@ namespace OpenDental {
 				MessageBox.Show("No queries in the Query Feed to log.");
 				return;
 			}
-			if(!MsgBox.Show(MsgBoxButtons.YesNo,Lan.g(this,"Log all queries to a file?  Total query count")+$": {_dictQueries.Count.ToString("N0")}")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,Lan.G(this,"Log all queries to a file?  Total query count")+$": {_dictQueries.Count.ToString("N0")}")) {
 				return;
 			}
 			string logFolderPath="QueryMonitorLogs";
@@ -161,7 +161,7 @@ namespace OpenDental {
 				return;
 			}
 			catch(Exception ex) {
-				MsgBox.Show(Lan.g(this,"Error creating log file")+$":\r\n{ex.Message}");
+				MsgBox.Show(Lan.G(this,"Error creating log file")+$":\r\n{ex.Message}");
 				return;
 			}
 			if(MsgBox.Show(MsgBoxButtons.YesNo,"Log file created.  Would you like to open the file?")) {
@@ -169,7 +169,7 @@ namespace OpenDental {
 					FileAtoZ.StartProcessRelative(logFolderPath,logFileName);
 				}
 				catch(Exception ex) {
-					MsgBox.Show(Lan.g(this,"Could not open log file")+$":\r\n{ex.Message}");
+					MsgBox.Show(Lan.G(this,"Could not open log file")+$":\r\n{ex.Message}");
 				}
 			}
 		}

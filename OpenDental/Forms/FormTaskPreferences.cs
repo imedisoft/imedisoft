@@ -40,14 +40,14 @@ namespace OpenDental {
 		///available, example: Clinics have been turned off, Clinic filter no longer available.</summary>
 		private void FillComboGlobalFilter() {
 			GlobalTaskFilterType globalPref=(GlobalTaskFilterType)PrefC.GetInt(PrefName.TasksGlobalFilterType);
-			comboGlobalFilter.Items.Add(Lan.g(this,GlobalTaskFilterType.Disabled.GetDescription()),GlobalTaskFilterType.Disabled);
-			comboGlobalFilter.Items.Add(Lan.g(this,GlobalTaskFilterType.None.GetDescription()),GlobalTaskFilterType.None);
+			comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.Disabled.GetDescription()),GlobalTaskFilterType.Disabled);
+			comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.None.GetDescription()),GlobalTaskFilterType.None);
 			if(PrefC.HasClinicsEnabled) {
 				labelGlobalFilter.Visible=true;
 				comboGlobalFilter.Visible=true;
-				comboGlobalFilter.Items.Add(Lan.g(this,GlobalTaskFilterType.Clinic.GetDescription()),GlobalTaskFilterType.Clinic);
+				comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.Clinic.GetDescription()),GlobalTaskFilterType.Clinic);
 				if(Defs.GetDefsForCategory(DefCat.Regions).Count>0) {
-					comboGlobalFilter.Items.Add(Lan.g(this,GlobalTaskFilterType.Region.GetDescription()),GlobalTaskFilterType.Region);
+					comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.Region.GetDescription()),GlobalTaskFilterType.Region);
 				}
 			}
 			comboGlobalFilter.SetSelectedEnum(globalPref);
@@ -100,7 +100,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(validNumX.errorProvider1.GetError(validNumX)!="" | validNumY.errorProvider1.GetError(validNumY)!="") {
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			if(FormOpenDental.IsDashboardVisible && checkTaskListAlwaysShow.Checked && !checkBoxTaskKeepListHidden.Checked && radioRight.Checked) {

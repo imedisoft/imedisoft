@@ -442,10 +442,10 @@ namespace OpenDental{
 
 		private void butDeleteCat_Click(object sender,System.EventArgs e) {
 			if(listCat.SelectedIndex==-1) {
-				MessageBox.Show(Lan.g(this,"Please select a category first."));
+				MessageBox.Show(Lan.G(this,"Please select a category first."));
 				return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Are you sure you want to delete the entire category and all notes in it?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show(Lan.G(this,"Are you sure you want to delete the entire category and all notes in it?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;
 			}
 			QuickPasteCat category=_listCats[listCat.SelectedIndex];
@@ -457,7 +457,7 @@ namespace OpenDental{
 
 		private void butUpCat_Click(object sender,System.EventArgs e) {
 			if(listCat.SelectedIndex==-1) {
-				MessageBox.Show(Lan.g(this,"Please select a category first."));
+				MessageBox.Show(Lan.G(this,"Please select a category first."));
 				return;
 			}
 			if(listCat.SelectedIndex==0) {
@@ -471,7 +471,7 @@ namespace OpenDental{
 
 		private void butDownCat_Click(object sender,System.EventArgs e) {
 			if(listCat.SelectedIndex==-1) {
-				MessageBox.Show(Lan.g(this,"Please select a category first."));
+				MessageBox.Show(Lan.G(this,"Please select a category first."));
 				return;
 			}
 			if(listCat.SelectedIndex==_listCats.Count-1) {
@@ -506,7 +506,7 @@ namespace OpenDental{
 
 		private void butAddNote_Click(object sender,System.EventArgs e) {
 			if(listCat.SelectedIndex==-1) {
-				MessageBox.Show(Lan.g(this,"Please select a category first."));
+				MessageBox.Show(Lan.G(this,"Please select a category first."));
 				return;
 			}
 			QuickPasteNote quickNote=new QuickPasteNote();
@@ -528,7 +528,7 @@ namespace OpenDental{
 
 		private void butEditNote_Click(object sender,System.EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1) {
-				MessageBox.Show(Lan.g(this,"Please select a note first."));
+				MessageBox.Show(Lan.G(this,"Please select a note first."));
 				return;
 			}
 			QuickPasteNote quickNote=(QuickPasteNote)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
@@ -563,7 +563,7 @@ namespace OpenDental{
 			int selectedIdx=gridMain.GetSelectedIndex();
 			int destinationIdx=(selectedIdx+(isDown?1:-1));
 			if(selectedIdx==-1) {
-				MessageBox.Show(Lan.g(this,"Please select a note first."));
+				MessageBox.Show(Lan.G(this,"Please select a note first."));
 				return;
 			}
 			if(!destinationIdx.Between(0,gridMain.ListGridRows.Count-1)) {
@@ -620,7 +620,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(TextToFill!=null) {
 				if(gridMain.GetSelectedIndex()==-1) {
-					MessageBox.Show(Lan.g(this,"Please select a note first."));
+					MessageBox.Show(Lan.G(this,"Please select a note first."));
 					return;
 				}
 				InsertValue(((QuickPasteNote)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).Note);

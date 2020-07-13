@@ -60,34 +60,34 @@ namespace OpenDental {
 			List<string> listErrors=new List<string>();			
 			if(Rule.TypeCur==ApptReminderType.Arrival) {
 				if(!textTemplateSms.Text.ToLower().Contains(OpenDentBusiness.AutoComm.ArrivalsTagReplacer.ARRIVED_TAG.ToLower())) {
-					listErrors.Add(Lan.g(this,$"Arrival texts must contain the \"{OpenDentBusiness.AutoComm.ArrivalsTagReplacer.ARRIVED_TAG}\" tag."));
+					listErrors.Add(Lan.G(this,$"Arrival texts must contain the \"{OpenDentBusiness.AutoComm.ArrivalsTagReplacer.ARRIVED_TAG}\" tag."));
 				}
 			}
 			else {				
 				if(Rule.TypeCur!=ApptReminderType.PatientPortalInvite) {
 					if(string.IsNullOrWhiteSpace(textTemplateSms.Text)) {
-						listErrors.Add(Lan.g(this,"Text message cannot be blank."));
+						listErrors.Add(Lan.G(this,"Text message cannot be blank."));
 					}
 				}
 				if(string.IsNullOrWhiteSpace(textTemplateSubject.Text)) {
-					listErrors.Add(Lan.g(this,"Email subject cannot be blank."));
+					listErrors.Add(Lan.G(this,"Email subject cannot be blank."));
 				}
 				if(string.IsNullOrWhiteSpace(_templateEmail)) {
-					listErrors.Add(Lan.g(this,"Email message cannot be blank."));
+					listErrors.Add(Lan.G(this,"Email message cannot be blank."));
 				}				
 				if(PrefC.GetBool(PrefName.EmailDisclaimerIsOn) && !_templateEmail.ToLower().Contains("[emaildisclaimer]")) {
-					listErrors.Add(Lan.g(this,"Email must contain the \"[EmailDisclaimer]\" tag."));
+					listErrors.Add(Lan.G(this,"Email must contain the \"[EmailDisclaimer]\" tag."));
 				}
 			}
 			if(Rule.TypeCur==ApptReminderType.ConfirmationFutureDay) {
 				if(!textTemplateSms.Text.ToLower().Contains("[confirmcode]")) {
-					listErrors.Add(Lan.g(this,"Confirmation texts must contain the \"[ConfirmCode]\" tag."));
+					listErrors.Add(Lan.G(this,"Confirmation texts must contain the \"[ConfirmCode]\" tag."));
 				}
 				if(_templateEmail.ToLower().Contains("[confirmcode]")) {
-					listErrors.Add(Lan.g(this,"Confirmation emails should not contain the \"[ConfirmCode]\" tag."));
+					listErrors.Add(Lan.G(this,"Confirmation emails should not contain the \"[ConfirmCode]\" tag."));
 				}
 				if(!_templateEmail.ToLower().Contains("[confirmurl]")) {
-					listErrors.Add(Lan.g(this,"Confirmation emails must contain the \"[ConfirmURL]\" tag."));
+					listErrors.Add(Lan.G(this,"Confirmation emails must contain the \"[ConfirmURL]\" tag."));
 				}
 			}
 			if(Rule.TypeCur==ApptReminderType.ScheduleThankYou) {
@@ -95,8 +95,8 @@ namespace OpenDental {
 				if(!PrefC.GetBool(PrefName.ApptConfirmAutoSignedUp)) {
 					string addToCalTag=ApptThankYouSents.ADD_TO_CALENDAR.ToLower();
 					string errorText(string mode) {
-						return Lan.g(this,$"Automated Thank-You {mode} cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
-							+Lan.g(this," when not signed up for eConfirmations.");
+						return Lan.G(this,$"Automated Thank-You {mode} cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
+							+Lan.G(this," when not signed up for eConfirmations.");
 					}
 					if(textTemplateSms.Text.ToLower().Contains(addToCalTag)) {
 						listErrors.Add(errorText("texts"));
@@ -107,7 +107,7 @@ namespace OpenDental {
 				}
 			}
 			if(Rule.Language!="" && Rule.ApptReminderRuleNum==0) {//new rule, user may have not remembered to setup the aggregates
-				string err=Lan.g(this,"Aggregated templates have not been set up for all additional languages. Click on the 'Advanced' button to set up " +
+				string err=Lan.G(this,"Aggregated templates have not been set up for all additional languages. Click on the 'Advanced' button to set up " +
 					"aggregated templates.");
 				if(Rule.TypeCur==ApptReminderType.Arrival) {
 					if(Rule.TemplateSMSAggShared=="" || Rule.TemplateSMSAggPerAppt=="") { //Arrivals don't include email

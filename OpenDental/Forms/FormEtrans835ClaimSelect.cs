@@ -377,7 +377,7 @@ namespace OpenDental {
 				isValidClaimFee=claimSelected.ClaimFee.IsEqual(claimFee835);
 			}
 			if(!isValidClaimFee) {
-				MessageBox.Show(Lan.g(this,"Claim fee on claim does not match ERA.")+"  "+Lan.g(this,"Expected")+" "+claimFee835.ToString("f"));
+				MessageBox.Show(Lan.G(this,"Claim fee on claim does not match ERA.")+"  "+Lan.G(this,"Expected")+" "+claimFee835.ToString("f"));
 				return;
 			}
 			if(claimSelected.ClaimType=="PreAuth" && _x835Claim.DateServiceStart.Date.Year<=1900) {
@@ -386,7 +386,7 @@ namespace OpenDental {
 			else if((claimSelected.DateService.Date.CompareTo(_x835Claim.DateServiceStart.Date) < 0)
 				|| (claimSelected.DateService.Date.CompareTo(_x835Claim.DateServiceEnd.Date) > 0))
 			{
-				MessageBox.Show(Lan.g(this,"Date of service on claim does not match service date range on ERA.")+"\r\n"+Lan.g(this,"Expected")+" "
+				MessageBox.Show(Lan.G(this,"Date of service on claim does not match service date range on ERA.")+"\r\n"+Lan.G(this,"Expected")+" "
 					+_x835Claim.DateServiceStart.ToShortDateString()+" - "+_x835Claim.DateServiceEnd.ToShortDateString());
 				return;
 			}

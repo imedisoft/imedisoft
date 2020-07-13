@@ -360,7 +360,7 @@ namespace OpenDental{
 			for(int i=0;i<listSorted.Count;i++) {
 				row=new GridRow();
 				if(listSorted[i].EmployeeNum==0) {
-					row.Cells.Add(Lan.g(this,"All Employees"));
+					row.Cells.Add(Lan.G(this,"All Employees"));
 				}
 				else {
 					Employee emp=Employees.GetEmp(listSorted[i].EmployeeNum);

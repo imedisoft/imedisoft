@@ -454,18 +454,18 @@ namespace OpenDental{
 				return;
 			}
 			if(IsNew){
-				Text=Lan.g(this,"Add Referral Attachment");
+				Text=Lan.G(this,"Add Referral Attachment");
       }
       else{
 				_refAttachOld=RefAttachCur.Copy();
-				Text=Lan.g(this,"Edit Referral Attachment");
+				Text=Lan.G(this,"Edit Referral Attachment");
       }
 			string referralDescript=DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation)
 				.FirstOrDefault(x => x.InternalName=="Referrals")?.Description;
 			if(string.IsNullOrWhiteSpace(referralDescript)) {//either not displaying the Referral field or no description entered, default to 'Referral (other)'
-				referralDescript=Lan.g(this,"Referral (other)");
+				referralDescript=Lan.G(this,"Referral (other)");
 			}
-			listRefType.Items.AddRange(new[] { Lan.g(this,"To"),Lan.g(this,"From"),referralDescript });
+			listRefType.Items.AddRange(new[] { Lan.G(this,"To"),Lan.G(this,"From"),referralDescript });
 			FillData();
 			FillSheets();
 			_provNumSelected=RefAttachCur.ProvNum;
@@ -513,7 +513,7 @@ namespace OpenDental{
 			textOrder.ReadOnly=true;//It can be reordered by the Up/Down buttons on FormReferralsPatient.
 			comboRefToStatus.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(ReferralToStatus)).Length;i++){
-				comboRefToStatus.Items.Add(Lan.g("enumReferralToStatus",Enum.GetNames(typeof(ReferralToStatus))[i]));
+				comboRefToStatus.Items.Add(Lan.G("enumReferralToStatus",Enum.GetNames(typeof(ReferralToStatus))[i]));
 				if((int)RefAttachCur.RefToStatus==i){
 					comboRefToStatus.SelectedIndex=i;
 				}
@@ -613,7 +613,7 @@ namespace OpenDental{
 				|| textRefDate.errorProvider1.GetError(textRefDate)!=""
 				|| textDateProcCompleted.errorProvider1.GetError(textDateProcCompleted)!="") 
 			{
-				throw new ApplicationException(Lan.g(this,"Please fix data entry errors first."));
+				throw new ApplicationException(Lan.G(this,"Please fix data entry errors first."));
 			}
 			RefAttachCur.RefType=(ReferralType)listRefType.SelectedIndex;
 			RefAttachCur.ProvNum=(listRefType.SelectedIndex==0?_provNumSelected:0);//If the Referral Type is 'To', use the selected ProvNum.

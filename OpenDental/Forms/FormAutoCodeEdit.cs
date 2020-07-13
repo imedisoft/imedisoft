@@ -205,10 +205,10 @@ namespace OpenDental{
 
 		private void FormAutoCodeEdit_Load(object sender, System.EventArgs e) {      
       if(IsNew){
-        this.Text=Lan.g(this,"Add Auto Code");
+        this.Text=Lan.G(this,"Add Auto Code");
       }
       else{
-        this.Text=Lan.g(this,"Edit Auto Code");
+        this.Text=Lan.G(this,"Edit Auto Code");
         textDescript.Text=AutoCodeCur.Description;
         checkHidden.Checked=AutoCodeCur.IsHidden;
 				checkLessIntrusive.Checked=AutoCodeCur.LessIntrusive;
@@ -261,7 +261,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(tbAutoItem.SelectedRow==-1){
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
         return;
 			}
 			AutoCodeItem AutoCodeItemCur=listForCode[tbAutoItem.SelectedRow];
@@ -272,7 +272,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 		  if(textDescript.Text==""){
-        MessageBox.Show(Lan.g(this,"The Description cannot be blank"));
+        MessageBox.Show(Lan.G(this,"The Description cannot be blank"));
         return;
       }
 			if(listForCode.Count==0){
@@ -446,8 +446,8 @@ namespace OpenDental{
 				numCategories++;
 			}
 			if(numCategories!=listForCode[0].ListConditions.Count) {//Every row has to have the same number of conditions
-				MessageBox.Show(Lan.g(this,"When using ")+listForCode[0].ListConditions.Count+Lan.g(this," condition(s), you must use conditions from ")											
-					+listForCode[0].ListConditions.Count+Lan.g(this," logical categories. You are using conditions from ")+numCategories+Lan.g(this," logical categories."));
+				MessageBox.Show(Lan.G(this,"When using ")+listForCode[0].ListConditions.Count+Lan.G(this," condition(s), you must use conditions from ")											
+					+listForCode[0].ListConditions.Count+Lan.G(this," logical categories. You are using conditions from ")+numCategories+Lan.G(this," logical categories."));
 				e.Cancel=true;
 				return;
 			}
@@ -482,8 +482,8 @@ namespace OpenDental{
 				reqNumAutoCodeItems=reqNumAutoCodeItems*2;
 			}
 			if(listForCode.Count!=reqNumAutoCodeItems) {
-				MessageBox.Show(Lan.g(this,"For the condition categories you are using, you should have ")
-					+reqNumAutoCodeItems+Lan.g(this," entries in your list. You have ")+listForCode.Count+".");
+				MessageBox.Show(Lan.G(this,"For the condition categories you are using, you should have ")
+					+reqNumAutoCodeItems+Lan.G(this," entries in your list. You have ")+listForCode.Count+".");
 				e.Cancel=true;
 				return;
 			}

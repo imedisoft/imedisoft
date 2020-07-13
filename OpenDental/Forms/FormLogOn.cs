@@ -146,7 +146,7 @@ namespace OpenDental {
 				//Jason approved always storing the cleartext password that the user typed in 
 				//since this is necessary for Reporting Servers over middle tier and was already happening when a user logged in over middle tier.
 				Security.PasswordTyped=passwordTyped;
-				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,Lan.g(this,"User:")+" "+Security.CurUser.UserName+" "+Lan.g(this,"has logged on."));
+				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,Lan.G(this,"User:")+" "+Security.CurUser.UserName+" "+Lan.G(this,"has logged on."));
 				UserOdPrefL.SetThemeForUserIfNeeded();
 			}
 			Plugins.HookAddCode(this,"FormLogOn.butOK_Click_end");

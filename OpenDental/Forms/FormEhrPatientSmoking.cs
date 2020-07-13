@@ -348,7 +348,7 @@ namespace OpenDental {
 			//selected code guaranteed to exist in the drop down at this point
 			comboTobaccoStatus.Items.Clear();
 			comboTobaccoStatus.Items.AddRange(_listTobaccoStatuses.Select(x => x.Description).ToArray());
-			comboTobaccoStatus.Items.Add(Lan.g(this,"Choose from all SNOMED CT codes")+"...");
+			comboTobaccoStatus.Items.Add(Lan.G(this,"Choose from all SNOMED CT codes")+"...");
 			comboTobaccoStatus.SelectedIndex=_listTobaccoStatuses.FindIndex(x => x.CodeValue==FormS.SelectedSnomed.SnomedCode);//add 1 for ...choose from
 		}
 
@@ -377,7 +377,7 @@ namespace OpenDental {
 			_listTobaccoStatuses=_listTobaccoStatuses.OrderBy(x => x.Description).ToList();
 			comboTobaccoStatus.Items.Clear();
 			comboTobaccoStatus.Items.AddRange(_listTobaccoStatuses.Select(x => x.Description).ToArray());
-			comboTobaccoStatus.Items.Add(Lan.g(this,"Choose from all SNOMED CT codes")+"...");
+			comboTobaccoStatus.Items.Add(Lan.G(this,"Choose from all SNOMED CT codes")+"...");
 		}
 
 		///<summary>Fill comboInterventionCode with counseling and medication intervention codes using _listCounselInterventionCodes

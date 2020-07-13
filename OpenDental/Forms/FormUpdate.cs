@@ -30,10 +30,10 @@ namespace OpenDental {
 
 		private void FormUpdate_Load(object sender, System.EventArgs e) {
 			SetButtonVisibility();
-			labelVersion.Text=Lan.g(this,"Using Version:")+" "+Application.ProductVersion;
+			labelVersion.Text=Lan.G(this,"Using Version:")+" "+Application.ProductVersion;
 			UpdateHistory updateHistory=UpdateHistories.GetForVersion(Application.ProductVersion);
 			if(updateHistory!=null) {
-				labelVersion.Text+="  "+Lan.g(this,"Since")+": "+updateHistory.DateTimeUpdated.ToShortDateString();
+				labelVersion.Text+="  "+Lan.G(this,"Since")+": "+updateHistory.DateTimeUpdated.ToShortDateString();
 			}
 			if(PrefC.GetBool(PrefName.UpdateWindowShowsClassicView)) {
 				//Default location is (74,9).  We move it 5 pixels up since butShowPrev is 5 pixels bigger then labelVersion
@@ -52,7 +52,7 @@ namespace OpenDental {
 					butCheck2.Visible=true;
 				}
 				else {
-					textConnectionMessage.Text=Lan.g(this,"Not authorized for")+" "+GroupPermissions.GetDesc(Permissions.Setup);
+					textConnectionMessage.Text=Lan.G(this,"Not authorized for")+" "+GroupPermissions.GetDesc(Permissions.Setup);
 				}
 			}
 		}
@@ -91,7 +91,7 @@ namespace OpenDental {
 			if(PrefC.GetString(PrefName.WebServiceServerName)!="" //using web service
 				&&!ODEnvironment.IdIsThisComputer(PrefC.GetString(PrefName.WebServiceServerName).ToLower()))//and not on web server 
 			{
-				MessageBox.Show(Lan.g(this,"Updates are only allowed from the web server")+": "+PrefC.GetString(PrefName.WebServiceServerName));
+				MessageBox.Show(Lan.G(this,"Updates are only allowed from the web server")+": "+PrefC.GetString(PrefName.WebServiceServerName));
 				return;
 			}
 			if(ReplicationServers.ServerIsBlocked()) {
@@ -103,7 +103,7 @@ namespace OpenDental {
 			groupStable.Visible=false;
 			groupBeta.Visible=false;
 			groupAlpha.Visible=false;
-			textConnectionMessage.Text=Lan.g(this,"Attempting to connect to web service......");
+			textConnectionMessage.Text=Lan.G(this,"Attempting to connect to web service......");
 			Application.DoEvents();
 			string result="";
 			try {
@@ -111,18 +111,18 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;
-				string friendlyMessage=Lan.g(this,"Error checking for updates.");
+				string friendlyMessage=Lan.G(this,"Error checking for updates.");
 				FriendlyException.Show(friendlyMessage,ex);
 				textConnectionMessage.Text=friendlyMessage;
 				return;
 			}
-			textConnectionMessage.Text=Lan.g(this,"Connection successful.");
+			textConnectionMessage.Text=Lan.G(this,"Connection successful.");
 			Cursor=Cursors.Default;
 			try {
 				ParseXml(result);
 			}
 			catch(Exception ex) {
-				string friendlyMessage=Lan.g(this,"Error checking for updates.");
+				string friendlyMessage=Lan.G(this,"Error checking for updates.");
 				FriendlyException.Show(friendlyMessage,ex);
 				textConnectionMessage.Text=friendlyMessage;
 				return;
@@ -151,10 +151,10 @@ namespace OpenDental {
 				&& string.IsNullOrEmpty(_buildAvailable) 
 				&& string.IsNullOrEmpty(_alphaAvailable))
 			{
-				textConnectionMessage.Text+=Lan.g(this,"  There are no downloads available.");
+				textConnectionMessage.Text+=Lan.G(this,"  There are no downloads available.");
 			}
 			else {
-				textConnectionMessage.Text+=Lan.g(this,"  The following downloads are available.\r\n"
+				textConnectionMessage.Text+=Lan.G(this,"  The following downloads are available.\r\n"
 					+"Be sure to stop the program on all other computers in the office before installing.");
 			}
 		}
@@ -375,7 +375,7 @@ namespace OpenDental {
 				Process.Start(fileName);
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"There was a problem launching")+" "+fileName,ex);
+				FriendlyException.Show(Lan.G(this,"There was a problem launching")+" "+fileName,ex);
 			}
 		}
 
@@ -421,7 +421,7 @@ namespace OpenDental {
 			textResult.Text="";
 			textResult2.Text="";
 			if(textUpdateCode.Text.Length==0) {
-				textResult.Text+=Lan.g(this,"Registration number not valid.");
+				textResult.Text+=Lan.G(this,"Registration number not valid.");
 				return;
 			}
 			string updateInfoMajor="";

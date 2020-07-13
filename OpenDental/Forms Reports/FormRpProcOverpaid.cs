@@ -317,17 +317,17 @@ namespace OpenDental {
 					RefreshReport();
 					gridMain.BeginUpdate();
 					if(gridMain.ListGridColumns.Count==0) {
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Patient"),_colWidthPatName,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Date"),_colWidthProcDate,HorizontalAlignment.Center,GridSortingStrategy.DateParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Code"),_colWidthProcCode,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Tth"),_colWidthProcTth,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Prov"),_colWidthProv,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Fee"),_colWidthFee,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Ins Paid"),_colWidthInsPay,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Write-off"),_colWidthWO,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Pt Paid"),_colWidthPtPaid,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Adjust"),_colWidthAdj,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Overpayment"),_colWidthOverpay,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient"),_colWidthPatName,GridSortingStrategy.StringCompare));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Date"),_colWidthProcDate,HorizontalAlignment.Center,GridSortingStrategy.DateParse));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Code"),_colWidthProcCode,GridSortingStrategy.StringCompare));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Tth"),_colWidthProcTth,GridSortingStrategy.StringCompare));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Prov"),_colWidthProv,GridSortingStrategy.StringCompare));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Fee"),_colWidthFee,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Ins Paid"),_colWidthInsPay,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Write-off"),_colWidthWO,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Pt Paid"),_colWidthPtPaid,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Adjust"),_colWidthAdj,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Overpayment"),_colWidthOverpay,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 					}
 					gridMain.ListGridRows.Clear();
 					GridRow row;
@@ -358,13 +358,13 @@ namespace OpenDental {
 				},
 				startingMessage: "Refreshing Grid...",
 				actionException: e => this.Invoke(() => {
-					FriendlyException.Show(Lan.g(this,"Error filling the Procedures Overpaid grid."),e);
+					FriendlyException.Show(Lan.G(this,"Error filling the Procedures Overpaid grid."),e);
 				})
 			);
 		}
 
 		private void FillProvs() {
-			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(Lan.g(this,"All"))); //tag = null
+			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(Lan.G(this,"All"))); //tag = null
 			foreach(Provider provCur in Providers.GetListReports()) {
 				comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(provCur.GetLongDesc(),provCur));
 			}
@@ -382,19 +382,19 @@ namespace OpenDental {
 					},
 					startingMessage: "Refreshing the Grid Data...",
 					actionException: e => this.Invoke(() => {
-						FriendlyException.Show(Lan.g(this,"Error filling the Procedures Overpaid grid."),e);
+						FriendlyException.Show(Lan.G(this,"Error filling the Procedures Overpaid grid."),e);
 					})
 				);
 			}
-			string subTitleProviders=Lan.g(this,"All Providers");
+			string subTitleProviders=Lan.G(this,"All Providers");
 			if(_listSelectedProvNums.Count>0) {
-				subTitleProviders=Lan.g(this,"For Providers:")+" "+string.Join(",",_listSelectedProvNums.Select(x => Providers.GetFormalName(x)));
+				subTitleProviders=Lan.G(this,"For Providers:")+" "+string.Join(",",_listSelectedProvNums.Select(x => Providers.GetFormalName(x)));
 			}
 			string subtitleClinics=comboBoxMultiClinics.GetStringSelectedClinics();
 			//This report will never show progress for printing.  This is because the report is being rebuilt whenever the grid is refreshed.
 			_myReport=new ReportComplex(true,false,false);
-			_myReport.ReportName=Lan.g(this,"Overpaid Procedures");
-			_myReport.AddTitle("Title",Lan.g(this,"Overpaid Procedures"));
+			_myReport.ReportName=Lan.G(this,"Overpaid Procedures");
+			_myReport.AddTitle("Title",Lan.G(this,"Overpaid Procedures"));
 			_myReport.AddSubTitle("Practice Name",PrefC.GetString(PrefName.PracticeTitle));
 			if(_myReportDateFrom==_myReportDateTo) {
 				_myReport.AddSubTitle("Report Dates",_myReportDateFrom.ToShortDateString());

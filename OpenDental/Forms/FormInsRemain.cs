@@ -30,17 +30,17 @@ namespace OpenDental {
 			GridColumn col;
 			gridRemainTimeUnits.BeginUpdate();
 			gridRemainTimeUnits.ListGridColumns.Clear();
-			col=new GridColumn(Lan.g(gridRemainTimeUnits.TranslationName,"Carrier"),60){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Carrier"),60){ IsWidthDynamic=true };
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridRemainTimeUnits.TranslationName,"Subscriber"),60){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Subscriber"),60){ IsWidthDynamic=true };
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridRemainTimeUnits.TranslationName,"Category"),60){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Category"),60){ IsWidthDynamic=true };
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridRemainTimeUnits.TranslationName,"Qty"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Qty"),60,HorizontalAlignment.Center);
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridRemainTimeUnits.TranslationName,"Used"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Used"),60,HorizontalAlignment.Center);
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridRemainTimeUnits.TranslationName,"Remaining"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Remaining"),60,HorizontalAlignment.Center);
 			gridRemainTimeUnits.ListGridColumns.Add(col);
 			gridRemainTimeUnits.EndUpdate();
 		}

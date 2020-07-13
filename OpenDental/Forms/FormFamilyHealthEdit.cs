@@ -20,7 +20,7 @@ namespace OpenDental {
 		private void FormFamilyHealthEdit_Load(object sender,EventArgs e) {
 			string[] familyRelationships=Enum.GetNames(typeof(FamilyRelationship));
 			for(int i=0;i<familyRelationships.Length;i++) {
-				listRelationship.Items.Add(Lan.g("enumFamilyRelationship",familyRelationships[i]));
+				listRelationship.Items.Add(Lan.G("enumFamilyRelationship",familyRelationships[i]));
 			}
 			listRelationship.SelectedIndex=(int)FamilyHealthCur.Relationship;
 			if(FamilyHealthCur.IsNew) {

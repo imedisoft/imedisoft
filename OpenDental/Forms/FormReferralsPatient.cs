@@ -228,7 +228,7 @@ namespace OpenDental{
 				butOK.Visible=true;
 			}
 			if(ProcNum!=0) {
-				Text=Lan.g(this,"Referrals");
+				Text=Lan.G(this,"Referrals");
 				butAddFrom.Visible=false;
 				butAddCustom.Visible=false;
 			}
@@ -251,21 +251,21 @@ namespace OpenDental{
 			string referralDescript=DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation)
 				.FirstOrDefault(x => x.InternalName=="Referrals")?.Description;
 			if(string.IsNullOrWhiteSpace(referralDescript)) {//either not displaying the Referral field or no description entered, default to 'Referral (other)'
-				referralDescript=Lan.g(this,"Referral (other)");
+				referralDescript=Lan.G(this,"Referral (other)");
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableRefList","Referral Type"),85));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableRefList","Name"),120));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableRefList","Date"),65));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableRefList","Status"),70));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableRefList","Proc"),120));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableRefList","Note"),170));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableRefList","Email"),190));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Referral Type"),85));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Name"),120));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Date"),65));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Status"),70));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Proc"),120));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Note"),170));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Email"),190));
 			gridMain.ListGridRows.Clear();
 			bool hasInvalidRef=false;
 			GridRow row;
-			List<string> listRefTypeNames=new List<string>() {Lan.g(this,"To"),Lan.g(this,"From"),referralDescript };
+			List<string> listRefTypeNames=new List<string>() {Lan.G(this,"To"),Lan.G(this,"From"),referralDescript };
 			for(int i=0;i<RefAttachList.Count;i++) {
 				RefAttach refAttachCur=RefAttachList[i];
 				if(ProcNum != 0 && !checkShowAll.Checked
@@ -282,7 +282,7 @@ namespace OpenDental{
 				else {
 					row.Cells.Add(refAttachCur.RefDate.ToShortDateString());
 				}
-				row.Cells.Add(Lan.g("enumReferralToStatus",refAttachCur.RefToStatus.ToString()));
+				row.Cells.Add(Lan.G("enumReferralToStatus",refAttachCur.RefToStatus.ToString()));
 				if(refAttachCur.ProcNum==0) {
 					row.Cells.Add("");
 				}

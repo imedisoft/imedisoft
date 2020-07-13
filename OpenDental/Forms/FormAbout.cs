@@ -265,14 +265,14 @@ namespace OpenDental{
 			if(softwareName!="Open Dental Software" && !Programs.GetCur(ProgramName.BencoPracticeManagement).Enabled) {
 				pictureOpenDental.Visible=false;
 			}
-			labelVersion.Text=Lan.g(this,"Version:")+" "+Application.ProductVersion;
+			labelVersion.Text=Lan.G(this,"Version:")+" "+Application.ProductVersion;
 			UpdateHistory updateHistory=UpdateHistories.GetForVersion(Application.ProductVersion);
 			if(updateHistory!=null) {
-				labelVersion.Text+="  "+Lan.g(this,"Since:")+" "+updateHistory.DateTimeUpdated.ToShortDateString();
+				labelVersion.Text+="  "+Lan.G(this,"Since:")+" "+updateHistory.DateTimeUpdated.ToShortDateString();
 			}
 			//keeps the trailing year up to date
-			labelCopyright.Text=softwareName+" "+Lan.g(this,"Copyright 2003-")+DateTime.Now.ToString("yyyy")+", Jordan Sparks, D.M.D.";
-			labelMySQLCopyright.Text=Lan.g(this,"MySQL - Copyright 1995-")+DateTime.Now.ToString("yyyy")+Lan.g(this,", www.mysql.com");
+			labelCopyright.Text=softwareName+" "+Lan.G(this,"Copyright 2003-")+DateTime.Now.ToString("yyyy")+", Jordan Sparks, D.M.D.";
+			labelMySQLCopyright.Text=Lan.G(this,"MySQL - Copyright 1995-")+DateTime.Now.ToString("yyyy")+Lan.G(this,", www.mysql.com");
 			//Database Server----------------------------------------------------------		
 			List<string> serviceList=Computers.GetServiceInfo();
 			labelName.Text+=serviceList[2].ToString();//MiscData.GetODServer();//server name

@@ -39,9 +39,9 @@ namespace OpenDental {
 				return;
 			}
 			if(!_listSetupClasses[_indexSetupClasses].SetupControl.IsDone) {
-				string strMsg = Lan.g("FormSetupWizard","You have not finished setting this section up yet.") 
+				string strMsg = Lan.G("FormSetupWizard","You have not finished setting this section up yet.") 
 					+ "\r\n" + _listSetupClasses[_indexSetupClasses].SetupControl.StrIncomplete;
-				strMsg+="\r\n" + Lan.g("FormSetupWizard","Click 'Skip' if you do not wish to finish setting this section up at this time.");
+				strMsg+="\r\n" + Lan.G("FormSetupWizard","Click 'Skip' if you do not wish to finish setting this section up at this time.");
 				MessageBox.Show(strMsg);
 				return;
 			}
@@ -152,7 +152,7 @@ namespace OpenDental {
 			else {
 				butBack.Enabled=true;
 			}
-			labelTitle.Text=Lan.g("FormSetupWizard", _listSetupClasses[_indexSetupClasses].Name + " Setup");
+			labelTitle.Text=Lan.G("FormSetupWizard", _listSetupClasses[_indexSetupClasses].Name + " Setup");
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

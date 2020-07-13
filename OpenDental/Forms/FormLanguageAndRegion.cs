@@ -32,7 +32,7 @@ namespace OpenDental {
 				comboLanguageAndRegion.Visible=false;
 				labelNewLAR.Visible=false;
 				butOK.Enabled=false;
-				butCancel.Text=Lan.g(this,"&Close");
+				butCancel.Text=Lan.G(this,"&Close");
 				checkNoShow.Enabled=false;
 			}
 		}

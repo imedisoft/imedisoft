@@ -356,9 +356,9 @@ namespace OpenDental {
 
 		private void butAddProc_Click(object sender,EventArgs e) {
 			List<GridColumn> listGridCols=new List<GridColumn>() {
-				new GridColumn(Lan.g(this,"Code"),70),
-				new GridColumn(Lan.g(this,"Abbreviation"),90,HorizontalAlignment.Center),
-				new GridColumn(Lan.g(this,"Description"),100,HorizontalAlignment.Right){ IsWidthDynamic=true }
+				new GridColumn(Lan.G(this,"Code"),70),
+				new GridColumn(Lan.G(this,"Abbreviation"),90,HorizontalAlignment.Center),
+				new GridColumn(Lan.G(this,"Description"),100,HorizontalAlignment.Right){ IsWidthDynamic=true }
 			};
 			List<ProcedureCode> listMouthProcCodes=ProcedureCodes.GetProcCodesByTreatmentArea(false,TreatmentArea.Mouth,TreatmentArea.None)
 				.OrderBy(x => x.ProcCode).ToList();

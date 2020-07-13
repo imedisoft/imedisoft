@@ -803,9 +803,9 @@ namespace OpenDental{
 		private void butClaimPay_Click(object sender,EventArgs e) {
 			if(!Security.IsAuthorized(Permissions.InsPayCreate,true) && !Security.IsAuthorized(Permissions.InsPayEdit,true)) {
 				//Custom message for multiple permissions.
-				MessageBox.Show(Lan.g(this,"Not authorized")+".\r\n"
-					+Lan.g(this,"A user with the SecurityAdmin permission must grant you access for")+":\r\n"
-					+Lan.g(this,"Insurance Payment Create or Insurance Payment Edit"));
+				MessageBox.Show(Lan.G(this,"Not authorized")+".\r\n"
+					+Lan.G(this,"A user with the SecurityAdmin permission must grant you access for")+":\r\n"
+					+Lan.G(this,"Insurance Payment Create or Insurance Payment Edit"));
 				return;
 			}
 			FormClaimPayList FormCPL=new FormClaimPayList();
@@ -1106,9 +1106,9 @@ namespace OpenDental{
 		private void FillEmps(){
 			gridEmp.BeginUpdate();
 			gridEmp.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableEmpClock","Employee"),180);
+			GridColumn col=new GridColumn(Lan.G("TableEmpClock","Employee"),180);
 			gridEmp.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableEmpClock","Status"),104);
+			col=new GridColumn(Lan.G("TableEmpClock","Status"),104);
 			gridEmp.ListGridColumns.Add(col);
 			gridEmp.ListGridRows.Clear();
 			UI.GridRow row;
@@ -1139,7 +1139,7 @@ namespace OpenDental{
 					}
 				}
 				_listShownTimeClockStatuses.Add(timeClockStatus);
-				listStatus.Items.Add(Lan.g("enumTimeClockStatus",statusDescript));
+				listStatus.Items.Add(Lan.G("enumTimeClockStatus",statusDescript));
 			}
 			for(int i=0;i<_listEmployees.Count;i++) {
 				if(_listEmployees[i].EmployeeNum==Security.CurUser.EmployeeNum) {
@@ -1258,7 +1258,7 @@ namespace OpenDental{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			EmployeeCur.ClockStatus=Lan.g(this,"Working");
+			EmployeeCur.ClockStatus=Lan.G(this,"Working");
 			Employees.Update(EmployeeCur);
 			ModuleSelected(PatCurNum);
 			if(!PayPeriods.HasPayPeriodForDate(DateTime.Today)) {
@@ -1290,7 +1290,7 @@ namespace OpenDental{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			EmployeeCur.ClockStatus=Lan.g("enumTimeClockStatus",(_listShownTimeClockStatuses[listStatus.SelectedIndex]).GetDescription());
+			EmployeeCur.ClockStatus=Lan.G("enumTimeClockStatus",(_listShownTimeClockStatuses[listStatus.SelectedIndex]).GetDescription());
 			Employees.Update(EmployeeCur);
 			ModuleSelected(PatCurNum);
 		}
@@ -1388,7 +1388,7 @@ namespace OpenDental{
 				listMessages.Items.Add(sigElementDefMessages[i].SigText);
 			}
 			comboViewUser.Items.Clear();
-			comboViewUser.Items.Add(Lan.g(this,"all"));
+			comboViewUser.Items.Add(Lan.G(this,"all"));
 			for(int i=0;i<sigElementDefUser.Length;i++) {
 				comboViewUser.Items.Add(sigElementDefUser[i].SigText);
 			}
@@ -1409,16 +1409,16 @@ namespace OpenDental{
 			List<long> listSelectedSigMessageNums=gridMessages.SelectedTags<SigMessage>().Select(x => x.SigMessageNum).ToList();
 			gridMessages.BeginUpdate();
 			gridMessages.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableTextMessages","To"),60);
+			GridColumn col=new GridColumn(Lan.G("TableTextMessages","To"),60);
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTextMessages","From"),60);
+			col=new GridColumn(Lan.G("TableTextMessages","From"),60);
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTextMessages","Sent"),63);
+			col=new GridColumn(Lan.G("TableTextMessages","Sent"),63);
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTextMessages","Ack'd"),63);
+			col=new GridColumn(Lan.G("TableTextMessages","Ack'd"),63);
 			col.TextAlign=HorizontalAlignment.Center;
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTextMessages","Text"),274);
+			col=new GridColumn(Lan.G("TableTextMessages","Text"),274);
 			gridMessages.ListGridColumns.Add(col);
 			gridMessages.ListGridRows.Clear();
 			GridRow row;
@@ -1626,7 +1626,7 @@ namespace OpenDental{
 				FillMessages();
 			}
 			catch{
-				errorProvider1.SetError(textDays,Lan.g(this,"Invalid number.  Usually 1 or 2."));
+				errorProvider1.SetError(textDays,Lan.G(this,"Invalid number.  Usually 1 or 2."));
 			}
 		}
 

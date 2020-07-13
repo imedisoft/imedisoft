@@ -21,13 +21,13 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Scheduled Action"),120);
+			col=new GridColumn(Lan.G(this,"Scheduled Action"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Frequency to Run"),150);
+			col=new GridColumn(Lan.G(this,"Frequency to Run"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Time To Run"),75);
+			col=new GridColumn(Lan.G(this,"Time To Run"),75);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Time of Last Run"),155);
+			col=new GridColumn(Lan.G(this,"Time of Last Run"),155);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

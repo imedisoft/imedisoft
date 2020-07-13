@@ -60,7 +60,7 @@ namespace OpenDental {
 			if(ListRulesNonDefault.Count==0) {
 				List<string> listErrors=Controls.OfType<UserControlReminderAgg>().First().ValidateTemplates();
 				if(listErrors.Count!=0) {
-					MessageBox.Show(Lan.g(this,"You must fix the following errors before continuing.")+"\r\n\r\n-"+string.Join("\r\n-",listErrors));
+					MessageBox.Show(Lan.G(this,"You must fix the following errors before continuing.")+"\r\n\r\n-"+string.Join("\r\n-",listErrors));
 					return;
 				}
 				Controls.OfType<UserControlReminderAgg>().First().SaveControlTemplates();
@@ -70,7 +70,7 @@ namespace OpenDental {
 					UserControlReminderAgg aggControl=(UserControlReminderAgg)page.Controls[0];
 					List<string> listErrors=aggControl.ValidateTemplates();
 					if(listErrors.Count!=0) {
-						MessageBox.Show(Lan.g(this,"You must fix the following errors before continuing.")+"\r\n\r\n-"+string.Join("\r\n-",listErrors));
+						MessageBox.Show(Lan.G(this,"You must fix the following errors before continuing.")+"\r\n\r\n-"+string.Join("\r\n-",listErrors));
 						return;
 					}
 					aggControl.SaveControlTemplates();

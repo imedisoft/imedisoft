@@ -113,7 +113,7 @@ namespace OpenDental {
 			List<string[]> listMedLines=SplitLines(medicationData);
 			foreach(string[] medLine in listMedLines) {
 				if(medLine.Length!=4) {
-					throw new ODException(Lan.g("Medications","Invalid formatting detected in file."));
+					throw new ODException(Lan.G("Medications","Invalid formatting detected in file."));
 				}
 				Medication medication=new Medication();
 				medication.MedName=PIn.String(medLine[0]).Trim();//MedName
@@ -151,7 +151,7 @@ namespace OpenDental {
 							continue;
 						}
 						else {//Character outside of an encapsulated field.  Invalid formatting..
-							throw new Exception(Lan.g("Medications","Invalid formatting in Medication file."));
+							throw new Exception(Lan.G("Medications","Invalid formatting in Medication file."));
 						}
 					}
 					if(c=='"' && (field.Length==0 || field[field.Length-1]!='\\')) {//End of a field.

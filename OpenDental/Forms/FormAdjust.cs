@@ -80,7 +80,7 @@ namespace OpenDental {
 				}
 				//Do not let the user change the adjustment type if the current adjustment is a "discount plan" adjustment type.
 				if(Defs.GetValue(DefCat.AdjTypes,_adjustmentCur.AdjType)=="dp") {
-					labelAdditions.Text=Lan.g(this,"Discount Plan")+": "+Defs.GetName(DefCat.AdjTypes,_adjustmentCur.AdjType);
+					labelAdditions.Text=Lan.G(this,"Discount Plan")+": "+Defs.GetName(DefCat.AdjTypes,_adjustmentCur.AdjType);
 					labelSubtractions.Visible=false;
 					listTypePos.Visible=false;
 					listTypeNeg.Visible=false;
@@ -289,7 +289,7 @@ namespace OpenDental {
 				return;
 			}
 			if(textAmount.Text==""){
-				MessageBox.Show(Lan.g(this,"Please enter an amount."));	
+				MessageBox.Show(Lan.G(this,"Please enter an amount."));	
 				return;
 			}
 			if(!isDiscountPlanAdj && listTypeNeg.SelectedIndex==-1 && listTypePos.SelectedIndex==-1){

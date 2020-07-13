@@ -41,11 +41,11 @@ namespace OpenDental {
 			_listPatients=Patients.GetMultPats(listPatNums);//Can contain 0.
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Date"),100);
+			GridColumn col=new GridColumn(Lan.G(this,"Date"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Patient"),100);
+			col=new GridColumn(Lan.G(this,"Patient"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Response"),100);
+			col=new GridColumn(Lan.G(this,"Response"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

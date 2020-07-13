@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		private void FormHcpcs_Load(object sender,EventArgs e) {
 			if(IsSelectionMode) {
-				butClose.Text=Lan.g(this,"Cancel");
+				butClose.Text=Lan.G(this,"Cancel");
 			}
 			else {
 				butOK.Visible=false;

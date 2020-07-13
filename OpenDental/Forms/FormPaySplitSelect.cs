@@ -90,20 +90,20 @@ namespace OpenDental {
 		private void FillGrid(bool isShowAll){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableUnallocatedPaysplits","Date"),70);
+			GridColumn col=new GridColumn(Lan.G("TableUnallocatedPaysplits","Date"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableUnallocatedPaysplits","Patient Name"),120);
+			col=new GridColumn(Lan.G("TableUnallocatedPaysplits","Patient Name"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableUnallocatedPaysplits","Prov"),120);
+			col=new GridColumn(Lan.G("TableUnallocatedPaysplits","Prov"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableUnallocatedPaysplits","UnearnedType"),150);
+			col=new GridColumn(Lan.G("TableUnallocatedPaysplits","UnearnedType"),150);
 			gridMain.ListGridColumns.Add(col);
 			if(isShowAll) {
 				//Original because we don't know how much has been allocated
-				col=new GridColumn(Lan.g("TableUnallocatedPaysplits","Amt Original"),60,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G("TableUnallocatedPaysplits","Amt Original"),60,HorizontalAlignment.Right);
 			}
 			else {
-				col=new GridColumn(Lan.g("TableUnallocatedPaysplits","Amt End"),60,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G("TableUnallocatedPaysplits","Amt End"),60,HorizontalAlignment.Right);
 			}
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();

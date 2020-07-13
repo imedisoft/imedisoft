@@ -199,7 +199,7 @@ namespace OpenDental{
 		///<summary>Causes the toolbar to be laid out again.</summary>
 		public void LayoutToolBar(){
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Print"),0,"","Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print"),0,"","Print"));
 //ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Save PDF"),4,"Save as Adobe PDF","PDF"));
 //ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Export"),3,"","Export"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
@@ -208,13 +208,13 @@ namespace OpenDental{
 			//button.Style=ODToolBarButtonStyle.Label;
 			//ToolBarMain.Buttons.Add(button);
 			//ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Go Forward One Page","Fwd"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Zoom In"),6,"","Zoom"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Zoom In"),6,"","Zoom"));
 			//ODToolBarButton button=new ODToolBarButton("Scroll Mode",-1,"","");
 			//button.Style=ODToolBarButtonStyle.DropDownButton;
 			//button.DropDownMenu=menuScrollMode;
 			//ToolBarMain.Buttons.Add(button);
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Close"),-1,"Close This Window","Close"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Close"),-1,"Close This Window","Close"));
 			//ToolBarMain.Invalidate();
 		}
 
@@ -268,7 +268,7 @@ namespace OpenDental{
 				}
 			}
 			catch{
-				MessageBox.Show(Lan.g(this,"Printer not available"));
+				MessageBox.Show(Lan.G(this,"Printer not available"));
 			}
 		}
 
@@ -355,13 +355,13 @@ namespace OpenDental{
 			if(viewer.ZoomMode==fyiReporting.RdlViewer.ZoomEnum.FitPage){
 				//then zoom in
 				viewer.ZoomMode=fyiReporting.RdlViewer.ZoomEnum.FitWidth;
-				ToolBarMain.Buttons["Zoom"].Text=Lan.g(this,"Zoom Out");
+				ToolBarMain.Buttons["Zoom"].Text=Lan.G(this,"Zoom Out");
 				ToolBarMain.Buttons["Zoom"].ImageIndex=6;
 			}
 			else{
 				//zoom out
 				viewer.ZoomMode=fyiReporting.RdlViewer.ZoomEnum.FitPage;
-				ToolBarMain.Buttons["Zoom"].Text=Lan.g(this,"Zoom In");
+				ToolBarMain.Buttons["Zoom"].Text=Lan.G(this,"Zoom In");
 				ToolBarMain.Buttons["Zoom"].ImageIndex=5;
 			}
 			ToolBarMain.Invalidate();

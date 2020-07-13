@@ -392,7 +392,7 @@ namespace OpenDental{
 
 		private void FormInsTemplates_Load(object sender, System.EventArgs e) {
 			if(!IsSelectMode){
-				butCancel.Text=Lan.g(this,"Close");
+				butCancel.Text=Lan.G(this,"Close");
 				butOK.Visible=false;
 			}
 			Program prog=Programs.GetCur(ProgramName.Trojan);
@@ -451,7 +451,7 @@ namespace OpenDental{
 			col=new GridColumn(Lans.g("TableInsurancePlans","Subs"),40);
 			gridMain.ListGridColumns.Add(col);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				col=new GridColumn(Lan.g("TableCarriers","CDAnet"),50);
+				col=new GridColumn(Lan.G("TableCarriers","CDAnet"),50);
 				gridMain.ListGridColumns.Add(col);
 			}
 			if(trojan){
@@ -561,7 +561,7 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedIndices.Length<2) {
-				MessageBox.Show(Lan.g(this,"Please select at least two items first."));
+				MessageBox.Show(Lan.G(this,"Please select at least two items first."));
 				return;
 			}
 			InsPlan[] listSelected=new InsPlan[gridMain.SelectedIndices.Length];
@@ -596,7 +596,7 @@ namespace OpenDental{
 				catch (ApplicationException ex){
 					MessageBox.Show(ex.Message);
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,0,
-						Lan.g(this,"InsPlan Combine delete validation failed.  Plan was not deleted."),
+						Lan.G(this,"InsPlan Combine delete validation failed.  Plan was not deleted."),
 						listSelected[i].PlanNum,listSelected[i].SecDateTEdit); //new plan, no date needed.
 					//Since we already deleted/changed all of the other dependencies, 
 					//we should continue in making the Securitylog entry and cleaning up. 
@@ -609,7 +609,7 @@ namespace OpenDental{
 				//}
 			}
 			if(didMerge) {
-				string logText=Lan.g(this,"Merged the following PlanNum(s): ")+string.Join(", ",listMergedPlanNums)+" "+Lan.g(this,"into")+" "+planToMergeTo.PlanNum;
+				string logText=Lan.G(this,"Merged the following PlanNum(s): ")+string.Join(", ",listMergedPlanNums)+" "+Lan.G(this,"into")+" "+planToMergeTo.PlanNum;
 				SecurityLogs.MakeLogEntry(Permissions.InsPlanMerge,0,logText);
 			}
 			FillGrid();
@@ -636,7 +636,7 @@ namespace OpenDental{
 				MessageBox.Show("All plans are in use.");
 				return;
 			}
-			string msgText=unusedCount.ToString()+" "+Lan.g(this,"plans found that are not in use by any subscribers.  Hide all of them?");
+			string msgText=unusedCount.ToString()+" "+Lan.G(this,"plans found that are not in use by any subscribers.  Hide all of them?");
 			if(MessageBox.Show(msgText,"",MessageBoxButtons.YesNo)!=DialogResult.Yes){
 				return;
 			}
@@ -648,11 +648,11 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//only visible if IsSelectMode
 			if(gridMain.SelectedIndices.Length==0){
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
 			if(gridMain.SelectedIndices.Length>1) {
-				MessageBox.Show(Lan.g(this,"Please select only one item first."));
+				MessageBox.Show(Lan.G(this,"Please select only one item first."));
 				return;
 			}
 			InsPlan plan=InsPlans.GetPlan(PIn.Long(table.Rows[gridMain.SelectedIndices[0]]["PlanNum"].ToString()),null);

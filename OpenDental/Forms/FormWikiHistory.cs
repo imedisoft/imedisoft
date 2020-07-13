@@ -23,7 +23,7 @@ namespace OpenDental {
 			//textContent.ReadOnly=true;
 			FillGrid();
 			LoadWikiPage(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag as WikiPageHist);//should never be null.
-			Text=Lan.g(this,"Wiki History")+" - "+PageTitleCur;
+			Text=Lan.G(this,"Wiki History")+" - "+PageTitleCur;
 			//Page is locked and user doesn't have permission
 			if(IsLocked && !Security.IsAuthorized(Permissions.WikiAdmin,true)) {
 				butRevert.Enabled=false;
@@ -61,7 +61,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				webBrowserWiki.DocumentText="";
-				MessageBox.Show(this,Lan.g(this,"This page is broken and cannot be viewed.  Error message:")+" "+ex.Message);
+				MessageBox.Show(this,Lan.G(this,"This page is broken and cannot be viewed.  Error message:")+" "+ex.Message);
 			}
 		}
 
@@ -69,11 +69,11 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"User"),70);
+			GridColumn col=new GridColumn(Lan.G(this,"User"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Del"),25);
+			col=new GridColumn(Lan.G(this,"Del"),25);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Saved"),80);
+			col=new GridColumn(Lan.G(this,"Saved"),80);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			List<WikiPageHist> listWikiPageHists=WikiPageHists.GetByTitleNoPageContent(PageTitleCur);

@@ -40,12 +40,12 @@ namespace OpenDental {
 		}
 
 		private void FormUpdateInProgress_Load(object sender,System.EventArgs e) {
-			string warningString=Lan.g("FormUpdateInProgress","An update is in progress on workstation")+": '"+_updateComputerName+"'.\r\n\r\n"
-			+Lan.g(this,"Not allowed to start")+" "+PrefC.GetString(PrefName.SoftwareName)+" "+Lan.g(this,"while an update is in progress.")+"\r\n"
-			+Lan.g(this,"Please wait and click 'Try Again'.");
+			string warningString=Lan.G("FormUpdateInProgress","An update is in progress on workstation")+": '"+_updateComputerName+"'.\r\n\r\n"
+			+Lan.G(this,"Not allowed to start")+" "+PrefC.GetString(PrefName.SoftwareName)+" "+Lan.G(this,"while an update is in progress.")+"\r\n"
+			+Lan.G(this,"Please wait and click 'Try Again'.");
 			try {
 				if(_listAdminCompNames.Contains(ComputerPrefs.LocalComputer.ComputerName)) {
-					warningString+="\r\n\r\n"+Lan.g(this,"If you are the person who started the update and you wish to override"
+					warningString+="\r\n\r\n"+Lan.G(this,"If you are the person who started the update and you wish to override"
 						+" this message because an update is not in progress, click 'Override'.");
 					butOverride.Visible=true;
 				}
@@ -58,7 +58,7 @@ namespace OpenDental {
 		private void butTryAgain_Click(object sender,EventArgs e) {
 			Prefs.RefreshCache();
 			if(PrefC.GetString(PrefName.UpdateInProgressOnComputerName)!="") {
-				MessageBox.Show(Lan.g(this,"Workstation")+": '"+_updateComputerName+"' "+Lan.g(this,"is still updating.  Please wait and 'Try Again'"));
+				MessageBox.Show(Lan.G(this,"Workstation")+": '"+_updateComputerName+"' "+Lan.G(this,"is still updating.  Please wait and 'Try Again'"));
 				return;
 			}
 			DialogResult=DialogResult.OK;

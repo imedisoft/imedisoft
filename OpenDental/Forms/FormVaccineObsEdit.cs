@@ -154,7 +154,7 @@ namespace OpenDental {
 				return;
 			}
 			if(textDateObserved.errorProvider1.GetError(textDateObserved)!="") {
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			if(!textMethodCode.ReadOnly && textMethodCode.Text.Trim()=="") {

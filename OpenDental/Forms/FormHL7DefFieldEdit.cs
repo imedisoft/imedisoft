@@ -36,7 +36,7 @@ namespace OpenDental {
 				comboDataType.Enabled=true;
 			}
 			for(int i=0;i<Enum.GetNames(typeof(DataTypeHL7)).Length;i++) {
-				comboDataType.Items.Add(Lan.g("enumDataTypeHL7",Enum.GetName(typeof(DataTypeHL7),i).ToString()));
+				comboDataType.Items.Add(Lan.G("enumDataTypeHL7",Enum.GetName(typeof(DataTypeHL7),i).ToString()));
 			}
 			if(HL7DefFieldCur!=null) {
 				comboDataType.SelectedIndex=(int)HL7DefFieldCur.DataType;

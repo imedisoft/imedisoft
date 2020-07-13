@@ -56,13 +56,13 @@ namespace OpenDental {
 
 		private void FillTransType() {
 			listBoxTransTypes.Items.Clear();
-			listBoxTransTypes.Items.Add(new ODBoxItem<AccountEntryType>(Lan.g(this,"Adjustment"),AccountEntryType.Adjustment));
+			listBoxTransTypes.Items.Add(new ODBoxItem<AccountEntryType>(Lan.G(this,"Adjustment"),AccountEntryType.Adjustment));
 			listBoxTransTypes.SetSelected(listBoxTransTypes.Items.Count-1,true);
-			listBoxTransTypes.Items.Add(new ODBoxItem<AccountEntryType>(Lan.g(this,"Claim Payment"),AccountEntryType.ClaimPayment));
+			listBoxTransTypes.Items.Add(new ODBoxItem<AccountEntryType>(Lan.G(this,"Claim Payment"),AccountEntryType.ClaimPayment));
 			listBoxTransTypes.SetSelected(listBoxTransTypes.Items.Count-1,true);
-			listBoxTransTypes.Items.Add(new ODBoxItem<AccountEntryType>(Lan.g(this,"Payment"),AccountEntryType.Payment));
+			listBoxTransTypes.Items.Add(new ODBoxItem<AccountEntryType>(Lan.G(this,"Payment"),AccountEntryType.Payment));
 			listBoxTransTypes.SetSelected(listBoxTransTypes.Items.Count-1,true);
-			listBoxTransTypes.Items.Add(new ODBoxItem<AccountEntryType>(Lan.g(this,"Procedure"),AccountEntryType.Procedure));
+			listBoxTransTypes.Items.Add(new ODBoxItem<AccountEntryType>(Lan.G(this,"Procedure"),AccountEntryType.Procedure));
 			listBoxTransTypes.SetSelected(listBoxTransTypes.Items.Count-1,true);
 			//add for payplans later
 		}

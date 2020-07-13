@@ -169,21 +169,21 @@ namespace OpenDental{
 			ListInternal=HL7Defs.GetDeepInternalList();
 			grid1.BeginUpdate();
 			grid1.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Description"),100);
+			GridColumn col=new GridColumn(Lan.G(this,"Description"),100);
 			grid1.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Mode"),40);
+			col=new GridColumn(Lan.G(this,"Mode"),40);
 			grid1.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"In Folder / Socket"),130);
+			col=new GridColumn(Lan.G(this,"In Folder / Socket"),130);
 			grid1.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Out Folder / Socket"),130);
+			col=new GridColumn(Lan.G(this,"Out Folder / Socket"),130);
 			grid1.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Enabled"),35);
+			col=new GridColumn(Lan.G(this,"Enabled"),35);
 			grid1.ListGridColumns.Add(col);
 			grid1.ListGridRows.Clear();
 			for(int i=0;i<ListInternal.Count;i++) {
 				GridRow row=new GridRow();
 				row.Cells.Add(ListInternal[i].Description);
-				row.Cells.Add(Lan.g("enumModeTxHL7",ListInternal[i].ModeTx.ToString()));
+				row.Cells.Add(Lan.G("enumModeTxHL7",ListInternal[i].ModeTx.ToString()));
 				if(ListInternal[i].ModeTx==ModeTxHL7.File) {
 					row.Cells.Add(ListInternal[i].IncomingFolder);
 					row.Cells.Add(ListInternal[i].OutgoingFolder);
@@ -208,21 +208,21 @@ namespace OpenDental{
 			ListCustom=HL7Defs.GetDeepCustomList();
 			grid2.BeginUpdate();
 			grid2.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Description"),100);
+			GridColumn col=new GridColumn(Lan.G(this,"Description"),100);
 			grid2.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Mode"),40);
+			col=new GridColumn(Lan.G(this,"Mode"),40);
 			grid2.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"In Folder / Socket"),130);
+			col=new GridColumn(Lan.G(this,"In Folder / Socket"),130);
 			grid2.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Out Folder / Socket"),130);
+			col=new GridColumn(Lan.G(this,"Out Folder / Socket"),130);
 			grid2.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Enabled"),35);
+			col=new GridColumn(Lan.G(this,"Enabled"),35);
 			grid2.ListGridColumns.Add(col);
 			grid2.ListGridRows.Clear();
 			for(int i=0;i<ListCustom.Count;i++) {
 				GridRow row=new GridRow();
 				row.Cells.Add(ListCustom[i].Description);
-				row.Cells.Add(Lan.g("enumModeTxHL7",ListCustom[i].ModeTx.ToString()));
+				row.Cells.Add(Lan.G("enumModeTxHL7",ListCustom[i].ModeTx.ToString()));
 				if(ListCustom[i].ModeTx==ModeTxHL7.File) {
 					row.Cells.Add(ListCustom[i].IncomingFolder);
 					row.Cells.Add(ListCustom[i].OutgoingFolder);

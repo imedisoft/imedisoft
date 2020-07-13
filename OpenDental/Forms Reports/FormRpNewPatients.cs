@@ -259,7 +259,7 @@ namespace OpenDental{
 			textDateFrom.Text=new DateTime(DateTime.Today.Year,DateTime.Today.Month,1).ToShortDateString();
 			textDateTo.Text=new DateTime(DateTime.Today.Year,DateTime.Today.Month
 				,DateTime.DaysInMonth(DateTime.Today.Year,DateTime.Today.Month)).ToShortDateString();
-			listProv.Items.Add(Lan.g(this,"all"));
+			listProv.Items.Add(Lan.G(this,"all"));
 			for(int i=0;i<_listProviders.Count;i++){
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
@@ -276,7 +276,7 @@ namespace OpenDental{
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			DateTime dateFrom=PIn.Date(textDateFrom.Text);
@@ -299,7 +299,7 @@ namespace OpenDental{
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			DateTime dateFrom=PIn.Date(textDateFrom.Text);
@@ -322,7 +322,7 @@ namespace OpenDental{
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			if(listProv.SelectedIndices.Count==0) {
@@ -352,7 +352,7 @@ namespace OpenDental{
 			if(listProv.SelectedIndices[0]==0) {//'All' is selected
 				for(int i=0;i<listProvs.Count;i++) {
 					listProvNums.Add(listProvs[i].ProvNum);
-					subtitleProvs=Lan.g(this,"All Providers");
+					subtitleProvs=Lan.G(this,"All Providers");
 				}
 			}
 			else {
@@ -369,25 +369,25 @@ namespace OpenDental{
 			Font fontBold=new Font("Tahoma",9,FontStyle.Bold);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.g(this,"New Patients");
-			report.AddTitle("Title",Lan.g(this,"New Patients"),fontTitle);
+			report.ReportName=Lan.G(this,"New Patients");
+			report.AddTitle("Title",Lan.G(this,"New Patients"),fontTitle);
 			report.AddSubTitle("Practice Title",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Providers",subtitleProvs,fontSubTitle);
 			report.AddSubTitle("Dates of Report",dateFrom.ToString("d")+" - "+dateTo.ToString("d"),fontSubTitle);
-			QueryObject query=report.AddQuery(table,Lan.g(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
-			query.AddColumn(Lan.g(this,"#"),40,FieldValueType.String,font);
-			query.AddColumn(Lan.g(this,"Date"),90,FieldValueType.Date,font);
-			query.AddColumn(Lan.g(this,"Last Name"),120,FieldValueType.String,font);
-			query.AddColumn(Lan.g(this,"First Name"),120,FieldValueType.String,font);
-			query.AddColumn(Lan.g(this,"Referral"),140,FieldValueType.String,font);
-			query.AddColumn(Lan.g(this,"Production Fee"),90,FieldValueType.Number,font);
+			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
+			query.AddColumn(Lan.G(this,"#"),40,FieldValueType.String,font);
+			query.AddColumn(Lan.G(this,"Date"),90,FieldValueType.Date,font);
+			query.AddColumn(Lan.G(this,"Last Name"),120,FieldValueType.String,font);
+			query.AddColumn(Lan.G(this,"First Name"),120,FieldValueType.String,font);
+			query.AddColumn(Lan.G(this,"Referral"),140,FieldValueType.String,font);
+			query.AddColumn(Lan.G(this,"Production Fee"),90,FieldValueType.Number,font);
 			if(checkAddress.Checked){
-				query.AddColumn(Lan.g(this,"Pref'd"),90,FieldValueType.String,font);
-				query.AddColumn(Lan.g(this,"Address"),100,FieldValueType.String,font);
-				query.AddColumn(Lan.g(this,"Add2"),80,FieldValueType.String,font);
-				query.AddColumn(Lan.g(this,"City"),100,FieldValueType.String,font); 
-				query.AddColumn(Lan.g(this,"ST"),30,FieldValueType.String,font);
-				query.AddColumn(Lan.g(this,"Zip"),55,FieldValueType.String,font);
+				query.AddColumn(Lan.G(this,"Pref'd"),90,FieldValueType.String,font);
+				query.AddColumn(Lan.G(this,"Address"),100,FieldValueType.String,font);
+				query.AddColumn(Lan.G(this,"Add2"),80,FieldValueType.String,font);
+				query.AddColumn(Lan.G(this,"City"),100,FieldValueType.String,font); 
+				query.AddColumn(Lan.G(this,"ST"),30,FieldValueType.String,font);
+				query.AddColumn(Lan.G(this,"Zip"),55,FieldValueType.String,font);
 			}
 			report.AddPageNum(font);
 			if(!report.SubmitQueries()) {

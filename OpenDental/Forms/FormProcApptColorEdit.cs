@@ -242,7 +242,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textCodeRange.Text.Trim()=="") {
-				MessageBox.Show(Lan.g(this,"Code range cannot be blank."));
+				MessageBox.Show(Lan.G(this,"Code range cannot be blank."));
 				return;
 			}
 			ProcApptColorCur.ColorText=panelColor.BackColor;

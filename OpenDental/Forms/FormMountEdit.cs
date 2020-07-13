@@ -237,7 +237,7 @@ namespace OpenDental{
 				return;
 			}
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			if(textDate.Text=="") {

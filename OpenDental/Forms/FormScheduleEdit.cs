@@ -211,7 +211,7 @@ namespace OpenDental{
 			_isHolidayOrNote=(SchedCur.StartTime==TimeSpan.Zero && SchedCur.StopTime==TimeSpan.Zero);
 			if(PrefC.HasClinicsEnabled) {
 				if(ClinicNum==0) {
-					Text+=" - "+Lan.g(this,"Headquarters");
+					Text+=" - "+Lan.G(this,"Headquarters");
 				}
 				else {
 					string abbr=Clinics.GetAbbr(ClinicNum);
@@ -248,7 +248,7 @@ namespace OpenDental{
 			}
 			comboStart.Text=SchedCur.StartTime.ToShortTimeString();
 			comboStop.Text=SchedCur.StopTime.ToShortTimeString();
-			listOps.Items.Add(Lan.g(this,"not specified"));
+			listOps.Items.Add(Lan.G(this,"not specified"));
 			//filter list if using clinics and if a clinic filter was passed in to only ops assigned to the specified clinic, otherwise all non-hidden ops
 			_listOps=Operatories.GetDeepCopy(true);
 			if(PrefC.HasClinicsEnabled && ClinicNum>0) {
@@ -304,7 +304,7 @@ namespace OpenDental{
 				else {//Go see if there is going to be overlapping issues with this new schedule.
 					listProvsOverlap=Schedules.GetOverlappingSchedProvNums(ListProvNums,SchedCur,listProvSchedsOnly,listSelectedOps);
 				}
-				if(listProvsOverlap.Count>0 && MessageBox.Show(Lan.g(this,"Overlapping provider schedules detected, would you like to continue anyway?")+"\r\n"+Lan.g(this,"Providers affected")+":\r\n  "
+				if(listProvsOverlap.Count>0 && MessageBox.Show(Lan.G(this,"Overlapping provider schedules detected, would you like to continue anyway?")+"\r\n"+Lan.G(this,"Providers affected")+":\r\n  "
 					+string.Join("\r\n  ",listProvsOverlap.Select(x=>Providers.GetLongDesc(x))),"",MessageBoxButtons.YesNo)!=DialogResult.Yes) 
 				{ 
 					return;

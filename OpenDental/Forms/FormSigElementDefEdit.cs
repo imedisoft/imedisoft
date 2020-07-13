@@ -336,9 +336,9 @@ namespace OpenDental{
 
 		private void FormSigElementDefEdit_Load(object sender,EventArgs e) {
 			listType.Items.Clear();
-			listType.Items.Add(Lan.g("enumSignalElementType","User"));
-			listType.Items.Add(Lan.g("enumSignalElementType","Extra"));
-			listType.Items.Add(Lan.g("enumSignalElementType","Message"));
+			listType.Items.Add(Lan.G("enumSignalElementType","User"));
+			listType.Items.Add(Lan.G("enumSignalElementType","Extra"));
+			listType.Items.Add(Lan.G("enumSignalElementType","Message"));
 			listType.SelectedIndex=(int)ElementCur.SigElementType;
 			textSigText.Text=ElementCur.SigText;
 			SetSoundButtons();

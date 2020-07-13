@@ -184,7 +184,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			_pagesPrinted=0;
 			_headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Printed patient list from EHR"));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Printed patient list from EHR"));
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {

@@ -532,7 +532,7 @@ namespace OpenDental{
 			textMonths.Text=RecallCur.RecallInterval.Months.ToString();
 			textWeeks.Text=RecallCur.RecallInterval.Weeks.ToString();
 			textDays.Text=RecallCur.RecallInterval.Days.ToString();
-			comboStatus.Items.Add(Lan.g(this,"None"));
+			comboStatus.Items.Add(Lan.G(this,"None"));
 			comboStatus.SelectedIndex=0;
 			_listRecallUnschedStatusDefs=Defs.GetDefsForCategory(DefCat.RecallUnschedStatus,true);
 			for(int i=0;i<_listRecallUnschedStatusDefs.Count;i++){

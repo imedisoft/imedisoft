@@ -112,8 +112,8 @@ namespace OpenDental {
 				//This correctly reports the text size for how we are drawing the text.
 				sizeText=TextRenderer.MeasureText(textFieldValue.Text,font);
 			}
-			labelTextW.Text=Lan.g(this,"TextW:")+" "+sizeText.Width.ToString();
-			labelTextH.Text=Lan.g(this,"TextH:")+" "+sizeText.Height.ToString();
+			labelTextW.Text=Lan.G(this,"TextW:")+" "+sizeText.Width.ToString();
+			labelTextH.Text=Lan.G(this,"TextH:")+" "+sizeText.Height.ToString();
 		}
 
 		private void butExamSheet_Click(object sender,EventArgs e) {

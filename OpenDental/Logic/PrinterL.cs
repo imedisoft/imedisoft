@@ -258,9 +258,9 @@ namespace OpenDental {
 
 		///<summary>Returns a translated error code description.</summary>
 		public static string GetErrorStringFromCode(PrintoutErrorCode code) {
-			string message=Lan.g(nameof(PrinterL),code.GetDescription());
+			string message=Lan.G(nameof(PrinterL),code.GetDescription());
 			if(code!=PrintoutErrorCode.Success) {
-				message+="\r\n"+Lan.g(nameof(PrinterL),"If you do have a printer installed, restarting the workstation may solve the problem.");
+				message+="\r\n"+Lan.G(nameof(PrinterL),"If you do have a printer installed, restarting the workstation may solve the problem.");
 			}
 			return message;
 		}
@@ -274,7 +274,7 @@ namespace OpenDental {
 		///If using msgOverride, must be translated before passing in.
 		///Optionally pass an exception to include the exception.Message text at the end of the pop up.</summary>
 		private static void ShowError(string msgOverride="",Exception ex=null) {
-			string msg=Lan.g(nameof(PrinterL),"There was an error while trying to print.");
+			string msg=Lan.G(nameof(PrinterL),"There was an error while trying to print.");
 			if(!string.IsNullOrEmpty(msgOverride)) {
 				msg=msgOverride;
 			}

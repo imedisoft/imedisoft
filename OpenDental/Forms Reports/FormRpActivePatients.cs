@@ -37,7 +37,7 @@ namespace OpenDental {
 			else {
 				_listClinics=Clinics.GetForUserod(Security.CurUser);
 				if(!Security.CurUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.g(this,"Unassigned"));
+					listClin.Items.Add(Lan.G(this,"Unassigned"));
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -159,7 +159,7 @@ namespace OpenDental {
 			string subtitleClinics="";
 			string subtitleBilling="";
 			if(checkAllProv.Checked) {
-				subtitleProvs=Lan.g(this,"All Providers");
+				subtitleProvs=Lan.G(this,"All Providers");
 			}
 			else {
 				for(int i=0;i<listProv.SelectedIndices.Count;i++) {
@@ -171,7 +171,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClin.Checked) {
-					subtitleClinics=Lan.g(this,"All Clinics");
+					subtitleClinics=Lan.G(this,"All Clinics");
 				}
 				else {
 					for(int i=0;i<listClin.SelectedIndices.Count;i++) {
@@ -183,7 +183,7 @@ namespace OpenDental {
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								subtitleClinics+=Lan.g(this,"Unassigned");
+								subtitleClinics+=Lan.G(this,"Unassigned");
 							}
 							else {
 								subtitleClinics+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -193,7 +193,7 @@ namespace OpenDental {
 				}
 			}
 			if(checkAllBilling.Checked) {
-				subtitleBilling=Lan.g(this,"All Billing Types");
+				subtitleBilling=Lan.G(this,"All Billing Types");
 			}
 			else {
 				for(int i=0;i<listBillingTypes.SelectedIndices.Count;i++) {
@@ -203,8 +203,8 @@ namespace OpenDental {
 					subtitleBilling+=Defs.GetValue(DefCat.BillingTypes,_listBillingTypeDefs[listBillingTypes.SelectedIndices[i]].DefNum);
 				}
 			}
-			report.ReportName=Lan.g(this,"Active Patients");
-			report.AddTitle("Title",Lan.g(this,"Active Patients"));
+			report.ReportName=Lan.G(this,"Active Patients");
+			report.AddTitle("Title",Lan.G(this,"Active Patients"));
 			report.AddSubTitle("Date",dateStart.SelectionStart.ToShortDateString()+" - "+dateEnd.SelectionStart.ToShortDateString());
 			report.AddSubTitle("Providers",subtitleProvs);
 			if(PrefC.HasClinicsEnabled) {

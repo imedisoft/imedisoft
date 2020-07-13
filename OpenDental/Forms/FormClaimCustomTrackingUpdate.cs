@@ -63,7 +63,7 @@ namespace OpenDental {
 			Def[] arrayErrorCodeDefs = Defs.GetDefsForCategory(DefCat.ClaimErrorCode,true).ToArray();
 			comboErrorCode.Items.Clear();
 			//Add "none" option.
-			comboErrorCode.Items.Add(new ODBoxItem<Def>(Lan.g(this,"None"),new Def() {ItemValue="",DefNum=0}));
+			comboErrorCode.Items.Add(new ODBoxItem<Def>(Lan.G(this,"None"),new Def() {ItemValue="",DefNum=0}));
 			comboErrorCode.SelectedIndex=0;
 			if(arrayErrorCodeDefs.Length==0) {
 				//if the list is empty, then disable the comboBox.

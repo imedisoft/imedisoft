@@ -57,10 +57,10 @@ namespace OpenDental {
 					_listProcs[j].Discount=_listProcs[j].ProcFee*(percent/100);
 				}
 				if(_listProcs[j].Discount!=_oldListProcs[j].Discount) {//Discount was changed
-					string message=Lan.g(this,"Discount created or changed from Treat Plan module for procedure")
-						+": "+ProcedureCodes.GetProcCode(_listProcs[j].CodeNum).ProcCode+"  "+Lan.g(this,"Dated")
-						+": "+_listProcs[j].ProcDate.ToShortDateString()+"  "+Lan.g(this,"With a Fee of")+": "+_listProcs[j].ProcFee.ToString("c")+".  "+Lan.g(this,"Attributed a")+" "+percent
-					+" "+Lan.g(this,"percent discount, changing the discount value from")+" "+_oldListProcs[j].Discount.ToString("c")+" "+Lan.g(this,"to")+" "+_listProcs[j].Discount.ToString("c");
+					string message=Lan.G(this,"Discount created or changed from Treat Plan module for procedure")
+						+": "+ProcedureCodes.GetProcCode(_listProcs[j].CodeNum).ProcCode+"  "+Lan.G(this,"Dated")
+						+": "+_listProcs[j].ProcDate.ToShortDateString()+"  "+Lan.G(this,"With a Fee of")+": "+_listProcs[j].ProcFee.ToString("c")+".  "+Lan.G(this,"Attributed a")+" "+percent
+					+" "+Lan.G(this,"percent discount, changing the discount value from")+" "+_oldListProcs[j].Discount.ToString("c")+" "+Lan.G(this,"to")+" "+_listProcs[j].Discount.ToString("c");
 					SecurityLogs.MakeLogEntry(Permissions.TreatPlanDiscountEdit,_listProcs[j].PatNum,message);
 				}
 				Procedures.Update(_listProcs[j],_oldListProcs[j]);

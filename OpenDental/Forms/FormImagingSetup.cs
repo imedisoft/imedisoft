@@ -561,7 +561,7 @@ namespace OpenDental{
 			if(  textScanDocQuality.errorProvider1.GetError(textScanDocQuality)!=""
 				|| textScanDocResolution.errorProvider1.GetError(textScanDocResolution)!="")
 			{
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			if(textScanDocQuality.Text=="100"
@@ -592,9 +592,9 @@ namespace OpenDental{
 			DataValid.SetInvalid(InvalidType.Prefs);
 			if(_scanDocSelectSourceOld!=checkScanDocSelectSource.Checked) {
 				SecurityLogs.MakeLogEntry(Permissions.Setup,0
-					,Lan.g(this,"Show Select Scanner Window option changed from")+" "
-					+(_scanDocSelectSourceOld?Lan.g(this,"true"):Lan.g(this,"false"))+" "
-					+Lan.g(this,"to")+" "+(checkScanDocSelectSource.Checked?Lan.g(this,"true"):Lan.g(this,"false")));
+					,Lan.G(this,"Show Select Scanner Window option changed from")+" "
+					+(_scanDocSelectSourceOld?Lan.G(this,"true"):Lan.G(this,"false"))+" "
+					+Lan.G(this,"to")+" "+(checkScanDocSelectSource.Checked?Lan.G(this,"true"):Lan.G(this,"false")));
 			}
 			DialogResult=DialogResult.OK;
 		}

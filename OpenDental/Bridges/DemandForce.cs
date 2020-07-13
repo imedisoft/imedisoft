@@ -27,7 +27,7 @@ namespace OpenDental.Bridges {
 				MessageBox.Show(_path+" could not be found.");
 				return;
 			}
-			if(MessageBox.Show(Lan.g("DemandForce","This may take 20 minutes or longer")+".  "+Lan.g("DemandForce","Continue")+"?","",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
+			if(MessageBox.Show(Lan.G("DemandForce","This may take 20 minutes or longer")+".  "+Lan.G("DemandForce","Continue")+"?","",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 				return;
 			}
 			_formProg=new FormProgress();
@@ -39,12 +39,12 @@ namespace OpenDental.Bridges {
 			workerThread.Start();
 			if(_formProg.ShowDialog()==DialogResult.Cancel) {
 				workerThread.Abort();
-				MessageBox.Show(Lan.g("DemandForce","Export cancelled")+". "+Lan.g("DemandForce","Partially created file has been deleted")+".");
+				MessageBox.Show(Lan.G("DemandForce","Export cancelled")+". "+Lan.G("DemandForce","Partially created file has been deleted")+".");
 				CheckCreatedFile(CodeBase.ODFileUtils.CombinePaths(Path.GetDirectoryName(_path),"extract.xml"));
 				_formProg.Dispose();
 				return;
 			}
-			MessageBox.Show(Lan.g("DemandForce","Export complete")+". "+Lan.g("DemandForce","Press OK to launch DemandForce")+".");
+			MessageBox.Show(Lan.G("DemandForce","Export complete")+". "+Lan.G("DemandForce","Press OK to launch DemandForce")+".");
 			try {
 				ODFileUtils.ProcessStart(_path);//We might have to add extract.xml to launch command in the future.
 			}
@@ -74,7 +74,7 @@ namespace OpenDental.Bridges {
 			double totalLines=CalculateTotalLinesOfCode(arrayPatNums,allAptProcNums,allPatApts);
 			while(!_formProg.IsHandleCreated) { }//Wait for the form to show the first time, or else the Invoke calls will cause an exception.
 			_formProg.Invoke(new PassProgressDelegate(PassPercentProgressToDialog),new object[] { linesProcessedCount,
-				Lan.g(_formProg,"Executing the bridge to DemandForce"),
+				Lan.G(_formProg,"Executing the bridge to DemandForce"),
 				100.0,"" });
 			Thread.Sleep(1000);//Wait 1 second so the user can see the progress bar popup.
 			try {
@@ -172,7 +172,7 @@ namespace OpenDental.Bridges {
 									}
 									if(linesProcessedCount<totalLines) {//this avoids setting progress bar to max, which would close the dialog.
 										_formProg.Invoke(new PassProgressDelegate(PassPercentProgressToDialog),new object[] { (linesProcessedCount/totalLines*100),
-											Lan.g(_formProg,"Creating export file: ?currentVal % of ?maxVal % completed"),
+											Lan.G(_formProg,"Creating export file: ?currentVal % of ?maxVal % completed"),
 											100.0,""});
 									}
 									linesProcessedCount+=2;
@@ -184,7 +184,7 @@ namespace OpenDental.Bridges {
 							writer.WriteEndElement();//Appointment
 							if(linesProcessedCount<totalLines) {//this avoids setting progress bar to max, which would close the dialog.
 								_formProg.Invoke(new PassProgressDelegate(PassPercentProgressToDialog),new object[] { (linesProcessedCount/totalLines*100),
-									Lan.g(_formProg,"Creating export file: ?currentVal % of ?maxVal % completed"),
+									Lan.G(_formProg,"Creating export file: ?currentVal % of ?maxVal % completed"),
 									100.0,""});
 							}
 							linesProcessedCount+=12;
@@ -193,7 +193,7 @@ namespace OpenDental.Bridges {
 					writer.WriteEndElement();//Customer
 					if(linesProcessedCount<totalLines) {//this avoids setting progress bar to max, which would close the dialog.
 						_formProg.Invoke(new PassProgressDelegate(PassPercentProgressToDialog),new object[] { (linesProcessedCount/totalLines*100),
-							Lan.g(_formProg,"Creating export file: ?currentVal % of ?maxVal % completed"),
+							Lan.G(_formProg,"Creating export file: ?currentVal % of ?maxVal % completed"),
 							100.0,""});
 					}
 					linesProcessedCount+=20;
@@ -205,7 +205,7 @@ namespace OpenDental.Bridges {
 				ODFileUtils.WriteAllText(extract,strb.ToString());
 			}
 			catch {
-				MessageBox.Show(Lan.g("DemandForce","Export file creation failed")+". "+Lan.g("DemandForce","User may not have sufficient permissions")+".");
+				MessageBox.Show(Lan.G("DemandForce","Export file creation failed")+". "+Lan.G("DemandForce","User may not have sufficient permissions")+".");
 			}
 			if(linesProcessedCount>=totalLines) {//this avoids setting progress bar to max, which would close the dialog.
 				_formProg.DisplayText="Creating export file: 100 % of 100 % completed";

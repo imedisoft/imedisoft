@@ -129,7 +129,7 @@ namespace OpenDental {
 				if(dictEnabledProcessors.Count>1) {
 					List<string> listCCProcessors=dictEnabledProcessors.Select(x => x.Key).ToList();
 					InputBox chooseProcessor=
-						new InputBox(Lan.g(this,"For which credit card processing company would you like to add this card?"),listCCProcessors,true);
+						new InputBox(Lan.G(this,"For which credit card processing company would you like to add this card?"),listCCProcessors,true);
 					if(chooseProcessor.ShowDialog()==DialogResult.Cancel) {
 						return;
 					}

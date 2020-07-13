@@ -20,7 +20,7 @@ namespace OpenDental {
 			SetFilterControlsAndAction(() => FillGrid(),
 				(int)TimeSpan.FromSeconds(0.5).TotalMilliseconds,
 				textProvNum);
-			comboClass.Items.Add(Lan.g(this,"All"));
+			comboClass.Items.Add(Lan.G(this,"All"));
 			comboClass.SelectedIndex=0;
 			_listSchoolClasses=SchoolClasses.GetDeepCopy();
 			for(int i=0;i<_listSchoolClasses.Count;i++) {
@@ -39,13 +39,13 @@ namespace OpenDental {
 			gridStudents.BeginUpdate();
 			gridStudents.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TableProviderSetup","ProvNum"),60);
+			col=new GridColumn(Lan.G("TableProviderSetup","ProvNum"),60);
 			gridStudents.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProviderSetup","Last Name"),90);
+			col=new GridColumn(Lan.G("TableProviderSetup","Last Name"),90);
 			gridStudents.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProviderSetup","First Name"),90);
+			col=new GridColumn(Lan.G("TableProviderSetup","First Name"),90);
 			gridStudents.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProviderSetup","Class"),100);
+			col=new GridColumn(Lan.G("TableProviderSetup","Class"),100);
 			gridStudents.ListGridColumns.Add(col);
 			gridStudents.ListGridRows.Clear();
 			GridRow row;

@@ -57,7 +57,7 @@ namespace OpenDental.Reporting.Allocators.MyAllocator1 {
 		#endregion
 		private void butRunAllocatorTool_Click(object sender,EventArgs e) {
 			if(!rbutIHaveRead.Checked) {
-				PU.MB = Lan.g(this,"You must indicate that you have read the text in the box!");
+				PU.MB = Lan.G(this,"You must indicate that you have read the text in the box!");
 				return;
 			}
 

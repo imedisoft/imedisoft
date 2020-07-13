@@ -21,11 +21,11 @@ namespace OpenDental
 			HeadingIsPresent=true;
 			InstantClassesPar();
 			SetRowHeight(0,4,14);
-			Heading=Lan.g("TableProcAdj","Adjustments");
-			Fields[0]=Lan.g("TableProcAdj","Entry Date");
-			Fields[1]=Lan.g("TableProcAdj","Amount");
-			Fields[2]=Lan.g("TableProcAdj","Type");
-			Fields[3]=Lan.g("TableProcAdj","Note");
+			Heading=Lan.G("TableProcAdj","Adjustments");
+			Fields[0]=Lan.G("TableProcAdj","Entry Date");
+			Fields[1]=Lan.G("TableProcAdj","Amount");
+			Fields[2]=Lan.G("TableProcAdj","Type");
+			Fields[3]=Lan.G("TableProcAdj","Note");
 			ColAlign[0]=HorizontalAlignment.Center;
 			ColAlign[1]=HorizontalAlignment.Right;
 			ColWidth[0]=70;

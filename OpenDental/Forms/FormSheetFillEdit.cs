@@ -461,7 +461,7 @@ namespace OpenDental {
 					textbox.ScrollBars=RichTextBoxScrollBars.None;
 					textbox.SelectionAlignment=HorizontalAlignment.Left;
 					string signed=sigBox.GetIsTypedFromWebForms() ? "Typed signature in WebForms" : "Signed";
-					textbox.Text=Lan.g(this,signed)+": "+field.DateTimeSig.ToShortDateString()+" "+field.DateTimeSig.ToShortTimeString();
+					textbox.Text=Lan.G(this,signed)+": "+field.DateTimeSig.ToShortDateString()+" "+field.DateTimeSig.ToShortTimeString();
 					textbox.Multiline=false;
 					textbox.Height=14;
 					textbox.ReadOnly=true;
@@ -498,7 +498,7 @@ namespace OpenDental {
 						}
 					}
 					catch(Exception ex) {
-						FriendlyException.Show(Lan.g(this,"Error pasting clipboard content."),ex);
+						FriendlyException.Show(Lan.G(this,"Error pasting clipboard content."),ex);
 					}
 					e.Handled=true;//Do not let the base Paste function to be invoked because it allows pasting formatted text, pictures, etc.
 				}));
@@ -1042,7 +1042,7 @@ namespace OpenDental {
 				pdfFile=EmailSheet(FormS.EmailPatOrLabAddress,SheetCur.Description.ToString());//subject could be improved
 			}
 			if((SheetCur.SheetType==SheetTypeEnum.ReferralSlip || SheetCur.SheetType==SheetTypeEnum.ReferralLetter) && FormS.Email2) {
-				pdfFile=EmailSheet(FormS.Email2Address,Lan.g(this,"RE: ")+Patients.GetLim(SheetCur.PatNum).GetNameLF());//subject will work even if patnum invalid
+				pdfFile=EmailSheet(FormS.Email2Address,Lan.G(this,"RE: ")+Patients.GetLim(SheetCur.PatNum).GetNameLF());//subject will work even if patnum invalid
 			}
 			if(SheetCur.SheetType==SheetTypeEnum.Statement && SaveStatementToDocDelegate!=null) {
 				SaveStatementToDocDelegate(Stmt,SheetCur,pdfFile);
@@ -1214,7 +1214,7 @@ namespace OpenDental {
 					if(Referrals.TryGetReferral(referralNum,out referral) && referral.EMail!="") {
 						emailAddress=referral.EMail;
 					}
-					subject=Lan.g(this,"RE: ")+Patients.GetLim(SheetCur.PatNum).GetNameLF();
+					subject=Lan.G(this,"RE: ")+Patients.GetLim(SheetCur.PatNum).GetNameLF();
 				}
 			}
 			string pdfFile=EmailSheet(emailAddress,subject);
@@ -1261,7 +1261,7 @@ namespace OpenDental {
 			}
 			catch (Exception ex)
 			{
-				FriendlyException.Show(Lan.g(this, "Unable to open the file."), ex);
+				FriendlyException.Show(Lan.G(this, "Unable to open the file."), ex);
 				return;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,SheetCur.Description+" from "+SheetCur.DateTimeSheet.ToShortDateString()+" pdf was created");
@@ -1281,8 +1281,8 @@ namespace OpenDental {
 			FormPatientSelect FormPS=new FormPatientSelect();
 			FormPS.SelectionModeOnly=true;
 			if(FormPS.ShowDialog()==DialogResult.OK) {
-				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,Lan.g(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.g(this,"moved to PatNum")+" "+FormPS.SelectedPatNum);
-				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,FormPS.SelectedPatNum,Lan.g(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.g(this,"moved from PatNum")+" "+SheetCur.PatNum);
+				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,Lan.G(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.G(this,"moved to PatNum")+" "+FormPS.SelectedPatNum);
+				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,FormPS.SelectedPatNum,Lan.G(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.G(this,"moved from PatNum")+" "+SheetCur.PatNum);
 				SheetCur.PatNum=FormPS.SelectedPatNum;
 			}
 		}
@@ -1419,7 +1419,7 @@ namespace OpenDental {
 					//at least one of these definitions is not hidden.
 					Def def=Defs.GetCatList((int)DefCat.ImageCats).FirstOrDefault(x => !x.IsHidden);
 					defNum=def.DefNum;
-					MessageBox.Show(this,Lan.g(this,"The Image Category Definition \"Letters\" could not be found.  Referral letter saved to:\r\n")+def.ItemName);
+					MessageBox.Show(this,Lan.G(this,"The Image Category Definition \"Letters\" could not be found.  Referral letter saved to:\r\n")+def.ItemName);
 				}
 				Document doc=ImageStore.Import(_tempPdfFile,defNum,patCur);
 				//Update sheetCur with the docnum
@@ -1547,10 +1547,10 @@ namespace OpenDental {
 					RichTextBox inputBox=(RichTextBox)control;
 					if(field.IsRequired && inputBox.Text.Trim()==""){
 						if(field.FieldName=="misc" && !string.IsNullOrWhiteSpace(field.ReportableName)) {
-							MessageBox.Show(Lan.g(this,"You must enter a value for")+" "+field.ReportableName+" "+Lan.g(this,"before continuing."));
+							MessageBox.Show(Lan.G(this,"You must enter a value for")+" "+field.ReportableName+" "+Lan.G(this,"before continuing."));
 						}
 						else {
-							MessageBox.Show(Lan.g(this,"You must enter a value for")+" "+field.FieldName+" "+Lan.g(this,"before continuing."));
+							MessageBox.Show(Lan.G(this,"You must enter a value for")+" "+field.FieldName+" "+Lan.G(this,"before continuing."));
 						}
 						return false;			
 					}	
@@ -1567,10 +1567,10 @@ namespace OpenDental {
 					System.Windows.Controls.RichTextBox richTextBox=(System.Windows.Controls.RichTextBox)elementHost.Child;
 					if(field.IsRequired && GetTextFromWpfRichTextBox(richTextBox).Trim()=="") {
 						if(field.FieldName=="misc" && !string.IsNullOrWhiteSpace(field.ReportableName)) {
-							MessageBox.Show(Lan.g(this,"You must enter a value for")+" "+field.ReportableName+" "+Lan.g(this,"before continuing."));
+							MessageBox.Show(Lan.G(this,"You must enter a value for")+" "+field.ReportableName+" "+Lan.G(this,"before continuing."));
 						}
 						else {
-							MessageBox.Show(Lan.g(this,"You must enter a value for")+" "+field.FieldName+" "+Lan.g(this,"before continuing."));
+							MessageBox.Show(Lan.G(this,"You must enter a value for")+" "+field.FieldName+" "+Lan.G(this,"before continuing."));
 						}
 						return false;
 					}
@@ -1597,7 +1597,7 @@ namespace OpenDental {
 							//int widthActual=(SheetCur.IsLandscape?SheetCur.Height:SheetCur.Width);
 							//int heightActual=(SheetCur.IsLandscape?SheetCur.Width:SheetCur.Height);
 							//int topMidBottom=(heightActual/3)
-							MessageBox.Show(Lan.g(this,"You must check the required checkbox."));
+							MessageBox.Show(Lan.G(this,"You must check the required checkbox."));
 							return false;
 						}
 						else{//then radiobuttons (of both kinds)
@@ -1624,10 +1624,10 @@ namespace OpenDental {
 							}
 							if(numGroupButtons>0 && !valueSet){//there is not at least one radiobutton in the group that's checked.
 								if(field.RadioButtonGroup!="") {//if they are in a custom group
-									MessageBox.Show(Lan.g(this,"You must select a value for radio button group")+" '"+field.RadioButtonGroup+"'. ");
+									MessageBox.Show(Lan.G(this,"You must select a value for radio button group")+" '"+field.RadioButtonGroup+"'. ");
 								}
 								else {
-									MessageBox.Show(Lan.g(this,"You must select a value for radio button group")+" '"+field.FieldName+"'. ");
+									MessageBox.Show(Lan.G(this,"You must select a value for radio button group")+" '"+field.FieldName+"'. ");
 								}
 								return false;
 							}
@@ -1819,7 +1819,7 @@ namespace OpenDental {
 			}
 			Sheets.Delete(SheetCur.SheetNum,SheetCur.PatNum,SheetCur.ShowInTerminal);
 			SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,SheetCur.Description
-				+" "+Lan.g(this,"deleted from")+" "+SheetCur.DateTimeSheet.ToShortDateString());
+				+" "+Lan.G(this,"deleted from")+" "+SheetCur.DateTimeSheet.ToShortDateString());
 			if(SheetCur.ShowInTerminal>0) {
 				Signalods.SetInvalid(InvalidType.Kiosk);
 			}

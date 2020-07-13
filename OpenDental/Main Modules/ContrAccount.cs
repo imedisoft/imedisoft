@@ -275,7 +275,7 @@ namespace OpenDental {
 				contextMenuQuickProcs.MenuItems.Add(new MenuItem(_arrayDefsAcctProcQuickAdd[i].ItemName,menuItemQuickProcs_Click));
 			}
 			if(_arrayDefsAcctProcQuickAdd.Length==0) {
-				contextMenuQuickProcs.MenuItems.Add(new MenuItem(Lan.g(this,"No quick charge procedures defined. Go to Setup | Definitions to add."),(x,y) => { }));//"null" event handler.
+				contextMenuQuickProcs.MenuItems.Add(new MenuItem(Lan.G(this,"No quick charge procedures defined. Go to Setup | Definitions to add."),(x,y) => { }));//"null" event handler.
 			}
 		}
 		#endregion Methods - Event Handlers ContextMenus
@@ -843,7 +843,7 @@ namespace OpenDental {
 				return;
 			}
 			if(createClaimDataWrapper.ClaimData.ListPatPlans.Count<2) {
-				MessageBox.Show(Lan.g(this,"Patient does not have secondary insurance."));
+				MessageBox.Show(Lan.G(this,"Patient does not have secondary insurance."));
 				return;
 			}
 			if(PatPlans.GetOrdinal(PriSecMed.Secondary,createClaimDataWrapper.ClaimData.ListPatPlans,createClaimDataWrapper.ClaimData.ListInsPlans
@@ -1294,7 +1294,7 @@ namespace OpenDental {
 			}
 			if(listProcCodesAdded.Count>0) {
 				SecurityLogs.MakeLogEntry(Permissions.AccountProcsQuickAdd,_patCur.PatNum
-					,Lan.g(this,"The following procedures were added via the Quick Charge button from the Account module")
+					,Lan.G(this,"The following procedures were added via the Quick Charge button from the Account module")
 						+": "+string.Join(",",listProcCodesAdded));
 				ModuleSelected(_patCur.PatNum);
 			}
@@ -1688,7 +1688,7 @@ namespace OpenDental {
 			Provider patProvider=Providers.GetProv(_patCur.PriProv);
 			if(AddProcAndValidate(quickProcText,patProvider)) {
 				SecurityLogs.MakeLogEntry(Permissions.AccountProcsQuickAdd,_patCur.PatNum
-					,Lan.g(this,"The following procedures were added via the Quick Charge button from the Account module")
+					,Lan.G(this,"The following procedures were added via the Quick Charge button from the Account module")
 						+": "+string.Join(",",quickProcText));
 				ModuleSelected(_patCur.PatNum);
 			}
@@ -1731,8 +1731,8 @@ namespace OpenDental {
 								+"Is the payment you are applying directly from the debtor or guarantor?\r\n\r\n"
 								+"Yes - this payment is directly from the debtor/guarantor\r\n\r\n"
 								+"No - this payment is from TSI"));
-						InputBox inputBox=new InputBox(new List<InputBoxParam>() { new InputBoxParam(InputBoxType.ValidDouble,Lan.g(this,"Please enter an amount: ")),
-							_famCur.ListPats.Length>1 ? (new InputBoxParam(InputBoxType.CheckBox,"",Lan.g(this," - Prefer this patient"),new Size(120,20))) : null }
+						InputBox inputBox=new InputBox(new List<InputBoxParam>() { new InputBoxParam(InputBoxType.ValidDouble,Lan.G(this,"Please enter an amount: ")),
+							_famCur.ListPats.Length>1 ? (new InputBoxParam(InputBoxType.CheckBox,"",Lan.G(this," - Prefer this patient"),new Size(120,20))) : null }
 							,new Func<string, bool>((text) => {
 								if(text=="") {
 									MessageBox.Show("Please enter a value.");
@@ -1852,46 +1852,46 @@ namespace OpenDental {
 		public void LayoutToolBar() {
 			ToolBarMain.Buttons.Clear();
 			ODToolBarButton button;
-			_butPayment=new ODToolBarButton(Lan.g(this,"Payment"),1,"","Payment");
+			_butPayment=new ODToolBarButton(Lan.G(this,"Payment"),1,"","Payment");
 			_butPayment.Style=ODToolBarButtonStyle.DropDownButton;
 			_butPayment.DropDownMenu=contextMenuPayment;
 			ToolBarMain.Buttons.Add(_butPayment);
-			button=new ODToolBarButton(Lan.g(this,"Adjustment"),2,"","Adjustment");
+			button=new ODToolBarButton(Lan.G(this,"Adjustment"),2,"","Adjustment");
 			button.Style=ODToolBarButtonStyle.DropDownButton;
 			button.DropDownMenu=contextMenuAdjust;
 			ToolBarMain.Buttons.Add(button);
-			button=new ODToolBarButton(Lan.g(this,"New Claim"),3,"","Insurance");
+			button=new ODToolBarButton(Lan.G(this,"New Claim"),3,"","Insurance");
 			button.Style=ODToolBarButtonStyle.DropDownButton;
 			button.DropDownMenu=contextMenuIns;
 			ToolBarMain.Buttons.Add(button);
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			button=new ODToolBarButton(Lan.g(this,"Payment Plan"),-1,"","PayPlan");
+			button=new ODToolBarButton(Lan.G(this,"Payment Plan"),-1,"","PayPlan");
 			button.Style=ODToolBarButtonStyle.DropDownButton;
 			button.DropDownMenu=contextMenuPayPlan;
 			ToolBarMain.Buttons.Add(button);
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Installment Plan"),-1,"","InstallPlan"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Installment Plan"),-1,"","InstallPlan"));
 			if(Security.IsAuthorized(Permissions.AccountProcsQuickAdd,true)) {
 				//If the user doesn't have permission to use the quick charge button don't add it to the toolbar.
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-				_butQuickProcs=new ODToolBarButton(Lan.g(this,"Quick Procs"),-1,"","QuickProcs");
+				_butQuickProcs=new ODToolBarButton(Lan.G(this,"Quick Procs"),-1,"","QuickProcs");
 				_butQuickProcs.Style=ODToolBarButtonStyle.DropDownButton;
 				_butQuickProcs.DropDownMenu=contextMenuQuickProcs;
 				contextMenuQuickProcs.Popup+=new EventHandler(contextMenuQuickProcs_Popup);
 				ToolBarMain.Buttons.Add(_butQuickProcs);
 			}
 			if(!PrefC.GetBool(PrefName.EasyHideRepeatCharges)) {
-				button=new ODToolBarButton(Lan.g(this,"Repeating Charge"),-1,"","RepeatCharge");
+				button=new ODToolBarButton(Lan.G(this,"Repeating Charge"),-1,"","RepeatCharge");
 				button.Style=ODToolBarButtonStyle.PushButton;
 				ToolBarMain.Buttons.Add(button);
 			}
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			button=new ODToolBarButton(Lan.g(this,"Statement"),4,"","Statement");
+			button=new ODToolBarButton(Lan.G(this,"Statement"),4,"","Statement");
 			button.Style=ODToolBarButtonStyle.DropDownButton;
 			button.DropDownMenu=contextMenuStatement;
 			ToolBarMain.Buttons.Add(button);
 			if(PrefC.GetBool(PrefName.AccountShowQuestionnaire)) {
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Questionnaire"),-1,"","Questionnaire"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Questionnaire"),-1,"","Questionnaire"));
 			}
 			ProgramL.LoadToolbar(ToolBarMain,ToolBarsAvail.AccountModule);
 			ToolBarMain.Invalidate();
@@ -2379,11 +2379,11 @@ namespace OpenDental {
 						row.Cells.Add(debondProc.ProcDate.ToShortDateString());
 					}
 					else {
-						row.Cells.Add(Lan.g("TableOrthoCases","Debond Incomplete"));
+						row.Cells.Add(Lan.G("TableOrthoCases","Debond Incomplete"));
 					}
 				}
 				else {
-					row.Cells.Add(Lan.g("TableOrthoCases","Debond Incomplete"));
+					row.Cells.Add(Lan.G("TableOrthoCases","Debond Incomplete"));
 				}
 				row.Tag=orthoCase;
 				gridOrthoCases.ListGridRows.Add(row);
@@ -2444,27 +2444,27 @@ namespace OpenDental {
 				//but the emphasis simply changes by slight renaming of labels
 				//and by font size changes.
 				if(PrefC.GetBool(PrefName.BalancesDontSubtractIns)){
-					labelTotal.Text=Lan.g(this,"Balance");
+					labelTotal.Text=Lan.G(this,"Balance");
 					labelTotalAmt.Font=fontBold;
 					labelTotalAmt.ForeColor=Color.Firebrick;
 					panelAgeLine.Visible=true;//verical line
-					labelInsEst.Text=Lan.g(this,"Ins Pending");
-					labelBalance.Text=Lan.g(this,"After Ins");
+					labelInsEst.Text=Lan.G(this,"Ins Pending");
+					labelBalance.Text=Lan.G(this,"After Ins");
 					labelBalanceAmt.Font=this.Font;
 					labelBalanceAmt.ForeColor=Color.Black;
 				}
 				else{//this is more common
-					labelTotal.Text=Lan.g(this,"Total");
+					labelTotal.Text=Lan.G(this,"Total");
 					labelTotalAmt.Font=this.Font;
 					labelTotalAmt.ForeColor = Color.Black;
 					panelAgeLine.Visible=false;
-					labelInsEst.Text=Lan.g(this,"-InsEst");
-					labelBalance.Text=Lan.g(this,"=Est Bal");
+					labelInsEst.Text=Lan.G(this,"-InsEst");
+					labelBalance.Text=Lan.G(this,"=Est Bal");
 					labelBalanceAmt.Font=fontBold;
 					labelBalanceAmt.ForeColor=Color.Firebrick;
 					if(PrefC.GetBool(PrefName.FuchsOptionsOn)){
-						labelTotal.Text=Lan.g(this,"Balance");
-						labelBalance.Text=Lan.g(this,"=Owed Now");
+						labelTotal.Text=Lan.G(this,"Balance");
+						labelBalance.Text=Lan.G(this,"=Owed Now");
 						labelTotalAmt.Font=fontBold;
 					}
 				}
@@ -2499,7 +2499,7 @@ namespace OpenDental {
 			if(listPatPlans.Count == 0) {
 				row = new GridRow();
 				row.Cells.Add("");
-				row.Cells.Add(Lan.g(this,"Patient has no insurance."));
+				row.Cells.Add(Lan.G(this,"Patient has no insurance."));
 				gridAutoOrtho.ListGridRows.Add(row);
 			}
 			else {
@@ -2524,16 +2524,16 @@ namespace OpenDental {
 					row.ColorBackG=listDefs[0].ItemColor; //same logic as family module insurance colors.
 					switch(i) {
 						case 0: //primary
-							row.Cells.Add(Lan.g(this,"Primary Ins"));
+							row.Cells.Add(Lan.G(this,"Primary Ins"));
 							break;
 						case 1: //secondary
-							row.Cells.Add(Lan.g(this,"Secondary Ins"));
+							row.Cells.Add(Lan.G(this,"Secondary Ins"));
 							break;
 						case 2: //tertiary
-							row.Cells.Add(Lan.g(this,"Tertiary Ins"));
+							row.Cells.Add(Lan.G(this,"Tertiary Ins"));
 							break;
 						default: //other
-							row.Cells.Add(Lan.g(this,"Other Ins"));
+							row.Cells.Add(Lan.G(this,"Other Ins"));
 							break;
 					}
 					row.Cells.Add("");
@@ -2542,7 +2542,7 @@ namespace OpenDental {
 					gridAutoOrtho.ListGridRows.Add(row);
 					//claimtype
 					row=new GridRow();
-					row.Cells.Add(Lan.g(this,"ClaimType"));
+					row.Cells.Add(Lan.G(this,"ClaimType"));
 					if(insPlanCur==null) {
 						row.Cells.Add("");
 					}
@@ -2555,13 +2555,13 @@ namespace OpenDental {
 					if(insPlanCur.OrthoType == OrthoClaimType.InitialPlusPeriodic) {
 						//Frequency
 						row= new GridRow();
-						row.Cells.Add(Lan.g(this,"Frequency"));
+						row.Cells.Add(Lan.G(this,"Frequency"));
 						row.Cells.Add(insPlanCur.OrthoAutoProcFreq.ToString());
 						row.Tag=orthoPatCur;
 						gridAutoOrtho.ListGridRows.Add(row);
 						//Fee
 						row= new GridRow();
-						row.Cells.Add(Lan.g(this,"FeeBilled"));
+						row.Cells.Add(Lan.G(this,"FeeBilled"));
 						row.Cells.Add(patPlanCur.OrthoAutoFeeBilledOverride==-1 ? POut.Double(insPlanCur.OrthoAutoFeeBilled) : POut.Double(patPlanCur.OrthoAutoFeeBilledOverride));
 						row.Tag=orthoPatCur;
 						gridAutoOrtho.ListGridRows.Add(row);
@@ -2572,15 +2572,15 @@ namespace OpenDental {
 					if(!_loadData.DictDateLastOrthoClaims.TryGetValue(patPlanCur.PatPlanNum,out dateLast)) {
 						dateLast=Claims.GetDateLastOrthoClaim(patPlanCur,insPlanCur.OrthoType);
 					}
-					row.Cells.Add(Lan.g(this,"LastClaim"));
-					row.Cells.Add(dateLast==null || dateLast.Date == DateTime.MinValue.Date ? Lan.g(this,"None Sent") : dateLast.ToShortDateString());
+					row.Cells.Add(Lan.G(this,"LastClaim"));
+					row.Cells.Add(dateLast==null || dateLast.Date == DateTime.MinValue.Date ? Lan.G(this,"None Sent") : dateLast.ToShortDateString());
 					row.Tag=orthoPatCur;
 					gridAutoOrtho.ListGridRows.Add(row);
 					//NextClaimDate - Only show for initialPlusPeriodic claimtype.
 					if(insPlanCur.OrthoType == OrthoClaimType.InitialPlusPeriodic) {
 						row= new GridRow();
-						row.Cells.Add(Lan.g(this,"NextClaim"));
-						row.Cells.Add(patPlanCur.OrthoAutoNextClaimDate.Date == DateTime.MinValue.Date ? Lan.g(this,"Stopped") : patPlanCur.OrthoAutoNextClaimDate.ToShortDateString());
+						row.Cells.Add(Lan.G(this,"NextClaim"));
+						row.Cells.Add(patPlanCur.OrthoAutoNextClaimDate.Date == DateTime.MinValue.Date ? Lan.G(this,"Stopped") : patPlanCur.OrthoAutoNextClaimDate.ToShortDateString());
 						row.Tag=orthoPatCur;
 						gridAutoOrtho.ListGridRows.Add(row);
 					}
@@ -2588,7 +2588,7 @@ namespace OpenDental {
 			}
 			//Pat Ortho Info Title
 			row= new GridRow();
-			row.Cells.Add(Lan.g(this,"Pat Ortho Info"));
+			row.Cells.Add(Lan.G(this,"Pat Ortho Info"));
 			row.Cells.Add("");
 			row.ColorBackG=Color.LightCyan;
 			row.Bold=true;
@@ -2601,53 +2601,53 @@ namespace OpenDental {
 			DateTime firstOrthoProcDate=_loadData.FirstOrthoProcDate;
 			if(firstOrthoProcDate!=DateTime.MinValue) {
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,"Total Tx Time")); //Number of Years/Months/Days since the first ortho procedure on this account
+				row.Cells.Add(Lan.G(this,"Total Tx Time")); //Number of Years/Months/Days since the first ortho procedure on this account
 				DateSpan dateSpan=new DateSpan(firstOrthoProcDate,DateTimeOD.Today);
 				string strDateDiff="";
 				if(dateSpan.YearsDiff!=0) {
-					strDateDiff+=dateSpan.YearsDiff+" "+Lan.g(this,"year"+(dateSpan.YearsDiff==1 ? "" : "s"));
+					strDateDiff+=dateSpan.YearsDiff+" "+Lan.G(this,"year"+(dateSpan.YearsDiff==1 ? "" : "s"));
 				}
 				if(dateSpan.MonthsDiff!=0) {
 					if(strDateDiff!="") {
 						strDateDiff+=", ";
 					}
-					strDateDiff+=dateSpan.MonthsDiff+" "+Lan.g(this,"month"+(dateSpan.MonthsDiff==1 ? "" : "s"));
+					strDateDiff+=dateSpan.MonthsDiff+" "+Lan.G(this,"month"+(dateSpan.MonthsDiff==1 ? "" : "s"));
 				}
 				if(dateSpan.DaysDiff!=0 || strDateDiff=="") {
 					if(strDateDiff!="") {
 						strDateDiff+=", ";
 					}
-					strDateDiff+=dateSpan.DaysDiff+" "+Lan.g(this,"day"+(dateSpan.DaysDiff==1 ? "" : "s"));
+					strDateDiff+=dateSpan.DaysDiff+" "+Lan.G(this,"day"+(dateSpan.DaysDiff==1 ? "" : "s"));
 				}
 				row.Cells.Add(strDateDiff);
 				gridAutoOrtho.ListGridRows.Add(row);
 				//Date Start
 				row = new GridRow();
-				row.Cells.Add(Lan.g(this,"Date Start")); //Date of the first ortho procedure on this account
+				row.Cells.Add(Lan.G(this,"Date Start")); //Date of the first ortho procedure on this account
 				row.Cells.Add(firstOrthoProcDate.ToShortDateString());
 				gridAutoOrtho.ListGridRows.Add(row);
 				//Tx Months Total
 				row = new GridRow();
-				row.Cells.Add(Lan.g(this,"Tx Months Total")); //this patient's OrthoClaimMonthsTreatment, or the practice default if 0.
+				row.Cells.Add(Lan.G(this,"Tx Months Total")); //this patient's OrthoClaimMonthsTreatment, or the practice default if 0.
 				int txMonthsTotal=(_patientNoteCur.OrthoMonthsTreatOverride==-1?PrefC.GetByte(PrefName.OrthoDefaultMonthsTreat):_patientNoteCur.OrthoMonthsTreatOverride);
 				row.Cells.Add(txMonthsTotal.ToString());
 				gridAutoOrtho.ListGridRows.Add(row);
 				//Months in treatment
 				row = new GridRow();
 				int txTimeInMonths=(dateSpan.YearsDiff * 12) + dateSpan.MonthsDiff + (dateSpan.DaysDiff < 15? 0: 1);
-				row.Cells.Add(Lan.g(this,"Months in Treatment"));
+				row.Cells.Add(Lan.G(this,"Months in Treatment"));
 				row.Cells.Add(txTimeInMonths.ToString());
 				gridAutoOrtho.ListGridRows.Add(row);
 				//Months Rem
 				row = new GridRow();
-				row.Cells.Add(Lan.g(this,"Months Rem")); //Months Total - Total Tx Time
+				row.Cells.Add(Lan.G(this,"Months Rem")); //Months Total - Total Tx Time
 				row.Cells.Add(Math.Max(0,txMonthsTotal-txTimeInMonths).ToString());
 				gridAutoOrtho.ListGridRows.Add(row);
 			}
 			else { //no ortho procedures charted for this patient.
 				row = new GridRow();
 				row.Cells.Add(""); 
-				row.Cells.Add(Lan.g(this,"No ortho procedures charted."));
+				row.Cells.Add(Lan.G(this,"No ortho procedures charted."));
 				gridAutoOrtho.ListGridRows.Add(row);
 			}
 			gridAutoOrtho.EndUpdate();
@@ -2663,19 +2663,19 @@ namespace OpenDental {
 			}
 			gridComm.BeginUpdate();
 			gridComm.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableCommLogAccount","Date"),70);
+			GridColumn col=new GridColumn(Lan.G("TableCommLogAccount","Date"),70);
 			gridComm.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCommLogAccount","Time"),42);//,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableCommLogAccount","Time"),42);//,HorizontalAlignment.Right);
 			gridComm.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCommLogAccount","Name"),80);
+			col=new GridColumn(Lan.G("TableCommLogAccount","Name"),80);
 			gridComm.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCommLogAccount","Type"),80);
+			col=new GridColumn(Lan.G("TableCommLogAccount","Type"),80);
 			gridComm.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCommLogAccount","Mode"),55);
+			col=new GridColumn(Lan.G("TableCommLogAccount","Mode"),55);
 			gridComm.ListGridColumns.Add(col);
 			//col=new ODGridColumn(Lan.g("TableCommLogAccount","Sent/Recd"),75);
 			//gridComm.Columns.Add(col);
-			col=new GridColumn(Lan.g("TableCommLogAccount","Note"),455);
+			col=new GridColumn(Lan.G("TableCommLogAccount","Note"),455);
 			gridComm.ListGridColumns.Add(col);
 			gridComm.ListGridRows.Clear();
 			GridRow row;
@@ -2871,13 +2871,13 @@ namespace OpenDental {
 			gridOrthoCases.BeginUpdate();
 			gridOrthoCases.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TableOrthoCases","Is Active"),70,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableOrthoCases","Is Active"),70,HorizontalAlignment.Center);
 			gridOrthoCases.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOrthoCases","Is Transfer"),70,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableOrthoCases","Is Transfer"),70,HorizontalAlignment.Center);
 			gridOrthoCases.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOrthoCases","Start Date"),130,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableOrthoCases","Start Date"),130,HorizontalAlignment.Center);
 			gridOrthoCases.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOrthoCases","Completion Date"),120,HorizontalAlignment.Center){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G("TableOrthoCases","Completion Date"),120,HorizontalAlignment.Center){ IsWidthDynamic=true };
 			gridOrthoCases.ListGridColumns.Add(col);
 			gridOrthoCases.ListGridRows.Clear();
 			gridOrthoCases.EndUpdate();
@@ -2946,9 +2946,9 @@ namespace OpenDental {
 			}
 			gridAcctPat.BeginUpdate();
 			gridAcctPat.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableAccountPat","Patient"),105);
+			GridColumn col=new GridColumn(Lan.G("TableAccountPat","Patient"),105);
 			gridAcctPat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableAccountPat","Bal"),49,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableAccountPat","Bal"),49,HorizontalAlignment.Right);
 			gridAcctPat.ListGridColumns.Add(col);
 			gridAcctPat.ListGridRows.Clear();
 			GridRow row;
@@ -3027,31 +3027,31 @@ namespace OpenDental {
 			gridPayPlan.Visible=true;
 			gridPayPlan.BeginUpdate();
 			gridPayPlan.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TablePaymentPlans","Date"),65);
+			GridColumn col=new GridColumn(Lan.G("TablePaymentPlans","Date"),65);
 			gridPayPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePaymentPlans","Guarantor"),100);
+			col=new GridColumn(Lan.G("TablePaymentPlans","Guarantor"),100);
 			gridPayPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePaymentPlans","Patient"),100);
+			col=new GridColumn(Lan.G("TablePaymentPlans","Patient"),100);
 			gridPayPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePaymentPlans","Type"),30,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TablePaymentPlans","Type"),30,HorizontalAlignment.Center);
 			gridPayPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePaymentPlans","Category"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TablePaymentPlans","Category"),60,HorizontalAlignment.Center);
 			gridPayPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePaymentPlans","Principal"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TablePaymentPlans","Principal"),60,HorizontalAlignment.Right);
 			gridPayPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePaymentPlans","Total Cost"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TablePaymentPlans","Total Cost"),60,HorizontalAlignment.Right);
 			gridPayPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePaymentPlans","Paid"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TablePaymentPlans","Paid"),60,HorizontalAlignment.Right);
 			gridPayPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePaymentPlans","PrincPaid"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TablePaymentPlans","PrincPaid"),60,HorizontalAlignment.Right);
 			gridPayPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePaymentPlans","Balance"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TablePaymentPlans","Balance"),60,HorizontalAlignment.Right);
 			gridPayPlan.ListGridColumns.Add(col);
 			if(PrefC.GetBool(PrefName.PayPlanHideDueNow)) {
 				col=new GridColumn("Closed",60,HorizontalAlignment.Center);
 			}
 			else {
-				col=new GridColumn(Lan.g("TablePaymentPlans","Due Now"),60,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G("TablePaymentPlans","Due Now"),60,HorizontalAlignment.Right);
 			}
 			gridPayPlan.ListGridColumns.Add(col);
 			gridPayPlan.ListGridRows.Clear();
@@ -3078,7 +3078,7 @@ namespace OpenDental {
 				row.Cells.Add(table.Rows[i]["type"].ToString());
 				long planCat=PIn.Long(table.Rows[i]["PlanCategory"].ToString());
 				if(planCat==0) {
-					row.Cells.Add(Lan.g(this,"None"));
+					row.Cells.Add(Lan.G(this,"None"));
 				}
 				else {
 					row.Cells.Add(Defs.GetDef(DefCat.PayPlanCategories,planCat).ItemName);
@@ -3089,7 +3089,7 @@ namespace OpenDental {
 				row.Cells.Add(table.Rows[i]["princPaid"].ToString());
 				row.Cells.Add(table.Rows[i]["balance"].ToString());
 				if(table.Rows[i]["IsClosed"].ToString()=="1" && PrefC.GetInt(PrefName.PayPlansVersion)==2) {
-					cell=new GridCell(Lan.g(this,"Closed"));
+					cell=new GridCell(Lan.G(this,"Closed"));
 					row.ColorText=Color.Gray;
 				}
 				else if(PrefC.GetBool(PrefName.PayPlanHideDueNow)) {//pref can only be enabled when PayPlansVersion == 2.
@@ -3137,26 +3137,26 @@ namespace OpenDental {
 				return;
 			}
 			if(PrefC.GetBool(PrefName.BillingUseBillingCycleDay)) {
-				gridRepeat.Title=Lan.g(gridRepeat,"Repeat Charges")+" - Billing Day "+_patCur.BillingCycleDay;
+				gridRepeat.Title=Lan.G(gridRepeat,"Repeat Charges")+" - Billing Day "+_patCur.BillingCycleDay;
 			}
 			else {
-				gridRepeat.Title=Lan.g(gridRepeat,"Repeat Charges");
+				gridRepeat.Title=Lan.G(gridRepeat,"Repeat Charges");
 			}
 			splitContainerRepChargesPP.Panel1Collapsed=false;
 			gridRepeat.Visible=true;
 			gridRepeat.BeginUpdate();
 			gridRepeat.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableRepeatCharges","Description"),150);
+			GridColumn col=new GridColumn(Lan.G("TableRepeatCharges","Description"),150);
 			gridRepeat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRepeatCharges","Amount"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableRepeatCharges","Amount"),60,HorizontalAlignment.Right);
 			gridRepeat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRepeatCharges","Start Date"),70,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableRepeatCharges","Start Date"),70,HorizontalAlignment.Center);
 			gridRepeat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRepeatCharges","Stop Date"),70,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableRepeatCharges","Stop Date"),70,HorizontalAlignment.Center);
 			gridRepeat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRepeatCharges","Enabled"),55,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableRepeatCharges","Enabled"),55,HorizontalAlignment.Center);
 			gridRepeat.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRepeatCharges","Note"),355);
+			col=new GridColumn(Lan.G("TableRepeatCharges","Note"),355);
 			gridRepeat.ListGridColumns.Add(col);
 			gridRepeat.ListGridRows.Clear();
 			GridRow row;
@@ -3785,21 +3785,21 @@ namespace OpenDental {
 			string msg="";
 			if(isTsiPayplan) {
 				if(!Security.IsAuthorized(Permissions.Billing,true)) {
-					msg=Lan.g(this,"The guarantor of this family has been sent to TSI for a past due balance.")+"\r\n"
-						+Lan.g(this,"Creating a payment plan for this guarantor would cause the account to be suspended in the TSI system but you are not "
+					msg=Lan.G(this,"The guarantor of this family has been sent to TSI for a past due balance.")+"\r\n"
+						+Lan.G(this,"Creating a payment plan for this guarantor would cause the account to be suspended in the TSI system but you are not "
 							+"authorized for")+"\r\n"
 						+GroupPermissions.GetDesc(Permissions.Billing);
 					MessageBox.Show(this,msg);
 					return;
 				}
 				string billingType=Defs.GetName(DefCat.BillingTypes,PrefC.GetLong(PrefName.TransworldPaidInFullBillingType));
-				msg=Lan.g(this,"The guarantor of this family has been sent to TSI for a past due balance.")+"\r\n"
-					+Lan.g(this,"Creating this payment plan will suspend the TSI account for a maximum of 50 days if the account is in the Accelerator or "
+				msg=Lan.G(this,"The guarantor of this family has been sent to TSI for a past due balance.")+"\r\n"
+					+Lan.G(this,"Creating this payment plan will suspend the TSI account for a maximum of 50 days if the account is in the Accelerator or "
 						+"Profit Recovery stage.")+"\r\n"
-					+Lan.g(this,"Continue creating the payment plan?")+"\r\n\r\n"
-					+Lan.g(this,"Yes - Create the payment plan, send a suspend message to TSI, and change the guarantor's billing type to")+" "
+					+Lan.G(this,"Continue creating the payment plan?")+"\r\n\r\n"
+					+Lan.G(this,"Yes - Create the payment plan, send a suspend message to TSI, and change the guarantor's billing type to")+" "
 						+billingType+".\r\n\r\n"
-					+Lan.g(this,"No - Do not create the payment plan and allow TSI to continue managing the account.");
+					+Lan.G(this,"No - Do not create the payment plan and allow TSI to continue managing the account.");
 				if(!MsgBox.Show(MsgBoxButtons.YesNo,msg)) {
 					return;
 				}
@@ -3838,7 +3838,7 @@ namespace OpenDental {
 			if(isTsiPayplan && PayPlans.GetOne(payPlan.PayPlanNum)!=null) {
 				msg=TsiTransLogs.SuspendGuar(_famCur.Guarantor);
 				if(!string.IsNullOrEmpty(msg)) {
-					MessageBox.Show(this,msg+"\r\n"+Lan.g(this,"The account will have to be suspended manually using the A/R Manager or the TSI web portal."));
+					MessageBox.Show(this,msg+"\r\n"+Lan.G(this,"The account will have to be suspended manually using the A/R Manager or the TSI web portal."));
 				}
 			}
 		}

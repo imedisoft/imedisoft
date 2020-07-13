@@ -34,11 +34,11 @@ namespace OpenDental {
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormEtrans270EBraw","#"),50);
+			GridColumn col=new GridColumn(Lan.G("FormEtrans270EBraw","#"),50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormEtrans270EBraw","Raw"),150);
+			col=new GridColumn(Lan.G("FormEtrans270EBraw","Raw"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormEtrans270EBraw","Description"),150);
+			col=new GridColumn(Lan.G("FormEtrans270EBraw","Description"),150);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

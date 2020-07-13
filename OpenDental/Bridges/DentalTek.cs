@@ -57,7 +57,7 @@ namespace OpenDental.Bridges {
 								}
 							}
 							catch(Exception e) {
-								MessageBox.Show(Lan.g("DentalTek","Error occurred:")+" "+e.Message+"\r\n"+Lan.g("DentalTek","Please login to your Xbeyon/DentalTek Application and try again."));
+								MessageBox.Show(Lan.G("DentalTek","Error occurred:")+" "+e.Message+"\r\n"+Lan.G("DentalTek","Please login to your Xbeyon/DentalTek Application and try again."));
 								return false;
 							}
 							request="https://extapi.dentaltek.com/v1/pbx/rest/ClickToCall?phoneNumber="+phoneNumber+"&token="+token+"&premise=true";
@@ -96,7 +96,7 @@ namespace OpenDental.Bridges {
 				listPhoneNumbers.Add("HmPhone: "+pat.HmPhone);
 				listPhoneNumbers.Add("WkPhone: "+pat.WkPhone);
 				listPhoneNumbers.Add("WirelessPhone: "+pat.WirelessPhone);
-				InputBox inputBox=new InputBox(Lan.g("DentalTek","Please select a phone number"),listPhoneNumbers);
+				InputBox inputBox=new InputBox(Lan.G("DentalTek","Please select a phone number"),listPhoneNumbers);
 				inputBox.comboSelection.SelectedIndex=0;//This could be set to always display the inputbox form to always allow users to choose the number.
 				inputBox.ShowDialog();
 				if(inputBox.DialogResult!=DialogResult.OK){

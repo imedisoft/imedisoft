@@ -221,14 +221,14 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(listEmp.SelectedIndices.Count!=1){
-				MessageBox.Show(Lan.g(this,"Please select one item first."));
+				MessageBox.Show(Lan.G(this,"Please select one item first."));
 				return;
 			}
 			//Employers.Cur=;
 			//make sure no dependent patients:
 			string dependentNames=Employers.DependentPatients(ListEmployers[listEmp.SelectedIndices[0]]);
 			if(dependentNames!=""){
-				MessageBox.Show(Lan.g(this,"Not allowed to delete this employer because it it attached to "
+				MessageBox.Show(Lan.G(this,"Not allowed to delete this employer because it it attached to "
 					+"the following patients.  You should combine employers instead.")
 					+"\r\n\r\n"+dependentNames);
 					return;
@@ -236,12 +236,12 @@ namespace OpenDental{
 			//make sure no dependent insplans:
 			dependentNames=Employers.DependentInsPlans(ListEmployers[listEmp.SelectedIndices[0]]);
 			if(dependentNames!=""){
-				MessageBox.Show(Lan.g(this,"Not allowed to delete this employer because it is attached to "
+				MessageBox.Show(Lan.G(this,"Not allowed to delete this employer because it is attached to "
 					+"the following insurance plans.  You should combine employers instead.")
 					+"\r\n\r\n"+dependentNames);
 					return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Delete Employer?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show(Lan.G(this,"Delete Employer?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;
 			}
 			Employers.Delete(ListEmployers[listEmp.SelectedIndices[0]]);
@@ -250,7 +250,7 @@ namespace OpenDental{
 
 		private void butEdit_Click(object sender, System.EventArgs e) {
 			if(listEmp.SelectedIndices.Count!=1){
-				MessageBox.Show(Lan.g(this,"Please select one item first."));
+				MessageBox.Show(Lan.G(this,"Please select one item first."));
 				return;
 			}
 			FormEmployerEdit FormEE=new FormEmployerEdit();
@@ -263,10 +263,10 @@ namespace OpenDental{
 
 		private void butCombine_Click(object sender, System.EventArgs e) {
 			if(listEmp.SelectedIndices.Count<2){
-				MessageBox.Show(Lan.g(this,"Please select multiple items first while holding down the control key."));
+				MessageBox.Show(Lan.G(this,"Please select multiple items first while holding down the control key."));
 				return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Combine all these employers into a single employer? This will affect all patients using these employers."),""
+			if(MessageBox.Show(Lan.G(this,"Combine all these employers into a single employer? This will affect all patients using these employers."),""
 				,MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;
 			}

@@ -191,7 +191,7 @@ namespace OpenDental {
 			SetLabelText();
 			_userCurTaskListInbox=TaskLists.GetOne(Security.CurUser.TaskListInBox);
 			if(_userCurTaskListInbox!=null) {
-				_userCurTaskListInbox.Descript=Lan.g(this,"My Inbox")+": "+_userCurTaskListInbox.Descript;
+				_userCurTaskListInbox.Descript=Lan.G(this,"My Inbox")+": "+_userCurTaskListInbox.Descript;
 			}
 			else {
 				//Is null when the current user does not have an inbox set up
@@ -214,7 +214,7 @@ namespace OpenDental {
 					break;
 				case TaskObjectType.None:
 					_listUnfilteredTaskList=GetUserInboxTaskLists();
-					this.Text=Lan.g(this,"Task Send User");//Form title assumes tasklist.
+					this.Text=Lan.G(this,"Task Send User");//Form title assumes tasklist.
 					break;
 				default://Just in case
 					_listUnfilteredTaskList=new List<TaskList>();
@@ -228,12 +228,12 @@ namespace OpenDental {
 			switch(OType) {
 				case TaskObjectType.Patient:
 				case TaskObjectType.Appointment:
-					retVal=Lan.g(this,"task list");
+					retVal=Lan.G(this,"task list");
 					break;
 				case TaskObjectType.None:
-					retVal=Lan.g(this,"user");
+					retVal=Lan.G(this,"user");
 					if(checkMulti.Checked) {
-						retVal=Lan.g(this,"users");
+						retVal=Lan.G(this,"users");
 					}
 					break;
 			}
@@ -345,16 +345,16 @@ namespace OpenDental {
 		///<summary>Sets the main label on this form depending on OType.</summary>
 		private void SetLabelText() {
 			//strUserSetup only shows when selecting a user to send to.
-			string strUserSetup=(OType==TaskObjectType.None ? Lan.g(this,"If a user is not in the list, then their inbox has not been setup yet. ") : "");
+			string strUserSetup=(OType==TaskObjectType.None ? Lan.G(this,"If a user is not in the list, then their inbox has not been setup yet. ") : "");
 			string objTypeStr=GetOTypeDescription();
 			if(checkMulti.Checked) {
 				listMain.SelectionMode=SelectionMode.MultiSimple;
-				labelMulti.Text=Lan.g(this,"Pick")+" "+objTypeStr+" "+Lan.g(this,"to send to.")+"  "
-					+strUserSetup+Lan.g(this,"Click on")+" "+objTypeStr+" "+Lan.g(this,"to toggle.");
+				labelMulti.Text=Lan.G(this,"Pick")+" "+objTypeStr+" "+Lan.G(this,"to send to.")+"  "
+					+strUserSetup+Lan.G(this,"Click on")+" "+objTypeStr+" "+Lan.G(this,"to toggle.");
 			}
 			else {
 				listMain.SelectionMode=SelectionMode.One;
-				labelMulti.Text=Lan.g(this,"Pick ")+objTypeStr+" "+Lan.g(this,"to send to.  ")+strUserSetup;
+				labelMulti.Text=Lan.G(this,"Pick ")+objTypeStr+" "+Lan.G(this,"to send to.  ")+strUserSetup;
 			}
 		}
 
@@ -409,7 +409,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(listMain.SelectedIndex==-1){
-				string msg=Lan.g(this,"Please select a ")+GetOTypeDescription()+Lan.g(this," first.");
+				string msg=Lan.G(this,"Please select a ")+GetOTypeDescription()+Lan.G(this," first.");
 				MessageBox.Show(msg);
 				return;
 			}

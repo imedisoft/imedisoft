@@ -207,12 +207,12 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			gridMain.AllowSortingByColumn=true;
-			col=new GridColumn(Lan.g(this,"Field Name"),200);
+			col=new GridColumn(Lan.G(this,"Field Name"),200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Field Type"),100);
+			col=new GridColumn(Lan.G(this,"Field Type"),100);
 			gridMain.ListGridColumns.Add(col);
 			if(!_isSelectionMode) {
-				col=new GridColumn(Lan.g(this,"Hidden"),150,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G(this,"Hidden"),150,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
 			}
 			gridMain.ListGridRows.Clear();

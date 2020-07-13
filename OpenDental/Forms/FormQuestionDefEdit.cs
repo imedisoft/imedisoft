@@ -162,7 +162,7 @@ namespace OpenDental{
 
 		private void FormQuestionDefEdit_Load(object sender, System.EventArgs e) {
 			for(int i=0;i<Enum.GetNames(typeof(QuestionType)).Length;i++){
-				listType.Items.Add(Lan.g("enumQuestionType",Enum.GetNames(typeof(QuestionType))[i]));
+				listType.Items.Add(Lan.G("enumQuestionType",Enum.GetNames(typeof(QuestionType))[i]));
 			}
 			listType.SelectedIndex=(int)QuestionDefCur.QuestType;
 			textQuestion.Text=QuestionDefCur.Description;

@@ -136,9 +136,9 @@ namespace OpenDental{
 			SchoolCourses.RefreshCache();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormSchoolCourses","Course ID"),100);
+			GridColumn col=new GridColumn(Lan.G("FormSchoolCourses","Course ID"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormEvaluationDefEdit","Description"),80);
+			col=new GridColumn(Lan.G("FormEvaluationDefEdit","Description"),80);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

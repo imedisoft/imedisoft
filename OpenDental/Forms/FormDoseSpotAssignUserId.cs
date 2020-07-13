@@ -53,7 +53,7 @@ namespace OpenDental {
 
 		private void FillComboBox() {
 			comboDoseUsers.Items.Clear();
-			comboDoseUsers.Items.Add(new ODBoxItem<Userod>(Lan.g(this,"None")));
+			comboDoseUsers.Items.Add(new ODBoxItem<Userod>(Lan.G(this,"None")));
 			comboDoseUsers.SelectedIndex=0;
 			foreach(Userod userCur in _listUsersInComboBox) {
 				ODBoxItem<Userod> boxItemCur=new ODBoxItem<Userod>(userCur.UserName,userCur);

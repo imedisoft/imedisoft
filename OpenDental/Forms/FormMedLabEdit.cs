@@ -362,7 +362,7 @@ namespace OpenDental {
 					//Do nothing.  This file will likely get cleaned up later.
 				}
 			}
-			docc.Description=Lan.g(this,"MedLab Result");
+			docc.Description=Lan.G(this,"MedLab Result");
 			docc.DateCreated=DateTime.Now;
 			Documents.Update(docc);
 			string filePathAndName="";
@@ -527,10 +527,10 @@ namespace OpenDental {
 			ListMedLabs.ForEach(x => x.PatNum=PatCur.PatNum);//update local list, done after moving files
 			_medLabCur=ListMedLabs[0];
 			if(fileMoveFailures>0) {//will never be > 0 if storing images in the db
-				MessageBox.Show(Lan.g(this,"Some files attached to the MedLab objects could not be moved.")+"\r\n"
-					+Lan.g(this,"This could be due to a missing file, a file being open, or a permission issue on the file which is preventing the move.")+"\r\n"
-					+Lan.g(this,"The file(s) will have to be moved manually from the Image module.")+"\r\n"
-					+Lan.g(this,"Number of files not moved")+": "+fileMoveFailures.ToString());
+				MessageBox.Show(Lan.G(this,"Some files attached to the MedLab objects could not be moved.")+"\r\n"
+					+Lan.G(this,"This could be due to a missing file, a file being open, or a permission issue on the file which is preventing the move.")+"\r\n"
+					+Lan.G(this,"The file(s) will have to be moved manually from the Image module.")+"\r\n"
+					+Lan.G(this,"Number of files not moved")+": "+fileMoveFailures.ToString());
 			}
 		}
 

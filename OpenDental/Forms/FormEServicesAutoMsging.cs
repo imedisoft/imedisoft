@@ -63,7 +63,7 @@ namespace OpenDental {
 				checkUseDefaultsEC.Visible=true;
 				checkUseDefaultsEC.Enabled=false;//when loading form we will be viewing defaults.
 				checkIsConfirmEnabled.Visible=true;
-				groupAutomationStatuses.Text=Lan.g(this,"eConfirmation Settings")+" - "+Lan.g(this,"Affects all Clinics");
+				groupAutomationStatuses.Text=Lan.G(this,"eConfirmation Settings")+" - "+Lan.G(this,"Affects all Clinics");
 			}
 			else {//NO CLINICS
 				checkUseDefaultsEC.Visible=false;
@@ -71,7 +71,7 @@ namespace OpenDental {
 				checkUseDefaultsEC.Checked=false;
 				checkIsConfirmEnabled.Visible=false;
 				checkEnableNoClinic.Visible=false;
-				groupAutomationStatuses.Text=Lan.g(this,"eConfirmation Settings");
+				groupAutomationStatuses.Text=Lan.G(this,"eConfirmation Settings");
 			}
 			setListClinicsAndDictRulesHelper();
 			comboClinicEConfirm.SelectedIndex=0;
@@ -200,9 +200,9 @@ namespace OpenDental {
 			List<long> listDontSendRem=PrefC.GetString(PrefName.ApptConfirmExcludeERemind).Split(',').Select(x => PIn.Long(x)).ToList();
 			gridConfStatuses.BeginUpdate();
 			gridConfStatuses.ListGridColumns.Clear();
-			gridConfStatuses.ListGridColumns.Add(new GridColumn(Lan.g(this,"Status"),100));
-			gridConfStatuses.ListGridColumns.Add(new GridColumn(Lan.g(this,"Don't Send"),70,HorizontalAlignment.Center));
-			gridConfStatuses.ListGridColumns.Add(new GridColumn(Lan.g(this,"Don't Change"),70,HorizontalAlignment.Center));
+			gridConfStatuses.ListGridColumns.Add(new GridColumn(Lan.G(this,"Status"),100));
+			gridConfStatuses.ListGridColumns.Add(new GridColumn(Lan.G(this,"Don't Send"),70,HorizontalAlignment.Center));
+			gridConfStatuses.ListGridColumns.Add(new GridColumn(Lan.G(this,"Don't Change"),70,HorizontalAlignment.Center));
 			gridConfStatuses.ListGridRows.Clear();
 			foreach(Def defConfStatus in _listDefsApptStatus) {
 				GridRow row=new GridRow();
@@ -219,10 +219,10 @@ namespace OpenDental {
 			#region Fill Reminders grid.
 			gridRemindersMain.BeginUpdate();
 			gridRemindersMain.ListGridColumns.Clear();
-			gridRemindersMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Type"),150) { TextAlign=HorizontalAlignment.Center });
-			gridRemindersMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Lead Time"),250));
+			gridRemindersMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Type"),150) { TextAlign=HorizontalAlignment.Center });
+			gridRemindersMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Lead Time"),250));
 			//gridRemindersMain.Columns.Add(new ODGridColumn("Send\r\nAll",50) { TextAlign=HorizontalAlignment.Center });
-			gridRemindersMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Send Order"),100));
+			gridRemindersMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Send Order"),100));
 			gridRemindersMain.NoteSpanStart=1;
 			gridRemindersMain.NoteSpanStop=2;
 			gridRemindersMain.ListGridRows.Clear();
@@ -243,18 +243,18 @@ namespace OpenDental {
 					continue;//only show default langauges in this grid.
 				}
 				row=new GridRow();
-				row.Cells.Add(Lan.g(this,apptRule.TypeCur.GetDescription())
-					+(_ecClinicCur.IsConfirmDefault ? "\r\n("+Lan.g(this,"Defaults")+")" : ""));
+				row.Cells.Add(Lan.G(this,apptRule.TypeCur.GetDescription())
+					+(_ecClinicCur.IsConfirmDefault ? "\r\n("+Lan.G(this,"Defaults")+")" : ""));
 				long tsPriorTicks=(apptRule.TypeCur==ApptReminderType.ScheduleThankYou) ? Math.Abs(apptRule.TSPrior.Ticks) : apptRule.TSPrior.Ticks;
 				string tsPrior=new TimeSpan(tsPriorTicks).ToStringDH();
 				if(!apptRule.IsEnabled) {
-					tsPrior="("+Lan.g(this,"Disabled")+") "+tsPrior;
+					tsPrior="("+Lan.G(this,"Disabled")+") "+tsPrior;
 				}
 				row.Cells.Add(tsPrior);
-				row.Cells.Add(apptRule.IsSendAll ? Lan.g(this,"All") : sendOrderText);
+				row.Cells.Add(apptRule.IsSendAll ? Lan.G(this,"All") : sendOrderText);
 				string strTemplateSMS=apptRule.TemplateSMS;
-				row.Note=Lan.g(this,"SMS Template")+":\r\n"+strTemplateSMS+"\r\n\r\n"+Lan.g(this,"Email Subject Template")+":\r\n"
-					+apptRule.TemplateEmailSubject+"\r\n"+Lan.g(this,"Email Template")+":\r\n"+apptRule.TemplateEmail;
+				row.Note=Lan.G(this,"SMS Template")+":\r\n"+strTemplateSMS+"\r\n\r\n"+Lan.G(this,"Email Subject Template")+":\r\n"
+					+apptRule.TemplateEmailSubject+"\r\n"+Lan.G(this,"Email Template")+":\r\n"+apptRule.TemplateEmail;
 				row.Tag=apptRule;
 				if(gridRemindersMain.ListGridRows.Count%2==1) {
 					row.ColorBackG=Color.FromArgb(240,240,240);//light gray every other row.
@@ -295,27 +295,27 @@ namespace OpenDental {
 
 		private void FillECRActivationButtons() {
 			//Reminder Activation Status
-			FillActivateButton(PrefName.ApptRemindAutoEnabled,Lan.g(this,"eReminders"),butActivateReminder,textStatusReminders);
+			FillActivateButton(PrefName.ApptRemindAutoEnabled,Lan.G(this,"eReminders"),butActivateReminder,textStatusReminders);
 			//Confirmation Activation Status
-			FillActivateButton(PrefName.ApptConfirmAutoEnabled,Lan.g(this,"eConfirmations"),butActivateConfirm,textStatusConfirmations);
+			FillActivateButton(PrefName.ApptConfirmAutoEnabled,Lan.G(this,"eConfirmations"),butActivateConfirm,textStatusConfirmations);
 			//ThankYou Activation Status
-			FillActivateButton(PrefName.ApptThankYouAutoEnabled,Lan.g(this,"Auto Thank-You"),butActivateThanks,textStatusThankYous);
+			FillActivateButton(PrefName.ApptThankYouAutoEnabled,Lan.G(this,"Auto Thank-You"),butActivateThanks,textStatusThankYous);
 			//Arrivals Activation Status
-			FillActivateButton(PrefName.ApptArrivalAutoEnabled,Lan.g(this,ApptReminderType.Arrival.GetDescription()),butActivateArrivals,textStatusArrivals);
+			FillActivateButton(PrefName.ApptArrivalAutoEnabled,Lan.G(this,ApptReminderType.Arrival.GetDescription()),butActivateArrivals,textStatusArrivals);
 		}
 
 		private void FillActivateButton(PrefName prefEnabled,string serviceName,UI.Button button,TextBox textBoxStatus) {
 			if(PrefC.GetBool(prefEnabled)) {
-				textBoxStatus.Text=serviceName+" : "+Lan.g(this,"Active");
+				textBoxStatus.Text=serviceName+" : "+Lan.G(this,"Active");
 				textBoxStatus.BackColor=Color.FromArgb(236,255,236);//light green
 				textBoxStatus.ForeColor=Color.Black;//instead of disabled grey
-				button.Text=Lan.g(this,"Deactivate ")+serviceName;
+				button.Text=Lan.G(this,"Deactivate ")+serviceName;
 			}
 			else {
-				textBoxStatus.Text=serviceName+" : "+Lan.g(this,"Inactive");
+				textBoxStatus.Text=serviceName+" : "+Lan.G(this,"Inactive");
 				textBoxStatus.BackColor=Color.FromArgb(254,235,233);//light red;
 				textBoxStatus.ForeColor=Color.Black;//instead of disabled grey
-				button.Text=Lan.g(this,"Activate ")+serviceName;
+				button.Text=Lan.G(this,"Activate ")+serviceName;
 			}
 		}
 

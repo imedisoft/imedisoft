@@ -1042,7 +1042,7 @@ namespace OpenDental{
 			}
 			if(!IsSelectionMode) {
 				butOK.Visible=false;
-				butCancel.Text=Lan.g(this,"Close");
+				butCancel.Text=Lan.G(this,"Close");
 			}
 			else if(AllowMultipleSelections) {
 				//Allow the user to select multiple rows by changing the grid selection mode.
@@ -1226,9 +1226,9 @@ namespace OpenDental{
 				}
 			}
 			//Fill provider combo boxes
-			comboProvider1.Items.Add(Lan.g(this,"None"));
-			comboProvider2.Items.Add(Lan.g(this,"None"));
-			comboProvider3.Items.Add(Lan.g(this,"None"));
+			comboProvider1.Items.Add(Lan.G(this,"None"));
+			comboProvider2.Items.Add(Lan.G(this,"None"));
+			comboProvider3.Items.Add(Lan.G(this,"None"));
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProvider1.Items.Add(_listProviders[i].Abbr);
 				comboProvider2.Items.Add(_listProviders[i].Abbr);
@@ -1504,13 +1504,13 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			//The order of these columns are important for gridMain_CellDoubleClick(), gridMain_CellLeave(), and GridMain_CellEnter()
-			GridColumn col=new GridColumn(Lan.g("TableProcedures","Category"),90);
+			GridColumn col=new GridColumn(Lan.G("TableProcedures","Category"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProcedures","Description"),206);
+			col=new GridColumn(Lan.G("TableProcedures","Description"),206);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProcedures","Abbr"),90);
+			col=new GridColumn(Lan.G("TableProcedures","Abbr"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProcedures","Code"),50);
+			col=new GridColumn(Lan.G("TableProcedures","Code"),50);
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn("Fee 1",50,HorizontalAlignment.Right,true);
 			gridMain.ListGridColumns.Add(col);
@@ -1733,7 +1733,7 @@ namespace OpenDental{
 			if(feeAmtNewStr!="" && !Double.TryParse(gridMain.ListGridRows[e.Row].Cells[e.Col].Text,out feeAmtNew)) {
 				gridMain.SetSelected(new Point(e.Col,e.Row));
 				gridMain.ListGridRows[e.Row].Cells[e.Col].Text=feeAmtOld;
-				MessageBox.Show(Lan.g(this,"Please fix data entry error first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry error first."));
 				return;
 			}
 			if(Fees.IsFeeAmtEqual(fee,feeAmtNewStr) || !FeeL.CanEditFee(feeSched,provNum,clinicNum)) {
@@ -1893,12 +1893,12 @@ namespace OpenDental{
 			Prefs.UpdateBool(PrefName.ProcCodeListShowHidden,checkShowHidden.Checked);
 			string hiddenStatus="";
 			if(checkShowHidden.Checked) {
-				hiddenStatus=Lan.g(this,"checked.");
+				hiddenStatus=Lan.G(this,"checked.");
 			}
 			else {
-				hiddenStatus=Lan.g(this,"unchecked.");
+				hiddenStatus=Lan.G(this,"unchecked.");
 			}
-			MessageBox.Show(Lan.g(this,"Show Hidden will default to")+" "+hiddenStatus);
+			MessageBox.Show(Lan.G(this,"Show Hidden will default to")+" "+hiddenStatus);
 		}
 
 		#endregion
@@ -1997,13 +1997,13 @@ namespace OpenDental{
 				FillGrid();
 				return;
 			}
-			MessageBox.Show(Lan.g(this,"Procedure codes inserted")+": "+rowsInserted);
+			MessageBox.Show(Lan.G(this,"Procedure codes inserted")+": "+rowsInserted);
 			DataValid.SetInvalid(InvalidType.Defs,InvalidType.ProcCodes);
 			ProcedureCodes.RefreshCache();
 			FillCats();
 			SynchAndFillListFees(false);//just in case there is a new fee?
 			FillGrid();
-			SecurityLogs.MakeLogEntry(Permissions.Setup,0,Lan.g(this,"Imported Procedure Codes"));
+			SecurityLogs.MakeLogEntry(Permissions.Setup,0,Lan.G(this,"Imported Procedure Codes"));
 		}
 
 		///<summary>Can be called externally.  Surround with try catch.  Returns number of codes inserted. 
@@ -2016,7 +2016,7 @@ namespace OpenDental{
 			XmlSerializer serializer=new XmlSerializer(typeof(List<ProcedureCode>));
 			if(path!="") {
 				if(!File.Exists(path)) {
-					throw new ApplicationException(Lan.g("FormProcCodes","File does not exist."));
+					throw new ApplicationException(Lan.G("FormProcCodes","File does not exist."));
 				}
 				try {
 					using(TextReader reader=new StreamReader(path)) {
@@ -2024,7 +2024,7 @@ namespace OpenDental{
 					}
 				}
 				catch {
-					throw new ApplicationException(Lan.g("FormProcCodes","Invalid file format"));
+					throw new ApplicationException(Lan.G("FormProcCodes","Invalid file format"));
 				}
 			}
 			else if(xmlData!="") {
@@ -2034,7 +2034,7 @@ namespace OpenDental{
 					}
 				}
 				catch {
-					throw new ApplicationException(Lan.g("FormProcCodes","xml format"));
+					throw new ApplicationException(Lan.G("FormProcCodes","xml format"));
 				}
 				XmlDocument xmlDocNcodes=new XmlDocument();
 				xmlDocNcodes.LoadXml(xmlData);
@@ -2261,7 +2261,7 @@ namespace OpenDental{
 
 		private int GetFeeSchedGroupIndexFromPicker(List<FeeSchedGroup> listFeeSchedGroup) {
 			List<GridColumn> listColumnHeaders=new List<GridColumn>() {
-				new GridColumn(Lan.g(this,"Description"),100){ IsWidthDynamic=true }
+				new GridColumn(Lan.G(this,"Description"),100){ IsWidthDynamic=true }
 			};
 			List<GridRow> listRowValues=new List<GridRow>();
 			listFeeSchedGroup.ForEach(x => {
@@ -2269,8 +2269,8 @@ namespace OpenDental{
 				row.Tag=x;
 				listRowValues.Add(row);
 			});
-			string formTitle=Lan.g(this,"Fee Schedule Group Picker");
-			string gridTitle=Lan.g(this,"Fee Schedule Groups");
+			string formTitle=Lan.G(this,"Fee Schedule Group Picker");
+			string gridTitle=Lan.G(this,"Fee Schedule Groups");
 			FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 			if(form.ShowDialog()==DialogResult.OK) {
 				return listFeeSchedGroup.FindIndex((x => x.FeeSchedGroupNum==((FeeSchedGroup)form.ListSelectedTags[0]).FeeSchedGroupNum));

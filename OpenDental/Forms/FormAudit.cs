@@ -346,15 +346,15 @@ namespace OpenDental{
 			textDateTo.Text=DateTime.Today.ToShortDateString();
 			for(int i=0;i<permissionsAlphabetic.Count;i++){
 				if(i==0){
-					comboPermission.Items.Add(Lan.g(this,"All"));//None
+					comboPermission.Items.Add(Lan.G(this,"All"));//None
 				}
 				else{
-					comboPermission.Items.Add(Lan.g("enumPermissions",permissionsAlphabetic[i]));
+					comboPermission.Items.Add(Lan.G("enumPermissions",permissionsAlphabetic[i]));
 				}
 			}
 			comboPermission.SelectedIndex=0;
 			_listUserods=Userods.GetDeepCopy();
-			comboUser.Items.Add(Lan.g(this,"All"));
+			comboUser.Items.Add(Lan.G(this,"All"));
 			comboUser.SelectedIndex=0;
 			for(int i=0;i<_listUserods.Count;i++){
 				comboUser.Items.Add(_listUserods[i].UserName);
@@ -433,19 +433,19 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"There was a problem refreshing the Audit Trail with the current filters."),ex);
+				FriendlyException.Show(Lan.G(this,"There was a problem refreshing the Audit Trail with the current filters."),ex);
 				logList=new SecurityLog[0];
 			}
 			grid.BeginUpdate();
 			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn(Lan.g("TableAudit","Date"),70,GridSortingStrategy.DateParse));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g("TableAudit","Time"),60,GridSortingStrategy.DateParse));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g("TableAudit","Patient"),100));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g("TableAudit","User"),70));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g("TableAudit","Permission"),190));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g("TableAudit","Computer"),70));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g("TableAudit","Log Text"),279));
-			grid.ListGridColumns.Add(new GridColumn(Lan.g("TableAudit","Last Edit"),100));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G("TableAudit","Date"),70,GridSortingStrategy.DateParse));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G("TableAudit","Time"),60,GridSortingStrategy.DateParse));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G("TableAudit","Patient"),100));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G("TableAudit","User"),70));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G("TableAudit","Permission"),190));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G("TableAudit","Computer"),70));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G("TableAudit","Log Text"),279));
+			grid.ListGridColumns.Add(new GridColumn(Lan.G("TableAudit","Last Edit"),100));
 			grid.ListGridRows.Clear();
 			GridRow row;
 			foreach(SecurityLog logCur in logList) {
@@ -454,7 +454,7 @@ namespace OpenDental{
 				row.Cells.Add(logCur.LogDateTime.ToShortTimeString());
 				row.Cells.Add(logCur.PatientName);
 				//user might be null due to old bugs.
-				row.Cells.Add(Userods.GetUser(logCur.UserNum)?.UserName??(Lan.g(this,"Unknown")+"("+POut.Long(logCur.UserNum)+")"));
+				row.Cells.Add(Userods.GetUser(logCur.UserNum)?.UserName??(Lan.G(this,"Unknown")+"("+POut.Long(logCur.UserNum)+")"));
 				if(logCur.PermType==Permissions.ChartModule) {
 					row.Cells.Add("ChartModuleViewed");
 				}
@@ -525,7 +525,7 @@ namespace OpenDental{
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugClassicPreview(pd_PrintPage,Lan.g(this,"Audit trail printed"),printoutOrientation:PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugClassicPreview(pd_PrintPage,Lan.G(this,"Audit trail printed"),printoutOrientation:PrintoutOrientation.Landscape);
 		}
 
 		///<summary>Raised for each page to be printed.</summary>
@@ -540,10 +540,10 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Audit Trail");
+				text=Lan.G(this,"Audit Trail");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=textDateFrom.Text+" "+Lan.g(this,"to")+" "+textDateTo.Text;
+				text=textDateFrom.Text+" "+Lan.G(this,"to")+" "+textDateTo.Text;
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=20;
 				headingPrinted=true;

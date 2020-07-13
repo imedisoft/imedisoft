@@ -166,7 +166,7 @@ namespace OpenDental.Bridges {
 				htKeyVals["PhHome"]=LimitLength(pat.HmPhone,13);
 				htKeyVals["PhWork"]=LimitLength(pat.WkPhone,13);
 				if(!WritePrivatePofileString2("Slave",htKeyVals,iniFile)) {
-					MessageBox.Show(Lan.g(null,"Unable to start external program: ")+path);
+					MessageBox.Show(Lan.G(null,"Unable to start external program: ")+path);
 				}
 				else {
 					try {

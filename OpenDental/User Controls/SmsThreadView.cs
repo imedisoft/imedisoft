@@ -138,7 +138,7 @@ namespace OpenDental {
 			if(_smsThreadPage > maxPage) {	
 				_smsThreadPage=maxPage;
 			}
-			labelCurrentPage.Text=(_smsThreadPage).ToString() +" "+Lan.g(this,"of")+" "+ (maxPage).ToString();
+			labelCurrentPage.Text=(_smsThreadPage).ToString() +" "+Lan.G(this,"of")+" "+ (maxPage).ToString();
 			//Here we fill the reference list that is displayed depending on which page we're on.
 			int firstMessageIdx=CountMessagesToDisplay*(_smsThreadPage-1);
 			int lastMessageIdx=Math.Min(CountMessagesToDisplay*_smsThreadPage,_listSmsThreadMessages.Count)-1;

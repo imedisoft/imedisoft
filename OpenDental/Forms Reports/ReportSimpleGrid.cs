@@ -103,7 +103,7 @@ namespace OpenDental{
 
 		///<summary>Assumes that the columns will be set in sequential order.  Automatically runs the language translation.</summary>
 		public void SetColumn(object sender,int idx,string colCaption,int colWidth,HorizontalAlignment colAlign) {
-			this.colCaption[idx]=Lan.g(sender,colCaption);
+			this.colCaption[idx]=Lan.G(sender,colCaption);
 			this.colWidth[idx]=colWidth;
 			this.colPos[idx+1]=this.colPos[idx]+colWidth;
 			this.colAlign[idx]=colAlign;
@@ -116,7 +116,7 @@ namespace OpenDental{
 
 		///<summary>This is an alternative to SetColumn.  Used when we want to set absolute column positions instead of widths.  Mostly used for older reports so that we don't have to sit down with a calculator and refigure each column width.  SetColumn is the newer better way to do it.  When using this, set the RIGHT position of each column.  Column 1 always has a left position of 0.</summary>
 		public void SetColumnPos(object sender,int idx,string colCaption,int colPos,HorizontalAlignment colAlign) {
-			this.colCaption[idx]=Lan.g(sender,colCaption);
+			this.colCaption[idx]=Lan.G(sender,colCaption);
 			this.colPos[idx+1]=colPos;
 			this.colWidth[idx]=this.colPos[idx+1]-this.colPos[idx];
 			this.colAlign[idx]=colAlign;

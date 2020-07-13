@@ -47,8 +47,8 @@ namespace OpenDental {
 			List<string> listSetStmts = UserQueries.ParseSetStatements(_queryCur.QueryText);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(gridMain.TranslationName,"Variable"),200));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(gridMain.TranslationName,"Value"),200,true));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"Variable"),200));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"Value"),200,true));
 			gridMain.ListGridRows.Clear();
 			foreach(string strSetStmt in listSetStmts) { //for each SET statement
 				List<QuerySetStmtObject> listQObjs = UserQueries.GetListQuerySetStmtObjs(strSetStmt); //find the variable name
@@ -75,7 +75,7 @@ namespace OpenDental {
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			QuerySetStmtObject qObjCur = (QuerySetStmtObject)gridMain.SelectedGridRows[0].Tag;
 			InputBox inputBox=new InputBox(new List<InputBoxParam> {
-				new InputBoxParam(InputBoxType.TextBox,Lan.g(this,"Set value for")+" "+ qObjCur.Variable,text: qObjCur.Value)
+				new InputBoxParam(InputBoxType.TextBox,Lan.G(this,"Set value for")+" "+ qObjCur.Variable,text: qObjCur.Value)
 			});
 			inputBox.ShowDialog();
 			if(inputBox.DialogResult == DialogResult.OK) {
@@ -116,12 +116,12 @@ namespace OpenDental {
 		private void butShowHide_Click(object sender,EventArgs e) {
 			splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
 			if(splitContainer1.Panel2Collapsed) {
-				butShowHide.Text=Lan.g(this,"Show Text");
+				butShowHide.Text=Lan.G(this,"Show Text");
 				Height = 325;
 				this.butShowHide.Image = global::OpenDental.Properties.Resources.arrowDownTriangle;
 			}
 			else {
-				butShowHide.Text=Lan.g(this,"Hide Text");
+				butShowHide.Text=Lan.G(this,"Hide Text");
 				Height = 720;
 				this.butShowHide.Image = global::OpenDental.Properties.Resources.arrowUpTriangle;
 			}

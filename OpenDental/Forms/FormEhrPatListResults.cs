@@ -233,7 +233,7 @@ namespace OpenDental {
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Patient List Printed"));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Patient List Printed"));
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {

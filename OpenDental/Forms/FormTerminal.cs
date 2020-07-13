@@ -197,7 +197,7 @@ namespace OpenDental {
 			}
 			if(string.IsNullOrWhiteSpace(clientName) || TerminalActives.IsCompClientNameInUse(Environment.MachineName,clientName)) {
 				InputBox iBox=new InputBox("Please enter a unique name to identify this kiosk.");
-				iBox.setTitle(Lan.g(this,"Kiosk Session Name"));
+				iBox.setTitle(Lan.G(this,"Kiosk Session Name"));
 				iBox.ShowDialog();
 				while(iBox.DialogResult==DialogResult.OK && TerminalActives.IsCompClientNameInUse(Environment.MachineName,iBox.textResult.Text)) {
 					MessageBox.Show("The name entered is invalid or already in use.");
@@ -408,7 +408,7 @@ namespace OpenDental {
 			if(PrefC.GetString(PrefName.TerminalClosePassword)!="") {
 				InputBox iBox=new InputBox("Enter password to exit kiosk.");
 				iBox.textResult.PasswordChar='*';
-				iBox.setTitle(Lan.g(this,"Kiosk Password"));
+				iBox.setTitle(Lan.G(this,"Kiosk Password"));
 				iBox.ShowDialog();
 				while(iBox.DialogResult==DialogResult.OK && iBox.textResult.Text!=PrefC.GetString(PrefName.TerminalClosePassword)) {
 					MessageBox.Show("Invalid Password");

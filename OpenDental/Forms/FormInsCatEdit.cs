@@ -217,7 +217,7 @@ namespace OpenDental {
 			if(  textPercent.errorProvider1.GetError(textPercent)!=""
 				//|| textPriBasicPercent.errorProvider1.GetError(textPriBasicPercent)!=""
 				){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			_covCatCur.Description=textDescription.Text;

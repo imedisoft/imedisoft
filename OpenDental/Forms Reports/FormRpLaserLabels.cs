@@ -916,12 +916,12 @@ namespace OpenDental {
 			checkAllProviders.Checked = true;
 			listProviders.Visible = false;
 			//If you change listStatus, be sure the change is reflected in BuildPatStatList.
-			listStatus.Items.Add(Lan.g("enumPatientStatus","Patient"));
-			listStatus.Items.Add(Lan.g("enumPatientStatus","NonPatient"));
-			listStatus.Items.Add(Lan.g("enumPatientStatus","Inactive"));
-			listStatus.Items.Add(Lan.g("enumPatientStatus","Archived"));
-			listStatus.Items.Add(Lan.g("enumPatientStatus","Deceased"));
-			listStatus.Items.Add(Lan.g("enumPatientStatus","Prospective"));
+			listStatus.Items.Add(Lan.G("enumPatientStatus","Patient"));
+			listStatus.Items.Add(Lan.G("enumPatientStatus","NonPatient"));
+			listStatus.Items.Add(Lan.G("enumPatientStatus","Inactive"));
+			listStatus.Items.Add(Lan.G("enumPatientStatus","Archived"));
+			listStatus.Items.Add(Lan.G("enumPatientStatus","Deceased"));
+			listStatus.Items.Add(Lan.G("enumPatientStatus","Prospective"));
 			displayLabels(iLabelStart);
 			SetNextMonth();
 		}
@@ -1168,7 +1168,7 @@ namespace OpenDental {
 				pagesPrinted = 0;
 				labelsPrinted = 0;
 				PrinterL.TryPreview(pdLabels_PrintPage,
-					Lan.g(this,"Laser labels printed"),
+					Lan.G(this,"Laser labels printed"),
 					PrintSituation.LabelSheet,
 					new Margins(0,0,0,0),
 					PrintoutOrigin.AtMargin,
@@ -1460,13 +1460,13 @@ namespace OpenDental {
 			if(CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(dateTo.Year,dateTo.Month)==dateTo.Day) {
 				toLastDay=true;
 			}
-			textBirthdayFrom.Text=dateFrom.AddMonths(-1).ToString(Lan.g(this,"MM/dd"));
-			textBirthdayTo.Text=dateTo.AddMonths(-1).ToString(Lan.g(this,"MM/dd"));
+			textBirthdayFrom.Text=dateFrom.AddMonths(-1).ToString(Lan.G(this,"MM/dd"));
+			textBirthdayTo.Text=dateTo.AddMonths(-1).ToString(Lan.G(this,"MM/dd"));
 			if(toLastDay) {
 				dateTo=PIn.Date(textBirthdayTo.Text);
 				textBirthdayTo.Text=new DateTime(dateTo.Year,dateTo.Month,
 					CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(dateTo.Year,dateTo.Month))
-					.ToString(Lan.g(this,"MM/dd"));
+					.ToString(Lan.G(this,"MM/dd"));
 			}
 		}
 
@@ -1479,22 +1479,22 @@ namespace OpenDental {
 			if(CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(dateTo.Year,dateTo.Month)==dateTo.Day) {
 				toLastDay=true;
 			}
-			textBirthdayFrom.Text=dateFrom.AddMonths(1).ToString(Lan.g(this,"MM/dd"));
-			textBirthdayTo.Text=dateTo.AddMonths(1).ToString(Lan.g(this,"MM/dd"));
+			textBirthdayFrom.Text=dateFrom.AddMonths(1).ToString(Lan.G(this,"MM/dd"));
+			textBirthdayTo.Text=dateTo.AddMonths(1).ToString(Lan.G(this,"MM/dd"));
 			if(toLastDay) {
 				dateTo=PIn.Date(textBirthdayTo.Text);
 				textBirthdayTo.Text=new DateTime(dateTo.Year,dateTo.Month,
 					CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(dateTo.Year,dateTo.Month))
-					.ToString(Lan.g(this,"MM/dd"));
+					.ToString(Lan.G(this,"MM/dd"));
 			}
 		}
 		private void SetNextMonth() {
 			textBirthdayFrom.Text
                 = new DateTime(DateTime.Today.AddMonths(1).Year,DateTime.Today.AddMonths(1).Month,1)
-					.ToString(Lan.g(this,"MM/dd"));
+					.ToString(Lan.G(this,"MM/dd"));
 			textBirthdayTo.Text
                 = new DateTime(DateTime.Today.AddMonths(2).Year,DateTime.Today.AddMonths(2).Month,1).AddDays(-1)
-					.ToString(Lan.g(this,"MM/dd"));
+					.ToString(Lan.G(this,"MM/dd"));
 		}
 
 		private void butBirthdayMonth_Click(object sender,EventArgs e) {

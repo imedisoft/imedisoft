@@ -207,7 +207,7 @@ namespace OpenDental{
 			//Fill the right-click menu for the grid
 			List<MenuItem> listMenuItems=new List<MenuItem>();
 			//The first item in the list will always exists, but we toggle it's visibility to only show when 1 row is selected.
-			listMenuItems.Add(new MenuItem(Lan.g(this,"Go to Account"),new EventHandler(gridMain_RightClickHelper)));
+			listMenuItems.Add(new MenuItem(Lan.G(this,"Go to Account"),new EventHandler(gridMain_RightClickHelper)));
 			listMenuItems[0].Tag=0;//Tags are used to identify what to do in gridMain_RightClickHelper.
 			Menu.MenuItemCollection menuItemCollection=new Menu.MenuItemCollection(rightClickMenu);
 			menuItemCollection.AddRange(listMenuItems.ToArray());
@@ -228,22 +228,22 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g(gridMain.TranslationName,"Clinic"),90);
+				col=new GridColumn(Lan.G(gridMain.TranslationName,"Clinic"),90);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Date of Service"),90,GridSortingStrategy.DateParse);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Date of Service"),90,GridSortingStrategy.DateParse);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Claim Type"),90);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Claim Type"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Claim Status"),100);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Claim Status"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Patient Name"),150);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Patient Name"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Carrier Name"),150);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Carrier Name"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Claim Fee"),90,GridSortingStrategy.AmountParse);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Claim Fee"),90,GridSortingStrategy.AmountParse);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Proc Codes"),100);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Proc Codes"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -328,8 +328,8 @@ namespace OpenDental{
 			DataTable table=RpClaimNotSent.GetClaimsNotSent(_startDate,_endDate,listClinicNums,true,(ClaimNotSentStatuses)comboBoxInsFilter.SelectedItem);
 			string subtitleClinics="";
 			subtitleClinics=comboClinicMulti.GetStringSelectedClinics();
-			report.ReportName=Lan.g(this,"Claims Not Sent");
-			report.AddTitle("Title",Lan.g(this,"Claims Not Sent"));
+			report.ReportName=Lan.G(this,"Claims Not Sent");
+			report.AddTitle("Title",Lan.G(this,"Claims Not Sent"));
 			if(PrefC.HasClinicsEnabled) {
 				report.AddSubTitle("Clinics",subtitleClinics);
 			}

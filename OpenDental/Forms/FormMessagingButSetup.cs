@@ -167,12 +167,12 @@ namespace OpenDental{
 		private void FormMessagingButSetup_Load(object sender,EventArgs e) {
 			_listComputers=Computers.GetDeepCopy();
 			listComputers.Items.Clear();
-			listComputers.Items.Add(Lan.g(this,"All"));
+			listComputers.Items.Add(Lan.G(this,"All"));
 			string s;
 			for(int i=0;i<_listComputers.Count;i++) {
 				s=_listComputers[i].CompName;
 				if(SystemInformation.ComputerName==_listComputers[i].CompName){
-					s+=" "+Lan.g(this,"(this computer)");
+					s+=" "+Lan.G(this,"(this computer)");
 				}
 				listComputers.Items.Add(s);
 			}
@@ -202,7 +202,7 @@ namespace OpenDental{
 						buttonText+=" ("+string.Join(",",listSigElementDefs.Select(x => x.SigText))+")";
 					}
 					if(sigButDef.ComputerName=="" && listComputers.SelectedIndex!=0) {
-						buttonText+=" "+Lan.g(this,"(all)");
+						buttonText+=" "+Lan.G(this,"(all)");
 					}
 					listButtons.Items.Add(buttonText);
 				}

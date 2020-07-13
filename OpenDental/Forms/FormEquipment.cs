@@ -86,27 +86,27 @@ namespace OpenDental {
 			else {
 			}
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Description"),150);
+			GridColumn col=new GridColumn(Lan.G(this,"Description"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"SerialNumber"),90);
+			col=new GridColumn(Lan.G(this,"SerialNumber"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Yr"),40);
+			col=new GridColumn(Lan.G(this,"Yr"),40);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"DatePurchased"),90);
+			col=new GridColumn(Lan.G(this,"DatePurchased"),90);
 			gridMain.ListGridColumns.Add(col);
 			if(display!=EnumEquipmentDisplayMode.Purchased) {//Purchased mode is designed for submission to tax authority, only certain columns
-				col=new GridColumn(Lan.g(this,"DateSold"),90);
+				col=new GridColumn(Lan.G(this,"DateSold"),90);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(this,"Cost"),80,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Cost"),80,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Est Value"),80,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Est Value"),80,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
 			if(display!=EnumEquipmentDisplayMode.Purchased) {
-				col=new GridColumn(Lan.g(this,"Location"),80);
+				col=new GridColumn(Lan.G(this,"Location"),80);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(this,"Status"),160);
+			col=new GridColumn(Lan.G(this,"Status"),160);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -161,7 +161,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Equipment list printed"));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Equipment list printed"));
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -175,19 +175,19 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Equipment List");
+				text=Lan.G(this,"Equipment List");
 				if(radioPurchased.Checked) {
-					text+=" - "+Lan.g(this,"Purchased");
+					text+=" - "+Lan.G(this,"Purchased");
 				}
 				if(radioSold.Checked) {
-					text+=" - "+Lan.g(this,"Sold");
+					text+=" - "+Lan.G(this,"Sold");
 				}
 				if(radioAll.Checked) {
-					text+=" - "+Lan.g(this,"All");
+					text+=" - "+Lan.G(this,"All");
 				}
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=textDateStart.Text+" "+Lan.g(this,"to")+" "+textDateEnd.Text;
+				text=textDateStart.Text+" "+Lan.G(this,"to")+" "+textDateEnd.Text;
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=20;
 				headingPrinted=true;
@@ -205,7 +205,7 @@ namespace OpenDental {
 				for(int i=0;i<listEquip.Count;i++){
 					total+=listEquip[i].MarketValue;
 				}
-				g.DrawString(Lan.g(this,"Total Est Value:")+" "+total.ToString("c"),Font,Brushes.Black,550,yPos);
+				g.DrawString(Lan.G(this,"Total Est Value:")+" "+total.ToString("c"),Font,Brushes.Black,550,yPos);
 			}
 			g.Dispose();
 		}

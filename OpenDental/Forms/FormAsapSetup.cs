@@ -20,15 +20,15 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Type"),100);
+			col=new GridColumn(Lan.G(this,"Type"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,""),250);//Random tidbits regarding the template
+			col=new GridColumn(Lan.G(this,""),250);//Random tidbits regarding the template
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Template"),500);
+			col=new GridColumn(Lan.G(this,"Template"),500);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			checkUseDefaults.Checked=true;
-			string baseVars=Lan.g(this,"Available variables:")+" [NameF], [Date], [Time], [OfficeName], [OfficePhone]";
+			string baseVars=Lan.G(this,"Available variables:")+" [NameF], [Date], [Time], [OfficeName], [OfficePhone]";
 			GridRow row;
 			row=BuildRowForTemplate(PrefName.ASAPTextTemplate,"Text manual",baseVars);
 			gridMain.ListGridRows.Add(row);
@@ -75,7 +75,7 @@ namespace OpenDental {
 				}
 			}
 			GridRow row=new GridRow();
-			row.Cells.Add(Lan.g(this,templateName)+(doShowDefault ? " "+Lan.g(this,"(Default)") : ""));
+			row.Cells.Add(Lan.G(this,templateName)+(doShowDefault ? " "+Lan.G(this,"(Default)") : ""));
 			row.Cells.Add(availableVars);
 			row.Cells.Add(templateText);
 			row.Tag=prefName;

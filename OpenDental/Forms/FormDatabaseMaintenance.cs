@@ -1012,9 +1012,9 @@ namespace OpenDental {
 			_listDbmMethodsGrid=GetDbmMethodsForGrid();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Name"),300));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Break\r\nDown"),40,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Results"),300){ IsWidthDynamic=true });
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),300));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Break\r\nDown"),40,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Results"),300){ IsWidthDynamic=true });
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			for(int i=0;i<_listDbmMethodsGrid.Count;i++) {
@@ -1032,7 +1032,7 @@ namespace OpenDental {
 			_listDbmMethodsGridHidden=GetDbmMethodsForGrid(isHidden: true,isOld: false);
 			gridHidden.BeginUpdate();
 			gridHidden.ListGridColumns.Clear();
-			gridHidden.ListGridColumns.Add(new GridColumn(Lan.g(this,"Name"),340));
+			gridHidden.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),340));
 			gridHidden.ListGridRows.Clear();
 			GridRow row;
 			for(int i = 0;i<_listDbmMethodsGridHidden.Count;i++) {
@@ -1050,12 +1050,12 @@ namespace OpenDental {
 			_listDbmMethodsGridOld.Sort(new MethodInfoComparer());
 			gridOld.BeginUpdate();
 			gridOld.ListGridColumns.Clear();
-			gridOld.ListGridColumns.Add(new GridColumn(Lan.g(this,"Name"),300));
+			gridOld.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),300));
 			if(checkShowHidden.Checked) {
-				gridOld.ListGridColumns.Add(new GridColumn(Lan.g(this,"Hidden"),45,HorizontalAlignment.Center));
+				gridOld.ListGridColumns.Add(new GridColumn(Lan.G(this,"Hidden"),45,HorizontalAlignment.Center));
 			}
-			gridOld.ListGridColumns.Add(new GridColumn(Lan.g(this,"Break\r\nDown"),40,HorizontalAlignment.Center));
-			gridOld.ListGridColumns.Add(new GridColumn(Lan.g(this,"Results"),300){ IsWidthDynamic=true });
+			gridOld.ListGridColumns.Add(new GridColumn(Lan.G(this,"Break\r\nDown"),40,HorizontalAlignment.Center));
+			gridOld.ListGridColumns.Add(new GridColumn(Lan.G(this,"Results"),300){ IsWidthDynamic=true });
 			gridOld.ListGridRows.Clear();
 			GridRow row;
 			for(int i = 0;i<_listDbmMethodsGridOld.Count;i++) {
@@ -1189,20 +1189,20 @@ namespace OpenDental {
 		}
 
 		private void butOptimize_Click(object sender,EventArgs e) {
-			if(MessageBox.Show(Lan.g("FormDatabaseMaintenance","This tool will backup, optimize, and repair all tables.")+"\r\n"+Lan.g("FormDatabaseMaintenance","Continue?")
-				,Lan.g("FormDatabaseMaintenance","Backup Optimize Repair")
+			if(MessageBox.Show(Lan.G("FormDatabaseMaintenance","This tool will backup, optimize, and repair all tables.")+"\r\n"+Lan.G("FormDatabaseMaintenance","Continue?")
+				,Lan.G("FormDatabaseMaintenance","Backup Optimize Repair")
 				,MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
 			string result="";
 			if(Shared.BackupRepairAndOptimize(true,BackupLocation.OptimizeTool)) {
-				result=DateTime.Now.ToString()+"\r\n"+Lan.g("FormDatabaseMaintenance","Repair and Optimization Complete");
+				result=DateTime.Now.ToString()+"\r\n"+Lan.G("FormDatabaseMaintenance","Repair and Optimization Complete");
 			}
 			else {
 				result=DateTime.Now.ToString()+"\r\n";
-				result+=Lan.g("FormDatabaseMaintenance","Backup, repair, or optimize has failed.  Your database has not been altered.")+"\r\n";
-				result+=Lan.g("FormDatabaseMaintenance","Please call support for help, a manual backup of your data must be made before trying to fix your database.")+"\r\n";
+				result+=Lan.G("FormDatabaseMaintenance","Backup, repair, or optimize has failed.  Your database has not been altered.")+"\r\n";
+				result+=Lan.G("FormDatabaseMaintenance","Please call support for help, a manual backup of your data must be made before trying to fix your database.")+"\r\n";
 			}
 			Cursor=Cursors.Default;
 			SaveLogToFile(result);
@@ -1251,7 +1251,7 @@ namespace OpenDental {
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will replace ALL null strings in your database with empty strings.  This cannot be undone.  Do you wish to continue?")) {
 				return;
 			}
-			MessageBox.Show(Lan.g(this,"Number of null strings replaced with empty strings")+": "+DatabaseMaintenances.MySqlRemoveNullStrings());
+			MessageBox.Show(Lan.G(this,"Number of null strings replaced with empty strings")+": "+DatabaseMaintenances.MySqlRemoveNullStrings());
 			_isCacheInvalid=true;//The above DBM could have potentially changed cached tables. 
 		}
 
@@ -1312,7 +1312,7 @@ namespace OpenDental {
 			string results="";
 			ODProgress.ShowAction(() => results=DatabaseMaintenances.CleanUpRawEmails(),
 				actionException:ex => {
-					results=Lan.g(this,"There was an error cleaning up email bloat:")+"\r\n"+ex.Message;
+					results=Lan.G(this,"There was an error cleaning up email bloat:")+"\r\n"+ex.Message;
 				},
 				eventType:typeof(DatabaseMaintEvent),
 				odEventType:ODEventType.DatabaseMaint);
@@ -1331,7 +1331,7 @@ namespace OpenDental {
 			string results="";
 			ODProgress.ShowAction(() => results=DatabaseMaintenances.CleanUpAttachmentsRootDirectiory(),
 				actionException: ex => {
-					results=Lan.g(this,"There was an error cleaning up email attachments:")+"\r\n"+ex.Message;
+					results=Lan.G(this,"There was an error cleaning up email attachments:")+"\r\n"+ex.Message;
 				},
 				eventType: typeof(DatabaseMaintEvent),
 				odEventType: ODEventType.DatabaseMaint);
@@ -1368,7 +1368,7 @@ namespace OpenDental {
 			ODProgress.ShowAction(() => results=DatabaseMaintenances.DetachInvalidPaymentPlanPayments());
 			MsgBoxCopyPaste msgBoxCopyPaste=new MsgBoxCopyPaste(results);
 			msgBoxCopyPaste.ShowInTaskbar=true;
-			msgBoxCopyPaste.Text=Lan.g(this,"Payments Fixed");
+			msgBoxCopyPaste.Text=Lan.G(this,"Payments Fixed");
 			msgBoxCopyPaste.Show();
 		}
 
@@ -1460,11 +1460,11 @@ namespace OpenDental {
 					selectedIndex=selectedIndices[i];
 					MethodInfo method=(MethodInfo)grid.ListGridRows[selectedIndices[i]].Tag;
 					ScrollToBottom(grid,selectedIndices[i]);
-					UpdateResultTextForRow(grid,selectedIndices[i],Lan.g("FormDatabaseMaintenance","Running")+"...");
+					UpdateResultTextForRow(grid,selectedIndices[i],Lan.G("FormDatabaseMaintenance","Running")+"...");
 					string result=RunMethod(method,modeCur);
 					string status="";
 					if(result=="") {//Only possible if running a check / fix in non-verbose mode and nothing happened or needs to happen.
-						status=Lan.g("FormDatabaseMaintenance","Done.  No maintenance needed.");
+						status=Lan.G("FormDatabaseMaintenance","Done.  No maintenance needed.");
 					}
 					UpdateResultTextForRow(grid,selectedIndices[i],result+status);
 					logText.Append(result);
@@ -1480,9 +1480,9 @@ namespace OpenDental {
 			_threadRunDBM.AddExceptionHandler(ex => this.InvokeIfRequired(() => {
 				FriendlyException.Show("Error during database maintenance.",ex);
 				if(selectedIndex>=0) {
-					UpdateResultTextForRow(grid,selectedIndex,Lan.g(this,"ERROR: ")+ex.Message);
+					UpdateResultTextForRow(grid,selectedIndex,Lan.G(this,"ERROR: ")+ex.Message);
 				}
-				logText.Append(Lan.g(this,"ERROR: ")+ex.Message);
+				logText.Append(Lan.G(this,"ERROR: ")+ex.Message);
 				ToggleUI(false);
 				grid.SetSelected(selectedIndices,true);//Reselect all rows that were originally selected.
 			}));
@@ -1525,7 +1525,7 @@ namespace OpenDental {
 			string result=RunMethod(method,DbmMode.Breakdown);
 			Cursor=Cursors.Default;
 			if(result=="") {
-				result=Lan.g("FormDatabaseMaintenance","Done.  No maintenance needed.");
+				result=Lan.G("FormDatabaseMaintenance","Done.  No maintenance needed.");
 			}
 			SaveLogToFile(method.Name+":\r\n"+result);
 			//Show the result of the dbm method in a simple copy paste msg box.
@@ -1608,9 +1608,9 @@ namespace OpenDental {
 					strB.AppendLine();
 				}
 			}
-			strB.AppendLine(Lan.g("FormDatabaseMaintenance","Done"));
+			strB.AppendLine(Lan.G("FormDatabaseMaintenance","Done"));
 			LogTextPrint=strB.ToString();
-			PrinterL.TryPrintOrDebugClassicPreview(pd2_PrintPage,Lan.g(this,"Database Maintenance log printed"),new Margins(40,50,50,60),0);
+			PrinterL.TryPrintOrDebugClassicPreview(pd2_PrintPage,Lan.G(this,"Database Maintenance log printed"),new Margins(40,50,50,60),0);
 		}
 
 		///<summary>Turn certain UI elements on or off depending on if DBM is running.</summary>

@@ -312,9 +312,9 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("FormDisplayFields","Description"),200);
+			col=new GridColumn(Lan.G("FormDisplayFields","Description"),200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormDisplayFields","Width"),80);
+			col=new GridColumn(Lan.G("FormDisplayFields","Width"),80);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			OrthoChartTabFields orthoChartTabFields=GetSelectedFields();
@@ -605,7 +605,7 @@ namespace OpenDental{
 			//Get all fields associated to a tab in order to sync with the database later.
 			List<DisplayField> listAllFields=GetAllFields(false);
 			if(listAllFields.Count(x=>x.InternalName=="Signature") > 1) {
-				MessageBox.Show(Lan.g(this,"Only one display field can be a signature field.  Fields that have the signature field checkbox checked:")+" "
+				MessageBox.Show(Lan.G(this,"Only one display field can be a signature field.  Fields that have the signature field checkbox checked:")+" "
 					+string.Join(", ",listAllFields.FindAll(x => x.InternalName=="Signature").Select(x => x.Description)));
 				return;
 			}

@@ -34,7 +34,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				webBrowserWiki.DocumentText="";
-				MessageBox.Show(this,Lan.g(this,"This page is broken and cannot be viewed.  Error message:")+" "+ex.Message);
+				MessageBox.Show(this,Lan.G(this,"This page is broken and cannot be viewed.  Error message:")+" "+ex.Message);
 			}
 		}
 
@@ -42,7 +42,7 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Page Title"),70);
+			GridColumn col=new GridColumn(Lan.G(this,"Page Title"),70);
 			gridMain.ListGridColumns.Add(col);
 			//col=new ODGridColumn(Lan.g(this,"Saved"),42);
 			//gridMain.Columns.Add(col);

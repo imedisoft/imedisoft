@@ -627,8 +627,8 @@ namespace OpenDental{
 				butNow2.Enabled=false;
 			}
 			if(ClockEventCur.ClockStatus==TimeClockStatus.Break){
-				groupBox1.Text=Lan.g(this,"Clock Out Date and Time");
-				groupBox2.Text=Lan.g(this,"Clock In Date and Time");
+				groupBox1.Text=Lan.G(this,"Clock Out Date and Time");
+				groupBox2.Text=Lan.G(this,"Clock In Date and Time");
 				groupTimeSpans.Visible=false;
 				groupRate2.Visible=false;
 			}
@@ -664,7 +664,7 @@ namespace OpenDental{
 					}
 				}
 				_listShownTimeClockStatuses.Add(timeClockStatus);
-				listStatus.Items.Add(Lan.g("enumTimeClockStatus",statusDescript));
+				listStatus.Items.Add(Lan.G("enumTimeClockStatus",statusDescript));
 			}
 			//When ClockEventAllowBreak is disabled, ClockStatus still maps to the correct index because 'Break' is the last option. 5/24/18
 			listStatus.SelectedIndex=_listShownTimeClockStatuses.IndexOf(ClockEventCur.ClockStatus);//all clockevents have a status

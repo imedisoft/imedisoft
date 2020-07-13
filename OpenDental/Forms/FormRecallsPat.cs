@@ -41,32 +41,32 @@ namespace OpenDental {
 			RecallList=Recalls.GetList(PatNum);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableRecallsPat","Type"),90);
+			GridColumn col=new GridColumn(Lan.G("TableRecallsPat","Type"),90);
 			gridMain.ListGridColumns.Add(col);
 			//col=new ODGridColumn(Lan.g("TableRecallsPat","Disabled"),60,HorizontalAlignment.Center);
 			//gridMain.Columns.Add(col);
-			col=new GridColumn(Lan.g("TableRecallsPat","PreviousDate"),80);
+			col=new GridColumn(Lan.G("TableRecallsPat","PreviousDate"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRecallsPat","Due Date"),80);
+			col=new GridColumn(Lan.G("TableRecallsPat","Due Date"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRecallsPat","Sched Date"),80);
+			col=new GridColumn(Lan.G("TableRecallsPat","Sched Date"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRecallsPat","Interval"),70);
+			col=new GridColumn(Lan.G("TableRecallsPat","Interval"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRecallsPat","Status"),80);
+			col=new GridColumn(Lan.G("TableRecallsPat","Status"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRecallsPat","Note"),100);
+			col=new GridColumn(Lan.G("TableRecallsPat","Note"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			GridCell cell;
 			IsPerio=false;
-			butPerio.Text=Lan.g(this,"Set Perio");
+			butPerio.Text=Lan.G(this,"Set Perio");
 			string cellStr;
 			for(int i=0;i<RecallList.Count;i++){
 				if(PrefC.GetLong(PrefName.RecallTypeSpecialPerio)==RecallList[i].RecallTypeNum){
 					IsPerio=true;
-					butPerio.Text=Lan.g(this,"Set Prophy");
+					butPerio.Text=Lan.G(this,"Set Prophy");
 				}
 				row=new GridRow();
 				row.Cells.Add(RecallTypes.GetDescription(RecallList[i].RecallTypeNum));
@@ -103,19 +103,19 @@ namespace OpenDental {
 				row.Cells.Add(Defs.GetValue(DefCat.RecallUnschedStatus,RecallList[i].RecallStatus));
 				cellStr="";
 				if(RecallList[i].IsDisabled) {
-					cellStr+=Lan.g(this,"Disabled");
+					cellStr+=Lan.G(this,"Disabled");
 				}
 				if(RecallList[i].DisableUntilDate.Year>1880) {
 					if(cellStr!="") {
 						cellStr+=", ";
 					}
-					cellStr+=Lan.g(this,"Disabled until ")+RecallList[i].DisableUntilDate.ToShortDateString();
+					cellStr+=Lan.G(this,"Disabled until ")+RecallList[i].DisableUntilDate.ToShortDateString();
 				}
 				if(RecallList[i].DisableUntilBalance>0) {
 					if(cellStr!="") {
 						cellStr+=", ";
 					}
-					cellStr+=Lan.g(this,"Disabled until balance ")+RecallList[i].DisableUntilBalance.ToString("c");
+					cellStr+=Lan.G(this,"Disabled until balance ")+RecallList[i].DisableUntilBalance.ToString("c");
 				}
 				if(RecallList[i].Note!="") {
 					if(cellStr!="") {

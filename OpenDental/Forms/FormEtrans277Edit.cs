@@ -28,7 +28,7 @@ namespace OpenDental {
 				x277=new X277(MessageText);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Claim Status Response not valid.  An error occurred while loading: ")+"\r\n"+ex.Message);
+				MessageBox.Show(Lan.G(this,"Claim Status Response not valid.  An error occurred while loading: ")+"\r\n"+ex.Message);
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -79,26 +79,26 @@ namespace OpenDental {
 			int variableWidth=this.Width-2*gridMain.Left-10;
 			if(showServiceDateRange) {
 				const int serviceDateFromWidth=86;
-				col=new GridColumn(Lan.g(this,"ServDateFrom"),serviceDateFromWidth,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G(this,"ServDateFrom"),serviceDateFromWidth,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
 				variableWidth-=serviceDateFromWidth;
 				const int serviceDateToWidth=80;
-				col=new GridColumn(Lan.g(this,"ServDateTo"),serviceDateToWidth,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G(this,"ServDateTo"),serviceDateToWidth,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
 				variableWidth-=serviceDateToWidth;
 			}
 			else {
 				const int serviceDateWidth=80;
-				col=new GridColumn(Lan.g(this,"ServiceDate"),serviceDateWidth,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G(this,"ServiceDate"),serviceDateWidth,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
 				variableWidth-=serviceDateWidth;
 			}
 			const int amountWidth=80;
-			col=new GridColumn(Lan.g(this,"Amount"),amountWidth,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Amount"),amountWidth,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			variableWidth-=amountWidth;
 			const int statusWidth=54;
-			col=new GridColumn(Lan.g(this,"Status"),statusWidth,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Status"),statusWidth,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			variableWidth-=statusWidth;
 			const int lnameWidth=150;
@@ -106,15 +106,15 @@ namespace OpenDental {
 			const int claimIdWidth=100;
 			const int payorControlNumWidth=126;
 			variableWidth+=-lnameWidth-fnameWidth-claimIdWidth-payorControlNumWidth;
-			col=new GridColumn(Lan.g(this,"Reason"),variableWidth);
+			col=new GridColumn(Lan.G(this,"Reason"),variableWidth);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"LName"),lnameWidth);
+			col=new GridColumn(Lan.G(this,"LName"),lnameWidth);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"FName"),fnameWidth);
+			col=new GridColumn(Lan.G(this,"FName"),fnameWidth);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"ClaimIdentifier"),claimIdWidth);
+			col=new GridColumn(Lan.G(this,"ClaimIdentifier"),claimIdWidth);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"PayorControlNum"),payorControlNumWidth);
+			col=new GridColumn(Lan.G(this,"PayorControlNum"),payorControlNumWidth);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			for(int i=0;i<claimTrackingNumbers.Count;i++) {

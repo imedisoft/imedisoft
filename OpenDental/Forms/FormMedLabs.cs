@@ -32,7 +32,7 @@ namespace OpenDental {
 			//One time reconcile may need to be run to create embedded PDFs for MedLabs that are not attached to a patient.
 			if(!PrefC.GetBool(PrefName.MedLabReconcileDone) && PrefC.AtoZfolderUsed!=DataStorageType.InDatabase) {
 				int countMedLabs=MedLabs.GetCountForPatient(0);
-				if(MessageBox.Show(this,Lan.g(this,"There are MedLabs in the database that have not been associated with a patient.\r\nA one time "
+				if(MessageBox.Show(this,Lan.G(this,"There are MedLabs in the database that have not been associated with a patient.\r\nA one time "
 					+"reconciliation must be performed that will reprocess the HL7 messages for these MedLabs.  This can take some time.\r\nDo you want to "
 					+"continue?\r\nNumber of MedLabs not associated with a patient")+": "+countMedLabs+".","",MessageBoxButtons.YesNo)==DialogResult.No)
 				{
@@ -43,7 +43,7 @@ namespace OpenDental {
 				int reconcileFailedCount=MedLabs.Reconcile();
 				Cursor=Cursors.Default;
 				if(reconcileFailedCount>0) {
-					MessageBox.Show(this,Lan.g(this,"Some of the MedLab objects in the database could not be reconciled.\r\nThis may be due to an issue "
+					MessageBox.Show(this,Lan.G(this,"Some of the MedLab objects in the database could not be reconciled.\r\nThis may be due to an issue "
 						+"processing the original HL7 message text file.\r\nNumber failed")+": "+reconcileFailedCount);
 				}
 				Prefs.UpdateBool(PrefName.MedLabReconcileDone,true);
@@ -52,10 +52,10 @@ namespace OpenDental {
 			_dictLabAcctClinic=new Dictionary<string,string>();
 			_listUserClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
-				_listUserClinics.Add(new Clinic() { ClinicNum=-1,Description=Lan.g(this,"All") });//ClinicNum will be -1 at index 0, "All" means all the user has access to
+				_listUserClinics.Add(new Clinic() { ClinicNum=-1,Description=Lan.G(this,"All") });//ClinicNum will be -1 at index 0, "All" means all the user has access to
 				if(!Security.CurUser.ClinicIsRestricted) {
 					//ClinicNum 0 at index==1, "Headquarters" means any where MedLab.PatAccountNum does not match any clinic.MedLabAccountNum
-					_listUserClinics.Add(new Clinic() { ClinicNum=0,Description=Lan.g(this,"Unassigned") });
+					_listUserClinics.Add(new Clinic() { ClinicNum=0,Description=Lan.G(this,"Unassigned") });
 				}
 				_listUserClinics.AddRange(Clinics.GetForUserod(Security.CurUser));
 				_listUserClinics.ForEach(x => comboClinic.Items.Add(x.Description));

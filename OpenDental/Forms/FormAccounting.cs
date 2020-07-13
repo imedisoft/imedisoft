@@ -243,16 +243,16 @@ namespace OpenDental{
 		///<summary>Causes the toolbar to be laid out again.</summary>
 		public void LayoutToolBar() {
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Add"),0,"","Add"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Add"),0,"","Add"));
 			//ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Edit"),1,Lan.g(this,"Edit Selected Account"),"Edit"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Edit"),1,Lan.G(this,"Edit Selected Account"),"Edit"));
 			/*ODToolBarButton button=new ODToolBarButton("",-1,"","PageNum");
 			button.Style=ODToolBarButtonStyle.Label;
 			ToolBarMain.Buttons.Add(button);
 			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Go Forward One Page","Fwd"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));*/
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Export"),2,Lan.g(this,"Export the Chart of Accounts"),"Export"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Close"),-1,"Close This Window","Close"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Export"),2,Lan.G(this,"Export the Chart of Accounts"),"Export"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Close"),-1,"Close This Window","Close"));
 		}
 
 		private void menuItemSetup_Click(object sender,EventArgs e) {
@@ -312,15 +312,15 @@ namespace OpenDental{
 			Accounts.RefreshCache();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableChartOfAccounts","Type"),70);
+			GridColumn col=new GridColumn(Lan.G("TableChartOfAccounts","Type"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableChartOfAccounts","Description"),170);
+			col=new GridColumn(Lan.G("TableChartOfAccounts","Description"),170);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableChartOfAccounts","Balance"),80,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableChartOfAccounts","Balance"),80,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableChartOfAccounts","Bank Number"),100);
+			col=new GridColumn(Lan.G("TableChartOfAccounts","Bank Number"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableChartOfAccounts","Inactive"),70,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableChartOfAccounts","Inactive"),70,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

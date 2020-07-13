@@ -592,7 +592,7 @@ namespace OpenDental{
 			Appointment apt=Appointments.GetOneApt(CaseCur.AptNum);
 			if(apt!=null){
 				if(apt.AptStatus==ApptStatus.UnschedList){
-					textAppointment.Text=Lan.g(this,"Unscheduled");
+					textAppointment.Text=Lan.G(this,"Unscheduled");
 				}
 				else{
 					textAppointment.Text=apt.AptDateTime.ToShortDateString()+" "+apt.AptDateTime.ToShortTimeString();
@@ -603,7 +603,7 @@ namespace OpenDental{
 			if(apt!=null){
 				textPlanned.Text=apt.ProcDescript;
 				if(textPlanned.Text==""){
-					textPlanned.Text=Lan.g(this,"Attached");
+					textPlanned.Text=Lan.G(this,"Attached");
 				}
 			}
 			if(CaseCur.DateTimeCreated.Year>1880){
@@ -625,10 +625,10 @@ namespace OpenDental{
 			textLabFee.Text=CaseCur.LabFee.ToString("n");
 			sheet=Sheets.GetLabSlip(CaseCur.PatNum,CaseCur.LabCaseNum);
 			if(sheet==null) {
-				butSlip.Text=Lan.g(this,"New Slip");
+				butSlip.Text=Lan.G(this,"New Slip");
 			}
 			else {
-				butSlip.Text=Lan.g(this,"Edit Slip");
+				butSlip.Text=Lan.G(this,"Edit Slip");
 			}
 			textInvoiceNumber.Text=CaseCur.InvoiceNum;
 			Plugins.HookAddCode(this,"FormLabCaseEdit.Load_end",CaseCur,IsNew);
@@ -734,10 +734,10 @@ namespace OpenDental{
 			//refresh
 			sheet=Sheets.GetLabSlip(CaseCur.PatNum,CaseCur.LabCaseNum);
 			if(sheet==null) {
-				butSlip.Text=Lan.g(this,"New Slip");
+				butSlip.Text=Lan.G(this,"New Slip");
 			}
 			else {
-				butSlip.Text=Lan.g(this,"Edit Slip");
+				butSlip.Text=Lan.G(this,"Edit Slip");
 				butCancel.Enabled=false;//user can still click X to close window, but we do handle that as well.
 			}
 		}

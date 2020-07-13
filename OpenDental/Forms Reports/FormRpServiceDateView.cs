@@ -44,15 +44,15 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			//Columns
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Service Date"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Trans Date"),80));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Patient"),150));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Reference"),220));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Charge"),80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Credit"),80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Prov"),80));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"InsBal"),80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"AcctBal"),80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Service Date"),90));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Trans Date"),80));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient"),150));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Reference"),220));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Charge"),80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Credit"),80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Prov"),80));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"InsBal"),80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"AcctBal"),80,HorizontalAlignment.Right));
 			//Rows
 			gridMain.ListGridRows.Clear();
 			DataRow lastRow=table.Select().LastOrDefault();
@@ -180,7 +180,7 @@ namespace OpenDental {
 			}
 			_pagesPrinted=0;
 			_headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Service date view printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Service date view printed"),PrintoutOrientation.Landscape);
 		}
 
 		private void pd_PrintPage(object sender,PrintPageEventArgs e) {
@@ -193,7 +193,7 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!_headingPrinted) {
-				text=Lan.g(this,"Service Date View");
+				text=Lan.G(this,"Service Date View");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				text=(IsFamily ? Lans.g(this,"Entire Family:")+" " : "")+$"{_fam.GetNameInFamFL(PatNum)}";

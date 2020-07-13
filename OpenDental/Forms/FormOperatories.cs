@@ -210,25 +210,25 @@ namespace OpenDental{
 				//Clinics are hidden so add the width of the clinic column to the Op Name column because the clinic column will not show.
 				opNameWidth+=clinicWidth;
 			}
-			GridColumn col=new GridColumn(Lan.g("TableOperatories","Op Name"),opNameWidth);
+			GridColumn col=new GridColumn(Lan.G("TableOperatories","Op Name"),opNameWidth);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOperatories","Abbrev"),70);
+			col=new GridColumn(Lan.G("TableOperatories","Abbrev"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOperatories","IsHidden"),64,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableOperatories","IsHidden"),64,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g("TableOperatories","Clinic"),clinicWidth);
+				col=new GridColumn(Lan.G("TableOperatories","Clinic"),clinicWidth);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("TableOperatories","Provider"),70);
+			col=new GridColumn(Lan.G("TableOperatories","Provider"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOperatories","Hygienist"),70);
+			col=new GridColumn(Lan.G("TableOperatories","Hygienist"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOperatories","IsHygiene"),64,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableOperatories","IsHygiene"),64,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOperatories","IsWebSched"),74,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableOperatories","IsWebSched"),74,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableOperatories","IsNewPat"),50,HorizontalAlignment.Center){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G("TableOperatories","IsNewPat"),50,HorizontalAlignment.Center){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			UI.GridRow row;
@@ -379,9 +379,9 @@ namespace OpenDental{
 			int apptCount=listApptsToMerge.FindAll(x => x.Op!=masterOpNum).Count;
 			if(apptCount > 0) {
 				string selectedOpName=_listOps.First(x => x.OperatoryNum==masterOpNum).Abbrev;//Safe
-				if(MessageBox.Show(Lan.g(this,"Would you like to move")+" "+apptCount+" "
-					+Lan.g(this,"appointments from their current operatories to")+" "+selectedOpName+"?\r\n\r\n"
-					+Lan.g(this,"You cannot undo this!")
+				if(MessageBox.Show(Lan.G(this,"Would you like to move")+" "+apptCount+" "
+					+Lan.G(this,"appointments from their current operatories to")+" "+selectedOpName+"?\r\n\r\n"
+					+Lan.G(this,"You cannot undo this!")
 					,"WARNING"
 					,MessageBoxButtons.YesNo)!=DialogResult.Yes) 
 				{
@@ -402,8 +402,8 @@ namespace OpenDental{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			MessageBox.Show(Lan.g("Operatories","The following operatories and all of their appointments were merged into the")
-					+" "+_listOps.FirstOrDefault(x => x.OperatoryNum==masterOpNum).Abbrev+" "+Lan.g("Operatories","operatory:")+"\r\n"
+			MessageBox.Show(Lan.G("Operatories","The following operatories and all of their appointments were merged into the")
+					+" "+_listOps.FirstOrDefault(x => x.OperatoryNum==masterOpNum).Abbrev+" "+Lan.G("Operatories","operatory:")+"\r\n"
 					+string.Join(", ",_listOps.FindAll(x => x.OperatoryNum!=masterOpNum && listSelectedOpNums.Contains(x.OperatoryNum)).Select(x => x.Abbrev)));
 			RefreshList();
 			FillGrid();
@@ -474,10 +474,10 @@ namespace OpenDental{
 			if(!op1.IsInHQView && !op2.IsInHQView) {
 				return true;
 			}
-			strErrorMsg=Lan.g(this,"You cannot change the order of the Operatories")+" '"+op1.Abbrev+"' "+Lan.g(this,"and")+" '"+op2.Abbrev+"' "
-				+Lan.g(this,"with Clinic")+" '"+comboClinic.GetSelectedAbbr()+"' "
-				+Lan.g(this,"selected because it is also a member of a Headquarters Appointment View.") +" "
-				+Lan.g(this,"You must set your clinic selection to 'All' to reorder these operatories.");
+			strErrorMsg=Lan.G(this,"You cannot change the order of the Operatories")+" '"+op1.Abbrev+"' "+Lan.G(this,"and")+" '"+op2.Abbrev+"' "
+				+Lan.G(this,"with Clinic")+" '"+comboClinic.GetSelectedAbbr()+"' "
+				+Lan.G(this,"selected because it is also a member of a Headquarters Appointment View.") +" "
+				+Lan.G(this,"You must set your clinic selection to 'All' to reorder these operatories.");
 			return false;
 		}
 

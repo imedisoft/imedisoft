@@ -36,11 +36,11 @@ namespace OpenDental {
 
 		private void FormMessageReplacements_Load(object sender,EventArgs e) {
 			if(IsSelectionMode) {
-				butClose.Text=Lan.g(this,"Cancel");
+				butClose.Text=Lan.G(this,"Cancel");
 				butOK.Visible=true;
 			}
 			if(!_allowPHI) {
-				labelExplanation.Text+="  "+Lan.g(this,"Fields in grey are protected health information.");
+				labelExplanation.Text+="  "+Lan.G(this,"Fields in grey are protected health information.");
 			}
 			FillGrid();
 		}
@@ -48,11 +48,11 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Type"),100);
+			GridColumn col=new GridColumn(Lan.G(this,"Type"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Replacement"),155);
+			col=new GridColumn(Lan.G(this,"Replacement"),155);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),200){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G(this,"Description"),200){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			foreach(ReplacementField tag in GetReplacementFieldList(_allowPHI,_replaceTypes)) {
@@ -185,9 +185,9 @@ namespace OpenDental {
 		///<summary>Builds and inserts a replacement row into the grid using the passed in field name, description, and replacement type.</summary>
 		private void AddReplacementRow(ReplacementField tag) {
 			GridRow row=new GridRow();
-			row.Cells.Add(Lan.g("enumMessageReplaceType",tag.ReplacementTypeCur.ToString()));
+			row.Cells.Add(Lan.G("enumMessageReplaceType",tag.ReplacementTypeCur.ToString()));
 			row.Cells.Add(tag.FieldName);
-			row.Cells.Add(Lan.g(this,tag.Descript));
+			row.Cells.Add(Lan.G(this,tag.Descript));
 			if(tag.IsPHI) {
 				row.ColorText=Color.DarkSlateGray;
 			}

@@ -24,7 +24,7 @@ namespace OpenDental {
 			FillMain();
 			RequiredFieldType[] arrayRequiredFieldTypes=(RequiredFieldType[])Enum.GetValues(typeof(RequiredFieldType));
 			for(int i=0;i<arrayRequiredFieldTypes.Length;i++) {
-				comboFieldTypes.Items.Add(Lan.g("enumRequiredFieldType",arrayRequiredFieldTypes[i].ToString()));
+				comboFieldTypes.Items.Add(Lan.G("enumRequiredFieldType",arrayRequiredFieldTypes[i].ToString()));
 			}
 			comboFieldTypes.SelectedIndex=0;
 			FillAvailable();
@@ -124,9 +124,9 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Field Name"),150);
+			col=new GridColumn(Lan.G(this,"Field Name"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Conditions"),80,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Conditions"),80,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -149,11 +149,11 @@ namespace OpenDental {
 		private void FillConditions() {
 			gridConditions.BeginUpdate();
 			gridConditions.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Type"),120);
+			GridColumn col=new GridColumn(Lan.G(this,"Type"),120);
 			gridConditions.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Operator"),80,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Operator"),80,HorizontalAlignment.Center);
 			gridConditions.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Value"),150);
+			col=new GridColumn(Lan.G(this,"Value"),150);
 			gridConditions.ListGridColumns.Add(col);
 			gridConditions.ListGridRows.Clear();
 			GridRow row;
@@ -163,16 +163,16 @@ namespace OpenDental {
 				row=new GridRow();
 				currentType=_reqFieldCur.ListRequiredFieldConditions[i].ConditionType;
 				if(currentType==RequiredFieldName.Birthdate) {
-					row.Cells.Add(Lan.g("enumRequiredFieldName","Age"));
+					row.Cells.Add(Lan.G("enumRequiredFieldName","Age"));
 				}
 				else {
-					row.Cells.Add(Lan.g("enumRequiredFieldName",currentType.ToString()));
+					row.Cells.Add(Lan.G("enumRequiredFieldName",currentType.ToString()));
 				}
 				if(_reqFieldCur.ListRequiredFieldConditions[i].Operator==ConditionOperator.NotEquals) {
-					row.Cells.Add(Lan.g(this,"Is not"));
+					row.Cells.Add(Lan.G(this,"Is not"));
 				}
 				else {
-					row.Cells.Add(Lan.g(this,"Is"));//If the operator is <,>,<=, or >=, this will be reflected in the 'Value' column
+					row.Cells.Add(Lan.G(this,"Is"));//If the operator is <,>,<=, or >=, this will be reflected in the 'Value' column
 				}
 				//Construct the string for the 'Value' column
 				if(currentType==RequiredFieldName.Birthdate || currentType==RequiredFieldName.AdmitDate || currentType==RequiredFieldName.DateTimeDeceased) {
@@ -181,16 +181,16 @@ namespace OpenDental {
 					//																					less than 26
 					switch(_reqFieldCur.ListRequiredFieldConditions[i].Operator) {
 						case ConditionOperator.GreaterThan:
-							allCondValues+=Lan.g(this,"greater than")+" ";
+							allCondValues+=Lan.G(this,"greater than")+" ";
 							break;
 						case ConditionOperator.LessThan:
-							allCondValues+=Lan.g(this,"less than")+" ";
+							allCondValues+=Lan.G(this,"less than")+" ";
 							break;
 						case ConditionOperator.GreaterThanOrEqual:
-							allCondValues+=Lan.g(this,"greater than or equal to")+" ";
+							allCondValues+=Lan.G(this,"greater than or equal to")+" ";
 							break;
 						case ConditionOperator.LessThanOrEqual:
-							allCondValues+=Lan.g(this,"less than or equal to")+" ";
+							allCondValues+=Lan.G(this,"less than or equal to")+" ";
 							break;
 					}
 					if(allCondValues.Length>0) {
@@ -202,7 +202,7 @@ namespace OpenDental {
 					//These RequiredFieldName types store a FK to another value
 					case RequiredFieldName.Clinic:
 						if(condVal=="0") {
-							condVal=Lan.g(this,"Unassigned");
+							condVal=Lan.G(this,"Unassigned");
 						}
 						else {
 							condVal=Clinics.GetDesc(PIn.Long(condVal));
@@ -222,10 +222,10 @@ namespace OpenDental {
 					if((currentType==RequiredFieldName.Birthdate || currentType==RequiredFieldName.AdmitDate || currentType==RequiredFieldName.DateTimeDeceased)
 						&& _reqFieldCur.ListRequiredFieldConditions[i].ConditionRelationship==LogicalOperator.And)
 					{
-						allCondValues+=" "+Lan.g(this,"and")+"\r\n";
+						allCondValues+=" "+Lan.G(this,"and")+"\r\n";
 					}
 					else {
-						allCondValues+=" "+Lan.g(this,"or")+"\r\n";
+						allCondValues+=" "+Lan.G(this,"or")+"\r\n";
 					}
 					//Don't add the row, continue building the 'Value' string
 				}
@@ -249,7 +249,7 @@ namespace OpenDental {
 				return;
 			}
 			_reqFieldCur=_listReqFields[gridMain.SelectedIndices[0]];
-			labelExplanation.Text=Lan.g("enumRequiredFieldName",_reqFieldCur.FieldName.ToString())+" ";
+			labelExplanation.Text=Lan.G("enumRequiredFieldName",_reqFieldCur.FieldName.ToString())+" ";
 			switch(_reqFieldCur.FieldName) {
 				case RequiredFieldName.PreferContactMethod:
 				case RequiredFieldName.PreferConfirmMethod:
@@ -260,41 +260,41 @@ namespace OpenDental {
 				case RequiredFieldName.Race:
 				case RequiredFieldName.Ethnicity:
 				case RequiredFieldName.InsuranceSubscriber:
-					labelExplanation.Text+=Lan.g(this,"cannot be 'None'.");
+					labelExplanation.Text+=Lan.G(this,"cannot be 'None'.");
 					break;
 				case RequiredFieldName.Clinic:
-					labelExplanation.Text+=Lan.g(this,"cannot be 'Unassigned'.");
+					labelExplanation.Text+=Lan.G(this,"cannot be 'Unassigned'.");
 					break;
 				case RequiredFieldName.StudentStatus:
-					labelExplanation.Text+=Lan.g(this,"must be chosen.");
+					labelExplanation.Text+=Lan.G(this,"must be chosen.");
 					break;
 				case RequiredFieldName.TextOK:
-					labelExplanation.Text+=Lan.g(this,"cannot be '??'.");
+					labelExplanation.Text+=Lan.G(this,"cannot be '??'.");
 					break;
 				case RequiredFieldName.EligibilityExceptCode:
-					labelExplanation.Text+=Lan.g(this,"cannot be '0 - Please Choose'.");
+					labelExplanation.Text+=Lan.G(this,"cannot be '0 - Please Choose'.");
 					break;
 				case RequiredFieldName.GradeLevel:
 				case RequiredFieldName.TreatmentUrgency:
 				case RequiredFieldName.Gender:
-					labelExplanation.Text+=Lan.g(this,"cannot be 'Unknown'.");
+					labelExplanation.Text+=Lan.G(this,"cannot be 'Unknown'.");
 					break;
 				case RequiredFieldName.PrimaryProvider:
-					labelExplanation.Text+=Lan.g(this,"cannot be 'Select Provider'.");
+					labelExplanation.Text+=Lan.G(this,"cannot be 'Select Provider'.");
 					break;
 				case RequiredFieldName.MedicaidID:
 					checkMedicaidLength.Visible=true;
-					labelExplanation.Text+=Lan.g(this,"cannot be blank.");
+					labelExplanation.Text+=Lan.G(this,"cannot be blank.");
 					break;
 				case RequiredFieldName.MedicaidState:
 					checkMedicaidLength.Visible=true;
-					labelExplanation.Text+=Lan.g(this,"cannot be blank and must be a valid state abbreviation.");
+					labelExplanation.Text+=Lan.G(this,"cannot be blank and must be a valid state abbreviation.");
 					break;
 				case RequiredFieldName.State:
-					labelExplanation.Text+=Lan.g(this,"cannot be blank and must be a valid state abbreviation.");
+					labelExplanation.Text+=Lan.G(this,"cannot be blank and must be a valid state abbreviation.");
 					break;
 				default:
-					labelExplanation.Text+=Lan.g(this,"cannot be blank.");
+					labelExplanation.Text+=Lan.G(this,"cannot be blank.");
 					break;
 			}
 			FillConditions();

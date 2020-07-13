@@ -800,7 +800,7 @@ namespace OpenDental{
 			//Ensure that the path entered has slashes matching the current OS (in case entered manually).
 			string path=FixDirSeparators(fb.SelectedPath);
 			if(checkMultiplePaths.Checked && textDocPath.Text.Length>0) {
-				string messageText=Lan.g(this,"Replace existing document paths? Click No to add path to existing document paths.");
+				string messageText=Lan.G(this,"Replace existing document paths? Click No to add path to existing document paths.");
 				switch(MessageBox.Show(messageText,"",MessageBoxButtons.YesNoCancel)) {
 					case DialogResult.Yes:
 						textDocPath.Text=path;//Replace existing paths with new path.
@@ -899,7 +899,7 @@ namespace OpenDental{
 			}
 			_progCur=Programs.GetCur(ProgramName.Dropbox);
 			if(_progCur==null) {//Should never happen.
-				errorMsg=Lan.g(this,"The Dropbox bridge is missing from the database.");
+				errorMsg=Lan.G(this,"The Dropbox bridge is missing from the database.");
 				return false;
 			}
 			try {
@@ -910,7 +910,7 @@ namespace OpenDental{
 				textAccessToken.Text=_ppDropboxAccessToken.PropertyValue;
 			}
 			catch(Exception e) {
-				errorMsg=Lan.g(this,"You are missing a program property for Dropbox.  Please contact support to resolve this issue.")+"\r\n"+e.StackTrace;
+				errorMsg=Lan.G(this,"You are missing a program property for Dropbox.  Please contact support to resolve this issue.")+"\r\n"+e.StackTrace;
 				return false;
 			}
 			_hasDropboxLoaded=true;
@@ -946,7 +946,7 @@ namespace OpenDental{
 			}
 			_progCur=Programs.GetCur(ProgramName.SFTP);
 			if(_progCur==null) {//Should never happen.
-				errorMsg=Lan.g(this,"The SFTP bridge is missing from the database.");
+				errorMsg=Lan.G(this,"The SFTP bridge is missing from the database.");
 				return false;
 			}
 			try {
@@ -969,7 +969,7 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception e) {
-				errorMsg=Lan.g(this,"You are missing a program property for SFTP.  Please contact support to resolve this issue.")+"\r\n"+e.StackTrace;
+				errorMsg=Lan.G(this,"You are missing a program property for SFTP.  Please contact support to resolve this issue.")+"\r\n"+e.StackTrace;
 				return false;
 			}
 			_hasSftpLoaded=true;
@@ -1044,12 +1044,12 @@ namespace OpenDental{
 				}
 				catch(Exception ex) {
 					Cursor=Cursors.Default;
-					MessageBox.Show(Lan.g(this,"Error connecting to SFTP host: ")+ex.Message);
+					MessageBox.Show(Lan.G(this,"Error connecting to SFTP host: ")+ex.Message);
 					return;
 				}
 			}
 			Cursor=Cursors.Default;
-			string sftpWarningMsg=Lan.g(this,"Warning: Updating workstations older than 16.3 while using SFTP may cause issues."
+			string sftpWarningMsg=Lan.G(this,"Warning: Updating workstations older than 16.3 while using SFTP may cause issues."
 				+"\r\nIf experienced, use the Setup.exe located in the AtoZ folder on your SFTP server to reinstall.");
 			if(radioSftp.Checked && PrefC.AtoZfolderUsed!=DataStorageType.SftpAtoZ
 				&& !MsgBox.Show(MsgBoxButtons.YesNo,sftpWarningMsg))

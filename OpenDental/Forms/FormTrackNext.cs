@@ -322,11 +322,11 @@ namespace OpenDental{
 
 		private void FormTrackNext_Load(object sender, System.EventArgs e) {
 			Cursor=Cursors.WaitCursor;
-			comboOrder.Items.Add(Lan.g(this,"Status"));
-			comboOrder.Items.Add(Lan.g(this,"Alphabetical"));
-			comboOrder.Items.Add(Lan.g(this,"Date"));
+			comboOrder.Items.Add(Lan.G(this,"Status"));
+			comboOrder.Items.Add(Lan.G(this,"Alphabetical"));
+			comboOrder.Items.Add(Lan.G(this,"Date"));
 			comboOrder.SelectedIndex=0;
-			comboProv.Items.Add(Lan.g(this,"All"));
+			comboProv.Items.Add(Lan.G(this,"All"));
 			comboProv.SelectedIndex=0;
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
@@ -337,7 +337,7 @@ namespace OpenDental{
 				labelSite.Visible=false;
 			}
 			else{
-				comboSite.Items.Add(Lan.g(this,"All"));
+				comboSite.Items.Add(Lan.G(this,"All"));
 				comboSite.SelectedIndex=0;
 				_listSites=Sites.GetDeepCopy();
 				for(int i=0;i<_listSites.Count;i++) {
@@ -395,17 +395,17 @@ namespace OpenDental{
 				() => {
 					gridMain.BeginUpdate();
 					gridMain.ListGridColumns.Clear();
-					GridColumn col=new GridColumn(Lan.g(this,"Patient"),140);
+					GridColumn col=new GridColumn(Lan.G(this,"Patient"),140);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g(this,"Date"),65);
+					col=new GridColumn(Lan.G(this,"Date"),65);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g(this,"Status"),110);
+					col=new GridColumn(Lan.G(this,"Status"),110);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g(this,"Prov"),50);
+					col=new GridColumn(Lan.G(this,"Prov"),50);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g(this,"Procedures"),150);
+					col=new GridColumn(Lan.G(this,"Procedures"),150);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g(this,"Notes"),200);
+					col=new GridColumn(Lan.G(this,"Notes"),200);
 					gridMain.ListGridColumns.Add(col);
 					gridMain.ListGridRows.Clear();
 					GridRow row;
@@ -413,7 +413,7 @@ namespace OpenDental{
 						.ToDictionary(x => x.PatNum,x => x.GetNameLF());
 					foreach(Appointment apt in _listPlannedAppts){
 						row=new GridRow();
-						string patName=Lan.g(this,"UNKNOWN");
+						string patName=Lan.G(this,"UNKNOWN");
 						dictPatNames.TryGetValue(apt.PatNum,out patName);
 						row.Cells.Add(patName);
 						if(apt.AptDateTime.Year<1880){
@@ -425,11 +425,11 @@ namespace OpenDental{
 						row.Cells.Add(Defs.GetName(DefCat.RecallUnschedStatus,apt.UnschedStatus));
 						if(apt.IsHygiene) {
 							Provider provHyg=Providers.GetFirstOrDefault(x => x.ProvNum==apt.ProvHyg);
-							row.Cells.Add(provHyg==null?Lan.g(this,"INVALID"):provHyg.Abbr);
+							row.Cells.Add(provHyg==null?Lan.G(this,"INVALID"):provHyg.Abbr);
 						}
 						else {
 							Provider prov=Providers.GetFirstOrDefault(x => x.ProvNum==apt.ProvNum);
-							row.Cells.Add(prov==null?Lan.g(this,"INVALID"):prov.Abbr);
+							row.Cells.Add(prov==null?Lan.G(this,"INVALID"):prov.Abbr);
 						}
 						row.Cells.Add(apt.ProcDescript);
 						row.Cells.Add(apt.Note);
@@ -473,7 +473,7 @@ namespace OpenDental{
 		private void grid_MouseUp(object sender,MouseEventArgs e) {
 			if(e.Button==MouseButtons.Right && gridMain.SelectedIndices.Length>0) {
 				Patient pat=Patients.GetLim(_listPlannedAppts[gridMain.SelectedIndices[gridMain.SelectedIndices.Length-1]].PatNum);
-				toolStripMenuItemSelectPatient.Text=Lan.g(gridMain.TranslationName,"Select Patient")+" ("+pat.GetNameFL()+")";
+				toolStripMenuItemSelectPatient.Text=Lan.G(gridMain.TranslationName,"Select Patient")+" ("+pat.GetNameFL()+")";
 			}
 		}
 
@@ -540,7 +540,7 @@ namespace OpenDental{
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Planned appointment tracker list printed"));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Planned appointment tracker list printed"));
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -554,7 +554,7 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Planned Appointment Tracker");
+				text=Lan.G(this,"Planned Appointment Tracker");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				//yPos+=(int)g.MeasureString(text,headingFont).Height;
 				//text=textDateFrom.Text+" "+Lan.g(this,"to")+" "+textDateTo.Text;

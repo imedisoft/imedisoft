@@ -528,7 +528,7 @@ namespace OpenDental.UI{
 					}
 				}
 				//0 is not in list
-				_overrideText=Lan.g("Defs","none");
+				_overrideText=Lan.G("Defs","none");
 				_selectedKey=0;//still, and selectedIndex is -1
 				OnSelectedIndexChanged(this,new EventArgs());
 				Invalidate();
@@ -609,7 +609,7 @@ namespace OpenDental.UI{
 					}
 				}
 				//0 is not in list
-				_overrideText=Lan.g("Providers","none");
+				_overrideText=Lan.G("Providers","none");
 				_selectedKey=0;//still, and selectedIndex is -1
 				OnSelectedIndexChanged(this,new EventArgs());
 				Invalidate();
@@ -733,7 +733,7 @@ namespace OpenDental.UI{
 			///<summary>Adds a dummy def called "None", with a DefNum of 0.  If you pass in a string to show instead of "None", you should run in through translation first.</summary>
 			public void AddDefNone(string textShowing=null){
 				if(textShowing==null){
-					Add(Lan.g("combo","None"),new Def());
+					Add(Lan.G("combo","None"),new Def());
 				}
 				else{
 					Add(textShowing,new Def());
@@ -744,7 +744,7 @@ namespace OpenDental.UI{
 			public void AddDefs(List<Def> listDefs){
 				Func<Def,string> funcItemToString= x => {
 					if(x.IsHidden){
-						return x.ItemName+" "+Lan.g("Defs","(hidden)");
+						return x.ItemName+" "+Lan.G("Defs","(hidden)");
 					}
 					return x.ItemName;
 				};
@@ -753,7 +753,7 @@ namespace OpenDental.UI{
 
 			///<summary>Adds the values of an enum to the list of Items.  Does not Clear first.  Descriptions are pulled from DescriptionAttribute or .ToString, then run through translation.  If you want add only some enums, or in a different order, or display ShortDescriptionAttribute, you have to add the Enums individually with your own text.</summary>
 			public void AddEnums<T>() where T : Enum {//struct,IConvertible{
-				AddList(Enum.GetValues(typeof(T)).Cast<T>(),x=>Lan.g("enum"+typeof(T).Name,GetEnumDescription(x)));
+				AddList(Enum.GetValues(typeof(T)).Cast<T>(),x=>Lan.G("enum"+typeof(T).Name,GetEnumDescription(x)));
 				_comboBoxPlusParent.Invalidate();
 			}
 
@@ -791,13 +791,13 @@ namespace OpenDental.UI{
 
 			///<summary>Adds a dummy object called "None", with a key of 0.</summary>
 			public void AddNone<T>() where T:new(){
-				Add(Lan.g("combo","None"),new T());
+				Add(Lan.G("combo","None"),new T());
 			}
 
 			///<summary>Adds a dummy provider called "None", with a ProvNum of 0.  If you pass in a string to show instead of "None", you should run in through translation first.</summary>
 			public void AddProvNone(string textShowing=null){
 				if(textShowing==null){
-					Add(Lan.g("combo","None"),new Provider(){Abbr=Lan.g("combo","None") });
+					Add(Lan.G("combo","None"),new Provider(){Abbr=Lan.G("combo","None") });
 				}
 				else{
 					Add(textShowing,new Provider());

@@ -46,7 +46,7 @@ namespace OpenDental {
 			else {
 				_listClinics=Clinics.GetForUserod(Security.CurUser);
 				if(!Security.CurUser.ClinicIsRestricted) {
-					listClinics.Items.Add(Lan.g(this,"Unassigned"));
+					listClinics.Items.Add(Lan.G(this,"Unassigned"));
 					listClinics.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -117,12 +117,12 @@ namespace OpenDental {
 					case BrokenApptProcedure.Missed:
 						_listBrokenProcOptions.Add(BrokenApptProcedure.Missed);
 						index=listOptions.Items.Add(Lans.g(this,brokenApptCodeDB.ToString())+": (D9986)");
-						labelDescr.Text=Lan.g(this,"Broken appointments based on ADA code D9986");
+						labelDescr.Text=Lan.G(this,"Broken appointments based on ADA code D9986");
 					break;
 					case BrokenApptProcedure.Cancelled:
 						_listBrokenProcOptions.Add(BrokenApptProcedure.Cancelled);
 						index=listOptions.Items.Add(Lans.g(this,brokenApptCodeDB.ToString())+": (D9987)");
-						labelDescr.Text=Lan.g(this,"Broken appointments based on ADA code D9987");
+						labelDescr.Text=Lan.G(this,"Broken appointments based on ADA code D9987");
 					break;
 					case BrokenApptProcedure.Both:
 						_listBrokenProcOptions.Add(BrokenApptProcedure.Missed);
@@ -131,7 +131,7 @@ namespace OpenDental {
 						listOptions.Items.Add(Lans.g(this,BrokenApptProcedure.Missed.ToString())+": (D9986)");
 						listOptions.Items.Add(Lans.g(this,BrokenApptProcedure.Cancelled.ToString())+": (D9987)");
 						index=listOptions.Items.Add(Lans.g(this,brokenApptCodeDB.ToString()));
-						labelDescr.Text=Lan.g(this,"Broken appointments based on ADA code D9986 or D9987");
+						labelDescr.Text=Lan.G(this,"Broken appointments based on ADA code D9986 or D9987");
 					break;
 				}
 				listOptions.SetSelected(index,true);
@@ -141,7 +141,7 @@ namespace OpenDental {
 
 		private void radioAdj_CheckedChanged(object sender,EventArgs e) {
 			if(radioAdj.Checked) {
-				labelDescr.Text=Lan.g(this,"Broken appointments based on broken appointment adjustments");
+				labelDescr.Text=Lan.G(this,"Broken appointments based on broken appointment adjustments");
 				listOptions.Items.Clear();
 				_listPosAdjTypes.Clear();
 				listOptions.SelectionMode=SelectionMode.MultiSimple;
@@ -162,7 +162,7 @@ namespace OpenDental {
 
 		private void radioAptStatus_CheckedChanged(object sender,EventArgs e) {
 			if(radioAptStatus.Checked) {
-				labelDescr.Text=Lan.g(this,"Broken appointments based on appointment status");
+				labelDescr.Text=Lan.G(this,"Broken appointments based on appointment status");
 			}
 		}
 
@@ -227,7 +227,7 @@ namespace OpenDental {
 			string subtitleProvs="";
 			string subtitleClinics="";
 			if(checkAllProvs.Checked) {
-				subtitleProvs=Lan.g(this,"All Providers");
+				subtitleProvs=Lan.G(this,"All Providers");
 			}
 			else {
 				for(int i=0;i<listProvs.SelectedIndices.Count;i++) {
@@ -239,7 +239,7 @@ namespace OpenDental {
 			}
 			if(_hasClinicsEnabled) {
 				if(checkAllClinics.Checked) {
-					subtitleClinics=Lan.g(this,"All Clinics");
+					subtitleClinics=Lan.G(this,"All Clinics");
 				}
 				else {
 					for(int i=0;i<listClinics.SelectedIndices.Count;i++) {
@@ -251,7 +251,7 @@ namespace OpenDental {
 						}
 						else {
 							if(listClinics.SelectedIndices[i]==0) {
-								subtitleClinics+=Lan.g(this,"Unassigned");
+								subtitleClinics+=Lan.G(this,"Unassigned");
 							}
 							else {
 								subtitleClinics+=_listClinics[listClinics.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -264,8 +264,8 @@ namespace OpenDental {
 			Font fontBold=new Font("Tahoma",10,FontStyle.Bold);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",11,FontStyle.Bold);
-			reportComplex.ReportName=Lan.g(this,"Broken Appointments");
-			reportComplex.AddTitle("Title",Lan.g(this,"Broken Appointments"),fontTitle);
+			reportComplex.ReportName=Lan.G(this,"Broken Appointments");
+			reportComplex.AddTitle("Title",Lan.G(this,"Broken Appointments"),fontTitle);
 			if(radioProcs.Checked) {//Report looking at ADA procedure code D9986
 				string codes="";
 				switch(brokenApptSelection) {
@@ -280,56 +280,56 @@ namespace OpenDental {
 						codes="D9986 or D9987";
 					break;
 				}
-				reportComplex.AddSubTitle("Report Description",Lan.g(this,"By ADA Code "+codes),fontSubTitle);
+				reportComplex.AddSubTitle("Report Description",Lan.G(this,"By ADA Code "+codes),fontSubTitle);
 			}
 			else if(radioAdj.Checked) {//Report looking at broken appointment adjustments
-				reportComplex.AddSubTitle("Report Description",Lan.g(this,"By Broken Appointment Adjustment"),fontSubTitle);
+				reportComplex.AddSubTitle("Report Description",Lan.G(this,"By Broken Appointment Adjustment"),fontSubTitle);
 			}
 			else {//Report looking at appointments with a status of 'Broken'
-				reportComplex.AddSubTitle("Report Description",Lan.g(this,"By Appointment Status"),fontSubTitle);
+				reportComplex.AddSubTitle("Report Description",Lan.G(this,"By Appointment Status"),fontSubTitle);
 			}
 			reportComplex.AddSubTitle("Providers",subtitleProvs,fontSubTitle);
 			reportComplex.AddSubTitle("Clinics",subtitleClinics,fontSubTitle);
 			QueryObject queryObject;
 			if(PrefC.HasClinicsEnabled) {//Split the query up by clinics.
-				queryObject=reportComplex.AddQuery(table,Lan.g(this,"Date")+": "+DateTimeOD.Today.ToString("d"),"ClinicDesc",SplitByKind.Value,0,true);
+				queryObject=reportComplex.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"),"ClinicDesc",SplitByKind.Value,0,true);
 			}
 			else {
-				queryObject=reportComplex.AddQuery(table,Lan.g(this,"Date")+": "+DateTimeOD.Today.ToString("d"),"",SplitByKind.None,0,true);
+				queryObject=reportComplex.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"),"",SplitByKind.None,0,true);
 			}
 			//Add columns to report
 			if(radioProcs.Checked) {//Report looking at ADA procedure code D9986 or D9987
-				queryObject.AddColumn(Lan.g(this,"Date"),85,FieldValueType.Date,font);
-				queryObject.AddColumn(Lan.g(this,"Provider"),180,FieldValueType.String,font);
+				queryObject.AddColumn(Lan.G(this,"Date"),85,FieldValueType.Date,font);
+				queryObject.AddColumn(Lan.G(this,"Provider"),180,FieldValueType.String,font);
 				if(brokenApptSelection==BrokenApptProcedure.Both) {
-					queryObject.AddColumn(Lan.g(this,"Code"),75,FieldValueType.String,font);
+					queryObject.AddColumn(Lan.G(this,"Code"),75,FieldValueType.String,font);
 				}
-				queryObject.AddColumn(Lan.g(this,"Patient"),220,FieldValueType.String,font);
-				queryObject.AddColumn(Lan.g(this,"Fee"),200,FieldValueType.Number,font);
-				queryObject.AddGroupSummaryField(Lan.g(this,"Total Broken Appointment Fees")+":",Lan.g(this,"Fee"),"ProcFee",SummaryOperation.Sum,
+				queryObject.AddColumn(Lan.G(this,"Patient"),220,FieldValueType.String,font);
+				queryObject.AddColumn(Lan.G(this,"Fee"),200,FieldValueType.Number,font);
+				queryObject.AddGroupSummaryField(Lan.G(this,"Total Broken Appointment Fees")+":",Lan.G(this,"Fee"),"ProcFee",SummaryOperation.Sum,
 					font:fontBold,offSetX:0,offSetY:10);
-				queryObject.AddGroupSummaryField(Lan.g(this,"Total Broken Appointments")+":",Lan.g(this,"Fee"),"ProcFee",SummaryOperation.Count,
+				queryObject.AddGroupSummaryField(Lan.G(this,"Total Broken Appointments")+":",Lan.G(this,"Fee"),"ProcFee",SummaryOperation.Count,
 					font:fontBold,offSetX:0,offSetY:10);
 			}
 			else if(radioAdj.Checked) {//Report looking at broken appointment adjustments
-				queryObject.AddColumn(Lan.g(this,"Date"),85,FieldValueType.Date,font);
-				queryObject.AddColumn(Lan.g(this,"Provider"),100,FieldValueType.String,font);
-				queryObject.AddColumn(Lan.g(this,"Patient"),220,FieldValueType.String,font);
-				queryObject.AddColumn(Lan.g(this,"Amount"),80,FieldValueType.Number,font);
-				queryObject.AddColumn(Lan.g(this,"Note"),300,FieldValueType.String,font);
-				queryObject.AddGroupSummaryField(Lan.g(this,"Total Broken Appointment Adjustment Amount")+":",
-					Lan.g(this,"Amount"),"AdjAmt",SummaryOperation.Sum,font:fontBold,offSetX:0,offSetY:10);
-				queryObject.AddGroupSummaryField(Lan.g(this,"Total Broken Appointments")+":",
-					Lan.g(this,"Amount"),"AdjAmt",SummaryOperation.Count,font:fontBold,offSetX:0,offSetY:10);
+				queryObject.AddColumn(Lan.G(this,"Date"),85,FieldValueType.Date,font);
+				queryObject.AddColumn(Lan.G(this,"Provider"),100,FieldValueType.String,font);
+				queryObject.AddColumn(Lan.G(this,"Patient"),220,FieldValueType.String,font);
+				queryObject.AddColumn(Lan.G(this,"Amount"),80,FieldValueType.Number,font);
+				queryObject.AddColumn(Lan.G(this,"Note"),300,FieldValueType.String,font);
+				queryObject.AddGroupSummaryField(Lan.G(this,"Total Broken Appointment Adjustment Amount")+":",
+					Lan.G(this,"Amount"),"AdjAmt",SummaryOperation.Sum,font:fontBold,offSetX:0,offSetY:10);
+				queryObject.AddGroupSummaryField(Lan.G(this,"Total Broken Appointments")+":",
+					Lan.G(this,"Amount"),"AdjAmt",SummaryOperation.Count,font:fontBold,offSetX:0,offSetY:10);
 			}
 			else {//Report looking at appointments with a status of 'Broken'
-				queryObject.AddColumn(Lan.g(this,"AptDate"),85,FieldValueType.Date,font);
-				queryObject.AddColumn(Lan.g(this,"Patient"),220,FieldValueType.String,font);
-				queryObject.AddColumn(Lan.g(this,"Doctor"),165,FieldValueType.String,font);
-				queryObject.AddColumn(Lan.g(this,"Hygienist"),165,FieldValueType.String,font);
-				queryObject.AddColumn(Lan.g(this,"IsHyg"),50,FieldValueType.Boolean,font);
-				queryObject.GetColumnDetail(Lan.g(this,"IsHyg")).ContentAlignment = ContentAlignment.MiddleCenter;
-				queryObject.AddGroupSummaryField(Lan.g(this,"Total Broken Appointments")+":",Lan.g(this,"IsHyg"),"AptDateTime",SummaryOperation.Count,
+				queryObject.AddColumn(Lan.G(this,"AptDate"),85,FieldValueType.Date,font);
+				queryObject.AddColumn(Lan.G(this,"Patient"),220,FieldValueType.String,font);
+				queryObject.AddColumn(Lan.G(this,"Doctor"),165,FieldValueType.String,font);
+				queryObject.AddColumn(Lan.G(this,"Hygienist"),165,FieldValueType.String,font);
+				queryObject.AddColumn(Lan.G(this,"IsHyg"),50,FieldValueType.Boolean,font);
+				queryObject.GetColumnDetail(Lan.G(this,"IsHyg")).ContentAlignment = ContentAlignment.MiddleCenter;
+				queryObject.AddGroupSummaryField(Lan.G(this,"Total Broken Appointments")+":",Lan.G(this,"IsHyg"),"AptDateTime",SummaryOperation.Count,
 					font:fontBold,offSetX:0,offSetY:10);
 			}
 			queryObject.ContentAlignment=ContentAlignment.MiddleRight;

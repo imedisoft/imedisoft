@@ -366,16 +366,16 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textStoreName.Text==""){
-				MessageBox.Show(Lan.g(this,"Store name cannot be blank."));
+				MessageBox.Show(Lan.G(this,"Store name cannot be blank."));
 				return;
 			}
 			if(CultureInfo.CurrentCulture.Name=="en-US"){
 				if(textPhone.Text!="" && TelephoneNumbers.FormatNumbersExactTen(textPhone.Text)==""){
-					MessageBox.Show(Lan.g(this,"Phone number must be in a 10-digit format."));
+					MessageBox.Show(Lan.G(this,"Phone number must be in a 10-digit format."));
 					return;
 				}
 				if(textFax.Text!="" && TelephoneNumbers.FormatNumbersExactTen(textFax.Text)==""){
-					MessageBox.Show(Lan.g(this,"Fax number must be in a 10-digit format."));
+					MessageBox.Show(Lan.G(this,"Fax number must be in a 10-digit format."));
 					return;
 				}
 			}

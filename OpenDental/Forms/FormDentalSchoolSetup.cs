@@ -34,8 +34,8 @@ namespace OpenDental {
 			if(FormUGP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			DialogResult diag=MessageBox.Show(Lan.g(this,"Update all existing students to this user group?")+"\r\n"
-				+Lan.g(this,"Choose No to just save the new default user group for students."),"",MessageBoxButtons.YesNoCancel);
+			DialogResult diag=MessageBox.Show(Lan.G(this,"Update all existing students to this user group?")+"\r\n"
+				+Lan.G(this,"Choose No to just save the new default user group for students."),"",MessageBoxButtons.YesNoCancel);
 			if(diag==DialogResult.Cancel) {
 				return;
 			}
@@ -64,8 +64,8 @@ namespace OpenDental {
 			if(FormUGP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			DialogResult diag=MessageBox.Show(Lan.g(this,"Update all existing instructors to this user group?")+"\r\n"
-				+Lan.g(this,"Choose No to just save the new default user group for instructors."),"",MessageBoxButtons.YesNoCancel);
+			DialogResult diag=MessageBox.Show(Lan.G(this,"Update all existing instructors to this user group?")+"\r\n"
+				+Lan.G(this,"Choose No to just save the new default user group for instructors."),"",MessageBoxButtons.YesNoCancel);
 			if(diag==DialogResult.Cancel) {
 				return;
 			}

@@ -27,19 +27,19 @@ namespace OpenDental {
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"LName"),100);
+			GridColumn col=new GridColumn(Lan.G(this,"LName"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"FName"),100);
+			col=new GridColumn(Lan.G(this,"FName"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Year"),60);
+			col=new GridColumn(Lan.G(this,"Year"),60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Key"),100);
+			col=new GridColumn(Lan.G(this,"Key"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Charge"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Charge"),60,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"FTE"),35,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"FTE"),35,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Notes"),100);
+			col=new GridColumn(Lan.G(this,"Notes"),100);
 			gridMain.ListGridColumns.Add(col);
 			listKeys=EhrProvKeys.RefreshForFam(Guarantor);
 			gridMain.ListGridRows.Clear();
@@ -84,15 +84,15 @@ namespace OpenDental {
 		private void FillGridQ() {
 			gridQ.BeginUpdate();
 			gridQ.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Practice Title"),120);
+			GridColumn col=new GridColumn(Lan.G(this,"Practice Title"),120);
 			gridQ.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Year"),40);
+			col=new GridColumn(Lan.G(this,"Year"),40);
 			gridQ.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Quarter"),50);
+			col=new GridColumn(Lan.G(this,"Quarter"),50);
 			gridQ.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Key"),100);
+			col=new GridColumn(Lan.G(this,"Key"),100);
 			gridQ.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Notes"),100);
+			col=new GridColumn(Lan.G(this,"Notes"),100);
 			gridQ.ListGridColumns.Add(col);
 			listKeysQuart=EhrQuarterlyKeys.Refresh(Guarantor);
 			gridQ.ListGridRows.Clear();

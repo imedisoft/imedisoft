@@ -155,8 +155,8 @@ namespace OpenDental {
 			tabControlImages.DrawItem += new DrawItemEventHandler(OnDrawItem);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				//panelQuickButtons.Enabled=false;
-				butBF.Text=Lan.g(this,"B/V");//vestibular instead of facial
-				butV.Text=Lan.g(this,"5");
+				butBF.Text=Lan.G(this,"B/V");//vestibular instead of facial
+				butV.Text=Lan.G(this,"5");
 			}
 			else {
 				menuItemLabFee.Visible=false;
@@ -1000,7 +1000,7 @@ namespace OpenDental {
 			}
 			long defNum=Defs.GetImageCat(ImageCategorySpecial.T);
 			if(defNum==0) {//no category set for Tooth Charts.
-				MessageBox.Show(Lan.g(this,"No Def set for Tooth Charts."));
+				MessageBox.Show(Lan.G(this,"No Def set for Tooth Charts."));
 				return;
 			}
 			Bitmap bitmapChart=null;
@@ -1009,7 +1009,7 @@ namespace OpenDental {
 				ImageStore.Import(bitmapChart,defNum,ImageType.Photo,_patCur);
 			}
 			catch(SharpDXException sdxEx) {
-				MsgBoxCopyPaste errorMsg=new MsgBoxCopyPaste(Lan.g(this,"Failed to capture tooth chart image from graphics card. \r\n"
+				MsgBoxCopyPaste errorMsg=new MsgBoxCopyPaste(Lan.G(this,"Failed to capture tooth chart image from graphics card. \r\n"
 					+"Please contact support to help with graphics troubleshooting:\r\n")
 					+sdxEx.Message+"\r\n"
 					+sdxEx.StackTrace
@@ -1018,7 +1018,7 @@ namespace OpenDental {
 				return;
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Unable to save file: ")+ex.Message);
+				MessageBox.Show(Lan.G(this,"Unable to save file: ")+ex.Message);
 				return;
 			}
 			finally {//Executes regardles of above returns in the catches, "Saved." msgbox will not show.
@@ -1311,7 +1311,7 @@ namespace OpenDental {
 					_pagesPrinted=0;
 					_headingPrinted=false;
 					PrinterL.TryPrintOrDebugRpPreview(pd2_PrintPageDay,
-						Lan.g(this,"Day report for hospital printed"),
+						Lan.G(this,"Day report for hospital printed"),
 						auditPatNum:_patCur.PatNum,
 						margins:new Margins(0,0,0,0),
 						printoutOrigin:PrintoutOrigin.AtMargin
@@ -1348,7 +1348,7 @@ namespace OpenDental {
 			_pagesPrinted=0;
 			_headingPrinted=false;
 			PrinterL.TryPrintOrDebugRpPreview(pd2_PrintPage,
-				Lan.g(this,"Progress notes printed"),
+				Lan.G(this,"Progress notes printed"),
 				auditPatNum:_patCur.PatNum
 			);
 		}
@@ -2342,7 +2342,7 @@ namespace OpenDental {
 		}
 
 		private void textProcCode_Enter(object sender,EventArgs e) {
-			if(textProcCode.Text==Lan.g(this,"Type Proc Code")) {
+			if(textProcCode.Text==Lan.G(this,"Type Proc Code")) {
 				textProcCode.Text="";
 			}
 		}
@@ -3367,7 +3367,7 @@ namespace OpenDental {
 			//DisplayFields.RefreshCache();
 			if(gridChartViews.ListGridRows.Count==0) {//No chart views, Use default values.
 				listDisplayFields=DisplayFields.GetDefaultList(DisplayFieldCategory.None);
-				gridProg.Title=Lan.g("TableProg","Progress Notes");
+				gridProg.Title=Lan.G("TableProg","Progress Notes");
 				if(!chartCustViewChanged) {
 					checkSheets.Checked=true;
 					checkTasks.Checked=true;
@@ -3385,7 +3385,7 @@ namespace OpenDental {
 					checkNotes.Checked=true;
 					checkShowTeeth.Checked=false;
 					checkAudit.Checked=false;
-					textShowDateRange.Text=Lan.g(this,"All Dates");
+					textShowDateRange.Text=Lan.G(this,"All Dates");
 				}
 			}
 			else {
@@ -3666,7 +3666,7 @@ namespace OpenDental {
 							gridPtInfo.ListGridRows.Add(row);
 						}
 						else {
-							row.Cells.Add(Lan.g("TableChartPtInfo","none"));
+							row.Cells.Add(Lan.G("TableChartPtInfo","none"));
 						}
 						for(int i=0;listAllergies.Count>i;i++) {
 							row=new GridRow();
@@ -3748,7 +3748,7 @@ namespace OpenDental {
 							row.Cells.Add("??");
 						}
 						else if(_patCur.DateFirstVisit==DateTime.Today) {
-							row.Cells.Add(Lan.g("TableChartPtInfo","NEW PAT"));
+							row.Cells.Add(Lan.G("TableChartPtInfo","NEW PAT"));
 						}
 						else {
 							row.Cells.Add(_patCur.DateFirstVisit.ToShortDateString());
@@ -3820,7 +3820,7 @@ namespace OpenDental {
 							gridPtInfo.ListGridRows.Add(row);
 						}
 						else {
-							row.Cells.Add(Lan.g("TableChartPtInfo","none"));
+							row.Cells.Add(Lan.G("TableChartPtInfo","none"));
 						}
 						string text;
 						Medication medication;
@@ -3866,7 +3866,7 @@ namespace OpenDental {
 						}
 						List<PatRestriction> listPatRestricts=LoadData.ListPatRestricts;
 						if(listPatRestricts.Count==0) {
-							row.Cells.Add(Lan.g(this,"None"));//row added outside of switch statement
+							row.Cells.Add(Lan.G(this,"None"));//row added outside of switch statement
 						}
 						for(int i=0;i<listPatRestricts.Count;i++) {
 							row=new GridRow();
@@ -3896,10 +3896,10 @@ namespace OpenDental {
 							hasAccess=LoadData.HasPatientPortalAccess;
 						}
 						if(!hasAccess) {
-							row.Cells.Add(Lan.g(this,"No access"));
+							row.Cells.Add(Lan.G(this,"No access"));
 						}
 						else {
-							row.Cells.Add(Lan.g(this,"Online"));
+							row.Cells.Add(Lan.G(this,"Online"));
 						}
 						break;
 					#endregion Patient Portal
@@ -3941,7 +3941,7 @@ namespace OpenDental {
 							InsSub insSub=InsSubs.GetSub(PatPlans.GetInsSubNum(_listPatPlans,ordinal),_listInsSubs);
 							name=InsPlans.GetCarrierName(insSub.PlanNum,_listInsPlans);
 							if(_listPatPlans[0].IsPending) {
-								name+=Lan.g("TableChartPtInfo"," (pending)");
+								name+=Lan.G("TableChartPtInfo"," (pending)");
 							}
 							row.Cells.Add(name);
 						}
@@ -3974,7 +3974,7 @@ namespace OpenDental {
 							gridPtInfo.ListGridRows.Add(row);
 						}
 						else {
-							row.Cells.Add(Lan.g("TableChartPtInfo","none"));
+							row.Cells.Add(Lan.G("TableChartPtInfo","none"));
 						}
 						//Add a new row for each med.
 						for(int i=0;i<listDiseases.Count;i++) {
@@ -3988,7 +3988,7 @@ namespace OpenDental {
 							}
 							else {
 								row.Cells.Add("");
-								cell=new GridCell(DiseaseDefs.GetItem(listDiseases[i].DiseaseDefNum)?.DiseaseName??Lan.g(this,"INVALID PROBLEM"));
+								cell=new GridCell(DiseaseDefs.GetItem(listDiseases[i].DiseaseDefNum)?.DiseaseName??Lan.G(this,"INVALID PROBLEM"));
 								cell.ColorText=Color.Red;
 								cell.Bold=YN.Yes;
 								row.Cells.Add(cell);
@@ -4009,13 +4009,13 @@ namespace OpenDental {
 							provText+=Providers.GetAbbr(_patCur.PriProv)+", ";							
 						}
 						else {
-							provText+=Lan.g("TableChartPtInfo","None")+", ";
+							provText+=Lan.G("TableChartPtInfo","None")+", ";
 						}
 						if(_patCur.SecProv != 0) {
 							provText+=Providers.GetAbbr(_patCur.SecProv);
 						}
 						else {
-							provText+=Lan.g("TableChartPtInfo","None");
+							provText+=Lan.G("TableChartPtInfo","None");
 						}
 						row.Cells.Add(provText);
 						row.Tag = null;
@@ -4025,12 +4025,12 @@ namespace OpenDental {
 					case "References":
 						List<CustRefEntry> listCustRefEntries=CustRefEntries.GetEntryListForCustomer(_patCur.PatNum);
 						if(listCustRefEntries.Count==0) {
-							row.Cells.Add(Lan.g("TablePatient","None"));
+							row.Cells.Add(Lan.G("TablePatient","None"));
 							row.Tag="References";
 							row.ColorBackG=listMiscColorShortDefs[8].ItemColor;
 						}
 						else {
-							row.Cells.Add(Lan.g("TablePatient",""));
+							row.Cells.Add(Lan.G("TablePatient",""));
 							row.Tag="References";
 							row.ColorBackG=listMiscColorShortDefs[8].ItemColor;
 							gridPtInfo.ListGridRows.Add(row);
@@ -4081,7 +4081,7 @@ namespace OpenDental {
 								continue;
 							}
 							row=new GridRow();
-							row.Cells.Add(Lan.g("TableChartPtInfo","Registration Key"));
+							row.Cells.Add(Lan.G("TableChartPtInfo","Registration Key"));
 							string str=arrayKeys[i].RegKey.Substring(0,4)+"-"+arrayKeys[i].RegKey.Substring(4,4)+"-"
 								+arrayKeys[i].RegKey.Substring(8,4)+"-"+arrayKeys[i].RegKey.Substring(12,4);
 							str+="  |  PatNum: "+arrayKeys[i].PatNum.ToString();//Always show the PatNum
@@ -4114,7 +4114,7 @@ namespace OpenDental {
 							InsSub insSub=InsSubs.GetSub(PatPlans.GetInsSubNum(_listPatPlans,ordinal),_listInsSubs);
 							name=InsPlans.GetCarrierName(insSub.PlanNum,_listInsPlans);
 							if(_listPatPlans[1].IsPending) {
-								name+=Lan.g("TableChartPtInfo"," (pending)");
+								name+=Lan.G("TableChartPtInfo"," (pending)");
 							}
 							row.Cells.Add(name);
 						}
@@ -4164,7 +4164,7 @@ namespace OpenDental {
 							.OrderByDescending(x => x.DateTEvent).Take(3).ToList();//only display the last three assessments at most
 						row=new GridRow() { ColorBackG=listMiscColorDefs[3].ItemColor,Tag="tabTobaccoUse" };
 						row.Cells.Add(new GridCell(Text=fieldCur.Description==""?fieldCur.InternalName:fieldCur.Description) { Bold=YN.Yes });
-						row.Cells.Add(listTobaccoStatuses.Count>0?"":Lan.g("TableChartPtInfo","none"));
+						row.Cells.Add(listTobaccoStatuses.Count>0?"":Lan.G("TableChartPtInfo","none"));
 						if(listTobaccoStatuses.Count>0) {
 							gridPtInfo.ListGridRows.Add(row);
 						}
@@ -4491,7 +4491,7 @@ namespace OpenDental {
 				if(UsingEcwTightOrFull()) {
 					if(!Environment.Is64BitOperatingSystem) {
 						//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"New Rx"),1,"","Rx"));
-						button=new ODToolBarButton(Lan.g(this,"New Rx"),1,"","Rx");
+						button=new ODToolBarButton(Lan.G(this,"New Rx"),1,"","Rx");
 						button.Style=ODToolBarButtonStyle.DropDownButton;
 						button.DropDownMenu=_contextMenuRxManage;
 						ToolBarMain.Buttons.Add(button);
@@ -4500,21 +4500,21 @@ namespace OpenDental {
 				}
 				else {
 					//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"New Rx"),1,"","Rx"));
-					button=new ODToolBarButton(Lan.g(this,"New Rx"),1,"","Rx");
+					button=new ODToolBarButton(Lan.G(this,"New Rx"),1,"","Rx");
 					button.Style=ODToolBarButtonStyle.DropDownButton;
 					button.DropDownMenu=_contextMenuRxManage;
 					ToolBarMain.Buttons.Add(button);
 					if(_butErx==null) {
-						_butErx=new ODToolBarButton(Lan.g(this,"eRx"),1,"","eRx");
+						_butErx=new ODToolBarButton(Lan.G(this,"eRx"),1,"","eRx");
 						_butErx.Style=ODToolBarButtonStyle.DropDownButton;
 						_butErx.DropDownMenu=menuErx;
 					}
 					ToolBarMain.Buttons.Add(_butErx);
 				}
 			}
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"LabCase"),-1,"","LabCase"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"LabCase"),-1,"","LabCase"));
 			if(!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Perio Chart"),2,"","Perio"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Perio Chart"),2,"","Perio"));
 			}
 			button=new ODToolBarButton(OrthoChartTabs.GetFirst(true).TabName,-1,"","Ortho");
 			if(OrthoChartTabs.GetCount(true)>1) {
@@ -4522,7 +4522,7 @@ namespace OpenDental {
 				button.DropDownMenu=menuOrthoChart;
 			}
 			ToolBarMain.Buttons.Add(button);
-			button=new ODToolBarButton(Lan.g(this,"Consent"),-1,"","Consent");
+			button=new ODToolBarButton(Lan.G(this,"Consent"),-1,"","Consent");
 			if(SheetDefs.GetCustomForType(SheetTypeEnum.Consent).Count>0) {
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				button.DropDownMenu=menuConsent;
@@ -4532,16 +4532,16 @@ namespace OpenDental {
 			//	ToolBarMain.Buttons.Add(new ODToolBarButton(".",-1,"",""));
 			//}
 			if(!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
-				button=new ODToolBarButton(Lan.g(this,"Tooth Chart"),-1,"","ToothChart");
+				button=new ODToolBarButton(Lan.G(this,"Tooth Chart"),-1,"","ToothChart");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				button.DropDownMenu=menuToothChart;
 				ToolBarMain.Buttons.Add(button);
 			}
-			button=new ODToolBarButton(Lan.g(this,"Exam Sheet"),-1,"","ExamSheet");
+			button=new ODToolBarButton(Lan.G(this,"Exam Sheet"),-1,"","ExamSheet");
 			button.Style=ODToolBarButtonStyle.PushButton;
 			ToolBarMain.Buttons.Add(button);
 			if(UsingEcwTight()) {//button will show in this toolbar instead of the usual one.
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Commlog"),4,Lan.g(this,"New Commlog Entry"),"Commlog"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Commlog"),4,Lan.G(this,"New Commlog Entry"),"Commlog"));
 			}
 			if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {
 				ToolBarMain.Buttons.Add(new ODToolBarButton("EHR",-1,"","EHR"));
@@ -4557,7 +4557,7 @@ namespace OpenDental {
 			if(_sheetLayoutController!=null && _sheetLayoutController.ListSheetDefsLayout.Count>0) {
 				button=new ODToolBarButton("Layout",-1,"","Layout");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
-				List<MenuItem> listMenuItems=new List<MenuItem>(new[] { new MenuItem(Lan.g(this,"Add/Edit Layouts"),LayoutMenuItem_Click),new MenuItem("-") });
+				List<MenuItem> listMenuItems=new List<MenuItem>(new[] { new MenuItem(Lan.G(this,"Add/Edit Layouts"),LayoutMenuItem_Click),new MenuItem("-") });
 				long selectedLayoutSheetDefNum=_sheetLayoutController.GetLayoutForUser().SheetDefNum;
 				listMenuItems.AddRange(
 					_sheetLayoutController.ListSheetDefsLayout.FindAll(x => x.SheetDefNum>0)//add all custom SheetDefs
@@ -5134,7 +5134,7 @@ namespace OpenDental {
 				DateTime dateNow=doCheckDb ? MiscData.GetNowDateTime() : DateTime.Now;
 				if(appt.AptDateTime.Date > dateNow.Date) {
 					if(!isSilent) {
-						MessageBox.Show(Lan.g(this,"Not allowed because a procedure is attached to a future appointment with a date of ")
+						MessageBox.Show(Lan.G(this,"Not allowed because a procedure is attached to a future appointment with a date of ")
 							+appt.AptDateTime.ToShortDateString());
 					}
 					return false;
@@ -5981,9 +5981,9 @@ namespace OpenDental {
 			}
 			gridChartViews.BeginUpdate();
 			gridChartViews.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableChartViews","F#"),25);
+			GridColumn col=new GridColumn(Lan.G("TableChartViews","F#"),25);
 			gridChartViews.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableChartViews","View"),50){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G("TableChartViews","View"),50){ IsWidthDynamic=true };
 			gridChartViews.ListGridColumns.Add(col);
 			gridChartViews.ListGridRows.Clear();
 			GridRow row;
@@ -6013,7 +6013,7 @@ namespace OpenDental {
 				textShowDateRange.Text+=_dateTimeShowDateEnd.ToShortDateString();
 			}
 			if(textShowDateRange.Text=="") {
-				textShowDateRange.Text=Lan.g(this,"All Dates");
+				textShowDateRange.Text=Lan.G(this,"All Dates");
 			}
 		}
 
@@ -6035,11 +6035,11 @@ namespace OpenDental {
 			}
 			int selectedPrognosis=comboPrognosis.SelectedIndex;//retain prognosis selection
 			comboPrognosis.Items.Clear();
-			comboPrognosis.Items.AddDefNone(Lan.g(this,"no prognosis"));
+			comboPrognosis.Items.AddDefNone(Lan.G(this,"no prognosis"));
 			comboPrognosis.Items.AddDefs(listPrognosisDefs);
 			int selectedPriority=comboPriority.SelectedIndex;//retain current selection
 			comboPriority.Items.Clear();
-			comboPriority.Items.AddDefNone(Lan.g(this,"no priority"));//0
+			comboPriority.Items.AddDefNone(Lan.G(this,"no priority"));//0
 			comboPriority.Items.AddDefs(listTxPrioritiesDefs);
 			if(selectedPrognosis>0 && selectedPrognosis<comboPrognosis.Items.Count) {
 				comboPrognosis.SelectedIndex=selectedPrognosis;
@@ -6057,7 +6057,7 @@ namespace OpenDental {
 			}
 			int selectedButtonCat=listButtonCats.SelectedIndex;
 			listButtonCats.Items.Clear();
-			listButtonCats.Items.Add(Lan.g(this,"Quick Buttons"));
+			listButtonCats.Items.Add(Lan.G(this,"Quick Buttons"));
 			foreach(Def procButtonCatDef in listProcButtonCatDefs) {
 				listButtonCats.Items.Add(new ODBoxItem<Def>(procButtonCatDef.ItemName,procButtonCatDef));
 			}
@@ -6072,7 +6072,7 @@ namespace OpenDental {
 			tabControlImages.TabPages.Clear();
 			TabPage tabPage;
 			tabPage=new TabPage();
-			tabPage.Text=Lan.g(this,"All");
+			tabPage.Text=Lan.G(this,"All");
 			tabControlImages.TabPages.Add(tabPage);
 			_arrayListVisImageCats=new ArrayList();
 			List<Def> listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
@@ -6142,7 +6142,7 @@ namespace OpenDental {
 
 		private void FillListPriorities() {
 			listPriorities.Items.Clear();
-			listPriorities.Items.Add(Lan.g("ContrChart","No Priority"));
+			listPriorities.Items.Add(Lan.G("ContrChart","No Priority"));
 			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
 			foreach(Def txPriorityDef in listDefs) {
 				listPriorities.Items.Add(new ODBoxItem<Def>(txPriorityDef.ItemName,txPriorityDef));
@@ -6383,9 +6383,9 @@ namespace OpenDental {
 		private void FillTreatPlans() {
 			gridTreatPlans.BeginUpdate();
 			gridTreatPlans.ListGridColumns.Clear();
-			gridTreatPlans.ListGridColumns.Add(new GridColumn(Lan.g("ChartTPList","Status"),50));
-			gridTreatPlans.ListGridColumns.Add(new GridColumn(Lan.g("ChartTPList","Heading"),60){ IsWidthDynamic=true });
-			gridTreatPlans.ListGridColumns.Add(new GridColumn(Lan.g("ChartTPList","Procs"),50,HorizontalAlignment.Center));
+			gridTreatPlans.ListGridColumns.Add(new GridColumn(Lan.G("ChartTPList","Status"),50));
+			gridTreatPlans.ListGridColumns.Add(new GridColumn(Lan.G("ChartTPList","Heading"),60){ IsWidthDynamic=true });
+			gridTreatPlans.ListGridColumns.Add(new GridColumn(Lan.G("ChartTPList","Procs"),50,HorizontalAlignment.Center));
 			gridTreatPlans.ListGridRows.Clear();
 			if(_patCur==null || !checkTreatPlans.Checked) {
 				gridTreatPlans.EndUpdate();
@@ -6495,11 +6495,11 @@ namespace OpenDental {
 		private void FillTpProcDisplay() {
 			gridTpProcs.BeginUpdate();
 			gridTpProcs.ListGridColumns.Clear();
-			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.g("TableTP","Priority"),50));
-			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.g("TableTP","Tth"),35));
-			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.g("TableTP","Surf"),40));
-			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.g("TableTP","Code"),50));
-			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.g("TableTP","Description"),50){ IsWidthDynamic=true });
+			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.G("TableTP","Priority"),50));
+			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.G("TableTP","Tth"),35));
+			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.G("TableTP","Surf"),40));
+			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.G("TableTP","Code"),50));
+			gridTpProcs.ListGridColumns.Add(new GridColumn(Lan.G("TableTP","Description"),50){ IsWidthDynamic=true });
 			gridTpProcs.ListGridRows.Clear();
 			if(_patCur==null || _dictTpNumListTpRows==null || gridTreatPlans.ListGridRows.Count==0) {
 				gridTpProcs.EndUpdate();
@@ -6748,7 +6748,7 @@ namespace OpenDental {
 					case "Stat":
 						long procNum=PIn.Long(rowCur["ProcNum"].ToString());
 						if(ProcMultiVisits.IsProcInProcess(procNum)) {
-							row.Cells.Add(Lan.g("enumProcStat",ProcStatExt.InProcess));
+							row.Cells.Add(Lan.G("enumProcStat",ProcStatExt.InProcess));
 						}
 						else {
 							row.Cells.Add(rowCur["procStatus"].ToString());//Already translated for display
@@ -7903,7 +7903,7 @@ namespace OpenDental {
 			if(erxOption==ErxOption.DoseSpotWithLegacy) {
 				if(prov.IsErxEnabled==ErxEnabledStatus.EnabledWithLegacy) {
 					InputBox pickErxOption=
-						new InputBox(Lan.g(this,"Which eRx option would you like to use?"),new List<string>() { "Legacy","DoseSpot"},false);
+						new InputBox(Lan.G(this,"Which eRx option would you like to use?"),new List<string>() { "Legacy","DoseSpot"},false);
 					if(pickErxOption.ShowDialog()==DialogResult.Cancel) {
 						return;
 					}
@@ -7995,7 +7995,7 @@ namespace OpenDental {
 				}
 				else { //newCropAccountId!=""
 					if(!programErx.Enabled) {
-						MessageBox.Show(Lan.g(this,"eRx is currently disabled.")+"\r\n"+Lan.g(this,"To enable, see our online manual for instructions."));
+						MessageBox.Show(Lan.G(this,"eRx is currently disabled.")+"\r\n"+Lan.G(this,"To enable, see our online manual for instructions."));
 						return;
 					}
 					if(!NewCropIsAccountIdValid()) {
@@ -8010,7 +8010,7 @@ namespace OpenDental {
 			}
 			else if(erxOption==ErxOption.DoseSpot) {
 				if(!programErx.Enabled) {
-					MessageBox.Show(Lan.g(this,"eRx is currently disabled.")+"\r\n"+Lan.g(this,"To enable, see our online manual for instructions."));
+					MessageBox.Show(Lan.G(this,"eRx is currently disabled.")+"\r\n"+Lan.G(this,"To enable, see our online manual for instructions."));
 					return;
 				}
 				if(Security.CurUser.EmployeeNum==0 && Security.CurUser.ProvNum==0) {
@@ -8074,10 +8074,10 @@ namespace OpenDental {
 								userOnBehalfOf=listDoseUsers[0];
 							}
 							else if(listDoseUsers.Count==0) {
-								throw new ODException(Lan.g(this,"Could not find DoseSpot User ID for the selected provider."));
+								throw new ODException(Lan.G(this,"Could not find DoseSpot User ID for the selected provider."));
 							}
 							else {
-								throw new ODException(Lan.g(this,"There are too many Open Dental users associated to the selected provider."));
+								throw new ODException(Lan.G(this,"There are too many Open Dental users associated to the selected provider."));
 							}
 							prov=Providers.GetProv(formProviderPick.SelectedProvNum);
 							#region Provider Term Date Check
@@ -8159,7 +8159,7 @@ namespace OpenDental {
 				erxDoseSpotLog.MsgText=queryString;
 				erxDoseSpotLog.ProvNum=prov.ProvNum;
 				erxDoseSpotLog.UserNum=Security.CurUser.UserNum;
-				SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxDoseSpotLog.PatNum,Lan.g(this,"eRx DoseSpot entry made for provider")+" "+Providers.GetAbbr(erxDoseSpotLog.ProvNum));
+				SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxDoseSpotLog.PatNum,Lan.G(this,"eRx DoseSpot entry made for provider")+" "+Providers.GetAbbr(erxDoseSpotLog.ProvNum));
 				ErxLogs.Insert(erxDoseSpotLog);
 				return;
 			}
@@ -8191,11 +8191,11 @@ namespace OpenDental {
 				if(isEmp) {
 					emp=Employees.GetEmp(Security.CurUser.EmployeeNum);
 					if(emp.LName=="") {//Checked in UI, but check here just in case this database was converted from another software.
-						MessageBox.Show(Lan.g(this,"Employee last name missing for user")+": "+Security.CurUser.UserName);
+						MessageBox.Show(Lan.G(this,"Employee last name missing for user")+": "+Security.CurUser.UserName);
 						return;
 					}
 					if(emp.FName=="") {//Not validated in UI.
-						MessageBox.Show(Lan.g(this,"Employee first name missing for user")+": "+Security.CurUser.UserName);
+						MessageBox.Show(Lan.G(this,"Employee first name missing for user")+": "+Security.CurUser.UserName);
 						return;
 					}
 				}
@@ -8220,17 +8220,17 @@ namespace OpenDental {
 			ProviderErx provErx=ProviderErxs.GetOneForNpiAndOption(npi,erxOption);
 			if(!PrefC.GetBool(PrefName.NewCropIsLegacy) && !provErx.IsIdentifyProofed) {
 				if(PrefC.GetString(PrefName.NewCropPartnerName)!="" || PrefC.GetString(PrefName.NewCropPassword)!="") {//Customer of a distributor
-					MessageBox.Show(Lan.g(this,"Provider")+" "+prov.Abbr+" "
-						+Lan.g(this,"must complete Identity Proofing (IDP) before using eRx.  Call support for details."));
+					MessageBox.Show(Lan.G(this,"Provider")+" "+prov.Abbr+" "
+						+Lan.G(this,"must complete Identity Proofing (IDP) before using eRx.  Call support for details."));
 				}
 				else {//Customer of OD proper or customer of a reseller
-					MessageBox.Show(Lan.g(this,"Provider")+" "+prov.Abbr+" "+Lan.g(this,"must complete Identity Proofing (IDP) before using eRx.  "
+					MessageBox.Show(Lan.G(this,"Provider")+" "+prov.Abbr+" "+Lan.G(this,"must complete Identity Proofing (IDP) before using eRx.  "
 						+"Please call support to schedule an IDP appointment."));
 				}
 				isAccessAllowed=false;
 			}
 			if(provErx.IsEnabled!=ErxStatus.Enabled) {
-				MessageBox.Show(Lan.g(this,"Contact support to enable eRx for provider")+" "+prov.Abbr);
+				MessageBox.Show(Lan.G(this,"Contact support to enable eRx for provider")+" "+prov.Abbr);
 				isAccessAllowed=false;
 			}
 #endregion ProviderErx Validation
@@ -8274,7 +8274,7 @@ namespace OpenDental {
 				}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Error launching browser window.  Internet Explorer might not be installed.  ")+ex.Message);
+				MessageBox.Show(Lan.G(this,"Error launching browser window.  Internet Explorer might not be installed.  ")+ex.Message);
 				return;
 			}
 			ErxLog erxLog=new ErxLog();
@@ -8282,7 +8282,7 @@ namespace OpenDental {
 			erxLog.MsgText=clickThroughXml;
 			erxLog.ProvNum=prov.ProvNum;
 			erxLog.UserNum=Security.CurUser.UserNum;
-			SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxLog.PatNum,Lan.g(this,"eRx entry made for provider")+" "+Providers.GetAbbr(erxLog.ProvNum));
+			SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxLog.PatNum,Lan.G(this,"eRx entry made for provider")+" "+Providers.GetAbbr(erxLog.ProvNum));
 			ErxLogs.Insert(erxLog);
 		}
 
@@ -8385,8 +8385,8 @@ namespace OpenDental {
 			MessageBox.Show(messageHL7.ToString());
 #endif
 
-			MessageBox.Show(listProcs.Count + " " + (listProcs.Count == 1 ? Lan.g(this, "procedure") : Lan.g(this, "procedures"))
-					+ " " + Lan.g(this, "queued to be sent by the HL7 service."));
+			MessageBox.Show(listProcs.Count + " " + (listProcs.Count == 1 ? Lan.G(this, "procedure") : Lan.G(this, "procedures"))
+					+ " " + Lan.G(this, "queued to be sent by the HL7 service."));
 
 		}
 
@@ -8962,15 +8962,15 @@ namespace OpenDental {
 			listDx.SelectedIndex=-1;
 			//listProcButtons.SelectedIndex=-1;
 			listViewButtons.SelectedIndices.Clear();
-			textProcCode.Text=Lan.g(this,"Type Proc Code");
+			textProcCode.Text=Lan.G(this,"Type Proc Code");
 		}
 
 		private void DeleteRows() {
 			if(gridProg.SelectedIndices.Length==0) {
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Delete Selected Item(s)?"),"",MessageBoxButtons.OKCancel)
+			if(MessageBox.Show(Lan.G(this,"Delete Selected Item(s)?"),"",MessageBoxButtons.OKCancel)
 				!=DialogResult.OK) {
 				return;
 			}
@@ -9015,24 +9015,24 @@ namespace OpenDental {
 			}
 			Recalls.Synch(_patCur.PatNum);
 			if(skippedC>0) {
-				MessageBox.Show(Lan.g(this,"Not allowed to delete completed procedures from here.")+"\r"
-					+skippedC.ToString()+" "+Lan.g(this,"item(s) skipped."));
+				MessageBox.Show(Lan.G(this,"Not allowed to delete completed procedures from here.")+"\r"
+					+skippedC.ToString()+" "+Lan.G(this,"item(s) skipped."));
 			}
 			if(skippedLinkedToOrthoCase>0) {
-				MessageBox.Show(Lan.g(this,"Not allowed to delete procedures that are linked to ortho cases. "+
-					"Detach the procedure or delete the ortho case first.")+"\r"+skippedLinkedToOrthoCase.ToString()+" "+Lan.g(this,"item(s) skipped."));
+				MessageBox.Show(Lan.G(this,"Not allowed to delete procedures that are linked to ortho cases. "+
+					"Detach the procedure or delete the ortho case first.")+"\r"+skippedLinkedToOrthoCase.ToString()+" "+Lan.G(this,"item(s) skipped."));
 			}
 			if(skippedSecurity>0) {
-				MessageBox.Show(Lan.g(this,"Not allowed to delete procedures due to security.")+"\r"
-					+skippedSecurity.ToString()+" "+Lan.g(this,"item(s) skipped."));
+				MessageBox.Show(Lan.G(this,"Not allowed to delete procedures due to security.")+"\r"
+					+skippedSecurity.ToString()+" "+Lan.G(this,"item(s) skipped."));
 			}
 			if(skippedRxSecurity>0) {
-				MessageBox.Show(Lan.g(this,"Not allowed to delete Rx due to security.")+"\r"
-					+skippedRxSecurity.ToString()+" "+Lan.g(this,"item(s) skipped."));
+				MessageBox.Show(Lan.G(this,"Not allowed to delete Rx due to security.")+"\r"
+					+skippedRxSecurity.ToString()+" "+Lan.G(this,"item(s) skipped."));
 			}
 			if(skippedAttached>0) {
-				MessageBox.Show(Lan.g(this,"Not allowed to delete TP procedures with payments attached.")+"\r"
-					+skippedAttached.ToString()+" "+Lan.g(this,"item(s) skipped. "));
+				MessageBox.Show(Lan.G(this,"Not allowed to delete TP procedures with payments attached.")+"\r"
+					+skippedAttached.ToString()+" "+Lan.G(this,"item(s) skipped. "));
 			}
 			ModuleSelected(_patCur.PatNum);
 		}
@@ -9062,13 +9062,13 @@ namespace OpenDental {
 				}
 			}
 			if(!ProcedureCodes.GetContainsKey(textProcCode.Text)) {
-				MessageBox.Show(Lan.g(this,"Invalid code."));
+				MessageBox.Show(Lan.G(this,"Invalid code."));
 				//textProcCode.Text="";
 				textProcCode.SelectionStart=textProcCode.Text.Length;
 				return;
 			}
 			if(Defs.GetHidden(DefCat.ProcCodeCats,ProcedureCodes.GetProcCode(textProcCode.Text).ProcCat)) {//if the category is hidden
-				MessageBox.Show(Lan.g(this,"Code is in a hidden category and cannot be added from here."));
+				MessageBox.Show(Lan.G(this,"Code is in a hidden category and cannot be added from here."));
 				textProcCode.SelectionStart=textProcCode.Text.Length;
 				return;
 			}
@@ -9216,7 +9216,7 @@ namespace OpenDental {
 				arrayCodeList=new long[1];
 				arrayCodeList[0]=ProcedureCodes.GetCodeNum(procButtonQuick.CodeValue);
 				if(arrayCodeList[0]==0) {
-					MessageBox.Show(this,Lan.g(this,"Procedure code does not exist in database")+" : "+procButtonQuick.CodeValue);
+					MessageBox.Show(this,Lan.G(this,"Procedure code does not exist in database")+" : "+procButtonQuick.CodeValue);
 					return;
 				}
 				arrayAutoCodeList=new long[0];
@@ -9236,8 +9236,8 @@ namespace OpenDental {
 				AutoCode autoCode=AutoCodes.GetOne(autoCodeNum);
 				if(AutoCodeItems.GetListForCode(autoCode.AutoCodeNum).Count==0) {
 					//AutoCode is not setup correctly.
-					MessageBox.Show(this,Lan.g(this,"The following AutoCode has no associated Procedure Codes: ")+"\r\n"+autoCode.Description+"\r\n"
-						+Lan.g(this,"AutoCode must be setup correctly before it can be used with a Quick Proc Button."));
+					MessageBox.Show(this,Lan.G(this,"The following AutoCode has no associated Procedure Codes: ")+"\r\n"+autoCode.Description+"\r\n"
+						+Lan.G(this,"AutoCode must be setup correctly before it can be used with a Quick Proc Button."));
 					return;
 				}
 			}
@@ -9688,19 +9688,19 @@ namespace OpenDental {
 			gridPlanned.BeginUpdate();
 			gridPlanned.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TablePlannedAppts","#"),25,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TablePlannedAppts","#"),25,HorizontalAlignment.Center);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePlannedAppts","Min"),35);
+			col=new GridColumn(Lan.G("TablePlannedAppts","Min"),35);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePlannedAppts","Procedures"),175);
+			col=new GridColumn(Lan.G("TablePlannedAppts","Procedures"),175);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePlannedAppts","Note"),175);
+			col=new GridColumn(Lan.G("TablePlannedAppts","Note"),175);
 			gridPlanned.ListGridColumns.Add(col);
 			if(Programs.UsingOrion) {
-				col=new GridColumn(Lan.g("TablePlannedAppts","SchedBy"),80);
+				col=new GridColumn(Lan.G("TablePlannedAppts","SchedBy"),80);
 			}
 			else {
-				col=new GridColumn(Lan.g("TablePlannedAppts","DateSched"),80);
+				col=new GridColumn(Lan.G("TablePlannedAppts","DateSched"),80);
 			}
 			gridPlanned.ListGridColumns.Add(col);
 			gridPlanned.ListGridRows.Clear();
@@ -9762,10 +9762,10 @@ namespace OpenDental {
 				else {//Not Orion
 					ApptStatus aptStatus=(ApptStatus)(PIn.Long(_tablePlannedAll.Rows[i]["AptStatus"].ToString()));
 					if(aptStatus==ApptStatus.UnschedList) {
-						row.Cells.Add(Lan.g(this,"Unsched"));
+						row.Cells.Add(Lan.G(this,"Unsched"));
 					}
 					else if(aptStatus==ApptStatus.Broken) {
-						row.Cells.Add(Lan.g(this,"Broken"));
+						row.Cells.Add(Lan.G(this,"Broken"));
 					}
 					else {//scheduled, complete and ASAP
 						row.Cells.Add(_tablePlannedAll.Rows[i]["dateSched"].ToString());

@@ -96,11 +96,11 @@ namespace OpenDental {
 			}
 			catch(ApplicationException aex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.g(this,"Request failed:")+"\r\n"+aex.Message);
+				MessageBox.Show(Lan.G(this,"Request failed:")+"\r\n"+aex.Message);
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.g(this,"Request failed:")+"\r\n"+ex.ToString());
+				MessageBox.Show(Lan.G(this,"Request failed:")+"\r\n"+ex.ToString());
 			}
 			DialogResult=DialogResult.OK;
 		}

@@ -37,8 +37,8 @@ namespace OpenDental{
 			Notes=new string[notes.Length];
 			notes.CopyTo(Notes,0);
 			if(UseTrojanImportDescription) {
-				label1.Text=Lan.g(this,"Multiple versions of the note exist.  Please pick or edit one version to retain. You can also pick multiple rows to combine notes.");
-				label2.Text=Lan.g(this,"This is the final note that will be used.");
+				label1.Text=Lan.G(this,"Multiple versions of the note exist.  Please pick or edit one version to retain. You can also pick multiple rows to combine notes.");
+				label2.Text=Lan.G(this,"This is the final note that will be used.");
 			}
 		}
 

@@ -88,7 +88,7 @@ namespace OpenDental {
 				Cursor=Cursors.WaitCursor;
 				long insSubModifiedCount=InsSubs.MoveSubscribers(_fromInsPlan.PlanNum,_intoInsPlan.PlanNum);
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.g(this,"Count of Subscribers Moved")+": "+insSubModifiedCount);
+				MessageBox.Show(Lan.G(this,"Count of Subscribers Moved")+": "+insSubModifiedCount);
 			}
 			catch(ApplicationException ex) {//The tool was blocked due to validation failure.
 				Cursor=Cursors.Default;
@@ -96,13 +96,13 @@ namespace OpenDental {
 				msgBox.ShowDialog();
 				return;//Since this exception is due to validation failure, do not close the form.  Let the user manually click Cancel so they know what happened.
 			}
-			SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeSubsc,0,Lan.g(this,"Subscribers Moved from")+" "+_fromInsPlan.PlanNum+" "+Lan.g(this,"to")+" "+_intoInsPlan.PlanNum);
+			SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeSubsc,0,Lan.G(this,"Subscribers Moved from")+" "+_fromInsPlan.PlanNum+" "+Lan.G(this,"to")+" "+_intoInsPlan.PlanNum);
 			DialogResult=DialogResult.OK;//Closes the form.
 		}
 
 		private void butCancel_Click(object sender,EventArgs e) {
 			//probably don't need this log entry, but here to maintain old behavior
-			SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeSubsc,0,Lan.g(this,"Subscriber Move Cancel"));
+			SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeSubsc,0,Lan.G(this,"Subscriber Move Cancel"));
 			DialogResult=DialogResult.Cancel;//Closes the form.
 		}
 

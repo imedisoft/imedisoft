@@ -280,7 +280,7 @@ namespace OpenDental{
 			else {
 				_listClinics=Clinics.GetForUserod(Security.CurUser);
 				if(!Security.CurUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.g(this,"Unassigned"));
+					listClin.Items.Add(Lan.G(this,"Unassigned"));
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -382,7 +382,7 @@ namespace OpenDental{
 			}
 			catch (Exception ex) {
 				report.CloseProgressBar();
-				string text=Lan.g(this,"Error getting report data:")+" "+ex.Message+"\r\n\r\n"+ex.StackTrace;
+				string text=Lan.G(this,"Error getting report data:")+" "+ex.Message+"\r\n\r\n"+ex.StackTrace;
 				MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(text);
 				msgBox.ShowDialog();
 				return;
@@ -398,31 +398,31 @@ namespace OpenDental{
 			Font fontBold=new Font("Tahoma",9,FontStyle.Bold);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.g(this,"Daily Procedures");
-			report.AddTitle("Title",Lan.g(this,"Daily Procedures"),fontTitle);
+			report.ReportName=Lan.G(this,"Daily Procedures");
+			report.AddTitle("Title",Lan.G(this,"Daily Procedures"),fontTitle);
 			report.AddSubTitle("Practice Title",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Dates of Report",date1.SelectionStart.ToString("d")+" - "+date2.SelectionStart.ToString("d"),fontSubTitle);
 			report.AddSubTitle("Providers",subtitleProvs,fontSubTitle);
 			if(PrefC.HasClinicsEnabled) {
 				report.AddSubTitle("Clinics",subtitleClinics,fontSubTitle);
 			}
-			QueryObject query=report.AddQuery(table,Lan.g(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
-			query.AddColumn(Lan.g(this,"Date"),90,FieldValueType.Date,font);
-			query.GetColumnDetail(Lan.g(this,"Date")).StringFormat="d";
-			query.AddColumn(Lan.g(this,"Patient Name"),150,FieldValueType.String,font);
+			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
+			query.AddColumn(Lan.G(this,"Date"),90,FieldValueType.Date,font);
+			query.GetColumnDetail(Lan.G(this,"Date")).StringFormat="d";
+			query.AddColumn(Lan.G(this,"Patient Name"),150,FieldValueType.String,font);
 			if(isAnyClinicMedical) {
-				query.AddColumn(Lan.g(this,"Code"),140,FieldValueType.String,font);
+				query.AddColumn(Lan.G(this,"Code"),140,FieldValueType.String,font);
 			}
 			else {
-				query.AddColumn(Lan.g(this,"Code"),70,FieldValueType.String,font);
+				query.AddColumn(Lan.G(this,"Code"),70,FieldValueType.String,font);
 				query.AddColumn("Tooth",40,FieldValueType.String,font);
 			}
-			query.AddColumn(Lan.g(this,"Description"),140,FieldValueType.String,font);
-			query.AddColumn(Lan.g(this,"Provider"),80,FieldValueType.String,font);
+			query.AddColumn(Lan.G(this,"Description"),140,FieldValueType.String,font);
+			query.AddColumn(Lan.G(this,"Provider"),80,FieldValueType.String,font);
 			if(PrefC.HasClinicsEnabled) {
-				query.AddColumn(Lan.g(this,"Clinic"),100,FieldValueType.String,font);
+				query.AddColumn(Lan.G(this,"Clinic"),100,FieldValueType.String,font);
 			}
-			query.AddColumn(Lan.g(this,"Fee"),80,FieldValueType.Number,font);
+			query.AddColumn(Lan.G(this,"Fee"),80,FieldValueType.Number,font);
 			report.AddPageNum(font);
 			if(!report.SubmitQueries()) {
 				return;
@@ -441,23 +441,23 @@ namespace OpenDental{
 			Font fontBold=new Font("Tahoma",9,FontStyle.Bold);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.g(this,"Procedures By Procedure Code");
-			report.AddTitle("Title",Lan.g(this,"Procedures By Procedure Code"),fontTitle);
+			report.ReportName=Lan.G(this,"Procedures By Procedure Code");
+			report.AddTitle("Title",Lan.G(this,"Procedures By Procedure Code"),fontTitle);
 			report.AddSubTitle("Practice Title",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Dates of Report",date1.SelectionStart.ToString("d")+" - "+date2.SelectionStart.ToString("d"),fontSubTitle);
 			report.AddSubTitle("Providers",subtitleProvs,fontSubTitle);
 			if(PrefC.HasClinicsEnabled) {
 				report.AddSubTitle("Clinics",subtitleClinics,fontSubTitle);
 			}
-			QueryObject query=report.AddQuery(table,Lan.g(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
-			query.AddColumn(Lan.g(this,"Category"),150,FieldValueType.String,font);
-			query.AddColumn(Lan.g(this,"Code"),130,FieldValueType.String,font);
-			query.AddColumn(Lan.g(this,"Description"),140,FieldValueType.String,font);
-			query.AddColumn(Lan.g(this,"Quantity"),60,FieldValueType.Integer,font);
-			query.GetColumnDetail(Lan.g(this,"Quantity")).ContentAlignment=ContentAlignment.MiddleRight;
-			query.AddColumn(Lan.g(this,"Average Fee"),110,FieldValueType.String,font);
-			query.GetColumnDetail(Lan.g(this,"Average Fee")).ContentAlignment=ContentAlignment.MiddleRight;
-			query.AddColumn(Lan.g(this,"Total Fees"),110,FieldValueType.Number,font);
+			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
+			query.AddColumn(Lan.G(this,"Category"),150,FieldValueType.String,font);
+			query.AddColumn(Lan.G(this,"Code"),130,FieldValueType.String,font);
+			query.AddColumn(Lan.G(this,"Description"),140,FieldValueType.String,font);
+			query.AddColumn(Lan.G(this,"Quantity"),60,FieldValueType.Integer,font);
+			query.GetColumnDetail(Lan.G(this,"Quantity")).ContentAlignment=ContentAlignment.MiddleRight;
+			query.AddColumn(Lan.G(this,"Average Fee"),110,FieldValueType.String,font);
+			query.GetColumnDetail(Lan.G(this,"Average Fee")).ContentAlignment=ContentAlignment.MiddleRight;
+			query.AddColumn(Lan.G(this,"Total Fees"),110,FieldValueType.Number,font);
 			report.AddPageNum(font);
 			if(!report.SubmitQueries()) {
 				return;
@@ -471,7 +471,7 @@ namespace OpenDental{
 		private string ConstructProviderSubtitle() {
 			string subtitleProvs="";
 			if(checkAllProv.Checked) {
-				return Lan.g(this,"All Providers");
+				return Lan.G(this,"All Providers");
 			}
 			for(int i=0;i<listProv.SelectedIndices.Count;i++) {
 				if(i>0) {
@@ -489,7 +489,7 @@ namespace OpenDental{
 				return subtitleClinics;
 			}
 			if(checkAllClin.Checked) {
-				return Lan.g(this,"All Clinics");
+				return Lan.G(this,"All Clinics");
 			}
 			for(int i=0;i<listClin.SelectedIndices.Count;i++) {
 				if(i>0) {
@@ -500,7 +500,7 @@ namespace OpenDental{
 				}
 				else {
 					if(listClin.SelectedIndices[i]==0) {
-						subtitleClinics+=Lan.g(this,"Unassigned");
+						subtitleClinics+=Lan.G(this,"Unassigned");
 					}
 					else {
 						subtitleClinics+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index to account for 'Unassigned' 

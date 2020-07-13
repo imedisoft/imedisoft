@@ -430,7 +430,7 @@ namespace OpenDental {
 		///<summary>Only called from FillTreePermissionsInitial</summary>
 		private TreeNode SetNode(string text) {
 			TreeNode retVal = new TreeNode();
-			retVal.Text=Lan.g(this,text);
+			retVal.Text=Lan.G(this,text);
 			retVal.Tag=Permissions.None;
 			retVal.ImageIndex=0;
 			retVal.SelectedImageIndex=0;
@@ -483,10 +483,10 @@ namespace OpenDental {
 				{
 					node.ImageIndex=2;
 					if(listGroupPerms[i].NewerDate.Year>1880) {
-						node.Text+=" ("+Lan.g(this,"if date newer than")+" "+listGroupPerms[i].NewerDate.ToShortDateString()+")";
+						node.Text+=" ("+Lan.G(this,"if date newer than")+" "+listGroupPerms[i].NewerDate.ToShortDateString()+")";
 					}
 					else if(listGroupPerms[i].NewerDays>0) {
-						node.Text+=" ("+Lan.g(this,"if days newer than")+" "+listGroupPerms[i].NewerDays.ToString()+")";
+						node.Text+=" ("+Lan.G(this,"if days newer than")+" "+listGroupPerms[i].NewerDays.ToString()+")";
 					}
 				}
 			}

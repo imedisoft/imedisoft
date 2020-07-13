@@ -132,12 +132,12 @@ namespace OpenDental{
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormStateAbbrs","Description"),175);
+			GridColumn col=new GridColumn(Lan.G("FormStateAbbrs","Description"),175);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormStateAbbrs","Abbr"),70);
+			col=new GridColumn(Lan.G("FormStateAbbrs","Abbr"),70);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.GetBool(PrefName.EnforceMedicaidIDLength)) {
-				col=new GridColumn(Lan.g("FormStateAbbrs","Medicaid ID Length"),200);
+				col=new GridColumn(Lan.G("FormStateAbbrs","Medicaid ID Length"),200);
 				gridMain.ListGridColumns.Add(col);
 			}
 			gridMain.ListGridRows.Clear();

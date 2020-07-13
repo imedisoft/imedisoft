@@ -291,21 +291,21 @@ namespace OpenDental{
 		private void FillAccount(){
 			if(AccountPicked==null){
 				textAccount.Text="";
-				butChange.Text=Lan.g(this,"Pick");
-				labelDebit.Text=Lan.g(this,"Debit");
-				labelCredit.Text=Lan.g(this,"Credit");
+				butChange.Text=Lan.G(this,"Pick");
+				labelDebit.Text=Lan.G(this,"Debit");
+				labelCredit.Text=Lan.G(this,"Credit");
 				return;
 			}
 			//AccountCur=Accounts.ListShort[comboAccount.SelectedIndex];
 			textAccount.Text=AccountPicked.Description;
-			butChange.Text=Lan.g(this,"Change");
+			butChange.Text=Lan.G(this,"Change");
 			if(Accounts.DebitIsPos(AccountPicked.AcctType)) {
-				labelDebit.Text=Lan.g(this,"Debit")+Lan.g(this,"(+)");
-				labelCredit.Text=Lan.g(this,"Credit")+Lan.g(this,"(-)");
+				labelDebit.Text=Lan.G(this,"Debit")+Lan.G(this,"(+)");
+				labelCredit.Text=Lan.G(this,"Credit")+Lan.G(this,"(-)");
 			}
 			else {
-				labelDebit.Text=Lan.g(this,"Debit")+Lan.g(this,"(-)");
-				labelCredit.Text=Lan.g(this,"Credit")+Lan.g(this,"(+)");
+				labelDebit.Text=Lan.G(this,"Debit")+Lan.G(this,"(-)");
+				labelCredit.Text=Lan.G(this,"Credit")+Lan.G(this,"(+)");
 			}
 		}
 

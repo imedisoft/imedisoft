@@ -33,13 +33,13 @@ namespace OpenDental {
 			_listAutoNoteControls=AutoNoteControls.GetDeepCopy();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormAutoNoteControls","Description"),100);
+			GridColumn col=new GridColumn(Lan.G("FormAutoNoteControls","Description"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormAutoNoteControls","Type"),100);
+			col=new GridColumn(Lan.G("FormAutoNoteControls","Type"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormAutoNoteControls","Prompt Text"),100);
+			col=new GridColumn(Lan.G("FormAutoNoteControls","Prompt Text"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormAutoNoteControls","Options"),100);
+			col=new GridColumn(Lan.G("FormAutoNoteControls","Options"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

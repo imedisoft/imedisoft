@@ -23,7 +23,7 @@ namespace OpenDental {
 			_showingInfoButton=CDSPermissions.GetForUser(Security.CurUser.UserNum).ShowInfobutton;
 			_showingInfobuttonShift=(_showingInfoButton?1:0);
 			if(IsSelectionMode || IsMultiSelectMode) {
-				butClose.Text=Lan.g(this,"Cancel");
+				butClose.Text=Lan.G(this,"Cancel");
 			}
 			else {
 				butOK.Visible=false;
@@ -64,13 +64,13 @@ namespace OpenDental {
 				col.ImageList=imageListInfoButton;
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(this,"SNOMED CT"),125);//column width of 125 holds the longest Snomed CT code as of 8/7/15 which is 900000000000002006
+			col=new GridColumn(Lan.G(this,"SNOMED CT"),125);//column width of 125 holds the longest Snomed CT code as of 8/7/15 which is 900000000000002006
 			gridMain.ListGridColumns.Add(col);
 			//col=new ODGridColumn("Deprecated",75,HorizontalAlignment.Center);
 			//gridMain.Columns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),500);
+			col=new GridColumn(Lan.G(this,"Description"),500);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Used By CQM's"),185);//width 185 so all of our CQM measure nums as of 8/7/15 will fit 68,69,74,75,127,138,147,155,165
+			col=new GridColumn(Lan.G(this,"Used By CQM's"),185);//width 185 so all of our CQM measure nums as of 8/7/15 will fit 68,69,74,75,127,138,147,155,165
 			gridMain.ListGridColumns.Add(col);
 			//col=new ODGridColumn("Date Of Standard",100);
 			//gridMain.Columns.Add(col);
@@ -161,7 +161,7 @@ namespace OpenDental {
 				DiseaseDefs.Update(def);
 				changeCount++;
 			}
-			MessageBox.Show(Lan.g(this,"SNOMED CT codes added: ")+changeCount);
+			MessageBox.Show(Lan.G(this,"SNOMED CT codes added: ")+changeCount);
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

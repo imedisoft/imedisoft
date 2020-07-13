@@ -145,10 +145,10 @@ namespace OpenDental{
  		private void FormAutoItemEdit_Load(object sender, System.EventArgs e) {
 			AutoCodeConds.RefreshCache();    
 			if(IsNew){
-				this.Text=Lan.g(this,"Add Auto Code Item");  
+				this.Text=Lan.G(this,"Add Auto Code Item");  
 			}
 			else{ 
-				this.Text=Lan.g(this,"Edit Auto Code Item");
+				this.Text=Lan.G(this,"Edit Auto Code Item");
 				textADA.Text=ProcedureCodes.GetStringProcCode(AutoCodeItemCur.CodeNum);    
 			}
 			FillList();
@@ -157,7 +157,7 @@ namespace OpenDental{
 		private void FillList() {
 			listConditions.Items.Clear();
 			foreach(string s in Enum.GetNames(typeof(AutoCondition))) {
-				listConditions.Items.Add(Lan.g("enumAutoConditions",s));
+				listConditions.Items.Add(Lan.G("enumAutoConditions",s));
 			}
 			List<AutoCodeCond> listAutoCodeConds=AutoCodeConds.GetWhere(x => x.AutoCodeItemNum==AutoCodeItemCur.AutoCodeItemNum);
 			for(int i=0;i<listAutoCodeConds.Count;i++) {
@@ -167,7 +167,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,System.EventArgs e) {
 			if(textADA.Text=="") {
-				MessageBox.Show(Lan.g(this,"Code cannot be left blank."));
+				MessageBox.Show(Lan.G(this,"Code cannot be left blank."));
 				listConditions.SelectedIndex=-1;
 				FillList();
 				return;
@@ -206,7 +206,7 @@ namespace OpenDental{
 					textADA.Text=ProcedureCodes.GetStringProcCode(FormP.SelectedCodeNum);
 				}
 				else {
-					MessageBox.Show(Lan.g(this,"That procedure code is already in use in a different Auto Code.  Not allowed to use it here."));
+					MessageBox.Show(Lan.G(this,"That procedure code is already in use in a different Auto Code.  Not allowed to use it here."));
 					textADA.Text=ProcedureCodes.GetStringProcCode(AutoCodeItemCur.CodeNum);
 				}
 			}

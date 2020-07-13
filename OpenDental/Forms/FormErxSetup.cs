@@ -105,7 +105,7 @@ namespace OpenDental {
 				SetRadioButtonChecked(_eRxOption);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Error loading the eRx program: ")+ex.Message);
+				MessageBox.Show(Lan.G(this,"Error loading the eRx program: ")+ex.Message);
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -114,17 +114,17 @@ namespace OpenDental {
 		private void FillGridDoseSpot() {
 			gridProperties.BeginUpdate();
 			gridProperties.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Clinic"),120);
+			GridColumn col=new GridColumn(Lan.G(this,"Clinic"),120);
 			gridProperties.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Clinic ID"),160);
+			col=new GridColumn(Lan.G(this,"Clinic ID"),160);
 			gridProperties.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Clinic Key"),160);
+			col=new GridColumn(Lan.G(this,"Clinic Key"),160);
 			gridProperties.ListGridColumns.Add(col);
 			gridProperties.ListGridRows.Clear();
 			DoseSpotGridRowModel clinicHqModel=new DoseSpotGridRowModel();
 			clinicHqModel.Clinic=new Clinic();
 			clinicHqModel.Clinic.ClinicNum=0;
-			clinicHqModel.Clinic.Abbr=Lan.g(this,"Headquarters");
+			clinicHqModel.Clinic.Abbr=Lan.G(this,"Headquarters");
 			clinicHqModel.ClinicIDProperty=GetPropertyForClinic(0,Erx.PropertyDescs.ClinicID);
 			clinicHqModel.ClinicKeyProperty=GetPropertyForClinic(0,Erx.PropertyDescs.ClinicKey);
 			gridProperties.ListGridRows.Add(CreateDoseSpotGridRow(clinicHqModel));//If clinics isn't enabled, this will be the only row in the grid.

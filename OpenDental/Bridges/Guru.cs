@@ -146,7 +146,7 @@ namespace OpenDental.Bridges {
 					MV_FILE_NOT_FOUND - Sent file cannot be found
 					MV_ERROR - General Error
 					*/
-					throw new ODException(Lan.g("Guru","MedVisorInterface.MVStart() returned with an error code of:")+$" {errorNum}");
+					throw new ODException(Lan.G("Guru","MedVisorInterface.MVStart() returned with an error code of:")+$" {errorNum}");
 				}
 			}
 			catch(DllNotFoundException) {

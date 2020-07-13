@@ -327,7 +327,6 @@
     <Compile Include="Bridges\BioPAK.cs" />
     <Compile Include="Bridges\CaptureLink.cs" />
     <Compile Include="Bridges\ClioSoft.cs" />
-    <Compile Include="Bridges\AaTemplate.cs" />
     <Compile Include="Bridges\ClaimX_Statements.cs" />
     <Compile Include="Bridges\CDS.cs" />
     <Compile Include="Bridges\CleaRay.cs" />
@@ -857,7 +856,6 @@
     <Compile Include="Logic\AutoNoteL.cs" />
     <Compile Include="Logic\PayConnectL.cs" />
     <Compile Include="Logic\PayPlanL.cs" />
-    <Compile Include="Logic\aaLogicUI.cs" />
     <Compile Include="Logic\ActionNeededL.cs" />
     <Compile Include="Logic\AppointmentL.cs" />
     <Compile Include="Logic\UserOdPrefL.cs" />

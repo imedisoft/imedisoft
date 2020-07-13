@@ -222,7 +222,7 @@ namespace OpenDental.Reporting.Allocators {
 			// Generate list of Guarantors to allocate
 			int[] GuarantorsToAllocate = Generate_GuarantorList_ToAllocate();
 			if(GuarantorsToAllocate == null || GuarantorsToAllocate.Length == 0) {
-				MessageBox.Show(Lan.g(this,"No Guarantors to Allocate. Exiting."));
+				MessageBox.Show(Lan.G(this,"No Guarantors to Allocate. Exiting."));
 				return;
 			}
 			int BatchSize = 50;
@@ -265,11 +265,11 @@ namespace OpenDental.Reporting.Allocators {
 		private bool CheckTableStatus() {
 			bool rValOK_TO_RUN = false;
 			if(!TableExists(TABLENAME)) {
-				DialogResult dr = MessageBox.Show(Lan.g(this,"The Table for holding provider split infomation generated\n"
+				DialogResult dr = MessageBox.Show(Lan.G(this,"The Table for holding provider split infomation generated\n"
 					+ "by MyAllocator1 does not exist."
 					+ "Creation of this table is required create set up allocation by provider\n"
 					+ "according to the rules in MyAllocator1.\n\n"
-					+ "Do you want to create this table?"),Lan.g(this,"Create Table"),MessageBoxButtons.YesNoCancel);
+					+ "Do you want to create this table?"),Lan.G(this,"Create Table"),MessageBoxButtons.YesNoCancel);
 				if(dr == DialogResult.Yes) {
 					Db.NonQOld(MyAllocator1_ProviderPayment.CreatTableString());
 				}
@@ -308,7 +308,7 @@ namespace OpenDental.Reporting.Allocators {
 			// Find fully processed Guarantors
 			#region Check with users on continuing an incomplete batch run
 			if(TempTableExists) {
-				DialogResult dr = MessageBox.Show(Lan.g(this,"Processing was incomplete during last\n"
+				DialogResult dr = MessageBox.Show(Lan.G(this,"Processing was incomplete during last\n"
 					+ "run of the batch allocation process. Do you want to start over?\n"
 					+ "This will likely result in a loss of data but the data will\n"
 					+ "be rebuilt\n\nDO YOU WANT TO START OVER?"),"Warning",MessageBoxButtons.YesNo);
@@ -324,9 +324,9 @@ namespace OpenDental.Reporting.Allocators {
 				if(dr == DialogResult.No) // Don't want to start over 
 				{
 
-					DialogResult dr2 = MessageBox.Show(Lan.g(this,"Do you want to continue from where you left of?\n"
+					DialogResult dr2 = MessageBox.Show(Lan.G(this,"Do you want to continue from where you left of?\n"
 						+ "If you state no the allocation process will be aborted.\n\nContinue?"),
-						Lan.g(this,"Continue?"),MessageBoxButtons.YesNo);
+						Lan.G(this,"Continue?"),MessageBoxButtons.YesNo);
 					if(dr2 == DialogResult.No)
 						return null; // don't want to continue
 				}

@@ -157,7 +157,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(this.textDescription.Text==""){
-				MessageBox.Show(Lan.g(this,"Please enter a description."));
+				MessageBox.Show(Lan.G(this,"Please enter a description."));
 				return;
 			}
 			InsFilingCodeSubtypeCur.Descript=textDescription.Text;

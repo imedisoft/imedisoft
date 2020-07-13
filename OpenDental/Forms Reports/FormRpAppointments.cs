@@ -363,7 +363,7 @@ namespace OpenDental
 				_listClinics=Clinics.GetForUserod(Security.CurUser);
 				listClinics.Items.Clear();
 				if(!Security.CurUser.ClinicIsRestricted) {
-					listClinics.Items.Add(Lan.g(this,"Unassigned"));
+					listClinics.Items.Add(Lan.G(this,"Unassigned"));
 					listClinics.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -388,23 +388,23 @@ namespace OpenDental
 			if(textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!="") 
 			{
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return false;
 			}
 			if(textDateFrom.Text.Length==0
 				|| textDateTo.Text.Length==0) 
 			{
-				MessageBox.Show(Lan.g(this,"From and To dates are required."));
+				MessageBox.Show(Lan.G(this,"From and To dates are required."));
 				return false;
 			}
 			DateTime dateFrom=PIn.Date(textDateFrom.Text);
 			DateTime dateTo=PIn.Date(textDateTo.Text);
 			if(dateTo < dateFrom) {
-				MessageBox.Show(Lan.g(this,"To date cannot be before From date."));
+				MessageBox.Show(Lan.G(this,"To date cannot be before From date."));
 				return false;
 			}
 			if(!checkAllProvs.Checked && listProvs.SelectedIndices.Count==0) {
-				MessageBox.Show(Lan.g(this,"You must select at least one provider."));
+				MessageBox.Show(Lan.G(this,"You must select at least one provider."));
 				return false;
 			}
 			if(_hasClinicsEnabled) {//Not no clinics.
@@ -505,12 +505,12 @@ namespace OpenDental
 			Font font=new Font("Tahoma",9);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.g(this,"Appointments");
-			report.AddTitle("Title",Lan.g(this,"Appointments"),fontTitle);
+			report.ReportName=Lan.G(this,"Appointments");
+			report.AddTitle("Title",Lan.G(this,"Appointments"),fontTitle);
 			report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString(),fontSubTitle);
 			if(checkAllProvs.Checked) {
-				report.AddSubTitle("Providers",Lan.g(this,"All Providers"));
+				report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
 			}
 			else {
 				string str="";

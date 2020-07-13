@@ -49,17 +49,17 @@ namespace OpenDental {
 			gridAdjusts.BeginUpdate();
 			gridAdjusts.ListGridRows.Clear();
 			gridAdjusts.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableAdjustSelect","Date"),70,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn(Lan.G("TableAdjustSelect","Date"),70,HorizontalAlignment.Center);
 			gridAdjusts.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableAdjustSelect","Prov"),60){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G("TableAdjustSelect","Prov"),60){ IsWidthDynamic=true };
 			gridAdjusts.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g("TableAdjustSelect","Clinic"),60){ IsWidthDynamic=true };
+				col=new GridColumn(Lan.G("TableAdjustSelect","Clinic"),60){ IsWidthDynamic=true };
 				gridAdjusts.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("TableAdjustSelect","Amt Orig"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableAdjustSelect","Amt Orig"),60,HorizontalAlignment.Right);
 			gridAdjusts.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableAdjustSelect","Amt Avail"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableAdjustSelect","Amt Avail"),60,HorizontalAlignment.Right);
 			gridAdjusts.ListGridColumns.Add(col);
 			GridRow row;
 			foreach(AccountEntry entry in _listPatAdjEntries) {

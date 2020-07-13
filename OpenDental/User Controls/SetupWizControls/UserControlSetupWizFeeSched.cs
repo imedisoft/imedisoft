@@ -38,11 +38,11 @@ namespace OpenDental.User_Controls.SetupWizard {
 			_listFeeScheds=_listFeeScheds.OrderBy(x => x.ItemOrder).ToList();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableFeeScheds","Description"),145);
+			GridColumn col=new GridColumn(Lan.G("TableFeeScheds","Description"),145);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableFeeScheds","Type"),70);
+			col=new GridColumn(Lan.G("TableFeeScheds","Type"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableFeeScheds","Hidden"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableFeeScheds","Hidden"),60,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

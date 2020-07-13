@@ -80,7 +80,7 @@ namespace OpenDental {
 					return;
 				}
 				FormProgress FormP=new FormProgress();
-				FormP.DisplayText=Lan.g(CloudStorage.LanThis,"Uploading...");
+				FormP.DisplayText=Lan.G(CloudStorage.LanThis,"Uploading...");
 				FormP.NumberFormat="F";
 				FormP.NumberMultiplication=1;
 				FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
@@ -147,7 +147,7 @@ namespace OpenDental {
 				}
 				else {
 					FormProgress FormP=new FormProgress();
-					FormP.DisplayText=Lan.g(CloudStorage.LanThis,"Downloading...");
+					FormP.DisplayText=Lan.G(CloudStorage.LanThis,"Downloading...");
 					FormP.NumberFormat="F";
 					FormP.NumberMultiplication=1;
 					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0

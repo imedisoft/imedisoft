@@ -383,7 +383,7 @@ namespace OpenDental {
 				}
 			}
 			if(skipCount>0) {
-				MessageBox.Show(Lan.g(this," Row(s) skipped because allergy already present in the reconcile list")+": "+skipCount);
+				MessageBox.Show(Lan.G(this," Row(s) skipped because allergy already present in the reconcile list")+": "+skipCount);
 			}
 			FillReconcileGrid();
 		}
@@ -440,7 +440,7 @@ namespace OpenDental {
 				}
 			}
 			if(skipCount>0) {
-				MessageBox.Show(Lan.g(this," Row(s) skipped because allergy already present in the reconcile list")+": "+skipCount);
+				MessageBox.Show(Lan.G(this," Row(s) skipped because allergy already present in the reconcile list")+": "+skipCount);
 			}
 			FillReconcileGrid();
 		}

@@ -198,23 +198,23 @@ namespace OpenDental {
 			int selectedIndex=-1;
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormApptsOther","Appt Status"),100);
+			GridColumn col=new GridColumn(Lan.G("FormApptsOther","Appt Status"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormApptsOther","Prov"),50);
+			col=new GridColumn(Lan.G("FormApptsOther","Prov"),50);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g("FormApptsOther","Clinic"),80);
+				col=new GridColumn(Lan.G("FormApptsOther","Clinic"),80);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("FormApptsOther","Date"),70);//If the order changes, reflect the change for dateIndex below.
+			col=new GridColumn(Lan.G("FormApptsOther","Date"),70);//If the order changes, reflect the change for dateIndex below.
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormApptsOther","Time"),70);//Must immediately follow Date column.
+			col=new GridColumn(Lan.G("FormApptsOther","Time"),70);//Must immediately follow Date column.
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormApptsOther","Min"),40);
+			col=new GridColumn(Lan.G("FormApptsOther","Min"),40);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormApptsOther","Procedures"),150);
+			col=new GridColumn(Lan.G("FormApptsOther","Procedures"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormApptsOther","Notes"),320);
+			col=new GridColumn(Lan.G("FormApptsOther","Notes"),320);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -246,7 +246,7 @@ namespace OpenDental {
 						else if(_listApptOthers[i].AptDateTime.Date==DateTime.Today.Date) { //Today
 							row.ColorBackG=_listProgNoteColorDefs[9].ItemColor;
 							row.ColorText=_listProgNoteColorDefs[8].ItemColor;
-							row.Cells[0].Text=Lan.g(this,"Today");
+							row.Cells[0].Text=Lan.G(this,"Today");
 						}
 						else if(_listApptOthers[i].AptDateTime > DateTime.Today) { //Future
 							row.ColorBackG=_listProgNoteColorDefs[13].ItemColor;
@@ -256,7 +256,7 @@ namespace OpenDental {
 					else if(_listApptOthers[i].AptStatus==ApptStatus.Planned) { //show line for planned appt
 						row.ColorBackG=_listProgNoteColorDefs[17].ItemColor;
 						row.ColorText=_listProgNoteColorDefs[16].ItemColor;
-						string txt=Lan.g("enumApptStatus","Planned")+" ";
+						string txt=Lan.G("enumApptStatus","Planned")+" ";
 						int plannedAptIdx=_listPlannedIncompletes.FindIndex(x => x.AptNum==_listApptOthers[i].AptNum);
 						if(IsShowCompletePlanned) {
 							for(int p=0;p<_listPlannedAppts.Count;p++) {
@@ -274,34 +274,34 @@ namespace OpenDental {
 							}
 						}
 						if(plannedAptIdx<0) {//attached to a completed appointment
-							txt+=" ("+Lan.g("enumApptStatus",ApptStatus.Complete.ToString())+")";
+							txt+=" ("+Lan.G("enumApptStatus",ApptStatus.Complete.ToString())+")";
 						}
 						if(_listApptOthers.ToList().FindAll(x => x.NextAptNum==_listApptOthers[i].AptNum)
 							.Exists(x => x.AptStatus==ApptStatus.Scheduled)) //attached to a scheduled appointment
 						{
-							txt+=" ("+Lan.g("enumApptStatus",ApptStatus.Scheduled.ToString())+")";
+							txt+=" ("+Lan.G("enumApptStatus",ApptStatus.Scheduled.ToString())+")";
 						}
 						row.Cells[0].Text=txt;
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.PtNote) {
 						row.ColorBackG=_listProgNoteColorDefs[19].ItemColor;
 						row.ColorText=_listProgNoteColorDefs[18].ItemColor;
-						row.Cells[0].Text=Lan.g("enumApptStatus","PtNote");
+						row.Cells[0].Text=Lan.G("enumApptStatus","PtNote");
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.PtNoteCompleted) {
 						row.ColorBackG=_listProgNoteColorDefs[21].ItemColor;
 						row.ColorText=_listProgNoteColorDefs[20].ItemColor;
-						row.Cells[0].Text=Lan.g("enumApptStatus","PtNoteCompleted");
+						row.Cells[0].Text=Lan.G("enumApptStatus","PtNoteCompleted");
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.Broken) {
-						row.Cells[0].Text=Lan.g("enumApptStatus","Broken");
+						row.Cells[0].Text=Lan.G("enumApptStatus","Broken");
 						row.Cells[dateIndex].Text=_listApptOthers[i].AptDateTime.ToString("d");
 						row.Cells[dateIndex+1].Text=_listApptOthers[i].AptDateTime.ToString("t");
 						row.ColorBackG=_listProgNoteColorDefs[15].ItemColor;
 						row.ColorText=_listProgNoteColorDefs[14].ItemColor;
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.UnschedList) {
-						row.Cells[0].Text=Lan.g("enumApptStatus","UnschedList");
+						row.Cells[0].Text=Lan.G("enumApptStatus","UnschedList");
 						row.ColorBackG=_listProgNoteColorDefs[15].ItemColor;
 						row.ColorText=_listProgNoteColorDefs[14].ItemColor;
 					}

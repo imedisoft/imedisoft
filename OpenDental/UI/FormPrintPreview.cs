@@ -163,7 +163,7 @@ namespace OpenDental.UI{
 		///<summary>Causes the toolbar to be laid out again.</summary>
 		public void LayoutToolBar(){
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Print"),0,"","Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print"),0,"","Print"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,"Go Back One Page","Back"));
 			ODToolBarButton button=new ODToolBarButton("",-1,"","PageNum");
@@ -171,7 +171,7 @@ namespace OpenDental.UI{
 			ToolBarMain.Buttons.Add(button);
 			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Go Forward One Page","Fwd"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Close"),-1,"Close This Window","Close"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Close"),-1,"Close This Window","Close"));
 		}
 
 		private void FormReport_Layout(object sender, System.Windows.Forms.LayoutEventArgs e) {
@@ -217,7 +217,7 @@ namespace OpenDental.UI{
 					Document.Print();
 				}
 				catch(Exception e){
-					MessageBox.Show(Lan.g(this,"Error: ")+e.Message);
+					MessageBox.Show(Lan.G(this,"Error: ")+e.Message);
 				}
 			}
 			else {//New print pattern

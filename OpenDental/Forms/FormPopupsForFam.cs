@@ -69,19 +69,19 @@ namespace OpenDental {
 			#endregion Automation PopUpThenDisable10Min
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TablePopupsForFamily","Patient"),120);
+			GridColumn col=new GridColumn(Lan.G("TablePopupsForFamily","Patient"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePopupsForFamily","Level"),80);
+			col=new GridColumn(Lan.G("TablePopupsForFamily","Level"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePopupsForFamily","Disabled"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TablePopupsForFamily","Disabled"),60,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePopupsForFamily","Last Viewed"),80,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TablePopupsForFamily","Last Viewed"),80,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			if(checkDeleted.Checked) {
-				col=new GridColumn(Lan.g("TablePopupsForFamily","Deleted"),60,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G("TablePopupsForFamily","Deleted"),60,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("TablePopupsForFamily","Popup Message"),120);
+			col=new GridColumn(Lan.G("TablePopupsForFamily","Popup Message"),120);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -95,12 +95,12 @@ namespace OpenDental {
 					//if(autoCur==null) {
 					//	continue;
 					//}
-					row.Cells.Add(Lan.g("enumEnumPopupLevel","Auto")+": "+Lan.g("enumEnumPopupLevel",autoCur.Autotrigger.ToString()));
+					row.Cells.Add(Lan.G("enumEnumPopupLevel","Auto")+": "+Lan.G("enumEnumPopupLevel",autoCur.Autotrigger.ToString()));
 					row.Cells.Add("");//Disabled column. Will never happen for automations.
 					row.Cells.Add(_listPopups[i].DateTimeEntry.ToShortTimeString());
 				}
 				else {
-					row.Cells.Add(Lan.g("enumEnumPopupLevel",_listPopups[i].PopupLevel.ToString()));
+					row.Cells.Add(Lan.G("enumEnumPopupLevel",_listPopups[i].PopupLevel.ToString()));
 					row.Cells.Add(_listPopups[i].IsDisabled?"X":"");
 					PopupEvent popEvent=_listPopEvents.FirstOrDefault(x => x.PopupNum==_listPopups[i].PopupNum);
 					if(popEvent!=null && popEvent.LastViewed.Year>1880) {

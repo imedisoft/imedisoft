@@ -382,7 +382,7 @@ namespace OpenDental {
 			//21611-7 = Estimated
 			//21612-7 = Reported
 			//29553-5 = Calculated
-			InputBox IB=new InputBox(Lan.g(this,"Input age criterion as (operand)(value). Examples: <18, >55, =22, <=35."));
+			InputBox IB=new InputBox(Lan.G(this,"Input age criterion as (operand)(value). Examples: <18, >55, =22, <=35."));
 			if(IB.ShowDialog()!=DialogResult.OK || string.IsNullOrEmpty(IB.textResult.Text)) {
 				return;
 			}
@@ -397,7 +397,7 @@ namespace OpenDental {
 		private void butAddGender_Click(object sender,EventArgs e) {
 			//46098-0 = Gender. There are 3 other age LOINCS that should also be checked.  Stored as " Age(Operand)(Value) "
 			//Other Gender LoincCodes include 21840-4,46607-8,54131-8, and 72143-1
-			InputBox IB=new InputBox(Lan.g(this,"Input genders.  Example: male,female,unknown"));
+			InputBox IB=new InputBox(Lan.G(this,"Input genders.  Example: male,female,unknown"));
 			//Fill inputBox with current gender codes.---------------------------------------------------------
 			if(EhrTriggerCur.DemographicsList.Contains("gender")) {
 				string[] arrayString=EhrTriggerCur.DemographicsList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -444,7 +444,7 @@ namespace OpenDental {
 
 		private void butAddHeight_Click(object sender,EventArgs e) {
 			//8302-2 = height
-			InputBox IB=new InputBox(Lan.g(this,"Input height criterion as (operand)(value in inches). Examples: >80, <=48.5"));
+			InputBox IB=new InputBox(Lan.G(this,"Input height criterion as (operand)(value in inches). Examples: >80, <=48.5"));
 			if(IB.ShowDialog()!=DialogResult.OK || string.IsNullOrEmpty(IB.textResult.Text)) {
 				return;
 			}
@@ -458,7 +458,7 @@ namespace OpenDental {
 
 		private void butAddWeight_Click(object sender,EventArgs e) {
 			//29463-7 = weight
-			InputBox IB=new InputBox(Lan.g(this,"Input weight criterion as (operand)(value). Examples: <=99.5, >=300"));
+			InputBox IB=new InputBox(Lan.G(this,"Input weight criterion as (operand)(value). Examples: <=99.5, >=300"));
 			if(IB.ShowDialog()!=DialogResult.OK || string.IsNullOrEmpty(IB.textResult.Text)) {
 				return;
 			}
@@ -484,7 +484,7 @@ namespace OpenDental {
 
 		private void butAddBMI_Click(object sender,EventArgs e) {
 			//39156-5 = BMI
-			InputBox IB=new InputBox(Lan.g(this,"Input BMI criterion. Examples: <5, >=27.5%"));
+			InputBox IB=new InputBox(Lan.G(this,"Input BMI criterion. Examples: <5, >=27.5%"));
 			if(IB.ShowDialog()!=DialogResult.OK || string.IsNullOrEmpty(IB.textResult.Text)) {
 				return;
 			}

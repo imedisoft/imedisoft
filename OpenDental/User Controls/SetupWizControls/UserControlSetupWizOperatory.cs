@@ -28,33 +28,33 @@ namespace OpenDental.User_Controls.SetupWizard {
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			if(PrefC.HasClinicsEnabled) {
-				col = new GridColumn(Lan.g("FormSetupWizard","OpName"),110);
+				col = new GridColumn(Lan.G("FormSetupWizard","OpName"),110);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","Abbrev"),110);
+				col = new GridColumn(Lan.G("FormSetupWizard","Abbrev"),110);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","Clinic"),110);
+				col = new GridColumn(Lan.G("FormSetupWizard","Clinic"),110);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","ProvDentist"),110);
+				col = new GridColumn(Lan.G("FormSetupWizard","ProvDentist"),110);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","ProvHygienist"),110);
+				col = new GridColumn(Lan.G("FormSetupWizard","ProvHygienist"),110);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","IsHygiene"),60,HorizontalAlignment.Center);
+				col = new GridColumn(Lan.G("FormSetupWizard","IsHygiene"),60,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","IsHidden"),60,HorizontalAlignment.Center);
+				col = new GridColumn(Lan.G("FormSetupWizard","IsHidden"),60,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
 			}
 			else {
-				col = new GridColumn(Lan.g("FormSetupWizard","OpName"),135);
+				col = new GridColumn(Lan.G("FormSetupWizard","OpName"),135);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","Abbrev"),120);
+				col = new GridColumn(Lan.G("FormSetupWizard","Abbrev"),120);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","ProvDentist"),130);
+				col = new GridColumn(Lan.G("FormSetupWizard","ProvDentist"),130);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","ProvHygienist"),130);
+				col = new GridColumn(Lan.G("FormSetupWizard","ProvHygienist"),130);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","IsHygiene"),80,HorizontalAlignment.Center);
+				col = new GridColumn(Lan.G("FormSetupWizard","IsHygiene"),80,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
-				col = new GridColumn(Lan.g("FormSetupWizard","IsHidden"),80,HorizontalAlignment.Center);
+				col = new GridColumn(Lan.G("FormSetupWizard","IsHidden"),80,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
 			}
 			//col = new ODGridColumn("Clinic",120);

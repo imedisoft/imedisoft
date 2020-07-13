@@ -320,7 +320,7 @@ namespace OpenDental{
 
 		private void butUp_Click(object sender, System.EventArgs e) {
 			if(listViews.SelectedIndex==-1){
-				MessageBox.Show(Lan.g(this,"Please select a category first."));
+				MessageBox.Show(Lan.G(this,"Please select a category first."));
 				return;
 			}
 			if(listViews.SelectedIndex==0){
@@ -341,7 +341,7 @@ namespace OpenDental{
 
 		private void butDown_Click(object sender, System.EventArgs e) {
 			if(listViews.SelectedIndex==-1){
-				MessageBox.Show(Lan.g(this,"Please select a category first."));
+				MessageBox.Show(Lan.G(this,"Please select a category first."));
 				return;
 			}
 			if(listViews.SelectedIndex==listViews.Items.Count-1){

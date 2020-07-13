@@ -50,7 +50,7 @@ namespace OpenDental {
 						else if(CloudStorage.IsCloudStorage) {
 							OpenDentalCloud.Core.TaskStateDownload state=CloudStorage.Download(filePath,fileName);
 							if(state==null || state.FileContent==null) {
-								throw new Exception(Lan.g(CloudStorage.LanThis,"Unable to download image."));
+								throw new Exception(Lan.G(CloudStorage.LanThis,"Unable to download image."));
 							}
 							else {
 								using(MemoryStream stream=new MemoryStream(state.FileContent)) {
@@ -107,8 +107,8 @@ namespace OpenDental {
 				}
 			}
 			if(!hasFName || !hasLName || !hasBirthdate) {
-				MessageBox.Show(Lan.g("WebForms","The sheet called")+" \""+sheetDef.Description+"\" "
-					+Lan.g("WebForms","does not contain all three required fields: LName, FName, and Birthdate."));
+				MessageBox.Show(Lan.G("WebForms","The sheet called")+" \""+sheetDef.Description+"\" "
+					+Lan.G("WebForms","does not contain all three required fields: LName, FName, and Birthdate."));
 				return false;
 			}
 			return true;
@@ -224,7 +224,7 @@ namespace OpenDental {
 			try {
 				SheetsSynchProxy.TimeoutOverride=300000;//5 minutes.  Default is 100000 (1.66667 minutes).
 				if(WebUtils.GetDentalOfficeID()==0) {
-					strMsg=Lan.g("FormWebForms","Either the registration key provided by the dental office is incorrect or the Host Server Address cannot be found.");
+					strMsg=Lan.G("FormWebForms","Either the registration key provided by the dental office is incorrect or the Host Server Address cannot be found.");
 					return strMsg;
 				}
 				List<WebForms_Sheet> listWebFormSheets;
@@ -240,10 +240,10 @@ namespace OpenDental {
 					listWebFormSheets.RemoveAll(x => listSheetsSeen.Contains(x.SheetID));//Remove all sheets that we've already seen.
 					if(listWebFormSheets.Count==0) {
 						if(iterations==1 && listSheetsFromCemtTool.Count==0) {
-							strMsg=Lan.g("FormWebForms","No Patient forms retrieved from server");
+							strMsg=Lan.G("FormWebForms","No Patient forms retrieved from server");
 						}
 						else {
-							strMsg=Lan.g("FormWebForms","All Patient forms retrieved from server");
+							strMsg=Lan.G("FormWebForms","All Patient forms retrieved from server");
 						}
 						return strMsg;
 					}
@@ -337,13 +337,13 @@ namespace OpenDental {
 				//Security log for OD automatically importing a sheet into a patient.
 				string logText;
 				if(isWebForms) {
-					logText=Lan.g("FormWebForms","Web form import from:");
+					logText=Lan.G("FormWebForms","Web form import from:");
 				}
 				else {
-					logText=Lan.g("FormWebForms","CEMT patient transfer import from:");
+					logText=Lan.G("FormWebForms","CEMT patient transfer import from:");
 				}
 				logText+=" "+lName+", "+fName+" "+bDate.ToShortDateString()+"\r\n"
-					+Lan.g("FormWebForms","Auto imported into:")+" "+pat.LName+", "+pat.FName+" "+pat.Birthdate.ToShortDateString();
+					+Lan.G("FormWebForms","Auto imported into:")+" "+pat.LName+", "+pat.FName+" "+pat.Birthdate.ToShortDateString();
 				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,patNum,logText);
 			}
 			if(patNum==0) {
@@ -352,13 +352,13 @@ namespace OpenDental {
 				//Security log for user creating a new patient.
 				string logText;
 				if(isWebForms) {
-					logText=Lan.g("FormWebForms","Web form import from:");
+					logText=Lan.G("FormWebForms","Web form import from:");
 				}
 				else {
-					logText=Lan.g("FormWebForms","CEMT patient transfer import from:");
+					logText=Lan.G("FormWebForms","CEMT patient transfer import from:");
 				}
 				logText+=" "+lName+", "+fName+" "+bDate.ToShortDateString()+"\r\n"
-					+Lan.g("FormWebForms","User created new pat:")+" "+pat.LName+", "+pat.FName+" "+pat.Birthdate.ToShortDateString();
+					+Lan.G("FormWebForms","User created new pat:")+" "+pat.LName+", "+pat.FName+" "+pat.Birthdate.ToShortDateString();
 				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,patNum,logText);
 			}
 			else if(pat==null) {

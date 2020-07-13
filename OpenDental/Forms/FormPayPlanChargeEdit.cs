@@ -350,7 +350,7 @@ namespace OpenDental{
 				|| textPrincipal.errorProvider1.GetError(textPrincipal)!=""
 				|| textInterest.errorProvider1.GetError(textInterest)!=""
 				){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			//if(comboProvNum.SelectedIndex==-1){

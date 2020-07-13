@@ -26,7 +26,7 @@ namespace OpenDental {
 			textPaperCopies.Text=PaperCopies.ToString();
 			checkEmailPat.Checked=EmailPatOrLab;
 			if(IsForLab) {
-				checkEmailPat.Text=Lan.g(this,"E-mail to Lab:");
+				checkEmailPat.Text=Lan.G(this,"E-mail to Lab:");
 			}
 			textEmailPat.Text=EmailPatOrLabAddress;
 			if(Email2Visible){

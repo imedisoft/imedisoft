@@ -32,7 +32,7 @@ namespace OpenDental.Bridges {
 					Directory.CreateDirectory(fullPath);
 				}
 				catch {
-					MessageBox.Show(Lan.g("VixWinNumbered","Patient image path could not be created.  This usually indicates a permission issue.  Path")+":\r\n"
+					MessageBox.Show(Lan.G("VixWinNumbered","Patient image path could not be created.  This usually indicates a permission issue.  Path")+":\r\n"
 						+fullPath);
 					return;
 				}

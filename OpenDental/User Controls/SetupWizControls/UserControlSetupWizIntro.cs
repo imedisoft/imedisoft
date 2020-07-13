@@ -30,8 +30,8 @@ namespace OpenDental.User_Controls.SetupWizard {
 			labelTitle.Text+=" " +name+"...";
 			labelDesc.Text = descript;
 			labelDesc.Text += "\r\n\r\n"
-				+Lan.g("FormSetupWizard","If you do not want to set up your")+" "+name+" "
-				+Lan.g("FormSetupWizard","at this time, click 'Skip' below.");
+				+Lan.G("FormSetupWizard","If you do not want to set up your")+" "+name+" "
+				+Lan.G("FormSetupWizard","at this time, click 'Skip' below.");
 		}
 
 		private void UserControlSetupWizIntro_Load(object sender,EventArgs e) {

@@ -37,12 +37,12 @@ namespace OpenDental {
 			//Note: DateTime strings that are empty actually are " " due to how the empty datetime control behaves.
 			_listTaskPriorities=Defs.GetDefsForCategory(DefCat.TaskPriorities);
 			long userNum=0;
-			comboUsers.Items.Add(Lan.g(this,"All"));
-			comboUsers.Items.Add(Lan.g(this,"Me"));
+			comboUsers.Items.Add(Lan.G(this,"All"));
+			comboUsers.Items.Add(Lan.G(this,"Me"));
 			comboUsers.SelectedIndex=0;//Always default to All.
 			_listUsers=Userods.GetDeepCopy();//List of all users for searching.  I figure we don't want to exclude hidden ones for searching.
 			_listUsers.ForEach(x => comboUsers.Items.Add(x.UserName));
-			comboPriority.Items.Add(Lan.g(this,"All"));
+			comboPriority.Items.Add(Lan.G(this,"All"));
 			for(int i=0;i<_listTaskPriorities.Count;i++) {
 				comboPriority.Items.Add(_listTaskPriorities[i].ItemName);
 			}
@@ -209,7 +209,7 @@ namespace OpenDental {
 
 		private void butNewTask_Click(object sender,EventArgs e) {
 			FormTaskListSelect FormTLS = new FormTaskListSelect(TaskObjectType.Patient);
-			FormTLS.Text=Lan.g(FormTLS,"Add Task")+" - "+FormTLS.Text;
+			FormTLS.Text=Lan.G(FormTLS,"Add Task")+" - "+FormTLS.Text;
 			FormTLS.ShowDialog();
 			if(FormTLS.DialogResult!=DialogResult.OK || FormTLS.ListSelectedLists[0]==0) {
 				return;

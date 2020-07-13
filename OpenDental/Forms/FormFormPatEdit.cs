@@ -159,7 +159,7 @@ namespace OpenDental{
 			}
 			else {
 				butOK.Visible=false;
-				butCancel.Text=Lan.g(this,"Close");
+				butCancel.Text=Lan.G(this,"Close");
 				multInput.Visible=false;
 				//Gets filled repeatedly.  Saved each time user double clicks on a row.  Only the answer can be edited.
 				FillGrid();
@@ -202,9 +202,9 @@ namespace OpenDental{
 			//QuestionList=Questions.Refresh(PatNum);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableQuestions","Question"),370);
+			GridColumn col=new GridColumn(Lan.G("TableQuestions","Question"),370);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableQuestions","Answer"),370);
+			col=new GridColumn(Lan.G("TableQuestions","Answer"),370);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -260,7 +260,7 @@ namespace OpenDental{
 					//else it will just be blank
 				}
 				else if(QuestionDefList[i].QuestType==QuestionType.YesNoUnknown){
-					quest.Answer=Lan.g("enumYN",multInput.GetCurrentValues(i)[0].ToString());
+					quest.Answer=Lan.G("enumYN",multInput.GetCurrentValues(i)[0].ToString());
 				}
 				quest.FormPatNum=FormPatCur.FormPatNum;
 				Questions.Insert(quest);

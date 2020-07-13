@@ -185,7 +185,7 @@ namespace OpenDental
 			}
 			if (MessageText == null || MessageText.Length < 23)
 			{
-				MessageBox.Show(Lan.g(this, "CCD message format too short") + ": " + MessageText);
+				MessageBox.Show(Lan.G(this, "CCD message format too short") + ": " + MessageText);
 				Close();
 				return;
 			}
@@ -244,7 +244,7 @@ namespace OpenDental
 				}
 				else
 				{
-					MessageBox.Show(Lan.g(this, "Unhandled transactionCode") + " '" + transactionCode + "' " + Lan.g(this, "for version 02 message."));
+					MessageBox.Show(Lan.G(this, "Unhandled transactionCode") + " '" + transactionCode + "' " + Lan.G(this, "for version 02 message."));
 					Close();
 					return;
 				}
@@ -284,7 +284,7 @@ namespace OpenDental
 				{
 					if (paymentAdjustmentAmount.valuestr.Substring(1) != "000000")
 					{
-						MessageBox.Show(Lan.g(this, "Payment adjustment amount") + ": " + RawMoneyStrToDisplayMoney(paymentAdjustmentAmount.valuestr));
+						MessageBox.Show(Lan.G(this, "Payment adjustment amount") + ": " + RawMoneyStrToDisplayMoney(paymentAdjustmentAmount.valuestr));
 					}
 				}
 				if (autoPrint)
@@ -545,7 +545,7 @@ namespace OpenDental
 			if (msg.Length > 0)
 			{
 				MsgBoxCopyPaste msgBox = new MsgBoxCopyPaste(msg);
-				msgBox.Text = Lan.g(this, "Information from Insurance Carrier");
+				msgBox.Text = Lan.G(this, "Information from Insurance Carrier");
 				msgBox.ShowDialog();
 			}
 		}

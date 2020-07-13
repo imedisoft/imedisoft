@@ -80,10 +80,10 @@ namespace OpenDental {
 
 		private void FillFrequencyCombos() {
 			foreach(DayOfWeekFrequency frequency in Enum.GetValues(typeof(DayOfWeekFrequency))) {
-				comboFrequency.Items.Add(Lan.g("enumDayOfWeekFrequency",frequency.GetDescription()));
+				comboFrequency.Items.Add(Lan.G("enumDayOfWeekFrequency",frequency.GetDescription()));
 			}
 			foreach(DayOfWeek day in Enum.GetValues(typeof(DayOfWeek))) {
-				comboDays.Items.Add(Lan.g("enumDayOfWeek",day.GetDescription()));
+				comboDays.Items.Add(Lan.G("enumDayOfWeek",day.GetDescription()));
 			}
 			//Set Defaults
 			comboFrequency.SelectedIndex=(int)DayOfWeekFrequency.Every;
@@ -144,7 +144,7 @@ namespace OpenDental {
 		}
 
 		private void FillPayTypeCombo() {
-			comboPaymentType.Items.AddDefNone(Lan.g(this,"Use Default"));
+			comboPaymentType.Items.AddDefNone(Lan.G(this,"Use Default"));
 			comboPaymentType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PaymentTypes,true));
 			comboPaymentType.SetSelectedDefNum(CreditCardCur.PaymentType);
 		}
@@ -240,16 +240,16 @@ namespace OpenDental {
 						daysFormatted+=",";
 					}
 					if(days.Count >= 2 && i==days.Count-1) {
-						daysFormatted+=" "+Lan.g(this,"and");
+						daysFormatted+=" "+Lan.G(this,"and");
 					}
-					daysFormatted+=" "+Lan.g("OrdinalIndicators",days[i].Trim()+MiscUtils.GetOrdinalIndicator(days[i].Trim()));
+					daysFormatted+=" "+Lan.G("OrdinalIndicators",days[i].Trim()+MiscUtils.GetOrdinalIndicator(days[i].Trim()));
 				}
-				labelFrequencyInWords.Text=daysFormatted+" "+Lan.g(this,"day of the month");
+				labelFrequencyInWords.Text=daysFormatted+" "+Lan.G(this,"day of the month");
 			}
 			else {//radioWeekDay
 				string frequency=comboFrequency.GetItemText((comboFrequency.Items[comboFrequency.SelectedIndex]));
 				string dayOfWeek=comboDays.GetItemText((comboDays.Items[comboDays.SelectedIndex]));
-				labelFrequencyInWords.Text=frequency+" "+dayOfWeek+" "+Lan.g(this,"of the month");
+				labelFrequencyInWords.Text=frequency+" "+dayOfWeek+" "+Lan.G(this,"of the month");
 			}
 		}
 

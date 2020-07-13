@@ -1851,13 +1851,13 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(listExams.SelectedIndex==-1){
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.PerioEdit,PerioExams.ListExams[listExams.SelectedIndex].ExamDate)) {
 				return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Delete Exam?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show(Lan.G(this,"Delete Exam?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;
 			}
 			int curselected=listExams.SelectedIndex;
@@ -1886,7 +1886,7 @@ namespace OpenDental{
 				labelListening.Visible=true;
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"Unable to initialize audio input. Try plugging a different microphone into the computer."),ex);
+				FriendlyException.Show(Lan.G(this,"Unable to initialize audio input. Try plugging a different microphone into the computer."),ex);
 			}
 		}
 
@@ -1970,7 +1970,7 @@ namespace OpenDental{
 		///<summary>The only valid numbers are 0 through 9</summary>
 		private void NumberClicked(int number){
 			if(gridP.SelectedExam==-1) {
-				MessageBox.Show(Lan.g(this,"Please add or select an exam first in the list to the left."));
+				MessageBox.Show(Lan.G(this,"Please add or select an exam first in the list to the left."));
 				return;
 			}
 			if(TenIsDown) {
@@ -2093,7 +2093,7 @@ namespace OpenDental{
 
 		private void butSkip_Click(object sender, System.EventArgs e) {
 			if(listExams.SelectedIndex<0){//PerioExamCur could still be set to a deleted exam and would not be null even if there is no exam.
-				MessageBox.Show(Lan.g(this,"Please select an exam first."));
+				MessageBox.Show(Lan.G(this,"Please select an exam first."));
 				return;
 			}
 			gridP.ToggleSkip(PerioExamCur.PerioExamNum);
@@ -2189,7 +2189,7 @@ namespace OpenDental{
 				return;
 			}
 			PrinterL.TryPrint(pd2_PrintPage,
-				Lan.g(this,"Perio chart from")+" "+PerioExamCur.ExamDate+" "+Lan.g(this,"printed"),
+				Lan.G(this,"Perio chart from")+" "+PerioExamCur.ExamDate+" "+Lan.G(this,"printed"),
 				PatCur.PatNum,
 				PrintSituation.TPPerio,
 				new Margins(0,0,0,0),
@@ -2200,7 +2200,7 @@ namespace OpenDental{
 
 		private void butSave_Click(object sender,EventArgs e) {
 			if(this.listExams.SelectedIndex<0){
-				MessageBox.Show(Lan.g(this,"Please select an exam first."));
+				MessageBox.Show(Lan.G(this,"Please select an exam first."));
 				return;
 			}
 			gridP.SaveCurExam(PerioExamCur);
@@ -2234,7 +2234,7 @@ namespace OpenDental{
 			SizeF m;
 			//Title
 			Font font=new Font("Arial",15);
-			string titleStr=Lan.g(this,"Periodontal Charting");
+			string titleStr=Lan.G(this,"Periodontal Charting");
 			m=g.MeasureString(titleStr,font);
 			g.DrawString(titleStr,font,Brushes.Black,new PointF(perioPrintImage.Width/2f-m.Width/2f,y));
 			y+=m.Height;
@@ -2273,7 +2273,7 @@ namespace OpenDental{
 				ImageStore.Import(perioPrintImage,defNumCategory,ImageType.Photo,PatCur);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Unable to save file. ") + ex.Message);
+				MessageBox.Show(Lan.G(this,"Unable to save file. ") + ex.Message);
 				perioPrintImage.Dispose();
 				gridImage.Dispose();
 				perioPrintImage=null;
@@ -2351,7 +2351,7 @@ namespace OpenDental{
 			}
 			StringFormat format=new StringFormat();
 			format.Alignment=StringAlignment.Center;
-			grfx.DrawString(Lan.g(this,"Periodontal Charting"),new Font("Arial",15),Brushes.Black,
+			grfx.DrawString(Lan.G(this,"Periodontal Charting"),new Font("Arial",15),Brushes.Black,
 				new RectangleF(xPos,yPos,650,25),format);			
 			yPos+=25;
 			grfx.DrawString(clinicName,new Font("Arial",11),Brushes.Black
@@ -2367,42 +2367,42 @@ namespace OpenDental{
 			yPos+=688;//Offset for grid that we already drew.
 			Font font=new Font("Arial",9);
 			grfx.FillEllipse(new SolidBrush(butColorPlaque.BackColor),xPos,yPos+3,8,8);
-			grfx.DrawString(Lan.g(this,"Plaque Index:")+" "+gridP.ComputeIndex(BleedingFlags.Plaque)+" %"
+			grfx.DrawString(Lan.G(this,"Plaque Index:")+" "+gridP.ComputeIndex(BleedingFlags.Plaque)+" %"
 				,font,Brushes.Black,xPos+12,yPos);
 			yPos+=20;
 			grfx.FillEllipse(new SolidBrush(butColorCalculus.BackColor),xPos,yPos+3,8,8);
-			grfx.DrawString(Lan.g(this,"Calculus Index:")+" "+gridP.ComputeIndex(BleedingFlags.Calculus)+" %"
+			grfx.DrawString(Lan.G(this,"Calculus Index:")+" "+gridP.ComputeIndex(BleedingFlags.Calculus)+" %"
 				,font,Brushes.Black,xPos+12,yPos);
 			yPos+=20;
 			grfx.FillEllipse(new SolidBrush(butColorBleed.BackColor),xPos,yPos+3,8,8);
-			grfx.DrawString(Lan.g(this,"Bleeding Index:")+" "+gridP.ComputeIndex(BleedingFlags.Blood)+" %"
+			grfx.DrawString(Lan.G(this,"Bleeding Index:")+" "+gridP.ComputeIndex(BleedingFlags.Blood)+" %"
 				,font,Brushes.Black,xPos+12,yPos);
 			yPos+=20;
 			grfx.FillEllipse(new SolidBrush(butColorPus.BackColor),xPos,yPos+3,8,8);
-			grfx.DrawString(Lan.g(this,"Suppuration Index:")+" "+gridP.ComputeIndex(BleedingFlags.Suppuration)+" %"
+			grfx.DrawString(Lan.G(this,"Suppuration Index:")+" "+gridP.ComputeIndex(BleedingFlags.Suppuration)+" %"
 				,font,Brushes.Black,xPos+12,yPos);
 			yPos+=20;
-			grfx.DrawString(Lan.g(this,"Teeth with Probing greater than or equal to")+" "+textRedProb.Text+" mm: "
+			grfx.DrawString(Lan.G(this,"Teeth with Probing greater than or equal to")+" "+textRedProb.Text+" mm: "
 				+ConvertALtoString(gridP.CountTeeth(PerioSequenceType.Probing))
 				,font,Brushes.Black,xPos,yPos);
 			yPos+=20;
-			grfx.DrawString(Lan.g(this,"Teeth with MGJ less than or equal to")+" "+textRedMGJ.Text+" mm: "
+			grfx.DrawString(Lan.G(this,"Teeth with MGJ less than or equal to")+" "+textRedMGJ.Text+" mm: "
 				+ConvertALtoString(gridP.CountTeeth(PerioSequenceType.MGJ))
 				,font,Brushes.Black,xPos,yPos);
 			yPos+=20;
-			grfx.DrawString(Lan.g(this,"Teeth with Gingival Margin greater than or equal to")+" "+textRedGing.Text+" mm: "
+			grfx.DrawString(Lan.G(this,"Teeth with Gingival Margin greater than or equal to")+" "+textRedGing.Text+" mm: "
 				+ConvertALtoString(gridP.CountTeeth(PerioSequenceType.GingMargin))
 				,font,Brushes.Black,xPos,yPos);
 			yPos+=20;
-			grfx.DrawString(Lan.g(this,"Teeth with CAL greater than or equal to")+" "+textRedCAL.Text+" mm: "
+			grfx.DrawString(Lan.G(this,"Teeth with CAL greater than or equal to")+" "+textRedCAL.Text+" mm: "
 				+ConvertALtoString(gridP.CountTeeth(PerioSequenceType.CAL))
 				,font,Brushes.Black,xPos,yPos);
 			yPos+=20;
-			grfx.DrawString(Lan.g(this,"Teeth with Furcations greater than or equal to class")+" "+textRedFurc.Text+": "
+			grfx.DrawString(Lan.G(this,"Teeth with Furcations greater than or equal to class")+" "+textRedFurc.Text+": "
 				+ConvertALtoString(gridP.CountTeeth(PerioSequenceType.Furcation))
 				,font,Brushes.Black,xPos,yPos);
 			yPos+=20;
-			grfx.DrawString(Lan.g(this,"Teeth with Mobility greater than or equal to")+" "+textRedMob.Text+": "
+			grfx.DrawString(Lan.G(this,"Teeth with Mobility greater than or equal to")+" "+textRedMob.Text+": "
 				+ConvertALtoString(gridP.CountTeeth(PerioSequenceType.Mobility))
 				,font,Brushes.Black,xPos,yPos);
 			//pagesPrinted++;

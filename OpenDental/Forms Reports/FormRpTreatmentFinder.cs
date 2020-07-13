@@ -524,20 +524,20 @@ namespace OpenDental
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			//0=PatNum
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "LName"), 100));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "FName"), 100));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "Contact"), 120));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "LName"), 100));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "FName"), 100));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "Contact"), 120));
 			//4=address
 			//5=cityStateZip
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "Annual Max"), 80, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "Amt Used"), 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "Amt Pend"), 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "Amt Rem"), 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "Treat Plan"), 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "Insurance Carrier"), 225));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "Annual Max"), 80, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "Amt Used"), 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "Amt Pend"), 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "Amt Rem"), 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "Treat Plan"), 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "Insurance Carrier"), 225));
 			if (PrefC.HasClinicsEnabled)
 			{
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableTreatmentFinder", "Clinic"), 120));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableTreatmentFinder", "Clinic"), 120));
 			}
 			gridMain.ListGridRows.Clear();
 			Cursor = Cursors.WaitCursor;
@@ -705,7 +705,7 @@ namespace OpenDental
 			pagesPrinted = 0;
 			patientsPrinted = 0;
 			PrinterL.TryPreview(pdLabels_PrintPage,
-				Lan.g(this, "Treatment finder labels printed"),
+				Lan.G(this, "Treatment finder labels printed"),
 				PrintSituation.LabelSheet,
 				new Margins(0, 0, 0, 0),
 				PrintoutOrigin.AtMargin,
@@ -816,13 +816,13 @@ namespace OpenDental
 
 		private void buttonExport_Click(object sender, EventArgs e)
 		{
-			string fileName = Lan.g(this, "Treatment Finder");
+			string fileName = Lan.G(this, "Treatment Finder");
 			string filePath = ODFileUtils.CombinePaths(Path.GetTempPath(), fileName);
 
 			SaveFileDialog saveFileDialog2 = new SaveFileDialog();
 			saveFileDialog2.AddExtension = true;
-			saveFileDialog2.Title = Lan.g(this, "Treatment Finder");
-			saveFileDialog2.FileName = Lan.g(this, "Treatment Finder");
+			saveFileDialog2.Title = Lan.G(this, "Treatment Finder");
+			saveFileDialog2.FileName = Lan.G(this, "Treatment Finder");
 			if (!Directory.Exists(PrefC.GetString(PrefName.ExportPath)))
 			{
 				try
@@ -855,11 +855,11 @@ namespace OpenDental
 			}
 			catch
 			{
-				MessageBox.Show(Lan.g(this, "File in use by another program.  Close and try again."));
+				MessageBox.Show(Lan.G(this, "File in use by another program.  Close and try again."));
 				return;
 			}
 
-			MessageBox.Show(Lan.g(this, "File created successfully"));
+			MessageBox.Show(Lan.G(this, "File created successfully"));
 
 		}
 
@@ -867,7 +867,7 @@ namespace OpenDental
 		{
 			pagesPrinted = 0;
 			headingPrinted = false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage, Lan.g(this, "Treatment finder list printed"), PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage, Lan.G(this, "Treatment finder list printed"), PrintoutOrientation.Landscape);
 		}
 
 		private void pd_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
@@ -883,7 +883,7 @@ namespace OpenDental
 			#region printHeading
 			if (!headingPrinted)
 			{
-				text = Lan.g(this, "Treatment Finder");
+				text = Lan.G(this, "Treatment Finder");
 				g.DrawString(text, headingFont, Brushes.Black, center - g.MeasureString(text, headingFont).Width / 2, yPos);
 				yPos += (int)g.MeasureString(text, headingFont).Height;
 				if (checkIncludeNoIns.Checked)

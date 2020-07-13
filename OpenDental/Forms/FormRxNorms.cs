@@ -74,13 +74,13 @@ namespace OpenDental {
 			List <string> listMedPatRxCuis=MedicationPats.GetForRxCuis(rxList.Select(x => x.RxCui).ToList()).Select(x => x.RxCui.ToString()).ToList();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormRxNorms","Code"),80);
+			GridColumn col=new GridColumn(Lan.G("FormRxNorms","Code"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormRxNorms","InMedList"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("FormRxNorms","InMedList"),60,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormRxNorms","MedCount"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("FormRxNorms","MedCount"),60,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormRxNorms","Description"),80){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G("FormRxNorms","Description"),80){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

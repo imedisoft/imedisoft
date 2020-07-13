@@ -31,9 +31,9 @@ namespace OpenDental {
 			listNeeded=SupplyNeededs.CreateObjects();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Date Added"),80);
+			GridColumn col=new GridColumn(Lan.G(this,"Date Added"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),300);
+			col=new GridColumn(Lan.G(this,"Description"),300);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -102,7 +102,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Supplies needed list printed"),PrintoutOrientation.Portrait);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Supplies needed list printed"),PrintoutOrientation.Portrait);
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -116,7 +116,7 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Supplies Needed");
+				text=Lan.G(this,"Supplies Needed");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				//text=Lan.g(this,"Supplies Needed");

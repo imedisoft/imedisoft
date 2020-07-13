@@ -120,11 +120,11 @@ namespace OpenDental{
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Date"),100);
+			GridColumn col=new GridColumn(Lan.G(this,"Date"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Category"),120);
+			col=new GridColumn(Lan.G(this,"Category"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),300);
+			col=new GridColumn(Lan.G(this,"Description"),300);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

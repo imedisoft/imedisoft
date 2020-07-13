@@ -803,7 +803,7 @@ namespace OpenDental{
 					groupAddPt.Visible = false;
 				}
 			}
-			comboBillingType.Items.Add(Lan.g(this, "All"));
+			comboBillingType.Items.Add(Lan.G(this, "All"));
 			comboBillingType.SelectedIndex = 0;
 			_listBillingTypeDefs = Defs.GetDefsForCategory(DefCat.BillingTypes, true);
 			for (int i = 0; i < _listBillingTypeDefs.Count; i++)
@@ -817,7 +817,7 @@ namespace OpenDental{
 			}
 			else
 			{
-				comboSite.Items.Add(Lan.g(this, "All"));
+				comboSite.Items.Add(Lan.G(this, "All"));
 				comboSite.SelectedIndex = 0;
 				_listSites = Sites.GetDeepCopy();
 				for (int i = 0; i < _listSites.Count; i++)
@@ -1369,7 +1369,7 @@ namespace OpenDental{
 		///<summary>Remember, this button is not even visible if SelectionModeOnly.</summary>
 		private void butAddPt_Click(object sender, System.EventArgs e){
 			if(textLName.Text=="" && textFName.Text=="" && textChartNumber.Text==""){
-				MessageBox.Show(Lan.g(this,"Not allowed to add a new patient until you have done a search to see if that patient already exists. "
+				MessageBox.Show(Lan.G(this,"Not allowed to add a new patient until you have done a search to see if that patient already exists. "
 					+"Hint: just type a few letters into the Last Name box above.")); 
 				return;
 			}
@@ -1392,7 +1392,7 @@ namespace OpenDental{
 				}
 			}
 			Patient PatCur=Patients.CreateNewPatient(textLName.Text,textFName.Text,PIn.Date(textBirthdate.Text),priProv,Clinics.ClinicNum
-				,Lan.g(this,"Created from Select Patient window."));
+				,Lan.G(this,"Created from Select Patient window."));
 			Family FamCur=Patients.GetFamily(PatCur.PatNum);
 			if(Plugins.HookMethod(this,"FormPatientSelect.butAddPt_Click_showForm",PatCur,FamCur)) {
 				return;
@@ -1409,7 +1409,7 @@ namespace OpenDental{
 
 		private void butAddAll_Click(object sender,EventArgs e) {
 			if(textLName.Text=="" && textFName.Text=="" && textChartNumber.Text==""){
-				MessageBox.Show(Lan.g(this,"Not allowed to add a new patient until you have done a search to see if that patient already exists. Hint: just type a few letters into the Last Name box above.")); 
+				MessageBox.Show(Lan.G(this,"Not allowed to add a new patient until you have done a search to see if that patient already exists. Hint: just type a few letters into the Last Name box above.")); 
 				return;
 			}
 			FormPatientAddAll FormP=new FormPatientAddAll();

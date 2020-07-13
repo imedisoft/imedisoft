@@ -98,7 +98,7 @@ namespace OpenDental {
 						_domainObjectGuid=testEntry.Guid.ToString();
 					}
 					catch(Exception ex) {
-						FriendlyException.Show(Lan.g(this,"Unable to bind to the current domain."),ex);
+						FriendlyException.Show(Lan.G(this,"Unable to bind to the current domain."),ex);
 					}
 				}
 			}
@@ -122,7 +122,7 @@ namespace OpenDental {
 						_domainObjectGuid=testEntry.Guid.ToString();
 					}
 					catch(Exception ex) {
-						FriendlyException.Show(Lan.g(this,"An error occurred while attempting to access the provided Domain Login Path."),ex);
+						FriendlyException.Show(Lan.G(this,"An error occurred while attempting to access the provided Domain Login Path."),ex);
 					}
 				}
 			}

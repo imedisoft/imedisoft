@@ -261,10 +261,10 @@ namespace OpenDental {
 
 		private void butClearDay_Click(object sender,EventArgs e) {
 			if(PrefC.HasClinicsEnabled) {
-				string clincAbbr=(Clinics.ClinicNum==0?Lan.g(this,"Headquarters"):Clinics.GetAbbr(Clinics.ClinicNum));
-				if(MessageBox.Show(Lan.g(this,"Clear all blockouts for day for clinic: ")+clincAbbr+Lan.g(this,"?")+"\r\n"
-					+Lan.g(this,"(This may include blockouts not shown in the current appointment view)")
-					,Lan.g(this,"Clear Blockouts"),MessageBoxButtons.OKCancel)!=DialogResult.OK) 
+				string clincAbbr=(Clinics.ClinicNum==0?Lan.G(this,"Headquarters"):Clinics.GetAbbr(Clinics.ClinicNum));
+				if(MessageBox.Show(Lan.G(this,"Clear all blockouts for day for clinic: ")+clincAbbr+Lan.G(this,"?")+"\r\n"
+					+Lan.G(this,"(This may include blockouts not shown in the current appointment view)")
+					,Lan.G(this,"Clear Blockouts"),MessageBoxButtons.OKCancel)!=DialogResult.OK) 
 				{ 
 					return;
 				}

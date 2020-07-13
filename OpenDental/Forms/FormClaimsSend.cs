@@ -416,7 +416,7 @@ namespace OpenDental{
 			_arrayQueueAll=Claims.GetQueueList(0,0,0);
 			_arrayQueueAll.ForEach(x => x.MissingData="(validated when sending)");
 			_listNumberOfClaims=new List<int>();
-			contextMenuStatus.MenuItems.Add(Lan.g(this,"Go to Account"),new EventHandler(GotoAccount_Clicked));
+			contextMenuStatus.MenuItems.Add(Lan.G(this,"Go to Account"),new EventHandler(GotoAccount_Clicked));
 			gridMain.ContextMenu=contextMenuStatus;
 			gridHistory.ContextMenu=contextMenuHistory;
 			_listClearinghouses=Clearinghouses.GetDeepCopy();
@@ -432,7 +432,7 @@ namespace OpenDental{
 			else {
 				_listClinics=Clinics.GetForUserod(Security.CurUser);
 			}
-			comboCustomTracking.Items.Add(Lan.g(this,"all"));
+			comboCustomTracking.Items.Add(Lan.G(this,"all"));
 			comboCustomTracking.SelectedIndex=0;
 			_listClaimCustomTrackingDefs=Defs.GetDefsForCategory(DefCat.ClaimCustomTracking);
 			if(_listClaimCustomTrackingDefs.Count==0){
@@ -505,7 +505,7 @@ namespace OpenDental{
 			comboClinic.Items.Clear();
 			_listNumberOfClaims.Clear();
 			if(!Security.CurUser.ClinicIsRestricted) {
-				comboClinic.Items.Add(Lan.g(this,"Unassigned/Default"));
+				comboClinic.Items.Add(Lan.G(this,"Unassigned/Default"));
 				comboClinic.SelectedIndex=0;
 			}
 			for(int i=0;i<_listClinics.Count;i++) {
@@ -531,34 +531,34 @@ namespace OpenDental{
 		///<summary></summary>
 		public void LayoutToolBars(){
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Preview"),0,Lan.g(this,"Preview the Selected Claim"),"Preview"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Blank"),1,Lan.g(this,"Print a Blank Claim Form"),"Blank"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Print"),2,Lan.g(this,"Print Selected Claims"),"Print"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Labels"),6,Lan.g(this,"Print Single Labels"),"Labels"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Preview"),0,Lan.G(this,"Preview the Selected Claim"),"Preview"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Blank"),1,Lan.G(this,"Print a Blank Claim Form"),"Blank"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print"),2,Lan.G(this,"Print Selected Claims"),"Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Labels"),6,Lan.G(this,"Print Single Labels"),"Labels"));
 			/*ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 			ODToolBarButton button=new ODToolBarButton(Lan.g(this,"Change Status"),-1,Lan.g(this,"Changes Status of Selected Claims"),"Status");
 			button.Style=ODToolBarButtonStyle.DropDownButton;
 			button.DropDownMenu=contextMenuStatus;
 			ToolBarMain.Buttons.Add(button);*/
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ODToolBarButton button=new ODToolBarButton(Lan.g(this,"Send E-Claims"),4,Lan.g(this,"Send claims Electronically"),"Eclaims");
+			ODToolBarButton button=new ODToolBarButton(Lan.G(this,"Send E-Claims"),4,Lan.G(this,"Send claims Electronically"),"Eclaims");
 			button.Style=ODToolBarButtonStyle.DropDownButton;
 			button.DropDownMenu=contextMenuEclaims;
 			ToolBarMain.Buttons.Add(button);
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Validate Claims"),-1,Lan.g(this,"Refresh and Validate Selected Claims"),"Validate"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Validate Claims"),-1,Lan.G(this,"Refresh and Validate Selected Claims"),"Validate"));
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Outstanding"),-1,Lan.g(this,"Get Outstanding Transactions"),"Outstanding"));
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Payment Rec"),-1,Lan.g(this,"Get Payment Reconciliation Transactions"),"PayRec"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Outstanding"),-1,Lan.G(this,"Get Outstanding Transactions"),"Outstanding"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Payment Rec"),-1,Lan.G(this,"Get Payment Reconciliation Transactions"),"PayRec"));
 				//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Summary Rec"),-1,Lan.g(this,"Get Summary Reconciliation Transactions"),"SummaryRec"));
 			}
 			else {
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Get Reports"),5,Lan.g(this,"Get Reports from Other Clearinghouses"),"Reports"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Get Reports"),5,Lan.G(this,"Get Reports from Other Clearinghouses"),"Reports"));
 			}
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Refresh"),-1,Lan.g(this,"Refresh the Grid"),"Refresh"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Refresh"),-1,Lan.G(this,"Refresh the Grid"),"Refresh"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Procs Not Billed"),-1,"","ProcsNotBilled"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Close"),-1,"","Close"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Procs Not Billed"),-1,"","ProcsNotBilled"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Close"),-1,"","Close"));
 			/*ArrayList toolButItems=ToolButItems.GetForToolBar(ToolBarsAvail.ClaimsSend);
 			for(int i=0;i<toolButItems.Count;i++){
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
@@ -567,14 +567,14 @@ namespace OpenDental{
 			}*/
 			ToolBarMain.Invalidate();
 			ToolBarHistory.Buttons.Clear();
-			ToolBarHistory.Buttons.Add(new ODToolBarButton(Lan.g(this,"Refresh"),-1,Lan.g(this,"Refresh this list."),"Refresh"));
+			ToolBarHistory.Buttons.Add(new ODToolBarButton(Lan.G(this,"Refresh"),-1,Lan.G(this,"Refresh this list."),"Refresh"));
 			ToolBarHistory.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarHistory.Buttons.Add(new ODToolBarButton(Lan.g(this,"Undo"),-1,
-				Lan.g(this,"Change the status of claims back to 'Waiting'."),"Undo"));
+			ToolBarHistory.Buttons.Add(new ODToolBarButton(Lan.G(this,"Undo"),-1,
+				Lan.G(this,"Change the status of claims back to 'Waiting'."),"Undo"));
 			ToolBarHistory.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarHistory.Buttons.Add(new ODToolBarButton(Lan.g(this,"Print List"),2,
-				Lan.g(this,"Print history list."),"PrintList"));
-			ToolBarHistory.Buttons.Add(new ODToolBarButton(Lan.g(this,"Outstanding Claims"),-1,"","OutstandingClaims"));
+			ToolBarHistory.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print List"),2,
+				Lan.G(this,"Print history list."),"PrintList"));
+			ToolBarHistory.Buttons.Add(new ODToolBarButton(Lan.G(this,"Outstanding Claims"),-1,"","OutstandingClaims"));
 			/*#if DEBUG
 			ToolBarHistory.Buttons.Add(new ODToolBarButton(Lan.g(this,"Print Item"),2,
 				Lan.g(this,"For debugging, this will simply display the first item in the list."),"PrintItem"));
@@ -640,28 +640,28 @@ namespace OpenDental{
 			ClaimSendQueueItem[] arrayQueueFiltered=GetListQueueFiltered();//We update the class wide variable because it is used in double clicking and other events.
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableQueue","DateService"),75,HorizontalAlignment.Center);//new column
+			GridColumn col=new GridColumn(Lan.G("TableQueue","DateService"),75,HorizontalAlignment.Center);//new column
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableQueue","Patient Name"),120);//was 190
+			col=new GridColumn(Lan.G("TableQueue","Patient Name"),120);//was 190
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableQueue","Carrier Name"),200);//was 220, before that was 100 but was too small.  In Insurance Plans window is 140.
+			col=new GridColumn(Lan.G("TableQueue","Carrier Name"),200);//was 220, before that was 100 but was too small.  In Insurance Plans window is 140.
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g("TableQueue","Clinic"),80);
+				col=new GridColumn(Lan.G("TableQueue","Clinic"),80);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("TableQueue","Provider"),55);//Just large enough to show the title
+			col=new GridColumn(Lan.G("TableQueue","Provider"),55);//Just large enough to show the title
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableQueue","M/D"),30);//Just large enough to hold 4 characters (see below)
+			col=new GridColumn(Lan.G("TableQueue","M/D"),30);//Just large enough to hold 4 characters (see below)
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableQueue","Clearinghouse"),85);//Just large enough for the title
+			col=new GridColumn(Lan.G("TableQueue","Clearinghouse"),85);//Just large enough for the title
 			gridMain.ListGridColumns.Add(col);
 			clearinghouseIndex=gridMain.ListGridColumns.Count-1;
-			col=new GridColumn(Lan.g("TableQueue","Warnings"),120);
+			col=new GridColumn(Lan.G("TableQueue","Warnings"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableQueue","Missing Info"),300);
+			col=new GridColumn(Lan.G("TableQueue","Missing Info"),300);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableQueue","ProcCodes"),120){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G("TableQueue","ProcCodes"),120){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -840,11 +840,11 @@ namespace OpenDental{
 			FormClaimPrint FormCP;
 			FormCP=new FormClaimPrint();
 			if(gridMain.SelectedTags<ClaimSendQueueItem>().Count==0){
-				MessageBox.Show(Lan.g(this,"Please select a claim first."));
+				MessageBox.Show(Lan.G(this,"Please select a claim first."));
 				return;
 			}
 			if(gridMain.SelectedTags<ClaimSendQueueItem>().Count>1){
-				MessageBox.Show(Lan.g(this,"Please select only one claim."));
+				MessageBox.Show(Lan.G(this,"Please select only one claim."));
 				return;
 			}
 			FormCP.PatNumCur=gridMain.SelectedTag<ClaimSendQueueItem>().PatNum;
@@ -858,7 +858,7 @@ namespace OpenDental{
 		private void toolBarButBlank_Click(){
 			FormClaimPrint FormCP=new FormClaimPrint();
 			FormCP.PrintBlank=true;
-			FormCP.PrintImmediate(Lan.g(this,"Blank claim printed"),PrintSituation.Claim,0);
+			FormCP.PrintImmediate(Lan.G(this,"Blank claim printed"),PrintSituation.Claim,0);
 		}
 
 		private void toolBarButPrint_Click(){
@@ -884,7 +884,7 @@ namespace OpenDental{
 				if(isFirstIteration && gridMain.SelectedGridRows.Count>1) {
 					doUsePrinterSettingsForAll=MsgBox.Show(MsgBoxButtons.YesNo,"Use the same printer settings for all selected claims?");
 				}
-				if(!FormCP.PrintImmediate(Lan.g(this,"Multiple claims printed"),PrintSituation.Claim,0,(doUsePrinterSettingsForAll && !isFirstIteration))) {
+				if(!FormCP.PrintImmediate(Lan.G(this,"Multiple claims printed"),PrintSituation.Claim,0,(doUsePrinterSettingsForAll && !isFirstIteration))) {
 					return;
 				}
 				Etranss.SetClaimSentOrPrinted(queueItem.ClaimNum,queueItem.PatNum,0,EtransType.ClaimPrinted,0,Security.CurUser.UserNum);
@@ -896,7 +896,7 @@ namespace OpenDental{
 
 		private void toolBarButLabels_Click(){
 			if(gridMain.SelectedTags<ClaimSendQueueItem>().Count==0){
-				MessageBox.Show(Lan.g(this,"Please select a claim first."));
+				MessageBox.Show(Lan.G(this,"Please select a claim first."));
 				return;
 			}
 			//PrintDocument pd=new PrintDocument();//only used to pass printerName
@@ -922,7 +922,7 @@ namespace OpenDental{
 
 		private void toolBarButValidate_Click() {
 			if(gridMain.SelectedTags<ClaimSendQueueItem>().Count==0) {
-				MessageBox.Show(Lan.g(this,"Please select one or more claims first."));
+				MessageBox.Show(Lan.G(this,"Please select one or more claims first."));
 				return;
 			}
 			RefreshAndValidateSelections();
@@ -1083,7 +1083,7 @@ namespace OpenDental{
 					//(Find the index of listTempQueueItem c where c.ClaimNum is the same as the ClaimNum of the item just sent.)
 					listTempQueueItem.RemoveAt(listTempQueueItem.FindIndex(c => c.ClaimNum==queueItems[i].ClaimNum));
 					//one securitylog entry for each sent claim
-					SecurityLogs.MakeLogEntry(Permissions.ClaimSend,queueItems[i].PatNum,Lan.g(this,"Claim sent from Claims Send Window."));
+					SecurityLogs.MakeLogEntry(Permissions.ClaimSend,queueItems[i].PatNum,Lan.G(this,"Claim sent from Claims Send Window."));
 				}
 			}
 			_arrayQueueAll=listTempQueueItem.ToArray();
@@ -1234,25 +1234,25 @@ namespace OpenDental{
 			gridHistory.ListGridColumns.Clear();
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				GridColumn col;
-				col=new GridColumn(Lan.g("TableClaimHistory","Patient Name"),120);
+				col=new GridColumn(Lan.G("TableClaimHistory","Patient Name"),120);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Carrier Name"),150);
+				col=new GridColumn(Lan.G("TableClaimHistory","Carrier Name"),150);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Clearinghouse"),90);
+				col=new GridColumn(Lan.G("TableClaimHistory","Clearinghouse"),90);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Date"),70,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G("TableClaimHistory","Date"),70,HorizontalAlignment.Center);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Type"),90);
+				col=new GridColumn(Lan.G("TableClaimHistory","Type"),90);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","AckCode"),90,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G("TableClaimHistory","AckCode"),90,HorizontalAlignment.Center);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Note"),90);
+				col=new GridColumn(Lan.G("TableClaimHistory","Note"),90);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Office#"),90);
+				col=new GridColumn(Lan.G("TableClaimHistory","Office#"),90);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","User"),80);
+				col=new GridColumn(Lan.G("TableClaimHistory","User"),80);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","# Carriers"),30){ IsWidthDynamic=true };
+				col=new GridColumn(Lan.G("TableClaimHistory","# Carriers"),30){ IsWidthDynamic=true };
 				gridHistory.ListGridColumns.Add(col);
 				gridHistory.ListGridRows.Clear();
 				GridRow row;
@@ -1276,21 +1276,21 @@ namespace OpenDental{
 			}
 			else {
 				GridColumn col;
-				col=new GridColumn(Lan.g("TableClaimHistory","Patient Name"),130);
+				col=new GridColumn(Lan.G("TableClaimHistory","Patient Name"),130);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Carrier Name"),170);
+				col=new GridColumn(Lan.G("TableClaimHistory","Carrier Name"),170);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Clearinghouse"),90);
+				col=new GridColumn(Lan.G("TableClaimHistory","Clearinghouse"),90);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Date"),70,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G("TableClaimHistory","Date"),70,HorizontalAlignment.Center);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Type"),100);
+				col=new GridColumn(Lan.G("TableClaimHistory","Type"),100);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","AckCode"),100,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G("TableClaimHistory","AckCode"),100,HorizontalAlignment.Center);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","Note"),170);
+				col=new GridColumn(Lan.G("TableClaimHistory","Note"),170);
 				gridHistory.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimHistory","User"),130){ IsWidthDynamic=true };
+				col=new GridColumn(Lan.G("TableClaimHistory","User"),130){ IsWidthDynamic=true };
 				gridHistory.ListGridColumns.Add(col);
 				gridHistory.ListGridRows.Clear();
 				GridRow row;
@@ -1419,7 +1419,7 @@ namespace OpenDental{
 			pagesPrinted=0;
 			headingPrinted=false;
 			PrinterL.TryPrintOrDebugRpPreview(pd2_PrintPage,
-				Lan.g(this,"Claim history list printed"),
+				Lan.G(this,"Claim history list printed"),
 				margins:new Margins(0,0,0,0),
 				printoutOrigin:PrintoutOrigin.AtMargin
 			);
@@ -1492,10 +1492,10 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Claim History");
+				text=Lan.G(this,"Claim History");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=dateRangePicker.GetDateTimeFrom().ToShortDateString()+" "+Lan.g(this,"to")+" "+dateRangePicker.GetDateTimeTo().ToShortDateString();
+				text=dateRangePicker.GetDateTimeFrom().ToShortDateString()+" "+Lan.G(this,"to")+" "+dateRangePicker.GetDateTimeTo().ToShortDateString();
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=20;
 				headingPrinted=true;

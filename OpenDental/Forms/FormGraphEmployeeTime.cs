@@ -27,7 +27,7 @@ namespace OpenDental {
 			InitializeComponent();
 			DateShowing=dateShowing;
 			Lan.F(this);
-			toolTip.ToolTipTitle=Lan.g(this,"Employees");
+			toolTip.ToolTipTitle=Lan.G(this,"Employees");
 			_listRegions=new List<Region>();
 		}
 
@@ -366,7 +366,7 @@ namespace OpenDental {
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {
-			PrinterL.TryPrint(pd2_PrintPage,Lan.g(this,"Employee time graph printed"));
+			PrinterL.TryPrint(pd2_PrintPage,Lan.G(this,"Employee time graph printed"));
 		}
 
 		private void pd2_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {

@@ -245,7 +245,7 @@ namespace OpenDental {
 						}
 					}
 					if(listVSFound.Count>1) {//Selected code found in more than one value set, ask the user which InterventionCodeSet to assign to this intervention
-						InputBox chooseSet=new InputBox(Lan.g(this,"The selected code belongs to more than one intervention code set.  Select the code set to assign to this intervention from the list below."),listVSFound);
+						InputBox chooseSet=new InputBox(Lan.G(this,"The selected code belongs to more than one intervention code set.  Select the code set to assign to this intervention from the list below."),listVSFound);
 						if(chooseSet.ShowDialog()!=DialogResult.OK) {
 							return;
 						}

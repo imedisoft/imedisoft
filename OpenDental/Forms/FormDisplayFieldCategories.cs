@@ -143,7 +143,7 @@ namespace OpenDental{
 					listCategory.Items.Add(new ODBoxItem<DisplayFieldCategory>(OrthoChartTabs.GetFirst(true).TabName,cat));
 					continue;
 				}
-				listCategory.Items.Add(new ODBoxItem<DisplayFieldCategory>(Lan.g("enumDisplayFieldCategory",cat.GetDescription()),cat));
+				listCategory.Items.Add(new ODBoxItem<DisplayFieldCategory>(Lan.G("enumDisplayFieldCategory",cat.GetDescription()),cat));
 			}
 			listCategory.SelectedIndex=0;
 		}

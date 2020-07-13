@@ -45,7 +45,7 @@ namespace OpenDental {
 			}
 			tableTotals.Rows.Add(totalsRow);
 			report.ReportName="Dental Sealant Measure";
-			report.AddTitle("Title",Lan.g(this,"Dental Sealant Measure"));
+			report.AddTitle("Title",Lan.G(this,"Dental Sealant Measure"));
 			report.AddSubTitle("Date",textYear.Text);
 			//setup query
 			QueryObject query;

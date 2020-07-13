@@ -109,7 +109,7 @@ namespace OpenDental{
 			_clinSelectedCur=clinicNum;
 			if(PrefC.HasClinicsEnabled && clinicNum>0) {
 				if(retVal!="") {
-					retVal+=" - "+Lan.g("FormOpenDental","Clinic")+": ";
+					retVal+=" - "+Lan.G("FormOpenDental","Clinic")+": ";
 				}
 				if(PrefC.GetBool(PrefName.TitleBarClinicUseAbbr)) {
 					retVal+=Clinics.GetAbbr(clinicNum);
@@ -124,7 +124,7 @@ namespace OpenDental{
 			if(pat==null || pat.PatNum==0 || pat.PatNum==-1) {
 				retVal+=MainTitleUpdateCountdown();
 				if(FormOpenDental.RegKeyIsForTesting) {
-					retVal+=" - "+Lan.g("FormOpenDental","Developer Only License")+" - "+Lan.g("FormOpenDental","Not for use with live patient data")+" - ";
+					retVal+=" - "+Lan.G("FormOpenDental","Developer Only License")+" - "+Lan.G("FormOpenDental","Not for use with live patient data")+" - ";
 				}
 				return retVal;
 			}
@@ -148,7 +148,7 @@ namespace OpenDental{
 			}
 			retVal+=MainTitleUpdateCountdown();
 			if(FormOpenDental.RegKeyIsForTesting) {
-				retVal+=" - "+Lan.g("FormOpenDental","Developer Only License")+" - "+Lan.g("FormOpenDental","Not for use with live patient data")+" - ";
+				retVal+=" - "+Lan.G("FormOpenDental","Developer Only License")+" - "+Lan.G("FormOpenDental","Not for use with live patient data")+" - ";
 			}
 			return retVal;
 		}
@@ -159,7 +159,7 @@ namespace OpenDental{
 			string retVal=PrefC.GetString(PrefName.MainWindowTitle);
 			if(PrefC.HasClinicsEnabled && _clinSelectedCur>0) {
 				if(retVal!="") {
-					retVal+=" - "+Lan.g("FormOpenDental","Clinic")+": ";
+					retVal+=" - "+Lan.G("FormOpenDental","Clinic")+": ";
 				}
 				if(PrefC.GetBool(PrefName.TitleBarClinicUseAbbr)) {
 					retVal+=Clinics.GetAbbr(_clinSelectedCur);
@@ -174,7 +174,7 @@ namespace OpenDental{
 			if(_patSelectedCur==null || _patSelectedCur.PatNum==0 || _patSelectedCur.PatNum==-1) {
 				retVal+=MainTitleUpdateCountdown();
 				if(FormOpenDental.RegKeyIsForTesting) {
-					retVal+=" - "+Lan.g("FormOpenDental","Developer Only License")+" - "+Lan.g("FormOpenDental","Not for use with live patient data")+" - ";
+					retVal+=" - "+Lan.G("FormOpenDental","Developer Only License")+" - "+Lan.G("FormOpenDental","Not for use with live patient data")+" - ";
 				}
 				//Now check to see if this database has been put into "Testing Mode"
 				if(Introspection.IsTestingMode) {
@@ -202,7 +202,7 @@ namespace OpenDental{
 			}
 			retVal+=MainTitleUpdateCountdown();
 			if(FormOpenDental.RegKeyIsForTesting) {
-				retVal+=" - "+Lan.g("FormOpenDental","Developer Only License")+" - "+Lan.g("FormOpenDental","Not for use with live patient data")+" - ";
+				retVal+=" - "+Lan.G("FormOpenDental","Developer Only License")+" - "+Lan.G("FormOpenDental","Not for use with live patient data")+" - ";
 			}
 			//Now check to see if this database has been put into "Testing Mode"
 			if(Introspection.IsTestingMode) {
@@ -226,22 +226,22 @@ namespace OpenDental{
 			string strTimeLeft="";
 			if(timeLeft.TotalSeconds>=0) {
 				if(timeLeft.Days>=1) {
-					strTimeLeft=timeLeft.Days+" "+Lan.g("FormOpenDental","days")+", "+timeLeft.Hours+" "+Lan.g("FormOpenDental","hours");
+					strTimeLeft=timeLeft.Days+" "+Lan.G("FormOpenDental","days")+", "+timeLeft.Hours+" "+Lan.G("FormOpenDental","hours");
 				}
 				else if(timeLeft.Hours>=1) {
-					strTimeLeft=timeLeft.Hours+" "+Lan.g("FormOpenDental","hours")+", "+timeLeft.Minutes+" "+Lan.g("FormOpenDental","minutes");
+					strTimeLeft=timeLeft.Hours+" "+Lan.G("FormOpenDental","hours")+", "+timeLeft.Minutes+" "+Lan.G("FormOpenDental","minutes");
 				}
 				else if(timeLeft.Minutes>=1) {
-					strTimeLeft=timeLeft.Minutes+" "+Lan.g("FormOpenDental","minutes")+", "+timeLeft.Seconds+" "+Lan.g("FormOpenDental","seconds");
+					strTimeLeft=timeLeft.Minutes+" "+Lan.G("FormOpenDental","minutes")+", "+timeLeft.Seconds+" "+Lan.G("FormOpenDental","seconds");
 				}
 				else if(timeLeft.Seconds>=0) {
-					strTimeLeft=timeLeft.Seconds+" "+Lan.g("FormOpenDental","seconds");
+					strTimeLeft=timeLeft.Seconds+" "+Lan.G("FormOpenDental","seconds");
 				}
 			}
 			else {
 				return titleText;
 			}
-			retVal=titleText+"        "+Lan.g("FormOpenDental","Update In")+": "+strTimeLeft;
+			retVal=titleText+"        "+Lan.G("FormOpenDental","Update In")+": "+strTimeLeft;
 			return retVal;
 		}
 

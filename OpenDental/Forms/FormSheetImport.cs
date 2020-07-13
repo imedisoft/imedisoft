@@ -266,7 +266,7 @@ namespace OpenDental {
 				if(fieldVal!=null) {//field exists on form
 					row=new SheetImportRow();
 					row.FieldName="Gender";
-					row.OldValDisplay=Lan.g("enumPatientGender",PatCur.Gender.ToString());
+					row.OldValDisplay=Lan.G("enumPatientGender",PatCur.Gender.ToString());
 					row.OldValObj=PatCur.Gender;
 					if(fieldVal=="") {//no box was checked
 						row.NewValDisplay="";
@@ -275,11 +275,11 @@ namespace OpenDental {
 					else {
 						try {
 							PatientGender gender=(PatientGender)Enum.Parse(typeof(PatientGender),fieldVal);
-							row.NewValDisplay=Lan.g("enumPatientGender",gender.ToString());
+							row.NewValDisplay=Lan.G("enumPatientGender",gender.ToString());
 							row.NewValObj=gender;
 						}
 						catch {
-							MessageBox.Show(fieldVal+Lan.g(this," is not a valid gender."));
+							MessageBox.Show(fieldVal+Lan.G(this," is not a valid gender."));
 						}
 					}
 					row.ImpValDisplay=row.NewValDisplay;
@@ -295,7 +295,7 @@ namespace OpenDental {
 				if(fieldVal!=null) {//field exists on form
 					row=new SheetImportRow();
 					row.FieldName="Position";
-					row.OldValDisplay=Lan.g("enumPatientPositionr",PatCur.Position.ToString());
+					row.OldValDisplay=Lan.G("enumPatientPositionr",PatCur.Position.ToString());
 					row.OldValObj=PatCur.Position;
 					if(fieldVal=="") {//no box was checked
 						row.NewValDisplay="";
@@ -304,11 +304,11 @@ namespace OpenDental {
 					else {
 						try {
 							PatientPosition position=(PatientPosition)Enum.Parse(typeof(PatientPosition),fieldVal);
-							row.NewValDisplay=Lan.g("enumPatientPosition",position.ToString());
+							row.NewValDisplay=Lan.G("enumPatientPosition",position.ToString());
 							row.NewValObj=position;
 						}
 						catch {
-							MessageBox.Show(fieldVal+Lan.g(this," is not a valid PatientPosition."));
+							MessageBox.Show(fieldVal+Lan.G(this," is not a valid PatientPosition."));
 						}
 					}
 					row.ImpValDisplay=row.NewValDisplay;
@@ -444,7 +444,7 @@ namespace OpenDental {
 				if(fieldVal!=null) {
 					row=new SheetImportRow();
 					row.FieldName="PreferContactMethod";
-					row.OldValDisplay=Lan.g("enumContactMethod",PatCur.PreferContactMethod.ToString());
+					row.OldValDisplay=Lan.G("enumContactMethod",PatCur.PreferContactMethod.ToString());
 					row.OldValObj=PatCur.PreferContactMethod;
 					if(fieldVal=="") {
 						row.NewValDisplay="";
@@ -453,11 +453,11 @@ namespace OpenDental {
 					else {
 						try {
 							ContactMethod cmeth=(ContactMethod)Enum.Parse(typeof(ContactMethod),fieldVal);
-							row.NewValDisplay=Lan.g("enumContactMethod",cmeth.ToString());
+							row.NewValDisplay=Lan.G("enumContactMethod",cmeth.ToString());
 							row.NewValObj=cmeth;
 						}
 						catch {
-							MessageBox.Show(fieldVal+Lan.g(this," is not a valid ContactMethod."));
+							MessageBox.Show(fieldVal+Lan.G(this," is not a valid ContactMethod."));
 						}
 					}
 					row.ImpValDisplay=row.NewValDisplay;
@@ -476,7 +476,7 @@ namespace OpenDental {
 				if(fieldVal!=null) {
 					row=new SheetImportRow();
 					row.FieldName="PreferConfirmMethod";
-					row.OldValDisplay=Lan.g("enumContactMethod",PatCur.PreferConfirmMethod.ToString());
+					row.OldValDisplay=Lan.G("enumContactMethod",PatCur.PreferConfirmMethod.ToString());
 					row.OldValObj=PatCur.PreferConfirmMethod;
 					if(fieldVal=="") {
 						row.NewValDisplay="";
@@ -485,11 +485,11 @@ namespace OpenDental {
 					else {
 						try {
 							ContactMethod cmeth=(ContactMethod)Enum.Parse(typeof(ContactMethod),fieldVal);
-							row.NewValDisplay=Lan.g("enumContactMethod",cmeth.ToString());
+							row.NewValDisplay=Lan.G("enumContactMethod",cmeth.ToString());
 							row.NewValObj=cmeth;
 						}
 						catch {
-							MessageBox.Show(fieldVal+Lan.g(this," is not a valid ContactMethod."));
+							MessageBox.Show(fieldVal+Lan.G(this," is not a valid ContactMethod."));
 						}
 					}
 					row.ImpValDisplay=row.NewValDisplay;
@@ -508,7 +508,7 @@ namespace OpenDental {
 				if(fieldVal!=null) {
 					row=new SheetImportRow();
 					row.FieldName="PreferRecallMethod";
-					row.OldValDisplay=Lan.g("enumContactMethod",PatCur.PreferRecallMethod.ToString());
+					row.OldValDisplay=Lan.G("enumContactMethod",PatCur.PreferRecallMethod.ToString());
 					row.OldValObj=PatCur.PreferRecallMethod;
 					if(fieldVal=="") {
 						row.NewValDisplay="";
@@ -517,11 +517,11 @@ namespace OpenDental {
 					else {
 						try {
 							ContactMethod cmeth=(ContactMethod)Enum.Parse(typeof(ContactMethod),fieldVal);
-							row.NewValDisplay=Lan.g("enumContactMethod",cmeth.ToString());
+							row.NewValDisplay=Lan.G("enumContactMethod",cmeth.ToString());
 							row.NewValObj=cmeth;
 						}
 						catch {
-							MessageBox.Show(fieldVal+Lan.g(this," is not a valid ContactMethod."));
+							MessageBox.Show(fieldVal+Lan.G(this," is not a valid ContactMethod."));
 						}
 					}
 					row.ImpValDisplay=row.NewValDisplay;
@@ -544,7 +544,7 @@ namespace OpenDental {
 						row.NewValDisplay=fieldVal;
 						row.NewValObj=null;
 						if(row.NewValDisplay!="") {//user did enter a referral
-							row.ImpValDisplay=Lan.g(this,"[double click to pick]");
+							row.ImpValDisplay=Lan.G(this,"[double click to pick]");
 							row.ImpValObj=null;
 							row.IsFlaggedImp=true;
 							row.DoImport=false;//this will change to true after they pick a referral
@@ -761,7 +761,7 @@ namespace OpenDental {
 					row=new SheetImportRow();
 					row.FieldName="ins1Relat";
 					row.FieldDisplay="Relationship";
-					row.OldValDisplay=Lan.g("enumRelat",Ins1Relat.ToString());
+					row.OldValDisplay=Lan.G("enumRelat",Ins1Relat.ToString());
 					row.OldValObj=Ins1Relat;
 					if(fieldVal=="") {
 						row.NewValDisplay="";
@@ -770,11 +770,11 @@ namespace OpenDental {
 					else {
 						try {
 							Relat relat=(Relat)Enum.Parse(typeof(Relat),fieldVal);
-							row.NewValDisplay=Lan.g("enumRelat",relat.ToString());
+							row.NewValDisplay=Lan.G("enumRelat",relat.ToString());
 							row.NewValObj=relat;
 						}
 						catch {
-							MessageBox.Show(fieldVal+Lan.g(this," is not a valid Relationship."));
+							MessageBox.Show(fieldVal+Lan.G(this," is not a valid Relationship."));
 						}
 					}
 					row.ImpValDisplay=row.NewValDisplay;
@@ -969,7 +969,7 @@ namespace OpenDental {
 					row=new SheetImportRow();
 					row.FieldName="ins2Relat";
 					row.FieldDisplay="Relationship";
-					row.OldValDisplay=Lan.g("enumRelat",Ins2Relat.ToString());
+					row.OldValDisplay=Lan.G("enumRelat",Ins2Relat.ToString());
 					row.OldValObj=Ins2Relat;
 					if(fieldVal=="") {
 						row.NewValDisplay="";
@@ -978,11 +978,11 @@ namespace OpenDental {
 					else {
 						try {
 							Relat relat=(Relat)Enum.Parse(typeof(Relat),fieldVal);
-							row.NewValDisplay=Lan.g("enumRelat",relat.ToString());
+							row.NewValDisplay=Lan.G("enumRelat",relat.ToString());
 							row.NewValObj=relat;
 						}
 						catch {
-							MessageBox.Show(fieldVal+Lan.g(this," is not a valid Relationship."));
+							MessageBox.Show(fieldVal+Lan.G(this," is not a valid Relationship."));
 						}
 					}
 					row.ImpValDisplay=row.NewValDisplay;
@@ -1380,7 +1380,7 @@ namespace OpenDental {
 					row.OldValObj=null;
 					row.NewValDisplay="Y";
 					row.NewValObj=newMedList[i];
-					row.ImpValDisplay=Lan.g(this,"[double click to pick]");
+					row.ImpValDisplay=Lan.G(this,"[double click to pick]");
 					row.ImpValObj=new long();
 					row.IsFlaggedImp=true;
 					row.DoImport=false;//this will change to true after they pick a medication
@@ -1470,15 +1470,15 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col; 
-			col=new GridColumn(Lan.g(this,"FieldName"),140);
+			col=new GridColumn(Lan.G(this,"FieldName"),140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Current Value"),175);
+			col=new GridColumn(Lan.G(this,"Current Value"),175);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Entered Value"),175);
+			col=new GridColumn(Lan.G(this,"Entered Value"),175);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Import Value"),175);
+			col=new GridColumn(Lan.G(this,"Import Value"),175);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Do Import"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Do Import"),60,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -1649,7 +1649,7 @@ namespace OpenDental {
 		///<summary>Mostly the same as IsImportable.  But subtle differences.</summary>
 		private bool IsEditable(SheetImportRow row) {
 			if(row.FieldName=="wirelessCarrier"){
-				MessageBox.Show(row.FieldName+" "+Lan.g(this,"cannot be imported."));
+				MessageBox.Show(row.FieldName+" "+Lan.G(this,"cannot be imported."));
 				return false;
 			}
 			if(row.FieldName=="referredFrom") {
@@ -2047,8 +2047,8 @@ namespace OpenDental {
 				|| carrierNameRow==null
 				|| carrierPhoneRow==null) 
 			{
-				MessageBox.Show(Lan.g(this,"Required ")+insWarnStr+Lan.g(this," fields are missing on this sheet.  You cannot import ")+insWarnStr
-					+Lan.g(this," with this sheet until it contains all of required fields.  Required fields: Relationship, Subscriber, SubscriberID, CarrierName, and CarrierPhone."));
+				MessageBox.Show(Lan.G(this,"Required ")+insWarnStr+Lan.G(this," fields are missing on this sheet.  You cannot import ")+insWarnStr
+					+Lan.G(this," with this sheet until it contains all of required fields.  Required fields: Relationship, Subscriber, SubscriberID, CarrierName, and CarrierPhone."));
 				return false;
 			}
 			if(relationRow.ImpValObj==null 
@@ -2056,7 +2056,7 @@ namespace OpenDental {
 				|| (string)subscriberIdRow.ImpValObj==""
 				|| carrierNameRow.ImpValObj==null
 				|| carrierPhoneRow.ImpValObj==null) {
-				MessageBox.Show(Lan.g(this,"Cannot import ")+insWarnStr+Lan.g(this," until all required fields have been set.  Required fields: Relationship, Subscriber, SubscriberID, CarrierName, and CarrierPhone."));
+				MessageBox.Show(Lan.G(this,"Cannot import ")+insWarnStr+Lan.G(this," until all required fields have been set.  Required fields: Relationship, Subscriber, SubscriberID, CarrierName, and CarrierPhone."));
 				return false;
 			}
 			InsPlan plan=null;
@@ -2268,9 +2268,9 @@ namespace OpenDental {
 			if(!isPrimary) {
 				insStr="secondary ";
 			}
-			return MessageBox.Show(Lan.g(this,"The ")+insStr+importValue+Lan.g(this," does not match the selected plan's ")+importValue+".\r\n"
-				+Lan.g(this,"Use the selected plan's ")+importValue+"?\r\n\r\n"
-				+Lan.g(this,"No will create a new plan using all of the import values."),Lan.g(this,"Import ")+insStr+importValue,MessageBoxButtons.YesNoCancel);
+			return MessageBox.Show(Lan.G(this,"The ")+insStr+importValue+Lan.G(this," does not match the selected plan's ")+importValue+".\r\n"
+				+Lan.G(this,"Use the selected plan's ")+importValue+"?\r\n\r\n"
+				+Lan.G(this,"No will create a new plan using all of the import values."),Lan.G(this,"Import ")+insStr+importValue,MessageBoxButtons.YesNoCancel);
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

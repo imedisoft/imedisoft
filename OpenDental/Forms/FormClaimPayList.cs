@@ -51,25 +51,25 @@ namespace OpenDental {
 			ListClaimPay=ClaimPaymentCrud.TableToList(tableClaimPayments);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Date"),65);
+			GridColumn col=new GridColumn(Lan.G(this,"Date"),65);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Type"),70);
+			col=new GridColumn(Lan.G(this,"Type"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Amount"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Amount"),75,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Partial"),40,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Partial"),40,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Carrier"),180);
+			col=new GridColumn(Lan.G(this,"Carrier"),180);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"PayGroup"),80);
+			col=new GridColumn(Lan.G(this,"PayGroup"),80);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g(this,"Clinic"),80);
+				col=new GridColumn(Lan.G(this,"Clinic"),80);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(this,"Note"),180);
+			col=new GridColumn(Lan.G(this,"Note"),180);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Scanned"),40,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Scanned"),40,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);			
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -571,7 +571,7 @@ namespace OpenDental{
 				if(!listClinics.Exists(x => x.ClinicNum==Clinics.ClinicNum)) {//Could have a hidden clinic selected
 					listClinics.Add(Clinics.GetClinic(Clinics.ClinicNum));
 				}
-				listClin.Items.AddRange(listClinics.Select(x => new ODBoxItem<Clinic>(x.Abbr+(x.IsHidden?(" "+Lan.g(this,"(hidden)")):""),x)).ToArray());
+				listClin.Items.AddRange(listClinics.Select(x => new ODBoxItem<Clinic>(x.Abbr+(x.IsHidden?(" "+Lan.G(this,"(hidden)")):""),x)).ToArray());
 				listClin.SelectedIndex=listClinics.FindIndex(x => x.ClinicNum==Clinics.ClinicNum);//FindIndex could return -1, which is fine
 				if(Clinics.ClinicNum==0) {
 					checkAllClin.Checked=true;
@@ -730,36 +730,36 @@ namespace OpenDental{
 			ReportComplex report=new ReportComplex(true,false); 
 			DataTable tableAging=RpAging.GetAgingTable(GetParamsFromForm());
 			report.IsLandscape=checkHasDateLastPay.Checked;
-			report.ReportName=Lan.g(this,"AGING OF ACCOUNTS RECEIVABLE REPORT");
-			report.AddTitle("Aging Report",Lan.g(this,"AGING OF ACCOUNTS RECEIVABLE"));
+			report.ReportName=Lan.G(this,"AGING OF ACCOUNTS RECEIVABLE REPORT");
+			report.AddTitle("Aging Report",Lan.G(this,"AGING OF ACCOUNTS RECEIVABLE"));
 			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle));
-			report.AddSubTitle("AsOf",Lan.g(this,"As of ")+textDate.Text);
+			report.AddSubTitle("AsOf",Lan.G(this,"As of ")+textDate.Text);
 			if(radioAny.Checked){
-				report.AddSubTitle("Balance",Lan.g(this,"Any Balance"));
+				report.AddSubTitle("Balance",Lan.G(this,"Any Balance"));
 			}
 			if(radio30.Checked){
-				report.AddSubTitle("Over30",Lan.g(this,"Over 30 Days"));
+				report.AddSubTitle("Over30",Lan.G(this,"Over 30 Days"));
 			}
 			if(radio60.Checked){
-				report.AddSubTitle("Over60",Lan.g(this,"Over 60 Days"));
+				report.AddSubTitle("Over60",Lan.G(this,"Over 60 Days"));
 			}
 			if(radio90.Checked){
-				report.AddSubTitle("Over90",Lan.g(this,"Over 90 Days"));
+				report.AddSubTitle("Over90",Lan.G(this,"Over 90 Days"));
 			}
 			if(checkBillTypesAll.Checked){
-				report.AddSubTitle("AllBillingTypes",Lan.g(this,"All Billing Types"));
+				report.AddSubTitle("AllBillingTypes",Lan.G(this,"All Billing Types"));
 			}
 			else{
 				report.AddSubTitle("",string.Join(", ",listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].ItemName)));
 			}
 			if(checkProvAll.Checked) {
-				report.AddSubTitle("Providers",Lan.g(this,"All Providers"));
+				report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
 			}
 			else {
 				report.AddSubTitle("Providers",string.Join(", ",listProv.SelectedIndices.OfType<int>().Select(x => _listProviders[x].Abbr)));
 			}
 			if(checkAllClin.Checked) {
-				report.AddSubTitle("Clinics",Lan.g(this,"All Clinics"));
+				report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
 			}
 			else {
 				report.AddSubTitle("Clinics",string.Join(", ",listClin.GetListSelected<Clinic>().Select(x => x.Abbr)));

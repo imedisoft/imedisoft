@@ -636,7 +636,7 @@ namespace OpenDental{
 				checkBoxBillShowTransSinceZero.Checked=PrefC.GetBool(PrefName.BillingShowTransSinceBalZero);
 				listMode.Items.Clear();
 				for(int i=0;i<Enum.GetNames(typeof(StatementMode)).Length;i++){
-					listMode.Items.Add(Lan.g("enumStatementMode",Enum.GetNames(typeof(StatementMode))[i]));
+					listMode.Items.Add(Lan.G("enumStatementMode",Enum.GetNames(typeof(StatementMode))[i]));
 					if((int)StmtCur.Mode_==i){
 						listMode.SelectedIndex=i;
 					}
@@ -749,7 +749,7 @@ namespace OpenDental{
 				}
 				listMode.Items.Clear();
 				for(int i=0;i<Enum.GetNames(typeof(StatementMode)).Length;i++){
-					listMode.Items.Add(Lan.g("enumStatementMode",Enum.GetNames(typeof(StatementMode))[i]));
+					listMode.Items.Add(Lan.G("enumStatementMode",Enum.GetNames(typeof(StatementMode))[i]));
 					if(allSame && (int)StmtList[0].Mode_==i){
 						listMode.SelectedIndex=i;
 					}
@@ -1115,14 +1115,14 @@ namespace OpenDental{
 			}
 			docc.ImgType=ImageType.Document;
 			if(StmtCur.IsInvoice) {
-				docc.Description=Lan.g(this,"Invoice");
+				docc.Description=Lan.G(this,"Invoice");
 			}
 			else {
 				if(StmtCur.IsReceipt==true) {
-					docc.Description=Lan.g(this,"Receipt");
+					docc.Description=Lan.G(this,"Receipt");
 				}
 				else {
-					docc.Description=Lan.g(this,"Statement");
+					docc.Description=Lan.G(this,"Statement");
 				}
 			}
 			//Some customers have wanted to sort their statements in the images module by date and time.  
@@ -1249,14 +1249,14 @@ namespace OpenDental{
 			}
 			docc.ImgType=ImageType.Document;
 			if(StmtCur.IsInvoice) {
-				docc.Description=Lan.g(this,"Invoice");
+				docc.Description=Lan.G(this,"Invoice");
 			}
 			else {
 				if(StmtCur.IsReceipt==true) {
-					docc.Description=Lan.g(this,"Receipt");
+					docc.Description=Lan.G(this,"Receipt");
 				}
 				else {
-					docc.Description=Lan.g(this,"Statement");
+					docc.Description=Lan.G(this,"Statement");
 				}
 			}
 			docc.DateCreated=StmtCur.DateSent;
@@ -1418,7 +1418,7 @@ namespace OpenDental{
 			Document doc=Documents.GetByNum(StmtCur.DocNum);
 			string fileName=ImageStore.GetFilePath(doc,patFolder);
 			if(!FileAtoZ.Exists(fileName)) {
-				MessageBox.Show(Lan.g(this,"File not found:")+" "+doc.FileName);
+				MessageBox.Show(Lan.G(this,"File not found:")+" "+doc.FileName);
 				return;
 			}
 			try {
@@ -1733,7 +1733,7 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"Error retrieving patient folder."),ex);
+				FriendlyException.Show(Lan.G(this,"Error retrieving patient folder."),ex);
 				return;
 			}
 			DialogResult=DialogResult.OK;
@@ -1969,7 +1969,7 @@ namespace OpenDental{
 					Statements.DeleteStatements(new List<Statement> { StmtCur },forceImageDelete:true);
 				}
 				catch(Exception ex) {
-					FriendlyException.Show(Lan.g(this,"Error retrieving patient folder."),ex);
+					FriendlyException.Show(Lan.G(this,"Error retrieving patient folder."),ex);
 				}
 			}
 			DialogResult=DialogResult.Cancel;

@@ -1216,7 +1216,7 @@ namespace OpenDental{
 			textNote.Text=_payPlanCur.Note;
 			_payPlanNote=textNote.Text;
 			if(IsInsPayPlan) {
-				Text=Lan.g(this,"Insurance Payment Plan");
+				Text=Lan.G(this,"Insurance Payment Plan");
 				textInsPlan.Text=InsPlans.GetDescript(_payPlanCur.PlanNum,FamCur,InsPlanList,_payPlanCur.InsSubNum,SubList);
 				labelGuarantor.Visible=false;
 				textGuarantor.Visible=false;
@@ -1229,7 +1229,7 @@ namespace OpenDental{
 				labelTxAmtInfo.Location=new Point(labelTxAmtInfo.Location.X,labelTxAmtInfo.Location.Y-20);
 			}
 			else {
-				Text=Lan.g(this,"Patient Payment Plan");
+				Text=Lan.G(this,"Patient Payment Plan");
 				labelInsPlan.Visible=false;
 				textInsPlan.Visible=false;
 				butChangePlan.Visible=false;
@@ -1250,7 +1250,7 @@ namespace OpenDental{
 			}
 			textTotalTxAmt.Text=PayPlans.GetTxTotalAmt(_listPayPlanCharges).ToString("f");
 			if(_payPlanCur.IsClosed) {
-				butOK.Text=Lan.g(this,"Reopen");
+				butOK.Text=Lan.G(this,"Reopen");
 				butDelete.Enabled=false;
 				butClosePlan.Enabled=false;
 				labelClosed.Visible=true;
@@ -1340,23 +1340,23 @@ namespace OpenDental{
 			GridColumn col;
 			//If this column is changed from a date column then the comparer method (ComparePayPlanRows) needs to be updated.
 			//If changes are made to the order of the grid, changes need to also be made for butPrint_Click
-			col=new GridColumn(Lan.g("PayPlanAmortization","Date"),64,HorizontalAlignment.Center);//0
+			col=new GridColumn(Lan.G("PayPlanAmortization","Date"),64,HorizontalAlignment.Center);//0
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Provider"),50);//1
+			col=new GridColumn(Lan.G("PayPlanAmortization","Provider"),50);//1
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Description"),130);//2
+			col=new GridColumn(Lan.G("PayPlanAmortization","Description"),130);//2
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Principal"),60,HorizontalAlignment.Right);//3
+			col=new GridColumn(Lan.G("PayPlanAmortization","Principal"),60,HorizontalAlignment.Right);//3
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Interest"),52,HorizontalAlignment.Right);//4
+			col=new GridColumn(Lan.G("PayPlanAmortization","Interest"),52,HorizontalAlignment.Right);//4
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Due"),60,HorizontalAlignment.Right);//5
+			col=new GridColumn(Lan.G("PayPlanAmortization","Due"),60,HorizontalAlignment.Right);//5
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Payment"),60,HorizontalAlignment.Right);//6
+			col=new GridColumn(Lan.G("PayPlanAmortization","Payment"),60,HorizontalAlignment.Right);//6
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Adjustment"),70,HorizontalAlignment.Right);//7
+			col=new GridColumn(Lan.G("PayPlanAmortization","Adjustment"),70,HorizontalAlignment.Right);//7
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("PayPlanAmortization","Balance"),60,HorizontalAlignment.Right);//8
+			col=new GridColumn(Lan.G("PayPlanAmortization","Balance"),60,HorizontalAlignment.Right);//8
 			gridCharges.ListGridColumns.Add(col);
 			gridCharges.ListGridRows.Clear();
 			List<GridRow> listPayPlanRows=new List<GridRow>();
@@ -1574,7 +1574,7 @@ namespace OpenDental{
 				|| textPeriodPayment.errorProvider1.GetError(textPeriodPayment)!=""
 				|| textCompletedAmt.errorProvider1.GetError(textCompletedAmt)!=""
 				) {
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			if(textAmount.Text=="" || PIn.Double(textAmount.Text)==0) {
@@ -1815,7 +1815,7 @@ namespace OpenDental{
 				Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 				Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 				ReportComplex report=new ReportComplex(false,false);
-				report.AddTitle("Title",Lan.g(this,"Payment Plan Terms"),fontTitle);
+				report.AddTitle("Title",Lan.G(this,"Payment Plan Terms"),fontTitle);
 				report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 				report.AddSubTitle("Date SubTitle",DateTime.Today.ToShortDateString(),fontSubTitle);
 				AreaSectionType sectType=AreaSectionType.ReportHeader;
@@ -2064,19 +2064,19 @@ namespace OpenDental{
 		private void AreTermsValid(bool areTermsValid) {
 			if(!areTermsValid) {
 				//The principal is actually increasing or staying the same with each payment.
-				MessageBox.Show(Lan.g(this,"This payment plan will never be paid off. The interest being charged on each payment is greater than the"+
+				MessageBox.Show(Lan.G(this,"This payment plan will never be paid off. The interest being charged on each payment is greater than the"+
 					" payment amount. Choose a lower interest rate or a higher payment amount."));
 			}
 		}
 
 		private void SetNote() {
 			textNote.Text=_payPlanNote+DateTime.Today.ToShortDateString()
-				+" - "+Lan.g(this,"Date of Agreement")+": "+textDate.Text
-				+", "+Lan.g(this,"Total Amount")+": "+textAmount.Text
-				+", "+Lan.g(this,"APR")+": "+textAPR.Text
-				+", "+Lan.g(this,"Total Cost of Loan")+": "+textTotalCost.Text;
+				+" - "+Lan.G(this,"Date of Agreement")+": "+textDate.Text
+				+", "+Lan.G(this,"Total Amount")+": "+textAmount.Text
+				+", "+Lan.G(this,"APR")+": "+textAPR.Text
+				+", "+Lan.G(this,"Total Cost of Loan")+": "+textTotalCost.Text;
 			if(_totalNegAdjAmt!=0) {
-				textNote.Text+=", "+Lan.g(this,"Adjustment")+": "+_totalNegAdjAmt.ToString("f");
+				textNote.Text+=", "+Lan.G(this,"Adjustment")+": "+_totalNegAdjAmt.ToString("f");
 			}
 		}
 
@@ -2109,8 +2109,8 @@ namespace OpenDental{
 			}
 			InputBox inputBox=new InputBox(new List<InputBoxParam>() 
 			{
-				new InputBoxParam(InputBoxType.ValidDouble,Lan.g(this,"Please enter an amount:")+" "),
-				new InputBoxParam(InputBoxType.CheckBox,"",Lan.g(this,"Also make line item in Account Module"),new Size(250,30)),
+				new InputBoxParam(InputBoxType.ValidDouble,Lan.G(this,"Please enter an amount:")+" "),
+				new InputBoxParam(InputBoxType.CheckBox,"",Lan.G(this,"Also make line item in Account Module"),new Size(250,30)),
 			}
 				,new Func<string,bool>((text) => {
 					double amount=PIn.Double(text);
@@ -2125,7 +2125,7 @@ namespace OpenDental{
 					return true;
 				})
 			);
-			inputBox.setTitle(Lan.g(this,"Negative Pay Plan Adjustment"));
+			inputBox.setTitle(Lan.G(this,"Negative Pay Plan Adjustment"));
 			inputBox.Size=new Size(350,170);
 			if(inputBox.ShowDialog()!=DialogResult.OK) {
 				return;
@@ -2144,7 +2144,7 @@ namespace OpenDental{
 				adj.AdjDate=DateTime.Now.Date;
 				adj.PatNum=PatCur.PatNum;
 				adj.ProvNum=comboProv.GetSelectedProvNum();
-				adj.AdjNote=Lan.g(this,"Payment plan adjustment");
+				adj.AdjNote=Lan.G(this,"Payment plan adjustment");
 				adj.SecUserNumEntry=Security.CurUser.UserNum;
 				adj.SecDateTEdit=DateTime.Now;
 				adj.ClinicNum=comboClinic.SelectedClinicNum;
@@ -2159,7 +2159,7 @@ namespace OpenDental{
 					ChargeDate=DateTime.Now.Date,
 					ChargeType=PayPlanChargeType.Credit,//needs to be saved as a credit to show in Tx Form
 					Guarantor=PatCur.PatNum,
-					Note=Lan.g(this,"Adjustment"),
+					Note=Lan.G(this,"Adjustment"),
 					PatNum=PatCur.PatNum,
 					PayPlanNum=_payPlanCur.PayPlanNum,
 					Principal=negAdjAmt,
@@ -2199,7 +2199,7 @@ namespace OpenDental{
 				addCharge.ChargeType=PayPlanChargeType.Credit;
 				addCharge.Guarantor=_payPlanCur.Guarantor; //credits always show in the account of the patient that the payplan was for.
 				addCharge.Interest=0;
-				addCharge.Note=Lan.g(this,"Expected Payments from")+" "+textInsPlan.Text;
+				addCharge.Note=Lan.G(this,"Expected Payments from")+" "+textInsPlan.Text;
 				addCharge.PatNum=_payPlanCur.PatNum;
 				addCharge.PayPlanNum=_payPlanCur.PayPlanNum;
 				addCharge.Principal=PIn.Double(textCompletedAmt.Text);
@@ -2212,7 +2212,7 @@ namespace OpenDental{
 				foreach(Adjustment adj in _listAdjustments) {
 					Adjustments.Insert(adj);
 					TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(adj);
-					SecurityLogs.MakeLogEntry(Permissions.AdjustmentCreate,PatCur.PatNum,Lan.g(this,"Adjustment created from payment plan for")+" "
+					SecurityLogs.MakeLogEntry(Permissions.AdjustmentCreate,PatCur.PatNum,Lan.G(this,"Adjustment created from payment plan for")+" "
 						+PatCur.GetNameFL()+", "+adj.AdjAmt.ToString("c"));
 				}				
 			}

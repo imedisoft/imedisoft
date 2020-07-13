@@ -243,7 +243,7 @@ namespace OpenDental {
 					emailMessages=EmailMessages.ReceiveFromInbox(1,AddressCur,ref listSkipMsgUids);
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.g(this,"Error receiving email messages")+": "+ex.Message);
+					MessageBox.Show(Lan.G(this,"Error receiving email messages")+": "+ex.Message);
 				}
 				emailMessagesTotalCount+=emailMessages.Count;
 				if(emailMessages.Count==0) {
@@ -288,17 +288,17 @@ namespace OpenDental {
 			int colSigPixCount=40;
 			int colPatientPixCount=140;
 			int variableWidth=gridInbox.Width-10-colFromPixCount-colReceivedDatePixCount-colMessageTypePixCount-colSigPixCount-colPatientPixCount;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.g(this,"From"),colFromPixCount,HorizontalAlignment.Left));//0
+			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.G(this,"From"),colFromPixCount,HorizontalAlignment.Left));//0
 			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.g(this,"Subject"),variableWidth,HorizontalAlignment.Left));//1
+			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.G(this,"Subject"),variableWidth,HorizontalAlignment.Left));//1
 			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.g(this,"Date Received"),colReceivedDatePixCount,HorizontalAlignment.Left));//2
+			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.G(this,"Date Received"),colReceivedDatePixCount,HorizontalAlignment.Left));//2
 			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.DateParse;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.g(this,"MessageType"),colMessageTypePixCount,HorizontalAlignment.Left));//3
+			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.G(this,"MessageType"),colMessageTypePixCount,HorizontalAlignment.Left));//3
 			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.g(this,"Sig"),colSigPixCount,HorizontalAlignment.Center));//4
+			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.G(this,"Sig"),colSigPixCount,HorizontalAlignment.Center));//4
 			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.g(this,"Patient"),colPatientPixCount,HorizontalAlignment.Left));//5
+			gridInbox.ListGridColumns.Add(new UI.GridColumn(Lan.G(this,"Patient"),colPatientPixCount,HorizontalAlignment.Left));//5
 			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
 			List<EmailMessage> listEmailsFiltered;
 			if(_isSearching) { //if searching, use the search list. Should already be filled.
@@ -489,7 +489,7 @@ namespace OpenDental {
 		private void InitEmailHideInFlags() {
 			_listHideInFlags=Enum.GetValues(typeof(HideInFlags)).Cast<HideInFlags>().Where(x => x!=HideInFlags.None).ToList();
 			for(int i=0;i<_listHideInFlags.Count;i++) {
-				listShowIn.Items.Add(Lan.g("enumHideInFlags",((HideInFlags)(_listHideInFlags[i])).GetDescription()));
+				listShowIn.Items.Add(Lan.G("enumHideInFlags",((HideInFlags)(_listHideInFlags[i])).GetDescription()));
 			}
 		}
 
@@ -501,7 +501,7 @@ namespace OpenDental {
 			}
 			//set all listShowIn Items to match selected email, default to all items not selected if no email selected
 			for(int i=0;i<_listHideInFlags.Count;i++) {
-				listShowIn.Items[i]=Lan.g("enumHideInFlags",_listHideInFlags[i].GetDescription());
+				listShowIn.Items[i]=Lan.G("enumHideInFlags",_listHideInFlags[i].GetDescription());
 				if(emailMessageCur==null) {
 					listShowIn.SetSelected(i,false);//no selected email
 				}
@@ -523,7 +523,7 @@ namespace OpenDental {
 				//mismatched flags across multiple selected emails should display as "showing"+"Settings Vary"
 				for(int i=0;i<_listHideInFlags.Count;i++) {
 					if(emailMessage.HideIn.HasFlag(_listHideInFlags[i])!=emailMessageCur.HideIn.HasFlag(_listHideInFlags[i])) {
-						listShowIn.Items[i]=Lan.g("enumHideInFlags",_listHideInFlags[i].GetDescription()+" *Settings Vary");
+						listShowIn.Items[i]=Lan.G("enumHideInFlags",_listHideInFlags[i].GetDescription()+" *Settings Vary");
 						listShowIn.SetSelected(i,true);
 					}
 				}
@@ -766,7 +766,7 @@ namespace OpenDental {
 			FillInboxOrSent();
 			Signalods.SetInvalid(InvalidType.EmailMessages); //will refresh for other users.
 			Cursor=Cursors.Default;
-			MessageBox.Show(Lan.g(this,"Email messages moved successfully")+": "+messagesMovedCount);
+			MessageBox.Show(Lan.G(this,"Email messages moved successfully")+": "+messagesMovedCount);
 		}
 
 		private void butRefresh_Click(object sender,EventArgs e) {
@@ -882,8 +882,8 @@ namespace OpenDental {
 			}
 			Cursor=Cursors.WaitCursor;
 			_isSearching=true;
-			gridInbox.Title=Lan.g(this,"Currently Searching - Inbox");
-			gridSent.Title=Lan.g(this,"Currently Searching - Sent Messages");
+			gridInbox.Title=Lan.G(this,"Currently Searching - Inbox");
+			gridSent.Title=Lan.G(this,"Currently Searching - Sent Messages");
 			butClear.Enabled=true;
 			groupSearch.BackColor=Color.FromArgb(255,255,192); //same as the color of the Appointment Scheduler
 																				//if the user typed something into the Subject/Body textbox, then we need to go to the database.
@@ -903,8 +903,8 @@ namespace OpenDental {
 			_searchPatNum=0;
 			_isSearching=false;
 			butClear.Enabled=false;
-			gridInbox.Title=Lan.g(this,"Inbox");
-			gridSent.Title=Lan.g(this,"Sent Messages");
+			gridInbox.Title=Lan.G(this,"Inbox");
+			gridSent.Title=Lan.G(this,"Sent Messages");
 			groupSearch.BackColor=SystemColors.Control;
 			FillInboxOrSent();
 		}
@@ -1085,23 +1085,23 @@ namespace OpenDental {
 				if(EmailMessages.IsSecureWebMail(emailMessage.SentOrReceived)) {
 					EmailMessages.Delete(emailMessage);
 					string logText="";
-					logText+="\r\n"+Lan.g(this,"From")+": "+emailMessage.FromAddress+". ";
-					logText+="\r\n"+Lan.g(this,"To")+": "+emailMessage.ToAddress+". ";
+					logText+="\r\n"+Lan.G(this,"From")+": "+emailMessage.FromAddress+". ";
+					logText+="\r\n"+Lan.G(this,"To")+": "+emailMessage.ToAddress+". ";
 					if(!String.IsNullOrEmpty(emailMessage.Subject)) {
-						logText+="\r\n"+Lan.g(this,"Subject")+": "+emailMessage.Subject+". ";
+						logText+="\r\n"+Lan.G(this,"Subject")+": "+emailMessage.Subject+". ";
 					}
 					if(!String.IsNullOrEmpty(emailMessage.BodyText)) {
 						if(emailMessage.BodyText.Length > 50) {
-							logText+="\r\n"+Lan.g(this,"Body Text")+": "+emailMessage.BodyText.Substring(0,49)+"... ";
+							logText+="\r\n"+Lan.G(this,"Body Text")+": "+emailMessage.BodyText.Substring(0,49)+"... ";
 						}
 						else {
-							logText+="\r\n"+Lan.g(this,"Body Text")+": "+emailMessage.BodyText;
+							logText+="\r\n"+Lan.G(this,"Body Text")+": "+emailMessage.BodyText;
 						}
 					}
 					if(emailMessage.MsgDateTime != DateTime.MinValue) {
-						logText+="\r\n"+Lan.g(this,"Date")+": "+emailMessage.MsgDateTime.ToShortDateString()+". ";
+						logText+="\r\n"+Lan.G(this,"Date")+": "+emailMessage.MsgDateTime.ToShortDateString()+". ";
 					}
-					SecurityLogs.MakeLogEntry(Permissions.WebMailDelete,emailMessage.PatNum,Lan.g(this,"Webmail deleted.")+" "+logText);
+					SecurityLogs.MakeLogEntry(Permissions.WebMailDelete,emailMessage.PatNum,Lan.G(this,"Webmail deleted.")+" "+logText);
 				}
 				else {//Not a web mail message.
 					EmailMessages.Delete(emailMessage);

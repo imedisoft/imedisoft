@@ -375,7 +375,7 @@ namespace OpenDental{
 			else {
 				_listClinics=Clinics.GetForUserod(Security.CurUser);
 				if(!Security.CurUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.g(this,"Unassigned"));
+					listClin.Items.Add(Lan.G(this,"Unassigned"));
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -541,14 +541,14 @@ namespace OpenDental{
 			string subtitleProvs="";
 			string subtitleClinics="";
 			if(checkAllProv.Checked) {
-				subtitleProvs=Lan.g(this,"All Providers");
+				subtitleProvs=Lan.G(this,"All Providers");
 			}
 			else {
 				subtitleProvs+=string.Join(", ",listProv.SelectedIndices.OfType<int>().ToList().Select(x => _listProviders[x].Abbr));
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClin.Checked && !Security.CurUser.ClinicIsRestricted) {
-					subtitleClinics=Lan.g(this,"All Clinics");
+					subtitleClinics=Lan.G(this,"All Clinics");
 				}
 				else {
 					for(int i=0;i<listClin.SelectedIndices.Count;i++) {
@@ -560,7 +560,7 @@ namespace OpenDental{
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								subtitleClinics+=Lan.g(this,"Unassigned");
+								subtitleClinics+=Lan.G(this,"Unassigned");
 							}
 							else {
 								subtitleClinics+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -573,8 +573,8 @@ namespace OpenDental{
 			Font fontBold=new Font("Tahoma",9,FontStyle.Bold);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.g(this,"Daily Payments");
-			report.AddTitle("Title",Lan.g(this,"Daily Payments"),fontTitle);
+			report.ReportName=Lan.G(this,"Daily Payments");
+			report.AddTitle("Title",Lan.G(this,"Daily Payments"),fontTitle);
 			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Providers",subtitleProvs,fontSubTitle);
 			if(PrefC.HasClinicsEnabled) {

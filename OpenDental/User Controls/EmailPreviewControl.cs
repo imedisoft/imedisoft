@@ -375,7 +375,7 @@ namespace OpenDental {
 			}
 			_listHideInFlags=Enum.GetValues(typeof(HideInFlags)).Cast<HideInFlags>().Where(x => x!=HideInFlags.None).ToList();
 			foreach(HideInFlags flag in _listHideInFlags) {
-				listShowIn.Items.Add(Lan.g("enumHideInFlags",flag.GetDescription()));
+				listShowIn.Items.Add(Lan.G("enumHideInFlags",flag.GetDescription()));
 			}
 		}
 		
@@ -456,7 +456,7 @@ namespace OpenDental {
 		}
 
 		private void menuItemRename_Click(object sender,EventArgs e) {
-			InputBox input=new InputBox(Lan.g(this,"Filename"));
+			InputBox input=new InputBox(Lan.G(this,"Filename"));
 			EmailAttach emailAttach=_listEmailAttachDisplayed[gridAttachments.SelectedIndices[0]];
 			input.textResult.Text=emailAttach.DisplayedFileName;
 			input.ShowDialog();

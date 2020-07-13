@@ -41,10 +41,10 @@ namespace OpenDental {
 			int curSelection=gridMain.GetSelectedIndex();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableLabImage","Attached"),60,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableLabImage","Date"),80,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableLabImage","Category"),80,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g("TableLabImage","Desc"),180,HorizontalAlignment.Left));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableLabImage","Attached"),60,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableLabImage","Date"),80,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableLabImage","Category"),80,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableLabImage","Desc"),180,HorizontalAlignment.Left));
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			for(int i=0;i<_listPatientDocuments.Count;i++) {

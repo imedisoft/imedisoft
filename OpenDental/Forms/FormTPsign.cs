@@ -375,10 +375,10 @@ namespace OpenDental{
 			button.Style=ODToolBarButtonStyle.Label;
 			ToolBarMain.Buttons.Add(button);
 			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Go Forward One Page","Fwd"));
-			button=new ODToolBarButton(Lan.g(this,"FullPage"),-1,Lan.g(this,"FullPage"),"FullPage");
+			button=new ODToolBarButton(Lan.G(this,"FullPage"),-1,Lan.G(this,"FullPage"),"FullPage");
 			button.Style=ODToolBarButtonStyle.ToggleButton;
 			ToolBarMain.Buttons.Add(button);
-			button=new ODToolBarButton(Lan.g(this,"100%"),-1,Lan.g(this,"100%"),"100");
+			button=new ODToolBarButton(Lan.G(this,"100%"),-1,Lan.G(this,"100%"),"100");
 			button.Style=ODToolBarButtonStyle.ToggleButton;
 			ToolBarMain.Buttons.Add(button);
 			//ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
@@ -482,7 +482,7 @@ namespace OpenDental{
 				Document.Print();
 			}
 			catch(Exception e){
-				MessageBox.Show(Lan.g(this,"Error: ")+e.Message);
+				MessageBox.Show(Lan.G(this,"Error: ")+e.Message);
 			}
 			DialogResult=DialogResult.OK;
 		}

@@ -207,18 +207,18 @@ namespace OpenDental {
 			contextMenu.MenuItems.Add("",onClick);
 			contextMenu.MenuItems.Add("",onClick);
 			contextMenu.MenuItems.Add("-");
-			contextMenu.MenuItems.Add(Lan.g(this,"Add to Dictionary"),onClick);
-			contextMenu.MenuItems.Add(Lan.g(this,"Disable Spell Check"),onClick);
+			contextMenu.MenuItems.Add(Lan.G(this,"Add to Dictionary"),onClick);
+			contextMenu.MenuItems.Add(Lan.G(this,"Disable Spell Check"),onClick);
 			contextMenu.MenuItems.Add("-");
-			contextMenu.MenuItems.Add(new MenuItem(Lan.g(this,"Insert Date"),onClick,Shortcut.CtrlD));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.g(this,"Insert Quick Note"),onClick,Shortcut.CtrlQ));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.g(this,"Insert Auto Note"),onClick));
+			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Insert Date"),onClick,Shortcut.CtrlD));
+			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Insert Quick Note"),onClick,Shortcut.CtrlQ));
+			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Insert Auto Note"),onClick));
 			contextMenu.MenuItems.Add("-");
-			contextMenu.MenuItems.Add(new MenuItem(Lan.g(this,"Cut"),onClick,Shortcut.CtrlX));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.g(this,"Copy"),onClick,Shortcut.CtrlC));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.g(this,"Paste"),onClick,Shortcut.CtrlV));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.g(this,"Paste Plain Text"),onClick));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.g(this,"Edit Auto Note"),onClick));
+			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Cut"),onClick,Shortcut.CtrlX));
+			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Copy"),onClick,Shortcut.CtrlC));
+			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Paste"),onClick,Shortcut.CtrlV));
+			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Paste Plain Text"),onClick));
+			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Edit Auto Note"),onClick));
 			base.BackColor=SystemColors.Window;//Needed for OnReadOnlyChanged() to change backcolor when ReadOnly because of an issue with RichTextBox.
 		}
 
@@ -392,7 +392,7 @@ namespace OpenDental {
 			  && IsOnMisspelled(PositionOfClick)) {//clicked on or near a misspelled word AND spell check is enabled
 				List<string> suggestions=SpellSuggest();
 				if(suggestions.Count==0) {//no suggestions
-					contextMenu.MenuItems[0].Text=Lan.g(this,"No Spelling Suggestions");
+					contextMenu.MenuItems[0].Text=Lan.G(this,"No Spelling Suggestions");
 					contextMenu.MenuItems[0].Visible=true;
 					contextMenu.MenuItems[0].Enabled=false;//suggestion 1 set to "No Spelling Suggestions"
 					contextMenu.MenuItems[1].Visible=false;//suggestion 2

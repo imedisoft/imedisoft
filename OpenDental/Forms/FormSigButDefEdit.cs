@@ -325,7 +325,7 @@ namespace OpenDental{
 			_arraySigElementDefExtras=SigElementDefs.GetSubList(SignalElementType.Extra);
 			_arraySigElementDefMessages=SigElementDefs.GetSubList(SignalElementType.Message);
 			comboTo.Items.Clear();
-			comboTo.Items.Add(Lan.g(this,"none"));
+			comboTo.Items.Add(Lan.G(this,"none"));
 			comboTo.SelectedIndex=0;
 			for(int i=0;i<_arraySigElementDefUser.Length;i++) {
 				comboTo.Items.Add(_arraySigElementDefUser[i].SigText);
@@ -334,7 +334,7 @@ namespace OpenDental{
 				}
 			}
 			comboExtras.Items.Clear();
-			comboExtras.Items.Add(Lan.g(this,"none"));
+			comboExtras.Items.Add(Lan.G(this,"none"));
 			comboExtras.SelectedIndex=0;
 			for(int i=0;i<_arraySigElementDefExtras.Length;i++) {
 				comboExtras.Items.Add(_arraySigElementDefExtras[i].SigText);
@@ -343,7 +343,7 @@ namespace OpenDental{
 				}
 			}
 			comboMessage.Items.Clear();
-			comboMessage.Items.Add(Lan.g(this,"none"));
+			comboMessage.Items.Add(Lan.G(this,"none"));
 			comboMessage.SelectedIndex=0;
 			for(int i=0;i<_arraySigElementDefMessages.Length;i++) {
 				comboMessage.Items.Add(_arraySigElementDefMessages[i].SigText);

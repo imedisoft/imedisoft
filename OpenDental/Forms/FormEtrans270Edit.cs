@@ -76,7 +76,7 @@ namespace OpenDental {
 				textResponseGroupNum.Text=x271.GetGroupNum();
 			}
 			if(textCurrentGroupNum.Text!=textResponseGroupNum.Text) {
-				errorProviderGroupNum.SetError(textCurrentGroupNum,Lan.g(this,"Mismatched group number."));
+				errorProviderGroupNum.SetError(textCurrentGroupNum,Lan.G(this,"Mismatched group number."));
 			}
 			radioBenefitSendsPat.Checked=(!_isConinsuranceInverted);
 			radioBenefitSendsIns.Checked=(_isConinsuranceInverted);
@@ -181,9 +181,9 @@ namespace OpenDental {
 		private void FillGridDates() {
 			gridDates.BeginUpdate();
 			gridDates.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Date"),150);
+			GridColumn col=new GridColumn(Lan.G(this,"Date"),150);
 			gridDates.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Qualifier"),230);
+			col=new GridColumn(Lan.G(this,"Qualifier"),230);
 			gridDates.ListGridColumns.Add(col);
 			gridDates.ListGridRows.Clear();
 			GridRow row;
@@ -199,12 +199,12 @@ namespace OpenDental {
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Response"),360);
+			GridColumn col=new GridColumn(Lan.G(this,"Response"),360);
 			gridMain.ListGridColumns.Add(col);
 			if(radioModeElect.Checked) {
-				col=new GridColumn(Lan.g(this,"Note"),212);
+				col=new GridColumn(Lan.G(this,"Note"),212);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Import As Benefit"),360);
+				col=new GridColumn(Lan.G(this,"Import As Benefit"),360);
 				gridMain.ListGridColumns.Add(col);
 			}
 			gridMain.ListGridRows.Clear();
@@ -346,7 +346,7 @@ namespace OpenDental {
 			pagesPrinted=0;
 			headingPrinted=false;
 			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,
-				Lan.g(this,"Electronic benefit request from")+" "+EtransCur.DateTimeTrans.ToShortDateString()+" "+Lan.g(this,"printed"),
+				Lan.G(this,"Electronic benefit request from")+" "+EtransCur.DateTimeTrans.ToShortDateString()+" "+Lan.G(this,"printed"),
 				auditPatNum:EtransCur.PatNum,
 				margins:new Margins(25,25,40,80)
 			);
@@ -363,13 +363,13 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Electronic Benefits Response");
+				text=Lan.G(this,"Electronic Benefits Response");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				InsSub sub=InsSubs.GetSub(this.SubNum,new List<InsSub>());
 				InsPlan plan=InsPlans.GetPlan(this.PlanNum,new List<InsPlan>());
 				Patient subsc=Patients.GetPat(sub.Subscriber);
-				text=Lan.g(this,"Subscriber: ")+subsc.GetNameFL();
+				text=Lan.G(this,"Subscriber: ")+subsc.GetNameFL();
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 				Carrier carrier=Carriers.GetCarrier(plan.CarrierNum);

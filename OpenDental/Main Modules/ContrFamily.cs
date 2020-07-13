@@ -459,7 +459,7 @@ namespace OpenDental{
 
 		private void FillPatientPicture(){
 			picturePat.Image=null;
-			picturePat.TextNullImage=Lan.g(this,"Patient Picture Unavailable");
+			picturePat.TextNullImage=Lan.G(this,"Patient Picture Unavailable");
 			if(PatCur==null || 
 				PrefC.AtoZfolderUsed==DataStorageType.InDatabase){//Do not use patient image when A to Z folders are disabled.
 				return;
@@ -509,39 +509,39 @@ namespace OpenDental{
 			ODToolBarButton button;
 			//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Recall"),1,"","Recall"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			button=new ODToolBarButton(Lan.g(this,"Family Members:"),-1,"","");
+			button=new ODToolBarButton(Lan.G(this,"Family Members:"),-1,"","");
 			button.Style=ODToolBarButtonStyle.Label;
 			ToolBarMain.Buttons.Add(button);
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Add"),2,"Add Family Member","Add"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Delete"),3,Lan.g(this,"Delete Family Member"),"Delete"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Set Guarantor"),4,Lan.g(this,"Set as Guarantor"),"Guarantor"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Move"),5,Lan.g(this,"Move to Another Family"),"Move"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Add"),2,"Add Family Member","Add"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Delete"),3,Lan.G(this,"Delete Family Member"),"Delete"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Set Guarantor"),4,Lan.G(this,"Set as Guarantor"),"Guarantor"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Move"),5,Lan.G(this,"Move to Another Family"),"Move"));
 			if(PrefC.GetBool(PrefName.ShowFeaturePatientClone)) {
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-				button=new ODToolBarButton(Lan.g(this,"Clones:"),-1,"","");
+				button=new ODToolBarButton(Lan.G(this,"Clones:"),-1,"","");
 				button.Style=ODToolBarButtonStyle.Label;
 				ToolBarMain.Buttons.Add(button);
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Add"),-1,Lan.g(this,"Creates a clone of the currently selected patient."),"AddClone"));
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Synch"),-1,Lan.g(this,"Synch information to the clone patient or create a clone of the currently selected patient if one does not exist"),"SynchClone"));
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Break"),-1,Lan.g(this,"Remove selected patient from the clone group."),"BreakClone"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Add"),-1,Lan.G(this,"Creates a clone of the currently selected patient."),"AddClone"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Synch"),-1,Lan.G(this,"Synch information to the clone patient or create a clone of the currently selected patient if one does not exist"),"SynchClone"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Break"),-1,Lan.G(this,"Remove selected patient from the clone group."),"BreakClone"));
 			}
 			if(PrefC.GetBool(PrefName.ShowFeatureSuperfamilies)){
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-				button=new ODToolBarButton(Lan.g(this,"Super Family:"),-1,"","");
+				button=new ODToolBarButton(Lan.G(this,"Super Family:"),-1,"","");
 				button.Style=ODToolBarButtonStyle.Label;
 				ToolBarMain.Buttons.Add(button);
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Add"),-1,"Add selected patient to a super family","AddSuper"));
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Remove"),-1,Lan.g(this,"Remove selected patient, and their family, from super family"),"RemoveSuper"));
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Disband"),-1,Lan.g(this,"Disband the current super family by removing all members of the super family."),"DisbandSuper"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Add"),-1,"Add selected patient to a super family","AddSuper"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Remove"),-1,Lan.G(this,"Remove selected patient, and their family, from super family"),"RemoveSuper"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Disband"),-1,Lan.G(this,"Disband the current super family by removing all members of the super family."),"DisbandSuper"));
 			}
 			if(!PrefC.GetBool(PrefName.EasyHideInsurance)){
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-				button=new ODToolBarButton(Lan.g(this,"Add Insurance"),6,"","Ins");
+				button=new ODToolBarButton(Lan.G(this,"Add Insurance"),6,"","Ins");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				button.DropDownMenu=menuInsurance;
 				ToolBarMain.Buttons.Add(button);
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-				button=new ODToolBarButton(Lan.g(this,"Discount Plan"),-1,"","Discount");
+				button=new ODToolBarButton(Lan.G(this,"Discount Plan"),-1,"","Discount");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				button.DropDownMenu=menuDiscount;
 				ToolBarMain.Buttons.Add(button);
@@ -894,7 +894,7 @@ namespace OpenDental{
 							row.Cells.Add("Postcode");
 						}
 						else{
-							row.Cells.Add(Lan.g("TablePatient","Zip"));
+							row.Cells.Add(Lan.G("TablePatient","Zip"));
 						}
 					}
 					else if(fieldCur.InternalName=="PatFields"){
@@ -964,7 +964,7 @@ namespace OpenDental{
 					case "Billing Type":
 						string billingtype=Defs.GetName(DefCat.BillingTypes,PatCur.BillingType);
 						if(Defs.GetHidden(DefCat.BillingTypes,PatCur.BillingType)) {
-							billingtype+=" "+Lan.g(this,"(hidden)");
+							billingtype+=" "+Lan.G(this,"(hidden)");
 						}						
 						row.Cells.Add(billingtype);
 						break;
@@ -1101,7 +1101,7 @@ namespace OpenDental{
 					case "Pat Restrictions":
 						List<PatRestriction> listPatRestricts=_loadData.ListPatRestricts??PatRestrictions.GetAllForPat(PatCur.PatNum);
 						if(listPatRestricts.Count==0) {
-							row.Cells.Add(Lan.g("TablePatient","None"));//row added outside of switch statement
+							row.Cells.Add(Lan.G("TablePatient","None"));//row added outside of switch statement
 						}
 						for(int i=0;i<listPatRestricts.Count;i++) {
 							row=new GridRow();
@@ -1142,7 +1142,7 @@ namespace OpenDental{
 							row.Cells.Add(Providers.GetLongDesc(Patients.GetProvNum(PatCur)));
 						}
 						else {
-							row.Cells.Add(Lan.g("TablePatient","None"));
+							row.Cells.Add(Lan.G("TablePatient","None"));
 						}
 						break;
 					#endregion Primary Provider
@@ -1150,12 +1150,12 @@ namespace OpenDental{
 					case "References":
 						List<CustRefEntry> custREList=_loadData.ListCustRefEntries??CustRefEntries.GetEntryListForCustomer(PatCur.PatNum);
 						if(custREList.Count==0) {
-							row.Cells.Add(Lan.g("TablePatient","None"));
+							row.Cells.Add(Lan.G("TablePatient","None"));
 							row.Tag="References";
 							row.ColorBackG=listMiscColorDefs[8].ItemColor;
 						}
 						else {
-							row.Cells.Add(Lan.g("TablePatient",""));
+							row.Cells.Add(Lan.G("TablePatient",""));
 							row.Tag="References";
 							row.ColorBackG=listMiscColorDefs[8].ItemColor;
 							gridPat.ListGridRows.Add(row);
@@ -1187,7 +1187,7 @@ namespace OpenDental{
 						listRefsFiltered.AddRange(listRefs.Where(x => x.RefType==ReferralType.RefTo).DistinctBy(x => x.ReferralNum).ToList());
 						listRefs=listRefsFiltered;
 						if(listRefs.Count==0){
-							row.Cells.Add(Lan.g("TablePatient","None"));
+							row.Cells.Add(Lan.G("TablePatient","None"));
 							row.Tag="Referral";
 							row.ColorBackG=listMiscColorDefs[8].ItemColor;
 						}
@@ -1199,17 +1199,17 @@ namespace OpenDental{
 						for(int i=0;i<listRefs.Count;i++) {
 							row=new GridRow();
 							if(listRefs[i].RefType==ReferralType.RefFrom){
-								row.Cells.Add(Lan.g("TablePatient","Referred From"));
+								row.Cells.Add(Lan.G("TablePatient","Referred From"));
 							}
 							else if(listRefs[i].RefType==ReferralType.RefTo) {
-								row.Cells.Add(Lan.g("TablePatient","Referred To"));
+								row.Cells.Add(Lan.G("TablePatient","Referred To"));
 							}
 							else {
 								if(!string.IsNullOrWhiteSpace(fieldCur.Description)) {
 									row.Cells.Add(fieldCur.Description);
 								}
 								else {
-									row.Cells.Add(Lan.g("TablePatient","Referral"));
+									row.Cells.Add(Lan.G("TablePatient","Referral"));
 								}
 							}
 							try{
@@ -1253,7 +1253,7 @@ namespace OpenDental{
 							row.Cells.Add(Providers.GetLongDesc(PatCur.SecProv));
 						}
 						else{
-							row.Cells.Add(Lan.g("TablePatient","None"));
+							row.Cells.Add(Lan.G("TablePatient","None"));
 						}
 						break;
 					#endregion Sec. Provider
@@ -1349,17 +1349,17 @@ namespace OpenDental{
 		private void FillFamilyData(){
 			gridFamily.BeginUpdate();
 			gridFamily.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TablePatient","Name"),140);
+			GridColumn col=new GridColumn(Lan.G("TablePatient","Name"),140);
 			gridFamily.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePatient","Position"),65);
+			col=new GridColumn(Lan.G("TablePatient","Position"),65);
 			gridFamily.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePatient","Gender"),55);
+			col=new GridColumn(Lan.G("TablePatient","Gender"),55);
 			gridFamily.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePatient","Status"),65);
+			col=new GridColumn(Lan.G("TablePatient","Status"),65);
 			gridFamily.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePatient","Age"),45);
+			col=new GridColumn(Lan.G("TablePatient","Age"),45);
 			gridFamily.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePatient","Recall Due"),80);
+			col=new GridColumn(Lan.G("TablePatient","Recall Due"),80);
 			gridFamily.ListGridColumns.Add(col);
 			gridFamily.ListGridRows.Clear();
 			if(PatCur==null){
@@ -1378,9 +1378,9 @@ namespace OpenDental{
 				}
 				row=new GridRow();
 				row.Cells.Add(FamCur.GetNameInFamLFI(i));
-				row.Cells.Add(Lan.g("enumPatientPosition",FamCur.ListPats[i].Position.ToString()));
-				row.Cells.Add(Lan.g("enumPatientGender",FamCur.ListPats[i].Gender.ToString()));
-				row.Cells.Add(Lan.g("enumPatientStatus",FamCur.ListPats[i].PatStatus.ToString()));
+				row.Cells.Add(Lan.G("enumPatientPosition",FamCur.ListPats[i].Position.ToString()));
+				row.Cells.Add(Lan.G("enumPatientGender",FamCur.ListPats[i].Gender.ToString()));
+				row.Cells.Add(Lan.G("enumPatientStatus",FamCur.ListPats[i].PatStatus.ToString()));
 				row.Cells.Add(Patients.AgeToString(FamCur.ListPats[i].Age));
 				recallDate=DateTime.MinValue;
 				for(int j=0;j<RecallList.Count;j++){
@@ -1532,60 +1532,60 @@ namespace OpenDental{
 			if(hasProcs || hasAppt || hasClaims || hasAdj || hasPay || hasClaimProcs || hasComm || hasPayPlans
 				|| hasInsPlans || hasRef || hasMeds || isSuperFamilyHead || hasSheets || hasRepeat || hasCC || hasRegKey || hasPerio || hasClones) 
 			{
-				string message=Lan.g(this,"You cannot delete this patient without first deleting the following data:")+"\r";
+				string message=Lan.G(this,"You cannot delete this patient without first deleting the following data:")+"\r";
 				if(hasProcs) {
-					message+=Lan.g(this,"Procedures")+"\r";
+					message+=Lan.G(this,"Procedures")+"\r";
 				}
 				if(hasAppt) {
-					message+=Lan.g(this,"Appointments")+"\r";
+					message+=Lan.G(this,"Appointments")+"\r";
 				}
 				if(hasClaims) {
-					message+=Lan.g(this,"Claims")+"\r";
+					message+=Lan.G(this,"Claims")+"\r";
 				}
 				if(hasAdj) {
-					message+=Lan.g(this,"Adjustments")+"\r";
+					message+=Lan.G(this,"Adjustments")+"\r";
 				}
 				if(hasPay) {
-					message+=Lan.g(this,"Payments")+"\r";
+					message+=Lan.G(this,"Payments")+"\r";
 				}
 				if(hasClaimProcs) {
-					message+=Lan.g(this,"Procedures attached to claims")+"\r";
+					message+=Lan.G(this,"Procedures attached to claims")+"\r";
 				}
 				if(hasComm) {
-					message+=Lan.g(this,"Commlog entries")+"\r";
+					message+=Lan.G(this,"Commlog entries")+"\r";
 				}
 				if(hasPayPlans) {
-					message+=Lan.g(this,"Payment plans")+"\r";
+					message+=Lan.G(this,"Payment plans")+"\r";
 				}
 				if(hasInsPlans) {
-					message+=Lan.g(this,"Insurance plans")+"\r";
+					message+=Lan.G(this,"Insurance plans")+"\r";
 				}
 				if(hasRef) {
-					message+=Lan.g(this,"References")+"\r";
+					message+=Lan.G(this,"References")+"\r";
 				}
 				if(hasMeds) {
-					message+=Lan.g(this,"Medications")+"\r";
+					message+=Lan.G(this,"Medications")+"\r";
 				}
 				if(isSuperFamilyHead) {
-					message+=Lan.g(this,"Attached Super Family")+"\r";
+					message+=Lan.G(this,"Attached Super Family")+"\r";
 				}
 				if(hasSheets) {
-					message+=Lan.g(this,"Sheets")+"\r";
+					message+=Lan.G(this,"Sheets")+"\r";
 				}
 				if(hasRepeat) {
-					message+=Lan.g(this,"Repeating Charges")+"\r";
+					message+=Lan.G(this,"Repeating Charges")+"\r";
 				}
 				if(hasCC) {
-					message+=Lan.g(this,"Credit Cards")+"\r";
+					message+=Lan.G(this,"Credit Cards")+"\r";
 				}
 				if(hasRegKey) {
-					message+=Lan.g(this,"Registration Keys")+"\r";
+					message+=Lan.G(this,"Registration Keys")+"\r";
 				}
 				if(hasPerio) {
-					message+=Lan.g(this,"Perio Chart")+"\r";
+					message+=Lan.G(this,"Perio Chart")+"\r";
 				}
 				if(hasClones) {
-					message+=Lan.g(this,"Attached Clones")+"\r";
+					message+=Lan.G(this,"Attached Clones")+"\r";
 				}
 				MessageBox.Show(message);
 				return;
@@ -1616,7 +1616,7 @@ namespace OpenDental{
 					//does not delete notes or plans, etc.
 				}
 				else{
-					MessageBox.Show(Lan.g(this,"You cannot delete the guarantor if there are other family members. You would have to make a different family member the guarantor first."));
+					MessageBox.Show(Lan.G(this,"You cannot delete the guarantor if there are other family members. You would have to make a different family member the guarantor first."));
 				}
 			}
 			else{//not selecting guarantor
@@ -1647,10 +1647,10 @@ namespace OpenDental{
 
 		private void ToolButGuarantor_Click() {
 			if(PatCur.PatNum==PatCur.Guarantor) {
-				MessageBox.Show(Lan.g(this,"Patient is already the guarantor.  Please select a different family member."));
+				MessageBox.Show(Lan.G(this,"Patient is already the guarantor.  Please select a different family member."));
 				return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Make the selected patient the guarantor?")
+			if(MessageBox.Show(Lan.G(this,"Make the selected patient the guarantor?")
 				,"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 				return;
 			}
@@ -1681,7 +1681,7 @@ namespace OpenDental{
 						}
 						List<PatientLink> listPatLinks=PatientLinks.GetLinks(pat.PatNum,PatientLinkType.Merge);//If there is another family member, make sure it is merged.  
 						if(listPatLinks.Count==0 || !listPatLinks.Exists(x => x.PatNumFrom==pat.PatNum)) {//If it's not merged, user can't move guarantor.
-							MessageBox.Show(Lan.g(this,"You cannot move the guarantor.  If you wish to move the guarantor, you must make another family member the guarantor first."));
+							MessageBox.Show(Lan.G(this,"You cannot move the guarantor.  If you wish to move the guarantor, you must make another family member the guarantor first."));
 							return;
 						}
 					}
@@ -1695,7 +1695,7 @@ namespace OpenDental{
 				{
 					return;
 				}
-				switch(MessageBox.Show(Lan.g(this,"Create new family instead of moving to an existing family?"),"",MessageBoxButtons.YesNoCancel)){
+				switch(MessageBox.Show(Lan.G(this,"Create new family instead of moving to an existing family?"),"",MessageBoxButtons.YesNoCancel)){
 					case DialogResult.Cancel:
 						return;
 					case DialogResult.Yes://new family (split)
@@ -1853,12 +1853,12 @@ namespace OpenDental{
 						case "Notes":
 							cellStr="";
 							if(recallListPat[i].IsDisabled) {
-								cellStr+=Lan.g(this,"Disabled");
+								cellStr+=Lan.G(this,"Disabled");
 								if(recallListPat[i].DatePrevious.Year>1800) {
-									cellStr+=Lan.g(this,". Previous: ")+recallListPat[i].DatePrevious.ToShortDateString();
+									cellStr+=Lan.G(this,". Previous: ")+recallListPat[i].DatePrevious.ToShortDateString();
 									if(recallListPat[i].RecallInterval!=new Interval(0,0,0,0)) {
 										DateTime duedate=recallListPat[i].DatePrevious+recallListPat[i].RecallInterval;
-										cellStr+=Lan.g(this,". (Due): ")+duedate.ToShortDateString();
+										cellStr+=Lan.G(this,". (Due): ")+duedate.ToShortDateString();
 									}
 								}
 							}
@@ -1866,13 +1866,13 @@ namespace OpenDental{
 								if(cellStr!="") {
 									cellStr+=", ";
 								}
-								cellStr+=Lan.g(this,"Disabled until ")+recallListPat[i].DisableUntilDate.ToShortDateString();
+								cellStr+=Lan.G(this,"Disabled until ")+recallListPat[i].DisableUntilDate.ToShortDateString();
 							}
 							if(recallListPat[i].DisableUntilBalance>0) {
 								if(cellStr!="") {
 									cellStr+=", ";
 								}
-								cellStr+=Lan.g(this,"Disabled until balance ")+recallListPat[i].DisableUntilBalance.ToString("c");
+								cellStr+=Lan.G(this,"Disabled until balance ")+recallListPat[i].DisableUntilBalance.ToString("c");
 							}
 							if(recallListPat[i].RecallStatus!=0) {
 								if(cellStr!="") {
@@ -1925,9 +1925,9 @@ namespace OpenDental{
 		private void FillGridSuperFam() {
 			gridSuperFam.BeginUpdate();
 			gridSuperFam.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("gridSuperFam","Name"),280);
+			GridColumn col=new GridColumn(Lan.G("gridSuperFam","Name"),280);
 			gridSuperFam.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("gridSuperFam","Stmt"),280){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G("gridSuperFam","Stmt"),280){ IsWidthDynamic=true };
 			gridSuperFam.ListGridColumns.Add(col);
 			gridSuperFam.ListGridRows.Clear();
 			if(PatCur==null) {
@@ -2130,7 +2130,7 @@ namespace OpenDental{
 				patPlanNew.PatPlanNum=PatPlans.Insert(patPlanNew);
 				listPatPlansForPat.Add(patPlanNew.Copy());
 				if(string.IsNullOrWhiteSpace(insSubCur.SubscriberID)) {
-					MessageBox.Show(this,Lan.g(this,"Enter the SubscriberID for")+" "+pat.GetNameFL()+".");
+					MessageBox.Show(this,Lan.G(this,"Enter the SubscriberID for")+" "+pat.GetNameFL()+".");
 					FormI=new FormInsPlan(InsPlans.GetPlan(insSubCur.PlanNum,listInsPlansForFam),patPlanNew,insSubCur);
 					FormI.IsNewPlan=false;
 					FormI.IsNewPatPlan=true;
@@ -2195,11 +2195,11 @@ namespace OpenDental{
 		private void FillGridPatientClones() {
 			gridPatientClones.BeginUpdate();
 			gridPatientClones.ListGridColumns.Clear();
-			gridPatientClones.ListGridColumns.Add(new GridColumn(Lan.g(gridPatientClones.TranslationName,"Name"),150));
+			gridPatientClones.ListGridColumns.Add(new GridColumn(Lan.G(gridPatientClones.TranslationName,"Name"),150));
 			if(PrefC.HasClinicsEnabled) {
-				gridPatientClones.ListGridColumns.Add(new GridColumn(Lan.g(gridPatientClones.TranslationName,"Clinic"),80));
+				gridPatientClones.ListGridColumns.Add(new GridColumn(Lan.G(gridPatientClones.TranslationName,"Clinic"),80));
 			}
-			gridPatientClones.ListGridColumns.Add(new GridColumn(Lan.g(gridPatientClones.TranslationName,"Specialty"),150){ IsWidthDynamic=true });
+			gridPatientClones.ListGridColumns.Add(new GridColumn(Lan.G(gridPatientClones.TranslationName,"Specialty"),150){ IsWidthDynamic=true });
 			gridPatientClones.ListGridRows.Clear();
 			if(PatCur==null) {
 				gridPatientClones.EndUpdate();
@@ -2303,7 +2303,7 @@ namespace OpenDental{
 			string strDataUpdated=Patients.SynchClonesWithPatient(PatCur,FamCur,PlanList,SubList,BenefitList,PatPlanList);
 			ModuleSelected(PatCur.PatNum);
 			if(string.IsNullOrWhiteSpace(strDataUpdated)) {
-				strDataUpdated=Lan.g(this,"No changes were made, data already in synch.");
+				strDataUpdated=Lan.G(this,"No changes were made, data already in synch.");
 			}
 			new MsgBoxCopyPaste(strDataUpdated).Show();
 		}
@@ -2345,7 +2345,7 @@ namespace OpenDental{
 				MessageBox.Show("Cannot add insurance if patient has a discount plan.");
 				return;
 			}
-			DialogResult result=MessageBox.Show(Lan.g(this,"Is this patient the subscriber?"),"",MessageBoxButtons.YesNoCancel);
+			DialogResult result=MessageBox.Show(Lan.G(this,"Is this patient the subscriber?"),"",MessageBoxButtons.YesNoCancel);
 			if(result==DialogResult.Cancel){
 				return;
 			}
@@ -2497,11 +2497,11 @@ namespace OpenDental{
 		private void FillInsData(){
 			if(PatCur!=null && PatCur.DiscountPlanNum!=0) {
 				gridIns.BeginUpdate();
-				gridIns.Title=Lan.g(this,"Discount Plan");
+				gridIns.Title=Lan.G(this,"Discount Plan");
 				gridIns.ListGridColumns.Clear();
 				gridIns.ListGridRows.Clear();
 				gridIns.ListGridColumns.Add(new GridColumn("",170));
-				gridIns.ListGridColumns.Add(new GridColumn(Lan.g(this,"Discount Plan"),170));
+				gridIns.ListGridColumns.Add(new GridColumn(Lan.G(this,"Discount Plan"),170));
 				DiscountPlan discountPlan;
 				if(_loadData.DiscountPlan==null || _loadData.DiscountPlan.DiscountPlanNum!=PatCur.DiscountPlanNum) {
 					discountPlan=DiscountPlans.GetPlan(PatCur.DiscountPlanNum);
@@ -2511,23 +2511,23 @@ namespace OpenDental{
 				}
 				Def adjType=Defs.GetDef(DefCat.AdjTypes,discountPlan.DefNum);
 				GridRow discountRow=new GridRow();
-				discountRow.Cells.Add(Lan.g("TableDiscountPlans","Description"));
+				discountRow.Cells.Add(Lan.G("TableDiscountPlans","Description"));
 				discountRow.Cells.Add(discountPlan.Description);
 				discountRow.ColorBackG=Defs.GetFirstForCategory(DefCat.MiscColors).ItemColor;
 				gridIns.ListGridRows.Add(discountRow);
 				discountRow=new GridRow();
-				discountRow.Cells.Add(Lan.g("TableDiscountPlans","Adjustment Type"));
+				discountRow.Cells.Add(Lan.G("TableDiscountPlans","Adjustment Type"));
 				discountRow.Cells.Add(adjType.ItemName);
 				gridIns.ListGridRows.Add(discountRow);
 				discountRow=new GridRow();
-				discountRow.Cells.Add(Lan.g("TableDiscountPlans","Fee Schedule"));
+				discountRow.Cells.Add(Lan.G("TableDiscountPlans","Fee Schedule"));
 				discountRow.Cells.Add(FeeScheds.GetDescription(discountPlan.FeeSchedNum));
 				gridIns.ListGridRows.Add(discountRow);
 				gridIns.EndUpdate();
 				return;
 			}
 			else {
-				gridIns.Title=Lan.g(this,"Insurance Plans");
+				gridIns.Title=Lan.G(this,"Insurance Plans");
 			}
 			if(PatPlanList.Count==0){
 				gridIns.BeginUpdate();
@@ -2554,20 +2554,20 @@ namespace OpenDental{
 			int dentalOrdinal=1;
 			for(int i=0;i<PatPlanList.Count;i++) {
 				if(planArray[i].IsMedical) {
-					col=new GridColumn(Lan.g("TableCoverage","Medical"),170);
+					col=new GridColumn(Lan.G("TableCoverage","Medical"),170);
 					gridIns.ListGridColumns.Add(col);
 				}
 				else { //dental
 					if(dentalOrdinal==1) {
-						col=new GridColumn(Lan.g("TableCoverage","Primary"),170);
+						col=new GridColumn(Lan.G("TableCoverage","Primary"),170);
 						gridIns.ListGridColumns.Add(col);
 					}
 					else if(dentalOrdinal==2) {
-						col=new GridColumn(Lan.g("TableCoverage","Secondary"),170);
+						col=new GridColumn(Lan.G("TableCoverage","Secondary"),170);
 						gridIns.ListGridColumns.Add(col);
 					}
 					else {
-						col=new GridColumn(Lan.g("TableCoverage","Other"),170);
+						col=new GridColumn(Lan.G("TableCoverage","Other"),170);
 						gridIns.ListGridColumns.Add(col);
 					}
 					dentalOrdinal++;
@@ -2575,7 +2575,7 @@ namespace OpenDental{
 			}
 			OpenDental.UI.GridRow row=new GridRow();
 			//subscriber
-			row.Cells.Add(Lan.g("TableCoverage","Subscriber"));
+			row.Cells.Add(Lan.G("TableCoverage","Subscriber"));
 			for(int i=0;i<PatPlanList.Count;i++){
 				row.Cells.Add(FamCur.GetNameInFamFL(subArray[i].Subscriber));
 			}
@@ -2583,7 +2583,7 @@ namespace OpenDental{
 			gridIns.ListGridRows.Add(row);
 			//subscriber ID
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Subscriber ID"));
+			row.Cells.Add(Lan.G("TableCoverage","Subscriber ID"));
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(subArray[i].SubscriberID);
 			}
@@ -2591,15 +2591,15 @@ namespace OpenDental{
 			gridIns.ListGridRows.Add(row);
 			//relationship
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Rel'ship to Sub"));
+			row.Cells.Add(Lan.G("TableCoverage","Rel'ship to Sub"));
 			for(int i=0;i<PatPlanList.Count;i++){
-				row.Cells.Add(Lan.g("enumRelat",PatPlanList[i].Relationship.ToString()));
+				row.Cells.Add(Lan.G("enumRelat",PatPlanList[i].Relationship.ToString()));
 			}
 			row.ColorBackG=listDefs[0].ItemColor;
 			gridIns.ListGridRows.Add(row);
 			//patient ID
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Patient ID"));
+			row.Cells.Add(Lan.G("TableCoverage","Patient ID"));
 			for(int i=0;i<PatPlanList.Count;i++){
 				row.Cells.Add(PatPlanList[i].PatID);
 			}
@@ -2607,7 +2607,7 @@ namespace OpenDental{
 			gridIns.ListGridRows.Add(row);
 			//pending
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Pending"));
+			row.Cells.Add(Lan.G("TableCoverage","Pending"));
 			for(int i=0;i<PatPlanList.Count;i++){
 				if(PatPlanList[i].IsPending){
 					row.Cells.Add("X");
@@ -2621,21 +2621,21 @@ namespace OpenDental{
 			gridIns.ListGridRows.Add(row);
 			//employer
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Employer"));
+			row.Cells.Add(Lan.G("TableCoverage","Employer"));
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(Employers.GetName(planArray[i].EmployerNum));
 			}
 			gridIns.ListGridRows.Add(row);
 			//carrier
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Carrier"));
+			row.Cells.Add(Lan.G("TableCoverage","Carrier"));
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(InsPlans.GetCarrierName(planArray[i].PlanNum,planArray));
 			}
 			gridIns.ListGridRows.Add(row);
 			//group name
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Group Name"));
+			row.Cells.Add(Lan.G("TableCoverage","Group Name"));
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(planArray[i].GroupName);
 			}
@@ -2643,10 +2643,10 @@ namespace OpenDental{
 			//group number
 			row=new GridRow();
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				row.Cells.Add(Lan.g("TableCoverage","Plan Number"));
+				row.Cells.Add(Lan.G("TableCoverage","Plan Number"));
 			}
 			else {
-				row.Cells.Add(Lan.g("TableCoverage","Group Number"));
+				row.Cells.Add(Lan.G("TableCoverage","Group Number"));
 			}
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(planArray[i].GroupNum);
@@ -2654,36 +2654,36 @@ namespace OpenDental{
 			gridIns.ListGridRows.Add(row);
 			//plan type
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Type"));
+			row.Cells.Add(Lan.G("TableCoverage","Type"));
 			for(int i=0;i<planArray.Count;i++) {
 				switch(planArray[i].PlanType){
 					default://malfunction
 						row.Cells.Add("");
 						break;
 					case "":
-						row.Cells.Add(Lan.g(this,"Category Percentage"));
+						row.Cells.Add(Lan.G(this,"Category Percentage"));
 						break;
 					case "p":
 						FeeSched feeSchedCopay=FeeScheds.GetFirstOrDefault(x => x.FeeSchedNum==planArray[i].CopayFeeSched);
 						if(feeSchedCopay!=null && feeSchedCopay.FeeSchedType==FeeScheduleType.FixedBenefit) {
-							row.Cells.Add(Lan.g(this,"PPO Fixed Benefit"));
+							row.Cells.Add(Lan.G(this,"PPO Fixed Benefit"));
 						}
 						else {
-							row.Cells.Add(Lan.g(this,"PPO Percentage"));
+							row.Cells.Add(Lan.G(this,"PPO Percentage"));
 						}
 						break;
 					case "f":
-						row.Cells.Add(Lan.g(this,"Medicaid or Flat Co-pay"));
+						row.Cells.Add(Lan.G(this,"Medicaid or Flat Co-pay"));
 						break;
 					case "c":
-						row.Cells.Add(Lan.g(this,"Capitation"));
+						row.Cells.Add(Lan.G(this,"Capitation"));
 						break;
 				}
 			}
 			gridIns.ListGridRows.Add(row);
 			//fee schedule
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Fee Schedule"));
+			row.Cells.Add(Lan.G("TableCoverage","Fee Schedule"));
 			for(int i=0;i<planArray.Count;i++) {
 				row.Cells.Add(FeeScheds.GetDescription(planArray[i].FeeSched));
 			}
@@ -2691,14 +2691,14 @@ namespace OpenDental{
 			gridIns.ListGridRows.Add(row);
 			//Calendar vs service year------------------------------------------------------------------------------------
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Benefit Period"));
+			row.Cells.Add(Lan.G("TableCoverage","Benefit Period"));
 			for(int i=0;i<planArray.Count;i++) {
 				if(planArray[i].MonthRenew==0) {
-					row.Cells.Add(Lan.g("TableCoverage","Calendar Year"));
+					row.Cells.Add(Lan.G("TableCoverage","Calendar Year"));
 				}
 				else {
 					DateTime dateservice=new DateTime(2000,planArray[i].MonthRenew,1);
-					row.Cells.Add(Lan.g("TableCoverage","Service year begins:")+" "+dateservice.ToString("MMMM"));
+					row.Cells.Add(Lan.G("TableCoverage","Service year begins:")+" "+dateservice.ToString("MMMM"));
 				}
 			}
 			gridIns.ListGridRows.Add(row);
@@ -2720,10 +2720,10 @@ namespace OpenDental{
 					}
 					//create a description for the benefit
 					if(benMatrix[x,y].PatPlanNum!=0) {
-						desc+=Lan.g(this,"(pat)")+" ";
+						desc+=Lan.G(this,"(pat)")+" ";
 					}
 					if(benMatrix[x,y].CoverageLevel==BenefitCoverageLevel.Family) {
-						desc+=Lan.g(this,"Fam")+" ";
+						desc+=Lan.G(this,"Fam")+" ";
 					}
 					proccode=ProcedureCodes.GetProcCode(benMatrix[x,y].CodeNum);
 					if(benMatrix[x,y].BenefitType==InsBenefitType.CoInsurance && benMatrix[x,y].Percent != -1) {
@@ -2735,14 +2735,14 @@ namespace OpenDental{
 						}
 					}
 					else if(benMatrix[x,y].BenefitType==InsBenefitType.Deductible) {
-						desc+=Lan.g(this,"Deductible")+" "+CovCats.GetDesc(benMatrix[x,y].CovCatNum)+" ";
+						desc+=Lan.G(this,"Deductible")+" "+CovCats.GetDesc(benMatrix[x,y].CovCatNum)+" ";
 					}
 					else if(benMatrix[x,y].BenefitType==InsBenefitType.Limitations
 						&& benMatrix[x,y].QuantityQualifier==BenefitQuantity.None
 						&& (benMatrix[x,y].TimePeriod==BenefitTimePeriod.ServiceYear
 						|| benMatrix[x,y].TimePeriod==BenefitTimePeriod.CalendarYear))
 					{//annual max
-						desc+=Lan.g(this,"Annual Max")+" ";
+						desc+=Lan.G(this,"Annual Max")+" ";
 					}
 					else if(benMatrix[x,y].BenefitType==InsBenefitType.Limitations
 						&& CovCats.GetForEbenCat(EbenefitCategory.Orthodontics)!=null
@@ -2750,73 +2750,73 @@ namespace OpenDental{
 						&& benMatrix[x,y].QuantityQualifier==BenefitQuantity.None
 						&& benMatrix[x,y].TimePeriod==BenefitTimePeriod.Lifetime)
 					{
-						desc+=Lan.g(this,"Ortho Max")+" ";
+						desc+=Lan.G(this,"Ortho Max")+" ";
 					}
 					else if(Benefits.IsExamFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Exam frequency")+" ";
+						desc+=Lan.G(this,"Exam frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsBitewingFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"BW frequency")+" ";
+						desc+=Lan.G(this,"BW frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsPanoFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Pano/FMX frequency")+" ";
+						desc+=Lan.G(this,"Pano/FMX frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsCancerScreeningFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Cancer Screening frequency")+" ";
+						desc+=Lan.G(this,"Cancer Screening frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsProphyFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Prophy frequency")+" ";
+						desc+=Lan.G(this,"Prophy frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsFlourideFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Fluoride frequency")+" ";
+						desc+=Lan.G(this,"Fluoride frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsFlourideAgeLimit(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Fluoride age limit")+" ";
+						desc+=Lan.G(this,"Fluoride age limit")+" ";
 						specialAgeLimitAdded=true;
 					}
 					else if(Benefits.IsSealantFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Sealant frequency")+" ";
+						desc+=Lan.G(this,"Sealant frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsSealantAgeLimit(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Sealant age limit")+" ";
+						desc+=Lan.G(this,"Sealant age limit")+" ";
 						specialAgeLimitAdded=true;
 					}
 					else if(Benefits.IsCrownFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Crown frequency")+" ";
+						desc+=Lan.G(this,"Crown frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsSRPFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"SRP frequency")+" ";
+						desc+=Lan.G(this,"SRP frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsFullDebridementFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Full Debridement frequency")+" ";
+						desc+=Lan.G(this,"Full Debridement frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsPerioMaintFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Perio Maint frequency")+" ";
+						desc+=Lan.G(this,"Perio Maint frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsDenturesFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Dentures frequency")+" ";
+						desc+=Lan.G(this,"Dentures frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(Benefits.IsImplantFrequency(benMatrix[x,y])) {
-						desc+=Lan.g(this,"Implants frequency")+" ";
+						desc+=Lan.G(this,"Implants frequency")+" ";
 						specialFreqAdded=true;
 					}
 					else if(benMatrix[x,y].CodeNum==0 && proccode.AbbrDesc!=null){//e.g. flo
 						desc+=proccode.AbbrDesc+" ";
 					}
 					else{
-						desc+=Lan.g("enumInsBenefitType",benMatrix[x,y].BenefitType.ToString())+" ";
+						desc+=Lan.G("enumInsBenefitType",benMatrix[x,y].BenefitType.ToString())+" ";
 					}
 					row.Cells.Add(desc);
 					break;
@@ -2866,15 +2866,15 @@ namespace OpenDental{
 					}
 					if(benMatrix[x,y].QuantityQualifier==BenefitQuantity.NumberOfServices){//eg 2 times per CalendarYear
 						if(benMatrix[x,y].TimePeriod==BenefitTimePeriod.NumberInLast12Months) {
-							val+=benMatrix[x,y].Quantity.ToString()+" "+Lan.g(this,"times in the last 12 months")+" ";
+							val+=benMatrix[x,y].Quantity.ToString()+" "+Lan.G(this,"times in the last 12 months")+" ";
 						}
 						else {
-							val+=benMatrix[x,y].Quantity.ToString()+" "+Lan.g(this,"times per")+" "
-								+Lan.g("enumBenefitQuantity",benMatrix[x,y].TimePeriod.ToString())+" ";
+							val+=benMatrix[x,y].Quantity.ToString()+" "+Lan.G(this,"times per")+" "
+								+Lan.G("enumBenefitQuantity",benMatrix[x,y].TimePeriod.ToString())+" ";
 						}
 					}
 					else if(benMatrix[x,y].QuantityQualifier==BenefitQuantity.Months) {//eg Every 2 months
-						val+=Lan.g(this,"Every ")+benMatrix[x,y].Quantity.ToString()+" month";
+						val+=Lan.G(this,"Every ")+benMatrix[x,y].Quantity.ToString()+" month";
 						if(benMatrix[x,y].Quantity>1){
 							val+="s";
 						}
@@ -2887,24 +2887,24 @@ namespace OpenDental{
 					}
 					else{
 						if(benMatrix[x,y].QuantityQualifier!=BenefitQuantity.None && !specialAgeLimitAdded){//e.g. flo
-							val+=Lan.g("enumBenefitQuantity",benMatrix[x,y].QuantityQualifier.ToString())+" ";
+							val+=Lan.G("enumBenefitQuantity",benMatrix[x,y].QuantityQualifier.ToString())+" ";
 						}
 						if(benMatrix[x,y].Quantity!=0){
 							val+=benMatrix[x,y].Quantity.ToString()+" ";
 						}
 						if(specialAgeLimitAdded) {
-							val+=Lan.g(this,"years old");
+							val+=Lan.G(this,"years old");
 						}
 					}
 					if(benMatrix[x,y].BenefitType==InsBenefitType.WaitingPeriod 
 						&& benMatrix[x,y].QuantityQualifier.In(BenefitQuantity.Months,BenefitQuantity.Years))
 					{
-						val=CovCats.GetDesc(benMatrix[x,y].CovCatNum)+" "+Lan.g(this,"Wait ")+benMatrix[x,y].Quantity.ToString();
+						val=CovCats.GetDesc(benMatrix[x,y].CovCatNum)+" "+Lan.G(this,"Wait ")+benMatrix[x,y].Quantity.ToString();
 						if(benMatrix[x,y].QuantityQualifier==BenefitQuantity.Months) {//eg Every 2 months
-							val+=Lan.g(this," Month"+(benMatrix[x,y].Quantity>1 ? "s" : ""));
+							val+=Lan.G(this," Month"+(benMatrix[x,y].Quantity>1 ? "s" : ""));
 						}
 						else {//eg Every 2 years
-							val+=Lan.g(this," Year"+(benMatrix[x,y].Quantity>1 ? "s" : ""));
+							val+=Lan.G(this," Year"+(benMatrix[x,y].Quantity>1 ? "s" : ""));
 						}
 					}
 					//if(benMatrix[x,y].MonetaryAmt!=0){
@@ -2919,7 +2919,7 @@ namespace OpenDental{
 			}
 			//Plan note
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Ins Plan Note"));
+			row.Cells.Add(Lan.G("TableCoverage","Ins Plan Note"));
 			OpenDental.UI.GridCell cell;
 			for(int i=0;i<PatPlanList.Count;i++){
 				cell=new GridCell();
@@ -2931,7 +2931,7 @@ namespace OpenDental{
 			gridIns.ListGridRows.Add(row);
 			//Subscriber Note
 			row=new GridRow();
-			row.Cells.Add(Lan.g("TableCoverage","Subscriber Note"));
+			row.Cells.Add(Lan.G("TableCoverage","Subscriber Note"));
 			for(int i=0;i<PatPlanList.Count;i++) {
 				cell=new GridCell();
 				cell.Text=subArray[i].SubscNote;
@@ -2946,7 +2946,7 @@ namespace OpenDental{
 				.ToDictionary(x => x,x => new InsProcHist(Procedures.GetDictInsHistProcs(PatCur.PatNum,x,out List<ClaimProc> listClaimProcs),listClaimProcs));
 			foreach(PrefName prefName in Prefs.GetInsHistPrefNames()) {
 				row=new GridRow();
-				row.Cells.Add(Lan.g("TableCoverage",prefName.GetDescription()));
+				row.Cells.Add(Lan.G("TableCoverage",prefName.GetDescription()));
 				foreach(PatPlan patPlan in PatPlanList) {
 					DateTime procDate=DateTime.MinValue;
 					if(dictInsProcHist.TryGetValue(patPlan.InsSubNum,out InsProcHist insProcHist)
@@ -2957,7 +2957,7 @@ namespace OpenDental{
 					{
 						procDate=proc.ProcDate;
 					}
-					row.Cells.Add(new GridCell(procDate.Year>1880?procDate.ToShortDateString():Lan.g("TableCoverage","No History")));
+					row.Cells.Add(new GridCell(procDate.Year>1880?procDate.ToShortDateString():Lan.G("TableCoverage","No History")));
 				}
 				row.Tag=prefName.ToString();//Tag with prefname
 				gridIns.ListGridRows.Add(row);

@@ -639,13 +639,13 @@ namespace OpenDental{
 				FillSimple();
 			}
 			if(TransCur.DepositNum==0){
-				butAttachDep.Text=Lan.g(this,"Attach");
+				butAttachDep.Text=Lan.G(this,"Attach");
 			}
 			else{
 				Deposit dep=Deposits.GetOne(TransCur.DepositNum);
 				textSourceDeposit.Text=dep.DateDeposit.ToShortDateString()
 					+"  "+dep.Amount.ToString("c");
-				butAttachDep.Text=Lan.g(this,"Detach");
+				butAttachDep.Text=Lan.G(this,"Detach");
 			}
 			if(TransCur.PayNum==0) {
 				//no way to attach yet.  This can be added later.
@@ -655,7 +655,7 @@ namespace OpenDental{
 				Payment pay=Payments.GetPayment(TransCur.PayNum);
 				textSourcePay.Text=Patients.GetPat(pay.PatNum).GetNameFL()+" "
 					+pay.PayDate.ToShortDateString()+" "+pay.PayAmt.ToString("c");
-				butAttachPay.Text=Lan.g(this,"Detach");
+				butAttachPay.Text=Lan.G(this,"Detach");
 			}
 		}
 
@@ -669,31 +669,31 @@ namespace OpenDental{
 			double credits=0;
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableTransSplits","Account"),150);
+			GridColumn col=new GridColumn(Lan.G("TableTransSplits","Account"),150);
 			gridMain.ListGridColumns.Add(col);
-			string str=Lan.g("TableTransSplits","Debit");
+			string str=Lan.G("TableTransSplits","Debit");
 			if(AccountOfOrigin!=null){
 				if(Accounts.DebitIsPos(AccountOfOrigin.AcctType)) {
-					str+=Lan.g(this,"(+)");
+					str+=Lan.G(this,"(+)");
 				}
 				else {
-					str+=Lan.g(this,"(-)");
+					str+=Lan.G(this,"(-)");
 				}
 			}
 			col=new GridColumn(str,70,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			str=Lan.g("TableTransSplits","Credit");
+			str=Lan.G("TableTransSplits","Credit");
 			if(AccountOfOrigin!=null){
 				if(Accounts.DebitIsPos(AccountOfOrigin.AcctType)) {
-					str+=Lan.g(this,"(-)");
+					str+=Lan.G(this,"(-)");
 				}
 				else {
-					str+=Lan.g(this,"(+)");
+					str+=Lan.G(this,"(+)");
 				}
 			}
 			col=new GridColumn(str,70,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTransSplits","Memo"),200);
+			col=new GridColumn(Lan.G("TableTransSplits","Memo"),200);
 			gridMain.ListGridColumns.Add(col);			 
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -738,7 +738,7 @@ namespace OpenDental{
 			if(JournalList.Count==0){
 				AccountPicked=null;
 				textAccount.Text="";
-				butChange.Text=Lan.g(this,"Pick");
+				butChange.Text=Lan.G(this,"Pick");
 				textAmount.Text="";
 				textMemo.Text="";
 			}
@@ -769,17 +769,17 @@ namespace OpenDental{
 				if(((JournalEntry)JournalList[0]).AccountNum==0){
 					AccountPicked=null;
 					textAccount.Text="";
-					butChange.Text=Lan.g(this,"Pick");
+					butChange.Text=Lan.G(this,"Pick");
 				}
 				else if(((JournalEntry)JournalList[0]).AccountNum==AccountOfOrigin.AccountNum){
 					AccountPicked=null;
 					textAccount.Text="";
-					butChange.Text=Lan.g(this,"Pick");
+					butChange.Text=Lan.G(this,"Pick");
 				}
 				else{//the sole entry is not for the current account
 					AccountPicked=Accounts.GetAccount(((JournalEntry)JournalList[0]).AccountNum);
 					textAccount.Text=AccountPicked.Description;
-					butChange.Text=Lan.g(this,"Change");
+					butChange.Text=Lan.G(this,"Change");
 				}
 				textMemo.Text=((JournalEntry)JournalList[0]).Memo;
 				textCheckNumber.Text=((JournalEntry)JournalList[0]).CheckNumber;
@@ -815,12 +815,12 @@ namespace OpenDental{
 				if(journalOther.AccountNum==0){
 					AccountPicked=null;
 					textAccount.Text="";
-					butChange.Text=Lan.g(this,"Pick");
+					butChange.Text=Lan.G(this,"Pick");
 				}
 				else{
 					AccountPicked=Accounts.GetAccount(journalOther.AccountNum);
 					textAccount.Text=AccountPicked.Description;
-					butChange.Text=Lan.g(this,"Change");
+					butChange.Text=Lan.G(this,"Change");
 				}
 				textMemo.Text=journalCur.Memo;
 				if(journalCur.CheckNumber!=""){
@@ -841,7 +841,7 @@ namespace OpenDental{
 			}
 			AccountPicked=FormA.SelectedAccount.Clone();
 			textAccount.Text=AccountPicked.Description;
-			butChange.Text=Lan.g(this,"Change");
+			butChange.Text=Lan.G(this,"Change");
 		}
 
 		private void checkSimple_Click(object sender,EventArgs e) {
@@ -934,12 +934,12 @@ namespace OpenDental{
 				TransCur.DepositNum=FormD.SelectedDeposit.DepositNum;
 				textSourceDeposit.Text=FormD.SelectedDeposit.DateDeposit.ToShortDateString()
 					+"  "+FormD.SelectedDeposit.Amount.ToString("c");
-				butAttachDep.Text=Lan.g(this,"Detach");
+				butAttachDep.Text=Lan.G(this,"Detach");
 			}
 			else{//trying to detach
 				TransCur.DepositNum=0;
 				textSourceDeposit.Text="";
-				butAttachDep.Text=Lan.g(this,"Attach");
+				butAttachDep.Text=Lan.G(this,"Attach");
 			}
 		}
 
@@ -1063,7 +1063,7 @@ namespace OpenDental{
 			if(!IsNew){
 				//we need this data before it's gone
 				JournalList=JournalEntries.GetForTrans(TransCur.TransactionNum);//because they were cleared when laying out
-				securityentry=Lan.g(this,"Deleted: ")
+				securityentry=Lan.G(this,"Deleted: ")
 					+((JournalEntry)JournalList[0]).DateDisplayed.ToShortDateString()+" ";
 				double tot=0;
 				for(int i=0;i<JournalList.Count;i++) {

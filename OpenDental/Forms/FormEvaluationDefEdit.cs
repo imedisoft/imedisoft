@@ -49,14 +49,14 @@ namespace OpenDental {
 		private void FillGrid() {//Also fills total points if necessary.
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormEvaluationDefEdit","Description"),140);
+			GridColumn col=new GridColumn(Lan.G("FormEvaluationDefEdit","Description"),140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormEvaluationDefEdit","Grading Scale"),100);
+			col=new GridColumn(Lan.G("FormEvaluationDefEdit","Grading Scale"),100);
 			gridMain.ListGridColumns.Add(col);
 			if(_evalDefCur.GradingScaleNum!=0
 				&& _gradingScales[_evalDefCur.GradingScaleNum].ScaleType==EnumScaleType.Weighted) 
 			{
-				col=new GridColumn(Lan.g("FormEvaluationDefEdit","Max Points"),80);
+				col=new GridColumn(Lan.G("FormEvaluationDefEdit","Max Points"),80);
 				gridMain.ListGridColumns.Add(col);
 			}
 			gridMain.ListGridRows.Clear();

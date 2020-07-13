@@ -79,7 +79,7 @@ namespace OpenDental {
 				SaveSignature();
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Error saving signature.")+"\r\n"+ex.Message);
+				MessageBox.Show(Lan.G(this,"Error saving signature.")+"\r\n"+ex.Message);
 				//and continue with the rest of this method
 			}
 			Procedures.Update(ProcCur,procOld);

@@ -145,7 +145,7 @@ namespace OpenDental{
 			else {
 				_listClinics=Clinics.GetForUserod(Security.CurUser);
 				if(!Security.CurUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.g(this,"Unassigned"));
+					listClin.Items.Add(Lan.G(this,"Unassigned"));
 					listClin.SetSelected(0,true);
 				}
 				for(int i = 0;i<_listClinics.Count;i++) {
@@ -205,7 +205,7 @@ namespace OpenDental{
 			string subtitleClinics="";
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClin.Checked && !Security.CurUser.ClinicIsRestricted) {
-					subtitleClinics=Lan.g(this,"All Clinics");
+					subtitleClinics=Lan.G(this,"All Clinics");
 				}
 				else {
 					for(int i=0;i<listClin.SelectedIndices.Count;i++) {
@@ -217,7 +217,7 @@ namespace OpenDental{
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								subtitleClinics+=Lan.g(this,"Unassigned");
+								subtitleClinics+=Lan.G(this,"Unassigned");
 							}
 							else {
 								subtitleClinics+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -230,8 +230,8 @@ namespace OpenDental{
 			Font fontBold=new Font("Tahoma",9,FontStyle.Bold);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.g(this,"Patient Portion Uncollected");
-			report.AddTitle("Title",Lan.g(this,"Patient Portion Uncollected"),fontTitle);
+			report.ReportName=Lan.G(this,"Patient Portion Uncollected");
+			report.AddTitle("Title",Lan.G(this,"Patient Portion Uncollected"),fontTitle);
 			report.AddSubTitle("Practice Title",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Dates of Report",date1.SelectionStart.ToString("d")+" - "+date2.SelectionStart.ToString("d"),fontSubTitle);
 			if(PrefC.HasClinicsEnabled) {

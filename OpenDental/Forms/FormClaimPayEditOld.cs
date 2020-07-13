@@ -332,7 +332,7 @@ namespace OpenDental{
 				labelClinic.Visible=false;
 			}
 			comboClinic.Items.Clear();
-			comboClinic.Items.Add(Lan.g(this,"None"));
+			comboClinic.Items.Add(Lan.G(this,"None"));
 			comboClinic.SelectedIndex=0;
 			_listClinics=Clinics.GetDeepCopy(true);
 			for(int i=0;i<_listClinics.Count;i++){
@@ -361,17 +361,17 @@ namespace OpenDental{
 			splits=Claims.RefreshByCheckOld(ClaimPaymentCur.ClaimPaymentNum,checkShowUn.Checked);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableClaimPaySplits","Date"),70);
+			GridColumn col=new GridColumn(Lan.G("TableClaimPaySplits","Date"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPaySplits","Prov"),40);
+			col=new GridColumn(Lan.G("TableClaimPaySplits","Prov"),40);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPaySplits","Patient"),140);
+			col=new GridColumn(Lan.G("TableClaimPaySplits","Patient"),140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPaySplits","Carrier"),140);
+			col=new GridColumn(Lan.G("TableClaimPaySplits","Carrier"),140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPaySplits","Fee"),65,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableClaimPaySplits","Fee"),65,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPaySplits","Payment"),65,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableClaimPaySplits","Payment"),65,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);			 
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -432,8 +432,8 @@ namespace OpenDental{
 					SecurityLogs.MakeLogEntry(Permissions.InsPayEdit,splits[i].PatNum,
 						"Delete for patient: "
 						+Patients.GetLim(splits[i].PatNum).GetNameLF()+", "
-						+Lan.g(this,"Total Amt: ")+ClaimPaymentCur.CheckAmt.ToString("c")+", "
-						+Lan.g(this,"Claim Split: ")+splits[i].InsPayAmt.ToString("c"));
+						+Lan.G(this,"Total Amt: ")+ClaimPaymentCur.CheckAmt.ToString("c")+", "
+						+Lan.G(this,"Claim Split: ")+splits[i].InsPayAmt.ToString("c"));
 				}
 			}
 			DialogResult=DialogResult.OK;
@@ -460,7 +460,7 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0){
-				MessageBox.Show(Lan.g(this,"At least one item must be selected, or use the delete button."));	
+				MessageBox.Show(Lan.G(this,"At least one item must be selected, or use the delete button."));	
 				return;
 			}
 			if(IsNew){
@@ -515,14 +515,14 @@ namespace OpenDental{
 					if(IsNew){
 						SecurityLogs.MakeLogEntry(Permissions.InsPayCreate,splits[i].PatNum,
 							Patients.GetLim(splits[i].PatNum).GetNameLF()+", "
-							+Lan.g(this,"Total Amt: ")+ClaimPaymentCur.CheckAmt.ToString("c")+", "
-							+Lan.g(this,"Claim Split: ")+splits[i].InsPayAmt.ToString("c"));
+							+Lan.G(this,"Total Amt: ")+ClaimPaymentCur.CheckAmt.ToString("c")+", "
+							+Lan.G(this,"Claim Split: ")+splits[i].InsPayAmt.ToString("c"));
 					}
 					else{
 						SecurityLogs.MakeLogEntry(Permissions.InsPayEdit,splits[i].PatNum,
 							Patients.GetLim(splits[i].PatNum).GetNameLF()+", "
-							+Lan.g(this,"Total Amt: ")+ClaimPaymentCur.CheckAmt.ToString("c")+", "
-							+Lan.g(this,"Claim Split: ")+splits[i].InsPayAmt.ToString("c"));
+							+Lan.G(this,"Total Amt: ")+ClaimPaymentCur.CheckAmt.ToString("c")+", "
+							+Lan.G(this,"Claim Split: ")+splits[i].InsPayAmt.ToString("c"));
 					}
 				}
 				else{//row not selected

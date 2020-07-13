@@ -43,7 +43,7 @@ namespace OpenDental.User_Controls {
 				butSetAll.Visible=true;
 				comboUserGroup.Visible=true;
 				labelUserGroup.Visible=true;
-				label1.Text=Lan.g(this,"The current selection's internal name is:");
+				label1.Text=Lan.G(this,"The current selection's internal name is:");
 			}
 			else {
 				butUp.Visible=true;
@@ -51,7 +51,7 @@ namespace OpenDental.User_Controls {
 				butSetAll.Visible=false;
 				comboUserGroup.Visible=false;
 				labelUserGroup.Visible=false;
-				label1.Text=Lan.g(this,"Move the selected item within its list.")+"\r\n"+Lan.g(this,"The current selection's internal name is:");
+				label1.Text=Lan.G(this,"Move the selected item within its list.")+"\r\n"+Lan.G(this,"The current selection's internal name is:");
 			}
 			if(refreshData) {
 				ListDisplayReportAll=DisplayReports.GetAll(true);

@@ -58,7 +58,7 @@ namespace OpenDental.UI {
 						continue;
 					}
 					//Make a security log if we still have a valid user logged in. 
-					string logText=Lan.g(this,"Deleted from pinboard while closing Open Dental")+": ";
+					string logText=Lan.G(this,"Deleted from pinboard while closing Open Dental")+": ";
 					if(appt.AptDateTime.Year>1880) {
 						logText+=appt.AptDateTime.ToString()+", ";
 					}
@@ -186,7 +186,7 @@ namespace OpenDental.UI {
 			}
 			if(e.Button==MouseButtons.Right) {
 				ContextMenu contextMenu=new ContextMenu();
-				MenuItem menuItemProv=new MenuItem(Lan.g(this,"Change Provider"));
+				MenuItem menuItemProv=new MenuItem(Lan.G(this,"Change Provider"));
 				menuItemProv.Click+=new EventHandler(menuItemProv_Click);
 				contextMenu.MenuItems.Add(menuItemProv);
 				contextMenu.Show(this,e.Location);

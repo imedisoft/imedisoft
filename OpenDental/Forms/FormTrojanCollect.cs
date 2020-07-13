@@ -540,8 +540,8 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			if(!File.Exists(ODFileUtils.CombinePaths(folderPath,"TROBEN.HB"))){
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.g(this,"The Trojan Communicator is not installed or is not configured for the folder")+": "
-					+folderPath+".  "+Lan.g(this,"Please contact Trojan Software Support at 800-451-9723 x1 or x2"));
+				MessageBox.Show(Lan.G(this,"The Trojan Communicator is not installed or is not configured for the folder")+": "
+					+folderPath+".  "+Lan.G(this,"Please contact Trojan Software Support at 800-451-9723 x1 or x2"));
 				return;
 			}
 			try {

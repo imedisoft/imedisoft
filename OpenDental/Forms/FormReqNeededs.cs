@@ -323,7 +323,7 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TableRequirementsNeeded","Description"),200);
+			col=new GridColumn(Lan.G("TableRequirementsNeeded","Description"),200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

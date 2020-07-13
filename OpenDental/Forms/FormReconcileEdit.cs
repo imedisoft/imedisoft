@@ -354,13 +354,13 @@ namespace OpenDental{
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableJournal","Chk #"),60,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn(Lan.G("TableJournal","Chk #"),60,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableJournal","Date"),80);
+			col=new GridColumn(Lan.G("TableJournal","Date"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableJournal","Deposits"),70,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableJournal","Deposits"),70,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableJournal","Withdrawals"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableJournal","Withdrawals"),75,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn("X",30,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
@@ -583,9 +583,9 @@ namespace OpenDental{
 			MigraDoc.DocumentObjectModel.Font nameFontx=MigraDocHelper.CreateFont(9,true);
 			MigraDoc.DocumentObjectModel.Font totalFontx=MigraDocHelper.CreateFont(9,true);
 			Paragraph pageNumParag=new Paragraph();
-			pageNumParag.AddText(Lan.g(this,"Page")+" ");
+			pageNumParag.AddText(Lan.G(this,"Page")+" ");
 			pageNumParag.AddPageField();
-			pageNumParag.AddText(" "+Lan.g(this,"of")+" ");
+			pageNumParag.AddText(" "+Lan.G(this,"of")+" ");
 			pageNumParag.AddNumPagesField();
 			section.Footers.Primary.Add(pageNumParag);
 			Paragraph par=section.AddParagraph();
@@ -596,7 +596,7 @@ namespace OpenDental{
 			//Render the reconcile grid.
 			par=section.AddParagraph();
 			par.Format.Alignment=ParagraphAlignment.Center;
-			par.AddFormattedText(Lan.g(this,"RECONCILE"),totalFontx);
+			par.AddFormattedText(Lan.G(this,"RECONCILE"),totalFontx);
 			par.AddLineBreak();
 			text=Accounts.GetAccount(ReconcileCur.AccountNum).Description.ToUpper();
 			par.AddFormattedText(text,totalFontx);
@@ -612,7 +612,7 @@ namespace OpenDental{
 			par.AddLineBreak();
 			par.AddText(MiscData.GetNowDateTime().ToShortDateString());
 			par.AddLineBreak();
-			par.AddText(Lan.g(this,"Reconcile Date")+": "+PIn.Date(textDate.Text).ToShortDateString());
+			par.AddText(Lan.G(this,"Reconcile Date")+": "+PIn.Date(textDate.Text).ToShortDateString());
 			par.AddLineBreak();
 			par.AddText(labelStart.Text+": "+PIn.Double(textStart.Text).ToString("n"));
 			par.AddLineBreak();

@@ -36,8 +36,8 @@ namespace CentralManager {
 			Cursor=Cursors.WaitCursor;
 			gridDatabasesTo.BeginUpdate();
 			gridDatabasesTo.ListGridColumns.Clear();
-			gridDatabasesTo.ListGridColumns.Add(new GridColumn(Lan.g("TableDatabases","Databases"),150));
-			gridDatabasesTo.ListGridColumns.Add(new GridColumn(Lan.g("TableDatabases","Note"),200));
+			gridDatabasesTo.ListGridColumns.Add(new GridColumn(Lan.G("TableDatabases","Databases"),150));
+			gridDatabasesTo.ListGridColumns.Add(new GridColumn(Lan.G("TableDatabases","Note"),200));
 			gridDatabasesTo.ListGridColumns.Add(new GridColumn("Status",30,HorizontalAlignment.Center));
 			gridDatabasesTo.ListGridRows.Clear();
 			GridRow row;
@@ -59,9 +59,9 @@ namespace CentralManager {
 			Cursor=Cursors.WaitCursor;
 			gridPatients.BeginUpdate();
 			gridPatients.ListGridColumns.Clear();
-			gridPatients.ListGridColumns.Add(new GridColumn(Lan.g("TablePatients","PatNum"),140));
-			gridPatients.ListGridColumns.Add(new GridColumn(Lan.g("TablePatients","LName"),140));
-			gridPatients.ListGridColumns.Add(new GridColumn(Lan.g("TablePatients","FName"),140,true));
+			gridPatients.ListGridColumns.Add(new GridColumn(Lan.G("TablePatients","PatNum"),140));
+			gridPatients.ListGridColumns.Add(new GridColumn(Lan.G("TablePatients","LName"),140));
+			gridPatients.ListGridColumns.Add(new GridColumn(Lan.G("TablePatients","FName"),140,true));
 			gridPatients.ListGridRows.Clear();
 			GridRow row;
 			foreach(DataRow pat in _listPatientDataRows) {
@@ -135,7 +135,7 @@ namespace CentralManager {
 				return;
 			}
 			ODProgress.ShowAction(() => RunTransfer(), startingMessage: Lans.g(this,"Transferring patient(s)..."),
-				actionException: err => this.Invoke(() => FriendlyException.Show(Lan.g(this,"Error transferring patient(s)."),err)));
+				actionException: err => this.Invoke(() => FriendlyException.Show(Lan.G(this,"Error transferring patient(s)."),err)));
 		}
 
 		private void RunTransfer() {

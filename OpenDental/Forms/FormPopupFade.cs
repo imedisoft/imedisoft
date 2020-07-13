@@ -88,7 +88,7 @@ namespace OpenDental {
 		///<param name="doTranslate">Set to false if you don't want to translate the message.</param>
 		public static void ShowMessage(object sender,string message,bool doDisplayClose=true,bool doTranslate=true) {
 			if(doTranslate) {
-				message=Lan.g(sender.GetType().Name,message);
+				message=Lan.G(sender.GetType().Name,message);
 			}
 			FormPopupFade FormPF=new FormPopupFade(message,doDisplayClose);
 			FormPF.ShowInTaskbar=false;

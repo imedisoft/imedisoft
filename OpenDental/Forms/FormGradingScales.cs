@@ -32,7 +32,7 @@ namespace OpenDental {
 			_listGradingScales=GradingScales.RefreshList();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormGradingScales","Description"),160);
+			GridColumn col=new GridColumn(Lan.G("FormGradingScales","Description"),160);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

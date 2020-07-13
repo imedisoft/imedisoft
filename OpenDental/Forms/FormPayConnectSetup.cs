@@ -412,15 +412,15 @@ namespace OpenDental{
 			}
 			checkEnabled.Checked=_progCur.Enabled;
 			if(!PrefC.HasClinicsEnabled) {//clinics are not enabled, use ClinicNum 0 to indicate 'Headquarters' or practice level program properties
-				checkEnabled.Text=Lan.g(this,"Enabled");
-				groupPaySettings.Text=Lan.g(this,"Payment Settings");
+				checkEnabled.Text=Lan.G(this,"Enabled");
+				groupPaySettings.Text=Lan.G(this,"Payment Settings");
 				comboClinic.Visible=false;
 				labelClinic.Visible=false;
 				labelClinicEnable.Visible=false;
 				_listUserClinicNums=new List<long>() { 0 };//if clinics are disabled, programproperty.ClinicNum will be set to 0
 			}
 			else {//Using clinics
-				groupPaySettings.Text=Lan.g(this,"Clinic Payment Settings");
+				groupPaySettings.Text=Lan.G(this,"Clinic Payment Settings");
 				_listUserClinicNums=new List<long>();
 				comboClinic.Items.Clear();
 				//if PayConnect is enabled and the user is restricted to a clinic, don't allow the user to disable for all clinics
@@ -430,7 +430,7 @@ namespace OpenDental{
 					}
 				}
 				else {
-					comboClinic.Items.Add(Lan.g(this,"Headquarters"));
+					comboClinic.Items.Add(Lan.G(this,"Headquarters"));
 					//this way both lists have the same number of items in it and if 'Headquarters' is selected the programproperty.ClinicNum will be set to 0
 					_listUserClinicNums.Add(0);
 					comboClinic.SelectedIndex=0;
@@ -478,8 +478,8 @@ namespace OpenDental{
 				}
 			}
 			comboDefaultProcessing.Items.Clear();
-			comboDefaultProcessing.Items.Add(Lan.g(this,PayConnectProcessingMethod.WebService.GetDescription()));
-			comboDefaultProcessing.Items.Add(Lan.g(this,PayConnectProcessingMethod.Terminal.GetDescription()));
+			comboDefaultProcessing.Items.Add(Lan.G(this,PayConnectProcessingMethod.WebService.GetDescription()));
+			comboDefaultProcessing.Items.Add(Lan.G(this,PayConnectProcessingMethod.Terminal.GetDescription()));
 			if(processingMethod=="0" || processingMethod=="1") {
 				comboDefaultProcessing.SelectedIndex=PIn.Int(processingMethod);
 			}
@@ -638,7 +638,7 @@ namespace OpenDental{
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.g(this,"Unable to download driver. Error message")+": "+ex.Message);
+				MessageBox.Show(Lan.G(this,"Unable to download driver. Error message")+": "+ex.Message);
 				return;
 			}
 			MemoryStream ms=new MemoryStream();

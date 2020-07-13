@@ -26,25 +26,25 @@ namespace OpenDental {
 			this.Cursor=Cursors.WaitCursor;
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(gridMain.TranslationName,"Date"),65,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn(Lan.G(gridMain.TranslationName,"Date"),65,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"AptStatus"),90);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"AptStatus"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"UnschedStatus"),110);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"UnschedStatus"),110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Prov"),80);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Prov"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Procedures"),150);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Procedures"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(gridMain.TranslationName,"Notes"),200);
+			col=new GridColumn(Lan.G(gridMain.TranslationName,"Notes"),200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			foreach(Appointment apt in _listUnschedApptsForPat) {
 				row=new GridRow();
 				row.Cells.Add(apt.AptDateTime.ToShortDateString());
-				row.Cells.Add(Lan.g(this,apt.AptStatus.ToString()));
-				row.Cells.Add(Lan.g(this,apt.UnschedStatus.ToString()));
+				row.Cells.Add(Lan.G(this,apt.AptStatus.ToString()));
+				row.Cells.Add(Lan.G(this,apt.UnschedStatus.ToString()));
 				row.Cells.Add(Providers.GetAbbr(apt.ProvNum));
 				row.Cells.Add(apt.ProcDescript);
 				row.Cells.Add(apt.Note);
@@ -60,7 +60,7 @@ namespace OpenDental {
 		private void SetSelectedAppt() {
 			SelectedAppt=gridMain.SelectedTag<Appointment>();
 			if(SelectedAppt==null) {//No row was selected.
-				MessageBox.Show(Lan.g(this,"Please select an unscheduled appointment to use."));
+				MessageBox.Show(Lan.G(this,"Please select an unscheduled appointment to use."));
 				return;
 			}
 			DialogResult=DialogResult.OK;

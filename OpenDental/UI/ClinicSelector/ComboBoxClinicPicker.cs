@@ -717,7 +717,7 @@ namespace OpenDental.UI {
 		private string GetDisplayText(int widthMax){
 			if(_selectedClinicNoPermission!=null){
 				if(_selectedClinicNoPermission.IsHidden) {
-					return _selectedClinicNoPermission.Abbr+Lan.g(this," (hidden)");
+					return _selectedClinicNoPermission.Abbr+Lan.G(this," (hidden)");
 				}
 				return _selectedClinicNoPermission.Abbr;
 			}

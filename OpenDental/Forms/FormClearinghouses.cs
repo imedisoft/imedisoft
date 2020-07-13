@@ -366,15 +366,15 @@ namespace OpenDental{
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Description"),150);
+			GridColumn col=new GridColumn(Lan.G(this,"Description"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Export Path"),230);
+			col=new GridColumn(Lan.G(this,"Export Path"),230);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Format"),110);
+			col=new GridColumn(Lan.G(this,"Format"),110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Is Default"),60);
+			col=new GridColumn(Lan.G(this,"Is Default"),60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Payors"),80){ IsWidthDynamic=true };//310
+			col=new GridColumn(Lan.G(this,"Payors"),80){ IsWidthDynamic=true };//310
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -114,7 +114,7 @@ namespace OpenDental {
 					gridInsPlanFiles.BeginUpdate();
 				}
 				string filePath=(string)row.Tag;
-				ShowStatus(Lan.g(this,"Parsing file")+" "+Path.GetFileName(filePath));
+				ShowStatus(Lan.G(this,"Parsing file")+" "+Path.GetFileName(filePath));
 				string messageText=File.ReadAllText(filePath);
 				X12object xobj=X12object.ToX12object(messageText);
 				if(xobj==null) {

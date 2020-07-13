@@ -20,7 +20,7 @@ namespace OpenDental {
 		private void FormFieldDefLink_Load(object sender,EventArgs e) {
 			string[] arrayFieldLocations=Enum.GetNames(typeof(FieldLocations));
 			for(int i=0;i<arrayFieldLocations.Length;i++) {
-				comboFieldLocation.Items.Add(Lan.g("enumFieldLocations",arrayFieldLocations[i]));
+				comboFieldLocation.Items.Add(Lan.G("enumFieldLocations",arrayFieldLocations[i]));
 				if(i==(int)_fieldLocation) {
 					comboFieldLocation.SelectedIndex=i;
 				}

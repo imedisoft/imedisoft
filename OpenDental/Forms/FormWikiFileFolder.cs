@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		private void FormWikiFileFolder_Load(object sender,EventArgs e) {
 			if(IsFolderMode) {
-				Text=Lan.g(this,"Insert Folder Link");
+				Text=Lan.G(this,"Insert Folder Link");
 			}
 		}
 

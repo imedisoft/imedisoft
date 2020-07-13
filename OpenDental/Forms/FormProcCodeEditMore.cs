@@ -38,20 +38,20 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			if(!PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g("TableProcCodeEditMore","Schedule"),200);
+				col=new GridColumn(Lan.G("TableProcCodeEditMore","Schedule"),200);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableProcCodeEditMore","Provider"),135);
+				col=new GridColumn(Lan.G("TableProcCodeEditMore","Provider"),135);
 				gridMain.ListGridColumns.Add(col);
 			}
 			else {//Using clinics.
-				col=new GridColumn(Lan.g("TableProcCodeEditMore","Schedule"),130);
+				col=new GridColumn(Lan.G("TableProcCodeEditMore","Schedule"),130);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableProcCodeEditMore","Clinic"),130);
+				col=new GridColumn(Lan.G("TableProcCodeEditMore","Clinic"),130);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableProcCodeEditMore","Provider"),75);
+				col=new GridColumn(Lan.G("TableProcCodeEditMore","Provider"),75);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("TableProcCodeEditMore","Amount"),100,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableProcCodeEditMore","Amount"),100,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

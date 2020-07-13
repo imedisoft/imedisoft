@@ -81,7 +81,7 @@ namespace OpenDental{
 				else{
 					myMessage=ex.Message;
 				}
-				_errorProv.SetError(this,Lan.g("ValidTime",myMessage));
+				_errorProv.SetError(this,Lan.G("ValidTime",myMessage));
 			}
 		}
 

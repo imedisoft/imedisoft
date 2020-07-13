@@ -53,7 +53,7 @@ namespace OpenDental {
 			TaskNotes.Delete(TaskNoteCur.TaskNoteNum);
 			DialogResult=DialogResult.OK;
 			OnEditComplete();//Signals sent from FormTaskEdit.
-			Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.g(this,"Deleted note from task"),Tasks.GetOne(TaskNoteCur.TaskNum));
+			Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.G(this,"Deleted note from task"),Tasks.GetOne(TaskNoteCur.TaskNum));
 			Close();//Needed because the window is called as a non-modal window.
 		}
 
@@ -87,14 +87,14 @@ namespace OpenDental {
 			if(TaskNoteCur.IsNew) {
 				TaskNoteCur.Note=textNote.Text;
 				TaskNotes.Insert(TaskNoteCur);
-				Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.g(this,"Added task note"),Tasks.GetOne(TaskNoteCur.TaskNum));
+				Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.G(this,"Added task note"),Tasks.GetOne(TaskNoteCur.TaskNum));
 				DialogResult=DialogResult.OK;
 				OnEditComplete();
 			}
 			else if(TaskNoteCur.Note!=textNote.Text || dateTimeNoteOld!=TaskNoteCur.DateTimeNote) {
 				TaskNoteCur.Note=textNote.Text;
 				TaskNotes.Update(TaskNoteCur);
-				Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.g(this,"Task note changed"),Tasks.GetOne(TaskNoteCur.TaskNum));
+				Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.G(this,"Task note changed"),Tasks.GetOne(TaskNoteCur.TaskNum));
 				DialogResult=DialogResult.OK;
 				OnEditComplete();
 			}

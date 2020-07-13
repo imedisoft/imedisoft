@@ -23,7 +23,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			SetSimple();
 			SetControls(groupPrinter);
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
-				labelTPandPerio.Text=Lan.g("FormSetupWizard","Treatment Plans");
+				labelTPandPerio.Text=Lan.G("FormSetupWizard","Treatment Plans");
 			}
 			checkScanDocSelectSource.Checked=ComputerPrefs.LocalComputer.ScanDocSelectSource;
 			if(ComputerPrefs.LocalComputer.ScanDocShowOptions) {
@@ -67,10 +67,10 @@ namespace OpenDental.User_Controls.SetupWizard {
 			}
 			combo.Items.Clear();
 			if(combo==comboDefault) {
-				combo.Items.Add(Lan.g("FormSetupWizard","Windows default"));
+				combo.Items.Add(Lan.G("FormSetupWizard","Windows default"));
 			}
 			else {
-				combo.Items.Add(Lan.g("FormSetupWizard","default"));
+				combo.Items.Add(Lan.G("FormSetupWizard","default"));
 			}
 			for(int i = 0;i<PrinterSettings.InstalledPrinters.Count;i++) {
 				combo.Items.Add(PrinterSettings.InstalledPrinters[i]);

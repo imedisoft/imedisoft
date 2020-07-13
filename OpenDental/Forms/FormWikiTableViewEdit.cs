@@ -51,7 +51,7 @@ namespace OpenDental {
 				listShowing.Items.Add(WikiViewCur.Columns[i]);
 			}
 			comboOrderBy.Items.Clear();
-			comboOrderBy.Items.Add(Lan.g(this,"none"));
+			comboOrderBy.Items.Add(Lan.G(this,"none"));
 			for(int i=0;i<WikiViewCur.Columns.Count;i++) {
 				comboOrderBy.Items.Add(WikiViewCur.Columns[i]);
 				if(WikiViewCur.OrderBy==WikiViewCur.Columns[i]) {

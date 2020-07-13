@@ -187,13 +187,13 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(listCounties.SelectedIndex==-1){
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
 			County CountyCur=CountiesList[listCounties.SelectedIndex];
 			string usedBy=Counties.UsedBy(CountyCur.CountyName);
 			if(usedBy != ""){
-				MessageBox.Show(Lan.g(this,"Cannot delete County because it is already in use by the following patients: \r")+usedBy);
+				MessageBox.Show(Lan.G(this,"Cannot delete County because it is already in use by the following patients: \r")+usedBy);
 				return;
 			}
 			Counties.Delete(CountyCur);

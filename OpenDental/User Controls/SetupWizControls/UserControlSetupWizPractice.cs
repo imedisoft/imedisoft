@@ -54,16 +54,16 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void CheckIsDone() {
 			IsDone=true;
-			StrIncomplete = Lan.g("FormSetupWizard","The following fields need to be corrected: ");
+			StrIncomplete = Lan.G("FormSetupWizard","The following fields need to be corrected: ");
 			string phone = textPhone.Text;//Auto formatting turned off on purpose.
 			if(!TelephoneNumbers.IsNumberValidTenDigit(ref phone)) {
 				IsDone=false;
-				StrIncomplete+="\r\n "+Lan.g("FormSetupWizard","-Practice Phone is invalid.  Must contain exactly ten digits.");
+				StrIncomplete+="\r\n "+Lan.G("FormSetupWizard","-Practice Phone is invalid.  Must contain exactly ten digits.");
 			}
 			string fax = textFax.Text;//Auto formatting turned off on purpose.
 			if(!TelephoneNumbers.IsNumberValidTenDigit(ref fax)) {
 				IsDone=false;
-				StrIncomplete+="\r\n "+Lan.g("FormSetupWizard","-Practice Fax is invalid.  Must contain exactly ten digits.");
+				StrIncomplete+="\r\n "+Lan.G("FormSetupWizard","-Practice Fax is invalid.  Must contain exactly ten digits.");
 			}
 			if(listProvider.SelectedIndex==-1//practice really needs a default prov
 				&& _listProviders.Count > 0) 
@@ -75,7 +75,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			{
 				//listProvider.BackColor = OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 				IsDone=false;
-				StrIncomplete+="\r\n "+Lan.g("FormSetupWizard","-Practice Provider must have a default fee schedule.");
+				StrIncomplete+="\r\n "+Lan.G("FormSetupWizard","-Practice Provider must have a default fee schedule.");
 			}
 		}
 

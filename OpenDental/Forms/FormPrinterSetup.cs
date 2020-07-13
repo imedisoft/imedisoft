@@ -565,7 +565,7 @@ namespace OpenDental{
 				installedPrinters=PrinterSettings.InstalledPrinters;
 			}
 			catch(Exception ex) {//do not let the window open if printers cannot be accessed
-				FriendlyException.Show(Lan.g(this,"Unable to access installed printers."),ex);
+				FriendlyException.Show(Lan.G(this,"Unable to access installed printers."),ex);
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -573,7 +573,7 @@ namespace OpenDental{
 			SetSimple();
 			SetControls(this,installedPrinters);
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
-				labelTPandPerio.Text=Lan.g(this,"Treatment Plans");
+				labelTPandPerio.Text=Lan.G(this,"Treatment Plans");
 			}
 		}
 
@@ -602,10 +602,10 @@ namespace OpenDental{
 			}
 			combo.Items.Clear();
 			if(combo==comboDefault){
-				combo.Items.Add(Lan.g(this,"Windows default"));
+				combo.Items.Add(Lan.G(this,"Windows default"));
 			}
 			else{
-				combo.Items.Add(Lan.g(this,"default"));
+				combo.Items.Add(Lan.G(this,"default"));
 			}
 			for(int i=0;i<installedPrinters.Count;i++){
 				combo.Items.Add(installedPrinters[i]);

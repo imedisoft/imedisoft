@@ -327,7 +327,7 @@ namespace OpenDental{
 		private void FormFeeSchedules_Load(object sender, System.EventArgs e) {
 			_listFeeScheds=FeeScheds.GetDeepCopy(_isSelectionMode);
 			CheckItemOrders();
-			listType.Items.Add(Lan.g(this,"All"));
+			listType.Items.Add(Lan.G(this,"All"));
 			Array arrayValues=Enum.GetValues(typeof(FeeScheduleType));
 			for(int i=0;i<arrayValues.Length;i++) {
 				FeeScheduleType feeSchedType=((FeeScheduleType)arrayValues.GetValue(i));
@@ -395,11 +395,11 @@ namespace OpenDental{
 			_listFeeSchedsForType.Sort(CompareItemOrder);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableFeeScheds","Description"),145);
+			GridColumn col=new GridColumn(Lan.G("TableFeeScheds","Description"),145);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableFeeScheds","Type"),70);
+			col=new GridColumn(Lan.G("TableFeeScheds","Type"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableFeeScheds","Hidden"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableFeeScheds","Hidden"),60,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -595,7 +595,7 @@ namespace OpenDental{
 				return;
 			}
 			long changed=FeeScheds.CleanupAllowedScheds();
-			MessageBox.Show(changed.ToString()+" "+Lan.g(this,"unused fee schedules deleted."));
+			MessageBox.Show(changed.ToString()+" "+Lan.G(this,"unused fee schedules deleted."));
 			if(changed==0) {
 				return;
 			}

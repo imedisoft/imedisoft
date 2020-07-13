@@ -32,7 +32,7 @@ namespace OpenDental {
 			else {
 				_listEmployees=Employees.GetEmpsForClinic(Clinics.ClinicNum);
 			}
-			listEmp.Items.Add(Lan.g(this,"All Employees"));
+			listEmp.Items.Add(Lan.G(this,"All Employees"));
 			listEmp.SelectedIndex=0;
 			foreach(Employee emp in _listEmployees) {
 				int index=listEmp.Items.Add(emp.FName+" "+emp.LName);

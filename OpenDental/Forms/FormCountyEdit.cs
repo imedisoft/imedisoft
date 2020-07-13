@@ -160,7 +160,7 @@ namespace OpenDental{
 			CountyCur.CountyCode=textCountyCode.Text;
 			if(IsNew){
 				if(Counties.DoesExist(CountyCur.CountyName)){
-					MessageBox.Show(Lan.g(this,"County name already exists. Duplicate not allowed."));
+					MessageBox.Show(Lan.G(this,"County name already exists. Duplicate not allowed."));
 					return;
 				}
 				Counties.Insert(CountyCur);
@@ -168,7 +168,7 @@ namespace OpenDental{
 			else{//existing County
 				if(CountyCur.CountyName!=CountyCur.OldCountyName){//County name was changed
 					if(Counties.DoesExist(CountyCur.CountyName)){//changed to a name that already exists.
-						MessageBox.Show(Lan.g(this,"County name already exists. Duplicate not allowed."));
+						MessageBox.Show(Lan.G(this,"County name already exists. Duplicate not allowed."));
 						return;
 					}
 				}

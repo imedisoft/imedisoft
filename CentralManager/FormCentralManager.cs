@@ -201,7 +201,7 @@ namespace CentralManager
 			Cursor = Cursors.Default;
 			if (_invalidConnsLog != "")
 			{
-				OpenDental.MessageBox.Show(this, Lan.g(this, "Could not connect to the following servers") + ":" + _invalidConnsLog);
+				OpenDental.MessageBox.Show(this, Lan.G(this, "Could not connect to the following servers") + ":" + _invalidConnsLog);
 			}
 		}
 
@@ -245,9 +245,9 @@ namespace CentralManager
 			}
 			if (storedVersion.CompareTo(currentVersion) != 0)
 			{
-				OpenDental.MessageBox.Show(Lan.g(this, "Program version") + ": " + currentVersion.ToString() + "\r\n"
-					+ Lan.g(this, "Database version") + ": " + storedVersion.ToString() + "\r\n"
-					+ Lan.g(this, "Versions must match.  Please manually connect to the database through the main program in order to update the version."));
+				OpenDental.MessageBox.Show(Lan.G(this, "Program version") + ": " + currentVersion.ToString() + "\r\n"
+					+ Lan.G(this, "Database version") + ": " + storedVersion.ToString() + "\r\n"
+					+ Lan.G(this, "Versions must match.  Please manually connect to the database through the main program in order to update the version."));
 				_hasFatalError = true;
 				Application.Exit();
 				return;

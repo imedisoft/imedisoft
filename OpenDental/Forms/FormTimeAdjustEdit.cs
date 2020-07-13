@@ -291,12 +291,12 @@ namespace OpenDental{
 			}
 			textNote.Text=TimeAdjustCur.Note;
 			comboPTO.Items.Clear();
-			comboPTO.Items.Add(Lan.g(this,"None"));
+			comboPTO.Items.Add(Lan.G(this,"None"));
 			comboPTO.SelectedIndex=0;
 			List<Def> listPtoTypes=Defs.GetDefsForCategory(DefCat.TimeCardAdjTypes).OrderBy(x => x.ItemName).ToList();
 			foreach(Def def in listPtoTypes) {
 				if(def.IsHidden && def.DefNum==TimeAdjustCur.PtoDefNum) {
-					comboPTO.Items.Add(new ODBoxItem<Def>(def.ItemName+" "+Lan.g(this,"(hidden)"),def));
+					comboPTO.Items.Add(new ODBoxItem<Def>(def.ItemName+" "+Lan.G(this,"(hidden)"),def));
 				}
 				else if(!def.IsHidden) {
 					comboPTO.Items.Add(new ODBoxItem<Def>(def.ItemName,def));

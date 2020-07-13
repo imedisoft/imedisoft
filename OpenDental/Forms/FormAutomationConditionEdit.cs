@@ -22,14 +22,14 @@ namespace OpenDental {
 
 		private void FormAutomationConditionEdit_Load(object sender,EventArgs e) {
 			foreach(AutoCondField condField in Enum.GetValues(typeof(AutoCondField))) {
-				listCompareField.Items.Add(Lan.g("enumAutoCondField",condField.GetDescription()));
+				listCompareField.Items.Add(Lan.G("enumAutoCondField",condField.GetDescription()));
 				listCompareField.SelectedIndex=0;
 			}
 			for(int i=0;i<Enum.GetNames(typeof(AutoCondComparison)).Length;i++) {
 				if(Enum.GetNames(typeof(AutoCondComparison))[i]=="None") {//Skip none as an option for the comparison field
 					continue;
 				}
-				listComparison.Items.Add(Lan.g("enumAutoCondComparison",Enum.GetNames(typeof(AutoCondComparison))[i]));
+				listComparison.Items.Add(Lan.G("enumAutoCondComparison",Enum.GetNames(typeof(AutoCondComparison))[i]));
 				listComparison.SelectedIndex=0;
 			}
 			if(!IsNew) {
@@ -48,11 +48,11 @@ namespace OpenDental {
 		private void ShowOrHideFields(AutoCondField autoCondField) {
 			if(autoCondField==AutoCondField.BillingType) {
 				butBillingType.Visible=true;
-				labelCompareString.Text=Lan.g(this,"Text (Type or pick from list) ");
+				labelCompareString.Text=Lan.G(this,"Text (Type or pick from list) ");
 			}
 			else {
 				butBillingType.Visible=false;
-				labelCompareString.Text=Lan.g(this,"Text");
+				labelCompareString.Text=Lan.G(this,"Text");
 			}
 			if(autoCondField.In(AutoCondField.InsuranceNotEffective,AutoCondField.IsControlled,AutoCondField.IsProcRequired
 				,AutoCondField.IsPatientInstructionPresent)) 

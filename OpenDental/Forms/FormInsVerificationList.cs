@@ -186,7 +186,7 @@ namespace OpenDental {
 				List<Clinic> listClinicsForUser=Clinics.GetForUserod(Security.CurUser);
 				if(_listRegionDefs.Count!=0) {
 					_listRegionDefs.RemoveAll(x => !listClinicsForUser.Any(y => y.Region==x.DefNum));
-					listBoxVerifyRegions.Items.Add(Lan.g(this,"All"));
+					listBoxVerifyRegions.Items.Add(Lan.G(this,"All"));
 					for(int i = 0;i<_listRegionDefs.Count;i++) {
 						listBoxVerifyRegions.Items.Add(_listRegionDefs[i].ItemName);
 						if(_listDefNumsVerifyRegionsFilter.Contains(_listRegionDefs[i].DefNum)) {
@@ -214,7 +214,7 @@ namespace OpenDental {
 			if(_isAllClinicsEnabled) {
 				//"All" will only show if the user isn't restricted to a clinic and if the enterprise preference is off
 				//Even so, "All" will be restricted down to whatever region(s) are selected when getting the verification list.
-				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>(Lan.g(this,"All"),new Clinic { ClinicNum=-1 }));
+				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>(Lan.G(this,"All"),new Clinic { ClinicNum=-1 }));
 				indexCur++;
 			}
 			foreach(Clinic clinic in listClinicsForUser) {
@@ -229,7 +229,7 @@ namespace OpenDental {
 			}
 			if(!Security.CurUser.ClinicIsRestricted && !_isRegionSelected) {//Show "Unassigned" if user is not restricted and no region is selected.
 				//Add Unassigned at the bottom. ClinicNum of 0.
-				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>(Lan.g(this,"Unassigned"),new Clinic { ClinicNum=0 }));
+				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>(Lan.G(this,"Unassigned"),new Clinic { ClinicNum=0 }));
 				if(_listClinicNumsVerifyClinicsFilter.Contains(0)) {
 					listBoxVerifyClinics.SelectedIndex=indexCur;
 				}
@@ -245,8 +245,8 @@ namespace OpenDental {
 		private void FillUsers() {
 			comboVerifyUser.Items.Clear();
 			comboVerifyUser.SelectedIndex=-1;
-			comboVerifyUser.Items.Add(Lan.g(this,"All Users"));
-			comboVerifyUser.Items.Add(Lan.g(this,"Unassigned"));
+			comboVerifyUser.Items.Add(Lan.G(this,"All Users"));
+			comboVerifyUser.Items.Add(Lan.G(this,"Unassigned"));
 			List<long> listClinicNums=new List<long>();
 			if(!_listClinicNumsVerifyClinicsFilter.Contains(-1)) {
 				listClinicNums=new List<long>();
@@ -512,13 +512,13 @@ namespace OpenDental {
 			}
 			//The _gridRowSelected needs to get updated before we run our menu item logic because Popup fires before CellClick.
 			_gridRowSelected=(InsVerifyGridObject)grid.ListGridRows[grid.GetSelectedIndex()].Tag;
-			menuRightClick.MenuItems.Add(new MenuItem(Lan.g(this,"Go to Patient"),gridMainRight_click));
-			string verifyDescription=Lan.g(this,"Go to Insurance Plan");
+			menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Go to Patient"),gridMainRight_click));
+			string verifyDescription=Lan.G(this,"Go to Insurance Plan");
 			if(_gridRowSelected.PatInsVerify!=null) {
-				verifyDescription=Lan.g(this,"Go to Patient Plan");
+				verifyDescription=Lan.G(this,"Go to Patient Plan");
 			}
 			menuRightClick.MenuItems.Add(new MenuItem(verifyDescription,gridMainRight_click));
-			MenuItem assignUserToolItem=new MenuItem(Lan.g(this,"Assign to User"));
+			MenuItem assignUserToolItem=new MenuItem(Lan.G(this,"Assign to User"));
 			foreach(Userod user in _listUsersInRegion) {
 				MenuItem assignUserDropDownCur=new MenuItem(user.UserName);
 				assignUserDropDownCur.Tag=user;
@@ -526,7 +526,7 @@ namespace OpenDental {
 				assignUserToolItem.MenuItems.Add(assignUserDropDownCur);
 			}
 			menuRightClick.MenuItems.Add(assignUserToolItem);
-			MenuItem verifyStatusToolItem=new MenuItem(Lan.g(this,"Set Verify Status to"));
+			MenuItem verifyStatusToolItem=new MenuItem(Lan.G(this,"Set Verify Status to"));
 			foreach(Def status in _listVerifyStatuses) {
 				MenuItem verifyStatusDropDownCur=new MenuItem(status.ItemName);
 				verifyStatusDropDownCur.Tag=status;
@@ -535,15 +535,15 @@ namespace OpenDental {
 			}
 			menuRightClick.MenuItems.Add(verifyStatusToolItem);
 			if(_gridRowSelected.IsPatAndInsRow()) {
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.g(this,"Verify Patient Eligibility"),gridMainRight_click));//Number 3 in gridMainRight_click
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.g(this,"Verify Insurance Benefits"),gridMainRight_click));//Number 4 in gridMainRight_click
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.g(this,"Verify Both"),gridMainRight_click));//Number 5 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Patient Eligibility"),gridMainRight_click));//Number 3 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Insurance Benefits"),gridMainRight_click));//Number 4 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Both"),gridMainRight_click));//Number 5 in gridMainRight_click
 			}
 			else if(_gridRowSelected.IsOnlyPatRow()) {
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.g(this,"Verify Patient Eligibility"),gridMainRight_click));//Number 3 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Patient Eligibility"),gridMainRight_click));//Number 3 in gridMainRight_click
 			}
 			else if(_gridRowSelected.IsOnlyInsRow()) {
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.g(this,"Verify Insurance Benefits"),gridMainRight_click));//Number 3 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Insurance Benefits"),gridMainRight_click));//Number 3 in gridMainRight_click
 			}
 		}
 
@@ -710,7 +710,7 @@ namespace OpenDental {
 		}
 
 		private void gridAssign_Popup(object sender,EventArgs e) {
-			MenuItem assignUserToolItem=new MenuItem(Lan.g(this,"Assign to User"));
+			MenuItem assignUserToolItem=new MenuItem(Lan.G(this,"Assign to User"));
 			foreach(Userod user in _listUsersInRegion) {
 				MenuItem assignUserDropDownCur=new MenuItem(user.UserName);
 				assignUserDropDownCur.Tag=user;
@@ -718,7 +718,7 @@ namespace OpenDental {
 				assignUserToolItem.MenuItems.Add(assignUserDropDownCur);
 			}
 			menuRightClick.MenuItems.Add(assignUserToolItem);
-			MenuItem verifyStatusToolItem=new MenuItem(Lan.g(this,"Set Verify Status to"));
+			MenuItem verifyStatusToolItem=new MenuItem(Lan.G(this,"Set Verify Status to"));
 			foreach(Def status in _listVerifyStatuses) {
 				MenuItem verifyStatusDropDownCur=new MenuItem(status.ItemName);
 				verifyStatusDropDownCur.Tag=status;
@@ -856,8 +856,8 @@ namespace OpenDental {
 		private void SetStatus(long statusDefNum,bool isVerifyGrid) {
 			string statusNote="";
 			bool hasChanged=false;
-			InputBox ib=new InputBox(Lan.g(this,"Add a status note:"),true);
-			ib.setTitle(Lan.g(this,"Add Status Note"));
+			InputBox ib=new InputBox(Lan.G(this,"Add a status note:"),true);
+			ib.setTitle(Lan.G(this,"Add Status Note"));
 			if(!isVerifyGrid) {
 				ib.textResult.Text=textInsVerifyNote.Text;
 			}

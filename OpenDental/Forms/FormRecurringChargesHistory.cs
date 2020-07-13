@@ -67,24 +67,24 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"PatNum"),55,GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Name"),185));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PatNum"),55,GridSortingStrategy.AmountParse));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),185));
 			if(PrefC.HasClinicsEnabled) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Clinic"),65));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Clinic"),65));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Date Charge"),135,HorizontalAlignment.Center,
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Date Charge"),135,HorizontalAlignment.Center,
 				GridSortingStrategy.DateParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Charge Status"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"User"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Family Bal"),PrefC.HasClinicsEnabled ? 70 : 85,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Charge Status"),90));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"User"),90));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Family Bal"),PrefC.HasClinicsEnabled ? 70 : 85,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"PayPlan Due"),PrefC.HasClinicsEnabled ? 80 : 90,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PayPlan Due"),PrefC.HasClinicsEnabled ? 80 : 90,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Total Due"),PrefC.HasClinicsEnabled ? 65 : 80,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Total Due"),PrefC.HasClinicsEnabled ? 65 : 80,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Repeat Amt"),PrefC.HasClinicsEnabled ? 75 : 90,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Repeat Amt"),PrefC.HasClinicsEnabled ? 75 : 90,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Charge Amt"),PrefC.HasClinicsEnabled ? 85 : 95,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Charge Amt"),PrefC.HasClinicsEnabled ? 85 : 95,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
 			if(gridMain.WidthAllColumns > gridMain.Width) {
 				gridMain.HScrollVisible=true;

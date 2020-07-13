@@ -215,9 +215,9 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Date"),70);
+			col=new GridColumn(Lan.G(this,"Date"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),140);
+			col=new GridColumn(Lan.G(this,"Description"),140);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -129,7 +129,7 @@ namespace OpenDental{
 			tableEquity.LoadDataRow(new object[] { "Retained Earnings (Auto)",Accounts.RetainedEarningsAuto(date1.SelectionStart) },LoadOption.OverwriteChanges);
 			tableEquity.LoadDataRow(new object[] { "NetIncomeThisYear",Accounts.NetIncomeThisYear(date1.SelectionStart) },LoadOption.OverwriteChanges);
 			reportComplex.ReportName="Balance Sheet";
-			reportComplex.AddTitle("Title",Lan.g(this,"Balance Sheet"),fontTitle);
+			reportComplex.AddTitle("Title",Lan.G(this,"Balance Sheet"),fontTitle);
 			reportComplex.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			reportComplex.AddSubTitle("Date",date1.SelectionStart.ToShortDateString(),fontSubTitle);
 			//setup query

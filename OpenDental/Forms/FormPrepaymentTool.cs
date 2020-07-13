@@ -103,9 +103,9 @@ namespace OpenDental {
 			GridRow row;
 			GridCodes.BeginUpdate();
 			GridCodes.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Code"),50);
+			GridColumn col=new GridColumn(Lan.G(this,"Code"),50);
 			GridCodes.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),100){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G(this,"Description"),100){ IsWidthDynamic=true };
 			GridCodes.ListGridColumns.Add(col);
 			GridCodes.ListGridRows.Clear();
 			for(int i=0;i<_listPrePaySupportCodes.Count;i++) {
@@ -122,21 +122,21 @@ namespace OpenDental {
 			GetTaxEstimates(_listPreviouslyCompProcedureCharges,false);
 			GridCompletedProcs.BeginUpdate();
 			GridCompletedProcs.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Code"),50,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn(Lan.G(this,"Code"),50,HorizontalAlignment.Center);
 			GridCompletedProcs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),100,HorizontalAlignment.Left){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G(this,"Description"),100,HorizontalAlignment.Left){ IsWidthDynamic=true };
 			GridCompletedProcs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Units"),30,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Units"),30,HorizontalAlignment.Right);
 			GridCompletedProcs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Base"),50,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Base"),50,HorizontalAlignment.Right);
 			GridCompletedProcs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Charge"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Charge"),75,HorizontalAlignment.Right);
 			GridCompletedProcs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Discount"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Discount"),75,HorizontalAlignment.Right);
 			GridCompletedProcs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Est Tax"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Est Tax"),75,HorizontalAlignment.Right);
 			GridCompletedProcs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Amount"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Amount"),75,HorizontalAlignment.Right);
 			GridCompletedProcs.ListGridColumns.Add(col);
 			GridCompletedProcs.ListGridRows.Clear();
 			foreach(ProcedureCharge proc in _listPreviouslyCompProcedureCharges) {
@@ -168,21 +168,21 @@ namespace OpenDental {
 			GetTaxEstimates(_listProcedureCharge);
 			GridPrepayment.BeginUpdate();
 			GridPrepayment.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Code"),50,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn(Lan.G(this,"Code"),50,HorizontalAlignment.Center);
 			GridPrepayment.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),100,HorizontalAlignment.Left){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G(this,"Description"),100,HorizontalAlignment.Left){ IsWidthDynamic=true };
 			GridPrepayment.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Units"),30,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Units"),30,HorizontalAlignment.Right);
 			GridPrepayment.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Base"),50,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Base"),50,HorizontalAlignment.Right);
 			GridPrepayment.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Charge"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Charge"),75,HorizontalAlignment.Right);
 			GridPrepayment.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Discount"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Discount"),75,HorizontalAlignment.Right);
 			GridPrepayment.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Est Tax"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Est Tax"),75,HorizontalAlignment.Right);
 			GridPrepayment.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Amount"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Amount"),75,HorizontalAlignment.Right);
 			GridPrepayment.ListGridColumns.Add(col);
 			GridPrepayment.ListGridRows.Clear();
 			foreach(ProcedureCharge proc in _listProcedureCharge) {
@@ -565,7 +565,7 @@ namespace OpenDental {
 					AvaTax.CreatePrepaymentTransaction(dictTransactions,_patCur,_listCompletedProcs);
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.g(this,"Error sending procedures to AvaTax.")+"\r\n"+ex.ToString());
+					MessageBox.Show(Lan.G(this,"Error sending procedures to AvaTax.")+"\r\n"+ex.ToString());
 				}
 			}			
 		}
@@ -639,7 +639,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(_listProcedureCharge.Count==0) {
-				MessageBox.Show(Lan.g("Prepayment Tool","No procedures selected."));
+				MessageBox.Show(Lan.G("Prepayment Tool","No procedures selected."));
 				return;
 			}
 			ReturnPayment=new Payment();

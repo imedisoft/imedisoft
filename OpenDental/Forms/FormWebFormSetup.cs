@@ -150,7 +150,7 @@ namespace OpenDental {
 					_listWebFormSheetDefs=new List<WebForms_SheetDef>();
 				}
 				gridMain.ListGridColumns.Clear();
-				GridColumn col=new GridColumn(Lan.g(this,"Description"),200);
+				GridColumn col=new GridColumn(Lan.G(this,"Description"),200);
 				gridMain.ListGridColumns.Add(col);
 				gridMain.ListGridRows.Clear();
 				foreach(WebForms_SheetDef sheetDef in _listWebFormSheetDefs) {
@@ -256,7 +256,7 @@ namespace OpenDental {
 
 		private void butNextForms_Click(object sender,EventArgs e) {
 			InputBox input=new InputBox("Select next forms",_listWebFormSheetDefs.Select(x => x.Description).ToList(),true);
-			input.Text=Lan.g(this,"Select Sheet Defs");
+			input.Text=Lan.G(this,"Select Sheet Defs");
 			if(input.ShowDialog()==DialogResult.OK) {
 				_listSelectedNextFormIds=input.SelectedIndices.Select(x => _listWebFormSheetDefs[x].WebSheetDefID).ToList();
 				textNextForms.Text=string.Join(", ",input.SelectedIndices.Select(x => _listWebFormSheetDefs[x].Description));
@@ -381,7 +381,7 @@ namespace OpenDental {
 			}
 			if(failures>0) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(this,Lan.g(this,"Error deleting ")+POut.Int(failures)+Lan.g(this," web form(s). Either the web service is not available or "
+				MessageBox.Show(this,Lan.G(this,"Error deleting ")+POut.Int(failures)+Lan.G(this," web form(s). Either the web service is not available or "
 					+"the Host Server Address cannot be found."));
 			}
 			FillGrid();

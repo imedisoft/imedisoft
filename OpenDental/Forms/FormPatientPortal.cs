@@ -157,7 +157,7 @@ namespace OpenDental {
 		}
 
 		private void PrintPatientInfo() {
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Patient portal login information printed"),auditPatNum:_patCur.PatNum);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Patient portal login information printed"),auditPatNum:_patCur.PatNum);
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -217,8 +217,8 @@ namespace OpenDental {
 				_userWebCur.LoginDetails=Authentication.GenerateLoginDetailsSHA512(textOnlinePassword.Text);
 			}
 			if(shouldPrint) {
-				DialogResult result=MessageBox.Show(Lan.g(this,"Online Username or Password changed but was not printed, would you like to print?")
-					,Lan.g(this,"Print Patient Info")
+				DialogResult result=MessageBox.Show(Lan.G(this,"Online Username or Password changed but was not printed, would you like to print?")
+					,Lan.G(this,"Print Patient Info")
 					,MessageBoxButtons.YesNoCancel);
 				if(result==DialogResult.Yes) {
 					//Print the showing information.

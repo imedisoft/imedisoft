@@ -350,7 +350,7 @@ namespace OpenDental{
 				MessageBox.Show("This problem def is currently in use and cannot be deleted.");
 				return;
 			}
-			SecurityLogMsgText=DiseaseDefCur.DiseaseName+" "+Lan.g(this,"deleted.");
+			SecurityLogMsgText=DiseaseDefCur.DiseaseName+" "+Lan.G(this,"deleted.");
 			DiseaseDefCur=null;//Flags this disease for removal in outside forms.
 			DialogResult=DialogResult.OK;
 		}

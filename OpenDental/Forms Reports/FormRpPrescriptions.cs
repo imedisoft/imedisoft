@@ -148,8 +148,8 @@ namespace OpenDental{
 			Font font=new Font("Tahoma",9);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.g(this,"Prescriptions");
-			report.AddTitle("Title",Lan.g(this,"Prescriptions"),fontTitle);
+			report.ReportName=Lan.G(this,"Prescriptions");
+			report.AddTitle("Title",Lan.G(this,"Prescriptions"),fontTitle);
 			report.AddSubTitle("PracticeTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
 			if(radioPatient.Checked){
 				report.AddSubTitle("By Patient","By Patient");
@@ -157,7 +157,7 @@ namespace OpenDental{
 			else{
 				report.AddSubTitle("By Drug","By Drug");
 			}
-			QueryObject query=report.AddQuery(table,Lan.g(this,"Date")+": "+DateTimeOD.Today.ToString("d"));			
+			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));			
 			query.AddColumn("Patient Name",120,FieldValueType.String);
 			query.AddColumn("Date",95,FieldValueType.Date);
 			query.AddColumn("Drug Name",100,FieldValueType.String);

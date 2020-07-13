@@ -59,8 +59,8 @@ namespace OpenDental {
 			Defs.HideDef(Defs.GetDef(DefCat.ImageCats,_defNumFrom));
 			DataValid.SetInvalid(InvalidType.Defs);
 			MessageBox.Show("Image Categories merged successfully.");
-			string logText=Lan.g(this,"Image Category Merge from")
-				+" "+Defs.GetName(DefCat.ImageCats,_defNumFrom)+" "+Lan.g(this,"to")+" "+Defs.GetName(DefCat.ImageCats,_defNumInto);
+			string logText=Lan.G(this,"Image Category Merge from")
+				+" "+Defs.GetName(DefCat.ImageCats,_defNumFrom)+" "+Lan.G(this,"to")+" "+Defs.GetName(DefCat.ImageCats,_defNumInto);
 			//Make log entry here.
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,logText);
 			textBoxFrom.Clear();

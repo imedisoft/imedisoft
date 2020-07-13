@@ -279,7 +279,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(MessageBox.Show(Lan.g(this,"Delete Blockout?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show(Lan.G(this,"Delete Blockout?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 			  return;   
 			}
       if(IsNew){

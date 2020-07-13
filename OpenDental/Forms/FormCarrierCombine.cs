@@ -157,7 +157,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(tbCarriers.SelectedRow==-1){
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
 			PickedCarrierNum=carrierList[tbCarriers.SelectedRow].CarrierNum;

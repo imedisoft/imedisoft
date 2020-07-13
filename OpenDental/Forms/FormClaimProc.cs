@@ -346,15 +346,15 @@ namespace OpenDental {
 			}
 			//The order of the items in comboStatus matter inside the comboStatus_SelectionChangeCommitted(), because we use hard coded indices.
 			comboStatus.Items.Clear();
-			comboStatus.Items.Add(Lan.g(this,"Estimate"));
-			comboStatus.Items.Add(Lan.g(this,"Not Received"));
-			comboStatus.Items.Add(Lan.g(this,"Received"));
-			comboStatus.Items.Add(Lan.g(this,"PreAuthorization"));
-			comboStatus.Items.Add(Lan.g(this,"Supplemental"));
-			comboStatus.Items.Add(Lan.g(this,"CapClaim"));
-			comboStatus.Items.Add(Lan.g(this,"CapEstimate"));
-			comboStatus.Items.Add(Lan.g(this,"CapComplete"));
-			comboStatus.Items.Add(Lan.g(this,"InsHist"));
+			comboStatus.Items.Add(Lan.G(this,"Estimate"));
+			comboStatus.Items.Add(Lan.G(this,"Not Received"));
+			comboStatus.Items.Add(Lan.G(this,"Received"));
+			comboStatus.Items.Add(Lan.G(this,"PreAuthorization"));
+			comboStatus.Items.Add(Lan.G(this,"Supplemental"));
+			comboStatus.Items.Add(Lan.G(this,"CapClaim"));
+			comboStatus.Items.Add(Lan.G(this,"CapEstimate"));
+			comboStatus.Items.Add(Lan.G(this,"CapComplete"));
+			comboStatus.Items.Add(Lan.G(this,"InsHist"));
 			SetComboStatus(ClaimProcCur.Status);
 			if(ClaimProcCur.Status==ClaimProcStatus.Received || ClaimProcCur.Status==ClaimProcStatus.Supplemental) {
 				labelDateEntry.Visible=true;
@@ -666,10 +666,10 @@ namespace OpenDental {
 			}
 			DateTime datePrevious=FeeCur.SecDateTEdit;
 			//Make an audit entry that the user manually launched the Fee Edit window from this location.
-			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,Lan.g(this,"Procedure")+": "+ProcedureCodes.GetStringProcCode(FeeCur.CodeNum)
-				+", "+Lan.g(this,"Fee")+": "+FeeCur.Amount.ToString("c")+", "+Lan.g(this,"Fee Schedule")+": "+FeeScheds.GetDescription(FeeCur.FeeSched)
-				+". "+Lan.g(this,"Manually launched Edit Fee window via Edit Claim Procedure window."),FeeCur.CodeNum,DateTime.MinValue);
-			SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit,0,Lan.g(this,"Fee Inserted"),FeeCur.FeeNum,datePrevious);
+			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,Lan.G(this,"Procedure")+": "+ProcedureCodes.GetStringProcCode(FeeCur.CodeNum)
+				+", "+Lan.G(this,"Fee")+": "+FeeCur.Amount.ToString("c")+", "+Lan.G(this,"Fee Schedule")+": "+FeeScheds.GetDescription(FeeCur.FeeSched)
+				+". "+Lan.G(this,"Manually launched Edit Fee window via Edit Claim Procedure window."),FeeCur.CodeNum,DateTime.MinValue);
+			SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit,0,Lan.G(this,"Fee Inserted"),FeeCur.FeeNum,datePrevious);
 			FormFE.FeeCur=FeeCur;
 			FormFE.ShowDialog();
 			//The Fees cache is updated in the closing of FormFeeEdit if there were any changes made.  Simply refresh our window.
@@ -1130,7 +1130,7 @@ namespace OpenDental {
 		///except certain specific scenarios where the user does not have permission (multiple different permissions are considered).</summary>
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(ClaimProcCur.IsTransfer) {
-				if(MessageBox.Show(Lan.g(this,"This Claim Procedure is part of an income transfer."+"\r\n"
+				if(MessageBox.Show(Lan.G(this,"This Claim Procedure is part of an income transfer."+"\r\n"
 					+"Deleting this claim procedure will delete all of the income transfers for this claim.  Continue?"),""
 					,MessageBoxButtons.OKCancel)!=DialogResult.OK)	
 				{
@@ -1138,14 +1138,14 @@ namespace OpenDental {
 				}
 			}
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && ClaimProcCur.ProcNum==proc.ProcNum && proc.ProcNumLab==0) {
-				if(MessageBox.Show(Lan.g(this,
+				if(MessageBox.Show(Lan.G(this,
 					"Deleting this insurance payment will also delete the insurance payment for any attached labs. Continue?"),
 					"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 					return;
 				}
 			}
 			else {
-				if(MessageBox.Show(Lan.g(this,"Delete this estimate?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+				if(MessageBox.Show(Lan.G(this,"Delete this estimate?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 					return;
 				}
 			}
@@ -1186,20 +1186,20 @@ namespace OpenDental {
 			creditRem=feeAcct-patPayAmt-insPayAmt-writeOff+adj;
 			bool isCreditGreater=creditRem.IsLessThanZero();
 			string procDescript=ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode
-				+"\t"+Lan.g(this,"Fee")+": "+feeAcct.ToString("F")
-				+"\t"+Lan.g(this,"Credits")+": "+Math.Abs((-patPayAmt-insPayAmt-writeOff+adj)).ToString("F")
-				+"\t"+Lan.g(this,"Remaining")+": ("+Math.Abs(creditRem).ToString("F")+")";
+				+"\t"+Lan.G(this,"Fee")+": "+feeAcct.ToString("F")
+				+"\t"+Lan.G(this,"Credits")+": "+Math.Abs((-patPayAmt-insPayAmt-writeOff+adj)).ToString("F")
+				+"\t"+Lan.G(this,"Remaining")+": ("+Math.Abs(creditRem).ToString("F")+")";
 			if(!isCreditGreater) {
 				return true;
 			}
 			if(creditsGreaterPref==ClaimProcCreditsGreaterThanProcFee.Block) {
-				MessageBox.Show(this,Lan.g(this,"Remaining amount is negative")+":\r\n"+procDescript+"\r\n"+Lan.g(this,"Not allowed to continue."),
-					Lan.g(this,"Overpaid Procedure Warning"));
+				MessageBox.Show(this,Lan.G(this,"Remaining amount is negative")+":\r\n"+procDescript+"\r\n"+Lan.G(this,"Not allowed to continue."),
+					Lan.G(this,"Overpaid Procedure Warning"));
 				return false;
 			}
 			if(creditsGreaterPref==ClaimProcCreditsGreaterThanProcFee.Warn) {
-				return MessageBox.Show(this,Lan.g(this,"Remaining amount is negative")+":\r\n"+procDescript+"\r\n"+Lan.g(this,"Continue?"),
-					Lan.g(this,"Overpaid Procedure Warning"),MessageBoxButtons.YesNo)==DialogResult.Yes;
+				return MessageBox.Show(this,Lan.G(this,"Remaining amount is negative")+":\r\n"+procDescript+"\r\n"+Lan.G(this,"Continue?"),
+					Lan.G(this,"Overpaid Procedure Warning"),MessageBoxButtons.YesNo)==DialogResult.Yes;
 			}
 			return true;//should never get to this line, only possible if another enum value is added to allow, warn, and block
 		}
@@ -1219,13 +1219,13 @@ namespace OpenDental {
 			//Any changes to this calculation should also consider FormClaimPayTotal.IsWriteoffGreaterThanProcFee().
 			writeoffRem=feeAcct-writeOff+adjAcct;
 			bool isWriteoffGreater=writeoffRem.IsLessThanZero() && writeOff.IsGreaterThanZero();
-			string procDescript=Lan.g(this,"Fee")+": "+feeAcct.ToString("F")
-				+"\t"+Lan.g(this,"Adjustments")+": "+adjAcct.ToString("F")
-				+"\t"+Lan.g(this,"Write-off")+": "+Math.Abs((-writeOff)).ToString("F")
-				+"\t"+Lan.g(this,"Remaining")+": ("+Math.Abs(writeoffRem).ToString("F")+")";
+			string procDescript=Lan.G(this,"Fee")+": "+feeAcct.ToString("F")
+				+"\t"+Lan.G(this,"Adjustments")+": "+adjAcct.ToString("F")
+				+"\t"+Lan.G(this,"Write-off")+": "+Math.Abs((-writeOff)).ToString("F")
+				+"\t"+Lan.G(this,"Remaining")+": ("+Math.Abs(writeoffRem).ToString("F")+")";
 			if(isWriteoffGreater) {
-				MessageBox.Show(this,Lan.g(this,"Write-off amount is greater than the adjusted procedure fee")+":\r\n"+procDescript+"\r\n"
-					+Lan.g(this,"Not allowed to continue."),Lan.g(this,"Excessive Write-off"));
+				MessageBox.Show(this,Lan.G(this,"Write-off amount is greater than the adjusted procedure fee")+":\r\n"+procDescript+"\r\n"
+					+Lan.G(this,"Not allowed to continue."),Lan.G(this,"Excessive Write-off"));
 				return true;
 			}
 			return false;
@@ -1267,7 +1267,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//no security check here because if attached to a payment, nobody is allowed to change the date or amount anyway.
 			if(!AllAreValid()){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			if(PIn.Date(textDateCP.Text).Date > DateTime.Today.Date
@@ -1355,19 +1355,19 @@ namespace OpenDental {
 				//note: the amount and the date will not have been changed.
 				SecurityLogs.MakeLogEntry(Permissions.InsPayEdit,ClaimProcCur.PatNum,
 					Patients.GetLim(ClaimProcCur.PatNum).GetNameLF()+", "
-					+Lan.g(this,"Date and amount not changed."));//I'm really not sure what they would have changed.
+					+Lan.G(this,"Date and amount not changed."));//I'm really not sure what they would have changed.
 			}
 			if(ClaimProcCur.Status.In(ClaimProcStatus.Received,ClaimProcStatus.NotReceived,ClaimProcStatus.CapClaim)
 				&& ClaimProcCur.ProvNum != ClaimProcOld.ProvNum) 
 			{
 				string strSecLog;
 				if(proc == null) {
-					strSecLog = "Total Payment for "+textInsPlan.Text+". "+Lan.g(this,"Provider changed from")+" "
-					+Providers.GetAbbr(ClaimProcOld.ProvNum)+" "+Lan.g(this,"to")+" "+Providers.GetAbbr(ClaimProcCur.ProvNum);
+					strSecLog = "Total Payment for "+textInsPlan.Text+". "+Lan.G(this,"Provider changed from")+" "
+					+Providers.GetAbbr(ClaimProcOld.ProvNum)+" "+Lan.G(this,"to")+" "+Providers.GetAbbr(ClaimProcCur.ProvNum);
 				}
 				else {
-					strSecLog = ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode+" - "+textInsPlan.Text+". "+Lan.g(this,"Provider changed from")+" "
-					+Providers.GetAbbr(ClaimProcOld.ProvNum)+" "+Lan.g(this,"to")+" "+Providers.GetAbbr(ClaimProcCur.ProvNum);
+					strSecLog = ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode+" - "+textInsPlan.Text+". "+Lan.G(this,"Provider changed from")+" "
+					+Providers.GetAbbr(ClaimProcOld.ProvNum)+" "+Lan.G(this,"to")+" "+Providers.GetAbbr(ClaimProcCur.ProvNum);
 				}
 				SecurityLogs.MakeLogEntry(Permissions.ClaimProcClaimAttachedProvEdit,ClaimProcCur.PatNum,strSecLog);
 			}

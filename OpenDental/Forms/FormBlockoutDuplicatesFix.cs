@@ -25,7 +25,7 @@ namespace OpenDental {
 				labelInstructions.Text="";
 			}
 			else {
-				labelInstructions.Text=Lan.g(this,"Click the Clear button to fix the duplicates.");
+				labelInstructions.Text=Lan.G(this,"Click the Clear button to fix the duplicates.");
 			}
 		}
 

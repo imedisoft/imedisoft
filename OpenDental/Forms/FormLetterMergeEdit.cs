@@ -562,7 +562,7 @@ namespace OpenDental{
 				WrdApp=LetterMerges.WordApp;
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"Error. Is MS Word installed?"),ex);
+				FriendlyException.Show(Lan.G(this,"Error. Is MS Word installed?"),ex);
 				return;
 			}
 			//Create a new document.

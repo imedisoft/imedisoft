@@ -41,9 +41,9 @@ namespace OpenDental {
 			DataTable table=EvaluationDefs.GetAllByCourse(courseNum);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableEvaluationSetup","Course"),100);
+			GridColumn col=new GridColumn(Lan.G("TableEvaluationSetup","Course"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableEvaluationSetup","Evaluation Title"),180);
+			col=new GridColumn(Lan.G("TableEvaluationSetup","Evaluation Title"),180);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

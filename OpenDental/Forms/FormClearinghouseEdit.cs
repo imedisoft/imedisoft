@@ -1041,7 +1041,7 @@ namespace OpenDental{
 		private void FormClearinghouseEdit_Load(object sender,System.EventArgs e) {
 			comboFormat.Items.AddEnums<ElectronicClaimFormat>();
 			for(int i=0;i<Enum.GetNames(typeof(EclaimsCommBridge)).Length;i++) {
-				string translatedCommBridgeName=Lan.g("enumEclaimsCommBridge",Enum.GetNames(typeof(EclaimsCommBridge))[i]);
+				string translatedCommBridgeName=Lan.G("enumEclaimsCommBridge",Enum.GetNames(typeof(EclaimsCommBridge))[i]);
 				comboCommBridge.Items.Add(translatedCommBridgeName,(EclaimsCommBridge)i);
 			}
 			comboClinic.SelectedClinicNum=ClinicNum;
@@ -1196,7 +1196,7 @@ namespace OpenDental{
 				else if(behavior==EraBehaviors.DownloadAndReceive) {//This is the only download option available in US.
 					description="Download ERAs";
 				}
-				description=Lan.g("enumEraBehavior",description); //make sure the ERA->EOB replace gets run through translation
+				description=Lan.G("enumEraBehavior",description); //make sure the ERA->EOB replace gets run through translation
 				ODBoxItem<EraBehaviors> listBoxItem=new ODBoxItem<EraBehaviors>(description,behavior);
 				listBoxEraBehavior.Items.Add(listBoxItem);
 				if(behavior==ClearinghouseCur.IsEraDownloadAllowed) {

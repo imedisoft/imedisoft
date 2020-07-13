@@ -76,7 +76,7 @@ namespace OpenDental {
 				}
 			}
 			if(notAllowed.ToString()!="") {
-				MessageBox.Show(Lan.g(this,"UNII code has invalid characters: ")+notAllowed);
+				MessageBox.Show(Lan.G(this,"UNII code has invalid characters: ")+notAllowed);
 				return;
 			}
 			if(textUnii.Text!="" && textUnii.Text.Length!=10) {

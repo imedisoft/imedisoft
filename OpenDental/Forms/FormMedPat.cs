@@ -442,7 +442,7 @@ namespace OpenDental{
 				textGenericName.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).MedName;
 				textMedNote.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).Notes;
 			}
-			comboProv.Items.Add(Lan.g(this,"none"));
+			comboProv.Items.Add(Lan.G(this,"none"));
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());

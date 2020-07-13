@@ -867,7 +867,7 @@ namespace OpenDental{
 			if(listDefsCarrierGroupNames.Count>0) {//only show if at least one CarrierGroupName definition
 				labelCarrierGroupName.Visible=true;
 				comboCarrierGroupName.Visible=true;
-				comboCarrierGroupName.Items.Add(Lan.g(this,"Unspecified"),new Def());//defNum 0
+				comboCarrierGroupName.Items.Add(Lan.G(this,"Unspecified"),new Def());//defNum 0
 				comboCarrierGroupName.Items.AddDefs(listDefsCarrierGroupNames);
 				comboCarrierGroupName.SetSelectedDefNum(CarrierCur.CarrierGroupName);
 			}
@@ -901,7 +901,7 @@ namespace OpenDental{
 			}
 			//Canadian stuff is filled in for everyone, because a Canadian user might sometimes have a computer set to American.
 			//So a computer set to American would not be able to SEE the Canadian fields, but they at least would not be damaged.
-			comboNetwork.Items.Add(Lan.g(this,"none"));
+			comboNetwork.Items.Add(Lan.G(this,"none"));
 			comboNetwork.SelectedIndex=0;
 			List<CanadianNetwork> listCanadianNetworks=CanadianNetworks.GetDeepCopy();
 			for(int i=0;i<listCanadianNetworks.Count;i++) {
@@ -980,7 +980,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(MessageBox.Show(Lan.g(this,"Delete Carrier?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show(Lan.G(this,"Delete Carrier?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;
 			}
 			try{
@@ -995,7 +995,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textCarrierName.Text==""){
-				MessageBox.Show(Lan.g(this,"Carrier Name cannot be blank."));
+				MessageBox.Show(Lan.G(this,"Carrier Name cannot be blank."));
 				return;
 			}
 			Carrier carrierOld =CarrierCur.Copy();
@@ -1032,8 +1032,8 @@ namespace OpenDental{
 					Carriers.Update(CarrierCur,carrierOld);
 					//If the carrier name has changed loop through all the insplans that use this carrier and make a securitylog entry.
 					if(carrierOld.CarrierName!=CarrierCur.CarrierName) {
-						SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeCarrierName,0,Lan.g(this,"Carrier name changed in Edit Carrier window from")+" "
-							+carrierOld.CarrierName+" "+Lan.g(this,"to")+" "+CarrierCur.CarrierName);
+						SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeCarrierName,0,Lan.G(this,"Carrier name changed in Edit Carrier window from")+" "
+							+carrierOld.CarrierName+" "+Lan.G(this,"to")+" "+CarrierCur.CarrierName);
 					}
 				}
 				catch(ApplicationException ex){

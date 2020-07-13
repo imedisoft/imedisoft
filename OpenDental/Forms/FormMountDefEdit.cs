@@ -748,7 +748,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MessageBox.Show(Lan.g(this,"Description cannot be blank."));
+				MessageBox.Show(Lan.G(this,"Description cannot be blank."));
 				return;
 			}
 			if(textWidth.errorProvider1.GetError(textWidth)!=""

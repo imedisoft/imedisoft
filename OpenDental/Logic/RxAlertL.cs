@@ -81,7 +81,7 @@ namespace OpenDental {
 				string alert="";
 				for(int i=0;i<diseaseMatches.Count;i++) {
 					if(i==0) {
-						alert+=Lan.g("RxAlertL","This patient has the following medical problems: ");
+						alert+=Lan.G("RxAlertL","This patient has the following medical problems: ");
 					}
 					alert+=diseaseMatches[i];
 					if((i+1)==diseaseMatches.Count) {
@@ -96,7 +96,7 @@ namespace OpenDental {
 						alert+="and the following allergies: ";
 					}
 					else if(i==0) {
-						alert=Lan.g("RxAlertL","This patient has the following allergies: ");
+						alert=Lan.G("RxAlertL","This patient has the following allergies: ");
 					}
 					alert+=allergiesMatches[i];
 					if((i+1)==allergiesMatches.Count) {
@@ -111,7 +111,7 @@ namespace OpenDental {
 						alert+="and is taking the following medications: ";
 					}
 					else if(i==0) {
-						alert=Lan.g("RxAlertL","This patient is taking the following medications: ");
+						alert=Lan.G("RxAlertL","This patient is taking the following medications: ");
 					}
 					alert+=medicationsMatches[i];
 					if((i+1)==medicationsMatches.Count) {
@@ -121,13 +121,13 @@ namespace OpenDental {
 						alert+=", ";
 					}
 				}
-				alert+="\r\n"+Lan.g("RxAlertL","Continue anyway?");
+				alert+="\r\n"+Lan.G("RxAlertL","Continue anyway?");
 				if(MessageBox.Show(alert,"Alert",MessageBoxButtons.OKCancel,MessageBoxIcon.Exclamation)!=DialogResult.OK) {
 					return false;
 				}
 			}
 			for(int i=0;i<customMessages.Count;i++){
-				if(MessageBox.Show(customMessages[i]+"\r\n"+Lan.g("RxAlertL","Continue anyway?"),"Alert",MessageBoxButtons.OKCancel,MessageBoxIcon.Exclamation)!=DialogResult.OK){
+				if(MessageBox.Show(customMessages[i]+"\r\n"+Lan.G("RxAlertL","Continue anyway?"),"Alert",MessageBoxButtons.OKCancel,MessageBoxIcon.Exclamation)!=DialogResult.OK){
 					return false;
 				}
 			}

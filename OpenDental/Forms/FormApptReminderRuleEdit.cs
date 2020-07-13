@@ -84,28 +84,28 @@ namespace OpenDental {
 		private void FormApptReminderRuleEdit_Load(object sender,EventArgs e) {
 			switch(ApptReminderRuleCur.TypeCur) {
 				case ApptReminderType.Reminder:
-					Text=Lan.g(this,"Edit eReminder Rule");
+					Text=Lan.G(this,"Edit eReminder Rule");
 					break;
 				case ApptReminderType.ConfirmationFutureDay:
-					Text=Lan.g(this,"Edit eConfirmation Rule");
+					Text=Lan.G(this,"Edit eConfirmation Rule");
 					break;
 				case ApptReminderType.PatientPortalInvite:
-					Text=Lan.g(this,"Edit Patient Portal Invite Rule");
+					Text=Lan.G(this,"Edit Patient Portal Invite Rule");
 					break;
 				case ApptReminderType.ScheduleThankYou:
-					Text=Lan.g(this,"Edit Automated Thank-You Rule");
+					Text=Lan.G(this,"Edit Automated Thank-You Rule");
 					break;
 				case ApptReminderType.Arrival:
-					Text=Lan.g(this,"Edit Arrival Rule");
+					Text=Lan.G(this,"Edit Arrival Rule");
 					break;
 				default:
-					Text=Lan.g(this,"Edit Rule");
+					Text=Lan.G(this,"Edit Rule");
 					break;
 			}
 			checkEnabled.Checked=ApptReminderRuleCur.IsEnabled;
 			checkEConfirmationAutoReplies.Checked=ApptReminderRuleCur.IsAutoReplyEnabled;
 			labelRuleType.Text=ApptReminderRuleCur.TypeCur.GetDescription();
-			labelTags.Text=Lan.g(this,"Use the following replacement tags to customize messages : ")
+			labelTags.Text=Lan.G(this,"Use the following replacement tags to customize messages : ")
 				+string.Join(", ",ApptReminderRules.GetAvailableTags(ApptReminderRuleCur.TypeCur));
 			if(ApptReminderRuleCur.TypeCur.In(ApptReminderType.PatientPortalInvite,ApptReminderType.Arrival)) {
 				checkSendAll.Visible=false;
@@ -177,7 +177,7 @@ namespace OpenDental {
 				radioAfterAppt.Visible=false;
 			}
 			if(ApptReminderRuleCur.TypeCur==ApptReminderType.ScheduleThankYou) {
-				groupSendTime.Text=Lan.g(this,"Send Time - after appointment scheduled.");
+				groupSendTime.Text=Lan.G(this,"Send Time - after appointment scheduled.");
 			}
 			if(ApptReminderRuleCur.DoNotSendWithin.Days > 0) {
 				textDaysWithin.Text=ApptReminderRuleCur.DoNotSendWithin.Days.ToString();
@@ -202,19 +202,19 @@ namespace OpenDental {
 						continue;
 					}
 					gridRow=new GridRow();
-					gridRow.Cells.Add(Lan.g(this,"Preferred Confirm Method"));
+					gridRow.Cells.Add(Lan.G(this,"Preferred Confirm Method"));
 					gridPriorities.ListGridRows.Add(gridRow);
 					continue;
 				}
 				if(typeCur==CommType.Text && !SmsPhones.IsIntegratedTextingEnabled()) {
 					gridRow=new GridRow();
-					gridRow.Cells.Add(Lan.g(this,typeCur.ToString())+" ("+Lan.g(this,"Not Configured")+")");
+					gridRow.Cells.Add(Lan.G(this,typeCur.ToString())+" ("+Lan.G(this,"Not Configured")+")");
 					gridRow.ColorBackG=Color.LightGray;
 					gridPriorities.ListGridRows.Add(gridRow);
 				}
 				else {
 					gridRow=new GridRow();
-					gridRow.Cells.Add(Lan.g(this,typeCur.ToString()));
+					gridRow.Cells.Add(Lan.G(this,typeCur.ToString()));
 					gridPriorities.ListGridRows.Add(gridRow);
 				}
 			}
@@ -349,7 +349,7 @@ namespace OpenDental {
 				MessageBox.Show("No additional languages available.");
 				return;
 			}
-			InputBox languageSelect=new InputBox(Lan.g(this,"Select language for template: "),listLanguagesDisplay,0);
+			InputBox languageSelect=new InputBox(Lan.G(this,"Select language for template: "),listLanguagesDisplay,0);
 			languageSelect.ShowDialog();
 			if(languageSelect.DialogResult!=DialogResult.OK) {
 				return;
@@ -447,28 +447,28 @@ namespace OpenDental {
 				}
 			}
 			if(PIn.Int(textDays.Text,false)>366) {
-				errors.Add(Lan.g(this,"Lead time must 365 days or less."));
+				errors.Add(Lan.G(this,"Lead time must 365 days or less."));
 			}
 			if(checkEnabled.Checked && PIn.Int(textHours.Text,false)==0 
 				&& PIn.Int(textDays.Text,false)==0 
 				&& ApptReminderRuleCur.TypeCur!=ApptReminderType.ScheduleThankYou) //ScheduleThankYou can be 0, meaning send immediately.
 			{
-				errors.Add(Lan.g(this,"Lead time must be greater than 0 hours."));
+				errors.Add(Lan.G(this,"Lead time must be greater than 0 hours."));
 			}
 			if(ApptReminderRuleCur.TypeCur==ApptReminderType.ConfirmationFutureDay) {
 				if(PIn.Int(textDays.Text,false)==0) {
-					errors.Add(Lan.g(this,"Lead time must 1 day or more for confirmations."));
+					errors.Add(Lan.G(this,"Lead time must 1 day or more for confirmations."));
 				}
 			}
 			if(radioBeforeAppt.Checked) {
 				TimeSpan tsPrior=new TimeSpan(PIn.Int(textDays.Text,false),PIn.Int(textHours.Text,false),0,0);
 				TimeSpan doNotSendWithin=new TimeSpan(PIn.Int(textDaysWithin.Text,false),PIn.Int(textHoursWithin.Text,false),0,0);
 				if(doNotSendWithin >= tsPrior && ApptReminderRuleCur.TypeCur!=ApptReminderType.ScheduleThankYou) {
-					errors.Add(Lan.g(this,"'Send Time' must be greater than 'Do Not Send Within' time."));
+					errors.Add(Lan.G(this,"'Send Time' must be greater than 'Do Not Send Within' time."));
 				}
 			}
 			if(errors.Count>0) {
-				MessageBox.Show(Lan.g(this,"You must fix the following errors before continuing.")+"\r\n\r\n-"+string.Join("\r\n-",errors));
+				MessageBox.Show(Lan.G(this,"You must fix the following errors before continuing.")+"\r\n\r\n-"+string.Join("\r\n-",errors));
 				return false;
 			}
 			return true;

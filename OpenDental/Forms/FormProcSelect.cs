@@ -103,32 +103,32 @@ namespace OpenDental{
 				_listPaySplits, _listClaimProcs, _listPayPlanCharges, _listInsPayAsTotal, credCalc, ListSplitsCur);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableProcSelect","Date"),70);
+			GridColumn col=new GridColumn(Lan.G("TableProcSelect","Date"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProcSelect","Prov"),55);
+			col=new GridColumn(Lan.G("TableProcSelect","Prov"),55);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableProcSelect","Code"),55);
+			col=new GridColumn(Lan.G("TableProcSelect","Code"),55);
 			gridMain.ListGridColumns.Add(col);
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
-				col=new GridColumn(Lan.g("TableProcSelect","Description"),290);
+				col=new GridColumn(Lan.G("TableProcSelect","Description"),290);
 				gridMain.ListGridColumns.Add(col);
 			}
 			else {
-				col=new GridColumn(Lan.g("TableProcSelect","Tooth"),40);
+				col=new GridColumn(Lan.G("TableProcSelect","Tooth"),40);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableProcSelect","Description"),250);
+				col=new GridColumn(Lan.G("TableProcSelect","Description"),250);
 				gridMain.ListGridColumns.Add(col);
 			}
 			if(credCalc == CreditCalcType.ExcludeAll) {
-				col=new GridColumn(Lan.g("TableProcSelect","Amt"),40,HorizontalAlignment.Right){ IsWidthDynamic=true };
+				col=new GridColumn(Lan.G("TableProcSelect","Amt"),40,HorizontalAlignment.Right){ IsWidthDynamic=true };
 				gridMain.ListGridColumns.Add(col);
 			}
 			else {
-				col=new GridColumn(Lan.g("TableProcSelect","Amt Orig"),60,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G("TableProcSelect","Amt Orig"),60,HorizontalAlignment.Right);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableProcSelect","Amt Avail"),60,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G("TableProcSelect","Amt Avail"),60,HorizontalAlignment.Right);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableProcSelect","Amt End"),60,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G("TableProcSelect","Amt End"),60,HorizontalAlignment.Right);
 				gridMain.ListGridColumns.Add(col);
 			}
 			gridMain.ListGridRows.Clear();

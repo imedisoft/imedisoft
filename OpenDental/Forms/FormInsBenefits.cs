@@ -1307,7 +1307,7 @@ namespace OpenDental{
 					MessageBox.Show("Not allowed to use simplified view until you fix your Insurance Categories from the setup menu.  At least one of each e-benefit category must be present.");
 					return;
 				}
-				gridBenefits.Title=Lan.g(this,"Other Benefits");
+				gridBenefits.Title=Lan.G(this,"Other Benefits");
 				panelSimple.Visible=true;
 				gridBenefits.Location=new Point(gridBenefits.Left,panelSimple.Bottom+4);
 				gridBenefits.Height=butAdd.Top-gridBenefits.Top-5;
@@ -1318,7 +1318,7 @@ namespace OpenDental{
 					checkSimplified.Checked=true;
 					return;
 				}
-				gridBenefits.Title=Lan.g(this,"Benefits");
+				gridBenefits.Title=Lan.G(this,"Benefits");
 				panelSimple.Visible=false;
 				gridBenefits.Location=new Point(gridBenefits.Left,groupYear.Bottom+3);
 				gridBenefits.Height=butAdd.Top-gridBenefits.Top-5;
@@ -1957,7 +1957,7 @@ namespace OpenDental{
 					row.Cells.Add("");
 				}
 				else{
-					row.Cells.Add(Lan.g("enumBenefitCoverageLevel",benefitList[i].CoverageLevel.ToString()));
+					row.Cells.Add(Lan.G("enumBenefitCoverageLevel",benefitList[i].CoverageLevel.ToString()));
 				}
 				if(benefitList[i].BenefitType==InsBenefitType.CoInsurance && benefitList[i].Percent != -1) {
 					row.Cells.Add("%");
@@ -1969,7 +1969,7 @@ namespace OpenDental{
 				//	row.Cells.Add(Lan.g(this,"Annual Max"));
 				//}
 				else {
-					row.Cells.Add(Lan.g("enumInsBenefitType",benefitList[i].BenefitType.ToString()));
+					row.Cells.Add(Lan.G("enumInsBenefitType",benefitList[i].BenefitType.ToString()));
 				}
 				row.Cells.Add(Benefits.GetCategoryString(benefitList[i]));
 				if(benefitList[i].Percent == -1) {
@@ -1983,11 +1983,11 @@ namespace OpenDental{
 					row.Cells.Add("");
 				}
 				else {
-					row.Cells.Add(Lan.g("enumBenefitTimePeriod",benefitList[i].TimePeriod.ToString()));
+					row.Cells.Add(Lan.G("enumBenefitTimePeriod",benefitList[i].TimePeriod.ToString()));
 				}
 				if(benefitList[i].Quantity>0) {
 					row.Cells.Add(benefitList[i].Quantity.ToString()+" "
-						+Lan.g("enumBenefitQuantity",benefitList[i].QuantityQualifier.ToString()));
+						+Lan.G("enumBenefitQuantity",benefitList[i].QuantityQualifier.ToString()));
 				}
 				else {
 					row.Cells.Add("");
@@ -2124,7 +2124,7 @@ namespace OpenDental{
 
 		///<summary>Only called if in simple view.  This takes all the data on the form and converts it to benefit items.  A new benefitListAll is created based on a combination of benefitList and the new items from the form.  This is used when clicking OK from simple view, or when switching from simple view to complex view.</summary>
 		private bool ConvertFormToBenefits(bool isSilent=false){
-			string messageText=Lan.g(this,"field is invalid.\r\n"
+			string messageText=Lan.G(this,"field is invalid.\r\n"
 				+"Leave the field blank or enter an age to denote coverage through that year before clicking OK.");
 			if(!textFlo.IsValid) { 
 				MessageBox.Show(this,label4.Text+" "+messageText);

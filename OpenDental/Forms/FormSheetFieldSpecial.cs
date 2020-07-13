@@ -73,7 +73,7 @@ namespace OpenDental {
 			textHeight.MinVal=-100;//Default for control in this window.
 			switch(listBoxAvailable.SelectedItem.ToString()) {
 				case "toothChart":
-					labelSpecialInfo.Text=Lan.g(this,"The tooth chart will display a graphical toothchart based on which patient and treatment plan is selected. "+
+					labelSpecialInfo.Text=Lan.G(this,"The tooth chart will display a graphical toothchart based on which patient and treatment plan is selected. "+
 					                                 "Fixed aspect ratio of 410/307");
 					if(_sheetDefCur.SheetType.GetAttributeOrDefault<SheetLayoutAttribute>().IsDynamic) {
 						//Allow user to edit toothChart width.
@@ -83,7 +83,7 @@ namespace OpenDental {
 					}
 					break;
 				case "toothChartLegend":
-					labelSpecialInfo.Text=Lan.g(this,"The tooth chart legend shows what the colors on the tooth chart mean.");
+					labelSpecialInfo.Text=Lan.G(this,"The tooth chart legend shows what the colors on the tooth chart mean.");
 					textWidth.Text=POut.Int(DashToothChartLegend.DefaultWidth);
 					textHeight.Text=POut.Int(DashToothChartLegend.DefaultHeight);
 					if(!SheetDefs.IsDashboardType(_sheetDefCur)) {

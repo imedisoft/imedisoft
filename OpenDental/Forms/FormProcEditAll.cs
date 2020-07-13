@@ -124,7 +124,7 @@ namespace OpenDental {
 			else {
 				_listClinics=_listClinics.OrderBy(x => x.ItemOrder).ToList();
 			}
-			_listClinics.Insert(0,Clinics.GetPracticeAsClinicZero(Lan.g(this,"None")));
+			_listClinics.Insert(0,Clinics.GetPracticeAsClinicZero(Lan.G(this,"None")));
 			for(int i=0;i<_listClinics.Count;i++) {//None mimics FormProcEdit
 				comboClinic.Items.Add(_listClinics[i].Abbr,_listClinics[i]);
 				if(isAllProcsForSameClinic && _listClinics[i].ClinicNum==ProcList[0].ClinicNum) {
@@ -214,8 +214,8 @@ namespace OpenDental {
 					}
 					apt=Appointments.GetOneApt(proc.AptNum);
 					if(proc.ProcDate.Date!=apt.AptDateTime.Date) {
-						string error=Lan.g(this,"Date does not match appointment date for a procedure dated:")+" "+proc.ProcDate.ToShortDateString()
-							+"\r\n"+Lan.g(this,"Continue anyway?");
+						string error=Lan.G(this,"Date does not match appointment date for a procedure dated:")+" "+proc.ProcDate.ToShortDateString()
+							+"\r\n"+Lan.G(this,"Continue anyway?");
 						if(MessageBox.Show(error,"",MessageBoxButtons.YesNo)==DialogResult.No) {
 							return false;
 						}
@@ -264,16 +264,16 @@ namespace OpenDental {
 			string field="";
 			switch(logField) {
 				case SecurityLogFields.ProcDate:
-						field=Lan.g(this,"Proc Date");
+						field=Lan.G(this,"Proc Date");
 						break;
 				case SecurityLogFields.ProvNum:
-						field=Lan.g(this,"Provider");
+						field=Lan.G(this,"Provider");
 						break;
 				case SecurityLogFields.ClinicNum:
-						field=Lan.g(this,"Clinic");
+						field=Lan.G(this,"Clinic");
 						break;
 			}
-			return Lan.g(this,"Procedure code")+" "+procCodeVal+" "+field+" "+Lan.g(this,"changed from")+" '"+oldVal+"' "+Lan.g(this,"to")+" '"+newVal+"'\r\n";
+			return Lan.G(this,"Procedure code")+" "+procCodeVal+" "+field+" "+Lan.G(this,"changed from")+" '"+oldVal+"' "+Lan.G(this,"to")+" '"+newVal+"'\r\n";
 		}
 
 		///<summary>Runs Procedures.ComputeEstimates for given proc and listClaimProcs.

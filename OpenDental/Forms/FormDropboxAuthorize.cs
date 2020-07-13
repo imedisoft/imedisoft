@@ -20,7 +20,7 @@ namespace OpenDental {
 				System.Diagnostics.Process.Start(url);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Error:")+"  "+ex.Message);
+				MessageBox.Show(Lan.G(this,"Error:")+"  "+ex.Message);
 			}
 		}
 
@@ -33,7 +33,7 @@ namespace OpenDental {
 				DataValid.SetInvalid(InvalidType.Programs);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Error:")+"  "+ex.Message);
+				MessageBox.Show(Lan.G(this,"Error:")+"  "+ex.Message);
 				return;
 			}
 			DialogResult=DialogResult.OK;

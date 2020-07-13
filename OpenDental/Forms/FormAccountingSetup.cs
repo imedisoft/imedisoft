@@ -652,9 +652,9 @@ namespace OpenDental{
 		private void FillPayGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableAccountingAutoPay","Payment Type"),200);
+			GridColumn col=new GridColumn(Lan.G("TableAccountingAutoPay","Payment Type"),200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableAccountingAutoPay","Pick List"),250);
+			col=new GridColumn(Lan.G("TableAccountingAutoPay","Pick List"),250);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -783,7 +783,7 @@ namespace OpenDental{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			InputBox FormChooseClasses=new InputBox(Lan.g(this,"Choose a class"),listClasses,true);
+			InputBox FormChooseClasses=new InputBox(Lan.G(this,"Choose a class"),listClasses,true);
 			FormChooseClasses.TopLevel=true;
 			if(FormChooseClasses.ShowDialog()!=DialogResult.OK) {
 				return;

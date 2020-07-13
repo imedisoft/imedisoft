@@ -191,15 +191,15 @@ namespace OpenDental {
 				ShowImageAttachmentItemEdit(image);
 			}
 			catch(System.IO.FileNotFoundException ex) {
-				FriendlyException.Show(Lan.g(this,"The selected file at: "+selectedFile+" could not be found"),ex);
+				FriendlyException.Show(Lan.G(this,"The selected file at: "+selectedFile+" could not be found"),ex);
 			}
 			catch(System.OutOfMemoryException ex) {
 				//Image.FromFile() will throw an OOM exception when the image format is invalid or not supported.
 				//See MSDN if you have trust issues:  https://msdn.microsoft.com/en-us/library/stf701f5(v=vs.110).aspx
-				FriendlyException.Show(Lan.g(this,"The file does not have a valid image format. Please try again or call support."+"\r\n"+ex.Message),ex);
+				FriendlyException.Show(Lan.G(this,"The file does not have a valid image format. Please try again or call support."+"\r\n"+ex.Message),ex);
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"An error occurred. Please try again or call support.")+"\r\n"+ex.Message,ex);
+				FriendlyException.Show(Lan.G(this,"An error occurred. Please try again or call support.")+"\r\n"+ex.Message,ex);
 			}
 		}
 
@@ -215,32 +215,32 @@ namespace OpenDental {
 					if(dataObject.GetDataPresent(DataFormats.FileDrop)) {
 						string[] files=(string[])dataObject.GetData(DataFormats.FileDrop);
 						if(files.Length>1) {//Throw error if multiple images are in the list
-							throw new ODException(Lan.g(this,"Can only paste one image from file at a time"));
+							throw new ODException(Lan.G(this,"Can only paste one image from file at a time"));
 						}
 						try {
 							Bitmap bitmapClipboard=new Bitmap(files.First());//Create a bitmap of the original file to avoid the transparency bug with the image class
 							ShowImageAttachmentItemEdit(bitmapClipboard);
 						}
 						catch(ArgumentException) {
-							throw new ODException(Lan.g(this,"Invalid file type when copying image from location. Valid file types include BMP, GIF, JPEG, PNG, and TIFF."));
+							throw new ODException(Lan.G(this,"Invalid file type when copying image from location. Valid file types include BMP, GIF, JPEG, PNG, and TIFF."));
 						}
 					}
 					else {
-						throw new ODException(Lan.g(this,"Could not find a valid image file on the clipboard."));
+						throw new ODException(Lan.G(this,"Could not find a valid image file on the clipboard."));
 					}
 				}		
 				else {
-					throw new ODException(Lan.g(this,"Could not find a valid image or image file on the clipboard."));
+					throw new ODException(Lan.G(this,"Could not find a valid image or image file on the clipboard."));
 				}
 			}
 			catch(ODException ode) {
 				MessageBox.Show(ode.Message);
 			}
 			catch(ExternalException ee) {
-				FriendlyException.Show(Lan.g(this,"The clipboard could not be accessed. This typically occurs when the clipboard is being used by another process."),ee);
+				FriendlyException.Show(Lan.G(this,"The clipboard could not be accessed. This typically occurs when the clipboard is being used by another process."),ee);
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"An error occurred while accessing the clipboard. Please call support if the issue persists."),ex);
+				FriendlyException.Show(Lan.G(this,"An error occurred while accessing the clipboard. Please call support if the issue persists."),ex);
 			}
 		}
 

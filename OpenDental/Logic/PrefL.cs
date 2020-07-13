@@ -82,7 +82,7 @@ namespace OpenDental {
 			if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ && hasAtoZ) {
 				folderAtoZUpdateFiles=ODFileUtils.CombinePaths(ImageStore.GetPreferredAtoZpath(),"UpdateFiles");
 			}
-			ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Removing old update files..."));
+			ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Removing old update files..."));
 			//Try to delete the UpdateFiles folder from both the AtoZ share and the local TEMP dir.
 			if(!DeleteFolder(folderAtoZUpdateFiles) | !DeleteFolder(folderTempUpdateFiles)) {//Logical OR to prevent short circuit.
 				FormOpenDental.ExitCode=301;//UpdateFiles folder cannot be deleted (Warning)
@@ -95,7 +95,7 @@ namespace OpenDental {
 			}
 			#endregion
 			#region Copy Current Installation Directory To UpdateFiles Folders
-			ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Backing up new update files..."));
+			ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Backing up new update files..."));
 			//Copy the installation directory files to the UpdateFiles share and a TEMP dir that we just created which we will zip up and insert into the db.
 			//When PrefC.AtoZfolderUsed is true and we're upgrading from a version prior to 15.3.10, this copy that we are about to make allows backwards 
 			//compatibility for versions of OD that do not look at the database for their UpdateFiles.
@@ -115,7 +115,7 @@ namespace OpenDental {
 			int maxAllowedPacket=0;
 			int defaultMaxAllowedPacketSize=41943040;//40MB
 
-				ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Getting MySQL max allowed packet setting..."));
+				ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Getting MySQL max allowed packet setting..."));
 				maxAllowedPacket=MiscData.GetMaxAllowedPacket();
 				//If trying to get the max_allowed_packet value for MySQL failed, assume they can handle 40MB of data.
 				//Our installations of MySQL defaults the global property 'max_allowed_packet' to 40MB.
@@ -152,7 +152,7 @@ namespace OpenDental {
 			MemoryStream memStream=new MemoryStream();
 			ZipFile zipFile=new ZipFile();
 			//Take the entire directory in the temp dir that we just created and zip it up.
-			ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Compressing new update files..."));
+			ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Compressing new update files..."));
 			try {
 				zipFile.AddDirectory(folderTempUpdateFiles);//This adds any sub directories as well.
 				zipFile.Save(memStream);
@@ -163,7 +163,7 @@ namespace OpenDental {
 				FormOpenDental.ExitCode=304;//Error compressing UpdateFiles
 				if(!isSilent) {
 					currentForm.InvokeIfRequired(() => {
-						MessageBox.Show(Lan.g("Prefs","Error compressing UpdateFiles:")+"\r\n"+ex.Message);
+						MessageBox.Show(Lan.G("Prefs","Error compressing UpdateFiles:")+"\r\n"+ex.Message);
 					});
 				}
 				return false;
@@ -180,11 +180,11 @@ namespace OpenDental {
 					//Converting the file to Base64String bloats the size by approximately 30% so we need to make sure that the chunk size is well below 40MB
 					//Old code used 15MB and that seemed to work very well for the majority of users.
 					charsPerPayload=Math.Min(charsPerPayload,15728640);//15728640 is divisible by 3 which is important for Base64 "appending" logic.
-					ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Deleting old update files row..."));
+					ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Deleting old update files row..."));
 					DocumentMiscs.DeleteAllForType(DocumentMiscType.UpdateFiles);
 					byte[] zipFileBytes=new byte[charsPerPayload];
 					memStream.Position=0;//Start at the beginning of the stream.
-					ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Inserting new update files into database row..."));
+					ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Inserting new update files into database row..."));
 					DocumentMisc docUpdateFiles=new DocumentMisc();
 					docUpdateFiles.DateCreated=DateTime.Today;
 					docUpdateFiles.DocMiscType=DocumentMiscType.UpdateFiles;
@@ -196,7 +196,7 @@ namespace OpenDental {
 				}
 				catch(Exception ex) {
 					//Only log the error, do not stop the update process.  The above code is known to fail for various reasons and we abandoned it.
-					ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Error inserting new update files into database row..."));
+					ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Error inserting new update files into database row..."));
 					ODException.SwallowAnyException(() => {
 						EventLog.WriteEntry("OpenDental","Error inserting new update files into database row:\r\n"+ex.Message,
 							EventLogEntryType.Error);
@@ -210,12 +210,12 @@ namespace OpenDental {
 			charsPerPayload=Math.Min(charsPerPayload,1048575);//1048575 is divisible by 3 which is important for Base64 "appending" logic.
 			try {
 				//Clear and prep the current UpdateFiles row in the documentmisc table for the updated binaries.
-				ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Deleting old update files segments..."));
+				ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Deleting old update files segments..."));
 				DocumentMiscs.DeleteAllForType(DocumentMiscType.UpdateFilesSegment);
 				byte[] zipFileBytes=new byte[charsPerPayload];
 				memStream.Position=0;//Start at the beginning of the stream.
 				//Convert the zipped up bytes into Base64 and instantly insert it into the database little by little.
-				ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Inserting new update files segments into database..."));
+				ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Inserting new update files segments into database..."));
 				try {
 					int count=1;
 					DocumentMisc docUpdateFilesSegment=new DocumentMisc();
@@ -227,7 +227,7 @@ namespace OpenDental {
 						DocumentMiscs.Insert(docUpdateFilesSegment);
 						count++;
 					}
-					ODEvent.Fire(ODEventType.PrefL,Lan.g("Prefs","Done..."));
+					ODEvent.Fire(ODEventType.PrefL,Lan.G("Prefs","Done..."));
 				}
 				catch(MySqlException myEx) {
 					ODException.SwallowAnyException(() => {
@@ -255,9 +255,9 @@ namespace OpenDental {
 				if(isSilent) {
 					return false;
 				}
-				string errorStr=Lan.g("Prefs","Failed inserting update files into the database.");
+				string errorStr=Lan.G("Prefs","Failed inserting update files into the database.");
 				if(myEx.Number.In((int)MySqlErrorCode.TooLongString,(int)MySqlErrorCode.WarningAllowedPacketOverflowed,(int)MySqlErrorCode.PacketTooLarge)) {
-					errorStr+="\r\n"+Lan.g("Prefs","Please call us or have your IT admin increase the max_allowed_packet to 40MB in the my.ini file.");
+					errorStr+="\r\n"+Lan.G("Prefs","Please call us or have your IT admin increase the max_allowed_packet to 40MB in the my.ini file.");
 					try {
 						string innoDBTableNames=InnoDb.GetInnodbTableNames();
 						if(innoDBTableNames!="") {
@@ -267,7 +267,7 @@ namespace OpenDental {
 							//older version, then MySQL will fail to start.  
 							//An alternative solution would be to convert their tables over to MyISAM instead of letting them continue with InnoDB (if possible).
 							//The following message to the user is vague on purpose to avoid listing version numbers.
-							errorStr+="\r\n"+Lan.g("Prefs","InnoDB tables have been detected, you may need to increase the innodb_log_file_size variable.");
+							errorStr+="\r\n"+Lan.G("Prefs","InnoDB tables have been detected, you may need to increase the innodb_log_file_size variable.");
 						}
 					}
 					catch(Exception) {
@@ -275,7 +275,7 @@ namespace OpenDental {
 					}
 				}
 				else {
-					errorStr+="\r\n"+Lan.g("Prefs","MySqlException")+": "+myEx.Message;
+					errorStr+="\r\n"+Lan.G("Prefs","MySqlException")+": "+myEx.Message;
 				}
 				currentForm.InvokeIfRequired(() => {
 					MessageBox.Show(errorStr);
@@ -288,7 +288,7 @@ namespace OpenDental {
 					return false;
 				}
 				currentForm.InvokeIfRequired(() => {
-					MessageBox.Show(Lan.g("Prefs","Failed inserting update files into the database.")+"\r\n"+ex.Message);
+					MessageBox.Show(Lan.G("Prefs","Failed inserting update files into the database.")+"\r\n"+ex.Message);
 				});
 				return false;
 			}
@@ -439,9 +439,9 @@ namespace OpenDental {
 					return false;
 				}
 				//Else offer to downgrade their client
-				string message=Lan.g("Prefs","Your version is more recent than the server version.");
-				message+="\r\n"+Lan.g("Prefs","Updates are only allowed from the web server")+": "+updateServerName;
-				message+="\r\n\r\n"+Lan.g("Prefs","Do you want to downgrade to the server version?");
+				string message=Lan.G("Prefs","Your version is more recent than the server version.");
+				message+="\r\n"+Lan.G("Prefs","Updates are only allowed from the web server")+": "+updateServerName;
+				message+="\r\n\r\n"+Lan.G("Prefs","Do you want to downgrade to the server version?");
 				if(MessageBox.Show(message,"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 					return false;//If user clicks cancel, then exit program
 				}
@@ -542,8 +542,8 @@ namespace OpenDental {
 							Prefs.UpdateBool(PrefName.EConnectorEnabled,true);//No need to send an invalidate signal to other workstations.  They were kicked out.
 							try {
 								ListenerServiceType listenerType=WebServiceMainHQProxy.SetEConnectorOn();
-								string logText=Lan.g("PrefL","eConnector status automatically set to")+" "+listenerType.ToString()+" "
-									+Lan.g("PrefL","via the upgrade process.");
+								string logText=Lan.G("PrefL","eConnector status automatically set to")+" "+listenerType.ToString()+" "
+									+Lan.G("PrefL","via the upgrade process.");
 								SecurityLogs.MakeLogEntry(Permissions.EServicesSetup,0,logText);
 							}
 							catch(Exception) {
@@ -693,9 +693,9 @@ namespace OpenDental {
 				return;
 			}
 			if(MessageBox.Show(
-				Lan.g("Prefs","Setup file will now be downloaded.")+"\r\n"
-				+Lan.g("Prefs","Workstation version will be updated from ")+currentVersion.ToString(3)
-				+Lan.g("Prefs"," to ")+storedVersion.ToString(3),
+				Lan.G("Prefs","Setup file will now be downloaded.")+"\r\n"
+				+Lan.G("Prefs","Workstation version will be updated from ")+currentVersion.ToString(3)
+				+Lan.G("Prefs"," to ")+storedVersion.ToString(3),
 				"",MessageBoxButtons.OKCancel)
 				!=DialogResult.OK)//they don't want to update for some reason.
 			{
@@ -703,7 +703,7 @@ namespace OpenDental {
 			}
 			FolderBrowserDialog dlg=new FolderBrowserDialog();
 			dlg.SelectedPath=ImageStore.GetPreferredAtoZpath();
-			dlg.Description=Lan.g("Prefs","Setup.exe will be downloaded to the folder you select below");
+			dlg.Description=Lan.G("Prefs","Setup.exe will be downloaded to the folder you select below");
 			if(dlg.ShowDialog()!=DialogResult.OK) {
 				return;//app will exit
 			}
@@ -757,35 +757,35 @@ namespace OpenDental {
 					strNewVersion=strNewVersion.Replace("b","");
 				}
 			}catch{
-				updateInfoMajor+=Lan.g("FormUpdate","Registration number not valid, or internet connection failed.  ");
+				updateInfoMajor+=Lan.G("FormUpdate","Registration number not valid, or internet connection failed.  ");
 				return false;
 			}
 			if(versionNewBuild==new Version(Application.ProductVersion)) {
-				updateInfoMajor+=Lan.g("FormUpdate","You are using the most current build of this version.  ");
+				updateInfoMajor+=Lan.G("FormUpdate","You are using the most current build of this version.  ");
 			}else{
 				//this also allows users to install previous versions.
-				updateInfoMajor+=Lan.g("FormUpdate","A new build of this version is available for download:  ")
+				updateInfoMajor+=Lan.G("FormUpdate","A new build of this version is available for download:  ")
 					+versionNewBuild.ToString();
 				if(buildIsAlpha) {
-					updateInfoMajor+=Lan.g("FormUpdate","(alpha)  ");
+					updateInfoMajor+=Lan.G("FormUpdate","(alpha)  ");
 				}
 				if(buildIsBeta) {
-					updateInfoMajor+=Lan.g("FormUpdate","(beta)  ");
+					updateInfoMajor+=Lan.G("FormUpdate","(beta)  ");
 				}
 				shouldDownload=true;
 			}
 			//Whether or not build is current, we want to inform user about the next minor version
 			if(strNewVersion!=null) {//we don't really care what it is.
-				updateInfoMinor+=Lan.g("FormUpdate","A newer version is also available.  ");
+				updateInfoMinor+=Lan.G("FormUpdate","A newer version is also available.  ");
 				if(versionIsAlpha) {
-					updateInfoMinor+=Lan.g("FormUpdate","It is alpha (experimental), so it has bugs and "+
+					updateInfoMinor+=Lan.G("FormUpdate","It is alpha (experimental), so it has bugs and "+
 						"you will need to update it frequently.  ");
 				}
 				if(versionIsBeta) {
-					updateInfoMinor+=Lan.g("FormUpdate","It is beta (test), so it has some bugs and "+
+					updateInfoMinor+=Lan.G("FormUpdate","It is beta (test), so it has some bugs and "+
 						"you will need to update it frequently.  ");
 				}
-				updateInfoMinor+=Lan.g("FormUpdate","Contact us for a new Registration number if you wish to use it.  ");
+				updateInfoMinor+=Lan.G("FormUpdate","Contact us for a new Registration number if you wish to use it.  ");
 			}
 			return shouldDownload;
 		}
@@ -823,7 +823,7 @@ namespace OpenDental {
 				File.Delete(destinationPath);
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g("FormUpdate","Error deleting file:")+"\r\n"+ex.Message,ex);
+				FriendlyException.Show(Lan.G("FormUpdate","Error deleting file:")+"\r\n"+ex.Message,ex);
 				MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
 				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName,"");
 				return;
@@ -866,7 +866,7 @@ namespace OpenDental {
 							File.Delete(destinationPath2);
 						}
 						catch(Exception ex) {
-							FriendlyException.Show(Lan.g("FormUpdate","Error deleting file:")+"\r\n"+ex.Message,ex);
+							FriendlyException.Show(Lan.G("FormUpdate","Error deleting file:")+"\r\n"+ex.Message,ex);
 							MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
 							Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName,"");
 							return;
@@ -879,7 +879,7 @@ namespace OpenDental {
 				OpenDentalCloud.Core.TaskStateUpload state=null;
 				byte[] arrayBytes=File.ReadAllBytes(destinationPath);
 				FormP=new FormProgress();
-				FormP.DisplayText=Lan.g("FormUpdate","Uploading Setup File...");//Upload unversioned setup file to AtoZ main folder.
+				FormP.DisplayText=Lan.G("FormUpdate","Uploading Setup File...");//Upload unversioned setup file to AtoZ main folder.
 				FormP.NumberFormat="F";
 				FormP.NumberMultiplication=1;
 				FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
@@ -897,7 +897,7 @@ namespace OpenDental {
 				}
 				if(destinationPath2!=null && destinationPath2!="") {//Upload a copy of the Setup.exe to a versioned setup file to SetupFiles folder.  Not always used.
 					FormP=new FormProgress();
-					FormP.DisplayText=Lan.g("FormUpdate","Uploading Setup File SetupFiles folder...");
+					FormP.DisplayText=Lan.G("FormUpdate","Uploading Setup File SetupFiles folder...");
 					FormP.NumberFormat="F";
 					FormP.NumberMultiplication=1;
 					FormP.MaxVal=100;//Doesn't matter what this value is as long as it is greater than 0
@@ -930,7 +930,7 @@ namespace OpenDental {
 			if(!runSetupAfterDownload) {
 				return;
 			}
-			string msg=Lan.g("FormUpdate","Download succeeded.  Setup program will now begin.  When done, restart the program on this computer, then on the other computers.");
+			string msg=Lan.G("FormUpdate","Download succeeded.  Setup program will now begin.  When done, restart the program on this computer, then on the other computers.");
 			if(dblist.Length > 0) {
 				msg="Download succeeded.  Setup file probably copied to other AtoZ folders as well.  Setup program will now begin.  When done, restart the program for each database on this computer, then on the other computers.";
 			}
@@ -954,7 +954,7 @@ namespace OpenDental {
 				actionCloseStopServicesProgress?.Invoke();
 				//Notify the user to go manually stop the services that could not automatically stop.
 				if(!string.IsNullOrEmpty(servicesNotStopped)) {
-					MsgBoxCopyPaste msgBCP=new MsgBoxCopyPaste(Lan.g("FormUpdate","The following services could not be stopped.  You need to manually stop them before continuing.")
+					MsgBoxCopyPaste msgBCP=new MsgBoxCopyPaste(Lan.G("FormUpdate","The following services could not be stopped.  You need to manually stop them before continuing.")
 					+"\r\n"+servicesNotStopped);
 					msgBCP.ShowDialog();
 				}
@@ -1023,8 +1023,8 @@ namespace OpenDental {
 				FormOpenDental.ExitCode=110;//MySQL version lower than 5.0
 				if(!isSilent) {
 					//We will force users to upgrade to 5.0, but not yet to 5.5
-					MessageBox.Show(Lan.g("Prefs","Your version of MySQL won't work with this program")+": "+thisVersion
-						+".  "+Lan.g("Prefs","You should upgrade to MySQL 5.0 using the installer on our website."));
+					MessageBox.Show(Lan.G("Prefs","Your version of MySQL won't work with this program")+": "+thisVersion
+						+".  "+Lan.G("Prefs","You should upgrade to MySQL 5.0 using the installer on our website."));
 				}
 				return false;
 			}
@@ -1142,7 +1142,7 @@ namespace OpenDental {
 					string updateInfoMajor="";
 					string updateInfoMinor="";
 					if(ShouldDownloadUpdate(updateUri,updateCode,out updateInfoMajor,out updateInfoMinor)) {
-						if(MessageBox.Show(updateInfoMajor+Lan.g("Prefs","Perform program update now?"),"",
+						if(MessageBox.Show(updateInfoMajor+Lan.G("Prefs","Perform program update now?"),"",
 							MessageBoxButtons.YesNo)==DialogResult.Yes) {
 							string tempFile=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),patchName);//Resort to a more common temp file name.
 							DownloadInstallPatchFromURI(updateUri+updateCode+"/"+patchName,//Source URI
@@ -1344,8 +1344,8 @@ namespace OpenDental {
 			});
 			if(manifestVersion!=storedVersion.ToString(3)) {//manifest version is wrong
 				string manpath=ODFileUtils.CombinePaths(folderUpdate,"Manifest.txt");
-				string message=Lan.g("Prefs","The expected version information was not found in this file:")+" "+manpath+".  "
-					+Lan.g("Prefs","There is probably a permission issue on that folder which should be fixed.\r\n\r\n"
+				string message=Lan.G("Prefs","The expected version information was not found in this file:")+" "+manpath+".  "
+					+Lan.G("Prefs","There is probably a permission issue on that folder which should be fixed.\r\n\r\n"
 					+"The suggested solution is to return to the computer where the update was just run.  Go to Help | "
 					+"Update | Setup, and click the Recopy button.");
 				//If they were copying the files to a dynamic mode folder, do not install the exe. Give them the troubleshooting message with no option.
@@ -1357,7 +1357,7 @@ namespace OpenDental {
 				else {
 					//No point trying the Setup.exe because that's probably wrong too.
 					//Just go straight to downloading and running the Setup.exe.
-					if(MessageBox.Show(message+"\r\n\r\n"+Lan.g("Prefs","If, instead, you click OK in this window, then a fresh Setup file will be "
+					if(MessageBox.Show(message+"\r\n\r\n"+Lan.G("Prefs","If, instead, you click OK in this window, then a fresh Setup file will be "
 						+"downloaded and run."),"",MessageBoxButtons.OKCancel)!=DialogResult.OK)//they don't want to download again.
 					{
 						FormOpenDental.ExitCode=312;//Stored version is higher that client version after an update was successful.
@@ -1371,9 +1371,9 @@ namespace OpenDental {
 			}
 			//Manifest version matches. Show window if they are updating their main installation of Open Dental.
 			if(destDir==Application.StartupPath) {//if this is copying the files to the installation folder
-				if(MessageBox.Show(Lan.g("Prefs","Files will now be copied.")+"\r\n"
-					+Lan.g("Prefs","Workstation version will be updated from ")+currentVersion.ToString(3)
-					+Lan.g("Prefs"," to ")+storedVersion.ToString(3),
+				if(MessageBox.Show(Lan.G("Prefs","Files will now be copied.")+"\r\n"
+					+Lan.G("Prefs","Workstation version will be updated from ")+currentVersion.ToString(3)
+					+Lan.G("Prefs"," to ")+storedVersion.ToString(3),
 					"",MessageBoxButtons.OKCancel)
 					!=DialogResult.OK)//they don't want to update for some reason.
 				{
@@ -1392,7 +1392,7 @@ namespace OpenDental {
 					Directory.Delete(tempFolderUpdate,true);
 				}
 				catch(Exception ex) {
-					FriendlyException.Show(Lan.g("Prefs","Unable to delete update files from local temp folder. Try closing and reopening the program."),ex);
+					FriendlyException.Show(Lan.G("Prefs","Unable to delete update files from local temp folder. Try closing and reopening the program."),ex);
 					FormOpenDental.ExitCode=301;//UpdateFiles folder cannot be deleted
 					Environment.Exit(FormOpenDental.ExitCode);
 					return false;
@@ -1473,7 +1473,7 @@ namespace OpenDental {
 				proc.WaitForExit();//Waits for the file copier to be complete.
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g("Prefs","Unable to start the update file copier. Try closing and reopening the program."),ex);
+				FriendlyException.Show(Lan.G("Prefs","Unable to start the update file copier. Try closing and reopening the program."),ex);
 				FormOpenDental.ExitCode=305;//Unable to start the UpdateFileCopier.exe process.
 				Environment.Exit(FormOpenDental.ExitCode);
 				return false;

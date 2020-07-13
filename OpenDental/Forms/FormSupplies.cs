@@ -109,24 +109,24 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Category"),130);
+			GridColumn col=new GridColumn(Lan.G(this,"Category"),130);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Catalog #"),80);
+			col=new GridColumn(Lan.G(this,"Catalog #"),80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Supplier"),100);
+			col=new GridColumn(Lan.G(this,"Supplier"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),200);
+			col=new GridColumn(Lan.G(this,"Description"),200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Price"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Price"),60,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Stock"),50,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Stock"),50,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Order"),50,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Order"),50,HorizontalAlignment.Center);
 			if(checkEnterQty.Checked){
 				col.IsEditable=true;
 			}
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Hidden"),50,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Hidden"),50,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -453,7 +453,7 @@ namespace OpenDental {
 			}
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd2_PrintPage,Lan.g(this,"Supplies list printed"),margins:new Margins(50,50,40,30));
+			PrinterL.TryPrintOrDebugRpPreview(pd2_PrintPage,Lan.G(this,"Supplies list printed"),margins:new Margins(50,50,40,30));
 		}
 
 		/// <summary>Creates a new order with all the items currently highlighted as a new pending order.</summary>
@@ -488,7 +488,7 @@ namespace OpenDental {
 			for(int i=0;i<listSupplyOrders.Count;i++){
 				SupplyOrders.UpdateOrderPrice(listSupplyOrders[i].SupplyOrderNum);
 			}
-			MessageBox.Show(Lan.g(this,"Done. Added ")+listSupplyOrders.Count.ToString()+Lan.g(this," orders.  Manage orders from Orders window"));
+			MessageBox.Show(Lan.G(this,"Done. Added ")+listSupplyOrders.Count.ToString()+Lan.G(this," orders.  Manage orders from Orders window"));
 			DialogResult=DialogResult.OK;
 		}
 
@@ -529,7 +529,7 @@ namespace OpenDental {
 			for(int i=0;i<listSupplyOrders.Count;i++){
 				SupplyOrders.UpdateOrderPrice(listSupplyOrders[i].SupplyOrderNum);
 			}
-			MessageBox.Show(Lan.g(this,"Done. Added ")+listSupplyOrders.Count.ToString()+Lan.g(this," orders.  Manage orders from Orders window"));
+			MessageBox.Show(Lan.G(this,"Done. Added ")+listSupplyOrders.Count.ToString()+Lan.G(this," orders.  Manage orders from Orders window"));
 			DialogResult=DialogResult.OK;
 		}
 
@@ -543,10 +543,10 @@ namespace OpenDental {
 			int yPos=bounds.Top;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Supply List");
+				text=Lan.G(this,"Supply List");
 				g.DrawString(text,headingFont,Brushes.Black,425-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=Lan.g(this,"Date")+": "+DateTime.Today.ToShortDateString();
+				text=Lan.G(this,"Date")+": "+DateTime.Today.ToShortDateString();
 				g.DrawString(text,subHeadingFont,Brushes.Black,425-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				yPos+=5;

@@ -184,28 +184,28 @@ namespace OpenDental {
 				_listButtons[i].Image=GetImage(_listButtons[i].ModuleType,isMedical);
 				switch(_listButtons[i].ModuleType){
 					case EnumModuleType.Appointments:
-						_listButtons[i].Caption=Lan.g(this,"Appts");
+						_listButtons[i].Caption=Lan.G(this,"Appts");
 						break;
 					case EnumModuleType.Family:
-						_listButtons[i].Caption=Lan.g(this,"Family");
+						_listButtons[i].Caption=Lan.G(this,"Family");
 						break;
 					case EnumModuleType.Account:
-						_listButtons[i].Caption=Lan.g(this,"Account");
+						_listButtons[i].Caption=Lan.G(this,"Account");
 						break;
 					case EnumModuleType.TreatPlan:
-						_listButtons[i].Caption=Lan.g(this,"Treat' Plan");
+						_listButtons[i].Caption=Lan.G(this,"Treat' Plan");
 						break;
 					case EnumModuleType.Chart:
 						if(PrefC.GetBool(PrefName.EasyHideClinical)) {
-							_listButtons[i].Caption=Lan.g(this,"Procs");
+							_listButtons[i].Caption=Lan.G(this,"Procs");
 						}
-						_listButtons[i].Caption=Lan.g(this,"Chart");
+						_listButtons[i].Caption=Lan.G(this,"Chart");
 						break;
 					case EnumModuleType.Images:
-						_listButtons[i].Caption=Lan.g(this,"Imaging");
+						_listButtons[i].Caption=Lan.G(this,"Imaging");
 						break;
 					case EnumModuleType.Manage:
-						_listButtons[i].Caption=Lan.g(this,"Manage");
+						_listButtons[i].Caption=Lan.G(this,"Manage");
 						break;
 				}
 			}

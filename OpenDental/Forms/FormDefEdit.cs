@@ -442,7 +442,7 @@ namespace OpenDental {
 			if(!_defCatOptions.CanEditName) {
 				//Allow foreign users to translate definitions that they do not have access to translate.
 				//Use FormDefinitions instead of 'this' because the users will have already translated the item names in that form and no need to duplicate.
-				itemName=Lan.g("FormDefinitions",DefCur.ItemName);
+				itemName=Lan.G("FormDefinitions",DefCur.ItemName);
 				textName.ReadOnly=true;
 				if(!DefCur.IsHidden || Defs.IsDefDeprecated(DefCur)) {
 					checkHidden.Enabled=false;//prevent hiding defs that are hard-coded into OD. Prevent unhiding defs that are deprecated.
@@ -476,7 +476,7 @@ namespace OpenDental {
 			if(_defCatOptions.IsValueDefNum) {
 				textValue.ReadOnly=true;
 				textValue.BackColor=SystemColors.Control;
-				labelValue.Text=Lan.g("FormDefinitions","Use the select button to choose a definition from the list.");
+				labelValue.Text=Lan.G("FormDefinitions","Use the select button to choose a definition from the list.");
 				long defNumCur=PIn.Long(DefCur.ItemValue??"");
 				if(defNumCur>0) {
 					textValue.Text=_defsList.FirstOrDefault(x => defNumCur==x.DefNum)?.ItemName??"";
@@ -485,7 +485,7 @@ namespace OpenDental {
 				butClearValue.Visible=true;
 			}
 			else if(_defCatOptions.DoShowItemOrderInValue) {
-				labelValue.Text=Lan.g(this,"Internal Priority");
+				labelValue.Text=Lan.G(this,"Internal Priority");
 				textValue.Text=DefCur.ItemOrder.ToString();
 				textValue.ReadOnly=true;
 				butSelect.Visible=false;
@@ -593,7 +593,7 @@ namespace OpenDental {
 							//Now check to see if the trimmed version of the code does not exist either.
 							procCode=ProcedureCodes.GetProcCode(procCodes[i].Trim());
 							if(procCode.CodeNum==0) {
-								MessageBox.Show(Lan.g(this,"Invalid procedure code entered")+": "+procCodes[i]);
+								MessageBox.Show(Lan.G(this,"Invalid procedure code entered")+": "+procCodes[i]);
 								return;
 							}
 						}
@@ -603,7 +603,7 @@ namespace OpenDental {
 					break;
 				case DefCat.AdjTypes:
 					if(textValue.Text!="+" && textValue.Text!="-" && textValue.Text!="dp"){
-						MessageBox.Show(Lan.g(this,"Valid values are +, -, or dp."));
+						MessageBox.Show(Lan.G(this,"Valid values are +, -, or dp."));
 						return;
 					}
 					break;
@@ -624,7 +624,7 @@ namespace OpenDental {
 				case DefCat.CommLogTypes:
 					List<string> listCommItemTypes=Commlogs.GetCommItemTypes().Select(x => x.GetDescription(useShortVersionIfAvailable:true)).ToList();
 					if(textValue.Text!="" && !listCommItemTypes.Any(x => x==textValue.Text)) {
-						MessageBox.Show(Lan.g(this,"Valid values are:")+" "+string.Join(", ",listCommItemTypes));
+						MessageBox.Show(Lan.G(this,"Valid values are:")+" "+string.Join(", ",listCommItemTypes));
 						return;
 					}
 					break;
@@ -635,11 +635,11 @@ namespace OpenDental {
 						discVal=System.Convert.ToInt32(textValue.Text);
 					}
 					catch {
-						MessageBox.Show(Lan.g(this,"Not a valid number"));
+						MessageBox.Show(Lan.G(this,"Not a valid number"));
 						return;
 					}
 					if(discVal < 0 || discVal > 100) {
-						MessageBox.Show(Lan.g(this,"Valid values are between 0 and 100"));
+						MessageBox.Show(Lan.G(this,"Valid values are between 0 and 100"));
 						return;
 					}
 					textValue.Text=discVal.ToString();
@@ -667,7 +667,7 @@ namespace OpenDental {
 					break;
 				case DefCat.OperatoriesOld:
 					if(textValue.Text.Length > 5){
-						MessageBox.Show(Lan.g(this,"Maximum length of abbreviation is 5."));
+						MessageBox.Show(Lan.G(this,"Maximum length of abbreviation is 5."));
 						return;
 					}
 					break;
@@ -688,13 +688,13 @@ namespace OpenDental {
 					break;
 				case DefCat.RecallUnschedStatus:
 					if(textValue.Text.Length > 7){
-						MessageBox.Show(Lan.g(this,"Maximum length is 7."));
+						MessageBox.Show(Lan.G(this,"Maximum length is 7."));
 						return;
 					}
 					break;
 				case DefCat.TxPriorities:
 					if(textValue.Text.Length > 7){
-						MessageBox.Show(Lan.g(this,"Maximum length of abbreviation is 7."));
+						MessageBox.Show(Lan.G(this,"Maximum length of abbreviation is 7."));
 						return;
 					}
 					break;

@@ -852,11 +852,11 @@ namespace OpenDental
 			}
 			List<MenuItem> listMenuItems = new List<MenuItem>();
 			//The first item in the list will always exists, but we toggle it's visibility to only show when 1 row is selected.
-			listMenuItems.Add(new MenuItem(Lan.g(this, "Go to Account"), new EventHandler(gridMain_RightClickHelper)));
+			listMenuItems.Add(new MenuItem(Lan.G(this, "Go to Account"), new EventHandler(gridMain_RightClickHelper)));
 			listMenuItems[0].Tag = 0;//Tags are used to identify what to do in gridMain_RightClickHelper.
-			listMenuItems.Add(new MenuItem(Lan.g(this, "Assign to Me"), new EventHandler(gridMain_RightClickHelper)));
+			listMenuItems.Add(new MenuItem(Lan.G(this, "Assign to Me"), new EventHandler(gridMain_RightClickHelper)));
 			listMenuItems[1].Tag = 1;
-			listMenuItems.Add(new MenuItem(Lan.g(this, "Assign to User")));
+			listMenuItems.Add(new MenuItem(Lan.G(this, "Assign to User")));
 			List<MenuItem> listSubUserMenu = new List<MenuItem>();
 			_listClaimSentEditUsers.ForEach(x =>
 			{
@@ -896,7 +896,7 @@ namespace OpenDental
 
 		private void FillProvs()
 		{
-			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(Lan.g(this, "All"))); //tag = null
+			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(Lan.G(this, "All"))); //tag = null
 			foreach (Provider provCur in Providers.GetListReports())
 			{
 				comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(provCur.GetLongDesc(), provCur));
@@ -1001,7 +1001,7 @@ namespace OpenDental
 				startingMessage: "Refreshing Grid...",
 				actionException: e => this.Invoke(() =>
 				{
-					FriendlyException.Show(Lan.g(this, "Error filling the Claims grid."), e);
+					FriendlyException.Show(Lan.G(this, "Error filling the Claims grid."), e);
 				})
 			);
 			if (listRows == null)
@@ -1013,7 +1013,7 @@ namespace OpenDental
 			gridMain.EndUpdate();
 			checkIgnoreCustom.Checked = isIgnoreCustomChecked;
 			textBox1.Text = total.ToString("c");
-			labelClaimCount.Text = string.Format("{0} {1}", gridMain.ListGridRows.Count, gridMain.ListGridRows.Count == 1 ? Lan.g(this, "claim") : Lan.g(this, "claims"));
+			labelClaimCount.Text = string.Format("{0} {1}", gridMain.ListGridRows.Count, gridMain.ListGridRows.Count == 1 ? Lan.G(this, "claim") : Lan.G(this, "claims"));
 			RefreshSelectedInfo();
 		}
 
@@ -1087,7 +1087,7 @@ namespace OpenDental
 									type = "Error";//Not allowed to be blank.
 									break;
 							}
-							row.Cells.Add(Lan.g(this, type));
+							row.Cells.Add(Lan.G(this, type));
 							break;
 						case "User":
 							row.Cells.Add(Userods.GetName(claimCur.UserNum));
@@ -1147,7 +1147,7 @@ namespace OpenDental
 							row.Cells.Add(claimCur.PatDOB.ToShortDateString());
 							break;
 						default:
-							row.Cells.Add(Lan.g(this, "MISSING"));
+							row.Cells.Add(Lan.G(this, "MISSING"));
 							break;
 					}
 				}
@@ -1260,7 +1260,7 @@ namespace OpenDental
 		{
 			pagesPrinted = 0;
 			headingPrinted = false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage, Lan.g(this, "Outstanding insurance report printed"), PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage, Lan.G(this, "Outstanding insurance report printed"), PrintoutOrientation.Landscape);
 		}
 
 		private void butAssignUser_Click(object sender, EventArgs e)
@@ -1530,34 +1530,34 @@ namespace OpenDental
 			#region printHeading
 			if (!headingPrinted)
 			{
-				text = Lan.g(this, "Outstanding Insurance Claims");
+				text = Lan.G(this, "Outstanding Insurance Claims");
 				g.DrawString(text, headingFont, Brushes.Black, center - g.MeasureString(text, headingFont).Width / 2, yPos);
 				yPos += (int)g.MeasureString(text, headingFont).Height;
 				if (_preauthOption == RpOutstandingIns.PreauthOptions.IncludingPreauths)
 				{
-					text = Lan.g(this, "Including Preauthorizations");
+					text = Lan.G(this, "Including Preauthorizations");
 				}
 				else if (_preauthOption == RpOutstandingIns.PreauthOptions.ExcludingPreauths)
 				{
-					text = Lan.g(this, "Not Including Preauthorizations");
+					text = Lan.G(this, "Not Including Preauthorizations");
 				}
 				else
 				{
-					text = Lan.g(this, "Only Preauthorizations");
+					text = Lan.G(this, "Only Preauthorizations");
 				}
 				g.DrawString(text, subHeadingFont, Brushes.Black, center - g.MeasureString(text, subHeadingFont).Width / 2, yPos);
 				yPos += 20;
 				//print today's date
-				text = Lan.g(this, "Run On:") + " " + DateTimeOD.Today.ToShortDateString();
+				text = Lan.G(this, "Run On:") + " " + DateTimeOD.Today.ToShortDateString();
 				g.DrawString(text, subHeadingFont, Brushes.Black, center - g.MeasureString(text, subHeadingFont).Width / 2, yPos);
 				yPos += 20;
 				if (_listSelectedProvNums.Count == 0)
 				{
-					text = Lan.g(this, "For All Providers");
+					text = Lan.G(this, "For All Providers");
 				}
 				else
 				{
-					text = Lan.g(this, "For Providers:") + " ";
+					text = Lan.G(this, "For Providers:") + " ";
 					for (int i = 0; i < _listSelectedProvNums.Count; i++)
 					{
 						text += Providers.GetFormalName(_listSelectedProvNums[i]);
@@ -1586,7 +1586,7 @@ namespace OpenDental
 
 		private void butExport_Click(object sender, System.EventArgs e)
 		{
-			string fileName = Lan.g(this, "Outstanding Insurance Claims");
+			string fileName = Lan.G(this, "Outstanding Insurance Claims");
 			string filePath = ODFileUtils.CombinePaths(Path.GetTempPath(), fileName);
 
 			SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -1644,11 +1644,11 @@ namespace OpenDental
 			}
 			catch
 			{
-				MessageBox.Show(Lan.g(this, "File in use by another program.  Close and try again."));
+				MessageBox.Show(Lan.G(this, "File in use by another program.  Close and try again."));
 				return;
 			}
 
-			MessageBox.Show(Lan.g(this, "File created successfully"));
+			MessageBox.Show(Lan.G(this, "File created successfully"));
 		}
 	}
 }

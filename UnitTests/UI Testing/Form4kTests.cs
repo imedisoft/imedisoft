@@ -38,16 +38,16 @@ namespace UnitTests{
 		///<summary>Causes the toolbar to be laid out again.</summary>
 		public void LayoutToolBar() {
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Add"),0,"","Add"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Add"),0,"","Add"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Edit"),1,Lan.g(this,"Edit Selected Account"),"Edit"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Edit"),1,Lan.G(this,"Edit Selected Account"),"Edit"));
 			/*ODToolBarButton button=new ODToolBarButton("",-1,"","PageNum");
 			button.Style=ODToolBarButtonStyle.Label;
 			ToolBarMain.Buttons.Add(button);
 			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Go Forward One Page","Fwd"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));*/
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Export"),2,Lan.g(this,"Export the Chart of Accounts"),"Export"){Enabled=false });
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Close"),-1,"Close This Window","Close"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Export"),2,Lan.G(this,"Export the Chart of Accounts"),"Export"){Enabled=false });
+			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Close"),-1,"Close This Window","Close"));
 		}
 
 		private void FillPatients(){

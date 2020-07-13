@@ -232,17 +232,17 @@ namespace OpenDental
 			docc.ImgType = ImageType.Document;
 			if (StmtCur.IsInvoice)
 			{
-				docc.Description = Lan.g(nameof(FormRpStatement), "Invoice");
+				docc.Description = Lan.G(nameof(FormRpStatement), "Invoice");
 			}
 			else
 			{
 				if (StmtCur.IsReceipt == true)
 				{
-					docc.Description = Lan.g(nameof(FormRpStatement), "Receipt");
+					docc.Description = Lan.G(nameof(FormRpStatement), "Receipt");
 				}
 				else
 				{
-					docc.Description = Lan.g(nameof(FormRpStatement), "Statement");
+					docc.Description = Lan.G(nameof(FormRpStatement), "Statement");
 				}
 			}
 			docc.DateCreated = StmtCur.DateSent;
@@ -268,7 +268,7 @@ namespace OpenDental
 				margins = new Margins(40, 40, 40, 440);//4.4" from bottom
 			}
 			PrinterL.CreateODprintout(
-				auditDescription: Lan.g(this, "Statement from") + " " + stmt.DateTStamp.ToShortDateString() + " " + Lans.g(this, "printed"),
+				auditDescription: Lan.G(this, "Statement from") + " " + stmt.DateTStamp.ToShortDateString() + " " + Lans.g(this, "printed"),
 				printSit: PrintSituation.Statement,
 				auditPatNum: pat.PatNum,
 				margins: margins
@@ -307,7 +307,7 @@ namespace OpenDental
 				}
 				catch
 				{
-					MessageBox.Show(Lan.g(this, "Printer not available"));
+					MessageBox.Show(Lan.G(this, "Printer not available"));
 				}
 			}
 		}
@@ -361,17 +361,17 @@ namespace OpenDental
 			{
 				if (CultureInfo.CurrentCulture.Name == "en-NZ" || CultureInfo.CurrentCulture.Name == "en-AU")
 				{//New Zealand and Australia
-					text = Lan.g(this, "TAX INVOICE");
+					text = Lan.G(this, "TAX INVOICE");
 				}
 				else
 				{
-					text = Lan.g(this, "INVOICE");
+					text = Lan.G(this, "INVOICE");
 					text += " #" + Stmt.StatementNum.ToString();//Some larger customers of OD need this to show in order to properly pay.
 				}
 			}
 			else if (Stmt.IsReceipt)
 			{
-				text = Lan.g(this, "RECEIPT");
+				text = Lan.G(this, "RECEIPT");
 				if (CultureInfo.CurrentCulture.Name.EndsWith("SG"))
 				{//SG=Singapore
 					text += " #" + Stmt.StatementNum.ToString();
@@ -379,10 +379,10 @@ namespace OpenDental
 			}
 			else
 			{
-				text = Lan.g(this, "STATEMENT");
+				text = Lan.G(this, "STATEMENT");
 				if (Stmt.StatementType == StmtType.LimitedStatement)
 				{
-					text += " (" + Lan.g(this, "Limited") + ")";
+					text += " (" + Lan.G(this, "Limited") + ")";
 				}
 			}
 			par.AddFormattedText(text, font);
@@ -390,7 +390,7 @@ namespace OpenDental
 			font = MigraDocHelper.CreateFont(10);
 			par.AddLineBreak();
 			par.AddFormattedText(text, font);
-			text = Lan.g(this, "Account Number") + " ";
+			text = Lan.G(this, "Account Number") + " ";
 			if (PrefC.GetBool(PrefName.StatementAccountsUseChartNumber))
 			{
 				text += PatGuar.ChartNumber;
@@ -552,13 +552,13 @@ namespace OpenDental
 				font = MigraDocHelper.CreateFont(8, true);
 				cell = row.Cells[0];
 				par = cell.AddParagraph();
-				par.AddFormattedText(Lan.g(this, "Amount Due"), font);
+				par.AddFormattedText(Lan.G(this, "Amount Due"), font);
 				cell = row.Cells[1];
 				par = cell.AddParagraph();
-				par.AddFormattedText(Lan.g(this, "Date Due"), font);
+				par.AddFormattedText(Lan.G(this, "Date Due"), font);
 				cell = row.Cells[2];
 				par = cell.AddParagraph();
-				par.AddFormattedText(Lan.g(this, "Amount Enclosed"), font);
+				par.AddFormattedText(Lan.G(this, "Amount Enclosed"), font);
 				row = table.AddRow();
 				row.Format.Alignment = ParagraphAlignment.Center;
 				row.Borders.Left.Color = Colors.Gray;
@@ -624,7 +624,7 @@ namespace OpenDental
 				}
 				if (PrefC.GetLong(PrefName.StatementsCalcDueDate) == -1)
 				{
-					text = Lan.g(this, "Upon Receipt");
+					text = Lan.G(this, "Upon Receipt");
 				}
 				else
 				{
@@ -641,7 +641,7 @@ namespace OpenDental
 			{
 				float yPos = 60;
 				font = MigraDocHelper.CreateFont(7, true);
-				text = Lan.g(this, "CREDIT CARD TYPE");
+				text = Lan.G(this, "CREDIT CARD TYPE");
 				MigraDocHelper.DrawString(frame, text, font, 0, yPos);
 				float rowHeight = 26;
 				System.Drawing.Font wfont = new System.Drawing.Font("Arial", 7, FontStyle.Bold);
@@ -649,37 +649,37 @@ namespace OpenDental
 				MigraDocHelper.DrawLine(frame, System.Drawing.Color.Black, g.MeasureString(text, wfont).Width,
 					yPos + wfont.GetHeight(g), 326, yPos + wfont.GetHeight(g));
 				yPos += rowHeight;
-				text = Lan.g(this, "#");
+				text = Lan.G(this, "#");
 				MigraDocHelper.DrawString(frame, text, font, 0, yPos);
 				MigraDocHelper.DrawLine(frame, System.Drawing.Color.Black, g.MeasureString(text, wfont).Width,
 					yPos + wfont.GetHeight(g), 326, yPos + wfont.GetHeight(g));
 				yPos += rowHeight;
-				text = Lan.g(this, "3 DIGIT CSV");
+				text = Lan.G(this, "3 DIGIT CSV");
 				MigraDocHelper.DrawString(frame, text, font, 0, yPos);
 				MigraDocHelper.DrawLine(frame, System.Drawing.Color.Black, g.MeasureString(text, wfont).Width,
 					yPos + wfont.GetHeight(g), 326, yPos + wfont.GetHeight(g));
 				yPos += rowHeight;
-				text = Lan.g(this, "EXPIRES");
+				text = Lan.G(this, "EXPIRES");
 				MigraDocHelper.DrawString(frame, text, font, 0, yPos);
 				MigraDocHelper.DrawLine(frame, System.Drawing.Color.Black, g.MeasureString(text, wfont).Width,
 					yPos + wfont.GetHeight(g), 326, yPos + wfont.GetHeight(g));
 				yPos += rowHeight;
-				text = Lan.g(this, "AMOUNT APPROVED");
+				text = Lan.G(this, "AMOUNT APPROVED");
 				MigraDocHelper.DrawString(frame, text, font, 0, yPos);
 				MigraDocHelper.DrawLine(frame, System.Drawing.Color.Black, g.MeasureString(text, wfont).Width,
 					yPos + wfont.GetHeight(g), 326, yPos + wfont.GetHeight(g));
 				yPos += rowHeight;
-				text = Lan.g(this, "NAME");
+				text = Lan.G(this, "NAME");
 				MigraDocHelper.DrawString(frame, text, font, 0, yPos);
 				MigraDocHelper.DrawLine(frame, System.Drawing.Color.Black, g.MeasureString(text, wfont).Width,
 					yPos + wfont.GetHeight(g), 326, yPos + wfont.GetHeight(g));
 				yPos += rowHeight;
-				text = Lan.g(this, "SIGNATURE");
+				text = Lan.G(this, "SIGNATURE");
 				MigraDocHelper.DrawString(frame, text, font, 0, yPos);
 				MigraDocHelper.DrawLine(frame, System.Drawing.Color.Black, g.MeasureString(text, wfont).Width,
 					yPos + wfont.GetHeight(g), 326, yPos + wfont.GetHeight(g));
 				yPos -= rowHeight;
-				text = Lan.g(this, "(As it appears on card)");
+				text = Lan.G(this, "(As it appears on card)");
 				wfont = new System.Drawing.Font("Arial", 5);
 				font = MigraDocHelper.CreateFont(5);
 				MigraDocHelper.DrawString(frame, text, font, 625 - g.MeasureString(text, wfont).Width / 2 + 5, yPos + 13);
@@ -745,7 +745,7 @@ namespace OpenDental
 			if (!Stmt.HidePayment)
 			{
 				MigraDocHelper.DrawLine(frame, System.Drawing.Color.LightGray, 0, 0, 850, 0);
-				text = Lan.g(this, "PLEASE DETACH AND RETURN THE UPPER PORTION WITH YOUR PAYMENT");
+				text = Lan.G(this, "PLEASE DETACH AND RETURN THE UPPER PORTION WITH YOUR PAYMENT");
 				font = MigraDocHelper.CreateFont(6, true, System.Drawing.Color.Gray);
 				par = frame.AddParagraph();
 				par.Format.Alignment = ParagraphAlignment.Center;
@@ -803,16 +803,16 @@ namespace OpenDental
 				font = MigraDocHelper.CreateFont(8, true);
 				cell = row.Cells[0];
 				par = cell.AddParagraph();
-				par.AddFormattedText(Lan.g(this, "0-30"), font);
+				par.AddFormattedText(Lan.G(this, "0-30"), font);
 				cell = row.Cells[1];
 				par = cell.AddParagraph();
-				par.AddFormattedText(Lan.g(this, "31-60"), font);
+				par.AddFormattedText(Lan.G(this, "31-60"), font);
 				cell = row.Cells[2];
 				par = cell.AddParagraph();
-				par.AddFormattedText(Lan.g(this, "61-90"), font);
+				par.AddFormattedText(Lan.G(this, "61-90"), font);
 				cell = row.Cells[3];
 				par = cell.AddParagraph();
-				par.AddFormattedText(Lan.g(this, "over 90"), font);
+				par.AddFormattedText(Lan.G(this, "over 90"), font);
 				row = table.AddRow();
 				row.Format.Alignment = ParagraphAlignment.Center;
 				row.Borders.Left.Color = Colors.Gray;
@@ -897,25 +897,25 @@ namespace OpenDental
 			MigraDoc.DocumentObjectModel.Font fontBold = MigraDocHelper.CreateFont(10, true);
 			if (Stmt.IsInvoice)
 			{
-				text = Lan.g(this, "Procedures:");
+				text = Lan.G(this, "Procedures:");
 				par.AddFormattedText(text, font);
 				par.AddLineBreak();
-				text = Lan.g(this, "Adjustments:");
+				text = Lan.G(this, "Adjustments:");
 				par.AddFormattedText(text, font);
 				par.AddLineBreak();
 				if (PrefC.GetInt(PrefName.PayPlansVersion) == (int)PayPlanVersions.AgeCreditsAndDebits)
 				{
-					text = Lan.g(this, "Pay Plan Charges:");
+					text = Lan.G(this, "Pay Plan Charges:");
 					par.AddFormattedText(text, font);
 					par.AddLineBreak();
 				}
-				text = Lan.g(this, "Total:");
+				text = Lan.G(this, "Total:");
 				par.AddFormattedText(text, font);
 				par.AddLineBreak();
 			}
 			else if (PrefC.GetBool(PrefName.BalancesDontSubtractIns))
 			{
-				text = Lan.g(this, "Balance:");
+				text = Lan.G(this, "Balance:");
 				par.AddFormattedText(text, fontBold);
 				//par.AddLineBreak();
 				//text = Lan.g(this, "Ins Pending:");
@@ -929,25 +929,25 @@ namespace OpenDental
 			{//this is more common
 				if (PrefC.GetBool(PrefName.FuchsOptionsOn))
 				{
-					text = Lan.g(this, "Balance:");
+					text = Lan.G(this, "Balance:");
 					par.AddFormattedText(text, font);
 					par.AddLineBreak();
-					text = Lan.g(this, "-Ins Estimate:");
+					text = Lan.G(this, "-Ins Estimate:");
 					par.AddFormattedText(text, font);
 					par.AddLineBreak();
-					text = Lan.g(this, "=Owed Now:");
+					text = Lan.G(this, "=Owed Now:");
 					par.AddFormattedText(text, fontBold);
 					par.AddLineBreak();
 				}
 				else
 				{
-					text = Lan.g(this, "Total:");
+					text = Lan.G(this, "Total:");
 					par.AddFormattedText(text, font);
 					par.AddLineBreak();
-					text = Lan.g(this, "-Ins Estimate:");
+					text = Lan.G(this, "-Ins Estimate:");
 					par.AddFormattedText(text, font);
 					par.AddLineBreak();
-					text = Lan.g(this, "=Balance:");
+					text = Lan.G(this, "=Balance:");
 					par.AddFormattedText(text, fontBold);
 					par.AddLineBreak();
 				}
@@ -1098,15 +1098,15 @@ namespace OpenDental
 			this.Controls.Add(gridPP);
 			gridPP.BeginUpdate();
 			gridPP.ListGridColumns.Clear();
-			gcol = new GridColumn(Lan.g(this, "Date"), 73);
+			gcol = new GridColumn(Lan.G(this, "Date"), 73);
 			gridPP.ListGridColumns.Add(gcol);
-			gcol = new GridColumn(Lan.g(this, "Description"), 270);
+			gcol = new GridColumn(Lan.G(this, "Description"), 270);
 			gridPP.ListGridColumns.Add(gcol);
-			gcol = new GridColumn(Lan.g(this, "Charges"), 60, HorizontalAlignment.Right);
+			gcol = new GridColumn(Lan.G(this, "Charges"), 60, HorizontalAlignment.Right);
 			gridPP.ListGridColumns.Add(gcol);
-			gcol = new GridColumn(Lan.g(this, "Credits"), 60, HorizontalAlignment.Right);
+			gcol = new GridColumn(Lan.G(this, "Credits"), 60, HorizontalAlignment.Right);
 			gridPP.ListGridColumns.Add(gcol);
-			gcol = new GridColumn(Lan.g(this, "Balance"), 60, HorizontalAlignment.Right);
+			gcol = new GridColumn(Lan.G(this, "Balance"), 60, HorizontalAlignment.Right);
 			gridPP.ListGridColumns.Add(gcol);
 			gridPP.Width = gridPP.WidthAllColumns + 20;
 			gridPP.EndUpdate();
@@ -1124,7 +1124,7 @@ namespace OpenDental
 				par.Format.Alignment = ParagraphAlignment.Center;
 				//par.Format.SpaceBefore=Unit.FromInch(.05);
 				//par.Format.SpaceAfter=Unit.FromInch(.05);
-				par.AddText(Lan.g(this, "Payment Plans"));
+				par.AddText(Lan.G(this, "Payment Plans"));
 				MigraDocHelper.InsertSpacer(section, 2);
 				gridPP.BeginUpdate();
 				gridPP.ListGridRows.Clear();
@@ -1162,7 +1162,7 @@ namespace OpenDental
 						payPlanDue = PIn.Double(tableMisc.Rows[m]["value"].ToString());
 					}
 				}
-				par.AddText(Lan.g(this, "Payment Plan Amount Due: ") + payPlanDue.ToString("c"));//PatGuar.PayPlanDue.ToString("c"));
+				par.AddText(Lan.G(this, "Payment Plan Amount Due: ") + payPlanDue.ToString("c"));//PatGuar.PayPlanDue.ToString("c"));
 				MigraDocHelper.InsertSpacer(section, 10);
 			}
 			#endregion PayPlan grid
@@ -1173,37 +1173,37 @@ namespace OpenDental
 			this.Controls.Add(gridPat);
 			gridPat.BeginUpdate();
 			gridPat.ListGridColumns.Clear();
-			gcol = new GridColumn(Lan.g(this, "Date"), 73);
+			gcol = new GridColumn(Lan.G(this, "Date"), 73);
 			gridPat.ListGridColumns.Add(gcol);
-			gcol = new GridColumn(Lan.g(this, "Patient"), 100);
+			gcol = new GridColumn(Lan.G(this, "Patient"), 100);
 			gridPat.ListGridColumns.Add(gcol);
 			//prov
 			if (Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
 			{
-				gcol = new GridColumn(Lan.g(this, "Code"), 87);
+				gcol = new GridColumn(Lan.G(this, "Code"), 87);
 				gridPat.ListGridColumns.Add(gcol);
 			}
 			else
 			{
-				gcol = new GridColumn(Lan.g(this, "Code"), 45);
+				gcol = new GridColumn(Lan.G(this, "Code"), 45);
 				gridPat.ListGridColumns.Add(gcol);
-				gcol = new GridColumn(Lan.g(this, "Tooth"), 42);
+				gcol = new GridColumn(Lan.G(this, "Tooth"), 42);
 				gridPat.ListGridColumns.Add(gcol);
 			}
-			gcol = new GridColumn(Lan.g(this, "Description"), 270);
+			gcol = new GridColumn(Lan.G(this, "Description"), 270);
 			gridPat.ListGridColumns.Add(gcol);
-			gcol = new GridColumn(Lan.g(this, "Charges"), 60, HorizontalAlignment.Right);
+			gcol = new GridColumn(Lan.G(this, "Charges"), 60, HorizontalAlignment.Right);
 			gridPat.ListGridColumns.Add(gcol);
-			gcol = new GridColumn(Lan.g(this, "Credits"), 60, HorizontalAlignment.Right);
+			gcol = new GridColumn(Lan.G(this, "Credits"), 60, HorizontalAlignment.Right);
 			gridPat.ListGridColumns.Add(gcol);
 			if (Stmt.IsInvoice)
 			{
-				gcol = new GridColumn(Lan.g(this, "Total"), 60, HorizontalAlignment.Right);
+				gcol = new GridColumn(Lan.G(this, "Total"), 60, HorizontalAlignment.Right);
 				gridPat.ListGridColumns.Add(gcol);
 			}
 			else
 			{
-				gcol = new GridColumn(Lan.g(this, "Balance"), 60, HorizontalAlignment.Right);
+				gcol = new GridColumn(Lan.G(this, "Balance"), 60, HorizontalAlignment.Right);
 				gridPat.ListGridColumns.Add(gcol);
 			}
 			gridPat.Width = gridPat.WidthAllColumns + 20;
@@ -1366,7 +1366,7 @@ namespace OpenDental
 				{
 					par = section.AddParagraph();
 					par.Format.Font = font;
-					par.AddText(Lan.g(this, "Scheduled Appointments:"));
+					par.AddText(Lan.G(this, "Scheduled Appointments:"));
 				}
 				for (int i = 0; i < tableAppt.Rows.Count; i++)
 				{

@@ -69,7 +69,7 @@ namespace OpenDental {
 				procsChecked.Add(proc);
 			}
 			if(info!="") {
-				info=Lan.g("ProcedureL","Duplicate procedures")+": "+info;
+				info=Lan.G("ProcedureL","Duplicate procedures")+": "+info;
 			}
 			return info;
 		}
@@ -124,9 +124,9 @@ namespace OpenDental {
 					return true;
 				}
 				if(!Security.IsAuthorized(perm,proc.ProcDate,true,true)) {
-					MessageBox.Show(Lan.g("Procedures","The appointment provider does not match the provider on at least one completed procedure.")+"\r\n"
+					MessageBox.Show(Lan.G("Procedures","The appointment provider does not match the provider on at least one completed procedure.")+"\r\n"
 						+Lans.g("Procedures","Not authorized for")+": "+GroupPermissions.GetDesc(perm)+"\r\n"
-						+Lan.g("Procedures","Any change to the provider on the completed procedure(s) will have to be made manually."));
+						+Lan.G("Procedures","Any change to the provider on the completed procedure(s) will have to be made manually."));
 					return true;//user does not have permission to change the provider. Don't change provider.
 				}
 			}
@@ -165,11 +165,11 @@ namespace OpenDental {
 		public static bool AreTimesValid(string timeStart,string timeEnd) {
 			if(Programs.UsingOrion || PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
 				if(!ValidateTime(timeStart)) {
-					MessageBox.Show(Lan.g("Procedures","Start time is invalid."));
+					MessageBox.Show(Lan.G("Procedures","Start time is invalid."));
 					return false;
 				}
 				if(!ValidateTime(timeEnd)) {
-					MessageBox.Show(Lan.g("Procedures","End time is invalid."));
+					MessageBox.Show(Lan.G("Procedures","End time is invalid."));
 					return false;
 				}
 			}
@@ -179,7 +179,7 @@ namespace OpenDental {
 						DateTime.Parse(timeStart);
 					}
 					catch {
-						MessageBox.Show(Lan.g("Procedures","Start time is invalid."));
+						MessageBox.Show(Lan.G("Procedures","Start time is invalid."));
 						return false;
 					}
 				}

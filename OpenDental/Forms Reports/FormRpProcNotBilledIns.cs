@@ -54,19 +54,19 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			GridColumn col=null;
 			if(gridMain.ListGridColumns.Count==0) {
-				col=new GridColumn(Lan.g(this,"Patient Name"),_colWidthPatName);
+				col=new GridColumn(Lan.G(this,"Patient Name"),_colWidthPatName);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Stat"),_colWidthStat,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G(this,"Stat"),_colWidthStat,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Procedure Date"),_colWidthProcDate,HorizontalAlignment.Center);
+				col=new GridColumn(Lan.G(this,"Procedure Date"),_colWidthProcDate,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g(this,"Procedure Description"),410) { IsWidthDynamic=true };
+				col=new GridColumn(Lan.G(this,"Procedure Description"),410) { IsWidthDynamic=true };
 				gridMain.ListGridColumns.Add(col);
 				if(PrefC.HasClinicsEnabled) {
-					col=new GridColumn(Lan.g(this,"Clinic"),_colWidthClinic);
+					col=new GridColumn(Lan.G(this,"Clinic"),_colWidthClinic);
 					gridMain.ListGridColumns.Add(col);
 				}
-				col=new GridColumn(Lan.g(this,"Amount"),_colWidthAmount,HorizontalAlignment.Right);
+				col=new GridColumn(Lan.G(this,"Amount"),_colWidthAmount,HorizontalAlignment.Right);
 				gridMain.ListGridColumns.Add(col);
 			}
 			gridMain.ListGridRows.Clear();
@@ -79,7 +79,7 @@ namespace OpenDental{
 				for(int j=0;j<queryObj.ReportTable.Rows.Count;j++) {
 					row=new GridRow();
 					row.Cells.Add(queryObj.ReportTable.Rows[j][0].ToString());//Procedure Name
-					row.Cells.Add(Lan.g("enumProcStat",PIn.String(queryObj.ReportTable.Rows[j][1].ToString())));//Stat
+					row.Cells.Add(Lan.G("enumProcStat",PIn.String(queryObj.ReportTable.Rows[j][1].ToString())));//Stat
 					row.Cells.Add(PIn.Date(queryObj.ReportTable.Rows[j][2].ToString()).ToShortDateString());//Procedure Date
 					row.Cells.Add(queryObj.ReportTable.Rows[j][3].ToString());//Procedure Description
 					if(PrefC.HasClinicsEnabled) {
@@ -112,12 +112,12 @@ namespace OpenDental{
 			}
 			string subtitleClinics="";
 			if(PrefC.HasClinicsEnabled) {
-				subtitleClinics=Lan.g(this,"Clinics: ")+comboClinics.GetStringSelectedClinics();
+				subtitleClinics=Lan.G(this,"Clinics: ")+comboClinics.GetStringSelectedClinics();
 			}
 			//This report will never show progress for printing.  This is because the report is being rebuilt whenever the grid is refreshed.
 			_myReport=new ReportComplex(true,false,false);
-			_myReport.ReportName=Lan.g(this,"Procedures Not Billed to Insurance");
-			_myReport.AddTitle("Title",Lan.g(this,"Procedures Not Billed to Insurance"));
+			_myReport.ReportName=Lan.G(this,"Procedures Not Billed to Insurance");
+			_myReport.AddTitle("Title",Lan.G(this,"Procedures Not Billed to Insurance"));
 			_myReport.AddSubTitle("Practice Name",PrefC.GetString(PrefName.PracticeTitle));
 			if(_myReportDateFrom==_myReportDateTo) {
 				_myReport.AddSubTitle("Report Dates",_myReportDateFrom.ToShortDateString());
@@ -364,7 +364,7 @@ namespace OpenDental{
 				MsgBoxCopyPaste form=new MsgBoxCopyPaste(claimErrors);
 				form.ShowDialog();
 			}
-			MessageBox.Show(Lan.g(this,"Number of claims created")+": "+claimCreatedCount);
+			MessageBox.Show(Lan.G(this,"Number of claims created")+": "+claimCreatedCount);
 		}
 		
 		///<summary>Mimics ContrAccount.CreateClaim(...).  Removes items from listProcs until unique diagnosis code count is low enough.</summary>

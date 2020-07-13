@@ -33,15 +33,15 @@ namespace OpenDental {
 		private void comboType_SelectedIndexChanged(object sender,EventArgs e) {
 			switch(comboType.SelectedItem.ToString()) {
 				case "Text":
-					labelResponses.Text=Lan.g(this,"Default text");
+					labelResponses.Text=Lan.G(this,"Default text");
 					butAutoNoteResp.Visible=false;
 					break;
 				case "OneResponse":
-					labelResponses.Text=Lan.g(this,"Possible responses (one line per item)");
+					labelResponses.Text=Lan.G(this,"Possible responses (one line per item)");
 					butAutoNoteResp.Visible=true;
 					break;
 				case "MultiResponse":
-					labelResponses.Text=Lan.g(this,"Possible responses (one line per item)");
+					labelResponses.Text=Lan.G(this,"Possible responses (one line per item)");
 					butAutoNoteResp.Visible=false;
 					break;
 				

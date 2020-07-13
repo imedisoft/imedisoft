@@ -535,7 +535,7 @@ namespace OpenDental{
 				textFormWidth.Enabled=false;
 				textFormHeight.Enabled=false;
 				butOK.Visible=false;
-				butCancel.Text=Lan.g(this,"Close");
+				butCancel.Text=Lan.G(this,"Close");
 				panelClaimForm.Enabled=false;
 				labelInternal.Visible=true;
 			}
@@ -1200,7 +1200,7 @@ namespace OpenDental{
 				return;
 			}
 			if(fontDialog1.Font.Style!=FontStyle.Regular){
-				MessageBox.Show(Lan.g(this,"Only regular font style allowed."));
+				MessageBox.Show(Lan.G(this,"Only regular font style allowed."));
 			}
 			_claimFormCur.FontName=fontDialog1.Font.Name;
 			_claimFormCur.FontSize=fontDialog1.Font.Size;
@@ -1351,7 +1351,7 @@ namespace OpenDental{
 				return;
 			}
 			PrinterL.TryPrint(pd2_PrintPage,
-				Lan.g(this,"Claim form")+" "+_claimFormCur.Description+" "+Lan.g(this,"printed"),
+				Lan.G(this,"Claim form")+" "+_claimFormCur.Description+" "+Lan.G(this,"printed"),
 				margins:new Margins(0,0,0,0),
 				printoutOrigin:PrintoutOrigin.AtMargin
 			);
@@ -1447,11 +1447,11 @@ namespace OpenDental{
 			if(  textOffsetX.errorProvider1.GetError(textOffsetX)!=""
 				|| textOffsetY.errorProvider1.GetError(textOffsetY)!=""
 				){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return false;
 			}
 			if(textDescription.Text=="") {
-				MessageBox.Show(Lan.g(this,"You must enter a description first."));
+				MessageBox.Show(Lan.G(this,"You must enter a description first."));
 				return false;
 			}
 			_claimFormCur.Description=textDescription.Text;

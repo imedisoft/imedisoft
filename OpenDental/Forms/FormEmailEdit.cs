@@ -76,35 +76,35 @@ namespace OpenDental {
 
 		private void LayoutToolBars() {
 			toolBarTop.Buttons.Clear();
-			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.g(this,"Setup"),19,Lan.g(this,"Setup master page and styles."),"Setup"));
+			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.G(this,"Setup"),19,Lan.G(this,"Setup master page and styles."),"Setup"));
 			toolBarTop.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.g(this,"Ext Link"),8,"","Ext Link"));
-			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.g(this,"Heading1"),9,"","H1"));
-			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.g(this,"Heading2"),10,"","H2"));
-			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.g(this,"Heading3"),11,"","H3"));
+			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.G(this,"Ext Link"),8,"","Ext Link"));
+			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.G(this,"Heading1"),9,"","H1"));
+			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.G(this,"Heading2"),10,"","H2"));
+			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.G(this,"Heading3"),11,"","H3"));
 			toolBarTop.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.g(this,"Table"),15,"","Table"));
-			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.g(this,"Image"),16,"","Image"));
+			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.G(this,"Table"),15,"","Table"));
+			toolBarTop.Buttons.Add(new ODToolBarButton(Lan.G(this,"Image"),16,"","Image"));
 			//The autograph button and drop down
-			ODToolBarButton buttonAutograph=new ODToolBarButton(Lan.g(this,"Autograph"),-1,"","Autograph");
+			ODToolBarButton buttonAutograph=new ODToolBarButton(Lan.G(this,"Autograph"),-1,"","Autograph");
 			buttonAutograph.Style=ODToolBarButtonStyle.DropDownButton;
 			FillAutographDropdown();
 			buttonAutograph.DropDownMenu=menuAutographDropdown;
 			toolBarTop.Buttons.Add(buttonAutograph);
 			//Create the tool bar on the bottom
 			toolBarBottom.Buttons.Clear();
-			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.g(this,"Cut"),3,"","Cut"));
-			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.g(this,"Copy"),4,"","Copy"));
-			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.g(this,"Paste"),5,"","Paste"));
+			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.G(this,"Cut"),3,"","Cut"));
+			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.G(this,"Copy"),4,"","Copy"));
+			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.G(this,"Paste"),5,"","Paste"));
 			toolBarBottom.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.g(this,"Undo"),6,"","Undo"));
+			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.G(this,"Undo"),6,"","Undo"));
 			toolBarBottom.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.g(this,"Bold"),12,"","Bold"));
-			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.g(this,"Italic"),13,"","Italic"));
-			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.g(this,"Color"),14,"","Color"));
-			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.g(this,"Font"),17,"","Font"));
+			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.G(this,"Bold"),12,"","Bold"));
+			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.G(this,"Italic"),13,"","Italic"));
+			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.G(this,"Color"),14,"","Color"));
+			toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.G(this,"Font"),17,"","Font"));
 			if(AreReplacementsAllowed) {
-				toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.g(this,"Body Fields"),-1,"","Body Fields"));
+				toolBarBottom.Buttons.Add(new ODToolBarButton(Lan.G(this,"Body Fields"),-1,"","Body Fields"));
 			}
 		}
 

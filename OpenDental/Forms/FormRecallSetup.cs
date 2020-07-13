@@ -641,13 +641,13 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TableRecallMsgs","Remind#"),50);
+			col=new GridColumn(Lan.G("TableRecallMsgs","Remind#"),50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRecallMsgs","Mode"),61);
+			col=new GridColumn(Lan.G("TableRecallMsgs","Mode"),61);
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn("",300);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableRecallMsgs","Message"),500);
+			col=new GridColumn(Lan.G("TableRecallMsgs","Message"),500);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -655,56 +655,56 @@ namespace OpenDental{
 			//
 			row=new GridRow();
 			row.Cells.Add("1");
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"Subject line"));
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"Subject line"));
 			row.Cells.Add(PrefC.GetString(PrefName.RecallEmailSubject));//old
 			row.Tag="RecallEmailSubject";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("1");
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"Available variables")+": [NameFL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"Available variables")+": [NameFL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.RecallEmailMessage));
 			row.Tag="RecallEmailMessage";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("1");
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
 			row.Cells.Add(PrefC.GetString(PrefName.RecallEmailFamMsg));
 			row.Tag="RecallEmailFamMsg";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("1");
-			row.Cells.Add(Lan.g(this,"Postcard"));
-			row.Cells.Add(Lan.g(this,"Available variables")+": [NameFL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"Postcard"));
+			row.Cells.Add(Lan.G(this,"Available variables")+": [NameFL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.RecallPostcardMessage));//old
 			row.Tag="RecallPostcardMessage";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("1");
-			row.Cells.Add(Lan.g(this,"Postcard"));
-			row.Cells.Add(Lan.g(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
+			row.Cells.Add(Lan.G(this,"Postcard"));
+			row.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
 			row.Cells.Add(PrefC.GetString(PrefName.RecallPostcardFamMsg));//old
 			row.Tag="RecallPostcardFamMsg";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("1");
-			row.Cells.Add(Lan.g(this,"WebSched Email"));
-			row.Cells.Add(Lan.g(this,"Subject line.  Available variables")+": [NameF]");
+			row.Cells.Add(Lan.G(this,"WebSched Email"));
+			row.Cells.Add(Lan.G(this,"Subject line.  Available variables")+": [NameF]");
 			row.Cells.Add(PrefC.GetString(PrefName.WebSchedSubject));
 			row.Tag="WebSchedSubject";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("1");
-			row.Cells.Add(Lan.g(this,"WebSched Email"));
-			row.Cells.Add(Lan.g(this,"Email body.  Available variables")+": [URL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"WebSched Email"));
+			row.Cells.Add(Lan.G(this,"Email body.  Available variables")+": [URL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.WebSchedMessage));
 			row.Tag="WebSchedMessage";
 			gridMain.ListGridRows.Add(row);
@@ -715,8 +715,8 @@ namespace OpenDental{
 			//
 			row=new GridRow();
 			row.Cells.Add("1");
-			row.Cells.Add(Lan.g(this,"WebSched Text"));
-			row.Cells.Add(Lan.g(this,"Available variables")+": [URL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"WebSched Text"));
+			row.Cells.Add(Lan.G(this,"Available variables")+": [URL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.WebSchedMessageText));
 			row.Tag=PrefName.WebSchedMessageText.ToString();
 			gridMain.ListGridRows.Add(row);
@@ -728,64 +728,64 @@ namespace OpenDental{
 			//
 			row=new GridRow();
 			row.Cells.Add("2");
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"Subject line"));
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"Subject line"));
 			row.Cells.Add(PrefC.GetString(PrefName.RecallEmailSubject2));
 			row.Tag="RecallEmailSubject2";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("2");
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"Available variables")+": "+availableFields);
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"Available variables")+": "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.RecallEmailMessage2));
 			row.Tag="RecallEmailMessage2";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("2");
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"For multiple patients in one family.  Use [FamilyList]."));
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList]."));
 			row.Cells.Add(PrefC.GetString(PrefName.RecallEmailFamMsg2));
 			row.Tag="RecallEmailFamMsg2";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("2");
-			row.Cells.Add(Lan.g(this,"Postcard"));
-			row.Cells.Add(Lan.g(this,"Available variables")+": [NameFL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"Postcard"));
+			row.Cells.Add(Lan.G(this,"Available variables")+": [NameFL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.RecallPostcardMessage2));
 			row.Tag="RecallPostcardMessage2";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("2");
-			row.Cells.Add(Lan.g(this,"Postcard"));
-			row.Cells.Add(Lan.g(this,"For multiple patients in one family.  Use [FamilyList]."));
+			row.Cells.Add(Lan.G(this,"Postcard"));
+			row.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList]."));
 			row.Cells.Add(PrefC.GetString(PrefName.RecallPostcardFamMsg2));
 			row.Tag="RecallPostcardFamMsg2";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("2");
-			row.Cells.Add(Lan.g(this,"WebSched Email"));
-			row.Cells.Add(Lan.g(this,"Subject line.  Available variables")+": [NameF]");
+			row.Cells.Add(Lan.G(this,"WebSched Email"));
+			row.Cells.Add(Lan.G(this,"Subject line.  Available variables")+": [NameF]");
 			row.Cells.Add(PrefC.GetString(PrefName.WebSchedSubject2));
 			row.Tag="WebSchedSubject2";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("2");
-			row.Cells.Add(Lan.g(this,"WebSched Email"));
-			row.Cells.Add(Lan.g(this,"Email body.  Available variables")+": [URL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"WebSched Email"));
+			row.Cells.Add(Lan.G(this,"Email body.  Available variables")+": [URL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.WebSchedMessage2));
 			row.Tag="WebSchedMessage2";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("2");
-			row.Cells.Add(Lan.g(this,"WebSched Text"));
-			row.Cells.Add(Lan.g(this,"Available variables")+": [URL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"WebSched Text"));
+			row.Cells.Add(Lan.G(this,"Available variables")+": [URL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.WebSchedMessageText2));
 			row.Tag=PrefName.WebSchedMessageText2;
 			gridMain.ListGridRows.Add(row);
@@ -795,64 +795,64 @@ namespace OpenDental{
 			//
 			row=new GridRow();
 			row.Cells.Add("3");
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"Subject line"));
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"Subject line"));
 			row.Cells.Add(PrefC.GetString(PrefName.RecallEmailSubject3));
 			row.Tag="RecallEmailSubject3";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("3");
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"Available variables")+": "+availableFields);
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"Available variables")+": "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.RecallEmailMessage3));
 			row.Tag="RecallEmailMessage3";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("3");
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"For multiple patients in one family.  Use [FamilyList]."));
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList]."));
 			row.Cells.Add(PrefC.GetString(PrefName.RecallEmailFamMsg3));
 			row.Tag="RecallEmailFamMsg3";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("3");
-			row.Cells.Add(Lan.g(this,"Postcard"));
-			row.Cells.Add(Lan.g(this,"Available variables")+": [NameFL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"Postcard"));
+			row.Cells.Add(Lan.G(this,"Available variables")+": [NameFL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.RecallPostcardMessage3));
 			row.Tag="RecallPostcardMessage3";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("3");
-			row.Cells.Add(Lan.g(this,"Postcard"));
-			row.Cells.Add(Lan.g(this,"For multiple patients in one family.  Use [FamilyList]."));
+			row.Cells.Add(Lan.G(this,"Postcard"));
+			row.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList]."));
 			row.Cells.Add(PrefC.GetString(PrefName.RecallPostcardFamMsg3));
 			row.Tag="RecallPostcardFamMsg3";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("3");
-			row.Cells.Add(Lan.g(this,"WebSched Email"));
-			row.Cells.Add(Lan.g(this,"Subject line.  Available variables")+": [NameF]");
+			row.Cells.Add(Lan.G(this,"WebSched Email"));
+			row.Cells.Add(Lan.G(this,"Subject line.  Available variables")+": [NameF]");
 			row.Cells.Add(PrefC.GetString(PrefName.WebSchedSubject3));
 			row.Tag="WebSchedSubject3";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("3");
-			row.Cells.Add(Lan.g(this,"WebSched Email"));
-			row.Cells.Add(Lan.g(this,"Email body.  Available variables")+": [URL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"WebSched Email"));
+			row.Cells.Add(Lan.G(this,"Email body.  Available variables")+": [URL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.WebSchedMessage3));
 			row.Tag="WebSchedMessage3";
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("3");
-			row.Cells.Add(Lan.g(this,"WebSched Text"));
-			row.Cells.Add(Lan.g(this,"Available variables")+": [URL], "+availableFields);
+			row.Cells.Add(Lan.G(this,"WebSched Text"));
+			row.Cells.Add(Lan.G(this,"Available variables")+": [URL], "+availableFields);
 			row.Cells.Add(PrefC.GetString(PrefName.WebSchedMessageText3));
 			row.Tag=PrefName.WebSchedMessageText3.ToString();
 			gridMain.ListGridRows.Add(row);

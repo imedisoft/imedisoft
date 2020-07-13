@@ -148,7 +148,7 @@ namespace OpenDental{
 
 		private void FormPharmacies_Load(object sender, System.EventArgs e) {
 			if(IsSelectionMode){
-				butClose.Text=Lan.g(this,"Cancel");
+				butClose.Text=Lan.G(this,"Cancel");
 			}
 			else{
 				butOK.Visible=false;
@@ -175,21 +175,21 @@ namespace OpenDental{
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TablePharmacies","Store Name"),130);
+			GridColumn col=new GridColumn(Lan.G("TablePharmacies","Store Name"),130);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePharmacies","Phone"),90);
+			col=new GridColumn(Lan.G("TablePharmacies","Phone"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePharmacies","Fax"),90);
+			col=new GridColumn(Lan.G("TablePharmacies","Fax"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePharmacies","Address"),120);
+			col=new GridColumn(Lan.G("TablePharmacies","Address"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TablePharmacies","City"),90);
+			col=new GridColumn(Lan.G("TablePharmacies","City"),90);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g("TablePharmacies","Clinics"),115);
+				col=new GridColumn(Lan.G("TablePharmacies","Clinics"),115);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("TablePharmacies","Note"),100);
+			col=new GridColumn(Lan.G("TablePharmacies","Note"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

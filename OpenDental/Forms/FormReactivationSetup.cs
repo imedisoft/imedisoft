@@ -46,46 +46,46 @@ namespace OpenDental {
 			string availableFields="[NameFL], [NameF], [ClinicName], [ClinicPhone], [PracticeName], [PracticePhone], [OfficePhone]";
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableReactivationMsgs","Mode"),61);
+			GridColumn col=new GridColumn(Lan.G("TableReactivationMsgs","Mode"),61);
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn("",300);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableReactivationMsgs","Message"),500);
+			col=new GridColumn(Lan.G("TableReactivationMsgs","Message"),500);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			#region 1st Reminder
 			//ReactivationEmailSubject
 			GridRow gridRow=new GridRow();
-			gridRow.Cells.Add(Lan.g(this,"E-mail"));
-			gridRow.Cells.Add(Lan.g(this,"Subject line"));
+			gridRow.Cells.Add(Lan.G(this,"E-mail"));
+			gridRow.Cells.Add(Lan.G(this,"Subject line"));
 			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationEmailSubject));
 			gridRow.Tag=PrefName.ReactivationEmailSubject;
 			gridMain.ListGridRows.Add(gridRow);
 			//ReactivationEmailMessage
 			gridRow=new GridRow();
-			gridRow.Cells.Add(Lan.g(this,"E-mail"));
-			gridRow.Cells.Add(Lan.g(this,"Available variables")+": "+availableFields);
+			gridRow.Cells.Add(Lan.G(this,"E-mail"));
+			gridRow.Cells.Add(Lan.G(this,"Available variables")+": "+availableFields);
 			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationEmailMessage));
 			gridRow.Tag=PrefName.ReactivationEmailMessage;
 			gridMain.ListGridRows.Add(gridRow);
 			//ReactivationEmailFamMsg
 			gridRow=new GridRow();
-			gridRow.Cells.Add(Lan.g(this,"E-mail"));
-			gridRow.Cells.Add(Lan.g(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
+			gridRow.Cells.Add(Lan.G(this,"E-mail"));
+			gridRow.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
 			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationEmailFamMsg));
 			gridRow.Tag=PrefName.ReactivationEmailFamMsg;
 			gridMain.ListGridRows.Add(gridRow);
 			//ReactivationPostcardMessage
 			gridRow=new GridRow();
-			gridRow.Cells.Add(Lan.g(this,"Postcard"));
-			gridRow.Cells.Add(Lan.g(this,"Available variables")+": "+availableFields);
+			gridRow.Cells.Add(Lan.G(this,"Postcard"));
+			gridRow.Cells.Add(Lan.G(this,"Available variables")+": "+availableFields);
 			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationPostcardMessage));
 			gridRow.Tag=PrefName.ReactivationPostcardMessage;
 			gridMain.ListGridRows.Add(gridRow);
 			//ReactivationPostcardFamMsg
 			gridRow=new GridRow();
-			gridRow.Cells.Add(Lan.g(this,"Postcard"));
-			gridRow.Cells.Add(Lan.g(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
+			gridRow.Cells.Add(Lan.G(this,"Postcard"));
+			gridRow.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
 			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationPostcardFamMsg));
 			gridRow.Tag=PrefName.ReactivationPostcardFamMsg;
 			gridMain.ListGridRows.Add(gridRow);

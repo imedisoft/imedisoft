@@ -113,7 +113,7 @@ namespace OpenDental {
 			comboSpecialty.Items.Clear();
 			//Create a dummy specialty of 0 if there are any clinics that do not have a specialty.
 			if(listClinicsNoSpecialty!=null && listClinicsNoSpecialty.Count > 0) {
-				comboSpecialty.Items.Add(new ODBoxItem<Def>(Lan.g(this,"Unspecified"),new Def() { DefNum=0 }));
+				comboSpecialty.Items.Add(new ODBoxItem<Def>(Lan.G(this,"Unspecified"),new Def() { DefNum=0 }));
 				_dictSpecialtyClinics[0]=listClinicsNoSpecialty;
 			}
 			foreach(Def specialty in listSpecialtyDefs) {
@@ -147,7 +147,7 @@ namespace OpenDental {
 				&& ((ODBoxItem<Def>)comboSpecialty.SelectedItem).Tag!=null
 				&& ((ODBoxItem<Def>)comboSpecialty.SelectedItem).Tag.DefNum==0)
 			{
-				comboClinic.Items.Add(Lan.g(this,"Unassigned"),new Clinic());
+				comboClinic.Items.Add(Lan.G(this,"Unassigned"),new Clinic());
 			}
 			foreach(Clinic clinic in _dictSpecialtyClinics[((ODBoxItem<Def>)comboSpecialty.SelectedItem).Tag.DefNum]) {
 				comboClinic.Items.Add(clinic.Abbr,clinic);
@@ -167,7 +167,7 @@ namespace OpenDental {
 			}
 			comboSpecialty.Items.Clear();
 			//Create a dummy specialty of 0.  Always allow the user to make Unspecified clones.
-			comboSpecialty.Items.Add(new ODBoxItem<Def>(Lan.g(this,"Unspecified"),new Def() { DefNum=0 }));
+			comboSpecialty.Items.Add(new ODBoxItem<Def>(Lan.G(this,"Unspecified"),new Def() { DefNum=0 }));
 			foreach(Def specialty in listSpecialtyDefs) {
 				comboSpecialty.Items.Add(new ODBoxItem<Def>(specialty.ItemName,specialty));
 			}

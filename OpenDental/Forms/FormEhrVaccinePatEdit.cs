@@ -340,7 +340,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDateExpiration.errorProvider1.GetError(textDateExpiration)!="") {
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			VaccineCompletionStatus vaccineCompletionStatus=(VaccineCompletionStatus)listCompletionStatus.SelectedIndex;

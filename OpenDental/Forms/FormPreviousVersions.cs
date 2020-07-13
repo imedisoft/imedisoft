@@ -22,9 +22,9 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Version"),117);
+			GridColumn col=new GridColumn(Lan.G(this,"Version"),117);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Date"),117);
+			col=new GridColumn(Lan.G(this,"Date"),117);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row=null;

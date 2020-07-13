@@ -120,9 +120,9 @@ namespace OpenDental{
 			RList=Reconciles.GetList(AccountNum);
 			grid.BeginUpdate();
 			grid.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableReconciles","Date"),80);
+			GridColumn col=new GridColumn(Lan.G("TableReconciles","Date"),80);
 			grid.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableReconciles","Ending Bal"),100,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableReconciles","Ending Bal"),100,HorizontalAlignment.Right);
 			grid.ListGridColumns.Add(col);
 			grid.ListGridRows.Clear();
 			OpenDental.UI.GridRow row;

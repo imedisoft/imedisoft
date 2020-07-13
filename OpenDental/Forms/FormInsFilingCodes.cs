@@ -174,7 +174,7 @@ namespace OpenDental {
 
 		private void FormInsFilingCodes_Load(object sender,EventArgs e) {
 			if(IsSelectionMode) {
-				butClose.Text=Lan.g(this,"Cancel");
+				butClose.Text=Lan.G(this,"Cancel");
 			} 
 			else {
 				butOK.Visible=false;
@@ -205,11 +205,11 @@ namespace OpenDental {
 			_listInsFilingCodes=InsFilingCodes.GetDeepCopy();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableInsFilingCodes","Description"),250);
+			GridColumn col=new GridColumn(Lan.G("TableInsFilingCodes","Description"),250);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableInsFilingCodes","Group"),100);
+			col=new GridColumn(Lan.G("TableInsFilingCodes","Group"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableInsFilingCodes","EclaimCode"),100);
+			col=new GridColumn(Lan.G("TableInsFilingCodes","EclaimCode"),100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

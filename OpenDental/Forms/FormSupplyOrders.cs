@@ -111,19 +111,19 @@ namespace OpenDental {
 				.ThenBy(x => x.DatePlaced).ToList();
 			gridOrders.BeginUpdate();
 			gridOrders.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Date Placed"),80);
+			GridColumn col=new GridColumn(Lan.G(this,"Date Placed"),80);
 			gridOrders.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Date Received"),90);
+			col=new GridColumn(Lan.G(this,"Date Received"),90);
 			gridOrders.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Amount"),70,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Amount"),70,HorizontalAlignment.Right);
 			gridOrders.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Shipping"),70,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Shipping"),70,HorizontalAlignment.Right);
 			gridOrders.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Supplier"),120);
+			col=new GridColumn(Lan.G(this,"Supplier"),120);
 			gridOrders.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Note"),200);
+			col=new GridColumn(Lan.G(this,"Note"),200);
 			gridOrders.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Placed By"),100);
+			col=new GridColumn(Lan.G(this,"Placed By"),100);
 			gridOrders.ListGridColumns.Add(col);
 			gridOrders.ListGridRows.Clear();
 			GridRow row;
@@ -134,7 +134,7 @@ namespace OpenDental {
 					isPending=true;
 				}
 				if(isPending) {
-					row.Cells.Add(Lan.g(this,"pending"));
+					row.Cells.Add(Lan.G(this,"pending"));
 				}
 				else {
 					row.Cells.Add(_listSupplyOrders[i].DatePlaced.ToShortDateString());
@@ -171,17 +171,17 @@ namespace OpenDental {
 			}
 			gridItems.BeginUpdate();
 			gridItems.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Catalog #"),80);
+			GridColumn col=new GridColumn(Lan.G(this,"Catalog #"),80);
 			gridItems.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),320);
+			col=new GridColumn(Lan.G(this,"Description"),320);
 			gridItems.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Qty"),60,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Qty"),60,HorizontalAlignment.Center);
 			col.IsEditable=true;
 			gridItems.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Price/Unit"),70,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Price/Unit"),70,HorizontalAlignment.Right);
 			col.IsEditable=true;
 			gridItems.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Subtotal"),70,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Subtotal"),70,HorizontalAlignment.Right);
 			gridItems.ListGridColumns.Add(col);
 			gridItems.ListGridRows.Clear();
 			GridRow row;
@@ -257,7 +257,7 @@ namespace OpenDental {
 			_headingPrinted=false;
 			PrinterL.TryPrintOrDebugRpPreview(
 				pd2_PrintPage,
-				Lan.g(this,"Supplies order from")+" "+_listSupplyOrders[gridOrders.GetSelectedIndex()].DatePlaced.ToShortDateString()+" "+Lan.g(this,"printed"),
+				Lan.G(this,"Supplies order from")+" "+_listSupplyOrders[gridOrders.GetSelectedIndex()].DatePlaced.ToShortDateString()+" "+Lan.G(this,"printed"),
 				margins:new Margins(50,50,40,30)
 			);
 		}
@@ -272,13 +272,13 @@ namespace OpenDental {
 			int yPos=bounds.Top;
 			#region printHeading
 			if(!_headingPrinted) {
-				text=Lan.g(this,"Supply Order");
+				text=Lan.G(this,"Supply Order");
 				g.DrawString(text,headingFont,Brushes.Black,425-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=Lan.g(this,"Order Number")+": "+_listSupplyOrders[gridOrders.SelectedIndices[0]].SupplyOrderNum;
+				text=Lan.G(this,"Order Number")+": "+_listSupplyOrders[gridOrders.SelectedIndices[0]].SupplyOrderNum;
 				g.DrawString(text,subHeadingFont,Brushes.Black,425-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
-				text=Lan.g(this,"Date")+": "+_listSupplyOrders[gridOrders.SelectedIndices[0]].DatePlaced.ToShortDateString();
+				text=Lan.G(this,"Date")+": "+_listSupplyOrders[gridOrders.SelectedIndices[0]].DatePlaced.ToShortDateString();
 				g.DrawString(text,subHeadingFont,Brushes.Black,425-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 				Supplier supplier=Suppliers.GetOne(_listSupplyOrders[gridOrders.SelectedIndices[0]].SupplierNum);

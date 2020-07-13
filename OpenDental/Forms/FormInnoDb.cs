@@ -41,7 +41,7 @@ namespace OpenDental {
 			}
 			if(InnoDb.GetDefaultEngine()=="InnoDB") {
 				MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(
-					Lan.g("FormInnoDB","You will first need to change your default storage engine to MyISAM.  Make sure that the following line is in your my.ini file: \r\n"
+					Lan.G("FormInnoDB","You will first need to change your default storage engine to MyISAM.  Make sure that the following line is in your my.ini file: \r\n"
 					+"default-storage-engine=MyISAM.\r\n"
 					+"Then, restart the MySQL service and return here."));
 				msgbox.ShowDialog();
@@ -54,7 +54,7 @@ namespace OpenDental {
 			textBox1.Text+=Lans.g("FormInnoDb","Default Storage Engine: "+InnoDb.GetDefaultEngine().ToString()+"\r\n");
 			Application.DoEvents();
 			int numchanged=InnoDb.ConvertTables("InnoDB","MyISAM");
-			textBox1.Text+=Lan.g("FormInnoDb","Number of tables converted to MyISAM: ")+numchanged.ToString()+"\r\n";
+			textBox1.Text+=Lan.G("FormInnoDb","Number of tables converted to MyISAM: ")+numchanged.ToString()+"\r\n";
 			Application.DoEvents();
 			textBox1.Text+=InnoDb.GetEngineCount();
 			Application.DoEvents();
@@ -68,7 +68,7 @@ namespace OpenDental {
 			}
 			if(!InnoDb.IsInnodbAvail()) {
 				MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(
-					Lan.g("FormInnoDb","InnoDB storage engine is disabled.  In order for InnoDB tables to work you must comment out the skip-innodb line in your my.ini file, like this:\r\n"
+					Lan.G("FormInnoDb","InnoDB storage engine is disabled.  In order for InnoDB tables to work you must comment out the skip-innodb line in your my.ini file, like this:\r\n"
 					+"#skip-innodb\r\n"
 					+"and, if present, comment out the default-storage-engine line like this: \r\n"
 					+"#default-storage-engine=MyISAM.\r\n"
@@ -78,7 +78,7 @@ namespace OpenDental {
 			}
 			if(InnoDb.GetDefaultEngine()=="MyISAM") {
 				MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(
-					Lan.g("FormInnoDB","You will first need to change your default storage engine to InnoDB.  In your my.ini file, comment out the default-storage-engine line like this: \r\n"
+					Lan.G("FormInnoDB","You will first need to change your default storage engine to InnoDB.  In your my.ini file, comment out the default-storage-engine line like this: \r\n"
 					+"#default-storage-engine=MyISAM.\r\n"
 					+"Then, restart the MySQL service and return here."));
 				msgbox.ShowDialog();
@@ -91,7 +91,7 @@ namespace OpenDental {
 			textBox1.Text+=Lans.g("FormInnoDb","Default Storage Engine: "+InnoDb.GetDefaultEngine().ToString()+"\r\n");
 			Application.DoEvents();
 			int numchanged=InnoDb.ConvertTables("MyISAM","InnoDB");
-			textBox1.Text+=Lan.g("FormInnoDb","Number of tables converted to InnoDB: ")+numchanged.ToString()+"\r\n";
+			textBox1.Text+=Lan.G("FormInnoDb","Number of tables converted to InnoDB: ")+numchanged.ToString()+"\r\n";
 			Application.DoEvents();
 			textBox1.Text+=InnoDb.GetEngineCount();
 			Application.DoEvents();

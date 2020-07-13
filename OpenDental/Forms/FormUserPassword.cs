@@ -189,10 +189,10 @@ namespace OpenDental{
 
 		private void FormUserPassword_Load(object sender, System.EventArgs e) {
 			if(IsCreate){
-				Text=Lan.g(this,"Create Password");
+				Text=Lan.G(this,"Create Password");
 			}
 			if(_isCopiedUser) {
-				Text=Lan.g(this,"Create Password for Copied User");
+				Text=Lan.G(this,"Create Password for Copied User");
 			}
 			if(IsInSecurityWindow) {
 				labelCurrent.Visible=false;

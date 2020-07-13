@@ -213,14 +213,14 @@ namespace OpenDental{
 				listBoxFeeSched.Items.Add(_listFeeScheds[i].Description);
 			}		
 			listBoxFeeSched.SelectedIndex=0;	
-			listBoxClinics.Items.Add(Lan.g(this,"Default"));
+			listBoxClinics.Items.Add(Lan.G(this,"Default"));
 			if(PrefC.HasClinicsEnabled) {
 				for(int i=0;i<_listClinics.Count;i++) {
 					listBoxClinics.Items.Add(_listClinics[i].Abbr);
 				}
 			}
 			listBoxClinics.SelectedIndex=0;
-			listBoxProviders.Items.Add(Lan.g(this,"Default"));
+			listBoxProviders.Items.Add(Lan.G(this,"Default"));
 			for(int i=0;i<_listProviders.Count;i++) {
 				listBoxProviders.Items.Add(_listProviders[i].Abbr);
 			}
@@ -240,7 +240,7 @@ namespace OpenDental{
 			}
 			DataTable dataTable=RpProcCodes.GetData(feeSched.FeeSchedNum,clinicNum,provNum,radioCategories.Checked,checkShowBlankFees.Checked);
 			report.ReportName="Procedure Codes - Fee Schedules";
-			report.AddTitle("Title",Lan.g(this,"Procedure Codes - Fee Schedules"));
+			report.AddTitle("Title",Lan.G(this,"Procedure Codes - Fee Schedules"));
 			report.AddSubTitle("Fee Schedule",feeSched.Description);
 			report.AddSubTitle("Clinic",listBoxClinics.Items[listBoxClinics.SelectedIndex].ToString());
 			report.AddSubTitle("Provider",listBoxProviders.Items[listBoxProviders.SelectedIndex].ToString());

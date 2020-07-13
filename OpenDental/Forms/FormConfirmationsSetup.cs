@@ -47,33 +47,33 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TableConfirmMsgs","Mode"),61);
+			col=new GridColumn(Lan.G("TableConfirmMsgs","Mode"),61);
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn("",300);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableConfirmMsgs","Message"),500);
+			col=new GridColumn(Lan.G("TableConfirmMsgs","Message"),500);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			#region Confirmation
 			//Confirmation---------------------------------------------------------------------------------------------
 			row=new GridRow();
-			row.Cells.Add(Lan.g(this,"Postcard"));
-			row.Cells.Add(Lan.g(this,"Confirmation message.  Use [date]  and [time] where you want those values to be inserted"));
+			row.Cells.Add(Lan.G(this,"Postcard"));
+			row.Cells.Add(Lan.G(this,"Confirmation message.  Use [date]  and [time] where you want those values to be inserted"));
 			row.Cells.Add(PrefC.GetString(PrefName.ConfirmPostcardMessage));
 			row.Tag=PrefName.ConfirmPostcardMessage;
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"Confirmation subject line."));
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"Confirmation subject line."));
 			row.Cells.Add(PrefC.GetString(PrefName.ConfirmEmailSubject));
 			row.Tag=PrefName.ConfirmEmailSubject;
 			gridMain.ListGridRows.Add(row);
 			//
 			row=new GridRow();
-			row.Cells.Add(Lan.g(this,"E-mail"));
-			row.Cells.Add(Lan.g(this,"Confirmation message. Available variables: [NameF], [date], [time]."));
+			row.Cells.Add(Lan.G(this,"E-mail"));
+			row.Cells.Add(Lan.G(this,"Confirmation message. Available variables: [NameF], [date], [time]."));
 			row.Cells.Add(PrefC.GetString(PrefName.ConfirmEmailMessage));
 			row.Tag=PrefName.ConfirmEmailMessage;
 			gridMain.ListGridRows.Add(row);
@@ -81,8 +81,8 @@ namespace OpenDental {
 			#region Text Messaging
 			//Text Messaging----------------------------------------------------------------------------------------------
 			row=new GridRow();
-			row.Cells.Add(Lan.g(this,"Text"));
-			row.Cells.Add(Lan.g(this,"Confirmation message. Available variables: [NameF], [date], [time]."));
+			row.Cells.Add(Lan.G(this,"Text"));
+			row.Cells.Add(Lan.G(this,"Confirmation message. Available variables: [NameF], [date], [time]."));
 			row.Cells.Add(PrefC.GetString(PrefName.ConfirmTextMessage));
 			row.Tag=PrefName.ConfirmTextMessage;
 			gridMain.ListGridRows.Add(row);

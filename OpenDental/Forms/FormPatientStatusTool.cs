@@ -20,9 +20,9 @@ namespace OpenDental {
 			//Auto set the date picker to two years in the past.
 			odDatePickerSince.SetDateTime(DateTime.Today.AddYears(-2));
 			//Fill listbox
-			listOptions.Items.Add(Lan.g(this,"Planned Procedures"));
-			listOptions.Items.Add(Lan.g(this,"Completed Procedures"));
-			listOptions.Items.Add(Lan.g(this,"Appointments"));
+			listOptions.Items.Add(Lan.G(this,"Planned Procedures"));
+			listOptions.Items.Add(Lan.G(this,"Completed Procedures"));
+			listOptions.Items.Add(Lan.G(this,"Appointments"));
 			//Fill and enable ComboBoxClinic if clinics are enabled
 			if(PrefC.HasClinicsEnabled) {
 				comboClinic.IsAllSelected=true;
@@ -48,20 +48,20 @@ namespace OpenDental {
 				,includeTPProc,includeCompletedProc,includeAppointments,listClinicNums);
 			gridMain.BeginUpdate();
 			if(gridMain.ListGridColumns.Count==0) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"PatNum"),75,GridSortingStrategy.AmountParse));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"PatStatusCur"),100,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"PatStatusNew"),100,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"First Name"),125,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Last Name"),125,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Birthdate"),75,GridSortingStrategy.DateParse));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PatNum"),75,GridSortingStrategy.AmountParse));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PatStatusCur"),100,GridSortingStrategy.StringCompare));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PatStatusNew"),100,GridSortingStrategy.StringCompare));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"First Name"),125,GridSortingStrategy.StringCompare));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Last Name"),125,GridSortingStrategy.StringCompare));
+				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Birthdate"),75,GridSortingStrategy.DateParse));
 				if(PrefC.HasClinicsEnabled) {
-					gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Clinic"),75,GridSortingStrategy.StringCompare));
+					gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Clinic"),75,GridSortingStrategy.StringCompare));
 				}
 			}
 			gridMain.ListGridRows.Clear();
 			//Mimics FormPatientEdit
-			string patientStatus=Lan.g("enumPatientStatus","Patient");
-			string inactiveStatus=Lan.g("enumPatientStatus","Inactive");
+			string patientStatus=Lan.G("enumPatientStatus","Patient");
+			string inactiveStatus=Lan.G("enumPatientStatus","Inactive");
 			GridRow row;
 			foreach(Patient pat in listPatients) {
 				row=new GridRow();
@@ -106,13 +106,13 @@ namespace OpenDental {
 				MessageBox.Show("Please make a selection first");
 				return;
 			}
-			string patientStatus=Lan.g("enumPatientStatus","Patient");
-			string inactiveStatus=Lan.g("enumPatientStatus","Inactive");
-			string msgText=Lan.g(this,"This will change the status for selected patients from")+" "
+			string patientStatus=Lan.G("enumPatientStatus","Patient");
+			string inactiveStatus=Lan.G("enumPatientStatus","Inactive");
+			string msgText=Lan.G(this,"This will change the status for selected patients from")+" "
 				+(_isConvertToPatient? inactiveStatus : patientStatus)+" "
 				+Lans.g(this,"to")+" "
 				+(_isConvertToPatient ? patientStatus : inactiveStatus)+".\r\n"+
-				Lan.g(this,"Do you wish to continue?");
+				Lan.G(this,"Do you wish to continue?");
 			if(MessageBox.Show(msgText,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 				return;//The user chose not to change the statuses.
 			}

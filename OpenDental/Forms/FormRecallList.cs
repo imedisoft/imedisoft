@@ -241,7 +241,7 @@ namespace OpenDental {
 					SendWebSched();
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.g(this,"Error sending Web Sched notifications. Error message:")+" "+ex.Message);
+					MessageBox.Show(Lan.G(this,"Error sending Web Sched notifications. Error message:")+" "+ex.Message);
 				}
 			}
 			_hasClickedWebSched=false;
@@ -252,18 +252,18 @@ namespace OpenDental {
 			List<long> listExcludeEmailAddressNums=Clinics.GetDeepCopy().Select(x => x.EmailAddressNum)
 				.Concat(new[] { PrefC.GetLong(PrefName.EmailDefaultAddressNum),PrefC.GetLong(PrefName.EmailNotifyAddressNum) }).ToList();
 			_listEmailAddresses=EmailAddresses.GetWhere(x => !listExcludeEmailAddressNums.Contains(x.EmailAddressNum));
-			comboEmailFromRecalls.Items.Add(Lan.g(this,"Practice/Clinic"));//default
+			comboEmailFromRecalls.Items.Add(Lan.G(this,"Practice/Clinic"));//default
 			comboEmailFromRecalls.SelectedIndex=0;
 			comboEmailFromRecalls.Items.AddRange(_listEmailAddresses.Select(x => x.EmailUsername).ToArray());
-			comboEmailFromReact.Items.Add(Lan.g(this,"Practice/Clinic"));//default
+			comboEmailFromReact.Items.Add(Lan.G(this,"Practice/Clinic"));//default
 			comboEmailFromReact.SelectedIndex=0;
 			comboEmailFromReact.Items.AddRange(_listEmailAddresses.Select(x => x.EmailUsername).ToArray());
 			//Add user specific email address if present.
 			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurUser.UserNum);//can be null
 			if(emailAddressMe!=null) {
 				_listEmailAddresses.Insert(0,emailAddressMe);
-				comboEmailFromRecalls.Items.Insert(1,Lan.g(this,"Me")+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
-				comboEmailFromReact.Items.Insert(1,Lan.g(this,"Me")+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
+				comboEmailFromRecalls.Items.Insert(1,Lan.G(this,"Me")+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
+				comboEmailFromReact.Items.Insert(1,Lan.G(this,"Me")+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
 			}
 		}
 
@@ -390,7 +390,7 @@ namespace OpenDental {
 					}
 				}
 				gridRecalls.EndUpdate();
-				labelPatientCount.Text=Lan.g(this,"Patient Count:")+" "+gridRecalls.ListGridRows.Count;
+				labelPatientCount.Text=Lan.G(this,"Patient Count:")+" "+gridRecalls.ListGridRows.Count;
 			};
 			//Show progress window while filling the grid.
 			ODProgress.ShowAction(
@@ -438,7 +438,7 @@ namespace OpenDental {
 		private void gridRecalls_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(gridRecalls.ListGridColumns[e.Col].Tag.ToString()=="WebSched") {//A column's tag is its display field internal name.
 				using(MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(((PatRowTag)gridRecalls.ListGridRows[e.Row].Tag).WebSchedSendError)) {
-					msgBox.Text=Lan.g(this,"Web Sched Notification Send Error");
+					msgBox.Text=Lan.G(this,"Web Sched Notification Send Error");
 					msgBox.ShowDialog();
 					return;
 				}
@@ -480,7 +480,7 @@ namespace OpenDental {
 						commlogCur.Note="";
 						if(recall.RecallStatus!=FormR.RecallCur.RecallStatus) {
 							if(FormR.RecallCur.RecallStatus==0) {
-								commlogCur.Note+=Lan.g(this,"Status None");
+								commlogCur.Note+=Lan.G(this,"Status None");
 							}
 							else {
 								commlogCur.Note+=Defs.GetName(DefCat.RecallUnschedStatus,FormR.RecallCur.RecallStatus);
@@ -490,13 +490,13 @@ namespace OpenDental {
 							if(commlogCur.Note!="") {
 								commlogCur.Note+=",  ";
 							}
-							commlogCur.Note+=Lan.g(this,"Disabled until ")+FormR.RecallCur.DisableUntilDate.ToShortDateString();
+							commlogCur.Note+=Lan.G(this,"Disabled until ")+FormR.RecallCur.DisableUntilDate.ToShortDateString();
 						}
 						if(recall.DisableUntilBalance!=FormR.RecallCur.DisableUntilBalance && FormR.RecallCur.DisableUntilBalance>0) {
 							if(commlogCur.Note!="") {
 								commlogCur.Note+=",  ";
 							}
-							commlogCur.Note+=Lan.g(this,"Disabled until balance below ")+FormR.RecallCur.DisableUntilBalance.ToString("c");
+							commlogCur.Note+=Lan.G(this,"Disabled until balance below ")+FormR.RecallCur.DisableUntilBalance.ToString("c");
 						}
 						if(recall.Note!=FormR.RecallCur.Note) {
 							if(commlogCur.Note!="") {
@@ -567,7 +567,7 @@ namespace OpenDental {
 				pinAptNums.Add(apt.AptNum);
 			}
 			if(patsRestricted>0) {
-				MessageBox.Show(Lan.g(this,"Family members skipped due to patient restriction")+" "+PatRestrictions.GetPatRestrictDesc(PatRestrict.ApptSchedule)
+				MessageBox.Show(Lan.G(this,"Family members skipped due to patient restriction")+" "+PatRestrictions.GetPatRestrictDesc(PatRestrict.ApptSchedule)
 					+": "+patsRestricted+".");
 			}
 			if(pinAptNums.Count==0) {
@@ -638,7 +638,7 @@ namespace OpenDental {
 				listGridIndicesNotSignUp.Add(i);
 			}
 			if(needsToBeSignedUp && listClinicNumsNotSignedUp.Count > 0) {
-				string message=Lan.g(this,"You have selected recalls whose clinic is not signed up for Web Sched recall. "
+				string message=Lan.G(this,"You have selected recalls whose clinic is not signed up for Web Sched recall. "
 					+"Do you want to go to the sign up portal to sign these clinics up? "
 					+"Clicking 'No' will deselect these recalls and send the remaining.");
 				if(MessageBox.Show(message,"",MessageBoxButtons.YesNo)==DialogResult.Yes) {
@@ -651,7 +651,7 @@ namespace OpenDental {
 			#endregion Check Web Sched Pref and Show Promo
 			#region Recall List Validation
 			if(gridRecalls.ListGridRows.Count < 1) {
-				MessageBox.Show(Lan.g(this,"There are no Patients in the Recall table.  Must have at least one."));
+				MessageBox.Show(Lan.G(this,"There are no Patients in the Recall table.  Must have at least one."));
 				return;
 			}
 			if(!EmailAddresses.ExistsValidEmail()) {
@@ -751,20 +751,20 @@ namespace OpenDental {
 			}
 			List<string> listSkippedMsgs=new List<string>();
 			if(skippedContact>0) {
-				listSkippedMsgs.Add(Lan.g(this,"Selected patients skipped due to missing email addresses and wireless phone:")+" "+skippedContact);
+				listSkippedMsgs.Add(Lan.G(this,"Selected patients skipped due to missing email addresses and wireless phone:")+" "+skippedContact);
 			}
 			if(skippedTimeSlot>0) {
-				listSkippedMsgs.Add(Lan.g(this,"Selected patients skipped due to no available Web Sched time slots found:")+" "+skippedTimeSlot);
+				listSkippedMsgs.Add(Lan.G(this,"Selected patients skipped due to no available Web Sched time slots found:")+" "+skippedTimeSlot);
 			}
 			if(skippedClinic0>0) {
-				listSkippedMsgs.Add(Lan.g(this,"Selected patients skipped due to not being assigned to a clinic:")+" "+skippedClinic0);
+				listSkippedMsgs.Add(Lan.G(this,"Selected patients skipped due to not being assigned to a clinic:")+" "+skippedClinic0);
 			}
 			if(skippedRestricted>0) {
-				listSkippedMsgs.Add(Lan.g(this,"Selected patients skipped due to patient restriction:")+ " "+skippedRestricted);
+				listSkippedMsgs.Add(Lan.G(this,"Selected patients skipped due to patient restriction:")+ " "+skippedRestricted);
 			}
 			if(skippedNotInList>0) {
 				FillRecalls();
-				listSkippedMsgs.Add(Lan.g(this,"Selected patients skipped due to no longer being in the recall list:")+" "+skippedNotInList);
+				listSkippedMsgs.Add(Lan.G(this,"Selected patients skipped due to no longer being in the recall list:")+" "+skippedNotInList);
 			}
 			if(!listSkippedMsgs.IsNullOrEmpty()) {
 				MessageBox.Show(string.Join("\r\n",listSkippedMsgs));
@@ -789,7 +789,7 @@ namespace OpenDental {
 				WebSchedRecallSource.FormRecallList,
 				emailAddressFrom);
 			Cursor=Cursors.Default;
-			SecurityLogs.MakeLogEntry(Permissions.WebSchedRecallManualSend,0,Lan.g(this,"Web Sched Recalls manually sent."));
+			SecurityLogs.MakeLogEntry(Permissions.WebSchedRecallManualSend,0,Lan.G(this,"Web Sched Recalls manually sent."));
 			if(listWebSchedErrors.Count>0) {
 				//Show the error (already translated) to the user and then refresh the grid in case any were successful.
 				using(MsgBoxCopyPaste msgBCP=new MsgBoxCopyPaste(string.Join("\r\n",listWebSchedErrors))) {
@@ -839,7 +839,7 @@ namespace OpenDental {
 				pagesPrinted=0;
 				patientsPrinted=0;
 				PrinterL.TryPreview(pdLabels_PrintPage,
-					Lan.g(this,(commType==CommItemTypeAuto.RECALL?"Recall":"Reactivation")+" list labels printed"),
+					Lan.G(this,(commType==CommItemTypeAuto.RECALL?"Recall":"Reactivation")+" list labels printed"),
 					PrintSituation.LabelSheet,
 					new Margins(0,0,0,0),
 					PrintoutOrigin.AtMargin,
@@ -863,7 +863,7 @@ namespace OpenDental {
 				while(patientsPrinted<addrTable.Rows.Count) {
 					text="";
 					if(DoGroupFamilies() && addrTable.Rows[patientsPrinted]["famList"].ToString()!="") {//print family label
-						text=addrTable.Rows[patientsPrinted]["guarLName"].ToString()+" "+Lan.g(this,"Household")+"\r\n";
+						text=addrTable.Rows[patientsPrinted]["guarLName"].ToString()+" "+Lan.G(this,"Household")+"\r\n";
 					}
 					else {//print single label
 						text=addrTable.Rows[patientsPrinted]["patientNameFL"].ToString()+"\r\n";
@@ -907,7 +907,7 @@ namespace OpenDental {
 				}
 				int totalPages=(int)Math.Ceiling((double)addrTable.Rows.Count/(double)postcardsPerSheet);
 				PrinterL.TryPreview(pdCards_PrintPage,
-					Lan.g(this,(commType==CommItemTypeAuto.RECALL?"Recall":"Reactivation")+" list postcards printed"),
+					Lan.G(this,(commType==CommItemTypeAuto.RECALL?"Recall":"Reactivation")+" list postcards printed"),
 					PrintSituation.Postcard,
 					new Margins(0,0,0,0),
 					PrintoutOrigin.AtMargin,
@@ -944,7 +944,7 @@ namespace OpenDental {
 				}
 			}
 			if(gridRecalls.ListGridRows.Count < 1) {
-				MessageBox.Show(Lan.g(this,"There are no Patients in the Recall table.  Must have at least one to send."));
+				MessageBox.Show(Lan.G(this,"There are no Patients in the Recall table.  Must have at least one to send."));
 				return;
 			}
 			if(PrefC.GetLong(PrefName.RecallStatusMailed)==0) {
@@ -1111,7 +1111,7 @@ namespace OpenDental {
 						return;
 					}
 					if(skipped>0){
-						MessageBox.Show(Lan.g(this,"Selected patients skipped due to missing email addresses: ")+skipped.ToString());
+						MessageBox.Show(Lan.G(this,"Selected patients skipped due to missing email addresses: ")+skipped.ToString());
 					}
 				}
 			}
@@ -1291,7 +1291,7 @@ namespace OpenDental {
 			while(yPos<1000 && patientsPrinted<addrTable.Rows.Count){
 				text="";
 				if(DoGroupFamilies() && addrTable.Rows[patientsPrinted]["famList"].ToString()!=""){//print family label
-					text=addrTable.Rows[patientsPrinted]["guarLName"].ToString()+" "+Lan.g(this,"Household")+"\r\n";
+					text=addrTable.Rows[patientsPrinted]["guarLName"].ToString()+" "+Lan.G(this,"Household")+"\r\n";
 				}
 				else {//print single label
 					text=addrTable.Rows[patientsPrinted]["patientNameFL"].ToString()+"\r\n";
@@ -1398,7 +1398,7 @@ namespace OpenDental {
 				//Patient's Address-----------------------------------------------------------------------
 				if(DoGroupFamilies() && addrTable.Rows[patientsPrinted]["famList"].ToString()!="")//print family card
 				{
-					str=addrTable.Rows[patientsPrinted]["guarLName"].ToString()+" "+Lan.g(this,"Household")+"\r\n";
+					str=addrTable.Rows[patientsPrinted]["guarLName"].ToString()+" "+Lan.G(this,"Household")+"\r\n";
 				}
 				else{//print single card
 					str=addrTable.Rows[patientsPrinted]["patientNameFL"].ToString()+"\r\n";
@@ -1494,7 +1494,7 @@ namespace OpenDental {
 				commlogCur.CommType=Commlogs.GetTypeAuto(commType);
 				commlogCur.UserNum=Security.CurUser.UserNum;
 				if(doIncludeNote) {
-					commlogCur.Note=Lan.g(this,(commType==CommItemTypeAuto.RECALL?"Recall ":"Reactivation ")+" reminder.");
+					commlogCur.Note=Lan.G(this,(commType==CommItemTypeAuto.RECALL?"Recall ":"Reactivation ")+" reminder.");
 					if(commType==CommItemTypeAuto.RECALL && comboSetStatusRecalls.SelectedIndex>0) {//comboStatus not None
 						commlogCur.Note+="  "+comboSetStatusRecalls.GetSelected<Def>().ItemName;
 					}
@@ -1502,7 +1502,7 @@ namespace OpenDental {
 						commlogCur.Note+="  "+comboSetStatusReact.GetSelected<Def>().ItemName;
 					}
 					else{
-						commlogCur.Note+="  "+Lan.g(this,"Status None");
+						commlogCur.Note+="  "+Lan.G(this,"Status None");
 					}
 				}
 				commlogCur.IsNew=true;
@@ -1523,7 +1523,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,$"{(IsRecallGridSelected()?"Recall":"Reactivation")} list printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,$"{(IsRecallGridSelected()?"Recall":"Reactivation")} list printed"),PrintoutOrientation.Landscape);
 		}
 
 		///<summary>Shared functionality with Recalls and Reactivations, be careful when making changes.</summary>
@@ -1538,11 +1538,11 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 #region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,$"{(IsRecallGridSelected()?"Recall":"Reactivation")} List");
+				text=Lan.G(this,$"{(IsRecallGridSelected()?"Recall":"Reactivation")} List");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				if(IsRecallGridSelected()) {
-					text=datePickerRecalls.GetDateTimeFrom().ToShortDateString()+" "+Lan.g(this,"to")+" "+datePickerRecalls.GetDateTimeTo().ToShortDateString();
+					text=datePickerRecalls.GetDateTimeFrom().ToShortDateString()+" "+Lan.G(this,"to")+" "+datePickerRecalls.GetDateTimeTo().ToShortDateString();
 				}
 				else {//Reactivation
 					text=$"Since {datePickerReact.GetDateTimeTo()}";
@@ -1591,13 +1591,13 @@ namespace OpenDental {
 					RecallListEvent.Fire(ODEventType.RecallList,Lans.g(this,"Filling the Recently Contacted grid..."));
 					gridReminders.BeginUpdate();
 					gridReminders.ListGridColumns.Clear();
-					gridReminders.ListGridColumns.Add(new GridColumn(Lan.g(this,"Date Time Sent"),140,GridSortingStrategy.DateParse));
-					gridReminders.ListGridColumns.Add(new GridColumn(Lan.g(this,"Patient"),200));
-					gridReminders.ListGridColumns.Add(new GridColumn(Lan.g(this,"Reminder Type"),180));
-					gridReminders.ListGridColumns.Add(new GridColumn(Lan.g(this,"Age"),50,GridSortingStrategy.AmountParse));
-					gridReminders.ListGridColumns.Add(new GridColumn(Lan.g(this,"Due Date"),100,GridSortingStrategy.DateParse));
-					gridReminders.ListGridColumns.Add(new GridColumn(Lan.g(this,"Recall Type"),130));
-					gridReminders.ListGridColumns.Add(new GridColumn(Lan.g(this,"Recall Status"),130));
+					gridReminders.ListGridColumns.Add(new GridColumn(Lan.G(this,"Date Time Sent"),140,GridSortingStrategy.DateParse));
+					gridReminders.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient"),200));
+					gridReminders.ListGridColumns.Add(new GridColumn(Lan.G(this,"Reminder Type"),180));
+					gridReminders.ListGridColumns.Add(new GridColumn(Lan.G(this,"Age"),50,GridSortingStrategy.AmountParse));
+					gridReminders.ListGridColumns.Add(new GridColumn(Lan.G(this,"Due Date"),100,GridSortingStrategy.DateParse));
+					gridReminders.ListGridColumns.Add(new GridColumn(Lan.G(this,"Recall Type"),130));
+					gridReminders.ListGridColumns.Add(new GridColumn(Lan.G(this,"Recall Status"),130));
 					gridReminders.ListGridRows.Clear();
 					gridReminders.ListGridRows.AddRange(listRecent.Select(x => new GridRow(
 						x.DateSent.ToString(),
@@ -1617,7 +1617,7 @@ namespace OpenDental {
 
 		private void FillReactivationGrid() {
 			if(!Defs.GetDefsForCategory(DefCat.CommLogTypes).Any(x => x.ItemValue==CommItemTypeAuto.REACT.GetDescription(true))) {
-				MessageBox.Show(Lan.g(this,"First you must set up a Reactivation commlog type in definitions"));
+				MessageBox.Show(Lan.G(this,"First you must set up a Reactivation commlog type in definitions"));
 				return;
 			}
 			//Verification
@@ -1637,22 +1637,22 @@ namespace OpenDental {
 			);
 			gridReactivations.BeginUpdate();
 			gridReactivations.ListGridColumns.Clear();
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Last Seen"),75,GridSortingStrategy.DateParse));
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Patient"),90));
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Age"),30,GridSortingStrategy.AmountParse));
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Provider"),90));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Last Seen"),75,GridSortingStrategy.DateParse));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient"),90));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Age"),30,GridSortingStrategy.AmountParse));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Provider"),90));
 			if(PrefC.HasClinicsEnabled) {
-				gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Clinic"),75));
+				gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Clinic"),75));
 			}
 			if(!PrefC.GetBool(PrefName.EasyHidePublicHealth)) {
-				gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Site"),75));
+				gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Site"),75));
 			}
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Billing Type"),85));
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"#Remind"),55,GridSortingStrategy.AmountParse));
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Last Contacted"),100,GridSortingStrategy.DateParse));
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Contact"),100));
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Status"),80));
-			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.g(this,"Note"),150));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Billing Type"),85));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"#Remind"),55,GridSortingStrategy.AmountParse));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Last Contacted"),100,GridSortingStrategy.DateParse));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Contact"),100));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Status"),80));
+			gridReactivations.ListGridColumns.Add(new GridColumn(Lan.G(this,"Note"),150));
 			gridReactivations.ListGridRows.Clear();
 			foreach(DataRow row in tableReacts.Rows) {
 				GridRow rowNew=new GridRow();
@@ -1692,7 +1692,7 @@ namespace OpenDental {
 				}
 			}
 			gridReactivations.EndUpdate();
-			labelReactPatCount.Text=Lan.g(this,"Patient Count:")+" "+gridReactivations.ListGridRows.Count.ToString();
+			labelReactPatCount.Text=Lan.G(this,"Patient Count:")+" "+gridReactivations.ListGridRows.Count.ToString();
 		}
 
 		private void gridReactivations_CellDoubleClick(object sender,ODGridClickEventArgs e) {
@@ -1753,7 +1753,7 @@ namespace OpenDental {
 			List<long> listRet=new List<long>();
 			foreach(Patient pat in fam.ListPats) {
 				if(PatRestrictionL.IsRestricted(pat.PatNum,PatRestrict.ApptSchedule)) {
-					MsgBox.Show(Lan.g(this,$"Skipping family member {pat.GetNameFirstOrPrefL()} due to patient restriction")+" "+PatRestrictions.GetPatRestrictDesc(PatRestrict.ApptSchedule));
+					MsgBox.Show(Lan.G(this,$"Skipping family member {pat.GetNameFirstOrPrefL()} due to patient restriction")+" "+PatRestrictions.GetPatRestrictDesc(PatRestrict.ApptSchedule));
 					continue;
 				}
 				listRet.AddRange(SchedPatReact(pat.PatNum));

@@ -40,7 +40,7 @@ namespace OpenDental {
 			//validation is handled here in GetUniqueUsername(...) 
 			Userod user=e.User;
 			if (user is null) {
-				MsgBox.Show(Lan.g(this,"Please select a user."));
+				MsgBox.Show(Lan.G(this,"Please select a user."));
 				return;
 			}		
 			if(!Userods.TryGetUniqueUsername(user.UserName+"(Copy)",0,false,false,out string newUserName)){//This should really never fail.

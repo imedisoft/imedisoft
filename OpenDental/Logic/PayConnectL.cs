@@ -33,11 +33,11 @@ namespace OpenDental {
 			clonePayment.PayAmt*=-1; //The negated amount of the original payment
 			clonePayment.PayDate=DateTime.Now;
 			clonePayment.Receipt=receiptStr;
-			clonePayment.PayNote=Lan.g("PayConnectL","Transaction Type")+": "+Enum.GetName(typeof(PayConnectService.transType),transType)
-				+Environment.NewLine+Lan.g("PayConnectL","Status")+": "+response.Description+Environment.NewLine
-				+Lan.g("PayConnectL","Amount")+": "+clonePayment.PayAmt+Environment.NewLine
-				+Lan.g("PayConnectL","Auth Code")+": "+response.AuthCode+Environment.NewLine
-				+Lan.g("PayConnectL","Ref Number")+": "+response.RefNumber;
+			clonePayment.PayNote=Lan.G("PayConnectL","Transaction Type")+": "+Enum.GetName(typeof(PayConnectService.transType),transType)
+				+Environment.NewLine+Lan.G("PayConnectL","Status")+": "+response.Description+Environment.NewLine
+				+Lan.G("PayConnectL","Amount")+": "+clonePayment.PayAmt+Environment.NewLine
+				+Lan.G("PayConnectL","Auth Code")+": "+response.AuthCode+Environment.NewLine
+				+Lan.G("PayConnectL","Ref Number")+": "+response.RefNumber;
 			clonePayment.PaymentSource=pcResponseWeb.CCSource;
 			clonePayment.ProcessStatus=ProcessStat.OfficeProcessed;
 			clonePayment.PayNum=Payments.Insert(clonePayment);
@@ -55,7 +55,7 @@ namespace OpenDental {
 				PayNum=clonePayment.PayNum,
 				CCSource=pcResponseWeb.CCSource,
 				Amount=clonePayment.PayAmt,
-				PayNote=Lan.g("PayConnectL",clonePayment.PayNote+Environment.NewLine+"From within Open Dental Proper."),
+				PayNote=Lan.G("PayConnectL",clonePayment.PayNote+Environment.NewLine+"From within Open Dental Proper."),
 				ProcessingStatus=PayConnectWebStatus.Completed,
 				DateTimeEntry=DateTime.Now,
 				DateTimeCompleted=DateTime.Now,

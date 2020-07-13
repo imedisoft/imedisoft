@@ -138,13 +138,13 @@ namespace OpenDental{
 			_listElectIDs=ElectIDs.GetDeepCopy();
 			gridElectIDs.BeginUpdate();
 			gridElectIDs.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableApptProcs","Carrier"),320);
+			GridColumn col=new GridColumn(Lan.G("TableApptProcs","Carrier"),320);
 			gridElectIDs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableApptProcs","Payer ID"),80);
+			col=new GridColumn(Lan.G("TableApptProcs","Payer ID"),80);
 			gridElectIDs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableApptProcs","Is Medicaid"),70,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableApptProcs","Is Medicaid"),70,HorizontalAlignment.Center);
 			gridElectIDs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableApptProcs","Comments"),390);
+			col=new GridColumn(Lan.G("TableApptProcs","Comments"),390);
 			gridElectIDs.ListGridColumns.Add(col);
 			gridElectIDs.ListGridRows.Clear();
 			GridRow row;
@@ -194,7 +194,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(IsSelectMode) {
 				if(gridElectIDs.SelectedIndices.Length<1) {
-					MessageBox.Show(Lan.g(this,"Please select an item first."));
+					MessageBox.Show(Lan.G(this,"Please select an item first."));
 					return;
 				}
 				selectedID=_listElectIDs[gridElectIDs.SelectedIndices[0]];

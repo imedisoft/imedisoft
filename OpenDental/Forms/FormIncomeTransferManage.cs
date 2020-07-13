@@ -49,11 +49,11 @@ namespace OpenDental {
 			string translationName=gridTransfers.TranslationName;
 			gridTransfers.BeginUpdate();
 			gridTransfers.ListGridColumns.Clear();
-			gridTransfers.ListGridColumns.Add(new GridColumn(Lan.g(translationName,"Date"),65,HorizontalAlignment.Center));
+			gridTransfers.ListGridColumns.Add(new GridColumn(Lan.G(translationName,"Date"),65,HorizontalAlignment.Center));
 			if(PrefC.HasClinicsEnabled) {//Clinics
-				gridTransfers.ListGridColumns.Add(new GridColumn(Lan.g(translationName,"Clinic"),80){ IsWidthDynamic=true });
+				gridTransfers.ListGridColumns.Add(new GridColumn(Lan.G(translationName,"Clinic"),80){ IsWidthDynamic=true });
 			}
-			gridTransfers.ListGridColumns.Add(new GridColumn(Lan.g(translationName,"Paid By"),80){ IsWidthDynamic=true });
+			gridTransfers.ListGridColumns.Add(new GridColumn(Lan.G(translationName,"Paid By"),80){ IsWidthDynamic=true });
 			gridTransfers.ListGridRows.Clear();
 			List<Payment> transfers=Payments.GetTransfers(_famCur.GetPatNums().ToArray());
 			foreach(Payment transfer in transfers.OrderBy(x => x.PayDate)) {
@@ -74,14 +74,14 @@ namespace OpenDental {
 		private void FillGridCharges() {
 			gridImbalances.BeginUpdate();
 			gridImbalances.ListGridColumns.Clear();
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.g(this,"Prov"),80){ IsWidthDynamic=true });
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.g(this,"Patient"),80){ IsWidthDynamic=true });
+			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Prov"),80){ IsWidthDynamic=true });
+			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient"),80){ IsWidthDynamic=true });
 			if(PrefC.HasClinicsEnabled) {
-				gridImbalances.ListGridColumns.Add(new GridColumn(Lan.g(this,"Clinic"),80){ IsWidthDynamic=true });
+				gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Clinic"),80){ IsWidthDynamic=true });
 			}
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.g(this,"Charges"),80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.g(this,"Credits"),80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.g(this,"Balance"),80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Charges"),80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Credits"),80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Balance"),80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 			gridImbalances.ListGridRows.Clear();
 			_constructResults=PaymentEdit.ConstructAndLinkChargeCredits(_famCur.GetPatNums(),_patCur.PatNum,
 				new List<PaySplit>(),new Payment(),new List<AccountEntry>(),isIncomeTxfr:true);

@@ -86,22 +86,22 @@ namespace OpenDental{
 		private void FormAuditOneType_Load(object sender, System.EventArgs e) {
 			//Default is "Changes made to this appointment before the update to 12.3 will not be reflected below, but can be found in the regular audit trail."
 			if(PermTypes.Contains(Permissions.ProcFeeEdit)) {
-				labelDisclaimer.Text=Lan.g(this,"Changes made to this procedure fee before the update to 13.2 were not tracked in the audit trail.");
+				labelDisclaimer.Text=Lan.G(this,"Changes made to this procedure fee before the update to 13.2 were not tracked in the audit trail.");
 			} 
 			else if(PermTypes.Contains(Permissions.InsPlanChangeCarrierName)) {
-				labelDisclaimer.Text=Lan.g(this,"Changes made to the carrier for this ins plan before the update to 13.2 were not tracked in the audit trail.");
+				labelDisclaimer.Text=Lan.G(this,"Changes made to the carrier for this ins plan before the update to 13.2 were not tracked in the audit trail.");
 			}
 			else if(PermTypes.Contains(Permissions.RxEdit)) {
-				labelDisclaimer.Text=Lan.g(this,"Changes made to the carrier for this Rx before the update to 14.2 were not tracked in the audit trail.");
+				labelDisclaimer.Text=Lan.G(this,"Changes made to the carrier for this Rx before the update to 14.2 were not tracked in the audit trail.");
 			}
 			else if(PermTypes.Contains(Permissions.OrthoChartEditFull)) {
-				labelDisclaimer.Text=Lan.g(this,"Changes made to the ortho chart for this date before the update to 14.3 were not tracked in the audit trail.");
+				labelDisclaimer.Text=Lan.G(this,"Changes made to the ortho chart for this date before the update to 14.3 were not tracked in the audit trail.");
 			}
 			else if(PermTypes.Contains(Permissions.ImageEdit) || PermTypes.Contains(Permissions.ImageDelete)) {
-				labelDisclaimer.Text=Lan.g(this,"Changes made to this document before the update to 15.1 will not be reflected below.");
+				labelDisclaimer.Text=Lan.G(this,"Changes made to this document before the update to 15.1 will not be reflected below.");
 			}
 			else if(PermTypes.Contains(Permissions.EhrMeasureEventEdit)) {
-				labelDisclaimer.Text=Lan.g(this,"Changes made to this measure event before the update to 15.2 will not be reflected below.");
+				labelDisclaimer.Text=Lan.G(this,"Changes made to this measure event before the update to 15.2 will not be reflected below.");
 			}
 			FillGrid();
 		}
@@ -111,19 +111,19 @@ namespace OpenDental{
 				LogList=SecurityLogs.Refresh(PatNum,PermTypes,FKey);
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.g(this,"There was a problem refreshing the Audit Trail with the current filters."),ex);
+				FriendlyException.Show(Lan.G(this,"There was a problem refreshing the Audit Trail with the current filters."),ex);
 				LogList=new SecurityLog[0];
 			}
 			grid.BeginUpdate();
 			grid.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g("TableAudit","Date Time"),120);
+			col=new GridColumn(Lan.G("TableAudit","Date Time"),120);
 			grid.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableAudit","User"),70);
+			col=new GridColumn(Lan.G("TableAudit","User"),70);
 			grid.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableAudit","Permission"),170);
+			col=new GridColumn(Lan.G("TableAudit","Permission"),170);
 			grid.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableAudit","Log Text"),510);
+			col=new GridColumn(Lan.G("TableAudit","Log Text"),510);
 			grid.ListGridColumns.Add(col);
 			grid.ListGridRows.Clear();
 			GridRow row;

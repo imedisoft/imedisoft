@@ -30,19 +30,19 @@ namespace OpenDental {
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableInvoiceItems","Date"),70);
+			GridColumn col=new GridColumn(Lan.G("TableInvoiceItems","Date"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableInvoiceItems","PatName"),100);
+			col=new GridColumn(Lan.G("TableInvoiceItems","PatName"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableInvoiceItems","Prov"),55);
+			col=new GridColumn(Lan.G("TableInvoiceItems","Prov"),55);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableInvoiceItems","Code"),55);
+			col=new GridColumn(Lan.G("TableInvoiceItems","Code"),55);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableInvoiceItems","Tooth"),50);
+			col=new GridColumn(Lan.G("TableInvoiceItems","Tooth"),50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableInvoiceItems","Description"),150);
+			col=new GridColumn(Lan.G("TableInvoiceItems","Description"),150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableInvoiceItems","Fee"),60,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableInvoiceItems","Fee"),60,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -53,7 +53,7 @@ namespace OpenDental {
 				row.Cells.Add(tableRow["PatName"].ToString());
 				row.Cells.Add(Providers.GetAbbr(PIn.Long(tableRow["Prov"].ToString())));
 				if(!string.IsNullOrWhiteSpace(tableRow["AdjType"].ToString())){	//It's an adjustment
-					row.Cells.Add(Lan.g(this,"Adjust"));//Adjustment
+					row.Cells.Add(Lan.G(this,"Adjust"));//Adjustment
 					row.Cells.Add(Tooth.ToInternat(tableRow["Tooth"].ToString()));
 					row.Cells.Add(Defs.GetName(DefCat.AdjTypes,PIn.Long(tableRow["AdjType"].ToString())));//Adjustment type
 				}
@@ -61,7 +61,7 @@ namespace OpenDental {
 					if(PrefC.GetInt(PrefName.PayPlansVersion)!=(int)PayPlanVersions.AgeCreditsAndDebits) {
 						continue;//They can only attach debits to invoices and they can only do so if they're on version 2.
 					}
-					row.Cells.Add(Lan.g(this, "Pay Plan"));
+					row.Cells.Add(Lan.G(this, "Pay Plan"));
 					row.Cells.Add(Tooth.ToInternat(tableRow["Tooth"].ToString()));
 					row.Cells.Add(PIn.Enum<PayPlanChargeType>(PIn.Int(tableRow["ChargeType"].ToString())).GetDescription());//Pay Plan charge type
 				}

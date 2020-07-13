@@ -460,7 +460,7 @@ namespace OpenDental{
 			comboShowRecall.SelectedIndex=0;//Default to show all.
 			textDateFrom.Text=AddWorkDays(1,DateTime.Today).ToShortDateString();
 			textDateTo.Text=AddWorkDays(2,DateTime.Today).ToShortDateString();
-			comboProv.Items.Add(Lan.g(this,"All"));
+			comboProv.Items.Add(Lan.G(this,"All"));
 			comboProv.SelectedIndex=0;
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
@@ -472,7 +472,7 @@ namespace OpenDental{
 			//textPostcardMessage.Text=PrefC.GetString(PrefName.ConfirmPostcardMessage");
 			comboStatus.Items.Clear();
 			comboViewStatus.Items.Clear();
-			comboViewStatus.Items.Add(new ODBoxItem<Def>(Lan.g(this,"None"),new Def()));
+			comboViewStatus.Items.Add(new ODBoxItem<Def>(Lan.G(this,"None"),new Def()));
 			comboViewStatus.SelectedIndex=0;
 			_listApptConfirmedDefs=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true);
 			for(int i=0;i<_listApptConfirmedDefs.Count;i++){
@@ -506,7 +506,7 @@ namespace OpenDental{
 			_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==PrefC.GetLong(PrefName.EmailDefaultAddressNum));
 			//Exclude web mail notification email address.
 			_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==PrefC.GetLong(PrefName.EmailNotifyAddressNum));
-			comboEmailFrom.Items.Add(Lan.g(this,"Practice/Clinic"));//default
+			comboEmailFrom.Items.Add(Lan.G(this,"Practice/Clinic"));//default
 			comboEmailFrom.SelectedIndex=0;
 			//Add all email addresses which are not associated to a user, a clinic, or either of the default email addresses.
 			for(int i=0;i<_listEmailAddresses.Count;i++) {
@@ -516,7 +516,7 @@ namespace OpenDental{
 			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurUser.UserNum);//can be null
 			if(emailAddressMe!=null) {
 				_listEmailAddresses.Insert(0,emailAddressMe);
-				comboEmailFrom.Items.Insert(1,Lan.g(this,"Me")+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
+				comboEmailFrom.Items.Insert(1,Lan.G(this,"Me")+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
 			}
 		}
 
@@ -549,7 +549,7 @@ namespace OpenDental{
 			if(e.Button==MouseButtons.Right && gridMain.SelectedIndices.Length>0) {
 				//To maintain legacy behavior we will use the last selected index if multiple are selected.
 				Patient pat=Patients.GetLim(PIn.Long(Table.Rows[gridMain.SelectedIndices[gridMain.SelectedIndices.Length-1]]["PatNum"].ToString()));
-				toolStripMenuItemSelectPatient.Text=Lan.g(gridMain.TranslationName,"Select Patient")+" ("+pat.GetNameFL()+")";
+				toolStripMenuItemSelectPatient.Text=Lan.G(gridMain.TranslationName,"Select Patient")+" ("+pat.GetNameFL()+")";
 			}
 		}
 
@@ -621,25 +621,25 @@ namespace OpenDental{
 					int scrollVal=gridMain.ScrollValue;
 					gridMain.BeginUpdate();
 					gridMain.ListGridColumns.Clear();
-					GridColumn col=new GridColumn(Lan.g("TableConfirmList","Date Time"),70);
+					GridColumn col=new GridColumn(Lan.G("TableConfirmList","Date Time"),70);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g("TableConfirmList","DateSched"),80);
+					col=new GridColumn(Lan.G("TableConfirmList","DateSched"),80);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g("TableConfirmList","Patient"),80);
+					col=new GridColumn(Lan.G("TableConfirmList","Patient"),80);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g("TableConfirmList","Age"),30);
+					col=new GridColumn(Lan.G("TableConfirmList","Age"),30);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g("TableConfirmList","Contact"),150);
+					col=new GridColumn(Lan.G("TableConfirmList","Contact"),150);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g("TableConfirmList","Addr/Ph Note"),100);
+					col=new GridColumn(Lan.G("TableConfirmList","Addr/Ph Note"),100);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g("TableConfirmList","Status"),80);//confirmed
+					col=new GridColumn(Lan.G("TableConfirmList","Status"),80);//confirmed
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g("TableConfirmList","Procs"),110);
+					col=new GridColumn(Lan.G("TableConfirmList","Procs"),110);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g("TableConfirmList","Medical"),80);
+					col=new GridColumn(Lan.G("TableConfirmList","Medical"),80);
 					gridMain.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.g("TableConfirmList","Appt Note"),124);
+					col=new GridColumn(Lan.G("TableConfirmList","Appt Note"),124);
 					gridMain.ListGridColumns.Add(col);
 					gridMain.ListGridRows.Clear();
 					GridRow row;
@@ -781,7 +781,7 @@ namespace OpenDental{
 				return;
 			}
 		  if(Table.Rows.Count==0){
-        MessageBox.Show(Lan.g(this,"There are no appointments in the list.  Must have at least one to run report."));    
+        MessageBox.Show(Lan.G(this,"There are no appointments in the list.  Must have at least one to run report."));    
         return;
       }
 			long[] aptNums;
@@ -803,7 +803,7 @@ namespace OpenDental{
 
 		private void butLabels_Click(object sender, System.EventArgs e) {
 			if(Table.Rows.Count==0){
-        MessageBox.Show(Lan.g(this,"There are no appointments in the list.  Must have at least one to print."));    
+        MessageBox.Show(Lan.G(this,"There are no appointments in the list.  Must have at least one to print."));    
         return;
       }
 			if(gridMain.SelectedIndices.Length==0){
@@ -819,7 +819,7 @@ namespace OpenDental{
 			pagesPrinted=0;
 			patientsPrinted=0;
 			PrinterL.TryPreview(pdLabels_PrintPage,
-				Lan.g(this,"Confirmation list labels printed"),
+				Lan.G(this,"Confirmation list labels printed"),
 				PrintSituation.LabelSheet,
 				new Margins(0,0,0,0),
 				PrintoutOrigin.AtMargin,
@@ -830,7 +830,7 @@ namespace OpenDental{
 		///<summary>Changes made to printing confirmation postcards need to be made in FormRecallList.butPostcards_Click() as well.</summary>
 		private void butPostcards_Click(object sender,System.EventArgs e) {
 			if(Table.Rows.Count==0) {
-				MessageBox.Show(Lan.g(this,"There are no appointments in the list.  Must have at least one to print."));
+				MessageBox.Show(Lan.G(this,"There are no appointments in the list.  Must have at least one to print."));
 				return;
 			}
 			if(gridMain.SelectedIndices.Length==0) {
@@ -869,7 +869,7 @@ namespace OpenDental{
 			}
 			int totalPages=((int)Math.Ceiling((double)AddrTable.Rows.Count/(double)PrefC.GetLong(PrefName.RecallPostcardsPerSheet)));
 			bool isDialogOk=PrinterL.TryPreview(pdCards_PrintPage,
-				Lan.g(this,"Confirmation list postcards printed"),
+				Lan.G(this,"Confirmation list postcards printed"),
 				PrintSituation.Postcard,
 				new Margins(0,0,0,0),
 				PrintoutOrigin.AtMargin,
@@ -1112,7 +1112,7 @@ namespace OpenDental{
 					return;
 				}
 				if(skipped>0) {
-					MessageBox.Show(Lan.g(this,"Selected patients skipped due to missing email addresses: ")+skipped.ToString());
+					MessageBox.Show(Lan.G(this,"Selected patients skipped due to missing email addresses: ")+skipped.ToString());
 				}
 			}
 			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Send email to all of the selected patients?")) {
@@ -1165,7 +1165,7 @@ namespace OpenDental{
 			Cursor=Cursors.Default;
 			if(listPatNumsFailed.Count==gridMain.SelectedIndices.Length){ //all failed
 				//no need to refresh
-				if(DialogResult.Yes != MessageBox.Show(Lan.g(this,"All emails failed. Possibly due to invalid email addresses, a loss of connectivity, or a firewall blocking communication.  Would you like to see additional details?"),"",MessageBoxButtons.YesNo)){
+				if(DialogResult.Yes != MessageBox.Show(Lan.G(this,"All emails failed. Possibly due to invalid email addresses, a loss of connectivity, or a firewall blocking communication.  Would you like to see additional details?"),"",MessageBoxButtons.YesNo)){
 					return;
 				}
 				MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(errors);
@@ -1181,7 +1181,7 @@ namespace OpenDental{
 						gridMain.SetSelected(i,true);
 					}
 				}
-				if(DialogResult.Yes != MessageBox.Show(Lan.g(this,"Some emails failed to send.  All failed email confirmations have been selected in the confirmation list.  Would you like to see additional details?"),"",MessageBoxButtons.YesNo)) {
+				if(DialogResult.Yes != MessageBox.Show(Lan.G(this,"Some emails failed to send.  All failed email confirmations have been selected in the confirmation list.  Would you like to see additional details?"),"",MessageBoxButtons.YesNo)) {
 					return;
 				}
 				MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(errors);
@@ -1268,7 +1268,7 @@ namespace OpenDental{
 				return;
 			}
 			if(skipped>0) {
-				MessageBox.Show(Lan.g(this,"Selected patients skipped: ")+skipped.ToString());
+				MessageBox.Show(Lan.G(this,"Selected patients skipped: ")+skipped.ToString());
 			}
 			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Send text message to all of the selected patients?")) {
 				return;
@@ -1330,7 +1330,7 @@ namespace OpenDental{
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Confirmation list printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Confirmation list printed"),PrintoutOrientation.Landscape);
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -1344,10 +1344,10 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.g(this,"Confirmation List");
+				text=Lan.G(this,"Confirmation List");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=textDateFrom.Text+" "+Lan.g(this,"to")+" "+textDateTo.Text;
+				text=textDateFrom.Text+" "+Lan.G(this,"to")+" "+textDateTo.Text;
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=20;
 				headingPrinted=true;

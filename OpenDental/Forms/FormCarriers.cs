@@ -325,10 +325,10 @@ namespace OpenDental{
 			//	checkCDAnet.Visible=false;
 			//}
 			if(IsSelectMode) {
-				butCancel.Text=Lan.g(this,"Cancel");
+				butCancel.Text=Lan.G(this,"Cancel");
 			}
 			else {
-				butCancel.Text=Lan.g(this,"Close");
+				butCancel.Text=Lan.G(this,"Close");
 				butOK.Visible=false;
 			}
 			if(!Security.IsAuthorized(Permissions.CarrierCreate,true)) {
@@ -387,28 +387,28 @@ namespace OpenDental{
 			}
 			else{*/
 				//gridMain.Size=new Size(839,gridMain.Height);
-			col=new GridColumn(Lan.g("TableCarriers","Carrier Name"),160);
+			col=new GridColumn(Lan.G("TableCarriers","Carrier Name"),160);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCarriers","Phone"),90);
+			col=new GridColumn(Lan.G("TableCarriers","Phone"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCarriers","Address"),130);
+			col=new GridColumn(Lan.G("TableCarriers","Address"),130);
 			gridMain.ListGridColumns.Add(col);
 			//col=new ODGridColumn(Lan.g("TableCarriers","Address2"),120);
 			//gridMain.Columns.Add(col);
-			col=new GridColumn(Lan.g("TableCarriers","City"),90);
+			col=new GridColumn(Lan.G("TableCarriers","City"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCarriers","ST"),50);
+			col=new GridColumn(Lan.G("TableCarriers","ST"),50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCarriers","Zip"),70);
+			col=new GridColumn(Lan.G("TableCarriers","Zip"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCarriers","ElectID"),50);
+			col=new GridColumn(Lan.G("TableCarriers","ElectID"),50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCarriers","Hidden"),50,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableCarriers","Hidden"),50,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableCarriers","Plans"),50);
+			col=new GridColumn(Lan.G("TableCarriers","Plans"),50);
 			gridMain.ListGridColumns.Add(col);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				col=new GridColumn(Lan.g("TableCarriers","CDAnet"),50);
+				col=new GridColumn(Lan.G("TableCarriers","CDAnet"),50);
 				gridMain.ListGridColumns.Add(col);
 			}
 			//}
@@ -582,10 +582,10 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedIndices.Length<2){
-				MessageBox.Show(Lan.g(this,"Please select multiple items first while holding down the control key."));
+				MessageBox.Show(Lan.G(this,"Please select multiple items first while holding down the control key."));
 				return;
 			}
-			if(MessageBox.Show(Lan.g(this,"Combine all these carriers into a single carrier? This will affect all patients using these carriers.  The next window will let you select which carrier to keep when combining."),""
+			if(MessageBox.Show(Lan.G(this,"Combine all these carriers into a single carrier? This will affect all patients using these carriers.  The next window will let you select which carrier to keep when combining."),""
 				,MessageBoxButtons.OKCancel)!=DialogResult.OK)
 			{
 				return;
@@ -620,11 +620,11 @@ namespace OpenDental{
 				//Carriers were combined successfully. Loop through all the associated insplans and make a securitylog entry that their carrier changed.
 				for(int i=0;i<listInsPlans.Count;i++) {
 					for(int j=0;j<listInsPlans[i].Count;j++) {
-						SecurityLogs.MakeLogEntry(Permissions.InsCarrierCombine,0,Lan.g(this,"Carrier with name ")+" "+carrierNames[i]+" "
-							+Lan.g(this,"was combined with")+" "+carrierTo,listInsPlans[i][j].PlanNum,listInsPlans[i][j].SecDateTEdit);
+						SecurityLogs.MakeLogEntry(Permissions.InsCarrierCombine,0,Lan.G(this,"Carrier with name ")+" "+carrierNames[i]+" "
+							+Lan.G(this,"was combined with")+" "+carrierTo,listInsPlans[i][j].PlanNum,listInsPlans[i][j].SecDateTEdit);
 						if(carrierNames[i].Trim().ToLower()!=carrierTo.Trim().ToLower()) {
-							SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeCarrierName,0,Lan.g(this,"Carrier with name ")+" "+carrierNames[i]+" "
-								+Lan.g(this,"was merged with")+" "+carrierTo,listInsPlans[i][j].PlanNum,listInsPlans[i][j].SecDateTEdit);
+							SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeCarrierName,0,Lan.G(this,"Carrier with name ")+" "+carrierNames[i]+" "
+								+Lan.G(this,"was merged with")+" "+carrierTo,listInsPlans[i][j].PlanNum,listInsPlans[i][j].SecDateTEdit);
 						}
 					}
 				}
@@ -649,7 +649,7 @@ namespace OpenDental{
 			}
 			//==================== NAME ====================
 			if(listCarriers.Any(x=>x.CarrierName!=carCur.CarrierName && !string.IsNullOrWhiteSpace(x.CarrierName))) {
-				listWarnings.Add(Lan.g(this,"Carrier Name"));
+				listWarnings.Add(Lan.G(this,"Carrier Name"));
 			}
 			//==================== ADDRESS INFO ====================
 			if(listCarriers.Any(x => x.Address!=carCur.Address && !string.IsNullOrWhiteSpace(x.Address))
@@ -658,47 +658,47 @@ namespace OpenDental{
 				|| listCarriers.Any(x => x.State!=carCur.State && !string.IsNullOrWhiteSpace(x.State))
 				|| listCarriers.Any(x => x.Zip!=carCur.Zip && !string.IsNullOrWhiteSpace(x.Zip))) 
 			{
-				listWarnings.Add(Lan.g(this,"Carrier Address"));
+				listWarnings.Add(Lan.G(this,"Carrier Address"));
 			}
 			//==================== PHONE ====================
 			if(listCarriers.Any(x => x.Phone!=carCur.Phone && !string.IsNullOrWhiteSpace(x.Phone))) {
-				listWarnings.Add(Lan.g(this,"Carrier Phone"));
+				listWarnings.Add(Lan.G(this,"Carrier Phone"));
 			}
 			//==================== ElectID ====================
 			if(listCarriers.Any(x => x.ElectID!=carCur.ElectID && !string.IsNullOrWhiteSpace(x.ElectID))) {
-				listWarnings.Add(Lan.g(this,"Carrier ElectID"));
+				listWarnings.Add(Lan.G(this,"Carrier ElectID"));
 			}
 			//==================== TIN ====================
 			if(listCarriers.Any(x => x.TIN!=carCur.TIN && !string.IsNullOrWhiteSpace(x.TIN))) {
-				listWarnings.Add(Lan.g(this,"Carrier TIN"));
+				listWarnings.Add(Lan.G(this,"Carrier TIN"));
 			}
 			//==================== CDAnetVersion ====================
 			if(listCarriers.Any(x => x.CDAnetVersion!=carCur.CDAnetVersion && !string.IsNullOrWhiteSpace(x.CDAnetVersion))) {
-				listWarnings.Add(Lan.g(this,"Carrier CDAnet Version"));
+				listWarnings.Add(Lan.G(this,"Carrier CDAnet Version"));
 			}
 			//==================== IsCDA ====================
 			if(listCarriers.Any(x=>x.IsCDA!=carCur.IsCDA)) {
-				listWarnings.Add(Lan.g(this,"Carrier Is CDA"));
+				listWarnings.Add(Lan.G(this,"Carrier Is CDA"));
 			}
 			//==================== CanadianNetworkNum ====================
 			if(listCarriers.Any(x => x.CanadianNetworkNum!=carCur.CanadianNetworkNum)) {
-				listWarnings.Add(Lan.g(this,"Canadian Network"));
+				listWarnings.Add(Lan.G(this,"Canadian Network"));
 			}
 			//==================== NoSendElect ====================
 			if(listCarriers.Any(x => x.NoSendElect!=carCur.NoSendElect)) {
-				listWarnings.Add(Lan.g(this,"Send Elect"));
+				listWarnings.Add(Lan.G(this,"Send Elect"));
 			}
 			//==================== IsHidden ====================
 			if(listCarriers.Any(x => x.IsHidden!=carCur.IsHidden)) {
-				listWarnings.Add(Lan.g(this,"Is Hidden"));
+				listWarnings.Add(Lan.G(this,"Is Hidden"));
 			}
 			//==================== CanadianEncryptionMethod ====================
 			if(listCarriers.Any(x => x.CanadianEncryptionMethod!=carCur.CanadianEncryptionMethod)) {
-				listWarnings.Add(Lan.g(this,"Canadian Encryption Method"));
+				listWarnings.Add(Lan.G(this,"Canadian Encryption Method"));
 			}
 			//==================== CanadianSupportedTypes ====================
 			if(listCarriers.Any(x => x.CanadianSupportedTypes!=carCur.CanadianSupportedTypes)) {
-				listWarnings.Add(Lan.g(this,"Canadian Supported Types"));
+				listWarnings.Add(Lan.G(this,"Canadian Supported Types"));
 			}
 			//==================== Additional fields ====================
 			//If anyone asks for them, these fields can also be checked.
@@ -707,9 +707,9 @@ namespace OpenDental{
 			// public DateTime					SecDateTEdit;
 			//====================USER PROMPT====================
 			if(listWarnings.Count>0) {
-				string warningMessage=Lan.g(this,"WARNING!")+" "+Lan.g(this,"Mismatched data has been detected between selected carriers")+":\r\n\r\n"
+				string warningMessage=Lan.G(this,"WARNING!")+" "+Lan.G(this,"Mismatched data has been detected between selected carriers")+":\r\n\r\n"
 					+string.Join("\r\n",listWarnings)+"\r\n\r\n"
-					+Lan.g(this,"Would you like to continue combining carriers anyway?");
+					+Lan.G(this,"Would you like to continue combining carriers anyway?");
 				if(MessageBox.Show(warningMessage,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 					return false;
 				}
@@ -724,11 +724,11 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//only visible if IsSelectMode
 			if(gridMain.SelectedIndices.Length==0) {
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
 			if(gridMain.SelectedIndices.Length>1) {
-				MessageBox.Show(Lan.g(this,"Please select only one item first."));
+				MessageBox.Show(Lan.G(this,"Please select only one item first."));
 				return;
 			}
 			SelectedCarrier=Carriers.GetCarrier(PIn.Long(table.Rows[gridMain.SelectedIndices[0]]["CarrierNum"].ToString()));

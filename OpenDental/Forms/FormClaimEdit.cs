@@ -131,7 +131,7 @@ namespace OpenDental{
 				groupFinalizePayment.Visible=false;
 			}
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				labelPredeterm.Text=Lan.g(this,"Predeterm Num");
+				labelPredeterm.Text=Lan.G(this,"Predeterm Num");
 				labelPriorAuth.Visible=false;
 				textPriorAuth.Visible=false;
 				labelSpecialProgram.Visible=false;
@@ -142,7 +142,7 @@ namespace OpenDental{
 				groupAttachments.Visible=false;
 				groupAttachedImages.Visible=false;
 				groupAccident.Visible=false;
-				labelNote.Text=Lan.g(this,"Claim Note (will only show on printed claims)");
+				labelNote.Text=Lan.G(this,"Claim Note (will only show on printed claims)");
 				tabMain.SelectedTab=tabCanadian;
 				if(ClaimCur.DateSent.Date==MiscData.GetNowDateTime().Date) { //Reversal can only happen on the same day that the claim was originally sent.
 					butReverse.Enabled=(ClaimCur.CanadaTransRefNum!=null && ClaimCur.CanadaTransRefNum.Trim()!="");
@@ -186,29 +186,29 @@ namespace OpenDental{
 				butPaySupp.Visible=false;
 				butSplit.Visible=false;
 				groupFinalizePayment.Visible=false;
-				labelNote.Text=Lan.g(this,"Preauth Note (this will show on the preauth when submitted)");
-				groupEnterPayment.Text=Lan.g(this,"Enter Estimate");
-				this.Text=Lan.g(this,"Edit Preauthorization");
+				labelNote.Text=Lan.G(this,"Preauth Note (this will show on the preauth when submitted)");
+				groupEnterPayment.Text=Lan.G(this,"Enter Estimate");
+				this.Text=Lan.G(this,"Edit Preauthorization");
 			}
-			comboClaimType.Items.Add(Lan.g(this,"Primary"));
-			comboClaimType.Items.Add(Lan.g(this,"Secondary"));
-			comboClaimType.Items.Add(Lan.g(this,"PreAuth"));
-			comboClaimType.Items.Add(Lan.g(this,"Other"));
-			comboClaimType.Items.Add(Lan.g(this,"Capitation"));
-			comboClaimStatus.Items.Add(Lan.g(this,"Unsent"));//0
-			comboClaimStatus.Items.Add(Lan.g(this,"Hold until Pri received"));//1
-			comboClaimStatus.Items.Add(Lan.g(this,"Waiting to Send"));//2
-			comboClaimStatus.Items.Add(Lan.g(this,"Probably Sent"));//3
-			comboClaimStatus.Items.Add(Lan.g(this,"Sent - Verified"));//4
-			comboClaimStatus.Items.Add(Lan.g(this,"Received"));//5
+			comboClaimType.Items.Add(Lan.G(this,"Primary"));
+			comboClaimType.Items.Add(Lan.G(this,"Secondary"));
+			comboClaimType.Items.Add(Lan.G(this,"PreAuth"));
+			comboClaimType.Items.Add(Lan.G(this,"Other"));
+			comboClaimType.Items.Add(Lan.G(this,"Capitation"));
+			comboClaimStatus.Items.Add(Lan.G(this,"Unsent"));//0
+			comboClaimStatus.Items.Add(Lan.G(this,"Hold until Pri received"));//1
+			comboClaimStatus.Items.Add(Lan.G(this,"Waiting to Send"));//2
+			comboClaimStatus.Items.Add(Lan.G(this,"Probably Sent"));//3
+			comboClaimStatus.Items.Add(Lan.G(this,"Sent - Verified"));//4
+			comboClaimStatus.Items.Add(Lan.G(this,"Received"));//5
 			comboSpecialProgram.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(EnumClaimSpecialProgram)).Length;i++) {
 				comboSpecialProgram.Items.Add(Enum.GetNames(typeof(EnumClaimSpecialProgram))[i]);
 			}
 			string[] enumRelat=Enum.GetNames(typeof(Relat));
 			for(int i=0;i<enumRelat.Length;i++){;
-				comboPatRelat.Items.Add(Lan.g("enumRelat",enumRelat[i]));
-				comboPatRelat2.Items.Add(Lan.g("enumRelat",enumRelat[i]));
+				comboPatRelat.Items.Add(Lan.G("enumRelat",enumRelat[i]));
+				comboPatRelat2.Items.Add(Lan.G("enumRelat",enumRelat[i]));
 			}
       ClaimProcList=_loadData.ListClaimProcs;
 			ProcList=_loadData.ListProcs;
@@ -235,18 +235,18 @@ namespace OpenDental{
 			textRefNum.Text=ClaimCur.RefNumString;
 			string[] enumPlaceOfService=Enum.GetNames(typeof(PlaceOfService));
 			for(int i=0;i<enumPlaceOfService.Length;i++) {
-				comboPlaceService.Items.Add(Lan.g("enumPlaceOfService",enumPlaceOfService[i]));
+				comboPlaceService.Items.Add(Lan.G("enumPlaceOfService",enumPlaceOfService[i]));
 			}
 			comboPlaceService.SelectedIndex=(int)ClaimCur.PlaceService;
 			string[] enumYN=Enum.GetNames(typeof(YN));
 			for(int i=0;i<enumYN.Length;i++) {
-				comboEmployRelated.Items.Add(Lan.g("enumYN",enumYN[i]));
+				comboEmployRelated.Items.Add(Lan.G("enumYN",enumYN[i]));
 			}
 			comboEmployRelated.SelectedIndex=(int)ClaimCur.EmployRelated;
-			comboAccident.Items.Add(Lan.g(this,"No"));
-			comboAccident.Items.Add(Lan.g(this,"Auto"));
-			comboAccident.Items.Add(Lan.g(this,"Employment"));
-			comboAccident.Items.Add(Lan.g(this,"Other"));
+			comboAccident.Items.Add(Lan.G(this,"No"));
+			comboAccident.Items.Add(Lan.G(this,"Auto"));
+			comboAccident.Items.Add(Lan.G(this,"Employment"));
+			comboAccident.Items.Add(Lan.G(this,"Other"));
 			switch(ClaimCur.AccidentRelated) {
 				case "":
 					comboAccident.SelectedIndex=0;
@@ -325,7 +325,7 @@ namespace OpenDental{
 					&& !comboClinic.UserHasPermission())//User does not have access to clinic associated to claim.
 			{
 				SetFormReadOnly(this);
-				this.Text+=" - "+Lan.g(this,"CLAIM CLINIC IS HIDDEN");
+				this.Text+=" - "+Lan.G(this,"CLAIM CLINIC IS HIDDEN");
 			}
 			if(!PrefC.GetBool(PrefName.AllowProcAdjFromClaim)) {
 				contextAdjust.MenuItems.Remove(menuItemAddAdj);
@@ -478,10 +478,10 @@ namespace OpenDental{
 				return;
 			}
 			if(ClaimCur.ClaimType=="PreAuth") {
-				this.Text=Lan.g(this,"Edit Preauthorization")+" - "+PatCur.GetNameLF();
+				this.Text=Lan.G(this,"Edit Preauthorization")+" - "+PatCur.GetNameLF();
 			}
 			else {
-				this.Text=Lan.g(this,"Edit Claim")+" - "+PatCur.GetNameLF();
+				this.Text=Lan.G(this,"Edit Claim")+" - "+PatCur.GetNameLF();
 			}
 			if(ClaimCur.DateService.Year<1880) {
 				textDateService.Text="";
@@ -544,7 +544,7 @@ namespace OpenDental{
 			}
 			comboMedType.SelectedIndex=(int)ClaimCur.MedType;
 			comboClaimForm.Items.Clear();
-			comboClaimForm.Items.Add(Lan.g(this,"None"));
+			comboClaimForm.Items.Add(Lan.G(this,"None"));
 			comboClaimForm.SelectedIndex=0;
 			_listClaimForms=ClaimForms.GetDeepCopy(true);
 			for(int i=0;i<_listClaimForms.Count;i++){
@@ -948,43 +948,43 @@ namespace OpenDental{
 			ClaimCur.WriteOff=0;
 			gridProc.BeginUpdate();
 			gridProc.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableClaimProc","#"),25);
+			GridColumn col=new GridColumn(Lan.G("TableClaimProc","#"),25);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Date"),66);
+			col=new GridColumn(Lan.G("TableClaimProc","Date"),66);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Prov"),62);
+			col=new GridColumn(Lan.G("TableClaimProc","Prov"),62);
 			gridProc.ListGridColumns.Add(col);
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
-				col=new GridColumn(Lan.g("TableClaimProc","Code"),75);
+				col=new GridColumn(Lan.G("TableClaimProc","Code"),75);
 				gridProc.ListGridColumns.Add(col);
 			}
 			else {
-				col=new GridColumn(Lan.g("TableClaimProc","Code"),50);
+				col=new GridColumn(Lan.G("TableClaimProc","Code"),50);
 				gridProc.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.g("TableClaimProc","Tth"),25);
+				col=new GridColumn(Lan.G("TableClaimProc","Tth"),25);
 				gridProc.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("TableClaimProc","Description"),130);
+			col=new GridColumn(Lan.G("TableClaimProc","Description"),130);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Fee"),62,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableClaimProc","Fee"),62,HorizontalAlignment.Right);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Billed to Ins"),75,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableClaimProc","Billed to Ins"),75,HorizontalAlignment.Right);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Deduct"),62,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableClaimProc","Deduct"),62,HorizontalAlignment.Right);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Ins Est"),62,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableClaimProc","Ins Est"),62,HorizontalAlignment.Right);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Ins Pay"),62,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableClaimProc","Ins Pay"),62,HorizontalAlignment.Right);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","WriteOff"),62,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableClaimProc","WriteOff"),62,HorizontalAlignment.Right);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Status"),50,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableClaimProc","Status"),50,HorizontalAlignment.Center);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Pmt"),30,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableClaimProc","Pmt"),30,HorizontalAlignment.Center);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Pay Tracking"),90,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G("TableClaimProc","Pay Tracking"),90,HorizontalAlignment.Center);
 			gridProc.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimProc","Remarks"),60){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G("TableClaimProc","Remarks"),60){ IsWidthDynamic=true };
 			gridProc.ListGridColumns.Add(col);
 			gridProc.ListGridRows.Clear();
 			GridRow row;
@@ -1067,17 +1067,17 @@ namespace OpenDental{
 			//payments
 			gridPay.BeginUpdate();
 			gridPay.ListGridColumns.Clear();
-			col=new GridColumn(Lan.g("TableClaimPay","Date"),70);
+			col=new GridColumn(Lan.G("TableClaimPay","Date"),70);
 			gridPay.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPay","Type"),60);
+			col=new GridColumn(Lan.G("TableClaimPay","Type"),60);
 			gridPay.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPay","Amount"),80,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableClaimPay","Amount"),80,HorizontalAlignment.Right);
 			gridPay.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPay","Check Num"),90);
+			col=new GridColumn(Lan.G("TableClaimPay","Check Num"),90);
 			gridPay.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPay","Bank/Branch"),100);
+			col=new GridColumn(Lan.G("TableClaimPay","Bank/Branch"),100);
 			gridPay.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableClaimPay","Note"),180);
+			col=new GridColumn(Lan.G("TableClaimPay","Note"),180);
 			gridPay.ListGridColumns.Add(col);
 			gridPay.ListGridRows.Clear();
 			if(doRefreshData) {
@@ -1173,7 +1173,7 @@ namespace OpenDental{
 			if(claimProcCur.InsPayAmt>0 && claimProcCur.ClaimPaymentNum==0) {
 				//Many users will just enter payment via clicking 'By Procedure' or 'Total' which does not "finalize" claim payments.
 				//Instead of showing a "payment date" for insurance payments, we are going to make it visually obvious that the payments have not been finalized yet.
-				date=Lan.g(this,"Not Final");//"Not Finalized" is too long.
+				date=Lan.G(this,"Not Final");//"Not Finalized" is too long.
 			}
 			row.Cells.Add(date);
 			row.Cells.Add(Providers.GetAbbr(claimProcCur.ProvNum));
@@ -1184,9 +1184,9 @@ namespace OpenDental{
 					row.Cells.Add("");//tooth
 				}
 				if(claimProcCur.Status==ClaimProcStatus.NotReceived)
-					row.Cells.Add(Lan.g(this,"Estimate"));
+					row.Cells.Add(Lan.G(this,"Estimate"));
 				else
-					row.Cells.Add(Lan.g(this,"Total Payment"));
+					row.Cells.Add(Lan.G(this,"Total Payment"));
 			}
 			else {
 				//claimProcsForClaim list already handles ProcNum=0 above
@@ -1213,26 +1213,26 @@ namespace OpenDental{
 			row.Cells.Add(claimProcCur.WriteOff.ToString("F"));
 			switch(claimProcCur.Status){
 				case ClaimProcStatus.Received:
-					row.Cells.Add(Lan.g("TableClaimProc","Recd"));
+					row.Cells.Add(Lan.G("TableClaimProc","Recd"));
 					break;
 				case ClaimProcStatus.NotReceived:
 					row.Cells.Add("");
 					break;
 				case ClaimProcStatus.Preauth:
-					row.Cells.Add(Lan.g("TableClaimProc","PreA"));
+					row.Cells.Add(Lan.G("TableClaimProc","PreA"));
 					break;
 				case ClaimProcStatus.Supplemental:
 					//The income transfer system will create supplemental ClaimProcs that are designed to offset other ClaimProcs.
 					//These entries need to stand out to the user and the easiest way to do so is to not display them as supplemental payments (Supp).
 					if(claimProcCur.IsTransfer) {
-						row.Cells.Add(Lan.g("TableClaimProc","Txfr"));
+						row.Cells.Add(Lan.G("TableClaimProc","Txfr"));
 					}
 					else {
-						row.Cells.Add(Lan.g("TableClaimProc","Supp"));
+						row.Cells.Add(Lan.G("TableClaimProc","Supp"));
 					}
 					break;
 				case ClaimProcStatus.CapClaim:
-					row.Cells.Add(Lan.g("TableClaimProc","Cap"));
+					row.Cells.Add(Lan.G("TableClaimProc","Cap"));
 					break;
 				case ClaimProcStatus.Adjustment:
 				case ClaimProcStatus.InsHist:
@@ -1270,11 +1270,11 @@ namespace OpenDental{
 			////status history
 			gridStatusHistory.BeginUpdate();
 			gridStatusHistory.ListGridColumns.Clear();
-			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.g("TableStatusHistory","Date"),120));
-			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.g("TableStatusHistory","Description"),270));
-			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.g("TableStatusHistory","Log Note"),320));
-			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.g("TableStatusHistory","ErrorCode"),90));
-			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.g("TableStatusHistory","User"),90));
+			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.G("TableStatusHistory","Date"),120));
+			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.G("TableStatusHistory","Description"),270));
+			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.G("TableStatusHistory","Log Note"),320));
+			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.G("TableStatusHistory","ErrorCode"),90));
+			gridStatusHistory.ListGridColumns.Add(new GridColumn(Lan.G("TableStatusHistory","User"),90));
 			gridStatusHistory.ListGridRows.Clear();
 			List<ClaimTracking> listCustomStatusEntries;
 			if(doRefreshStatusEntries) {
@@ -1410,7 +1410,7 @@ namespace OpenDental{
 				//and how their base estimates are calulated.  Ideally we would be able to loop through ClaimProcList and and check for conflicting
 				//estimates and values.However we can not do this currently due to FormClaimProc handling the base estimate calculations in ComputeAmounts()
 				//and that we save the ClaimProc to the DB when exiting the edit window.
-				_recalcErrorProvider.SetError(this.butRecalc,Lan.g(this,
+				_recalcErrorProvider.SetError(this.butRecalc,Lan.G(this,
 				 "Claim procedures values have been changed.\n"
 				 +"Modified values can result in claim totals not matching claim procedure sums.\n"
 				 +"Click to recalculate the claim totals and claim procedure estimates\n"
@@ -1501,11 +1501,11 @@ namespace OpenDental{
 			}
 			//preauths are only allowed "payment" entry by procedure since a total would be meaningless
 			if(ClaimCur.ClaimType=="PreAuth"){
-				MessageBox.Show(Lan.g(this,"PreAuthorizations can only be entered by procedure."));
+				MessageBox.Show(Lan.G(this,"PreAuthorizations can only be entered by procedure."));
 				return;
 			}
 			if(ClaimCur.ClaimType=="Cap"){
-				if(MessageBox.Show(Lan.g(this,"If you enter by total, the insurance payment will affect the patient balance.  It is recommended to enter by procedure instead.  Continue anyway?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK)
+				if(MessageBox.Show(Lan.G(this,"If you enter by total, the insurance payment will affect the patient balance.  It is recommended to enter by procedure instead.  Continue anyway?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK)
 				return;
 			}
 			if(PrefC.GetBool(PrefName.OrthoInsPayConsolidated)) {
@@ -1628,7 +1628,7 @@ namespace OpenDental{
 			}
 			if(gridProc.SelectedIndices.Length==0){
 				//if still no rows selected
-				MessageBox.Show(Lan.g(this,"All procedures in the list have already been paid."));
+				MessageBox.Show(Lan.G(this,"All procedures in the list have already been paid."));
 				return;
 			}
 			bool allAreProcs=true;
@@ -1637,12 +1637,12 @@ namespace OpenDental{
 					allAreProcs=false;
 			}
 			if(!allAreProcs){
-				MessageBox.Show(Lan.g(this,"You can only select procedures."));
+				MessageBox.Show(Lan.G(this,"You can only select procedures."));
 				return;
 			}
 			for(int i=0;i<gridProc.SelectedIndices.Length;i++) {
 				if(_listClaimProcsForClaim[gridProc.SelectedIndices[i]].ClaimPaymentNum!=0) {//if attached to a check
-					MessageBox.Show(Lan.g(this,"Procedures that are attached to checks cannot be included."));
+					MessageBox.Show(Lan.G(this,"Procedures that are attached to checks cannot be included."));
 					return;
 				}
 			}
@@ -1651,7 +1651,7 @@ namespace OpenDental{
 					|| _listClaimProcsForClaim[gridProc.SelectedIndices[i]].Status==ClaimProcStatus.Supplemental
 					|| _listClaimProcsForClaim[gridProc.SelectedIndices[i]].Status==ClaimProcStatus.CapComplete) 
 				{
-					MessageBox.Show(Lan.g(this,"Procedures that are already received cannot be included."));
+					MessageBox.Show(Lan.G(this,"Procedures that are already received cannot be included."));
 					//This expanded security prevents making changes to historical entries of zero with a writeoff.
 					return;
 				}
@@ -1811,7 +1811,7 @@ namespace OpenDental{
 				return;
 			}
 			if(gridProc.SelectedIndices.Length==0){
-				MessageBox.Show(Lan.g(this,"This is only for additional payments on procedures already marked received.  Please highlight procedures first."));
+				MessageBox.Show(Lan.G(this,"This is only for additional payments on procedures already marked received.  Please highlight procedures first."));
 				return;
 			}
 			bool allAreRecd=true;
@@ -1825,11 +1825,11 @@ namespace OpenDental{
 				}
 			}
 			if(!allAreRecd){
-				MessageBox.Show(Lan.g(this,"All selected procedures must be status received."));
+				MessageBox.Show(Lan.G(this,"All selected procedures must be status received."));
 				return;
 			}
 			if(clickedTotalPayment) {
-				MessageBox.Show(Lan.g(this,"Select the procedures that you want to enter a supplemental payment for.  If you want to make a supplemental "
+				MessageBox.Show(Lan.G(this,"Select the procedures that you want to enter a supplemental payment for.  If you want to make a supplemental "
 					+"payment on a payment previously entered as total, click 'As Total' again."));
 				return;
 			}
@@ -1861,17 +1861,17 @@ namespace OpenDental{
 			}
 			UpdateClaim();
 			if(gridProc.SelectedIndices.Length==0){
-				MessageBox.Show(Lan.g(this,"Please highlight procedures first."));
+				MessageBox.Show(Lan.G(this,"Please highlight procedures first."));
 				return;
 			}
 			List<long> listSelectedProcNums=new List<long>();
 			for(int i=0;i<gridProc.SelectedIndices.Length;i++){
 				if(_listClaimProcsForClaim[gridProc.SelectedIndices[i]].ProcNum==0){
-					MessageBox.Show(Lan.g(this,"Only procedures can be selected."));
+					MessageBox.Show(Lan.G(this,"Only procedures can be selected."));
 					return;
 				}
 				if(_listClaimProcsForClaim[gridProc.SelectedIndices[i]].InsPayAmt!=0){
-					MessageBox.Show(Lan.g(this,"All selected procedures must have zero insurance payment amounts."));
+					MessageBox.Show(Lan.G(this,"All selected procedures must have zero insurance payment amounts."));
 					return;
 				}
 				listSelectedProcNums.Add(_listClaimProcsForClaim[gridProc.SelectedIndices[i]].ProcNum);
@@ -1926,9 +1926,9 @@ namespace OpenDental{
 		private bool TrySelectClaimPayment(List<ClaimPayment> listClaimPayments,out ClaimPayment claimPayment) {
 			claimPayment=null;
 			List<GridColumn> listColumnHeaders=new List<GridColumn>() {
-				new GridColumn(Lan.g(this,"Carrier"),80){ IsWidthDynamic=true },
-				new GridColumn(Lan.g(this,"Check Date"),70,HorizontalAlignment.Center),
-				new GridColumn(Lan.g(this,"Amount"),80,HorizontalAlignment.Right)
+				new GridColumn(Lan.G(this,"Carrier"),80){ IsWidthDynamic=true },
+				new GridColumn(Lan.G(this,"Check Date"),70,HorizontalAlignment.Center),
+				new GridColumn(Lan.G(this,"Amount"),80,HorizontalAlignment.Right)
 			};
 			List<GridRow> listRowValues=new List<GridRow>();
 			listClaimPayments.ForEach(x => {
@@ -1936,8 +1936,8 @@ namespace OpenDental{
 				row.Tag=x;
 				listRowValues.Add(row);
 			});
-			string formTitle=Lan.g(this,"EOB Picker");
-			string gridTitle=Lan.g(this,"EOBs");
+			string formTitle=Lan.G(this,"EOB Picker");
+			string gridTitle=Lan.G(this,"EOBs");
 			FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 			if(form.ShowDialog()!=DialogResult.OK) {
 				return false;
@@ -2003,7 +2003,7 @@ namespace OpenDental{
 			}
 			UpdateClaim();
 			if(!_listClaimProcsForClaim.Any(x => x.Status.In(ClaimProcs.GetInsPaidStatuses()))) {
-				MessageBox.Show(Lan.g(this,"There are no valid received payments for this claim."));
+				MessageBox.Show(Lan.G(this,"There are no valid received payments for this claim."));
 				return;
 			}
 			ClaimPayment claimPayment=new ClaimPayment();
@@ -2233,7 +2233,7 @@ namespace OpenDental{
 				return;
 			}
 			ClaimAttach claimAttach=new ClaimAttach();
-			claimAttach.DisplayedFileName=Lan.g(this,"PerioChart.jpg");
+			claimAttach.DisplayedFileName=Lan.G(this,"PerioChart.jpg");
 			claimAttach.ActualFileName=newName;
 			ClaimCur.Attachments.Add(claimAttach);
 			FillAttachments();
@@ -2242,14 +2242,14 @@ namespace OpenDental{
 		private void butExport_Click(object sender,EventArgs e) {
 			string exportPath=PrefC.GetString(PrefName.ClaimAttachExportPath);
 			if(!Directory.Exists(exportPath)){
-				if(MessageBox.Show(Lan.g(this,"The claim export path no longer exists at:")+" "+exportPath+"\r\n"
-					+Lan.g(this,"Would you like to create it?"),"", MessageBoxButtons.YesNo)==DialogResult.Yes) 
+				if(MessageBox.Show(Lan.G(this,"The claim export path no longer exists at:")+" "+exportPath+"\r\n"
+					+Lan.G(this,"Would you like to create it?"),"", MessageBoxButtons.YesNo)==DialogResult.Yes) 
 				{
 					try {
 						Directory.CreateDirectory(exportPath);
 					}
 					catch {	//May throw an exception for a variety of reasons.
-						MessageBox.Show(Lan.g(this,"The directory was unable to be created.  Try running as Administrator."));
+						MessageBox.Show(Lan.G(this,"The directory was unable to be created.  Try running as Administrator."));
 						return;
 					}
 				}
@@ -2262,15 +2262,15 @@ namespace OpenDental{
 				string newFilePath=ODFileUtils.CombinePaths(exportPath,
 					PatCur.FName+PatCur.LName+PatCur.PatNum+"_"+i+Path.GetExtension(ClaimCur.Attachments[i].ActualFileName));
 				if(!FileAtoZ.Exists(curAttachPath)) {
-					MessageBox.Show(Lan.g(this,"The attachment file")+" "+curAttachPath+" "+Lan.g(this,"has been moved, deleted or is inaccessible."));
+					MessageBox.Show(Lan.G(this,"The attachment file")+" "+curAttachPath+" "+Lan.G(this,"has been moved, deleted or is inaccessible."));
 					return;
 				}
 				try {
 					FileAtoZ.Copy(curAttachPath,newFilePath,FileAtoZSourceDestination.AtoZToLocal,"Downloading file...");
 				}
 				catch {
-					MessageBox.Show(Lan.g(this,"The attachment")+" "+curAttachPath+" "
-						+Lan.g(this,"could not be copied to the export folder, probably because of an incorrect file permission. Aborting export operation."));
+					MessageBox.Show(Lan.G(this,"The attachment")+" "+curAttachPath+" "
+						+Lan.G(this,"could not be copied to the export folder, probably because of an incorrect file permission. Aborting export operation."));
 					return;
 				}				
 			}
@@ -2296,7 +2296,7 @@ namespace OpenDental{
 		}
 
 		private void menuItemRename_Click(object sender,EventArgs e) {
-			InputBox input=new InputBox(Lan.g(this,"Filename"));
+			InputBox input=new InputBox(Lan.G(this,"Filename"));
 			input.textResult.Text=ClaimCur.Attachments[listAttachments.SelectedIndex].DisplayedFileName;
 			input.ShowDialog();
 			if(input.DialogResult!=DialogResult.OK) {
@@ -2386,7 +2386,7 @@ namespace OpenDental{
 			FormClaimPrint FormCP=new FormClaimPrint();
 			FormCP.PatNumCur=ClaimCur.PatNum;
 			FormCP.ClaimNumCur=ClaimCur.ClaimNum;
-			if(!FormCP.PrintImmediate(Lan.g(this,"Claim from")+" "+ClaimCur.DateService.ToShortDateString()+" "+Lan.g(this,"printed"),
+			if(!FormCP.PrintImmediate(Lan.G(this,"Claim from")+" "+ClaimCur.DateService.ToShortDateString()+" "+Lan.G(this,"printed"),
 				PrintSituation.Claim,PatCur.PatNum))
 			{
 				return;
@@ -2398,7 +2398,7 @@ namespace OpenDental{
 			//ClaimCur.ClaimStatus="S";
 			//ClaimCur.DateSent=DateTime.Today;
 			//Claims.Update(ClaimCur);
-			SecurityLogs.MakeLogEntry(Permissions.ClaimSend,ClaimCur.PatNum,Lan.g(this,"Claim printed from Claim Edit window."));
+			SecurityLogs.MakeLogEntry(Permissions.ClaimSend,ClaimCur.PatNum,Lan.G(this,"Claim printed from Claim Edit window."));
 			DialogResult=DialogResult.OK;
 		}
 
@@ -2501,7 +2501,7 @@ namespace OpenDental{
 			//string missingData=
 			listQueue[0]=Eclaims.GetMissingData(clearinghouseClin,listQueue[0]);
 			if(listQueue[0].MissingData!=""){
-				MessageBox.Show(Lan.g(this,"Cannot send claim until missing data is fixed:")+"\r\n"+listQueue[0].MissingData);
+				MessageBox.Show(Lan.G(this,"Cannot send claim until missing data is fixed:")+"\r\n"+listQueue[0].MissingData);
 				return;
 			}
 			else if(clearinghouseClin.IsAttachmentSendAllowed && clearinghouseClin.CommBridge==EclaimsCommBridge.ClaimConnect) {
@@ -2569,7 +2569,7 @@ namespace OpenDental{
 					FormClaimPrint.FillRenaissance,new FormTerminalConnection());//this also calls SetClaimSentOrPrinted which creates the etrans entry.
 			}
 			Cursor=Cursors.Default;
-			SecurityLogs.MakeLogEntry(Permissions.ClaimSend,PatCur.PatNum,Lan.g(this,"Claim sent from Claim Edit Window."));
+			SecurityLogs.MakeLogEntry(Permissions.ClaimSend,PatCur.PatNum,Lan.G(this,"Claim sent from Claim Edit Window."));
 			DialogResult=DialogResult.OK;
 		}
 
@@ -2638,7 +2638,7 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Failed to reverse claim")+": "+ex.Message);
+				MessageBox.Show(Lan.G(this,"Failed to reverse claim")+": "+ex.Message);
 			}
 			Cursor=Cursors.Default;
 		}
@@ -3263,7 +3263,7 @@ namespace OpenDental{
 				return;
 			}
 			if(ClaimCur.ClaimStatus=="R"){
-				MessageBox.Show(Lan.g(this,"You cannot delete this claim while status is Received.  You will have to change the status first."));
+				MessageBox.Show(Lan.G(this,"You cannot delete this claim while status is Received.  You will have to change the status first."));
 				return;
 			}
 			List<long> list835Attaches=Etrans835Attaches.GetForClaimNums(ClaimCur.ClaimNum).Select(x => x.Etrans835AttachNum).ToList();
@@ -3274,7 +3274,7 @@ namespace OpenDental{
 					+"\r\nDeleting the claim will unassociate this claim from the ERA."
 					+"\r\n";
 				}
-				if(MessageBox.Show(msgAttaches+Lan.g(this,"Delete PreAuthorization?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+				if(MessageBox.Show(msgAttaches+Lan.G(this,"Delete PreAuthorization?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 					return;
 				}
 			}
@@ -3286,14 +3286,14 @@ namespace OpenDental{
 					+"\r\nand the associated ERA will need to be edited before it can be Finalized."
 					+"\r\n";
 				}
-				if(MessageBox.Show(msgAttaches+Lan.g(this,"Delete Claim?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+				if(MessageBox.Show(msgAttaches+Lan.G(this,"Delete Claim?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 					return;
 				}
 			}
 			DeleteClaimHelper(list835Attaches);
 			SecurityLogs.MakeLogEntry(Permissions.ClaimDelete,ClaimCur.PatNum,PatCur.GetNameLF()
-				+", "+Lan.g(this,"Date Entry")+": "+ClaimCur.SecDateEntry.ToShortDateString()
-				+", "+Lan.g(this,"Date of Service")+": "+ClaimCur.DateService.ToShortDateString());
+				+", "+Lan.G(this,"Date Entry")+": "+ClaimCur.SecDateEntry.ToShortDateString()
+				+", "+Lan.G(this,"Date of Service")+": "+ClaimCur.DateService.ToShortDateString());
 			_isDeleting=true;
 			DialogResult=DialogResult.OK;
 		}
@@ -3427,7 +3427,7 @@ namespace OpenDental{
 					return;
 				}
 				else if(listQueue[0].MissingData!="") {
-					if(MessageBox.Show(Lan.g(this,"Cannot send claim until missing data is fixed:")+"\r\n"+listQueue[0].MissingData+"\r\n\r\nContinue anyway?",
+					if(MessageBox.Show(Lan.G(this,"Cannot send claim until missing data is fixed:")+"\r\n"+listQueue[0].MissingData+"\r\n\r\nContinue anyway?",
 						"",MessageBoxButtons.OKCancel)==DialogResult.OK)
 					{
 						DialogResult=DialogResult.OK;

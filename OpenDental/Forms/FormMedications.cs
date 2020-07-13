@@ -297,11 +297,11 @@ namespace OpenDental{
 			}
 			FillTab();
 			if(IsSelectionMode){
-				this.Text=Lan.g(this,"Select Medication");
+				this.Text=Lan.G(this,"Select Medication");
 			}
 			else{
 				butOK.Visible=false;
-				butCancel.Text=Lan.g(this,"Close");
+				butCancel.Text=Lan.G(this,"Close");
 			}
 		}
 
@@ -334,17 +334,17 @@ namespace OpenDental{
 			gridAllMedications.BeginUpdate();
 			gridAllMedications.ListGridColumns.Clear();
 			//The order of these columns is important.  See gridAllMedications_CellClick()
-			GridColumn col=new GridColumn(Lan.g(this,"Drug Name"),120,GridSortingStrategy.StringCompare);
+			GridColumn col=new GridColumn(Lan.G(this,"Drug Name"),120,GridSortingStrategy.StringCompare);
 			gridAllMedications.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Generic Name"),120,GridSortingStrategy.StringCompare);
+			col=new GridColumn(Lan.G(this,"Generic Name"),120,GridSortingStrategy.StringCompare);
 			gridAllMedications.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"InUse"),55,HorizontalAlignment.Center,GridSortingStrategy.StringCompare);
+			col=new GridColumn(Lan.G(this,"InUse"),55,HorizontalAlignment.Center,GridSortingStrategy.StringCompare);
 			gridAllMedications.ListGridColumns.Add(col);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("US")) {//United States
-				col=new GridColumn(Lan.g(this,"RxNorm"),70,GridSortingStrategy.StringCompare);
+				col=new GridColumn(Lan.G(this,"RxNorm"),70,GridSortingStrategy.StringCompare);
 				gridAllMedications.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(this,"Notes for Generic"),250,GridSortingStrategy.StringCompare);
+			col=new GridColumn(Lan.G(this,"Notes for Generic"),250,GridSortingStrategy.StringCompare);
 			gridAllMedications.ListGridColumns.Add(col);
 			gridAllMedications.ListGridRows.Clear();
 			List <Medication> listMeds=Medications.GetList(textSearch.Text);
@@ -367,7 +367,7 @@ namespace OpenDental{
 				}
 				if(CultureInfo.CurrentCulture.Name.EndsWith("US")) {//United States
 					if(med.RxCui==0) {
-						row.Cells.Add(Lan.g(this,"(select)"));
+						row.Cells.Add(Lan.G(this,"(select)"));
 						row.Cells[row.Cells.Count-1].Bold=YN.Yes;
 					}
 					else {
@@ -395,9 +395,9 @@ namespace OpenDental{
 			bool isSortAscending=gridMissing.SortedIsAscending;
 			gridMissing.BeginUpdate();
 			gridMissing.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"RxNorm"),70,GridSortingStrategy.StringCompare);
+			GridColumn col=new GridColumn(Lan.G(this,"RxNorm"),70,GridSortingStrategy.StringCompare);
 			gridMissing.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Drug Description"),140,GridSortingStrategy.StringCompare){ IsWidthDynamic=true };
+			col=new GridColumn(Lan.G(this,"Drug Description"),140,GridSortingStrategy.StringCompare){ IsWidthDynamic=true };
 			gridMissing.ListGridColumns.Add(col);
 			gridMissing.ListGridRows.Clear();
 			List<MedicationPat> listMedPats=MedicationPats.GetAllMissingMedications();
@@ -436,12 +436,12 @@ namespace OpenDental{
 
 		private void butAddBrand_Click(object sender, System.EventArgs e) {
 			if(gridAllMedications.GetSelectedIndex()==-1){
-				MessageBox.Show(Lan.g(this,"You must first highlight the generic medication from the list.  If it is not already on the list, then you must add it first."));
+				MessageBox.Show(Lan.G(this,"You must first highlight the generic medication from the list.  If it is not already on the list, then you must add it first."));
 				return;
 			}
 			Medication medSelected=(Medication)gridAllMedications.ListGridRows[gridAllMedications.GetSelectedIndex()].Tag;
 			if(medSelected.MedicationNum!=medSelected.GenericNum){
-				MessageBox.Show(Lan.g(this,"The selected medication is not generic."));
+				MessageBox.Show(Lan.G(this,"The selected medication is not generic."));
 				return;
 			}
 			Medication MedicationCur=new Medication();
@@ -484,8 +484,8 @@ namespace OpenDental{
 			int countDuplicateMedications=listImportMeds.Count-countImportedMedications;
 			DataValid.SetInvalid(InvalidType.Medications);
 			Cursor=Cursors.Default;
-			MessageBox.Show(this,POut.Int(countDuplicateMedications)+" "+Lan.g(this,"duplicate medications found.")+"\r\n"
-				+POut.Int(countImportedMedications)+" "+Lan.g(this,"medications imported."));
+			MessageBox.Show(this,POut.Int(countDuplicateMedications)+" "+Lan.G(this,"duplicate medications found.")+"\r\n"
+				+POut.Int(countImportedMedications)+" "+Lan.G(this,"medications imported."));
 			FillTab();
 		}
 
@@ -499,7 +499,7 @@ namespace OpenDental{
 				listMedsNew=MedicationL.GetMedicationsFromFile(tempFile,true);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Failed to download medications.")+"\r\n"+ex.Message);
+				MessageBox.Show(Lan.G(this,"Failed to download medications.")+"\r\n"+ex.Message);
 			}
 			return listMedsNew;
 		}
@@ -524,7 +524,7 @@ namespace OpenDental{
 				MessageBox.Show(this,msg+": "+ex.Message);
 			}
 			Cursor=Cursors.Default;
-			MessageBox.Show(this,POut.Int(countExportedMeds)+" "+Lan.g(this,"medications exported to:")+" "+fileName);
+			MessageBox.Show(this,POut.Int(countExportedMeds)+" "+Lan.G(this,"medications exported to:")+" "+fileName);
 		}
 
 		///<summary>When isImport is true, prompts users to select file and returns the full file path if OK clicked, otherwise an empty string.
@@ -708,7 +708,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//this button is not visible if not selection mode.
 			if(gridAllMedications.GetSelectedIndex()==-1) {
-				MessageBox.Show(Lan.g(this,"Please select an item first."));
+				MessageBox.Show(Lan.G(this,"Please select an item first."));
 				return;
 			}
 			SelectedMedicationNum=((Medication)gridAllMedications.ListGridRows[gridAllMedications.GetSelectedIndex()].Tag).MedicationNum;

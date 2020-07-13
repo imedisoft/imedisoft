@@ -717,11 +717,11 @@ namespace OpenDental{
 		private void FillGrids() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("FormChartView","FieldName"),110);
+			GridColumn col=new GridColumn(Lan.G("FormChartView","FieldName"),110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormChartView","New Descript"),110);
+			col=new GridColumn(Lan.G("FormChartView","New Descript"),110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("FormChartView","Width"),60);
+			col=new GridColumn(Lan.G("FormChartView","Width"),60);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

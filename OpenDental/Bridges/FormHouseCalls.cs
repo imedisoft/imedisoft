@@ -213,13 +213,13 @@ namespace OpenDental{
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MessageBox.Show(Lan.g(this,"Please fix data entry errors first."));
+				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
 			DateTime FromDate;
 			DateTime ToDate;
 			if(textDateFrom.Text==""){
-				MessageBox.Show(Lan.g(this,"From Date cannot be left blank."));
+				MessageBox.Show(Lan.G(this,"From Date cannot be left blank."));
 				return;
 			}
 			FromDate=PIn.Date(textDateFrom.Text);

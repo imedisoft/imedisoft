@@ -94,7 +94,7 @@ namespace OpenDental {
 				return;
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Error: ")+ex.Message);
+				MessageBox.Show(Lan.G(this,"Error: ")+ex.Message);
 				return;
 			}
 			finally {

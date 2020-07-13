@@ -36,9 +36,9 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Phone Number"),120);
+			col=new GridColumn(Lan.G(this,"Phone Number"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Patient"),200);
+			col=new GridColumn(Lan.G(this,"Patient"),200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			foreach(IGrouping<string,PatComm> patCommGroup in _listPatComms.GroupBy(x => DoCombineNumbers ? x.WirelessPhone : x.PatNum.ToString())) {
@@ -55,7 +55,7 @@ namespace OpenDental {
 		private bool SendText(PatComm patComm,long clinicNum,string message) {	
 			if(!patComm.IsSmsAnOption)	{
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.g(this,"It is not OK to text patient")+" "+patComm.FName+" "+patComm.LName+".");
+				MessageBox.Show(Lan.G(this,"It is not OK to text patient")+" "+patComm.FName+" "+patComm.LName+".");
 				Cursor=Cursors.WaitCursor;
 				return false;
 			}
@@ -99,9 +99,9 @@ namespace OpenDental {
 				}
 				catch(ODException odex) {
 					Cursor=Cursors.Default;
-					string errorMsg=Lan.g(this,"There was an error sending to")+" "+listPatComms.First().WirelessPhone+". "
+					string errorMsg=Lan.G(this,"There was an error sending to")+" "+listPatComms.First().WirelessPhone+". "
 						+odex.Message+" "
-						+Lan.g(this,"Do you want to continue sending messages?");
+						+Lan.G(this,"Do you want to continue sending messages?");
 					if(MessageBox.Show(errorMsg,"",MessageBoxButtons.YesNo)==DialogResult.No) {
 						break;
 					}
@@ -109,8 +109,8 @@ namespace OpenDental {
 				}
 				catch {
 					Cursor=Cursors.Default;
-					string errorMsg=Lan.g(this,"There was an error sending to")+" "+listPatComms.First().WirelessPhone+". "
-						+Lan.g(this,"Do you want to continue sending messages?");
+					string errorMsg=Lan.G(this,"There was an error sending to")+" "+listPatComms.First().WirelessPhone+". "
+						+Lan.G(this,"Do you want to continue sending messages?");
 					if(MessageBox.Show(errorMsg,"",MessageBoxButtons.YesNo)==DialogResult.No) {
 						break;
 					}
@@ -118,7 +118,7 @@ namespace OpenDental {
 				}
 			}
 			Cursor=Cursors.Default;
-			MessageBox.Show(numTextsSent+" "+Lan.g(this,"texts sent successfully."));
+			MessageBox.Show(numTextsSent+" "+Lan.G(this,"texts sent successfully."));
 			DialogResult=DialogResult.OK;
 			Close();
 		}

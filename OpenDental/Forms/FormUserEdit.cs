@@ -76,7 +76,7 @@ namespace OpenDental{
 			securityTreeUser.FillTreePermissionsInitial();
 			RefreshUserTree();
 			listEmployee.Items.Clear();
-			listEmployee.Items.Add(Lan.g(this,"none"));
+			listEmployee.Items.Add(Lan.G(this,"none"));
 			listEmployee.SelectedIndex=0;
 			_listEmployees=Employees.GetDeepCopy(true);
 			for(int i=0;i<_listEmployees.Count;i++){
@@ -86,7 +86,7 @@ namespace OpenDental{
 				}
 			}
 			listProv.Items.Clear();
-			listProv.Items.Add(Lan.g(this,"none"));
+			listProv.Items.Add(Lan.G(this,"none"));
 			listProv.SelectedIndex=0;
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
@@ -111,7 +111,7 @@ namespace OpenDental{
 			_listAlertCategories=AlertCategories.GetDeepCopy();
 			List<long> listUserAlertCatNums=_listUserAlertTypesOld.Select(x => x.AlertCategoryNum).ToList();
 			foreach(AlertCategory cat in _listAlertCategories) {
-				int index=listAlertSubMulti.Items.Add(Lan.g(this,cat.Description));
+				int index=listAlertSubMulti.Items.Add(Lan.G(this,cat.Description));
 				listAlertSubMulti.SetSelected(index,listUserAlertCatNums.Contains(cat.AlertCategoryNum));
 			}
 			if(!PrefC.HasClinicsEnabled) {
@@ -121,9 +121,9 @@ namespace OpenDental{
 			}
 			else {
 				listClinic.Items.Clear();
-				listClinic.Items.Add(Lan.g(this,"All"));
-				listAlertSubsClinicsMulti.Items.Add(Lan.g(this,"All"));
-				listAlertSubsClinicsMulti.Items.Add(Lan.g(this,"Headquarters"));
+				listClinic.Items.Add(Lan.G(this,"All"));
+				listAlertSubsClinicsMulti.Items.Add(Lan.G(this,"All"));
+				listAlertSubsClinicsMulti.Items.Add(Lan.G(this,"Headquarters"));
 				if(UserCur.ClinicNum==0) {//Unrestricted
 					listClinic.SetSelected(0,true);
 					checkClinicIsRestricted.Enabled=false;//We don't really need this checkbox any more but it's probably better for users to keep it....
@@ -152,7 +152,7 @@ namespace OpenDental{
 				checkClinicIsRestricted.Checked=UserCur.ClinicIsRestricted;
 			}
 			if(string.IsNullOrEmpty(UserCur.PasswordHash)){
-				butPassword.Text=Lan.g(this,"Create Password");
+				butPassword.Text=Lan.G(this,"Create Password");
 			}
 
 			if(IsNew) {
@@ -206,7 +206,7 @@ namespace OpenDental{
 				DirectoryEntry.Exists(PrefC.GetString(PrefName.DomainLoginPath));
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"An error occurred while attempting to access the provided DomainLoginPath:")+" "+ex.Message);
+				MessageBox.Show(Lan.G(this,"An error occurred while attempting to access the provided DomainLoginPath:")+" "+ex.Message);
 				return;
 			}
 			FormDomainUserPick FormDU=new FormDomainUserPick();
@@ -243,10 +243,10 @@ namespace OpenDental{
 			UserCur.PasswordIsStrong=FormU.PasswordIsStrong;
 			_passwordTyped=FormU.PasswordTyped;
 			if(string.IsNullOrEmpty(UserCur.PasswordHash)) {
-				butPassword.Text=Lan.g(this,"Create Password");
+				butPassword.Text=Lan.G(this,"Create Password");
 			}
 			else{
-				butPassword.Text=Lan.g(this,"Change Password");
+				butPassword.Text=Lan.G(this,"Change Password");
 			}
 		}
 

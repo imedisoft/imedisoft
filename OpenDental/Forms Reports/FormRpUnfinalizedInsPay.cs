@@ -38,11 +38,11 @@ namespace OpenDental {
 
     private void FillType() {
 			_listTypes=new List<string>();
-			comboBoxMultiType.Items.Add(Lan.g(this,"All"));
+			comboBoxMultiType.Items.Add(Lan.G(this,"All"));
 			_listTypes.Add("All");
-			comboBoxMultiType.Items.Add(Lan.g(this,"Partial Payment"));
+			comboBoxMultiType.Items.Add(Lan.G(this,"Partial Payment"));
 			_listTypes.Add(RpUnfinalizedInsPay.UnfinalizedInsPay.UnfinalizedPaymentType.PartialPayment.GetDescription());
-			comboBoxMultiType.Items.Add(Lan.g(this,"Unfinalized Claim"));
+			comboBoxMultiType.Items.Add(Lan.G(this,"Unfinalized Claim"));
 			_listTypes.Add(RpUnfinalizedInsPay.UnfinalizedInsPay.UnfinalizedPaymentType.UnfinalizedPayment.GetDescription());
 			comboBoxMultiType.SetSelected(0,true);
 		}
@@ -72,21 +72,21 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			//columns
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableUnfinalizedInsPay","Type"),120);
+			GridColumn col=new GridColumn(Lan.G("TableUnfinalizedInsPay","Type"),120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableUnfinalizedInsPay","Patient"),200);
+			col=new GridColumn(Lan.G("TableUnfinalizedInsPay","Patient"),200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableUnfinalizedInsPay","Carrier"),200);
+			col=new GridColumn(Lan.G("TableUnfinalizedInsPay","Carrier"),200);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.g("TableUnfinalizedInsPay","Clinic"),160);
+				col=new GridColumn(Lan.G("TableUnfinalizedInsPay","Clinic"),160);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g("TableUnfinalizedInsPay","Date"),90);
+			col=new GridColumn(Lan.G("TableUnfinalizedInsPay","Date"),90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableUnfinalizedInsPay","Date of Service"),100);
+			col=new GridColumn(Lan.G("TableUnfinalizedInsPay","Date of Service"),100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableUnfinalizedInsPay","Amount"),90);
+			col=new GridColumn(Lan.G("TableUnfinalizedInsPay","Amount"),90);
 			gridMain.ListGridColumns.Add(col);
 			//rows
 			gridMain.ListGridRows.Clear();
@@ -104,16 +104,16 @@ namespace OpenDental {
 				row=new GridRow();
 				string patName=unfinalCur.PatientCur.GetNameLFnoPref();
 				if(unfinalCur.CountPats > 1) {
-					patName+=" "+Lan.g(this,"(multiple)");
+					patName+=" "+Lan.G(this,"(multiple)");
 				}
 				string carrierName=unfinalCur.CarrierCur.CarrierName;
-				row.Cells.Add(Lan.g(this,unfinalCur.Type.GetDescription()));
+				row.Cells.Add(Lan.G(this,unfinalCur.Type.GetDescription()));
 				row.Cells.Add(patName);
 				row.Cells.Add(carrierName);
 				if(PrefC.HasClinicsEnabled) {
 					string clinicAbbr=unfinalCur.ClinicCur.Abbr;
 					if(unfinalCur.ClinicCur.ClinicNum==0) {//Unassigned, see RpUnfinalizedInsPay.UnfinalizedInsPay(...)
-						clinicAbbr=Lan.g(this,clinicAbbr);
+						clinicAbbr=Lan.G(this,clinicAbbr);
 					}
 					row.Cells.Add(clinicAbbr);
 				}
@@ -184,7 +184,7 @@ namespace OpenDental {
 			}
 			List<ClaimProc> listClaimProcForClaim=ClaimProcs.RefreshForClaim(unfinalPay.ClaimCur.ClaimNum);
 			if(!listClaimProcForClaim.Any(x => x.Status.In(ClaimProcs.GetInsPaidStatuses()))) {
-				MessageBox.Show(Lan.g(this,"There are no valid received payments for this claim."));
+				MessageBox.Show(Lan.G(this,"There are no valid received payments for this claim."));
 				return;
 			}
 			ClaimPayment claimPayment=new ClaimPayment();
@@ -288,7 +288,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			_pagesPrinted=0;	
 			_headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.g(this,"Unfinalized Payment report printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Unfinalized Payment report printed"),PrintoutOrientation.Landscape);
 		}
 
 		//Copied from FormRpOutstandingIns.cs
@@ -302,7 +302,7 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!_headingPrinted) {
-				text=Lan.g(this,"Unfinalized Insurance Payment Report");
+				text=Lan.G(this,"Unfinalized Insurance Payment Report");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				if(comboBoxMultiType.SelectedIndices[0].ToString()=="0") {
@@ -341,7 +341,7 @@ namespace OpenDental {
 
 		//Copied from FormRpOutstandingIns.cs
 		private void butExport_Click(object sender,System.EventArgs e) {
-			string fileName=Lan.g(this,"Unfinalized Insurance Payments");
+			string fileName=Lan.G(this,"Unfinalized Insurance Payments");
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
 				saveFileDialog.AddExtension=true;
@@ -386,11 +386,11 @@ namespace OpenDental {
 				}
 			}
 			catch {
-				MessageBox.Show(Lan.g(this,"File in use by another program.  Close and try again."));
+				MessageBox.Show(Lan.G(this,"File in use by another program.  Close and try again."));
 				return;
 			}
 
-				MessageBox.Show(Lan.g(this,"File created successfully"));
+				MessageBox.Show(Lan.G(this,"File created successfully"));
 			
 		}
 		

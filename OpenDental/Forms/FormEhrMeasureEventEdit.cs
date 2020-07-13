@@ -96,10 +96,10 @@ namespace OpenDental {
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
 				return;
 			}
-			string logEntry=Lan.g(this,"Ehr Measure Event was deleted.")+"  "
-				+Lan.g(this,"Date")+": "+PIn.DateT(textDateTime.Text)+"  "
-				+Lan.g(this,"Type")+": "+_measureEventCur.EventType.ToString()+"  "
-				+Lan.g(this,"Patient")+": "+textPatient.Text;
+			string logEntry=Lan.G(this,"Ehr Measure Event was deleted.")+"  "
+				+Lan.G(this,"Date")+": "+PIn.DateT(textDateTime.Text)+"  "
+				+Lan.G(this,"Type")+": "+_measureEventCur.EventType.ToString()+"  "
+				+Lan.G(this,"Patient")+": "+textPatient.Text;
 			SecurityLogs.MakeLogEntry(Permissions.EhrMeasureEventEdit,_measureEventCur.PatNum,logEntry);
 			EhrMeasureEvents.Delete(_measureEventCur.EhrMeasureEventNum);
 			DialogResult=DialogResult.Cancel;
@@ -126,11 +126,11 @@ namespace OpenDental {
 			}
 			List<string> listLogEdits=new List<string>();
 			if(_measureEventCur.MoreInfo!=textMoreInfo.Text) {
-				listLogEdits.Add(Lan.g(this,"More Info was changed."));
+				listLogEdits.Add(Lan.G(this,"More Info was changed."));
 				_measureEventCur.MoreInfo=textMoreInfo.Text;
 			}
 			if(_measureEventCur.DateTEvent!=dateTEvent) {
-				listLogEdits.Add(Lan.g(this,"Date was changed from")+": "+_measureEventCur.DateTEvent.ToString()+" "+Lan.g(this,"to")+": "+dateTEvent.ToString()+".");
+				listLogEdits.Add(Lan.G(this,"Date was changed from")+": "+_measureEventCur.DateTEvent.ToString()+" "+Lan.G(this,"to")+": "+dateTEvent.ToString()+".");
 				_measureEventCur.DateTEvent=dateTEvent;
 			}
 			if(textTobaccoStartDate.Visible && textTobaccoDesireToQuit.Visible) {
@@ -138,7 +138,7 @@ namespace OpenDental {
 				_measureEventCur.TobaccoCessationDesire=PIn.Byte(textTobaccoDesireToQuit.Text);
 			}
 			if(listLogEdits.Count>0) {
-				listLogEdits.Insert(0,Lan.g(this,"EHR Measure Event was edited."));
+				listLogEdits.Insert(0,Lan.G(this,"EHR Measure Event was edited."));
 				SecurityLogs.MakeLogEntry(Permissions.EhrMeasureEventEdit,_measureEventCur.PatNum,string.Join("  ",listLogEdits));
 			}
 			if(_measureEventCur.IsNew) {//should never happen, only updates happen here

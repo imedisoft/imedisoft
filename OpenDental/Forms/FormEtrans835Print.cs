@@ -119,7 +119,7 @@ namespace OpenDental {
 			_pagesPrintedCount=0;
 			_isHeadingPrinted=false;
 			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,
-				Lan.g(this,"Electronic remittance advice (ERA) printed"),
+				Lan.G(this,"Electronic remittance advice (ERA) printed"),
 				PrintoutOrientation.Portrait,
 				margins:new Margins(25,25,50,50)
 			);
@@ -136,7 +136,7 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!_isHeadingPrinted) {
-				text=Lan.g(this,"Electronic Remittance Advice (ERA)");
+				text=Lan.G(this,"Electronic Remittance Advice (ERA)");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				yPos+=20;

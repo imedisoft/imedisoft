@@ -23,7 +23,7 @@ namespace OpenDental {
 
 		private void FormPatientForms_Load(object sender,EventArgs e) {
 			Patient pat=Patients.GetLim(PatNum);
-			Text=Lan.g(this,"Patient Forms for")+" "+pat.GetNameFL();
+			Text=Lan.G(this,"Patient Forms for")+" "+pat.GetNameFL();
 			FillGrid();
 		}
 
@@ -35,15 +35,15 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g(this,"Date"),70);
+			GridColumn col=new GridColumn(Lan.G(this,"Date"),70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Time"),42);
+			col=new GridColumn(Lan.G(this,"Time"),42);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Kiosk"),55,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Kiosk"),55,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Description"),210);
+			col=new GridColumn(Lan.G(this,"Description"),210);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Image Category"),120);
+			col=new GridColumn(Lan.G(this,"Image Category"),120);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

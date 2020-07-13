@@ -26,13 +26,13 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridTaskHist.BeginUpdate();
 			gridTaskHist.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("TableTaskAudit","Create Date"),140);
+			GridColumn col=new GridColumn(Lan.G("TableTaskAudit","Create Date"),140);
 			gridTaskHist.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTaskAudit","Edit Date"),140);
+			col=new GridColumn(Lan.G("TableTaskAudit","Edit Date"),140);
 			gridTaskHist.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTaskAudit","Editing User"),80);
+			col=new GridColumn(Lan.G("TableTaskAudit","Editing User"),80);
 			gridTaskHist.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("TableTaskAudit","Changes"),100);
+			col=new GridColumn(Lan.G("TableTaskAudit","Changes"),100);
 			gridTaskHist.ListGridColumns.Add(col);
 			gridTaskHist.ListGridRows.Clear();
 			GridRow row;//Row describes difference between current row and the Next row. Last row will be the last TaskHist compared to the current Task.

@@ -31,10 +31,10 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Table"),165));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Index"),165));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Index Columns"),200));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.g(this,"Redundant Of"),615));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Table"),165));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Index"),165));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Index Columns"),200));
+			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Redundant Of"),615));
 			gridMain.ListGridRows.Clear();
 			gridMain.ListGridRows.AddRange(table.Select().Select(x =>
 				new GridRow(new[] { "TABLE_NAME","INDEX_NAME","INDEX_COLS","REDUNDANT_OF" }.Select(y => PIn.String(x[y].ToString())).ToArray()) { Tag=x }));
@@ -71,7 +71,7 @@ namespace OpenDental {
 				string path="";
 				try {
 					path=GetLogFilePath();
-					msgBox=new MsgBoxCopyPaste(Lan.g(this,"SQL statements to add the selected index(es) back will be in the following location")+":\r\n"+path);
+					msgBox=new MsgBoxCopyPaste(Lan.G(this,"SQL statements to add the selected index(es) back will be in the following location")+":\r\n"+path);
 					msgBox.ShowDialog();
 				}
 				catch(Exception ex) {
@@ -80,7 +80,7 @@ namespace OpenDental {
 			}
 			string logText="";
 			ODProgress.ShowAction(() => logText=DatabaseMaintenances.DropRedundantIndexes(gridMain.SelectedTags<DataRow>()),
-				actionException:ex => { MsgBox.Show(Lan.g(this,"There was an error dropping redundant indexes")+":\r\n"+ex.Message); },
+				actionException:ex => { MsgBox.Show(Lan.G(this,"There was an error dropping redundant indexes")+":\r\n"+ex.Message); },
 				eventType:typeof(DatabaseMaintEvent),
 				odEventType:ODEventType.DatabaseMaint);
 			if(checkLogAddStatements.Checked) {
@@ -88,7 +88,7 @@ namespace OpenDental {
 					SaveLogToFile(logText);
 				}
 				catch {
-					msgBox=new MsgBoxCopyPaste(Lan.g(this,"Could not create or modify the log file. Copy and paste the following queries into a text file and "
+					msgBox=new MsgBoxCopyPaste(Lan.G(this,"Could not create or modify the log file. Copy and paste the following queries into a text file and "
 						+"save it in case you ever want to undo the actions performed by this tool.")+"\r\n\r\n"+logText);
 					msgBox.ShowDialog();
 				}
@@ -113,10 +113,10 @@ namespace OpenDental {
 				File.AppendAllText(GetLogFilePath(),DateTime.Now.ToString()+" - Computer Name: "+machineName+new string('-',45)+Environment.NewLine+logText);
 			}
 			catch(SecurityException se) {
-				throw new ODException(Lan.g(this,"Log not saved to Drop Index Logs folder because user does not have permission to access that file."),se);
+				throw new ODException(Lan.G(this,"Log not saved to Drop Index Logs folder because user does not have permission to access that file."),se);
 			}
 			catch(UnauthorizedAccessException uae) {
-				throw new ODException(Lan.g(this,"Log not saved to Drop Index Logs folder because user does not have permission to access that file."),uae);
+				throw new ODException(Lan.G(this,"Log not saved to Drop Index Logs folder because user does not have permission to access that file."),uae);
 			}
 			//Throw all other types of exceptions like usual.
 		}
@@ -129,7 +129,7 @@ namespace OpenDental {
 				}
 			}
 			catch(Exception ex) {
-				throw new ODException(Lan.g(this,"Could not create or access the directory for saving the Drop Index Log file."),ex);
+				throw new ODException(Lan.G(this,"Could not create or access the directory for saving the Drop Index Log file."),ex);
 			}
 			return ODFileUtils.CombinePaths(path,DateTime.Now.ToString("M_d_yyyy")+".txt");//One file per date
 		}

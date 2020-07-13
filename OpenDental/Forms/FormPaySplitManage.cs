@@ -83,21 +83,21 @@ namespace OpenDental {
 			gridSplits.BeginUpdate();
 			gridSplits.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Date"),65,HorizontalAlignment.Center);
+			col=new GridColumn(Lan.G(this,"Date"),65,HorizontalAlignment.Center);
 			gridSplits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Prov"),40);
+			col=new GridColumn(Lan.G(this,"Prov"),40);
 			gridSplits.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {//Clinics
-				col=new GridColumn(Lan.g(this,"Clinic"),40);
+				col=new GridColumn(Lan.G(this,"Clinic"),40);
 				gridSplits.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(this,"Patient"),100);
+			col=new GridColumn(Lan.G(this,"Patient"),100);
 			gridSplits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"ProcCode"),60);
+			col=new GridColumn(Lan.G(this,"ProcCode"),60);
 			gridSplits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Type"),100);
+			col=new GridColumn(Lan.G(this,"Type"),100);
 			gridSplits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Amount"),55,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Amount"),55,HorizontalAlignment.Right);
 			gridSplits.ListGridColumns.Add(col);
 			gridSplits.ListGridRows.Clear();
 			GridRow row;
@@ -154,25 +154,25 @@ namespace OpenDental {
 			gridCharges.BeginUpdate();
 			gridCharges.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.g(this,"Date"),65);
+			col=new GridColumn(Lan.G(this,"Date"),65);
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Prov"),40);
+			col=new GridColumn(Lan.G(this,"Prov"),40);
 			gridCharges.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {//Clinics
-				col=new GridColumn(Lan.g(this,"Clinic"),40);
+				col=new GridColumn(Lan.G(this,"Clinic"),40);
 				gridCharges.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.g(this,"Patient"),100);
+			col=new GridColumn(Lan.G(this,"Patient"),100);
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"ProcCode"),60);
+			col=new GridColumn(Lan.G(this,"ProcCode"),60);
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Type"),100);
+			col=new GridColumn(Lan.G(this,"Type"),100);
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Amt Orig"),55,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Amt Orig"),55,HorizontalAlignment.Right);
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Amt Start"),55,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Amt Start"),55,HorizontalAlignment.Right);
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g(this,"Amt End"),55,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G(this,"Amt End"),55,HorizontalAlignment.Right);
 			gridCharges.ListGridColumns.Add(col);
 			gridCharges.ListGridRows.Clear();
 			GridRow row;
@@ -215,7 +215,7 @@ namespace OpenDental {
 				}
 				string patName=dictPatients[entryCharge.PatNum].LName + ", " + dictPatients[entryCharge.PatNum].FName;
 				if(entryCharge.Tag.GetType()==typeof(PayPlanChargeType)) {
-					patName+="\r\n"+Lan.g(this,"Guar")+": "+dictPatients[((PayPlanCharge)entryCharge.Tag).Guarantor].LName +", "
+					patName+="\r\n"+Lan.G(this,"Guar")+": "+dictPatients[((PayPlanCharge)entryCharge.Tag).Guarantor].LName +", "
 						+ dictPatients[((PayPlanCharge)entryCharge.Tag).Guarantor].FName;
 				}
 				row.Cells.Add(patName);//Patient
@@ -228,7 +228,7 @@ namespace OpenDental {
 				if(entryCharge.GetType()==typeof(Procedure)) {
 					//Get the proc and add its description if the row is a proc.
 					Procedure proc=(Procedure)entryCharge.Tag;
-					row.Cells[row.Cells.Count-1].Text=Lan.g(this,"Proc")+": "+Procedures.GetDescription(proc);
+					row.Cells[row.Cells.Count-1].Text=Lan.G(this,"Proc")+": "+Procedures.GetDescription(proc);
 				}
 				row.Cells.Add(entryCharge.AmountOriginal.ToString("f"));//Amount Original
 				row.Cells.Add(entryCharge.AmountAvailable.ToString("f"));//Amount Start

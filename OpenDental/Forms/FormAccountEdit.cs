@@ -223,7 +223,7 @@ namespace OpenDental{
 			_accountOld=_accountCur.Clone();
 			textDescription.Text=_accountCur.Description;
 			for(int i=0;i<Enum.GetNames(typeof(AccountType)).Length;i++){
-				listAcctType.Items.Add(Lan.g("enumAccountType",Enum.GetNames(typeof(AccountType))[i]));
+				listAcctType.Items.Add(Lan.G("enumAccountType",Enum.GetNames(typeof(AccountType))[i]));
 				if((int)_accountCur.AcctType==i){
 					listAcctType.SelectedIndex=i;
 				}
