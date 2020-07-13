@@ -47,6 +47,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{19AC6140-D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imedisoft.Translation", "Imedisoft.Translation\Imedisoft.Translation.csproj", "{3218C76D-D512-43CE-A588-5E136DF5888A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imedisoft.IO", "Imedisoft.IO\Imedisoft.IO.csproj", "{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Web|Any CPU = Debug_Web|Any CPU
@@ -444,6 +446,30 @@ Global
 		{3218C76D-D512-43CE-A588-5E136DF5888A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3218C76D-D512-43CE-A588-5E136DF5888A}.Release|x86.ActiveCfg = Release|Any CPU
 		{3218C76D-D512-43CE-A588-5E136DF5888A}.Release|x86.Build.0 = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug_Web|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug_Web|Any CPU.Build.0 = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug_Web|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug_Web|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug_Web|x86.ActiveCfg = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug_Web|x86.Build.0 = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Debug|x86.Build.0 = Debug|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.LinuxRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.LinuxRelease|Any CPU.Build.0 = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.LinuxRelease|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.LinuxRelease|Mixed Platforms.Build.0 = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.LinuxRelease|x86.ActiveCfg = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.LinuxRelease|x86.Build.0 = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Release|x86.ActiveCfg = Release|Any CPU
+		{B8F7B63E-2CCA-48A1-9BC4-F2E240F77057}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

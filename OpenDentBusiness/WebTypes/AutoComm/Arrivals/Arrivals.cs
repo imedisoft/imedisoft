@@ -74,7 +74,7 @@ namespace OpenDentBusiness.AutoComm {
 			//happening behind the scenes anyway.
 			ODThread arrivalThread=new ODThread(o => {
 				List<Appointment> listTodayAppts=(listAppts??Appointments.GetAppointmentsForPat(listPatNums.ToArray()))
-					.Where(x => x.ClinicNum==clinicNum && x.AptDateTime.Date==DateTime_.Today).ToList();
+					.Where(x => x.ClinicNum==clinicNum && x.AptDateTime.Date==DateTime.Today).ToList();
 				Arrivals arrival=LoadArrivals(clinicNum.SingleItemToList(),listTodayAppts.Select(x => x.AptNum).ToList());
 				arrival.TryProcessArrival(patNumForResponse,clinicNum,mobilePhoneNumber,listTodayAppts);
 			});
@@ -88,7 +88,7 @@ namespace OpenDentBusiness.AutoComm {
 		///<summary>Determines if the patient corresponding to the SmsFromMobile can be sent an Arrival Response and marked as Arrived.</summary>
 		private bool TryProcessArrival(long patNum,long clinicNum,string mobilePhoneNumber,List<Appointment> listAppts) {
 			bool retVal=false;
-			List<Appointment> listApptsToday=listAppts.Where(x => x.ClinicNum==clinicNum && x.AptDateTime.Date==DateTime_.Today).OrderBy(x => x.AptDateTime).ToList();
+			List<Appointment> listApptsToday=listAppts.Where(x => x.ClinicNum==clinicNum && x.AptDateTime.Date==DateTime.Today).OrderBy(x => x.AptDateTime).ToList();
 			string logSubDir=ODFileUtils.CombinePaths(nameof(Arrivals),nameof(TryProcessArrival),clinicNum.ToString());
 			if(listApptsToday.Count==0) {
 				Logger.WriteError($"PatNum: {patNum} does not have any appointments at ClinicNum {clinicNum} today.",logSubDir);

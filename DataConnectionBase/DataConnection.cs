@@ -1,19 +1,17 @@
+using CodeBase;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using CodeBase;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace DataConnectionBase
 {
-	///<summary></summary>
-	public class DataConnection : IDisposable
+    public class DataConnection : IDisposable
 	{
 		///<summary>This data adapter is used for all queries to the database.</summary>
 		private MySqlDataAdapter _da;

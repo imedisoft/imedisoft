@@ -255,7 +255,6 @@
     <Compile Include="UnitTests\ReactivationsTests.cs" />
     <Compile Include="UnitTests\TelephoneNumbersTests.cs" />
     <Compile Include="UnitTests\PDMPTests.cs" />
-    <Compile Include="UnitTests\ReportsTests.cs" />
     <Compile Include="UnitTests\AlertItemsTests.cs" />
     <Compile Include="UnitTests\ClearinghouseTests.cs" />
     <Compile Include="UnitTests\LedgersTests.cs" />
@@ -264,7 +263,6 @@
     <Compile Include="IntegrationTests\FormTaskEditTests.cs" />
     <Compile Include="IntegrationTests\UserControlTasksTests.cs" />
     <Compile Include="Misc\FeeTestBase.cs" />
-    <Compile Include="UnitTests\ODInstallerTests.cs" />
     <Compile Include="UnitTests\FriendlyExceptionTests.cs" />
     <Compile Include="UnitTests\DataConnectionTests.cs" />
     <Compile Include="UnitTests\ErxTests.cs" />

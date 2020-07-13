@@ -1,21 +1,19 @@
+using CodeBase;
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Globalization;
-using CodeBase;
 
 namespace DataConnectionBase
 {
-	/// <summary>
-	/// "S" stands for Scrub.
-	/// Converts strings coming in from user input into the appropriate type.
-	/// </summary>
-	public class SIn
+    /// <summary>
+    /// Converts strings coming in from user input into the appropriate type.
+    /// </summary>
+    public class SIn
 	{
 		public static Bitmap Bitmap(string value)
 		{
-			// Bitmaps require a minimum length for header info.
 			if (value == null || value.Length < 0x32) return null;
 
 			try
@@ -24,8 +22,7 @@ namespace DataConnectionBase
 
 				using (var stream = new MemoryStream(rawData))
 				{
-					Bitmap image = new Bitmap(stream);
-					return image;
+					return new Bitmap(stream);
 				}
 			}
 			catch
@@ -34,9 +31,9 @@ namespace DataConnectionBase
 			}
 		}
 
-		public static bool Bool(string myString)
+		public static bool Bool(string value)
 		{
-			if (myString == "" || myString == "0" || myString.ToLower() == "false")
+			if (value == "" || value == "0" || value.ToLower() == "false")
 			{
 				return false;
 			}
@@ -46,27 +43,24 @@ namespace DataConnectionBase
 		/// <summary>
 		/// Set has exceptions to false to supress exceptions and return 0 if the input string is not an byte.
 		/// </summary>
-		public static byte Byte(string myString, bool hasExceptions = true)
+		public static byte Byte(string value, bool hasExceptions = true)
 		{
-			if (myString == "")
-			{
-				return 0;
-			}
-			else
+			if (!string.IsNullOrEmpty(value))
 			{
 				try
 				{
-					return Convert.ToByte(myString);
+					return Convert.ToByte(value);
 				}
-				catch (Exception ex)
+				catch
 				{
 					if (hasExceptions)
 					{
-						throw ex;
+						throw;
 					}
-					return 0;
 				}
 			}
+
+			return 0;
 		}
 
 		/// <summary>
@@ -96,12 +90,10 @@ namespace DataConnectionBase
 		/// </summary>
 		public static DateTime Date(string value)
 		{
-			if (value == "" || value == null) return DateTime.MinValue;
+			if (string.IsNullOrEmpty(value)) return DateTime.MinValue;
 
 			try
 			{
-				// DateTimeKind.Unspecified, which prevents -7:00, for example, from being tacked onto the end during serialization.
-				// return DateTime.Parse(myString,CultureInfo.InvariantCulture);
 				return DateTime.Parse(value);
 			}
 			catch
@@ -110,13 +102,14 @@ namespace DataConnectionBase
 			}
 		}
 
+		[Obsolete("Use Date() instead, it is exactly the same...")]
 		public static DateTime DateT(string value)
 		{
-			if (value == "") return DateTime.MinValue;
+			if (string.IsNullOrEmpty(value)) return DateTime.MinValue;
 
 			try
 			{
-				return (DateTime.Parse(value));
+				return DateTime.Parse(value);
 			}
 			catch
 			{
@@ -155,32 +148,29 @@ namespace DataConnectionBase
 		/// </param>
 		public static double Double(string value, bool doUseEnUSFormat = false)
 		{
-			if (value == "")
-			{
-				return 0;
-			}
-			else
+			if (!string.IsNullOrEmpty(value))
 			{
 				try
 				{
 					if (doUseEnUSFormat)
 					{
-                        var numberFormatInfo = new NumberFormatInfo
-                        {
-                            NumberDecimalSeparator = ".",
-                            NumberGroupSeparator = ","
-                        };
+						var numberFormatInfo = new NumberFormatInfo
+						{
+							NumberDecimalSeparator = ".",
+							NumberGroupSeparator = ","
+						};
 
-                        return Convert.ToDouble(value, numberFormatInfo);
+						return Convert.ToDouble(value, numberFormatInfo);
 					}
 
 					return Convert.ToDouble(value); // In Europe, comes in as a comma, parsed according to culture.
 				}
 				catch
 				{
-					return 0;
 				}
 			}
+
+			return 0;
 		}
 
 		/// <summary>
@@ -188,25 +178,22 @@ namespace DataConnectionBase
 		/// </summary>
 		public static int Int(string value, bool hasExceptions = true)
 		{
-			if (value == "")
-			{
-				return 0;
-			}
-			else
+			if (!string.IsNullOrEmpty(value))
 			{
 				try
 				{
 					return Convert.ToInt32(value);
 				}
-				catch (Exception ex)
+				catch
 				{
 					if (hasExceptions)
 					{
-						throw ex;
+						throw;
 					}
-					return 0;
 				}
 			}
+
+			return 0;
 		}
 
 		public static float Float(string value)
@@ -232,25 +219,22 @@ namespace DataConnectionBase
 		/// </summary>
 		public static long Long(string value, bool hasExceptions = true)
 		{
-			if (value == "")
-			{
-				return 0;
-			}
-			else
+			if (!string.IsNullOrEmpty(value))
 			{
 				try
 				{
 					return Convert.ToInt64(value);
 				}
-				catch (Exception ex)
+				catch
 				{
 					if (hasExceptions)
 					{
-						throw ex;
+						throw;
 					}
-					return 0;
 				}
 			}
+
+			return 0;
 		}
 
 		/// <summary>
@@ -283,42 +267,43 @@ namespace DataConnectionBase
 			return result;
 		}
 
-
 		/// <summary>
 		/// Strongly types the integer provided to the enumeration value of the declared enum type (T).
 		/// </summary>
-		public static T Enum<T>(int value, T defaultEnumOption = default) where T : struct, IConvertible
+		public static T Enum<T>(int value, T defaultValue = default) where T : struct, IConvertible
 		{
 			if (!typeof(T).IsEnum)
 			{
 				throw new Exception("T must be an enumeration.");
 			}
 
-			T result = defaultEnumOption;
+			T result = defaultValue;
+
 			ODException.SwallowAnyException(() =>
 			{
 				if (typeof(T).IsDefined(typeof(FlagsAttribute), true))
-				{//[Flags]
-				 //For each bit that is set in value, make sure that it is a defined enum member.
+				{
 					for (int i = 1; i <= value; i *= 2)
 					{
 						if ((i & value) == i && !System.Enum.IsDefined(typeof(T), i))
 						{
-							return;//Use defaultEnumOption
+							return;
 						}
+
 						if (i - 1 == int.MaxValue)
 						{
-							break;//To avoid arithmetic overflow
+							break;
 						}
 					}
 				}
 				else
-				{//Doesn't have [Flags]
+				{
 					if (!System.Enum.IsDefined(typeof(T), value))
 					{
-						return;//Use defaultEnumOption
+						return;
 					}
 				}
+
 				result = (T)System.Enum.ToObject(typeof(T), value);
 			});
 
@@ -348,19 +333,16 @@ namespace DataConnectionBase
 		/// <summary>
 		/// Currently does nothing.
 		/// </summary>
-		public static string String(string myString) => myString;
+		public static string String(string value) => value;
 
-		/// <summary>
-		/// Timespans that might be invalid time of day.
-		/// Can be + or - and can be up to 800+ hours.
-		/// </summary>
-		public static TimeSpan TSpan(string myString)
+		[Obsolete("Use Time() instead, it is exactly the same...")]
+		public static TimeSpan TSpan(string value)
 		{
-			if (string.IsNullOrEmpty(myString)) return TimeSpan.Zero;
+			if (string.IsNullOrEmpty(value)) return TimeSpan.Zero;
 
 			try
 			{
-				return TimeSpan.Parse(myString);
+				return TimeSpan.Parse(value);
 			}
 			catch
 			{
@@ -368,17 +350,13 @@ namespace DataConnectionBase
 			}
 		}
 
-		/// <summary>
-		/// Used for Timespans that are guaranteed to always be a valid time of day.
-		/// No negatives or hours over 24.
-		/// </summary>
-		public static TimeSpan Time(string myString)
+		public static TimeSpan Time(string value)
 		{
-			if (string.IsNullOrEmpty(myString)) return TimeSpan.Zero;
+			if (string.IsNullOrEmpty(value)) return TimeSpan.Zero;
 
 			try
 			{
-				return TimeSpan.Parse(myString);
+				return TimeSpan.Parse(value);
 			}
 			catch
 			{

@@ -4,10 +4,10 @@ using System.ComponentModel;
 
 namespace DataConnectionBase
 {
-	/// <summary>
-	/// Specific ODEvent for when communication to the database is unavailable.
-	/// </summary>
-	public class DataConnectionEvent
+    /// <summary>
+    /// Specific ODEvent for when communication to the database is unavailable.
+    /// </summary>
+    public class DataConnectionEvent
 	{
 		/// <summary>
 		/// This event will get fired whenever communication to the database is attempted and fails.

@@ -24,13 +24,13 @@ namespace UnitTests.SIn_Tests {
 		public void SInTests_SInEnum_FlagsDefault() {
 			CrudSpecialColType specialType=CrudSpecialColType.None;
 			int specialTypeInt=(int)specialType;
-			Assert.AreEqual(specialType,SIn.Enum(specialTypeInt,defaultEnumOption:CrudSpecialColType.TextIsClob));
+			Assert.AreEqual(specialType,SIn.Enum(specialTypeInt,defaultValue:CrudSpecialColType.TextIsClob));
 		}
 
 		[TestMethod]
 		public void SInTests_SInEnum_FlagsNoMatch() {
 			int specialTypeInt=int.MaxValue;
-			Assert.AreEqual(CrudSpecialColType.None,SIn.Enum(specialTypeInt,defaultEnumOption: CrudSpecialColType.None));
+			Assert.AreEqual(CrudSpecialColType.None,SIn.Enum(specialTypeInt,defaultValue: CrudSpecialColType.None));
 		}
 
 		[TestMethod]
@@ -50,7 +50,7 @@ namespace UnitTests.SIn_Tests {
 		[TestMethod]
 		public void SInTests_SInEnum_IntNoMatch() {
 			int patStatInt=(int)PatientStatus.Inactive+(int)PatientStatus.Prospective;
-			Assert.AreEqual(PatientStatus.Patient,SIn.Enum(patStatInt,defaultEnumOption: PatientStatus.Patient));
+			Assert.AreEqual(PatientStatus.Patient,SIn.Enum(patStatInt,defaultValue: PatientStatus.Patient));
 		}
 		
 	}

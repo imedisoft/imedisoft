@@ -9,7 +9,6 @@ namespace DataConnectionBase
 {
     /// <summary>
     /// Converts various datatypes into strings formatted correctly for MySQL. 
-    /// "S" is short for Scrub because this class was written specifically to replace parameters in the mysql queries.
     /// </summary>
     public class SOut
 	{

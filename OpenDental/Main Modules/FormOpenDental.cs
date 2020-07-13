@@ -4387,9 +4387,12 @@ namespace OpenDental{
 		private bool AreYouSurePrompt(long userNum, string message)
 		{
 			UserOdPref logOffMessage = UserOdPrefs.GetByUserAndFkeyType(userNum, UserOdFkeyType.SuppressLogOffMessage).FirstOrDefault();
+
 			if (logOffMessage == null)
-			{//Doesn't exist in the database
-				InputBox checkResult = new InputBox(message, Lan.G(this, "Do not show me this message again."), true, new Point(0, 40));
+			{
+
+				InputBox checkResult = new InputBox(message, "Do not show me this message again.", true, new Point(0, 40));
+
 				checkResult.ShowDialog();
 				if (checkResult.DialogResult == DialogResult.Cancel)
 				{
@@ -4406,9 +4409,13 @@ namespace OpenDental{
 						});
 					}
 				}
+
 			}
+
 			return true;
 		}
+
+
 		#endregion MenuEvents
 
 		#region File
@@ -8025,13 +8032,14 @@ namespace OpenDental{
 		private void FormOpenDental_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (e.CloseReason == CloseReason.UserClosing && Security.CurUser != null && Security.IsUserLoggedIn)
-			{//Checking if User clicked the 'X' button
-				if (!AreYouSurePrompt(Security.CurUser.UserNum, Lan.G(this, "Are you sure you would like to close?")))
+			{
+				if (!AreYouSurePrompt(Security.CurUser.UserNum, "Are you sure you would like to close?"))
 				{
 					e.Cancel = true;
 					return;
 				}
 			}
+
 			try
 			{
 				FormOpenDentalClosing(sender, e);

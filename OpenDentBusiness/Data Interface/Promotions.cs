@@ -173,7 +173,7 @@ namespace OpenDentBusiness{
 			}
 			Promotion promotion=new Promotion {
 				ClinicNum=Clinics.ClinicNum,
-				DateTimeCreated=DateTime_.Now,
+				DateTimeCreated=DateTime.Now,
 				PromotionName=promotionName,
 				TypePromotion=type,
 			};
@@ -186,7 +186,7 @@ namespace OpenDentBusiness{
 					BodyText=body,
 					HideIn=HideInFlags.EmailInbox | HideInFlags.ApptEdit,
 					HtmlType=templateCur.EmailTemplateType,
-					MsgDateTime=DateTime_.Now,
+					MsgDateTime=DateTime.Now,
 					PatNum=patNum,
 					PatNumSubj=patNum,
 					RecipientAddress=uniqueIdPair.Key,

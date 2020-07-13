@@ -1,18 +1,19 @@
 ﻿using CodeBase;
 using OpenDentBusiness;
+using System;
 
 namespace UnitTestsCore {
 	public class RecurringChargeT {
 
 		public static RecurringCharge CreateRecurringCharge(long patNum,RecurringChargeStatus status,double chargeAmt,long creditCardNum,
-			DateDefaultToday dateCharge=default(DateDefaultToday)) 
+			DateTime? dateCharge = null) 
 		{
 			RecurringCharge charge=new RecurringCharge {
 				ChargeAmt=chargeAmt,
 				ChargeStatus=status,
 				CreditCardNum=creditCardNum,
 				PatNum=patNum,
-				DateTimeCharge=dateCharge.Date,
+				DateTimeCharge=dateCharge?.Date ?? DateTimeOD.Today,
 			};
 			RecurringCharges.Insert(charge);
 			return charge;

@@ -123,9 +123,6 @@ namespace OpenDental{
 			}
 			if(pat==null || pat.PatNum==0 || pat.PatNum==-1) {
 				retVal+=MainTitleUpdateCountdown();
-				if(FormOpenDental.RegKeyIsForTesting) {
-					retVal+=" - "+Lan.G("FormOpenDental","Developer Only License")+" - "+Lan.G("FormOpenDental","Not for use with live patient data")+" - ";
-				}
 				return retVal;
 			}
 			retVal+=" - "+pat.GetNameLF();
@@ -147,9 +144,6 @@ namespace OpenDental{
 				retVal+=" - "+Sites.GetDescription(pat.SiteNum);
 			}
 			retVal+=MainTitleUpdateCountdown();
-			if(FormOpenDental.RegKeyIsForTesting) {
-				retVal+=" - "+Lan.G("FormOpenDental","Developer Only License")+" - "+Lan.G("FormOpenDental","Not for use with live patient data")+" - ";
-			}
 			return retVal;
 		}
 
@@ -173,9 +167,6 @@ namespace OpenDental{
 			}
 			if(_patSelectedCur==null || _patSelectedCur.PatNum==0 || _patSelectedCur.PatNum==-1) {
 				retVal+=MainTitleUpdateCountdown();
-				if(FormOpenDental.RegKeyIsForTesting) {
-					retVal+=" - "+Lan.G("FormOpenDental","Developer Only License")+" - "+Lan.G("FormOpenDental","Not for use with live patient data")+" - ";
-				}
 				//Now check to see if this database has been put into "Testing Mode"
 				if(Introspection.IsTestingMode) {
 					retVal+=" <TESTING MODE ENABLED> ";
@@ -201,9 +192,6 @@ namespace OpenDental{
 				retVal+=" - "+Sites.GetDescription(_patSelectedCur.SiteNum);
 			}
 			retVal+=MainTitleUpdateCountdown();
-			if(FormOpenDental.RegKeyIsForTesting) {
-				retVal+=" - "+Lan.G("FormOpenDental","Developer Only License")+" - "+Lan.G("FormOpenDental","Not for use with live patient data")+" - ";
-			}
 			//Now check to see if this database has been put into "Testing Mode"
 			if(Introspection.IsTestingMode) {
 				retVal+=" <TESTING MODE ENABLED> ";

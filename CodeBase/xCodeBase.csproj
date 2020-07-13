@@ -247,9 +247,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\DateTime_.cs" />
     <Compile Include="Utilities\ODClipboard.cs" />
-    <Compile Include="Utilities\DateDefaultToday.cs" />
     <Compile Include="Utilities\DateRange.cs" />
     <Compile Include="Utilities\DateTimeOD.cs" />
     <Compile Include="Progress\IODProgress.cs" />

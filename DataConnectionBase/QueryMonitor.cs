@@ -13,7 +13,7 @@ namespace DataConnectionBase
 		/// This will cause the query log to contain runnable queries (i.e. with query parameters replaced with actual parameter value),
 		/// and will include the method name of the calling method in DataConnection (i.e. GetTable, NonQ, etc).
 		/// </summary>
-		public static bool IsMonitoring = false;
+		public static bool IsMonitoring { get; set; } = false;
 
 		public static void RunMonitoredQuery(Action queryAction, DbCommand cmd)
 		{
