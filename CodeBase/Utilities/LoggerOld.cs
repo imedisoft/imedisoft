@@ -8,9 +8,9 @@ namespace CodeBase
 	{
 		public static Logger openlog = new Logger(ODFileUtils.GetProgramDirectory() + "openlog.txt");
 
-		public Logger(string pLogFile)
+		public Logger(string path)
 		{
-			logFile = pLogFile;
+			logFile = path;
 		}
 
 		/// <summary>
