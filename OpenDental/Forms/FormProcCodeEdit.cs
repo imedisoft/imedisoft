@@ -719,7 +719,7 @@ namespace OpenDental{
 			// butAddNote
 			// 
 			this.butAddNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAddNote.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddNote.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddNote.Location = new System.Drawing.Point(687, 108);
 			this.butAddNote.Name = "butAddNote";
@@ -783,7 +783,7 @@ namespace OpenDental{
 			// butAutoNote
 			// 
 			this.butAutoNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAutoNote.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAutoNote.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAutoNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAutoNote.Location = new System.Drawing.Point(687, 20);
 			this.butAutoNote.Name = "butAutoNote";
@@ -805,7 +805,7 @@ namespace OpenDental{
 			// butAutoTpNote
 			// 
 			this.butAutoTpNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAutoTpNote.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAutoTpNote.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAutoTpNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAutoTpNote.Location = new System.Drawing.Point(687, 20);
 			this.butAutoTpNote.Name = "butAutoTpNote";
@@ -817,7 +817,7 @@ namespace OpenDental{
 			// butAddTpNote
 			// 
 			this.butAddTpNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAddTpNote.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddTpNote.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddTpNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddTpNote.Location = new System.Drawing.Point(687, 108);
 			this.butAddTpNote.Name = "butAddTpNote";

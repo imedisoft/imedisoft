@@ -86,7 +86,7 @@ namespace OpenDental{
 			// butShowHide
 			// 
 			this.butShowHide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butShowHide.Image = global::OpenDental.Properties.Resources.arrowDownTriangle;
+			this.butShowHide.Image = global::Imedisoft.Properties.Resources.arrowDownTriangle;
 			this.butShowHide.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.butShowHide.Location = new System.Drawing.Point(0, 181);
 			this.butShowHide.Name = "butShowHide";

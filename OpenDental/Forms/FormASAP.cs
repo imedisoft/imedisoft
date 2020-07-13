@@ -328,7 +328,7 @@ namespace OpenDental {
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(967, 485);
 			this.butPrint.Name = "butPrint";
@@ -385,7 +385,7 @@ namespace OpenDental {
 			// butText
 			// 
 			this.butText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butText.Image = global::OpenDental.Properties.Resources.Text;
+			this.butText.Image = global::Imedisoft.Properties.Resources.Text;
 			this.butText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butText.Location = new System.Drawing.Point(967, 181);
 			this.butText.Name = "butText";

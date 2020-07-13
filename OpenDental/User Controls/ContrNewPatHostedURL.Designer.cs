@@ -90,7 +90,7 @@
 			// 
 			// butClear
 			// 
-			this.butClear.Image = global::OpenDental.Properties.Resources.deleteX18;
+			this.butClear.Image = global::Imedisoft.Properties.Resources.deleteX18;
 			this.butClear.Location = new System.Drawing.Point(597, 65);
 			this.butClear.Name = "butClear";
 			this.butClear.Size = new System.Drawing.Size(27, 23);

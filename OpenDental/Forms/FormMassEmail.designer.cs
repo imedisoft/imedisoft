@@ -433,7 +433,7 @@ namespace OpenDental{
 			// butMoveToAvailable
 			// 
 			this.butMoveToAvailable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butMoveToAvailable.Image = global::OpenDental.Properties.Resources.Left;
+			this.butMoveToAvailable.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butMoveToAvailable.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butMoveToAvailable.Location = new System.Drawing.Point(690, 347);
 			this.butMoveToAvailable.Name = "butMoveToAvailable";
@@ -445,7 +445,7 @@ namespace OpenDental{
 			// butMoveToSelected
 			// 
 			this.butMoveToSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butMoveToSelected.Image = global::OpenDental.Properties.Resources.Right;
+			this.butMoveToSelected.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butMoveToSelected.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butMoveToSelected.Location = new System.Drawing.Point(690, 254);
 			this.butMoveToSelected.Name = "butMoveToSelected";
@@ -528,7 +528,7 @@ namespace OpenDental{
 			// 
 			// butNewTemplate
 			// 
-			this.butNewTemplate.Image = global::OpenDental.Properties.Resources.Add;
+			this.butNewTemplate.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butNewTemplate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butNewTemplate.Location = new System.Drawing.Point(15, 21);
 			this.butNewTemplate.Name = "butNewTemplate";
@@ -550,7 +550,7 @@ namespace OpenDental{
 			// butDeleteTemplate
 			// 
 			this.butDeleteTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDeleteTemplate.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDeleteTemplate.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDeleteTemplate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDeleteTemplate.Location = new System.Drawing.Point(14, 575);
 			this.butDeleteTemplate.Name = "butDeleteTemplate";

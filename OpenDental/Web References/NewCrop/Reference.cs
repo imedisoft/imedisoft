@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace OpenDental.NewCrop {
+namespace Imedisoft.NewCrop {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -215,7 +215,7 @@ namespace OpenDental.NewCrop {
         
         /// <remarks/>
         public Update1() {
-            this.Url = global::OpenDental.Properties.Settings.Default.OpenDental_NewCrop_Update1;
+            this.Url = global::Imedisoft.Properties.Settings.Default.OpenDental_NewCrop_Update1;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;

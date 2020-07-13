@@ -283,7 +283,7 @@ namespace OpenDental{
 			// 
 			// butRight
 			// 
-			this.butRight.Image = global::OpenDental.Properties.Resources.Right;
+			this.butRight.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butRight.Location = new System.Drawing.Point(63, 18);
 			this.butRight.Name = "butRight";
 			this.butRight.Size = new System.Drawing.Size(39, 24);
@@ -292,7 +292,7 @@ namespace OpenDental{
 			// 
 			// butLeft
 			// 
-			this.butLeft.Image = global::OpenDental.Properties.Resources.Left;
+			this.butLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butLeft.Location = new System.Drawing.Point(13, 18);
 			this.butLeft.Name = "butLeft";
 			this.butLeft.Size = new System.Drawing.Size(39, 24);
@@ -435,7 +435,7 @@ namespace OpenDental{
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(691, 661);
 			this.butPrint.Name = "butPrint";
@@ -458,7 +458,7 @@ namespace OpenDental{
 			// butAdj
 			// 
 			this.butAdj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAdj.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdj.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdj.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdj.Location = new System.Drawing.Point(18, 661);
 			this.butAdj.Name = "butAdj";
@@ -492,7 +492,7 @@ namespace OpenDental{
 			// 
 			// butPrevEmp
 			// 
-			this.butPrevEmp.Image = global::OpenDental.Properties.Resources.Left;
+			this.butPrevEmp.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butPrevEmp.Location = new System.Drawing.Point(8, 18);
 			this.butPrevEmp.Name = "butPrevEmp";
 			this.butPrevEmp.Size = new System.Drawing.Size(39, 24);
@@ -501,7 +501,7 @@ namespace OpenDental{
 			// 
 			// butNextEmp
 			// 
-			this.butNextEmp.Image = global::OpenDental.Properties.Resources.Right;
+			this.butNextEmp.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butNextEmp.Location = new System.Drawing.Point(59, 18);
 			this.butNextEmp.Name = "butNextEmp";
 			this.butNextEmp.Size = new System.Drawing.Size(39, 24);

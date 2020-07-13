@@ -95,7 +95,7 @@ namespace OpenDental
 			// 
 			// butPrint
 			// 
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(340, 5);
 			this.butPrint.Name = "butPrint";
@@ -129,7 +129,7 @@ namespace OpenDental
 			// 
 			// butFwd
 			// 
-			this.butFwd.Image = global::OpenDental.Properties.Resources.Right;
+			this.butFwd.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butFwd.Location = new System.Drawing.Point(195, 7);
 			this.butFwd.Name = "butFwd";
 			this.butFwd.Size = new System.Drawing.Size(18, 22);
@@ -138,7 +138,7 @@ namespace OpenDental
 			// 
 			// butBack
 			// 
-			this.butBack.Image = global::OpenDental.Properties.Resources.Left;
+			this.butBack.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butBack.Location = new System.Drawing.Point(123, 7);
 			this.butBack.Name = "butBack";
 			this.butBack.Size = new System.Drawing.Size(18, 22);

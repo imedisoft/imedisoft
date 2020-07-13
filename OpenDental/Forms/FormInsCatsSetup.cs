@@ -70,7 +70,7 @@ namespace OpenDental {
 			// 
 			// butAddSpan
 			// 
-			this.butAddSpan.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddSpan.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddSpan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddSpan.Location = new System.Drawing.Point(512,286);
 			this.butAddSpan.Name = "butAddSpan";
@@ -81,7 +81,7 @@ namespace OpenDental {
 			// 
 			// butUp
 			// 
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(8,19);
 			this.butUp.Name = "butUp";
@@ -92,7 +92,7 @@ namespace OpenDental {
 			// 
 			// butAddCat
 			// 
-			this.butAddCat.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddCat.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddCat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddCat.Location = new System.Drawing.Point(8,61);
 			this.butAddCat.Name = "butAddCat";
@@ -103,7 +103,7 @@ namespace OpenDental {
 			// 
 			// butDown
 			// 
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDown.Location = new System.Drawing.Point(100,19);
 			this.butDown.Name = "butDown";

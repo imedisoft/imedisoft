@@ -165,7 +165,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(12, 384);
 			this.butDelete.Name = "butDelete";
@@ -177,7 +177,7 @@ namespace OpenDental{
 			// butClearResponsParty
 			// 
 			this.butClearResponsParty.AdjustImageLocation = new System.Drawing.Point(1, 1);
-			this.butClearResponsParty.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butClearResponsParty.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butClearResponsParty.Location = new System.Drawing.Point(385, 257);
 			this.butClearResponsParty.Name = "butClearResponsParty";
 			this.butClearResponsParty.Size = new System.Drawing.Size(25, 23);
@@ -245,7 +245,7 @@ namespace OpenDental{
 			// butDocumentDetach
 			// 
 			this.butDocumentDetach.AdjustImageLocation = new System.Drawing.Point(1, 1);
-			this.butDocumentDetach.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDocumentDetach.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDocumentDetach.Location = new System.Drawing.Point(385, 283);
 			this.butDocumentDetach.Name = "butDocumentDetach";
 			this.butDocumentDetach.Size = new System.Drawing.Size(25, 23);

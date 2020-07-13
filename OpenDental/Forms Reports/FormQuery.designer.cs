@@ -122,7 +122,7 @@
 			// 
 			// butExportExcel
 			// 
-			this.butExportExcel.Image = global::OpenDental.Properties.Resources.butExportExcel;
+			this.butExportExcel.Image = global::Imedisoft.Properties.Resources.butExportExcel;
 			this.butExportExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butExportExcel.Location = new System.Drawing.Point(159, 71);
 			this.butExportExcel.Name = "butExportExcel";
@@ -134,7 +134,7 @@
 			// 
 			// butPaste
 			// 
-			this.butPaste.Image = global::OpenDental.Properties.Resources.butPaste;
+			this.butPaste.Image = global::Imedisoft.Properties.Resources.butPaste;
 			this.butPaste.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPaste.Location = new System.Drawing.Point(78, 56);
 			this.butPaste.Name = "butPaste";
@@ -145,7 +145,7 @@
 			// 
 			// butCopy
 			// 
-			this.butCopy.Image = global::OpenDental.Properties.Resources.butCopy;
+			this.butCopy.Image = global::Imedisoft.Properties.Resources.butCopy;
 			this.butCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCopy.Location = new System.Drawing.Point(3, 56);
 			this.butCopy.Name = "butCopy";
@@ -274,7 +274,7 @@
 			// 
 			// butBack
 			// 
-			this.butBack.Image = global::OpenDental.Properties.Resources.Left;
+			this.butBack.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butBack.Location = new System.Drawing.Point(6, 7);
 			this.butBack.Name = "butBack";
 			this.butBack.Size = new System.Drawing.Size(18, 23);
@@ -284,7 +284,7 @@
 			// butFwd
 			// 
 			this.butFwd.AdjustImageLocation = new System.Drawing.Point(1, 0);
-			this.butFwd.Image = global::OpenDental.Properties.Resources.Right;
+			this.butFwd.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butFwd.Location = new System.Drawing.Point(118, 7);
 			this.butFwd.Name = "butFwd";
 			this.butFwd.Size = new System.Drawing.Size(18, 23);
@@ -293,7 +293,7 @@
 			// 
 			// butPrint
 			// 
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(785, 753);
 			this.butPrint.Name = "butPrint";
@@ -304,7 +304,7 @@
 			// 
 			// butExport
 			// 
-			this.butExport.Image = global::OpenDental.Properties.Resources.butExport;
+			this.butExport.Image = global::Imedisoft.Properties.Resources.butExport;
 			this.butExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butExport.Location = new System.Drawing.Point(690, 753);
 			this.butExport.Name = "butExport";
@@ -315,7 +315,7 @@
 			// 
 			// butQView
 			// 
-			this.butQView.Image = global::OpenDental.Properties.Resources.butQView;
+			this.butQView.Image = global::Imedisoft.Properties.Resources.butQView;
 			this.butQView.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butQView.Location = new System.Drawing.Point(574, 739);
 			this.butQView.Name = "butQView";
@@ -326,7 +326,7 @@
 			// 
 			// butPrintPreview
 			// 
-			this.butPrintPreview.Image = global::OpenDental.Properties.Resources.butPreview;
+			this.butPrintPreview.Image = global::Imedisoft.Properties.Resources.butPreview;
 			this.butPrintPreview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrintPreview.Location = new System.Drawing.Point(573, 753);
 			this.butPrintPreview.Name = "butPrintPreview";

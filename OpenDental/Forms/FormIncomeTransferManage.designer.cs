@@ -60,7 +60,7 @@ namespace OpenDental{
 			// butTransfer
 			// 
 			this.butTransfer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butTransfer.Image = global::OpenDental.Properties.Resources.Left;
+			this.butTransfer.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butTransfer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butTransfer.Location = new System.Drawing.Point(426, 570);
 			this.butTransfer.Name = "butTransfer";

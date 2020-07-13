@@ -868,7 +868,7 @@ namespace OpenDental{
 			// butCopyPrevious
 			// 
 			this.butCopyPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCopyPrevious.Image = global::OpenDental.Properties.Resources.Add;
+			this.butCopyPrevious.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butCopyPrevious.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCopyPrevious.Location = new System.Drawing.Point(7, 227);
 			this.butCopyPrevious.Name = "butCopyPrevious";
@@ -911,7 +911,7 @@ namespace OpenDental{
 			// 
 			// butPrint
 			// 
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(885, 616);
 			this.butPrint.Name = "butPrint";
@@ -922,7 +922,7 @@ namespace OpenDental{
 			// 
 			// butAdd
 			// 
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(7, 197);
 			this.butAdd.Name = "butAdd";
@@ -943,7 +943,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(7, 257);
 			this.butDelete.Name = "butDelete";
@@ -1044,7 +1044,7 @@ namespace OpenDental{
 			// 
 			// butListen
 			// 
-			this.butListen.Image = global::OpenDental.Properties.Resources.Microphone_22px;
+			this.butListen.Image = global::Imedisoft.Properties.Resources.Microphone_22px;
 			this.butListen.Location = new System.Drawing.Point(7, 286);
 			this.butListen.Name = "butListen";
 			this.butListen.Size = new System.Drawing.Size(30, 30);

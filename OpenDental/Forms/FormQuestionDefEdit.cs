@@ -98,7 +98,7 @@ namespace OpenDental{
 			// buttonDelete
 			// 
 			this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.buttonDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.buttonDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.buttonDelete.Location = new System.Drawing.Point(54,298);
 			this.buttonDelete.Name = "buttonDelete";

@@ -108,7 +108,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(12, 411);
 			this.butDelete.Name = "butDelete";
@@ -120,7 +120,7 @@ namespace OpenDental{
 			// butCriterionAdd
 			// 
 			this.butCriterionAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCriterionAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butCriterionAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butCriterionAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCriterionAdd.Location = new System.Drawing.Point(365, 93);
 			this.butCriterionAdd.Name = "butCriterionAdd";
@@ -141,7 +141,7 @@ namespace OpenDental{
 			// butDown
 			// 
 			this.butDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDown.Location = new System.Drawing.Point(365, 239);
 			this.butDown.Name = "butDown";
@@ -154,7 +154,7 @@ namespace OpenDental{
 			// 
 			this.butUp.AdjustImageLocation = new System.Drawing.Point(0, 1);
 			this.butUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(365, 209);
 			this.butUp.Name = "butUp";

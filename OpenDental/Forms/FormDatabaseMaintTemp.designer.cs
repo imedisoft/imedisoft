@@ -216,7 +216,7 @@ namespace OpenDental{
 			// 
 			// butPrint
 			// 
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(129, 559);
 			this.butPrint.Name = "butPrint";

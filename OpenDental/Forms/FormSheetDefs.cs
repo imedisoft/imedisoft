@@ -161,7 +161,7 @@ namespace OpenDental{
 			// butCopy2
 			// 
 			this.butCopy2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCopy2.Image = global::OpenDental.Properties.Resources.Add;
+			this.butCopy2.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butCopy2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCopy2.Location = new System.Drawing.Point(737, 637);
 			this.butCopy2.Name = "butCopy2";
@@ -172,7 +172,7 @@ namespace OpenDental{
 			// 
 			// butCopy
 			// 
-			this.butCopy.Image = global::OpenDental.Properties.Resources.Right;
+			this.butCopy.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCopy.Location = new System.Drawing.Point(422, 448);
 			this.butCopy.Name = "butCopy";
@@ -214,7 +214,7 @@ namespace OpenDental{
 			// butNew
 			// 
 			this.butNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butNew.Image = global::OpenDental.Properties.Resources.Add;
+			this.butNew.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butNew.Location = new System.Drawing.Point(652, 637);
 			this.butNew.Name = "butNew";

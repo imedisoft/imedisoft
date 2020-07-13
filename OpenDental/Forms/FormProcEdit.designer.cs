@@ -1622,7 +1622,7 @@
 			// 
 			// butAddExistAdj
 			// 
-			this.butAddExistAdj.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddExistAdj.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddExistAdj.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddExistAdj.Location = new System.Drawing.Point(589, 6);
 			this.butAddExistAdj.Name = "butAddExistAdj";
@@ -1680,7 +1680,7 @@
 			// 
 			// butAddEstimate
 			// 
-			this.butAddEstimate.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddEstimate.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddEstimate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddEstimate.Location = new System.Drawing.Point(3, 6);
 			this.butAddEstimate.Name = "butAddEstimate";
@@ -1691,7 +1691,7 @@
 			// 
 			// butAddAdjust
 			// 
-			this.butAddAdjust.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddAdjust.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddAdjust.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddAdjust.Location = new System.Drawing.Point(458, 6);
 			this.butAddAdjust.Name = "butAddAdjust";
@@ -2298,7 +2298,7 @@
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(2, 671);
 			this.butDelete.Name = "butDelete";

@@ -134,7 +134,7 @@ namespace OpenDental{
 			// butEditTemplate
 			// 
 			this.butEditTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butEditTemplate.Image = global::OpenDental.Properties.Resources.editPencil;
+			this.butEditTemplate.Image = global::Imedisoft.Properties.Resources.editPencil;
 			this.butEditTemplate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEditTemplate.Location = new System.Drawing.Point(545, 489);
 			this.butEditTemplate.Name = "butEditTemplate";

@@ -1256,7 +1256,7 @@ namespace OpenDental {
 			// butClearReferralSource
 			// 
 			this.butClearReferralSource.AdjustImageLocation = new System.Drawing.Point(1, 1);
-			this.butClearReferralSource.Image = global::OpenDental.Properties.Resources.deleteX18;
+			this.butClearReferralSource.Image = global::Imedisoft.Properties.Resources.deleteX18;
 			this.butClearReferralSource.Location = new System.Drawing.Point(411, 618);
 			this.butClearReferralSource.Name = "butClearReferralSource";
 			this.butClearReferralSource.Size = new System.Drawing.Size(21, 20);
@@ -1565,7 +1565,7 @@ namespace OpenDental {
 			// butAddComm
 			// 
 			this.butAddComm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAddComm.Image = global::OpenDental.Properties.Resources.commlog;
+			this.butAddComm.Image = global::Imedisoft.Properties.Resources.commlog;
 			this.butAddComm.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddComm.Location = new System.Drawing.Point(340, 647);
 			this.butAddComm.Name = "butAddComm";

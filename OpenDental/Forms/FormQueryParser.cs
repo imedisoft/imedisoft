@@ -118,12 +118,12 @@ namespace OpenDental {
 			if(splitContainer1.Panel2Collapsed) {
 				butShowHide.Text=Lan.G(this,"Show Text");
 				Height = 325;
-				this.butShowHide.Image = global::OpenDental.Properties.Resources.arrowDownTriangle;
+				this.butShowHide.Image = global::Imedisoft.Properties.Resources.arrowDownTriangle;
 			}
 			else {
 				butShowHide.Text=Lan.G(this,"Hide Text");
 				Height = 720;
-				this.butShowHide.Image = global::OpenDental.Properties.Resources.arrowUpTriangle;
+				this.butShowHide.Image = global::Imedisoft.Properties.Resources.arrowUpTriangle;
 			}
 		}
 

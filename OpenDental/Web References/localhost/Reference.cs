@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace OpenDental.localhost {
+namespace Imedisoft.localhost {
     using System;
     using System.Web.Services;
     using System.Diagnostics;

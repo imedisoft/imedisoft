@@ -244,7 +244,7 @@ namespace OpenDental{
 			// butAddPPInviteRule
 			// 
 			this.butAddPPInviteRule.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAddPPInviteRule.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddPPInviteRule.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddPPInviteRule.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddPPInviteRule.Location = new System.Drawing.Point(100, 546);
 			this.butAddPPInviteRule.Name = "butAddPPInviteRule";

@@ -188,7 +188,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(39, 346);
 			this.butDelete.Name = "butDelete";
@@ -210,7 +210,7 @@ namespace OpenDental{
 			// butPreview
 			// 
 			this.butPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPreview.Image = global::OpenDental.Properties.Resources.butPreview;
+			this.butPreview.Image = global::Imedisoft.Properties.Resources.butPreview;
 			this.butPreview.Location = new System.Drawing.Point(39, 302);
 			this.butPreview.Name = "butPreview";
 			this.butPreview.Size = new System.Drawing.Size(74, 24);

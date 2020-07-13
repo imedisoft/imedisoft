@@ -209,7 +209,7 @@ namespace OpenDental{
 			// butTsiOcp
 			// 
 			this.butTsiOcp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butTsiOcp.Image = global::OpenDental.Properties.Resources.TSI_Icon;
+			this.butTsiOcp.Image = global::Imedisoft.Properties.Resources.TSI_Icon;
 			this.butTsiOcp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butTsiOcp.Location = new System.Drawing.Point(12, 660);
 			this.butTsiOcp.Name = "butTsiOcp";
@@ -478,7 +478,7 @@ namespace OpenDental{
 			// butUnsentPrint
 			// 
 			this.butUnsentPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butUnsentPrint.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butUnsentPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butUnsentPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUnsentPrint.Location = new System.Drawing.Point(1036, 586);
 			this.butUnsentPrint.Name = "butUnsentPrint";
@@ -1040,7 +1040,7 @@ namespace OpenDental{
 			// butSentPrint
 			// 
 			this.butSentPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butSentPrint.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butSentPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butSentPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butSentPrint.Location = new System.Drawing.Point(1117, 586);
 			this.butSentPrint.Name = "butSentPrint";
@@ -1389,7 +1389,7 @@ namespace OpenDental{
 			// butExcludedPrint
 			// 
 			this.butExcludedPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butExcludedPrint.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butExcludedPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butExcludedPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butExcludedPrint.Location = new System.Drawing.Point(1036, 586);
 			this.butExcludedPrint.Name = "butExcludedPrint";

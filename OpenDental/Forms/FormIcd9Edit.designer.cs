@@ -30,7 +30,7 @@ namespace OpenDental{
 			this.textCode = new System.Windows.Forms.TextBox();
 			this.buttonDelete = new OpenDental.UI.Button();
 			this.butClose = new OpenDental.UI.Button();
-			this.service11 = new OpenDental.localhost.Service1();
+			this.service11 = new Imedisoft.localhost.Service1();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -70,7 +70,7 @@ namespace OpenDental{
 			// buttonDelete
 			// 
 			this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.buttonDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.buttonDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.buttonDelete.Location = new System.Drawing.Point(22, 97);
 			this.buttonDelete.Name = "buttonDelete";
@@ -122,6 +122,6 @@ namespace OpenDental{
 		private System.Windows.Forms.TextBox textDescription;
 		private UI.Button buttonDelete;
 		private System.Windows.Forms.TextBox textCode;
-		private localhost.Service1 service11;
+		private Imedisoft.localhost.Service1 service11;
 	}
 }

@@ -763,7 +763,7 @@ namespace OpenDental {
 			// 
 			// butBirthdayRight
 			// 
-			this.butBirthdayRight.Image = global::OpenDental.Properties.Resources.Right;
+			this.butBirthdayRight.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butBirthdayRight.Location = new System.Drawing.Point(217,30);
 			this.butBirthdayRight.Name = "butBirthdayRight";
 			this.butBirthdayRight.Size = new System.Drawing.Size(37,23);
@@ -773,7 +773,7 @@ namespace OpenDental {
 			// 
 			// butBirthdayLeft
 			// 
-			this.butBirthdayLeft.Image = global::OpenDental.Properties.Resources.Left;
+			this.butBirthdayLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butBirthdayLeft.Location = new System.Drawing.Point(77,30);
 			this.butBirthdayLeft.Name = "butBirthdayLeft";
 			this.butBirthdayLeft.Size = new System.Drawing.Size(37,23);
@@ -1273,10 +1273,10 @@ namespace OpenDental {
 					picLabel[cnt].Click += new EventHandler(clickLabel);
 					picLabel[cnt].Tag = cnt.ToString();
 					if(cnt < istartingpoint) {
-						picLabel[cnt].Image = global::OpenDental.Properties.Resources.deleteX;
+						picLabel[cnt].Image = global::Imedisoft.Properties.Resources.deleteX;
 					}
 					else {
-						picLabel[cnt].Image = global::OpenDental.Properties.Resources.butLabel;
+						picLabel[cnt].Image = global::Imedisoft.Properties.Resources.butLabel;
 					}
 					panLabels.Controls.Add(picLabel[cnt]);
 					cnt += 1;

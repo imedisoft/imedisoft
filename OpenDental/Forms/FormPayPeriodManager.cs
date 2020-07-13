@@ -327,7 +327,7 @@ namespace OpenDental {
 			// 
 			// butGenerate
 			// 
-			this.butGenerate.Image = global::OpenDental.Properties.Resources.Add;
+			this.butGenerate.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butGenerate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butGenerate.Location = new System.Drawing.Point(235, 308);
 			this.butGenerate.Name = "butGenerate";

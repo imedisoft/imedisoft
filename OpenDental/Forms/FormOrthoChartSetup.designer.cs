@@ -82,7 +82,7 @@ namespace OpenDental{
 			// butDown
 			// 
 			this.butDown.Anchor = System.Windows.Forms.AnchorStyles.Right;
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDown.Location = new System.Drawing.Point(281, 165);
 			this.butDown.Name = "butDown";
@@ -95,7 +95,7 @@ namespace OpenDental{
 			// butUp
 			// 
 			this.butUp.Anchor = System.Windows.Forms.AnchorStyles.Right;
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(281, 135);
 			this.butUp.Name = "butUp";

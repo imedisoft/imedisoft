@@ -142,7 +142,7 @@ namespace OpenDental{
 			// butAddReminder
 			// 
 			this.butAddReminder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAddReminder.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddReminder.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddReminder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddReminder.Location = new System.Drawing.Point(428, 611);
 			this.butAddReminder.Name = "butAddReminder";
@@ -155,7 +155,7 @@ namespace OpenDental{
 			// butAddConfirmation
 			// 
 			this.butAddConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAddConfirmation.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddConfirmation.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddConfirmation.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddConfirmation.Location = new System.Drawing.Point(303, 611);
 			this.butAddConfirmation.Name = "butAddConfirmation";
@@ -363,7 +363,7 @@ namespace OpenDental{
 			// butAddThankYouVerify
 			// 
 			this.butAddThankYouVerify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAddThankYouVerify.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddThankYouVerify.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddThankYouVerify.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddThankYouVerify.Location = new System.Drawing.Point(558, 611);
 			this.butAddThankYouVerify.Name = "butAddThankYouVerify";
@@ -467,7 +467,7 @@ namespace OpenDental{
 			// butAddArrival
 			// 
 			this.butAddArrival.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAddArrival.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddArrival.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddArrival.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddArrival.Location = new System.Drawing.Point(700, 611);
 			this.butAddArrival.Name = "butAddArrival";

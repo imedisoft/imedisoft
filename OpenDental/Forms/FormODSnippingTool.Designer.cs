@@ -55,7 +55,7 @@
 			// butCancel
 			// 
 			this.butCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCancel.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butCancel.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCancel.Location = new System.Drawing.Point(291, 7);
 			this.butCancel.Name = "butCancel";

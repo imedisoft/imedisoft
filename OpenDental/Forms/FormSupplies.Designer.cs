@@ -61,7 +61,7 @@ namespace OpenDental{
 			// 
 			this.butUp.AdjustImageLocation = new System.Drawing.Point(0, 1);
 			this.butUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(12, 592);
 			this.butUp.Name = "butUp";
@@ -73,7 +73,7 @@ namespace OpenDental{
 			// butDown
 			// 
 			this.butDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDown.Location = new System.Drawing.Point(12, 622);
 			this.butDown.Name = "butDown";
@@ -105,7 +105,7 @@ namespace OpenDental{
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(122, 622);
 			this.butPrint.Name = "butPrint";
@@ -154,7 +154,7 @@ namespace OpenDental{
 			// butAdd
 			// 
 			this.butAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(657, 26);
 			this.butAdd.Name = "butAdd";

@@ -58,7 +58,7 @@ namespace OpenDental{
 			// 
 			// butAdd
 			// 
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(9, 12);
 			this.butAdd.Name = "butAdd";
@@ -127,7 +127,7 @@ namespace OpenDental{
 			// 
 			// butAddQuarterly
 			// 
-			this.butAddQuarterly.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddQuarterly.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddQuarterly.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddQuarterly.Location = new System.Drawing.Point(568, 12);
 			this.butAddQuarterly.Name = "butAddQuarterly";

@@ -427,7 +427,7 @@ namespace OpenDental{
 			// 
 			// butPaySimple
 			// 
-			this.butPaySimple.BackgroundImage = global::OpenDental.Properties.Resources.PaySimple_Button_2019_26x75;
+			this.butPaySimple.BackgroundImage = global::Imedisoft.Properties.Resources.PaySimple_Button_2019_26x75;
 			this.butPaySimple.Location = new System.Drawing.Point(236, 21);
 			this.butPaySimple.Name = "butPaySimple";
 			this.butPaySimple.Size = new System.Drawing.Size(76, 26);

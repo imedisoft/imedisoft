@@ -61,7 +61,7 @@ namespace OpenDental{
 			// 
 			// buttonLeft
 			// 
-			this.buttonLeft.Image = global::OpenDental.Properties.Resources.Left;
+			this.buttonLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.buttonLeft.Location = new System.Drawing.Point(484, 22);
 			this.buttonLeft.Name = "buttonLeft";
 			this.buttonLeft.Size = new System.Drawing.Size(22, 22);
@@ -71,7 +71,7 @@ namespace OpenDental{
 			// 
 			// buttonRight
 			// 
-			this.buttonRight.Image = global::OpenDental.Properties.Resources.Right;
+			this.buttonRight.Image = global::Imedisoft.Properties.Resources.Right;
 			this.buttonRight.Location = new System.Drawing.Point(721, 21);
 			this.buttonRight.Name = "buttonRight";
 			this.buttonRight.Size = new System.Drawing.Size(22, 22);
@@ -92,7 +92,7 @@ namespace OpenDental{
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(877, 637);
 			this.butPrint.Name = "butPrint";
@@ -114,7 +114,7 @@ namespace OpenDental{
 			// butEdit
 			// 
 			this.butEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butEdit.Image = global::OpenDental.Properties.Resources.editPencil;
+			this.butEdit.Image = global::Imedisoft.Properties.Resources.editPencil;
 			this.butEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEdit.Location = new System.Drawing.Point(34, 637);
 			this.butEdit.Name = "butEdit";

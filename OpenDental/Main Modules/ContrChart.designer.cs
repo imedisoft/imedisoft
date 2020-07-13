@@ -1497,7 +1497,7 @@
 			// 
 			// butClear
 			// 
-			this.butClear.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butClear.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butClear.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butClear.Location = new System.Drawing.Point(82, 1);
 			this.butClear.Name = "butClear";
@@ -1508,7 +1508,7 @@
 			// 
 			// butNew
 			// 
-			this.butNew.Image = global::OpenDental.Properties.Resources.Add;
+			this.butNew.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butNew.Location = new System.Drawing.Point(1, 1);
 			this.butNew.Name = "butNew";
@@ -1533,7 +1533,7 @@
 			// 
 			// butDown
 			// 
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDown.Location = new System.Drawing.Point(283, 1);
 			this.butDown.Name = "butDown";
@@ -1544,7 +1544,7 @@
 			// butUp
 			// 
 			this.butUp.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(244, 1);
 			this.butUp.Name = "butUp";
@@ -1645,7 +1645,7 @@
 			// 
 			// butChartViewDown
 			// 
-			this.butChartViewDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butChartViewDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butChartViewDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butChartViewDown.Location = new System.Drawing.Point(426, 195);
 			this.butChartViewDown.Name = "butChartViewDown";
@@ -1656,7 +1656,7 @@
 			// 
 			// butChartViewUp
 			// 
-			this.butChartViewUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butChartViewUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butChartViewUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butChartViewUp.Location = new System.Drawing.Point(367, 195);
 			this.butChartViewUp.Name = "butChartViewUp";
@@ -1667,7 +1667,7 @@
 			// 
 			// butChartViewAdd
 			// 
-			this.butChartViewAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butChartViewAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butChartViewAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butChartViewAdd.Location = new System.Drawing.Point(303, 195);
 			this.butChartViewAdd.Name = "butChartViewAdd";
@@ -2364,7 +2364,7 @@
 			// 
 			// butNewTP
 			// 
-			this.butNewTP.Image = global::OpenDental.Properties.Resources.Add;
+			this.butNewTP.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butNewTP.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butNewTP.Location = new System.Drawing.Point(851, 434);
 			this.butNewTP.Name = "butNewTP";

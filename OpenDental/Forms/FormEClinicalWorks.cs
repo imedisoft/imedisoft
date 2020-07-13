@@ -39,7 +39,7 @@ namespace OpenDental{
 		private RadioButton radioModeTight;
 		private RadioButton radioModeStandalone;
 		private CheckBox checkFeeSchedules;
-		private localhost.Service1 service11;
+		private Imedisoft.localhost.Service1 service11;
 		private Label labelHL7Warning;
 		private RadioButton radioModeFull;
 		private UI.Button butDiagnostic;
@@ -129,7 +129,7 @@ namespace OpenDental{
 			this.label4 = new System.Windows.Forms.Label();
 			this.textHL7Server = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
-			this.service11 = new OpenDental.localhost.Service1();
+			this.service11 = new Imedisoft.localhost.Service1();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
 			this.labelDefEnabledWarning = new System.Windows.Forms.Label();

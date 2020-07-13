@@ -14,6 +14,7 @@ using MySql.Data.MySqlClient;
 using OpenDentBusiness;
 using System.Net;
 using OpenDental.Forms;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public class PrefL {

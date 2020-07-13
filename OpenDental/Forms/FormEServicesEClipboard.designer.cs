@@ -254,7 +254,7 @@ namespace OpenDental{
 			// butEClipboardUp
 			// 
 			this.butEClipboardUp.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butEClipboardUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butEClipboardUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butEClipboardUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEClipboardUp.Location = new System.Drawing.Point(444, 208);
 			this.butEClipboardUp.Name = "butEClipboardUp";
@@ -264,7 +264,7 @@ namespace OpenDental{
 			// 
 			// butEClipboardDown
 			// 
-			this.butEClipboardDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butEClipboardDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butEClipboardDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEClipboardDown.Location = new System.Drawing.Point(444, 240);
 			this.butEClipboardDown.Name = "butEClipboardDown";
@@ -274,7 +274,7 @@ namespace OpenDental{
 			// 
 			// butEClipboardRight
 			// 
-			this.butEClipboardRight.Image = global::OpenDental.Properties.Resources.Right;
+			this.butEClipboardRight.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butEClipboardRight.Location = new System.Drawing.Point(182, 97);
 			this.butEClipboardRight.Name = "butEClipboardRight";
 			this.butEClipboardRight.Size = new System.Drawing.Size(35, 26);
@@ -284,7 +284,7 @@ namespace OpenDental{
 			// butEClipboardLeft
 			// 
 			this.butEClipboardLeft.AdjustImageLocation = new System.Drawing.Point(-1, 0);
-			this.butEClipboardLeft.Image = global::OpenDental.Properties.Resources.Left;
+			this.butEClipboardLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butEClipboardLeft.Location = new System.Drawing.Point(182, 131);
 			this.butEClipboardLeft.Name = "butEClipboardLeft";
 			this.butEClipboardLeft.Size = new System.Drawing.Size(35, 26);

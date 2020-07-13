@@ -142,7 +142,7 @@ namespace OpenDental{
 			// 
 			// butForward
 			// 
-			this.butForward.Image = global::OpenDental.Properties.Resources.Right;
+			this.butForward.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butForward.Location = new System.Drawing.Point(199, 7);
 			this.butForward.Name = "butForward";
 			this.butForward.Size = new System.Drawing.Size(39, 24);
@@ -151,7 +151,7 @@ namespace OpenDental{
 			// 
 			// butBack
 			// 
-			this.butBack.Image = global::OpenDental.Properties.Resources.Left;
+			this.butBack.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butBack.Location = new System.Drawing.Point(12, 6);
 			this.butBack.Name = "butBack";
 			this.butBack.Size = new System.Drawing.Size(39, 24);
@@ -396,7 +396,7 @@ namespace OpenDental{
 			// butAddTime
 			// 
 			this.butAddTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAddTime.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddTime.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddTime.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddTime.Location = new System.Drawing.Point(9, 442);
 			this.butAddTime.Name = "butAddTime";
@@ -418,7 +418,7 @@ namespace OpenDental{
 			// butCloseOffice
 			// 
 			this.butCloseOffice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCloseOffice.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butCloseOffice.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butCloseOffice.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCloseOffice.Location = new System.Drawing.Point(866, 521);
 			this.butCloseOffice.Name = "butCloseOffice";

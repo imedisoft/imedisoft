@@ -2461,12 +2461,12 @@ namespace OpenDental {
 			if(splitContainerCharges.Panel2Collapsed) {
 				butShowHide.Text=Lan.G(this,"Show Splits");
 				Height = splitContainerCharges.SplitterDistance+100;//Plus 100 to give room for the buttons
-				this.butShowHide.Image = global::OpenDental.Properties.Resources.arrowDownTriangle;
+				this.butShowHide.Image = global::Imedisoft.Properties.Resources.arrowDownTriangle;
 			}
 			else {
 				butShowHide.Text=Lan.G(this,"Hide Splits");
 				Height = _originalHeight;
-				this.butShowHide.Image = global::OpenDental.Properties.Resources.arrowUpTriangle;
+				this.butShowHide.Image = global::Imedisoft.Properties.Resources.arrowUpTriangle;
 			}
 		}
 

@@ -540,7 +540,7 @@ namespace OpenDental{
 			// 
 			// butEmailInbox
 			// 
-			this.butEmailInbox.Image = global::OpenDental.Properties.Resources.email1;
+			this.butEmailInbox.Image = global::Imedisoft.Properties.Resources.email1;
 			this.butEmailInbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEmailInbox.Location = new System.Drawing.Point(148, 97);
 			this.butEmailInbox.Name = "butEmailInbox";
@@ -636,7 +636,7 @@ namespace OpenDental{
 			// butManageAR
 			// 
 			this.butManageAR.AdjustImageLocation = new System.Drawing.Point(-2, 0);
-			this.butManageAR.Image = global::OpenDental.Properties.Resources.TSI_Icon;
+			this.butManageAR.Image = global::Imedisoft.Properties.Resources.TSI_Icon;
 			this.butManageAR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butManageAR.Location = new System.Drawing.Point(16, 149);
 			this.butManageAR.Name = "butManageAR";

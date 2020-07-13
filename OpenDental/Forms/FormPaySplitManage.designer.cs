@@ -126,7 +126,7 @@ namespace OpenDental{
 			// buttAddMany
 			// 
 			this.buttAddMany.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttAddMany.Image = global::OpenDental.Properties.Resources.Add;
+			this.buttAddMany.Image = global::Imedisoft.Properties.Resources.Add;
 			this.buttAddMany.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.buttAddMany.Location = new System.Drawing.Point(574, 630);
 			this.buttAddMany.Name = "buttAddMany";
@@ -149,7 +149,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(7, 631);
 			this.butDelete.Name = "butDelete";
@@ -182,7 +182,7 @@ namespace OpenDental{
 			// butCreatePartial
 			// 
 			this.butCreatePartial.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCreatePartial.Image = global::OpenDental.Properties.Resources.Add;
+			this.butCreatePartial.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butCreatePartial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCreatePartial.Location = new System.Drawing.Point(670, 631);
 			this.butCreatePartial.Name = "butCreatePartial";
@@ -205,7 +205,7 @@ namespace OpenDental{
 			// butCreateManual
 			// 
 			this.butCreateManual.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butCreateManual.Image = global::OpenDental.Properties.Resources.Add;
+			this.butCreateManual.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butCreateManual.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCreateManual.Location = new System.Drawing.Point(202, 631);
 			this.butCreateManual.Name = "butCreateManual";

@@ -78,7 +78,7 @@ namespace OpenDental{
 			// butPreview
 			// 
 			this.butPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPreview.Image = global::OpenDental.Properties.Resources.butPreview;
+			this.butPreview.Image = global::Imedisoft.Properties.Resources.butPreview;
 			this.butPreview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPreview.Location = new System.Drawing.Point(236, 138);
 			this.butPreview.Name = "butPreview";

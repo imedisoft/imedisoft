@@ -26,7 +26,7 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEtrans835s));
 			this.imageListCalendar = new System.Windows.Forms.ImageList(this.components);
-			this.smsService1 = new OpenDental.CallFireService.SMSService();
+			this.smsService1 = new Imedisoft.CallFireService.SMSService();
 			this.listStatus = new System.Windows.Forms.ListBox();
 			this.textCarrier = new OpenDental.ODtextBox();
 			this.butRefresh = new OpenDental.UI.Button();
@@ -301,7 +301,7 @@
 		private System.Windows.Forms.Label labelDaysOldMax;
 		private System.Windows.Forms.Label labelDaysOldMin;
 		private ODtextBox textCarrier;
-		private CallFireService.SMSService smsService1;
+		private Imedisoft.CallFireService.SMSService smsService1;
 		private System.Windows.Forms.ListBox listStatus;
 		private UI.ODGrid gridMain;
 		private UI.ODDateRangePicker dateRangePicker;

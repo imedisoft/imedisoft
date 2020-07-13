@@ -269,7 +269,7 @@
 			// butDeletePayment
 			// 
 			this.butDeletePayment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDeletePayment.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDeletePayment.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDeletePayment.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDeletePayment.Location = new System.Drawing.Point(11, 664);
 			this.butDeletePayment.Name = "butDeletePayment";
@@ -292,7 +292,7 @@
 			// butPrintReceipt
 			// 
 			this.butPrintReceipt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPrintReceipt.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrintReceipt.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrintReceipt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrintReceipt.Location = new System.Drawing.Point(389, 664);
 			this.butPrintReceipt.Name = "butPrintReceipt";
@@ -307,7 +307,7 @@
 			// 
 			this.butEmailReceipt.AdjustImageLocation = new System.Drawing.Point(-3, 0);
 			this.butEmailReceipt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butEmailReceipt.Image = global::OpenDental.Properties.Resources.email1;
+			this.butEmailReceipt.Image = global::Imedisoft.Properties.Resources.email1;
 			this.butEmailReceipt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEmailReceipt.Location = new System.Drawing.Point(499, 664);
 			this.butEmailReceipt.Name = "butEmailReceipt";
@@ -388,7 +388,7 @@
 			// 
 			// butPaySimple
 			// 
-			this.butPaySimple.BackgroundImage = global::OpenDental.Properties.Resources.PaySimple_Button_2019_26x75;
+			this.butPaySimple.BackgroundImage = global::Imedisoft.Properties.Resources.PaySimple_Button_2019_26x75;
 			this.butPaySimple.Location = new System.Drawing.Point(979, 24);
 			this.butPaySimple.Name = "butPaySimple";
 			this.butPaySimple.Size = new System.Drawing.Size(76, 26);
@@ -397,7 +397,7 @@
 			// 
 			// butShowHide
 			// 
-			this.butShowHide.Image = global::OpenDental.Properties.Resources.arrowDownTriangle;
+			this.butShowHide.Image = global::Imedisoft.Properties.Resources.arrowDownTriangle;
 			this.butShowHide.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.butShowHide.Location = new System.Drawing.Point(3, 222);
 			this.butShowHide.Name = "butShowHide";
@@ -828,7 +828,7 @@
 			// butPay
 			// 
 			this.butPay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPay.Image = global::OpenDental.Properties.Resources.Left;
+			this.butPay.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butPay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPay.Location = new System.Drawing.Point(502, 375);
 			this.butPay.Name = "butPay";
@@ -920,7 +920,7 @@
 			// butCreatePartial
 			// 
 			this.butCreatePartial.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butCreatePartial.Image = global::OpenDental.Properties.Resources.Add;
+			this.butCreatePartial.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butCreatePartial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCreatePartial.Location = new System.Drawing.Point(591, 375);
 			this.butCreatePartial.Name = "butCreatePartial";
@@ -943,7 +943,7 @@
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(9, 374);
 			this.butDelete.Name = "butDelete";
@@ -1227,7 +1227,7 @@
 			// butAddManual
 			// 
 			this.butAddManual.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAddManual.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddManual.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddManual.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddManual.Location = new System.Drawing.Point(210, 374);
 			this.butAddManual.Name = "butAddManual";

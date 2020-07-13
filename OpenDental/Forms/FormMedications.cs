@@ -113,7 +113,7 @@ namespace OpenDental{
 			// 
 			// butAddGeneric
 			// 
-			this.butAddGeneric.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddGeneric.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddGeneric.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddGeneric.Location = new System.Drawing.Point(6, 6);
 			this.butAddGeneric.Name = "butAddGeneric";
@@ -124,7 +124,7 @@ namespace OpenDental{
 			// 
 			// butAddBrand
 			// 
-			this.butAddBrand.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddBrand.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddBrand.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddBrand.Location = new System.Drawing.Point(125, 6);
 			this.butAddBrand.Name = "butAddBrand";
@@ -230,7 +230,7 @@ namespace OpenDental{
 			// 
 			// butConvertBrand
 			// 
-			this.butConvertBrand.Image = global::OpenDental.Properties.Resources.Add;
+			this.butConvertBrand.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butConvertBrand.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butConvertBrand.Location = new System.Drawing.Point(161, 6);
 			this.butConvertBrand.Name = "butConvertBrand";
@@ -241,7 +241,7 @@ namespace OpenDental{
 			// 
 			// butConvertGeneric
 			// 
-			this.butConvertGeneric.Image = global::OpenDental.Properties.Resources.Add;
+			this.butConvertGeneric.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butConvertGeneric.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butConvertGeneric.Location = new System.Drawing.Point(5, 6);
 			this.butConvertGeneric.Name = "butConvertGeneric";

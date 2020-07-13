@@ -97,7 +97,7 @@ namespace OpenDental {
 				writer.WriteEndElement();
 			}
 #if DEBUG
-			OpenDental.localhost.Service1 OIDService=new OpenDental.localhost.Service1();
+			Imedisoft.localhost.Service1 OIDService=new Imedisoft.localhost.Service1();
 #else
 			OpenDental.customerUpdates.Service1 OIDService=new OpenDental.customerUpdates.Service1();
 			OIDService.Url=PrefC.GetString(PrefName.UpdateServerAddress);

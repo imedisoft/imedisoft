@@ -232,7 +232,7 @@ namespace OpenDental{
 			// 
 			// butCopy
 			// 
-			this.butCopy.Image = global::OpenDental.Properties.Resources.Right;
+			this.butCopy.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCopy.Location = new System.Drawing.Point(200, 221);
 			this.butCopy.Name = "butCopy";

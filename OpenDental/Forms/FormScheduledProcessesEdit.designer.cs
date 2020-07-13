@@ -49,7 +49,7 @@ namespace OpenDental{
 			// butDeleteSchedProc
 			// 
 			this.butDeleteSchedProc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDeleteSchedProc.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDeleteSchedProc.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDeleteSchedProc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDeleteSchedProc.Location = new System.Drawing.Point(43, 112);
 			this.butDeleteSchedProc.Name = "butDeleteSchedProc";

@@ -156,7 +156,7 @@ namespace OpenDental{
 			// 
 			// butDownCat
 			// 
-			this.butDownCat.Image = global::OpenDental.Properties.Resources.down;
+			this.butDownCat.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDownCat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDownCat.Location = new System.Drawing.Point(98, 383);
 			this.butDownCat.Name = "butDownCat";
@@ -168,7 +168,7 @@ namespace OpenDental{
 			// butUpCat
 			// 
 			this.butUpCat.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butUpCat.Image = global::OpenDental.Properties.Resources.up;
+			this.butUpCat.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUpCat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUpCat.Location = new System.Drawing.Point(98, 348);
 			this.butUpCat.Name = "butUpCat";
@@ -179,7 +179,7 @@ namespace OpenDental{
 			// 
 			// butAddCat
 			// 
-			this.butAddCat.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddCat.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddCat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddCat.Location = new System.Drawing.Point(8, 348);
 			this.butAddCat.Name = "butAddCat";
@@ -190,7 +190,7 @@ namespace OpenDental{
 			// 
 			// butDeleteCat
 			// 
-			this.butDeleteCat.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDeleteCat.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDeleteCat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDeleteCat.Location = new System.Drawing.Point(8, 383);
 			this.butDeleteCat.Name = "butDeleteCat";
@@ -202,7 +202,7 @@ namespace OpenDental{
 			// butAddNote
 			// 
 			this.butAddNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAddNote.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddNote.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddNote.Location = new System.Drawing.Point(184, 641);
 			this.butAddNote.Name = "butAddNote";
@@ -214,7 +214,7 @@ namespace OpenDental{
 			// butDownNote
 			// 
 			this.butDownNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDownNote.Image = global::OpenDental.Properties.Resources.down;
+			this.butDownNote.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDownNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDownNote.Location = new System.Drawing.Point(439, 641);
 			this.butDownNote.Name = "butDownNote";
@@ -227,7 +227,7 @@ namespace OpenDental{
 			// 
 			this.butUpNote.AdjustImageLocation = new System.Drawing.Point(0, 1);
 			this.butUpNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butUpNote.Image = global::OpenDental.Properties.Resources.up;
+			this.butUpNote.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUpNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUpNote.Location = new System.Drawing.Point(354, 641);
 			this.butUpNote.Name = "butUpNote";
@@ -239,7 +239,7 @@ namespace OpenDental{
 			// butEditNote
 			// 
 			this.butEditNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butEditNote.Image = global::OpenDental.Properties.Resources.editPencil;
+			this.butEditNote.Image = global::Imedisoft.Properties.Resources.editPencil;
 			this.butEditNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEditNote.Location = new System.Drawing.Point(269, 641);
 			this.butEditNote.Name = "butEditNote";

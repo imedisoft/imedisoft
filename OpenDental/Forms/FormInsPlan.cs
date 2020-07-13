@@ -1152,7 +1152,7 @@ namespace OpenDental{
 			// butLabel
 			// 
 			this.butLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butLabel.Image = global::OpenDental.Properties.Resources.butLabel;
+			this.butLabel.Image = global::Imedisoft.Properties.Resources.butLabel;
 			this.butLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butLabel.Location = new System.Drawing.Point(201, 673);
 			this.butLabel.Name = "butLabel";
@@ -1164,7 +1164,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(13, 673);
 			this.butDelete.Name = "butDelete";
@@ -4447,12 +4447,12 @@ namespace OpenDental{
 		//This is not our code.   Added SPK/AAD 10/06 for eligibility check.-------------------------------------------------------------------------
 		private void EligibilityCheckDentalXchange() {
 			Cursor = Cursors.WaitCursor;
-			OpenDental.com.dentalxchange.webservices.WebServiceService DCIService 
-				= new OpenDental.com.dentalxchange.webservices.WebServiceService();
-			OpenDental.com.dentalxchange.webservices.Credentials DCICredential 
-				= new OpenDental.com.dentalxchange.webservices.Credentials();
-			OpenDental.com.dentalxchange.webservices.Request DCIRequest = new OpenDental.com.dentalxchange.webservices.Request();
-			OpenDental.com.dentalxchange.webservices.Response DCIResponse = new OpenDental.com.dentalxchange.webservices.Response();
+			Imedisoft.com.dentalxchange.webservices.WebServiceService DCIService 
+				= new Imedisoft.com.dentalxchange.webservices.WebServiceService();
+			Imedisoft.com.dentalxchange.webservices.Credentials DCICredential 
+				= new Imedisoft.com.dentalxchange.webservices.Credentials();
+			Imedisoft.com.dentalxchange.webservices.Request DCIRequest = new Imedisoft.com.dentalxchange.webservices.Request();
+			Imedisoft.com.dentalxchange.webservices.Response DCIResponse = new Imedisoft.com.dentalxchange.webservices.Response();
 			string loginID;
 			string passWord;
 			// Get Login / Password

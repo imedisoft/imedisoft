@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace OpenDental.MobileWeb {
+namespace Imedisoft.MobileWeb {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -90,7 +90,7 @@ namespace OpenDental.MobileWeb {
         
         /// <remarks/>
         public Mobile() {
-            this.Url = global::OpenDental.Properties.Settings.Default.OpenDental_MobileWeb_Mobile;
+            this.Url = global::Imedisoft.Properties.Settings.Default.OpenDental_MobileWeb_Mobile;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;

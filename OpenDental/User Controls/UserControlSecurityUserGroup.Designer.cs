@@ -403,7 +403,7 @@
 			// butEditGroup
 			// 
 			this.butEditGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butEditGroup.Image = global::OpenDental.Properties.Resources.editPencil;
+			this.butEditGroup.Image = global::Imedisoft.Properties.Resources.editPencil;
 			this.butEditGroup.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEditGroup.Location = new System.Drawing.Point(189, 612);
 			this.butEditGroup.Name = "butEditGroup";
@@ -425,7 +425,7 @@
 			// butAddGroup
 			// 
 			this.butAddGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAddGroup.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddGroup.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddGroup.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddGroup.Location = new System.Drawing.Point(6, 612);
 			this.butAddGroup.Name = "butAddGroup";

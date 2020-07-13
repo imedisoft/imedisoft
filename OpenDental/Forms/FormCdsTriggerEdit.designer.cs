@@ -79,7 +79,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(12, 616);
 			this.butDelete.Name = "butDelete";
@@ -114,7 +114,7 @@ namespace OpenDental{
 			// butAddSnomed
 			// 
 			this.butAddSnomed.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddSnomed.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddSnomed.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddSnomed.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddSnomed.Location = new System.Drawing.Point(6, 102);
 			this.butAddSnomed.Name = "butAddSnomed";
@@ -126,7 +126,7 @@ namespace OpenDental{
 			// butAddIcd10
 			// 
 			this.butAddIcd10.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddIcd10.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddIcd10.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddIcd10.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddIcd10.Location = new System.Drawing.Point(6, 73);
 			this.butAddIcd10.Name = "butAddIcd10";
@@ -138,7 +138,7 @@ namespace OpenDental{
 			// butAddIcd9
 			// 
 			this.butAddIcd9.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddIcd9.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddIcd9.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddIcd9.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddIcd9.Location = new System.Drawing.Point(6, 44);
 			this.butAddIcd9.Name = "butAddIcd9";
@@ -150,7 +150,7 @@ namespace OpenDental{
 			// butAddProblem
 			// 
 			this.butAddProblem.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddProblem.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddProblem.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddProblem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddProblem.Location = new System.Drawing.Point(6, 15);
 			this.butAddProblem.Name = "butAddProblem";
@@ -186,7 +186,7 @@ namespace OpenDental{
 			// 
 			this.butAddCvx.AdjustImageLocation = new System.Drawing.Point(0, 1);
 			this.butAddCvx.Enabled = false;
-			this.butAddCvx.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddCvx.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddCvx.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddCvx.Location = new System.Drawing.Point(6, 73);
 			this.butAddCvx.Name = "butAddCvx";
@@ -198,7 +198,7 @@ namespace OpenDental{
 			// butAddRxNorm
 			// 
 			this.butAddRxNorm.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddRxNorm.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddRxNorm.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddRxNorm.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddRxNorm.Location = new System.Drawing.Point(6, 44);
 			this.butAddRxNorm.Name = "butAddRxNorm";
@@ -210,7 +210,7 @@ namespace OpenDental{
 			// butAddMed
 			// 
 			this.butAddMed.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddMed.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddMed.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddMed.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddMed.Location = new System.Drawing.Point(6, 15);
 			this.butAddMed.Name = "butAddMed";
@@ -232,7 +232,7 @@ namespace OpenDental{
 			// butAddAllergy
 			// 
 			this.butAddAllergy.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddAllergy.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddAllergy.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddAllergy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddAllergy.Location = new System.Drawing.Point(6, 15);
 			this.butAddAllergy.Name = "butAddAllergy";
@@ -255,7 +255,7 @@ namespace OpenDental{
 			// butAddGender
 			// 
 			this.butAddGender.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddGender.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddGender.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddGender.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddGender.Location = new System.Drawing.Point(6, 44);
 			this.butAddGender.Name = "butAddGender";
@@ -267,7 +267,7 @@ namespace OpenDental{
 			// butAddAge
 			// 
 			this.butAddAge.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddAge.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddAge.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddAge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddAge.Location = new System.Drawing.Point(6, 15);
 			this.butAddAge.Name = "butAddAge";
@@ -289,7 +289,7 @@ namespace OpenDental{
 			// butAddLab
 			// 
 			this.butAddLab.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddLab.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddLab.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddLab.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddLab.Location = new System.Drawing.Point(6, 15);
 			this.butAddLab.Name = "butAddLab";
@@ -314,7 +314,7 @@ namespace OpenDental{
 			// butAddBMI
 			// 
 			this.butAddBMI.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddBMI.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddBMI.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddBMI.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddBMI.Location = new System.Drawing.Point(6, 102);
 			this.butAddBMI.Name = "butAddBMI";
@@ -327,7 +327,7 @@ namespace OpenDental{
 			// 
 			this.butAddBP.AdjustImageLocation = new System.Drawing.Point(0, 1);
 			this.butAddBP.Enabled = false;
-			this.butAddBP.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddBP.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddBP.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddBP.Location = new System.Drawing.Point(6, 73);
 			this.butAddBP.Name = "butAddBP";
@@ -339,7 +339,7 @@ namespace OpenDental{
 			// butAddWeight
 			// 
 			this.butAddWeight.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddWeight.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddWeight.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddWeight.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddWeight.Location = new System.Drawing.Point(6, 44);
 			this.butAddWeight.Name = "butAddWeight";
@@ -351,7 +351,7 @@ namespace OpenDental{
 			// butAddHeight
 			// 
 			this.butAddHeight.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butAddHeight.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddHeight.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddHeight.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddHeight.Location = new System.Drawing.Point(6, 15);
 			this.butAddHeight.Name = "butAddHeight";

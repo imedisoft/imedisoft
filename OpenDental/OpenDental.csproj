@@ -9,7 +9,7 @@
     <ProjectGuid>{8136317D-C936-49B6-9E31-D90F02D2F207}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenDental</RootNamespace>
+    <RootNamespace>Imedisoft</RootNamespace>
     <AssemblyName>OpenDental</AssemblyName>
     <TargetZone>LocalIntranet</TargetZone>
     <GenerateManifests>false</GenerateManifests>
@@ -461,6 +461,9 @@
     </Compile>
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormBase.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormChangeCloudPassword.cs">
       <SubType>Form</SubType>
@@ -8602,163 +8605,166 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Web References\CallFireService\SMSService.wsdl" />
+    <None Include="Web References\com.dentalxchange.webservices\Response1.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\MobileWeb\Mobile.wsdl" />
     <None Include="Web References\MobileWeb\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Web References\NewCrop\AccountStatusDetailV2Result.datasource">
+    <None Include="Web References\NewCrop\AccountStatusDetailV2Result1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\CheckCancelRxStatusResult.datasource">
+    <None Include="Web References\NewCrop\CheckCancelRxStatusResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\CompleteBatchResult.datasource">
+    <None Include="Web References\NewCrop\CompleteBatchResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\CounselingMessageDetailResult.datasource">
+    <None Include="Web References\NewCrop\CounselingMessageDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\CreateRxChangeApprovalResponseResult.datasource">
+    <None Include="Web References\NewCrop\CreateRxChangeApprovalResponseResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DigitalSigningBatchResult.datasource">
+    <None Include="Web References\NewCrop\DigitalSigningBatchResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DownloadDetailResult.datasource">
+    <None Include="Web References\NewCrop\DownloadDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DrugAllergyDetailResultV2.datasource">
+    <None Include="Web References\NewCrop\DrugAllergyDetailResultV21.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DrugDiseaseDetailResult.datasource">
+    <None Include="Web References\NewCrop\DrugDiseaseDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DrugDiseaseDetailResultV2.datasource">
+    <None Include="Web References\NewCrop\DrugDiseaseDetailResultV21.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DrugFormularyDetailResult.datasource">
+    <None Include="Web References\NewCrop\DrugFormularyDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DrugFormularyFavoriteDetailResult.datasource">
+    <None Include="Web References\NewCrop\DrugFormularyFavoriteDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DrugHistoryDetailResult.datasource">
+    <None Include="Web References\NewCrop\DrugHistoryDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DrugHistoryDetailV3Result.datasource">
+    <None Include="Web References\NewCrop\DrugHistoryDetailV3Result1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\DuplicateDrugTherapyResult.datasource">
+    <None Include="Web References\NewCrop\DuplicateDrugTherapyResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\EligibilityDetailResult.datasource">
+    <None Include="Web References\NewCrop\EligibilityDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\EligibilityDetailResultV3.datasource">
+    <None Include="Web References\NewCrop\EligibilityDetailResultV31.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\FormularyCoverageDetailResultV3.datasource">
+    <None Include="Web References\NewCrop\FormularyCoverageDetailResultV31.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\GetRxChangeDetailResult.datasource">
+    <None Include="Web References\NewCrop\GetRxChangeDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\GetRxChangesSummaryResult.datasource">
+    <None Include="Web References\NewCrop\GetRxChangesSummaryResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\GetRxFillDetailResult.datasource">
+    <None Include="Web References\NewCrop\GetRxFillDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\GetRxFillSummaryResult.datasource">
+    <None Include="Web References\NewCrop\GetRxFillSummaryResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\HealthplanDetailResult.datasource">
+    <None Include="Web References\NewCrop\HealthplanDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\MessageTransactionStatusResult.datasource">
+    <None Include="Web References\NewCrop\MessageTransactionStatusResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\PatientAllergyExtendedDetailResult.datasource">
+    <None Include="Web References\NewCrop\PatientAllergyExtendedDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\PatientAllergyExtendedDetailV4Result.datasource">
+    <None Include="Web References\NewCrop\PatientAllergyExtendedDetailV4Result1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\PatientDrugDetailResult4.datasource">
+    <None Include="Web References\NewCrop\PatientDrugDetailResult41.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\PatientDrugDetailResult5.datasource">
+    <None Include="Web References\NewCrop\PatientDrugDetailResult51.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\PatientFreeFormAllergyExtendedDetailResult.datasource">
+    <None Include="Web References\NewCrop\PatientFreeFormAllergyExtendedDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\PharmacyDetailResultV2.datasource">
+    <None Include="Web References\NewCrop\PharmacyDetailResultV21.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\PharmacyDetailResultV4.datasource">
+    <None Include="Web References\NewCrop\PharmacyDetailResultV41.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\NewCrop\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Web References\NewCrop\RegisterPrescriberDetailV2Result.datasource">
+    <None Include="Web References\NewCrop\RegisterPrescriberDetailV2Result1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RegistryDetailResult.datasource">
+    <None Include="Web References\NewCrop\RegistryDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RenewalDetailResult.datasource">
+    <None Include="Web References\NewCrop\RenewalDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RenewalDetailResultV4.datasource">
+    <None Include="Web References\NewCrop\RenewalDetailResultV41.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RenewalDetailResultV5.datasource">
+    <None Include="Web References\NewCrop\RenewalDetailResultV51.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RenewalListDetailResultV4.datasource">
+    <None Include="Web References\NewCrop\RenewalListDetailResultV41.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RenewalListSummaryResultV4.datasource">
+    <None Include="Web References\NewCrop\RenewalListSummaryResultV41.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RenewalResponseDetailResult.datasource">
+    <None Include="Web References\NewCrop\RenewalResponseDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RenewalSummaryResult.datasource">
+    <None Include="Web References\NewCrop\RenewalSummaryResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RenewalSummaryResultV2.datasource">
+    <None Include="Web References\NewCrop\RenewalSummaryResultV21.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\ReportDetailResult.datasource">
+    <None Include="Web References\NewCrop\ReportDetailResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\ReportDownloadResult.datasource">
+    <None Include="Web References\NewCrop\ReportDownloadResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\Result.datasource">
+    <None Include="Web References\NewCrop\Result1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RxBatchPrescriptionResult.datasource">
+    <None Include="Web References\NewCrop\RxBatchPrescriptionResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RxBatchRenewalResult.datasource">
+    <None Include="Web References\NewCrop\RxBatchRenewalResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RxBatchRenewalResultV2.datasource">
+    <None Include="Web References\NewCrop\RxBatchRenewalResultV21.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\RxChangeDeliveryStatusResult.datasource">
+    <None Include="Web References\NewCrop\RxChangeDeliveryStatusResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\SendCancelRxResult.datasource">
+    <None Include="Web References\NewCrop\SendCancelRxResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\NewCrop\TransmissionSummaryResult.datasource">
+    <None Include="Web References\NewCrop\TransmissionSummaryResult1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\NewCrop\Update1.wsdl" />
@@ -9377,9 +9383,6 @@
     <None Include="Web References\com.dentalxchange.webservices\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\com.dentalxchange.webservices\Response.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\com.dentalxchange.webservices\wsdl.wsdl" />
     <None Include="Web References\localhost\Service1.wsdl" />

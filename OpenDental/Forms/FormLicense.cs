@@ -113,35 +113,35 @@ namespace OpenDental{
 
 		private void FormLicense_Load(object sender,EventArgs e) {
 			FillListBoxLicense();
-			listBoxLicense.SetSelectedItem<string>(x => x==Properties.Resources.OpenDentalLicense);
+			listBoxLicense.SetSelectedItem<string>(x => x== Imedisoft.Properties.Resources.OpenDentalLicense);
 		}
 
 		///<summary>Fills the listbox with licenses and the license text as a tag.</summary>
 		private void FillListBoxLicense() {
-			listBoxLicense.Items.Add(new ODBoxItem<string>("OpenDental",Properties.Resources.OpenDentalLicense));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("AForge",Properties.Resources.AForge));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Bouncy Castle",Properties.Resources.BouncyCastle));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("BSD",Properties.Resources.Bsd));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("CDT",Properties.Resources.CDT_Content_End_User_License1));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Dropbox",Properties.Resources.Dropbox_Api));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("GPL",Properties.Resources.GPL));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Drifty",Properties.Resources.Ionic));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Mentalis",Properties.Resources.Mentalis));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Microsoft",Properties.Resources.Microsoft));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("MigraDoc",Properties.Resources.MigraDoc));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("NDde",Properties.Resources.NDde));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Newton Soft",Properties.Resources.NewtonSoft_Json));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Oracle",Properties.Resources.Oracle));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("PDFSharp",Properties.Resources.PdfSharp));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("SharpDX",Properties.Resources.SharpDX));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Sparks3D",Properties.Resources.Sparks3D));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("SSHNet",Properties.Resources.SshNet));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Stdole",Properties.Resources.stdole));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Tamir",Properties.Resources.Tamir));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Tao_Freeglut",Properties.Resources.Tao_Freeglut));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Tao_OpenGL",Properties.Resources.Tao_OpenGL));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Twain Group",Properties.Resources.Twain));
-			listBoxLicense.Items.Add(new ODBoxItem<string>("Zxing",Properties.Resources.Zxing));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("OpenDental", Imedisoft.Properties.Resources.OpenDentalLicense));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("AForge", Imedisoft.Properties.Resources.AForge));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Bouncy Castle", Imedisoft.Properties.Resources.BouncyCastle));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("BSD", Imedisoft.Properties.Resources.Bsd));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("CDT", Imedisoft.Properties.Resources.CDT_Content_End_User_License1));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Dropbox", Imedisoft.Properties.Resources.Dropbox_Api));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("GPL", Imedisoft.Properties.Resources.GPL));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Drifty", Imedisoft.Properties.Resources.Ionic));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Mentalis", Imedisoft.Properties.Resources.Mentalis));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Microsoft", Imedisoft.Properties.Resources.Microsoft));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("MigraDoc", Imedisoft.Properties.Resources.MigraDoc));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("NDde", Imedisoft.Properties.Resources.NDde));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Newton Soft", Imedisoft.Properties.Resources.NewtonSoft_Json));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Oracle", Imedisoft.Properties.Resources.Oracle));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("PDFSharp", Imedisoft.Properties.Resources.PdfSharp));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("SharpDX", Imedisoft.Properties.Resources.SharpDX));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Sparks3D", Imedisoft.Properties.Resources.Sparks3D));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("SSHNet", Imedisoft.Properties.Resources.SshNet));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Stdole", Imedisoft.Properties.Resources.stdole));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Tamir", Imedisoft.Properties.Resources.Tamir));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Tao_Freeglut", Imedisoft.Properties.Resources.Tao_Freeglut));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Tao_OpenGL", Imedisoft.Properties.Resources.Tao_OpenGL));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Twain Group", Imedisoft.Properties.Resources.Twain));
+			listBoxLicense.Items.Add(new ODBoxItem<string>("Zxing", Imedisoft.Properties.Resources.Zxing));
 		}
 
 		private void listLicense_SelectedIndexChanged(object sender,EventArgs e) {

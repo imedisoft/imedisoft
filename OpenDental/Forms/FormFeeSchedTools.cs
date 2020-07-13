@@ -1319,7 +1319,7 @@ namespace OpenDental {
 					writer.WriteEndElement();//RequestFeeSched
 				}
 #if DEBUG
-				OpenDental.localhost.Service1 updateService=new OpenDental.localhost.Service1();
+				Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
 #else
 				OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
 				updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);

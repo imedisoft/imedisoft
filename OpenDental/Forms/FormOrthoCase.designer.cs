@@ -630,7 +630,7 @@ namespace OpenDental{
 			// butCloseOrthoCase
 			// 
 			this.butCloseOrthoCase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butCloseOrthoCase.Image = global::OpenDental.Properties.Resources.close_door;
+			this.butCloseOrthoCase.Image = global::Imedisoft.Properties.Resources.close_door;
 			this.butCloseOrthoCase.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCloseOrthoCase.Location = new System.Drawing.Point(101, 384);
 			this.butCloseOrthoCase.Name = "butCloseOrthoCase";
@@ -642,7 +642,7 @@ namespace OpenDental{
 			// butDeleteOrthoCase
 			// 
 			this.butDeleteOrthoCase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDeleteOrthoCase.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDeleteOrthoCase.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDeleteOrthoCase.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDeleteOrthoCase.Location = new System.Drawing.Point(8, 384);
 			this.butDeleteOrthoCase.Name = "butDeleteOrthoCase";

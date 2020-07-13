@@ -268,7 +268,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(14, 544);
 			this.butDelete.Name = "butDelete";
@@ -487,7 +487,7 @@ namespace OpenDental{
 			// 
 			// butAuthGoogle
 			// 
-			this.butAuthGoogle.Image = global::OpenDental.Properties.Resources.google_signin_normal;
+			this.butAuthGoogle.Image = global::Imedisoft.Properties.Resources.google_signin_normal;
 			this.butAuthGoogle.Location = new System.Drawing.Point(107, 76);
 			this.butAuthGoogle.Name = "butAuthGoogle";
 			this.butAuthGoogle.Size = new System.Drawing.Size(191, 46);
@@ -695,19 +695,19 @@ namespace OpenDental{
 		}
 
 		private void butAuthGoogle_MouseEnter(object sender,EventArgs e) {
-			butAuthGoogle.BackgroundImage=Properties.Resources.google_signin_focus;
+			butAuthGoogle.BackgroundImage= Imedisoft.Properties.Resources.google_signin_focus;
 		}
 
 		private void butAuthGoogle_MouseLeave(object sender,EventArgs e) {
-			butAuthGoogle.BackgroundImage=Properties.Resources.google_signin_normal;
+			butAuthGoogle.BackgroundImage= Imedisoft.Properties.Resources.google_signin_normal;
 		}
 
 		private void butAuthGoogle_MouseDown(object sender,MouseEventArgs e) {
-			butAuthGoogle.BackgroundImage=Properties.Resources.google_signin_pressed;
+			butAuthGoogle.BackgroundImage= Imedisoft.Properties.Resources.google_signin_pressed;
 		}
 
 		private void butAuthGoogle_MouseUp(object sender,MouseEventArgs e) {
-			butAuthGoogle.BackgroundImage=Properties.Resources.google_signin_normal;
+			butAuthGoogle.BackgroundImage= Imedisoft.Properties.Resources.google_signin_normal;
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {

@@ -172,7 +172,7 @@ namespace OpenDental{
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(678,759);
 			this.butPrint.Name = "butPrint";
@@ -184,7 +184,7 @@ namespace OpenDental{
 			// butZoomIn
 			// 
 			this.butZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butZoomIn.Image = global::OpenDental.Properties.Resources.butZoomIn;
+			this.butZoomIn.Image = global::Imedisoft.Properties.Resources.butZoomIn;
 			this.butZoomIn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butZoomIn.Location = new System.Drawing.Point(502,759);
 			this.butZoomIn.Name = "butZoomIn";
@@ -196,7 +196,7 @@ namespace OpenDental{
 			// butZoomOut
 			// 
 			this.butZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butZoomOut.Image = global::OpenDental.Properties.Resources.butZoomOut;
+			this.butZoomOut.Image = global::Imedisoft.Properties.Resources.butZoomOut;
 			this.butZoomOut.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butZoomOut.Location = new System.Drawing.Point(591,759);
 			this.butZoomOut.Name = "butZoomOut";
@@ -208,7 +208,7 @@ namespace OpenDental{
 			// butExport
 			// 
 			this.butExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butExport.Image = global::OpenDental.Properties.Resources.butExport;
+			this.butExport.Image = global::Imedisoft.Properties.Resources.butExport;
 			this.butExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butExport.Location = new System.Drawing.Point(765,759);
 			this.butExport.Name = "butExport";

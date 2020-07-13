@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace OpenDental.customerUpdates {
+namespace Imedisoft.customerUpdates {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -89,7 +89,7 @@ namespace OpenDental.customerUpdates {
         
         /// <remarks/>
         public Service1() {
-            this.Url = global::OpenDental.Properties.Settings.Default.OpenDental_customerUpdates_Service1;
+            this.Url = global::Imedisoft.Properties.Settings.Default.OpenDental_customerUpdates_Service1;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;

@@ -129,7 +129,7 @@ namespace OpenDental {
 			// picturePracticeByNumbers
 			// 
 			this.picturePracticeByNumbers.HasBorder = false;
-			this.picturePracticeByNumbers.Image = global::OpenDental.Properties.Resources.PracticeByNumbers_100x24;
+			this.picturePracticeByNumbers.Image = global::Imedisoft.Properties.Resources.PracticeByNumbers_100x24;
 			this.picturePracticeByNumbers.Location = new System.Drawing.Point(8, 49);
 			this.picturePracticeByNumbers.Name = "picturePracticeByNumbers";
 			this.picturePracticeByNumbers.Size = new System.Drawing.Size(95, 24);
@@ -140,7 +140,7 @@ namespace OpenDental {
 			// pictureDentalIntel
 			// 
 			this.pictureDentalIntel.HasBorder = false;
-			this.pictureDentalIntel.Image = global::OpenDental.Properties.Resources.DentalIntelligence_Button_100x24;
+			this.pictureDentalIntel.Image = global::Imedisoft.Properties.Resources.DentalIntelligence_Button_100x24;
 			this.pictureDentalIntel.Location = new System.Drawing.Point(8, 19);
 			this.pictureDentalIntel.Name = "pictureDentalIntel";
 			this.pictureDentalIntel.Size = new System.Drawing.Size(95, 24);
@@ -161,7 +161,7 @@ namespace OpenDental {
 			// picturePodium
 			// 
 			this.picturePodium.HasBorder = false;
-			this.picturePodium.Image = global::OpenDental.Properties.Resources.Podium_Button_100x24;
+			this.picturePodium.Image = global::Imedisoft.Properties.Resources.Podium_Button_100x24;
 			this.picturePodium.Location = new System.Drawing.Point(8, 19);
 			this.picturePodium.Name = "picturePodium";
 			this.picturePodium.Size = new System.Drawing.Size(95, 24);

@@ -107,7 +107,7 @@ namespace OpenDental{
 			// 
 			// butAddTo
 			// 
-			this.butAddTo.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddTo.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddTo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddTo.Location = new System.Drawing.Point(127, 10);
 			this.butAddTo.Name = "butAddTo";
@@ -129,7 +129,7 @@ namespace OpenDental{
 			// 
 			// butAddFrom
 			// 
-			this.butAddFrom.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddFrom.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddFrom.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddFrom.Location = new System.Drawing.Point(12, 10);
 			this.butAddFrom.Name = "butAddFrom";
@@ -163,7 +163,7 @@ namespace OpenDental{
 			// 
 			this.butUp.AdjustImageLocation = new System.Drawing.Point(0, 1);
 			this.butUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(314, 317);
 			this.butUp.Name = "butUp";
@@ -175,7 +175,7 @@ namespace OpenDental{
 			// butDown
 			// 
 			this.butDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDown.Location = new System.Drawing.Point(402, 317);
 			this.butDown.Name = "butDown";
@@ -186,7 +186,7 @@ namespace OpenDental{
 			// 
 			// butAddCustom
 			// 
-			this.butAddCustom.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddCustom.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddCustom.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddCustom.Location = new System.Drawing.Point(227, 10);
 			this.butAddCustom.Name = "butAddCustom";

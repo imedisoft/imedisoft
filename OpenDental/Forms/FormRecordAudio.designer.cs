@@ -80,7 +80,7 @@ namespace OpenDental{
 			// butStart
 			// 
 			this.butStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butStart.Image = global::OpenDental.Properties.Resources.record;
+			this.butStart.Image = global::Imedisoft.Properties.Resources.record;
 			this.butStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butStart.Location = new System.Drawing.Point(36, 18);
 			this.butStart.Name = "butStart";

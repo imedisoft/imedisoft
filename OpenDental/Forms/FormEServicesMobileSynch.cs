@@ -21,11 +21,12 @@ using System.IO;
 using WebServiceSerializer;
 using OpenDentBusiness.WebServiceMainHQ;
 using OpenDentBusiness.WebTypes.WebSched.TimeSlot;
+using Imedisoft;
 
 namespace OpenDental {
 
 	public partial class FormEServicesMobileSynch:ODForm {
-		private static MobileWeb.Mobile mb=new MobileWeb.Mobile();
+		private static Imedisoft.MobileWeb.Mobile mb=new Imedisoft.MobileWeb.Mobile();
 		//private static int _batchSize=100;
 		///<summary>This variable prevents the synching methods from being called when a previous synch is in progress.</summary>
 		private static bool _isSynching;

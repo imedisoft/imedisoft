@@ -64,7 +64,7 @@
 			// 
 			// butPrint
 			// 
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.Location = new System.Drawing.Point(101,4);
 			this.butPrint.Name = "butPrint";
 			this.butPrint.Size = new System.Drawing.Size(49,23);
@@ -75,7 +75,7 @@
 			// 
 			// butPreviousPage
 			// 
-			this.butPreviousPage.Image = global::OpenDental.Properties.Resources.up;
+			this.butPreviousPage.Image = global::Imedisoft.Properties.Resources.up;
 			this.butPreviousPage.Location = new System.Drawing.Point(50,4);
 			this.butPreviousPage.Name = "butPreviousPage";
 			this.butPreviousPage.Size = new System.Drawing.Size(45,23);
@@ -86,7 +86,7 @@
 			// 
 			// butNextPage
 			// 
-			this.butNextPage.Image = global::OpenDental.Properties.Resources.down;
+			this.butNextPage.Image = global::Imedisoft.Properties.Resources.down;
 			this.butNextPage.Location = new System.Drawing.Point(5,4);
 			this.butNextPage.Name = "butNextPage";
 			this.butNextPage.Size = new System.Drawing.Size(39,23);

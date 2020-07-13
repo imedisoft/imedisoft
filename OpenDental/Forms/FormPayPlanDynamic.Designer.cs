@@ -200,7 +200,7 @@ namespace OpenDental {
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(12, 674);
 			this.butDelete.Name = "butDelete";
@@ -680,7 +680,7 @@ namespace OpenDental {
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(526, 674);
 			this.butPrint.Name = "butPrint";
@@ -692,7 +692,7 @@ namespace OpenDental {
 			// butClosePlan
 			// 
 			this.butClosePlan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butClosePlan.Image = global::OpenDental.Properties.Resources.close_door;
+			this.butClosePlan.Image = global::Imedisoft.Properties.Resources.close_door;
 			this.butClosePlan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butClosePlan.Location = new System.Drawing.Point(102, 674);
 			this.butClosePlan.Name = "butClosePlan";
@@ -924,7 +924,7 @@ namespace OpenDental {
 			// butDeleteProduction
 			// 
 			this.butDeleteProduction.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDeleteProduction.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDeleteProduction.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDeleteProduction.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDeleteProduction.Location = new System.Drawing.Point(3, 473);
 			this.butDeleteProduction.Name = "butDeleteProduction";
@@ -936,7 +936,7 @@ namespace OpenDental {
 			// butAddAdjustment
 			// 
 			this.butAddAdjustment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAddAdjustment.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddAdjustment.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddAdjustment.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddAdjustment.Location = new System.Drawing.Point(482, 473);
 			this.butAddAdjustment.Name = "butAddAdjustment";
@@ -949,7 +949,7 @@ namespace OpenDental {
 			// butPrintProduction
 			// 
 			this.butPrintProduction.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrintProduction.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrintProduction.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrintProduction.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrintProduction.Location = new System.Drawing.Point(296, 473);
 			this.butPrintProduction.Name = "butPrintProduction";
@@ -961,7 +961,7 @@ namespace OpenDental {
 			// butAddProcedure
 			// 
 			this.butAddProcedure.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAddProcedure.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddProcedure.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddProcedure.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddProcedure.Location = new System.Drawing.Point(579, 473);
 			this.butAddProcedure.Name = "butAddProcedure";

@@ -34,7 +34,7 @@
 			// butPrint
 			// 
 			this.butPrint.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(386, 636);
 			this.butPrint.Name = "butPrint";

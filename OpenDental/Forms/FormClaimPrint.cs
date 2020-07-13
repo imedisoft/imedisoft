@@ -138,7 +138,7 @@ namespace OpenDental{
 			// butBack
 			// 
 			this.butBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butBack.Image = global::OpenDental.Properties.Resources.Left;
+			this.butBack.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butBack.Location = new System.Drawing.Point(752,676);
 			this.butBack.Name = "butBack";
 			this.butBack.Size = new System.Drawing.Size(18,23);
@@ -149,7 +149,7 @@ namespace OpenDental{
 			// 
 			this.butFwd.AdjustImageLocation = new System.Drawing.Point(1,0);
 			this.butFwd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butFwd.Image = global::OpenDental.Properties.Resources.Right;
+			this.butFwd.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butFwd.Location = new System.Drawing.Point(830,676);
 			this.butFwd.Name = "butFwd";
 			this.butFwd.Size = new System.Drawing.Size(18,23);
@@ -369,7 +369,7 @@ namespace OpenDental{
 							extension=".gif";
 							break;
 						case "1500_02_12.gif":
-							thisImage=Properties.Resources._1500_02_12;
+							thisImage= Imedisoft.Properties.Resources._1500_02_12;
 							extension=".gif";
 							break;
 						default:

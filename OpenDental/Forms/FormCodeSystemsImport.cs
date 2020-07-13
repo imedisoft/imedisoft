@@ -220,7 +220,7 @@ namespace OpenDental {
 						if(codeSystem.CodeSystemName=="SNOMEDCT") {//SNOMEDCT codes cannot be given out to non-member nations.  We treat non-USA reg keys as non-member nations.
 							//Ensure customer has a valid USA registration key
 							#if DEBUG
-								OpenDental.localhost.Service1 regService=new OpenDental.localhost.Service1();
+								Imedisoft.localhost.Service1 regService=new Imedisoft.localhost.Service1();
 							#else
 								OpenDental.customerUpdates.Service1 regService=new OpenDental.customerUpdates.Service1();
 								regService.Url=PrefC.GetString(PrefName.UpdateServerAddress);
@@ -285,7 +285,7 @@ namespace OpenDental {
 
 		///<summary>Returns a list of available code systems.  Throws exceptions, put in try catch block.</summary>
 		private static string RequestCodeSystemsXml() {
-			OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
+			Imedisoft.customerUpdates.Service1 updateService=new Imedisoft.customerUpdates.Service1();
 			updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);
 			if(PrefC.GetString(PrefName.UpdateWebProxyAddress) !="") {
 				IWebProxy proxy=new WebProxy(PrefC.GetString(PrefName.UpdateWebProxyAddress));
@@ -914,7 +914,7 @@ If the master term dictionary or software program containing the UCUM table, UCU
 					writer.WriteEndElement();
 				}
 #if DEBUG
-				OpenDental.localhost.Service1 updateService=new OpenDental.localhost.Service1();
+				Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
 #else
 				OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
 				updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);

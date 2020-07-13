@@ -320,7 +320,7 @@ namespace OpenDental{
 			#region N Codes
 			if(checkNcodes.Checked) {
 				try {
-					rowsInserted+=FormProcCodes.ImportProcCodes("",null,Properties.Resources.NoFeeProcCodes);
+					rowsInserted+=FormProcCodes.ImportProcCodes("",null, Imedisoft.Properties.Resources.NoFeeProcCodes);
 				}
 				catch(ApplicationException ex) {
 					MessageBox.Show(ex.Message);

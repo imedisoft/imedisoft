@@ -336,7 +336,7 @@ namespace OpenDental{
 			// butDetach
 			// 
 			this.butDetach.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDetach.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDetach.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDetach.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDetach.Location = new System.Drawing.Point(14, 477);
 			this.butDetach.Name = "butDetach";

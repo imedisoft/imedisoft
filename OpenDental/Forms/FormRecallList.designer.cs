@@ -213,7 +213,7 @@
 			// panelWebSched
 			// 
 			this.panelWebSched.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.panelWebSched.BackgroundImage = global::OpenDental.Properties.Resources.webSched_PV_Button;
+			this.panelWebSched.BackgroundImage = global::Imedisoft.Properties.Resources.webSched_PV_Button;
 			this.panelWebSched.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.panelWebSched.Location = new System.Drawing.Point(759, 669);
 			this.panelWebSched.Name = "panelWebSched";
@@ -245,7 +245,7 @@
 			// butCommlog
 			// 
 			this.butCommlog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butCommlog.Image = global::OpenDental.Properties.Resources.commlog;
+			this.butCommlog.Image = global::Imedisoft.Properties.Resources.commlog;
 			this.butCommlog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butCommlog.Location = new System.Drawing.Point(545, 669);
 			this.butCommlog.Name = "butCommlog";
@@ -268,7 +268,7 @@
 			// butSchedFam
 			// 
 			this.butSchedFam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butSchedFam.Image = global::OpenDental.Properties.Resources.butPin22;
+			this.butSchedFam.Image = global::Imedisoft.Properties.Resources.butPin22;
 			this.butSchedFam.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butSchedFam.Location = new System.Drawing.Point(639, 669);
 			this.butSchedFam.Name = "butSchedFam";
@@ -281,7 +281,7 @@
 			// butLabelOne
 			// 
 			this.butLabelOne.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butLabelOne.Image = global::OpenDental.Properties.Resources.butLabel;
+			this.butLabelOne.Image = global::Imedisoft.Properties.Resources.butLabel;
 			this.butLabelOne.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butLabelOne.Location = new System.Drawing.Point(128, 643);
 			this.butLabelOne.Name = "butLabelOne";
@@ -293,7 +293,7 @@
 			// butSchedPat
 			// 
 			this.butSchedPat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butSchedPat.Image = global::OpenDental.Properties.Resources.butPin22;
+			this.butSchedPat.Image = global::Imedisoft.Properties.Resources.butPin22;
 			this.butSchedPat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butSchedPat.Location = new System.Drawing.Point(639, 643);
 			this.butSchedPat.Name = "butSchedPat";
@@ -328,7 +328,7 @@
 			// butEmail
 			// 
 			this.butEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butEmail.Image = global::OpenDental.Properties.Resources.email1;
+			this.butEmail.Image = global::Imedisoft.Properties.Resources.email1;
 			this.butEmail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEmail.Location = new System.Drawing.Point(253, 669);
 			this.butEmail.Name = "butEmail";
@@ -340,7 +340,7 @@
 			// butPostcards
 			// 
 			this.butPostcards.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPostcards.Image = global::OpenDental.Properties.Resources.butPreview;
+			this.butPostcards.Image = global::Imedisoft.Properties.Resources.butPreview;
 			this.butPostcards.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPostcards.Location = new System.Drawing.Point(3, 643);
 			this.butPostcards.Name = "butPostcards";
@@ -352,7 +352,7 @@
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(350, 669);
 			this.butPrint.Name = "butPrint";
@@ -408,7 +408,7 @@
 			// butLabels
 			// 
 			this.butLabels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butLabels.Image = global::OpenDental.Properties.Resources.butLabel;
+			this.butLabels.Image = global::Imedisoft.Properties.Resources.butLabel;
 			this.butLabels.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butLabels.Location = new System.Drawing.Point(128, 669);
 			this.butLabels.Name = "butLabels";
@@ -735,7 +735,7 @@
 			// butReactComm
 			// 
 			this.butReactComm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butReactComm.Image = global::OpenDental.Properties.Resources.commlog;
+			this.butReactComm.Image = global::Imedisoft.Properties.Resources.commlog;
 			this.butReactComm.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butReactComm.Location = new System.Drawing.Point(545, 669);
 			this.butReactComm.Name = "butReactComm";
@@ -758,7 +758,7 @@
 			// butReactSchedFam
 			// 
 			this.butReactSchedFam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butReactSchedFam.Image = global::OpenDental.Properties.Resources.butPin22;
+			this.butReactSchedFam.Image = global::Imedisoft.Properties.Resources.butPin22;
 			this.butReactSchedFam.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butReactSchedFam.Location = new System.Drawing.Point(639, 669);
 			this.butReactSchedFam.Name = "butReactSchedFam";
@@ -771,7 +771,7 @@
 			// butReactSingleLabels
 			// 
 			this.butReactSingleLabels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butReactSingleLabels.Image = global::OpenDental.Properties.Resources.butLabel;
+			this.butReactSingleLabels.Image = global::Imedisoft.Properties.Resources.butLabel;
 			this.butReactSingleLabels.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butReactSingleLabels.Location = new System.Drawing.Point(128, 643);
 			this.butReactSingleLabels.Name = "butReactSingleLabels";
@@ -783,7 +783,7 @@
 			// butReactSchedPat
 			// 
 			this.butReactSchedPat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butReactSchedPat.Image = global::OpenDental.Properties.Resources.butPin22;
+			this.butReactSchedPat.Image = global::Imedisoft.Properties.Resources.butPin22;
 			this.butReactSchedPat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butReactSchedPat.Location = new System.Drawing.Point(639, 643);
 			this.butReactSchedPat.Name = "butReactSchedPat";
@@ -796,7 +796,7 @@
 			// butReactEmail
 			// 
 			this.butReactEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butReactEmail.Image = global::OpenDental.Properties.Resources.email1;
+			this.butReactEmail.Image = global::Imedisoft.Properties.Resources.email1;
 			this.butReactEmail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butReactEmail.Location = new System.Drawing.Point(253, 669);
 			this.butReactEmail.Name = "butReactEmail";
@@ -808,7 +808,7 @@
 			// butReactPostcardPreview
 			// 
 			this.butReactPostcardPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butReactPostcardPreview.Image = global::OpenDental.Properties.Resources.butPreview;
+			this.butReactPostcardPreview.Image = global::Imedisoft.Properties.Resources.butPreview;
 			this.butReactPostcardPreview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butReactPostcardPreview.Location = new System.Drawing.Point(3, 643);
 			this.butReactPostcardPreview.Name = "butReactPostcardPreview";
@@ -820,7 +820,7 @@
 			// butReactPrint
 			// 
 			this.butReactPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butReactPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butReactPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butReactPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butReactPrint.Location = new System.Drawing.Point(350, 669);
 			this.butReactPrint.Name = "butReactPrint";
@@ -832,7 +832,7 @@
 			// butReactLabelPreview
 			// 
 			this.butReactLabelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butReactLabelPreview.Image = global::OpenDental.Properties.Resources.butLabel;
+			this.butReactLabelPreview.Image = global::Imedisoft.Properties.Resources.butLabel;
 			this.butReactLabelPreview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butReactLabelPreview.Location = new System.Drawing.Point(128, 669);
 			this.butReactLabelPreview.Name = "butReactLabelPreview";

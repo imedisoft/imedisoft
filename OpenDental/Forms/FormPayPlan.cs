@@ -481,7 +481,7 @@ namespace OpenDental{
 			// butAdd
 			// 
 			this.butAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(361, 661);
 			this.butAdd.Name = "butAdd";
@@ -561,7 +561,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(12, 661);
 			this.butDelete.Name = "butDelete";
@@ -960,7 +960,7 @@ namespace OpenDental{
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(763, 661);
 			this.butPrint.Name = "butPrint";
@@ -972,7 +972,7 @@ namespace OpenDental{
 			// butClosePlan
 			// 
 			this.butClosePlan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butClosePlan.Image = global::OpenDental.Properties.Resources.close_door;
+			this.butClosePlan.Image = global::Imedisoft.Properties.Resources.close_door;
 			this.butClosePlan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butClosePlan.Location = new System.Drawing.Point(102, 661);
 			this.butClosePlan.Name = "butClosePlan";
@@ -1063,7 +1063,7 @@ namespace OpenDental{
 			// butAdj
 			// 
 			this.butAdj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAdj.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdj.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdj.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdj.Location = new System.Drawing.Point(449, 661);
 			this.butAdj.Name = "butAdj";

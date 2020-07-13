@@ -185,7 +185,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(13, 662);
 			this.butDelete.Name = "butDelete";
@@ -247,7 +247,7 @@ namespace OpenDental{
 			// butDown
 			// 
 			this.butDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDown.Location = new System.Drawing.Point(297, 497);
 			this.butDown.Name = "butDown";
@@ -259,7 +259,7 @@ namespace OpenDental{
 			// butUp
 			// 
 			this.butUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(219, 497);
 			this.butUp.Name = "butUp";
@@ -271,7 +271,7 @@ namespace OpenDental{
 			// butLeft
 			// 
 			this.butLeft.AdjustImageLocation = new System.Drawing.Point(-1, 0);
-			this.butLeft.Image = global::OpenDental.Properties.Resources.Left;
+			this.butLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butLeft.Location = new System.Drawing.Point(389, 328);
 			this.butLeft.Name = "butLeft";
 			this.butLeft.Size = new System.Drawing.Size(35, 26);
@@ -280,7 +280,7 @@ namespace OpenDental{
 			// 
 			// butRight
 			// 
-			this.butRight.Image = global::OpenDental.Properties.Resources.Right;
+			this.butRight.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butRight.Location = new System.Drawing.Point(389, 294);
 			this.butRight.Name = "butRight";
 			this.butRight.Size = new System.Drawing.Size(35, 26);

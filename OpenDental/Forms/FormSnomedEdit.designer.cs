@@ -28,7 +28,7 @@ namespace OpenDental{
 			this.label2 = new System.Windows.Forms.Label();
 			this.textDescription = new System.Windows.Forms.TextBox();
 			this.textCode = new System.Windows.Forms.TextBox();
-			this.service11 = new OpenDental.localhost.Service1();
+			this.service11 = new Imedisoft.localhost.Service1();
 			this.butClose = new OpenDental.UI.Button();
 			this.SuspendLayout();
 			// 
@@ -107,6 +107,6 @@ namespace OpenDental{
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox textDescription;
 		private System.Windows.Forms.TextBox textCode;
-		private localhost.Service1 service11;
+		private Imedisoft.localhost.Service1 service11;
 	}
 }

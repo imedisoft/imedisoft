@@ -142,7 +142,7 @@ namespace OpenDental{
 			// 
 			// butAddCustom
 			// 
-			this.butAddCustom.Image = global::OpenDental.Properties.Resources.Right;
+			this.butAddCustom.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butAddCustom.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.butAddCustom.Location = new System.Drawing.Point(340,527);
 			this.butAddCustom.Name = "butAddCustom";
@@ -153,7 +153,7 @@ namespace OpenDental{
 			// 
 			// butDown
 			// 
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.Location = new System.Drawing.Point(618,250);
 			this.butDown.Name = "butDown";
 			this.butDown.Size = new System.Drawing.Size(53,26);
@@ -162,7 +162,7 @@ namespace OpenDental{
 			// 
 			// butUp
 			// 
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.Location = new System.Drawing.Point(547,250);
 			this.butUp.Name = "butUp";
 			this.butUp.Size = new System.Drawing.Size(53,26);
@@ -171,7 +171,7 @@ namespace OpenDental{
 			// 
 			// butDelete
 			// 
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(446,250);
 			this.butDelete.Name = "butDelete";
@@ -182,7 +182,7 @@ namespace OpenDental{
 			// 
 			// butAdd
 			// 
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Right;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.butAdd.Location = new System.Drawing.Point(340,107);
 			this.butAdd.Name = "butAdd";

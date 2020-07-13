@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace OpenDental.CallFireService {
+namespace Imedisoft.CallFireService {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -35,7 +35,7 @@ namespace OpenDental.CallFireService {
         
         /// <remarks/>
         public SMSService() {
-            this.Url = global::OpenDental.Properties.Settings.Default.OpenDental_CallFireService_SMSService;
+            this.Url = global::Imedisoft.Properties.Settings.Default.OpenDental_CallFireService_SMSService;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;

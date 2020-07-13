@@ -1193,7 +1193,7 @@ namespace OpenDental {
 				case "ButtonNewTP":
 					UI.Button button=new UI.Button();
 					if(sheetFieldDef.FieldName=="ButtonNewTP") {
-						button.Image=OpenDental.Properties.Resources.Add;
+						button.Image=Imedisoft.Properties.Resources.Add;
 						button.ImageAlign=System.Drawing.ContentAlignment.MiddleLeft;
 					}
 					button.Enabled=true;

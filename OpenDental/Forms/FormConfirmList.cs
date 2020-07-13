@@ -269,7 +269,7 @@ namespace OpenDental{
 			// butLabels
 			// 
 			this.butLabels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butLabels.Image = global::OpenDental.Properties.Resources.butLabel;
+			this.butLabels.Image = global::Imedisoft.Properties.Resources.butLabel;
 			this.butLabels.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butLabels.Location = new System.Drawing.Point(129, 659);
 			this.butLabels.Name = "butLabels";
@@ -303,7 +303,7 @@ namespace OpenDental{
 			// butPostcards
 			// 
 			this.butPostcards.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPostcards.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPostcards.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPostcards.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPostcards.Location = new System.Drawing.Point(4, 659);
 			this.butPostcards.Name = "butPostcards";
@@ -360,7 +360,7 @@ namespace OpenDental{
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(791, 659);
 			this.butPrint.Name = "butPrint";
@@ -372,7 +372,7 @@ namespace OpenDental{
 			// butEmail
 			// 
 			this.butEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butEmail.Image = global::OpenDental.Properties.Resources.email1;
+			this.butEmail.Image = global::Imedisoft.Properties.Resources.email1;
 			this.butEmail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEmail.Location = new System.Drawing.Point(237, 659);
 			this.butEmail.Name = "butEmail";
@@ -384,7 +384,7 @@ namespace OpenDental{
 			// butText
 			// 
 			this.butText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butText.Image = global::OpenDental.Properties.Resources.Text;
+			this.butText.Image = global::Imedisoft.Properties.Resources.Text;
 			this.butText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butText.Location = new System.Drawing.Point(333, 659);
 			this.butText.Name = "butText";

@@ -178,7 +178,7 @@
 			// pictureCDS
 			// 
 			this.pictureCDS.HasBorder = false;
-			this.pictureCDS.Image = global::OpenDental.Properties.Resources.CDS_Button_green;
+			this.pictureCDS.Image = global::Imedisoft.Properties.Resources.CDS_Button_green;
 			this.pictureCDS.Location = new System.Drawing.Point(10, 22);
 			this.pictureCDS.Name = "pictureCDS";
 			this.pictureCDS.Size = new System.Drawing.Size(83, 24);

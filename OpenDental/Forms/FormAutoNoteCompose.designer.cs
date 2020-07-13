@@ -111,7 +111,7 @@ namespace OpenDental{
 			// 
 			// butInsert
 			// 
-			this.butInsert.Image = global::OpenDental.Properties.Resources.Right;
+			this.butInsert.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butInsert.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.butInsert.Location = new System.Drawing.Point(283, 292);
 			this.butInsert.Name = "butInsert";

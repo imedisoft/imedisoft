@@ -90,7 +90,7 @@ namespace OpenDental{
 			// butRunQ
 			// 
 			this.butRunQ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butRunQ.Image = global::OpenDental.Properties.Resources.butGoto;
+			this.butRunQ.Image = global::Imedisoft.Properties.Resources.butGoto;
 			this.butRunQ.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butRunQ.Location = new System.Drawing.Point(986, 58);
 			this.butRunQ.Name = "butRunQ";

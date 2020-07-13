@@ -491,7 +491,7 @@
 			// 
 			// butBatch
 			// 
-			this.butBatch.Image = global::OpenDental.Properties.Resources.Add;
+			this.butBatch.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butBatch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butBatch.Location = new System.Drawing.Point(22, 14);
 			this.butBatch.Name = "butBatch";
@@ -502,7 +502,7 @@
 			// 
 			// butThisClaimOnly
 			// 
-			this.butThisClaimOnly.Image = global::OpenDental.Properties.Resources.Add;
+			this.butThisClaimOnly.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butThisClaimOnly.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butThisClaimOnly.Location = new System.Drawing.Point(22, 66);
 			this.butThisClaimOnly.Name = "butThisClaimOnly";
@@ -2903,7 +2903,7 @@
 			// 
 			// butAdd
 			// 
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(6, 6);
 			this.butAdd.Name = "butAdd";
@@ -3161,7 +3161,7 @@
 			// butLabel
 			// 
 			this.butLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butLabel.Image = global::OpenDental.Properties.Resources.butLabel;
+			this.butLabel.Image = global::Imedisoft.Properties.Resources.butLabel;
 			this.butLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butLabel.Location = new System.Drawing.Point(163, 801);
 			this.butLabel.Name = "butLabel";
@@ -3264,7 +3264,7 @@
 			// butPreview
 			// 
 			this.butPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPreview.Image = global::OpenDental.Properties.Resources.butPreview;
+			this.butPreview.Image = global::Imedisoft.Properties.Resources.butPreview;
 			this.butPreview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPreview.Location = new System.Drawing.Point(250, 801);
 			this.butPreview.Name = "butPreview";
@@ -3276,7 +3276,7 @@
 			// butPrint
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrintSmall;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(347, 801);
 			this.butPrint.Name = "butPrint";
@@ -3297,7 +3297,7 @@
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(5, 801);
 			this.butDelete.Name = "butDelete";

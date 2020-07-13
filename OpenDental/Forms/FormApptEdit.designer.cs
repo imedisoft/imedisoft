@@ -729,7 +729,7 @@
 			// 
 			// butDeleteProc
 			// 
-			this.butDeleteProc.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDeleteProc.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDeleteProc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDeleteProc.Location = new System.Drawing.Point(691, 2);
 			this.butDeleteProc.Name = "butDeleteProc";
@@ -740,7 +740,7 @@
 			// 
 			// butAdd
 			// 
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(767, 2);
 			this.butAdd.Name = "butAdd";
@@ -769,7 +769,7 @@
 			// butText
 			// 
 			this.butText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butText.Image = global::OpenDental.Properties.Resources.Text;
+			this.butText.Image = global::Imedisoft.Properties.Resources.Text;
 			this.butText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butText.Location = new System.Drawing.Point(1136, 431);
 			this.butText.Name = "butText";
@@ -781,7 +781,7 @@
 			// butAddComm
 			// 
 			this.butAddComm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAddComm.Image = global::OpenDental.Properties.Resources.commlog;
+			this.butAddComm.Image = global::Imedisoft.Properties.Resources.commlog;
 			this.butAddComm.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddComm.Location = new System.Drawing.Point(1136, 405);
 			this.butAddComm.Name = "butAddComm";
@@ -813,7 +813,7 @@
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(1136, 587);
 			this.butDelete.Name = "butDelete";

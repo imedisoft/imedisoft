@@ -471,7 +471,7 @@ namespace OpenDental{
 			// butNew
 			// 
 			this.butNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butNew.Image = global::OpenDental.Properties.Resources.Add;
+			this.butNew.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butNew.Location = new System.Drawing.Point(85, 57);
 			this.butNew.Name = "butNew";

@@ -7026,13 +7026,13 @@ namespace OpenDental {
 					return false;
 				}
 			}
-			NewCrop.Update1 wsNewCrop=new NewCrop.Update1();//New Crop web services interface.
-			NewCrop.Credentials credentials=new NewCrop.Credentials();
-			NewCrop.AccountRequest accountRequest=new NewCrop.AccountRequest();
-			NewCrop.PatientRequest patientRequest=new NewCrop.PatientRequest();
-			NewCrop.PrescriptionHistoryRequest prescriptionHistoryRequest=new NewCrop.PrescriptionHistoryRequest();
-			NewCrop.PatientInformationRequester patientInfoRequester=new NewCrop.PatientInformationRequester();
-			NewCrop.Result response=new NewCrop.Result();
+			Imedisoft.NewCrop.Update1 wsNewCrop=new Imedisoft.NewCrop.Update1();//New Crop web services interface.
+			Imedisoft.NewCrop.Credentials credentials=new Imedisoft.NewCrop.Credentials();
+			Imedisoft.NewCrop.AccountRequest accountRequest=new Imedisoft.NewCrop.AccountRequest();
+			Imedisoft.NewCrop.PatientRequest patientRequest=new Imedisoft.NewCrop.PatientRequest();
+			Imedisoft.NewCrop.PrescriptionHistoryRequest prescriptionHistoryRequest=new Imedisoft.NewCrop.PrescriptionHistoryRequest();
+			Imedisoft.NewCrop.PatientInformationRequester patientInfoRequester=new Imedisoft.NewCrop.PatientInformationRequester();
+			Imedisoft.NewCrop.Result response=new Imedisoft.NewCrop.Result();
 #if DEBUG
 			wsNewCrop.Url="https://preproduction.newcropaccounts.com/v7/WebServices/Update1.asmx";
 #endif
@@ -7088,12 +7088,13 @@ namespace OpenDental {
 				}
 				return false;
 			}
+			
 			//response.Message = Error message if error.
 			//response.RowCount = Number of prescription records returned.
 			//response.Status = Status of request. "OK" = success.
 			//response.Timing = Not sure what this is for. Tells us how quickly the server responded to the request?
 			//response.XmlResponse = The XML data returned, encoded in base 64.
-			if(response.Status!=NewCrop.StatusType.OK) {//Other statuses include Fail (ex if credentials are invalid), NotFound (ex if patientId invalid or accoundId invalid), Unknown (no known examples yet)
+			if (response.Status!= Imedisoft.NewCrop.StatusType.OK) {//Other statuses include Fail (ex if credentials are invalid), NotFound (ex if patientId invalid or accoundId invalid), Unknown (no known examples yet)
 				//For now we simply abort gracefully.
 				return false;
 			}
@@ -7950,7 +7951,7 @@ namespace OpenDental {
 						xmlWriter.WriteEndElement();
 					}
 #if DEBUG
-					OpenDental.localhost.Service1 updateService=new OpenDental.localhost.Service1();
+					Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
 #else
 				OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
 					updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);
@@ -8590,7 +8591,7 @@ namespace OpenDental {
 					xmlWriter.WriteEndElement();//End ErxAccessRequest
 				}
 #if DEBUG
-				localhost.Service1 updateService=new localhost.Service1();
+				Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
 #else
 				OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
 					updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);

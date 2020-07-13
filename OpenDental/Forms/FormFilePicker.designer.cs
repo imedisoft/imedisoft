@@ -117,7 +117,7 @@ namespace OpenDental{
 			// butGo
 			// 
 			this.butGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butGo.Image = global::OpenDental.Properties.Resources.Right;
+			this.butGo.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butGo.Location = new System.Drawing.Point(349, 11);
 			this.butGo.Name = "butGo";
 			this.butGo.Size = new System.Drawing.Size(20, 20);

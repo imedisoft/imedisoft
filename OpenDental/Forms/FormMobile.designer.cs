@@ -46,7 +46,7 @@ namespace OpenDental{
 			this.butFullSync = new OpenDental.UI.Button();
 			this.butSync = new OpenDental.UI.Button();
 			this.butClose = new OpenDental.UI.Button();
-			this.service11 = new OpenDental.localhost.Service1();
+			this.service11 = new Imedisoft.localhost.Service1();
 			this.butDelete = new OpenDental.UI.Button();
 			this.checkTroubleshooting = new System.Windows.Forms.CheckBox();
 			this.groupPreferences.SuspendLayout();
@@ -335,7 +335,7 @@ namespace OpenDental{
 		private System.Windows.Forms.Label textDateTimeLastRun;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Label label8;
-		private localhost.Service1 service11;
+		private Imedisoft.localhost.Service1 service11;
 		private UI.Button butDelete;
 		private System.Windows.Forms.CheckBox checkTroubleshooting;
 	}

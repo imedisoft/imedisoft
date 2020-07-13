@@ -44,7 +44,7 @@
 			this.butDrop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
 			this.butDrop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
 			this.butDrop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.butDrop.Image = global::OpenDental.Properties.Resources.downArrowWinForm;
+			this.butDrop.Image = global::Imedisoft.Properties.Resources.downArrowWinForm;
 			this.butDrop.Location = new System.Drawing.Point(148, 2);
 			this.butDrop.Name = "butDrop";
 			this.butDrop.Size = new System.Drawing.Size(16, 18);

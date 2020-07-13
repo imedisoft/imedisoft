@@ -62,7 +62,7 @@ namespace OpenDental{
 			// butAdd
 			// 
 			this.butAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(548, 636);
 			this.butAdd.Name = "butAdd";
@@ -74,7 +74,7 @@ namespace OpenDental{
 			// butAdd2
 			// 
 			this.butAdd2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAdd2.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd2.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd2.Location = new System.Drawing.Point(402, 636);
 			this.butAdd2.Name = "butAdd2";

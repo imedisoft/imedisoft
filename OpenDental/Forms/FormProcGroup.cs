@@ -294,7 +294,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(19, 606);
 			this.butDelete.Name = "butDelete";
@@ -470,7 +470,7 @@ namespace OpenDental{
 			// 
 			// butNew
 			// 
-			this.butNew.Image = global::OpenDental.Properties.Resources.Add;
+			this.butNew.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butNew.Location = new System.Drawing.Point(43, 3);
 			this.butNew.Name = "butNew";
@@ -481,7 +481,7 @@ namespace OpenDental{
 			// 
 			// butClear
 			// 
-			this.butClear.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butClear.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butClear.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butClear.Location = new System.Drawing.Point(123, 3);
 			this.butClear.Name = "butClear";
@@ -493,7 +493,7 @@ namespace OpenDental{
 			// butUp
 			// 
 			this.butUp.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(203, 3);
 			this.butUp.Name = "butUp";
@@ -504,7 +504,7 @@ namespace OpenDental{
 			// 
 			// butDown
 			// 
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDown.Location = new System.Drawing.Point(283, 3);
 			this.butDown.Name = "butDown";

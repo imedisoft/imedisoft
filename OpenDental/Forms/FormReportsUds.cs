@@ -88,7 +88,7 @@ namespace OpenDental {
 			table3A[37,1]=Patients.GetAgeGenderCount(85,200,PatientGender.Female,DateFrom,DateTo);
 			table3A[38,0]=Patients.GetAgeGenderCount(0,200,PatientGender.Male,DateFrom,DateTo);
 			table3A[38,1]=Patients.GetAgeGenderCount(0,200,PatientGender.Female,DateFrom,DateTo);
-			Bitmap bmp=Properties.Resources.UDS3a;
+			Bitmap bmp= Imedisoft.Properties.Resources.UDS3a;
 			int xPos=(width - bmp.Width)/2;
 			int yPos=(height - bmp.Height)/2;
 			g.DrawImage(bmp,xPos,yPos,bmp.Width,bmp.Height);

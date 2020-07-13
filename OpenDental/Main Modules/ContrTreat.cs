@@ -476,7 +476,7 @@ namespace OpenDental{
 			// 
 			// butPlannedAppt
 			// 
-			this.butPlannedAppt.Image = global::OpenDental.Properties.Resources.Add;
+			this.butPlannedAppt.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butPlannedAppt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPlannedAppt.Location = new System.Drawing.Point(429, 153);
 			this.butPlannedAppt.Name = "butPlannedAppt";
@@ -497,7 +497,7 @@ namespace OpenDental{
 			// 
 			// butSaveTP
 			// 
-			this.butSaveTP.Image = global::OpenDental.Properties.Resources.butCopy;
+			this.butSaveTP.Image = global::Imedisoft.Properties.Resources.butCopy;
 			this.butSaveTP.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butSaveTP.Location = new System.Drawing.Point(429, 60);
 			this.butSaveTP.Name = "butSaveTP";
@@ -508,7 +508,7 @@ namespace OpenDental{
 			// 
 			// butNewTP
 			// 
-			this.butNewTP.Image = global::OpenDental.Properties.Resources.Add;
+			this.butNewTP.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butNewTP.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butNewTP.Location = new System.Drawing.Point(429, 29);
 			this.butNewTP.Name = "butNewTP";
@@ -559,7 +559,7 @@ namespace OpenDental{
 			// 
 			// butSendToDevice
 			// 
-			this.butSendToDevice.Image = global::OpenDental.Properties.Resources.arrowRightLine;
+			this.butSendToDevice.Image = global::Imedisoft.Properties.Resources.arrowRightLine;
 			this.butSendToDevice.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butSendToDevice.Location = new System.Drawing.Point(429, 91);
 			this.butSendToDevice.Name = "butSendToDevice";

@@ -108,7 +108,7 @@ namespace OpenDental{
 			// butAdd
 			// 
 			this.butAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(441, 48);
 			this.butAdd.Name = "butAdd";
@@ -143,7 +143,7 @@ namespace OpenDental{
 			// 
 			// butLeft
 			// 
-			this.butLeft.Image = global::OpenDental.Properties.Resources.Left;
+			this.butLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butLeft.Location = new System.Drawing.Point(167, 13);
 			this.butLeft.Name = "butLeft";
 			this.butLeft.Size = new System.Drawing.Size(39, 24);
@@ -152,7 +152,7 @@ namespace OpenDental{
 			// 
 			// butRight
 			// 
-			this.butRight.Image = global::OpenDental.Properties.Resources.Right;
+			this.butRight.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butRight.Location = new System.Drawing.Point(307, 13);
 			this.butRight.Name = "butRight";
 			this.butRight.Size = new System.Drawing.Size(39, 24);

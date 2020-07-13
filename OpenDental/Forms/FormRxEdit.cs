@@ -252,7 +252,7 @@ namespace OpenDental{
 			// 
 			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(323, 586);
 			this.butPrint.Name = "butPrint";
@@ -265,7 +265,7 @@ namespace OpenDental{
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(12, 586);
 			this.butDelete.Name = "butDelete";
@@ -317,7 +317,7 @@ namespace OpenDental{
 			// 
 			this.butView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.butView.Image = global::OpenDental.Properties.Resources.printPreview20;
+			this.butView.Image = global::Imedisoft.Properties.Resources.printPreview20;
 			this.butView.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butView.Location = new System.Drawing.Point(410, 586);
 			this.butView.Name = "butView";
@@ -531,7 +531,7 @@ namespace OpenDental{
 			// 
 			this.butPrintPatInstructions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.butPrintPatInstructions.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butPrintPatInstructions.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butPrintPatInstructions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrintPatInstructions.Location = new System.Drawing.Point(233, 586);
 			this.butPrintPatInstructions.Name = "butPrintPatInstructions";

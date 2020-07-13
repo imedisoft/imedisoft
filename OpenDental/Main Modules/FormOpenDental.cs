@@ -57,6 +57,7 @@ using OpenDentBusiness.WebServiceMainHQ;
 using ServiceManager;
 using System.DirectoryServices;
 using OpenDental.Forms;
+using Imedisoft.Forms;
 #if EHRTEST
 using EHR;
 #endif
@@ -3092,7 +3093,7 @@ namespace OpenDental{
 				}
 				if(isUserSubscribed) {//User is subscribed to this TaskList, or one of its ancestors.
 					if(!listBlockedTaskLists.Any(x => x.Fkey==taskPopup.TaskListNum && PIn.Bool(x.ValueString))){//Subscribed and Unblocked, Show it!
-						SoundPlayer soundplay=new SoundPlayer(Properties.Resources.notify);
+						SoundPlayer soundplay=new SoundPlayer(Imedisoft.Properties.Resources.notify);
 						soundplay.Play();
 						FormTaskEdit FormT=new FormTaskEdit(taskPopup);
 						FormT.IsPopup=true;

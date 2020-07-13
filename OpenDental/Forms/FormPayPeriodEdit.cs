@@ -86,7 +86,7 @@ namespace OpenDental{
 			// 
 			butDelete.AdjustImageLocation = new System.Drawing.Point(0,0);
 			butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			butDelete.Location = new System.Drawing.Point(15,137);
 			butDelete.Name = "butDelete";

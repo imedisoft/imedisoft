@@ -107,7 +107,7 @@
 			// butPin
 			// 
 			this.butPin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPin.Image = global::OpenDental.Properties.Resources.butPin;
+			this.butPin.Image = global::Imedisoft.Properties.Resources.butPin;
 			this.butPin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPin.Location = new System.Drawing.Point(165, 620);
 			this.butPin.Name = "butPin";
@@ -119,7 +119,7 @@
 			// butNew
 			// 
 			this.butNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butNew.Image = global::OpenDental.Properties.Resources.Add;
+			this.butNew.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butNew.Location = new System.Drawing.Point(576, 620);
 			this.butNew.Name = "butNew";
@@ -197,7 +197,7 @@
 			// butRecall
 			// 
 			this.butRecall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butRecall.Image = global::OpenDental.Properties.Resources.butRecall;
+			this.butRecall.Image = global::Imedisoft.Properties.Resources.butRecall;
 			this.butRecall.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butRecall.Location = new System.Drawing.Point(308, 620);
 			this.butRecall.Name = "butRecall";
@@ -246,7 +246,7 @@
 			// butRecallFamily
 			// 
 			this.butRecallFamily.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butRecallFamily.Image = global::OpenDental.Properties.Resources.butRecall;
+			this.butRecallFamily.Image = global::Imedisoft.Properties.Resources.butRecall;
 			this.butRecallFamily.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butRecallFamily.Location = new System.Drawing.Point(308, 588);
 			this.butRecallFamily.Name = "butRecallFamily";

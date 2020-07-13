@@ -146,7 +146,7 @@ namespace OpenDental{
 			// 
 			// butRight
 			// 
-			this.butRight.Image = global::OpenDental.Properties.Resources.Right;
+			this.butRight.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butRight.Location = new System.Drawing.Point(320, 292);
 			this.butRight.Name = "butRight";
 			this.butRight.Size = new System.Drawing.Size(35, 24);
@@ -156,7 +156,7 @@ namespace OpenDental{
 			// butLeft
 			// 
 			this.butLeft.AdjustImageLocation = new System.Drawing.Point(-1, 0);
-			this.butLeft.Image = global::OpenDental.Properties.Resources.Left;
+			this.butLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butLeft.Location = new System.Drawing.Point(320, 252);
 			this.butLeft.Name = "butLeft";
 			this.butLeft.Size = new System.Drawing.Size(35, 24);
@@ -165,7 +165,7 @@ namespace OpenDental{
 			// 
 			// butDown
 			// 
-			this.butDown.Image = global::OpenDental.Properties.Resources.down;
+			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDown.Location = new System.Drawing.Point(109, 507);
 			this.butDown.Name = "butDown";
@@ -177,7 +177,7 @@ namespace OpenDental{
 			// butUp
 			// 
 			this.butUp.AdjustImageLocation = new System.Drawing.Point(0, 1);
-			this.butUp.Image = global::OpenDental.Properties.Resources.up;
+			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(12, 507);
 			this.butUp.Name = "butUp";

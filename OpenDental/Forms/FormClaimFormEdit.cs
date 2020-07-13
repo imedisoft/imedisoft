@@ -774,7 +774,7 @@ namespace OpenDental{
 			}
 			else if (claimFormItem.ImageFileName == "1500_02_12.gif")
 			{
-				img = Properties.Resources._1500_02_12;
+				img = Imedisoft.Properties.Resources._1500_02_12;
 				extension = ".gif";
 			}
 			else
@@ -1393,7 +1393,7 @@ namespace OpenDental{
 							thisImage=CDT.Class1.GetADA2019_J430();
 							break;
 						case "1500_02_12.gif":
-							thisImage=Properties.Resources._1500_02_12;
+							thisImage= Imedisoft.Properties.Resources._1500_02_12;
 							break;
 						default:
 							if(!FileAtoZ.Exists(fileName)) {

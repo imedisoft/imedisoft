@@ -468,7 +468,7 @@
 			// 
 			// butFamRecall
 			// 
-			this.butFamRecall.Image = global::OpenDental.Properties.Resources.butRecall;
+			this.butFamRecall.Image = global::Imedisoft.Properties.Resources.butRecall;
 			this.butFamRecall.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butFamRecall.Location = new System.Drawing.Point(5, 57);
 			this.butFamRecall.Name = "butFamRecall";
@@ -480,7 +480,7 @@
 			// 
 			// butMakeRecall
 			// 
-			this.butMakeRecall.Image = global::OpenDental.Properties.Resources.butRecall;
+			this.butMakeRecall.Image = global::Imedisoft.Properties.Resources.butRecall;
 			this.butMakeRecall.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butMakeRecall.Location = new System.Drawing.Point(5, 31);
 			this.butMakeRecall.Name = "butMakeRecall";

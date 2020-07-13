@@ -118,7 +118,7 @@ namespace OpenDental {
 			string key=ProgramProperties.GetPropVal(ProgramName.CallFire,"Key From CallFire");
 			string msg=wirelessPhone+","+message.Replace(",","");//ph#,msg Commas in msg cause error.
 			try {
-				CallFireService.SMSService callFire=new CallFireService.SMSService();
+                Imedisoft.CallFireService.SMSService callFire=new Imedisoft.CallFireService.SMSService();
 				callFire.sendSMSCampaign(
 					key,
 					new string[] { msg },

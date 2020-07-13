@@ -47,7 +47,7 @@
 			// butAdd
 			// 
 			this.butAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(713, 72);
 			this.butAdd.Name = "butAdd";
@@ -85,7 +85,7 @@
 			// 
 			this.pictureAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureAdd.HasBorder = false;
-			this.pictureAdd.Image = global::OpenDental.Properties.Resources.Left;
+			this.pictureAdd.Image = global::Imedisoft.Properties.Resources.Left;
 			this.pictureAdd.Location = new System.Drawing.Point(792, 75);
 			this.pictureAdd.Name = "pictureAdd";
 			this.pictureAdd.Size = new System.Drawing.Size(22, 20);

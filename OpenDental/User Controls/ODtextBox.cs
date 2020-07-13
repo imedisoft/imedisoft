@@ -189,12 +189,12 @@ namespace OpenDental {
 				&& HunspellGlobal==null) {
 #if DEBUG
 				try {
-					HunspellGlobal=new Hunspell(Properties.Resources.en_US_aff,Properties.Resources.en_US_dic);
+					HunspellGlobal=new Hunspell(Imedisoft.Properties.Resources.en_US_aff, Imedisoft.Properties.Resources.en_US_dic);
 				}
 				catch {
 					System.IO.File.Copy(@"..\..\..\Required dlls\Hunspellx64.dll","Hunspellx64.dll");
 					System.IO.File.Copy(@"..\..\..\Required dlls\Hunspellx86.dll","Hunspellx86.dll");
-					HunspellGlobal=new Hunspell(Properties.Resources.en_US_aff,Properties.Resources.en_US_dic);
+					HunspellGlobal=new Hunspell(Imedisoft.Properties.Resources.en_US_aff, Imedisoft.Properties.Resources.en_US_dic);
 				}
 #else
 				HunspellGlobal=new Hunspell(Properties.Resources.en_US_aff,Properties.Resources.en_US_dic);

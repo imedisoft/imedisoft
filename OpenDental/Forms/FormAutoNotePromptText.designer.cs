@@ -85,7 +85,7 @@ namespace OpenDental{
 			// butBack
 			// 
 			this.butBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butBack.Image = global::OpenDental.Properties.Resources.Left;
+			this.butBack.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butBack.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butBack.Location = new System.Drawing.Point(71, 280);
 			this.butBack.Name = "butBack";
@@ -98,7 +98,7 @@ namespace OpenDental{
 			// butNext
 			// 
 			this.butNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butNext.Image = global::OpenDental.Properties.Resources.Right;
+			this.butNext.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butNext.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.butNext.Location = new System.Drawing.Point(329, 280);
 			this.butNext.Name = "butNext";

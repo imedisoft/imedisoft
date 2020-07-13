@@ -456,7 +456,7 @@
 			// 
 			// butAddObservation
 			// 
-			this.butAddObservation.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddObservation.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddObservation.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddObservation.Location = new System.Drawing.Point(624, 497);
 			this.butAddObservation.Name = "butAddObservation";
@@ -488,7 +488,7 @@
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(11, 563);
 			this.butDelete.Name = "butDelete";

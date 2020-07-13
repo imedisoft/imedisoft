@@ -210,7 +210,7 @@ namespace OpenDental{
 			// pictureOpenDental
 			// 
 			this.pictureOpenDental.HasBorder = false;
-			this.pictureOpenDental.Image = global::OpenDental.Properties.Resources.ODLogo;
+			this.pictureOpenDental.Image = global::Imedisoft.Properties.Resources.ODLogo;
 			this.pictureOpenDental.Location = new System.Drawing.Point(143, 5);
 			this.pictureOpenDental.Name = "pictureOpenDental";
 			this.pictureOpenDental.Size = new System.Drawing.Size(106, 48);
@@ -260,7 +260,7 @@ namespace OpenDental{
 		private void FormAbout_Load(object sender, System.EventArgs e) {
 			string softwareName=PrefC.GetString(PrefName.SoftwareName);
 			if(Programs.GetCur(ProgramName.BencoPracticeManagement).Enabled) {
-				pictureOpenDental.Image=Properties.Resources.bencoLogo;
+				pictureOpenDental.Image= Imedisoft.Properties.Resources.bencoLogo;
 			}
 			if(softwareName!="Open Dental Software" && !Programs.GetCur(ProgramName.BencoPracticeManagement).Enabled) {
 				pictureOpenDental.Visible=false;

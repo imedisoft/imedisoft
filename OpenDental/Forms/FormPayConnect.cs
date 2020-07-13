@@ -93,7 +93,7 @@ namespace OpenDental {
 				try {
 					//If the config file for the DentalXChange credit card processing .dll doesn't exist, construct it from the included resource.
 					if(!File.Exists("DpsPos.dll.config")) {
-						File.WriteAllText("DpsPos.dll.config",Properties.Resources.DpsPos_dll_config);
+						File.WriteAllText("DpsPos.dll.config", Imedisoft.Properties.Resources.DpsPos_dll_config);
 					}
 				}
 				catch(Exception ex) {

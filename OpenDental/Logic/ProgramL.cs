@@ -460,7 +460,7 @@ namespace OpenDental{
 					toolBar.ImageList.Images.Add(key,image);
 				}
 				else if(programCur.ProgName==ProgramName.Midway.ToString()) {
-					Image image=global::OpenDental.Properties.Resources.Midway_Icon_22x22;
+					Image image=global::Imedisoft.Properties.Resources.Midway_Icon_22x22;
 					toolBar.ImageList.Images.Add(key,image);
 				}
 				if(toolBarsAvail!=ToolBarsAvail.MainToolbar) {

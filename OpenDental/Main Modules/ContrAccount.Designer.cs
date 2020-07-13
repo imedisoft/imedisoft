@@ -1470,7 +1470,7 @@
 			// 
 			// butEditAutoOrthoPlacement
 			// 
-			this.butEditAutoOrthoPlacement.Image = global::OpenDental.Properties.Resources.Left;
+			this.butEditAutoOrthoPlacement.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butEditAutoOrthoPlacement.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEditAutoOrthoPlacement.Location = new System.Drawing.Point(6, 41);
 			this.butEditAutoOrthoPlacement.Name = "butEditAutoOrthoPlacement";
@@ -1512,7 +1512,7 @@
 			// 
 			// butAutoOrthoEditMonthsTreat
 			// 
-			this.butAutoOrthoEditMonthsTreat.Image = global::OpenDental.Properties.Resources.Left;
+			this.butAutoOrthoEditMonthsTreat.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butAutoOrthoEditMonthsTreat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAutoOrthoEditMonthsTreat.Location = new System.Drawing.Point(6, 41);
 			this.butAutoOrthoEditMonthsTreat.Name = "butAutoOrthoEditMonthsTreat";

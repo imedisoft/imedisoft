@@ -176,7 +176,7 @@ namespace OpenDental{
 			// 
 			this.butAdd.AdjustImageLocation = new System.Drawing.Point(0, 1);
 			this.butAdd.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.butAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(468, 4);
 			this.butAdd.Name = "butAdd";

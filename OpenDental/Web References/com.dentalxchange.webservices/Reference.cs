@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace OpenDental.com.dentalxchange.webservices {
+namespace Imedisoft.com.dentalxchange.webservices {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -47,7 +47,7 @@ namespace OpenDental.com.dentalxchange.webservices {
         
         /// <remarks/>
         public WebServiceService() {
-            this.Url = global::OpenDental.Properties.Settings.Default.OpenDental_com_dentalxchange_webservices_WebServiceService;
+            this.Url = global::Imedisoft.Properties.Settings.Default.OpenDental_com_dentalxchange_webservices_WebServiceService;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;

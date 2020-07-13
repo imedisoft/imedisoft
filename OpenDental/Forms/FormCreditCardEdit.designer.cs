@@ -238,7 +238,7 @@ namespace OpenDental{
 			// 
 			// butRemoveProc
 			// 
-			this.butRemoveProc.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butRemoveProc.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butRemoveProc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butRemoveProc.Location = new System.Drawing.Point(355, 103);
 			this.butRemoveProc.Name = "butRemoveProc";
@@ -258,7 +258,7 @@ namespace OpenDental{
 			// 
 			// butAddProc
 			// 
-			this.butAddProc.Image = global::OpenDental.Properties.Resources.Add;
+			this.butAddProc.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddProc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddProc.Location = new System.Drawing.Point(355, 73);
 			this.butAddProc.Name = "butAddProc";
@@ -513,7 +513,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(21, 627);
 			this.butDelete.Name = "butDelete";

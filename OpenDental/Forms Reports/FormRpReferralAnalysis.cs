@@ -111,7 +111,7 @@ namespace OpenDental{
 			// 
 			// butRight
 			// 
-			this.butRight.Image = global::OpenDental.Properties.Resources.Right;
+			this.butRight.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butRight.Location = new System.Drawing.Point(205,33);
 			this.butRight.Name = "butRight";
 			this.butRight.Size = new System.Drawing.Size(45,24);
@@ -161,7 +161,7 @@ namespace OpenDental{
 			// 
 			// butLeft
 			// 
-			this.butLeft.Image = global::OpenDental.Properties.Resources.Left;
+			this.butLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butLeft.Location = new System.Drawing.Point(41,33);
 			this.butLeft.Name = "butLeft";
 			this.butLeft.Size = new System.Drawing.Size(45,24);

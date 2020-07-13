@@ -1,4 +1,4 @@
-using OpenDental.customerUpdates;
+using Imedisoft.customerUpdates;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -141,7 +141,7 @@ namespace OpenDental {
 			// buttonAdd
 			// 
 			this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonAdd.Image = global::OpenDental.Properties.Resources.Add;
+			this.buttonAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.buttonAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.buttonAdd.Location = new System.Drawing.Point(12, 630);
 			this.buttonAdd.Name = "buttonAdd";
@@ -307,8 +307,8 @@ namespace OpenDental {
 				writer.WriteEndElement();
 				writer.WriteEndElement();
 			}
-			#if DEBUG
-				OpenDental.localhost.Service1 updateService=new OpenDental.localhost.Service1();
+#if DEBUG
+			Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
 			#else
 				OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
 				updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);

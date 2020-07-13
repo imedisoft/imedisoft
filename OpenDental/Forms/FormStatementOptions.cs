@@ -404,7 +404,7 @@ namespace OpenDental{
 			// butDelete
 			// 
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::OpenDental.Properties.Resources.deleteX;
+			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butDelete.Location = new System.Drawing.Point(18, 523);
 			this.butDelete.Name = "butDelete";
@@ -415,7 +415,7 @@ namespace OpenDental{
 			// 
 			// butPrint
 			// 
-			this.butPrint.Image = global::OpenDental.Properties.Resources.butPrint;
+			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
 			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPrint.Location = new System.Drawing.Point(182, 523);
 			this.butPrint.Name = "butPrint";
@@ -426,7 +426,7 @@ namespace OpenDental{
 			// 
 			// butEmail
 			// 
-			this.butEmail.Image = global::OpenDental.Properties.Resources.email1;
+			this.butEmail.Image = global::Imedisoft.Properties.Resources.email1;
 			this.butEmail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEmail.Location = new System.Drawing.Point(267, 523);
 			this.butEmail.Name = "butEmail";
@@ -437,7 +437,7 @@ namespace OpenDental{
 			// 
 			// butPreview
 			// 
-			this.butPreview.Image = global::OpenDental.Properties.Resources.printPreview20;
+			this.butPreview.Image = global::Imedisoft.Properties.Resources.printPreview20;
 			this.butPreview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butPreview.Location = new System.Drawing.Point(435, 523);
 			this.butPreview.Name = "butPreview";
