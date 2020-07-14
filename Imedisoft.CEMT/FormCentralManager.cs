@@ -930,7 +930,7 @@ namespace CentralManager
 			{
 				try
 				{
-					dcon.SetDb(computerName, database, user, password, "", "");
+					dcon.SetDb(computerName, user, password, database);
 
 					FormCentralLogOn FormCLO = new FormCentralLogOn();
 					if (FormCLO.ShowDialog() != DialogResult.OK)

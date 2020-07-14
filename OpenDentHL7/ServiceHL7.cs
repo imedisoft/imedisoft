@@ -92,7 +92,7 @@ namespace OpenDentHL7 {
 			DataConnection dcon=new DataConnection();
 			//Try to connect to the database directly
 			try {
-				dcon.SetDb(computerName,database,user,password,"","");
+				dcon.SetDb(computerName, user, password, database);
 			}
 			catch {//(Exception ex){
 				throw new ApplicationException("Connection to database failed.");

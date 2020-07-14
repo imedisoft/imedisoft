@@ -66,7 +66,7 @@ namespace OpenDentBusiness
 		public static string GetInnodbTableNames()
 		{
 			string command = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables "
-				+ "WHERE TABLE_SCHEMA='" + SOut.String(DataConnection.GetDatabaseName()) + "' "
+				+ "WHERE TABLE_SCHEMA='" + SOut.String(DataConnection.DatabaseName) + "' "
 				+ "AND TABLE_NAME!='phone' "//this table is used internally at OD HQ, and is always innodb.
 				+ "AND ENGINE NOT LIKE 'MyISAM'";
 			DataTable table = Db.GetTable(command);
@@ -89,7 +89,7 @@ namespace OpenDentBusiness
 		public static bool HasInnoDbTables(string dbName = "") 
 			=> Db.GetTable(
 				"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables " +
-				"WHERE TABLE_SCHEMA='" + SOut.String(string.IsNullOrEmpty(dbName) ? DataConnection.GetDatabaseName() : dbName) + "' " +
+				"WHERE TABLE_SCHEMA='" + SOut.String(string.IsNullOrEmpty(dbName) ? DataConnection.DatabaseName : dbName) + "' " +
 				"AND ENGINE NOT LIKE 'MyISAM'").Rows.Count > 1;
 
 		/// <summary>

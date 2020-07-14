@@ -272,7 +272,7 @@ namespace OpenDentBusiness {
 			if(!canOptimizeInnodb) {
 				//Check to see if the table has its storage engine set to InnoDB.
 				command="SELECT ENGINE FROM information_schema.TABLES "
-					+"WHERE TABLE_SCHEMA='"+POut.String(DataConnection.GetDatabaseName())+"' "
+					+"WHERE TABLE_SCHEMA='"+POut.String(DataConnection.DatabaseName)+"' "
 					+"AND TABLE_NAME='"+POut.String(tableName)+"' ";
 				string storageEngine=Db.GetScalar(command);
 				if(storageEngine.ToLower()=="innodb") {

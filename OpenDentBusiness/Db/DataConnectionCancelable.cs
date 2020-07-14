@@ -40,23 +40,12 @@ namespace OpenDentBusiness
 		/// This is so that user queries can be safely cancelled if needed.
 		/// Required as a first step for user queries (and ONLY user queries).
 		/// </summary>
-		public static int GetServerThread(bool isReportServer)
+		public static int GetServerThread()
 		{
 			string connectionString;
 
-            if (isReportServer)
-            {
-				connectionString = DataConnection.GetReportConnectionString(
-					PrefC.ReportingServer.Server,
-					PrefC.ReportingServer.Database,
-					PrefC.ReportingServer.MySqlUser,
-					PrefC.ReportingServer.MySqlPass);
-            }
-            else
-            {
-				connectionString = DataConnection.GetCurrentConnectionString();
-            }
-
+            connectionString = DataConnection.ConnectionString;
+            
 			var con = new MySqlConnection(connectionString + ";pooling=false");
 
             con.Open();

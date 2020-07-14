@@ -99,7 +99,7 @@ namespace CentralManager
 				try
 				{
 					DataConnection dcon = new DataConnection();
-					dcon.SetDbT(computerName, database, user, password, "", "");
+					dcon.SetDbLocal(computerName, user, password, database);
 					if (refreshCache)
 					{
 						Cache.Refresh(InvalidType.AllLocal);

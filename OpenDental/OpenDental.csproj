@@ -8749,7 +8749,6 @@
     <None Include="Resources\google_signin_focus.png" />
     <None Include="Resources\google_signin_normal.png" />
     <None Include="Resources\Sparks3D.txt" />
-    <None Include="Resources\splashBenco.jpg" />
     <None Include="Resources\benco_logo.png" />
     <None Include="Resources\PaySimple_Button_2019_26x75.png" />
     <None Include="Resources\Zxing.txt" />
@@ -8759,8 +8758,6 @@
     <None Include="Resources\opendentallicense.txt" />
     <None Include="Resources\Midway_Icon_22x22.bmp" />
     <None Include="Resources\downArrowWinForm.png" />
-    <None Include="Resources\downArrowWinForm.bmp" />
-    <None Include="Resources\Icon1.ico" />
     <None Include="Resources\setupGears.gif" />
     <Resource Include="Resources\PaySimple_Button.png" />
     <None Include="Resources\Microphone_22px.png" />
@@ -8811,18 +8808,9 @@
     <None Include="Resources\deleteX18.gif" />
     <None Include="Resources\butDentalIntel.png" />
     <None Include="Resources\webSched_PV_Button.png" />
-    <None Include="Resources\HICF2012.jpg" />
     <None Include="Resources\phoneInUse.png" />
     <None Include="Resources\splashCanada.jpg" />
     <None Include="Web References\NewCrop\Update1.disco" />
-    <None Include="Resources\TxtMsg5.gif" />
-    <None Include="Resources\TxtMsg2.png" />
-    <None Include="Resources\TxtMsg1.png" />
-    <None Include="Resources\TxtMsg.png" />
-    <None Include="Resources\TxtMsg4.gif" />
-    <None Include="Resources\TxtMsg3.gif" />
-    <None Include="Resources\TxtMsg2.gif" />
-    <None Include="Resources\TxtMsg1.gif" />
     <None Include="Resources\UDS3b.gif" />
     <None Include="Resources\UDS3a.gif" />
     <None Include="Web References\MobileWeb\Mobile.disco" />
@@ -9286,8 +9274,6 @@
     <Content Include="ReportingForRdl\Allocators\MyAllocator1\Images\SnuffLight6.gif" />
     <Content Include="ReportingForRdl\Allocators\MyAllocator1\Images\SnuffLight7.gif" />
     <Content Include="ReportingForRdl\Allocators\MyAllocator1\Images\SnuffLight8.gif" />
-    <None Include="Resources\1500_02_12.bmp" />
-    <None Include="Resources\1500_02_12.jpg" />
     <None Include="Resources\1500_02_12.gif" />
     <None Include="Resources\AForge.txt" />
     <Content Include="Resources\Anesth.gif" />
@@ -9495,7 +9481,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Forms Agg Reports\" />
-    <Folder Include="Resources\OutlookBar\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

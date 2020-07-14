@@ -280,7 +280,7 @@ namespace OpenDental {
 				Func<bool> funcTestConnection=() => {
 					using(DataConnection dconn=new DataConnection()) {
 						try {
-							dconn.SetDb(DataConnection.GetCurrentConnectionString(),"");
+							dconn.SetDb(DataConnection.ConnectionString);
 							//Tell everyone that the data connection has been found.
 							DataConnectionEvent.Fire(new DataConnectionEventArgs(DataConnectionEventType.ConnectionRestored,true,e.ConnectionString));
 						}

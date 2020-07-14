@@ -354,7 +354,6 @@ namespace OpenDental{
 			//Have the auto retry timeout monitor throw an exception after the timeout specified above.
 			//If left false, then the application would fall into an infinite wait and we can't afford to have that happen at this point.
 			//This will get set to false down below after we register for the DataConnectionLost event which will display the Data Connection Lost window.
-			DataConnection.DoThrowOnAutoRetryTimeout = true;
 			allNeutral();
 			string odUser = "";
 			string odPassHash = "";
@@ -521,9 +520,7 @@ namespace OpenDental{
 			//and then resume what they were doing.  The purpose of this is to prevent UE's from happening with poor connections or temporary outages.
 			DataConnection.ConnectionRetryTimeoutSeconds = (int)TimeSpan.FromHours(4).TotalSeconds;
 			DataConnectionEvent.Fired += DataConnection_ConnectionLost;//Hook up the connection lost event. Nothing prior to this point will have LostConnection events fired.
-			DataConnection.DoThrowOnAutoRetryTimeout = false;//Depend on the Connection Lost window after the timeout has been reached.
-			DataConnection.CrashedTableTimeoutSeconds = TimeSpan.FromMinutes(1).TotalSeconds;
-			DataConnection.DataReaderNullTimeoutSeconds = TimeSpan.FromMinutes(1).TotalSeconds;
+
 			CrashedTableEvent.Fired += CrashedTable_Detected;
 			DataReaderNullEvent.Fired += DataReaderNull_Detected;
 			CredentialsFailedAfterLoginEvent.Fired += DataConnection_CredentialsFailedAfterLogin;

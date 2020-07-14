@@ -671,42 +671,43 @@ namespace OpenDental
 		///Users should not be installing the eConnector via the middle tier.</summary>
 		private static bool CreateConfigForEConnector(bool isListening)
 		{
-			string eConnectorConfigPath = ODFileUtils.CombinePaths(Directory.GetCurrentDirectory(), "OpenDentalEConnector", "OpenDentalWebConfig.xml");
-			string custListenerConfigPath = ODFileUtils.CombinePaths(Directory.GetCurrentDirectory(), "OpenDentalCustListener", "OpenDentalWebConfig.xml");
-			//Check to see if there is already a config file present.
-			if (File.Exists(eConnectorConfigPath))
-			{
-				return true;//Nothing to do.
-			}
-			//At this point we know that the eConnector does not have a config file present.
-			//Check to see if the user is currently using the CustListener service.
-			if (isListening)
-			{
-				//Try and grab a copy of the CustListener service config file first.
-				if (File.Exists(custListenerConfigPath))
-				{
-					try
-					{
-						File.Copy(custListenerConfigPath, "", false);
-						//If we got to this point the copy was successful and now the eConnector has a valid config file.
-						return true;
-					}
-					catch (Exception)
-					{
-						//The copy didn't work for some reason.  Simply try to create a new file in the eConnector directory.
-					}
-				}
-			}
-			string mySqlPassHash;
-			CDT.Class1.Encrypt(DataConnection.GetMysqlPass(), out mySqlPassHash);
-			return ServicesHelper.CreateServiceConfigFile(eConnectorConfigPath
-				, DataConnection.GetServerName()
-				, DataConnection.GetDatabaseName()
-				, DataConnection.GetMysqlUser()
-				, DataConnection.GetMysqlPass()
-				, mySqlPassHash
-				, DataConnection.GetMysqlUserLow()
-				, DataConnection.GetMysqlPassLow());
+			throw new NotImplementedException();
+			//string eConnectorConfigPath = ODFileUtils.CombinePaths(Directory.GetCurrentDirectory(), "OpenDentalEConnector", "OpenDentalWebConfig.xml");
+			//string custListenerConfigPath = ODFileUtils.CombinePaths(Directory.GetCurrentDirectory(), "OpenDentalCustListener", "OpenDentalWebConfig.xml");
+			////Check to see if there is already a config file present.
+			//if (File.Exists(eConnectorConfigPath))
+			//{
+			//	return true;//Nothing to do.
+			//}
+			////At this point we know that the eConnector does not have a config file present.
+			////Check to see if the user is currently using the CustListener service.
+			//if (isListening)
+			//{
+			//	//Try and grab a copy of the CustListener service config file first.
+			//	if (File.Exists(custListenerConfigPath))
+			//	{
+			//		try
+			//		{
+			//			File.Copy(custListenerConfigPath, "", false);
+			//			//If we got to this point the copy was successful and now the eConnector has a valid config file.
+			//			return true;
+			//		}
+			//		catch (Exception)
+			//		{
+			//			//The copy didn't work for some reason.  Simply try to create a new file in the eConnector directory.
+			//		}
+			//	}
+			//}
+			//string mySqlPassHash;
+			//CDT.Class1.Encrypt(DataConnection.GetMysqlPass(), out mySqlPassHash);
+			//return ServicesHelper.CreateServiceConfigFile(eConnectorConfigPath
+			//	, DataConnection.GetServerName()
+			//	, DataConnection.GetDatabaseName()
+			//	, DataConnection.GetMysqlUser()
+			//	, DataConnection.GetMysqlPass()
+			//	, mySqlPassHash
+			//	, DataConnection.GetMysqlUserLow()
+			//	, DataConnection.GetMysqlPassLow());
 		}
 
 		///<summary>Creates a default OpenDentalServiceConfig.xml file for Open Dental Service if one is not already present.
@@ -714,23 +715,25 @@ namespace OpenDental
 		///Users should not be installing Open Dental Service via the middle tier.</summary>
 		public static bool CreateConfigForOpenDentalService()
 		{
-			string odServiceConfigPath = ODFileUtils.CombinePaths(Directory.GetCurrentDirectory(), "OpenDentalService", "OpenDentalServiceConfig.xml");
-			//Check to see if there is already a config file present.
-			if (File.Exists(odServiceConfigPath))
-			{
-				return true;//Nothing to do.
-			}
-			//At this point we know that Open Dental Service does not have a config file present.
-			string mySqlPassHash;
-			CDT.Class1.Encrypt(DataConnection.GetMysqlPass(), out mySqlPassHash);
-			return ServicesHelper.CreateServiceConfigFile(odServiceConfigPath
-				, DataConnection.GetServerName()
-				, DataConnection.GetDatabaseName()
-				, DataConnection.GetMysqlUser()
-				, DataConnection.GetMysqlPass()
-				, mySqlPassHash
-				, DataConnection.GetMysqlUserLow()
-				, DataConnection.GetMysqlPassLow());
+			throw new NotImplementedException();
+
+			//string odServiceConfigPath = ODFileUtils.CombinePaths(Directory.GetCurrentDirectory(), "OpenDentalService", "OpenDentalServiceConfig.xml");
+			////Check to see if there is already a config file present.
+			//if (File.Exists(odServiceConfigPath))
+			//{
+			//	return true;//Nothing to do.
+			//}
+			////At this point we know that Open Dental Service does not have a config file present.
+			//string mySqlPassHash;
+			//CDT.Class1.Encrypt(DataConnection.GetMysqlPass(), out mySqlPassHash);
+			//return ServicesHelper.CreateServiceConfigFile(odServiceConfigPath
+			//	, DataConnection.GetServerName()
+			//	, DataConnection.GetDatabaseName()
+			//	, DataConnection.GetMysqlUser()
+			//	, DataConnection.GetMysqlPass()
+			//	, mySqlPassHash
+			//	, DataConnection.GetMysqlUserLow()
+			//	, DataConnection.GetMysqlPassLow());
 		}
 
 

@@ -14,10 +14,10 @@ namespace OpenDental
 
 		private readonly CentralConnection centralConnection = new CentralConnection
 		{
-			ServerName = DataConnection.GetServerName(),
-			DatabaseName = DataConnection.GetDatabaseName(),
-			MySqlUser = DataConnection.GetMysqlUser(),
-			MySqlPassword = DataConnection.GetMysqlPass()
+			ServerName = DataConnection.ServerName,
+			DatabaseName = DataConnection.DatabaseName,
+			MySqlUser = DataConnection.User,
+			MySqlPassword = DataConnection.Password
         };
 
 		protected override bool HasHelpKey => false;
@@ -44,11 +44,11 @@ namespace OpenDental
 			if (fromMainMenu)
 			{
 				serverTextBox.Enabled = false;
-				serverTextBox.Text = DataConnection.GetServerName();
-				userTextBox.Text = DataConnection.GetMysqlUser();
-				passwordTextBox.Text = DataConnection.GetMysqlPass();
+				serverTextBox.Text = DataConnection.ServerName;
+				userTextBox.Text = DataConnection.User;
+				passwordTextBox.Text = DataConnection.Password;
 				databaseComboBox.Enabled = false;
-				databaseComboBox.Text = DataConnection.GetDatabaseName();
+				databaseComboBox.Text = DataConnection.DatabaseName;
 				autoConnectComboBox.Checked = autoConnect;
 			}
 			else

@@ -96,7 +96,7 @@ namespace OpenDentBusiness
 		public static void TryToConnect(string connectionString)
         {
 			DataConnection dcon = new DataConnection();
-			dcon.SetDb(connectionString, "");
+			dcon.SetDb(connectionString);
 		}
 
 		/// <summary>
@@ -104,19 +104,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static void TryToConnect(string server, string username, string password, string database, bool autoConnect = false, bool saveConnectionSettings = true)
 		{
-            var connectionStringBuilder = new MySqlConnectionStringBuilder
-            {
-                Server = server,
-                UserID = username,
-                Password = password,
-                Database = database,
-                Port = 3306,
-                SslMode = MySqlSslMode.None,
-                CharacterSet = "utf8",
-				TreatTinyAsBoolean = false
-            };
-
-            var connectionString = connectionStringBuilder.ToString();
+			var connectionString = DataConnection.CreateConnectionString(server, username, password, database);
 
 			TryToConnect(connectionString);
 

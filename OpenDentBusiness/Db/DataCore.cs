@@ -46,11 +46,11 @@ namespace OpenDentBusiness
 			using (var dataConnection = new DataConnection())
 			{
 				result = ExecuteQueryFunc(() =>
-					  dataConnection.NonQ(command, getInsertID, columnNamePK, tableName, true, parameters.Select(x => x.GetMySqlParameter()).ToArray()));
+					  dataConnection.NonQ(command, true, parameters.Select(x => x.GetMySqlParameter()).ToArray()));
 
 				if (getInsertID)
 				{
-					result = dataConnection.InsertID;
+					result = dataConnection.LastInsertId;
 				}
 			}
 
@@ -76,7 +76,7 @@ namespace OpenDentBusiness
 		{
 			using (var dataConnection = new DataConnection())
 			{
-				return ExecuteQueryFunc(() => dataConnection.GetScalar(command));
+				return ExecuteQueryFunc(() => dataConnection.GetScalar(command)?.ToString() ?? "");
 			}
 		}
 

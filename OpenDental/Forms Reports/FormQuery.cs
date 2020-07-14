@@ -1090,7 +1090,7 @@ namespace OpenDental{
 		}
 
 		private void OnThreadStart(ODThread thread) {
-			_serverThreadID=DataConnectionCancelable.GetServerThread(checkReportServer.Checked);
+			_serverThreadID=DataConnectionCancelable.GetServerThread();
 			_reportSimpleGrid.TableQ=DataConnectionCancelable.GetTableConAlreadyOpen(_serverThreadID,_reportSimpleGrid.Query
 				,_reportSimpleGrid.IsSqlValidated,checkReportServer.Checked);
 			_reportSimpleGrid.InitializeColumns();

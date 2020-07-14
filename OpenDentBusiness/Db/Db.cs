@@ -33,13 +33,9 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// This is true if a connection to the database has been established.
 		/// </summary>
-		public static bool HasDatabaseConnection
-		{
-			get
-			{
-				return !string.IsNullOrEmpty(DataConnection.GetServerName()) || !string.IsNullOrEmpty(DataConnection.GetConnectionString());
-			}
-		}
+		public static bool HasDatabaseConnection => 
+			!string.IsNullOrEmpty(DataConnection.ConnectionString) && 
+			!string.IsNullOrEmpty(DataConnection.ServerName);
 
 		/// <summary>
 		/// Returns false if mysql variable "AUTO_INCREMENT_INCREMENT" equals 1, otherwise true.

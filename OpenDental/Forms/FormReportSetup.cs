@@ -168,30 +168,37 @@ namespace OpenDental {
 			}
 		}
 
-    ///<summary></summary>
-		private string[] GetDatabases() {
-			if(comboServerName.Text=="") {
+		///<summary></summary>
+		private string[] GetDatabases()
+		{
+			if (comboServerName.Text == "")
+			{
 				return new string[0];
 			}
-			try {
+			try
+			{
 				DataConnection dcon;
 				//use the one table that we know exists
-				if(textMysqlUser.Text=="") {
-					dcon=new DataConnection(comboServerName.Text,"mysql","root",textMysqlPass.Text);
+				if (textMysqlUser.Text == "")
+				{
+					dcon = new DataConnection(comboServerName.Text, "root", textMysqlPass.Text, "mysql");
 				}
-				else {
-					dcon=new DataConnection(comboServerName.Text,"mysql",textMysqlUser.Text,textMysqlPass.Text);
+				else
+				{
+					dcon = new DataConnection(comboServerName.Text, textMysqlUser.Text, textMysqlPass.Text, "mysql");
 				}
 				string command = "SHOW DATABASES";
 				//if this next step fails, table will simply have 0 rows
-				DataTable table = dcon.GetTable(command,false);
+				DataTable table = dcon.GetTable(command, false);
 				string[] dbNames = new string[table.Rows.Count];
-				for(int i = 0;i<table.Rows.Count;i++) {
-					dbNames[i]=table.Rows[i][0].ToString();
+				for (int i = 0; i < table.Rows.Count; i++)
+				{
+					dbNames[i] = table.Rows[i][0].ToString();
 				}
 				return dbNames;
 			}
-			catch(Exception) {
+			catch (Exception)
+			{
 				return new string[0];
 			}
 		}

@@ -620,7 +620,7 @@ namespace OpenDental {
 				//Make a backup if needed
 				if(checkArchiveDoBackupFirst.Checked) {
 					try { 
-						MiscData.MakeABackup(textArchiveServerName.Text,textArchiveUser.Text,textArchivePass.Text,doVerify:true);
+						MiscData.MakeABackup();
 					}
 					catch(Exception ex) {
 						FriendlyException.Show("An error occurred backing up the old database. Old data was not removed from the database. "+

@@ -103,33 +103,6 @@ namespace OpenDentBusiness
 					return InitOpenDentalWebConfigXml(ODFileUtils.CombinePaths(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "OpenDentalWebConfig.xml"));
 				}));
 
-				aTryInit(new Func<Dictionary<ConnectionNames, CentralConnection>>(() =>
-				{ 
-					// Dental Office Report Server (via prefs).
-					if (HasSingleEntry(ConnectionNames.DentalOfficeReportServer))
-					{ 
-						// Only try to add this value if it doesn't already exist.
-						return null;
-					}
-
-					// Be aware that if PrefC cache is not already filled and/or DataConnection.SetDb() has not already been called, this will fail.
-					CentralConnection cn = null;
-					ODException.SwallowAnyException(() =>
-					{
-                        // Give regular server credentials if the report server is not set up.
-                        cn = new CentralConnection
-                        {
-                            ServerName = PrefC.ReportingServer.Server == "" ? DataConnection.GetServerName() : PrefC.ReportingServer.Server,
-                            DatabaseName = PrefC.ReportingServer.Server == "" ? DataConnection.GetDatabaseName() : PrefC.ReportingServer.Database,
-                            MySqlUser = PrefC.ReportingServer.Server == "" ? DataConnection.GetMysqlUser() : PrefC.ReportingServer.MySqlUser,
-                            MySqlPassword = PrefC.ReportingServer.Server == "" ? DataConnection.GetMysqlPass() : PrefC.ReportingServer.MySqlPass
-                        };
-					});
-
-					// Not already there so add it once.
-					return new Dictionary<ConnectionNames, CentralConnection>() { { ConnectionNames.DentalOfficeReportServer, cn ?? new CentralConnection() } };
-				}));
-
 				Dictionary<ConnectionNames, CentralConnection> dictRet = null;
 				lock (_lock)
 				{
@@ -303,11 +276,11 @@ namespace OpenDentBusiness
 			_currentConnectionT = dbName;
 			if (!string.IsNullOrEmpty(conn.ConnectionString))
 			{
-				dataConn.SetDbT(conn.ConnectionString, "");
+				dataConn.SetDbLocal(conn.ConnectionString);
 			}
 			else
 			{
-				dataConn.SetDbT(conn.ServerName, conn.DatabaseName, conn.MySqlUser, conn.MySqlPassword, "", "", true);
+				dataConn.SetDbLocal(conn.ServerName, conn.MySqlUser, conn.MySqlPassword, conn.DatabaseName);
 			}
 
 			return conn;

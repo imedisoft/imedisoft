@@ -52,7 +52,7 @@ namespace UnitTests.ODThread_Tests {
 				ODThread odThreadParent=new ODThread(workerParent => {
 					//The parent thread needs to connect to a database that the main thread is not connected to.
 					CreateDatabaseIfNeeded(databaseName);
-					new DataConnection().SetDbT("localhost",databaseName,"root","","","");
+					new DataConnection().SetDbLocal("localhost", "root", "", databaseName);
 					VerifyCurrentDatabaseName(databaseName);
 					//Now the parent should spawn a child thread which should default to the thread specific database connection from the parent.
 					ODThread odThreadChild=new ODThread(workerChild => {
@@ -99,7 +99,7 @@ namespace UnitTests.ODThread_Tests {
 					ODThread odThreadChangeDb=new ODThread(workerChild => {
 						//The parent thread needs to call SetDb on a different database than the main thread is connected to.
 						CreateDatabaseIfNeeded(databaseName);
-						new DataConnection().SetDb("localhost",databaseName,"root","","","");
+						new DataConnection().SetDb("localhost","root","", databaseName);
 						VerifyCurrentDatabaseName(databaseName);
 					});
 					odThreadChangeDb.AddExceptionHandler(e => ex=e);

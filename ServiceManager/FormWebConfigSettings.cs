@@ -69,14 +69,17 @@ namespace ServiceManager {
 			textPassword.PasswordChar=textPassword.Text==""?default(char):'*';//mask password on leave
 		}
 
-		public bool TestConnection() {
-			DataConnection con=new DataConnection();
-			try {
-				con.SetDb(textServer.Text,textDatabase.Text,textUser.Text,textPassword.Text,textUserLow.Text,textPasswordLow.Text);
+		public bool TestConnection()
+		{
+			DataConnection con = new DataConnection();
+			try
+			{
+				con.SetDb(textServer.Text, textUser.Text, textPassword.Text, textDatabase.Text);
 				return true;
 			}
-			catch(Exception ex) {
-				MessageBox.Show("Error connecting to database: "+ex.Message);
+			catch (Exception ex)
+			{
+				MessageBox.Show("Error connecting to database: " + ex.Message);
 				return false;
 			}
 		}
