@@ -8774,6 +8774,7 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Icon32Database.png" />
     <None Include="Resources\IconMediaStop.png" />
     <None Include="Resources\IconMediaPlay.png" />
     <None Include="Resources\house16.png" />

@@ -1,291 +1,116 @@
+using DataConnectionBase;
+using Imedisoft.Forms;
+using MySql.Data.MySqlClient;
 using OpenDentBusiness;
 using System;
+using System.Linq;
 using System.Windows.Forms;
-using DataConnectionBase;
-using CodeBase;
-using System.Collections.Generic;
 
 namespace OpenDental
 {
-	public partial class FormChooseDatabase : ODForm
+    public partial class FormChooseDatabase : FormBase
 	{
-		///<summary></summary>
-		public ChooseDatabaseInfo Model;
+		private readonly bool fromMainMenu;
 
-		protected override bool HasHelpKey
+		private readonly CentralConnection centralConnection = new CentralConnection
 		{
-			get
-			{
-				return false;
-			}
-		}
+			ServerName = DataConnection.GetServerName(),
+			DatabaseName = DataConnection.GetDatabaseName(),
+			MySqlUser = DataConnection.GetMysqlUser(),
+			MySqlPassword = DataConnection.GetMysqlPass()
+        };
 
-		public FormChooseDatabase(ChooseDatabaseInfo model)
+		protected override bool HasHelpKey => false;
+
+		public FormChooseDatabase(bool fromMainMenu)
 		{
 			InitializeComponent();
-			Lan.F(this);
-			Model = model;
+
+			this.fromMainMenu = fromMainMenu;
 		}
 
 		private void FormChooseDatabase_Load(object sender, EventArgs e)
 		{
-			FillForm();
-		}
+			connectionGroupBox.Enabled = true;
 
-		private void FillForm()
-		{
-			if (Model.IsAccessedFromMainMenu)
+			CentralConnections.GetChooseDatabaseConnectionSettings(
+				out var connectionString,
+				out var autoConnect);
+
+			userTextBox.Text = centralConnection.MySqlUser;
+			passwordTextBox.Text = centralConnection.MySqlPassword;
+			autoConnectComboBox.Checked = autoConnect;
+
+			if (fromMainMenu)
 			{
-				comboComputerName.Enabled = false;
-				comboComputerName.Text = DataConnection.GetServerName();
-				comboDatabase.Enabled = false;
-				comboDatabase.Text = DataConnection.GetDatabaseName();
-				checkConnectServer.Enabled = false;
-				textURI.ReadOnly = true;
-			}
-			listType.Items.Add("MySql");
-			listType.Items.Add("Oracle");
-			listType.SelectedIndex = 0;
-			checkConnectServer.Checked = false;
-			groupDirect.Enabled = true;
-			groupServer.Enabled = false;
-			comboComputerName.Text = Model.CentralConnectionCur.ServerName;
-			comboDatabase.Text = Model.CentralConnectionCur.DatabaseName;
-			textUser.Text = Model.CentralConnectionCur.MySqlUser;
-			textPassword.Text = Model.CentralConnectionCur.MySqlPassword;
-			textPassword.PasswordChar = (textPassword.Text == "" ? default(char) : '*');
-			textUser2.Text = Model.CentralConnectionCur.OdUser;
-			textPassword2.Text = Model.CentralConnectionCur.OdPassword;
-			textConnectionString.Text = Model.ConnectionString;
-			checkNoShow.Checked = (Model.NoShow == YN.Yes);
-			if (Model.AllowAutoLogin)
-			{
-				checkBoxAutomaticLogin.Checked = Model.CentralConnectionCur.IsAutomaticLogin;
+				serverTextBox.Enabled = false;
+				serverTextBox.Text = DataConnection.GetServerName();
+				userTextBox.Text = DataConnection.GetMysqlUser();
+				passwordTextBox.Text = DataConnection.GetMysqlPass();
+				databaseComboBox.Enabled = false;
+				databaseComboBox.Text = DataConnection.GetDatabaseName();
+				autoConnectComboBox.Checked = autoConnect;
 			}
 			else
 			{
-				checkBoxAutomaticLogin.Visible = false;
+				var connectionStringBuilder = new MySqlConnectionStringBuilder(connectionString);
+
+				serverTextBox.Text = connectionStringBuilder.Server;
+				userTextBox.Text = connectionStringBuilder.UserID;
+				passwordTextBox.Text = connectionStringBuilder.Password;
+				databaseComboBox.Text = connectionStringBuilder.Database;
 			}
-			FillComboComputerNames();
-			FillComboDatabases();
-			if (textUser2.Text != "")
-			{
-				textPassword2.Select();
-			}
-			checkDynamicMode.Checked = Model.UseDynamicMode;
 		}
 
-		private void SyncModelWithUI()
-		{
-			Model.CentralConnectionCur.ServerName = comboComputerName.Text;
-			Model.CentralConnectionCur.DatabaseName = comboDatabase.Text;
-			Model.CentralConnectionCur.MySqlUser = textUser.Text;
-			Model.CentralConnectionCur.MySqlPassword = textPassword.Text;
-			Model.NoShow = (checkNoShow.Checked ? YN.Yes : YN.No);
-			Model.CentralConnectionCur.OdUser = textUser2.Text;
-			Model.CentralConnectionCur.OdPassword = textPassword2.Text;
-			Model.ConnectionString = textConnectionString.Text;
-			//Only save AutoLogin if connecting to MT and AutoLogin box is checked.
-			Model.CentralConnectionCur.IsAutomaticLogin = (checkBoxAutomaticLogin.Checked && checkConnectServer.Checked);
-			Model.UseDynamicMode = checkDynamicMode.Checked;
-		}
-
-		private void FillComboComputerNames()
-		{
-			comboComputerName.Items.Clear();
-			comboComputerName.Items.AddRange(CentralConnections.GetComputerNames());
-		}
-
-		private void FillComboDatabases()
-		{
-			comboDatabase.Items.Clear();
-			comboDatabase.Items.AddRange(CentralConnections.GetDatabases(Model.CentralConnectionCur));
-		}
-
-		private void comboDatabase_DropDown(object sender, EventArgs e)
+		private void DatabaseComboBox_DropDown(object sender, EventArgs e)
 		{
 			Cursor = Cursors.WaitCursor;
-			SyncModelWithUI();
-			FillComboDatabases();
+
+			centralConnection.ServerName = serverTextBox.Text;
+			centralConnection.DatabaseName = databaseComboBox.Text;
+			centralConnection.MySqlUser = userTextBox.Text;
+			centralConnection.MySqlPassword = passwordTextBox.Text;
+
+			databaseComboBox.Items.Clear();
+			databaseComboBox.Items.AddRange(CentralConnections.EnumerateDatabases(centralConnection).ToArray());
+
 			Cursor = Cursors.Default;
 		}
 
-		private void checkConnectServer_Click(object sender, EventArgs e)
-		{
-			if (checkConnectServer.Checked)
-			{
-				groupServer.Enabled = true;
-				groupDirect.Enabled = false;
-				checkDynamicMode.Checked = false;
-				checkDynamicMode.Enabled = false;
-			}
-			else
-			{
-				groupServer.Enabled = false;
-				groupDirect.Enabled = true;
-				checkDynamicMode.Enabled = true;
-			}
-		}
-
-		private void textPassword_TextChanged(object sender, EventArgs e)
-		{
-			if (textPassword.Text == "")
-			{
-				textPassword.PasswordChar = default(char);//if text is cleared, turn off password char mask
-			}
-		}
-
-		private void textPassword_Leave(object sender, EventArgs e)
-		{
-			textPassword.PasswordChar = (textPassword.Text == "" ? default(char) : '*');//mask password if loaded from the config file
-		}
-
-		private void checkDynamicMode_CheckedChanged(object sender, EventArgs e)
-		{
-			if (checkDynamicMode.Checked)
-			{
-				checkNoShow.Checked = false;
-				checkBoxAutomaticLogin.Checked = false;
-			}
-			checkNoShow.Enabled = !checkDynamicMode.Checked;
-			checkBoxAutomaticLogin.Enabled = !checkDynamicMode.Checked;
-		}
-
-		///<summary>Attempts to connect to the database (via Middle Tier if necessary).
-		///Returns true if connection settings are valid. Otherwise, false.</summary>
+		/// <summary>
+		/// Attempts to connect to the database.
+		/// Returns true if connection settings are valid. Otherwise, false.
+		/// </summary>
 		private bool IsValidConnection()
 		{
-			SyncModelWithUI();
 			try
 			{
-				CentralConnections.TryToConnect(Model.CentralConnectionCur, Model.ConnectionString, Model.NoShow == YN.Yes,
-					Model.ListAdminCompNames, useDynamicMode: Model.UseDynamicMode, allowAutoLogin: Model.AllowAutoLogin);
+				CentralConnections.TryToConnect(
+					serverTextBox.Text,
+					userTextBox.Text, 
+					passwordTextBox.Text, 
+					databaseComboBox.Text, 
+					autoConnectComboBox.Checked, 
+					true);
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message);
+				ShowError(ex.Message);
+
 				return false;
 			}
-			//A successful connection was made using the settings within the current choose database model.
+
 			return true;
 		}
 
-		private void butOK_Click(object sender, EventArgs e)
+		private void AcceptButton_Click(object sender, EventArgs e)
 		{
 			if (!IsValidConnection())
 			{
 				return;
 			}
+
 			DialogResult = DialogResult.OK;
-		}
-
-		private void butCancel_Click(object sender, EventArgs e)
-		{
-			DialogResult = DialogResult.Cancel;
-		}
-
-	}
-
-	///<summary>A helper class that contains database connection information and other information that can show within the Choose Database window and even some information that is only stored within the FreeDentalConfig.xml and has no UI but needs to be preserved.</summary>
-	public class ChooseDatabaseInfo
-	{
-		///<summmary></summmary>
-		public CentralConnection CentralConnectionCur = new CentralConnection();
-		///<summary></summary>
-		public string ConnectionString = "";
-		///<summary>Indicates whether the user is using dynamic mode. That is, when connecting to a database of a lower version, they will
-		///download the version from the server and run that instead of upgrading/downgrading their own client.</summary>
-		public bool UseDynamicMode;
-		///<summary>This is used when selecting File>Choose Database.  It will behave slightly differently.</summary>
-		public bool IsAccessedFromMainMenu;
-		///<summary>When silently running GetConfig() without showing UI, this gets set to true if either NoShowOnStartup or UsingEcw is found in config file.</summary>
-		public YN NoShow;
-		///<summary>Stored so that they don't get deleted when re-writing the FreeDentalConfig file.</summary>
-		public List<string> ListAdminCompNames = new List<string>();
-		///<summary>Defaults to true. Allows the user to choose whether or not they can select 'Log me in automatically.'</summary>
-		public bool AllowAutoLogin = true;
-
-		public ChooseDatabaseInfo()
-		{
-		}
-
-		///<summary>Every optional parameter provided should coincide with a command line argument. The values passed in will typically override any settings loaded in from the config file. Passing in a value for webServiceUri or databaseName will cause the config file to not even be considered.</summary>
-		public static ChooseDatabaseInfo GetChooseDatabaseInfoFromConfig(string webServiceUri = "", YN webServiceIsEcw = YN.Unknown, string odUser = ""
-			, string serverName = "", string databaseName = "", string mySqlUser = "", string mySqlPassword = "", string mySqlPassHash = "", YN noShow = YN.Unknown
-			, string odPassword = "", bool useDynamicMode = false, string odPassHash = "")
-		{
-			ChooseDatabaseInfo chooseDatabaseInfo = new ChooseDatabaseInfo();
-			//Even if we are passed a URI as a command line argument we still need to check the FreeDentalConfig file for middle tier automatic log in.
-			//The only time we do not need to do that is if a direct DB has been passed in.
-			if (string.IsNullOrEmpty(databaseName))
-			{
-				CentralConnections.GetChooseDatabaseConnectionSettings(out chooseDatabaseInfo.CentralConnectionCur, out chooseDatabaseInfo.ConnectionString
-					, out chooseDatabaseInfo.NoShow, out chooseDatabaseInfo.ListAdminCompNames, out chooseDatabaseInfo.UseDynamicMode
-					, out chooseDatabaseInfo.AllowAutoLogin);
-			}
-			//Command line args should always trump settings from the config file.
-			#region Command Line Arguements
-			if (odUser != "")
-			{
-				chooseDatabaseInfo.CentralConnectionCur.OdUser = odUser;
-			}
-			if (odPassword != "")
-			{
-				chooseDatabaseInfo.CentralConnectionCur.OdPassword = odPassword;
-			}
-			if (!string.IsNullOrEmpty(odPassHash))
-			{
-				chooseDatabaseInfo.CentralConnectionCur.OdPassHash = odPassHash;
-			}
-			if (serverName != "")
-			{
-				chooseDatabaseInfo.CentralConnectionCur.ServerName = serverName;
-			}
-			if (databaseName != "")
-			{
-				chooseDatabaseInfo.CentralConnectionCur.DatabaseName = databaseName;
-			}
-			if (mySqlUser != "")
-			{
-				chooseDatabaseInfo.CentralConnectionCur.MySqlUser = mySqlUser;
-			}
-			if (mySqlPassword != "")
-			{
-				chooseDatabaseInfo.CentralConnectionCur.MySqlPassword = mySqlPassword;
-			}
-			if (mySqlPassHash != "")
-			{
-				string decryptedPwd;
-				CDT.Class1.Decrypt(mySqlPassHash, out decryptedPwd);
-				chooseDatabaseInfo.CentralConnectionCur.MySqlPassword = decryptedPwd;
-			}
-			if (noShow != YN.Unknown)
-			{
-				chooseDatabaseInfo.NoShow = noShow;
-			}
-			if (odUser != "" && odPassword != "")
-			{
-				chooseDatabaseInfo.NoShow = YN.Yes;
-			}
-			//If they are overridding to say to use dynamic mode.
-			if (useDynamicMode)
-			{
-				chooseDatabaseInfo.UseDynamicMode = useDynamicMode;
-			}
-			#endregion
-			return chooseDatabaseInfo;
-		}
-
-		///<summary>Updates the passed in ChooseDatabaseModel with the current database/middle tier connection. Only updates values that are stored in
-		///FreeDentalConfig and are also kept in memory.</summary>
-		public static void UpdateChooseDatabaseInfoFromCurrentConnection(ChooseDatabaseInfo chooseDatabaseInfo)
-		{
-
-			chooseDatabaseInfo.CentralConnectionCur.ServerName = DataConnection.GetServerName();
-			chooseDatabaseInfo.CentralConnectionCur.DatabaseName = DataConnection.GetDatabaseName();
-			chooseDatabaseInfo.CentralConnectionCur.MySqlUser = DataConnection.GetMysqlUser();
-			chooseDatabaseInfo.CentralConnectionCur.MySqlPassword = DataConnection.GetMysqlPass();
-
 		}
 	}
 }

@@ -1,406 +1,255 @@
-namespace OpenDental{
-	partial class FormChooseDatabase {
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+namespace OpenDental
+{
+    partial class FormChooseDatabase
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing) {
-			if(disposing && (components != null)) {
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormChooseDatabase));
-			this.textConnectionString = new System.Windows.Forms.TextBox();
-			this.label8 = new System.Windows.Forms.Label();
-			this.listType = new System.Windows.Forms.ListBox();
-			this.label7 = new System.Windows.Forms.Label();
-			this.checkConnectServer = new System.Windows.Forms.CheckBox();
-			this.groupServer = new System.Windows.Forms.GroupBox();
-			this.checkBoxAutomaticLogin = new System.Windows.Forms.CheckBox();
-			this.checkUsingEcw = new System.Windows.Forms.CheckBox();
-			this.textURI = new System.Windows.Forms.TextBox();
-			this.textUser2 = new System.Windows.Forms.TextBox();
-			this.textPassword2 = new System.Windows.Forms.TextBox();
-			this.label10 = new System.Windows.Forms.Label();
-			this.label11 = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
-			this.groupDirect = new System.Windows.Forms.GroupBox();
-			this.textUser = new System.Windows.Forms.TextBox();
-			this.comboDatabase = new System.Windows.Forms.ComboBox();
-			this.checkNoShow = new System.Windows.Forms.CheckBox();
-			this.comboComputerName = new System.Windows.Forms.ComboBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.textPassword = new System.Windows.Forms.TextBox();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
-			this.butCancel = new OpenDental.UI.Button();
-			this.butOK = new OpenDental.UI.Button();
-			this.checkDynamicMode = new System.Windows.Forms.CheckBox();
-			this.groupServer.SuspendLayout();
-			this.groupDirect.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// textConnectionString
-			// 
-			this.textConnectionString.Location = new System.Drawing.Point(376, 366);
-			this.textConnectionString.Multiline = true;
-			this.textConnectionString.Name = "textConnectionString";
-			this.textConnectionString.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textConnectionString.Size = new System.Drawing.Size(312, 130);
-			this.textConnectionString.TabIndex = 34;
-			// 
-			// label8
-			// 
-			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(374, 348);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(165, 13);
-			this.label8.TabIndex = 39;
-			this.label8.Text = "Advanced: Use connection string";
-			// 
-			// listType
-			// 
-			this.listType.FormattingEnabled = true;
-			this.listType.Location = new System.Drawing.Point(376, 310);
-			this.listType.Name = "listType";
-			this.listType.Size = new System.Drawing.Size(99, 30);
-			this.listType.TabIndex = 38;
-			this.listType.Visible = false;
-			// 
-			// label7
-			// 
-			this.label7.Location = new System.Drawing.Point(373, 288);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(223, 18);
-			this.label7.TabIndex = 37;
-			this.label7.Text = "Database Type";
-			this.label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this.label7.Visible = false;
-			// 
-			// checkConnectServer
-			// 
-			this.checkConnectServer.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkConnectServer.Location = new System.Drawing.Point(28, 276);
-			this.checkConnectServer.Name = "checkConnectServer";
-			this.checkConnectServer.Size = new System.Drawing.Size(328, 18);
-			this.checkConnectServer.TabIndex = 33;
-			this.checkConnectServer.Text = "Connect to Middle Tier instead";
-			this.checkConnectServer.UseVisualStyleBackColor = true;
-			this.checkConnectServer.Click += new System.EventHandler(this.checkConnectServer_Click);
-			// 
-			// groupServer
-			// 
-			this.groupServer.Controls.Add(this.checkBoxAutomaticLogin);
-			this.groupServer.Controls.Add(this.checkUsingEcw);
-			this.groupServer.Controls.Add(this.textURI);
-			this.groupServer.Controls.Add(this.textUser2);
-			this.groupServer.Controls.Add(this.textPassword2);
-			this.groupServer.Controls.Add(this.label10);
-			this.groupServer.Controls.Add(this.label11);
-			this.groupServer.Controls.Add(this.label9);
-			this.groupServer.Controls.Add(this.label6);
-			this.groupServer.Location = new System.Drawing.Point(28, 304);
-			this.groupServer.Name = "groupServer";
-			this.groupServer.Size = new System.Drawing.Size(336, 218);
-			this.groupServer.TabIndex = 32;
-			this.groupServer.TabStop = false;
-			this.groupServer.Text = "Connect to Middle Tier - Only for advanced users";
-			// 
-			// checkBoxAutomaticLogin
-			// 
-			this.checkBoxAutomaticLogin.AutoSize = true;
-			this.checkBoxAutomaticLogin.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkBoxAutomaticLogin.Location = new System.Drawing.Point(13, 195);
-			this.checkBoxAutomaticLogin.Name = "checkBoxAutomaticLogin";
-			this.checkBoxAutomaticLogin.Size = new System.Drawing.Size(145, 18);
-			this.checkBoxAutomaticLogin.TabIndex = 40;
-			this.checkBoxAutomaticLogin.Text = "Log me in automatically.";
-			this.checkBoxAutomaticLogin.UseVisualStyleBackColor = true;
-			// 
-			// checkUsingEcw
-			// 
-			this.checkUsingEcw.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkUsingEcw.Location = new System.Drawing.Point(13, 176);
-			this.checkUsingEcw.Name = "checkUsingEcw";
-			this.checkUsingEcw.Size = new System.Drawing.Size(317, 18);
-			this.checkUsingEcw.TabIndex = 10;
-			this.checkUsingEcw.Text = "Using eClinicalWorks";
-			this.checkUsingEcw.UseVisualStyleBackColor = true;
-			// 
-			// textURI
-			// 
-			this.textURI.Location = new System.Drawing.Point(13, 63);
-			this.textURI.Name = "textURI";
-			this.textURI.Size = new System.Drawing.Size(309, 20);
-			this.textURI.TabIndex = 7;
-			// 
-			// textUser2
-			// 
-			this.textUser2.Location = new System.Drawing.Point(13, 106);
-			this.textUser2.Name = "textUser2";
-			this.textUser2.Size = new System.Drawing.Size(309, 20);
-			this.textUser2.TabIndex = 8;
-			// 
-			// textPassword2
-			// 
-			this.textPassword2.Location = new System.Drawing.Point(13, 147);
-			this.textPassword2.Name = "textPassword2";
-			this.textPassword2.PasswordChar = '*';
-			this.textPassword2.Size = new System.Drawing.Size(309, 20);
-			this.textPassword2.TabIndex = 9;
-			this.textPassword2.UseSystemPasswordChar = true;
-			// 
-			// label10
-			// 
-			this.label10.Location = new System.Drawing.Point(11, 128);
-			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(281, 18);
-			this.label10.TabIndex = 11;
-			this.label10.Text = "Password";
-			this.label10.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// label11
-			// 
-			this.label11.Location = new System.Drawing.Point(11, 87);
-			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(295, 18);
-			this.label11.TabIndex = 14;
-			this.label11.Text = "Open Dental User (not MySQL user)";
-			this.label11.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// label9
-			// 
-			this.label9.Location = new System.Drawing.Point(10, 42);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(283, 18);
-			this.label9.TabIndex = 9;
-			this.label9.Text = "URI";
-			this.label9.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// label6
-			// 
-			this.label6.Location = new System.Drawing.Point(9, 25);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(297, 18);
-			this.label6.TabIndex = 0;
-			this.label6.Text = "Read the manual to learn how to install the middle tier.";
-			// 
-			// groupDirect
-			// 
-			this.groupDirect.Controls.Add(this.textUser);
-			this.groupDirect.Controls.Add(this.comboDatabase);
-			this.groupDirect.Controls.Add(this.checkNoShow);
-			this.groupDirect.Controls.Add(this.comboComputerName);
-			this.groupDirect.Controls.Add(this.label1);
-			this.groupDirect.Controls.Add(this.textPassword);
-			this.groupDirect.Controls.Add(this.label2);
-			this.groupDirect.Controls.Add(this.label3);
-			this.groupDirect.Controls.Add(this.label4);
-			this.groupDirect.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupDirect.Location = new System.Drawing.Point(28, 15);
-			this.groupDirect.Name = "groupDirect";
-			this.groupDirect.Size = new System.Drawing.Size(660, 244);
-			this.groupDirect.TabIndex = 31;
-			this.groupDirect.TabStop = false;
-			this.groupDirect.Text = "Connection Settings - These values will only be used on this computer.  They have" +
-    " to be set on each computer";
-			// 
-			// textUser
-			// 
-			this.textUser.Location = new System.Drawing.Point(13, 140);
-			this.textUser.Name = "textUser";
-			this.textUser.Size = new System.Drawing.Size(280, 20);
-			this.textUser.TabIndex = 3;
-			// 
-			// comboDatabase
-			// 
-			this.comboDatabase.DropDownHeight = 390;
-			this.comboDatabase.IntegralHeight = false;
-			this.comboDatabase.Location = new System.Drawing.Point(13, 98);
-			this.comboDatabase.MaxDropDownItems = 100;
-			this.comboDatabase.Name = "comboDatabase";
-			this.comboDatabase.Size = new System.Drawing.Size(280, 21);
-			this.comboDatabase.TabIndex = 2;
-			this.comboDatabase.DropDown += new System.EventHandler(this.comboDatabase_DropDown);
-			// 
-			// checkNoShow
-			// 
-			this.checkNoShow.AutoSize = true;
-			this.checkNoShow.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkNoShow.Location = new System.Drawing.Point(13, 211);
-			this.checkNoShow.Name = "checkNoShow";
-			this.checkNoShow.Size = new System.Drawing.Size(294, 18);
-			this.checkNoShow.TabIndex = 5;
-			this.checkNoShow.Text = "Do not show this window on startup (this computer only)";
-			this.checkNoShow.UseVisualStyleBackColor = true;
-			// 
-			// comboComputerName
-			// 
-			this.comboComputerName.DropDownHeight = 390;
-			this.comboComputerName.IntegralHeight = false;
-			this.comboComputerName.Location = new System.Drawing.Point(13, 56);
-			this.comboComputerName.MaxDropDownItems = 100;
-			this.comboComputerName.Name = "comboComputerName";
-			this.comboComputerName.Size = new System.Drawing.Size(280, 21);
-			this.comboComputerName.TabIndex = 1;
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(11, 15);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(582, 38);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Server Name: The name of the computer where the MySQL server and database are loc" +
-    "ated.  If you are running this program on a single computer only, then the compu" +
-    "ter name may be localhost.";
-			this.label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// textPassword
-			// 
-			this.textPassword.Location = new System.Drawing.Point(13, 181);
-			this.textPassword.Name = "textPassword";
-			this.textPassword.PasswordChar = '*';
-			this.textPassword.Size = new System.Drawing.Size(280, 20);
-			this.textPassword.TabIndex = 4;
-			this.textPassword.UseSystemPasswordChar = true;
-			this.textPassword.TextChanged += new System.EventHandler(this.textPassword_TextChanged);
-			this.textPassword.Leave += new System.EventHandler(this.textPassword_Leave);
-			// 
-			// label2
-			// 
-			this.label2.Location = new System.Drawing.Point(11, 162);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(509, 18);
-			this.label2.TabIndex = 2;
-			this.label2.Text = "MySQL Password:";
-			this.label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// label3
-			// 
-			this.label3.Location = new System.Drawing.Point(11, 121);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(480, 18);
-			this.label3.TabIndex = 4;
-			this.label3.Text = "MySQL User:";
-			this.label3.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// label4
-			// 
-			this.label4.Location = new System.Drawing.Point(11, 79);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(582, 18);
-			this.label4.TabIndex = 6;
-			this.label4.Text = "Database: usually opendental unless you changed the name.";
-			this.label4.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// butCancel
-			// 
-			this.butCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.butCancel.Location = new System.Drawing.Point(613, 534);
-			this.butCancel.Name = "butCancel";
-			this.butCancel.Size = new System.Drawing.Size(75, 25);
-			this.butCancel.TabIndex = 36;
-			this.butCancel.Text = "&Cancel";
-			this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
-			// 
-			// butOK
-			// 
-			this.butOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butOK.Location = new System.Drawing.Point(520, 534);
-			this.butOK.Name = "butOK";
-			this.butOK.Size = new System.Drawing.Size(75, 25);
-			this.butOK.TabIndex = 35;
-			this.butOK.Text = "&OK";
-			this.butOK.Click += new System.EventHandler(this.butOK_Click);
-			// 
-			// checkDynamicMode
-			// 
-			this.checkDynamicMode.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkDynamicMode.Location = new System.Drawing.Point(376, 499);
-			this.checkDynamicMode.Name = "checkDynamicMode";
-			this.checkDynamicMode.Size = new System.Drawing.Size(312, 29);
-			this.checkDynamicMode.TabIndex = 41;
-			this.checkDynamicMode.Text = "Dynamic Mode: Automatically downgrades or upgrades to server version.";
-			this.checkDynamicMode.UseVisualStyleBackColor = true;
-			this.checkDynamicMode.CheckedChanged += new System.EventHandler(this.checkDynamicMode_CheckedChanged);
-			// 
-			// FormChooseDatabase
-			// 
-			this.AcceptButton = this.butOK;
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(716, 574);
-			this.Controls.Add(this.checkDynamicMode);
-			this.Controls.Add(this.textConnectionString);
-			this.Controls.Add(this.label8);
-			this.Controls.Add(this.listType);
-			this.Controls.Add(this.label7);
-			this.Controls.Add(this.checkConnectServer);
-			this.Controls.Add(this.groupServer);
-			this.Controls.Add(this.groupDirect);
-			this.Controls.Add(this.butCancel);
-			this.Controls.Add(this.butOK);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MaximizeBox = false;
-			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(732, 613);
-			this.Name = "FormChooseDatabase";
-			this.Text = "Choose Database";
-			this.Load += new System.EventHandler(this.FormChooseDatabase_Load);
-			this.groupServer.ResumeLayout(false);
-			this.groupServer.PerformLayout();
-			this.groupDirect.ResumeLayout(false);
-			this.groupDirect.PerformLayout();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormChooseDatabase));
+            this.connectionGroupBox = new System.Windows.Forms.GroupBox();
+            this.databaseInfoLabel = new System.Windows.Forms.Label();
+            this.userTextBox = new System.Windows.Forms.TextBox();
+            this.databaseComboBox = new System.Windows.Forms.ComboBox();
+            this.serverTextBox = new System.Windows.Forms.TextBox();
+            this.serverLabel = new System.Windows.Forms.Label();
+            this.passwordTextBox = new System.Windows.Forms.TextBox();
+            this.passwordLabel = new System.Windows.Forms.Label();
+            this.userLabel = new System.Windows.Forms.Label();
+            this.databaseLabel = new System.Windows.Forms.Label();
+            this.connectionLabel = new System.Windows.Forms.Label();
+            this.autoConnectComboBox = new System.Windows.Forms.CheckBox();
+            this.cancelButton = new OpenDental.UI.Button();
+            this.acceptButton = new OpenDental.UI.Button();
+            this.iconPictureBox = new System.Windows.Forms.PictureBox();
+            this.connectionGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // connectionGroupBox
+            // 
+            this.connectionGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.connectionGroupBox.Controls.Add(this.databaseInfoLabel);
+            this.connectionGroupBox.Controls.Add(this.userTextBox);
+            this.connectionGroupBox.Controls.Add(this.databaseComboBox);
+            this.connectionGroupBox.Controls.Add(this.serverTextBox);
+            this.connectionGroupBox.Controls.Add(this.serverLabel);
+            this.connectionGroupBox.Controls.Add(this.passwordTextBox);
+            this.connectionGroupBox.Controls.Add(this.passwordLabel);
+            this.connectionGroupBox.Controls.Add(this.userLabel);
+            this.connectionGroupBox.Controls.Add(this.databaseLabel);
+            this.connectionGroupBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.connectionGroupBox.Location = new System.Drawing.Point(12, 52);
+            this.connectionGroupBox.Name = "connectionGroupBox";
+            this.connectionGroupBox.Size = new System.Drawing.Size(380, 165);
+            this.connectionGroupBox.TabIndex = 1;
+            this.connectionGroupBox.TabStop = false;
+            this.connectionGroupBox.Text = "MySQL Connection Settings";
+            // 
+            // databaseInfoLabel
+            // 
+            this.databaseInfoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.databaseInfoLabel.Location = new System.Drawing.Point(107, 128);
+            this.databaseInfoLabel.Name = "databaseInfoLabel";
+            this.databaseInfoLabel.Size = new System.Drawing.Size(267, 20);
+            this.databaseInfoLabel.TabIndex = 8;
+            this.databaseInfoLabel.Text = "Usually opendental unless you changed the name.";
+            // 
+            // userTextBox
+            // 
+            this.userTextBox.Location = new System.Drawing.Point(110, 52);
+            this.userTextBox.Name = "userTextBox";
+            this.userTextBox.Size = new System.Drawing.Size(250, 20);
+            this.userTextBox.TabIndex = 3;
+            // 
+            // databaseComboBox
+            // 
+            this.databaseComboBox.DropDownHeight = 390;
+            this.databaseComboBox.IntegralHeight = false;
+            this.databaseComboBox.Location = new System.Drawing.Point(110, 104);
+            this.databaseComboBox.MaxDropDownItems = 100;
+            this.databaseComboBox.Name = "databaseComboBox";
+            this.databaseComboBox.Size = new System.Drawing.Size(250, 21);
+            this.databaseComboBox.TabIndex = 7;
+            this.databaseComboBox.DropDown += new System.EventHandler(this.DatabaseComboBox_DropDown);
+            // 
+            // serverTextBox
+            // 
+            this.serverTextBox.Location = new System.Drawing.Point(110, 26);
+            this.serverTextBox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.serverTextBox.Name = "serverTextBox";
+            this.serverTextBox.Size = new System.Drawing.Size(250, 20);
+            this.serverTextBox.TabIndex = 1;
+            // 
+            // serverLabel
+            // 
+            this.serverLabel.AutoSize = true;
+            this.serverLabel.Location = new System.Drawing.Point(35, 29);
+            this.serverLabel.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.serverLabel.Name = "serverLabel";
+            this.serverLabel.Size = new System.Drawing.Size(69, 13);
+            this.serverLabel.TabIndex = 0;
+            this.serverLabel.Text = "Server Name";
+            // 
+            // passwordTextBox
+            // 
+            this.passwordTextBox.Location = new System.Drawing.Point(110, 78);
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.PasswordChar = '*';
+            this.passwordTextBox.Size = new System.Drawing.Size(250, 20);
+            this.passwordTextBox.TabIndex = 5;
+            this.passwordTextBox.UseSystemPasswordChar = true;
+            // 
+            // passwordLabel
+            // 
+            this.passwordLabel.AutoSize = true;
+            this.passwordLabel.Location = new System.Drawing.Point(15, 81);
+            this.passwordLabel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
+            this.passwordLabel.Name = "passwordLabel";
+            this.passwordLabel.Size = new System.Drawing.Size(89, 13);
+            this.passwordLabel.TabIndex = 4;
+            this.passwordLabel.Text = "MySQL Password";
+            // 
+            // userLabel
+            // 
+            this.userLabel.AutoSize = true;
+            this.userLabel.Location = new System.Drawing.Point(13, 55);
+            this.userLabel.Name = "userLabel";
+            this.userLabel.Size = new System.Drawing.Size(91, 13);
+            this.userLabel.TabIndex = 2;
+            this.userLabel.Text = "MySQL Username";
+            // 
+            // databaseLabel
+            // 
+            this.databaseLabel.AutoSize = true;
+            this.databaseLabel.Location = new System.Drawing.Point(51, 107);
+            this.databaseLabel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
+            this.databaseLabel.Name = "databaseLabel";
+            this.databaseLabel.Size = new System.Drawing.Size(53, 13);
+            this.databaseLabel.TabIndex = 6;
+            this.databaseLabel.Text = "Database";
+            // 
+            // connectionLabel
+            // 
+            this.connectionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.connectionLabel.Location = new System.Drawing.Point(50, 9);
+            this.connectionLabel.Name = "connectionLabel";
+            this.connectionLabel.Size = new System.Drawing.Size(342, 40);
+            this.connectionLabel.TabIndex = 0;
+            this.connectionLabel.Text = "These values will only be used on this computer. They have to be set on each comp" +
+    "uter";
+            // 
+            // autoConnectComboBox
+            // 
+            this.autoConnectComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.autoConnectComboBox.AutoSize = true;
+            this.autoConnectComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.autoConnectComboBox.Location = new System.Drawing.Point(12, 223);
+            this.autoConnectComboBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
+            this.autoConnectComboBox.Name = "autoConnectComboBox";
+            this.autoConnectComboBox.Size = new System.Drawing.Size(303, 18);
+            this.autoConnectComboBox.TabIndex = 2;
+            this.autoConnectComboBox.Text = "Do not show this window on startup (this computer only)";
+            this.autoConnectComboBox.UseVisualStyleBackColor = true;
+            // 
+            // cancelButton
+            // 
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelButton.Location = new System.Drawing.Point(312, 264);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(80, 25);
+            this.cancelButton.TabIndex = 4;
+            this.cancelButton.Text = "&Cancel";
+            // 
+            // acceptButton
+            // 
+            this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.acceptButton.Location = new System.Drawing.Point(226, 264);
+            this.acceptButton.Name = "acceptButton";
+            this.acceptButton.Size = new System.Drawing.Size(80, 25);
+            this.acceptButton.TabIndex = 3;
+            this.acceptButton.Text = "&OK";
+            this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
+            // 
+            // iconPictureBox
+            // 
+            this.iconPictureBox.Image = global::Imedisoft.Properties.Resources.Icon32Database;
+            this.iconPictureBox.Location = new System.Drawing.Point(12, 9);
+            this.iconPictureBox.Name = "iconPictureBox";
+            this.iconPictureBox.Size = new System.Drawing.Size(32, 32);
+            this.iconPictureBox.TabIndex = 11;
+            this.iconPictureBox.TabStop = false;
+            // 
+            // FormChooseDatabase
+            // 
+            this.AcceptButton = this.acceptButton;
+            this.ClientSize = new System.Drawing.Size(404, 301);
+            this.Controls.Add(this.iconPictureBox);
+            this.Controls.Add(this.connectionLabel);
+            this.Controls.Add(this.connectionGroupBox);
+            this.Controls.Add(this.cancelButton);
+            this.Controls.Add(this.autoConnectComboBox);
+            this.Controls.Add(this.acceptButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "FormChooseDatabase";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Choose Database";
+            this.Load += new System.EventHandler(this.FormChooseDatabase_Load);
+            this.connectionGroupBox.ResumeLayout(false);
+            this.connectionGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
-		}
+        }
 
-		#endregion
+        #endregion
 
-		private System.Windows.Forms.TextBox textConnectionString;
-		private System.Windows.Forms.Label label8;
-		private System.Windows.Forms.ListBox listType;
-		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.CheckBox checkConnectServer;
-		private System.Windows.Forms.GroupBox groupServer;
-		private System.Windows.Forms.CheckBox checkUsingEcw;
-		private System.Windows.Forms.TextBox textURI;
-		private System.Windows.Forms.TextBox textUser2;
-		private System.Windows.Forms.TextBox textPassword2;
-		private System.Windows.Forms.Label label10;
-		private System.Windows.Forms.Label label11;
-		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.GroupBox groupDirect;
-		private System.Windows.Forms.TextBox textUser;
-		private System.Windows.Forms.ComboBox comboDatabase;
-		private System.Windows.Forms.CheckBox checkNoShow;
-		private System.Windows.Forms.ComboBox comboComputerName;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.TextBox textPassword;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Label label4;
-		private UI.Button butCancel;
-		private UI.Button butOK;
-		private System.Windows.Forms.CheckBox checkBoxAutomaticLogin;
-		private System.Windows.Forms.CheckBox checkDynamicMode;
-	}
+        private System.Windows.Forms.GroupBox connectionGroupBox;
+        private System.Windows.Forms.TextBox userTextBox;
+        private System.Windows.Forms.ComboBox databaseComboBox;
+        private System.Windows.Forms.CheckBox autoConnectComboBox;
+        private System.Windows.Forms.TextBox serverTextBox;
+        private System.Windows.Forms.Label serverLabel;
+        private System.Windows.Forms.TextBox passwordTextBox;
+        private System.Windows.Forms.Label passwordLabel;
+        private System.Windows.Forms.Label userLabel;
+        private System.Windows.Forms.Label databaseLabel;
+        private OpenDental.UI.Button cancelButton;
+        private OpenDental.UI.Button acceptButton;
+        private System.Windows.Forms.Label connectionLabel;
+        private System.Windows.Forms.Label databaseInfoLabel;
+        private System.Windows.Forms.PictureBox iconPictureBox;
+    }
 }

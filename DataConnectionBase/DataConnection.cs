@@ -596,17 +596,7 @@ namespace DataConnectionBase
 		/// Will throw an exception if fails.
 		/// Calling class should catch exception.
 		/// </summary>
-		public void SetDb(string server, string db, string user, string password, string userLow, string passLow)
-		{
-			SetDb(server, db, user, password, userLow, passLow, false);
-		}
-
-		/// <summary>
-		/// This needs to be run every time we switch databases, especially on startup.
-		/// Will throw an exception if fails.
-		/// Calling class should catch exception.
-		/// </summary>
-		public void SetDb(string server, string db, string user, string password, string userLow, string passLow, bool skipValidation)
+		public void SetDb(string server, string db, string user, string password, string userLow, string passLow, bool skipValidation = false)
 		{
 			string connectStr = BuildSimpleConnectionString(server, db, user, password);
 			string connectStrLow = "";

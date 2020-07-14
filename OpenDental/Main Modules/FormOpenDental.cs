@@ -333,15 +333,16 @@ namespace OpenDental{
 			}
 		}
 
-		private void FormOpenDental_Load(object sender, System.EventArgs e)
+		private void FormOpenDental_Load(object sender, EventArgs e)
 		{
 			//In order for the "Automatically show the touch keyboard in windowed apps when there's no keyboard attached to your device" Windows setting
 			//to work we have to invoke the following line.  Surrounded in a try catch because the user can simply put the OS into tablet mode.
 			//Affects WPF RichTextBoxes accross the entire program.
 			ODException.SwallowAnyException(() =>
 			{
-				System.Windows.Automation.AutomationElement.FromHandle(this.Handle);//Just invoking this method wakes up something deep within Windows...
+				System.Windows.Automation.AutomationElement.FromHandle(this.Handle); // Just invoking this method wakes up something deep within Windows...
 			});
+
 			//Flag the userod cache as NOT allowed to cache any items for security purposes.
 			Userods.SetIsCacheAllowed(false);
 			TopMost = true;
@@ -358,8 +359,6 @@ namespace OpenDental{
 			string odUser = "";
 			string odPassHash = "";
 			string webServiceUri = "";
-			YN webServiceIsEcw = YN.Unknown;
-			bool isSilentUpdate = false;
 			string odPassword = "";
 			string serverName = "";
 			string databaseName = "";
@@ -382,17 +381,6 @@ namespace OpenDental{
 					if (CommandLineArgs[i].StartsWith("WebServiceUri=") && CommandLineArgs[i].Length > 14)
 					{
 						webServiceUri = CommandLineArgs[i].Substring(14).Trim('"');
-					}
-					if (CommandLineArgs[i].StartsWith("WebServiceIsEcw=") && CommandLineArgs[i].Length > 16)
-					{
-						if (CommandLineArgs[i].Substring(16).Trim('"') == "True")
-						{
-							webServiceIsEcw = YN.Yes;
-						}
-						else
-						{
-							webServiceIsEcw = YN.No;
-						}
 					}
 					if (CommandLineArgs[i].StartsWith("OdPassword=") && CommandLineArgs[i].Length > 11)
 					{
@@ -418,17 +406,6 @@ namespace OpenDental{
 					{
 						mySqlPassHash = CommandLineArgs[i].Substring(14).Trim('"');
 					}
-					if (CommandLineArgs[i].StartsWith("IsSilentUpdate=") && CommandLineArgs[i].Length > 15)
-					{
-						if (CommandLineArgs[i].Substring(15).Trim('"').ToLower() == "true")
-						{
-							isSilentUpdate = true;
-						}
-						else
-						{
-							isSilentUpdate = false;
-						}
-					}
 					if (CommandLineArgs[i].StartsWith("DynamicMode="))
 					{
 						useDynamicMode = CommandLineArgs[i].ToLower().Contains("true");
@@ -447,162 +424,97 @@ namespace OpenDental{
 			{
 				noShow = YN.Yes;
 			}
-			//Users that want to silently update MUST pass in the following command line args.
-			if (isSilentUpdate && (odUser.Trim() == ""
-					|| (odPassword.Trim() == "" && odPassHash.Trim() == "")
-					|| serverName.Trim() == ""
-					|| databaseName.Trim() == ""
-					|| mySqlUser.Trim() == ""
-					|| (mySqlPassword.Trim() == "" && mySqlPassHash.Trim() == "")))
-			{
-				ExitCode = 104;//Required command line arguments have not been set for silent updating
-				Environment.Exit(ExitCode);
-				return;
-			}
-			Version versionOd = Assembly.GetAssembly(typeof(FormOpenDental)).GetName().Version;
-			Version versionObBus = Assembly.GetAssembly(typeof(Db)).GetName().Version;
-			if (versionOd != versionObBus)
-			{
-				if (isSilentUpdate)
-				{
-					ExitCode = 105;//File versions do not match
-				}
-				else
-				{//Not a silent update.  Show a warning message.
-				 //No MsgBox or Lan.g() here, because we don't want to access the database if there is a version conflict.
-					MessageBox.Show("Mismatched program file versions. Please run the Open Dental setup file again on this computer.");
-				}
-				Environment.Exit(ExitCode);
-				return;
-			}
-			ChooseDatabaseInfo chooseDatabaseInfo = new ChooseDatabaseInfo();
-			try
-			{
-				chooseDatabaseInfo = ChooseDatabaseInfo.GetChooseDatabaseInfoFromConfig(webServiceUri, webServiceIsEcw, odUser, serverName, databaseName
-					, mySqlUser, mySqlPassword, mySqlPassHash, noShow, odPassword, useDynamicMode, odPassHash);
-			}
-			catch (ODException ode)
-			{
-				if (isSilentUpdate)
-				{
-					//Technically the only way GetChooseDatabaseInfoFromConfig() can throw an exception when silent updating is if DatabaseName wasn't set.
-					ExitCode = 104;//Required command line arguments have not been set for silent updating
-				}
-				else
-				{
-					MessageBox.Show(ode.Message);
-				}
-				Environment.Exit(ExitCode);
-				return;
-			}
+
 			FormSplash formSplash = new FormSplash();
-			FormChooseDatabase FormCD = new FormChooseDatabase(chooseDatabaseInfo);
-			ChooseDatabaseInfo modelFromForm = null;
-			while (true)
-			{//Most users will loop through once.  If user tries to connect to a db with replication failure, they will loop through again.
-				if (chooseDatabaseInfo.NoShow == YN.Yes)
-				{
-					try
-					{
-						CentralConnections.TryToConnect(chooseDatabaseInfo.CentralConnectionCur,
-							chooseDatabaseInfo.ConnectionString, (chooseDatabaseInfo.NoShow == YN.Yes), chooseDatabaseInfo.ListAdminCompNames,
-							isCommandLineArgs: (CommandLineArgs.Length != 0), useDynamicMode: chooseDatabaseInfo.UseDynamicMode);
-						UserOdPrefL.SetThemeForUserIfNeeded();
-					}
-					catch (Exception)
-					{
-						if (isSilentUpdate)
-						{
-							ExitCode = 106;//Connection to specified database has failed
-							Environment.Exit(ExitCode);
-							return;
-						}
-						//The current connection settings are invalid so simply show the choose database window for the user to correct them.
-						FormCD.ShowDialog();
-						if (FormCD.DialogResult == DialogResult.Cancel)
-						{
-							Environment.Exit(ExitCode);
-							return;
-						}
-						modelFromForm = FormCD.Model;
-					}
-				}
-				else
-				{
-					FormCD.ShowDialog();
-					if (FormCD.DialogResult == DialogResult.Cancel)
-					{
-						Environment.Exit(ExitCode);
-						return;
-					}
-					modelFromForm = FormCD.Model;
-				}
-				Cursor = Cursors.WaitCursor;
-				#region Theme
-				//this section can be fired twice because it's in a loop, but it can't be fired from different threads
-				ModuleBar.ActionIconChange = new Action(() =>
-				{
-					//ODColorTheme.AddOnThemeChanged(() => {
-					moduleBar.RefreshButtons();
-					LayoutToolBar();
-				});
+			FormChooseDatabase formChooseDatabase = new FormChooseDatabase(false);
+
+
+			CentralConnections.GetChooseDatabaseConnectionSettings(out var connectionString, out var autoConnect);
+
+			bool hasDatabaseConnection = false;
+			if (autoConnect)
+			{
 				try
 				{
-					//Use office default theme after we have the database data and until the user logs in below (the user may have a them override set).
-					ModuleBar.SetIcons(PrefC.GetBool(PrefName.ColorTheme));
-					//ODColorTheme.SetTheme((EnumTheme)PrefC.GetInt(PrefName.ColorTheme));
+					CentralConnections.TryToConnect(connectionString);
+
+					hasDatabaseConnection = true;
+
+					UserOdPrefL.SetThemeForUserIfNeeded();
 				}
 				catch
 				{
-					//try/catch in case you are trying to convert from an older version of OD and need to update the DB.
 				}
-				#endregion Theme
-				try
+			}
+
+			if (!hasDatabaseConnection)
+			{
+				if (formChooseDatabase.ShowDialog(this) == DialogResult.Cancel)
 				{
-					Plugins.LoadAllPlugins(this);//moved up from near RefreshLocalData(invalidTypes). New position might cause problems.
-				}
-				catch
-				{
-					//Do nothing since this will likely only fail if a column is added to the program table, 
-					//due to this method getting called before the update script.  If the plugins do not load, then the simple solution is to restart OD.
-				}
-				if (CommandLineArgs.Length == 0)
-				{ //eCW doesn't load splash screen
-					formSplash.Show(this);
-				}
-				//If there is no model and they are trying to run dynamic mode via command line arguments, use the model from the 
-				//command line args/config file for use in PrefL to launch the appropriate version.
-				if (modelFromForm == null && chooseDatabaseInfo.NoShow == YN.Yes && chooseDatabaseInfo.UseDynamicMode)
-				{
-					modelFromForm = chooseDatabaseInfo;
-				}
-				if (!PrefsStartup(isSilentUpdate, modelFromForm))
-				{//In Release, refreshes the Pref cache if conversion successful.
-					Cursor = Cursors.Default;
-					formSplash.Close();
-					if (ExitCode == 0)
-					{
-						//PrefsStartup failed and ExitCode is still 0 which means an unexpected error must have occurred.
-						//Set the exit code to 999 which will represent an Unknown Error
-						ExitCode = 999;
-					}
 					Environment.Exit(ExitCode);
-					return;
-				}
-				if (isSilentUpdate)
-				{
-					//The db was successfully updated so there is nothing else that needs to be done after this point.
-					Application.Exit();//Exits with ExitCode=0
+
 					return;
 				}
 
-				break;
+				hasDatabaseConnection = true;
 			}
+
+
+			Cursor = Cursors.WaitCursor;
+
+			#region Theme
+			//this section can be fired twice because it's in a loop, but it can't be fired from different threads
+			ModuleBar.ActionIconChange = new Action(() =>
+			{
+					//ODColorTheme.AddOnThemeChanged(() => {
+					moduleBar.RefreshButtons();
+				LayoutToolBar();
+			});
+			try
+			{
+				//Use office default theme after we have the database data and until the user logs in below (the user may have a them override set).
+				ModuleBar.SetIcons(PrefC.GetBool(PrefName.ColorTheme));
+				//ODColorTheme.SetTheme((EnumTheme)PrefC.GetInt(PrefName.ColorTheme));
+			}
+			catch
+			{
+				//try/catch in case you are trying to convert from an older version of OD and need to update the DB.
+			}
+			#endregion Theme
+
+			Plugins.LoadAllPlugins(this);
+
+			formSplash.Show(this);
+
+			if (!PrefsStartup())
+			{
+				//In Release, refreshes the Pref cache if conversion successful.
+				Cursor = Cursors.Default;
+				formSplash.Close();
+
+				if (ExitCode == 0)
+				{
+					//PrefsStartup failed and ExitCode is still 0 which means an unexpected error must have occurred.
+					//Set the exit code to 999 which will represent an Unknown Error
+					ExitCode = 999;
+				}
+
+				Environment.Exit(ExitCode);
+
+				return;
+			}
+
+
+
+
+
 			Logger.DoVerboseLogging = PrefC.IsVerboseLoggingSession;
 			if (Programs.UsingEcwTightOrFullMode())
 			{
 				formSplash.Close();
 			}
+
+
 			//Setting the time that we want to wait when the database connection has been lost.
 			//We don't want a LostConnection event to fire when updating because of Silent Updating which would fail due to window pop-ups from this event.
 			//When the event is triggered a "connection lost" window will display allowing the user to attempt reconnecting to the database
@@ -901,7 +813,7 @@ namespace OpenDental{
 		/// A silent update will have no UI elements appear. model stores all the info used within the choose database window.
 		/// Stores all information entered within the window.
 		/// </summary>
-		private bool PrefsStartup(bool isSilentUpdate = false, ChooseDatabaseInfo chooseDatabaseInfo = null)
+		private bool PrefsStartup(bool isSilentUpdate = false)
 		{
 			try
 			{
@@ -4479,27 +4391,31 @@ namespace OpenDental{
 			}
 		}
 
-		private void menuItemConfig_Click(object sender, System.EventArgs e)
+		private void menuItemConfig_Click(object sender, EventArgs e)
 		{
 			if (!Security.IsAuthorized(Permissions.ChooseDatabase))
 			{
 				return;
 			}
+
 			SecurityLogs.MakeLogEntry(Permissions.ChooseDatabase, 0, "");//make the entry before switching databases.
-			ChooseDatabaseInfo chooseDatabaseInfo = ChooseDatabaseInfo.GetChooseDatabaseInfoFromConfig();
-			ChooseDatabaseInfo.UpdateChooseDatabaseInfoFromCurrentConnection(chooseDatabaseInfo);
-			chooseDatabaseInfo.IsAccessedFromMainMenu = true;
-			FormChooseDatabase FormCD = new FormChooseDatabase(chooseDatabaseInfo);
-			if (FormCD.ShowDialog() != DialogResult.OK)
+
+			using (var formChooseDatabase = new FormChooseDatabase(true))
 			{
-				return;
+				if (formChooseDatabase.ShowDialog() != DialogResult.OK)
+				{
+					return;
+				}
 			}
+
 			CurPatNum = 0;
 			if (!PrefsStartup())
 			{
 				return;
 			}
+
 			RefreshLocalData(InvalidType.AllLocal);
+
 			UnselectActive();//Deselect the currently Visible module.
 			allNeutral();//Set all modules invisible.
 						 //The following 2 methods mimic RefreshCurrentModule()
