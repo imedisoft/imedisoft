@@ -16,10 +16,10 @@ namespace Imedisoft.Forms
 {
     public partial class FormQueryMonitor : FormBase
 	{
-		private readonly ConcurrentQueue<DbQueryObj> queriesQueue = new ConcurrentQueue<DbQueryObj>();
-		private readonly Dictionary<Guid, DbQueryObj> queriesDictionary = new Dictionary<Guid, DbQueryObj>();
+		private readonly ConcurrentQueue<QueryInfo> queriesQueue = new ConcurrentQueue<QueryInfo>();
+		private readonly Dictionary<Guid, QueryInfo> queriesDictionary = new Dictionary<Guid, QueryInfo>();
 		private bool isMonitoring = false;
-		private DbQueryObj selectedQuery = null;
+		private QueryInfo selectedQuery = null;
 
 		public FormQueryMonitor() => InitializeComponent();
 
@@ -37,7 +37,7 @@ namespace Imedisoft.Forms
 		{
 			if (queriesQueue.Count == 0) return;
 
-			var queries = new List<DbQueryObj>();
+			var queries = new List<QueryInfo>();
 			while (queriesQueue.Count != 0)
 			{
 				if (!queriesQueue.TryDequeue(out var query))
@@ -58,7 +58,7 @@ namespace Imedisoft.Forms
 			elapsedTextBox.Clear();
 			commandTextBox.Clear();
 
-            if (!(queryGrid.ListGridRows[e.Row].Tag is DbQueryObj query))
+            if (!(queryGrid.ListGridRows[e.Row].Tag is QueryInfo query))
             {
                 return;
             }
@@ -67,8 +67,8 @@ namespace Imedisoft.Forms
             {
 				selectedQuery = query;
 
-				startTextBox.Text = query.DateTimeStart.ToString();
-				stopTextBox.Text = query.DateTimeStart.ToString();
+				startTextBox.Text = query.StartTime.ToString();
+				stopTextBox.Text = query.StartTime.ToString();
 				elapsedTextBox.Text = query.Elapsed.ToString("G");
 				commandTextBox.Text = query.Command;
 			}
@@ -77,11 +77,11 @@ namespace Imedisoft.Forms
 			copyButton.Enabled = selectedQuery != null;
 		}
 
-		private void AddQueriesToGrid(params DbQueryObj[] queries)
+		private void AddQueriesToGrid(params QueryInfo[] queries)
 		{
 			if (queries.IsNullOrEmpty()) return;
 
-			foreach (DbQueryObj query in queries)
+			foreach (QueryInfo query in queries)
 			{
 				queriesDictionary[query.GUID] = query;
 			}
@@ -95,7 +95,7 @@ namespace Imedisoft.Forms
 
 			foreach (var query in displayQueries)
 			{
-				var row = new GridRow(query.Command.Trim(), query.DateTimeInit.ToString(), (query.Elapsed == TimeSpan.MinValue) ? "" : query.Elapsed.ToString("G"))
+				var row = new GridRow(query.Command.Trim(), query.StartTime.ToString(), (query.Elapsed == TimeSpan.MinValue) ? "" : query.Elapsed.ToString("G"))
 				{
 					Tag = query
 				};
@@ -151,12 +151,12 @@ namespace Imedisoft.Forms
 
 		private void DbMonitorEvent_Fired(ODEventArgs e)
 		{
-			if (e.EventType != ODEventType.QueryMonitor || !(e.Tag is DbQueryObj))
+			if (e.EventType != ODEventType.QueryMonitor || !(e.Tag is QueryInfo))
 			{
 				return;
 			}
 
-			queriesQueue.Enqueue(e.Tag as DbQueryObj);
+			queriesQueue.Enqueue(e.Tag as QueryInfo);
 		}
 
 		private void LogButton_Click(object sender, EventArgs e)

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using CodeBase;
+using System;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
-using CodeBase;
 
 namespace DataConnectionBase
 {
-	public class QueryMonitor
+    public class QueryMonitor
 	{
 		/// <summary>
 		/// Set to true if monitoring queries from FormQueryMonitor.
@@ -15,34 +15,47 @@ namespace DataConnectionBase
 		/// </summary>
 		public static bool IsMonitoring { get; set; } = false;
 
-		public static void RunMonitoredQuery(Action queryAction, DbCommand cmd)
+		public static void RunMonitoredQuery(Action queryAction, DbCommand command)
 		{
-			DbQueryObj dbQueryObj = null;
-			Stopwatch s = null;
+			QueryInfo queryInfo = null;
+
+			Stopwatch stopwatch = null;
+
 			if (IsMonitoring)
 			{
-				dbQueryObj = new DbQueryObj(cmd.CommandText);
+				queryInfo = new QueryInfo(command.CommandText);
 
-				//order by descending length of parameter name so that replacing parameter '@Note' doesn't replace part of parameter '@NoteBold'
-				cmd.Parameters.OfType<DbParameter>().OrderByDescending(x => x.ParameterName.Length)
-					.ForEach(x => dbQueryObj.Command = dbQueryObj.Command.Replace(x.ParameterName, "'" + SOut.String(x.Value.ToString()) + "'"));
-				dbQueryObj.MethodName = new StackTrace().GetFrame(3).GetMethod().Name;
+				var parameters = command.Parameters
+					.OfType<DbParameter>()
+					.OrderByDescending(
+						parameter => parameter.ParameterName.Length);
 
-				//Synchronously notify anyone that cares that the query has started to execute.
-				QueryMonitorEvent.Fire(ODEventType.QueryMonitor, dbQueryObj);
-				dbQueryObj.DateTimeStart = DateTime.Now;
+				foreach (var param in parameters)
+                {
+					queryInfo.Command = queryInfo.Command.Replace(
+						param.ParameterName, "'" + SOut.String(param.Value.ToString()) + "'");
+				}
 
-				//using stopwatch to time queries because the resolution of DateTime.Now is between 0.5 and 15 milliseconds which makes it not suitable for use
-				//as a benchmarking tool.  See https://docs.microsoft.com/en-us/dotnet/api/system.datetime.now
-				s = Stopwatch.StartNew();
+				queryInfo.MethodName = new StackTrace().GetFrame(3).GetMethod().Name;
+
+				// Synchronously notify anyone that cares that the query has started to execute.
+				QueryMonitorEvent.Fire(ODEventType.QueryMonitor, queryInfo);
+
+				// Using stopwatch to time queries because the resolution of DateTime.Now is between 0.5 and 15 milliseconds
+				// which makes it not suitable for use as a benchmarking tool. 
+				// See https://docs.microsoft.com/en-us/dotnet/api/system.datetime.now
+				stopwatch = Stopwatch.StartNew();
 			}
+
 			queryAction();
+
 			if (IsMonitoring)
 			{
-				s.Stop();
-				dbQueryObj.DateTimeStop = dbQueryObj.DateTimeStart.Add(s.Elapsed);
-				//Synchronously notify anyone that cares that the query has finished executing.
-				QueryMonitorEvent.Fire(ODEventType.QueryMonitor, dbQueryObj);
+				stopwatch.Stop();
+
+				queryInfo.StopTime = queryInfo.StartTime.Add(stopwatch.Elapsed);
+
+				QueryMonitorEvent.Fire(ODEventType.QueryMonitor, queryInfo);
 			}
 		}
 	}

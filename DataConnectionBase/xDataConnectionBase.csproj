@@ -92,7 +92,7 @@
     <Compile Include="DatabaseRecordBuilder.cs" />
     <Compile Include="DataConnection.cs" />
     <Compile Include="DataConnectionEvent.cs" />
-    <Compile Include="DbQueryObj.cs" />
+    <Compile Include="QueryInfo.cs" />
     <Compile Include="QueryMonitor.cs" />
     <Compile Include="SIn.cs" />
     <Compile Include="SOut.cs" />
