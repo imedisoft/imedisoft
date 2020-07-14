@@ -129,7 +129,7 @@ namespace OpenDental.Bridges
 		/// </summary>
 		private static string Tidy(string input)
 		{
-			string retVal = input.Replace(";", "")
+			string retVal = input.Replace(";", "");
 			retVal = retVal.Replace(" ", "");
 			return retVal;
 		}

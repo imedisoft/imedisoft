@@ -57,7 +57,7 @@ namespace OpenDental.Bridges
 		/// </summary>
 		private static string Cleanup(string input)
 		{
-			return input.Replace("\"", "")
+			return input.Replace("\"", "");
 		}
 	}
 }
