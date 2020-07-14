@@ -1,5 +1,8 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Forms;
+using Imedisoft.Properties;
+using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -9,192 +12,259 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormQueryMonitor:ODForm {
-		///<summary>Queries will be coming in at an alarming rate and this queue will get filled via DbMonitor events that are fired.
-		///There will be a timer running on the UI thread that will be pulling queries out of this queue and storing them into a dictionary.</summary>
-		private ConcurrentQueue<DbQueryObj> _queueQueries=new ConcurrentQueue<DbQueryObj>();
-		///<summary>Stores all query objects that this instance of the query monitor has captured.</summary>
-		private Dictionary<Guid,DbQueryObj> _dictQueries=new Dictionary<Guid,DbQueryObj>();
-		///<summary>Shallow copy of the currently selected query object.  Do not trust the grid because it gets truncated as the feed grows.</summary>
-		private DbQueryObj _dbQueryObjCur=null;
+namespace Imedisoft.Forms
+{
+    public partial class FormQueryMonitor : FormBase
+	{
+		private readonly ConcurrentQueue<DbQueryObj> queriesQueue = new ConcurrentQueue<DbQueryObj>();
+		private readonly Dictionary<Guid, DbQueryObj> queriesDictionary = new Dictionary<Guid, DbQueryObj>();
+		private bool isMonitoring = false;
+		private DbQueryObj selectedQuery = null;
 
-		///<summary>Returns true if this tool is currently monitoring queries.  Otherwise; false.</summary>
-		private bool _isMonitoring {
-			get {
-				return (butStart.Text=="Stop");
-			}
+		public FormQueryMonitor() => InitializeComponent();
+
+		private void FormQueryMonitor_Load(object sender, EventArgs e)
+		{
+			queryGrid.BeginUpdate();
+			queryGrid.ListGridColumns.Clear();
+			queryGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Command, 100) { IsWidthDynamic = true });
+			queryGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Start, 125, HorizontalAlignment.Center, GridSortingStrategy.DateParse));
+			queryGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Elapsed, 100, HorizontalAlignment.Center));
+			queryGrid.EndUpdate();
 		}
 
-		public FormQueryMonitor() {
-			InitializeComponent();
-			Lan.F(this);
-		}
+		private void TimerProcessQueue_Tick(object sender, EventArgs e)
+		{
+			if (queriesQueue.Count == 0) return;
 
-		private void FormQueryMonitor_Load(object sender,EventArgs e) {
-			FillGridColumns();
-		}
-
-		private void TimerProcessQueue_Tick(object sender,EventArgs e) {
-			if(_queueQueries.Count==0) {
-				return;
-			}
-			List<DbQueryObj> listQueries=new List<DbQueryObj>();
-			while(_queueQueries.Count!=0) {
-				if(!_queueQueries.TryDequeue(out DbQueryObj query)) {
+			var queries = new List<DbQueryObj>();
+			while (queriesQueue.Count != 0)
+			{
+				if (!queriesQueue.TryDequeue(out var query))
+				{
 					break;
 				}
-				listQueries.Add(query);
+
+				queries.Add(query);
 			}
-			AddQueriesToGrid(listQueries.ToArray());
+
+			AddQueriesToGrid(queries.ToArray());
 		}
 
-		private void FillGridColumns() {
-			gridFeed.BeginUpdate();
-			gridFeed.ListGridColumns.Clear();
-			gridFeed.ListGridColumns.Add(new GridColumn(Lan.G(gridFeed.TranslationName,"Command"),100){ IsWidthDynamic=true });
-			gridFeed.ListGridColumns.Add(new GridColumn(
-				Lan.G(gridFeed.TranslationName,"DateTimeStart"),125,HorizontalAlignment.Center,GridSortingStrategy.DateParse)
-			);
-			gridFeed.ListGridColumns.Add(new GridColumn(Lan.G(gridFeed.TranslationName,"Elapsed"),100,HorizontalAlignment.Center));
-			gridFeed.EndUpdate();
+		private void QueryGrid_CellClick(object sender, ODGridClickEventArgs e)
+		{
+			startTextBox.Clear();
+			stopTextBox.Clear();
+			elapsedTextBox.Clear();
+			commandTextBox.Clear();
+
+            if (!(queryGrid.ListGridRows[e.Row].Tag is DbQueryObj query))
+            {
+                return;
+            }
+
+            try
+            {
+				selectedQuery = query;
+
+				startTextBox.Text = query.DateTimeStart.ToString();
+				stopTextBox.Text = query.DateTimeStart.ToString();
+				elapsedTextBox.Text = query.Elapsed.ToString("G");
+				commandTextBox.Text = query.Command;
+			}
+            catch { }
+
+			copyButton.Enabled = selectedQuery != null;
 		}
 
-		private void GridFeed_CellClick(object sender,ODGridClickEventArgs e) {
-			textDateTimeStart.Clear();
-			textDateTimeStop.Clear();
-			textElapsed.Clear();
-			textCommand.Clear();
-			DbQueryObj dbQueryObj=gridFeed.ListGridRows[e.Row].Tag as DbQueryObj;
-			if(dbQueryObj==null) {
-				return;
-			}
-			ODException.SwallowAnyException(() => {
-				_dbQueryObjCur=dbQueryObj;
-				textDateTimeStart.Text=dbQueryObj.DateTimeStart.ToString();
-				textDateTimeStop.Text=dbQueryObj.DateTimeStart.ToString();
-				textElapsed.Text=dbQueryObj.Elapsed.ToString("G");
-				textCommand.Text=dbQueryObj.Command;
-			});
-		}
+		private void AddQueriesToGrid(params DbQueryObj[] queries)
+		{
+			if (queries.IsNullOrEmpty()) return;
 
-		private void AddQueriesToGrid(params DbQueryObj[] arrayQueries) {
-			if(arrayQueries.IsNullOrEmpty()) {
-				return;
+			foreach (DbQueryObj query in queries)
+			{
+				queriesDictionary[query.GUID] = query;
 			}
-			foreach(DbQueryObj query in arrayQueries) {
-				_dictQueries[query.GUID]=query;//Refresh the object within the dictionary so that any new information(e.g.Elapsed) gets updated.
-			}
-			//Arbitrarily limit the number of rows showing in the grid.
-			//The top of the grid is the oldest query so take the last X items.
-			//Use TakeLast(X) instead of a loop because a bunch of queries could have been queued (e.g. pasting schedules can queue thousands).
-			List<DbQueryObj> listDisplayQueries=_dictQueries.Values.TakeLast(500).ToList();
-			gridFeed.BeginUpdate();
-			gridFeed.ListGridRows.Clear();
-			foreach(DbQueryObj query in listDisplayQueries) {
-				GridRow row=new GridRow(query.Command.Trim(),
-					query.DateTimeInit.ToString(),
-					(query.Elapsed==TimeSpan.MinValue) ? "" : query.Elapsed.ToString("G"))
+
+			// Arbitrarily limit the number of rows showing in the grid.
+			// The top of the grid is the oldest query so take the last X items.
+			// Use TakeLast(X) instead of a loop because a bunch of queries could have been queued (e.g. pasting schedules can queue thousands).
+			var displayQueries = queriesDictionary.Values.TakeLast(500);
+			queryGrid.BeginUpdate();
+			queryGrid.ListGridRows.Clear();
+
+			foreach (var query in displayQueries)
+			{
+				var row = new GridRow(query.Command.Trim(), query.DateTimeInit.ToString(), (query.Elapsed == TimeSpan.MinValue) ? "" : query.Elapsed.ToString("G"))
 				{
-					Tag=query
+					Tag = query
 				};
-				gridFeed.ListGridRows.Add(row);
+
+				queryGrid.ListGridRows.Add(row);
 			}
-			gridFeed.EndUpdate();
-			gridFeed.ScrollToIndex(gridFeed.ListGridRows.Count-1);
+
+			queryGrid.EndUpdate();
+			queryGrid.ScrollToIndex(queryGrid.ListGridRows.Count - 1);
 		}
 
-		private void ButStart_Click(object sender,EventArgs e) {
-			if(_isMonitoring) {
+		private void Start()
+        {
+			if (isMonitoring) return;
+
+			timerProcessQueue.Start();
+			QueryMonitorEvent.Fired += DbMonitorEvent_Fired;
+			QueryMonitor.IsMonitoring = true;
+
+			toggleButton.Text = "&Stop";
+			toggleButton.Image = Resources.IconMediaStop;
+
+			logButton.Enabled = false;
+
+			isMonitoring = true;
+		}
+
+		private void Stop()
+        {
+			if (isMonitoring)
+            {
 				timerProcessQueue.Stop();
-				QueryMonitorEvent.Fired-=DbMonitorEvent_Fired;
-				QueryMonitor.IsMonitoring=false;
-				butStart.Text="Start";
+				QueryMonitorEvent.Fired -= DbMonitorEvent_Fired;
+				QueryMonitor.IsMonitoring = false;
+
+				toggleButton.Text = "&Start";
+				toggleButton.Image = Resources.IconMediaPlay;
+
+				logButton.Enabled = true;
+
+				isMonitoring = false;
 			}
-			else {
-				timerProcessQueue.Start();
-				QueryMonitorEvent.Fired+=DbMonitorEvent_Fired;
-				QueryMonitor.IsMonitoring=true;
-				butStart.Text="Stop";
-			}
+        }
+
+		private void ToggleButton_Click(object sender, EventArgs e)
+		{
+			if (isMonitoring) Stop();
+            else
+            {
+				Start();
+            }
 		}
 
-		private void DbMonitorEvent_Fired(ODEventArgs e) {
-			if(e.EventType!=ODEventType.QueryMonitor || !(e.Tag is DbQueryObj)) {
+		private void DbMonitorEvent_Fired(ODEventArgs e)
+		{
+			if (e.EventType != ODEventType.QueryMonitor || !(e.Tag is DbQueryObj))
+			{
 				return;
 			}
-			_queueQueries.Enqueue(e.Tag as DbQueryObj);
+
+			queriesQueue.Enqueue(e.Tag as DbQueryObj);
 		}
 
-		private void ButLog_Click(object sender,EventArgs e) {
-			if(_isMonitoring) {
-				MessageBox.Show("Stop monitoring queries before creating a log.");
+		private void LogButton_Click(object sender, EventArgs e)
+		{
+			if (isMonitoring)
+			{
+				ShowInfo(Translation.Common.StopMonitoringQueriesBeforeCreatingLog);
 				return;
 			}
-			if(_dictQueries.Count==0) {
-				MessageBox.Show("No queries in the Query Feed to log.");
+
+			if (queriesDictionary.Count == 0)
+			{
+				ShowInfo(Translation.Common.NoQueriesInTheQueryFeedToLog);
 				return;
 			}
-			if(!MsgBox.Show(MsgBoxButtons.YesNo,Lan.G(this,"Log all queries to a file?  Total query count")+$": {_dictQueries.Count.ToString("N0")}")) {
+
+			if (Prompt($"Log all queries to a file? Total query count: {queriesDictionary.Count:N0}") == DialogResult.No)
+            {
 				return;
-			}
-			string logFolderPath="QueryMonitorLogs";
-			string logFileName="";
-			try {
-				//Create the query monitor log folder in the AtoZ image path.
-				if(!OpenDentBusiness.FileIO.FileAtoZ.DirectoryExistsRelative(logFolderPath)) {
+            }
+
+			string logFolderPath = "QueryMonitorLogs";
+			string logFileName = "";
+			try
+			{
+				// Create the query monitor log folder in the AtoZ image path.
+				if (!OpenDentBusiness.FileIO.FileAtoZ.DirectoryExistsRelative(logFolderPath))
+				{
 					OpenDentBusiness.FileIO.FileAtoZ.CreateDirectoryRelative(logFolderPath);
 				}
-				//Get a unique file name within the log folder.
-				logFileName=$"QueryMonitorLog_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
-				while(OpenDentBusiness.FileIO.FileAtoZ.ExistsRelative(logFolderPath,logFileName)) {
-					logFileName=$"QueryMonitorLog_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
+
+				// Get a unique file name within the log folder.
+				logFileName = $"QueryMonitorLog_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+				while (OpenDentBusiness.FileIO.FileAtoZ.ExistsRelative(logFolderPath, logFileName))
+				{
+					logFileName = $"QueryMonitorLog_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
 					Thread.Sleep(100);
 				}
-				//Dump the entire query history into the log file.
-				OpenDentBusiness.FileIO.FileAtoZ.WriteAllTextRelative(logFolderPath,logFileName,
-					$"Query Monitor Log - {DateTime.Now.ToString()}, OD User: {Security.CurUser.UserName}, Computer: {Environment.MachineName}\r\n"+
-					$"{string.Join("\r\n",_dictQueries.Values.Select(x => x.ToString()))}");
+
+				// Dump the entire query history into the log file.
+				OpenDentBusiness.FileIO.FileAtoZ.WriteAllTextRelative(logFolderPath, logFileName,
+					$"Query Monitor Log - {DateTime.Now}, OD User: {Security.CurUser.UserName}, Computer: {Environment.MachineName}\r\n" +
+					$"{string.Join("\r\n", queriesDictionary.Values.Select(x => x.ToString()))}");
 			}
-			catch(ODException ode) {
-				MsgBox.Show(ode.Message);
+			catch (ODException exception)
+			{
+				ShowError(exception.Message);
+
 				return;
 			}
-			catch(Exception ex) {
-				MsgBox.Show(Lan.G(this,"Error creating log file")+$":\r\n{ex.Message}");
+			catch (Exception exception)
+			{
+				ShowError(string.Format(
+					Translation.Common.ErrorCreatingLogFile, exception.Message));
+
 				return;
 			}
-			if(MsgBox.Show(MsgBoxButtons.YesNo,"Log file created.  Would you like to open the file?")) {
-				try {
-					FileAtoZ.StartProcessRelative(logFolderPath,logFileName);
+
+			if (Prompt(Translation.Common.LogFileCreatedWouldYouLikeToOpenFile) == DialogResult.Yes)
+			{
+				try
+				{
+					FileAtoZ.StartProcessRelative(logFolderPath, logFileName);
 				}
-				catch(Exception ex) {
-					MsgBox.Show(Lan.G(this,"Could not open log file")+$":\r\n{ex.Message}");
+				catch (Exception ex)
+				{
+					ShowError(string.Format(
+						Translation.Common.ErrorOpeningLogFile, ex.Message));
 				}
 			}
 		}
 
-		private void ButCopy_Click(object sender,EventArgs e) {
-			if(_dbQueryObjCur==null) {
-				MessageBox.Show("Select a row from the Query Feed.");
+		private void CopyButton_Click(object sender, EventArgs e)
+		{
+			if (selectedQuery == null)
+			{
+				ShowInfo(Translation.Common.SelectRowFromQueryFeed);
+
 				return;
 			}
-			try {
-				ODClipboard.Text = _dbQueryObjCur.ToString();
-				MessageBox.Show("Copied");
+
+			try
+			{
+				ODClipboard.Text = selectedQuery.ToString();
+
+				ShowInfo(Translation.Common.Copied);
 			}
-			catch {
-				MessageBox.Show("Could not copy contents to clipboard.  Please try again.");
+			catch (Exception ex)
+			{
+				ShowError(Translation.Common.CouldNotCopyContentsToClipboard);
 			}
 		}
 
-		private void butClose_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void CloseButton_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
+
 			Close();
 		}
 
-		private void FormQueryMonitor_FormClosing(object sender,FormClosingEventArgs e) {
-			ODException.SwallowAnyException(() => { QueryMonitorEvent.Fired-=DbMonitorEvent_Fired; });
+		private void FormQueryMonitor_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			ODException.SwallowAnyException(() => { QueryMonitorEvent.Fired -= DbMonitorEvent_Fired; });
 		}
-	}
+
+        private void AlwaysOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+			TopMost = alwaysOnTopCheckBox.Checked;
+        }
+    }
 }

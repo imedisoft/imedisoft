@@ -117,10 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Command" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="Copied" xml:space="preserve">
+    <value>Copied</value>
+  </data>
+  <data name="CouldNotCopyContentsToClipboard" xml:space="preserve">
+    <value>Could not copy contents to clipboard. Please try again.</value>
+  </data>
+  <data name="Elapsed" xml:space="preserve">
+    <value>Elapsed</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="ErrorCreatingLogFile" xml:space="preserve">
+    <value>Error creating log file. {0}</value>
+  </data>
+  <data name="ErrorOpeningLogFile" xml:space="preserve">
+    <value>Could not open log file. {0}</value>
+  </data>
   <data name="InvalidPassword" xml:space="preserve">
     <value>Wrong password</value>
   </data>
+  <data name="LogFileCreatedWouldYouLikeToOpenFile" xml:space="preserve">
+    <value>Log file created. Would you like to open the file?</value>
+  </data>
+  <data name="NoQueriesInTheQueryFeedToLog" xml:space="preserve">
+    <value>No queries in the Query Feed to log.</value>
+  </data>
   <data name="PleaseEnterPassword" xml:space="preserve">
     <value>Please enter password</value>
+  </data>
+  <data name="SelectRowFromQueryFeed" xml:space="preserve">
+    <value>Select a row from the Query Feed.</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="StopMonitoringQueriesBeforeCreatingLog" xml:space="preserve">
+    <value>Stop monitoring queries before creating a log.</value>
   </data>
 </root>

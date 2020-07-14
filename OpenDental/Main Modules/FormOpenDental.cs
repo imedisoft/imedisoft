@@ -7126,18 +7126,11 @@ namespace OpenDental{
 
 		private void MenuItemQueryMonitor_Click(object sender, EventArgs e)
 		{
-			new FormQueryMonitor().Show();//Mildly annoying because this tool cannot be interacted with when other windows utilize ShowDialog()...
-			/*********************************************************************************************************************************
-				//The following code does not work.  Well, technically it works but ODGrid.OnPaint() is not thread safe so it crashes after a while.
-				ODThread threadQueryMonitor=new ODThread((o) => {
-					FormQueryMonitor FormQM=new FormQueryMonitor();
-					Application.Run(FormQM);//FormQM.ShowDialog() closes as soon as a button is clicked.  Give the query monitor its own OS Message Queue.
-				});
-				threadQueryMonitor.AddExceptionHandler((ex) => ex.DoNothing());
-				threadQueryMonitor.SetApartmentState(ApartmentState.STA);
-				threadQueryMonitor.Name=$"QueryMonitorThread_{DateTime.Now.Ticks}";
-				threadQueryMonitor.Start();
-			**********************************************************************************************************************************/
+			var thread = new Thread(() => new FormQueryMonitor().ShowDialog());
+
+			thread.SetApartmentState(ApartmentState.STA);
+			thread.Name = "QueryMonitorThread";
+			thread.Start();
 		}
 
 		private void menuItemRequestFeatures_Click(object sender, EventArgs e)

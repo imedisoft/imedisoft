@@ -49,20 +49,20 @@ namespace OpenDental.UI {
 		///<summary>This is a little bit misused.  Review.</summary>
 		private static Color _colorTitleBottom=Color.FromArgb(60,90,150);
 		//Brushes------------------------------------------------------------------------------------------------
-		private static SolidBrush _brushBackground=new SolidBrush(Color.FromArgb(202,212,222));
-		private static SolidBrush _brushHeaderBackground=new SolidBrush(Color.FromArgb(223,234,245));
-		private static SolidBrush _brushHeaderText=(SolidBrush)Brushes.Black;
-		private static SolidBrush _brushTitleText=(SolidBrush)Brushes.White;
+		private SolidBrush _brushBackground=new SolidBrush(Color.FromArgb(202,212,222));
+		private SolidBrush _brushHeaderBackground=new SolidBrush(Color.FromArgb(223,234,245));
+		private SolidBrush _brushHeaderText=(SolidBrush)Brushes.Black;
+		private SolidBrush _brushTitleText=(SolidBrush)Brushes.White;
 		//Fonts--------------------------------------------------------------------------------------------------
 		//private Font _fontCell96=new Font(FontFamily.GenericSansSerif,8.5f);//this.Font is ignored. Used for calculations.
 		//private Font _fontCellBold96=new Font(FontFamily.GenericSansSerif,8.5f,FontStyle.Bold);
 		//Pens---------------------------------------------------------------------------------------------------
 		///<summary>Review.  Also separates column headers.  Also used in a few other places where darker line needed.  Maybe change name _penGridlineDark?</summary>
-		private static Pen _penColumnSeparator=new Pen(Color.FromArgb(120,120,120));
+		private Pen _penColumnSeparator=new Pen(Color.FromArgb(120,120,120));
 		///<summary>Seems to only be used once as the line between title and headers.</summary>
-		private static Pen _penGridInnerLine=new Pen(Color.FromArgb(102,102,122));
-		private static Pen _penGridline=new Pen(Color.FromArgb(180,180,180));
-		private static Pen _penOutline=new Pen(Color.FromArgb(47,70,117));
+		private Pen _penGridInnerLine=new Pen(Color.FromArgb(102,102,122));
+		private Pen _penGridline=new Pen(Color.FromArgb(180,180,180));
+		private Pen _penOutline=new Pen(Color.FromArgb(47,70,117));
 		#endregion Fields - Private Static Drawing
 
 		#region Fields - Private Drawing

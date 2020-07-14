@@ -61,6 +61,69 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Command.
+        /// </summary>
+        public static string Command {
+            get {
+                return ResourceManager.GetString("Command", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied.
+        /// </summary>
+        public static string Copied {
+            get {
+                return ResourceManager.GetString("Copied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not copy contents to clipboard. Please try again..
+        /// </summary>
+        public static string CouldNotCopyContentsToClipboard {
+            get {
+                return ResourceManager.GetString("CouldNotCopyContentsToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elapsed.
+        /// </summary>
+        public static string Elapsed {
+            get {
+                return ResourceManager.GetString("Elapsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End.
+        /// </summary>
+        public static string End {
+            get {
+                return ResourceManager.GetString("End", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error creating log file. {0}.
+        /// </summary>
+        public static string ErrorCreatingLogFile {
+            get {
+                return ResourceManager.GetString("ErrorCreatingLogFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not open log file. {0}.
+        /// </summary>
+        public static string ErrorOpeningLogFile {
+            get {
+                return ResourceManager.GetString("ErrorOpeningLogFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wrong password.
         /// </summary>
         public static string InvalidPassword {
@@ -70,11 +133,65 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log file created. Would you like to open the file?.
+        /// </summary>
+        public static string LogFileCreatedWouldYouLikeToOpenFile {
+            get {
+                return ResourceManager.GetString("LogFileCreatedWouldYouLikeToOpenFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No queries in the Query Feed to log..
+        /// </summary>
+        public static string NoQueriesInTheQueryFeedToLog {
+            get {
+                return ResourceManager.GetString("NoQueriesInTheQueryFeedToLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter password.
         /// </summary>
         public static string PleaseEnterPassword {
             get {
                 return ResourceManager.GetString("PleaseEnterPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a row from the Query Feed..
+        /// </summary>
+        public static string SelectRowFromQueryFeed {
+            get {
+                return ResourceManager.GetString("SelectRowFromQueryFeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        public static string Start {
+            get {
+                return ResourceManager.GetString("Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        public static string Stop {
+            get {
+                return ResourceManager.GetString("Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop monitoring queries before creating a log..
+        /// </summary>
+        public static string StopMonitoringQueriesBeforeCreatingLog {
+            get {
+                return ResourceManager.GetString("StopMonitoringQueriesBeforeCreatingLog", resourceCulture);
             }
         }
     }
