@@ -995,7 +995,7 @@ namespace OpenDental{
 			//ok signifies that a database was restored
 			FormOpenDental.S_Contr_PatientSelected(new Patient(),false);//unload patient after restore.
 			//ParentForm.Text=PrefC.GetString(PrefName.MainWindowTitle");
-			DataValid.SetInvalid(true);
+			DataValid.SetInvalid();
 			ModuleSelected(PatCurNum);
 		}
 

@@ -4828,11 +4828,8 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Main Modules\ProgramEntry.cs" />
-    <Compile Include="Misc\IValid.cs" />
     <Compile Include="Misc\SetupWizard.cs" />
-    <Compile Include="Misc\ClassConvertDatabase.cs" />
     <Compile Include="Misc\ClassesShared.cs" />
-    <Compile Include="Misc\DataConnectionOld.cs" />
     <Compile Include="Misc\EZTwain.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -4913,9 +4910,6 @@
     <Compile Include="ReportingComplex\SectionCollection.cs" />
     <Compile Include="SheetFramework\LabelSingle.cs" />
     <Compile Include="Misc\ObjectDateComparer.cs" />
-    <Compile Include="Misc\Pop3.cs" />
-    <Compile Include="Misc\Tooth.cs" />
-    <Compile Include="Misc\VisiQuick.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SheetFramework\SheetEditMobileCtrl.cs">
       <SubType>UserControl</SubType>
@@ -8237,10 +8231,6 @@
       <DependentUpon>ContrPerio.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="User Controls\ContrTeeth.resx">
-      <DependentUpon>ContrTeeth.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="User Controls\Dashboard\DashLabel.resx">
       <DependentUpon>DashLabel.cs</DependentUpon>
     </EmbeddedResource>
@@ -8536,7 +8526,6 @@
     <Compile Include="User Controls\ContrPerio.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="User Controls\ContrTeeth.cs" />
     <Compile Include="User Controls\ODtextBox.cs">
       <SubType>Component</SubType>
     </Compile>

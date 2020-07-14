@@ -74,9 +74,9 @@ namespace OpenDental {
 			foreach(SetupWizard.SetupWizClass setupItem in _listSetupWizItems) {
 				GridRow row = new GridRow();
 				row.Cells.Add("     "+setupItem.Name);
-				row.Cells.Add(setupItem.GetStatus.GetDescription());
+				row.Cells.Add(setupItem.Status.GetDescription());
 				statusCellNum=row.Cells.Count-1;
-				row.Cells[statusCellNum].ColorBackG = SetupWizard.GetColor(setupItem.GetStatus);
+				row.Cells[statusCellNum].ColorBackG = SetupWizard.GetColor(setupItem.Status);
 				row.Cells.Add("0");
 				//row.ColorBackG=SetupWizard.GetColor(setupItem.GetStatus);
 				row.Tag=setupItem;
@@ -84,7 +84,7 @@ namespace OpenDental {
 			}
 			//now add parent rows to the list
 			foreach(GridRow rowCur in listSetupRows) {
-				ODSetupCategory catCur = ((SetupWizard.SetupWizClass)rowCur.Tag).GetCategory;
+				ODSetupCategory catCur = ((SetupWizard.SetupWizClass)rowCur.Tag).Category;
 				//bool exists = false;
 				////if the parent row doesn't exist..
 				//foreach(ODGridRow parentRow in listCategoryRows) {
@@ -118,8 +118,8 @@ namespace OpenDental {
 			}
 			//Assign colors to parent rows.
 			foreach(GridRow rowCur in listCategoryRows) {
-				if(listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).GetCategory == ((ODSetupCategory)rowCur.Tag))
-					.All(x => ((SetupWizard.SetupWizClass)x.Tag).GetStatus == ODSetupStatus.Complete || ((SetupWizard.SetupWizClass)x.Tag).GetStatus == ODSetupStatus.Optional))
+				if(listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag))
+					.All(x => ((SetupWizard.SetupWizClass)x.Tag).Status == ODSetupStatus.Complete || ((SetupWizard.SetupWizClass)x.Tag).Status == ODSetupStatus.Optional))
 				{
 					//rowCur.ColorBackG = SetupWizard.GetColor(ODSetupStatus.Complete);
 					rowCur.Cells[statusCellNum].Text="\r\n"+ODSetupStatus.Complete.GetDescription();
@@ -134,8 +134,8 @@ namespace OpenDental {
 			}
 			foreach(GridRow rowCur in listCategoryRows) {
 				listRowsAll.Add(rowCur);
-				listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).GetCategory == ((ODSetupCategory)rowCur.Tag)).DefaultIfEmpty(new GridRow()).LastOrDefault().ColorLborder = Color.Black;
-				listRowsAll.AddRange(listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).GetCategory == ((ODSetupCategory)rowCur.Tag)));
+				listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag)).DefaultIfEmpty(new GridRow()).LastOrDefault().ColorLborder = Color.Black;
+				listRowsAll.AddRange(listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag)));
 			}
 			return listRowsAll;
 		}
@@ -147,7 +147,7 @@ namespace OpenDental {
 				for(int i = 0;i < gridMain.ListGridRows.Count;i++) {
 					GridRow row = gridMain.ListGridRows[i];
 					if(row.Tag is SetupWizard.SetupWizClass
-						&& ((SetupWizard.SetupWizClass)row.Tag).GetCategory == (ODSetupCategory)clickedRow.Tag) {
+						&& ((SetupWizard.SetupWizClass)row.Tag).Category == (ODSetupCategory)clickedRow.Tag) {
 						gridMain.SetSelected(i,true);
 					}
 				}
@@ -157,7 +157,7 @@ namespace OpenDental {
 				|| clickedCol.ImageList == null) {
 				return;
 			}
-			MessageBox.Show(((SetupWizard.SetupWizClass)clickedRow.Tag).GetDescript);
+			MessageBox.Show(((SetupWizard.SetupWizClass)clickedRow.Tag).Description);
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
@@ -167,8 +167,8 @@ namespace OpenDental {
 			List<SetupWizard.SetupWizClass> listSetupClasses = new List<SetupWizard.SetupWizClass>();
 			if(clickedRow.Tag.GetType().BaseType != typeof(SetupWizard.SetupWizClass)) { //category clicked
 				foreach(SetupWizard.SetupWizClass setupWizClass in _listSetupWizItems) { //for each row, add the row and an intro and complete class.
-					if(setupWizClass.GetCategory == (ODSetupCategory)clickedRow.Tag) {
-						SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name, setupWizClass.GetDescript);
+					if(setupWizClass.Category == (ODSetupCategory)clickedRow.Tag) {
+						SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name, setupWizClass.Description);
 						SetupWizard.SetupComplete complete = new SetupWizard.SetupComplete(setupWizClass.Name);
 						listSetupClasses.Add(intro);
 						listSetupClasses.Add(setupWizClass);
@@ -180,7 +180,7 @@ namespace OpenDental {
 			}
 			else { //single row clicked
 				SetupWizard.SetupWizClass setupWizClass = (SetupWizard.SetupWizClass)clickedRow.Tag;
-				SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name,setupWizClass.GetDescript);
+				SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name,setupWizClass.Description);
 				SetupWizard.SetupComplete complete = new SetupWizard.SetupComplete(setupWizClass.Name);
 				listSetupClasses.Add(intro);
 				listSetupClasses.Add(setupWizClass);
@@ -194,7 +194,7 @@ namespace OpenDental {
 		private void butAll_Click(object sender,EventArgs e) {
 			List<SetupWizard.SetupWizClass> listSetupClasses = new List<OpenDental.SetupWizard.SetupWizClass>();
 			foreach(SetupWizard.SetupWizClass setupWizClass in _listSetupWizItems) { //for each row, add the row and an intro and complete class.
-					SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name,setupWizClass.GetDescript);
+					SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name,setupWizClass.Description);
 					SetupWizard.SetupComplete complete = new SetupWizard.SetupComplete(setupWizClass.Name);
 					listSetupClasses.Add(intro);
 					listSetupClasses.Add(setupWizClass);
@@ -213,7 +213,7 @@ namespace OpenDental {
 					continue;
 				}
 				SetupWizard.SetupWizClass setupWizClass = (SetupWizard.SetupWizClass)selectedRow.Tag;
-				SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name,setupWizClass.GetDescript);
+				SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name,setupWizClass.Description);
 				SetupWizard.SetupComplete complete = new SetupWizard.SetupComplete(setupWizClass.Name);
 				listSetupClasses.Add(intro);
 				listSetupClasses.Add(setupWizClass);

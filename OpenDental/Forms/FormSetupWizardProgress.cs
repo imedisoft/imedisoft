@@ -80,7 +80,7 @@ namespace OpenDental {
 						}
 						endCat++;
 					}
-					_listSetupClasses.Insert(endCat++,new SetupWizard.SetupIntro(clinSetup.Name,clinSetup.GetDescript));
+					_listSetupClasses.Insert(endCat++,new SetupWizard.SetupIntro(clinSetup.Name,clinSetup.Description));
 					_listSetupClasses.Insert(endCat++,clinSetup);
 					_listSetupClasses.Insert(endCat,new SetupWizard.SetupComplete(clinSetup.Name));
 				}
