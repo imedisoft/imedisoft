@@ -2187,61 +2187,74 @@ namespace OpenDental {
 		#endregion Methods - Private ToolBar
 
 		#region Methods - Private Refresh
-		///<summary></summary>
-		private void RefreshModuleData(long patNum,bool isSelectingFamily) {
+
+		private async void RefreshModuleData(long patNum, bool isSelectingFamily)
+		{
 			UpdateUrgFinNote();
 			UpdateFinNote();
-			if(patNum==0){
-				_patCur=null;
-				_famCur=null;
-				_dataSetMain=null;
-				Plugins.HookAddCode(this,"ContrAccount.RefreshModuleData_null");
+			if (patNum == 0)
+			{
+				_patCur = null;
+				_famCur = null;
+				_dataSetMain = null;
+				Plugins.HookAddCode(this, "ContrAccount.RefreshModuleData_null");
 				return;
 			}
-			DateTime fromDate=DateTime.MinValue;
-			DateTime toDate=DateTime.MaxValue;
-			if(textDateStart.errorProvider1.GetError(textDateStart)==""
-				&& textDateEnd.errorProvider1.GetError(textDateEnd)=="") {
-				if(textDateStart.Text!="") {
-					fromDate=PIn.Date(textDateStart.Text);
+			DateTime fromDate = DateTime.MinValue;
+			DateTime toDate = DateTime.MaxValue;
+			if (textDateStart.errorProvider1.GetError(textDateStart) == ""
+				&& textDateEnd.errorProvider1.GetError(textDateEnd) == "")
+			{
+				if (textDateStart.Text != "")
+				{
+					fromDate = PIn.Date(textDateStart.Text);
 				}
-				if(textDateEnd.Text!="") {
-					toDate=PIn.Date(textDateEnd.Text);
+				if (textDateEnd.Text != "")
+				{
+					toDate = PIn.Date(textDateEnd.Text);
 				}
 			}
-			bool doMakeSecLog=false;
-			if(_patNumLast!=patNum) {
-				doMakeSecLog=true;
-				_patNumLast=patNum;
+			bool doMakeSecLog = false;
+			if (_patNumLast != patNum)
+			{
+				doMakeSecLog = true;
+				_patNumLast = patNum;
 			}
-			bool doGetAutoOrtho=PrefC.GetBool(PrefName.OrthoEnabled);
-			try {
-				Logger.LogAction("Patients.GetFamily",LogPath.AccountModule,() => _loadData=AccountModules.GetAll(patNum,fromDate,toDate,
-					isSelectingFamily,checkShowDetail.Checked,true,true,doMakeSecLog,doGetAutoOrtho));
+			bool doGetAutoOrtho = PrefC.GetBool(PrefName.OrthoEnabled);
+			try
+			{
+				_loadData = await AccountModules.GetLoadDataAsync(
+					patNum, fromDate, toDate, isSelectingFamily, checkShowDetail.Checked, true, true, doMakeSecLog, doGetAutoOrtho);
+
+				// TODO: Logger.LogAction("Patients.GetFamily", LogPath.AccountModule, () => _loadData = AccountModules.GetAll(patNum, fromDate, toDate,
+				//	  isSelectingFamily, checkShowDetail.Checked, true, true, doMakeSecLog, doGetAutoOrtho));
 			}
-			catch(ApplicationException ex) {
-				if(ex.Message=="Missing codenum") {
+			catch (ApplicationException ex)
+			{
+				if (ex.Message == "Missing codenum")
+				{
 					MessageBox.Show($"Missing codenum. Please run database maintenance method {nameof(DatabaseMaintenances.ProcedurelogCodeNumInvalid)}.");
-					_patCur=null;
-					_dataSetMain=null;
+					_patCur = null;
+					_dataSetMain = null;
 					return;
 				}
 				throw;
 			}
-			lock(_lockDataSetMain) {
-				_dataSetMain=_loadData.DataSetMain;
+			lock (_lockDataSetMain)
+			{
+				_dataSetMain = _loadData.DataSetMain;
 			}
-			_famCur=_loadData.Fam;
-			_patCur=_famCur.GetPatient(patNum);
-			_patientNoteCur=_loadData.PatNote;
-			_listPatField=_loadData.ArrPatFields;
-			List<long> listDefNumsAcctHidden=Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType)
-					.FindAll(x => x.ItemValue!="")
+			_famCur = _loadData.Fam;
+			_patCur = _famCur.GetPatient(patNum);
+			_patientNoteCur = _loadData.PatNote;
+			_listPatField = _loadData.ArrPatFields;
+			List<long> listDefNumsAcctHidden = Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType)
+					.FindAll(x => x.ItemValue != "")
 					.Select(x => x.DefNum)
 					.ToList();
-			_listSplitsHidden=_loadData.ListPrePayments.FindAll(x => x.UnearnedType.In(listDefNumsAcctHidden));
+			_listSplitsHidden = _loadData.ListPrePayments.FindAll(x => x.UnearnedType.In(listDefNumsAcctHidden));
 			FillSummary();
-			Plugins.HookAddCode(this,"ContrAccount.RefreshModuleData_end",_famCur,_patCur,_dataSetMain,_PPBalanceTotal,isSelectingFamily);
+			Plugins.HookAddCode(this, "ContrAccount.RefreshModuleData_end", _famCur, _patCur, _dataSetMain, _PPBalanceTotal, isSelectingFamily);
 		}
 
 		private void RefreshModuleScreen(bool isSelectingFamily) {

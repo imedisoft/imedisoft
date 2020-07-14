@@ -63,9 +63,10 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>If intermingled=true, the patnum of any family member will get entire family intermingled.</summary>
-		public static LoadData GetAll(long patNum, DateTime fromDate, DateTime toDate, bool intermingled, bool showProcBreakdown,
-			bool showPayNotes, bool showAdjNotes, bool doMakeSecLog, bool doGetOrtho)
-		{
+		public static async System.Threading.Tasks.Task<LoadData> GetLoadDataAsync(long patNum, DateTime fromDate, DateTime toDate, bool intermingled, bool showProcBreakdown, bool showPayNotes, bool showAdjNotes, bool doMakeSecLog, bool doGetOrtho)
+        {
+			LoadData result = new LoadData();
+
 			Family fam = new Family();
 			Patient pat = new Patient();
 			LoadData retVal = new LoadData();
@@ -212,9 +213,13 @@ namespace OpenDentBusiness
 					SecurityLogs.MakeLogEntry(Permissions.AccountModule, patNum, "");
 				}
 			};
-			//Limiting to 4 threads so we don't get a "Too many connections" error from the Db.
-			//Allow to run until all thread complete; no timeout.
-			ODThread.RunParallel(new List<Action> { actionSetFamily, refreshOrGetFirstOrthoProcDate, actionSetClaims, actionSetMisc }, Timeout.Infinite, 4);
+
+
+			await System.Threading.Tasks.Task.Run(actionSetFamily);
+			await System.Threading.Tasks.Task.Run(refreshOrGetFirstOrthoProcDate);
+			await System.Threading.Tasks.Task.Run(actionSetClaims);
+			await System.Threading.Tasks.Task.Run(actionSetMisc);
+
 			return retVal;
 		}
 

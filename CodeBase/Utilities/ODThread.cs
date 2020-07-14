@@ -409,6 +409,7 @@ namespace CodeBase
 
 			// If thread is in idle due to wait event, then wake it immediately so we can more quickly quit.  Helps the thread quit within timeoutMS.
 			WakeUp();
+
 			if (removeThread)
 			{
 				lock (_lockObj)
@@ -481,14 +482,28 @@ namespace CodeBase
 		/// </summary>
 		public static IEnumerable<ODThread> GetThreadsByGroupName(string groupName)
 		{
+			List<ODThread> threads;
+
 			lock (_lockObj)
             {
-				foreach (var thread in _listOdThreads)
-                {
-					if (thread.GroupName.Equals(groupName, StringComparison.InvariantCultureIgnoreCase))
-						yield return thread;
-                }
+				threads = new List<ODThread>(_listOdThreads);
             }
+
+			if (string.IsNullOrEmpty(groupName))
+			{
+				foreach (var thread in threads)
+                {
+					yield return thread;
+                }
+
+				yield break;
+			}
+
+			foreach (var thread in threads)
+			{
+				if (thread.GroupName.Equals(groupName, StringComparison.InvariantCultureIgnoreCase))
+					yield return thread;
+			}
 		}
 
 		/// <summary>
