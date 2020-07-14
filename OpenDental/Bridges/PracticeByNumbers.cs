@@ -1,18 +1,13 @@
-using System;
 using CodeBase;
 using OpenDentBusiness;
 
 namespace OpenDental.Bridges
 {
-	/// <summary>
-	/// Link to Practice By Numbers Report Provider.
-	/// </summary>
-	public class PracticeByNumbers
+    /// <summary>
+    /// Link to Practice By Numbers Report Provider.
+    /// </summary>
+    public static class PracticeByNumbers
 	{
-		public PracticeByNumbers()
-		{
-		}
-
 		public static void ShowPage()
 		{
 			try

@@ -1,24 +1,12 @@
-using System;
-using System.Collections;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Forms;
-using OpenDentBusiness;
 using CodeBase;
+using OpenDentBusiness;
+using System;
+using System.IO;
 
 namespace OpenDental.Bridges
 {
-	/// <summary></summary>
-	public class Apixia
+    public static class Apixia
 	{
-
-		/// <summary></summary>
-		public Apixia()
-		{
-
-		}
-
 		///<summary>Launches the program using a combination of command line characters and the patient.Cur data.///</summary>
 		/*Data like the following:
 		[Patient]
@@ -95,6 +83,5 @@ namespace OpenDental.Bridges
 				}
 			}
 		}
-
 	}
 }

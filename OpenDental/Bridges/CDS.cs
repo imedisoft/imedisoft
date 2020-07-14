@@ -5,12 +5,8 @@ namespace OpenDental.Bridges
     /// <summary>
     /// Link to CDS Backup Solutions.
     /// </summary>
-    public class CDS
+    public static class CDS
 	{
-		public CDS()
-		{
-		}
-
 		public static void ShowPage()
 		{
 			try

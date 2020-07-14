@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
+﻿using CodeBase;
 using Microsoft.Win32;
 using OpenDentBusiness;
-using CodeBase;
-using System.IO;
+using System;
+using System.Linq;
 
 namespace OpenDental.Bridges
 {
-	public class PandaPerioAdvanced
+    public static class PandaPerioAdvanced
 	{
 		///<summary>Launches the program using a combination of command line characters and the patient.Cur data.</summary>
 		/*Data like the following:
@@ -71,17 +69,20 @@ namespace OpenDental.Bridges
 				}
 				return;
 			}
+
 			if (pat.Birthdate.Year < 1880)
 			{
 				MessageBox.Show("Patient must have a valid birthdate.");
 				return;
 			}
+
 			string iniPath = GetIniFromRegistry();
 			if (string.IsNullOrEmpty(iniPath))
 			{
 				MsgBox.Show("The ini file is not available.");
 				return;
 			}
+
 			try
 			{
 				ODFileUtils.WriteAllTextThenStart(iniPath, GetIniString(pat, programCur), path);

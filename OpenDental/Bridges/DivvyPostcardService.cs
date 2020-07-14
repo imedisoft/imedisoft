@@ -8,14 +8,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OpenDental.DivvyConnect {
-	using System.Runtime.Serialization;
-
-
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization","3.0.0.0")]
-	[System.Runtime.Serialization.DataContractAttribute(Name="Postcard",Namespace="http://schemas.datacontract.org/2004/07/DivvyConnect.Services",IsReference=true)]
-	public partial class Postcard:object,System.Runtime.Serialization.IExtensibleDataObject {
+namespace OpenDental.DivvyConnect
+{
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+	[System.Runtime.Serialization.DataContractAttribute(Name = "Postcard", Namespace = "http://schemas.datacontract.org/2004/07/DivvyConnect.Services", IsReference = true)]
+	public partial class Postcard : object, System.Runtime.Serialization.IExtensibleDataObject
+	{
 
 		private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
 
@@ -29,70 +28,89 @@ namespace OpenDental.DivvyConnect {
 
 		private OpenDental.DivvyConnect.Recipient RecipientField;
 
-		public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-			get {
+		public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+		{
+			get
+			{
 				return this.extensionDataField;
 			}
-			set {
+			set
+			{
 				this.extensionDataField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public System.DateTime AppointmentDateTime {
-			get {
+		public System.DateTime AppointmentDateTime
+		{
+			get
+			{
 				return this.AppointmentDateTimeField;
 			}
-			set {
+			set
+			{
 				this.AppointmentDateTimeField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public int DesignID {
-			get {
+		public int DesignID
+		{
+			get
+			{
 				return this.DesignIDField;
 			}
-			set {
+			set
+			{
 				this.DesignIDField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string ExternalPostcardID {
-			get {
+		public string ExternalPostcardID
+		{
+			get
+			{
 				return this.ExternalPostcardIDField;
 			}
-			set {
+			set
+			{
 				this.ExternalPostcardIDField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Message {
-			get {
+		public string Message
+		{
+			get
+			{
 				return this.MessageField;
 			}
-			set {
+			set
+			{
 				this.MessageField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public OpenDental.DivvyConnect.Recipient Recipient {
-			get {
+		public OpenDental.DivvyConnect.Recipient Recipient
+		{
+			get
+			{
 				return this.RecipientField;
 			}
-			set {
+			set
+			{
 				this.RecipientField = value;
 			}
 		}
 	}
 
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization","3.0.0.0")]
-	[System.Runtime.Serialization.DataContractAttribute(Name="Recipient",Namespace="http://schemas.datacontract.org/2004/07/DivvyConnect.Services",IsReference=true)]
-	public partial class Recipient:object,System.Runtime.Serialization.IExtensibleDataObject {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+	[System.Runtime.Serialization.DataContractAttribute(Name = "Recipient", Namespace = "http://schemas.datacontract.org/2004/07/DivvyConnect.Services", IsReference = true)]
+	public partial class Recipient : object, System.Runtime.Serialization.IExtensibleDataObject
+	{
 
 		private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
 
@@ -110,90 +128,115 @@ namespace OpenDental.DivvyConnect {
 
 		private string ZipField;
 
-		public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-			get {
+		public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+		{
+			get
+			{
 				return this.extensionDataField;
 			}
-			set {
+			set
+			{
 				this.extensionDataField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Address1 {
-			get {
+		public string Address1
+		{
+			get
+			{
 				return this.Address1Field;
 			}
-			set {
+			set
+			{
 				this.Address1Field = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Address2 {
-			get {
+		public string Address2
+		{
+			get
+			{
 				return this.Address2Field;
 			}
-			set {
+			set
+			{
 				this.Address2Field = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string City {
-			get {
+		public string City
+		{
+			get
+			{
 				return this.CityField;
 			}
-			set {
+			set
+			{
 				this.CityField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string ExternalRecipientID {
-			get {
+		public string ExternalRecipientID
+		{
+			get
+			{
 				return this.ExternalRecipientIDField;
 			}
-			set {
+			set
+			{
 				this.ExternalRecipientIDField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Name {
-			get {
+		public string Name
+		{
+			get
+			{
 				return this.NameField;
 			}
-			set {
+			set
+			{
 				this.NameField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string State {
-			get {
+		public string State
+		{
+			get
+			{
 				return this.StateField;
 			}
-			set {
+			set
+			{
 				this.StateField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Zip {
-			get {
+		public string Zip
+		{
+			get
+			{
 				return this.ZipField;
 			}
-			set {
+			set
+			{
 				this.ZipField = value;
 			}
 		}
 	}
 
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization","3.0.0.0")]
-	[System.Runtime.Serialization.DataContractAttribute(Name="Practice",Namespace="http://schemas.datacontract.org/2004/07/DivvyConnect.Services",IsReference=true)]
-	public partial class Practice:object,System.Runtime.Serialization.IExtensibleDataObject {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+	[System.Runtime.Serialization.DataContractAttribute(Name = "Practice", Namespace = "http://schemas.datacontract.org/2004/07/DivvyConnect.Services", IsReference = true)]
+	public partial class Practice : object, System.Runtime.Serialization.IExtensibleDataObject
+	{
 
 		private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
 
@@ -221,140 +264,180 @@ namespace OpenDental.DivvyConnect {
 
 		private string ZipField;
 
-		public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-			get {
+		public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+		{
+			get
+			{
 				return this.extensionDataField;
 			}
-			set {
+			set
+			{
 				this.extensionDataField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Address1 {
-			get {
+		public string Address1
+		{
+			get
+			{
 				return this.Address1Field;
 			}
-			set {
+			set
+			{
 				this.Address1Field = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Address2 {
-			get {
+		public string Address2
+		{
+			get
+			{
 				return this.Address2Field;
 			}
-			set {
+			set
+			{
 				this.Address2Field = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string City {
-			get {
+		public string City
+		{
+			get
+			{
 				return this.CityField;
 			}
-			set {
+			set
+			{
 				this.CityField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Company {
-			get {
+		public string Company
+		{
+			get
+			{
 				return this.CompanyField;
 			}
-			set {
+			set
+			{
 				this.CompanyField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Email {
-			get {
+		public string Email
+		{
+			get
+			{
 				return this.EmailField;
 			}
-			set {
+			set
+			{
 				this.EmailField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string ExternalPracticeID {
-			get {
+		public string ExternalPracticeID
+		{
+			get
+			{
 				return this.ExternalPracticeIDField;
 			}
-			set {
+			set
+			{
 				this.ExternalPracticeIDField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Fax {
-			get {
+		public string Fax
+		{
+			get
+			{
 				return this.FaxField;
 			}
-			set {
+			set
+			{
 				this.FaxField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Name {
-			get {
+		public string Name
+		{
+			get
+			{
 				return this.NameField;
 			}
-			set {
+			set
+			{
 				this.NameField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Phone {
-			get {
+		public string Phone
+		{
+			get
+			{
 				return this.PhoneField;
 			}
-			set {
+			set
+			{
 				this.PhoneField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string State {
-			get {
+		public string State
+		{
+			get
+			{
 				return this.StateField;
 			}
-			set {
+			set
+			{
 				this.StateField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string WebURL {
-			get {
+		public string WebURL
+		{
+			get
+			{
 				return this.WebURLField;
 			}
-			set {
+			set
+			{
 				this.WebURLField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Zip {
-			get {
+		public string Zip
+		{
+			get
+			{
 				return this.ZipField;
 			}
-			set {
+			set
+			{
 				this.ZipField = value;
 			}
 		}
 	}
 
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization","3.0.0.0")]
-	[System.Runtime.Serialization.DataContractAttribute(Name="PostcardReturnMessage",Namespace="http://schemas.datacontract.org/2004/07/DivvyConnect.Services")]
-	public partial class PostcardReturnMessage:object,System.Runtime.Serialization.IExtensibleDataObject {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+	[System.Runtime.Serialization.DataContractAttribute(Name = "PostcardReturnMessage", Namespace = "http://schemas.datacontract.org/2004/07/DivvyConnect.Services")]
+	public partial class PostcardReturnMessage : object, System.Runtime.Serialization.IExtensibleDataObject
+	{
 
 		private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
 
@@ -364,49 +447,62 @@ namespace OpenDental.DivvyConnect {
 
 		private OpenDental.DivvyConnect.SinglePostcardMessage[] PostcardMessagesField;
 
-		public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-			get {
+		public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+		{
+			get
+			{
 				return this.extensionDataField;
 			}
-			set {
+			set
+			{
 				this.extensionDataField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Message {
-			get {
+		public string Message
+		{
+			get
+			{
 				return this.MessageField;
 			}
-			set {
+			set
+			{
 				this.MessageField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public OpenDental.DivvyConnect.MessageCode MessageCode {
-			get {
+		public OpenDental.DivvyConnect.MessageCode MessageCode
+		{
+			get
+			{
 				return this.MessageCodeField;
 			}
-			set {
+			set
+			{
 				this.MessageCodeField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public OpenDental.DivvyConnect.SinglePostcardMessage[] PostcardMessages {
-			get {
+		public OpenDental.DivvyConnect.SinglePostcardMessage[] PostcardMessages
+		{
+			get
+			{
 				return this.PostcardMessagesField;
 			}
-			set {
+			set
+			{
 				this.PostcardMessagesField = value;
 			}
 		}
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization","3.0.0.0")]
-	[System.Runtime.Serialization.DataContractAttribute(Name="MessageCode",Namespace="http://schemas.datacontract.org/2004/07/DivvyConnect.Services")]
-	public enum MessageCode:int {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+	[System.Runtime.Serialization.DataContractAttribute(Name = "MessageCode", Namespace = "http://schemas.datacontract.org/2004/07/DivvyConnect.Services")]
+	public enum MessageCode : int
+	{
 
 		[System.Runtime.Serialization.EnumMemberAttribute()]
 		CompletedSucessfully = 0,
@@ -419,9 +515,10 @@ namespace OpenDental.DivvyConnect {
 	}
 
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization","3.0.0.0")]
-	[System.Runtime.Serialization.DataContractAttribute(Name="SinglePostcardMessage",Namespace="http://schemas.datacontract.org/2004/07/DivvyConnect.Services")]
-	public partial class SinglePostcardMessage:object,System.Runtime.Serialization.IExtensibleDataObject {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+	[System.Runtime.Serialization.DataContractAttribute(Name = "SinglePostcardMessage", Namespace = "http://schemas.datacontract.org/2004/07/DivvyConnect.Services")]
+	public partial class SinglePostcardMessage : object, System.Runtime.Serialization.IExtensibleDataObject
+	{
 
 		private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
 
@@ -431,49 +528,62 @@ namespace OpenDental.DivvyConnect {
 
 		private OpenDental.DivvyConnect.Postcard postcardRecordField;
 
-		public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-			get {
+		public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+		{
+			get
+			{
 				return this.extensionDataField;
 			}
-			set {
+			set
+			{
 				this.extensionDataField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public string Message {
-			get {
+		public string Message
+		{
+			get
+			{
 				return this.MessageField;
 			}
-			set {
+			set
+			{
 				this.MessageField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public OpenDental.DivvyConnect.PostcardCode postcardCode {
-			get {
+		public OpenDental.DivvyConnect.PostcardCode postcardCode
+		{
+			get
+			{
 				return this.postcardCodeField;
 			}
-			set {
+			set
+			{
 				this.postcardCodeField = value;
 			}
 		}
 
 		[System.Runtime.Serialization.DataMemberAttribute()]
-		public OpenDental.DivvyConnect.Postcard postcardRecord {
-			get {
+		public OpenDental.DivvyConnect.Postcard postcardRecord
+		{
+			get
+			{
 				return this.postcardRecordField;
 			}
-			set {
+			set
+			{
 				this.postcardRecordField = value;
 			}
 		}
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization","3.0.0.0")]
-	[System.Runtime.Serialization.DataContractAttribute(Name="PostcardCode",Namespace="http://schemas.datacontract.org/2004/07/DivvyConnect.Services")]
-	public enum PostcardCode:int {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+	[System.Runtime.Serialization.DataContractAttribute(Name = "PostcardCode", Namespace = "http://schemas.datacontract.org/2004/07/DivvyConnect.Services")]
+	public enum PostcardCode : int
+	{
 
 		[System.Runtime.Serialization.EnumMemberAttribute()]
 		Successful = 0,
@@ -483,44 +593,52 @@ namespace OpenDental.DivvyConnect {
 	}
 
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel","3.0.0.0")]
-	[System.ServiceModel.ServiceContractAttribute(ConfigurationName="IPostcardService")]
-	public interface IPostcardService {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
+	[System.ServiceModel.ServiceContractAttribute(ConfigurationName = "IPostcardService")]
+	public interface IPostcardService
+	{
 
-		[System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPostcardService/SendPostcards",ReplyAction="http://tempuri.org/IPostcardService/SendPostcardsResponse")]
-		OpenDental.DivvyConnect.PostcardReturnMessage SendPostcards(System.Guid apiKey,string username,string password,OpenDental.DivvyConnect.Postcard[] postcards,OpenDental.DivvyConnect.Practice practice);
+		[System.ServiceModel.OperationContractAttribute(Action = "http://tempuri.org/IPostcardService/SendPostcards", ReplyAction = "http://tempuri.org/IPostcardService/SendPostcardsResponse")]
+		OpenDental.DivvyConnect.PostcardReturnMessage SendPostcards(System.Guid apiKey, string username, string password, OpenDental.DivvyConnect.Postcard[] postcards, OpenDental.DivvyConnect.Practice practice);
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel","3.0.0.0")]
-	public interface IPostcardServiceChannel:IPostcardService,System.ServiceModel.IClientChannel {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
+	public interface IPostcardServiceChannel : IPostcardService, System.ServiceModel.IClientChannel
+	{
 	}
 
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel","3.0.0.0")]
-	public partial class PostcardServiceClient:System.ServiceModel.ClientBase<IPostcardService>,IPostcardService {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
+	public partial class PostcardServiceClient : System.ServiceModel.ClientBase<IPostcardService>, IPostcardService
+	{
 
-		public PostcardServiceClient() {
+		public PostcardServiceClient()
+		{
 		}
 
 		public PostcardServiceClient(string endpointConfigurationName) :
-			base(endpointConfigurationName) {
+			base(endpointConfigurationName)
+		{
 		}
 
-		public PostcardServiceClient(string endpointConfigurationName,string remoteAddress) :
-			base(endpointConfigurationName,remoteAddress) {
+		public PostcardServiceClient(string endpointConfigurationName, string remoteAddress) :
+			base(endpointConfigurationName, remoteAddress)
+		{
 		}
 
-		public PostcardServiceClient(string endpointConfigurationName,System.ServiceModel.EndpointAddress remoteAddress) :
-			base(endpointConfigurationName,remoteAddress) {
+		public PostcardServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) :
+			base(endpointConfigurationName, remoteAddress)
+		{
 		}
 
-		public PostcardServiceClient(System.ServiceModel.Channels.Binding binding,System.ServiceModel.EndpointAddress remoteAddress) :
-			base(binding,remoteAddress) {
+		public PostcardServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) :
+			base(binding, remoteAddress)
+		{
 		}
 
-		public OpenDental.DivvyConnect.PostcardReturnMessage SendPostcards(System.Guid apiKey,string username,string password,OpenDental.DivvyConnect.Postcard[] postcards,OpenDental.DivvyConnect.Practice practice) {
-			return base.Channel.SendPostcards(apiKey,username,password,postcards,practice);
+		public OpenDental.DivvyConnect.PostcardReturnMessage SendPostcards(System.Guid apiKey, string username, string password, OpenDental.DivvyConnect.Postcard[] postcards, OpenDental.DivvyConnect.Practice practice)
+		{
+			return base.Channel.SendPostcards(apiKey, username, password, postcards, practice);
 		}
 	}
-
 }

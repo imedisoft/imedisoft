@@ -5,12 +5,8 @@ using System.IO;
 
 namespace OpenDental.Bridges
 {
-    public class Camsight
+	public static class Camsight
 	{
-		public Camsight()
-		{
-		}
-
 		/// <summary>
 		/// Launches the program using command line.
 		/// </summary>
@@ -64,7 +60,7 @@ namespace OpenDental.Bridges
 		/// </summary>
 		private static string Tidy(string input)
 		{
-			string retVal = input.Replace(";", "");//get rid of any semicolons.
+			string retVal = input.Replace(";", "");
 			retVal = retVal.Replace(" ", "");
 			return retVal;
 		}
