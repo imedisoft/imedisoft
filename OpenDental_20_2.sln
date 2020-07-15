@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceManager", "ServiceMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imedisoft.CEMT", "Imedisoft.CEMT\Imedisoft.CEMT.csproj", "{10BFA78E-E5FE-4209-8347-AD0EC8B3F064}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imedisoft.Data.CrudGenerator", "xCrudGenerator\Imedisoft.Data.CrudGenerator.csproj", "{76227E95-B261-4B6A-A97C-3764E7EDDF97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imedisoft.Data.CrudGenerator", "Imedisoft.Data.CrudGenerator\Imedisoft.Data.CrudGenerator.csproj", "{76227E95-B261-4B6A-A97C-3764E7EDDF97}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenDentalGraph", "OpenDentalGraph\OpenDentalGraph.csproj", "{015E240B-23FB-4D91-B20C-CE221DDCCB0F}"
 EndProject
