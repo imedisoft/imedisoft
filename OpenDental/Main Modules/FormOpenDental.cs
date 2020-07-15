@@ -15,49 +15,31 @@ redistributed.
 
 
 //#define ORA_DB
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Drawing.Printing;
-using System.Data;
-using System.Diagnostics;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Media;
-using Microsoft.Win32;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.Permissions;
-using System.Security.Policy;
-using System.Security.Principal;
-using System.Threading;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using OpenDentBusiness;
-using OpenDentBusiness.UI;
 using CodeBase;
 using DataConnectionBase;
-using System.Security.AccessControl;
-using System.Xml;
-using System.Xml.XPath;
-using System.Xml.Serialization;
-using SparksToothChart;
+using Imedisoft.Forms;
+using Microsoft.Win32;
 //using OpenDental.SmartCards;
 using OpenDental.UI;
-using System.ServiceProcess;
-using System.Linq;
-using OpenDental.Bridges;
-using OpenDentBusiness.WebServiceMainHQ;
-using ServiceManager;
+using OpenDentBusiness;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
 using System.DirectoryServices;
-using OpenDental.Forms;
-using Imedisoft.Forms;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Media;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
+using System.Xml;
 #if EHRTEST
 using EHR;
 #endif
@@ -66,9 +48,10 @@ using EHR;
 //using OD_CRYPTO;
 //#endif
 
-namespace OpenDental{
-	///<summary></summary>
-	public partial class FormOpenDental : ODForm
+namespace OpenDental
+{
+    ///<summary></summary>
+    public partial class FormOpenDental : ODForm
 	{
 		#region Fields
 		///<summary>This is the singleton instance of the FormOpenDental. This allows us to have S_ methods that are public static and can be called from anywhere in the program to update FormOpenDental.</summary>
@@ -5841,12 +5824,7 @@ namespace OpenDental{
 
 		private void menuItemServiceManager_Click(object sender, EventArgs e)
 		{
-			if (!Security.IsAuthorized(Permissions.Setup))
-			{
-				return;
-			}
-			FormMain FormM = new FormMain();
-			FormM.ShowDialog();
+			// OBSOLETE...
 		}
 
 		private void menuItemShutdown_Click(object sender, EventArgs e)
