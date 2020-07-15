@@ -196,63 +196,84 @@ namespace OpenDental {
 		#endregion Methods - Public
 
 		#region Signal Processing
-		public void ProcessSignals(List<Signalod> listSignals) {
-			Logger.LogAction("ODForm.ProcessSignals",LogPath.Signals,() => OnProcessSignals(listSignals),this.GetType().Name);
+
+		public void ProcessSignals(List<Signalod> signals) 
+			=> Logger.LogAction("ODForm.ProcessSignals", () => OnProcessSignals(signals));
+
+		/// <summary>
+		/// Override this if your form cares about signal processing.
+		/// </summary>
+		public virtual void OnProcessSignals(List<Signalod> signals)
+		{
 		}
 
-		///<summary>Override this if your form cares about signal processing.</summary>
-		public virtual void OnProcessSignals(List<Signalod> listSignals) {
-		}
+		/// <summary>
+		/// Spawns a new thread to retrieve new signals from the DB, update caches, and broadcast signals to all subscribed forms.
+		/// </summary>
+		public static void SignalsTick(Action onShutdown, Action<List<ODForm>, List<Signalod>> onProcess, Action onDone)
+		{
+			var signals = new List<Signalod>();
 
-		///<summary>Spawns a new thread to retrieve new signals from the DB, update caches, and broadcast signals to all subscribed forms.</summary>
-		public static void SignalsTick(Action onShutdown,Action<List<ODForm>,List<Signalod>> onProcess,Action onDone) {
-			//No need to check RemotingRole; no call to db.
-			Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
-			List<Signalod> listSignals=new List<Signalod>();
-			ODThread threadRefreshSignals=new ODThread((o) => {
-				//Get new signals from DB.
-				Logger.LogToPath("RefreshTimed",LogPath.Signals,LogPhase.Start);
-				listSignals=Signalods.RefreshTimed(Signalods.SignalLastRefreshed);
-				Logger.LogToPath("RefreshTimed",LogPath.Signals,LogPhase.End);
-				//Only update the time stamp with signals retreived from the DB. Do NOT use listLocalSignals to set timestamp.
-				if(listSignals.Count>0) {
-					Signalods.SignalLastRefreshed=listSignals.Max(x => x.SigDateTime);
-					Signalods.ApptSignalLastRefreshed=Signalods.SignalLastRefreshed;
+			ODThread threadRefreshSignals = new ODThread((o) =>
+			{
+				// Get new signals from DB.
+				Logger.LogAction("RefreshTimed", () => signals = Signalods.RefreshTimed(Signalods.SignalLastRefreshed));
+
+				// Only update the time stamp with signals retreived from the DB. Do NOT use listLocalSignals to set timestamp.
+				if (signals.Count > 0)
+				{
+					Signalods.SignalLastRefreshed = signals.Max(x => x.SigDateTime);
+					Signalods.ApptSignalLastRefreshed = Signalods.SignalLastRefreshed;
 				}
-				Logger.LogToPath("Found "+listSignals.Count.ToString()+" signals",LogPath.Signals,LogPhase.Unspecified);
-				if(listSignals.Count==0) {
+
+				Logger.LogVerbose("Found " + signals.Count.ToString() + " signals");
+				if (signals.Count == 0)
+				{
 					return;
 				}
-				Logger.LogToPath("Signal count(s)",LogPath.Signals,LogPhase.Unspecified,string.Join(" - ",listSignals.GroupBy(x => x.IType).Select(x => x.Key.ToString()+": "+x.Count())));
-				if(listSignals.Exists(x => x.IType==InvalidType.ShutDownNow)) {
+
+				// Logger.LogVerbose("Signal count(s)", string.Join(" - ", listSignals.GroupBy(x => x.IType).Select(x => x.Key.ToString() + ": " + x.Count())));
+				if (signals.Exists(x => x.IType == InvalidType.ShutDownNow))
+				{
 					onShutdown();
 					return;
 				}
-				InvalidType[] cacheRefreshArray = listSignals.FindAll(x => x.FKey==0 && x.FKeyType==KeyType.Undefined).Select(x => x.IType).Distinct().ToArray();
-				//Always process signals for ClientDirect users regardless of where the RemoteRole source on the signal is from.
-				//The middle tier server will have refreshed its cache already.
-				bool getCacheFromDb=true;
-				Cache.Refresh(getCacheFromDb,cacheRefreshArray);
-				onProcess(_listSubscribedForms,listSignals);
+
+				var invalidTypes = signals
+					.FindAll(x => x.FKey == 0 && x.FKeyType == KeyType.Undefined)
+					.Select(x => x.IType)
+					.Distinct()
+					.ToArray();
+
+				Cache.Refresh(true, invalidTypes);
+
+				onProcess(_listSubscribedForms, signals);
 			});
-			threadRefreshSignals.AddExceptionHandler((e) => {
+
+
+			threadRefreshSignals.AddExceptionHandler((e) =>
+			{
 				DateTime dateTimeRefreshed;
-				try {
+				try
+				{
 					//Signal processing should always use the server's time.
-					dateTimeRefreshed=MiscData.GetNowDateTime();
+					dateTimeRefreshed = MiscData.GetNowDateTime();
 				}
-				catch {
+				catch
+				{
 					//If the server cannot be reached, we still need to move the signal processing forward so use local time as a fail-safe.
-					dateTimeRefreshed=DateTime.Now;
+					dateTimeRefreshed = DateTime.Now;
 				}
-				Signalods.SignalLastRefreshed=dateTimeRefreshed;
-				Signalods.ApptSignalLastRefreshed=dateTimeRefreshed;
+				Signalods.SignalLastRefreshed = dateTimeRefreshed;
+				Signalods.ApptSignalLastRefreshed = dateTimeRefreshed;
 			});
-			threadRefreshSignals.AddExitHandler((o) => {
-				Logger.LogToPath("",LogPath.Signals,LogPhase.End);
+
+			threadRefreshSignals.AddExitHandler((o) =>
+			{
 				onDone();
 			});
-			threadRefreshSignals.Name="SignalsTick";
+
+			threadRefreshSignals.Name = "SignalsTick";
 			threadRefreshSignals.Start(true);
 		}
 

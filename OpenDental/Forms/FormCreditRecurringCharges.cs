@@ -118,7 +118,7 @@ namespace OpenDental {
 			{
 				groupClinics.Visible = false;
 			}
-			_charger = new RecurringChargerator(new ShowErrors(this), true);
+			_charger = new RecurringChargerator(true);
 			_charger.SingleCardFinished = new Action(() =>
 			{
 				this.Invoke(() =>
@@ -419,7 +419,7 @@ namespace OpenDental {
 		}
 
 		private void StopRecurringCharges(ODEventArgs args) {
-			if(args.EventType==ODEventType.Shutdown) {
+			if(args.EventType==EventCategory.Shutdown) {
 				_charger.StopCharges(true);
 			}
 		}

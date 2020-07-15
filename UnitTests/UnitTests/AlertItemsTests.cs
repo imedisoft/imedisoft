@@ -21,7 +21,7 @@ namespace UnitTests.AlertItems_Tests {
 		}
 		
 		public void AlertItems_CreateAlertsForWebmailMethodCall() {
-			AlertItems.CreateAlertsForNewWebmail(_log);
+			AlertItems.CreateAlertsForNewWebmail();
 		}
 
 		/// <summary></summary>

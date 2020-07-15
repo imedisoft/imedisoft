@@ -612,7 +612,7 @@ namespace OpenDental{
 			{
 				return;
 			}
-			Action actionProgress=ODProgress.Show(ODEventType.HideUnusedFeeSchedules,startingMessage:Lans.g(this,"Backing up database..."));
+			Action actionProgress=ODProgress.Show(EventCategory.HideUnusedFeeSchedules,startingMessage:Lans.g(this,"Backing up database..."));
 			try {
 				MiscData.MakeABackup();
 			} 
@@ -621,7 +621,7 @@ namespace OpenDental{
 				FriendlyException.Show(Lans.g(this,"Unable to make a backup. No fee schedules have been altered."),ex);
 				return;
 			}
-			ODEvent.Fire(ODEventType.HideUnusedFeeSchedules,Lans.g(this,"Hiding unused fee schedules..."));
+			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,Lans.g(this,"Hiding unused fee schedules..."));
 			long countChanged=FeeScheds.HideUnusedScheds();
 			actionProgress?.Invoke();
 			MessageBox.Show(countChanged.ToString()+" "+Lans.g(this,"unused fee schedules hidden."));

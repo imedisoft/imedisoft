@@ -2761,7 +2761,7 @@ namespace OpenDental{
 			}
 			//Sync detaches any attached procedures within Appointments.Delete() but doesn't create any ApptComm items.
 			if(Appointments.Sync(_listAppointments,_listAppointmentsOld,AptCur.PatNum)) {
-				AppointmentEvent.Fire(ODEventType.AppointmentEdited,AptCur);
+				AppointmentEvent.Fire(EventCategory.AppointmentEdited,AptCur);
 			}
 			//Synch the recalls for this patient.  This is necessary in case the date of the appointment has change or has been deleted entirely.
 			Recalls.Synch(AptCur.PatNum);

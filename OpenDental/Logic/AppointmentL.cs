@@ -267,7 +267,7 @@ namespace OpenDental{
 			}
 			//if broken appointment procedure was deleted (user cancelled out of the window) just keep money on the original procedure.
 			#endregion
-			AppointmentEvent.Fire(ODEventType.AppointmentEdited,appt);
+			AppointmentEvent.Fire(EventCategory.AppointmentEdited,appt);
 			AutomationL.Trigger(AutomationTrigger.BreakAppointment,null,pat.PatNum);
 			Recalls.SynchScheduledApptFull(appt.PatNum);
 		}
@@ -347,7 +347,7 @@ namespace OpenDental{
 			}
 			#endregion
 			if(doFireApptEvent) {
-				AppointmentEvent.Fire(ODEventType.AppointmentEdited,appt);
+				AppointmentEvent.Fire(EventCategory.AppointmentEdited,appt);
 			}
 			Recalls.SynchScheduledApptFull(appt.PatNum);
 		}

@@ -165,7 +165,7 @@ namespace OpenDental{
 					return;
 				}
 				_curPatNum = value;
-				PatientChangedEvent.Fire(ODEventType.Patient, value);
+				PatientChangedEvent.Fire(EventCategory.Patient, value);
 			}
 		}
 
@@ -234,7 +234,7 @@ namespace OpenDental{
 		public FormOpenDental(string[] cla)
 		{
 			_formOpenDentalS = this;
-			Logger.openlog.Log("Initializing Open Dental...", Logger.Severity.INFO);
+			Logger.LogInfo("Initializing Open Dental...");
 			CommandLineArgs = cla;
 			FormSplash formSplash = new FormSplash();
 			if (CommandLineArgs.Length == 0)
@@ -304,7 +304,7 @@ namespace OpenDental{
 			//phonePanel.Visible=false;
 			//this.Controls.Add(phonePanel);
 			//phonePanel.GoToChanged += new System.EventHandler(this.phonePanel_GoToChanged);
-			Logger.openlog.Log("Open Dental initialization complete.", Logger.Severity.INFO);
+			Logger.LogInfo("Open Dental initialization complete.");
 			//Plugins.HookAddCode(this,"FormOpenDental.Constructor_end");//Can't do this because no plugins loaded.
 			formSplash.Close();
 		}
@@ -503,16 +503,11 @@ namespace OpenDental{
 				return;
 			}
 
-
-
-
-
-			Logger.DoVerboseLogging = PrefC.IsVerboseLoggingSession;
+			Logger.MinLogLevel = PrefC.IsVerboseLoggingSession() ? LogLevel.Verbose : Logger.MinLogLevel;
 			if (Programs.UsingEcwTightOrFullMode())
 			{
 				formSplash.Close();
 			}
-
 
 			//Setting the time that we want to wait when the database connection has been lost.
 			//We don't want a LostConnection event to fire when updating because of Silent Updating which would fail due to window pop-ups from this event.
@@ -2003,7 +1998,7 @@ namespace OpenDental{
 			{
 				return;
 			}
-			Logger.LogToPath("", LogPath.Signals, LogPhase.Start);
+			// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.Start);
 			int otherTaskCount = (_listNormalTaskNums != null) ? _listNormalTaskNums.Count : 0;
 			int totalTaskCount = GetNewReminderTaskCount() + otherTaskCount;
 			string notificationText = "";
@@ -2016,7 +2011,7 @@ namespace OpenDental{
 				_butTask.NotificationText = notificationText;
 				ToolBarMain.Invalidate(_butTask.Bounds);//Cause the notification text on the Task button to update as soon as possible.
 			}
-			Logger.LogToPath("", LogPath.Signals, LogPhase.End);
+			// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.End);
 		}
 
 		private int GetNewReminderTaskCount()
@@ -2728,15 +2723,15 @@ namespace OpenDental{
 		private void DataValid_BecameInvalid(OpenDental.ValidEventArgs e)
 		{
 			string suffix = Lan.G(nameof(Cache), "Refreshing Caches") + ": ";
-			ODEvent.Fire(ODEventType.Cache, suffix);
+			ODEvent.Fire(EventCategory.Cache, suffix);
 			if (e.OnlyLocal)
 			{//Currently used after doing a restore from FormBackup so that the local cache is forcefully updated.
-				ODEvent.Fire(ODEventType.Cache, suffix + Lan.G(nameof(Cache), "PrefsStartup"));
+				ODEvent.Fire(EventCategory.Cache, suffix + Lan.G(nameof(Cache), "PrefsStartup"));
 				if (!PrefsStartup())
 				{//??
 					return;
 				}
-				ODEvent.Fire(ODEventType.Cache, suffix + Lan.G(nameof(Cache), "AllLocal"));
+				ODEvent.Fire(EventCategory.Cache, suffix + Lan.G(nameof(Cache), "AllLocal"));
 				RefreshLocalData(InvalidType.AllLocal);//does local computer only
 				return;
 			}
@@ -2751,12 +2746,12 @@ namespace OpenDental{
 				Plugins.HookAddCode(this, "FormOpenDental.DataValid_BecameInvalid_taskInvalidTypes");
 				if (ContrChart2?.Visible ?? false)
 				{
-					ODEvent.Fire(ODEventType.Cache, suffix + Lan.G(nameof(Cache), "Chart Module"));
+					ODEvent.Fire(EventCategory.Cache, suffix + Lan.G(nameof(Cache), "Chart Module"));
 					ContrChart2.ModuleSelected(CurPatNum);
 				}
 				return;//All task signals should already be sent. Sending more Task signals here would cause unnecessary refreshes.
 			}
-			ODEvent.Fire(ODEventType.Cache, suffix + Lan.G(nameof(Cache), "Inserting Signals"));
+			ODEvent.Fire(EventCategory.Cache, suffix + Lan.G(nameof(Cache), "Inserting Signals"));
 			foreach (InvalidType iType in e.ITypes)
 			{
 				Signalod sig = new Signalod();
@@ -3074,7 +3069,7 @@ namespace OpenDental{
 		{
 			try
 			{
-				Logger.LogToPath("", LogPath.Signals, LogPhase.Start);
+				// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.Start);
 				//This checks if any forms are open that make us want to continue processing signals even if inactive. Currently only FormTerminal.
 				if (Application.OpenForms.OfType<FormTerminal>().Count() == 0)
 				{
@@ -3117,7 +3112,7 @@ namespace OpenDental{
 			if (_tasksUserNum != Security.CurUser.UserNum //The user has changed since the last signal tick was run (when logoff then logon),
 				|| _listReminderTasks == null || _listNormalTaskNums == null)//or first time processing signals since the program started.
 			{
-				Logger.LogToPath("CurUser change", LogPath.Signals, LogPhase.Start);
+				// TODO: Logger.LogToPath("CurUser change", LogPath.Signals, LogPhase.Start);
 				_tasksUserNum = Security.CurUser.UserNum;
 				List<Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(Security.CurUser.UserNum, Clinics.ClinicNum);//Get all tasks pertaining to current user.
 				_listNormalTaskNums = new List<long>();
@@ -3164,7 +3159,7 @@ namespace OpenDental{
 				//The user will load the appt module eventually and these refreshes are the only updates the appointment module receives for reminders.
 				ContrAppt2.RefreshReminders(_listReminderTasks);
 				_dateReminderRefresh = DateTimeOD.Today;
-				Logger.LogToPath("CurUser change", LogPath.Signals, LogPhase.End);
+				// TODO: Logger.LogToPath("CurUser change", LogPath.Signals, LogPhase.End);
 			}
 			//Check to see if a reminder task became due between the last signal interval and the current signal interval.
 			else if (_listReminderTasks.FindAll(x => x.DateTimeEntry <= DateTime.Now
@@ -3172,7 +3167,7 @@ namespace OpenDental{
 			{
 				List<Task> listDueReminderTasks = _listReminderTasks.FindAll(x => x.DateTimeEntry <= DateTime.Now
 					  && x.DateTimeEntry >= DateTime.Now.AddSeconds(-PrefC.GetInt(PrefName.ProcessSigsIntervalInSecs)));
-				Logger.LogToPath("Reminder task due", LogPath.Signals, LogPhase.Start);
+				// TODO: Logger.LogToPath("Reminder task due", LogPath.Signals, LogPhase.Start);
 				List<Signalod> listSignals = new List<Signalod>();
 				foreach (Task task in listDueReminderTasks)
 				{
@@ -3188,7 +3183,7 @@ namespace OpenDental{
 				{
 					TaskPopupHelper(reminderTask, listBlockedTaskLists);
 				}
-				Logger.LogToPath("Reminder task due", LogPath.Signals, LogPhase.End);
+				// TODO: Logger.LogToPath("Reminder task due", LogPath.Signals, LogPhase.End);
 			}
 			else if (_listReminderTasksOverLimit.Count > 0)
 			{//Try to display any due reminders that previously exceeded our limit of FormTaskEdit to show.
@@ -3200,7 +3195,7 @@ namespace OpenDental{
 			}
 			else if (_dateReminderRefresh.Date < DateTimeOD.Today)
 			{
-				Logger.LogToPath("Daily reminder refresh is due", LogPath.Signals, LogPhase.Unspecified);
+				// TODO: Logger.LogToPath("Daily reminder refresh is due", LogPath.Signals, LogPhase.Unspecified);
 				//Refresh the appt module to show the current list of reminders, even if the appt module not visible.  This refresh is fast.
 				//The user will load the appt module eventually and these refreshes are the only updates the appointment module receives for reminders.
 				ContrAppt2.RefreshReminders(_listReminderTasks);
@@ -3234,7 +3229,7 @@ namespace OpenDental{
 			//STOP! 
 			//If you are trying to do something in FormOpenDental that uses a signal, you should use FormOpenDental.OnProcessSignals() instead.
 			//This Function is only for processing things at regular intervals IF IT DOES NOT USE SIGNALS.
-			Logger.LogToPath("", LogPath.Signals, LogPhase.End);
+			// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.End);
 		}
 
 		///<summary>Called when _hasSignalProcessingPaused is true and we are about to start processing signals again.  We may have missed a shutdown workstations signal, so this method will check the version, the update in progress pref, and the corrupt db pref.  Returns false if the OD
@@ -3356,7 +3351,7 @@ namespace OpenDental{
 				InvalidateAlertsMenuItem();//Forces menuItemAlerts_DrawItem(...) logic to run again.
 			}
 
-			Logger.LogToPath("CheckAlerts", LogPath.Signals, LogPhase.End);
+			// TODO: Logger.LogToPath("CheckAlerts", LogPath.Signals, LogPhase.End);
 		}
 
 		///<summary>Helper function to translate the title for the given alertItem.</summary>
@@ -3444,10 +3439,10 @@ namespace OpenDental{
 				if (Application.OpenForms.OfType<FormTerminal>().Count() > 0)
 				{
 					string msg = Lan.G(this, "Kiosk mode enabled, popup blocked for TaskNum:");
-					Logger.LogToPath("", LogPath.Signals, LogPhase.Start, msg + " " + POut.Long(taskPopup.TaskNum));
+					// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.Start, msg + " " + POut.Long(taskPopup.TaskNum));
 					return;
 				}
-				Logger.LogToPath("", LogPath.Signals, LogPhase.Start, "TaskNum: " + taskPopup.TaskNum.ToString());
+				// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.Start, "TaskNum: " + taskPopup.TaskNum.ToString());
 				if (taskPopup.DateTimeEntry > DateTime.Now && taskPopup.ReminderType != TaskReminderType.NoReminder)
 				{
 					return;//Don't pop up future dated reminder tasks
@@ -3510,7 +3505,7 @@ namespace OpenDental{
 			}
 			finally
 			{
-				Logger.LogToPath("", LogPath.Signals, LogPhase.End, "TaskNum: " + taskPopup.TaskNum.ToString());
+				// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.End, "TaskNum: " + taskPopup.TaskNum.ToString());
 			}
 		}
 
@@ -3566,7 +3561,7 @@ namespace OpenDental{
 				PrefC.InvalidateVerboseLogging();
 			}
 			#region SMS Notifications
-			Logger.LogToPath("SMS Notifications", LogPath.Signals, LogPhase.Start);
+			// TODO: Logger.LogToPath("SMS Notifications", LogPath.Signals, LogPhase.Start);
 			Signalod signalSmsCount = listSignals.OrderByDescending(x => x.SigDateTime)
 				.FirstOrDefault(x => x.IType == InvalidType.SmsTextMsgReceivedUnreadCount && x.FKeyType == KeyType.SmsMsgUnreadCount);
 			if (signalSmsCount != null)
@@ -3574,7 +3569,7 @@ namespace OpenDental{
 				//Provide the pre-existing value here. This will act as a flag indicating that we should not resend the signal.  This would cause infinite signal loop.
 				SetSmsNotificationText(signalSmsCount);
 			}
-			Logger.LogToPath("SMS Notifications", LogPath.Signals, LogPhase.End);
+			// TODO: Logger.LogToPath("SMS Notifications", LogPath.Signals, LogPhase.End);
 			#endregion SMS Notifications
 			#region Tasks
 			List<Signalod> listSignalTasks = listSignals.FindAll(x => x.IType == InvalidType.Task || x.IType == InvalidType.TaskPopup
@@ -3592,9 +3587,9 @@ namespace OpenDental{
 				bool isRefreshPanelButtons = Signalods.IsContrApptButtonRefreshNeeded(listSignals);
 				if (isRefreshAppts || isRefreshScheds)
 				{
-					Logger.LogToPath("RefreshPeriod", LogPath.Signals, LogPhase.Start);
+					// TODO: Logger.LogToPath("RefreshPeriod", LogPath.Signals, LogPhase.Start);
 					ContrAppt2.RefreshPeriod(isRefreshAppointments: isRefreshAppts, isRefreshSchedules: isRefreshScheds);
-					Logger.LogToPath("RefreshPeriod", LogPath.Signals, LogPhase.End);
+					// TODO: Logger.LogToPath("RefreshPeriod", LogPath.Signals, LogPhase.End);
 				}
 				if (isRefreshPanelButtons)
 				{
@@ -3613,7 +3608,7 @@ namespace OpenDental{
 			#region eClipboard/Kiosk
 			if (listSignals.Exists(x => x.IType == InvalidType.EClipboard))
 			{
-				EClipboardEvent.Fire(ODEventType.eClipboard);
+				EClipboardEvent.Fire(EventCategory.eClipboard);
 			}
 			#endregion
 			#region Refresh
@@ -3629,14 +3624,14 @@ namespace OpenDental{
 			List<long> listSigMessageNums = listSignals.FindAll(x => x.IType == InvalidType.SigMessages && x.FKeyType == KeyType.SigMessage).Select(x => x.FKey).ToList();
 			if (listSigMessageNums.Count > 0)
 			{
-				Logger.LogToPath("SigMessages", LogPath.Signals, LogPhase.Start);
+				// TODO: Logger.LogToPath("SigMessages", LogPath.Signals, LogPhase.Start);
 				//Any SigMessage iType means we need to refresh our lights or buttons.
 				List<SigMessage> listSigMessages = SigMessages.GetSigMessages(listSigMessageNums);
 				ContrManage2.LogMsgs(listSigMessages);
 				FillSignalButtons(listSigMessages);
 				//Need to add a test to this: do not play messages that are over 2 minutes old.
 				BeginPlaySoundsThread(listSigMessages);
-				Logger.LogToPath("SigMessages", LogPath.Signals, LogPhase.End);
+				// TODO: Logger.LogToPath("SigMessages", LogPath.Signals, LogPhase.End);
 			}
 			#endregion Sig Messages
 			Plugins.HookAddCode(this, "FormOpenDental.ProcessSignals_end", listSignals);
@@ -4141,7 +4136,7 @@ namespace OpenDental{
 				this.BeginInvoke(() => DataConnection_ConnectionLost(e));
 				return;
 			}
-			if (e == null || e.EventType != ODEventType.DataConnection || e.IsConnectionRestored)
+			if (e == null || e.EventType != EventCategory.DataConnection || e.IsConnectionRestored)
 			{
 				return;
 			}
@@ -4156,7 +4151,7 @@ namespace OpenDental{
 				this.BeginInvoke(() => CrashedTable_Detected(e));
 				return;
 			}
-			if (e == null || e.EventType != ODEventType.CrashedTable || !e.IsTableCrashed)
+			if (e == null || e.EventType != EventCategory.CrashedTable || !e.IsTableCrashed)
 			{
 				return;
 			}
@@ -4174,7 +4169,7 @@ namespace OpenDental{
 				this.BeginInvoke(() => DataConnection_CredentialsFailedAfterLogin(e));
 				return;
 			}
-			if (e != null && e.EventType != ODEventType.ServiceCredentials)
+			if (e != null && e.EventType != EventCategory.ServiceCredentials)
 			{
 				return;
 			}
@@ -6890,7 +6885,7 @@ namespace OpenDental{
 
 		private void formProcNotBilled_GoToChanged(ODEventArgs e)
 		{
-			if (e.EventType != ODEventType.FormProcNotBilled_GoTo)
+			if (e.EventType != EventCategory.FormProcNotBilled_GoTo)
 			{
 				return;
 			}
@@ -7635,20 +7630,20 @@ namespace OpenDental{
 					}
 				}
 			}
-			GeneralProgramEvent.Fire(ODEventType.Shutdown, isForceClose);
+			GeneralProgramEvent.Fire(EventCategory.Shutdown, isForceClose);
 			foreach (Form formToClose in listOpenForms)
 			{
 				if (formToClose.Name == "FormWikiEdit")
 				{
-					WikiSaveEvent.Fire(ODEventType.WikiSave);
+					WikiSaveEvent.Fire(EventCategory.WikiSave);
 				}
 				if (formToClose.Name == "FormCommItem")
 				{
-					CommItemSaveEvent.Fire(ODEventType.CommItemSave, "ShutdownAllWorkstations");
+					CommItemSaveEvent.Fire(EventCategory.CommItemSave, "ShutdownAllWorkstations");
 				}
 				if (formToClose.Name == "FormEmailMessageEdit")
 				{
-					EmailSaveEvent.Fire(ODEventType.EmailSave);
+					EmailSaveEvent.Fire(EventCategory.EmailSave);
 				}
 			}
 			return true;

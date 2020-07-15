@@ -112,7 +112,7 @@ namespace OpenDental {
 				if(tabToRefresh!=UserControlTasksTab.Invalid && control.TaskTab!=tabToRefresh) {
 					continue;
 				}
-				Logger.LogAction("UserControlTasks.RefreshTasks",LogPath.Signals,() => control.FillGrid(listSignals));
+				Logger.LogAction("UserControlTasks.RefreshTasks",() => control.FillGrid(listSignals));
 			}
 		}
 

@@ -19,7 +19,7 @@ namespace UnitTests {
 		///Linked to email eServices.od.test@gmail.com.</summary>
 		public const string TestPatPhone="1(971)301-2247";
 		public TestContext TestContext { get; set; }
-		protected Logger.IWriteLine _log;
+
 		///<summary>Put this in the watch window to see the logger results.</summary>
 		protected string _logStr="";
 
@@ -30,17 +30,9 @@ namespace UnitTests {
 			}
 		}
 
-		public TestBase() {
-			_log=new LogDelegate((log,ll) => {
-				_logStr+=log+"\r\n";
-				//To view the output, in the Test Explorer in the bottom half, click 'Output'.
-				Console.WriteLine(log);
-			});
-		}
-
 		///<summary>Write to _logStr and the test output window.</summary>
 		protected void LogWriteLine(string log) {
-			_log.WriteLine(log,LogLevel.Verbose);
+			Console.WriteLine(log);
 		}
 
 		/// <summary> TestBase.Initialize will be called before the ClassInitialize and TestInitialize methods specific to each class.

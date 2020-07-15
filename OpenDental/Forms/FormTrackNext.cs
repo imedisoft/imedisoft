@@ -440,7 +440,7 @@ namespace OpenDental{
 				},
 				startingMessage:Lans.g(this,"Filling the Planned Appointments Grid..."),
 				eventType:typeof(PlannedTrackerEvent),
-				odEventType:ODEventType.PlannedTracker
+				odEventType:EventCategory.PlannedTracker
 			);
 		}
 

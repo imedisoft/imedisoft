@@ -1042,7 +1042,7 @@ namespace OpenDental{
 			ODProgress.ShowAction(() => {
 					List<Action> listActions=dictPriProvPats.Select(x => new Action(() => {
 						patsMoved+=x.Value.Count;
-						PatientEvent.Fire(ODEventType.Patient,Lan.G(this,"Moving patients")+": "+patsMoved+" out of "+totalPatCount);
+						PatientEvent.Fire(EventCategory.Patient,Lan.G(this,"Moving patients")+": "+patsMoved+" out of "+totalPatCount);
 						Patients.ChangePrimaryProviders(x.Key,provTo.ProvNum);//update all priprovs to new provider
 						SecurityLogs.MakeLogEntry(Permissions.PatPriProvEdit,0,"Primary provider changed for "+x.Value.Count+" patients from "
 							+Providers.GetLongDesc(x.Key)+" to "+provTo.GetLongDesc()+".");
@@ -1051,7 +1051,7 @@ namespace OpenDental{
 				},
 				startingMessage:Lan.G(this,"Moving patients")+"...",
 				eventType:typeof(PatientEvent),
-				odEventType:ODEventType.Patient);
+				odEventType:EventCategory.Patient);
 			Cursor=Cursors.Default;
 			_hasChanged=true;
 			FillGrid();
@@ -1102,7 +1102,7 @@ namespace OpenDental{
 			{
 				return;
 			}
-			Action actionCloseProgress=ODProgress.Show(ODEventType.Provider,startingMessage:Lan.G(this,"Gathering patient and provider details")+"...");
+			Action actionCloseProgress=ODProgress.Show(EventCategory.Provider,startingMessage:Lan.G(this,"Gathering patient and provider details")+"...");
 			Cursor=Cursors.WaitCursor;
 			List<long> listProvNumsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.ListGridRows[x].Tag).ProvNum).ToList();
 			DataTable tablePatNums=Patients.GetPatNumsByPriProvs(listProvNumsFrom);//list of all patients who are using the selected providers.
@@ -1140,7 +1140,7 @@ namespace OpenDental{
 						.ToDictionary(x => x.Key,x=>x.Select(y=>y.PatNum).ToList())
 						.Select(x => new Action(() => {
 							patsReassigned+=x.Value.Count;
-							PatientEvent.Fire(ODEventType.Patient,Lan.G(this,"Reassigning patients")+": "+patsReassigned
+							PatientEvent.Fire(EventCategory.Patient,Lan.G(this,"Reassigning patients")+": "+patsReassigned
 								+" "+Lan.G(this,"out of")+" "+listPatProvFrom.Count);
 							Patients.ReassignProv(x.Key.To,x.Value);
 							SecurityLogs.MakeLogEntry(Permissions.PatPriProvEdit,0,"Primary provider changed for "+x.Value.Count+" patients from "
@@ -1150,7 +1150,7 @@ namespace OpenDental{
 				},
 				startingMessage:Lan.G(this,"Reassigning patients")+"...",
 				eventType:typeof(PatientEvent),
-				odEventType:ODEventType.Patient);
+				odEventType:EventCategory.Patient);
 			Cursor=Cursors.Default;
 			//changed=true;//We didn't change any providers
 			FillGrid();

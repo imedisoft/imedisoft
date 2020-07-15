@@ -63,7 +63,7 @@ namespace OpenDentBusiness{
 			List<long> listSecurityLogNums;
 			do {
 				//Delete the hashes
-				MiscDataEvent.Fire(CodeBase.ODEventType.MiscData,
+				MiscDataEvent.Fire(CodeBase.EventCategory.MiscData,
 					Lans.g("FormBackup","Removing old data from securityloghash table. Rows deleted so far:")+" "+countDeleted);
 				//limiting to 500,000 to avoid out of memory exceptions
 				string command=$"SELECT SecurityLogNum FROM securitylog WHERE DATE(LogDateTime) <= {POut.DateT(date.Date)} LIMIT 500000";
@@ -73,7 +73,7 @@ namespace OpenDentBusiness{
 				}
 				SecurityLogHashes.DeleteForSecurityLogEntries(listSecurityLogNums);
 				//Then delete the securitylog entries themselves
-				MiscDataEvent.Fire(CodeBase.ODEventType.MiscData,
+				MiscDataEvent.Fire(CodeBase.EventCategory.MiscData,
 					Lans.g("FormBackup","Removing old data from securitylog table. Rows deleted so far:")+" "+countDeleted);
 				command=$"DELETE FROM securitylog WHERE SecurityLogNum IN ({string.Join(",",listSecurityLogNums)})";
 				Db.NonQ(command);

@@ -155,7 +155,7 @@ namespace OpenDental {
 				}
 				long clinicNumCur=Clinics.ClinicNum;
 				long userNumCur=Security.CurUser.UserNum;
-				Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
+				// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 				List<List<AlertItem>> listUniqueAlerts=AlertItems.GetUniqueAlerts(userNumCur,clinicNumCur);
 				//We will set the alert's tag to all the items in its list so that all can be marked read/deleted later.
 				listUniqueAlerts.ForEach(x => x.First().TagOD=x.Select(y => y.AlertItemNum).ToList());
@@ -251,7 +251,7 @@ namespace OpenDental {
 						return true;
 					}
 				};
-				FormConnectionLost FormCL=new FormConnectionLost(funcShouldWindowClose,ODEventType.CrashedTable,errorMessage,typeof(CrashedTableEvent));
+				FormConnectionLost FormCL=new FormConnectionLost(funcShouldWindowClose,EventCategory.CrashedTable,errorMessage,typeof(CrashedTableEvent));
 				if(FormCL.ShowDialog()==DialogResult.Cancel) {
 					ExitCode=108;//User decided to exit the program due to a crashed table UE.
 					Environment.Exit(ExitCode);
@@ -290,7 +290,7 @@ namespace OpenDental {
 					}
 					return true;//Data connection has been found so close the Connection Lost window.
 				};
-				FormConnectionLost FormCL=new FormConnectionLost(funcTestConnection,ODEventType.DataConnection,errorMessage);
+				FormConnectionLost FormCL=new FormConnectionLost(funcTestConnection,EventCategory.DataConnection,errorMessage);
 				if(FormCL.ShowDialog()==DialogResult.Cancel) {
 					//This is problematic because it causes DirectX to cause a UE but there doesn't seem to be a better way to close without using the database.
 					ExitCode=106;//Connection to specified database has failed
@@ -699,7 +699,7 @@ namespace OpenDental {
 			}
 			ODThread odThread=new ODThread(Podium.PodiumThreadIntervalMS,((ODThread o) => { Podium.ThreadPodiumSendInvitations(false); }));
 			odThread.AddExceptionHandler((ex) => {
-				Logger.WriteException(ex,Podium.LOG_DIRECTORY_PODIUM);
+				// TODO: Logger.WriteException(ex,Podium.LOG_DIRECTORY_PODIUM);
 			});
 			odThread.GroupName=FormODThreadNames.Podium.GetDescription();
 			odThread.Name=FormODThreadNames.Podium.GetDescription();

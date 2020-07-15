@@ -79,7 +79,7 @@ namespace OpenDental {
 					//FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper("Importing fees...",));
 					double percent=(double)counter*100d/(double)lineCount;
 					counter++;
-					FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(
+					FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(
 						"Importing fees...",((int)percent).ToString(),blockValue:(int)percent,progressStyle:ProgBarStyle.Continuous));
 					line=sr.ReadLine();
 				}

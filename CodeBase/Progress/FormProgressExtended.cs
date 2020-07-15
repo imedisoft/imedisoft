@@ -21,7 +21,7 @@ namespace CodeBase {
 		///<summary>Do not instatiate this class.  It is not meant for public use.  Use ODProgress.ShowProgressExtended() instead.
 		///Launches a progress window that will constantly spin and display status updates for global ODEvents with corresponding name.
 		///eventType must be a Type that contains an event called Fired.</summary>
-		public FormProgressExtended(ODEventType odEventType,Type eventType,bool hasHistory=false,string cancelButtonText=null) : base(odEventType,eventType) {
+		public FormProgressExtended(EventCategory odEventType,Type eventType,bool hasHistory=false,string cancelButtonText=null) : base(odEventType,eventType) {
 			InitializeComponent();
 			if(!string.IsNullOrEmpty(cancelButtonText)) {
 				butCancel.Text=cancelButtonText;

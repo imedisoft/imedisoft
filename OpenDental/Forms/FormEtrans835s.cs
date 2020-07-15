@@ -112,7 +112,7 @@ namespace OpenDental {
 			textControlId.Visible=PrefC.GetBool(PrefName.EraShowControlIdFilter);
 			Action actionCloseProgress=null;
 			if(isRefreshNeeded) {
-				actionCloseProgress=ODProgress.Show(ODEventType.Etrans,typeof(EtransEvent),Lan.G(this,"Gathering data")+"...");
+				actionCloseProgress=ODProgress.Show(EventCategory.Etrans,typeof(EtransEvent),Lan.G(this,"Gathering data")+"...");
 				_dictEtrans835s.Clear();
 				_dictEtransClaims.Clear();
 				List <Etrans835Attach> listAttached=Etrans835Attaches.GetForEtrans(_listAllEtrans.Select(x => x.EtransNum).ToArray());
@@ -127,7 +127,7 @@ namespace OpenDental {
 						dictEtransMessages=EtransMessageTexts.GetMessageTexts(_listAllEtrans.GetRange(rowCur,range).Select(x => x.EtransMessageTextNum).ToList(),false);
 					}
 					rowCur++;
-					EtransEvent.Fire(ODEventType.Etrans,Lan.G(this,"Processing 835: ")+": "+rowCur+" out of "+_listAllEtrans.Count);
+					EtransEvent.Fire(EventCategory.Etrans,Lan.G(this,"Processing 835: ")+": "+rowCur+" out of "+_listAllEtrans.Count);
 					List <Etrans835Attach> listAttachedTo835=listAttached.FindAll(x => x.EtransNum==etrans.EtransNum);
 					X835 x835=new X835(etrans,dictEtransMessages[etrans.EtransMessageTextNum],etrans.TranSetId835,listAttachedTo835,true);
 					_dictEtrans835s.Add(etrans.EtransNum,x835);
@@ -136,9 +136,9 @@ namespace OpenDental {
 					list835ClaimMatches.AddRange(listClaimMatches);
 				}
 				#region Set 835 unattached in batch and build _dictEtransClaims and _dictClaimPayCheckNums.
-				EtransEvent.Fire(ODEventType.Etrans,Lan.G(this,"Gathering internal claim matches."));
+				EtransEvent.Fire(EventCategory.Etrans,Lan.G(this,"Gathering internal claim matches."));
 				List<long> listClaimNums=Claims.GetClaimFromX12(list835ClaimMatches);//Can return null.
-				EtransEvent.Fire(ODEventType.Etrans,Lan.G(this,"Building data sets."));
+				EtransEvent.Fire(EventCategory.Etrans,Lan.G(this,"Building data sets."));
 				int claimIndexCur=0;
 				List<long> listMatchedClaimNums=new List<long>();
 				foreach(Etrans etrans in _listAllEtrans) {
@@ -165,7 +165,7 @@ namespace OpenDental {
 					}
 					#endregion
 				}
-				EtransEvent.Fire(ODEventType.Etrans,Lan.G(this,"Filling Grid."));
+				EtransEvent.Fire(EventCategory.Etrans,Lan.G(this,"Filling Grid."));
 				#endregion
 			}
 			gridMain.BeginUpdate();

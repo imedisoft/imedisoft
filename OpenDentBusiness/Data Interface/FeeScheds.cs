@@ -150,7 +150,7 @@ namespace OpenDentBusiness{
 							securityLogText+="Replacing Previous Fee \""+oldFee.Amount+"\"";
 						}
 						SecurityLogs.MakeLogEntry(Permissions.FeeSchedEdit,0,securityLogText);
-						FeeSchedEvent.Fire(ODEventType.FeeSched,
+						FeeSchedEvent.Fire(EventCategory.FeeSched,
 							new ProgressBarHelper(Lans.g("FormFeeSchedTools","Copying fees, please wait")+"...",blockValue:blockValue,blockMax:blockMax,
 							progressStyle:ProgBarStyle.Continuous));
 						lock(locker) {
@@ -210,7 +210,7 @@ namespace OpenDentBusiness{
 					else {
 						numSkipped++;
 					}
-					FeeSchedEvent.Fire(ODEventType.FeeSched,
+					FeeSchedEvent.Fire(EventCategory.FeeSched,
 					new ProgressBarHelper(Lans.g("FeeScheds","Processing fees, please wait")+"...","",(numImported+numSkipped),feeLines.Length,
 					ProgBarStyle.Continuous));
 				}
@@ -239,7 +239,7 @@ namespace OpenDentBusiness{
 					sr.Write(procCode.AbbrDesc+"\t");
 					sr.WriteLine(procCode.Descript);
 					double percent=((rowNum*1.0)/listProcCodes.Count*100);
-					FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(
+					FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(
 						"Exporting fees, please wait...",percent.ToString(),blockValue:(int)percent,progressStyle:ProgBarStyle.Continuous));
 					rowNum++;
 				}
@@ -316,10 +316,10 @@ namespace OpenDentBusiness{
 			OrthoSchedule orthoSchedule=null;
 			List<OrthoProcLink> listOrthoProcLinksForOrthoCase=null;
 			foreach(long clinicNumCur in listWriteoffClinicNums) {
-				progress.Fire(ODEventType.FeeSched,new ProgressBarHelper(Clinics.GetAbbr(clinicNumCur),"0%",0,100,ProgBarStyle.Blocks,"WriteoffProgress"));
+				progress.Fire(EventCategory.FeeSched,new ProgressBarHelper(Clinics.GetAbbr(clinicNumCur),"0%",0,100,ProgBarStyle.Blocks,"WriteoffProgress"));
 				long rowCurIndex = 0; //reset for each clinic.
 				object lockObj=new object();//used to lock rowCurIndex so the threads will correctly increment the count
-				progress.Fire(ODEventType.FeeSched,new ProgressBarHelper(Lans.g("FeeSchedEvent","Getting list to update writeoffs..."),
+				progress.Fire(EventCategory.FeeSched,new ProgressBarHelper(Lans.g("FeeSchedEvent","Getting list to update writeoffs..."),
 						progressBarEventType: ProgBarEventType.TextMsg));
 				listFeesHQandClinic=listFeesHQ;
 				if(PrefC.HasClinicsEnabled && clinicNumCur>0) {//listFeesHQ is already the fees for ClinicNum 0, only add to list if > 0
@@ -393,7 +393,7 @@ namespace OpenDentBusiness{
 					break;
 				}
 				#endregion Has Paused or Cancelled
-				progress.Fire(ODEventType.FeeSched,new ProgressBarHelper(Lans.g("FeeSchedEvent","Updating writeoff estimates for patients..."),
+				progress.Fire(EventCategory.FeeSched,new ProgressBarHelper(Lans.g("FeeSchedEvent","Updating writeoff estimates for patients..."),
 						progressBarEventType: ProgBarEventType.TextMsg));
 				listActions=listFamProcs.Select(x => new Action(() => {
 					#region Has Cancelled
@@ -432,7 +432,7 @@ namespace OpenDentBusiness{
 							lock(lockObj) {
 								percentage=Math.Ceiling(((double)(++rowCurIndex)/procCount)*100);
 							}
-							progress.Fire(ODEventType.FeeSched,
+							progress.Fire(EventCategory.FeeSched,
 								new ProgressBarHelper(Clinics.GetAbbr(clinicNumCur),(int)percentage+"%",(int)percentage,100,ProgBarStyle.Blocks,"WriteoffProgress"));
 						}
 					}
@@ -440,12 +440,12 @@ namespace OpenDentBusiness{
 				ODThread.RunParallel(listActions,TimeSpan.FromHours(3),
 					exceptionHandler:new ODThread.ExceptionDelegate((ex) => {
 						//Notify the user what went wrong via the text box.
-						progress.Fire(ODEventType.FeeSched,new ProgressBarHelper("Error updating writeoffs: "+ex.Message,
+						progress.Fire(EventCategory.FeeSched,new ProgressBarHelper("Error updating writeoffs: "+ex.Message,
 							progressBarEventType:ProgBarEventType.TextMsg));
 					})
 				);
 				if(listWriteoffClinicNums.Count>1) {//only show if more than one clinic
-					progress.Fire(ODEventType.FeeSched,
+					progress.Fire(EventCategory.FeeSched,
 						new ProgressBarHelper(rowCurIndex+" "+Lans.g("FeeSchedTools","procedures processed from")+" "+Clinics.GetAbbr(clinicNumCur),
 							progressBarEventType:ProgBarEventType.TextMsg));
 				}
@@ -468,7 +468,7 @@ namespace OpenDentBusiness{
 				#endregion Has Cancelled
 			}
 			progress.OnProgressDone();
-			progress.Fire(ODEventType.FeeSched,new ProgressBarHelper("Writeoffs updated. "+totalWriteoffsUpdated+" procedures processed.\r\nDone.",
+			progress.Fire(EventCategory.FeeSched,new ProgressBarHelper("Writeoffs updated. "+totalWriteoffsUpdated+" procedures processed.\r\nDone.",
 				progressBarEventType: ProgBarEventType.TextMsg));
 			return totalWriteoffsUpdated;
 		}
@@ -643,7 +643,7 @@ namespace OpenDentBusiness{
 		///<summary>Hides FeeScheds that are not hidden and not in use by anything. Returns the number of fee scheds that were hidden.</summary>
 		public static long HideUnusedScheds() {
 			
-			ODEvent.Fire(ODEventType.HideUnusedFeeSchedules,Lans.g("FormFeeScheds","Finding unused fee schedules..."));
+			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,Lans.g("FormFeeScheds","Finding unused fee schedules..."));
 			string command=@"SELECT feesched.FeeSchedNum 
 				FROM feesched
 				LEFT JOIN provider ON provider.FeeSched=feesched.FeeSchedNum
@@ -658,7 +658,7 @@ namespace OpenDentBusiness{
 			if(listFeeScheds.Count==0) {
 				return 0;
 			}
-			ODEvent.Fire(ODEventType.HideUnusedFeeSchedules,Lans.g("FormFeeScheds","Hiding unused fee schedules..."));
+			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,Lans.g("FormFeeScheds","Hiding unused fee schedules..."));
 			command="UPDATE feesched SET IsHidden=1 WHERE FeeSchedNum IN("+string.Join(",",listFeeScheds.Select(x => POut.Long(x)))+")";
 			long rowsChanged=Db.NonQ(command);
 			return rowsChanged;

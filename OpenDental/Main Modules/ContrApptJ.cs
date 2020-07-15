@@ -46,7 +46,7 @@ namespace OpenDental {
 
 		#region Constructor
 		public ContrAppt() {
-			Logger.openlog.Log("Initializing appointment module...",Logger.Severity.INFO);
+			Logger.LogInfo("Initializing appointment module...");
 			InitializeComponent();
 			gridReminders.ContextMenu=menuReminderEdit;
 			//The MonthCalendar control has a default context menu with a signle menu item option called "Go to today".
@@ -414,7 +414,7 @@ namespace OpenDental {
 			FormOpenDental.S_Contr_PatientSelected(_patCur,true,false);
 			RefreshPeriod();				
 			Recalls.SynchScheduledApptFull(appt.PatNum);
-			AppointmentEvent.Fire(ODEventType.AppointmentEdited,appt);
+			AppointmentEvent.Fire(EventCategory.AppointmentEdited,appt);
 			#endregion Update UI and cache
 			//The first hook's naming convention was maintained to allow it to continue to function.
 			//Plugin developers should use the "ContrAppt.contrApptPanel_ApptMoved_end" hook instead.
@@ -439,7 +439,7 @@ namespace OpenDental {
 			RefreshModuleDataPatient(e.Appt.PatNum);
 			FormOpenDental.S_Contr_PatientSelected(_patCur,true,false);
 			RefreshPeriod();
-			AppointmentEvent.Fire(ODEventType.AppointmentEdited,e.Appt);
+			AppointmentEvent.Fire(EventCategory.AppointmentEdited,e.Appt);
 		}
 
 		private void ContrApptPanel_ApptRightClicked(object sender, UI.ApptRightClickEventArgs e){
@@ -910,7 +910,7 @@ namespace OpenDental {
 				AutomationL.Trigger(AutomationTrigger.CompleteProcedure,listProcs.Select(x => ProcedureCodes.GetStringProcCode(x.CodeNum)).ToList(),appt.PatNum);
 			}
 			ModuleSelected(appt.PatNum);
-			AppointmentEvent.Fire(ODEventType.AppointmentEdited,appt);
+			AppointmentEvent.Fire(EventCategory.AppointmentEdited,appt);
 			//If necessary, prompt the user to ask the patient to opt in to using Short Codes.
 			FormShortCodeOptIn.PromptIfNecessary(pat,appt.ClinicNum);
 			Plugins.HookAddCode(this,"ContrAppt.OnComplete_Click_end",appt,_patCur);
@@ -1014,7 +1014,7 @@ namespace OpenDental {
 				return;
 			}
 			Appointments.Delete(contrApptPanel.SelectedAptNum,true);//Appointments S-Class handles Signalods
-			AppointmentEvent.Fire(ODEventType.AppointmentEdited,appt);
+			AppointmentEvent.Fire(EventCategory.AppointmentEdited,appt);
 			contrApptPanel.SelectedAptNum=-1;
 			pinBoard.SelectedIndex=-1;
 			for(int i=0;i<pinBoard.ListPinBoardItems.Count;i++) {
@@ -1599,7 +1599,7 @@ namespace OpenDental {
 					List<string> procCodes=procsForSingleApt.Select(x => ProcedureCodes.GetProcCode(x.CodeNum).ProcCode).ToList();					
 					AutomationL.Trigger(AutomationTrigger.ScheduleProcedure,procCodes,apptCur.PatNum);
 				}
-				AppointmentEvent.Fire(ODEventType.AppointmentEdited,apptCur);
+				AppointmentEvent.Fire(EventCategory.AppointmentEdited,apptCur);
 				Recalls.SynchScheduledApptFull(apptCur.PatNum);
 				Plugins.HookAddCode(this,"ContrAppt.pinBoard_MouseUp_end",apptCur,_patCur);//hook name is historical
 				#endregion Update UI and cache
@@ -2617,7 +2617,7 @@ namespace OpenDental {
 			SetInitialStartTime();//only runs once
 			contrApptPanel.EndUpdate();
 			//There is no "LoadData" in this Module, so at least pass _patCur.
-			PatientDashboardDataEvent.Fire(ODEventType.ModuleSelected,_patCur);
+			PatientDashboardDataEvent.Fire(EventCategory.ModuleSelected,_patCur);
 			Plugins.HookAddCode(this,"ContrAppt.ModuleSelected_end",patNum);
 		}
 
@@ -2723,7 +2723,7 @@ namespace OpenDental {
 
 		///<summary>This is public so that FormOpenDental can pass refreshed tasks here in order to avoid an extra query.</summary>
 		public void RefreshReminders(List <Task> listReminderTasks) {
-			Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
+			// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 			List<Task> listSortedReminderTasks=listReminderTasks
 				.Where(x => x.DateTimeEntry.Date <= DateTimeOD.Today)
 				.OrderBy(x => x.DateTimeEntry)
@@ -2748,7 +2748,7 @@ namespace OpenDental {
 				gridReminders.ListGridRows.Add(row);
 			}
 			gridReminders.EndUpdate();
-			Logger.LogToPath("",LogPath.Signals,LogPhase.End);
+			// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.End);
 		}
 
 		///<summary>This logic mimics filling a row within UserControlTasks.FillGrid().

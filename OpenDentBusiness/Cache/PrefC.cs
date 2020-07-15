@@ -91,24 +91,21 @@ namespace OpenDentBusiness
 		{
 			try
 			{
-				if (Prefs.DictIsNull())
-				{ //Do not allow PrefC.GetString below if we haven't loaded the Pref cache yet. This would cause a recursive loop and stack overflow.
-					throw new Exception("Prefs cache is null");
-				}
+				if (Prefs.DictIsNull()) throw new Exception("Prefs cache is null");
+				
 
 				if (_isVerboseLoggingSession == YN.Unknown)
 				{
 					if (GetString(PrefName.HasVerboseLogging).ToLower().Split(',').ToList().Exists(x => x == Environment.MachineName.ToLower()))
 					{
 						_isVerboseLoggingSession = YN.Yes;
-						//Switch logger to a directory that won't have permissions issues.
-						Logger.UseMyDocsDirectory();
 					}
 					else
 					{
 						_isVerboseLoggingSession = YN.No;
 					}
 				}
+
 				return _isVerboseLoggingSession == YN.Yes;
 			}
 			catch

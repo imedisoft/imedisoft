@@ -150,7 +150,7 @@ namespace OpenDental {
 		#region Constructor
 		///<summary></summary>
 		public ContrChart() {
-			Logger.openlog.Log("Initializing chart module...",Logger.Severity.INFO);
+			Logger.LogInfo("Initializing chart module...");
 			InitializeComponent();
 			tabControlImages.DrawItem += new DrawItemEventHandler(OnDrawItem);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
@@ -504,7 +504,7 @@ namespace OpenDental {
 		#region Methods - Event Handlers - ErxBrowsers
 		///<summary>CRITICAL: If we ever decide to launch eRx in an eternal browser window again, then we will need another way to sync the medications from eRx.  If we use an external browser window, then we have no way to know when the user is done with the exernal browser, and therefore we would not know when to sync.  Currently this event function knows when the browser closes, so we know when to sync.</summary>
 		private void ErxBrowserClosed(ODEventArgs e) {
-			if(e.EventType!=ODEventType.ErxBrowserClosed) {
+			if(e.EventType!=EventCategory.ErxBrowserClosed) {
 				return;
 			}
 			Patient pat=(Patient)e.Tag;
@@ -1394,7 +1394,7 @@ namespace OpenDental {
 				InsSub insSub1=InsSubs.GetSub(PatPlans.GetInsSubNum(_listPatPlans,PatPlans.GetOrdinal(PriSecMed.Primary,_listPatPlans,_listInsPlans,_listInsSubs)),_listInsSubs);
 				InsSub insSub2=InsSubs.GetSub(PatPlans.GetInsSubNum(_listPatPlans,PatPlans.GetOrdinal(PriSecMed.Secondary,_listPatPlans,_listInsPlans,_listInsSubs)),_listInsSubs);
 				Appointments.SetAptStatusComplete(apt,insSub1.PlanNum,insSub2.PlanNum);
-				AppointmentEvent.Fire(ODEventType.AppointmentEdited,apt);
+				AppointmentEvent.Fire(EventCategory.AppointmentEdited,apt);
 				List<Procedure> listProcsForAppt=Procedures.GetProcsForSingle(apt.AptNum,false);
 				bool removeCompletedProcs=ProcedureL.DoRemoveCompletedProcs(apt,listProcsForAppt.FindAll(x => x.AptNum==apt.AptNum && x.ProcStatus==ProcStat.C));
 				ProcedureL.SetCompleteInAppt(apt,_listInsPlans,_listPatPlans,_patCur,_listInsSubs,removeCompletedProcs);//loops through each proc, also makes completed security logs
@@ -4593,8 +4593,8 @@ namespace OpenDental {
 		///<summary>Only use this overload when isFullRefresh is set to false.  This is ONLY in a few places and only for eCW at this point.  Speeds things up by refreshing less data.</summary>
 		public void ModuleSelected(long patNum,bool isFullRefresh,bool isClinicRefresh) {
 			EasyHideClinicalData();
-			Logger.LogAction("RefreshModuleData",LogPath.ChartModule,() => RefreshModuleData(patNum,isFullRefresh));
-			Logger.LogAction("RefreshModuleScreen",LogPath.ChartModule,() => RefreshModuleScreen(isClinicRefresh));//Update UI to reflect any changed dynamic SheetDefs.
+			Logger.LogAction("RefreshModuleData",() => RefreshModuleData(patNum,isFullRefresh));
+			Logger.LogAction("RefreshModuleScreen",() => RefreshModuleScreen(isClinicRefresh));//Update UI to reflect any changed dynamic SheetDefs.
 			ReloadSheetLayout();//Module selected
 			Plugins.HookAddCode(this,"ContrChart.ModuleSelected_end",patNum);
 		}
@@ -4622,244 +4622,298 @@ namespace OpenDental {
 			Plugins.HookAddCode(this,"ContrChart.ModuleUnselected_end");
 		}
 
-		public void RefreshModuleScreen(bool isClinicRefresh=false) {
+		public void RefreshModuleScreen(bool isClinicRefresh = false)
+		{
 			//ParentForm.Text=Patients.GetMainTitle(PatCur);
 			LayoutToolBar();
-			if(_patCur==null) {
+			if (_patCur == null)
+			{
 				//groupShow.Enabled=false;
-				gridPtInfo.Enabled=false;
+				gridPtInfo.Enabled = false;
 				//tabPlanned.Enabled=false;
-				_toothChartRelay.Enabled=false;
-				gridProg.Enabled=false;
-				if(HasHideRxButtonsEcw()) {
+				_toothChartRelay.Enabled = false;
+				gridProg.Enabled = false;
+				if (HasHideRxButtonsEcw())
+				{
 					//Don't show the Rx and eRx buttons.
 				}
-				else {
+				else
+				{
 					//if(UsingEcwTight()) {
-					if(UsingEcwTightOrFull()) {
-						if(!Environment.Is64BitOperatingSystem) {
-							ToolBarMain.Buttons["Rx"].Enabled=false;
+					if (UsingEcwTightOrFull())
+					{
+						if (!Environment.Is64BitOperatingSystem)
+						{
+							ToolBarMain.Buttons["Rx"].Enabled = false;
 						}
 						//eRx already disabled because it is never enabled for eCW Tight or Full
 					}
-					else {
-						ToolBarMain.Buttons["Rx"].Enabled=false;
-						ToolBarMain.Buttons["eRx"].Enabled=false;
+					else
+					{
+						ToolBarMain.Buttons["Rx"].Enabled = false;
+						ToolBarMain.Buttons["eRx"].Enabled = false;
 					}
 				}
-				ToolBarMain.Buttons["LabCase"].Enabled=false;
-				if(ToolBarMain.Buttons["Perio"]!=null) {
-					ToolBarMain.Buttons["Perio"].Enabled=false;
+				ToolBarMain.Buttons["LabCase"].Enabled = false;
+				if (ToolBarMain.Buttons["Perio"] != null)
+				{
+					ToolBarMain.Buttons["Perio"].Enabled = false;
 				}
-				if(ToolBarMain.Buttons["Ortho"]!=null) {
-					ToolBarMain.Buttons["Ortho"].Enabled=false;
+				if (ToolBarMain.Buttons["Ortho"] != null)
+				{
+					ToolBarMain.Buttons["Ortho"].Enabled = false;
 				}
-				ToolBarMain.Buttons["Consent"].Enabled=false;
-				if(ToolBarMain.Buttons["ToothChart"]!=null) {
-					ToolBarMain.Buttons["ToothChart"].Enabled=false;
+				ToolBarMain.Buttons["Consent"].Enabled = false;
+				if (ToolBarMain.Buttons["ToothChart"] != null)
+				{
+					ToolBarMain.Buttons["ToothChart"].Enabled = false;
 				}
-				ToolBarMain.Buttons["ExamSheet"].Enabled=false;
-				if(UsingEcwTight()) {
-					ToolBarMain.Buttons["Commlog"].Enabled=false;
-					webBrowserEcw.Url=null;
+				ToolBarMain.Buttons["ExamSheet"].Enabled = false;
+				if (UsingEcwTight())
+				{
+					ToolBarMain.Buttons["Commlog"].Enabled = false;
+					webBrowserEcw.Url = null;
 				}
 				//if(FormOpenDental.ObjSomeEhrSuperClass!=null) {//didn't work
-				if(ToolBarMain.Buttons["EHR"]!=null) {
-					ToolBarMain.Buttons["EHR"].Enabled=false;
+				if (ToolBarMain.Buttons["EHR"] != null)
+				{
+					ToolBarMain.Buttons["EHR"].Enabled = false;
 				}
-				if(ToolBarMain.Buttons["HL7"]!=null) {
-					ToolBarMain.Buttons["HL7"].Enabled=false;
+				if (ToolBarMain.Buttons["HL7"] != null)
+				{
+					ToolBarMain.Buttons["HL7"].Enabled = false;
 				}
-				tabProc.Enabled=false;
-				butAddKey.Enabled=false;
-				butForeignKey.Enabled=false;
-				butPhoneNums.Enabled=false;
-				butErxAccess.Enabled=false;
-				trackToothProcDates.Enabled=false;
-				textToothProcDate.Enabled=false;
-				textSearch.Text="";
+				tabProc.Enabled = false;
+				butAddKey.Enabled = false;
+				butForeignKey.Enabled = false;
+				butPhoneNums.Enabled = false;
+				butErxAccess.Enabled = false;
+				trackToothProcDates.Enabled = false;
+				textToothProcDate.Enabled = false;
+				textSearch.Text = "";
 			}
-			else {
-				trackToothProcDates.Enabled=true;
-				textToothProcDate.Enabled=true;
+			else
+			{
+				trackToothProcDates.Enabled = true;
+				textToothProcDate.Enabled = true;
 				//groupShow.Enabled=true;
-				gridPtInfo.Enabled=true;
+				gridPtInfo.Enabled = true;
 				//groupPlanned.Enabled=true;
-				_toothChartRelay.Enabled=true;
-				gridProg.Enabled=true;
-				if(HasHideRxButtonsEcw()) {
+				_toothChartRelay.Enabled = true;
+				gridProg.Enabled = true;
+				if (HasHideRxButtonsEcw())
+				{
 					//Don't show the Rx and eRx buttons.
 				}
-				else {
+				else
+				{
 					//if(UsingEcwTight()) {
-					if(UsingEcwTightOrFull()) {
-						if(!Environment.Is64BitOperatingSystem) {
-							ToolBarMain.Buttons["Rx"].Enabled=true;
+					if (UsingEcwTightOrFull())
+					{
+						if (!Environment.Is64BitOperatingSystem)
+						{
+							ToolBarMain.Buttons["Rx"].Enabled = true;
 						}
 						//don't enable eRx
 					}
-					else {
-						ToolBarMain.Buttons["Rx"].Enabled=true;
-						ToolBarMain.Buttons["eRx"].Enabled=true;
+					else
+					{
+						ToolBarMain.Buttons["Rx"].Enabled = true;
+						ToolBarMain.Buttons["eRx"].Enabled = true;
 					}
 				}
-				ToolBarMain.Buttons["LabCase"].Enabled=true;
-				if(ToolBarMain.Buttons["Perio"]!=null) {
-					ToolBarMain.Buttons["Perio"].Enabled=true;
+				ToolBarMain.Buttons["LabCase"].Enabled = true;
+				if (ToolBarMain.Buttons["Perio"] != null)
+				{
+					ToolBarMain.Buttons["Perio"].Enabled = true;
 				}
-				if(ToolBarMain.Buttons["Ortho"]!=null) {
-					ToolBarMain.Buttons["Ortho"].Enabled=true;
+				if (ToolBarMain.Buttons["Ortho"] != null)
+				{
+					ToolBarMain.Buttons["Ortho"].Enabled = true;
 				}
-				ToolBarMain.Buttons["Consent"].Enabled=true;
-				if(ToolBarMain.Buttons["ToothChart"]!=null) {
-					ToolBarMain.Buttons["ToothChart"].Enabled=true;
+				ToolBarMain.Buttons["Consent"].Enabled = true;
+				if (ToolBarMain.Buttons["ToothChart"] != null)
+				{
+					ToolBarMain.Buttons["ToothChart"].Enabled = true;
 				}
-				ToolBarMain.Buttons["ExamSheet"].Enabled=true;
-				if(UsingEcwTightOrFull()) {
-					if(UsingEcwTight()) {
-						ToolBarMain.Buttons["Commlog"].Enabled=true;
+				ToolBarMain.Buttons["ExamSheet"].Enabled = true;
+				if (UsingEcwTightOrFull())
+				{
+					if (UsingEcwTight())
+					{
+						ToolBarMain.Buttons["Commlog"].Enabled = true;
 					}
 					//the following sequence also gets repeated after exiting the Rx window to refresh.
-					String strAppServer="";
-					try {
-						if(Bridges.ECW.UserId==0 || String.IsNullOrEmpty(Bridges.ECW.EcwConfigPath)) {
-							webBrowserEcw.Url=null;
-							labelECWerror.Text="This panel does not display unless\r\nOpen Dental is launched from inside eCW";
-							labelECWerror.Visible=true;
+					String strAppServer = "";
+					try
+					{
+						if (Bridges.ECW.UserId == 0 || String.IsNullOrEmpty(Bridges.ECW.EcwConfigPath))
+						{
+							webBrowserEcw.Url = null;
+							labelECWerror.Text = "This panel does not display unless\r\nOpen Dental is launched from inside eCW";
+							labelECWerror.Visible = true;
 						}
-						else {
+						else
+						{
 							//this property will not exist if using Oracle, eCW will never use Oracle
-							string uriString=ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks),"MedicalPanelUrl");
-							string path="";
-							if(uriString=="") {
-								XmlTextReader xmlTextReader=new XmlTextReader(Bridges.ECW.EcwConfigPath);
-								while(xmlTextReader.Read()) {
-									if(xmlTextReader.Name.ToString()=="server") {
-										strAppServer=xmlTextReader.ReadString().Trim();
+							string uriString = ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks), "MedicalPanelUrl");
+							string path = "";
+							if (uriString == "")
+							{
+								XmlTextReader xmlTextReader = new XmlTextReader(Bridges.ECW.EcwConfigPath);
+								while (xmlTextReader.Read())
+								{
+									if (xmlTextReader.Name.ToString() == "server")
+									{
+										strAppServer = xmlTextReader.ReadString().Trim();
 									}
 								}
-								path="http://"+strAppServer+"/mobiledoc/jsp/dashboard/Overview.jsp"
-									+"?ptId="+_patCur.PatNum.ToString()+"&panelName=overview&pnencid="
-									+Bridges.ECW.AptNum.ToString()+"&context=progressnotes&TrUserId="+Bridges.ECW.UserId.ToString();
+								path = "http://" + strAppServer + "/mobiledoc/jsp/dashboard/Overview.jsp"
+									+ "?ptId=" + _patCur.PatNum.ToString() + "&panelName=overview&pnencid="
+									+ Bridges.ECW.AptNum.ToString() + "&context=progressnotes&TrUserId=" + Bridges.ECW.UserId.ToString();
 								//set cookie
-								if(!String.IsNullOrEmpty(Bridges.ECW.JSessionId)) {
-									InternetSetCookie("http://"+strAppServer,null,"JSESSIONID = "+Bridges.ECW.JSessionId);
+								if (!String.IsNullOrEmpty(Bridges.ECW.JSessionId))
+								{
+									InternetSetCookie("http://" + strAppServer, null, "JSESSIONID = " + Bridges.ECW.JSessionId);
 								}
-								if(!String.IsNullOrEmpty(Bridges.ECW.JSessionIdSSO)) {
-									InternetSetCookie("http://"+strAppServer,null,"JSESSIONIDSSO = "+Bridges.ECW.JSessionIdSSO);
+								if (!String.IsNullOrEmpty(Bridges.ECW.JSessionIdSSO))
+								{
+									InternetSetCookie("http://" + strAppServer, null, "JSESSIONIDSSO = " + Bridges.ECW.JSessionIdSSO);
 								}
-								if(!String.IsNullOrEmpty(Bridges.ECW.LBSessionId)) {
-									if(ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks),"IsLBSessionIdExcluded")=="0") {
-										InternetSetCookie("http://"+strAppServer,null,"LBSESSIONID = "+Bridges.ECW.LBSessionId);
+								if (!String.IsNullOrEmpty(Bridges.ECW.LBSessionId))
+								{
+									if (ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks), "IsLBSessionIdExcluded") == "0")
+									{
+										InternetSetCookie("http://" + strAppServer, null, "LBSESSIONID = " + Bridges.ECW.LBSessionId);
 									}
-									else {
-										InternetSetCookie("http://"+strAppServer,null,Bridges.ECW.LBSessionId);
+									else
+									{
+										InternetSetCookie("http://" + strAppServer, null, Bridges.ECW.LBSessionId);
 									}
 								}
 							}
-							else {
-								path=uriString
-									+"?ptId="+_patCur.PatNum.ToString()+"&panelName=overview&pnencid="
-									+Bridges.ECW.AptNum.ToString()+"&context=progressnotes&TrUserId="+Bridges.ECW.UserId.ToString();
+							else
+							{
+								path = uriString
+									+ "?ptId=" + _patCur.PatNum.ToString() + "&panelName=overview&pnencid="
+									+ Bridges.ECW.AptNum.ToString() + "&context=progressnotes&TrUserId=" + Bridges.ECW.UserId.ToString();
 								//parse out with regex: uristring
-								Match match=Regex.Match(uriString,@"\b([^:]+://[^/]+)/");//http://servername
-								if(!match.Success || match.Groups.Count<2) {//if no match, or match but no group 1 to grab
+								Match match = Regex.Match(uriString, @"\b([^:]+://[^/]+)/");//http://servername
+								if (!match.Success || match.Groups.Count < 2)
+								{//if no match, or match but no group 1 to grab
 									throw new Exception("Invalid URL saved in the Medical Panel URL field of the eClinicalWorks program link.");
 								}
-								string cookieUrl=match.Groups[1].Value;
+								string cookieUrl = match.Groups[1].Value;
 								//set cookie
-								if(!String.IsNullOrEmpty(Bridges.ECW.JSessionId)) {
-									InternetSetCookie(cookieUrl,null,"JSESSIONID = "+Bridges.ECW.JSessionId);
+								if (!String.IsNullOrEmpty(Bridges.ECW.JSessionId))
+								{
+									InternetSetCookie(cookieUrl, null, "JSESSIONID = " + Bridges.ECW.JSessionId);
 								}
-								if(!String.IsNullOrEmpty(Bridges.ECW.JSessionIdSSO)) {
-									InternetSetCookie(cookieUrl,null,"JSESSIONIDSSO = "+Bridges.ECW.JSessionIdSSO);
+								if (!String.IsNullOrEmpty(Bridges.ECW.JSessionIdSSO))
+								{
+									InternetSetCookie(cookieUrl, null, "JSESSIONIDSSO = " + Bridges.ECW.JSessionIdSSO);
 								}
-								if(!String.IsNullOrEmpty(Bridges.ECW.LBSessionId)) {
-									if(ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks),"IsLBSessionIdExcluded")=="0") {
-										InternetSetCookie(cookieUrl,null,"LBSESSIONID = "+Bridges.ECW.LBSessionId);
+								if (!String.IsNullOrEmpty(Bridges.ECW.LBSessionId))
+								{
+									if (ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks), "IsLBSessionIdExcluded") == "0")
+									{
+										InternetSetCookie(cookieUrl, null, "LBSESSIONID = " + Bridges.ECW.LBSessionId);
 									}
-									else {
-										InternetSetCookie(cookieUrl,null,Bridges.ECW.LBSessionId);
+									else
+									{
+										InternetSetCookie(cookieUrl, null, Bridges.ECW.LBSessionId);
 									}
 								}
 							}
 							//navigate
-							webBrowserEcw.Navigate(path); 
-							labelECWerror.Visible=false;
+							webBrowserEcw.Navigate(path);
+							labelECWerror.Visible = false;
 						}
 					}
-					catch(Exception ex) {
-						webBrowserEcw.Url=null;
-						labelECWerror.Text="Error: "+ex.Message;
-						labelECWerror.Visible=true;
+					catch (Exception ex)
+					{
+						webBrowserEcw.Url = null;
+						labelECWerror.Text = "Error: " + ex.Message;
+						labelECWerror.Visible = true;
 					}
 				}
-				if(PrefC.GetBool(PrefName.ShowFeatureEhr)) { //didn't work either
-				//if(ToolBarMain.Buttons["EHR"]!=null) {
-					ToolBarMain.Buttons["EHR"].Enabled=true;
+				if (PrefC.GetBool(PrefName.ShowFeatureEhr))
+				{ //didn't work either
+				  //if(ToolBarMain.Buttons["EHR"]!=null) {
+					ToolBarMain.Buttons["EHR"].Enabled = true;
 				}
-				if(ToolBarMain.Buttons["HL7"]!=null) {
-					ToolBarMain.Buttons["HL7"].Enabled=true;
+				if (ToolBarMain.Buttons["HL7"] != null)
+				{
+					ToolBarMain.Buttons["HL7"].Enabled = true;
 				}
-				tabProc.Enabled=true;
-				butAddKey.Enabled=true;
-				butForeignKey.Enabled=true;
-				butPhoneNums.Enabled=true;
-				butErxAccess.Enabled=true;
-				if(_prevPatNum!=_patCur.PatNum) {//reset to TP status on every new patient selected
-					if(PrefC.GetBool(PrefName.AutoResetTPEntryStatus)) {
+				tabProc.Enabled = true;
+				butAddKey.Enabled = true;
+				butForeignKey.Enabled = true;
+				butPhoneNums.Enabled = true;
+				butErxAccess.Enabled = true;
+				if (_prevPatNum != _patCur.PatNum)
+				{//reset to TP status on every new patient selected
+					if (PrefC.GetBool(PrefName.AutoResetTPEntryStatus))
+					{
 						radioEntryTP.Select();
 					}
-					textSearch.Text="";
-					_prevPatNum=_patCur.PatNum;
+					textSearch.Text = "";
+					_prevPatNum = _patCur.PatNum;
 				}
-				if(PrefC.GetBool(PrefName.PatientDOBMasked)) {
+				if (PrefC.GetBool(PrefName.PatientDOBMasked))
+				{
 					//Add "View DOB" right click option, MenuItemPopupUnmaskDOB will show and hide it as needed.
-					if(gridPtInfo.ContextMenu==null) {
-						gridPtInfo.ContextMenu=new ContextMenu();//ODGrid will automatically attach the defaut Popups
+					if (gridPtInfo.ContextMenu == null)
+					{
+						gridPtInfo.ContextMenu = new ContextMenu();//ODGrid will automatically attach the defaut Popups
 					}
-					ContextMenu contextMenu=gridPtInfo.ContextMenu;
-					MenuItem menuItemUnmaskDOB=new MenuItem();
-					menuItemUnmaskDOB.Enabled=false;
-					menuItemUnmaskDOB.Visible=false;
-					menuItemUnmaskDOB.Name="ViewDOB";
-					menuItemUnmaskDOB.Text="View DOB";
-					menuItemUnmaskDOB.Click+=new System.EventHandler(this.MenuItemUnmaskDOB_Click);
+					ContextMenu contextMenu = gridPtInfo.ContextMenu;
+					MenuItem menuItemUnmaskDOB = new MenuItem();
+					menuItemUnmaskDOB.Enabled = false;
+					menuItemUnmaskDOB.Visible = false;
+					menuItemUnmaskDOB.Name = "ViewDOB";
+					menuItemUnmaskDOB.Text = "View DOB";
+					menuItemUnmaskDOB.Click += new System.EventHandler(this.MenuItemUnmaskDOB_Click);
 					contextMenu.MenuItems.Add(menuItemUnmaskDOB);
-					contextMenu.Popup+=MenuItemPopupUnmaskDOB;
+					contextMenu.Popup += MenuItemPopupUnmaskDOB;
 				}
 			}
-			if(Programs.UsingOrion) {
-				radioEntryC.Visible=false;
-				radioEntryEC.Visible=false;
-				radioEntryR.Visible=false;
-				radioEntryCn.Visible=false;
-				radioEntryEO.Location=new Point(radioEntryEO.Location.X,31);
-				groupBox2.Height=54;
-				menuItemSetComplete.Visible=false;
-				menuItemSetEC.Visible=false;
-				menuItemSetEO.Visible=false;
+			if (Programs.UsingOrion)
+			{
+				radioEntryC.Visible = false;
+				radioEntryEC.Visible = false;
+				radioEntryR.Visible = false;
+				radioEntryCn.Visible = false;
+				radioEntryEO.Location = new Point(radioEntryEO.Location.X, 31);
+				groupBox2.Height = 54;
+				menuItemSetComplete.Visible = false;
+				menuItemSetEC.Visible = false;
+				menuItemSetEO.Visible = false;
 			}
-			if(!UsingEcwTightOrFull() && isClinicRefresh) {
-				if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if (!UsingEcwTightOrFull() && isClinicRefresh)
+			{
+				if (Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
+				{
 					tabProc.TabPages.Remove(tabMissing);
 					tabProc.TabPages.Remove(tabMovements);
 					tabProc.TabPages.Remove(tabPrimary);
-					if(tabProc.SelectedTab==tabMissing || tabProc.SelectedTab==tabMovements || tabProc.SelectedTab==tabPrimary) {
-						tabProc.SelectedTab=tabEnterTx;
+					if (tabProc.SelectedTab == tabMissing || tabProc.SelectedTab == tabMovements || tabProc.SelectedTab == tabPrimary)
+					{
+						tabProc.SelectedTab = tabEnterTx;
 					}
-					_selectedProcTab=tabProc.SelectedIndex;
-					textSurf.Visible=false;
-					butBF.Visible=false;
-					butOI.Visible=false;
-					butV.Visible=false;
-					butM.Visible=false;
-					butD.Visible=false;
-					butL.Visible=false;
-					checkShowTeeth.Visible=false;
+					_selectedProcTab = tabProc.SelectedIndex;
+					textSurf.Visible = false;
+					butBF.Visible = false;
+					butOI.Visible = false;
+					butV.Visible = false;
+					butM.Visible = false;
+					butD.Visible = false;
+					butL.Visible = false;
+					checkShowTeeth.Visible = false;
 				}
-				else {
-					TabPage selectedTab=tabProc.SelectedTab;
+				else
+				{
+					TabPage selectedTab = tabProc.SelectedTab;
 					tabProc.TabPages.Remove(tabMissing);
 					tabProc.TabPages.Remove(tabMovements);
 					tabProc.TabPages.Remove(tabPrimary);
@@ -4872,34 +4926,38 @@ namespace OpenDental {
 					tabProc.TabPages.Add(tabPlanned);
 					tabProc.TabPages.Add(tabShow);
 					tabProc.TabPages.Add(tabDraw);
-					tabProc.SelectedTab=selectedTab;
-					_selectedProcTab=tabProc.SelectedIndex;
-					textSurf.Visible=true;
-					butBF.Visible=true;
-					butOI.Visible=true;
-					butV.Visible=true;
-					butM.Visible=true;
-					butD.Visible=true;
-					butL.Visible=true;
-					checkShowTeeth.Visible=true;
+					tabProc.SelectedTab = selectedTab;
+					_selectedProcTab = tabProc.SelectedIndex;
+					textSurf.Visible = true;
+					butBF.Visible = true;
+					butOI.Visible = true;
+					butV.Visible = true;
+					butM.Visible = true;
+					butD.Visible = true;
+					butL.Visible = true;
+					checkShowTeeth.Visible = true;
 				}
 			}
 			ToolBarMain.Invalidate();
 			ClearButtons();
 			FillMovementsAndHidden();
-			Logger.LogAction("FillChartViewsGrid",LogPath.ChartModule,() => FillChartViewsGrid(false));
-			if(textSearch.Text!="") {
+
+			Logger.LogAction("FillChartViewsGrid", () => FillChartViewsGrid(false));
+			if (textSearch.Text != "")
+			{
 				_listSearchResults?.Clear();
-				_listSearchResults=null;
+				_listSearchResults = null;
 				SearchProgNotes();
 			}
-			else {
-				Logger.LogAction("FillProgNotes",LogPath.ChartModule,() => FillProgNotes(doRefreshData: false));
+			else
+			{
+				Logger.LogAction("FillProgNotes", () => FillProgNotes(doRefreshData: false));
 			}
-			Logger.LogAction("FillPlanned",LogPath.ChartModule,() => FillPlanned());
-			Logger.LogAction("FillPtInfo",LogPath.ChartModule,() => FillPtInfo(false));
-			Logger.LogAction("FillDxProcImage",LogPath.ChartModule,() => FillDxProcImage(false));
-			Logger.LogAction("FillImages",LogPath.ChartModule,() => FillImages());
+
+			Logger.LogAction("FillPlanned", () => FillPlanned());
+			Logger.LogAction("FillPtInfo", () => FillPtInfo(false));
+			Logger.LogAction("FillDxProcImage", () => FillDxProcImage(false));
+			Logger.LogAction("FillImages", () => FillImages());
 		}
 
 		public void UpdateTreatmentNote() {
@@ -6349,7 +6407,7 @@ namespace OpenDental {
 			//By firing this event here, we propogate any charted procs/missing/movements immediately to the Patient Dashboard.  FillToothChart() is always
 			//invoked via FillProgNotes() when ModuleSelected() is invoked, therefore, this event will fire when ModuleSelected() is invoked.  By only 
 			//firing this event here, we avoid duplicate events.
-			PatientDashboardDataEvent.Fire(ODEventType.ModuleSelected,LoadData);
+			PatientDashboardDataEvent.Fire(EventCategory.ModuleSelected,LoadData);
 			Cursor=Cursors.Default;
 		}
 
@@ -7519,8 +7577,7 @@ namespace OpenDental {
 				_patNumLast=patNum;
 			}
 			try {
-				Logger.LogAction("GetAll",LogPath.ChartModule,() => LoadData=ChartModules.GetAll(patNum,checkAudit.Checked,GetChartModuleComponents(),
-					doMakeSecLog));
+				Logger.LogAction("GetAll",() => LoadData=ChartModules.GetAll(patNum,checkAudit.Checked,GetChartModuleComponents(), doMakeSecLog));
 			}
 			catch(ApplicationException ex) {
 				if(ex.Message=="Missing codenum") {

@@ -337,7 +337,7 @@ namespace OpenDentBusiness{
 		///The signal list will include any task changes including status changes and deletions.</summary>
 		public static List<Task> GetNewTasksThisUser(long userNum,long clinicNum,List<long> listTaskNums=null) {
 			
-			Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
+			// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 			if(userNum==0) {
 				return new List<Task>();//Return early because userNum is invalid.
 			}
@@ -359,7 +359,7 @@ namespace OpenDentBusiness{
 				command+=" WHERE TRUE "+TaskLists.BuildFilterWhereClause(userNum,clinicNum,Clinics.GetClinic(clinicNum)?.Region??0);
 			}
 			List<Task> ret=TableToList(Db.GetTable(command));//This is how we set the IsUnread column.
-			Logger.LogToPath("",LogPath.Signals,LogPhase.End);
+															 // TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.End);
 			return ret;
 		}
 

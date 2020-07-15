@@ -82,7 +82,7 @@ namespace OpenDental {
 			ODProgress.ShowAction(() => logText=DatabaseMaintenances.DropRedundantIndexes(gridMain.SelectedTags<DataRow>()),
 				actionException:ex => { MsgBox.Show(Lan.G(this,"There was an error dropping redundant indexes")+":\r\n"+ex.Message); },
 				eventType:typeof(DatabaseMaintEvent),
-				odEventType:ODEventType.DatabaseMaint);
+				odEventType:EventCategory.DatabaseMaint);
 			if(checkLogAddStatements.Checked) {
 				try {
 					SaveLogToFile(logText);

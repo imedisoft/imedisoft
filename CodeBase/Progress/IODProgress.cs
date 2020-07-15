@@ -2,47 +2,55 @@
 
 namespace CodeBase
 {
-    public interface IODProgress { 
+	public interface IODProgress
+	{
 		///<summary>Used within translations as the sender object</summary>
 		string LanThis { get; set; }
 
 		///<summary>Updates the status textbox with a new message.</summary>
 		void UpdateProgress(string message);
 		///<summary>Updates the progress bar with these details.</summary>
-		void UpdateProgressDetailed(string labelValue,string percentVal="",string tagString="",int barVal=0,int barMax=100,int marqSpeed=0
-			,string labelTop="",bool isLeftHidden=false,bool isTopHidden=false,bool isPercentHidden=false
-			,ProgBarStyle progStyle=ProgBarStyle.Blocks,ProgBarEventType progEvent=ProgBarEventType.ProgressBar);
+		void UpdateProgressDetailed(string labelValue, string percentVal = "", string tagString = "", int barVal = 0, int barMax = 100, int marqSpeed = 0
+			, string labelTop = "", bool isLeftHidden = false, bool isTopHidden = false, bool isPercentHidden = false
+			, ProgBarStyle progStyle = ProgBarStyle.Blocks, ProgBarEventType progEvent = ProgBarEventType.ProgressBar);
 	}
 
 	///<summary>Progress bar where all methods do nothing. Can be used when there can be no progress bar due to a lack of UI. 
 	///This is an implementation of the Null Object Pattern.</summary>
-	public class ODProgressDoNothing:IODProgress {
+	public class ODProgressDoNothing : IODProgress
+	{
 		///<summary>A singleton instance of this class that can be used repeatedly so that each consumer doesn't have to create a new object.</summary>
-		private static ODProgressDoNothing _instance=new ODProgressDoNothing();
+		private static ODProgressDoNothing _instance = new ODProgressDoNothing();
 		[XmlIgnore]
-		public static ODProgressDoNothing Instance {
-			get {
+		public static ODProgressDoNothing Instance
+		{
+			get
+			{
 				return _instance;
 			}
 		}
 
-		public string LanThis {
-			get {
+		public string LanThis
+		{
+			get
+			{
 				return "ODProgressDoNothing";
 			}
 			set { }
 		}
 
-		public void UpdateProgress(string message) {	}
+		public void UpdateProgress(string message) { }
 
-		public void UpdateProgressDetailed(string labelValue,string percentVal="",string tagString="",int barVal=0,int barMax=100,int marqSpeed=0,
-			string labelTop="",bool isLeftHidden=false,bool isTopHidden=false,bool isPercentHidden=false,ProgBarStyle progStyle=ProgBarStyle.Blocks,
-			ProgBarEventType progEvent=ProgBarEventType.ProgressBar) { }
+		public void UpdateProgressDetailed(string labelValue, string percentVal = "", string tagString = "", int barVal = 0, int barMax = 100, int marqSpeed = 0,
+			string labelTop = "", bool isLeftHidden = false, bool isTopHidden = false, bool isPercentHidden = false, ProgBarStyle progStyle = ProgBarStyle.Blocks,
+			ProgBarEventType progEvent = ProgBarEventType.ProgressBar)
+		{ }
 
 		public void Close() { }
 	}
 
-	public enum ProgBarStyle {
+	public enum ProgBarStyle
+	{
 		NoneSpecified,
 		///<summary>Usuaully used for percentage based progress.</summary>
 		Blocks,
@@ -55,7 +63,8 @@ namespace CodeBase
 	///These events can cause progress bars to change or cause the form itself to behave in specific ways.
 	///E.g. Use BringToFront to cause FormProgressExtended to come to the front of all other windows.
 	///The most common event will be ProgressBar in order to update the progress visually to the user.  It needs to be the first in the enum.</summary>
-	public enum ProgBarEventType {
+	public enum ProgBarEventType
+	{
 		///<summary>The default event type.  Adds a new progress bar or updates a current progress bar with the corresponding settings.</summary>
 		ProgressBar,
 		///<summary>Brings FormProgressExtended to the front.</summary>

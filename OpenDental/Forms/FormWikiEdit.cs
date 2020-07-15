@@ -326,7 +326,7 @@ namespace OpenDental {
 		}
 
 		private void WikiSaveEvent_Fired(ODEventArgs e) {
-			if(e.EventType==ODEventType.WikiSave) {
+			if(e.EventType==EventCategory.WikiSave) {
 				SaveDraft_Click(false);
 			}
 		}

@@ -533,14 +533,14 @@ namespace OpenDental {
 						SecurityLogs.MakeLogEntry(Permissions.PatientEdit,0,"Clinic changed for "+x.Value+" patients from "
 							+(dictClinicsFrom.TryGetValue(x.Key,out clinicCur)?clinicCur.Abbr:"")+" to "+clinicTo.Abbr+".");
 						patsMoved+=x.Value;
-						ClinicEvent.Fire(ODEventType.Clinic,Lan.G(this,"Moved patients")+": "+patsMoved+" "+Lan.G(this,"out of")+" "
+						ClinicEvent.Fire(EventCategory.Clinic,Lan.G(this,"Moved patients")+": "+patsMoved+" "+Lan.G(this,"out of")+" "
 							+dictClinFromCounts.Sum(y => y.Value));
 					})).ToList();
 					ODThread.RunParallel(listActions,TimeSpan.FromMinutes(2));
 				},
 				startingMessage:Lan.G(this,"Moving patients")+"...",
 				eventType:typeof(ClinicEvent),
-				odEventType:ODEventType.Clinic);
+				odEventType:EventCategory.Clinic);
 			_dictClinicalCounts=Clinics.GetClinicalPatientCount();
 			FillGrid();
 			MessageBox.Show("Done");

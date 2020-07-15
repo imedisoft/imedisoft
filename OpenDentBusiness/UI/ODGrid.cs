@@ -3136,13 +3136,13 @@ namespace OpenDental.UI {
 			Action actionCloseProgress=null;
 			//It might take a while to navigate more than 3 pages away (depending on filtering, row construction, etc).
 			if(Math.Abs(page-_pageCur)>3) {
-				actionCloseProgress=ODProgress.Show(ODEventType.ODGrid,typeof(ODGridEvent));
+				actionCloseProgress=ODProgress.Show(EventCategory.ODGrid,typeof(ODGridEvent));
 			}
 			//Only need to run if moving forward, previous pages are always handled by pages prior.
 			//Look ahead 3 pages so that we can determine if links are needed.
 			//No harm starting at first page, TryInitDataForPage(...) will instantly return for pages we've already seen.
 			for(int pageTemp=1; pageTemp<=(page+2); pageTemp++) {
-				ODGridEvent.Fire(ODEventType.ODGrid,"Processing page: "+pageTemp.ToString());
+				ODGridEvent.Fire(EventCategory.ODGrid,"Processing page: "+pageTemp.ToString());
 				if(!TryInitDataForPage(pageTemp) || _hasLoadedAllPages) {//Returns false if index is past cout of data we have available or everything has been filtered already.
 					break;
 				}

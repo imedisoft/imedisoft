@@ -403,9 +403,9 @@ namespace OpenDental {
 					grid.ListGridColumns.Add(col);
 					grid.ListGridRows.Clear();
 					List<InsVerifyGridRow> listGridRows=GetRowsForGrid(false);
-					InsuranceVerificationEvent.Fire(ODEventType.InsVerification,Lans.g(this,"Sorting Rows..."));
+					InsuranceVerificationEvent.Fire(EventCategory.InsVerification,Lans.g(this,"Sorting Rows..."));
 					listGridRows.Sort(CompareGridRows);
-					InsuranceVerificationEvent.Fire(ODEventType.InsVerification,Lans.g(this,"Filling the grid..."));
+					InsuranceVerificationEvent.Fire(EventCategory.InsVerification,Lans.g(this,"Filling the grid..."));
 					for(int i=0;i<listGridRows.Count;i++) {
 						grid.ListGridRows.Add(VerifyRowToODGridRow(listGridRows[i],false));
 					}
@@ -414,7 +414,7 @@ namespace OpenDental {
 				},
 				startingMessage:Lans.g(this,"Retrieving data for the grid..."),
 				eventType:typeof(InsuranceVerificationEvent),
-				odEventType:ODEventType.InsVerification
+				odEventType:EventCategory.InsVerification
 			);
 		}
 
@@ -667,7 +667,7 @@ namespace OpenDental {
 				},
 				startingMessage:Lans.g(this,"Retrieving data for the grid..."),
 				eventType:typeof(InsuranceVerificationEvent),
-				odEventType:ODEventType.InsVerification
+				odEventType:EventCategory.InsVerification
 			);
 		}
 

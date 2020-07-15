@@ -880,7 +880,7 @@ namespace OpenDental{
 			ODProgress.ShowAction(() => rowsAffected=(int)Adjustments.UndoFinanceOrBillingCharges(dateUndo,billingCharge),
 				startingMessage:Lan.G(this,"Deleting "+chargeType.ToLower()+" charge adjustments")+"...",
 				eventType:typeof(BillingEvent),
-				odEventType:ODEventType.Billing);
+				odEventType:EventCategory.Billing);
 			Cursor=Cursors.Default;
 			MessageBox.Show(Lan.G(this,chargeType+" charge adjustments deleted")+": "+rowsAffected);
 			if(rowsAffected==0) {
@@ -953,7 +953,7 @@ namespace OpenDental{
 			Action actionCloseProgress=null;
 			int chargesAdded=0;
 			try {
-				actionCloseProgress=ODProgress.Show(ODEventType.Billing,typeof(BillingEvent),Lan.G(this,"Gathering patients with aged balances")+"...");
+				actionCloseProgress=ODProgress.Show(EventCategory.Billing,typeof(BillingEvent),Lan.G(this,"Gathering patients with aged balances")+"...");
 				List<PatAging> listPatAgings=GetFinanceBillingAgingList();//Get the Aging List for Finance and Billing
 				long adjType=PrefC.GetLong(PrefName.FinanceChargeAdjustmentType);
 				Dictionary<long,List<Adjustment>> dictPatAdjustments=new Dictionary<long, List<Adjustment>>();
@@ -981,7 +981,7 @@ namespace OpenDental{
 				foreach(PatAging patAgingCur in listPatAgings) {
 					listActions.Add(new Action(() => {
 						if(++chargesProcessed%5==0) {
-							BillingEvent.Fire(ODEventType.Billing,Lan.G(this,"Processing "+chargeType+" charges")+": "+chargesProcessed+" out of "
+							BillingEvent.Fire(EventCategory.Billing,Lan.G(this,"Processing "+chargeType+" charges")+": "+chargesProcessed+" out of "
 								+listPatAgings.Count);
 						}
 						//This WILL NOT be the same as the patient's total balance. Start with BalOver90 since all options include that bucket. Add others if needed.

@@ -187,7 +187,7 @@ namespace OpenDentBusiness {
 			string checkingTable=Lans.g(nameof(MiscData),"Checking table");
 			for(int i=0;i<tableNames.Length;i++) {
 				//Alert the thread we are running this on that we are checking this table.
-				DatabaseMaintEvent.Fire(ODEventType.DatabaseMaint,checkingTable+": "+tableNames[i]);
+				DatabaseMaintEvent.Fire(EventCategory.DatabaseMaint,checkingTable+": "+tableNames[i]);
 				command="CHECK TABLE `"+tableNames[i]+"`";
 				try {
 					table=Db.GetTable(command);
@@ -235,7 +235,7 @@ namespace OpenDentBusiness {
 			}
 			for(int i = 0;i<tableNames.Length;i++) {
 				//Alert anyone that cares that we are optimizing this table.
-				MiscDataEvent.Fire(ODEventType.MiscData,Lans.g("MiscData","Optimizing table")+": "+tableNames[i]);
+				MiscDataEvent.Fire(EventCategory.MiscData,Lans.g("MiscData","Optimizing table")+": "+tableNames[i]);
 				string optimizeResult=OptimizeTable(tableNames[i],isLogged);
 				if(isLogged) {
 					retVal.AppendLine(optimizeResult);
@@ -243,7 +243,7 @@ namespace OpenDentBusiness {
 			}
 			for(int i = 0;i<tableNames.Length;i++) {
 				//Alert anyone that cares that we are repairing this table.
-				MiscDataEvent.Fire(ODEventType.MiscData,Lans.g("MiscData","Repairing table")+": "+tableNames[i]);
+				MiscDataEvent.Fire(EventCategory.MiscData,Lans.g("MiscData","Repairing table")+": "+tableNames[i]);
 				command="REPAIR TABLE `"+tableNames[i]+"`";
 				if(!isLogged) {
 					Db.NonQ(command);
@@ -8639,7 +8639,7 @@ HAVING cnt>1";
 			//Currently not including encrypted emails because the computer running this tool would need the private key to decrypt the message and
 			//we would need to take an extra step at the end (after cleaning up attachments) to re-encrypt the modified email message. 
 			//The current customers complaining only have bloat with clear text emails so that is where we are going to start with the clean up tool.
-			DatabaseMaintEvent.Fire(ODEventType.DatabaseMaint,Lans.g("DatabaseMaintenance","Getting email messages from the database..."));
+			DatabaseMaintEvent.Fire(EventCategory.DatabaseMaint,Lans.g("DatabaseMaintenance","Getting email messages from the database..."));
 			DataTable tableEmailMessageNums=Db.GetTable(command);
 			if(tableEmailMessageNums.Rows.Count==0) {
 				return Lans.g("DatabaseMaintenance","There are no email messages that need to be cleaned up.");
@@ -8651,7 +8651,7 @@ HAVING cnt>1";
 			int index=1;
 			//Call the processing email logic for each email which will clear out the RawEmailIn column if the email is successfully digested.
 			foreach(DataRow row in tableEmailMessageNums.Rows) {
-				DatabaseMaintEvent.Fire(ODEventType.DatabaseMaint,Lans.g("DatabaseMaintenance","Processing email message")
+				DatabaseMaintEvent.Fire(EventCategory.DatabaseMaint,Lans.g("DatabaseMaintenance","Processing email message")
 					+"  "+index.ToString()+" / "+tableEmailMessageNums.Rows.Count.ToString());
 				index++;
 				EmailMessage emailMessage=EmailMessages.GetOne(PIn.Long(row["EmailMessageNum"].ToString()));
@@ -8678,7 +8678,7 @@ HAVING cnt>1";
 				}
 			}
 			if(tableEmailMessageNums.Rows.Count!=noChangeCount) {//Using MySQL and something actually changed.
-				DatabaseMaintEvent.Fire(ODEventType.DatabaseMaint,Lans.g("DatabaseMaintenance","Optimizing the email message table..."));
+				DatabaseMaintEvent.Fire(EventCategory.DatabaseMaint,Lans.g("DatabaseMaintenance","Optimizing the email message table..."));
 				OptimizeTable("emailmessage");
 			}
 			string strResults=Lans.g("DatabaseMaintenance","Done.  No clean up required.");
@@ -8978,7 +8978,7 @@ HAVING cnt>1";
 						command+=$@"
 							OPTIMIZE TABLE {fullTableName};";
 					}
-					DatabaseMaintEvent.Fire(ODEventType.DatabaseMaint,Lans.g("DatabaseMaintenance","Dropping redundant indexes")+" "
+					DatabaseMaintEvent.Fire(EventCategory.DatabaseMaint,Lans.g("DatabaseMaintenance","Dropping redundant indexes")+" "
 						+(doOptimize?(Lans.g("DatabaseMaintenance","and optimizing")+" "):"")+Lans.g("DatabaseMaintenance","table")+" "
 						+fullTableName.Replace("`","")+".");
 					Db.NonQ(command);

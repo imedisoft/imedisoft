@@ -170,7 +170,7 @@ namespace OpenDental {
 				if(IsSelectedApptOtherNull()) {
 					return;
 				}
-				SendToPinboardEvent.Fire(ODEventType.SendToPinboard,new PinBoardArgs(PatCur,SelectedApptOther,_listApptOthers));
+				SendToPinboardEvent.Fire(EventCategory.SendToPinboard,new PinBoardArgs(PatCur,SelectedApptOther,_listApptOthers));
 			}
 			else{
 				RefreshData(PatCur,null);

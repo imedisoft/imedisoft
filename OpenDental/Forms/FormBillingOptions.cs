@@ -1231,13 +1231,13 @@ namespace OpenDental{
 			else if(comboClinic.ListSelectedClinicNums.Count == 1) { 
 				ODProgress.ShowAction(() => CreateHelper(comboClinic.ListSelectedClinicNums[0]),
 					startingMessage: Lan.G(this,"Creating Billing List")+"...",
-					odEventType: ODEventType.Billing,
+					odEventType: EventCategory.Billing,
 					eventType: typeof(BillingEvent));
 			}
 			else { //Clinics are not enabled.
 				ODProgress.ShowAction(() => CreateHelper(-2),
 					startingMessage: Lan.G(this,"Creating Billing List")+"...",
-					odEventType: ODEventType.Billing,
+					odEventType: EventCategory.Billing,
 					eventType: typeof(BillingEvent));
 			}
 			Cursor=Cursors.Default;
@@ -1248,11 +1248,11 @@ namespace OpenDental{
 		private void CreateManyHelper(List<long> listClinicNums) {
 			_popUpMessage="";
 			Cursor=Cursors.WaitCursor;
-			Action actionClosingProgress=ODProgress.Show(ODEventType.Billing,typeof(BillingEvent),Lan.G(this,"Creating Billing Lists")+"...");
+			Action actionClosingProgress=ODProgress.Show(EventCategory.Billing,typeof(BillingEvent),Lan.G(this,"Creating Billing Lists")+"...");
 			Dictionary<long,PatAgingData> dictPatAgingData=AgingData.GetAgingData(checkSinglePatient.Checked,checkIncludeChanged.Checked,
 				checkExcludeInsPending.Checked,checkExcludeIfProcs.Checked,checkSuperFam.Checked,listClinicNums);
 			for(int i=0;i<listClinicNums.Count;i++) {
-				BillingEvent.Fire(ODEventType.Billing,Lan.G(this,"Creating Billing Lists")+"..."+"("+(i+1).ToString()+"/"
+				BillingEvent.Fire(EventCategory.Billing,Lan.G(this,"Creating Billing Lists")+"..."+"("+(i+1).ToString()+"/"
 					+listClinicNums.Count.ToString()+")");
 				CreateHelper(listClinicNums[i],checkUseClinicDefaults.Checked,true,dictPatAgingData);
 			}

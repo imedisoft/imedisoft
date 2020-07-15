@@ -39,7 +39,7 @@ namespace DataConnectionBase
 				queryInfo.MethodName = new StackTrace().GetFrame(3).GetMethod().Name;
 
 				// Synchronously notify anyone that cares that the query has started to execute.
-				QueryMonitorEvent.Fire(ODEventType.QueryMonitor, queryInfo);
+				QueryMonitorEvent.Fire(EventCategory.QueryMonitor, queryInfo);
 
 				// Using stopwatch to time queries because the resolution of DateTime.Now is between 0.5 and 15 milliseconds
 				// which makes it not suitable for use as a benchmarking tool. 
@@ -55,7 +55,7 @@ namespace DataConnectionBase
 
 				queryInfo.StopTime = queryInfo.StartTime.Add(stopwatch.Elapsed);
 
-				QueryMonitorEvent.Fire(ODEventType.QueryMonitor, queryInfo);
+				QueryMonitorEvent.Fire(EventCategory.QueryMonitor, queryInfo);
 			}
 		}
 	}
@@ -64,7 +64,7 @@ namespace DataConnectionBase
 	{
 		public static event ODEventHandler Fired;
 
-		public static void Fire(ODEventType odEventType, object tag)
+		public static void Fire(EventCategory odEventType, object tag)
 		{
 			Fired?.Invoke(new ODEventArgs(odEventType, tag));
 		}

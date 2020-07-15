@@ -21,7 +21,7 @@ namespace OpenDental {
 		}
 
 		private void FormEServicesSetup2_Load(object sender,EventArgs e) {
-			Action actionCloseProgress=ODProgress.Show(ODEventType.EServices,typeof(EServicesEvent),"Validating eServices...");
+			Action actionCloseProgress=ODProgress.Show(EventCategory.EServices,typeof(EServicesEvent),"Validating eServices...");
 			try {
 				_signupOut=GetSignupOut();
 				actionCloseProgress?.Invoke();
@@ -167,7 +167,7 @@ namespace OpenDental {
 			DataValid.SetInvalid(InvalidType.Providers);//Providers includes clinics.
 			//Call this a second time so we can log if any important changes were made to this form.
 			//_signupOut gets filled on load and should not be null at this point
-			Action actionCloseProgress=ODProgress.Show(ODEventType.EServices,typeof(EServicesEvent),"Saving eServices...");
+			Action actionCloseProgress=ODProgress.Show(EventCategory.EServices,typeof(EServicesEvent),"Saving eServices...");
 			WebServiceMainHQProxy.GetEServiceSetupFull(GetUserSignupPortalPermissions(),oldSignupOut:_signupOut);
 			actionCloseProgress?.Invoke();
 		}

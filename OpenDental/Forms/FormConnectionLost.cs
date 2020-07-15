@@ -11,14 +11,14 @@ namespace OpenDental {
 		private Func<bool> _funcShouldWindowClose;
 		private ODThread _threadShouldWindowClose;
 		///<summary>The type of ODEvents that this window should listen to.</summary>
-		private ODEventType _odEventType;
+		private EventCategory _odEventType;
 		///<summary>The "Fired" event that is currently registered to this form.</summary>
 		private EventInfo _eventInfoFired;
 
 		///<summary>funcShouldWindowClose should return a boolean indicating if this window should close or not.
 		///Optionally set errorMessage to override the label text that is displayed to the user.
 		///Optionally set a custom eventType in order to listen for specific types of ODEvent.Fired events.  Defaults to DataConnectionEvent.</summary>
-		public FormConnectionLost(Func<bool> funcShouldWindowClose,ODEventType odEventType=ODEventType.Undefined,string errorMessage=""
+		public FormConnectionLost(Func<bool> funcShouldWindowClose,EventCategory odEventType=EventCategory.Undefined,string errorMessage=""
 			,Type eventType=null)
 		{
 			InitializeComponent();
@@ -86,7 +86,7 @@ namespace OpenDental {
 		public void CrashedTableEvent_Fired(CrashedTableEventArgs e) {
 			try {
 				//Check to see if an ODEventType was set otherwise check the ODEventName to make sure this is an event that this instance cares to process.
-				if(_odEventType!=ODEventType.Undefined) {
+				if(_odEventType!=EventCategory.Undefined) {
 					if(_odEventType!=e.EventType) {
 						return;
 					}
@@ -102,7 +102,7 @@ namespace OpenDental {
 		public void DataConnectionEvent_Fired(DataConnectionEventArgs e) {
 			try {
 				//Check to see if an ODEventType was set otherwise check the ODEventName to make sure this is an event that this instance cares to process.
-				if(_odEventType!=ODEventType.Undefined) {
+				if(_odEventType!=EventCategory.Undefined) {
 					if(_odEventType!=e.EventType) {
 						return;
 					}
@@ -118,7 +118,7 @@ namespace OpenDental {
 		public void MiddleTierConnectionEvent_Fired(MiddleTierConnectionEventArgs e) {
 			try {
 				//Check to see if an ODEventType was set otherwise check the ODEventName to make sure this is an event that this instance cares to process.
-				if(_odEventType!=ODEventType.Undefined) {
+				if(_odEventType!=EventCategory.Undefined) {
 					if(_odEventType!=e.EventType) {
 						return;
 					}

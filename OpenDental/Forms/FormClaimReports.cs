@@ -168,7 +168,7 @@ namespace OpenDental{
 				MessageBox.Show("Clearinghouse does not have a valid Report Path set.");
 				return;
 			}
-			ODProgressExtended progressbar=new ODProgressExtended(ODEventType.Clearinghouse,new ClearinghouseEvent(),this
+			ODProgressExtended progressbar=new ODProgressExtended(EventCategory.Clearinghouse,new ClearinghouseEvent(),this
 				,new ProgressBarHelper((Lans.g(this,"Clearinghouse Progress")),progressBarEventType:ProgBarEventType.Header),lanThis: this.Name);
 			//For Tesia, user wouldn't normally manually retrieve.
 			if(clearhouseHq.ISA08=="113504607") {

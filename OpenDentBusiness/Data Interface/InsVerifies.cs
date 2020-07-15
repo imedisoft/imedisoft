@@ -378,7 +378,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Called in OpenDentalService.  Attempts to verify patient benefits for same list in FormInsVerificaitonList.cs.
 		///Only runs for carriers that are flagged with TrustedEtransTypes.RealTimeEligibility.</summary>
-		public static List<InsVerify> TryBatchPatInsVerify(LogWriter logger=null) {
+		public static List<InsVerify> TryBatchPatInsVerify() {
 			//Mimics FormInsVerificaitonList.GetRowsForGrid(...)
 			bool excludePatVerifyWhenNoIns=PrefC.GetBool(PrefName.InsVerifyExcludePatVerify);
 			bool excludePatClones=(PrefC.GetBool(PrefName.ShowFeaturePatientClone) && PrefC.GetBool(PrefName.InsVerifyExcludePatientClones));
@@ -386,11 +386,11 @@ namespace OpenDentBusiness{
 			DateTime dateTimeEnd=DateTime.Today.AddDays(PrefC.GetInt(PrefName.InsVerifyAppointmentScheduledDays));//Non past due logic
 			DateTime dateTimeLastPatEligibility=DateTime.Today.AddDays(-PrefC.GetInt(PrefName.InsVerifyPatientEnrollmentDays));
 			DateTime dateTimeLastPlanBenefits=DateTime.Today.AddDays(-PrefC.GetInt(PrefName.InsVerifyBenefitEligibilityDays));
-			logger?.WriteLine($"BatchPatInsVerify has started...\r\n" +
+			Logger.LogVerbose($"BatchPatInsVerify has started...\r\n" +
 				$"dateTimeStart={dateTimeStart}\r\n" +
 				$"dateTimeEnd={dateTimeEnd}\r\n" +
 				$"dateTimeLastPatEligibility={dateTimeLastPatEligibility}\r\n" +
-				$"dateTimeLastPlanBenefits={dateTimeLastPlanBenefits}",LogLevel.Verbose,"InsVerifyBatch");
+				$"dateTimeLastPlanBenefits={dateTimeLastPlanBenefits}");
 			List<InsVerifyGridObject> listInsVerify=GetVerifyGridList(dateTimeStart,dateTimeEnd,dateTimeLastPatEligibility,dateTimeLastPlanBenefits
 				,new List<long>(){ -1 }//All clinics
 				,new List<long>(){ 0 }//All regions
@@ -400,7 +400,7 @@ namespace OpenDentBusiness{
 				,excludePatVerifyWhenNoIns
 				,excludePatClones
 			);
-			logger?.WriteLine($"{listInsVerify.Count} insverify grid objects",LogLevel.Verbose,"InsVerifyBatch");
+			Logger.LogVerbose($"{listInsVerify.Count} insverify grid objects",LogLevel.Verbose,"InsVerifyBatch");
 			Dictionary<long,Carrier> dictTrustedCarriers=null;//Key: CarrierNum, Value: Carrier
 			Dictionary<long,InsSub> dictInsSubs=null;//Key: InsSubNum, Value: InsSub
 			Dictionary<long,InsPlan> dictInsPlans=null;//Key: PlanNum, Value: InsPlan
@@ -486,16 +486,16 @@ namespace OpenDentBusiness{
 					else {//Error occurred
 						InsVerifySetStatus(insVerifyObj,errorStatusDefNum,errorStatus);
 						insVerifyObj.PatInsVerify.BatchVerifyState=BatchInsVerifyState.Error;
-						logger?.WriteLine($"Validation errors for patnum {insVerifyObj.GetPatNum()}:",LogLevel.Verbose,"InsVerifyBatch");
-						logger?.WriteLine($"{errorStatus}",LogLevel.Verbose,"InsVerifyBatch");
+						Logger.LogVerbose($"Validation errors for patnum {insVerifyObj.GetPatNum()}:",LogLevel.Verbose,"InsVerifyBatch");
+						Logger.LogVerbose($"{errorStatus}",LogLevel.Verbose,"InsVerifyBatch");
 					}
 				}
 				catch(Exception ex) {
-					logger?.WriteLine($"Exception was thrown on patnum: {insVerifyObj.GetPatNum()}",LogLevel.Verbose,"InsVerifyBatch");
-					logger?.WriteLine($"Exception text: {ex.StackTrace}",LogLevel.Verbose,"InsVerifyBatch");
+					Logger.LogVerbose($"Exception was thrown on patnum: {insVerifyObj.GetPatNum()}",LogLevel.Verbose,"InsVerifyBatch");
+					Logger.LogVerbose($"Exception text: {ex.StackTrace}",LogLevel.Verbose,"InsVerifyBatch");
 				}
 			}
-			logger?.WriteLine("BatchPatInsVerify has ended...",LogLevel.Verbose,"InsVerifyBatch");
+			Logger.LogVerbose("BatchPatInsVerify has ended...",LogLevel.Verbose,"InsVerifyBatch");
 			return listInsVerifies;
 		}
 

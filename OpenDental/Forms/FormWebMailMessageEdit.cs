@@ -492,7 +492,7 @@ namespace OpenDental {
 				}
 				catch(Exception ex) {
 					MessageBox.Show(this,"An error occurred sending the message. Please try again later or contact support.");
-					Logger.openlog.LogMB(this,System.Reflection.MethodBase.GetCurrentMethod().Name,ex.Message,Logger.Severity.ERROR);
+					// TODO: Logger.openlog.LogMB(this,System.Reflection.MethodBase.GetCurrentMethod().Name,ex.Message,Logger.Severity.Error);
 					butSend.Enabled=true;
 					return;
 				}

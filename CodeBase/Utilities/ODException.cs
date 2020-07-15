@@ -4,30 +4,28 @@ using System.Security.Permissions;
 
 namespace CodeBase
 {
-	[Serializable]
 	public class ODException : ApplicationException
 	{
 		private int _errorCode = 0;
-		///<summary>Contains query text when an ErrorCode in the 700s was thrown. This is the query that was attempted prior to an exception.</summary>
+
+		/// <summary>
+		/// Contains query text when an ErrorCode in the 700s was thrown.
+		/// 
+		/// This is the query that was attempted prior to an exception.
+		/// </summary>
 		private string _query = "";
 
-		///<summary>Gets the error code associated to this exception.  Defaults to 0 if no error code was explicitly set.</summary>		
-		public int ErrorCode
-		{
-			get
-			{
-				return _errorCode;
-			}
-		}
+		/// <summary>
+		/// Gets the error code associated to this exception.
+		/// 
+		/// Defaults to 0 if no error code was explicitly set.
+		/// </summary>		
+		public int ErrorCode => _errorCode;
 
-		///<summary>Contains query text when an ErrorCode in the 700s was thrown. This is the query that was attempted prior to an exception.</summary>
-		public string Query
-		{
-			get
-			{
-				return _query ?? "";
-			}
-		}
+		/// <summary>
+		/// Contains query text when an ErrorCode in the 700s was thrown. This is the query that was attempted prior to an exception.
+		/// </summary>
+		public string Query => _query ?? "";
 
 		///<summary>Convert an int to an Enum typed ErrorCode. Returns NotDefined if the input errorCode is not defined in ErrorCodes.</summary>		
 		public static ErrorCodes GetErrorCodeAsEnum(int errorCode)
@@ -39,8 +37,10 @@ namespace CodeBase
 			return (ErrorCodes)errorCode;
 		}
 
-		///<summary>Gets the pre-defined error code associated to this exception.  
-		///Defaults to NotDefined if the error code (int) specified is not defined in ErrorCodes enum.</summary>		
+		/// <summary>
+		/// Gets the pre-defined error code associated to this exception.  
+		/// Defaults to NotDefined if the error code (int) specified is not defined in ErrorCodes enum.
+		/// </summary>		
 		public ErrorCodes ErrorCodeAsEnum
 		{
 			get
@@ -49,13 +49,22 @@ namespace CodeBase
 			}
 		}
 
-		public ODException() { }
+		public ODException()
+		{
+		}
 
-		public ODException(int errorCode) : this("", errorCode) { }
+		public ODException(int errorCode) : this("", errorCode)
+		{
+		}
 
-		public ODException(string message) : this(message, 0) { }
+		public ODException(string message) : this(message, 0)
+		{
+		}
 
-		public ODException(string message, ErrorCodes errorCodeAsEnum) : this(message, (int)errorCodeAsEnum) { }
+		public ODException(string message, ErrorCodes errorCodeAsEnum) 
+			: this(message, (int)errorCodeAsEnum)
+		{
+		}
 
 		public ODException(string message, int errorCode)
 			: base(message)
@@ -72,13 +81,6 @@ namespace CodeBase
 
 		public ODException(string message, Exception ex) : base(message, ex)
 		{
-		}
-
-		///<summary>Used for serialization.</summary>
-		protected ODException(SerializationInfo info, StreamingContext context) : base(info, context)
-		{
-			_errorCode = info.GetInt32(nameof(ErrorCode));
-			_query = info.GetString(nameof(Query));
 		}
 
 		///<summary>Used for serialization.</summary>
@@ -107,19 +109,6 @@ namespace CodeBase
 			}
 		}
 
-		///<summary>Swallows and logs any exception that thrown from executing the action..</summary>
-		public static void SwallowAndLogAnyException(string subDirectory, Action a)
-		{
-			try
-			{
-				a();
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteLine(MiscUtils.GetExceptionText(ex), subDirectory);
-			}
-		}
-
 		///<summary>Does nothing if the exception passed in is null. Preserves the callstack of the exception passed in.
 		///Typically used when a work thread throws an exception and we want to wait until we are back on the main thread in order to throw the exception.
 		///Calling this when there is no worker thread involved is harmless and unnecessary but will still preserve the call stack.</summary>
@@ -129,6 +118,7 @@ namespace CodeBase
 			{
 				return;
 			}
+
 			//We are back in the main thread context so throw a new exception which contains our actual exception (from the worker) as the innner exception.
 			//Simply throwing ex here would cause the stack trace to be lost. https://stackoverflow.com/q/3403501
 			throw new Exception(ex.Message, ex);
@@ -200,12 +190,16 @@ namespace CodeBase
 			///<summary>Zipwhip verification pending.</summary>
 			ZipwhipPendingVerification = 900,
 			//4000-4999. Values used by ODCloud
+
 			///<summary>The file trying to write exists.</summary>
 			FileExists = 4000,
+
 			///<summary>Unable to communicate with ODCloudClient.</summary>
 			ODCloudClientTimeout = 4001,
+
 			///<summary>Error occurred when attempting to archive old claims.</summary>
 			ClaimArchiveFailed = 4002,
+
 			///<summary>Unable to communicate with the browser.</summary>
 			BrowserTimeout = 4003,
 		}

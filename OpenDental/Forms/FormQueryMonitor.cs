@@ -151,7 +151,7 @@ namespace Imedisoft.Forms
 
 		private void DbMonitorEvent_Fired(ODEventArgs e)
 		{
-			if (e.EventType != ODEventType.QueryMonitor || !(e.Tag is QueryInfo))
+			if (e.EventType != EventCategory.QueryMonitor || !(e.Tag is QueryInfo))
 			{
 				return;
 			}

@@ -59,7 +59,7 @@ namespace OpenDental{
 
 		///<summary></summary>
 		public ContrFamily(){
-			Logger.openlog.Log("Initializing family module...",Logger.Severity.INFO);
+			Logger.LogInfo("Initializing family module...");
 			InitializeComponent();// This call is required by the Windows.Forms Form Designer.
 		}
 
@@ -277,7 +277,7 @@ namespace OpenDental{
 		public void ModuleSelected(long patNum) {
 			RefreshModuleData(patNum);
 			RefreshModuleScreen();
-			PatientDashboardDataEvent.Fire(ODEventType.ModuleSelected,_loadData);
+			PatientDashboardDataEvent.Fire(EventCategory.ModuleSelected,_loadData);
 			Plugins.HookAddCode(this,"ContrFamily.ModuleSelected_end",patNum);
 		}
 

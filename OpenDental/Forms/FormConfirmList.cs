@@ -617,7 +617,7 @@ namespace OpenDental{
 					long clinicNum=PrefC.HasClinicsEnabled ? comboClinic.SelectedClinicNum : -1;
 					Table=Appointments.GetConfirmList(dateFrom,dateTo,provNum,clinicNum,showRecalls,showNonRecalls,
 						showHygienePrescheduled,apptConfirmedType.DefNum);
-					ConfirmationListEvent.Fire(ODEventType.ConfirmationList,Lans.g(this,"Filling the Confirmation List grid..."));
+					ConfirmationListEvent.Fire(EventCategory.ConfirmationList,Lans.g(this,"Filling the Confirmation List grid..."));
 					int scrollVal=gridMain.ScrollValue;
 					gridMain.BeginUpdate();
 					gridMain.ListGridColumns.Clear();
@@ -665,7 +665,7 @@ namespace OpenDental{
 				},
 				startingMessage:Lans.g(this,"Retrieving data for the Confirmation List grid..."),
 				eventType:typeof(ConfirmationListEvent),
-				odEventType:ODEventType.ConfirmationList
+				odEventType:EventCategory.ConfirmationList
 			);
 		}
 

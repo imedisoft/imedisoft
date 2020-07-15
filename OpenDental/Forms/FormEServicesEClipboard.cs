@@ -155,7 +155,7 @@ namespace OpenDental {
 		}
 
 		public void eClipboardChangedEvent_Fired(ODEventArgs e) {
-			if(e.EventType!=ODEventType.eClipboard || this.IsDisposed) {
+			if(e.EventType!=EventCategory.eClipboard || this.IsDisposed) {
 				return;
 			}
 			FillGridMobileAppDevices();

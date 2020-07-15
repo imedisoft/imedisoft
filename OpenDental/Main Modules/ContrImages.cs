@@ -132,7 +132,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public ContrImages() {
 			_zoomImage=1;
-			Logger.openlog.Log("Initializing Document Module...",Logger.Severity.INFO);
+			Logger.LogInfo("Initializing Document Module...");
 			InitializeComponent();
 			//The context menu causes strange bugs in MONO when performing selections on the tree.
 			//Perhaps when MONO is more developed we can remove this check.
@@ -168,7 +168,7 @@ namespace OpenDental {
 			this._suniDeviceControl.OnCaptureReady+=new System.EventHandler(this.CaptureReady);
 			this._suniDeviceControl.OnCaptureComplete+=new System.EventHandler(this.CaptureComplete);
 			this._suniDeviceControl.OnCaptureFinalize+=new System.EventHandler(this.CaptureFinalize);
-			Logger.openlog.Log("Document Module initialization complete.",Logger.Severity.INFO);
+			Logger.LogInfo("Document Module initialization complete.");
 		}
 		#endregion Constructor
 
@@ -1527,7 +1527,7 @@ namespace OpenDental {
 				_arrayBitmapsRaw=ImageStore.OpenImages(listDocs.ToArray(),_patFolder);
 				//Diverges slightly from the normal use of this event, in that it is fired from SelectTreeNode() rather than ModuleSelected.  Appropriate
 				//here because this is the only data in ContrImages that might affect the PatientDashboard, and there is no "LoadData" in this Module.
-				PatientDashboardDataEvent.Fire(ODEventType.ModuleSelected
+				PatientDashboardDataEvent.Fire(EventCategory.ModuleSelected
 					,new PatientDashboardDataEventArgs() {
 						Pat=_patCur,
 						ListDocuments=listDocs,
@@ -1991,7 +1991,7 @@ namespace OpenDental {
 						}
 						else {
 							if(doc.ImgType==ImageType.Photo) {
-								PatientEvent.Fire(ODEventType.Patient,_patCur);//Possibly updated the patient picture.
+								PatientEvent.Fire(EventCategory.Patient,_patCur);//Possibly updated the patient picture.
 							}
 							nodeIdTag=MakeIdDoc(doc.DocNum);
 							_documentShowing=doc.Copy();

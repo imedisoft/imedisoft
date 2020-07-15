@@ -1224,7 +1224,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets all schedules and blockouts that meet the Web Sched requirements.  Set isRecall to false to get New Pat Appt ops.
 		///Setting clinicNum to 0 will only consider unassigned operatories.</summary>
 		public static List<Schedule> GetSchedulesAndBlockoutsForWebSched(List<long> listProvNums,DateTime dateStart,DateTime dateEnd,bool isRecall
-			,long clinicNum,Logger.IWriteLine log=null, List<Schedule> listRestrictedToBlockouts=null) 
+			,long clinicNum,List<Schedule> listRestrictedToBlockouts=null) 
 		{
 			List<long> listProvNumsWithZero=new List<long>();
 			if(listProvNums!=null) {
@@ -1271,12 +1271,12 @@ namespace OpenDentBusiness{
 				listClinicNums.Add(clinicNum);
 			}
 			List<int> listSchedTypes=new List<int>() { (int)ScheduleType.Provider,(int)ScheduleType.Blockout };
-			return GetSchedulesHelper(dateStart,dateEnd,listClinicNums,listOperatoryNums,listProvNumsWithZero,listBlockoutTypeDefNums,listSchedTypes,log);
+			return GetSchedulesHelper(dateStart,dateEnd,listClinicNums,listOperatoryNums,listProvNumsWithZero,listBlockoutTypeDefNums,listSchedTypes);
 		}
 
 		///<summary>Gets a list of schedules for different methods.  Explicitly specify blockout types that need to be considered.</summary>
 		private static List<Schedule> GetSchedulesHelper(DateTime dateStart,DateTime dateEnd,List<long> listClinicNums,List<long> listOperatoryNums
-			,List<long> listProvNums,List<long> listBlockoutTypeDefNums,List<int> listSchedTypes,Logger.IWriteLine log=null) 
+			,List<long> listProvNums,List<long> listBlockoutTypeDefNums,List<int> listSchedTypes) 
 		{
 			//No need to check RemotingRole; private method.
 			//It is very important not to format these filters using DbHelper.DtimeToDate(). This would remove the index but yield the exact same results. 
@@ -1329,7 +1329,7 @@ namespace OpenDentBusiness{
 					)";
 			}
 			command+=" ORDER BY SchedDate";//Order the entire result set by SchedDate.
-			log?.WriteLine("command: "+command,LogLevel.Verbose);
+			Logger.LogVerbose("command: "+command);
 			return RefreshAndFill(command);
 		}
 

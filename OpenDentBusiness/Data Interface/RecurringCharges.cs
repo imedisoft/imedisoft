@@ -142,8 +142,6 @@ namespace OpenDentBusiness {
 		protected DateTime _nowDateTime;
 		///<summary>The program being used to process payments.</summary>
 		protected Program _progCur;
-		///<summary>Interface used to log events.</summary>
-		private Logger.IWriteLine _log;
 		///<summary>This action gets called after each card is done being processed.</summary>
 		public Action SingleCardFinished;
 		///<summary>True if the Chargerator is currently running cards.</summary>
@@ -177,11 +175,12 @@ namespace OpenDentBusiness {
 		///<summary>The number of cards updated by XCharge's Decline Minimizer.</summary>
 		public int Updated { get; private set;}
 		
-		public RecurringChargerator(Logger.IWriteLine log,bool isManual) {
-			_log=log;
+		public RecurringChargerator(bool isManual) {
 			_nowDateTime=MiscData.GetNowDateTime();
 			_isManual=isManual;
 		}
+
+		// TODO: Show message boxes for log messages...
 
 		///<summary>Fills the ListRecurringChargeData with recurring charges from the db. Gets recurring charges for all clinics for which the user has
 		///permission to access.</summary>
@@ -199,7 +198,7 @@ namespace OpenDentBusiness {
 			else {
 				ListRecurringChargeData=CreditCards.GetRecurringChargeList(listClinicNums,_nowDateTime);
 			}
-			_log.WriteLine("ListRecurringChargeData.Count: "+ListRecurringChargeData.Count,LogLevel.Verbose);
+			Logger.LogVerbose("ListRecurringChargeData.Count: " + ListRecurringChargeData.Count);
 			Dictionary<long,decimal> dictFamBals=new Dictionary<long,decimal>();//Keeps track of the family balance for each patient
 			//Calculate the repeat charge amount and the amount to be charged for each credit card
 			for(int i=ListRecurringChargeData.Count-1;i>-1;i--) {//loop through backwards since we may remove items if the charge amount is <=0
@@ -253,9 +252,11 @@ namespace OpenDentBusiness {
 					//Otherwise make sure the charge amount is not more than the repeat charge amount
 					chargeAmt=Math.Min(chargeAmt,rptChargeAmt);
 				}
-				if(chargeAmt<=0) { 
-					_log.WriteLine("Removing from ListRecurringChargeData. PatNum: "+chargeCur.RecurringCharge.PatNum+"  FamBal: "+famBalTotal
-						+"  PayPlanDue: "+payPlanDue+"  RepeatChargeAmt: "+rptChargeAmt,LogLevel.Verbose);
+				if(chargeAmt<=0) {
+
+					Logger.LogVerbose("Removing from ListRecurringChargeData. PatNum: " + chargeCur.RecurringCharge.PatNum + "  FamBal: " + famBalTotal
+						+ "  PayPlanDue: " + payPlanDue + "  RepeatChargeAmt: " + rptChargeAmt);
+
 					ListRecurringChargeData.RemoveAt(i);
 					continue;
 				}
@@ -409,7 +410,7 @@ namespace OpenDentBusiness {
 				clinicNumCur=chargeData.RecurringCharge.ClinicNum;//If clinics were enabled but no longer are, use credentials for headquarters.
 			}
 			if(listClinicNumsBadCredentials.Contains(clinicNumCur)) {//username or password is blank, don't try to process
-				MarkFailed(chargeData,Lans.g(_lanThis,"The X-Charge Username or Password for the clinic has not been set."),LogLevel.Information);
+				MarkFailed(chargeData,Lans.g(_lanThis,"The X-Charge Username or Password for the clinic has not been set."),LogLevel.Info);
 				return false;
 			}
 			string username=ProgramProperties.GetPropVal(_progCur.ProgramNum,"Username",clinicNumCur);
@@ -432,7 +433,7 @@ namespace OpenDentBusiness {
 			catch {
 				//Probably did not have permissions to delete the file.  Don't do anything, because a message will show telling them that the cards left in the grid failed.
 				//They will then go try and run the cards in the Account module and will then get a detailed message telling them what is wrong.
-				MarkFailed(chargeData,Lans.g(_lanThis,"Unable to delete result file."),LogLevel.Information);
+				MarkFailed(chargeData,Lans.g(_lanThis,"Unable to delete result file."),LogLevel.Info);
 				return false;
 			}
 			string xPath=Programs.GetProgramPath(_progCur);
@@ -543,12 +544,12 @@ namespace OpenDentBusiness {
 						Success++;
 					}
 					else {
-						MarkFailed(chargeData,Lans.g(_lanThis,"Result from XCharge:")+" "+strBuilderResultText.ToString(),LogLevel.Information);
+						MarkFailed(chargeData,Lans.g(_lanThis,"Result from XCharge:")+" "+strBuilderResultText.ToString(),LogLevel.Info);
 					}
 				}
 			}
 			catch(Exception ex) {
-				MarkFailed(chargeData,Lans.g(_lanThis,"XCharge error:")+" "+ex.Message,LogLevel.Information);
+				MarkFailed(chargeData,Lans.g(_lanThis,"XCharge error:")+" "+ex.Message,LogLevel.Info);
 				return false;
 			}
 			//If the decline minimizer updated the card, returned a value in the ACCOUNT field, and returned a valid exp date.  Update our record.
@@ -585,7 +586,7 @@ namespace OpenDentBusiness {
 					Success++;
 				}
 				else {
-					MarkFailed(chargeData,Lans.g(_lanThis,"Response from XWeb:")+" "+response.XWebResponseCode.ToString(),LogLevel.Information);
+					MarkFailed(chargeData,Lans.g(_lanThis,"Response from XWeb:")+" "+response.XWebResponseCode.ToString(),LogLevel.Info);
 					response.PayNote+="\r\n"+Lans.g(this,"Response from XWeb:")+" "+response.XWebResponseCode.ToString();
 				}
 				strBuilderResultText.Append(response.GetFormattedNote(true));
@@ -651,7 +652,7 @@ namespace OpenDentBusiness {
 			StringBuilder strBuilderResultText=new StringBuilder();//this payment's result text, used in payment note and then appended to file string builder
 			strBuilderResultFile.AppendLine("PatNum: "+patNum+" Name: "+patCur.GetNameFLnoPref());
 			if(payConnectResponse==null || payConnectResponse.Status==null) {
-				MarkFailed(chargeData,Lans.g(_lanThis,"Transaction Failed, unknown error"),LogLevel.Information);
+				MarkFailed(chargeData,Lans.g(_lanThis,"Transaction Failed, unknown error"),LogLevel.Info);
 				if(PrefC.HasClinicsEnabled && dictClinicNumDesc.ContainsKey(clinicNumCur)) {
 					strBuilderResultText.AppendLine("CLINIC="+dictClinicNumDesc[clinicNumCur]);
 				}
@@ -659,7 +660,7 @@ namespace OpenDentBusiness {
 				strBuilderResultFile.AppendLine(strBuilderResultText.ToString());//add to the file string builder
 			}
 			else if(payConnectResponse.Status.code!=0) {//error in transaction
-				MarkFailed(chargeData,Lans.g(_lanThis,"Transaction Failed, error status")+" "+payConnectResponse.Status.description,LogLevel.Information);
+				MarkFailed(chargeData,Lans.g(_lanThis,"Transaction Failed, error status")+" "+payConnectResponse.Status.description,LogLevel.Info);
 				if(PrefC.HasClinicsEnabled && dictClinicNumDesc.ContainsKey(clinicNumCur)) {
 					strBuilderResultText.AppendLine("CLINIC="+dictClinicNumDesc[clinicNumCur]);
 				}
@@ -772,7 +773,7 @@ namespace OpenDentBusiness {
 				receipt=response.TransactionReceipt;
 			}
 			catch(Exception ex) {
-				MarkFailed(chargeData,Lans.g(_lanThis,"Error processing card:")+" "+ex.Message,LogLevel.Information);
+				MarkFailed(chargeData,Lans.g(_lanThis,"Error processing card:")+" "+ex.Message,LogLevel.Info);
 				string clinicDesc="";
 				if(PrefC.HasClinicsEnabled && dictClinicNumDesc.ContainsKey(clinicNumCur)) {
 					clinicDesc=dictClinicNumDesc[clinicNumCur];
@@ -820,7 +821,7 @@ namespace OpenDentBusiness {
 				Failed++;
 			}
 			chargeData.RecurringCharge.ErrorMsg=chargeData.RecurringCharge.ErrorMsg?.AppendLine(errorMsg)??errorMsg;
-			_log.WriteLine(errorMsg+(errorMsg[errorMsg.Length-1]=='\n'?"":"\r\n")+"  "+Lans.g(_lanThis,"Patient:")+" "+chargeData.PatName,logLevel);
+			Logger.Write(logLevel,errorMsg + (errorMsg[errorMsg.Length-1]=='\n'?"":"\r\n")+"  "+Lans.g(_lanThis,"Patient:")+" "+chargeData.PatName);
 		}
 
 		///<summary>Sets the fields that are keeping count of the number of successes and failures.</summary>
@@ -862,7 +863,7 @@ namespace OpenDentBusiness {
 			}
 			if(warnings.Count>0) {
 				//Show the warning message.  This allows the user the ability to unhighlight rows or go change the date limitation.
-				_log.WriteLine(string.Join("\r\n",warnings),LogLevel.Error);
+				Logger.LogError(string.Join("\r\n",warnings));
 				return false;
 			}
 			return true;
@@ -1033,15 +1034,16 @@ namespace OpenDentBusiness {
 
 		///<summary>Deletes any recurring charges that have not been processed yet. This should be called when it is clear that the cards in this
 		///list are not going to be processed.</summary>
-		public void DeleteNotYetCharged() {
-			if(ListRecurringChargeData==null) {
+		public void DeleteNotYetCharged()
+		{
+			if (ListRecurringChargeData == null)
+			{
 				return;
 			}
-			List<RecurringCharge> listToDelete=ListRecurringChargeData.Select(x => x.RecurringCharge)
-				.Where(x => x.ChargeStatus==RecurringChargeStatus.NotYetCharged && x.RecurringChargeNum > 0).ToList();
-			_log.WriteLine("Deleting "+listToDelete.Count+" pending charges.",LogLevel.Verbose);
+			List<RecurringCharge> listToDelete = ListRecurringChargeData.Select(x => x.RecurringCharge)
+				.Where(x => x.ChargeStatus == RecurringChargeStatus.NotYetCharged && x.RecurringChargeNum > 0).ToList();
+			Logger.LogVerbose("Deleting " + listToDelete.Count + " pending charges.");
 			RecurringCharges.DeleteMany(listToDelete);
 		}
-
 	}
 }

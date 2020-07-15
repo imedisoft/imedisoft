@@ -165,28 +165,31 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets all appointments scheduled in the operatories passed in that fall within the start and end dates.
 		///Does not currently consider the time portion of the DateTimes passed in.</summary>
-		public static List<Appointment> GetAppointmentsForOpsByPeriod(List<long> opNums,DateTime dateStart,DateTime dateEnd=new DateTime(),
-			Logger.IWriteLine log=null,List<long> listProvNums=null) 
+		public static List<Appointment> GetAppointmentsForOpsByPeriod(List<long> opNums, DateTime dateStart, DateTime dateEnd = new DateTime(), List<long> listProvNums = null)
 		{
-			string command="SELECT * FROM appointment WHERE Op > 0 ";
-			if(opNums!=null && opNums.Count > 0) {
-				command+="AND Op IN("+String.Join(",",opNums)+") ";
+			string command = "SELECT * FROM appointment WHERE Op > 0 ";
+			if (opNums != null && opNums.Count > 0)
+			{
+				command += "AND Op IN(" + String.Join(",", opNums) + ") ";
 			}
 			//It is very important to format these filters as DateT. That will allow the index to be used. 
 			//Truncate dateStart/dateEnd down to .Date in order to mimic the behavior of DbHelper.DtimeToDate().
-			command+="AND AptStatus!="+POut.Int((int)ApptStatus.UnschedList)+" "
-				+"AND AptDateTime>="+POut.DateT(dateStart.Date)+" ";
-			if(dateEnd.Year > 1880) {
-				command+="AND AptDateTime<="+POut.DateT(dateEnd.Date.AddDays(1))+" ";
+			command += "AND AptStatus!=" + POut.Int((int)ApptStatus.UnschedList) + " "
+				+ "AND AptDateTime>=" + POut.DateT(dateStart.Date) + " ";
+			if (dateEnd.Year > 1880)
+			{
+				command += "AND AptDateTime<=" + POut.DateT(dateEnd.Date.AddDays(1)) + " ";
 			}
-			if(listProvNums!=null) {
-				List<long> listProvNumsFinal=listProvNums.FindAll(x => x>0);
-				if(listProvNumsFinal.Count>0) {
-					command+="AND (ProvNum IN ("+String.Join(",",listProvNumsFinal)+") OR ProvHyg IN ("+String.Join(",",listProvNumsFinal)+")) ";
+			if (listProvNums != null)
+			{
+				List<long> listProvNumsFinal = listProvNums.FindAll(x => x > 0);
+				if (listProvNumsFinal.Count > 0)
+				{
+					command += "AND (ProvNum IN (" + String.Join(",", listProvNumsFinal) + ") OR ProvHyg IN (" + String.Join(",", listProvNumsFinal) + ")) ";
 				}
 			}
-			command+="ORDER BY AptDateTime,Op";//Ordering by AptDateTime then Op is important for speed when checking for collisions in Web Sched.
-			log?.WriteLine("command: "+command,LogLevel.Verbose);
+			command += "ORDER BY AptDateTime,Op";//Ordering by AptDateTime then Op is important for speed when checking for collisions in Web Sched.
+			Logger.LogVerbose("command: " + command);
 			return Crud.AppointmentCrud.SelectMany(command);
 		}
 		
@@ -4078,7 +4081,7 @@ namespace OpenDentBusiness{
 					catch(ODException odex) {
 						if(verificationType==WebSchedVerifyType.TextAndEmail && logErrors) {
 							//SMS failed, so log, but continue so that we also try to send the email.
-							Logger.WriteException(odex,"SendFollowUpErrors");
+							Logger.LogException(odex);
 						}
 						else if(verificationType==WebSchedVerifyType.Text) {
 							throw odex;
@@ -4109,7 +4112,7 @@ namespace OpenDentBusiness{
 			}
 			catch(Exception e) {
 				if(logErrors) {
-					Logger.WriteException(e,"SendFollowUpErrors");
+					Logger.LogException(e);
 				}
 			}
 		}

@@ -276,7 +276,7 @@ namespace OpenDentBusiness.WebTypes {
 					MockExceptionHandler(e);
 				}
 				else {
-					Logger.WriteException(e,"PushNotifications");
+					Logger.LogException(e);
 				}
 			});
 			th.Name="SendPush_"+pushType.ToString()+"_ClinicNum_"+clinicNum.ToString()+"_UserNum_"+userNum.ToString();

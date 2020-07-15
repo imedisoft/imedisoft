@@ -241,7 +241,7 @@ namespace OpenDental{
 			Cursor=Cursors.WaitCursor;
 			GC.Collect();//free up resources since this could take a lot of memory
 			DataValid.SetInvalid(InvalidType.RecallTypes);
-			Action actionCloseRecallSyncProgress=ODProgress.Show(ODEventType.RecallSync,typeof(RecallSyncEvent),Lan.G(this,"Running Prep Queries")+"...",false,true);
+			Action actionCloseRecallSyncProgress=ODProgress.Show(EventCategory.RecallSync,typeof(RecallSyncEvent),Lan.G(this,"Running Prep Queries")+"...",false,true);
 			bool isSyncCompleted=Recalls.SynchAllPatients();
 			actionCloseRecallSyncProgress?.Invoke();
 			GC.Collect();//clean up resources, force the garbage collector to collect since resources may remain tied-up
@@ -267,7 +267,7 @@ namespace OpenDental{
 				{
 					Cursor=Cursors.WaitCursor;
 					GC.Collect();//free up resources since this could take a lot of memory
-					Action actionCloseRecallSyncProgress=ODProgress.Show(ODEventType.RecallSync,typeof(RecallSyncEvent),Lan.G(this,"Running Prep Queries")+"...");
+					Action actionCloseRecallSyncProgress=ODProgress.Show(EventCategory.RecallSync,typeof(RecallSyncEvent),Lan.G(this,"Running Prep Queries")+"...");
 					bool isSyncSuccessful=Recalls.SynchAllPatients();
 					actionCloseRecallSyncProgress?.Invoke();
 					GC.Collect();//clean up resources, force the garbage collector to collect since resources may remain tied-up

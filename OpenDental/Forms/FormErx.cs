@@ -87,7 +87,7 @@ namespace OpenDental {
 
 		protected override void OnClosed(EventArgs e) {
 			base.OnClosed(e);
-			ODEvent.Fire(ODEventType.ErxBrowserClosed,PatCur);
+			ODEvent.Fire(EventCategory.ErxBrowserClosed,PatCur);
 		}
 
 	}

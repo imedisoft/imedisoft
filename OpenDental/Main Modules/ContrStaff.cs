@@ -88,7 +88,7 @@ namespace OpenDental{
 
 		///<summary></summary>
 		public ContrStaff(){
-			Logger.openlog.Log("Initializing management module...",Logger.Severity.INFO);
+			Logger.LogInfo("Initializing management module...");
 			InitializeComponent();
 			this.listStatus.Click += new System.EventHandler(this.listStatus_Click);
 		}
@@ -951,7 +951,7 @@ namespace OpenDental{
 		}
 
 		private void formClaimsSend_GoToChanged(ODEventArgs e) {
-			if(e.EventType!=ODEventType.FormClaimSend_GoTo) {
+			if(e.EventType!=EventCategory.FormClaimSend_GoTo) {
 				return;
 			}
 			ClaimSendQueueItem claimSendQueueItem=(ClaimSendQueueItem)e.Tag;

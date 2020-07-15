@@ -51,7 +51,7 @@ namespace OpenDentBusiness{
 				}
 				_curUserT=value;
 				curUser=value;
-				UserodChangedEvent.Fire(ODEventType.Userod,_curUserT?.UserNum??curUser?.UserNum??0);
+				UserodChangedEvent.Fire(EventCategory.Userod,_curUserT?.UserNum??curUser?.UserNum??0);
 			}
 		}
 

@@ -231,14 +231,14 @@ namespace OpenDental {
 		#region EventHandlers
 
 		public void PatientChangedEvent_Fired(ODEventArgs e) {
-			if(e.EventType!=ODEventType.Patient || e.Tag.GetType()!=typeof(long) || this.IsDisposed) {
+			if(e.EventType!=EventCategory.Patient || e.Tag.GetType()!=typeof(long) || this.IsDisposed) {
 				return;
 			}
 			FillPat();
 		}
 
 		public void eClipboardChangedEvent_Fired(ODEventArgs e) {
-			if(e.EventType!=ODEventType.eClipboard || this.IsDisposed) {
+			if(e.EventType!=EventCategory.eClipboard || this.IsDisposed) {
 				return;
 			}
 			FillGrid();

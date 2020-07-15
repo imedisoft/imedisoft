@@ -3152,7 +3152,7 @@ namespace OpenDental{
 			PatientL.InvalidateSelectedPatSpecialty();
 			if(!IsNew) {
 				Patients.InsertAddressChangeSecurityLogEntry(PatOld,PatCur);
-				PatientEvent.Fire(ODEventType.Patient,PatCur);
+				PatientEvent.Fire(EventCategory.Patient,PatCur);
 			}
 			Plugins.HookAddCode(this,"FormPatientEdit.butOK_Click_end",PatCur,PatOld);
 			DialogResult=DialogResult.OK;

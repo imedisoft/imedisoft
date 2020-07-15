@@ -253,6 +253,7 @@ namespace CodeBase
 						return;
 					}
 				}
+
 				if (TimeIntervalMS > 0)
 				{
 					if (!HasQuit)

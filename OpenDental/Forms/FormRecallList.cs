@@ -290,7 +290,7 @@ namespace OpenDental {
 						listRecallTypes:comboRecallTypes.GetListSelected<RecallType>());
 				});
 				_tableRecalls=_getRecallTable();
-				RecallListEvent.Fire(ODEventType.RecallList,Lans.g(this,"Filling the Recall List grid..."));
+				RecallListEvent.Fire(EventCategory.RecallList,Lans.g(this,"Filling the Recall List grid..."));
 				gridRecalls.BeginUpdate();
 				gridRecalls.ListGridColumns.Clear();
 				List<DisplayField> fields=DisplayFields.GetForCategory(DisplayFieldCategory.RecallList);
@@ -397,7 +397,7 @@ namespace OpenDental {
 				fillGridAction,
 				startingMessage:Lans.g(this,"Retrieving data for the Recall List grid..."),
 				eventType:typeof(RecallListEvent),
-				odEventType:ODEventType.RecallList
+				odEventType:EventCategory.RecallList
 			);
 		}
 		
@@ -1588,7 +1588,7 @@ namespace OpenDental {
 				() => {
 					List<Recalls.RecallRecent> listRecent=Recalls.GetRecentRecalls(datePickerRemind.GetDateTimeFrom(),datePickerRemind.GetDateTimeTo(),
 						comboClinicRemind.ListSelectedClinicNums);
-					RecallListEvent.Fire(ODEventType.RecallList,Lans.g(this,"Filling the Recently Contacted grid..."));
+					RecallListEvent.Fire(EventCategory.RecallList,Lans.g(this,"Filling the Recently Contacted grid..."));
 					gridReminders.BeginUpdate();
 					gridReminders.ListGridColumns.Clear();
 					gridReminders.ListGridColumns.Add(new GridColumn(Lan.G(this,"Date Time Sent"),140,GridSortingStrategy.DateParse));
@@ -1611,7 +1611,7 @@ namespace OpenDental {
 				},
 				startingMessage:Lans.g(this,"Retrieving data for the Recently Contacted grid..."),
 				eventType:typeof(RecallListEvent),
-				odEventType:ODEventType.RecallList
+				odEventType:EventCategory.RecallList
 			);
 		}
 

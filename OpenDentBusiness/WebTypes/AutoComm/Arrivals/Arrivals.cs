@@ -78,8 +78,7 @@ namespace OpenDentBusiness.AutoComm {
 				Arrivals arrival=LoadArrivals(clinicNum.SingleItemToList(),listTodayAppts.Select(x => x.AptNum).ToList());
 				arrival.TryProcessArrival(patNumForResponse,clinicNum,mobilePhoneNumber,listTodayAppts);
 			});
-			arrivalThread.AddExceptionHandler((ex) => 
-				Logger.WriteError(MiscUtils.GetExceptionText(ex),ODFileUtils.CombinePaths(nameof(Arrivals),nameof(ProcessArrival))));
+			arrivalThread.AddExceptionHandler((ex) => Logger.LogError(MiscUtils.GetExceptionText(ex)));
 			arrivalThread.Name=nameof(ProcessArrival)+$"_PatNum{patNumForResponse}";
 			arrivalThread.GroupName=nameof(ProcessArrival);
 			arrivalThread.Start();
@@ -91,7 +90,7 @@ namespace OpenDentBusiness.AutoComm {
 			List<Appointment> listApptsToday=listAppts.Where(x => x.ClinicNum==clinicNum && x.AptDateTime.Date==DateTime.Today).OrderBy(x => x.AptDateTime).ToList();
 			string logSubDir=ODFileUtils.CombinePaths(nameof(Arrivals),nameof(TryProcessArrival),clinicNum.ToString());
 			if(listApptsToday.Count==0) {
-				Logger.WriteError($"PatNum: {patNum} does not have any appointments at ClinicNum {clinicNum} today.",logSubDir);
+				Logger.LogError($"PatNum: {patNum} does not have any appointments at ClinicNum {clinicNum} today.");
 				return false;
 			}
 			List<Appointment> listApptsAutomationEnabled=listApptsToday
@@ -99,7 +98,7 @@ namespace OpenDentBusiness.AutoComm {
 				.Where(x => Clinics.GetClinic(x.ClinicNum)?.IsConfirmEnabled??(x.ClinicNum==0 && PrefC.GetBool(PrefName.ApptArrivalAutoEnabled)))
 				.ToList();
 			if(listApptsAutomationEnabled.Count==0) {
-				Logger.WriteError($"PatNum: {patNum} has appointments at ClinicNum {clinicNum} today, but automation is not enabled for this clinic.",logSubDir);
+				Logger.LogError($"PatNum: {patNum} has appointments at ClinicNum {clinicNum} today, but automation is not enabled for this clinic.");
 				return false;
 			}
 			List<ApptResponse> listApptResponses=GetApptResponses(listApptsAutomationEnabled);
@@ -144,17 +143,17 @@ namespace OpenDentBusiness.AutoComm {
 					}
 				}
 				if(wirelessPhone is null) {
-					Logger.WriteError($"Unable to find a WirelessPhone for PatNum: {patNum}.",logDir);
+					Logger.LogError($"Unable to find a WirelessPhone for PatNum: {patNum}.");
 					return false;
 				}
 				SmsToMobile sent=SmsToMobiles.SendSmsSingle(patNum,wirelessPhone,message,clinicNum,SmsMessageSource.Arrival);
-				Logger.WriteLine($"Sent {JsonConvert.SerializeObject(sent)}",logDir);
+				Logger.LogInfo($"Sent {JsonConvert.SerializeObject(sent)}");
 				retVal=true;
 			}
 			catch(Exception ex) {
 				string err=$"Failed to send Arrival Response '{message}' to PatNum: {patNum}, WirelessPhone: {wirelessPhone}. "
 					+MiscUtils.GetExceptionText(ex);
-				Logger.WriteError(err,logDir);
+				Logger.LogError(err);
 			}
 			return retVal;
 		}
@@ -208,7 +207,7 @@ namespace OpenDentBusiness.AutoComm {
 				string template=getTemplate(rule);
 				if(string.IsNullOrWhiteSpace(template)) {
 					string info=$"Unable to find template for Appointment.AptNum: {appt.AptNum}";
-					Logger.WriteLine(info,logDir);
+					Logger.LogInfo(info);
 				}
 				else {
 					Clinic clinic=(appt.ClinicNum==0) ? Clinics.GetPracticeAsClinicZero() : Clinics.GetClinic(appt.ClinicNum);
@@ -218,7 +217,7 @@ namespace OpenDentBusiness.AutoComm {
 				}
 			}
 			catch(Exception ex) {
-				Logger.WriteError(MiscUtils.GetExceptionText(ex),logDir);
+				Logger.LogError(MiscUtils.GetExceptionText(ex));
 			}
 			message=msg;
 			return !string.IsNullOrWhiteSpace(message);

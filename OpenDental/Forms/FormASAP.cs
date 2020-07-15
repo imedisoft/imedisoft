@@ -893,7 +893,7 @@ namespace OpenDental {
 					long clinicNum=PrefC.HasClinicsEnabled ? comboClinic.SelectedClinicNum : -1;
 					_listASAPs=Appointments.RefreshASAP(provNum,siteNum,clinicNum,listAppStatuses,codeRangeFilter.StartRange,
 						codeRangeFilter.EndRange);
-					ASAPEvent.Fire(ODEventType.ASAP,Lans.g(this,"Filling Appointment ASAP grid..."));
+					ASAPEvent.Fire(EventCategory.ASAP,Lans.g(this,"Filling Appointment ASAP grid..."));
 					int scrollVal=gridAppts.ScrollValue;
 					List<long> listAptNumsSelected=gridAppts.SelectedTags<Appointment>().Select(x => x.AptNum).ToList();
 					gridAppts.BeginUpdate();
@@ -964,7 +964,7 @@ namespace OpenDental {
 				},
 				startingMessage:Lans.g(this,"Retrieving data for the Appointment ASAP grid..."),
 				eventType:typeof(ASAPEvent),
-				odEventType:ODEventType.ASAP
+				odEventType:EventCategory.ASAP
 			);
 		}
 
@@ -1103,7 +1103,7 @@ namespace OpenDental {
 						siteNum,RecallListSort.DueDate,showReminders,true,codeRangeFilter.StartRange,codeRangeFilter.EndRange);
 					List<Recall> listRecalls=Recalls.GetMultRecalls(tableRecalls.Rows.OfType<DataRow>().Select(x => PIn.Long(x["RecallNum"]
 						.ToString())).ToList());
-					ASAPEvent.Fire(ODEventType.ASAP,Lans.g(this,"Filling the Recall ASAP grid..."));
+					ASAPEvent.Fire(EventCategory.ASAP,Lans.g(this,"Filling the Recall ASAP grid..."));
 					List<long> listRecallNumsSelected=gridRecalls.SelectedTags<Recall>().Select(x => x.RecallNum).ToList();
 					bool hasGridBeenFilledBefore=(gridRecalls.ListGridColumns.Count > 0);
 					gridRecalls.BeginUpdate();
@@ -1180,7 +1180,7 @@ namespace OpenDental {
 				},
 				startingMessage:Lans.g(this,"Retrieving data for the Recall ASAP grid..."),
 				eventType:typeof(ASAPEvent),
-				odEventType:ODEventType.ASAP
+				odEventType:EventCategory.ASAP
 			);
 		}
 

@@ -23,7 +23,7 @@ namespace OpenDentBusiness {
 		public Exception Exception;
 
 		public MiddleTierConnectionEventArgs(bool isConnectionRestored) 
-			: base(ODEventType.MiddleTierConnection,MiddleTierConnectionEventType.MiddleTierConnectionLost.GetDescription()) 
+			: base(EventCategory.MiddleTierConnection,MiddleTierConnectionEventType.MiddleTierConnectionLost.GetDescription()) 
 		{
 			IsConnectionRestored=isConnectionRestored;
 		}

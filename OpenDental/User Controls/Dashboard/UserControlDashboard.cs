@@ -141,12 +141,24 @@ namespace OpenDental {
 			_threadRefresh.Start();
 		}
 
-		private void SetData(ODEventArgs e) {
+		private void SetData(ODEventArgs e)
+		{
 			//Instantiate the new PatientDashboardEventArgs on the main thread (ctor will create copies of Bitmaps, which cannot happen on a background thread
 			//as this has caused cross-threaded exceptions in the Image Module.)
-			PatientDashboardDataEventArgs data=new PatientDashboardDataEventArgs(e.Tag);
-			StartRefreshThread((widget) => widget.TrySetData(data),SET_THREAD_NAME
-				,() => ODException.SwallowAndLogAnyException(PATIENT_DASHBOARD_LOG_DIRECTORY,() => data?.Dispose()));
+			PatientDashboardDataEventArgs data = new PatientDashboardDataEventArgs(e.Tag);
+
+			StartRefreshThread((widget) => widget.TrySetData(data), SET_THREAD_NAME, 
+				() =>
+				{
+                    try
+                    {
+						data?.Dispose();
+					}
+                    catch
+                    {
+						// TODO: Log exception...
+                    }
+				});
 		}
 
 		///<summary>Adds a new Widget to the current Dashboard container.</summary>

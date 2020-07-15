@@ -2233,7 +2233,7 @@ namespace OpenDentBusiness {
 			if(_odThreadQueueData!=null) {
 				throw new ApplicationException("Global update fees tool is already running.");
 			}
-			FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(("Getting table of fees to update...")
+			FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(("Getting table of fees to update...")
 				,progressBarEventType:ProgBarEventType.TextMsg));
 			#if DEBUG
 			Stopwatch s=new Stopwatch();
@@ -2335,7 +2335,7 @@ namespace OpenDentBusiness {
 							&& procNumLab!=0) 
 						{
 							currentRowCount++;
-							FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(progressText,(int)percentComplete+"%"
+							FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(progressText,(int)percentComplete+"%"
 								,(int)percentComplete,100,ProgBarStyle.Blocks,"Clinic"
 								,labelTop: "Batch "+batchNumber+"/"+_listProcNumsMaxForGroups.Count));
 							continue;//The proc fee for a lab is derived from the lab fee on the parent procedure.
@@ -2401,7 +2401,7 @@ namespace OpenDentBusiness {
 						if(newFee.IsEqual(procFeeCur)) {
 							rowSkippedCount++;
 							currentRowCount++;
-							FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(progressText,(int)percentComplete+"%"
+							FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(progressText,(int)percentComplete+"%"
 								,(int)percentComplete,100,ProgBarStyle.Blocks,"Clinic"
 								,labelTop:"Batch "+batchNumber+"/"+_listProcNumsMaxForGroups.Count));
 							continue;
@@ -2415,23 +2415,23 @@ namespace OpenDentBusiness {
 						dictFeeListCodes[newFee].Last().Add(procNum);
 						currentRowCount++;
 						//update batch label for progress bar
-						FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(progressText,(int)percentComplete+"%"
+						FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(progressText,(int)percentComplete+"%"
 							,(int)percentComplete,100,ProgBarStyle.Blocks,"Clinic",
 							labelTop:"Batch "+batchNumber+"/"+_listProcNumsMaxForGroups.Count));
 					}//end of foreach loop. Done with one batch of procedures.
-					FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(
+					FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(
 						"Batch "+batchNumber+"/"+_listProcNumsMaxForGroups.Count+" fee process completed"
 						,progressBarEventType:ProgBarEventType.TextMsg));
 				}//end of while loop. Done with all batches of procedures.
-				FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(progressText,100+"%"
+				FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(progressText,100+"%"
 						,100,100,ProgBarStyle.Blocks,"Clinic",labelTop:"Batch "+batchNumber+"/"+_listProcNumsMaxForGroups.Count));
-				FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(
+				FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(
 					"Procedure fees processed "+progressText+" "+_totCount+"/"+_totCount
 					,progressBarEventType:ProgBarEventType.TextMsg));
 				if(dictFeeListCodes.Count==0) {
 					return 0;//no procedure fees updated, all skipped
 				}
-				FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper(
+				FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper(
 					"Updating fees...",progressBarEventType:ProgBarEventType.TextMsg));
 				#region Create List of Actions			
 				List<Action> listActions=dictFeeListCodes.SelectMany(x => x.Value.Select(y => new Action(() => {
@@ -2452,10 +2452,10 @@ namespace OpenDentBusiness {
 				ODThread.RunParallel(listActions,TimeSpan.FromMinutes(30)
 					,exceptionHandler:new ODThread.ExceptionDelegate((ex) => {
 						//Notify the user what went wrong via the text box.
-						FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper("Error updating ProcFee: "+ex.Message
+						FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper("Error updating ProcFee: "+ex.Message
 							,progressBarEventType:ProgBarEventType.TextMsg));
 				}));//each group of actions gets X minutes.
-				FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper("Fees Updated Successfully",
+				FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper("Fees Updated Successfully",
 						progressBarEventType:ProgBarEventType.TextMsg));
 			}//end of try
 			catch {
@@ -2548,7 +2548,7 @@ namespace OpenDentBusiness {
 				#endregion Create List of Actions
 				ODThread.RunParallel(listActions,TimeSpan.FromMinutes(30), exceptionHandler: new ODThread.ExceptionDelegate((ex) => {
 						//Notify the user what went wrong via the text box.
-						FeeSchedEvent.Fire(ODEventType.FeeSched,new ProgressBarHelper("Error getting TP procedures batch: "+ex.Message
+						FeeSchedEvent.Fire(EventCategory.FeeSched,new ProgressBarHelper("Error getting TP procedures batch: "+ex.Message
 							,progressBarEventType:ProgBarEventType.TextMsg));
 				}));
 			}

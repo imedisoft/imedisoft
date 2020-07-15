@@ -287,7 +287,7 @@ namespace OpenDentBusiness {
 			Stopwatch sw=new Stopwatch();
 			Stopwatch swTotal=new Stopwatch();
 			swTotal.Restart();
-			string info=$"Start: {DateTime.Now.ToString(Logger.DATETIME_FORMAT)}\r\n  groupByFamilies={groupByFamilies}\r\n  provNum={provNum}"+
+			string info=$"Start: {DateTime.Now.ToString(Logger.DateTimeFormat)}\r\n  groupByFamilies={groupByFamilies}\r\n  provNum={provNum}"+
 				$"\r\n  provName={Providers.GetAbbr(provNum)}\r\n  clinicNum={clinicNum}\r\n  clinicName={Clinics.GetAbbr(clinicNum)}"+
 				$"\r\n  siteNum={siteNum}\r\n  sortBy={sortBy}\r\n  showReminders={showReminders}\r\n  isAsap={isAsap}"+
 				$"\r\n  fromDate={fromDate.ToString("MM/dd/yy")}\r\n  toDate={toDate.ToString("MM/dd/yy")}";
@@ -617,8 +617,8 @@ namespace OpenDentBusiness {
 			logOther($"addRows {table.Rows.Count} rows");
 			swTotal.Stop();
 #if DEBUG
-			Logger.WriteLine($"\r\n----------SUMMARY TOTAL {swTotal.Elapsed.TotalSeconds.ToString("0.00")}s\r\n{info}\r\n\r\n","FillRecallTableInfo");
-			Logger.WriteLine($"\r\n----------INFO TOTAL {swTotal.Elapsed.TotalSeconds.ToString("0.00")}s\r\n{info}\r\n\r\n----------\r\n{verbose}\r\n\r\n","FillRecallTableVerbose");
+			Logger.LogInfo($"\r\n----------SUMMARY TOTAL {swTotal.Elapsed.TotalSeconds.ToString("0.00")}s\r\n{info}\r\n\r\n");
+			Logger.LogInfo($"\r\n----------INFO TOTAL {swTotal.Elapsed.TotalSeconds.ToString("0.00")}s\r\n{info}\r\n\r\n----------\r\n{verbose}\r\n\r\n");
 #endif
 			return table;
 		}
@@ -888,7 +888,7 @@ namespace OpenDentBusiness {
 							//Only fire a few progress events so that the program doesn't slow down due to the UI updating.
 							//Updating too infrequently will cause the main thread to spin too fast.  Mod 5 is a good throttle.
 							if(++curBatchCount%5==0 || curBatchCount==dictPatBatchData.Count) {
-								RecallSyncEvent.Fire(ODEventType.RecallSync,new ProgressBarHelper(
+								RecallSyncEvent.Fire(EventCategory.RecallSync,new ProgressBarHelper(
 									Lans.g("Recalls","Recalls Completed")+" "+patProcessedCount+"/"+_totalPatCount+" - "
 										+Math.Floor(((double)patProcessedCount/_totalPatCount)*100).ToString()+"%",
 									Math.Floor(((double)patProcessedCount/_totalPatCount)*100)+"%",
@@ -1014,7 +1014,7 @@ namespace OpenDentBusiness {
 					if(listRecallsForInsert.Count==0) {
 						continue;
 					}
-					RecallSyncEvent.Fire(ODEventType.RecallSync,new ProgressBarHelper(
+					RecallSyncEvent.Fire(EventCategory.RecallSync,new ProgressBarHelper(
 						Lans.g("Recalls","Recalls Completed")+" "+patProcessedCount+"/"+_totalPatCount+" - "
 							+Math.Floor(((double)patProcessedCount/_totalPatCount)*100).ToString()+"% - "
 							+Lans.g("Recalls","Inserting Recalls")+": "+listRecallsForInsert.Count,

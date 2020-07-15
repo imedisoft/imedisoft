@@ -595,7 +595,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select exactly one item first.");
 				return;
 			}
-			ODEvent.Fire(ODEventType.FormClaimSend_GoTo,gridMain.SelectedTags<ClaimSendQueueItem>().First());
+			ODEvent.Fire(EventCategory.FormClaimSend_GoTo,gridMain.SelectedTags<ClaimSendQueueItem>().First());
 			SendToBack();
 		}
 
@@ -828,7 +828,7 @@ namespace OpenDental{
 		}
 
 		private void formProcNotBilled_GoToChanged(ODEventArgs e) {
-			if(e.EventType!=ODEventType.FormProcNotBilled_GoTo) {
+			if(e.EventType!=EventCategory.FormProcNotBilled_GoTo) {
 				return;
 			}
 			Patient pat=Patients.GetPat((long)e.Tag);
@@ -1440,7 +1440,7 @@ namespace OpenDental{
 			ClaimSendQueueItem claimSendQueueItem=new ClaimSendQueueItem();
 			claimSendQueueItem.PatNum=PIn.Long(row["PatNum"].ToString());
 			claimSendQueueItem.ClaimNum=PIn.Long(row["ClaimNum"].ToString());
-			ODEvent.Fire(ODEventType.FormClaimSend_GoTo,claimSendQueueItem);
+			ODEvent.Fire(EventCategory.FormClaimSend_GoTo,claimSendQueueItem);
 			SendToBack();
 		}
 

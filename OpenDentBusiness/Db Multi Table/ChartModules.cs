@@ -184,11 +184,11 @@ namespace OpenDentBusiness
 		public static LoadData GetAll(long patNum, bool isAuditMode, ChartModuleComponentsToLoad componentsToLoad, bool doMakeSecLog)
 		{
 			LoadData data = new LoadData();
-			Logger.LogAction("GetProgNotes", LogPath.ChartModule, () => data.TableProgNotes = GetProgNotes(patNum, isAuditMode, componentsToLoad));
-			Logger.LogAction("GetPlannedApt", LogPath.ChartModule, () => data.TablePlannedAppts = GetPlannedApt(patNum));
-			Logger.LogAction("Patients.GetFamily", LogPath.ChartModule, () => data.Fam = Patients.GetFamily(patNum));
-			Logger.LogAction("Fam.GetPatient", LogPath.ChartModule, () => data.Pat = data.Fam.GetPatient(patNum));
-			Logger.LogAction("PatPlans.Refresh", LogPath.ChartModule, () =>
+			Logger.LogAction("GetProgNotes", () => data.TableProgNotes = GetProgNotes(patNum, isAuditMode, componentsToLoad));
+			Logger.LogAction("GetPlannedApt", () => data.TablePlannedAppts = GetPlannedApt(patNum));
+			Logger.LogAction("Patients.GetFamily", () => data.Fam = Patients.GetFamily(patNum));
+			Logger.LogAction("Fam.GetPatient", () => data.Pat = data.Fam.GetPatient(patNum));
+			Logger.LogAction("PatPlans.Refresh", () =>
 			{
 				data.ListPatPlans = PatPlans.Refresh(patNum);
 				if (!PatPlans.IsPatPlanListValid(data.ListPatPlans))
@@ -196,28 +196,28 @@ namespace OpenDentBusiness
 					data.ListPatPlans = PatPlans.Refresh(patNum);
 				}
 			});
-			Logger.LogAction("InsSubs.RefreshForFam", LogPath.ChartModule, () => data.ListInsSubs = InsSubs.RefreshForFam(data.Fam));
-			Logger.LogAction("InsPlans.RefreshForSubList", LogPath.ChartModule, () => data.ListInsPlans = InsPlans.RefreshForSubList(data.ListInsSubs));
-			Logger.LogAction("Benefits.Refresh", LogPath.ChartModule, () => data.ListBenefits = Benefits.Refresh(data.ListPatPlans, data.ListInsSubs));
-			Logger.LogAction("ClaimProcs.GetHistList", LogPath.ChartModule, () => data.ListClaimProcHists = ClaimProcs.GetHistList(patNum, data.ListBenefits, data.ListPatPlans, data.ListInsPlans, DateTime.Today, data.ListInsSubs));
-			Logger.LogAction("ClaimProcs.Refresh", LogPath.ChartModule, () => data.ListClaimProcs = ClaimProcs.Refresh(patNum));
-			Logger.LogAction("PaySplits.Refresh", LogPath.ChartModule, () => data.ArrPaySplits = PaySplits.Refresh(patNum));
-			Logger.LogAction("Adjustments.Refresh", LogPath.ChartModule, () => data.ArrAdjustments = Adjustments.Refresh(patNum));
-			Logger.LogAction("Procedures.Refresh", LogPath.ChartModule, () => data.ListProcs = Procedures.Refresh(patNum));
-			Logger.LogAction("OrthoProcLinks.GetManyForProcs", LogPath.ChartModule, () =>
+			Logger.LogAction("InsSubs.RefreshForFam", () => data.ListInsSubs = InsSubs.RefreshForFam(data.Fam));
+			Logger.LogAction("InsPlans.RefreshForSubList", () => data.ListInsPlans = InsPlans.RefreshForSubList(data.ListInsSubs));
+			Logger.LogAction("Benefits.Refresh", () => data.ListBenefits = Benefits.Refresh(data.ListPatPlans, data.ListInsSubs));
+			Logger.LogAction("ClaimProcs.GetHistList", () => data.ListClaimProcHists = ClaimProcs.GetHistList(patNum, data.ListBenefits, data.ListPatPlans, data.ListInsPlans, DateTime.Today, data.ListInsSubs));
+			Logger.LogAction("ClaimProcs.Refresh", () => data.ListClaimProcs = ClaimProcs.Refresh(patNum));
+			Logger.LogAction("PaySplits.Refresh", () => data.ArrPaySplits = PaySplits.Refresh(patNum));
+			Logger.LogAction("Adjustments.Refresh", () => data.ArrAdjustments = Adjustments.Refresh(patNum));
+			Logger.LogAction("Procedures.Refresh", () => data.ListProcs = Procedures.Refresh(patNum));
+			Logger.LogAction("OrthoProcLinks.GetManyForProcs", () =>
 				  data.ListOrthoProcLinks = OrthoProcLinks.GetManyForProcs(data.ListProcs.Select(x => x.ProcNum).ToList()));
-			Logger.LogAction("ProcMultiVisits.GetGroupsForProcsFromDb", LogPath.ChartModule, () =>
+			Logger.LogAction("ProcMultiVisits.GetGroupsForProcsFromDb", () =>
 				  data.ListProcMultiVisits = ProcMultiVisits.GetGroupsForProcsFromDb(data.ListProcs.Select(x => x.ProcNum).ToArray()));
-			Logger.LogAction("PatientNotes.Refresh", LogPath.ChartModule, () => data.PatNote = PatientNotes.Refresh(patNum, data.Pat.Guarantor));
-			Logger.LogAction("Documents.GetAllWithPat", LogPath.ChartModule, () => data.ArrDocuments = Documents.GetAllWithPat(patNum));
-			Logger.LogAction("Appointments.GetForPat", LogPath.ChartModule, () => data.ArrAppts = Appointments.GetForPat(patNum));
-			Logger.LogAction("ToothInitials.Refresh", LogPath.ChartModule, () => data.ListToothInitials = ToothInitials.Refresh(patNum));
-			Logger.LogAction("PatFields.Refresh", LogPath.ChartModule, () => data.ArrPatFields = PatFields.Refresh(patNum));
-			Logger.LogAction("ChartViews.RefreshCache", LogPath.ChartModule, () => data.TableChartViews = ChartViews.RefreshCache());//Ideally this would use signals to refresh
+			Logger.LogAction("PatientNotes.Refresh", () => data.PatNote = PatientNotes.Refresh(patNum, data.Pat.Guarantor));
+			Logger.LogAction("Documents.GetAllWithPat", () => data.ArrDocuments = Documents.GetAllWithPat(patNum));
+			Logger.LogAction("Appointments.GetForPat",() => data.ArrAppts = Appointments.GetForPat(patNum));
+			Logger.LogAction("ToothInitials.Refresh",  () => data.ListToothInitials = ToothInitials.Refresh(patNum));
+			Logger.LogAction("PatFields.Refresh",  () => data.ArrPatFields = PatFields.Refresh(patNum));
+			Logger.LogAction("ChartViews.RefreshCache",  () => data.TableChartViews = ChartViews.RefreshCache());//Ideally this would use signals to refresh
 			TreatPlanType tpTypeCur = (data.Pat.DiscountPlanNum == 0 ? TreatPlanType.Insurance : TreatPlanType.Discount);
-			Logger.LogAction("TreatPlans.AuditPlans", LogPath.ChartModule, () => TreatPlans.AuditPlans(patNum, tpTypeCur));
-			Logger.LogAction("ProcGroupItems.Refresh", LogPath.ChartModule, () => data.ListProcGroupItems = ProcGroupItems.Refresh(patNum));
-			Logger.LogAction("ProcButtonQuicks.GetAll", LogPath.ChartModule, () => data.ListProcButtonQuicks = ProcButtonQuicks.GetAll());
+			Logger.LogAction("TreatPlans.AuditPlans", () => TreatPlans.AuditPlans(patNum, tpTypeCur));
+			Logger.LogAction("ProcGroupItems.Refresh", () => data.ListProcGroupItems = ProcGroupItems.Refresh(patNum));
+			Logger.LogAction("ProcButtonQuicks.GetAll", () => data.ListProcButtonQuicks = ProcButtonQuicks.GetAll());
 			List<DisplayField> listFields = DisplayFields.GetForCategory(DisplayFieldCategory.ChartPatientInformation);
 			foreach (DisplayField field in listFields)
 			{

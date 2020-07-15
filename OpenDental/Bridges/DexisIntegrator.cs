@@ -92,7 +92,7 @@ namespace OpenDental.Bridges
 
 		private static void UserodChangedEvent_Fired(ODEventArgs e)
 		{
-			if (e.EventType != ODEventType.Userod || e.Tag.GetType() != typeof(long))
+			if (e.EventType != EventCategory.Userod || e.Tag.GetType() != typeof(long))
 			{
 				return;
 			}
@@ -119,7 +119,7 @@ namespace OpenDental.Bridges
 		/// </summary>
 		private static void PatientChangedEvent_Fired(ODEventArgs e)
 		{
-			if (e.EventType != ODEventType.Patient || e.Tag.GetType() != typeof(long))
+			if (e.EventType != EventCategory.Patient || e.Tag.GetType() != typeof(long))
 			{
 				return;
 			}

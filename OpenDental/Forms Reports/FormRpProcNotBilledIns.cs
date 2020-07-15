@@ -407,7 +407,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select an item with a patient.");
 				return;
 			}
-			ODEvent.Fire(ODEventType.FormProcNotBilled_GoTo,patNum);
+			ODEvent.Fire(EventCategory.FormProcNotBilled_GoTo,patNum);
 			SendToBack();
 		}
 

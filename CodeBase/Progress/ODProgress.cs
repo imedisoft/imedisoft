@@ -4,46 +4,58 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace CodeBase {
+namespace CodeBase
+{
 	///<summary>A wrapper class for FormProgressStatus which gives calling methods an easy way to show progress when doing long computations.
 	///Calling methods will typically call Show() or ShowAction() based on what they are trying to accomplish.</summary>
-	public class ODProgress {
+	public class ODProgress
+	{
 		///<summary>Explicit locker for _listFormProgresses.</summary>
-		private static ReaderWriterLockSlim _lockProgressCur=new ReaderWriterLockSlim();
+		private static ReaderWriterLockSlim _lockProgressCur = new ReaderWriterLockSlim();
 		///<summary>Used for keeping track of active progress windows.  Multiple progress windows can be shown at the same time.</summary>
-		private static List<FormProgressBase> _listActiveProgressForms=new List<FormProgressBase>();
+		private static List<FormProgressBase> _listActiveProgressForms = new List<FormProgressBase>();
 
 		///<summary>Gets the last progress window in the static list of currently opened progress windows.  Returns null when no active progress windows.
 		///The last progress window should be the most recent and thus the one showing to the user (on top of other progress windows).
 		///This is treated as the "active progress window" and all message boxes should be ran from its context.</summary>
-		public static FormProgressBase FormProgressActive {
-			get {
+		public static FormProgressBase FormProgressActive
+		{
+			get
+			{
 				_lockProgressCur.EnterReadLock();
-				try {
+				try
+				{
 					return _listActiveProgressForms.LastOrDefault();
 				}
-				finally {
+				finally
+				{
 					_lockProgressCur.ExitReadLock();
 				}
 			}
 		}
 
-		private static void AddActiveProgressWindow(FormProgressBase formPB) {
+		private static void AddActiveProgressWindow(FormProgressBase formPB)
+		{
 			_lockProgressCur.EnterWriteLock();
-			try {
+			try
+			{
 				_listActiveProgressForms.Add(formPB);
 			}
-			finally {
+			finally
+			{
 				_lockProgressCur.ExitWriteLock();
 			}
 		}
 
-		private static void RemoveActiveProgressWindow(FormProgressBase formPB) {
+		private static void RemoveActiveProgressWindow(FormProgressBase formPB)
+		{
 			_lockProgressCur.EnterWriteLock();
-			try {
+			try
+			{
 				_listActiveProgressForms.Remove(formPB);
 			}
-			finally {
+			finally
+			{
 				_lockProgressCur.ExitWriteLock();
 			}
 		}
@@ -61,15 +73,17 @@ namespace CodeBase {
 		///<param name="hasMinimize">Set to true if the progress window should allow minimizing.  False by default.</param>
 		///<param name="progStyle">Sets the style of the progress bar within the progress window that is going to be shown to the user.</param>
 		///<returns>An action that will close the progress window.  Invoke this action whenever long computations are finished.</returns>
-		public static Action Show(ODEventType odEventType=ODEventType.Undefined,Type eventType=null,string startingMessage="Please Wait...",
-			bool hasHistory=false,bool hasMinimize=false,ProgressBarStyle progStyle=ProgressBarStyle.Marquee)
+		public static Action Show(EventCategory odEventType = EventCategory.Undefined, Type eventType = null, string startingMessage = "Please Wait...",
+			bool hasHistory = false, bool hasMinimize = false, ProgressBarStyle progStyle = ProgressBarStyle.Marquee)
 		{
 			return ShowProgressBase(
-				() => {
-					return new FormProgressStatus(odEventType,eventType,hasHistory,hasMinimize,startingMessage,progStyle) {
-						TopMost=true,//Make this window show on top of ALL other windows.
+				() =>
+				{
+					return new FormProgressStatus(odEventType, eventType, hasHistory, hasMinimize, startingMessage, progStyle)
+					{
+						TopMost = true,//Make this window show on top of ALL other windows.
 					};
-				},"Thread_ODProgress_Show_"+DateTime.Now.Ticks);
+				}, "Thread_ODProgress_Show_" + DateTime.Now.Ticks);
 		}
 
 		///<summary>Non-blocking call. FormProgressExtended is an extremely tailored version of FormProgressStatus.
@@ -84,29 +98,35 @@ namespace CodeBase {
 		///<param name="progCanceled">Optionally pass in a delegate that will get invoked when the user clicks Cancel.</param>
 		///<param name="progPaused">Optionally pass in a delegate that will get invoked when the user clicks Pause.</param>
 		///<returns>An action that will close the progress window.  Invoke this action whenever long computations are finished.</returns>
-		public static Action ShowExtended(ODEventType odEventType,Type eventType,Form currentForm,object tag=null,
-			ProgressCanceledHandler progCanceled=null,ProgressPausedHandler progPaused=null,string cancelButtonText=null)
+		public static Action ShowExtended(EventCategory odEventType, Type eventType, Form currentForm, object tag = null,
+			ProgressCanceledHandler progCanceled = null, ProgressPausedHandler progPaused = null, string cancelButtonText = null)
 		{
-			Action actionCloseProgressWindow=ShowProgressBase(
-				() => {
-					FormProgressExtended FormPE=new FormProgressExtended(odEventType,eventType,cancelButtonText:cancelButtonText);
-					if(progCanceled!=null) {
-						FormPE.ProgressCanceled+=progCanceled;
+			Action actionCloseProgressWindow = ShowProgressBase(
+				() =>
+				{
+					FormProgressExtended FormPE = new FormProgressExtended(odEventType, eventType, cancelButtonText: cancelButtonText);
+					if (progCanceled != null)
+					{
+						FormPE.ProgressCanceled += progCanceled;
 					}
-					if(progPaused!=null) {
-						FormPE.ProgressPaused+=progPaused;
+					if (progPaused != null)
+					{
+						FormPE.ProgressPaused += progPaused;
 					}
 					//FormProgressExtended should NOT be the top most form.  Other windows might be popping up requiring attention from the user.
 					//FormPE.TopMost=true;//Make this window show on top of ALL other windows.
-					if(tag!=null) {
-						FormPE.ODEvent_Fired(new ODEventArgs(odEventType,tag));
+					if (tag != null)
+					{
+						FormPE.ODEvent_Fired(new ODEventArgs(odEventType, tag));
 					}
 					return FormPE;
-				},"Thread_ODProgress_ShowExtended_"+DateTime.Now.Ticks);
-			return () => {
+				}, "Thread_ODProgress_ShowExtended_" + DateTime.Now.Ticks);
+			return () =>
+			{
 				actionCloseProgressWindow();//Make sure the progress window is closed first.
-				//If a form was passed in, activate it so that it blinks or gets focus.
-				if(currentForm!=null && !currentForm.IsDisposed) {
+											//If a form was passed in, activate it so that it blinks or gets focus.
+				if (currentForm != null && !currentForm.IsDisposed)
+				{
 					currentForm.Activate();
 				}
 			};
@@ -125,27 +145,33 @@ namespace CodeBase {
 		///<param name="hasMinimize">Set to true if the progress window should allow minimizing.  False by default.</param>
 		///<param name="hasHistory">Set to true if the progress window should show a history of events that it has processed.
 		///This will cause the UI of the progress window to change slightly and will also make it so the user has to click a Close button.</param>
-		public static void ShowAction(Action actionComputation,string startingMessage="Please Wait...",
-			Action<Exception> actionException=null,Type eventType=null,ODEventType odEventType=ODEventType.Undefined,
-			ProgressBarStyle progStyle=ProgressBarStyle.Marquee,bool hasMinimize=true,bool hasHistory=false)
+		public static void ShowAction(Action actionComputation, string startingMessage = "Please Wait...",
+			Action<Exception> actionException = null, Type eventType = null, EventCategory odEventType = EventCategory.Undefined,
+			ProgressBarStyle progStyle = ProgressBarStyle.Marquee, bool hasMinimize = true, bool hasHistory = false)
 		{
-			if(actionComputation==null) {
+			if (actionComputation == null)
+			{
 				return;//No work to be done.  Simply return.
 			}
-			Action actionCloseProgressWindow=Show(odEventType,eventType,startingMessage,hasHistory,hasMinimize,progStyle);
+			Action actionCloseProgressWindow = Show(odEventType, eventType, startingMessage, hasHistory, hasMinimize, progStyle);
 			//Invoke the action on the main thread that was passed in.
-			try {
+			try
+			{
 				actionComputation();
 			}
-			catch(Exception e) {
-				if(actionException==null) {
+			catch (Exception e)
+			{
+				if (actionException == null)
+				{
 					throw;
 				}
-				else {
+				else
+				{
 					actionException(e);
 				}
 			}
-			finally {
+			finally
+			{
 				actionCloseProgressWindow();
 			}
 		}
@@ -156,31 +182,37 @@ namespace CodeBase {
 		///The global static FormProgressCurS will get set to the newly instantiated progress so that the entire application knows progress is showing.
 		///Finally returning a close action for the calling method to invoke whenever long computations are finished.
 		///Two critical portions of the closing method are 1 - it closes progress gracefully and 2 - FormProgressCurS gets set to null.</summary>
-		public static Action ShowProgressBase(Func<FormProgressBase> funcGetNewProgress,string threadName="Thread_ODProgress_ShowProgressBase") {
-			if(ODEnvironment.IsWindows7 || ODInitialize.IsRunningInUnitTest) {
-				return new Action(() => {
+		public static Action ShowProgressBase(Func<FormProgressBase> funcGetNewProgress, string threadName = "Thread_ODProgress_ShowProgressBase")
+		{
+			if (ODEnvironment.IsWindows7 || ODInitialize.IsRunningInUnitTest)
+			{
+				return new Action(() =>
+				{
 					//Do nothing.
 				});
 			}
-			FormProgressBase FormPB=null;
-			ManualResetEvent manualReset=new ManualResetEvent(false);
-			ODThread odThread=new ODThread(o => {
+
+			FormProgressBase FormPB = null;
+			ManualResetEvent manualReset = new ManualResetEvent(false);
+			ODThread odThread = new ODThread(o =>
+			{
 				//It is very important that this particular thread instantiates the form and not the calling method.
 				//This is what allows the progress window to show and be interacted with without joining or invoking back to the parent thread.
-				FormPB=funcGetNewProgress();
+				FormPB = funcGetNewProgress();
 				AddActiveProgressWindow(FormPB);//Let the entire application know that a progress window is showing.
-				FormPB.Shown+=(obj,eArg) => manualReset.Set();
-				FormPB.FormClosed+=(obj,eArg) => RemoveActiveProgressWindow(FormPB);
+				FormPB.Shown += (obj, eArg) => manualReset.Set();
+				FormPB.FormClosed += (obj, eArg) => RemoveActiveProgressWindow(FormPB);
 				FormPB.ShowDialog();//We cannot utilize the "owner" overload because that would cause a cross threaded exception.
 			});
 			odThread.SetApartmentState(ApartmentState.STA);//This is required for ReportComplex due to the history UI elements.
 			odThread.AddExceptionHandler(e => { });//The progress window had an exception... Not worth crashing the program over this.
-			odThread.Name=threadName;
+			odThread.Name = threadName;
 			odThread.Start();
 			//Force the calling thread to wait for the progress window to actually show to the user before continuing.
 			manualReset.WaitOne();
-			return () => {
-				FormPB.ForceClose=true;
+			return () =>
+			{
+				FormPB.ForceClose = true;
 				odThread.Join(Timeout.Infinite);
 			};
 		}

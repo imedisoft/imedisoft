@@ -64,7 +64,7 @@ namespace OpenDental
 			{
 				ODProgress.ShowAction(() => DatabaseMaintenances.RepairAndOptimize(),
 					eventType: typeof(MiscDataEvent),
-					odEventType: ODEventType.MiscData);
+					odEventType: EventCategory.MiscData);
 			}
 			catch (Exception ex)
 			{//MiscData.MakeABackup() could have thrown an exception.
@@ -112,7 +112,7 @@ namespace OpenDental
 			{
 				ODProgress.ShowAction(() => MiscData.MakeABackup(),
 					eventType: typeof(MiscDataEvent),
-					odEventType: ODEventType.MiscData);
+					odEventType: EventCategory.MiscData);
 			}
 			catch (Exception ex)
 			{//MiscData.MakeABackup() could have thrown an exception.
@@ -295,42 +295,5 @@ namespace OpenDental
 		DatabaseMaintenanceTool,
 		OptimizeTool,
 		InnoDbTool
-	}
-
-	/// <summary>
-	/// Displays any error messages in a MessageBox.
-	/// </summary>
-	public class ShowErrors : Logger.IWriteLine
-	{
-		private readonly Control parent;
-
-		public ShowErrors()
-		{
-		}
-
-		/// <summary>
-		/// Use this constructor to make sure that the Cursor is always Default when the MessageBox is shown.
-		/// </summary>
-		public ShowErrors(Control parent)
-		{
-			this.parent = parent;
-		}
-
-		/// <summary>
-		/// Shows all Errors in a message box. BeginInvokes over to the main thread if necessary.
-		/// </summary>
-		public void WriteLine(string data, LogLevel logLevel, string subDirectory = "")
-		{
-			if (logLevel != LogLevel.Error) return;
-
-			if (parent != null && parent.InvokeRequired)
-			{
-				parent.BeginInvoke(() => WriteLine(data, logLevel, subDirectory));
-			}
-            else
-            {
-				ODMessageBox.Show(data);
-			}
-		}
 	}
 }

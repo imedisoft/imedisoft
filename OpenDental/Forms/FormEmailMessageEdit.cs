@@ -480,7 +480,7 @@ namespace OpenDental{
 		}
 
 		private void EmailSaveEvent_Fired(ODEventArgs e) {
-			if(e.EventType!=ODEventType.EmailSave) {
+			if(e.EventType!=EventCategory.EmailSave) {
 				return;
 			}
 			//save email

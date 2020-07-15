@@ -33,7 +33,7 @@ namespace DataConnectionBase
 		public string ConnectionString;
 
 		public DataConnectionEventArgs(DataConnectionEventType error, bool isConnectionRestored, string connectionString)
-			: base(ODEventType.DataConnection, error.GetDescription())
+			: base(EventCategory.DataConnection, error.GetDescription())
 		{
 			IsConnectionRestored = isConnectionRestored;
 			ConnectionString = connectionString;
@@ -71,7 +71,7 @@ namespace DataConnectionBase
 		public string TableName;
 
 		public CrashedTableEventArgs(bool isTableCrashed, string tableName)
-			: base(ODEventType.CrashedTable, "Crashed table detected.\r\n"
+			: base(EventCategory.CrashedTable, "Crashed table detected.\r\n"
 					+ "Table status will be automatically monitored for 1 minute.\r\n"
 					+ "Call support for help repairing the table.\r\n\r\n"
 					+ "Click Retry to manually check the table status or Exit Program to close the program.")
@@ -114,7 +114,7 @@ namespace DataConnectionBase
 		public Func<bool> FuncRetryQuery;
 
 		public DataReaderNullEventArgs(bool isQuerySuccessful, Func<bool> funcRetryQuery)
-			: base(ODEventType.DataReaderNull, DataConnectionEventType.DataReaderNull.GetDescription())
+			: base(EventCategory.DataReaderNull, DataConnectionEventType.DataReaderNull.GetDescription())
 		{
 			IsQuerySuccessful = isQuerySuccessful;
 			FuncRetryQuery = funcRetryQuery;

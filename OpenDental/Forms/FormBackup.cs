@@ -633,7 +633,7 @@ namespace OpenDental {
 				SecurityLogs.MakeLogEntry(Permissions.Backup,0,$"SecurityLog and SecurityLogHashes on/before {dateTimeArchive.Value} deleted.");
 			},
 			eventType:typeof(MiscDataEvent),
-			odEventType:ODEventType.MiscData);
+			odEventType:EventCategory.MiscData);
 		}
 
 		private void butSaveArchive_Click(object sender,EventArgs e) {

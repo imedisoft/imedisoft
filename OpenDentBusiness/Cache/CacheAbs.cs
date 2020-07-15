@@ -31,17 +31,17 @@ namespace OpenDentBusiness {
 		private void FillCache(FillCacheSource source,DataTable table) {
 			//Get a list that can be used later to quickly set the cache.
 			List<T> listItemsAll=new List<T>();
-			Logger.LogToPath(""+typeof(T).Name,LogPath.Signals,LogPhase.Start);
-			if(source==FillCacheSource.Database) {
+			// TODO: Logger.LogToPath(""+typeof(T).Name,LogPath.Signals,LogPhase.Start);
+			if (source==FillCacheSource.Database) {
 				listItemsAll=GetCacheFromDb();
 			}
 			else if(source==FillCacheSource.DataTable) {
 				listItemsAll=TableToList(table);
 			}
 			OnNewCacheReceived(listItemsAll);
-			Logger.LogToPath(""+typeof(T).Name,LogPath.Signals,LogPhase.End,"Got "+listItemsAll.Count.ToString()+" items");
+			// TODO: Logger.LogToPath(""+typeof(T).Name,LogPath.Signals,LogPhase.End,"Got "+listItemsAll.Count.ToString()+" items");
 		}
-		
+
 		///<summary>Fills the cache using the provided DataTable. Thread safe. This can be called from ClientWeb.</summary>
 		public void FillCacheFromTable(DataTable table) {
 			FillCache(FillCacheSource.DataTable,table);

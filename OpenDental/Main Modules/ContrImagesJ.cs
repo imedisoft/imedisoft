@@ -504,7 +504,7 @@ namespace OpenDental{
 				//_bitmapRaw will always be null for PDFs
 				//Diverges slightly from the normal use of this event, in that it is fired from SelectTreeNode() rather than ModuleSelected.  Appropriate
 				//here because this is the only data in ContrImages that might affect the PatientDashboard, and there is no "LoadData" in this Module.
-				PatientDashboardDataEvent.Fire(ODEventType.ModuleSelected
+				PatientDashboardDataEvent.Fire(EventCategory.ModuleSelected
 					,new PatientDashboardDataEventArgs() {
 						Pat=_patCur,
 						ListDocuments=_arrayDocumentsShowing.ToList(),
@@ -2609,7 +2609,7 @@ namespace OpenDental{
 				}
 				else {
 					if(doc.ImgType==ImageType.Photo) {
-						PatientEvent.Fire(ODEventType.Patient,_patCur);//Possibly updated the patient picture.
+						PatientEvent.Fire(EventCategory.Patient,_patCur);//Possibly updated the patient picture.
 					}
 					nodeObjTag=new NodeObjTag(EnumNodeType.Document,doc.DocNum);
 					_documentShowing=doc.Copy();

@@ -954,7 +954,7 @@ namespace OpenDental {
 					startingMessage:"Preparing to copy fees...",
 					progStyle:ProgressBarStyle.Continuous,
 					eventType:typeof(FeeSchedEvent),
-					odEventType:ODEventType.FeeSched);
+					odEventType:EventCategory.FeeSched);
 			//After finishing, clear the Copy To section, but leave the Copy From section as is.
 			comboFeeSchedTo.SelectedIndex=0;
 			comboClinicTo.IsNothingSelected=true;
@@ -1057,12 +1057,12 @@ namespace OpenDental {
 							+"button in the Fee Tools window.";
 						SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,logText,listFees[i].CodeNum,DateTime.MinValue);
 						SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit,0,"Fee Updated",listFees[i].FeeNum,listFees[i].SecDateTEdit);
-						FeeSchedEvent.Fire(ODEventType.FeeSched,"Modifying fees, please wait...");
+						FeeSchedEvent.Fire(EventCategory.FeeSched,"Modifying fees, please wait...");
 					}
 				},
 				startingMessage:Lan.G(this,"Preparing to modify fees")+"...",
 				eventType:typeof(FeeSchedEvent),
-				odEventType:ODEventType.FeeSched);
+				odEventType:EventCategory.FeeSched);
 			MessageBox.Show("Done.");
 		}
 
@@ -1191,7 +1191,7 @@ namespace OpenDental {
 				startingMessage:Lan.G(this,"Preparing to export fees")+"...",
 				progStyle:ProgressBarStyle.Continuous,
 				eventType:typeof(FeeSchedEvent),
-				odEventType:ODEventType.FeeSched);
+				odEventType:EventCategory.FeeSched);
 
 				Cursor=Cursors.Default;
 				MessageBox.Show("Fee schedule exported.");
@@ -1258,7 +1258,7 @@ namespace OpenDental {
 				startingMessage:"Importing fees...",
 				progStyle:ProgressBarStyle.Continuous,
 				eventType:typeof(FeeSchedEvent),
-				odEventType:ODEventType.FeeSched);
+				odEventType:EventCategory.FeeSched);
 			//Progress bar won't go away.  No big deal I guess.
 			Cursor=Cursors.Default;
 			if(isImportSuccessful) { 
@@ -1280,7 +1280,7 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;//original wait cursor seems to go away for some reason.
 			Application.DoEvents();
 			string feeData="";
-			Action actionCloseFeeSchedImportCanadaProgress=ODProgress.Show(ODEventType.FeeSched,typeof(FeeSchedEvent));
+			Action actionCloseFeeSchedImportCanadaProgress=ODProgress.Show(EventCategory.FeeSched,typeof(FeeSchedEvent));
 			if(formPick.IsFileChosenProtected) {
 				actionCloseFeeSchedImportCanadaProgress?.Invoke();//Hide the progress window so it does not cover up the authorization form.
 				string memberNumberODA="";
@@ -1291,7 +1291,7 @@ namespace OpenDental {
 						Cursor=Cursors.Default;
 						return;
 					}
-					actionCloseFeeSchedImportCanadaProgress=ODProgress.Show(ODEventType.FeeSched,typeof(FeeSchedEvent));
+					actionCloseFeeSchedImportCanadaProgress=ODProgress.Show(EventCategory.FeeSched,typeof(FeeSchedEvent));
 					memberNumberODA=formAuth.ODAMemberNumber;
 					memberPasswordODA=formAuth.ODAMemberPassword;
 				}
@@ -1327,7 +1327,7 @@ namespace OpenDental {
 				//Send the message and get the result-------------------------------------------------------------------------------------
 				string result="";
 				try {
-					FeeSchedEvent.Fire(ODEventType.FeeSched,Lan.G(this,"Retrieving fee schedule")+"...");
+					FeeSchedEvent.Fire(EventCategory.FeeSched,Lan.G(this,"Retrieving fee schedule")+"...");
 					result=updateService.RequestFeeSched(strbuild.ToString());
 				}
 				catch(Exception ex) {
@@ -1368,7 +1368,7 @@ namespace OpenDental {
 				feeData=Encoding.UTF8.GetString(feeDataBytes);
 			}
 			else {
-				FeeSchedEvent.Fire(ODEventType.FeeSched,Lan.G(this,"Downloading fee schedule")+"...");
+				FeeSchedEvent.Fire(EventCategory.FeeSched,Lan.G(this,"Downloading fee schedule")+"...");
 				string tempFile=PrefC.GetRandomTempFile(".tmp");
 				WebClient myWebClient=new WebClient();
 				try {
@@ -1427,7 +1427,7 @@ namespace OpenDental {
 				+"estimate.  It might take a few minutes.  Continue?")) {
 				return;
 			}
-			ODProgressExtended progExtended=new ODProgressExtended(ODEventType.FeeSched,new FeeSchedEvent(),this,
+			ODProgressExtended progExtended=new ODProgressExtended(EventCategory.FeeSched,new FeeSchedEvent(),this,
 				tag:new ProgressBarHelper("Fee Schedule Update Progress",progressBarEventType:ProgBarEventType.Header),cancelButtonText:Lan.G(this,"Close"));
 			Cursor=Cursors.WaitCursor;
 			List<Fee> listFeesHQ=Fees.GetByClinicNum(0);//All HQ fees
@@ -1447,12 +1447,12 @@ namespace OpenDental {
 						}
 						double percentComplete=(((double)i)/listFeeClinics.Count*100);
 						if(listFeeClinics.Count>1) {
-							progExtended.Fire(ODEventType.FeeSched,new ProgressBarHelper("Overall",(int)percentComplete+"%",i,
+							progExtended.Fire(EventCategory.FeeSched,new ProgressBarHelper("Overall",(int)percentComplete+"%",i,
 								listFeeClinics.Count,tagString:"OverallStatus"));
-							progExtended.Fire(ODEventType.FeeSched,new ProgressBarHelper(Clinics.GetAbbr(listFeeClinics[i]),"0%",1,100,tagString:"Clinic"));
+							progExtended.Fire(EventCategory.FeeSched,new ProgressBarHelper(Clinics.GetAbbr(listFeeClinics[i]),"0%",1,100,tagString:"Clinic"));
 						}
 						else {
-							progExtended.Fire(ODEventType.FeeSched,new ProgressBarHelper(Clinics.GetAbbr(listFeeClinics[i]),"0%",1,100,tagString:"Clinic"));
+							progExtended.Fire(EventCategory.FeeSched,new ProgressBarHelper(Clinics.GetAbbr(listFeeClinics[i]),"0%",1,100,tagString:"Clinic"));
 							progExtended.HideButtons();//can't pause or cancel with 1 clinic. This event needs to be called after the bar is instantiated. 
 						}
 						rowsChanged+=Procedures.GlobalUpdateFees(listFeesHQ,listFeeClinics[i],Clinics.GetAbbr(listFeeClinics[i]));
@@ -1461,16 +1461,16 @@ namespace OpenDental {
 						}
 					}
 					if(listFeeClinics.Count>1) {
-						progExtended.Fire(ODEventType.FeeSched,new ProgressBarHelper("Overall","100%",100,100,tagString:"OverallStatus"));
+						progExtended.Fire(EventCategory.FeeSched,new ProgressBarHelper("Overall","100%",100,100,tagString:"OverallStatus"));
 					}
 				}
 				else {//no clinic - "Clinic" here is just a reference to the progress bar that updates Clinic progress instead of overall progress
-					progExtended.Fire(ODEventType.FeeSched,new ProgressBarHelper("Updating...","0%",1,100,tagString:"Clinic"));
+					progExtended.Fire(EventCategory.FeeSched,new ProgressBarHelper("Updating...","0%",1,100,tagString:"Clinic"));
 					progExtended.HideButtons();
 					rowsChanged=Procedures.GlobalUpdateFees(listFeesHQ,0,"Updating...");
 				}
 				progExtended.OnProgressDone();
-				progExtended.Fire(ODEventType.FeeSched,new ProgressBarHelper("Treatment planned procedure fees changed: "+rowsChanged.ToString()+"\r\nDone.",
+				progExtended.Fire(EventCategory.FeeSched,new ProgressBarHelper("Treatment planned procedure fees changed: "+rowsChanged.ToString()+"\r\nDone.",
 					progressBarEventType:ProgBarEventType.TextMsg));
 			}
 			catch(ApplicationException ex) {
@@ -1536,10 +1536,10 @@ namespace OpenDental {
 					//diagRes==DialogResult.No, run tool for all clinics and replace the previous run progress with the progress from this run
 				}
 			}
-			ODProgressExtended progress=new ODProgressExtended(ODEventType.FeeSched,new FeeSchedEvent(),this,
+			ODProgressExtended progress=new ODProgressExtended(EventCategory.FeeSched,new FeeSchedEvent(),this,
 				tag:new ProgressBarHelper(Lan.G(this,"Write-off Update Progress"),progressBarEventType:ProgBarEventType.Header),
 				cancelButtonText:Lan.G(this,"Close"));
-			progress.Fire(ODEventType.FeeSched,new ProgressBarHelper("","0%",0,100,ProgBarStyle.Blocks,"WriteoffProgress"));
+			progress.Fire(EventCategory.FeeSched,new ProgressBarHelper("","0%",0,100,ProgBarStyle.Blocks,"WriteoffProgress"));
 			Cursor=Cursors.WaitCursor;
 			try {
 				FeeScheds.GlobalUpdateWriteoffs(listWriteoffClinics,progress,doUpdatePrevClinicPref);

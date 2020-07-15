@@ -56,11 +56,13 @@ namespace OpenDental {
 		private long _patNumLast;
 		private decimal _PPBalanceTotal;
 		#endregion Fields - Private	
-	
+
 		#region Constructors
 		///<summary></summary>
-		public ContrAccount() {
-			Logger.openlog.Log("Initializing account module...",Logger.Severity.INFO);
+		public ContrAccount()
+		{
+			Logger.LogInfo("Initializing account module...");
+
 			InitializeComponent();// This call is required by the Windows.Forms Form Designer.
 		}
 		#endregion Constructors
@@ -1912,9 +1914,9 @@ namespace OpenDental {
 			else {
 				checkShowDetail.Checked=PIn.Bool(userOdPrefProcBreakdown.ValueString);
 			}
-			Logger.LogAction("RefreshModuleData",LogPath.AccountModule,() => RefreshModuleData(patNum,isSelectingFamily));
-			Logger.LogAction("RefreshModuleScreen",LogPath.AccountModule,() => RefreshModuleScreen(isSelectingFamily));
-			PatientDashboardDataEvent.Fire(ODEventType.ModuleSelected,_loadData);
+			Logger.LogAction("RefreshModuleData",() => RefreshModuleData(patNum,isSelectingFamily));
+			Logger.LogAction("RefreshModuleScreen",() => RefreshModuleScreen(isSelectingFamily));
+			PatientDashboardDataEvent.Fire(EventCategory.ModuleSelected,_loadData);
 			Plugins.HookAddCode(this,"ContrAccount.ModuleSelected_end",patNum,isSelectingFamily);
 		}
 
@@ -2305,20 +2307,20 @@ namespace OpenDental {
 				//butComm.Enabled=true;
 				tabControlShow.Enabled=true;
 			}
-			Logger.LogAction("FillPats",LogPath.AccountModule,() => FillPats(isSelectingFamily));
-			Logger.LogAction("FillMisc",LogPath.AccountModule,() => FillMisc());
-			Logger.LogAction("FillAging",LogPath.AccountModule,() => FillAging(isSelectingFamily));
+			Logger.LogAction("FillPats",() => FillPats(isSelectingFamily));
+			Logger.LogAction("FillMisc",() => FillMisc());
+			Logger.LogAction("FillAging",() => FillAging(isSelectingFamily));
 			//must be in this order.
-			Logger.LogAction("FillRepeatCharges",LogPath.AccountModule,() => FillRepeatCharges());//1
-			Logger.LogAction("FillPaymentPlans",LogPath.AccountModule,() => FillPaymentPlans());//2
-			Logger.LogAction("FillMain",LogPath.AccountModule,() => FillMain());//3
+			Logger.LogAction("FillRepeatCharges",() => FillRepeatCharges());//1
+			Logger.LogAction("FillPaymentPlans",() => FillPaymentPlans());//2
+			Logger.LogAction("FillMain",() => FillMain());//3
 			if(PrefC.GetBool(PrefName.OrthoEnabled)){
 				FillAutoOrtho(false);
 			}
 			if(OrthoCases.HasOrthoCasesEnabled()) {
 				FillOrthoCasesGrid();
 			}
-			Logger.LogAction("FillPatInfo",LogPath.AccountModule,() => FillPatInfo());
+			Logger.LogAction("FillPatInfo",() => FillPatInfo());
 			LayoutPanels();
 			FillComm();
 			FillTpUnearned();

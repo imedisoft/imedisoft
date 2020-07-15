@@ -1,9 +1,9 @@
 ﻿namespace CodeBase
 {
-    /// <summary>
-    /// Helper class to allow multiple areas of the program to subscribe to various events which they care about.
-    /// </summary>
-    public class ODEvent
+	/// <summary>
+	/// Helper class to allow multiple areas of the program to subscribe to various events which they care about.
+	/// </summary>
+	public class ODEvent
 	{
 		/// <summary>
 		/// Occurs when any developer calls Fire().
@@ -15,10 +15,7 @@
 		/// <summary>
 		/// Triggers the global Fired event to get called with the passed in arguments.
 		/// </summary>
-		public static void Fire(ODEventType odEventType, object tag)
-		{
-			Fired?.Invoke(new ODEventArgs(odEventType, tag));
-		}
+		public static void Fire(EventCategory eventCategory, object tag) => Fired?.Invoke(new ODEventArgs(eventCategory, tag));
 	}
 
 	/// <summary>
@@ -36,12 +33,12 @@
         /// Used to uniquly identify this ODEvent for consumers.
         /// And event type of Undefined will be treated as a generic ODEvent.
         /// </summary>
-        public ODEventType EventType { get; } = ODEventType.Undefined;
+        public EventCategory EventType { get; } = EventCategory.Undefined;
 
         /// <summary>
         /// Used when an ODEvent is needed but no object is needed in the consuming class.
         /// </summary>
-        public ODEventArgs(ODEventType eventType) : this(eventType, null)
+        public ODEventArgs(EventCategory eventType) : this(eventType, null)
 		{
 		}
 
@@ -55,7 +52,7 @@
 		/// <param name="tag">
 		/// Tag can be set to anything that the consumer may need. E.g. a string for FormProgressStatus to show to users.
 		/// </param>
-		public ODEventArgs(ODEventType eventType, object tag)
+		public ODEventArgs(EventCategory eventType, object tag)
 		{
 			Tag = tag;
 			EventType = eventType;
@@ -67,8 +64,10 @@
 	/// </summary>
 	public delegate void ODEventHandler(ODEventArgs e);
 
-	///<summary>Progress windows will be monitoring for these specific event types.</summary>
-	public enum ODEventType
+	/// <summary>
+	/// Progress windows will be monitoring for these specific event types.
+	/// </summary>
+	public enum EventCategory
 	{
 		///<summary>0 - The event type has not been set.  Treated as a generic ODEvent.</summary>
 		Undefined,

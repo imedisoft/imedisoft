@@ -692,10 +692,10 @@ namespace OpenDental{
 				bool canViewNotes=true;
 				_fromDateCur=PIn.Date(textDateFrom.Text);
 				_toDateCur=PIn.Date(textDateTo.Text);
-				Logger.LogToPath("Schedules.GetPeriod",LogPath.Signals,LogPhase.Start);
-				_tableScheds=Schedules.GetPeriod(_fromDateCur,_toDateCur,provNums,empNums,checkPracticeNotes.Checked,
+				// TODO: Logger.LogToPath("Schedules.GetPeriod",LogPath.Signals,LogPhase.Start);
+				_tableScheds = Schedules.GetPeriod(_fromDateCur,_toDateCur,provNums,empNums,checkPracticeNotes.Checked,
 					checkClinicNotes.Checked,comboClinic.SelectedClinicNum,checkShowClinicSchedules.Checked,canViewNotes);
-				Logger.LogToPath("Schedules.GetPeriod",LogPath.Signals,LogPhase.End);
+				// TODO: Logger.LogToPath("Schedules.GetPeriod",LogPath.Signals,LogPhase.End);
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
@@ -1100,7 +1100,7 @@ namespace OpenDental{
 				MessageBox.Show("Not allowed to paste back onto the same date as is on the clipboard.");
 				return;
 			}
-			Action actionCloseScheduleProgress=ODProgress.Show(ODEventType.Schedule,typeof(ScheduleEvent));
+			Action actionCloseScheduleProgress=ODProgress.Show(EventCategory.Schedule,typeof(ScheduleEvent));
 			List<long> listProvNums;
 			List<long> listEmployeeNums;
 			GetSelectedProvidersEmployeesAndClinic(out listProvNums,out listEmployeeNums);
@@ -1124,7 +1124,7 @@ namespace OpenDental{
 						return;
 					}
 					//user chose to continue.
-					actionCloseScheduleProgress=ODProgress.Show(ODEventType.Schedule,typeof(ScheduleEvent));
+					actionCloseScheduleProgress=ODProgress.Show(EventCategory.Schedule,typeof(ScheduleEvent));
 				}
 			}
 			//Flag every schedule that we are copying as new (because conflict detection requires schedules marked as new)
@@ -1143,7 +1143,7 @@ namespace OpenDental{
 					{
 						return;
 					}
-					actionCloseScheduleProgress=ODProgress.Show(ODEventType.Schedule,typeof(ScheduleEvent));
+					actionCloseScheduleProgress=ODProgress.Show(EventCategory.Schedule,typeof(ScheduleEvent));
 				}
 			}
 			List<Schedule> listHolidaySchedules=new List<Schedule>();
@@ -1237,8 +1237,8 @@ namespace OpenDental{
 				MessageBox.Show("Provider or Employee selection has been changed.  Please refresh first.");
 				return;
 			}
-			Action actionCloseScheduleProgress=ODProgress.Show(ODEventType.Schedule,typeof(ScheduleEvent));
-			Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
+			Action actionCloseScheduleProgress=ODProgress.Show(EventCategory.Schedule,typeof(ScheduleEvent));
+			// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 			//calculate which day or week is currently selected.
 			DateTime dateSelectedStart;
 			DateTime dateSelectedEnd;
@@ -1266,7 +1266,7 @@ namespace OpenDental{
 			List<long> listProvNums;
 			List<long> listEmployeeNums;
 			GetSelectedProvidersEmployeesAndClinic(out listProvNums,out listEmployeeNums);
-			Logger.LogToPath("RefreshPeriod",LogPath.Signals,LogPhase.Start);
+			// TODO: Logger.LogToPath("RefreshPeriod",LogPath.Signals,LogPhase.Start);
 			List<Schedule> listSchedulesToCopy=Schedules.RefreshPeriod(_dateCopyStart,_dateCopyEnd,listProvNums,listEmployeeNums,checkPracticeNotes.Checked,
 				checkClinicNotes.Checked,comboClinic.SelectedClinicNum);
 			listSchedulesToCopy.RemoveAll(x => x.SchedType==ScheduleType.Practice && x.Status==SchedStatus.Holiday);//Remove holiday schedules from the copy
@@ -1286,12 +1286,12 @@ namespace OpenDental{
 						return;
 					}
 					//user chose to continue.
-					actionCloseScheduleProgress=ODProgress.Show(ODEventType.Schedule,typeof(ScheduleEvent));
+					actionCloseScheduleProgress=ODProgress.Show(EventCategory.Schedule,typeof(ScheduleEvent));
 				}
 			}
 			//Flag every schedule that we are copying as new (because conflict detection requires schedules marked as new)
 			listSchedulesToCopy.ForEach(x => x.IsNew=true);
-			Logger.LogToPath("RefreshPeriod",LogPath.Signals,LogPhase.End);
+			// TODO: Logger.LogToPath("RefreshPeriod",LogPath.Signals,LogPhase.End);
 			Schedule sched;
 			int weekDelta=0;
 			TimeSpan span;
@@ -1336,10 +1336,10 @@ namespace OpenDental{
 					{
 						return;
 					}
-					actionCloseScheduleProgress=ODProgress.Show(ODEventType.Schedule,typeof(ScheduleEvent));
+					actionCloseScheduleProgress=ODProgress.Show(EventCategory.Schedule,typeof(ScheduleEvent));
 				}
 			}
-			Logger.LogToPath("ScheduleUpsert",LogPath.Signals,LogPhase.Start,"repeatCount: "+repeatCount.ToString());
+			// TODO: Logger.LogToPath("ScheduleUpsert",LogPath.Signals,LogPhase.Start,"repeatCount: "+repeatCount.ToString());
 			List<Schedule> listSchedulesToInsert=new List<Schedule>();
 			List<long> listSchedulesToDelete=new List<long>();
 			dayDelta=0;//this is needed when repeat pasting days in order to calculate skipping weekends.
@@ -1350,18 +1350,19 @@ namespace OpenDental{
 				if(checkReplace.Checked) {
 					List<Schedule> listSchedsToDelete=new List<Schedule>();
 					if(isWeek){
-						Logger.LogToPath("isWeek.Schedules.Clear",LogPath.Signals,LogPhase.Start);
-						listSchedsToDelete=Schedules.GetSchedulesToDelete(dateSelectedStart.AddDays(r*7),dateSelectedEnd.AddDays(r*7),listProvNums,
+						// TODO: Logger.LogToPath("isWeek.Schedules.Clear",LogPath.Signals,LogPhase.Start);
+						listSchedsToDelete = Schedules.GetSchedulesToDelete(dateSelectedStart.AddDays(r*7),dateSelectedEnd.AddDays(r*7),listProvNums,
 							listEmployeeNums,checkPracticeNotes.Checked,checkClinicNotes.Checked,comboClinic.SelectedClinicNum);
-						Logger.LogToPath("isWeek.Schedules.Clear",LogPath.Signals,LogPhase.End);
+						// TODO: Logger.LogToPath("isWeek.Schedules.Clear",LogPath.Signals,LogPhase.End);
 					}
-					else{
-						Logger.LogToPath("!isWeek.Schedules.Clear",LogPath.Signals,LogPhase.Start);
-					  listSchedsToDelete=Schedules.GetSchedulesToDelete(dateSelectedStart.AddDays(dayDelta),dateSelectedEnd.AddDays(dayDelta),
+					else
+					{
+						// TODO: Logger.LogToPath("!isWeek.Schedules.Clear",LogPath.Signals,LogPhase.Start);
+						listSchedsToDelete = Schedules.GetSchedulesToDelete(dateSelectedStart.AddDays(dayDelta),dateSelectedEnd.AddDays(dayDelta),
 							listProvNums,listEmployeeNums,checkPracticeNotes.Checked,checkClinicNotes.Checked,comboClinic.SelectedClinicNum);
-						Logger.LogToPath("!isWeek.Schedules.Clear",LogPath.Signals,LogPhase.End);
+						// TODO: Logger.LogToPath("!isWeek.Schedules.Clear",LogPath.Signals,LogPhase.End);
 					}
-					for(int i=listSchedsToDelete.Count-1;i>=0;i--) {//When pasting, do not paste over a holiday schedule.
+					for (int i=listSchedsToDelete.Count-1;i>=0;i--) {//When pasting, do not paste over a holiday schedule.
 						if(listSchedsToDelete[i].SchedType==ScheduleType.Practice && listSchedsToDelete[i].Status==SchedStatus.Holiday) {
 							listHolidaySchedules.Add(listSchedsToDelete[i]);
 							listSchedsToDelete.Remove(listSchedsToDelete[i]);//This is a holiday schedule, do not delete it when clearing.
@@ -1370,8 +1371,8 @@ namespace OpenDental{
 					}
 					listSchedulesToDelete.AddRange(listSchedsToDelete.Select(x => x.ScheduleNum).ToList());
 				}
-				Logger.LogToPath("SchedList.Insert",LogPath.Signals,LogPhase.Start,"SchedList.Count: "+listSchedulesToCopy.Count.ToString());
-				for(int i=0;i<listSchedulesToCopy.Count;i++) {//For example, if 3 weeks for one provider, then about 30 loops.
+				// TODO: Logger.LogToPath("SchedList.Insert",LogPath.Signals,LogPhase.Start,"SchedList.Count: "+listSchedulesToCopy.Count.ToString());
+				for (int i=0;i<listSchedulesToCopy.Count;i++) {//For example, if 3 weeks for one provider, then about 30 loops.
 					sched=listSchedulesToCopy[i].Copy();
 					if(isWeek) {
 						sched.SchedDate=sched.SchedDate.AddDays((weekDelta+r)*7).AddHours(1).Date;
@@ -1384,7 +1385,7 @@ namespace OpenDental{
 					}
 					listSchedulesToInsert.Add(sched);
 				}
-				Logger.LogToPath("SchedList.Insert",LogPath.Signals,LogPhase.End);		
+				// TODO: Logger.LogToPath("SchedList.Insert",LogPath.Signals,LogPhase.End);		
 				if(!checkWeekend.Checked && dateSelectedStart.AddDays(dayDelta).DayOfWeek==DayOfWeek.Friday){
 					dayDelta+=3;
 				}
@@ -1398,8 +1399,8 @@ namespace OpenDental{
 			}
 			Schedules.DeleteMany(listSchedulesToDelete);
 			Schedules.Insert(false,true,listSchedulesToInsert.ToArray());
-			Logger.LogToPath("ScheduleUpsert",LogPath.Signals,LogPhase.End);
-			DateTime rememberDateStart=_dateCopyStart;
+			// TODO: Logger.LogToPath("ScheduleUpsert",LogPath.Signals,LogPhase.End);
+			DateTime rememberDateStart =_dateCopyStart;
 			DateTime rememberDateEnd=_dateCopyEnd;
 			_clickedCell=gridMain.SelectedCell;
 			FillGrid();
@@ -1413,7 +1414,7 @@ namespace OpenDental{
 			}
 			changed=true;
 			actionCloseScheduleProgress?.Invoke();
-			Logger.LogToPath("",LogPath.Signals,LogPhase.End);
+			// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.End);
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {

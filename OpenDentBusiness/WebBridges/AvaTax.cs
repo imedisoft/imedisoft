@@ -115,7 +115,7 @@ namespace OpenDentBusiness {
 			}
 		}
 
-		private static LogWriter _logger=new LogWriter(LogDetailLevel,"AvaTax");
+		//private static LogWriter _logger=new LogWriter(LogDetailLevel,"AvaTax");
 
 		#endregion Properties
 
@@ -190,7 +190,7 @@ namespace OpenDentBusiness {
 			}
 			if(!Patients.HasValidUSZipCode(patient)) {
 				if(isSilent) {
-					_logger.WriteLine($"Invalid ZipCode for PatNum {proc.PatNum} while running Repeat Charge Tool on {DateTime.Today}",LogLevel.Error);
+					Logger.LogError($"Invalid ZipCode for PatNum {proc.PatNum} while running Repeat Charge Tool on {DateTime.Today}");
 				}
 				else {
 					//Remove the message box for now to avoid it from popping up on the server, stopping anyone using middletier to continue
@@ -224,8 +224,8 @@ namespace OpenDentBusiness {
 			foreach(string entry in arrayOverrides) {
 				string[] parts=entry.Split('-');
 				if(parts.Count()!=3) {
-					_logger.WriteLine("Tax Code Override entry is incorrect: "+entry+".  "
-						+"Fix this entry in AvaTax setup to resume processing overrides.",LogLevel.Error);
+					Logger.LogError("Tax Code Override entry is incorrect: "+entry+".  "
+						+"Fix this entry in AvaTax setup to resume processing overrides.");
 					hasFormatError=true;
 					continue;
 				}
@@ -284,7 +284,7 @@ namespace OpenDentBusiness {
 				return result.totalTax.Value;
 			}
 			catch {
-				_logger.WriteLine($"Error getting estimate from Avatax for PatNum: {patNum}",LogLevel.Error);
+				Logger.LogError($"Error getting estimate from Avatax for PatNum: {patNum}");
 				if(hasExceptions) {
 					throw;//Loses call stack, but everywhere that catches this only cares about the message.
 				}
@@ -312,11 +312,11 @@ namespace OpenDentBusiness {
 				return true;
 			}
 			catch(AvaTaxError at) {
-				_logger.WriteLine("Encountered an Avatax error: "+JsonConvert.SerializeObject(at.error.error),LogLevel.Error);
+				Logger.LogError("Encountered an Avatax error: "+JsonConvert.SerializeObject(at.error.error));
 				message=at.error.error.message;
 			}
 			catch(Exception ex) {
-				_logger.WriteLine("Unable to send or receive transaction: "+JsonConvert.SerializeObject(ex),LogLevel.Error);
+				Logger.LogError("Unable to send or receive transaction: "+JsonConvert.SerializeObject(ex));
 				message=ex.Message;
 			}
 			adj.AdjNote=AddNote(adj.AdjNote,"An error occurred processing the transaction: "+message+" See local logs for more details.");

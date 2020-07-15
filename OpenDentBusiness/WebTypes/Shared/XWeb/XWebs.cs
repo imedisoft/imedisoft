@@ -169,7 +169,6 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 			xResponse.ClinicNum=clinicNum;
 			xResponse.DateTUpdate=DateTime.Now;
 			xResponse.TransactionType=edgeExpressTransactionType.ToString();
-			OnWakeupMonitor(xResponse,new EventArgs());
 			return xResponse;
 		}
 
@@ -274,34 +273,9 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 		private static void FinishEdgeExpressUrlRequest(XWebResponse response) {
 			response.HpfExpiration=DateTime.Now.Add(_formTimeout);
 			XWebResponses.Insert(response);
-			OnWakeupMonitor(response,new EventArgs());
 		}
 
 		#endregion EdgeExpress
-
-		#region Events
-		public static EventHandler<Logger.LoggerEventArgs> InputEvent;
-		public static EventHandler<Logger.LoggerEventArgs> OutputEvent;
-		public static EventHandler WakeupMonitor;
-		///<summary>XWeb Gateway input event. Always sent as Verbose.</summary>
-		protected static void OnInputEvent(object sender,string s) {
-			if(InputEvent!=null) {
-				InputEvent(sender,new Logger.LoggerEventArgs(s,LogLevel.Verbose));
-			}
-		}
-		///<summary>XWeb Gateway output event. Always sent as Verbose.</summary>
-		protected static void OnOutputEvent(object sender,string s) {
-			if(OutputEvent!=null) {
-				OutputEvent(sender,new Logger.LoggerEventArgs(s,LogLevel.Verbose));
-			}
-		}
-		///<summary>New OTK is available. Send wakeup event to EConnector so it will start processing immediately.</summary>
-		protected static void OnWakeupMonitor(object sender,EventArgs e) {
-			if(WakeupMonitor!=null) {
-				WakeupMonitor(sender,new EventArgs());
-			}
-		}
-		#endregion
 
 		#region Helper Classes
 		///<summary>Extend this class to interface the XWeb API with a specific web call.</summary>
@@ -437,7 +411,6 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 					XWebResponses.Insert(response);
 				}
 				if(WakeupMonitorThread) {
-					OnWakeupMonitor(response,new EventArgs());
 				}
 				return response;
 			}
@@ -466,7 +439,6 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 				if(inputBytes.Length>=2048) {
 					throw new ODException("X-Web gateway request is too long.",ODException.ErrorCodes.MaxRequestDataExceeded);
 				}
-				OnInputEvent(input,PrettyPrintXml(input));
 				//Create HTTPS connection to X-Web gateway and send GET request.
 				using(WebClient webClient = new WebClient()) {
 					webClient.Headers.Add(HttpRequestHeader.ContentType,"application/xml");
@@ -481,7 +453,6 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 					else {
 						ret=webClient.Encoding.GetString(response);
 					}
-					OnOutputEvent(input,PrettyPrintXml(ret));
 					return ret;
 				}
 			}

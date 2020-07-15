@@ -128,7 +128,7 @@ namespace OpenDental{
 
 		///<summary></summary>
 		public ContrTreat(){
-			Logger.openlog.Log("Initializing treatment module...",Logger.Severity.INFO);
+			Logger.LogInfo("Initializing treatment module...");
 			InitializeComponent();// This call is required by the Windows.Forms Form Designer.
 		}
 
@@ -687,7 +687,7 @@ namespace OpenDental{
 			}
 			RefreshModuleData(patNum);
 			RefreshModuleScreen(false);
-			PatientDashboardDataEvent.Fire(ODEventType.ModuleSelected,_tpData);
+			PatientDashboardDataEvent.Fire(EventCategory.ModuleSelected,_tpData);
 			Plugins.HookAddCode(this,"ContrTreat.ModuleSelected_end",patNum);
 		}
 

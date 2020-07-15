@@ -1315,7 +1315,7 @@ namespace OpenDental {
 					results=Lan.G(this,"There was an error cleaning up email bloat:")+"\r\n"+ex.Message;
 				},
 				eventType:typeof(DatabaseMaintEvent),
-				odEventType:ODEventType.DatabaseMaint);
+				odEventType:EventCategory.DatabaseMaint);
 			MessageBox.Show(results);
 		}
 
@@ -1334,7 +1334,7 @@ namespace OpenDental {
 					results=Lan.G(this,"There was an error cleaning up email attachments:")+"\r\n"+ex.Message;
 				},
 				eventType: typeof(DatabaseMaintEvent),
-				odEventType: ODEventType.DatabaseMaint);
+				odEventType: EventCategory.DatabaseMaint);
 			MsgBoxCopyPaste msgBoxCopyPaste=new MsgBoxCopyPaste(results);
 			msgBoxCopyPaste.Show();
 		}
@@ -1439,7 +1439,7 @@ namespace OpenDental {
 			ODTuple<string,bool> tableCheckResult=null;
 			ODProgress.ShowAction(() => tableCheckResult=DatabaseMaintenances.MySQLTables(verbose,modeCur),
 				eventType:typeof(DatabaseMaintEvent),
-				odEventType:ODEventType.DatabaseMaint);
+				odEventType:EventCategory.DatabaseMaint);
 			logText.Append(tableCheckResult.Item1);
 			//No database maintenance methods should be run unless this passes.
 			if(!tableCheckResult.Item2) {
@@ -1718,7 +1718,7 @@ namespace OpenDental {
 			if(_isCacheInvalid) {
 				//Invalidate all cached tables.  DBM could have touched anything so blast them all.
 				//Failure to invalidate cache can cause UEs in the main program.
-				Action actionCloseProgress=ODProgress.Show(odEventType:ODEventType.Cache);
+				Action actionCloseProgress=ODProgress.Show(odEventType:EventCategory.Cache);
 				DataValid.SetInvalid(Cache.GetAllCachedInvalidTypes().ToArray());
 				actionCloseProgress();
 			}

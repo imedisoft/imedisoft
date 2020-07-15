@@ -349,7 +349,7 @@ namespace OpenDental {
 		}
 
 		private void PatientChangedEvent_Fired(ODEventArgs e) {
-			if(e.EventType!=ODEventType.Patient || e.Tag.GetType()!=typeof(long)) {
+			if(e.EventType!=EventCategory.Patient || e.Tag.GetType()!=typeof(long)) {
 				return;
 			}
 			//The tag for this event is the newly selected PatNum
@@ -362,7 +362,7 @@ namespace OpenDental {
 		}
 
 		private void CommItemSaveEvent_Fired(CodeBase.ODEventArgs e) {
-			if(e.EventType!=ODEventType.CommItemSave) {
+			if(e.EventType!=EventCategory.CommItemSave) {
 				return;
 			}
 			if(e.Tag!=null && e.Tag is string && e.Tag.ToString()=="ShutdownAllWorkstations") {
