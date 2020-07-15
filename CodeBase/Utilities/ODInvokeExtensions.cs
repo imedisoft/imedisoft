@@ -8,10 +8,14 @@ namespace CodeBase
 		/// <summary>
 		/// Invoke an action on a control.
 		/// </summary>
-		public static void Invoke(this Control control, Action action)
-		{
-			control.Invoke((Delegate)action);
-		}
+		public static void Invoke(this Control control, Action action) 
+			=> control.Invoke(action);
+
+		/// <summary>
+		/// BeginInvoke an action on a control.
+		/// </summary>
+		public static void BeginInvoke(this Control control, Action action)
+			=> control.BeginInvoke(action);
 
 		/// <summary>
 		/// Invoke an action on a control if InvokeRequired is true.
@@ -39,32 +43,23 @@ namespace CodeBase
 			}
 
 			bool invokeSuccessful = false;
+
 			try
 			{
-				//There is a chance this can throw if the invoke is reached and the form is disposed while the invoke is waiting for its turn.
 				control.Invoke(() =>
 				{
 					invokeSuccessful = true;
+
 					action();
 				});
 			}
 			catch 
 			{
-				if (!invokeSuccessful)
-				{
-					//Only swallow if the exception threw while trying to invoke.
-				}
-				else
+				if (invokeSuccessful)
 				{
 					throw;
 				}
 			}
 		}
-
-		/// <summary>
-		/// BeginInvoke an action on a control.
-		/// </summary>
-		public static void BeginInvoke(this Control control, Action action) 
-			=> control.BeginInvoke(action);
 	}
 }

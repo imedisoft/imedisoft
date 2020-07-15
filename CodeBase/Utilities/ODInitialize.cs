@@ -34,6 +34,7 @@ namespace CodeBase
 			// The default SecurityProtocol is "Ssl3|Tls".  We must add Tls12 in order to support Tls1.2 web reference handshakes, 
 			// without breaking any web references using Ssl3 or Tls. This is necessary for XWeb payments.
 			ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+
 			HasInitialized = true;
 		}
 	}

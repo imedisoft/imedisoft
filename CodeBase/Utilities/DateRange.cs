@@ -14,10 +14,6 @@ namespace CodeBase
 		/// </summary>
 		public DateTime End;
 
-		public DateRange()
-		{
-		}
-
 		public DateRange(DateTime startDateTime, DateTime dateRangeEnd)
 		{
 			Start = startDateTime;

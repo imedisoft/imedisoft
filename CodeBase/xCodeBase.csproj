@@ -255,10 +255,8 @@
     <Compile Include="Utilities\ODInitialize.cs" />
     <Compile Include="Utilities\ODInvokeExtensions.cs" />
     <Compile Include="Utilities\DateSpan.cs" />
-    <Compile Include="Utilities\LimitedSizeQueue.cs" />
     <Compile Include="Utilities\ODBoxItem.cs" />
     <Compile Include="Utilities\ODMethodsT.cs" />
-    <Compile Include="Utilities\ODNetworkConnection.cs" />
     <Compile Include="Utilities\ODprintout.cs" />
     <Compile Include="Utilities\ODTuple.cs" />
     <Compile Include="Utilities\ServicesHelper.cs" />

@@ -7,12 +7,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace CodeBase
 {
-	public static class MiscUtils
+    public static class MiscUtils
 	{
 		[DllImport("user32.dll")]
 		public static extern int SendMessage(IntPtr hWnd, int wMsg, int wParam, int lParam);
@@ -50,11 +49,14 @@ namespace CodeBase
 			return result;
 		}
 
-		///<summary>Returns a date that is on or after lowerBound and before upperBound</summary>
-		public static DateTime GetRandomDate(DateTime lowerBound, DateTime upperBound)
+		/// <summary>
+		/// Returns a date that is on or after lowerBound and before upperBound
+		/// </summary>
+		public static DateTime GetRandomDate(DateTime minDate, DateTime maxDate)
 		{
-			int daysInRange = (int)(upperBound - lowerBound).TotalDays;
-			return lowerBound.AddDays(ODRandom.Next(daysInRange));
+			int daysInRange = (int)(maxDate - minDate).TotalDays;
+
+			return minDate.AddDays(ODRandom.Next(daysInRange));
 		}
 
 		///<summary>Converts string into a list of strings where each string in the list is smaller than or equal to the
@@ -247,16 +249,14 @@ namespace CodeBase
 		/// Translations should be done in the calling class and should include the number in the translation.
 		/// This is because different languages have different ordinal rules for each number.
 		/// </summary>
-		public static string GetOrdinalIndicator(string num)
+		public static string GetOrdinalIndicator(string str)
 		{
-			try
+			if (int.TryParse(str, out var value))
 			{
-				return GetOrdinalIndicator(Convert.ToInt32(num));
+				return GetOrdinalIndicator(value);
 			}
-			catch
-			{
-				return "";
-			}
+
+			return "";
 		}
 
 		/// <summary>
@@ -264,14 +264,11 @@ namespace CodeBase
 		/// Translations should be done in the calling class and should include the number in the translation.
 		/// This is because different languages have different ordinal rules for each number.
 		/// </summary>
-		public static string GetOrdinalIndicator(int num)
+		public static string GetOrdinalIndicator(int value)
 		{
-			if (num <= 0)
-			{
-				return "";
-			}
+			value = Math.Abs(value);
 
-			switch (num % 100)
+			switch (value % 100)
 			{
 				case 11:
 				case 12:
@@ -279,17 +276,14 @@ namespace CodeBase
 					return "th";
 			}
 
-			switch (num % 10)
+			switch (value % 10)
 			{
-				case 1:
-					return "st";
-				case 2:
-					return "nd";
-				case 3:
-					return "rd";
-				default:
-					return "th";
+				case 1: return "st";
+				case 2: return "nd";
+				case 3: return "rd";
 			}
+
+			return "th";
 		}
 
 		/// <summary>
@@ -301,6 +295,7 @@ namespace CodeBase
 			{
 				throw new ArgumentException("Date must be at least 7 days greater than MinDate: " + date);
 			}
+
 			for (int i = 0; i < 7; i++)
 			{
 				DateTime newDate = date.AddDays(-i);
@@ -309,6 +304,7 @@ namespace CodeBase
 					return newDate;
 				}
 			}
+
 			throw new Exception("Unable to find day of the week: " + dayOfWeek.ToString());
 		}
 
@@ -412,45 +408,33 @@ namespace CodeBase
 			try
 			{
 				int browserVersion;
-				//Get the installed IE version.
-				using (WebBrowser wb = new WebBrowser())
+				using (var webBrowser = new WebBrowser())
 				{
-					browserVersion = wb.Version.Major;
+					browserVersion = webBrowser.Version.Major;
 				}
+
 				int regVal;
 				//Set the appropriate IE version
-				if (browserVersion >= 11)
+				if (browserVersion >= 11) regVal = 11001;
+				else if (browserVersion == 10) regVal = 10001;
+				else if (browserVersion == 9) regVal = 9999;
+				else if (browserVersion == 8) regVal = 8888;
+				else if (browserVersion == 7) regVal = 7000;
+				else // Unknown version. This will happen when version 12 and beyond are released.
 				{
-					regVal = 11001;
+					regVal = browserVersion * 1000 + 1; // Guess the regVal code needed based on the historic pattern.
 				}
-				else if (browserVersion == 10)
-				{
-					regVal = 10001;
-				}
-				else if (browserVersion == 9)
-				{
-					regVal = 9999;
-				}
-				else if (browserVersion == 8)
-				{
-					regVal = 8888;
-				}
-				else if (browserVersion == 7)
-				{
-					regVal = 7000;
-				}
-				else
-				{//Unknown version.  This will happen when version 12 and beyond are released.
-					regVal = browserVersion * 1000 + 1;//Guess the regVal code needed based on the historic pattern.
-				}
-				//Set the actual key.  This key can be set without admin rights, because it is within the current user's registry store.
-				string applicationName = Process.GetCurrentProcess().ProcessName + ".exe";//This is OpenDental.vhost.exe when debugging, different for distributors.
+
+				// Set the actual key. 
+				// This key can be set without admin rights, because it is within the current user's registry store.
+				string applicationName = Process.GetCurrentProcess().ProcessName + ".exe"; // This is OpenDental.vhost.exe when debugging, different for distributors.
 				string keyPath = @"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION";
 				Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(keyPath, true);
 				if (key == null)
 				{
 					key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(keyPath);
 				}
+
 				object keyValueCur = key.GetValue(applicationName);
 				if (keyValueCur == null || keyValueCur.ToString() != regVal.ToString())
 				{
@@ -462,58 +446,8 @@ namespace CodeBase
 			catch
 			{
 			}
+
 			return ret;
-		}
-
-		/// <summary>
-		/// Returns the file name with the extension of the currently executing program.
-		/// </summary>
-		public static string GetCurrentExeFileName() => Path.GetFileName(Application.ExecutablePath);
-
-		/// <summary>
-		/// Returns a string representation of a version in the format 'x.x.x.x'.
-		/// Most likely the string passed in should be in the correct format.
-		/// Sometimes the passed string will have letters after the build number.
-		/// This will strip letters.
-		/// </summary>
-		public static string GetVersionFromString(string strVersion)
-		{
-			string[] arrayVersion = strVersion.Split('.');
-			string majorNum = "0";
-			string minorNum = "0";
-			string buildNum = "0";
-			string revisionNum = "0";
-			if (arrayVersion.Count() > 0)
-			{
-				majorNum = CleanVersionNumber(arrayVersion[0]);
-			}
-			if (arrayVersion.Count() > 1)
-			{
-				minorNum = CleanVersionNumber(arrayVersion[1]);
-			}
-			if (arrayVersion.Count() > 2)
-			{
-				buildNum = CleanVersionNumber(arrayVersion[2]);
-			}
-			if (arrayVersion.Count() > 3)
-			{
-				revisionNum = CleanVersionNumber(arrayVersion[3]);
-			}
-			return int.Parse(majorNum) + "." + int.Parse(minorNum) + "." + int.Parse(buildNum) + "." + int.Parse(revisionNum);
-		}
-
-		/// <summary>
-		/// This helper method does the stripping of any alpha characters.
-		/// </summary>
-		private static string CleanVersionNumber(string strToParse)
-		{
-			int cleanNum = 0;
-			List<string> listNums = Regex.Split(strToParse, @"\D+").Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-			if (listNums.Count() > 0)
-			{
-				int.TryParse(listNums[0], out cleanNum);
-			}
-			return cleanNum.ToString();//return the parsed number as a string
 		}
 	}
 
@@ -528,14 +462,6 @@ namespace CodeBase
 	{
 		private readonly Action _actionParent;
 		private readonly List<ActionNode> _listChildActionNodes;
-
-		/// <summary>
-		/// Creates an action node with an empty action and no children. 
-		/// Good for use as a root.
-		/// </summary>
-		public ActionNode() : this(() => { })
-		{
-		}
 
 		/// <summary>
 		/// Creates an action node with no children and the passed in action.
