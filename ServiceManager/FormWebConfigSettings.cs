@@ -39,14 +39,14 @@ namespace ServiceManager
 				textUser.Text = nav.SelectSingleNode("User").Value;
 				textPassword.Text = nav.SelectSingleNode("Password").Value;
 				XPathNavigator encryptedPwdNode = nav.SelectSingleNode("MySQLPassHash");
-				string decryptedPwd;
-				if (textPassword.Text == ""
-					&& encryptedPwdNode != null
-					&& encryptedPwdNode.Value != ""
-					&& CDT.Class1.Decrypt(encryptedPwdNode.Value, out decryptedPwd))
-				{
-					textPassword.Text = decryptedPwd;
-				}
+				//string decryptedPwd;
+				//if (textPassword.Text == ""
+				//	&& encryptedPwdNode != null
+				//	&& encryptedPwdNode.Value != ""
+				//	&& CDT.Class1.Decrypt(encryptedPwdNode.Value, out decryptedPwd))
+				//{
+				//	textPassword.Text = decryptedPwd;
+				//}
 				textPassword.PasswordChar = textPassword.Text == "" ? default(char) : '*';//mask password
 				textUserLow.Text = "";
 				textPasswordLow.Text = "";
@@ -131,8 +131,8 @@ namespace ServiceManager
 			database.InnerText = textDatabase.Text;
 			XmlNode user = document.CreateNode(XmlNodeType.Element, "User", "");
 			user.InnerText = textUser.Text;
-			string encryptedPwd;
-			CDT.Class1.Encrypt(textPassword.Text, out encryptedPwd);
+			string encryptedPwd = "";
+			// TODO: CDT.Class1.Encrypt(textPassword.Text, out encryptedPwd);
 			XmlNode password = document.CreateNode(XmlNodeType.Element, "Password", "");
 			password.InnerText = string.IsNullOrEmpty(encryptedPwd) ? textPassword.Text : "";//only write the mysql password in plain text if encryption fails
 			XmlNode mysqlPassHash = document.CreateNode(XmlNodeType.Element, "MySQLPassHash", "");

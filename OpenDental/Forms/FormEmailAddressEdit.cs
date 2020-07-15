@@ -665,7 +665,7 @@ namespace OpenDental{
 
 		private void butAuthGoogle_Click(object sender,EventArgs e) {
 			try {
-				string url=Google.GetGoogleAuthorizationUrl(textUsername.Text);
+                string url = OpenDentBusiness.Google.GetGoogleAuthorizationUrl(textUsername.Text);
 				Process.Start(url);
 				InputBox inputbox=new InputBox("Please enter the authorization code from your browser");
 				inputbox.setTitle("Google Account Authorization");
@@ -677,7 +677,7 @@ namespace OpenDental{
 					throw new ODException(Lan.G(this,"There was no authorization code entered."));
 				}
 				string authCode=inputbox.textResult.Text;
-				GoogleToken tokens=Google.MakeAccessTokenRequest(authCode);
+				GoogleToken tokens=OpenDentBusiness.Google.MakeAccessTokenRequest(authCode);
 				if(tokens.ErrorMessage!="") {
 					throw new Exception(tokens.ErrorMessage);
 				}

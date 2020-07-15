@@ -1,4 +1,3 @@
-using CodeBase;
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -272,22 +271,17 @@ namespace DataConnectionBase
 		/// </summary>
 		public static T Enum<T>(int value, T defaultValue = default) where T : struct, IConvertible
 		{
-			if (!typeof(T).IsEnum)
-			{
-				throw new Exception("T must be an enumeration.");
-			}
+			if (!typeof(T).IsEnum) throw new Exception("T must be an enumeration.");
 
-			T result = defaultValue;
-
-			ODException.SwallowAnyException(() =>
-			{
+            try
+            {
 				if (typeof(T).IsDefined(typeof(FlagsAttribute), true))
 				{
 					for (int i = 1; i <= value; i *= 2)
 					{
 						if ((i & value) == i && !System.Enum.IsDefined(typeof(T), i))
 						{
-							return;
+							return defaultValue;
 						}
 
 						if (i - 1 == int.MaxValue)
@@ -300,14 +294,15 @@ namespace DataConnectionBase
 				{
 					if (!System.Enum.IsDefined(typeof(T), value))
 					{
-						return;
+						return defaultValue;
 					}
 				}
 
-				result = (T)System.Enum.ToObject(typeof(T), value);
-			});
+				return (T)System.Enum.ToObject(typeof(T), value);
+			}
+            catch { }
 
-			return result;
+			return defaultValue;
 		}
 
 		/// <summary>

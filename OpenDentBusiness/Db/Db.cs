@@ -316,7 +316,7 @@ namespace OpenDentBusiness
 			return DataCore.GetTable(command);
 		}
 
-		public static T SelectOne<T>(string command, DatabaseRecordBuilder<T> recordBuilder)
+		public static T SelectOne<T>(string command, DataRecordBuilder<T> recordBuilder)
 		{
 			LastCommand = command;
 
@@ -328,7 +328,7 @@ namespace OpenDentBusiness
 			}
 		}
 
-		public static IEnumerable<T> SelectMany<T>(string command, DatabaseRecordBuilder<T> recordBuilder)
+		public static IEnumerable<T> SelectMany<T>(string command, DataRecordBuilder<T> recordBuilder)
 		{
 			LastCommand = command;
 

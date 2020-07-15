@@ -3,7 +3,7 @@
     /// <summary>
     /// The base class of all database record entities.
     /// </summary>
-    public abstract class DatabaseRecord : DatabaseRecordBase
+    public abstract class DataRecord : DataRecordBase
     {
         /// <summary>
         /// Gets or sets the ID of the database record.

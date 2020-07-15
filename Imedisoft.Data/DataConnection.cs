@@ -169,7 +169,7 @@ namespace DataConnectionBase
 			command = connection.CreateCommand();
 		}
 
-		public T SelectOne<T>(string command, DatabaseRecordBuilder<T> recordBuilder)
+		public T SelectOne<T>(string command, DataRecordBuilder<T> recordBuilder)
 		{
 			if (recordBuilder == null) return default;
 
@@ -186,7 +186,7 @@ namespace DataConnectionBase
 			return default;
 		}
 
-		public IEnumerable<T> SelectMany<T>(string command, DatabaseRecordBuilder<T> recordBuilder)
+		public IEnumerable<T> SelectMany<T>(string command, DataRecordBuilder<T> recordBuilder)
 		{
 			if (recordBuilder == null) yield break;
 

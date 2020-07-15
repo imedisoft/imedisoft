@@ -255,9 +255,9 @@
       <Project>{18F7BC78-4B99-48D3-A1F1-0D13A63E3CF9}</Project>
       <Name>xCodeBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DataConnectionBase\xDataConnectionBase.csproj">
-      <Project>{29c41020-4411-41f2-9061-9b71b5b32b5d}</Project>
-      <Name>xDataConnectionBase</Name>
+    <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">
+      <Project>{063eccee-21c7-4300-b616-2f256ff12fce}</Project>
+      <Name>Imedisoft.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenDentBusiness\OpenDentBusiness.csproj">
       <Project>{3D0FC76E-803C-4DE2-BDB1-47D63A4E2357}</Project>

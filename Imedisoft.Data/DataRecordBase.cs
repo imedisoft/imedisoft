@@ -3,7 +3,7 @@
     /// <summary>
     /// The base class of all database record entities.
     /// </summary>
-    public abstract class DatabaseRecordBase
+    public abstract class DataRecordBase
     {
     }
 }
