@@ -47,15 +47,15 @@ namespace OpenDentBusiness.Crud{
 				labCase.LaboratoryNum  = PIn.Long  (row["LaboratoryNum"].ToString());
 				labCase.AptNum         = PIn.Long  (row["AptNum"].ToString());
 				labCase.PlannedAptNum  = PIn.Long  (row["PlannedAptNum"].ToString());
-				labCase.DateTimeDue    = PIn.DateT (row["DateTimeDue"].ToString());
-				labCase.DateTimeCreated= PIn.DateT (row["DateTimeCreated"].ToString());
-				labCase.DateTimeSent   = PIn.DateT (row["DateTimeSent"].ToString());
-				labCase.DateTimeRecd   = PIn.DateT (row["DateTimeRecd"].ToString());
-				labCase.DateTimeChecked= PIn.DateT (row["DateTimeChecked"].ToString());
+				labCase.DateTimeDue    = PIn.Date (row["DateTimeDue"].ToString());
+				labCase.DateTimeCreated= PIn.Date (row["DateTimeCreated"].ToString());
+				labCase.DateTimeSent   = PIn.Date (row["DateTimeSent"].ToString());
+				labCase.DateTimeRecd   = PIn.Date (row["DateTimeRecd"].ToString());
+				labCase.DateTimeChecked= PIn.Date (row["DateTimeChecked"].ToString());
 				labCase.ProvNum        = PIn.Long  (row["ProvNum"].ToString());
 				labCase.Instructions   = PIn.String(row["Instructions"].ToString());
 				labCase.LabFee         = PIn.Double(row["LabFee"].ToString());
-				labCase.DateTStamp     = PIn.DateT (row["DateTStamp"].ToString());
+				labCase.DateTStamp     = PIn.Date (row["DateTStamp"].ToString());
 				labCase.InvoiceNum     = PIn.String(row["InvoiceNum"].ToString());
 				retVal.Add(labCase);
 			}

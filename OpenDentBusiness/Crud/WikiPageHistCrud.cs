@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				wikiPageHist.UserNum      = PIn.Long  (row["UserNum"].ToString());
 				wikiPageHist.PageTitle    = PIn.String(row["PageTitle"].ToString());
 				wikiPageHist.PageContent  = PIn.String(row["PageContent"].ToString());
-				wikiPageHist.DateTimeSaved= PIn.DateT (row["DateTimeSaved"].ToString());
+				wikiPageHist.DateTimeSaved= PIn.Date (row["DateTimeSaved"].ToString());
 				wikiPageHist.IsDeleted    = PIn.Bool  (row["IsDeleted"].ToString());
 				retVal.Add(wikiPageHist);
 			}

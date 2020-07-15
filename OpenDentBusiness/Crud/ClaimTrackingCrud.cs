@@ -53,7 +53,7 @@ namespace OpenDentBusiness.Crud{
 					claimTracking.TrackingType     =(OpenDentBusiness.ClaimTrackingType)0;
 				}
 				claimTracking.UserNum            = PIn.Long  (row["UserNum"].ToString());
-				claimTracking.DateTimeEntry      = PIn.DateT (row["DateTimeEntry"].ToString());
+				claimTracking.DateTimeEntry      = PIn.Date (row["DateTimeEntry"].ToString());
 				claimTracking.Note               = PIn.String(row["Note"].ToString());
 				claimTracking.TrackingDefNum     = PIn.Long  (row["TrackingDefNum"].ToString());
 				claimTracking.TrackingErrorDefNum= PIn.Long  (row["TrackingErrorDefNum"].ToString());

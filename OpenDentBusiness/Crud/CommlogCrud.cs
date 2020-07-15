@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 				commlog=new Commlog();
 				commlog.CommlogNum    = PIn.Long  (row["CommlogNum"].ToString());
 				commlog.PatNum        = PIn.Long  (row["PatNum"].ToString());
-				commlog.CommDateTime  = PIn.DateT (row["CommDateTime"].ToString());
+				commlog.CommDateTime  = PIn.Date (row["CommDateTime"].ToString());
 				commlog.CommType      = PIn.Long  (row["CommType"].ToString());
 				commlog.Note          = PIn.String(row["Note"].ToString());
 				commlog.Mode_         = (OpenDentBusiness.CommItemMode)PIn.Int(row["Mode_"].ToString());
@@ -52,8 +52,8 @@ namespace OpenDentBusiness.Crud{
 				commlog.UserNum       = PIn.Long  (row["UserNum"].ToString());
 				commlog.Signature     = PIn.String(row["Signature"].ToString());
 				commlog.SigIsTopaz    = PIn.Bool  (row["SigIsTopaz"].ToString());
-				commlog.DateTStamp    = PIn.DateT (row["DateTStamp"].ToString());
-				commlog.DateTimeEnd   = PIn.DateT (row["DateTimeEnd"].ToString());
+				commlog.DateTStamp    = PIn.Date (row["DateTStamp"].ToString());
+				commlog.DateTimeEnd   = PIn.Date (row["DateTimeEnd"].ToString());
 				commlog.CommSource    = (OpenDentBusiness.CommItemSource)PIn.Int(row["CommSource"].ToString());
 				commlog.ProgramNum    = PIn.Long  (row["ProgramNum"].ToString());
 				retVal.Add(commlog);

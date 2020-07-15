@@ -1371,7 +1371,7 @@ namespace OpenDentBusiness {
 						dateTCollected=sf.FieldValue;
 						continue;
 					case "medlab.DateTimeReported":
-						dateReported=PIn.DateT(sf.FieldValue).ToShortDateString();
+						dateReported=PIn.Date(sf.FieldValue).ToShortDateString();
 						if(dateReported==DateTime.MinValue.ToShortDateString()) {
 							dateReported="";
 						}

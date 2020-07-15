@@ -48,7 +48,7 @@ namespace OpenDentBusiness.Crud{
 				eServiceSignal.ReasonCode       = PIn.Int   (row["ReasonCode"].ToString());
 				eServiceSignal.Severity         = (OpenDentBusiness.eServiceSignalSeverity)PIn.Int(row["Severity"].ToString());
 				eServiceSignal.Description      = PIn.String(row["Description"].ToString());
-				eServiceSignal.SigDateTime      = PIn.DateT (row["SigDateTime"].ToString());
+				eServiceSignal.SigDateTime      = PIn.Date (row["SigDateTime"].ToString());
 				eServiceSignal.Tag              = PIn.String(row["Tag"].ToString());
 				eServiceSignal.IsProcessed      = PIn.Bool  (row["IsProcessed"].ToString());
 				retVal.Add(eServiceSignal);

@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				patientLink.PatNumFrom    = PIn.Long  (row["PatNumFrom"].ToString());
 				patientLink.PatNumTo      = PIn.Long  (row["PatNumTo"].ToString());
 				patientLink.LinkType      = (OpenDentBusiness.PatientLinkType)PIn.Int(row["LinkType"].ToString());
-				patientLink.DateTimeLink  = PIn.DateT (row["DateTimeLink"].ToString());
+				patientLink.DateTimeLink  = PIn.Date (row["DateTimeLink"].ToString());
 				retVal.Add(patientLink);
 			}
 			return retVal;

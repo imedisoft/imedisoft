@@ -423,7 +423,7 @@ namespace OpenDental{
 			textPassword.Text=GetProp("Password");
 			textWorkstationName.Text=GetProp("WorkstationName");
 			textIntervalSeconds.Text=GetProp("IntervalSeconds");
-			DateTime datet=PIn.DateT(GetProp("DateTimeLastUploaded"));
+			DateTime datet=PIn.Date(GetProp("DateTimeLastUploaded"));
 			if(datet.Year>1880){
 				textDateTimeLastUploaded1.Text=datet.ToShortDateString()+"  "+datet.ToShortTimeString();
 			}
@@ -452,7 +452,7 @@ namespace OpenDental{
 				return;
 			}
 			propVal=ProgramProperties.GetPropVal(ProgramCur.ProgramNum,"DateTimeLastUploaded");
-			DateTime datet=PIn.DateT(propVal);
+			DateTime datet=PIn.Date(propVal);
 			if(datet.Year<1880){
 				if(!MsgBox.Show(MsgBoxButtons.YesNo,"This is an initial synchronization.  It could take a while.  You can probably continue to work on this computer, but you will need to leave the program running on this workstation until the synch is done.  Begin initial synchronization?"))
 				{
@@ -498,7 +498,7 @@ namespace OpenDental{
 			int intervalSecError=intervalSec*4;
 			string username=ProgramProperties.GetPropVal(prog.ProgramNum,"Username");
 			string password=ProgramProperties.GetPropVal(prog.ProgramNum,"Password");
-			DateTime dateTimeLastUploaded=PIn.DateT(ProgramProperties.GetPropVal(prog.ProgramNum,"DateTimeLastUploaded"));
+			DateTime dateTimeLastUploaded=PIn.Date(ProgramProperties.GetPropVal(prog.ProgramNum,"DateTimeLastUploaded"));
 			//track delta here
 			DateTime nowServer=MiscData.GetNowDateTime();
 			TimeSpan deltaTimeSpan=nowServer-DateTime.Now;//this was tested to work by adding delta to local time

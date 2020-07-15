@@ -54,7 +54,7 @@ namespace OpenDentBusiness{
 			for(int i=0;i<listAttaches.Count;i++) { 
 					Etrans835Attach attach=listAttaches[i];
 					DataRow row=table.Rows[i];
-					attach.DateTimeTrans=PIn.DateT(row["DateTimeTrans"].ToString());
+					attach.DateTimeTrans=PIn.Date(row["DateTimeTrans"].ToString());
 			}
 			return listAttaches;
 		}
@@ -87,7 +87,7 @@ namespace OpenDentBusiness{
 			for(int i=0;i<listAttaches.Count;i++) { 
 					Etrans835Attach attach=listAttaches[i];
 					DataRow row=table.Rows[i];
-					attach.DateTimeTrans=PIn.DateT(row["DateTimeTrans"].ToString());
+					attach.DateTimeTrans=PIn.Date(row["DateTimeTrans"].ToString());
 			}
 			return listAttaches;
 		}

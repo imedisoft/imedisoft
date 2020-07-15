@@ -82,7 +82,7 @@ namespace OpenDentBusiness.Crud{
 				catch{
 					medLabResult.ResultStatus =(OpenDentBusiness.ResultStatus)0;
 				}
-				medLabResult.DateTimeObs    = PIn.DateT (row["DateTimeObs"].ToString());
+				medLabResult.DateTimeObs    = PIn.Date (row["DateTimeObs"].ToString());
 				medLabResult.FacilityID     = PIn.String(row["FacilityID"].ToString());
 				medLabResult.DocNum         = PIn.Long  (row["DocNum"].ToString());
 				medLabResult.Note           = PIn.String(row["Note"].ToString());

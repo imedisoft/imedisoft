@@ -47,8 +47,8 @@ namespace OpenDentBusiness.Crud{
 				procMultiVisit.ProcNum               = PIn.Long  (row["ProcNum"].ToString());
 				procMultiVisit.ProcStatus            = (OpenDentBusiness.ProcStat)PIn.Int(row["ProcStatus"].ToString());
 				procMultiVisit.IsInProcess           = PIn.Bool  (row["IsInProcess"].ToString());
-				procMultiVisit.SecDateTEntry         = PIn.DateT (row["SecDateTEntry"].ToString());
-				procMultiVisit.SecDateTEdit          = PIn.DateT (row["SecDateTEdit"].ToString());
+				procMultiVisit.SecDateTEntry         = PIn.Date (row["SecDateTEntry"].ToString());
+				procMultiVisit.SecDateTEdit          = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(procMultiVisit);
 			}
 			return retVal;

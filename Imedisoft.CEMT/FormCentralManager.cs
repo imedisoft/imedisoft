@@ -978,7 +978,7 @@ namespace CentralManager
 				PtTableSearchParams ptTableSearchParams = new PtTableSearchParams(checkLimit.Checked, textLName.Text, textFName.Text, textPhone.Text,
 					textAddress.Text, checkHideInactive.Checked, textCity.Text, textState.Text, textSSN.Text, textPatNum.Text, textChartNumber.Text, 0,
 					checkGuarantors.Checked, !checkHideArchived.Checked,//checkHideArchived is opposite label for what this function expects, but hideArchived makes more sense
-					SIn.DateT(textBirthdate.Text), 0, textSubscriberID.Text, textEmail.Text, textCountry.Text, "", "", textClinicPatSearch.Text, "", hasNextLastVisit: hasNextLastVisit);
+					SIn.Date(textBirthdate.Text), 0, textSubscriberID.Text, textEmail.Text, textCountry.Text, "", "", textClinicPatSearch.Text, "", hasNextLastVisit: hasNextLastVisit);
 				table = Patients.GetPtDataTable(ptTableSearchParams);
 			}
 			catch (ThreadAbortException tae)

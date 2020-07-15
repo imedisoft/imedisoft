@@ -50,7 +50,7 @@ namespace OpenDentBusiness.Crud{
 				insEditLog.OldValue     = PIn.String(row["OldValue"].ToString());
 				insEditLog.NewValue     = PIn.String(row["NewValue"].ToString());
 				insEditLog.UserNum      = PIn.Long  (row["UserNum"].ToString());
-				insEditLog.DateTStamp   = PIn.DateT (row["DateTStamp"].ToString());
+				insEditLog.DateTStamp   = PIn.Date (row["DateTStamp"].ToString());
 				insEditLog.ParentKey    = PIn.Long  (row["ParentKey"].ToString());
 				insEditLog.Description  = PIn.String(row["Description"].ToString());
 				retVal.Add(insEditLog);

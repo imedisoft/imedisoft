@@ -56,11 +56,11 @@ namespace OpenDentBusiness.Crud{
 				catch{
 					careCreditWebResponse.ProcessingStatus      =(OpenDentBusiness.CareCreditWebStatus)0;
 				}
-				careCreditWebResponse.DateTimeEntry           = PIn.DateT (row["DateTimeEntry"].ToString());
-				careCreditWebResponse.DateTimePending         = PIn.DateT (row["DateTimePending"].ToString());
-				careCreditWebResponse.DateTimeCompleted       = PIn.DateT (row["DateTimeCompleted"].ToString());
-				careCreditWebResponse.DateTimeExpired         = PIn.DateT (row["DateTimeExpired"].ToString());
-				careCreditWebResponse.DateTimeLastError       = PIn.DateT (row["DateTimeLastError"].ToString());
+				careCreditWebResponse.DateTimeEntry           = PIn.Date (row["DateTimeEntry"].ToString());
+				careCreditWebResponse.DateTimePending         = PIn.Date (row["DateTimePending"].ToString());
+				careCreditWebResponse.DateTimeCompleted       = PIn.Date (row["DateTimeCompleted"].ToString());
+				careCreditWebResponse.DateTimeExpired         = PIn.Date (row["DateTimeExpired"].ToString());
+				careCreditWebResponse.DateTimeLastError       = PIn.Date (row["DateTimeLastError"].ToString());
 				careCreditWebResponse.LastResponseStr         = PIn.String(row["LastResponseStr"].ToString());
 				careCreditWebResponse.ClinicNum               = PIn.Long  (row["ClinicNum"].ToString());
 				string serviceType=row["ServiceType"].ToString();

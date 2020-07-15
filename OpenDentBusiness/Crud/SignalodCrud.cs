@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				signalod=new Signalod();
 				signalod.SignalNum  = PIn.Long  (row["SignalNum"].ToString());
 				signalod.DateViewing= PIn.Date  (row["DateViewing"].ToString());
-				signalod.SigDateTime= PIn.DateT (row["SigDateTime"].ToString());
+				signalod.SigDateTime= PIn.Date (row["SigDateTime"].ToString());
 				signalod.FKey       = PIn.Long  (row["FKey"].ToString());
 				string fKeyType=row["FKeyType"].ToString();
 				if(fKeyType=="") {

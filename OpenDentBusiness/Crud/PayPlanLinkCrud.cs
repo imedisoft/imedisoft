@@ -47,7 +47,7 @@ namespace OpenDentBusiness.Crud{
 				payPlanLink.LinkType      = (OpenDentBusiness.PayPlanLinkType)PIn.Int(row["LinkType"].ToString());
 				payPlanLink.FKey          = PIn.Long  (row["FKey"].ToString());
 				payPlanLink.AmountOverride= PIn.Double(row["AmountOverride"].ToString());
-				payPlanLink.SecDateTEntry = PIn.DateT (row["SecDateTEntry"].ToString());
+				payPlanLink.SecDateTEntry = PIn.Date (row["SecDateTEntry"].ToString());
 				retVal.Add(payPlanLink);
 			}
 			return retVal;

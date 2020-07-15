@@ -48,8 +48,8 @@ namespace OpenDentBusiness.Crud{
 				mobileDataByte.RawBase64Tag     = PIn.String(row["RawBase64Tag"].ToString());
 				mobileDataByte.PatNum           = PIn.Long  (row["PatNum"].ToString());
 				mobileDataByte.ActionType       = (OpenDentBusiness.eActionType)PIn.Int(row["ActionType"].ToString());
-				mobileDataByte.DateTimeEntry    = PIn.DateT (row["DateTimeEntry"].ToString());
-				mobileDataByte.DateTimeExpires  = PIn.DateT (row["DateTimeExpires"].ToString());
+				mobileDataByte.DateTimeEntry    = PIn.Date (row["DateTimeEntry"].ToString());
+				mobileDataByte.DateTimeExpires  = PIn.Date (row["DateTimeExpires"].ToString());
 				retVal.Add(mobileDataByte);
 			}
 			return retVal;

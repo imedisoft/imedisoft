@@ -52,7 +52,7 @@ namespace OpenDentBusiness.Crud{
 				operatory.IsHygiene     = PIn.Bool  (row["IsHygiene"].ToString());
 				operatory.ClinicNum     = PIn.Long  (row["ClinicNum"].ToString());
 				operatory.SetProspective= PIn.Bool  (row["SetProspective"].ToString());
-				operatory.DateTStamp    = PIn.DateT (row["DateTStamp"].ToString());
+				operatory.DateTStamp    = PIn.Date (row["DateTStamp"].ToString());
 				operatory.IsWebSched    = PIn.Bool  (row["IsWebSched"].ToString());
 				operatory.IsNewPatAppt  = PIn.Bool  (row["IsNewPatAppt"].ToString());
 				retVal.Add(operatory);

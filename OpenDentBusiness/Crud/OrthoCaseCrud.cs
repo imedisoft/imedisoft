@@ -54,9 +54,9 @@ namespace OpenDentBusiness.Crud{
 				orthoCase.DebondDateExpected= PIn.Date  (row["DebondDateExpected"].ToString());
 				orthoCase.IsTransfer        = PIn.Bool  (row["IsTransfer"].ToString());
 				orthoCase.OrthoType         = PIn.Long  (row["OrthoType"].ToString());
-				orthoCase.SecDateTEntry     = PIn.DateT (row["SecDateTEntry"].ToString());
+				orthoCase.SecDateTEntry     = PIn.Date (row["SecDateTEntry"].ToString());
 				orthoCase.SecUserNumEntry   = PIn.Long  (row["SecUserNumEntry"].ToString());
-				orthoCase.SecDateTEdit      = PIn.DateT (row["SecDateTEdit"].ToString());
+				orthoCase.SecDateTEdit      = PIn.Date (row["SecDateTEdit"].ToString());
 				orthoCase.IsActive          = PIn.Bool  (row["IsActive"].ToString());
 				orthoCase.FeeInsSecondary   = PIn.Double(row["FeeInsSecondary"].ToString());
 				retVal.Add(orthoCase);

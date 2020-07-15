@@ -48,7 +48,7 @@ namespace OpenDentBusiness.Crud{
 				entryLog.FKeyType     = (OpenDentBusiness.EntryLogFKeyType)PIn.Int(row["FKeyType"].ToString());
 				entryLog.FKey         = PIn.Long  (row["FKey"].ToString());
 				entryLog.LogSource    = (OpenDentBusiness.LogSources)PIn.Int(row["LogSource"].ToString());
-				entryLog.EntryDateTime= PIn.DateT (row["EntryDateTime"].ToString());
+				entryLog.EntryDateTime= PIn.Date (row["EntryDateTime"].ToString());
 				retVal.Add(entryLog);
 			}
 			return retVal;

@@ -64,7 +64,7 @@ namespace OpenDentBusiness.Crud{
 				sheetField.TextAlign               = (System.Windows.Forms.HorizontalAlignment)PIn.Int(row["TextAlign"].ToString());
 				sheetField.IsLocked                = PIn.Bool  (row["IsLocked"].ToString());
 				sheetField.ItemColor               = Color.FromArgb(PIn.Int(row["ItemColor"].ToString()));
-				sheetField.DateTimeSig             = PIn.DateT (row["DateTimeSig"].ToString());
+				sheetField.DateTimeSig             = PIn.Date (row["DateTimeSig"].ToString());
 				sheetField.TabOrderMobile          = PIn.Int   (row["TabOrderMobile"].ToString());
 				sheetField.UiLabelMobile           = PIn.String(row["UiLabelMobile"].ToString());
 				sheetField.UiLabelMobileRadioButton= PIn.String(row["UiLabelMobileRadioButton"].ToString());

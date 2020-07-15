@@ -89,7 +89,7 @@ namespace OpenDentBusiness{
 			DateTime dateCompleted;
 			for(int i=0;i<raw.Rows.Count;i++) {
 				row=table.NewRow();
-				AptDateTime=PIn.DateT(raw.Rows[i]["AptDateTime"].ToString());
+				AptDateTime=PIn.Date(raw.Rows[i]["AptDateTime"].ToString());
 				if(AptDateTime.Year>1880){
 					row["appointment"]=AptDateTime.ToShortDateString()+" "+AptDateTime.ToShortTimeString()
 						+" "+raw.Rows[i]["ProcDescript"].ToString();

@@ -247,7 +247,7 @@ namespace OpenDental{
 		///<summary>Turning on automated repeating charges, but recurring charges are also enabled and set to run before auto repeating charges.  Prompt user that this is unadvisable.</summary>
 		private void PromptRecurringRepeatingChargesTimes(object sender,EventArgs e) {
 			if(checkRepeatingChargesAutomated.Checked && checkRecurringChargesAutomated.Checked
-				&& PIn.DateT(textRepeatingChargesAutomatedTime.Text).TimeOfDay>=PIn.DateT(textRecurringChargesTime.Text).TimeOfDay)
+				&& PIn.Date(textRepeatingChargesAutomatedTime.Text).TimeOfDay>=PIn.Date(textRecurringChargesTime.Text).TimeOfDay)
 			{
 				MessageBox.Show("Recurring charges run time is currently set before Repeating charges run time.\r\nConsider setting repeating charges to "
 					+"automatically run before recurring charges.");
@@ -926,9 +926,9 @@ namespace OpenDental{
 			_changed|=Prefs.UpdateYN(PrefName.AgingProcLifo,checkAgingProcLifo.CheckState);
 			_changed|=Prefs.UpdateBool(PrefName.AllowPrepayProvider,checkAllowPrepayProvider.Checked);
 			_changed|=Prefs.UpdateBool(PrefName.RecurringChargesAutomatedEnabled,checkRecurringChargesAutomated.Checked);
-			_changed|=Prefs.UpdateDateT(PrefName.RecurringChargesAutomatedTime,PIn.DateT(textRecurringChargesTime.Text));
+			_changed|=Prefs.UpdateDateT(PrefName.RecurringChargesAutomatedTime,PIn.Date(textRecurringChargesTime.Text));
 			_changed|=Prefs.UpdateBool(PrefName.RepeatingChargesAutomated,checkRepeatingChargesAutomated.Checked);
-			_changed|=Prefs.UpdateDateT(PrefName.RepeatingChargesAutomatedTime,PIn.DateT(textRepeatingChargesAutomatedTime.Text));
+			_changed|=Prefs.UpdateDateT(PrefName.RepeatingChargesAutomatedTime,PIn.Date(textRepeatingChargesAutomatedTime.Text));
 			_changed|=Prefs.UpdateBool(PrefName.RepeatingChargesRunAging,checkRepeatingChargesRunAging.Checked);
 			_changed|=Prefs.UpdateInt(PrefName.ClaimZeroDollarProcBehavior,comboZeroDollarProcClaimBehavior.SelectedIndex);
 			_changed|=Prefs.UpdateBool(PrefName.ClaimTrackingStatusExcludesNone,checkClaimTrackingExcludeNone.Checked);
@@ -941,7 +941,7 @@ namespace OpenDental{
 			_changed|=Prefs.UpdateYN(PrefName.PrePayAllowedForTpProcs,_ynPrePayAllowedForTpProcs);
 			_changed|=Prefs.UpdateLong(PrefName.TpUnearnedType,comboTpUnearnedType.GetSelectedDefNum());
 			_changed|=Prefs.UpdateBool(PrefName.TpPrePayIsNonRefundable,checkIsRefundable.Checked);
-			_changed|=Prefs.UpdateDateT(PrefName.DynamicPayPlanRunTime,PIn.DateT(textDynamicPayPlan.Text));
+			_changed|=Prefs.UpdateDateT(PrefName.DynamicPayPlanRunTime,PIn.Date(textDynamicPayPlan.Text));
 			if(comboFinanceChargeAdjType.SelectedIndex!=-1) {
 				_changed|=Prefs.UpdateLong(PrefName.FinanceChargeAdjustmentType,comboFinanceChargeAdjType.GetSelectedDefNum());
 			}

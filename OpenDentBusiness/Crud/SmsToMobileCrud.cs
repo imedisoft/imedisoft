@@ -57,11 +57,11 @@ namespace OpenDentBusiness.Crud{
 				smsToMobile.MsgChargeUSD      = PIn.Float (row["MsgChargeUSD"].ToString());
 				smsToMobile.ClinicNum         = PIn.Long  (row["ClinicNum"].ToString());
 				smsToMobile.CustErrorText     = PIn.String(row["CustErrorText"].ToString());
-				smsToMobile.DateTimeSent      = PIn.DateT (row["DateTimeSent"].ToString());
-				smsToMobile.DateTimeTerminated= PIn.DateT (row["DateTimeTerminated"].ToString());
+				smsToMobile.DateTimeSent      = PIn.Date (row["DateTimeSent"].ToString());
+				smsToMobile.DateTimeTerminated= PIn.Date (row["DateTimeTerminated"].ToString());
 				smsToMobile.IsHidden          = PIn.Bool  (row["IsHidden"].ToString());
 				smsToMobile.MsgDiscountUSD    = PIn.Float (row["MsgDiscountUSD"].ToString());
-				smsToMobile.SecDateTEdit      = PIn.DateT (row["SecDateTEdit"].ToString());
+				smsToMobile.SecDateTEdit      = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(smsToMobile);
 			}
 			return retVal;

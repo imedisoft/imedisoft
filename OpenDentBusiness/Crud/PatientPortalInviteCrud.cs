@@ -47,7 +47,7 @@ namespace OpenDentBusiness.Crud{
 				patientPortalInvite.PatNum                = PIn.Long  (row["PatNum"].ToString());
 				patientPortalInvite.AptNum                = PIn.Long  (row["AptNum"].ToString());
 				patientPortalInvite.ClinicNum             = PIn.Long  (row["ClinicNum"].ToString());
-				patientPortalInvite.DateTimeEntry         = PIn.DateT (row["DateTimeEntry"].ToString());
+				patientPortalInvite.DateTimeEntry         = PIn.Date (row["DateTimeEntry"].ToString());
 				patientPortalInvite.TSPrior               = TimeSpan.FromTicks(PIn.Long(row["TSPrior"].ToString()));
 				patientPortalInvite.EmailSendStatus       = (OpenDentBusiness.AutoCommStatus)PIn.Int(row["EmailSendStatus"].ToString());
 				patientPortalInvite.EmailMessageNum       = PIn.Long  (row["EmailMessageNum"].ToString());

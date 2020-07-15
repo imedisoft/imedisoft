@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				labPanel.PatNum           = PIn.Long  (row["PatNum"].ToString());
 				labPanel.RawMessage       = PIn.String(row["RawMessage"].ToString());
 				labPanel.LabNameAddress   = PIn.String(row["LabNameAddress"].ToString());
-				labPanel.DateTStamp       = PIn.DateT (row["DateTStamp"].ToString());
+				labPanel.DateTStamp       = PIn.Date (row["DateTStamp"].ToString());
 				labPanel.SpecimenCondition= PIn.String(row["SpecimenCondition"].ToString());
 				labPanel.SpecimenSource   = PIn.String(row["SpecimenSource"].ToString());
 				labPanel.ServiceId        = PIn.String(row["ServiceId"].ToString());

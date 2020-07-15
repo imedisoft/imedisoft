@@ -381,7 +381,7 @@ namespace OpenDentBusiness{
 					,aptRow["Preferred"].ToString(),aptRow["MiddleI"].ToString()); //no call to db
 				Appointment apt=new Appointment();
 				apt.AptNum=PIn.Long(aptRow["AptNum"].ToString());
-				apt.AptDateTime=PIn.DateT(aptRow["AptDateTime"].ToString());
+				apt.AptDateTime=PIn.Date(aptRow["AptDateTime"].ToString());
 				apt.ProcDescript=PIn.String(aptRow["ProcDescript"].ToString());
 				apt.Note=PIn.String(aptRow["Note"].ToString());
 				dictTaskString.Add(apt.AptNum,patname+" "+apt.AptDateTime.ToString()+" "+apt.ProcDescript+" "+apt.Note+" - ");
@@ -643,7 +643,7 @@ namespace OpenDentBusiness{
 						//Fill the dictionary with the key of AptNum and the value of AptDateTime.
 						_dictTaskApts=Appointments.GetAptDateTimeForAptNums(listAptNums)
 							.Select()
-							.ToDictionary(x => PIn.Long(x["AptNum"].ToString()),x => PIn.DateT(x["AptDateTime"].ToString()));
+							.ToDictionary(x => PIn.Long(x["AptNum"].ToString()),x => PIn.Date(x["AptDateTime"].ToString()));
 					}
 				}
 			}
@@ -807,9 +807,9 @@ namespace OpenDentBusiness{
 				task.DateType       = (TaskDateType)PIn.Long(table.Rows[i][7].ToString());
 				task.FromNum        = PIn.Long(table.Rows[i][8].ToString());
 				task.ObjectType     = (TaskObjectType)PIn.Long(table.Rows[i][9].ToString());
-				task.DateTimeEntry  = PIn.DateT(table.Rows[i][10].ToString());
+				task.DateTimeEntry  = PIn.Date(table.Rows[i][10].ToString());
 				task.UserNum        = PIn.Long(table.Rows[i][11].ToString());
-				task.DateTimeFinished= PIn.DateT(table.Rows[i][12].ToString());
+				task.DateTimeFinished= PIn.Date(table.Rows[i][12].ToString());
 				retVal.Add(task);
 			}
 			return retVal;
@@ -1216,8 +1216,8 @@ namespace OpenDentBusiness{
 		///<summary>Compares the most recent times of the task or task notes associated to the tasks passed in.  Most recently updated tasks will be farther down in the list.</summary>
 		public static int CompareTimes(DataRow x, DataRow y)
 		{
-			DateTime xMaxDateTime = PIn.DateT(x["DateTimeEntry"].ToString());
-			DateTime yMaxDateTime = PIn.DateT(y["DateTimeEntry"].ToString());
+			DateTime xMaxDateTime = PIn.Date(x["DateTimeEntry"].ToString());
+			DateTime yMaxDateTime = PIn.Date(y["DateTimeEntry"].ToString());
 			return xMaxDateTime.CompareTo(yMaxDateTime);
 		}
 

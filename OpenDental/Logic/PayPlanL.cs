@@ -145,7 +145,7 @@ namespace OpenDental {
 				}
 			}
 			GridRow row=new GridRow();
-			row.Cells.Add(PIn.DateT(rowBundleClaimProc["DateCP"].ToString()).ToShortDateString());//0 Date
+			row.Cells.Add(PIn.Date(rowBundleClaimProc["DateCP"].ToString()).ToShortDateString());//0 Date
 			row.Cells.Add(Providers.GetLName(PIn.Long(rowBundleClaimProc["ProvNum"].ToString())));//1 Prov Abbr
 			row.Cells.Add(descript);//2 Descript
 			row.Cells.Add("");//3 Principal

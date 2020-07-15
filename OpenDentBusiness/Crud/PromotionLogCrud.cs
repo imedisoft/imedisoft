@@ -48,7 +48,7 @@ namespace OpenDentBusiness.Crud{
 				promotionLog.PatNum         = PIn.Long  (row["PatNum"].ToString());
 				promotionLog.EmailMessageNum= PIn.Long  (row["EmailMessageNum"].ToString());
 				promotionLog.EmailHostingFK = PIn.Long  (row["EmailHostingFK"].ToString());
-				promotionLog.DateTimeSent   = PIn.DateT (row["DateTimeSent"].ToString());
+				promotionLog.DateTimeSent   = PIn.Date (row["DateTimeSent"].ToString());
 				promotionLog.PromotionStatus= (OpenDentBusiness.PromotionLogStatus)PIn.Int(row["PromotionStatus"].ToString());
 				retVal.Add(promotionLog);
 			}

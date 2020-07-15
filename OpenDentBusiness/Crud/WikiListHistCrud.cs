@@ -47,7 +47,7 @@ namespace OpenDentBusiness.Crud{
 				wikiListHist.ListName       = PIn.String(row["ListName"].ToString());
 				wikiListHist.ListHeaders    = PIn.String(row["ListHeaders"].ToString());
 				wikiListHist.ListContent    = PIn.String(row["ListContent"].ToString());
-				wikiListHist.DateTimeSaved  = PIn.DateT (row["DateTimeSaved"].ToString());
+				wikiListHist.DateTimeSaved  = PIn.Date (row["DateTimeSaved"].ToString());
 				retVal.Add(wikiListHist);
 			}
 			return retVal;

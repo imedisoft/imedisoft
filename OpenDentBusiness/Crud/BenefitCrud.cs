@@ -52,8 +52,8 @@ namespace OpenDentBusiness.Crud{
 				benefit.Quantity         = PIn.Byte  (row["Quantity"].ToString());
 				benefit.CodeNum          = PIn.Long  (row["CodeNum"].ToString());
 				benefit.CoverageLevel    = (OpenDentBusiness.BenefitCoverageLevel)PIn.Int(row["CoverageLevel"].ToString());
-				benefit.SecDateTEntry    = PIn.DateT (row["SecDateTEntry"].ToString());
-				benefit.SecDateTEdit     = PIn.DateT (row["SecDateTEdit"].ToString());
+				benefit.SecDateTEntry    = PIn.Date (row["SecDateTEntry"].ToString());
+				benefit.SecDateTEdit     = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(benefit);
 			}
 			return retVal;

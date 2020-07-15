@@ -255,7 +255,7 @@ namespace OpenDental{
 			}
 			_mountCur.DocCategory=_listDefNumsImageCats[listCategory.SelectedIndex].DefNum;
 			_mountCur.Description=textDescription.Text;
-			DateTime dateTimeEntered=PIn.DateT(textDate.Text+" "+textTime.Text);
+			DateTime dateTimeEntered=PIn.Date(textDate.Text+" "+textTime.Text);
 			_mountCur.DateCreated=dateTimeEntered;	
 			_mountCur.Note=textNote.Text;
 			Mounts.Update(_mountCur);

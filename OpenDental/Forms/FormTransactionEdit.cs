@@ -908,9 +908,9 @@ namespace OpenDental{
 		private void butExport_Click(object sender,EventArgs e) {
 			//DateTime reconcileDate=PIn.Date(textReconcileDate.Text);
 			//List<Tuple<string,string>> listOtherDetails=new List<Tuple<string,string>>() {
-			//	Tuple.Create(labelDateTimeEntered.Text,PIn.DateT(textDateTimeEntered.Text).ToString()),
+			//	Tuple.Create(labelDateTimeEntered.Text,PIn.Date(textDateTimeEntered.Text).ToString()),
 			//	Tuple.Create(labelUserEntered.Text,PIn.String(textUserEntered.Text)),
-			//	Tuple.Create(labelDateTimeEdited.Text,PIn.DateT(textDateTimeEdited.Text).ToString()),
+			//	Tuple.Create(labelDateTimeEdited.Text,PIn.Date(textDateTimeEdited.Text).ToString()),
 			//	Tuple.Create(labelUserEdited.Text,PIn.String(textUserEdited.Text)),
 			//	Tuple.Create(labelDate.Text,PIn.Date(textDate.Text).ToShortDateString()),
 			//	Tuple.Create(labelReconcileDate.Text,(reconcileDate==DateTime.MinValue?"":reconcileDate.ToShortDateString()))

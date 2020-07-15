@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				claimSnapshot.Writeoff        = PIn.Double(row["Writeoff"].ToString());
 				claimSnapshot.InsPayEst       = PIn.Double(row["InsPayEst"].ToString());
 				claimSnapshot.Fee             = PIn.Double(row["Fee"].ToString());
-				claimSnapshot.DateTEntry      = PIn.DateT (row["DateTEntry"].ToString());
+				claimSnapshot.DateTEntry      = PIn.Date (row["DateTEntry"].ToString());
 				claimSnapshot.ClaimProcNum    = PIn.Long  (row["ClaimProcNum"].ToString());
 				claimSnapshot.SnapshotTrigger = (OpenDentBusiness.ClaimSnapshotTrigger)PIn.Int(row["SnapshotTrigger"].ToString());
 				retVal.Add(claimSnapshot);

@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				sheet.SheetNum        = PIn.Long  (row["SheetNum"].ToString());
 				sheet.SheetType       = (OpenDentBusiness.SheetTypeEnum)PIn.Int(row["SheetType"].ToString());
 				sheet.PatNum          = PIn.Long  (row["PatNum"].ToString());
-				sheet.DateTimeSheet   = PIn.DateT (row["DateTimeSheet"].ToString());
+				sheet.DateTimeSheet   = PIn.Date (row["DateTimeSheet"].ToString());
 				sheet.FontSize        = PIn.Float (row["FontSize"].ToString());
 				sheet.FontName        = PIn.String(row["FontName"].ToString());
 				sheet.Width           = PIn.Int   (row["Width"].ToString());
@@ -60,7 +60,7 @@ namespace OpenDentBusiness.Crud{
 				sheet.SheetDefNum     = PIn.Long  (row["SheetDefNum"].ToString());
 				sheet.DocNum          = PIn.Long  (row["DocNum"].ToString());
 				sheet.ClinicNum       = PIn.Long  (row["ClinicNum"].ToString());
-				sheet.DateTSheetEdited= PIn.DateT (row["DateTSheetEdited"].ToString());
+				sheet.DateTSheetEdited= PIn.Date (row["DateTSheetEdited"].ToString());
 				sheet.HasMobileLayout = PIn.Bool  (row["HasMobileLayout"].ToString());
 				retVal.Add(sheet);
 			}

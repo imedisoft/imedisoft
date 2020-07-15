@@ -53,8 +53,8 @@ namespace OpenDentBusiness.Crud{
 				patientNote.ICEPhone                  = PIn.String(row["ICEPhone"].ToString());
 				patientNote.OrthoMonthsTreatOverride  = PIn.Int   (row["OrthoMonthsTreatOverride"].ToString());
 				patientNote.DateOrthoPlacementOverride= PIn.Date  (row["DateOrthoPlacementOverride"].ToString());
-				patientNote.SecDateTEntry             = PIn.DateT (row["SecDateTEntry"].ToString());
-				patientNote.SecDateTEdit              = PIn.DateT (row["SecDateTEdit"].ToString());
+				patientNote.SecDateTEntry             = PIn.Date (row["SecDateTEntry"].ToString());
+				patientNote.SecDateTEdit              = PIn.Date (row["SecDateTEdit"].ToString());
 				patientNote.Consent                   = (OpenDentBusiness.PatConsentFlags)PIn.Int(row["Consent"].ToString());
 				retVal.Add(patientNote);
 			}

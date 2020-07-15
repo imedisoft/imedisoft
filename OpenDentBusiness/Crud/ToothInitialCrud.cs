@@ -49,8 +49,8 @@ namespace OpenDentBusiness.Crud{
 				toothInitial.Movement       = PIn.Float (row["Movement"].ToString());
 				toothInitial.DrawingSegment = PIn.String(row["DrawingSegment"].ToString());
 				toothInitial.ColorDraw      = Color.FromArgb(PIn.Int(row["ColorDraw"].ToString()));
-				toothInitial.SecDateTEntry  = PIn.DateT (row["SecDateTEntry"].ToString());
-				toothInitial.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
+				toothInitial.SecDateTEntry  = PIn.Date (row["SecDateTEntry"].ToString());
+				toothInitial.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(toothInitial);
 			}
 			return retVal;

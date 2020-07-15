@@ -54,7 +54,7 @@ namespace OpenDentBusiness.Crud{
 				claimPayment.PayType        = PIn.Long  (row["PayType"].ToString());
 				claimPayment.SecUserNumEntry= PIn.Long  (row["SecUserNumEntry"].ToString());
 				claimPayment.SecDateEntry   = PIn.Date  (row["SecDateEntry"].ToString());
-				claimPayment.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
+				claimPayment.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
 				claimPayment.PayGroup       = PIn.Long  (row["PayGroup"].ToString());
 				retVal.Add(claimPayment);
 			}

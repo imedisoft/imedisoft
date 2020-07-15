@@ -47,7 +47,7 @@ namespace OpenDentBusiness.Crud{
 				wikiPage.PageTitle           = PIn.String(row["PageTitle"].ToString());
 				wikiPage.KeyWords            = PIn.String(row["KeyWords"].ToString());
 				wikiPage.PageContent         = PIn.String(row["PageContent"].ToString());
-				wikiPage.DateTimeSaved       = PIn.DateT (row["DateTimeSaved"].ToString());
+				wikiPage.DateTimeSaved       = PIn.Date (row["DateTimeSaved"].ToString());
 				wikiPage.IsDeleted           = PIn.Bool  (row["IsDeleted"].ToString());
 				wikiPage.IsDraft             = PIn.Bool  (row["IsDraft"].ToString());
 				wikiPage.IsLocked            = PIn.Bool  (row["IsLocked"].ToString());

@@ -46,7 +46,7 @@ namespace OpenDental
 		{
 			_schedProcEdit.ScheduledAction = comboScheduledAction.GetSelected<ScheduledActionEnum>();
 			_schedProcEdit.FrequencyToRun = comboFrequency.GetSelected<FrequencyToRunEnum>();
-			_schedProcEdit.TimeToRun = PIn.DateT(textTimeToRun.Text);
+			_schedProcEdit.TimeToRun = PIn.Date(textTimeToRun.Text);
 		}
 
 		private bool ValidateFields()

@@ -54,7 +54,7 @@ namespace OpenDentBusiness.Crud{
 				refAttach.ProcNum           = PIn.Long  (row["ProcNum"].ToString());
 				refAttach.DateProcComplete  = PIn.Date  (row["DateProcComplete"].ToString());
 				refAttach.ProvNum           = PIn.Long  (row["ProvNum"].ToString());
-				refAttach.DateTStamp        = PIn.DateT (row["DateTStamp"].ToString());
+				refAttach.DateTStamp        = PIn.Date (row["DateTStamp"].ToString());
 				retVal.Add(refAttach);
 			}
 			return retVal;

@@ -37,7 +37,7 @@ namespace OpenDental.UI {
 					if(PIn.Int(ListPinBoardItems[i].DataRowAppt["AptStatus"].ToString())!=(int)ApptStatus.UnschedList){
 						continue;
 					}
-					if(PIn.DateT(ListPinBoardItems[i].DataRowAppt["AptDateTime"].ToString()).Year>1880){
+					if(PIn.Date(ListPinBoardItems[i].DataRowAppt["AptDateTime"].ToString()).Year>1880){
 						continue;
 					}
 					Appointment appt=null;

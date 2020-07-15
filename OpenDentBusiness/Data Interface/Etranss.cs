@@ -82,7 +82,7 @@ namespace OpenDentBusiness{
 				row["patName"]=table.Rows[i]["PatName"].ToString();
 				row["CarrierName"]=table.Rows[i]["CarrierName"].ToString();
 				row["Clearinghouse"]=table.Rows[i]["Clearinghouse"].ToString();
-				row["dateTimeTrans"]=PIn.DateT(table.Rows[i]["DateTimeTrans"].ToString()).ToShortDateString();
+				row["dateTimeTrans"]=PIn.Date(table.Rows[i]["DateTimeTrans"].ToString()).ToShortDateString();
 				row["OfficeSequenceNumber"]=table.Rows[i]["OfficeSequenceNumber"].ToString();
 				row["CarrierTransCounter"]=table.Rows[i]["CarrierTransCounter"].ToString();
 				row["Etype"]=table.Rows[i]["Etype"].ToString();
@@ -243,7 +243,7 @@ namespace OpenDentBusiness{
 			for(int i=0;i<table.Rows.Count;i++) {
 				etrans=new Etrans();
 				etrans.EtransNum           =PIn.Long(table.Rows[i][0].ToString());
-				etrans.DateTimeTrans       =PIn.DateT(table.Rows[i][1].ToString());
+				etrans.DateTimeTrans       =PIn.Date(table.Rows[i][1].ToString());
 				etrans.ClearingHouseNum    =PIn.Long(table.Rows[i][2].ToString());
 				etrans.Etype               =(EtransType)PIn.Long(table.Rows[i][3].ToString());
 				etrans.ClaimNum            =PIn.Long(table.Rows[i][4].ToString());
@@ -587,8 +587,8 @@ namespace OpenDentBusiness{
 						string[] arrayClaimInfo=x277.GetClaimInfo(claimMatch.ClaimIdentifier);
 						claimMatch.PatFname=PIn.String(arrayClaimInfo[0]);
 						claimMatch.PatLname=PIn.String(arrayClaimInfo[1]);
-						claimMatch.DateServiceStart=PIn.DateT(arrayClaimInfo[6]);
-						claimMatch.DateServiceEnd=PIn.DateT(arrayClaimInfo[7]);
+						claimMatch.DateServiceStart=PIn.Date(arrayClaimInfo[6]);
+						claimMatch.DateServiceEnd=PIn.Date(arrayClaimInfo[7]);
 						claimMatch.ClaimFee=PIn.Double(arrayClaimInfo[9]);
 						claimMatch.SubscriberId=PIn.String(arrayClaimInfo[10]);
 						claimMatch.EtransNum=etrans.EtransNum;

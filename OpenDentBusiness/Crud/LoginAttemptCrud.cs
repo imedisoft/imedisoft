@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				loginAttempt.LoginAttemptNum= PIn.Long  (row["LoginAttemptNum"].ToString());
 				loginAttempt.UserName       = PIn.String(row["UserName"].ToString());
 				loginAttempt.LoginType      = (OpenDentBusiness.UserWebFKeyType)PIn.Int(row["LoginType"].ToString());
-				loginAttempt.DateTFail      = PIn.DateT (row["DateTFail"].ToString());
+				loginAttempt.DateTFail      = PIn.Date (row["DateTFail"].ToString());
 				retVal.Add(loginAttempt);
 			}
 			return retVal;

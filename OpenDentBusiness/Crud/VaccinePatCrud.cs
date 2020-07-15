@@ -44,8 +44,8 @@ namespace OpenDentBusiness.Crud{
 				vaccinePat=new VaccinePat();
 				vaccinePat.VaccinePatNum         = PIn.Long  (row["VaccinePatNum"].ToString());
 				vaccinePat.VaccineDefNum         = PIn.Long  (row["VaccineDefNum"].ToString());
-				vaccinePat.DateTimeStart         = PIn.DateT (row["DateTimeStart"].ToString());
-				vaccinePat.DateTimeEnd           = PIn.DateT (row["DateTimeEnd"].ToString());
+				vaccinePat.DateTimeStart         = PIn.Date (row["DateTimeStart"].ToString());
+				vaccinePat.DateTimeEnd           = PIn.Date (row["DateTimeEnd"].ToString());
 				vaccinePat.AdministeredAmt       = PIn.Float (row["AdministeredAmt"].ToString());
 				vaccinePat.DrugUnitNum           = PIn.Long  (row["DrugUnitNum"].ToString());
 				vaccinePat.LotNumber             = PIn.String(row["LotNumber"].ToString());

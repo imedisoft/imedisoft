@@ -43,8 +43,8 @@ namespace OpenDentBusiness.Crud{
 				apptThankYouSent=new ApptThankYouSent();
 				apptThankYouSent.ApptThankYouSentNum     = PIn.Long  (row["ApptThankYouSentNum"].ToString());
 				apptThankYouSent.ApptNum                 = PIn.Long  (row["ApptNum"].ToString());
-				apptThankYouSent.ApptDateTime            = PIn.DateT (row["ApptDateTime"].ToString());
-				apptThankYouSent.ApptSecDateTEntry       = PIn.DateT (row["ApptSecDateTEntry"].ToString());
+				apptThankYouSent.ApptDateTime            = PIn.Date (row["ApptDateTime"].ToString());
+				apptThankYouSent.ApptSecDateTEntry       = PIn.Date (row["ApptSecDateTEntry"].ToString());
 				apptThankYouSent.TSPrior                 = TimeSpan.FromTicks(PIn.Long(row["TSPrior"].ToString()));
 				apptThankYouSent.ApptReminderRuleNum     = PIn.Long  (row["ApptReminderRuleNum"].ToString());
 				apptThankYouSent.SmsSentStatus           = (OpenDentBusiness.AutoCommStatus)PIn.Int(row["SmsSentStatus"].ToString());
@@ -62,7 +62,7 @@ namespace OpenDentBusiness.Crud{
 				apptThankYouSent.EmailSubj               = PIn.String(row["EmailSubj"].ToString());
 				apptThankYouSent.EmailTextTemplate       = PIn.String(row["EmailTextTemplate"].ToString());
 				apptThankYouSent.EmailText               = PIn.String(row["EmailText"].ToString());
-				apptThankYouSent.DateTimeThankYouTransmit= PIn.DateT (row["DateTimeThankYouTransmit"].ToString());
+				apptThankYouSent.DateTimeThankYouTransmit= PIn.Date (row["DateTimeThankYouTransmit"].ToString());
 				apptThankYouSent.ShortGuidEmail          = PIn.String(row["ShortGuidEmail"].ToString());
 				apptThankYouSent.ShortGUID               = PIn.String(row["ShortGUID"].ToString());
 				apptThankYouSent.DoNotResend             = PIn.Bool  (row["DoNotResend"].ToString());

@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				orthoProcLink.OrthoProcLinkNum= PIn.Long  (row["OrthoProcLinkNum"].ToString());
 				orthoProcLink.OrthoCaseNum    = PIn.Long  (row["OrthoCaseNum"].ToString());
 				orthoProcLink.ProcNum         = PIn.Long  (row["ProcNum"].ToString());
-				orthoProcLink.SecDateTEntry   = PIn.DateT (row["SecDateTEntry"].ToString());
+				orthoProcLink.SecDateTEntry   = PIn.Date (row["SecDateTEntry"].ToString());
 				orthoProcLink.SecUserNumEntry = PIn.Long  (row["SecUserNumEntry"].ToString());
 				orthoProcLink.ProcLinkType    = (OpenDentBusiness.OrthoProcType)PIn.Int(row["ProcLinkType"].ToString());
 				retVal.Add(orthoProcLink);

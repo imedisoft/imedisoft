@@ -51,7 +51,7 @@ namespace OpenDental {
 				return;
 			} 
 			try {
-				MedOrderCur.DateTimeOrder=PIn.DateT(textDateTime.Text);
+				MedOrderCur.DateTimeOrder=PIn.Date(textDateTime.Text);
 			}
 			catch {
 				MessageBox.Show(this,"Please enter a Date Time with format DD/MM/YYYY HH:mm AM/PM");

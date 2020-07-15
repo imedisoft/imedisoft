@@ -113,8 +113,8 @@ namespace OpenDental {
 			if(!IsValid(showMsg)) {
 				return false;
 			}
-			_commlogCur.DateTimeEnd=PIn.DateT(textDateTimeEnd.Text);
-			_commlogCur.CommDateTime=PIn.DateT(textDateTime.Text);
+			_commlogCur.DateTimeEnd=PIn.Date(textDateTimeEnd.Text);
+			_commlogCur.CommDateTime=PIn.Date(textDateTime.Text);
 			//there may not be a commtype selected.
 			if(listType.SelectedIndex==-1) {
 				_commlogCur.CommType=0;

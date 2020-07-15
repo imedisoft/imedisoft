@@ -47,7 +47,7 @@ namespace OpenDentBusiness.Crud{
 				smsFromMobile.ClinicNum        = PIn.Long  (row["ClinicNum"].ToString());
 				smsFromMobile.CommlogNum       = PIn.Long  (row["CommlogNum"].ToString());
 				smsFromMobile.MsgText          = PIn.String(row["MsgText"].ToString());
-				smsFromMobile.DateTimeReceived = PIn.DateT (row["DateTimeReceived"].ToString());
+				smsFromMobile.DateTimeReceived = PIn.Date (row["DateTimeReceived"].ToString());
 				smsFromMobile.SmsPhoneNumber   = PIn.String(row["SmsPhoneNumber"].ToString());
 				smsFromMobile.MobilePhoneNumber= PIn.String(row["MobilePhoneNumber"].ToString());
 				smsFromMobile.MsgPart          = PIn.Int   (row["MsgPart"].ToString());
@@ -58,7 +58,7 @@ namespace OpenDentBusiness.Crud{
 				smsFromMobile.IsHidden         = PIn.Bool  (row["IsHidden"].ToString());
 				smsFromMobile.MatchCount       = PIn.Int   (row["MatchCount"].ToString());
 				smsFromMobile.GuidMessage      = PIn.String(row["GuidMessage"].ToString());
-				smsFromMobile.SecDateTEdit     = PIn.DateT (row["SecDateTEdit"].ToString());
+				smsFromMobile.SecDateTEdit     = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(smsFromMobile);
 			}
 			return retVal;

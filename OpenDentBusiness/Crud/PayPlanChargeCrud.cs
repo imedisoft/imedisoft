@@ -55,8 +55,8 @@ namespace OpenDentBusiness.Crud{
 				payPlanCharge.ClinicNum       = PIn.Long  (row["ClinicNum"].ToString());
 				payPlanCharge.ChargeType      = (OpenDentBusiness.PayPlanChargeType)PIn.Int(row["ChargeType"].ToString());
 				payPlanCharge.ProcNum         = PIn.Long  (row["ProcNum"].ToString());
-				payPlanCharge.SecDateTEntry   = PIn.DateT (row["SecDateTEntry"].ToString());
-				payPlanCharge.SecDateTEdit    = PIn.DateT (row["SecDateTEdit"].ToString());
+				payPlanCharge.SecDateTEntry   = PIn.Date (row["SecDateTEntry"].ToString());
+				payPlanCharge.SecDateTEdit    = PIn.Date (row["SecDateTEdit"].ToString());
 				payPlanCharge.StatementNum    = PIn.Long  (row["StatementNum"].ToString());
 				payPlanCharge.FKey            = PIn.Long  (row["FKey"].ToString());
 				payPlanCharge.LinkType        = (OpenDentBusiness.PayPlanLinkType)PIn.Int(row["LinkType"].ToString());

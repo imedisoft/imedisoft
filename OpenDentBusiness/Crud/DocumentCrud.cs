@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 				document=new Document();
 				document.DocNum        = PIn.Long  (row["DocNum"].ToString());
 				document.Description   = PIn.String(row["Description"].ToString());
-				document.DateCreated   = PIn.DateT (row["DateCreated"].ToString());
+				document.DateCreated   = PIn.Date (row["DateCreated"].ToString());
 				document.DocCategory   = PIn.Long  (row["DocCategory"].ToString());
 				document.PatNum        = PIn.Long  (row["PatNum"].ToString());
 				document.FileName      = PIn.String(row["FileName"].ToString());
@@ -62,7 +62,7 @@ namespace OpenDentBusiness.Crud{
 				document.WindowingMin  = PIn.Int   (row["WindowingMin"].ToString());
 				document.WindowingMax  = PIn.Int   (row["WindowingMax"].ToString());
 				document.MountItemNum  = PIn.Long  (row["MountItemNum"].ToString());
-				document.DateTStamp    = PIn.DateT (row["DateTStamp"].ToString());
+				document.DateTStamp    = PIn.Date (row["DateTStamp"].ToString());
 				document.RawBase64     = PIn.String(row["RawBase64"].ToString());
 				document.Thumbnail     = PIn.String(row["Thumbnail"].ToString());
 				document.ExternalGUID  = PIn.String(row["ExternalGUID"].ToString());

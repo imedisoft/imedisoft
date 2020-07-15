@@ -90,7 +90,7 @@ namespace OpenDentBusiness{
 			//Set it for this user if a future repeating task, so it will be new when "due".  Doing this here so we don't check every row below.
 			//Only for future dates because we don't want to mark as new if it was already "due" and you added a note or something.
 			if((PIn.String(table.Rows[0]["ReminderGroupId"].ToString())!="")//Is a reminder
-				&& (PIn.DateT(table.Rows[0]["DateTimeEntry"].ToString())>PIn.DateT(table.Rows[0]["DbTime"].ToString())))//Is "due" in the future by DbTime 
+				&& (PIn.Date(table.Rows[0]["DateTimeEntry"].ToString())>PIn.Date(table.Rows[0]["DbTime"].ToString())))//Is "due" in the future by DbTime 
 			{
 				SetUnread(curUserNum,task);//Set unread for current user only, other users dealt with below.
 			}

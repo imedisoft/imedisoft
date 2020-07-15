@@ -1,10 +1,9 @@
-﻿using System;
+﻿using DataConnectionBase;
 using OpenDentBusiness;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
-using DataConnectionBase;
+using System;
 using System.Diagnostics;
+using System.Text;
+using System.Windows.Forms;
 
 namespace CentralManager
 {
@@ -16,15 +15,17 @@ namespace CentralManager
 		private static string GetArgsFromConnection(CentralConnection centralConnection, bool useDynamicMode)
 		{
 			string args = "";
+
 			if (centralConnection.DatabaseName != "")
 			{
-				args += "ServerName=\"" + centralConnection.ServerName + "\" "
-					+ "DatabaseName=\"" + centralConnection.DatabaseName + "\" "
-					+ "MySqlUser=\"" + centralConnection.MySqlUser + "\" ";
+				args +=
+					"ServerName=\"" + centralConnection.ServerName + "\" " +
+					"DatabaseName=\"" + centralConnection.DatabaseName + "\" " +
+					"MySqlUser=\"" + centralConnection.MySqlUser + "\" ";
 
 				if (centralConnection.MySqlPassword != "")
 				{
-					args += "MySqlPassword=\"" + CentralConnections.Decrypt(centralConnection.MySqlPassword, FormCentralManager.EncryptionKey) + "\" ";
+					args += "MySqlPassword=\"" + centralConnection.MySqlPassword + "\" ";
 				}
 			}
 
@@ -61,7 +62,7 @@ namespace CentralManager
 			}
 			catch
 			{
-                CodeBase.ODMessageBox.Show("Unable to start the process OpenDental.exe.");
+				CodeBase.ODMessageBox.Show("Unable to start the process OpenDental.exe.");
 			}
 		}
 
@@ -81,38 +82,23 @@ namespace CentralManager
 		/// </summary>
 		public static bool SetCentralConnection(CentralConnection centralConnection, bool refreshCache)
 		{
-			UTF8Encoding enc = new UTF8Encoding();
-			byte[] EncryptionKey = enc.GetBytes("mQlEGebnokhGFEFV");//Gotten from FormCentralManager constructor. Only place that does anything like this.
-			string computerName = "";
-			string database = "";
-			string user = "";
-			string password = "";
-			if (centralConnection.ServerName != "")
-			{//Direct connection
-				computerName = centralConnection.ServerName;
-				database = centralConnection.DatabaseName;
-				user = centralConnection.MySqlUser;
-				if (centralConnection.MySqlPassword != "")
+			try
+			{
+				var dataConnection = new DataConnection();
+
+				dataConnection.SetDbLocal(
+					centralConnection.ServerName,
+					centralConnection.MySqlUser,
+					centralConnection.MySqlPassword,
+					centralConnection.DatabaseName);
+
+				if (refreshCache)
 				{
-					password = CentralConnections.Decrypt(centralConnection.MySqlPassword, EncryptionKey);
-				}
-				try
-				{
-					DataConnection dcon = new DataConnection();
-					dcon.SetDbLocal(computerName, user, password, database);
-					if (refreshCache)
-					{
-						Cache.Refresh(InvalidType.AllLocal);
-					}
-				}
-				catch
-				{
-					return false;
+					Cache.Refresh(InvalidType.AllLocal);
 				}
 			}
-			else
+			catch
 			{
-				MessageBox.Show("Database must be specified in the connection.");
 				return false;
 			}
 

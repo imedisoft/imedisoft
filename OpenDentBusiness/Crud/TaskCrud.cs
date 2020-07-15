@@ -52,15 +52,15 @@ namespace OpenDentBusiness.Crud{
 				task.DateType         = (OpenDentBusiness.TaskDateType)PIn.Int(row["DateType"].ToString());
 				task.FromNum          = PIn.Long  (row["FromNum"].ToString());
 				task.ObjectType       = (OpenDentBusiness.TaskObjectType)PIn.Int(row["ObjectType"].ToString());
-				task.DateTimeEntry    = PIn.DateT (row["DateTimeEntry"].ToString());
+				task.DateTimeEntry    = PIn.Date (row["DateTimeEntry"].ToString());
 				task.UserNum          = PIn.Long  (row["UserNum"].ToString());
-				task.DateTimeFinished = PIn.DateT (row["DateTimeFinished"].ToString());
+				task.DateTimeFinished = PIn.Date (row["DateTimeFinished"].ToString());
 				task.PriorityDefNum   = PIn.Long  (row["PriorityDefNum"].ToString());
 				task.ReminderGroupId  = PIn.String(row["ReminderGroupId"].ToString());
 				task.ReminderType     = (OpenDentBusiness.TaskReminderType)PIn.Int(row["ReminderType"].ToString());
 				task.ReminderFrequency= PIn.Int   (row["ReminderFrequency"].ToString());
-				task.DateTimeOriginal = PIn.DateT (row["DateTimeOriginal"].ToString());
-				task.SecDateTEdit     = PIn.DateT (row["SecDateTEdit"].ToString());
+				task.DateTimeOriginal = PIn.Date (row["DateTimeOriginal"].ToString());
+				task.SecDateTEdit     = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(task);
 			}
 			return retVal;

@@ -33,7 +33,7 @@ namespace OpenDentBusiness{
 			DataTable rawComm=Db.GetTable(command);
 			for(int i=0;i<rawComm.Rows.Count;i++) {
 				row=table.NewRow();
-				row["commDateTime"]=PIn.DateT(rawComm.Rows[i]["commDateTime"].ToString()).ToShortDateString();
+				row["commDateTime"]=PIn.Date(rawComm.Rows[i]["commDateTime"].ToString()).ToShortDateString();
 				row["CommlogNum"]=rawComm.Rows[i]["CommlogNum"].ToString();
 				row["CommType"]=rawComm.Rows[i]["CommType"].ToString();
 				row["Note"]=rawComm.Rows[i]["Note"].ToString();
@@ -49,7 +49,7 @@ namespace OpenDentBusiness{
 			rawComm=Db.GetTable(command);
 			for(int i=0;i<rawComm.Rows.Count;i++) {
 				row=table.NewRow();
-				row["commDateTime"]=PIn.DateT(rawComm.Rows[i]["MsgDateTime"].ToString()).ToShortDateString();
+				row["commDateTime"]=PIn.Date(rawComm.Rows[i]["MsgDateTime"].ToString()).ToShortDateString();
 				row["EmailMessageNum"]=rawComm.Rows[i]["EmailMessageNum"].ToString();
 				row["CommlogNum"]=0;
 				row["Subject"]=rawComm.Rows[i]["Subject"].ToString();
@@ -85,24 +85,24 @@ namespace OpenDentBusiness{
 			if(raw.Rows.Count>0){
 				row["LabCaseNum"]=raw.Rows[0]["LabCaseNum"].ToString();
 				row["labDescript"]=raw.Rows[0]["Description"].ToString();
-				date=PIn.DateT(raw.Rows[0]["DateTimeChecked"].ToString());
+				date=PIn.Date(raw.Rows[0]["DateTimeChecked"].ToString());
 				if(date.Year>1880){
 					row["labDescript"]+=", "+Lans.g("FormApptEdit","Quality Checked");
 				}
 				else{
-					date=PIn.DateT(raw.Rows[0]["DateTimeRecd"].ToString());
+					date=PIn.Date(raw.Rows[0]["DateTimeRecd"].ToString());
 					if(date.Year>1880){
 						row["labDescript"]+=", "+Lans.g("FormApptEdit","Received");
 					}
 					else{
-						date=PIn.DateT(raw.Rows[0]["DateTimeSent"].ToString());
+						date=PIn.Date(raw.Rows[0]["DateTimeSent"].ToString());
 						if(date.Year>1880){
 							row["labDescript"]+=", "+Lans.g("FormApptEdit","Sent");//sent but not received
 						}
 						else{
 							row["labDescript"]+=", "+Lans.g("FormApptEdit","Not Sent");
 						}
-						dateDue=PIn.DateT(raw.Rows[0]["DateTimeDue"].ToString());
+						dateDue=PIn.Date(raw.Rows[0]["DateTimeDue"].ToString());
 						if(dateDue.Year>1880) {
 							row["labDescript"]+=", "+Lans.g("FormAppEdit","Due: ")+dateDue.ToString("ddd")+" "
 								+dateDue.ToShortDateString()+" "+dateDue.ToShortTimeString();
@@ -224,7 +224,7 @@ namespace OpenDentBusiness{
 			DataTable tableLastVisit=Db.GetTable(command);
 			for(int i=0;i<tableLastVisit.Rows.Count;i++) {
 				long patNum=PIn.Long(tableLastVisit.Rows[i]["PatNum"].ToString());
-				DateTime dateLastAppt=PIn.DateT(tableLastVisit.Rows[i]["DateLastAppt"].ToString());
+				DateTime dateLastAppt=PIn.Date(tableLastVisit.Rows[i]["DateLastAppt"].ToString());
 				retVal.Add(patNum,dateLastAppt);
 			}
 			return retVal;
@@ -832,12 +832,12 @@ namespace OpenDentBusiness{
 					if(rowRaw["patAddrNote"].ToString()!="") {
 						row["addrNote"]=Lans.g("Appointments","AddrNote: ")+rowRaw["patAddrNote"].ToString();
 					}
-					aptDate=PIn.DateT(rowRaw["apptAptDateTime"].ToString());
-					aptDateArrived=PIn.DateT(rowRaw["apptAptDateTimeArrived"].ToString());
+					aptDate=PIn.Date(rowRaw["apptAptDateTime"].ToString());
+					aptDateArrived=PIn.Date(rowRaw["apptAptDateTimeArrived"].ToString());
 					void trySetDateTime(string field,DateTime dateTime,int limit=10) {
 						int attempts=1;
 						row[field]=dateTime;
-						while(PIn.DateT(row[field].ToString())!=dateTime && attempts<=limit) {
+						while(PIn.Date(row[field].ToString())!=dateTime && attempts<=limit) {
 							//In the event of an asynchronous collision that caused this field to not be set correctly, re-attempt a limited number of times.
 							row[field]=dateTime;
 							attempts++;
@@ -994,24 +994,24 @@ namespace OpenDentBusiness{
 					row["IsHygiene"]=rowRaw["apptIsHygiene"].ToString();
 					row["lab"]="";
 					if(rowRaw["labcaseLabCaseNum"].ToString()!="") {
-						labDate=PIn.DateT(rowRaw["labcaseDateTimeChecked"].ToString());
+						labDate=PIn.Date(rowRaw["labcaseDateTimeChecked"].ToString());
 						if(labDate.Year>1880) {
 							row["lab"]=Lans.g("Appointments","Lab Quality Checked");
 						}
 						else {
-							labDate=PIn.DateT(rowRaw["labcaseDateTimeRecd"].ToString());
+							labDate=PIn.Date(rowRaw["labcaseDateTimeRecd"].ToString());
 							if(labDate.Year>1880) {
 								row["lab"]=Lans.g("Appointments","Lab Received");
 							}
 							else {
-								labDate=PIn.DateT(rowRaw["labcaseDateTimeSent"].ToString());
+								labDate=PIn.Date(rowRaw["labcaseDateTimeSent"].ToString());
 								if(labDate.Year>1880) {
 									row["lab"]=Lans.g("Appointments","Lab Sent");//sent but not received
 								}
 								else {
 									row["lab"]=Lans.g("Appointments","Lab Not Sent");
 								}
-								labDueDate=PIn.DateT(rowRaw["labcaseDateTimeDue"].ToString());
+								labDueDate=PIn.Date(rowRaw["labcaseDateTimeDue"].ToString());
 								if(labDueDate.Year>1880) {
 									row["lab"]+=", "+Lans.g("Appointments","Due: ")//+dateDue.ToString("ddd")+" "
 										+labDueDate.ToShortDateString();//+" "+dateDue.ToShortTimeString();
@@ -1142,7 +1142,7 @@ namespace OpenDentBusiness{
 						row["referralTo"]=dictRefToPatNums[apptPatNum];
 					}
 					row["timeAskedToArrive"]="";
-					timeAskedToArrive=PIn.DateT(rowRaw["apptDateTimeAskedToArrive"].ToString());
+					timeAskedToArrive=PIn.Date(rowRaw["apptDateTimeAskedToArrive"].ToString());
 					if(timeAskedToArrive.Year>1880) {
 						row["timeAskedToArrive"]=timeAskedToArrive.ToString("H:mm");
 					}
@@ -1299,8 +1299,8 @@ namespace OpenDentBusiness{
 				pat.FName=raw.Rows[i]["FName"].ToString();
 				pat.Preferred=raw.Rows[i]["Preferred"].ToString();
 				row["patName"]=pat.GetNameLF();
-				dateTimeNow=PIn.DateT(raw.Rows[i]["dateTimeNow"].ToString());
-				timeArrived=(PIn.DateT(raw.Rows[i]["DateTimeArrived"].ToString())).TimeOfDay;
+				dateTimeNow=PIn.Date(raw.Rows[i]["dateTimeNow"].ToString());
+				timeArrived=(PIn.Date(raw.Rows[i]["DateTimeArrived"].ToString())).TimeOfDay;
 				waitTime=dateTimeNow-timeArrived;
 				row["waitTime"]=waitTime.ToString("H:mm:ss");
 				//minutes=waitTime.Minutes;
@@ -1472,7 +1472,7 @@ namespace OpenDentBusiness{
 			//3. All unattached completed procs with same date as appt.
 			//but only if one of these types
 			if(apptStatus=="1" || apptStatus=="2" || apptStatus=="4" || apptStatus=="5"){//sched,C,ASAP,broken
-				DateTime aptDate=PIn.DateT(aptDateTime);
+				DateTime aptDate=PIn.Date(aptDateTime);
 				command+=" OR (AptNum=0 "//unattached
 					+"AND ProcStatus=2 "//complete
 					+"AND "+DbHelper.DtimeToDate("ProcDate")+"="+POut.Date(aptDate)+")";//same date
@@ -1634,8 +1634,8 @@ namespace OpenDentBusiness{
 				row["AddrNote"]=rawtable.Rows[i]["AddrNote"].ToString();
 				row["AptNum"]=rawtable.Rows[i]["AptNum"].ToString();
 				row["age"]=Patients.DateToAge(PIn.Date(rawtable.Rows[i]["Birthdate"].ToString())).ToString();//we don't care about m/y.
-				dateT=PIn.DateT(rawtable.Rows[i]["AptDateTime"].ToString());
-				timeAskedToArrive=PIn.DateT(rawtable.Rows[i]["DateTimeAskedToArrive"].ToString());
+				dateT=PIn.Date(rawtable.Rows[i]["AptDateTime"].ToString());
+				timeAskedToArrive=PIn.Date(rawtable.Rows[i]["DateTimeAskedToArrive"].ToString());
 				if(timeAskedToArrive.Year>1880) {
 					dateT=timeAskedToArrive;
 				}
@@ -2255,7 +2255,7 @@ namespace OpenDentBusiness{
 				if(dayTable.Rows[i]["AptStatus"].ToString()==((int)ApptStatus.Broken).ToString()){//ignore broken appts
 					continue;
 				}
-				aptDateTime=PIn.DateT(dayTable.Rows[i]["AptDateTime"].ToString());
+				aptDateTime=PIn.Date(dayTable.Rows[i]["AptDateTime"].ToString());
 				if(aptDateTime.Date!=apt.AptDateTime.Date) {//These appointments are on different days.
 					continue;
 				}
@@ -3202,7 +3202,7 @@ namespace OpenDentBusiness{
 			var groupsApptsPerOp=dtAppointments.Select().Select(x => new Appointment {
 				AptNum=PIn.Long(x["aptNum"].ToString()),
 				Op=PIn.Long(x["Op"].ToString()),
-				AptDateTime=PIn.DateT(x["AptDateTime"].ToString()),
+				AptDateTime=PIn.Date(x["AptDateTime"].ToString()),
 				Pattern=(x["Pattern"].ToString())
 			}).GroupBy(x => x.Op);
 			//Set the type of the list

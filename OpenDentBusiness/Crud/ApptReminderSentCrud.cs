@@ -43,8 +43,8 @@ namespace OpenDentBusiness.Crud{
 				apptReminderSent=new ApptReminderSent();
 				apptReminderSent.ApptReminderSentNum= PIn.Long  (row["ApptReminderSentNum"].ToString());
 				apptReminderSent.ApptNum            = PIn.Long  (row["ApptNum"].ToString());
-				apptReminderSent.ApptDateTime       = PIn.DateT (row["ApptDateTime"].ToString());
-				apptReminderSent.DateTimeSent       = PIn.DateT (row["DateTimeSent"].ToString());
+				apptReminderSent.ApptDateTime       = PIn.Date (row["ApptDateTime"].ToString());
+				apptReminderSent.DateTimeSent       = PIn.Date (row["DateTimeSent"].ToString());
 				apptReminderSent.TSPrior            = TimeSpan.FromTicks(PIn.Long(row["TSPrior"].ToString()));
 				apptReminderSent.ApptReminderRuleNum= PIn.Long  (row["ApptReminderRuleNum"].ToString());
 				apptReminderSent.IsSmsSent          = PIn.Bool  (row["IsSmsSent"].ToString());

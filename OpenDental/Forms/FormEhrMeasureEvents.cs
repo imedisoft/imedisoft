@@ -31,10 +31,10 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			if(comboType.SelectedIndex==0) {
-				_listEhrMeasureEvents=EhrMeasureEvents.GetAllByTypeFromDB(PIn.DateT(textDateStart.Text),PIn.DateT(textDateEnd.Text),(EhrMeasureEventType)comboType.SelectedIndex,true);
+				_listEhrMeasureEvents=EhrMeasureEvents.GetAllByTypeFromDB(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),(EhrMeasureEventType)comboType.SelectedIndex,true);
 			}
 			else {
-				_listEhrMeasureEvents=EhrMeasureEvents.GetAllByTypeFromDB(PIn.DateT(textDateStart.Text),PIn.DateT(textDateEnd.Text),(EhrMeasureEventType)comboType.SelectedIndex-1,false);
+				_listEhrMeasureEvents=EhrMeasureEvents.GetAllByTypeFromDB(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),(EhrMeasureEventType)comboType.SelectedIndex-1,false);
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();

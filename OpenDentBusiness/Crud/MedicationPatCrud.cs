@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				medicationPat.PatNum          = PIn.Long  (row["PatNum"].ToString());
 				medicationPat.MedicationNum   = PIn.Long  (row["MedicationNum"].ToString());
 				medicationPat.PatNote         = PIn.String(row["PatNote"].ToString());
-				medicationPat.DateTStamp      = PIn.DateT (row["DateTStamp"].ToString());
+				medicationPat.DateTStamp      = PIn.Date (row["DateTStamp"].ToString());
 				medicationPat.DateStart       = PIn.Date  (row["DateStart"].ToString());
 				medicationPat.DateStop        = PIn.Date  (row["DateStop"].ToString());
 				medicationPat.ProvNum         = PIn.Long  (row["ProvNum"].ToString());

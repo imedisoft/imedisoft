@@ -52,7 +52,7 @@ namespace OpenDentBusiness.Mobile.Crud{
 				appointmentm.Note        = PIn.String(table.Rows[i]["Note"].ToString());
 				appointmentm.ProvNum     = PIn.Long  (table.Rows[i]["ProvNum"].ToString());
 				appointmentm.ProvHyg     = PIn.Long  (table.Rows[i]["ProvHyg"].ToString());
-				appointmentm.AptDateTime = PIn.DateT (table.Rows[i]["AptDateTime"].ToString());
+				appointmentm.AptDateTime = PIn.Date (table.Rows[i]["AptDateTime"].ToString());
 				appointmentm.IsNewPatient= PIn.Bool  (table.Rows[i]["IsNewPatient"].ToString());
 				appointmentm.ProcDescript= PIn.String(table.Rows[i]["ProcDescript"].ToString());
 				appointmentm.ClinicNum   = PIn.Long  (table.Rows[i]["ClinicNum"].ToString());

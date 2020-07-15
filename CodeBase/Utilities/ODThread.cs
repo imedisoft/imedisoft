@@ -19,7 +19,7 @@ namespace CodeBase
 		/// <summary>
 		/// The C# thread that is used to run ODThread internally.
 		/// </summary>
-		private Thread _thread = null;
+		private readonly Thread _thread = null;
 		
 		/// <summary>
 		/// Sleep timer which can be interrupted elegantly.
@@ -35,28 +35,28 @@ namespace CodeBase
 		/// <summary>
 		/// Pointer to the function from the calling code which will perform the majority of this thread's work.
 		/// </summary>
-		private WorkerDelegate _worker = null;
-		
-		/// <summary>
-		/// Pointer to the function from the calling code which will be alerted when the run function has thrown an unhandled exception.
-		/// </summary>
-		private ExceptionDelegate _exceptionHandler = null;
-		
-		/// <summary>
-		/// Pointer to the function from the calling code which will be alerted when the run function has completed.
-		/// This will NOT fire if Join() times out.
-		/// </summary>
-		private WorkerDelegate _exitHandler = null;
-		
-		/// <summary>
-		/// Pointer to the function from the calling code which will be run before the main worker delegate starts.
-		/// </summary>
-		private WorkerDelegate _setupHandler = null;
+		private readonly WorkerDelegate _worker = null;
+
+        /// <summary>
+        /// Pointer to the function from the calling code which will be alerted when the run function has thrown an unhandled exception.
+        /// </summary>
+        private ExceptionDelegate _exceptionHandler = null;
+
+        /// <summary>
+        /// Pointer to the function from the calling code which will be alerted when the run function has completed.
+        /// This will NOT fire if Join() times out.
+        /// </summary>
+        private WorkerDelegate _exitHandler = null;
+
+        /// <summary>
+        /// Pointer to the function from the calling code which will be run before the main worker delegate starts.
+        /// </summary>
+        private WorkerDelegate _setupHandler = null;
 		
 		/// <summary>
 		/// Pointer to the function that runs in the constructor of ODThread.
 		/// </summary>
-		private static WorkerDelegate _onInitialize = null;
+		private static readonly WorkerDelegate _onInitialize = null;
 		
 		/// <summary>
 		/// Custom data which can be set before launching the thread and then safely accessed within the WorkerDelegate.
@@ -103,7 +103,7 @@ namespace CodeBase
 		/// <summary>
 		/// Stores the object that was returned via the func GetDatabaseContext which was invoked in the constructor.
 		/// </summary>
-		private object _databaseContext;
+		private readonly object _databaseContext;
 		
 		/// <summary>
 		/// This func gets invoked within the constructor of this thread.

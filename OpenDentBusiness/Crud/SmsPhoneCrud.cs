@@ -45,8 +45,8 @@ namespace OpenDentBusiness.Crud{
 				smsPhone.SmsPhoneNum     = PIn.Long  (row["SmsPhoneNum"].ToString());
 				smsPhone.ClinicNum       = PIn.Long  (row["ClinicNum"].ToString());
 				smsPhone.PhoneNumber     = PIn.String(row["PhoneNumber"].ToString());
-				smsPhone.DateTimeActive  = PIn.DateT (row["DateTimeActive"].ToString());
-				smsPhone.DateTimeInactive= PIn.DateT (row["DateTimeInactive"].ToString());
+				smsPhone.DateTimeActive  = PIn.Date (row["DateTimeActive"].ToString());
+				smsPhone.DateTimeInactive= PIn.Date (row["DateTimeInactive"].ToString());
 				smsPhone.InactiveCode    = PIn.String(row["InactiveCode"].ToString());
 				smsPhone.CountryCode     = PIn.String(row["CountryCode"].ToString());
 				retVal.Add(smsPhone);

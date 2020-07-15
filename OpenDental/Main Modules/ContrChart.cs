@@ -1262,7 +1262,7 @@ namespace OpenDental {
 				return;
 			}
 			DataRow row=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[0]].Tag;
-			//hospitalDate=PIn.DateT(row["ProcDate"].ToString());
+			//hospitalDate=PIn.Date(row["ProcDate"].ToString());
 			//Store the state of all checkboxes in temporary variables
 			bool showRx=this.checkRx.Checked;
 			bool showComm=this.checkComm.Checked;
@@ -1292,8 +1292,8 @@ namespace OpenDental {
 			checkSheets.Checked=false;
 			checkShowTeeth.Checked=false;
 			checkAudit.Checked=false;
-			_dateTimeShowDateStart=PIn.DateT(row["ProcDate"].ToString());
-			_dateTimeShowDateEnd=PIn.DateT(row["ProcDate"].ToString());
+			_dateTimeShowDateStart=PIn.Date(row["ProcDate"].ToString());
+			_dateTimeShowDateEnd=PIn.Date(row["ProcDate"].ToString());
 			checkShowTP.Checked=false;
 			checkShowC.Checked=true;
 			checkShowE.Checked=false;
@@ -5406,7 +5406,7 @@ namespace OpenDental {
 					skippedLinkedToOrthoCase++;
 					return false;
 				}
-				DateTime procDate=PIn.DateT(row["ProcDate"].ToString());
+				DateTime procDate=PIn.Date(row["ProcDate"].ToString());
 				long codeNum=PIn.Long(row["CodeNum"].ToString());
 				if(ProcedureCodes.GetStringProcCode(codeNum)==ProcedureCodes.GroupProcCode) {//If a group note
 					//Check DB to see if attached to any completed procedures. This isn't pulled from datasetmain because we want to be 100% up to date.
@@ -7276,7 +7276,7 @@ namespace OpenDental {
 							//rx.PharmacyNum;//Get the pharmacy where pharmacy.PharmID = node.Value
 							break;
 						case "prescriptiondate":
-							rx.RxDate=PIn.DateT(nodeRxField.Value);
+							rx.RxDate=PIn.Date(nodeRxField.Value);
 							break;
 						case "prescriptionguid"://32 characters with 4 hyphens. ex ba4d4a84-af0a-4cbf-9437-36feda97d1b6
 							rx.ErxGuid=nodeRxField.Value;
@@ -7691,7 +7691,7 @@ namespace OpenDental {
 			//if printing for hospital
 			/*
 			if(hospitalDate.Year > 1880) {
-				if(hospitalDate.Date != PIn.DateT(row["ProcDate"].ToString()).Date) {
+				if(hospitalDate.Date != PIn.Date(row["ProcDate"].ToString()).Date) {
 					return false;
 				}
 				if(row["ProcStatus"].ToString() != ((int)ProcStat.C).ToString()) {

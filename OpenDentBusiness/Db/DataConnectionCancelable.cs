@@ -86,7 +86,7 @@ namespace OpenDentBusiness
             }
 
             // Throws Exception if Sql is not allowed, which is handled by the ExceptionThreadHandler and output in a MsgBox
-            if (!isSqlValidated && !Db.IsSqlAllowed(command, isRunningOnReportServer: isRunningOnReportServer))
+            if (!isSqlValidated && !Db.IsSqlAllowed(command))
 			{
 				throw new ApplicationException(
 					"Error: Command is either not safe or user does not have permission.");

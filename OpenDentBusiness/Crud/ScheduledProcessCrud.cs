@@ -53,7 +53,7 @@ namespace OpenDentBusiness.Crud{
 				catch{
 					scheduledProcess.ScheduledAction  =(OpenDentBusiness.ScheduledActionEnum)0;
 				}
-				scheduledProcess.TimeToRun          = PIn.DateT (row["TimeToRun"].ToString());
+				scheduledProcess.TimeToRun          = PIn.Date (row["TimeToRun"].ToString());
 				string frequencyToRun=row["FrequencyToRun"].ToString();
 				if(frequencyToRun=="") {
 					scheduledProcess.FrequencyToRun   =(OpenDentBusiness.FrequencyToRunEnum)0;
@@ -64,7 +64,7 @@ namespace OpenDentBusiness.Crud{
 				catch{
 					scheduledProcess.FrequencyToRun   =(OpenDentBusiness.FrequencyToRunEnum)0;
 				}
-				scheduledProcess.LastRanDateTime    = PIn.DateT (row["LastRanDateTime"].ToString());
+				scheduledProcess.LastRanDateTime    = PIn.Date (row["LastRanDateTime"].ToString());
 				retVal.Add(scheduledProcess);
 			}
 			return retVal;

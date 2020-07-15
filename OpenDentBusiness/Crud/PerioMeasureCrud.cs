@@ -53,8 +53,8 @@ namespace OpenDentBusiness.Crud{
 				perioMeasure.MLvalue        = PIn.Int   (row["MLvalue"].ToString());
 				perioMeasure.Lvalue         = PIn.Int   (row["Lvalue"].ToString());
 				perioMeasure.DLvalue        = PIn.Int   (row["DLvalue"].ToString());
-				perioMeasure.SecDateTEntry  = PIn.DateT (row["SecDateTEntry"].ToString());
-				perioMeasure.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
+				perioMeasure.SecDateTEntry  = PIn.Date (row["SecDateTEntry"].ToString());
+				perioMeasure.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(perioMeasure);
 			}
 			return retVal;

@@ -115,7 +115,7 @@ namespace OpenDentBusiness.Crud{
 				claim.ShareOfCost                   = PIn.Double(row["ShareOfCost"].ToString());
 				claim.SecUserNumEntry               = PIn.Long  (row["SecUserNumEntry"].ToString());
 				claim.SecDateEntry                  = PIn.Date  (row["SecDateEntry"].ToString());
-				claim.SecDateTEdit                  = PIn.DateT (row["SecDateTEdit"].ToString());
+				claim.SecDateTEdit                  = PIn.Date (row["SecDateTEdit"].ToString());
 				claim.OrderingReferralNum           = PIn.Long  (row["OrderingReferralNum"].ToString());
 				claim.DateSentOrig                  = PIn.Date  (row["DateSentOrig"].ToString());
 				claim.DateIllnessInjuryPreg         = PIn.Date  (row["DateIllnessInjuryPreg"].ToString());

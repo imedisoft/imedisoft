@@ -60,11 +60,11 @@ namespace OpenDentBusiness.Crud{
 				catch{
 					payConnectResponseWeb.ProcessingStatus      =(OpenDentBusiness.PayConnectWebStatus)0;
 				}
-				payConnectResponseWeb.DateTimeEntry           = PIn.DateT (row["DateTimeEntry"].ToString());
-				payConnectResponseWeb.DateTimePending         = PIn.DateT (row["DateTimePending"].ToString());
-				payConnectResponseWeb.DateTimeCompleted       = PIn.DateT (row["DateTimeCompleted"].ToString());
-				payConnectResponseWeb.DateTimeExpired         = PIn.DateT (row["DateTimeExpired"].ToString());
-				payConnectResponseWeb.DateTimeLastError       = PIn.DateT (row["DateTimeLastError"].ToString());
+				payConnectResponseWeb.DateTimeEntry           = PIn.Date (row["DateTimeEntry"].ToString());
+				payConnectResponseWeb.DateTimePending         = PIn.Date (row["DateTimePending"].ToString());
+				payConnectResponseWeb.DateTimeCompleted       = PIn.Date (row["DateTimeCompleted"].ToString());
+				payConnectResponseWeb.DateTimeExpired         = PIn.Date (row["DateTimeExpired"].ToString());
+				payConnectResponseWeb.DateTimeLastError       = PIn.Date (row["DateTimeLastError"].ToString());
 				payConnectResponseWeb.LastResponseStr         = PIn.String(row["LastResponseStr"].ToString());
 				payConnectResponseWeb.IsTokenSaved            = PIn.Bool  (row["IsTokenSaved"].ToString());
 				payConnectResponseWeb.PaymentToken            = PIn.String(row["PaymentToken"].ToString());

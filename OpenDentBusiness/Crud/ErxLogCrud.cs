@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				erxLog.ErxLogNum = PIn.Long  (row["ErxLogNum"].ToString());
 				erxLog.PatNum    = PIn.Long  (row["PatNum"].ToString());
 				erxLog.MsgText   = PIn.String(row["MsgText"].ToString());
-				erxLog.DateTStamp= PIn.DateT (row["DateTStamp"].ToString());
+				erxLog.DateTStamp= PIn.Date (row["DateTStamp"].ToString());
 				erxLog.ProvNum   = PIn.Long  (row["ProvNum"].ToString());
 				erxLog.UserNum   = PIn.Long  (row["UserNum"].ToString());
 				retVal.Add(erxLog);

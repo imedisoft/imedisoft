@@ -47,8 +47,8 @@ namespace OpenDentBusiness.Crud{
 				xWebResponse.ProvNum              = PIn.Long  (row["ProvNum"].ToString());
 				xWebResponse.ClinicNum            = PIn.Long  (row["ClinicNum"].ToString());
 				xWebResponse.PaymentNum           = PIn.Long  (row["PaymentNum"].ToString());
-				xWebResponse.DateTEntry           = PIn.DateT (row["DateTEntry"].ToString());
-				xWebResponse.DateTUpdate          = PIn.DateT (row["DateTUpdate"].ToString());
+				xWebResponse.DateTEntry           = PIn.Date (row["DateTEntry"].ToString());
+				xWebResponse.DateTUpdate          = PIn.Date (row["DateTUpdate"].ToString());
 				xWebResponse.TransactionStatus    = (OpenDentBusiness.XWebTransactionStatus)PIn.Int(row["TransactionStatus"].ToString());
 				xWebResponse.ResponseCode         = PIn.Int   (row["ResponseCode"].ToString());
 				string xWebResponseCode=row["XWebResponseCode"].ToString();
@@ -64,7 +64,7 @@ namespace OpenDentBusiness.Crud{
 				xWebResponse.ResponseDescription  = PIn.String(row["ResponseDescription"].ToString());
 				xWebResponse.OTK                  = PIn.String(row["OTK"].ToString());
 				xWebResponse.HpfUrl               = PIn.String(row["HpfUrl"].ToString());
-				xWebResponse.HpfExpiration        = PIn.DateT (row["HpfExpiration"].ToString());
+				xWebResponse.HpfExpiration        = PIn.Date (row["HpfExpiration"].ToString());
 				xWebResponse.TransactionID        = PIn.String(row["TransactionID"].ToString());
 				xWebResponse.TransactionType      = PIn.String(row["TransactionType"].ToString());
 				xWebResponse.Alias                = PIn.String(row["Alias"].ToString());

@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				perioExam.PatNum          = PIn.Long  (row["PatNum"].ToString());
 				perioExam.ExamDate        = PIn.Date  (row["ExamDate"].ToString());
 				perioExam.ProvNum         = PIn.Long  (row["ProvNum"].ToString());
-				perioExam.DateTMeasureEdit= PIn.DateT (row["DateTMeasureEdit"].ToString());
+				perioExam.DateTMeasureEdit= PIn.Date (row["DateTMeasureEdit"].ToString());
 				retVal.Add(perioExam);
 			}
 			return retVal;

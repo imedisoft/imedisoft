@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				etrans835Attach.EtransNum         = PIn.Long  (row["EtransNum"].ToString());
 				etrans835Attach.ClaimNum          = PIn.Long  (row["ClaimNum"].ToString());
 				etrans835Attach.ClpSegmentIndex   = PIn.Int   (row["ClpSegmentIndex"].ToString());
-				etrans835Attach.DateTimeEntry     = PIn.DateT (row["DateTimeEntry"].ToString());
+				etrans835Attach.DateTimeEntry     = PIn.Date (row["DateTimeEntry"].ToString());
 				retVal.Add(etrans835Attach);
 			}
 			return retVal;

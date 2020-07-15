@@ -43,12 +43,12 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				transaction=new Transaction();
 				transaction.TransactionNum= PIn.Long  (row["TransactionNum"].ToString());
-				transaction.DateTimeEntry = PIn.DateT (row["DateTimeEntry"].ToString());
+				transaction.DateTimeEntry = PIn.Date (row["DateTimeEntry"].ToString());
 				transaction.UserNum       = PIn.Long  (row["UserNum"].ToString());
 				transaction.DepositNum    = PIn.Long  (row["DepositNum"].ToString());
 				transaction.PayNum        = PIn.Long  (row["PayNum"].ToString());
 				transaction.SecUserNumEdit= PIn.Long  (row["SecUserNumEdit"].ToString());
-				transaction.SecDateTEdit  = PIn.DateT (row["SecDateTEdit"].ToString());
+				transaction.SecDateTEdit  = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(transaction);
 			}
 			return retVal;

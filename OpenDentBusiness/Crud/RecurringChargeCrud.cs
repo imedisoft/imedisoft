@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				recurringCharge.RecurringChargeNum= PIn.Long  (row["RecurringChargeNum"].ToString());
 				recurringCharge.PatNum            = PIn.Long  (row["PatNum"].ToString());
 				recurringCharge.ClinicNum         = PIn.Long  (row["ClinicNum"].ToString());
-				recurringCharge.DateTimeCharge    = PIn.DateT (row["DateTimeCharge"].ToString());
+				recurringCharge.DateTimeCharge    = PIn.Date (row["DateTimeCharge"].ToString());
 				recurringCharge.ChargeStatus      = (OpenDentBusiness.RecurringChargeStatus)PIn.Int(row["ChargeStatus"].ToString());
 				recurringCharge.FamBal            = PIn.Double(row["FamBal"].ToString());
 				recurringCharge.PayPlanDue        = PIn.Double(row["PayPlanDue"].ToString());

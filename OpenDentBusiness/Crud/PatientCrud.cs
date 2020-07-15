@@ -108,7 +108,7 @@ namespace OpenDentBusiness.Crud{
 				patient.Title                    = PIn.String(row["Title"].ToString());
 				patient.PayPlanDue               = PIn.Double(row["PayPlanDue"].ToString());
 				patient.SiteNum                  = PIn.Long  (row["SiteNum"].ToString());
-				patient.DateTStamp               = PIn.DateT (row["DateTStamp"].ToString());
+				patient.DateTStamp               = PIn.Date (row["DateTStamp"].ToString());
 				patient.ResponsParty             = PIn.Long  (row["ResponsParty"].ToString());
 				patient.CanadianEligibilityCode  = PIn.Byte  (row["CanadianEligibilityCode"].ToString());
 				patient.AskToArriveEarly         = PIn.Int   (row["AskToArriveEarly"].ToString());
@@ -117,7 +117,7 @@ namespace OpenDentBusiness.Crud{
 				patient.TxtMsgOk                 = (OpenDentBusiness.YN)PIn.Int(row["TxtMsgOk"].ToString());
 				patient.SmokingSnoMed            = PIn.String(row["SmokingSnoMed"].ToString());
 				patient.Country                  = PIn.String(row["Country"].ToString());
-				patient.DateTimeDeceased         = PIn.DateT (row["DateTimeDeceased"].ToString());
+				patient.DateTimeDeceased         = PIn.Date (row["DateTimeDeceased"].ToString());
 				patient.BillingCycleDay          = PIn.Int   (row["BillingCycleDay"].ToString());
 				patient.SecUserNumEntry          = PIn.Long  (row["SecUserNumEntry"].ToString());
 				patient.SecDateEntry             = PIn.Date  (row["SecDateEntry"].ToString());

@@ -49,7 +49,7 @@ namespace OpenDentBusiness.Crud{
 				orthoSchedule.VisitAmount        = PIn.Double(row["VisitAmount"].ToString());
 				orthoSchedule.DebondAmount       = PIn.Double(row["DebondAmount"].ToString());
 				orthoSchedule.IsActive           = PIn.Bool  (row["IsActive"].ToString());
-				orthoSchedule.SecDateTEdit       = PIn.DateT (row["SecDateTEdit"].ToString());
+				orthoSchedule.SecDateTEdit       = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(orthoSchedule);
 			}
 			return retVal;

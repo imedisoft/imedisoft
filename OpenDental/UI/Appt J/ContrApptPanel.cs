@@ -1068,7 +1068,7 @@ namespace OpenDental.UI{
 					}
 					TimeSpan timeSpanBottomRounded=RoundTimeToNearestIncrement(timeSpanBottom.Value,MinPerIncr);					
 					//subtract to get the new length of appt
-					DateTime dateTimeTempAppt=PIn.DateT(_dataRowTempAppt["AptDateTime"].ToString());
+					DateTime dateTimeTempAppt=PIn.Date(_dataRowTempAppt["AptDateTime"].ToString());
 					TimeSpan newspan=timeSpanBottomRounded-dateTimeTempAppt.TimeOfDay;
 					//check if the appointment is being dragged to the next day
 					if(dateTimeTempAppt.Day!=(dateTimeTempAppt+newspan).Day) {//I don't think this can get hit
@@ -1101,7 +1101,7 @@ namespace OpenDental.UI{
 							if(PIn.Long(TableAppointments.Rows[i]["AptNum"].ToString())==aptNumTemp){
 								continue;
 							}
-							DateTime dateTimeApptInSameOp=PIn.DateT(TableAppointments.Rows[i]["AptDateTime"].ToString());
+							DateTime dateTimeApptInSameOp=PIn.Date(TableAppointments.Rows[i]["AptDateTime"].ToString());
 							if(IsWeeklyView && dateTimeApptInSameOp.Date!=dateTimeTempAppt.Date) {
 								continue;
 							}
@@ -1908,7 +1908,7 @@ namespace OpenDental.UI{
 					listApptLayoutInfos.Add(apptLayoutInfo);
 					continue;
 				}
-				apptLayoutInfo.DayOfWeek=(int)PIn.DateT(dataRow["AptDateTime"].ToString()).DayOfWeek-1;
+				apptLayoutInfo.DayOfWeek=(int)PIn.Date(dataRow["AptDateTime"].ToString()).DayOfWeek-1;
 				if(apptLayoutInfo.DayOfWeek==-1) {
 					apptLayoutInfo.DayOfWeek=6;
 				}
@@ -3000,8 +3000,8 @@ namespace OpenDental.UI{
 				backColor=Color.FromArgb(PIn.Int(dataRoww["ColorOverride"].ToString()));
 			}
 			//Check to see if the patient is late for their appointment. 
-			DateTime aptDateTime=PIn.DateT(dataRoww["AptDateTime"].ToString());
-			DateTime aptDateTimeArrived=PIn.DateT(dataRoww["AptDateTimeArrived"].ToString());
+			DateTime aptDateTime=PIn.Date(dataRoww["AptDateTime"].ToString());
+			DateTime aptDateTimeArrived=PIn.Date(dataRoww["AptDateTimeArrived"].ToString());
 			//If the appointment is scheduled and the patient was late for the appointment.
 			if((PIn.Long(dataRoww["AptStatus"].ToString())==(int)ApptStatus.Scheduled)
 				&& ((aptDateTimeArrived.TimeOfDay==TimeSpan.FromHours(0) && DateTime.Now>aptDateTime) 
@@ -3477,8 +3477,8 @@ namespace OpenDental.UI{
 						}
 						break;
 					case "IsLate[L]":
-						DateTime aptDateTime=PIn.DateT(dataRoww["AptDateTime"].ToString());
-						DateTime aptDateTimeArrived=PIn.DateT(dataRoww["AptDateTimeArrived"].ToString());
+						DateTime aptDateTime=PIn.Date(dataRoww["AptDateTime"].ToString());
+						DateTime aptDateTimeArrived=PIn.Date(dataRoww["AptDateTimeArrived"].ToString());
 						//If the appointment is scheduled, complete, or ASAP and the patient was late for the appointment.
 						if((PIn.Long(dataRoww["AptStatus"].ToString())==(int)ApptStatus.Scheduled
 							|| PIn.Long(dataRoww["AptStatus"].ToString())==(int)ApptStatus.Complete)
@@ -4456,7 +4456,7 @@ namespace OpenDental.UI{
 				return;
 			}
 			//was originally from ConvertToY:
-			DateTime aptDateTime=PIn.DateT(dataRow["AptDateTime"].ToString());
+			DateTime aptDateTime=PIn.Date(dataRow["AptDateTime"].ToString());
 			//this is not really a yPos because it's ignoring RowsPerIncr
 			float yPos=(aptDateTime.Hour*60/MinPerIncr+aptDateTime.Minute/MinPerIncr)*_heightLine;//*RowsPerIncr;
 			int startIndex=(int)(yPos/_heightLine);//rounds down

@@ -360,8 +360,8 @@ namespace OpenDental {
 				VaccinePatCur.VaccineDefNum=_listVaccineDefs[comboVaccine.SelectedIndex].VaccineDefNum;
 			}
 			try {
-				VaccinePatCur.DateTimeStart=PIn.DateT(textDateTimeStart.Text);
-				VaccinePatCur.DateTimeEnd=PIn.DateT(textDateTimeStop.Text);
+				VaccinePatCur.DateTimeStart=PIn.Date(textDateTimeStart.Text);
+				VaccinePatCur.DateTimeEnd=PIn.Date(textDateTimeStop.Text);
 			}
 			catch {
 				MessageBox.Show(this,"Please enter start and end times in format DD/MM/YYYY HH:mm AM/PM");

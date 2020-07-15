@@ -54,7 +54,7 @@ namespace OpenDentBusiness.Crud{
 				adjustment.ClinicNum      = PIn.Long  (row["ClinicNum"].ToString());
 				adjustment.StatementNum   = PIn.Long  (row["StatementNum"].ToString());
 				adjustment.SecUserNumEntry= PIn.Long  (row["SecUserNumEntry"].ToString());
-				adjustment.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
+				adjustment.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(adjustment);
 			}
 			return retVal;

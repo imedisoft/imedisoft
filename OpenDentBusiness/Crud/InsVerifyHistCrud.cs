@@ -52,9 +52,9 @@ namespace OpenDentBusiness.Crud{
 				insVerifyHist.DefNum                       = PIn.Long  (row["DefNum"].ToString());
 				insVerifyHist.DateLastAssigned             = PIn.Date  (row["DateLastAssigned"].ToString());
 				insVerifyHist.Note                         = PIn.String(row["Note"].ToString());
-				insVerifyHist.DateTimeEntry                = PIn.DateT (row["DateTimeEntry"].ToString());
+				insVerifyHist.DateTimeEntry                = PIn.Date (row["DateTimeEntry"].ToString());
 				insVerifyHist.HoursAvailableForVerification= PIn.Double(row["HoursAvailableForVerification"].ToString());
-				insVerifyHist.SecDateTEdit                 = PIn.DateT (row["SecDateTEdit"].ToString());
+				insVerifyHist.SecDateTEdit                 = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(insVerifyHist);
 			}
 			return retVal;

@@ -52,7 +52,7 @@ namespace OpenDentBusiness.Crud{
 				recall.RecallStatus       = PIn.Long  (row["RecallStatus"].ToString());
 				recall.Note               = PIn.String(row["Note"].ToString());
 				recall.IsDisabled         = PIn.Bool  (row["IsDisabled"].ToString());
-				recall.DateTStamp         = PIn.DateT (row["DateTStamp"].ToString());
+				recall.DateTStamp         = PIn.Date (row["DateTStamp"].ToString());
 				recall.RecallTypeNum      = PIn.Long  (row["RecallTypeNum"].ToString());
 				recall.DisableUntilBalance= PIn.Double(row["DisableUntilBalance"].ToString());
 				recall.DisableUntilDate   = PIn.Date  (row["DisableUntilDate"].ToString());

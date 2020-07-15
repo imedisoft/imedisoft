@@ -25,7 +25,7 @@ namespace OpenDentBusiness{
 				exam.PatNum      = PIn.Long(table.Rows[i][1].ToString());
 				exam.ExamDate    = PIn.Date(table.Rows[i][2].ToString());
 				exam.ProvNum     = PIn.Long(table.Rows[i][3].ToString());
-				exam.DateTMeasureEdit     = PIn.DateT(table.Rows[i][4].ToString());
+				exam.DateTMeasureEdit     = PIn.Date(table.Rows[i][4].ToString());
 				ListExams.Add(exam);
 			}
 			//return list;

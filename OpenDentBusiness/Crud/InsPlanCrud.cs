@@ -73,7 +73,7 @@ namespace OpenDentBusiness.Crud{
 				insPlan.SopCode                     = PIn.String(row["SopCode"].ToString());
 				insPlan.SecUserNumEntry             = PIn.Long  (row["SecUserNumEntry"].ToString());
 				insPlan.SecDateEntry                = PIn.Date  (row["SecDateEntry"].ToString());
-				insPlan.SecDateTEdit                = PIn.DateT (row["SecDateTEdit"].ToString());
+				insPlan.SecDateTEdit                = PIn.Date (row["SecDateTEdit"].ToString());
 				insPlan.HideFromVerifyList          = PIn.Bool  (row["HideFromVerifyList"].ToString());
 				insPlan.OrthoType                   = (OpenDentBusiness.OrthoClaimType)PIn.Int(row["OrthoType"].ToString());
 				insPlan.OrthoAutoProcFreq           = (OpenDentBusiness.OrthoAutoProcFrequency)PIn.Int(row["OrthoAutoProcFreq"].ToString());

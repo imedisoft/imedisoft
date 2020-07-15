@@ -71,14 +71,14 @@ namespace OpenDental {
 		  if(procOld.ProcTime != procCur.ProcTime) {
 		    if(Changes!=""){ Changes+="\r\n";}
 		    Changes+="Procedure Time changed from "
-					+(PIn.DateT(procOld.ProcTime.ToString()).ToShortTimeString()=="12:00 AM"?"none":PIn.DateT(procOld.ProcTime.ToString()).ToShortTimeString())
-					+" to "+(PIn.DateT(procCur.ProcTime.ToString()).ToShortTimeString()=="12:00 AM"?"none":PIn.DateT(procCur.ProcTime.ToString()).ToShortTimeString())+".";
+					+(PIn.Date(procOld.ProcTime.ToString()).ToShortTimeString()=="12:00 AM"?"none":PIn.Date(procOld.ProcTime.ToString()).ToShortTimeString())
+					+" to "+(PIn.Date(procCur.ProcTime.ToString()).ToShortTimeString()=="12:00 AM"?"none":PIn.Date(procCur.ProcTime.ToString()).ToShortTimeString())+".";
 		  }
 		  if(procOld.ProcTimeEnd != procCur.ProcTimeEnd) {
 		    if(Changes!=""){ Changes+="\r\n";}
 		    Changes+="Procedure End Time changed from "
-					+(PIn.DateT(procOld.ProcTimeEnd.ToString()).ToShortTimeString()=="12:00 AM"?"none":PIn.DateT(procOld.ProcTimeEnd.ToString()).ToShortTimeString())
-					+" to "+(PIn.DateT(procCur.ProcTimeEnd.ToString()).ToShortTimeString()=="12:00 AM"?"none":PIn.DateT(procCur.ProcTimeEnd.ToString()).ToShortTimeString())+".";
+					+(PIn.Date(procOld.ProcTimeEnd.ToString()).ToShortTimeString()=="12:00 AM"?"none":PIn.Date(procOld.ProcTimeEnd.ToString()).ToShortTimeString())
+					+" to "+(PIn.Date(procCur.ProcTimeEnd.ToString()).ToShortTimeString()=="12:00 AM"?"none":PIn.Date(procCur.ProcTimeEnd.ToString()).ToShortTimeString())+".";
 		  }
 			//Procedure, related areas, amount, hide graphics, etc.-----------------------------------------------------------------------------------------
 		  if(procOld.CodeNum != procCur.CodeNum) {

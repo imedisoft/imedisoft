@@ -49,7 +49,7 @@ namespace OpenDental {
 			List<ProcedureCode> listProcCodes=ProcedureCodes.GetAllCodes();
 			foreach(DataRow tableRow in _tableSuperFamAcct.Rows) {
 				row=new GridRow();
-				row.Cells.Add(PIn.DateT(tableRow["Date"].ToString()).ToShortDateString());
+				row.Cells.Add(PIn.Date(tableRow["Date"].ToString()).ToShortDateString());
 				row.Cells.Add(tableRow["PatName"].ToString());
 				row.Cells.Add(Providers.GetAbbr(PIn.Long(tableRow["Prov"].ToString())));
 				if(!string.IsNullOrWhiteSpace(tableRow["AdjType"].ToString())){	//It's an adjustment

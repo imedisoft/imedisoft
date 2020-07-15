@@ -48,9 +48,9 @@ namespace OpenDentBusiness.Crud{
 				mobileAppDevice.UniqueID           = PIn.String(row["UniqueID"].ToString());
 				mobileAppDevice.IsAllowed          = PIn.Bool  (row["IsAllowed"].ToString());
 				mobileAppDevice.PatNum             = PIn.Long  (row["PatNum"].ToString());
-				mobileAppDevice.LastCheckInActivity= PIn.DateT (row["LastCheckInActivity"].ToString());
-				mobileAppDevice.LastAttempt        = PIn.DateT (row["LastAttempt"].ToString());
-				mobileAppDevice.LastLogin          = PIn.DateT (row["LastLogin"].ToString());
+				mobileAppDevice.LastCheckInActivity= PIn.Date (row["LastCheckInActivity"].ToString());
+				mobileAppDevice.LastAttempt        = PIn.Date (row["LastAttempt"].ToString());
+				mobileAppDevice.LastLogin          = PIn.Date (row["LastLogin"].ToString());
 				retVal.Add(mobileAppDevice);
 			}
 			return retVal;

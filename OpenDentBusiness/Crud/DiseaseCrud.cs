@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 				disease.PatNum           = PIn.Long  (row["PatNum"].ToString());
 				disease.DiseaseDefNum    = PIn.Long  (row["DiseaseDefNum"].ToString());
 				disease.PatNote          = PIn.String(row["PatNote"].ToString());
-				disease.DateTStamp       = PIn.DateT (row["DateTStamp"].ToString());
+				disease.DateTStamp       = PIn.Date (row["DateTStamp"].ToString());
 				disease.ProbStatus       = (OpenDentBusiness.ProblemStatus)PIn.Int(row["ProbStatus"].ToString());
 				disease.DateStart        = PIn.Date  (row["DateStart"].ToString());
 				disease.DateStop         = PIn.Date  (row["DateStop"].ToString());

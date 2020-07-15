@@ -840,12 +840,12 @@ namespace OpenDental {
 					labelOrigDateComp.Visible=false;
 					textOrigDateComp.Visible=false;
 				}
-				dateT=PIn.DateT(_procCur.ProcTime.ToString());
+				dateT=PIn.Date(_procCur.ProcTime.ToString());
 				if(dateT.ToShortTimeString()!="12:00 AM"){
 					textTimeStart.Text+=dateT.ToShortTimeString();
 				}
 				if(Programs.UsingOrion || PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
-					dateT=PIn.DateT(_procCur.ProcTimeEnd.ToString());
+					dateT=PIn.Date(_procCur.ProcTimeEnd.ToString());
 					if(dateT.ToShortTimeString()!="12:00 AM") {
 						textTimeEnd.Text=dateT.ToShortTimeString();
 					}
@@ -2958,7 +2958,7 @@ namespace OpenDental {
 				_procCur.DateTP=PIn.Date(this.textDateTP.Text);
 			}
 			_procCur.ProcDate=PIn.Date(this.textDate.Text);
-			DateTime dateT=PIn.DateT(this.textTimeStart.Text);
+			DateTime dateT=PIn.Date(this.textTimeStart.Text);
 			_procCur.ProcTime=new TimeSpan(dateT.Hour,dateT.Minute,0);
 			if(Programs.UsingOrion || PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
 				dateT=ParseTime(textTimeStart.Text);
@@ -3390,9 +3390,9 @@ namespace OpenDental {
 				if(_procCur.Surf!="" || textTooth.Text!="" || textSurfaces.Text!="") {
 					DataTable table=OrionProcs.GetCancelledScheduleDateByToothOrSurf(_procCur.PatNum,textTooth.Text.ToString(),_procCur.Surf);
 					if(table.Rows.Count>0) {
-						if(textDateScheduled.Text!="" && DateTime.Parse(textDateScheduled.Text)>PIn.DateT(table.Rows[0]["DateScheduleBy"].ToString())) {
+						if(textDateScheduled.Text!="" && DateTime.Parse(textDateScheduled.Text)>PIn.Date(table.Rows[0]["DateScheduleBy"].ToString())) {
 							//If the cancelled sched by date is in the past then do nothing.
-							if(PIn.DateT(table.Rows[0]["DateScheduleBy"].ToString())>MiscData.GetNowDateTime().Date) {
+							if(PIn.Date(table.Rows[0]["DateScheduleBy"].ToString())>MiscData.GetNowDateTime().Date) {
 								textDateScheduled.Text=((DateTime)table.Rows[0]["DateScheduleBy"]).ToShortDateString();
 								_cancelledScheduleByDate=DateTime.Parse(textDateScheduled.Text);
 								MessageBox.Show("Schedule by date cannot be later than: "+textDateScheduled.Text+".");

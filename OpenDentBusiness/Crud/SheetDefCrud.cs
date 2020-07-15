@@ -54,7 +54,7 @@ namespace OpenDentBusiness.Crud{
 				sheetDef.IsMultiPage     = PIn.Bool  (row["IsMultiPage"].ToString());
 				sheetDef.BypassGlobalLock= (OpenDentBusiness.BypassLockStatus)PIn.Int(row["BypassGlobalLock"].ToString());
 				sheetDef.HasMobileLayout = PIn.Bool  (row["HasMobileLayout"].ToString());
-				sheetDef.DateTCreated    = PIn.DateT (row["DateTCreated"].ToString());
+				sheetDef.DateTCreated    = PIn.Date (row["DateTCreated"].ToString());
 				retVal.Add(sheetDef);
 			}
 			return retVal;

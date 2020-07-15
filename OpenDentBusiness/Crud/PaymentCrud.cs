@@ -58,7 +58,7 @@ namespace OpenDentBusiness.Crud{
 				payment.Receipt            = PIn.String(row["Receipt"].ToString());
 				payment.IsRecurringCC      = PIn.Bool  (row["IsRecurringCC"].ToString());
 				payment.SecUserNumEntry    = PIn.Long  (row["SecUserNumEntry"].ToString());
-				payment.SecDateTEdit       = PIn.DateT (row["SecDateTEdit"].ToString());
+				payment.SecDateTEdit       = PIn.Date (row["SecDateTEdit"].ToString());
 				payment.PaymentSource      = (OpenDentBusiness.CreditCardSource)PIn.Int(row["PaymentSource"].ToString());
 				payment.ProcessStatus      = (OpenDentBusiness.ProcessStat)PIn.Int(row["ProcessStatus"].ToString());
 				payment.RecurringChargeDate= PIn.Date  (row["RecurringChargeDate"].ToString());

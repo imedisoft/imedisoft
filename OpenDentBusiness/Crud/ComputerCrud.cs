@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 				computer=new Computer();
 				computer.ComputerNum  = PIn.Long  (row["ComputerNum"].ToString());
 				computer.CompName     = PIn.String(row["CompName"].ToString());
-				computer.LastHeartBeat= PIn.DateT (row["LastHeartBeat"].ToString());
+				computer.LastHeartBeat= PIn.Date (row["LastHeartBeat"].ToString());
 				retVal.Add(computer);
 			}
 			return retVal;

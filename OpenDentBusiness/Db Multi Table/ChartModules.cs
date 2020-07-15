@@ -383,7 +383,7 @@ namespace OpenDentBusiness
 				+ " ORDER BY EntryDateTime";// but this helps when looping for notes
 				DataTable rawNotes = dcon.GetTable(command);
 				Dictionary<string, List<DataRow>> dictNotes = rawNotes.Select().GroupBy(x => x["ProcNum"].ToString())
-					.ToDictionary(x => x.Key, x => x.OrderByDescending(y => PIn.DateT(y["EntryDateTime"].ToString())).ToList());
+					.ToDictionary(x => x.Key, x => x.OrderByDescending(y => PIn.Date(y["EntryDateTime"].ToString())).ToList());
 				Dictionary<string, ProcedureCode> dictProcCodes = ProcedureCodes.GetAllCodes().GroupBy(x => x.CodeNum)
 					.ToDictionary(x => x.Key.ToString(), x => x.First());
 				foreach (DataRow rowProc in rawProcs.Rows)
@@ -395,7 +395,7 @@ namespace OpenDentBusiness
 					}
 					row = table.NewRow();
 					row["AbbrDesc"] = rowProc["AbbrDesc"].ToString();
-					row["aptDateTime"] = PIn.DateT(rowProc["AptDateTime"].ToString());
+					row["aptDateTime"] = PIn.Date(rowProc["AptDateTime"].ToString());
 					row["AptNum"] = 0;
 					row["clinic"] = Clinics.GetDesc(PIn.Long(rowProc["ClinicNum"].ToString()));
 					row["ClinicNum"] = PIn.Long(rowProc["ClinicNum"].ToString());
@@ -431,7 +431,7 @@ namespace OpenDentBusiness
 							break;
 					}
 					row["CommlogNum"] = 0;
-					dateT = PIn.DateT(rowProc["DateEntryC"].ToString());
+					dateT = PIn.Date(rowProc["DateEntryC"].ToString());
 					if (dateT.Year < 1880)
 					{
 						row["dateEntryC"] = "";
@@ -441,7 +441,7 @@ namespace OpenDentBusiness
 						row["dateEntryC"] = dateT.ToString(Lans.GetShortDateTimeFormat());
 					}
 					row["DateEntryC"] = dateT.ToShortDateString();
-					dateT = PIn.DateT(rowProc["DateTP"].ToString());
+					dateT = PIn.Date(rowProc["DateTP"].ToString());
 					if (dateT.Year < 1880)
 					{
 						row["dateTP"] = "";
@@ -488,7 +488,7 @@ namespace OpenDentBusiness
 					{
 						#region note-----------------------------------------------------------------------------------------------------------
 						row["note"] = "";
-						dateT = PIn.DateT(rowProc["DateScheduleBy"].ToString());
+						dateT = PIn.Date(rowProc["DateScheduleBy"].ToString());
 						if (dateT.Year < 1880)
 						{
 							row["orionDateScheduleBy"] = "";
@@ -497,7 +497,7 @@ namespace OpenDentBusiness
 						{
 							row["orionDateScheduleBy"] = dateT.ToString(Lans.GetShortDateTimeFormat());
 						}
-						dateT = PIn.DateT(rowProc["DateStopClock"].ToString());
+						dateT = PIn.Date(rowProc["DateStopClock"].ToString());
 						if (dateT.Year < 1880)
 						{
 							row["orionDateStopClock"] = "";
@@ -551,7 +551,7 @@ namespace OpenDentBusiness
 									{//if there is an existing note
 										row["note"] += "\r\n------------------------------------------------------\r\n";//start a new line
 									}
-									row["note"] += PIn.DateT(rowCur["EntryDateTime"].ToString()).ToString();
+									row["note"] += PIn.Date(rowCur["EntryDateTime"].ToString()).ToString();
 									string userName;
 									if (!dictUserNames.TryGetValue(rowCur["UserNum"].ToString(), out userName))
 									{
@@ -588,7 +588,7 @@ namespace OpenDentBusiness
 					row["Priority"] = rowProc["Priority"].ToString();
 					row["priority"] = Defs.GetName(DefCat.TxPriorities, PIn.Long(rowProc["Priority"].ToString()));
 					row["ProcCode"] = rowProc["ProcCode"].ToString();
-					dateT = PIn.DateT(rowProc["ProcDate"].ToString());
+					dateT = PIn.Date(rowProc["ProcDate"].ToString());
 					if (dateT.Year < 1880)
 					{
 						row["procDate"] = "";
@@ -618,13 +618,13 @@ namespace OpenDentBusiness
 					}
 					row["ProcStatus"] = rowProc["ProcStatus"].ToString();
 					row["procTime"] = "";
-					dateT = PIn.DateT(rowProc["ProcTime"].ToString());
+					dateT = PIn.Date(rowProc["ProcTime"].ToString());
 					if (dateT.TimeOfDay != TimeSpan.Zero)
 					{
 						row["procTime"] = dateT.ToString("h:mm") + dateT.ToString("%t").ToLower();
 					}
 					row["procTimeEnd"] = "";
-					dateT = PIn.DateT(rowProc["ProcTimeEnd"].ToString());
+					dateT = PIn.Date(rowProc["ProcTimeEnd"].ToString());
 					if (dateT.TimeOfDay != TimeSpan.Zero)
 					{
 						row["procTimeEnd"] = dateT.ToString("h:mm") + dateT.ToString("%t").ToLower();
@@ -764,10 +764,10 @@ namespace OpenDentBusiness
 					row["isLocked"] = "";
 					row["LabCaseNum"] = 0;
 					row["length"] = "";
-					if (PIn.DateT(rawComm.Rows[i]["DateTimeEnd"].ToString()).Year > 1880)
+					if (PIn.Date(rawComm.Rows[i]["DateTimeEnd"].ToString()).Year > 1880)
 					{
-						DateTime startTime = PIn.DateT(rawComm.Rows[i]["CommDateTime"].ToString());
-						DateTime endTime = PIn.DateT(rawComm.Rows[i]["DateTimeEnd"].ToString());
+						DateTime startTime = PIn.Date(rawComm.Rows[i]["CommDateTime"].ToString());
+						DateTime endTime = PIn.Date(rawComm.Rows[i]["DateTimeEnd"].ToString());
 						row["length"] = (endTime - startTime).ToStringHmm();
 					}
 					row["note"] = rawComm.Rows[i]["Note"].ToString();
@@ -782,7 +782,7 @@ namespace OpenDentBusiness
 					row["Priority"] = "";
 					row["priority"] = "";
 					row["ProcCode"] = "";
-					dateT = PIn.DateT(rawComm.Rows[i]["CommDateTime"].ToString());
+					dateT = PIn.Date(rawComm.Rows[i]["CommDateTime"].ToString());
 					if (dateT.Year < 1880)
 					{
 						row["procDate"] = "";
@@ -868,7 +868,7 @@ namespace OpenDentBusiness
 					row["Priority"] = "";
 					row["priority"] = "";
 					row["ProcCode"] = "";
-					dateT = PIn.DateT(rawForm.Rows[i]["FormDateTime"].ToString());
+					dateT = PIn.Date(rawForm.Rows[i]["FormDateTime"].ToString());
 					row["ProcDate"] = dateT.ToShortDateString();
 					if (dateT.TimeOfDay != TimeSpan.Zero)
 					{
@@ -1020,7 +1020,7 @@ namespace OpenDentBusiness
 					+ rawLab.Rows[i]["Phone"].ToString();
 					if (PIn.Date(rawLab.Rows[i]["DateTimeDue"].ToString()).Year > 1880)
 					{
-						duedate = PIn.DateT(rawLab.Rows[i]["DateTimeDue"].ToString());
+						duedate = PIn.Date(rawLab.Rows[i]["DateTimeDue"].ToString());
 						row["description"] += "\r\n" + Lans.g("ChartModule", "Due") + " " + duedate.ToString("ddd") + " "
 						+ duedate.ToShortDateString() + " " + duedate.ToShortTimeString();
 					}
@@ -1057,7 +1057,7 @@ namespace OpenDentBusiness
 					row["Priority"] = "";
 					row["priority"] = "";
 					row["ProcCode"] = "";
-					dateT = PIn.DateT(rawLab.Rows[i]["DateTimeCreated"].ToString());
+					dateT = PIn.Date(rawLab.Rows[i]["DateTimeCreated"].ToString());
 					if (dateT.Year < 1880)
 					{
 						row["procDate"] = "";
@@ -1211,11 +1211,11 @@ namespace OpenDentBusiness
 					row["Priority"] = "";
 					row["priority"] = "";
 					row["ProcCode"] = "";
-					dateT = PIn.DateT(rawTaskRow["DateTask"].ToString());
+					dateT = PIn.Date(rawTaskRow["DateTask"].ToString());
 					row["procTime"] = "";
 					if (dateT.Year < 1880)
 					{//check if due date set for task or note
-						dateT = PIn.DateT(rawTaskRow["DateTimeEntry"].ToString());
+						dateT = PIn.Date(rawTaskRow["DateTimeEntry"].ToString());
 						if (dateT.Year < 1880)
 						{//since dateT was just redefined, check it now
 							row["procDate"] = "";
@@ -1288,7 +1288,7 @@ namespace OpenDentBusiness
 				row["clinic"] = "";
 				row["ClinicNum"] = rawApt.Rows[i]["ClinicNum"].ToString();
 				row["colorBackG"] = Color.White.ToArgb();
-				dateT = PIn.DateT(rawApt.Rows[i]["AptDateTime"].ToString());
+				dateT = PIn.Date(rawApt.Rows[i]["AptDateTime"].ToString());
 				apptStatus = PIn.Long(rawApt.Rows[i]["AptStatus"].ToString());
 				row["colorBackG"] = "";
 				row["colorText"] = listProgNoteColorDefs[8].ItemColor.ToArgb().ToString();
@@ -1461,7 +1461,7 @@ namespace OpenDentBusiness
 					row["priority"] = "";
 					row["ProcCode"] = "";
 					//row["PatNum"]=rawEmail.Rows[i]["PatNum"].ToString();
-					dateT = PIn.DateT(rawEmail.Rows[i]["msgDateTime"].ToString());
+					dateT = PIn.Date(rawEmail.Rows[i]["msgDateTime"].ToString());
 					if (dateT.Year < 1880)
 					{
 						row["procDate"] = "";
@@ -1542,7 +1542,7 @@ namespace OpenDentBusiness
 					row["colorBackG"] = Color.White.ToArgb();
 					row["colorText"] = Color.Black.ToArgb();//Defs.Long[(int)DefCat.ProgNoteColors][6].ItemColor.ToArgb().ToString();//needs to change
 					row["CommlogNum"] = 0;
-					dateT = PIn.DateT(rawSheet.Rows[i]["DateTimeSheet"].ToString());
+					dateT = PIn.Date(rawSheet.Rows[i]["DateTimeSheet"].ToString());
 					if (dateT.Year < 1880)
 					{
 						row["dateEntryC"] = "";

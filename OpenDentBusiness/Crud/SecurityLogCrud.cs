@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				securityLog.SecurityLogNum= PIn.Long  (row["SecurityLogNum"].ToString());
 				securityLog.PermType      = (OpenDentBusiness.Permissions)PIn.Int(row["PermType"].ToString());
 				securityLog.UserNum       = PIn.Long  (row["UserNum"].ToString());
-				securityLog.LogDateTime   = PIn.DateT (row["LogDateTime"].ToString());
+				securityLog.LogDateTime   = PIn.Date (row["LogDateTime"].ToString());
 				securityLog.LogText       = PIn.String(row["LogText"].ToString());
 				securityLog.PatNum        = PIn.Long  (row["PatNum"].ToString());
 				securityLog.CompName      = PIn.String(row["CompName"].ToString());
@@ -53,7 +53,7 @@ namespace OpenDentBusiness.Crud{
 				securityLog.LogSource     = (OpenDentBusiness.LogSources)PIn.Int(row["LogSource"].ToString());
 				securityLog.DefNum        = PIn.Long  (row["DefNum"].ToString());
 				securityLog.DefNumError   = PIn.Long  (row["DefNumError"].ToString());
-				securityLog.DateTPrevious = PIn.DateT (row["DateTPrevious"].ToString());
+				securityLog.DateTPrevious = PIn.Date (row["DateTPrevious"].ToString());
 				retVal.Add(securityLog);
 			}
 			return retVal;

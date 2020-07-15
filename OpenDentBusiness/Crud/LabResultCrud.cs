@@ -44,9 +44,9 @@ namespace OpenDentBusiness.Crud{
 				labResult=new LabResult();
 				labResult.LabResultNum= PIn.Long  (row["LabResultNum"].ToString());
 				labResult.LabPanelNum = PIn.Long  (row["LabPanelNum"].ToString());
-				labResult.DateTimeTest= PIn.DateT (row["DateTimeTest"].ToString());
+				labResult.DateTimeTest= PIn.Date (row["DateTimeTest"].ToString());
 				labResult.TestName    = PIn.String(row["TestName"].ToString());
-				labResult.DateTStamp  = PIn.DateT (row["DateTStamp"].ToString());
+				labResult.DateTStamp  = PIn.Date (row["DateTStamp"].ToString());
 				labResult.TestID      = PIn.String(row["TestID"].ToString());
 				labResult.ObsValue    = PIn.String(row["ObsValue"].ToString());
 				labResult.ObsUnits    = PIn.String(row["ObsUnits"].ToString());

@@ -253,12 +253,12 @@ namespace OpenDentBusiness{
 					Address=row["Address"].ToString(),
 					AddressPat=row["AddressPat"].ToString(),
 					BillingCycleDay=PIn.Int(row["BillingCycleDay"].ToString()),
-					CCExpiration=PIn.DateT(row["CCExpiration"].ToString()),
+					CCExpiration=PIn.Date(row["CCExpiration"].ToString()),
 					CCNumberMasked=row["CCNumberMasked"].ToString(),
 					CCSource=PIn.Enum<CreditCardSource>(row["CCSource"].ToString()),
-					DateStart=PIn.DateT(row["DateStart"].ToString()),
+					DateStart=PIn.Date(row["DateStart"].ToString()),
 					Guarantor=PIn.Long(row["Guarantor"].ToString()),
-					LatestPayment=PIn.DateT(row["LatestPayment"].ToString()),
+					LatestPayment=PIn.Date(row["LatestPayment"].ToString()),
 					PatName=row["PatName"].ToString(),
 					PayConnectToken=row["PayConnectToken"].ToString(),
 					PayConnectTokenExp=PIn.Date(row["PayConnectTokenExp"].ToString()),
@@ -278,7 +278,7 @@ namespace OpenDentBusiness{
 						RepeatAmt=PIn.Double(row["ChargeAmt"].ToString()),
 						UserNum=Security.CurUser.UserNum
 					},
-					RecurringChargeDate=PIn.DateT(row["RecurringChargeDate"].ToString()),
+					RecurringChargeDate=PIn.Date(row["RecurringChargeDate"].ToString()),
 					XChargeToken=row["XChargeToken"].ToString(),
 					Zip=row["Zip"].ToString(),
 					ZipPat=row["ZipPat"].ToString(),
@@ -374,7 +374,7 @@ namespace OpenDentBusiness{
 			//Loop through table and remove patients that do not need to be charged yet.
 			//Modify the charge amount if necessary to account for the number of missed charges in the last month.
 			for(int i=0;i<table.Rows.Count;i++) {
-				DateTime dateStart=PIn.DateT(table.Rows[i]["DateStart"].ToString());
+				DateTime dateStart=PIn.Date(table.Rows[i]["DateStart"].ToString());
 				DateTime latestPayment=PIn.Date(table.Rows[i]["LatestPayment"].ToString());
 				string chargeFrequency=table.Rows[i]["ChargeFrequency"].ToString();
 				DateTime recurringChargeDate=new DateTime();

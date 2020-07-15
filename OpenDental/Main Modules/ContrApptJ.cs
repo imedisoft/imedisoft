@@ -693,7 +693,7 @@ namespace OpenDental {
 			//Have to order listApptNums sent to FormApptPrintSetup so that routing slips can be printed in chronological order.
 			List<long> listApptNums=contrApptPanel.TableAppointments.Select()
 				.Where(x => PIn.Long(x["Op"].ToString()).In(listVisOpNums))
-				.OrderBy(x => PIn.DateT(x["AptDateTime"].ToString()))
+				.OrderBy(x => PIn.Date(x["AptDateTime"].ToString()))
 				.Select(x => PIn.Long(x["AptNum"].ToString()))
 				.ToList();
 			FormApptPrintSetup formApptPrintSetup=new FormApptPrintSetup(listApptNums,contrApptPanel.DateSelected,contrApptPanel.IsWeeklyView);
@@ -1214,7 +1214,7 @@ namespace OpenDental {
 				dataRow=pinBoard.ListPinBoardItems[pinBoard.SelectedIndex].DataRowAppt;
 				idx=pinBoard.SelectedIndex;
 			}
-			DateTime aptDateTime=PIn.DateT(dataRow["AptDateTime"].ToString());
+			DateTime aptDateTime=PIn.Date(dataRow["AptDateTime"].ToString());
 			long aptNum=PIn.Long(dataRow["AptNum"].ToString());
 			ApptStatus aptStatus=(ApptStatus)PIn.Int(dataRow["AptStatus"].ToString());
 			if(aptStatus==ApptStatus.UnschedList) {//unscheduled status
@@ -2260,7 +2260,7 @@ namespace OpenDental {
 				if(PIn.Long(contrApptPanel.TableAppointments.Rows[i]["Op"].ToString())!=opNumClicked){
 					continue;
 				}
-				if(PIn.DateT(contrApptPanel.TableAppointments.Rows[i]["AptDateTime"].ToString()).Date!=dateClicked){
+				if(PIn.Date(contrApptPanel.TableAppointments.Rows[i]["AptDateTime"].ToString()).Date!=dateClicked){
 					continue;
 				}
 				listPatNums.Add(PIn.Long(contrApptPanel.TableAppointments.Rows[i]["PatNum"].ToString()));
@@ -2276,7 +2276,7 @@ namespace OpenDental {
 				if(!contrApptPanel.ListOpsVisible.Any(y => y.OperatoryNum==opNum)){//Make sure the appointments are visible in the current view.
 					continue;
 				}
-				if(PIn.DateT(contrApptPanel.TableAppointments.Rows[i]["AptDateTime"].ToString()).Date!=dateClicked){
+				if(PIn.Date(contrApptPanel.TableAppointments.Rows[i]["AptDateTime"].ToString()).Date!=dateClicked){
 					continue;
 				}
 				listPatNums.Add(PIn.Long(contrApptPanel.TableAppointments.Rows[i]["PatNum"].ToString()));
@@ -3534,7 +3534,7 @@ namespace OpenDental {
 				if(PIn.Long(contrApptPanel.TableAppointments.Rows[i]["AptNum"].ToString())==aptNum){
 					continue;
 				}
-				DateTime dateTimeAppt=PIn.DateT(contrApptPanel.TableAppointments.Rows[i]["AptDateTime"].ToString());
+				DateTime dateTimeAppt=PIn.Date(contrApptPanel.TableAppointments.Rows[i]["AptDateTime"].ToString());
 				if(contrApptPanel.IsWeeklyView){
 					if(dateTimeAppt.Date!=contrApptPanel.DateSelected.Date){
 						continue;

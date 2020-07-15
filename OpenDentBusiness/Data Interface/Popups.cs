@@ -107,7 +107,7 @@ namespace OpenDentBusiness{
 			if(rawTable.Rows.Count==0) {
 				return DateTime.MinValue;
 			}
-			return PIn.DateT(rawTable.Rows[0]["DateTimeEntry"].ToString());
+			return PIn.Date(rawTable.Rows[0]["DateTimeEntry"].ToString());
 		}
 
 		/// <summary>Copies all family level popups when a family member leaves a family. Copies from other family members to patient, and from patient to guarantor.</summary>

@@ -288,7 +288,7 @@ namespace OpenDentBusiness{
 				patName+=PIn.String(row["FName"].ToString());
 				insVerifyCur.PatientName=patName;
 				insVerifyCur.CarrierName=PIn.String(row["CarrierName"].ToString());
-				insVerifyCur.AppointmentDateTime=PIn.DateT(row["AptDateTime"].ToString());
+				insVerifyCur.AppointmentDateTime=PIn.Date(row["AptDateTime"].ToString());
 				insVerifyCur.AptNum=PIn.Long(row["AptNum"].ToString());
 				insVerifyCur.ClinicNum=PIn.Long(row["ClinicNum"].ToString());//Non DB column. Used in OpenDentalService.
 				insVerifyCur.InsSubNum=PIn.Long(row["InsSubNum"].ToString());//Non DB column. Used in OpenDentalService.

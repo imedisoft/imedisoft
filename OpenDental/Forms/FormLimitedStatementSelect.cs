@@ -72,7 +72,7 @@ namespace OpenDental {
 				LimitedRow row=new LimitedRow();
 				row.PatNum=PIn.Long(tableRow["PatNum"].ToString());
 				row.PatientName=tableRow["patient"].ToString();
-				row.DateTime=PIn.DateT(tableRow["DateTime"].ToString());
+				row.DateTime=PIn.Date(tableRow["DateTime"].ToString());
 				row.Description=tableRow["description"].ToString();
 				row.ProcCode=tableRow["ProcCode"].ToString();//isn't just a proc code. Can be "Claim" etc...
 				row.Charges=tableRow["charges"].ToString();

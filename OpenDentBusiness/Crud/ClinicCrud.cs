@@ -64,7 +64,7 @@ namespace OpenDentBusiness.Crud{
 				clinic.Fax                 = PIn.String(row["Fax"].ToString());
 				clinic.EmailAddressNum     = PIn.Long  (row["EmailAddressNum"].ToString());
 				clinic.DefaultProv         = PIn.Long  (row["DefaultProv"].ToString());
-				clinic.SmsContractDate     = PIn.DateT (row["SmsContractDate"].ToString());
+				clinic.SmsContractDate     = PIn.Date (row["SmsContractDate"].ToString());
 				clinic.SmsMonthlyLimit     = PIn.Double(row["SmsMonthlyLimit"].ToString());
 				clinic.IsMedicalOnly       = PIn.Bool  (row["IsMedicalOnly"].ToString());
 				clinic.UseBillAddrOnClaims = PIn.Bool  (row["UseBillAddrOnClaims"].ToString());

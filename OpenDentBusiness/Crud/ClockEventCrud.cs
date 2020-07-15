@@ -44,12 +44,12 @@ namespace OpenDentBusiness.Crud{
 				clockEvent=new ClockEvent();
 				clockEvent.ClockEventNum     = PIn.Long  (row["ClockEventNum"].ToString());
 				clockEvent.EmployeeNum       = PIn.Long  (row["EmployeeNum"].ToString());
-				clockEvent.TimeEntered1      = PIn.DateT (row["TimeEntered1"].ToString());
-				clockEvent.TimeDisplayed1    = PIn.DateT (row["TimeDisplayed1"].ToString());
+				clockEvent.TimeEntered1      = PIn.Date (row["TimeEntered1"].ToString());
+				clockEvent.TimeDisplayed1    = PIn.Date (row["TimeDisplayed1"].ToString());
 				clockEvent.ClockStatus       = (OpenDentBusiness.TimeClockStatus)PIn.Int(row["ClockStatus"].ToString());
 				clockEvent.Note              = PIn.String(row["Note"].ToString());
-				clockEvent.TimeEntered2      = PIn.DateT (row["TimeEntered2"].ToString());
-				clockEvent.TimeDisplayed2    = PIn.DateT (row["TimeDisplayed2"].ToString());
+				clockEvent.TimeEntered2      = PIn.Date (row["TimeEntered2"].ToString());
+				clockEvent.TimeDisplayed2    = PIn.Date (row["TimeDisplayed2"].ToString());
 				clockEvent.OTimeHours        = PIn.TSpan (row["OTimeHours"].ToString());
 				clockEvent.OTimeAuto         = PIn.TSpan (row["OTimeAuto"].ToString());
 				clockEvent.Adjust            = PIn.TSpan (row["Adjust"].ToString());

@@ -1054,9 +1054,9 @@ namespace OpenDental.ReportingComplex {
 				}
 			}
 			else if(reportObject.FieldValueType==FieldValueType.Date) {
-				displayText=PIn.DateT(dt.Rows[i][queryObj.ArrDataFields.IndexOf(reportObject.DataField)].ToString()).ToString(reportObject.StringFormat);
+				displayText=PIn.Date(dt.Rows[i][queryObj.ArrDataFields.IndexOf(reportObject.DataField)].ToString()).ToString(reportObject.StringFormat);
 				if(i>0 && reportObject.SuppressIfDuplicate) {
-					prevDisplayText=PIn.DateT(dt.Rows[i-1][queryObj.ArrDataFields.IndexOf(reportObject.DataField)].ToString()).ToString(reportObject.StringFormat);
+					prevDisplayText=PIn.Date(dt.Rows[i-1][queryObj.ArrDataFields.IndexOf(reportObject.DataField)].ToString()).ToString(reportObject.StringFormat);
 				}
 			}
 			else if(reportObject.FieldValueType==FieldValueType.Integer) {

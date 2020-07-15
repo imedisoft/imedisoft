@@ -139,7 +139,7 @@ namespace OpenDentBusiness{
 					WHERE commlog.CommType="+POut.Long(commType)+" "+
 					"AND commlog.PatNum="+POut.Long(patNum)+" "+
 					"GROUP BY commlog.PatNum";
-			return PIn.DateT(Db.GetScalar(cmd));
+			return PIn.Date(Db.GetScalar(cmd));
 		}
 
 		///<summary>Gets the list of patients that need to be on the reactivation list based on the passed in filters.</summary>

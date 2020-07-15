@@ -276,8 +276,8 @@ namespace OpenDental{
 					MessageBox.Show("Invalid selection of ops.");
 					return;
 				}
-				startDateT=PIn.DateT(comboStart.Text);
-				stopDateT=PIn.DateT(comboStop.Text);
+				startDateT=PIn.Date(comboStart.Text);
+				stopDateT=PIn.Date(comboStop.Text);
 				if(startDateT==DateTime.MinValue || stopDateT==DateTime.MinValue) {
 					MessageBox.Show("Incorrect time format");
 					return;

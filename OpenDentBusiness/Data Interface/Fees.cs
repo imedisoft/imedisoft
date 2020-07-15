@@ -55,7 +55,7 @@ namespace OpenDentBusiness{
 					CodeNum=PIn.Long(x["CodeNum"].ToString()),
 					ClinicNum=PIn.Long(x["ClinicNum"].ToString()),
 					ProvNum=PIn.Long(x["ProvNum"].ToString()),
-					SecDateTEdit=PIn.DateT(x["SecDateTEdit"].ToString()),
+					SecDateTEdit=PIn.Date(x["SecDateTEdit"].ToString()),
 				}).ToList();
 		}
 

@@ -9,8 +9,10 @@ using CodeBase;
 using DataConnectionBase;
 
 namespace OpenDentBusiness{
-	[Obsolete]
 	public class ReplicationServers{
+
+		// TODO: Make this class obsolete...
+
 		#region Get Methods
 		#endregion
 

@@ -66,7 +66,7 @@ namespace OpenDentBusiness.Crud{
 				referral.Slip           = PIn.Long  (row["Slip"].ToString());
 				referral.IsDoctor       = PIn.Bool  (row["IsDoctor"].ToString());
 				referral.IsTrustedDirect= PIn.Bool  (row["IsTrustedDirect"].ToString());
-				referral.DateTStamp     = PIn.DateT (row["DateTStamp"].ToString());
+				referral.DateTStamp     = PIn.Date (row["DateTStamp"].ToString());
 				referral.IsPreferred    = PIn.Bool  (row["IsPreferred"].ToString());
 				retVal.Add(referral);
 			}

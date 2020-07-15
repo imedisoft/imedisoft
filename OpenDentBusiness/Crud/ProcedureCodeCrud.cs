@@ -66,7 +66,7 @@ namespace OpenDentBusiness.Crud{
 				procedureCode.BaseUnits         = PIn.Int   (row["BaseUnits"].ToString());
 				procedureCode.SubstitutionCode  = PIn.String(row["SubstitutionCode"].ToString());
 				procedureCode.SubstOnlyIf       = (OpenDentBusiness.SubstitutionCondition)PIn.Int(row["SubstOnlyIf"].ToString());
-				procedureCode.DateTStamp        = PIn.DateT (row["DateTStamp"].ToString());
+				procedureCode.DateTStamp        = PIn.Date (row["DateTStamp"].ToString());
 				procedureCode.IsMultiVisit      = PIn.Bool  (row["IsMultiVisit"].ToString());
 				procedureCode.DrugNDC           = PIn.String(row["DrugNDC"].ToString());
 				procedureCode.RevenueCodeDefault= PIn.String(row["RevenueCodeDefault"].ToString());

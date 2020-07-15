@@ -29,9 +29,9 @@ namespace Imedisoft.CEMT.Forms
 			databaseServerTextBox.Text = centralConnection.ServerName;
 			databaseNameTextBox.Text = centralConnection.DatabaseName;
 			databaseUserTextBox.Text = centralConnection.MySqlUser;
-			databasePasswordTextBox.Text = CentralConnections.Decrypt(centralConnection.MySqlPassword, FormCentralManager.EncryptionKey);
+			databasePasswordTextBox.Text = centralConnection.MySqlPassword;
 			noteTextBox.Text = centralConnection.Note;
-			showBreakdownCheckBox.Checked = centralConnection.IsNew ? true : centralConnection.HasClinicBreakdownReports;
+			showBreakdownCheckBox.Checked = centralConnection.IsNew || centralConnection.HasClinicBreakdownReports;
 		}
 
 		private void DeleteButton_Click(object sender, EventArgs e)
@@ -55,7 +55,7 @@ namespace Imedisoft.CEMT.Forms
 			centralConnection.ServerName = databaseServerTextBox.Text;
 			centralConnection.DatabaseName = databaseNameTextBox.Text;
 			centralConnection.MySqlUser = databaseUserTextBox.Text;
-			centralConnection.MySqlPassword = CentralConnections.Encrypt(databasePasswordTextBox.Text, FormCentralManager.EncryptionKey);
+			centralConnection.MySqlPassword = databasePasswordTextBox.Text;
 			centralConnection.Note = noteTextBox.Text;
 			centralConnection.HasClinicBreakdownReports = showBreakdownCheckBox.Checked;
 

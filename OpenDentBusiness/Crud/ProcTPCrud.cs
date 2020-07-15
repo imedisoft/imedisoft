@@ -62,7 +62,7 @@ namespace OpenDentBusiness.Crud{
 				procTP.ProcAbbr       = PIn.String(row["ProcAbbr"].ToString());
 				procTP.SecUserNumEntry= PIn.Long  (row["SecUserNumEntry"].ToString());
 				procTP.SecDateEntry   = PIn.Date  (row["SecDateEntry"].ToString());
-				procTP.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
+				procTP.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
 				procTP.FeeAllowed     = PIn.Double(row["FeeAllowed"].ToString());
 				procTP.TaxAmt         = PIn.Double(row["TaxAmt"].ToString());
 				procTP.ProvNum        = PIn.Long  (row["ProvNum"].ToString());

@@ -117,7 +117,7 @@ namespace OpenDental.Bridges
 					}
 					else
 					{
-						writer.WriteAttributeString("lastVisit", PIn.DateT("0001-01-01 00:00:00").ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffK"));
+						writer.WriteAttributeString("lastVisit", PIn.Date("0001-01-01 00:00:00").ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffK"));
 					}
 					writer.WriteStartElement("Demographics");
 					if (patient.FName != "")

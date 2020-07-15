@@ -58,7 +58,7 @@ namespace OpenDentBusiness.Crud{
 				medLab.ObsTestDescript    = PIn.String(row["ObsTestDescript"].ToString());
 				medLab.ObsTestLoinc       = PIn.String(row["ObsTestLoinc"].ToString());
 				medLab.ObsTestLoincText   = PIn.String(row["ObsTestLoincText"].ToString());
-				medLab.DateTimeCollected  = PIn.DateT (row["DateTimeCollected"].ToString());
+				medLab.DateTimeCollected  = PIn.Date (row["DateTimeCollected"].ToString());
 				medLab.TotalVolume        = PIn.String(row["TotalVolume"].ToString());
 				string actionCode=row["ActionCode"].ToString();
 				if(actionCode=="") {
@@ -71,13 +71,13 @@ namespace OpenDentBusiness.Crud{
 					medLab.ActionCode       =(OpenDentBusiness.ResultAction)0;
 				}
 				medLab.ClinicalInfo       = PIn.String(row["ClinicalInfo"].ToString());
-				medLab.DateTimeEntered    = PIn.DateT (row["DateTimeEntered"].ToString());
+				medLab.DateTimeEntered    = PIn.Date (row["DateTimeEntered"].ToString());
 				medLab.OrderingProvNPI    = PIn.String(row["OrderingProvNPI"].ToString());
 				medLab.OrderingProvLocalID= PIn.String(row["OrderingProvLocalID"].ToString());
 				medLab.OrderingProvLName  = PIn.String(row["OrderingProvLName"].ToString());
 				medLab.OrderingProvFName  = PIn.String(row["OrderingProvFName"].ToString());
 				medLab.SpecimenIDAlt      = PIn.String(row["SpecimenIDAlt"].ToString());
-				medLab.DateTimeReported   = PIn.DateT (row["DateTimeReported"].ToString());
+				medLab.DateTimeReported   = PIn.Date (row["DateTimeReported"].ToString());
 				string resultStatus=row["ResultStatus"].ToString();
 				if(resultStatus=="") {
 					medLab.ResultStatus     =(OpenDentBusiness.ResultStatus)0;

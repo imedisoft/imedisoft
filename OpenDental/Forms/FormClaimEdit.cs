@@ -2360,7 +2360,7 @@ namespace OpenDental
 		///True represents valid providers.  Otherwise; false.</summary>
 		private bool CheckProviderTerm() {
 			List<long> listInvalidProvs=Providers.GetInvalidProvsByTermDate(new List<long> 
-				{ comboProvBill.GetSelectedProvNum(),_provNumOrdering,comboProvTreat.GetSelectedProvNum() },PIn.DateT(textDateService.Text));
+				{ comboProvBill.GetSelectedProvNum(),_provNumOrdering,comboProvTreat.GetSelectedProvNum() },PIn.Date(textDateService.Text));
 			if(listInvalidProvs.Count==0) {
 				return true;
 			}

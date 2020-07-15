@@ -264,7 +264,7 @@ namespace OpenDental {
 				| Prefs.UpdateInt(PrefName.BillingElectBatchMax,PIn.Int(textBillingElectBatchMax.Text))
 				| Prefs.UpdateString(PrefName.ClaimIdPrefix,textClaimIdentifier.Text)
 				| Prefs.UpdateInt(PrefName.ClaimReportReceiveInterval,PIn.Int(textReportCheckInterval.Text))
-				| Prefs.UpdateDateT(PrefName.ClaimReportReceiveTime,PIn.DateT(textReportCheckTime.Text))
+				| Prefs.UpdateDateT(PrefName.ClaimReportReceiveTime,PIn.Date(textReportCheckTime.Text))
 				| Prefs.UpdateLong(PrefName.ProcessSigsIntervalInSecs,PIn.Long(textSigInterval.Text))
 				//SecurityLockDate and SecurityLockDays are handled in FormSecurityLock
 				//| Prefs.UpdateString(PrefName.SecurityLockDate,POut.Date(PIn.Date(textDateLock.Text),false))

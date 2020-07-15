@@ -47,7 +47,7 @@ namespace OpenDentBusiness.Crud{
 				orthoPlanLink.LinkType        = (OpenDentBusiness.OrthoPlanLinkType)PIn.Int(row["LinkType"].ToString());
 				orthoPlanLink.FKey            = PIn.Long  (row["FKey"].ToString());
 				orthoPlanLink.IsActive        = PIn.Bool  (row["IsActive"].ToString());
-				orthoPlanLink.SecDateTEntry   = PIn.DateT (row["SecDateTEntry"].ToString());
+				orthoPlanLink.SecDateTEntry   = PIn.Date (row["SecDateTEntry"].ToString());
 				orthoPlanLink.SecUserNumEntry = PIn.Long  (row["SecUserNumEntry"].ToString());
 				retVal.Add(orthoPlanLink);
 			}

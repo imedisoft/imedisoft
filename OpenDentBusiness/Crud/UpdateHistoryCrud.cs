@@ -43,7 +43,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				updateHistory=new UpdateHistory();
 				updateHistory.UpdateHistoryNum= PIn.Long  (row["UpdateHistoryNum"].ToString());
-				updateHistory.DateTimeUpdated = PIn.DateT (row["DateTimeUpdated"].ToString());
+				updateHistory.DateTimeUpdated = PIn.Date (row["DateTimeUpdated"].ToString());
 				updateHistory.ProgramVersion  = PIn.String(row["ProgramVersion"].ToString());
 				retVal.Add(updateHistory);
 			}

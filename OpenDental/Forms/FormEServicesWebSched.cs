@@ -387,7 +387,7 @@ namespace OpenDental {
 			}
 			_isWebSchedNewPatApptTimeSlotsOutdated=false;
 			_indexLastNewPatURL=comboWSNPClinics.SelectedIndex;
-			DateTime dateStart=PIn.DateT(textWebSchedNewPatApptsDateStart.Text);
+			DateTime dateStart=PIn.Date(textWebSchedNewPatApptsDateStart.Text);
 			DateTime dateEnd=dateStart.AddDays(30);
 			if(!signup.IsEnabled) {
 				return;//Do nothing, this clinic is excluded from New Pat Appts.

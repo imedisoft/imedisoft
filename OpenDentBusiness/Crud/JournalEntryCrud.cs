@@ -53,9 +53,9 @@ namespace OpenDentBusiness.Crud{
 				journalEntry.CheckNumber    = PIn.String(row["CheckNumber"].ToString());
 				journalEntry.ReconcileNum   = PIn.Long  (row["ReconcileNum"].ToString());
 				journalEntry.SecUserNumEntry= PIn.Long  (row["SecUserNumEntry"].ToString());
-				journalEntry.SecDateTEntry  = PIn.DateT (row["SecDateTEntry"].ToString());
+				journalEntry.SecDateTEntry  = PIn.Date (row["SecDateTEntry"].ToString());
 				journalEntry.SecUserNumEdit = PIn.Long  (row["SecUserNumEdit"].ToString());
-				journalEntry.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
+				journalEntry.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(journalEntry);
 			}
 			return retVal;

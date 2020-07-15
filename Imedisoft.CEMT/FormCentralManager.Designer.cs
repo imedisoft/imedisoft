@@ -1,28 +1,33 @@
-﻿namespace CentralManager {
-	partial class FormCentralManager {
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+﻿namespace CentralManager
+{
+    partial class FormCentralManager
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing) {
-			if(disposing && (components != null)) {
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent() {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
             this.textConnSearch = new System.Windows.Forms.TextBox();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
@@ -293,7 +298,7 @@
             // gridConns
             // 
             this.gridConns.AllowSortingByColumn = true;
-            this.gridConns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.gridConns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.gridConns.ContextMenuStrip = this.gridMainRightClickMenu;
             this.gridConns.Location = new System.Drawing.Point(6, 88);
@@ -689,8 +694,8 @@
             // 
             // gridPats
             // 
-            this.gridPats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.gridPats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gridPats.HScrollVisible = true;
             this.gridPats.Location = new System.Drawing.Point(715, 88);
@@ -748,80 +753,78 @@
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
-		}
+        }
 
-		#endregion
+        #endregion
 
-		private OpenDental.UI.ODGrid gridConns;
-		private System.Windows.Forms.TextBox textConnSearch;
-		private System.Windows.Forms.MainMenu mainMenu;
-		private System.Windows.Forms.MenuItem menuItemSetup;
-		private System.Windows.Forms.MenuItem menuItemReports;
-		private System.Windows.Forms.MenuItem menuItemConnections;
-		private System.Windows.Forms.MenuItem menuItemSecurity;
-		private System.Windows.Forms.MenuItem menuItemAnnualPI;
-		private System.Windows.Forms.MenuItem menuItemGroups;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.ComboBox comboConnectionGroups;
-		private System.Windows.Forms.MenuItem menuItemLogoff;
-		private System.Windows.Forms.MenuItem menuItemFile;
-		private System.Windows.Forms.MenuItem menuItemPassword;
-		private OpenDental.UI.Button butFilter;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.TextBox textProviderSearch;
-		private System.Windows.Forms.TextBox textClinicSearch;
-		private OpenDental.UI.Button butRefreshStatuses;
-		private System.Windows.Forms.Label labelVersion;
-		private System.Windows.Forms.MenuItem menuItem1;
-		private System.Windows.Forms.MenuItem menuItemDisplayFields;
-		private System.Windows.Forms.ContextMenuStrip gridMainRightClickMenu;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-		private System.Windows.Forms.MenuItem menuTransfer;
-		private System.Windows.Forms.MenuItem menuTransferPatient;
-		private System.Windows.Forms.Timer timer1;
-		private System.Windows.Forms.Label labelFetch;
-		private System.Windows.Forms.CheckBox checkLimit;
-		private OpenDental.UI.Button butSearchPats;
-		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.CheckBox checkGuarantors;
-		private System.Windows.Forms.TextBox textConnPatSearch;
-		private System.Windows.Forms.Label label14;
-		private System.Windows.Forms.TextBox textCountry;
-		private System.Windows.Forms.Label labelCountry;
-		private System.Windows.Forms.TextBox textEmail;
-		private System.Windows.Forms.Label labelEmail;
-		private System.Windows.Forms.TextBox textSubscriberID;
-		private System.Windows.Forms.Label label13;
-		private System.Windows.Forms.TextBox textBirthdate;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.CheckBox checkHideArchived;
-		private System.Windows.Forms.TextBox textChartNumber;
-		private System.Windows.Forms.TextBox textSSN;
-		private System.Windows.Forms.Label label12;
-		private System.Windows.Forms.Label label10;
-		private System.Windows.Forms.TextBox textPatNum;
-		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.TextBox textState;
-		private System.Windows.Forms.Label label8;
-		private System.Windows.Forms.TextBox textCity;
-		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.CheckBox checkHideInactive;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TextBox textAddress;
-		private System.Windows.Forms.Label label11;
-		private OpenDental.ValidPhone textPhone;
-		private System.Windows.Forms.Label label15;
-		private System.Windows.Forms.TextBox textFName;
-		private System.Windows.Forms.Label label16;
-		private System.Windows.Forms.TextBox textLName;
-		private System.Windows.Forms.Label label17;
-		private OpenDental.UI.ODGrid gridPats;
-		private System.Windows.Forms.TextBox textClinicPatSearch;
-		private System.Windows.Forms.Label label18;
-		private System.Windows.Forms.GroupBox groupBox1;
-	}
+        private OpenDental.UI.ODGrid gridConns;
+        private System.Windows.Forms.TextBox textConnSearch;
+        private System.Windows.Forms.MainMenu mainMenu;
+        private System.Windows.Forms.MenuItem menuItemSetup;
+        private System.Windows.Forms.MenuItem menuItemReports;
+        private System.Windows.Forms.MenuItem menuItemConnections;
+        private System.Windows.Forms.MenuItem menuItemSecurity;
+        private System.Windows.Forms.MenuItem menuItemAnnualPI;
+        private System.Windows.Forms.MenuItem menuItemGroups;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboConnectionGroups;
+        private System.Windows.Forms.MenuItem menuItemLogoff;
+        private System.Windows.Forms.MenuItem menuItemFile;
+        private System.Windows.Forms.MenuItem menuItemPassword;
+        private OpenDental.UI.Button butFilter;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textProviderSearch;
+        private System.Windows.Forms.TextBox textClinicSearch;
+        private OpenDental.UI.Button butRefreshStatuses;
+        private System.Windows.Forms.Label labelVersion;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem menuItemDisplayFields;
+        private System.Windows.Forms.ContextMenuStrip gridMainRightClickMenu;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.MenuItem menuTransfer;
+        private System.Windows.Forms.MenuItem menuTransferPatient;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label labelFetch;
+        private System.Windows.Forms.CheckBox checkLimit;
+        private OpenDental.UI.Button butSearchPats;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox checkGuarantors;
+        private System.Windows.Forms.TextBox textConnPatSearch;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox textCountry;
+        private System.Windows.Forms.Label labelCountry;
+        private System.Windows.Forms.TextBox textEmail;
+        private System.Windows.Forms.Label labelEmail;
+        private System.Windows.Forms.TextBox textSubscriberID;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox textBirthdate;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox checkHideArchived;
+        private System.Windows.Forms.TextBox textChartNumber;
+        private System.Windows.Forms.TextBox textSSN;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textPatNum;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox textState;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textCity;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.CheckBox checkHideInactive;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textAddress;
+        private System.Windows.Forms.Label label11;
+        private OpenDental.ValidPhone textPhone;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox textFName;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox textLName;
+        private System.Windows.Forms.Label label17;
+        private OpenDental.UI.ODGrid gridPats;
+        private System.Windows.Forms.TextBox textClinicPatSearch;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.GroupBox groupBox1;
+    }
 }
-

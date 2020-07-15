@@ -56,7 +56,7 @@ namespace OpenDentBusiness.Crud{
 				xChargeTransaction.BatchNum             = PIn.String(row["BatchNum"].ToString());
 				xChargeTransaction.ItemNum              = PIn.String(row["ItemNum"].ToString());
 				xChargeTransaction.ApprCode             = PIn.String(row["ApprCode"].ToString());
-				xChargeTransaction.TransactionDateTime  = PIn.DateT (row["TransactionDateTime"].ToString());
+				xChargeTransaction.TransactionDateTime  = PIn.Date (row["TransactionDateTime"].ToString());
 				retVal.Add(xChargeTransaction);
 			}
 			return retVal;

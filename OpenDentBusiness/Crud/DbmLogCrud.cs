@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				dbmLog.FKey         = PIn.Long  (row["FKey"].ToString());
 				dbmLog.FKeyType     = (OpenDentBusiness.DbmLogFKeyType)PIn.Int(row["FKeyType"].ToString());
 				dbmLog.ActionType   = (OpenDentBusiness.DbmLogActionType)PIn.Int(row["ActionType"].ToString());
-				dbmLog.DateTimeEntry= PIn.DateT (row["DateTimeEntry"].ToString());
+				dbmLog.DateTimeEntry= PIn.Date (row["DateTimeEntry"].ToString());
 				dbmLog.MethodName   = PIn.String(row["MethodName"].ToString());
 				dbmLog.LogText      = PIn.String(row["LogText"].ToString());
 				retVal.Add(dbmLog);

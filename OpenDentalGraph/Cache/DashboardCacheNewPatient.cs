@@ -21,7 +21,7 @@ namespace OpenDentalGraph.Cache {
 
 		protected override NewPatient GetInstanceFromDataRow(DataRow x) {
 			return new NewPatient() {
-				DateStamp=PIn.DateT(x["FirstProc"].ToString()),
+				DateStamp=PIn.Date(x["FirstProc"].ToString()),
 				Count=1, //Each row counts as 1.
 				Val=0, //there are no fees
 				SeriesName="All", //Only 1 series.

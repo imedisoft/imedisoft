@@ -1411,7 +1411,7 @@ namespace OpenDentBusiness{
 					#region SummaryOfCare
 					case EhrMeasureType.SummaryOfCare:
 						int socSent=PIn.Int(tableRaw.Rows[i]["SOCSent"].ToString());
-						DateTime refDate=PIn.DateT(tableRaw.Rows[i]["RefDate"].ToString());
+						DateTime refDate=PIn.Date(tableRaw.Rows[i]["RefDate"].ToString());
 						string refLName=PIn.String(tableRaw.Rows[i]["RefLName"].ToString());
 						string refFName=PIn.String(tableRaw.Rows[i]["RefFName"].ToString());
 						if(socSent<1) {
@@ -3404,7 +3404,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region CPOE_LabOrdersOnly
 					case EhrMeasureType.CPOE_LabOrdersOnly:
-						DateTime labOrderStartDate=PIn.DateT(tableRaw.Rows[i]["ObservationDateTimeStart"].ToString());
+						DateTime labOrderStartDate=PIn.Date(tableRaw.Rows[i]["ObservationDateTimeStart"].ToString());
 						bool labIsCpoe=PIn.Bool(tableRaw.Rows[i]["IsCpoe"].ToString());
 						explanation="Laboratory order: "+labOrderStartDate.ToShortDateString()+" ";
 						if(labIsCpoe) {
@@ -3418,7 +3418,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region CPOE_RadiologyOrdersOnly
 					case EhrMeasureType.CPOE_RadiologyOrdersOnly:
-						DateTime radOrderStartDate=PIn.DateT(tableRaw.Rows[i]["ObservationDateTimeStart"].ToString());
+						DateTime radOrderStartDate=PIn.Date(tableRaw.Rows[i]["ObservationDateTimeStart"].ToString());
 						bool radIsCpoe=PIn.Bool(tableRaw.Rows[i]["IsCpoe"].ToString());
 						explanation="Radiology order: "+radOrderStartDate.ToShortDateString()+" ";
 						if(radIsCpoe) {
@@ -3656,7 +3656,7 @@ namespace OpenDentBusiness{
 					#region SummaryOfCare
 					case EhrMeasureType.SummaryOfCare:
 						int socSent=PIn.Int(tableRaw.Rows[i]["SOCSent"].ToString());
-						DateTime refDate=PIn.DateT(tableRaw.Rows[i]["RefDate"].ToString());
+						DateTime refDate=PIn.Date(tableRaw.Rows[i]["RefDate"].ToString());
 						string refLName=PIn.String(tableRaw.Rows[i]["RefLName"].ToString());
 						string refFName=PIn.String(tableRaw.Rows[i]["RefFName"].ToString());
 						if(socSent<1) {
@@ -3671,7 +3671,7 @@ namespace OpenDentBusiness{
 					#region SummaryOfCareElectronic
 					case EhrMeasureType.SummaryOfCareElectronic:
 						int elecSOCSent=PIn.Int(tableRaw.Rows[i]["ElecSOCSent"].ToString());
-						DateTime elecRefDate=PIn.DateT(tableRaw.Rows[i]["RefDate"].ToString());
+						DateTime elecRefDate=PIn.Date(tableRaw.Rows[i]["RefDate"].ToString());
 						string elecRefLName=PIn.String(tableRaw.Rows[i]["RefLName"].ToString());
 						string elecRefFName=PIn.String(tableRaw.Rows[i]["RefFName"].ToString());
 						if(elecSOCSent<1) {
@@ -3685,7 +3685,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region SecureMessaging
 					case EhrMeasureType.SecureMessaging:
-						if(PIn.DateT(tableRaw.Rows[i]["secureMessageRead"].ToString()).Year>1880) {
+						if(PIn.Date(tableRaw.Rows[i]["secureMessageRead"].ToString()).Year>1880) {
 							row["met"]="X";
 						}
 						break;
@@ -6368,7 +6368,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region CPOE_LabOrdersOnly
 					case EhrMeasureType.CPOE_LabOrdersOnly:
-						DateTime labOrderStartDate=PIn.DateT(tableRaw.Rows[i]["ObservationDateTimeStart"].ToString());
+						DateTime labOrderStartDate=PIn.Date(tableRaw.Rows[i]["ObservationDateTimeStart"].ToString());
 						bool labIsCpoe=PIn.Bool(tableRaw.Rows[i]["IsCpoe"].ToString());
 						explanation="Laboratory order: "+labOrderStartDate.ToShortDateString()+" ";
 						if(labIsCpoe) {
@@ -6382,7 +6382,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region CPOE_RadiologyOrdersOnly
 					case EhrMeasureType.CPOE_RadiologyOrdersOnly:
-						DateTime radOrderStartDate=PIn.DateT(tableRaw.Rows[i]["ObservationDateTimeStart"].ToString());
+						DateTime radOrderStartDate=PIn.Date(tableRaw.Rows[i]["ObservationDateTimeStart"].ToString());
 						bool radIsCpoe=PIn.Bool(tableRaw.Rows[i]["IsCpoe"].ToString());
 						explanation="Radiology order: "+radOrderStartDate.ToShortDateString()+" ";
 						if(radIsCpoe) {
@@ -6620,7 +6620,7 @@ namespace OpenDentBusiness{
 					#region SummaryOfCare
 					case EhrMeasureType.SummaryOfCare:
 						int socSent=PIn.Int(tableRaw.Rows[i]["SOCSent"].ToString());
-						DateTime refDate=PIn.DateT(tableRaw.Rows[i]["RefDate"].ToString());
+						DateTime refDate=PIn.Date(tableRaw.Rows[i]["RefDate"].ToString());
 						string refLName=PIn.String(tableRaw.Rows[i]["RefLName"].ToString());
 						string refFName=PIn.String(tableRaw.Rows[i]["RefFName"].ToString());
 						if(socSent<1) {
@@ -6635,7 +6635,7 @@ namespace OpenDentBusiness{
 					#region SummaryOfCareElectronic
 					case EhrMeasureType.SummaryOfCareElectronic:
 						int elecSOCSent=PIn.Int(tableRaw.Rows[i]["ElecSOCSent"].ToString());
-						DateTime elecRefDate=PIn.DateT(tableRaw.Rows[i]["RefDate"].ToString());
+						DateTime elecRefDate=PIn.Date(tableRaw.Rows[i]["RefDate"].ToString());
 						string elecRefLName=PIn.String(tableRaw.Rows[i]["RefLName"].ToString());
 						string elecRefFName=PIn.String(tableRaw.Rows[i]["RefFName"].ToString());
 						if(elecSOCSent<1) {

@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				ehrMeasureEvent=new EhrMeasureEvent();
 				ehrMeasureEvent.EhrMeasureEventNum    = PIn.Long  (row["EhrMeasureEventNum"].ToString());
-				ehrMeasureEvent.DateTEvent            = PIn.DateT (row["DateTEvent"].ToString());
+				ehrMeasureEvent.DateTEvent            = PIn.Date (row["DateTEvent"].ToString());
 				ehrMeasureEvent.EventType             = (OpenDentBusiness.EhrMeasureEventType)PIn.Int(row["EventType"].ToString());
 				ehrMeasureEvent.PatNum                = PIn.Long  (row["PatNum"].ToString());
 				ehrMeasureEvent.MoreInfo              = PIn.String(row["MoreInfo"].ToString());

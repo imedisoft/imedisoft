@@ -155,7 +155,7 @@ namespace OpenDentBusiness{
 				row["Specialty"]=rawtable.Rows[i]["FieldValue"].ToString();
 				row["age"]=Patients.DateToAge(PIn.Date(rawtable.Rows[i]["Birthdate"].ToString())).ToString();
 				row["SuperFamily"]=rawtable.Rows[i]["SuperFamily"].ToString();
-				DateTime recentDate=PIn.DateT(rawtable.Rows[i]["DateMostRecent"].ToString());
+				DateTime recentDate=PIn.Date(rawtable.Rows[i]["DateMostRecent"].ToString());
 				row["DateMostRecent"]="";
 				if(recentDate.Year>1880) {
 					row["DateMostRecent"]=recentDate.ToShortDateString();

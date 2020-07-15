@@ -2066,7 +2066,7 @@ namespace OpenDental{
 				return;
 			}
 			//Insert measure event if one does not already exist for this date
-			DateTime dateTEntered=PIn.DateT(textDateAssessed.Text);//will be set to DateTime.Now when form loads
+			DateTime dateTEntered=PIn.Date(textDateAssessed.Text);//will be set to DateTime.Now when form loads
 			EhrMeasureEvent eventCur;
 			foreach(GridRow row in gridAssessments.ListGridRows) {
 				eventCur=(EhrMeasureEvent)row.Tag;
@@ -2211,7 +2211,7 @@ namespace OpenDental{
 				MessageBox.Show("You must select a tobacco status.");
 				return;
 			}
-			DateTime dateTEntered=PIn.DateT(textDateAssessed.Text);
+			DateTime dateTEntered=PIn.Date(textDateAssessed.Text);
 			EhrMeasureEvent meas=new EhrMeasureEvent();
 			meas.DateTEvent=dateTEntered;
 			meas.EventType=EhrMeasureEventType.TobaccoUseAssessed;

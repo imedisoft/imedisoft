@@ -67,7 +67,7 @@ namespace OpenDentBusiness
 		/// Checks to see if the query is safe for replication and if the user has permission to run a command query if it is a command query.
 		/// Use isRunningOnReportServer to indicate if the connection is made directly to the Report Server.
 		/// </summary>
-		public static bool IsSqlAllowed(string command, bool suppressMessage = false, bool isRunningOnReportServer = false)
+		public static bool IsSqlAllowed(string command, bool suppressMessage = false)
 		{
 			bool isCommand;
 			try

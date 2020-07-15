@@ -458,7 +458,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
-			List<ODTuple<Medication,string>> listImportMeds=new List<ODTuple<Medication,string>>();
+			List<(Medication,string)> listImportMeds=new List<(Medication,string)>();
 			//Leaving code here to include later when we have developed a default medications list available for download.
 			//if(MsgBox.Show(MsgBoxButtons.YesNo,"Click Yes to download and import default medication list.\r\nClick No to import from a file.")) {
 			//	Cursor=Cursors.WaitCursor;
@@ -487,21 +487,6 @@ namespace OpenDental{
 			MessageBox.Show(this,POut.Int(countDuplicateMedications)+" "+Lan.G(this,"duplicate medications found.")+"\r\n"
 				+POut.Int(countImportedMedications)+" "+Lan.G(this,"medications imported."));
 			FillTab();
-		}
-
-		///<summary>Attempts to download the default medication list from HQ.
-		///If there is an exception returns an empty list after showing the user an error prompt.</summary>
-		private List<ODTuple<Medication,string>> DownloadDefaultMedications() {
-			List<ODTuple<Medication,string>> listMedsNew=new List<ODTuple<Medication,string>>();
-			string tempFile="";
-			try {
-				tempFile=MedicationL.DownloadDefaultMedicationsFile();
-				listMedsNew=MedicationL.GetMedicationsFromFile(tempFile,true);
-			}
-			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Failed to download medications.")+"\r\n"+ex.Message);
-			}
-			return listMedsNew;
 		}
 
 		private void butExportMedications_Click(object sender,EventArgs e) {
@@ -538,8 +523,8 @@ namespace OpenDental{
 			else if(Directory.Exists("C:\\")) {
 				initialDirectory="C:\\";
 			}
-			FileDialog dlg=null;
-			if(isImport) {
+            FileDialog dlg;
+            if (isImport) {
 				dlg=new OpenFileDialog();
 			}
 			else {//Export

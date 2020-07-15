@@ -50,7 +50,7 @@ namespace OpenDentBusiness.Crud{
 				taskList.DateType            = (OpenDentBusiness.TaskDateType)PIn.Int(row["DateType"].ToString());
 				taskList.FromNum             = PIn.Long  (row["FromNum"].ToString());
 				taskList.ObjectType          = (OpenDentBusiness.TaskObjectType)PIn.Int(row["ObjectType"].ToString());
-				taskList.DateTimeEntry       = PIn.DateT (row["DateTimeEntry"].ToString());
+				taskList.DateTimeEntry       = PIn.Date (row["DateTimeEntry"].ToString());
 				taskList.GlobalTaskFilterType= (OpenDentBusiness.GlobalTaskFilterType)PIn.Int(row["GlobalTaskFilterType"].ToString());
 				taskList.TaskListStatus      = (OpenDentBusiness.TaskListStatusEnum)PIn.Int(row["TaskListStatus"].ToString());
 				retVal.Add(taskList);

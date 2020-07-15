@@ -63,8 +63,8 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT ValueString,NOW() FROM preference WHERE PrefName='OpenDentalServiceHeartbeat'";
 			DataTable table=DataCore.GetTable(command);
-			DateTime lastHeartbeat=PIn.DateT(table.Rows[0][0].ToString());
-			DateTime dateTimeNow=PIn.DateT(table.Rows[0][1].ToString());
+			DateTime lastHeartbeat=PIn.Date(table.Rows[0][0].ToString());
+			DateTime dateTimeNow=PIn.Date(table.Rows[0][1].ToString());
 			if(lastHeartbeat.AddMinutes(6)<dateTimeNow) {
 				return false;
 			}
@@ -83,8 +83,8 @@ namespace OpenDentBusiness{
 				table=DataCore.GetTable("SELECT ValueString,NOW() DateTNow FROM preference WHERE PrefName='AsteriskServerHeartbeat'");
 			});
 			if(table!=null && table.Rows.Count>=1 && table.Columns.Count>=2) {
-				dateTimeRecentHeartbeat=PIn.DateT(table.Rows[0]["ValueString"].ToString());
-				dateTimeNow=PIn.DateT(table.Rows[0]["DateTNow"].ToString());
+				dateTimeRecentHeartbeat=PIn.Date(table.Rows[0]["ValueString"].ToString());
+				dateTimeNow=PIn.Date(table.Rows[0]["DateTNow"].ToString());
 			}
 			//Check to see if the asterisk server heartbeat has stopped beating for the last 5 seconds.
 			if((dateTimeNow-dateTimeRecentHeartbeat).TotalSeconds > 5) {

@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				allergy.PatNum             = PIn.Long  (row["PatNum"].ToString());
 				allergy.Reaction           = PIn.String(row["Reaction"].ToString());
 				allergy.StatusIsActive     = PIn.Bool  (row["StatusIsActive"].ToString());
-				allergy.DateTStamp         = PIn.DateT (row["DateTStamp"].ToString());
+				allergy.DateTStamp         = PIn.Date (row["DateTStamp"].ToString());
 				allergy.DateAdverseReaction= PIn.Date  (row["DateAdverseReaction"].ToString());
 				allergy.SnomedReaction     = PIn.String(row["SnomedReaction"].ToString());
 				retVal.Add(allergy);

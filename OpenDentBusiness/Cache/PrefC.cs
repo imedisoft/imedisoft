@@ -322,8 +322,8 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Gets a pref of type datetime.
 		/// </summary>
-		public static DateTime GetDateT(PrefName preferenceName) 
-			=> SIn.DateT(Prefs.GetOne(preferenceName).ValueString);
+		public static DateTime GetDateT(PrefName preferenceName) // TODO: Deprecate this in favor of GetDate()
+			=> SIn.Date(Prefs.GetOne(preferenceName).ValueString);
 
 		/// <summary>
 		/// Gets a color from an int32 pref.

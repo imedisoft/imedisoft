@@ -50,7 +50,7 @@ namespace OpenDentBusiness.Crud{
 				feeSched.IsGlobal       = PIn.Bool  (row["IsGlobal"].ToString());
 				feeSched.SecUserNumEntry= PIn.Long  (row["SecUserNumEntry"].ToString());
 				feeSched.SecDateEntry   = PIn.Date  (row["SecDateEntry"].ToString());
-				feeSched.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
+				feeSched.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(feeSched);
 			}
 			return retVal;

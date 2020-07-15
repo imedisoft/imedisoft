@@ -120,7 +120,7 @@ namespace OpenDentBusiness{
 					if(i>5) {
 						break;
 					}
-					aptDateTime=PIn.DateT(table.Rows[i]["AptDateTime"].ToString());
+					aptDateTime=PIn.Date(table.Rows[i]["AptDateTime"].ToString());
 					s+=table.Rows[i]["LName"].ToString()+", "+table.Rows[i]["FName"].ToString()+POut.DateT(aptDateTime,false)+"\r\n";
 				}
 				throw new ApplicationException(s);

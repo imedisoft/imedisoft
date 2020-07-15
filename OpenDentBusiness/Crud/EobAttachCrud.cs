@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 				eobAttach=new EobAttach();
 				eobAttach.EobAttachNum   = PIn.Long  (row["EobAttachNum"].ToString());
 				eobAttach.ClaimPaymentNum= PIn.Long  (row["ClaimPaymentNum"].ToString());
-				eobAttach.DateTCreated   = PIn.DateT (row["DateTCreated"].ToString());
+				eobAttach.DateTCreated   = PIn.Date (row["DateTCreated"].ToString());
 				eobAttach.FileName       = PIn.String(row["FileName"].ToString());
 				eobAttach.RawBase64      = PIn.String(row["RawBase64"].ToString());
 				retVal.Add(eobAttach);

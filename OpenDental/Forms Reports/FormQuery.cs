@@ -561,8 +561,8 @@ namespace OpenDental{
 						case "nextschedappt":
 						case "starttime":
 						case "stoptime":
-							tableOut.Rows[i][j]=PIn.DateT(tableOut.Rows[i][j].ToString()).ToString("t")+"   "
-								+PIn.DateT(tableOut.Rows[i][j].ToString()).ToString("d");
+							tableOut.Rows[i][j]=PIn.Date(tableOut.Rows[i][j].ToString()).ToString("t")+"   "
+								+PIn.Date(tableOut.Rows[i][j].ToString()).ToString("d");
 							break;
 						//TimeCardManage
 						case "adjevent":

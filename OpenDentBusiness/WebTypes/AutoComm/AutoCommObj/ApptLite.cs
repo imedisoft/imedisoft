@@ -49,9 +49,9 @@ namespace OpenDentBusiness.AutoComm {
 		public ApptLite(DataRow row,List<ClinicRule> listClinicRules) {
 			PrimaryKey=PIn.Long(row["AptNum"].ToString());
 			//For most AutoCommApptAbs, this will be AptDateTime, but for ApptThankYous, SecDateTEntry is used.
-			DateTimeEvent=PIn.DateT(row["DateTimeEvent"].ToString());
-			AptDateTime=PIn.DateT(row["AptDateTime"].ToString());
-			DateTimeAskedToArrive=PIn.DateT(row["DateTimeAskedToArrive"].ToString());
+			DateTimeEvent=PIn.Date(row["DateTimeEvent"].ToString());
+			AptDateTime=PIn.Date(row["AptDateTime"].ToString());
+			DateTimeAskedToArrive=PIn.Date(row["DateTimeAskedToArrive"].ToString());
 			if(DateTimeAskedToArrive.Year<1880) {
 				DateTimeAskedToArrive=DateTimeEvent;
 			}

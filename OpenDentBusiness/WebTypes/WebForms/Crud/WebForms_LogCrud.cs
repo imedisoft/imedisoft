@@ -46,7 +46,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 				webForms_Log.DentalOfficeID= PIn.Long  (row["DentalOfficeID"].ToString());
 				webForms_Log.WebSheetDefIDs= PIn.String(row["WebSheetDefIDs"].ToString());
 				webForms_Log.LogMessage    = PIn.String(row["LogMessage"].ToString());
-				webForms_Log.DateTStamp    = PIn.DateT (row["DateTStamp"].ToString());
+				webForms_Log.DateTStamp    = PIn.Date (row["DateTStamp"].ToString());
 				retVal.Add(webForms_Log);
 			}
 			return retVal;

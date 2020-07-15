@@ -54,12 +54,12 @@ namespace OpenDentBusiness.Crud{
 				treatPlan.TPStatus             = (OpenDentBusiness.TreatPlanStatus)PIn.Int(row["TPStatus"].ToString());
 				treatPlan.SecUserNumEntry      = PIn.Long  (row["SecUserNumEntry"].ToString());
 				treatPlan.SecDateEntry         = PIn.Date  (row["SecDateEntry"].ToString());
-				treatPlan.SecDateTEdit         = PIn.DateT (row["SecDateTEdit"].ToString());
+				treatPlan.SecDateTEdit         = PIn.Date (row["SecDateTEdit"].ToString());
 				treatPlan.UserNumPresenter     = PIn.Long  (row["UserNumPresenter"].ToString());
 				treatPlan.TPType               = (OpenDentBusiness.TreatPlanType)PIn.Int(row["TPType"].ToString());
 				treatPlan.SignaturePractice    = PIn.String(row["SignaturePractice"].ToString());
-				treatPlan.DateTSigned          = PIn.DateT (row["DateTSigned"].ToString());
-				treatPlan.DateTPracticeSigned  = PIn.DateT (row["DateTPracticeSigned"].ToString());
+				treatPlan.DateTSigned          = PIn.Date (row["DateTSigned"].ToString());
+				treatPlan.DateTPracticeSigned  = PIn.Date (row["DateTPracticeSigned"].ToString());
 				treatPlan.SignatureText        = PIn.String(row["SignatureText"].ToString());
 				treatPlan.SignaturePracticeText= PIn.String(row["SignaturePracticeText"].ToString());
 				retVal.Add(treatPlan);

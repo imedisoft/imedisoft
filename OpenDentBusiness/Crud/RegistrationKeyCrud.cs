@@ -56,7 +56,7 @@ namespace OpenDentBusiness.Crud{
 				registrationKey.VotesAllotted       = PIn.Int   (row["VotesAllotted"].ToString());
 				registrationKey.IsResellerCustomer  = PIn.Bool  (row["IsResellerCustomer"].ToString());
 				registrationKey.HasEarlyAccess      = PIn.Bool  (row["HasEarlyAccess"].ToString());
-				registrationKey.DateTBackupScheduled= PIn.DateT (row["DateTBackupScheduled"].ToString());
+				registrationKey.DateTBackupScheduled= PIn.Date (row["DateTBackupScheduled"].ToString());
 				registrationKey.BackupPassCode      = PIn.String(row["BackupPassCode"].ToString());
 				retVal.Add(registrationKey);
 			}

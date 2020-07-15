@@ -319,7 +319,7 @@ namespace OpenDentBusiness {
 					descript+=" "+Lans.g("FormPayPlan","(split)");
 				}
 			}
-			retVal["ChargeDate"]=PIn.DateT(rowBundleClaimProc["DateCP"].ToString()).ToShortDateString();//0 Date
+			retVal["ChargeDate"]=PIn.Date(rowBundleClaimProc["DateCP"].ToString()).ToShortDateString();//0 Date
 			retVal["Provider"]=Providers.GetLName(PIn.Long(rowBundleClaimProc["ProvNum"].ToString()));//1 Prov Abbr
 			retVal["Description"]=descript;//2 Descript
 			retVal["Principal"]="";//3 Principal

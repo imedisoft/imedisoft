@@ -290,7 +290,7 @@ namespace OpenDental
 				sr.Write("\"" + Dequote(PIn.String(table.Rows[i][10].ToString())) + "\",");//10-City
 				sr.Write("\"" + Dequote(PIn.String(table.Rows[i][11].ToString())) + "\",");//11-State
 				sr.Write("\"" + Dequote(PIn.String(table.Rows[i][12].ToString())) + "\",");//12-Zip
-				aptDT = PIn.DateT(table.Rows[i][13].ToString());
+				aptDT = PIn.Date(table.Rows[i][13].ToString());
 				sr.Write("\"" + aptDT.ToString("MM/dd/yyyy") + "\",");//13-ApptDate
 				sr.Write("\"" + aptDT.ToString("hh:mm tt") + "\",");//13-ApptTime eg 01:30 PM
 				sr.Write("\"" + Dequote(PIn.String(table.Rows[i][14].ToString())) + "\",");//14-ApptReason

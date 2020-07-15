@@ -50,7 +50,7 @@ namespace OpenDentBusiness.Crud{
 				userWeb.Password             = PIn.String(row["Password"].ToString());
 				userWeb.PasswordResetCode    = PIn.String(row["PasswordResetCode"].ToString());
 				userWeb.RequireUserNameChange= PIn.Bool  (row["RequireUserNameChange"].ToString());
-				userWeb.DateTimeLastLogin    = PIn.DateT (row["DateTimeLastLogin"].ToString());
+				userWeb.DateTimeLastLogin    = PIn.Date (row["DateTimeLastLogin"].ToString());
 				userWeb.RequirePasswordChange= PIn.Bool  (row["RequirePasswordChange"].ToString());
 				retVal.Add(userWeb);
 			}

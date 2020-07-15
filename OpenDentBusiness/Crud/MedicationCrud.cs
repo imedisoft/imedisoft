@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				medication.MedName      = PIn.String(row["MedName"].ToString());
 				medication.GenericNum   = PIn.Long  (row["GenericNum"].ToString());
 				medication.Notes        = PIn.String(row["Notes"].ToString());
-				medication.DateTStamp   = PIn.DateT (row["DateTStamp"].ToString());
+				medication.DateTStamp   = PIn.Date (row["DateTStamp"].ToString());
 				medication.RxCui        = PIn.Long  (row["RxCui"].ToString());
 				retVal.Add(medication);
 			}

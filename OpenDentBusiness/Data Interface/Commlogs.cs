@@ -56,7 +56,7 @@ namespace OpenDentBusiness{
 				+ "AND CommSource=" + POut.Int((int)CommItemSource.User) + " "
 				+ "ORDER BY CommDateTime DESC "
 				+ "LIMIT 1";
-			return PIn.DateT(Db.GetScalar(command));
+			return PIn.Date(Db.GetScalar(command));
 		}
 		#endregion
 

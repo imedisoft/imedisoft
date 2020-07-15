@@ -579,7 +579,7 @@ namespace OpenDentBusiness{
 					+"WHERE FromAddress='"+POut.String(emailAddressFrom.EmailUsername.Trim())+"' AND SentOrReceived="+POut.Long((int)EmailSentOrReceived.AckDirectProcessed)+" "
 					+"ORDER BY MsgDateTime DESC",
 				1);
-			DateTime dateTimeLastAck=PIn.DateT(Db.GetScalar(command));//dateTimeLastAck will be 0001-01-01 if there is not yet any sent Acks.
+			DateTime dateTimeLastAck=PIn.Date(Db.GetScalar(command));//dateTimeLastAck will be 0001-01-01 if there is not yet any sent Acks.
 			if((DateTime.Now-dateTimeLastAck).TotalSeconds<60) {
 				//Our last Ack sent was less than 15 seconds ago.  Abort sending Acks right now.
 				return;

@@ -55,7 +55,7 @@ namespace OpenDentBusiness {
 							//TS is YYYYMMDDHHMMSS, string compare
 							case HL70125.TS:
 								select+=",ehrlabresult"+i+".ObservationValueDateTime ";//+DbHelper.DateTFormatColumn("ehrlabresult"+i+".ObservationValueDateTime","%m/%d/%Y %H:%i:%s");
-								where+="AND ehrlabresult"+i+".ObservationValueDateTime "//+POut.DateT(PIn.DateT(DbHelper.DateTFormatColumn("ehrlabresult"+i+".ObservationValueDateTime","%m/%d/%Y %H:%i:%s")))
+								where+="AND ehrlabresult"+i+".ObservationValueDateTime "//+POut.DateT(PIn.Date(DbHelper.DateTFormatColumn("ehrlabresult"+i+".ObservationValueDateTime","%m/%d/%Y %H:%i:%s")))
 									+GetOperandText(elementList[i].Operand)+"'"+POut.String(elementList[i].LabValue)+"' "
 									+"AND ehrlabresult"+i+".ValueType='TS' ";
 								break;

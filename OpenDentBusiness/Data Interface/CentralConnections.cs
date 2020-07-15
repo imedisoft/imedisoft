@@ -237,15 +237,6 @@ namespace OpenDentBusiness
 		}
 
 		/// <summary>
-		/// Encrypts signature text and returns a base 64 string so that it can go directly into the database.
-		/// </summary>
-		[Obsolete]
-		public static string Encrypt(string str, byte[] key) => str;
-
-		[Obsolete]
-		public static string Decrypt(string str, byte[] key) => str;
-
-		/// <summary>
 		/// Supply a CentralConnection and this method will go through the logic to put together the connection string.
 		/// </summary>
 		public static string GetConnectionString(CentralConnection conn)

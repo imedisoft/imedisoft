@@ -48,7 +48,7 @@ namespace OpenDentBusiness.Crud{
 				emailMessage.FromAddress     = PIn.String(row["FromAddress"].ToString());
 				emailMessage.Subject         = PIn.String(row["Subject"].ToString());
 				emailMessage.BodyText        = PIn.String(row["BodyText"].ToString());
-				emailMessage.MsgDateTime     = PIn.DateT (row["MsgDateTime"].ToString());
+				emailMessage.MsgDateTime     = PIn.Date (row["MsgDateTime"].ToString());
 				emailMessage.SentOrReceived  = (OpenDentBusiness.EmailSentOrReceived)PIn.Int(row["SentOrReceived"].ToString());
 				emailMessage.RecipientAddress= PIn.String(row["RecipientAddress"].ToString());
 				emailMessage.RawEmailIn      = PIn.String(row["RawEmailIn"].ToString());
@@ -60,8 +60,8 @@ namespace OpenDentBusiness.Crud{
 				emailMessage.AptNum          = PIn.Long  (row["AptNum"].ToString());
 				emailMessage.UserNum         = PIn.Long  (row["UserNum"].ToString());
 				emailMessage.HtmlType        = (OpenDentBusiness.EmailType)PIn.Int(row["HtmlType"].ToString());
-				emailMessage.SecDateTEntry   = PIn.DateT (row["SecDateTEntry"].ToString());
-				emailMessage.SecDateTEdit    = PIn.DateT (row["SecDateTEdit"].ToString());
+				emailMessage.SecDateTEntry   = PIn.Date (row["SecDateTEntry"].ToString());
+				emailMessage.SecDateTEdit    = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(emailMessage);
 			}
 			return retVal;

@@ -69,7 +69,7 @@ namespace OpenDental{
 
 		public TimeSpan TimeEntered {
 			get {
-				return PIn.DateT(((ValidTime)_listInputControls.FirstOrDefault(x => x is ValidTime)).Text).TimeOfDay;
+				return PIn.Date(((ValidTime)_listInputControls.FirstOrDefault(x => x is ValidTime)).Text).TimeOfDay;
 			}
 		}
 

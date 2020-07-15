@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				taskNote.TaskNoteNum = PIn.Long  (row["TaskNoteNum"].ToString());
 				taskNote.TaskNum     = PIn.Long  (row["TaskNum"].ToString());
 				taskNote.UserNum     = PIn.Long  (row["UserNum"].ToString());
-				taskNote.DateTimeNote= PIn.DateT (row["DateTimeNote"].ToString());
+				taskNote.DateTimeNote= PIn.Date (row["DateTimeNote"].ToString());
 				taskNote.Note        = PIn.String(row["Note"].ToString());
 				retVal.Add(taskNote);
 			}

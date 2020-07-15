@@ -284,10 +284,10 @@ namespace OpenDentBusiness
 				row["colorText"] = Color.Black.ToArgb().ToString();
 				row["creditsDouble"] = 0;
 				row["credits"] = "";//((double)row["creditsDouble"]).ToString("n");
-				dateT = PIn.DateT(rawCharge.Rows[i]["ChargeDate"].ToString());
+				dateT = PIn.Date(rawCharge.Rows[i]["ChargeDate"].ToString());
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToShortDateString();
-				row["dateTimeSort"] = PIn.DateT(rawCharge.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
+				row["dateTimeSort"] = PIn.Date(rawCharge.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
 				row["description"] = "";//"Princ: "+principal.ToString("n")+
 				if (interest != 0)
 				{
@@ -376,15 +376,15 @@ namespace OpenDentBusiness
 				row["credits"] = ((decimal)row["creditsDouble"]).ToString("n");
 				if (payPlanPlanNum == 0)
 				{
-					dateT = PIn.DateT(rawPay.Rows[i]["DatePay"].ToString());
+					dateT = PIn.Date(rawPay.Rows[i]["DatePay"].ToString());
 				}
 				else
 				{
-					dateT = PIn.DateT(rawPay.Rows[i]["DateCP"].ToString());//this may be changed to ProcDate in the future
+					dateT = PIn.Date(rawPay.Rows[i]["DateCP"].ToString());//this may be changed to ProcDate in the future
 				}
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToShortDateString();
-				row["dateTimeSort"] = PIn.DateT(rawPay.Rows[i]["SecDateTEdit"].ToString());//SecDateTEdit will be used for sorting if RandomKeys is enabled
+				row["dateTimeSort"] = PIn.Date(rawPay.Rows[i]["SecDateTEdit"].ToString());//SecDateTEdit will be used for sorting if RandomKeys is enabled
 				if (payPlanPlanNum == 0)
 				{
 					row["description"] = Defs.GetName(DefCat.PaymentTypes, PIn.Long(rawPay.Rows[i]["PayType"].ToString()));
@@ -521,7 +521,7 @@ namespace OpenDentBusiness
 			{
 				DataRow rowCur = rawComm.Rows[i];
 				row = table.NewRow();
-				dateT = PIn.DateT(rowCur["CommDateTime"].ToString());
+				dateT = PIn.Date(rowCur["CommDateTime"].ToString());
 				long commTypeDefNum = PIn.Long(rowCur["CommType"].ToString());
 				Def commlogType = listCommLogTypeDefs.FirstOrDefault(x => x.DefNum == commTypeDefNum);
 				//If Def exists and not an empty color use that color. Otherwise, leave row blank.
@@ -573,7 +573,7 @@ namespace OpenDentBusiness
 			{
 				DataRow rowCur = rawEmail.Rows[i];
 				row = table.NewRow();
-				dateT = PIn.DateT(rowCur["MsgDateTime"].ToString());
+				dateT = PIn.Date(rowCur["MsgDateTime"].ToString());
 				row["CommDateTime"] = dateT;
 				row["commDate"] = dateT.ToShortDateString();
 				if (dateT.TimeOfDay != TimeSpan.Zero)
@@ -611,7 +611,7 @@ namespace OpenDentBusiness
 			{
 				DataRow rowCur = rawForm.Rows[i];
 				row = table.NewRow();
-				dateT = PIn.DateT(rowCur["FormDateTime"].ToString());
+				dateT = PIn.Date(rowCur["FormDateTime"].ToString());
 				row["CommDateTime"] = dateT;
 				row["commDate"] = dateT.ToShortDateString();
 				if (dateT.TimeOfDay != TimeSpan.Zero)
@@ -643,7 +643,7 @@ namespace OpenDentBusiness
 			{
 				DataRow rowCur = rawSheet.Rows[i];
 				row = table.NewRow();
-				dateT = PIn.DateT(rowCur["DateTimeSheet"].ToString());
+				dateT = PIn.Date(rowCur["DateTimeSheet"].ToString());
 				row["CommDateTime"] = dateT;
 				row["commDate"] = dateT.ToShortDateString();
 				if (dateT.TimeOfDay != TimeSpan.Zero)
@@ -799,7 +799,7 @@ namespace OpenDentBusiness
 				}
 			}
 			List<DataRow> listPayPlanRows = retVal.Tables["payplan"].Rows.OfType<DataRow>()
-				.OrderBy(x => x["PatNum"].ToString()).ThenBy(x => PIn.DateT(x["DateTime"].ToString())).ToList();
+				.OrderBy(x => x["PatNum"].ToString()).ThenBy(x => PIn.Date(x["DateTime"].ToString())).ToList();
 			decimal payplanBal = 0;
 			foreach (DataRow row in listPayPlanRows)
 			{
@@ -998,11 +998,11 @@ namespace OpenDentBusiness
 				}
 				row["creditsDouble"] = amt + writeoff;
 				row["credits"] = ((decimal)row["creditsDouble"]).ToString("n");
-				dateT = PIn.DateT(rawClaimPayRow["DateCP"].ToString());
+				dateT = PIn.Date(rawClaimPayRow["DateCP"].ToString());
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-				row["dateTimeSort"] = PIn.DateT(rawClaimPayRow["SecDateTEdit"].ToString());//MAX SecDateTEdit will be used for sorting if RandomKeys is enabled
-				procdate = PIn.DateT(rawClaimPayRow["ProcDate"].ToString());
+				row["dateTimeSort"] = PIn.Date(rawClaimPayRow["SecDateTEdit"].ToString());//MAX SecDateTEdit will be used for sorting if RandomKeys is enabled
+				procdate = PIn.Date(rawClaimPayRow["ProcDate"].ToString());
 				row["description"] = Lans.g("AccountModule", "Insurance Payment for Claim") + " " + procdate.ToShortDateString();
 				if (rawClaimPayRow["PayPlanNum"].ToString() != "0")
 				{
@@ -1153,10 +1153,10 @@ namespace OpenDentBusiness
 				}
 				row["creditsDouble"] = 0;
 				row["credits"] = "";
-				dateT = PIn.DateT(rawProcRow["procDate_"].ToString());
+				dateT = PIn.Date(rawProcRow["procDate_"].ToString());
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-				row["dateTimeSort"] = PIn.DateT(rawProcRow["DateTStamp"].ToString());//DateTStamp will be used for sorting if RandomKeys is enabled
+				row["dateTimeSort"] = PIn.Date(rawProcRow["DateTStamp"].ToString());//DateTStamp will be used for sorting if RandomKeys is enabled
 				long codeNum = PIn.Long(rawProcRow["CodeNum"].ToString());
 				string surf = rawProcRow["Surf"].ToString();
 				string toothNum = rawProcRow["ToothNum"].ToString();
@@ -1347,10 +1347,10 @@ namespace OpenDentBusiness
 				row["clinic"] = Clinics.GetDesc(clinicNumCur);
 				row["ClinicNum"] = clinicNumCur;
 				row["colorText"] = listDefs[1].ItemColor.ToArgb().ToString();
-				dateT = PIn.DateT(rawAdj.Rows[i]["AdjDate"].ToString());
+				dateT = PIn.Date(rawAdj.Rows[i]["AdjDate"].ToString());
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-				row["dateTimeSort"] = PIn.DateT(rawAdj.Rows[i]["SecDateTEdit"].ToString());//SecDateTEdit will be used for sorting if RandomKeys is enabled
+				row["dateTimeSort"] = PIn.Date(rawAdj.Rows[i]["SecDateTEdit"].ToString());//SecDateTEdit will be used for sorting if RandomKeys is enabled
 				row["description"] = Defs.GetName(DefCat.AdjTypes, PIn.Long(rawAdj.Rows[i]["AdjType"].ToString()));
 				if (rawAdj.Rows[i]["AdjNote"].ToString() != "" && showAdjNotes)
 				{
@@ -1575,10 +1575,10 @@ namespace OpenDentBusiness
 				amt = PIn.Decimal(rawPay.Rows[i]["splitAmt_"].ToString());
 				row["creditsDouble"] = amt - (decimal)hiddenPaySplitAmountTotal;
 				row["credits"] = ((decimal)row["creditsDouble"]).ToString("n");
-				dateT = PIn.DateT(rawPay.Rows[i]["DatePay"].ToString());//was ProcDate in earlier versions
+				dateT = PIn.Date(rawPay.Rows[i]["DatePay"].ToString());//was ProcDate in earlier versions
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-				row["dateTimeSort"] = PIn.DateT(rawPay.Rows[i]["SecDateTEdit"].ToString());//MAX SecDateTEdit will be used for sorting if RandomKeys is enabled
+				row["dateTimeSort"] = PIn.Date(rawPay.Rows[i]["SecDateTEdit"].ToString());//MAX SecDateTEdit will be used for sorting if RandomKeys is enabled
 				row["description"] = Defs.GetName(DefCat.PaymentTypes, PIn.Long(rawPay.Rows[i]["PayType"].ToString()));
 				if (rawPay.Rows[i]["CheckNum"].ToString() != "")
 				{
@@ -1747,10 +1747,10 @@ namespace OpenDentBusiness
 				//might be changed lower down based on claim status
 				row["creditsDouble"] = 0;
 				row["credits"] = "";
-				dateT = PIn.DateT(rawClaim.Rows[i]["DateService"].ToString());
+				dateT = PIn.Date(rawClaim.Rows[i]["DateService"].ToString());
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-				row["dateTimeSort"] = PIn.DateT(rawClaim.Rows[i]["SecDateTEdit"].ToString());//MAX SecDateTEdit will be used for sorting if RandomKeys is enabled
+				row["dateTimeSort"] = PIn.Date(rawClaim.Rows[i]["SecDateTEdit"].ToString());//MAX SecDateTEdit will be used for sorting if RandomKeys is enabled
 				if (rawClaim.Rows[i]["ClaimType"].ToString() == "P")
 				{
 					row["description"] = Lans.g("ContrAccount", "Pri") + " ";
@@ -1773,7 +1773,7 @@ namespace OpenDentBusiness
 				amt = PIn.Decimal(rawClaim.Rows[i]["ClaimFee"].ToString());
 				row["description"] += Lans.g("ContrAccount", "Claim") + " " + amt.ToString("c") + " "
 					+ rawClaim.Rows[i]["CarrierName"].ToString();
-				daterec = PIn.DateT(rawClaim.Rows[i]["DateReceived"].ToString());
+				daterec = PIn.Date(rawClaim.Rows[i]["DateReceived"].ToString());
 				claimStatus = rawClaim.Rows[i]["ClaimStatus"].ToString();
 				if (claimStatus == "R")
 				{
@@ -1954,10 +1954,10 @@ namespace OpenDentBusiness
 				row["colorText"] = listDefs[5].ItemColor.ToArgb().ToString();
 				row["creditsDouble"] = 0;
 				row["credits"] = "";
-				dateT = PIn.DateT(rowCur["DateSent"].ToString());
+				dateT = PIn.Date(rowCur["DateSent"].ToString());
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-				row["dateTimeSort"] = PIn.DateT(rowCur["DateTStamp"].ToString());//DateTStamp will be used for sorting if RandomKeys is enabled
+				row["dateTimeSort"] = PIn.Date(rowCur["DateTStamp"].ToString());//DateTStamp will be used for sorting if RandomKeys is enabled
 				if (rowCur["IsInvoice"].ToString() == "0")
 				{//not an invoice
 					row["description"] += Lans.g("ContrAccount", "Statement");
@@ -2041,10 +2041,10 @@ namespace OpenDentBusiness
 					amt = PIn.Decimal(rawPayPlan.Rows[i]["CompletedAmt"].ToString());
 					row["creditsDouble"] = amt;
 					row["credits"] = ((decimal)row["creditsDouble"]).ToString("n");
-					dateT = PIn.DateT(rawPayPlan.Rows[i]["PayPlanDate"].ToString());
+					dateT = PIn.Date(rawPayPlan.Rows[i]["PayPlanDate"].ToString());
 					row["DateTime"] = dateT;
 					row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-					row["dateTimeSort"] = PIn.DateT(rawPayPlan.Rows[i]["SecDateTEntry"].ToString());//MAX SecDateTEntry will be used for sorting if RandomKeys is enabled
+					row["dateTimeSort"] = PIn.Date(rawPayPlan.Rows[i]["SecDateTEntry"].ToString());//MAX SecDateTEntry will be used for sorting if RandomKeys is enabled
 					if (rawPayPlan.Rows[i]["PlanNum"].ToString() == "0")
 					{
 						row["description"] = Lans.g("ContrAccount", "Payment Plan");
@@ -2159,10 +2159,10 @@ namespace OpenDentBusiness
 					row["clinic"] = Clinics.GetDesc(clinicNumCur);
 					row["ClinicNum"] = clinicNumCur;
 					row["colorText"] = listDefs[6].ItemColor.ToArgb().ToString();
-					dateT = PIn.DateT(rawPayPlan2.Rows[i]["ChargeDate"].ToString());
+					dateT = PIn.Date(rawPayPlan2.Rows[i]["ChargeDate"].ToString());
 					row["DateTime"] = dateT;
 					row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-					row["dateTimeSort"] = PIn.DateT(rawPayPlan2.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
+					row["dateTimeSort"] = PIn.Date(rawPayPlan2.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
 					if (rawPayPlan2.Rows[i]["PlanNum"].ToString() == "0")
 					{ //not an insurance payplan
 						row["description"] = rawPayPlan2.Rows[i]["Note"].ToString();
@@ -2241,10 +2241,10 @@ namespace OpenDentBusiness
 					row["clinic"] = Clinics.GetDesc(clinicNumCur);
 					row["ClinicNum"] = clinicNumCur;
 					row["colorText"] = listDefs[6].ItemColor.ToArgb().ToString();
-					dateT = PIn.DateT(rawPayPlan3.Rows[i]["ChargeDate"].ToString());
+					dateT = PIn.Date(rawPayPlan3.Rows[i]["ChargeDate"].ToString());
 					row["DateTime"] = dateT;
 					row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-					row["dateTimeSort"] = PIn.DateT(rawPayPlan3.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
+					row["dateTimeSort"] = PIn.Date(rawPayPlan3.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
 					if (rawPayPlan3.Rows[i]["PlanNum"].ToString() == "0")
 					{ //not an insurance payplan
 						row["description"] = rawPayPlan3.Rows[i]["Note"].ToString();
@@ -2395,10 +2395,10 @@ namespace OpenDentBusiness
 					row["clinic"] = Clinics.GetDesc(clinicNumCur);
 					row["ClinicNum"] = clinicNumCur;
 					row["colorText"] = listDefs[6].ItemColor.ToArgb().ToString();
-					dateT = PIn.DateT(payplanLinks.Rows[i]["SecDateTEntry"].ToString());
+					dateT = PIn.Date(payplanLinks.Rows[i]["SecDateTEntry"].ToString());
 					row["DateTime"] = dateT.Date;
 					row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
-					row["dateTimeSort"] = PIn.DateT(payplanLinks.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
+					row["dateTimeSort"] = PIn.Date(payplanLinks.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
 					row["description"] = "";
 					long patNumCur = PIn.Long(payplanLinks.Rows[i]["PatNum"].ToString());
 					row["patient"] = GetPatName(patNumCur, fam, doIncludePatLName);
@@ -2784,10 +2784,10 @@ namespace OpenDentBusiness
 				row = table.NewRow();
 				row["accumDue"] = accumDue.ToString("n");
 				row["balance"] = balance.ToString("n");
-				dateT = PIn.DateT(rawPayPlan.Rows[i]["PayPlanDate"].ToString());
+				dateT = PIn.Date(rawPayPlan.Rows[i]["PayPlanDate"].ToString());
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToShortDateString();
-				row["dateTimeSort"] = PIn.DateT(rawPayPlan.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
+				row["dateTimeSort"] = PIn.Date(rawPayPlan.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
 				if (rawPayPlan.Rows[i]["PlanNum"].ToString() == "0")
 				{
 					row["due"] = due.ToString("n");
@@ -2833,7 +2833,7 @@ namespace OpenDentBusiness
 				row = table.NewRow();
 				row["accumDue"] = "";
 				row["balance"] = "";
-				dateT = PIn.DateT(rawInstall.Rows[i]["DateAgreement"].ToString());
+				dateT = PIn.Date(rawInstall.Rows[i]["DateAgreement"].ToString());
 				row["DateTime"] = dateT;
 				row["date"] = dateT.ToShortDateString();
 				row["dateTimeSort"] = dateT;//no DateTStamp columns on the installmentplan table, use DateAgreement I guess?
@@ -2945,7 +2945,7 @@ namespace OpenDentBusiness
 				row["credits"] = "";
 				row["DateTime"] = DateTime.MinValue;
 				row["date"] = "";
-				row["dateTimeSort"] = PIn.DateT(rawPayPlan.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
+				row["dateTimeSort"] = PIn.Date(rawPayPlan.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
 				string description = Lans.g("AccountModule", descriptionPayPlanType) + "\r\n"
 					+ Lans.g("AccountModule", descriptionPrincipal) + " " + princ.ToString("c") + "\r\n";
 				if (interest != 0)
@@ -3148,7 +3148,7 @@ namespace OpenDentBusiness
 			{
 				row = table.NewRow();
 				patNumm = PIn.Long(raw.Rows[i]["PatNum"].ToString());
-				dateT = PIn.DateT(raw.Rows[i]["AptDateTime"].ToString());
+				dateT = PIn.Date(raw.Rows[i]["AptDateTime"].ToString());
 				row["descript"] = fam.GetNameInFamFL(patNumm) + ":  "
 					+ dateT.ToString("dddd") + ",  "
 					+ dateT.ToShortDateString()

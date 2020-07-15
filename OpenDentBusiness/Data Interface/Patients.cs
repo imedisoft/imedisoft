@@ -4051,15 +4051,15 @@ namespace OpenDentBusiness
 				if (PIn.Int(table.Rows[i]["ProcCount"].ToString()) > mostVisits)
 				{//New leader for most visits.
 					mostVisits = PIn.Int(table.Rows[i]["ProcCount"].ToString());
-					maxProcDate = PIn.DateT(table.Rows[i]["MaxProcDate"].ToString());
+					maxProcDate = PIn.Date(table.Rows[i]["MaxProcDate"].ToString());
 					newProv = PIn.Long(table.Rows[i]["ProvNum"].ToString());
 				}
 				else if (PIn.Int(table.Rows[i]["ProcCount"].ToString()) == mostVisits)
 				{//Tie for most visits, use MaxProcDate as a tie breaker.
-					if (PIn.DateT(table.Rows[i]["MaxProcDate"].ToString()) > maxProcDate)
+					if (PIn.Date(table.Rows[i]["MaxProcDate"].ToString()) > maxProcDate)
 					{
 						//mostVisits same as before
-						maxProcDate = PIn.DateT(table.Rows[i]["MaxProcDate"].ToString());
+						maxProcDate = PIn.Date(table.Rows[i]["MaxProcDate"].ToString());
 						newProv = PIn.Long(table.Rows[i]["ProvNum"].ToString());
 					}
 				}

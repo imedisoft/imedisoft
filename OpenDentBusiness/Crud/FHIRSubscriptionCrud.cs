@@ -51,7 +51,7 @@ namespace OpenDentBusiness.Crud{
 				fHIRSubscription.ChannelEndpoint    = PIn.String(row["ChannelEndpoint"].ToString());
 				fHIRSubscription.ChannelPayLoad     = PIn.String(row["ChannelPayLoad"].ToString());
 				fHIRSubscription.ChannelHeader      = PIn.String(row["ChannelHeader"].ToString());
-				fHIRSubscription.DateEnd            = PIn.DateT (row["DateEnd"].ToString());
+				fHIRSubscription.DateEnd            = PIn.Date (row["DateEnd"].ToString());
 				fHIRSubscription.APIKeyHash         = PIn.String(row["APIKeyHash"].ToString());
 				retVal.Add(fHIRSubscription);
 			}

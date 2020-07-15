@@ -48,8 +48,8 @@ namespace OpenDentBusiness.Crud{
 				sigMessage.SynchIcon            = PIn.Byte  (row["SynchIcon"].ToString());
 				sigMessage.FromUser             = PIn.String(row["FromUser"].ToString());
 				sigMessage.ToUser               = PIn.String(row["ToUser"].ToString());
-				sigMessage.MessageDateTime      = PIn.DateT (row["MessageDateTime"].ToString());
-				sigMessage.AckDateTime          = PIn.DateT (row["AckDateTime"].ToString());
+				sigMessage.MessageDateTime      = PIn.Date (row["MessageDateTime"].ToString());
+				sigMessage.AckDateTime          = PIn.Date (row["AckDateTime"].ToString());
 				sigMessage.SigText              = PIn.String(row["SigText"].ToString());
 				sigMessage.SigElementDefNumUser = PIn.Long  (row["SigElementDefNumUser"].ToString());
 				sigMessage.SigElementDefNumExtra= PIn.Long  (row["SigElementDefNumExtra"].ToString());

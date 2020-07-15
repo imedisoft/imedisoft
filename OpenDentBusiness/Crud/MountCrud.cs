@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				mount.MountNum   = PIn.Long  (row["MountNum"].ToString());
 				mount.PatNum     = PIn.Long  (row["PatNum"].ToString());
 				mount.DocCategory= PIn.Long  (row["DocCategory"].ToString());
-				mount.DateCreated= PIn.DateT (row["DateCreated"].ToString());
+				mount.DateCreated= PIn.Date (row["DateCreated"].ToString());
 				mount.Description= PIn.String(row["Description"].ToString());
 				mount.Note       = PIn.String(row["Note"].ToString());
 				mount.Width      = PIn.Int   (row["Width"].ToString());

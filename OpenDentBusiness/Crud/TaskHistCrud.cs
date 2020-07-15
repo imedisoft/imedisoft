@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 				taskHist=new TaskHist();
 				taskHist.TaskHistNum      = PIn.Long  (row["TaskHistNum"].ToString());
 				taskHist.UserNumHist      = PIn.Long  (row["UserNumHist"].ToString());
-				taskHist.DateTStamp       = PIn.DateT (row["DateTStamp"].ToString());
+				taskHist.DateTStamp       = PIn.Date (row["DateTStamp"].ToString());
 				taskHist.IsNoteChange     = PIn.Bool  (row["IsNoteChange"].ToString());
 				taskHist.TaskNum          = PIn.Long  (row["TaskNum"].ToString());
 				taskHist.TaskListNum      = PIn.Long  (row["TaskListNum"].ToString());
@@ -56,15 +56,15 @@ namespace OpenDentBusiness.Crud{
 				taskHist.DateType         = (OpenDentBusiness.TaskDateType)PIn.Int(row["DateType"].ToString());
 				taskHist.FromNum          = PIn.Long  (row["FromNum"].ToString());
 				taskHist.ObjectType       = (OpenDentBusiness.TaskObjectType)PIn.Int(row["ObjectType"].ToString());
-				taskHist.DateTimeEntry    = PIn.DateT (row["DateTimeEntry"].ToString());
+				taskHist.DateTimeEntry    = PIn.Date (row["DateTimeEntry"].ToString());
 				taskHist.UserNum          = PIn.Long  (row["UserNum"].ToString());
-				taskHist.DateTimeFinished = PIn.DateT (row["DateTimeFinished"].ToString());
+				taskHist.DateTimeFinished = PIn.Date (row["DateTimeFinished"].ToString());
 				taskHist.PriorityDefNum   = PIn.Long  (row["PriorityDefNum"].ToString());
 				taskHist.ReminderGroupId  = PIn.String(row["ReminderGroupId"].ToString());
 				taskHist.ReminderType     = (OpenDentBusiness.TaskReminderType)PIn.Int(row["ReminderType"].ToString());
 				taskHist.ReminderFrequency= PIn.Int   (row["ReminderFrequency"].ToString());
-				taskHist.DateTimeOriginal = PIn.DateT (row["DateTimeOriginal"].ToString());
-				taskHist.SecDateTEdit     = PIn.DateT (row["SecDateTEdit"].ToString());
+				taskHist.DateTimeOriginal = PIn.Date (row["DateTimeOriginal"].ToString());
+				taskHist.SecDateTEdit     = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(taskHist);
 			}
 			return retVal;

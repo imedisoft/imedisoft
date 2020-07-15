@@ -1997,7 +1997,7 @@ namespace OpenDental {
 					timePickerReminder.Value.TimeOfDay.Hours,timePickerReminder.Value.TimeOfDay.Minutes,timePickerReminder.Value.TimeOfDay.Seconds);
 			}
 			else {
-				_taskCur.DateTimeEntry=PIn.DateT(textDateTimeEntry.Text);
+				_taskCur.DateTimeEntry=PIn.Date(textDateTimeEntry.Text);
 			}
 			//Techs want to be notified of any changes made to completed tasks.
 			//Check if the task list changed on a task marked Done.
@@ -2058,7 +2058,7 @@ namespace OpenDental {
 				_taskCur.DateTimeFinished=DateTime.Now;
 			}
 			else {
-				_taskCur.DateTimeFinished=PIn.DateT(textDateTimeFinished.Text);
+				_taskCur.DateTimeFinished=PIn.Date(textDateTimeFinished.Text);
 			}
 			_taskCur.Descript=textDescript.Text;
 			_taskCur.DateTask=PIn.Date(textDateTask.Text);

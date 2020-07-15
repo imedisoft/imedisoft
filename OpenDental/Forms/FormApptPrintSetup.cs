@@ -62,8 +62,8 @@ namespace OpenDental {
 		}
 
 		private bool ValidEntries() {
-			DateTime start=PIn.DateT(comboStart.SelectedItem.ToString());
-			DateTime stop=PIn.DateT(comboStop.SelectedItem.ToString());
+			DateTime start=PIn.Date(comboStart.SelectedItem.ToString());
+			DateTime stop=PIn.Date(comboStop.SelectedItem.ToString());
 			if(start.Minute>0 || stop.Minute>0) {
 				MessageBox.Show("Please use hours only, no minutes.");
 				return false;
@@ -100,8 +100,8 @@ namespace OpenDental {
 
 		private void SaveChanges(bool suppressMessage) {
 			if(ValidEntries()) {
-				Prefs.UpdateDateT(PrefName.ApptPrintTimeStart,PIn.DateT(comboStart.SelectedItem.ToString()));
-				Prefs.UpdateDateT(PrefName.ApptPrintTimeStop,PIn.DateT(comboStop.SelectedItem.ToString()));
+				Prefs.UpdateDateT(PrefName.ApptPrintTimeStart,PIn.Date(comboStart.SelectedItem.ToString()));
+				Prefs.UpdateDateT(PrefName.ApptPrintTimeStop,PIn.Date(comboStop.SelectedItem.ToString()));
 				Prefs.UpdateString(PrefName.ApptPrintFontSize,textFontSize.Text);
 				Prefs.UpdateInt(PrefName.ApptPrintColumnsPerPage,PIn.Int(textColumnsPerPage.Text));
 				if(!suppressMessage) {
@@ -115,8 +115,8 @@ namespace OpenDental {
 			if(!ValidEntries()) {
 				return false;
 			}
-			if(PIn.DateT(comboStart.SelectedItem.ToString()).Hour!=PrefC.GetDateT(PrefName.ApptPrintTimeStart).Hour
-				|| PIn.DateT(comboStop.SelectedItem.ToString()).Hour!=PrefC.GetDateT(PrefName.ApptPrintTimeStop).Hour
+			if(PIn.Date(comboStart.SelectedItem.ToString()).Hour!=PrefC.GetDateT(PrefName.ApptPrintTimeStart).Hour
+				|| PIn.Date(comboStop.SelectedItem.ToString()).Hour!=PrefC.GetDateT(PrefName.ApptPrintTimeStop).Hour
 				|| textFontSize.Text!=PrefC.GetString(PrefName.ApptPrintFontSize)
 				|| textColumnsPerPage.Text!=PrefC.GetInt(PrefName.ApptPrintColumnsPerPage).ToString())
 			{
@@ -127,8 +127,8 @@ namespace OpenDental {
 					SaveChanges(true);
 				}
 			}
-			ApptPrintStartTime=PIn.DateT(comboStart.SelectedItem.ToString());
-			ApptPrintStopTime=PIn.DateT(comboStop.SelectedItem.ToString());
+			ApptPrintStartTime=PIn.Date(comboStart.SelectedItem.ToString());
+			ApptPrintStopTime=PIn.Date(comboStop.SelectedItem.ToString());
 			ApptPrintFontSize=PIn.Int(textFontSize.Text);
 			ApptPrintColsPerPage=PIn.Int(textColumnsPerPage.Text);
 			return true;

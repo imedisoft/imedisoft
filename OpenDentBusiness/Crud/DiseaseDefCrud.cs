@@ -46,7 +46,7 @@ namespace OpenDentBusiness.Crud{
 				diseaseDef.DiseaseName  = PIn.String(row["DiseaseName"].ToString());
 				diseaseDef.ItemOrder    = PIn.Int   (row["ItemOrder"].ToString());
 				diseaseDef.IsHidden     = PIn.Bool  (row["IsHidden"].ToString());
-				diseaseDef.DateTStamp   = PIn.DateT (row["DateTStamp"].ToString());
+				diseaseDef.DateTStamp   = PIn.Date (row["DateTStamp"].ToString());
 				diseaseDef.ICD9Code     = PIn.String(row["ICD9Code"].ToString());
 				diseaseDef.SnomedCode   = PIn.String(row["SnomedCode"].ToString());
 				diseaseDef.Icd10Code    = PIn.String(row["Icd10Code"].ToString());

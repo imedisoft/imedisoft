@@ -51,8 +51,8 @@ namespace OpenDentBusiness.Crud{
 				patPlan.InsSubNum                 = PIn.Long  (row["InsSubNum"].ToString());
 				patPlan.OrthoAutoFeeBilledOverride= PIn.Double(row["OrthoAutoFeeBilledOverride"].ToString());
 				patPlan.OrthoAutoNextClaimDate    = PIn.Date  (row["OrthoAutoNextClaimDate"].ToString());
-				patPlan.SecDateTEntry             = PIn.DateT (row["SecDateTEntry"].ToString());
-				patPlan.SecDateTEdit              = PIn.DateT (row["SecDateTEdit"].ToString());
+				patPlan.SecDateTEntry             = PIn.Date (row["SecDateTEntry"].ToString());
+				patPlan.SecDateTEdit              = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(patPlan);
 			}
 			return retVal;

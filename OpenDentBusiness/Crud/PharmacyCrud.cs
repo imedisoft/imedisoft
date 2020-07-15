@@ -53,7 +53,7 @@ namespace OpenDentBusiness.Crud{
 				pharmacy.State      = PIn.String(row["State"].ToString());
 				pharmacy.Zip        = PIn.String(row["Zip"].ToString());
 				pharmacy.Note       = PIn.String(row["Note"].ToString());
-				pharmacy.DateTStamp = PIn.DateT (row["DateTStamp"].ToString());
+				pharmacy.DateTStamp = PIn.Date (row["DateTStamp"].ToString());
 				retVal.Add(pharmacy);
 			}
 			return retVal;

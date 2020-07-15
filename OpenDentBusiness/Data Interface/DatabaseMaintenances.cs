@@ -641,7 +641,7 @@ namespace OpenDentBusiness {
 						for(int i = 0;i<table.Rows.Count;i++) {
 							log+="   "+table.Rows[i]["PatNum"].ToString()
 								+"-"+table.Rows[i]["PatName"].ToString()
-								+"  Appt Date:"+PIn.DateT(table.Rows[i]["AptDateTime"].ToString()).ToShortDateString();
+								+"  Appt Date:"+PIn.Date(table.Rows[i]["AptDateTime"].ToString()).ToShortDateString();
 							log+="\r\n";
 						}
 						log+=Lans.g("FormDatabaseMaintenance","   They need to be fixed manually.")+"\r\n";
@@ -958,7 +958,7 @@ namespace OpenDentBusiness {
 						for(int i = 0;i<table.Rows.Count;i++) {
 							log+="   "+table.Rows[i]["PatNum"].ToString()
 								+"-"+table.Rows[i]["PatName"].ToString()
-								+"  Appt Date:"+PIn.DateT(table.Rows[i]["AptDateTime"].ToString()).ToShortDateString();
+								+"  Appt Date:"+PIn.Date(table.Rows[i]["AptDateTime"].ToString()).ToShortDateString();
 							log+="\r\n";
 						}
 						log+=Lans.g("FormDatabaseMaintenance","   They need to be fixed manually.")+"\r\n";
@@ -1619,7 +1619,7 @@ namespace OpenDentBusiness {
 					var dictPatClaims=Db.GetTable(command).Select().Select(x => new {
 							ClaimNum=PIn.Long(x["ClaimNum"].ToString()),
 							PatNum=PIn.Long(x["PatNum"].ToString()),
-							DateService=PIn.DateT(x["DateService"].ToString())
+							DateService=PIn.Date(x["DateService"].ToString())
 						})
 						.GroupBy(x => x.PatNum)
 						.ToDictionary(x => x.Key,x => x.ToList());
@@ -4318,7 +4318,7 @@ namespace OpenDentBusiness {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						PlanNum=PIn.Long(x["PlanNum"].ToString()),
 						ClaimNum=PIn.Long(x["ClaimNum"].ToString()),
-						DateService=PIn.DateT(x["DateService"].ToString())
+						DateService=PIn.Date(x["DateService"].ToString())
 					}).GroupBy(x=>x.PatNum)
 					.ToDictionary(x=>x.Key,x=>x.ToList());
 					//claim.PlanNum2---------------------------------------------------------------------------------------------------
@@ -4330,7 +4330,7 @@ namespace OpenDentBusiness {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						PlanNum2=PIn.Long(x["PlanNum2"].ToString()),
 						ClaimNum=PIn.Long(x["ClaimNum"].ToString()),
-						DateService=PIn.DateT(x["DateService"].ToString())
+						DateService=PIn.Date(x["DateService"].ToString())
 					}).GroupBy(x=>x.PatNum)
 					.ToDictionary(x=>x.Key,x=>x.ToList());
 					//claimproc---------------------------------------------------------------------------------------------------
@@ -4353,7 +4353,7 @@ namespace OpenDentBusiness {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						PlanNum=PIn.Long(x["PlanNum"].ToString()),
 						EtransNum=PIn.Long(x["EtransNum"].ToString()),
-						DateTimeTrans=PIn.DateT(x["DateTimeTrans"].ToString())
+						DateTimeTrans=PIn.Date(x["DateTimeTrans"].ToString())
 					}).GroupBy(x=>x.PatNum)
 					.ToDictionary(x=>x.Key,x=>x.ToList());
 					//payplan---------------------------------------------------------------------------------------------------
@@ -5639,7 +5639,7 @@ namespace OpenDentBusiness {
 						for(int i = 0;i<table.Rows.Count;i++) {
 							log+="   "+table.Rows[i]["PatNum"].ToString();
 							log+="  "+Patients.GetNameLF(table.Rows[i]["LName"].ToString(),table.Rows[i]["FName"].ToString(),"","");
-							log+="  "+PIn.DateT(table.Rows[i]["PayDate"].ToString()).ToShortDateString();
+							log+="  "+PIn.Date(table.Rows[i]["PayDate"].ToString()).ToShortDateString();
 							log+="\r\n";
 						}
 						log+="   "+Lans.g("FormDatabaseMaintenance","They need to be fixed manually.")+"\r\n";
@@ -5793,7 +5793,7 @@ namespace OpenDentBusiness {
 					if(table.Rows.Count>0) {
 						log+=", "+Lans.g("FormDatabaseMaintenance","including")+":\r\n";
 						for(int i = 0;i<table.Rows.Count;i++) {
-							log+="   "+Lans.g("FormDatabaseMaintenance","Pay Plan Date")+": "+PIn.DateT(table.Rows[i]["PayPlanDate"].ToString()).ToShortDateString()+"\r\n"
+							log+="   "+Lans.g("FormDatabaseMaintenance","Pay Plan Date")+": "+PIn.Date(table.Rows[i]["PayPlanDate"].ToString()).ToShortDateString()+"\r\n"
 							+"      "+Lans.g("FormDatabaseMaintenance","Guarantor")+": #"+table.Rows[i]["PatNum"]+" - "+table.Rows[i]["PatFName"]+" "+table.Rows[i]["PatLName"]+"\r\n"
 							+"      "+Lans.g("FormDatabaseMaintenance","For Patient")+": #"+table.Rows[i]["GuarNum"]+" - "+table.Rows[i]["GuarFName"]+" "+table.Rows[i]["GuarLName"]+"\r\n";
 						}
@@ -5895,9 +5895,9 @@ namespace OpenDentBusiness {
 						for(int i = 0;i<table.Rows.Count;i++) {
 							log+="   "+Lans.g("FormDatabaseMaintenance","Payment")+": #"+table.Rows[i]["PatNum"].ToString();
 							log+=" "+table.Rows[i]["PatientName"].ToString();
-							log+=" "+PIn.DateT(table.Rows[i]["PayDate"].ToString()).ToShortDateString();
+							log+=" "+PIn.Date(table.Rows[i]["PayDate"].ToString()).ToShortDateString();
 							log+=" "+PIn.Double(table.Rows[i]["PayAmt"].ToString()).ToString("c");
-							log+="\r\n      "+Lans.g("FormDatabaseMaintenance","Split")+": "+PIn.DateT(table.Rows[i]["DatePay"].ToString()).ToShortDateString();
+							log+="\r\n      "+Lans.g("FormDatabaseMaintenance","Split")+": "+PIn.Date(table.Rows[i]["DatePay"].ToString()).ToShortDateString();
 							log+=" "+table.Rows[i]["SplitPatientName"].ToString();
 							log+=" "+table.Rows[i]["AbbrDesc"].ToString();
 							log+=" "+PIn.Double(table.Rows[i]["SplitAmt"].ToString()).ToString("c");
@@ -6160,7 +6160,7 @@ namespace OpenDentBusiness {
 						log+=", "+Lans.g("FormDatabaseMaintenance","including")+":\r\n";
 						for(int i = 0;i<table.Rows.Count;i++) {
 							log+="   "+Lans.g("FormDatabaseMaintenance","PatNum")+": #"+table.Rows[i]["PatNum"].ToString();
-							log+=" "+PIn.DateT(table.Rows[i]["DatePay"].ToString()).ToShortDateString();
+							log+=" "+PIn.Date(table.Rows[i]["DatePay"].ToString()).ToShortDateString();
 							log+=" "+PIn.Double(table.Rows[i]["SplitAmt"].ToString()).ToString("c");
 							log+="\r\n";
 						}
@@ -8025,7 +8025,7 @@ namespace OpenDentBusiness {
 						//Update the DateTimeFinished with either the max note DateTime or the time of the tasks DateTimeEntry.
 						//We cannot use the raw string in the DataTable because C# has auto-formatted the row into a DateTime row.
 						//Therefore we have to convert the string into a DateTime object and then send it back out in the format that MySQL expects.
-						DateTime dateTimeNoteMax=PIn.DateT(row["DateTimeNoteMax"].ToString());
+						DateTime dateTimeNoteMax=PIn.Date(row["DateTimeNoteMax"].ToString());
 						command="UPDATE task SET DateTimeFinished="+POut.DateT(dateTimeNoteMax)+" "
 							+"WHERE TaskNum="+row["TaskNum"].ToString();
 						Db.NonQ(command);

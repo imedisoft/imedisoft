@@ -64,7 +64,7 @@ namespace OpenDentBusiness{
 			DateTime date;
 			for(int i=0;i<raw.Rows.Count;i++) {
 				row=table.NewRow();
-		    AptDateTime=PIn.DateT(raw.Rows[i]["AptDateTime"].ToString());
+		    AptDateTime=PIn.Date(raw.Rows[i]["AptDateTime"].ToString());
 				row["AptDateTime"]=AptDateTime;
 				row["aptDateTime"]=AptDateTime.ToShortDateString()+" "+AptDateTime.ToShortTimeString();
 				row["AptNum"]=raw.Rows[i]["AptNum"].ToString();
@@ -76,17 +76,17 @@ namespace OpenDentBusiness{
 				row["phone"]=raw.Rows[i]["Phone"].ToString();
 				row["ProcDescript"]=raw.Rows[i]["ProcDescript"].ToString();
 				row["Instructions"]=raw.Rows[i]["Instructions"].ToString();
-				date=PIn.DateT(raw.Rows[i]["DateTimeChecked"].ToString());
+				date=PIn.Date(raw.Rows[i]["DateTimeChecked"].ToString());
 				if(date.Year>1880) {
 					row["status"]=Lans.g("FormLabCases","Quality Checked");
 				}
 				else {
-					date=PIn.DateT(raw.Rows[i]["DateTimeRecd"].ToString());
+					date=PIn.Date(raw.Rows[i]["DateTimeRecd"].ToString());
 					if(date.Year>1880) {
 						row["status"]=Lans.g("FormLabCases","Received");
 					}
 					else {
-						date=PIn.DateT(raw.Rows[i]["DateTimeSent"].ToString());
+						date=PIn.Date(raw.Rows[i]["DateTimeSent"].ToString());
 						if(date.Year>1880) {
 							row["status"]=Lans.g("FormLabCases","Sent");//sent but not received
 						}
@@ -119,17 +119,17 @@ namespace OpenDentBusiness{
 					row["ProcDescript"]="";
 					row["status"]="";
 					row["Instructions"]=raw.Rows[i]["Instructions"].ToString();
-					date=PIn.DateT(raw.Rows[i]["DateTimeChecked"].ToString());
+					date=PIn.Date(raw.Rows[i]["DateTimeChecked"].ToString());
 					if(date.Year>1880) {
 						row["status"]=Lans.g("FormLabCases","Quality Checked");
 					}
 					else {
-						date=PIn.DateT(raw.Rows[i]["DateTimeRecd"].ToString());
+						date=PIn.Date(raw.Rows[i]["DateTimeRecd"].ToString());
 						if(date.Year>1880) {
 							row["status"]=Lans.g("FormLabCases","Received");
 						}
 						else {
-							date=PIn.DateT(raw.Rows[i]["DateTimeSent"].ToString());
+							date=PIn.Date(raw.Rows[i]["DateTimeSent"].ToString());
 							if(date.Year>1880) {
 								row["status"]=Lans.g("FormLabCases","Sent");//sent but not received
 							}

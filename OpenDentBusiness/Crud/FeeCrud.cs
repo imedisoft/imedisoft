@@ -54,7 +54,7 @@ namespace OpenDentBusiness.Crud{
 				fee.ProvNum        = PIn.Long  (row["ProvNum"].ToString());
 				fee.SecUserNumEntry= PIn.Long  (row["SecUserNumEntry"].ToString());
 				fee.SecDateEntry   = PIn.Date  (row["SecDateEntry"].ToString());
-				fee.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
+				fee.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(fee);
 			}
 			return retVal;

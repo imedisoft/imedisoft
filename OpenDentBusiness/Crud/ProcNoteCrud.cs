@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				procNote.ProcNoteNum  = PIn.Long  (row["ProcNoteNum"].ToString());
 				procNote.PatNum       = PIn.Long  (row["PatNum"].ToString());
 				procNote.ProcNum      = PIn.Long  (row["ProcNum"].ToString());
-				procNote.EntryDateTime= PIn.DateT (row["EntryDateTime"].ToString());
+				procNote.EntryDateTime= PIn.Date (row["EntryDateTime"].ToString());
 				procNote.UserNum      = PIn.Long  (row["UserNum"].ToString());
 				procNote.Note         = PIn.String(row["Note"].ToString());
 				procNote.SigIsTopaz   = PIn.Bool  (row["SigIsTopaz"].ToString());

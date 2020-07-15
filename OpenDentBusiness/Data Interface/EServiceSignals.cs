@@ -82,7 +82,7 @@ namespace OpenDentBusiness{
 			if(listSignal[0].Severity==eServiceSignalSeverity.NotEnabled) { //NotEnabled means they don't care what the status is. Nothing to report.
 				return eServiceSignalSeverity.NotEnabled;
 			}
-			DateTime dtNow=PIn.DateT(table.Rows[0]["ServerTime"].ToString());
+			DateTime dtNow=PIn.Date(table.Rows[0]["ServerTime"].ToString());
 			if(
 				//eConnector exited gracefully and inserted its own critical signal.
 				listSignal[0].Severity==eServiceSignalSeverity.Critical ||

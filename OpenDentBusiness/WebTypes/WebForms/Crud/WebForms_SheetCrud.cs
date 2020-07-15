@@ -86,7 +86,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 				webForms_Sheet.DentalOfficeID = PIn.Long  (table.Rows[i]["DentalOfficeID"].ToString());
 				webForms_Sheet.Description    = PIn.String(table.Rows[i]["Description"].ToString());
 				webForms_Sheet.SheetType      = (OpenDentBusiness.SheetFieldType)PIn.Int(table.Rows[i]["SheetType"].ToString());
-				webForms_Sheet.DateTimeSheet  = PIn.DateT (table.Rows[i]["DateTimeSheet"].ToString());
+				webForms_Sheet.DateTimeSheet  = PIn.Date (table.Rows[i]["DateTimeSheet"].ToString());
 				webForms_Sheet.FontSize       = PIn.Float (table.Rows[i]["FontSize"].ToString());
 				webForms_Sheet.FontName       = PIn.String(table.Rows[i]["FontName"].ToString());
 				webForms_Sheet.Width          = PIn.Int   (table.Rows[i]["Width"].ToString());

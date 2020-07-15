@@ -47,7 +47,7 @@ namespace OpenDentBusiness.Crud{
 				tsiTransLog.PatNum        = PIn.Long  (row["PatNum"].ToString());
 				tsiTransLog.UserNum       = PIn.Long  (row["UserNum"].ToString());
 				tsiTransLog.TransType     = (OpenDentBusiness.TsiTransType)PIn.Int(row["TransType"].ToString());
-				tsiTransLog.TransDateTime = PIn.DateT (row["TransDateTime"].ToString());
+				tsiTransLog.TransDateTime = PIn.Date (row["TransDateTime"].ToString());
 				tsiTransLog.DemandType    = (OpenDentBusiness.TsiDemandType)PIn.Int(row["DemandType"].ToString());
 				tsiTransLog.ServiceCode   = (OpenDentBusiness.TsiServiceCode)PIn.Int(row["ServiceCode"].ToString());
 				tsiTransLog.ClientId      = PIn.String(row["ClientId"].ToString());

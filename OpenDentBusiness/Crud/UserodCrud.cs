@@ -57,13 +57,13 @@ namespace OpenDentBusiness.Crud{
 				userod.ClinicIsRestricted        = PIn.Bool  (row["ClinicIsRestricted"].ToString());
 				userod.InboxHidePopups           = PIn.Bool  (row["InboxHidePopups"].ToString());
 				userod.UserNumCEMT               = PIn.Long  (row["UserNumCEMT"].ToString());
-				userod.DateTFail                 = PIn.DateT (row["DateTFail"].ToString());
+				userod.DateTFail                 = PIn.Date (row["DateTFail"].ToString());
 				userod.FailedAttempts            = PIn.Byte  (row["FailedAttempts"].ToString());
 				userod.DomainUser                = PIn.String(row["DomainUser"].ToString());
 				userod.IsPasswordResetRequired   = PIn.Bool  (row["IsPasswordResetRequired"].ToString());
 				userod.MobileWebPin              = PIn.String(row["MobileWebPin"].ToString());
 				userod.MobileWebPinFailedAttempts= PIn.Byte  (row["MobileWebPinFailedAttempts"].ToString());
-				userod.DateTLastLogin            = PIn.DateT (row["DateTLastLogin"].ToString());
+				userod.DateTLastLogin            = PIn.Date (row["DateTLastLogin"].ToString());
 				retVal.Add(userod);
 			}
 			return retVal;

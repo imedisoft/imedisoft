@@ -85,7 +85,7 @@ namespace OpenDentBusiness.Crud{
 				procedure.CanadianTypeCodes  = PIn.String(row["CanadianTypeCodes"].ToString());
 				procedure.ProcTime           = PIn.Time(row["ProcTime"].ToString());
 				procedure.ProcTimeEnd        = PIn.Time(row["ProcTimeEnd"].ToString());
-				procedure.DateTStamp         = PIn.DateT (row["DateTStamp"].ToString());
+				procedure.DateTStamp         = PIn.Date (row["DateTStamp"].ToString());
 				procedure.Prognosis          = PIn.Long  (row["Prognosis"].ToString());
 				procedure.DrugUnit           = (OpenDentBusiness.EnumProcDrugUnit)PIn.Int(row["DrugUnit"].ToString());
 				procedure.DrugQty            = PIn.Float (row["DrugQty"].ToString());
@@ -159,7 +159,7 @@ namespace OpenDentBusiness.Crud{
 				CanadianTypeCodes  = PIn.String(row["CanadianTypeCodes"].ToString()),
 				ProcTime           = PIn.Time(row["ProcTime"].ToString()),
 				ProcTimeEnd        = PIn.Time(row["ProcTimeEnd"].ToString()),
-				DateTStamp         = PIn.DateT (row["DateTStamp"].ToString()),
+				DateTStamp         = PIn.Date (row["DateTStamp"].ToString()),
 				Prognosis          = PIn.Long  (row["Prognosis"].ToString()),
 				DrugUnit           = (OpenDentBusiness.EnumProcDrugUnit)PIn.Int(row["DrugUnit"].ToString()),
 				DrugQty            = PIn.Float (row["DrugQty"].ToString()),

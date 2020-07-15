@@ -301,7 +301,7 @@ namespace OpenDentBusiness{
 					if(i>0) {
 						strInUse+=", ";
 					}
-					strInUse+=PIn.DateT(table.Rows[i][0].ToString()).ToShortDateString();
+					strInUse+=PIn.Date(table.Rows[i][0].ToString()).ToShortDateString();
 				}
 				throw new ApplicationException(Lans.g("Carriers","Not allowed to delete carrier because it is in use in the etrans table.  Dates of claim sent history include ")+strInUse);
 			}

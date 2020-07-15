@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 				formPat=new FormPat();
 				formPat.FormPatNum  = PIn.Long  (row["FormPatNum"].ToString());
 				formPat.PatNum      = PIn.Long  (row["PatNum"].ToString());
-				formPat.FormDateTime= PIn.DateT (row["FormDateTime"].ToString());
+				formPat.FormDateTime= PIn.Date (row["FormDateTime"].ToString());
 				retVal.Add(formPat);
 			}
 			return retVal;

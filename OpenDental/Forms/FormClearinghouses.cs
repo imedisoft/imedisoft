@@ -597,7 +597,7 @@ namespace OpenDental{
 				doInvalidateCache=true;
 			}
 			if(radioTime.Checked) {
-				if(Prefs.UpdateDateT(PrefName.ClaimReportReceiveTime,PIn.DateT(textReportCheckTime.Text))) {
+				if(Prefs.UpdateDateT(PrefName.ClaimReportReceiveTime,PIn.Date(textReportCheckTime.Text))) {
 					doInvalidateCache=true;
 				}
 			}

@@ -48,7 +48,7 @@ namespace OpenDentBusiness.Crud{
 				popup.IsDisabled     = PIn.Bool  (row["IsDisabled"].ToString());
 				popup.PopupLevel     = (OpenDentBusiness.EnumPopupLevel)PIn.Int(row["PopupLevel"].ToString());
 				popup.UserNum        = PIn.Long  (row["UserNum"].ToString());
-				popup.DateTimeEntry  = PIn.DateT (row["DateTimeEntry"].ToString());
+				popup.DateTimeEntry  = PIn.Date (row["DateTimeEntry"].ToString());
 				popup.IsArchived     = PIn.Bool  (row["IsArchived"].ToString());
 				popup.PopupNumArchive= PIn.Long  (row["PopupNumArchive"].ToString());
 				retVal.Add(popup);

@@ -527,7 +527,7 @@ namespace OpenDentBusiness{
 			DateTime dateT;
 			for(int i=0;i<rawSheet.Rows.Count;i++) {
 				row=table.NewRow();
-				dateT=PIn.DateT(rawSheet.Rows[i]["DateTimeSheet"].ToString());
+				dateT=PIn.Date(rawSheet.Rows[i]["DateTimeSheet"].ToString());
 				row["date"]=dateT.ToShortDateString();
 				row["dateOnly"]=dateT.Date;
 				row["dateTime"]=dateT;
@@ -558,7 +558,7 @@ namespace OpenDentBusiness{
 			long docCat;
 			for(int i=0;i<rawDoc.Rows.Count;i++) {
 				row=table.NewRow();
-				dateT=PIn.DateT(rawDoc.Rows[i]["DateCreated"].ToString());
+				dateT=PIn.Date(rawDoc.Rows[i]["DateCreated"].ToString());
 				row["date"]=dateT.ToShortDateString();
 				row["dateOnly"]=dateT.Date;
 				row["dateTime"]=dateT;
@@ -629,7 +629,7 @@ namespace OpenDentBusiness{
 			DateTime dateT;
 			for(int i=0;i<rawSheet.Rows.Count;i++) {
 				row=table.NewRow();
-				dateT=PIn.DateT(rawSheet.Rows[i]["DateTimeSheet"].ToString());
+				dateT=PIn.Date(rawSheet.Rows[i]["DateTimeSheet"].ToString());
 				row["date"]=dateT.ToShortDateString();
 				row["dateOnly"]=dateT.Date;
 				row["dateTime"]=dateT;

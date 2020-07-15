@@ -53,7 +53,7 @@ namespace OpenDentBusiness.Crud{
 				schedule.Note        = PIn.String(row["Note"].ToString());
 				schedule.Status      = (OpenDentBusiness.SchedStatus)PIn.Int(row["Status"].ToString());
 				schedule.EmployeeNum = PIn.Long  (row["EmployeeNum"].ToString());
-				schedule.DateTStamp  = PIn.DateT (row["DateTStamp"].ToString());
+				schedule.DateTStamp  = PIn.Date (row["DateTStamp"].ToString());
 				schedule.ClinicNum   = PIn.Long  (row["ClinicNum"].ToString());
 				retVal.Add(schedule);
 			}

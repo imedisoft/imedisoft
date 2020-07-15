@@ -442,7 +442,7 @@ namespace OpenDentBusiness
 					SecurityLogs.MakeLogEntry(Permissions.AdjustmentEdit, PIn.Long(row["PatNum"].ToString()),
 						"Delete adjustment for patient, undo " + adjTypeStr.ToLower() + " charges: "
 						+ Patients.GetNameLF(row["LName"].ToString(), row["FName"].ToString(), row["Preferred"].ToString(), row["MiddleI"].ToString())
-						+ ", " + PIn.Double(row["AdjAmt"].ToString()).ToString("c"), 0, PIn.DateT(row["SecDateTEdit"].ToString()));
+						+ ", " + PIn.Double(row["AdjAmt"].ToString()).ToString("c"), 0, PIn.Date(row["SecDateTEdit"].ToString()));
 					if (++loopCount % 5 == 0)
 					{
 						BillingEvent.Fire(EventCategory.Billing, Lans.g("FinanceCharge", "Creating log entries for " + adjTypeStr.ToLower() + " charges")

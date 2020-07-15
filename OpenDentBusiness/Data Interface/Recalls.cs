@@ -452,7 +452,7 @@ namespace OpenDentBusiness {
 			sw.Restart();
 			//Create dictionary of key=PatNum, value=List of CommDateTimes for that patient
 			Dictionary<long,List<DateTime>> dictCommlogs=Db.GetTable(command).Select()
-				.GroupBy(x => PIn.Long(x["PatNum"].ToString()),x => PIn.DateT(x["CommDateTime"].ToString()))
+				.GroupBy(x => PIn.Long(x["PatNum"].ToString()),x => PIn.Date(x["CommDateTime"].ToString()))
 				.ToDictionary(x => x.Key,x => x.ToList());
 			logQuery("dictCommlogs",command,dictCommlogs.Values.Sum(x => x.Count()));
 			//Get the most recent webschedrecall reminders that have been sent to these patients.
@@ -476,9 +476,9 @@ namespace OpenDentBusiness {
 					PatNum=PIn.Long(x["PatNum"].ToString()),
 					SmsSendStatus=PIn.Enum<AutoCommStatus>(PIn.Int(x["SmsSendStatus"].ToString())),
 					EmailSendStatus=PIn.Enum<AutoCommStatus>(PIn.Int(x["EmailSendStatus"].ToString())),
-					DateTimeSendFailed=PIn.DateT(x["DateTimeSendFailed"].ToString()),
+					DateTimeSendFailed=PIn.Date(x["DateTimeSendFailed"].ToString()),
 					ResponseDescript=PIn.String(x["ResponseDescript"].ToString()),
-					DateTimeReminderSent=PIn.DateT(x["DateTimeReminderSent"].ToString()),
+					DateTimeReminderSent=PIn.Date(x["DateTimeReminderSent"].ToString()),
 				})
 				.GroupBy(x => x.PatNum,x => x)
 				.ToDictionary(x => x.Key,x => x.First());
@@ -1784,13 +1784,13 @@ namespace OpenDentBusiness {
 			List<RecallRecent> listRecent=new List<RecallRecent>();
 			foreach(DataRow row in table.Rows) {
 				RecallRecent recent=new RecallRecent {
-					DateSent=PIn.DateT(row["DateSent"].ToString()),
+					DateSent=PIn.Date(row["DateSent"].ToString()),
 					PatientName=PIn.String(row["PatientName"].ToString()),
 					PatNum=PIn.Long(row["PatNum"].ToString()),
 					Age=Patients.DateToAge(PIn.Date(row["BirthDate"].ToString())),
 					RecallType=PIn.String(row["RecallType"].ToString()),
 					RecallStatus=PIn.String(row["RecallStatus"].ToString()),
-					DueDate=PIn.DateT(row["DateDue"].ToString()),
+					DueDate=PIn.Date(row["DateDue"].ToString()),
 					RecallNum=PIn.Long(row["RecallNum"].ToString()),
 				};
 				switch(PIn.Int(row["CommMode"].ToString())) {

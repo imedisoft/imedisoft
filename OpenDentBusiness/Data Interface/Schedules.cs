@@ -424,7 +424,7 @@ namespace OpenDentBusiness{
 			//Compare schedules and find ones that overlap.  If they do overlap, compare clinics.
 			List<Schedule> listConflicts=new List<Schedule>(); 
 			foreach(DataRow row in tableSchedsForProvider.Rows) {
-				DateTime date1=PIn.DateT(row["SchedDate"].ToString());
+				DateTime date1=PIn.Date(row["SchedDate"].ToString());
 				TimeSpan startTime1=PIn.Time(row["StartTime"].ToString());
 				TimeSpan stopTime1=PIn.Time(row["StopTime"].ToString());
 				long clinicNum1=PIn.Long(row["OpClinicNum"].ToString());
@@ -433,7 +433,7 @@ namespace OpenDentBusiness{
 					continue;
 				}
 				foreach(DataRow row2 in tableSchedsForProvider.Rows) {
-					DateTime date2=PIn.DateT(row2["SchedDate"].ToString());
+					DateTime date2=PIn.Date(row2["SchedDate"].ToString());
 					TimeSpan startTime2=PIn.Time(row2["StartTime"].ToString());
 					TimeSpan stopTime2=PIn.Time(row2["StopTime"].ToString());
 					long clinicNum2=PIn.Long(row2["OpClinicNum"].ToString());
@@ -1138,8 +1138,8 @@ namespace OpenDentBusiness{
 			int rowI;
 			for(int i=0;i<raw.Rows.Count;i++){
 				dateSched=PIn.Date(raw.Rows[i]["SchedDate"].ToString());
-				startTime=PIn.DateT(raw.Rows[i]["StartTime"].ToString());
-				stopTime=PIn.DateT(raw.Rows[i]["StopTime"].ToString());
+				startTime=PIn.Date(raw.Rows[i]["StartTime"].ToString());
+				stopTime=PIn.Date(raw.Rows[i]["StopTime"].ToString());
 				rowI=GetRowCal(dateStart,dateSched);
 				if(i!=0//not first row
 					&& raw.Rows[i-1]["Abbr"].ToString()==raw.Rows[i]["Abbr"].ToString()//same provider as previous row
@@ -1147,7 +1147,7 @@ namespace OpenDentBusiness{
 					&& raw.Rows[i-1]["SchedDate"].ToString()==raw.Rows[i]["SchedDate"].ToString())//and same date as previous row
 				{
 					#region Not First Row and Same Prov/Emp/Date as Previous Row
-					if(startTime.TimeOfDay==PIn.DateT("12 AM").TimeOfDay && stopTime.TimeOfDay==PIn.DateT("12 AM").TimeOfDay) {
+					if(startTime.TimeOfDay==PIn.Date("12 AM").TimeOfDay && stopTime.TimeOfDay==PIn.Date("12 AM").TimeOfDay) {
 						#region Note or Holiday
 						if((PrefC.HasClinicsEnabled && raw.Rows[i-1]["ClinicNum"].ToString()!=raw.Rows[i]["ClinicNum"].ToString())//different clinic than previous line
 							|| raw.Rows[i-1]["Status"].ToString()!=raw.Rows[i]["Status"].ToString())//start notes and holidays on different lines
@@ -1182,7 +1182,7 @@ namespace OpenDentBusiness{
 				else {
 					#region First Row or Different Prov/Emp/Date as Previous Row
 					table.Rows[rowI][(int)dateSched.DayOfWeek]+="\r\n";
-					if(startTime.TimeOfDay==PIn.DateT("12 AM").TimeOfDay && stopTime.TimeOfDay==PIn.DateT("12 AM").TimeOfDay) {
+					if(startTime.TimeOfDay==PIn.Date("12 AM").TimeOfDay && stopTime.TimeOfDay==PIn.Date("12 AM").TimeOfDay) {
 						#region Note or Holiday
 						if(raw.Rows[i]["Status"].ToString()=="2"){//if holiday
 							table.Rows[rowI][(int)dateSched.DayOfWeek]+=Lans.g("Schedules","Holiday");
@@ -1601,8 +1601,8 @@ namespace OpenDentBusiness{
 				if(table.Rows.Count==0 || rawRow["EmployeeNum"].ToString()!=table.Rows[table.Rows.Count-1]["EmployeeNum"].ToString()) {
 					row["empName"]=rawRow["FName"].ToString();
 				}
-				startTime=PIn.DateT(rawRow["StartTime"].ToString());
-				stopTime=PIn.DateT(rawRow["StopTime"].ToString());
+				startTime=PIn.Date(rawRow["StartTime"].ToString());
+				stopTime=PIn.Date(rawRow["StopTime"].ToString());
 				row["schedule"]=startTime.ToString("h:mm")+"-"+stopTime.ToString("h:mm");
 				row["Note"]=rawRow["Note"].ToString();
 				table.Rows.Add(row);
@@ -1644,8 +1644,8 @@ namespace OpenDentBusiness{
 				schedCur=listScheds[i];
 				row=table.NewRow();
 				row["ProvAbbr"]=Providers.GetAbbr(schedCur.ProvNum);
-				startTime=PIn.DateT(schedCur.StartTime.ToString());
-				stopTime=PIn.DateT(schedCur.StopTime.ToString());
+				startTime=PIn.Date(schedCur.StartTime.ToString());
+				stopTime=PIn.Date(schedCur.StopTime.ToString());
 				row["schedule"]=startTime.ToString("h:mm")+"-"+stopTime.ToString("h:mm");
 				row["Note"]=schedCur.Note;
 				table.Rows.Add(row);

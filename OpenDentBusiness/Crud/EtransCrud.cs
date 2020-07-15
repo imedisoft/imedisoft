@@ -43,7 +43,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				etrans=new Etrans();
 				etrans.EtransNum           = PIn.Long  (row["EtransNum"].ToString());
-				etrans.DateTimeTrans       = PIn.DateT (row["DateTimeTrans"].ToString());
+				etrans.DateTimeTrans       = PIn.Date (row["DateTimeTrans"].ToString());
 				etrans.ClearingHouseNum    = PIn.Long  (row["ClearingHouseNum"].ToString());
 				etrans.Etype               = (OpenDentBusiness.EtransType)PIn.Int(row["Etype"].ToString());
 				etrans.ClaimNum            = PIn.Long  (row["ClaimNum"].ToString());

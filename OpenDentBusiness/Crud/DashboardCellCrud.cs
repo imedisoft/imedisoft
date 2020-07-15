@@ -57,7 +57,7 @@ namespace OpenDentBusiness.Crud{
 					dashboardCell.CellType        =(OpenDentBusiness.DashboardCellType)0;
 				}
 				dashboardCell.CellSettings      = PIn.String(row["CellSettings"].ToString());
-				dashboardCell.LastQueryTime     = PIn.DateT (row["LastQueryTime"].ToString());
+				dashboardCell.LastQueryTime     = PIn.Date (row["LastQueryTime"].ToString());
 				dashboardCell.LastQueryData     = PIn.String(row["LastQueryData"].ToString());
 				dashboardCell.RefreshRateSeconds= PIn.Int   (row["RefreshRateSeconds"].ToString());
 				retVal.Add(dashboardCell);

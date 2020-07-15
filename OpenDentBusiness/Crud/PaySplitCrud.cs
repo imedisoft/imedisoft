@@ -58,7 +58,7 @@ namespace OpenDentBusiness.Crud{
 				paySplit.UnearnedType    = PIn.Long  (row["UnearnedType"].ToString());
 				paySplit.ClinicNum       = PIn.Long  (row["ClinicNum"].ToString());
 				paySplit.SecUserNumEntry = PIn.Long  (row["SecUserNumEntry"].ToString());
-				paySplit.SecDateTEdit    = PIn.DateT (row["SecDateTEdit"].ToString());
+				paySplit.SecDateTEdit    = PIn.Date (row["SecDateTEdit"].ToString());
 				paySplit.FSplitNum       = PIn.Long  (row["FSplitNum"].ToString());
 				paySplit.AdjNum          = PIn.Long  (row["AdjNum"].ToString());
 				paySplit.PayPlanChargeNum= PIn.Long  (row["PayPlanChargeNum"].ToString());

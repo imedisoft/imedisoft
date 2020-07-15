@@ -45,7 +45,7 @@ namespace OpenDentBusiness.Crud{
 				iCD9.ICD9Num    = PIn.Long  (row["ICD9Num"].ToString());
 				iCD9.ICD9Code   = PIn.String(row["ICD9Code"].ToString());
 				iCD9.Description= PIn.String(row["Description"].ToString());
-				iCD9.DateTStamp = PIn.DateT (row["DateTStamp"].ToString());
+				iCD9.DateTStamp = PIn.Date (row["DateTStamp"].ToString());
 				retVal.Add(iCD9);
 			}
 			return retVal;

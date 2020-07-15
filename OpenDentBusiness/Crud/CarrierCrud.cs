@@ -58,7 +58,7 @@ namespace OpenDentBusiness.Crud{
 				carrier.CanadianSupportedTypes  = (OpenDentBusiness.CanSupTransTypes)PIn.Int(row["CanadianSupportedTypes"].ToString());
 				carrier.SecUserNumEntry         = PIn.Long  (row["SecUserNumEntry"].ToString());
 				carrier.SecDateEntry            = PIn.Date  (row["SecDateEntry"].ToString());
-				carrier.SecDateTEdit            = PIn.DateT (row["SecDateTEdit"].ToString());
+				carrier.SecDateTEdit            = PIn.Date (row["SecDateTEdit"].ToString());
 				carrier.TIN                     = PIn.String(row["TIN"].ToString());
 				carrier.CarrierGroupName        = PIn.Long  (row["CarrierGroupName"].ToString());
 				carrier.ApptTextBackColor       = Color.FromArgb(PIn.Int(row["ApptTextBackColor"].ToString()));

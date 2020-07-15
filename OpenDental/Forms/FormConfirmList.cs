@@ -1143,7 +1143,7 @@ namespace OpenDental{
 				Patient pat=new Patient {
 					FName=PIn.String(Table.Rows[gridMain.SelectedIndices[i]]["nameF"].ToString()),
 				};
-				DateTime apptDateTime=PIn.DateT(Table.Rows[gridMain.SelectedIndices[i]]["AptDateTime"].ToString());
+				DateTime apptDateTime=PIn.Date(Table.Rows[gridMain.SelectedIndices[i]]["AptDateTime"].ToString());
 				str=PatComm.BuildConfirmMessage(ContactMethod.Email,pat,apptDateTime);
 				message.BodyText=EmailMessages.FindAndReplacePostalAddressTag(str,clinicNum);
 				try {
@@ -1285,7 +1285,7 @@ namespace OpenDental{
 				Patient pat=new Patient {
 					FName=PIn.String(Table.Rows[gridMain.SelectedIndices[i]]["nameF"].ToString()),
 				};
-				DateTime apptDateTime=PIn.DateT(Table.Rows[gridMain.SelectedIndices[i]]["AptDateTime"].ToString());
+				DateTime apptDateTime=PIn.Date(Table.Rows[gridMain.SelectedIndices[i]]["AptDateTime"].ToString());
 				message=PatComm.BuildConfirmMessage(ContactMethod.TextMessage,pat,apptDateTime);
 				if(FormTME.SendText(patNum,wirelessPhone,message,txtMsgOk,clinicNum,SmsMessageSource.Confirmation)) {
 					long aptNum=PIn.Long(Table.Rows[gridMain.SelectedIndices[i]]["AptNum"].ToString());

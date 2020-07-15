@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 				databaseMaintenance.MethodName            = PIn.String(row["MethodName"].ToString());
 				databaseMaintenance.IsHidden              = PIn.Bool  (row["IsHidden"].ToString());
 				databaseMaintenance.IsOld                 = PIn.Bool  (row["IsOld"].ToString());
-				databaseMaintenance.DateLastRun           = PIn.DateT (row["DateLastRun"].ToString());
+				databaseMaintenance.DateLastRun           = PIn.Date (row["DateLastRun"].ToString());
 				retVal.Add(databaseMaintenance);
 			}
 			return retVal;

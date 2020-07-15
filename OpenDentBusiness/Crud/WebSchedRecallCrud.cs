@@ -46,12 +46,12 @@ namespace OpenDentBusiness.Crud{
 				webSchedRecall.ClinicNum              = PIn.Long  (row["ClinicNum"].ToString());
 				webSchedRecall.PatNum                 = PIn.Long  (row["PatNum"].ToString());
 				webSchedRecall.RecallNum              = PIn.Long  (row["RecallNum"].ToString());
-				webSchedRecall.DateTimeEntry          = PIn.DateT (row["DateTimeEntry"].ToString());
+				webSchedRecall.DateTimeEntry          = PIn.Date (row["DateTimeEntry"].ToString());
 				webSchedRecall.DateDue                = PIn.Date  (row["DateDue"].ToString());
 				webSchedRecall.ReminderCount          = PIn.Int   (row["ReminderCount"].ToString());
 				webSchedRecall.PreferRecallMethod     = (OpenDentBusiness.ContactMethod)PIn.Int(row["PreferRecallMethod"].ToString());
-				webSchedRecall.DateTimeReminderSent   = PIn.DateT (row["DateTimeReminderSent"].ToString());
-				webSchedRecall.DateTimeSendFailed     = PIn.DateT (row["DateTimeSendFailed"].ToString());
+				webSchedRecall.DateTimeReminderSent   = PIn.Date (row["DateTimeReminderSent"].ToString());
+				webSchedRecall.DateTimeSendFailed     = PIn.Date (row["DateTimeSendFailed"].ToString());
 				webSchedRecall.EmailSendStatus        = (OpenDentBusiness.AutoCommStatus)PIn.Int(row["EmailSendStatus"].ToString());
 				webSchedRecall.SmsSendStatus          = (OpenDentBusiness.AutoCommStatus)PIn.Int(row["SmsSendStatus"].ToString());
 				webSchedRecall.PhonePat               = PIn.String(row["PhonePat"].ToString());

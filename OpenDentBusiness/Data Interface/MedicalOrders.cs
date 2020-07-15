@@ -52,7 +52,7 @@ namespace OpenDentBusiness{
 			bool isDiscontinued;
 			for(int i=0;i<rawOrder.Rows.Count;i++) {
 				row=table.NewRow();
-				dateT=PIn.DateT(rawOrder.Rows[i]["DateTimeOrder"].ToString());
+				dateT=PIn.Date(rawOrder.Rows[i]["DateTimeOrder"].ToString());
 				medOrderType=(MedicalOrderType)PIn.Int(rawOrder.Rows[i]["MedOrderType"].ToString());
 				medicalOrderNum=PIn.Long(rawOrder.Rows[i]["MedicalOrderNum"].ToString());
 				row["DateTime"]=dateT;
@@ -97,7 +97,7 @@ namespace OpenDentBusiness{
 			//DateTime dateStop;
 			//for(int i=0;i<rawMed.Rows.Count;i++) {
 			//	row=table.NewRow();
-			//	dateT=PIn.DateT(rawMed.Rows[i]["DateStart"].ToString());
+			//	dateT=PIn.Date(rawMed.Rows[i]["DateStart"].ToString());
 			//	row["DateTime"]=dateT;
 			//	if(dateT.Year<1880) {
 			//		row["date"]="";

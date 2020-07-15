@@ -82,7 +82,7 @@ namespace OpenDentBusiness.Crud{
 				claimProc.ClaimPaymentTracking= PIn.Long  (row["ClaimPaymentTracking"].ToString());
 				claimProc.SecUserNumEntry     = PIn.Long  (row["SecUserNumEntry"].ToString());
 				claimProc.SecDateEntry        = PIn.Date  (row["SecDateEntry"].ToString());
-				claimProc.SecDateTEdit        = PIn.DateT (row["SecDateTEdit"].ToString());
+				claimProc.SecDateTEdit        = PIn.Date (row["SecDateTEdit"].ToString());
 				claimProc.DateSuppReceived    = PIn.Date  (row["DateSuppReceived"].ToString());
 				claimProc.DateInsFinalized    = PIn.Date  (row["DateInsFinalized"].ToString());
 				claimProc.IsTransfer          = PIn.Bool  (row["IsTransfer"].ToString());
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 				ClaimPaymentTracking= PIn.Long  (row["ClaimPaymentTracking"].ToString()),
 				SecUserNumEntry     = PIn.Long  (row["SecUserNumEntry"].ToString()),
 				SecDateEntry        = PIn.Date  (row["SecDateEntry"].ToString()),
-				SecDateTEdit        = PIn.DateT (row["SecDateTEdit"].ToString()),
+				SecDateTEdit        = PIn.Date (row["SecDateTEdit"].ToString()),
 				DateSuppReceived    = PIn.Date  (row["DateSuppReceived"].ToString()),
 				DateInsFinalized    = PIn.Date  (row["DateInsFinalized"].ToString()),
 				IsTransfer          = PIn.Bool  (row["IsTransfer"].ToString()),

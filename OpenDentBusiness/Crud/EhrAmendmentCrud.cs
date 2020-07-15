@@ -50,9 +50,9 @@ namespace OpenDentBusiness.Crud{
 				ehrAmendment.SourceName     = PIn.String(row["SourceName"].ToString());
 				ehrAmendment.FileName       = PIn.String(row["FileName"].ToString());
 				ehrAmendment.RawBase64      = PIn.String(row["RawBase64"].ToString());
-				ehrAmendment.DateTRequest   = PIn.DateT (row["DateTRequest"].ToString());
-				ehrAmendment.DateTAcceptDeny= PIn.DateT (row["DateTAcceptDeny"].ToString());
-				ehrAmendment.DateTAppend    = PIn.DateT (row["DateTAppend"].ToString());
+				ehrAmendment.DateTRequest   = PIn.Date (row["DateTRequest"].ToString());
+				ehrAmendment.DateTAcceptDeny= PIn.Date (row["DateTAcceptDeny"].ToString());
+				ehrAmendment.DateTAppend    = PIn.Date (row["DateTAppend"].ToString());
 				retVal.Add(ehrAmendment);
 			}
 			return retVal;

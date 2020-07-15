@@ -3320,7 +3320,7 @@ namespace OpenDentBusiness {
 				tobaccoAssessCur.PatNum=PIn.Long(tableEvents.Rows[i]["PatNum"].ToString());
 				tobaccoAssessCur.CodeValue=tableEvents.Rows[i]["CodeValueResult"].ToString();
 				tobaccoAssessCur.CodeSystemName=tableEvents.Rows[i]["CodeSystemResult"].ToString();
-				tobaccoAssessCur.DateTEvent=PIn.DateT(tableEvents.Rows[i]["DateTEvent"].ToString());
+				tobaccoAssessCur.DateTEvent=PIn.Date(tableEvents.Rows[i]["DateTEvent"].ToString());
 				string descript=tableEvents.Rows[i]["Description"].ToString();//if code is not in snomed table we will use description of EhrCode object
 				EhrCode ehrCodeCur=dictEventNumEhrCode[tobaccoAssessCur.EhrCqmMeasEventNum];
 				tobaccoAssessCur.CodeSystemOID=ehrCodeCur.CodeSystemOID;
@@ -3743,7 +3743,7 @@ namespace OpenDentBusiness {
 				ehrProcCur.PatNum=PIn.Long(tableEvents.Rows[i]["PatNum"].ToString());
 				ehrProcCur.CodeValue=tableEvents.Rows[i]["CodeValueEvent"].ToString();
 				ehrProcCur.CodeSystemName=tableEvents.Rows[i]["CodeSystemEvent"].ToString();
-				ehrProcCur.DateTEvent=PIn.DateT(tableEvents.Rows[i]["DateTEvent"].ToString());
+				ehrProcCur.DateTEvent=PIn.Date(tableEvents.Rows[i]["DateTEvent"].ToString());
 				string descript=tableEvents.Rows[i]["Description"].ToString();//if code is not in snomed table we will use description of EhrCode object
 				EhrCode ehrCodeCur=dictEhrMeasureEventNumEhrCode[ehrProcCur.EhrCqmMeasEventNum];
 				ehrProcCur.CodeSystemOID=ehrCodeCur.CodeSystemOID;
@@ -3968,8 +3968,8 @@ namespace OpenDentBusiness {
 				ehrVacPatCur.PatNum=PIn.Long(tableAllVaccinePats.Rows[i]["PatNum"].ToString());
 				ehrVacPatCur.CVXCode=tableAllVaccinePats.Rows[i]["CVXCode"].ToString();
 				ehrVacPatCur.CompletionStatus=(VaccineCompletionStatus)PIn.Int(tableAllVaccinePats.Rows[i]["CompletionStatus"].ToString());
-				ehrVacPatCur.DateStart=PIn.DateT(tableAllVaccinePats.Rows[i]["DateTimeStart"].ToString());
-				ehrVacPatCur.DateStop=PIn.DateT(tableAllVaccinePats.Rows[i]["DateTimeEnd"].ToString());
+				ehrVacPatCur.DateStart=PIn.Date(tableAllVaccinePats.Rows[i]["DateTimeStart"].ToString());
+				ehrVacPatCur.DateStop=PIn.Date(tableAllVaccinePats.Rows[i]["DateTimeEnd"].ToString());
 				EhrCode ehrCodeCur=dictVaccinePatNumEhrCode[ehrVacPatCur.EhrCqmVaccinePatNum];
 				ehrVacPatCur.CodeSystemName=ehrCodeCur.CodeSystem;
 				ehrVacPatCur.CodeSystemOID=ehrCodeCur.CodeSystemOID;

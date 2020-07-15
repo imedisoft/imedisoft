@@ -65,7 +65,7 @@ namespace OpenDentBusiness.Crud{
 				provider.SchoolClassNum        = PIn.Long  (row["SchoolClassNum"].ToString());
 				provider.NationalProvID        = PIn.String(row["NationalProvID"].ToString());
 				provider.CanadianOfficeNum     = PIn.String(row["CanadianOfficeNum"].ToString());
-				provider.DateTStamp            = PIn.DateT (row["DateTStamp"].ToString());
+				provider.DateTStamp            = PIn.Date (row["DateTStamp"].ToString());
 				provider.AnesthProvType        = PIn.Long  (row["AnesthProvType"].ToString());
 				provider.TaxonomyCodeOverride  = PIn.String(row["TaxonomyCodeOverride"].ToString());
 				provider.IsCDAnet              = PIn.Bool  (row["IsCDAnet"].ToString());

@@ -97,7 +97,7 @@ namespace OpenDental {
 				return;
 			}
 			string logEntry=Lan.G(this,"Ehr Measure Event was deleted.")+"  "
-				+Lan.G(this,"Date")+": "+PIn.DateT(textDateTime.Text)+"  "
+				+Lan.G(this,"Date")+": "+PIn.Date(textDateTime.Text)+"  "
 				+Lan.G(this,"Type")+": "+_measureEventCur.EventType.ToString()+"  "
 				+Lan.G(this,"Patient")+": "+textPatient.Text;
 			SecurityLogs.MakeLogEntry(Permissions.EhrMeasureEventEdit,_measureEventCur.PatNum,logEntry);
@@ -107,7 +107,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			//inserts never happen here.  Only updates.
-			DateTime dateTEvent=PIn.DateT(textDateTime.Text);
+			DateTime dateTEvent=PIn.Date(textDateTime.Text);
 			if(dateTEvent==DateTime.MinValue) {
 				MessageBox.Show("Please enter a valid date time.");//because this must always be valid
 				return;

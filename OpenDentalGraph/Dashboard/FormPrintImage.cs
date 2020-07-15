@@ -16,7 +16,7 @@ namespace OpenDentalGraph {
 	public partial class FormPrintImage:Form {
 		//the amount of space between each chart.
 		private const int CHART_SPACING=30;
-		private DashboardPanelCtrl _dashPanel;
+		private readonly DashboardPanelCtrl _dashPanel;
 		private Dictionary<Point,Chart> _dictCharts;
 		private bool _isLoading=true;
 		private int _marginWidth;
@@ -120,9 +120,9 @@ namespace OpenDentalGraph {
 				}
 				_bmpImage=ConvertToBmp(false);
 			}
-			Graphics g=Graphics.FromImage(_bmpImage);
-			//reset the document margins
-			printDocument1.DefaultPageSettings.Margins=new System.Drawing.Printing.Margins(_marginWidth,_marginWidth,_marginHeight,_marginHeight);
+
+            //reset the document margins
+            printDocument1.DefaultPageSettings.Margins=new System.Drawing.Printing.Margins(_marginWidth,_marginWidth,_marginHeight,_marginHeight);
 			//Reset the graphics objects by disposing of them and reinitializing them.
 			if(_bmpSheet!=null) {
 				_bmpSheet.Dispose();

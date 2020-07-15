@@ -48,7 +48,7 @@ namespace OpenDentBusiness.Crud{
 				patField.FieldValue     = PIn.String(row["FieldValue"].ToString());
 				patField.SecUserNumEntry= PIn.Long  (row["SecUserNumEntry"].ToString());
 				patField.SecDateEntry   = PIn.Date  (row["SecDateEntry"].ToString());
-				patField.SecDateTEdit   = PIn.DateT (row["SecDateTEdit"].ToString());
+				patField.SecDateTEdit   = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(patField);
 			}
 			return retVal;

@@ -57,7 +57,7 @@ namespace OpenDentBusiness.Crud{
 				statement.Intermingled     = PIn.Bool  (row["Intermingled"].ToString());
 				statement.IsSent           = PIn.Bool  (row["IsSent"].ToString());
 				statement.DocNum           = PIn.Long  (row["DocNum"].ToString());
-				statement.DateTStamp       = PIn.DateT (row["DateTStamp"].ToString());
+				statement.DateTStamp       = PIn.Date (row["DateTStamp"].ToString());
 				statement.IsReceipt        = PIn.Bool  (row["IsReceipt"].ToString());
 				statement.IsInvoice        = PIn.Bool  (row["IsInvoice"].ToString());
 				statement.IsInvoiceCopy    = PIn.Bool  (row["IsInvoiceCopy"].ToString());
