@@ -1000,8 +1000,7 @@ namespace UnitTests.Appointments_Tests {
 		///<summary>Testing appointment time pattern logic.</summary>
 		[TestMethod]
 		public void Appointments_GetApptTimePatternFromProcPatterns_PatternLogic() {
-			string suffix="79";
-			string pattern01="X";
+            string pattern01 ="X";
 			string pattern02="X/";
 			string pattern03="/X";
 			string pattern04="/X/";
@@ -1110,8 +1109,8 @@ namespace UnitTests.Appointments_Tests {
 			RecallType recallType=RecallTypeT.CreateRecallType(description:strDesc,procedures:strRecallProcCode);
 			PrefT.UpdateString(PrefName.RecallTypesShowingInList,string.Join(",",PrefC.GetString(PrefName.RecallTypesShowingInList),recallType.RecallTypeNum));
 			Patient pat=PatientT.CreatePatient(priProvNum:provNum,lName:MethodBase.GetCurrentMethod().Name);
-			Recall recall=RecallT.CreateRecall(pat.PatNum,recallType.RecallTypeNum,dateTimeRecall,intervalRecall,dateScheduled:dateTimeRecall);
-			Appointment appt=AppointmentT.CreateAppointment(pat.PatNum,dateTimeAppt,opNum,provNum,aptStatus:apptStatus,aptNote:note);
+            _ = RecallT.CreateRecall(pat.PatNum, recallType.RecallTypeNum, dateTimeRecall, intervalRecall, dateScheduled: dateTimeRecall);
+            Appointment appt=AppointmentT.CreateAppointment(pat.PatNum,dateTimeAppt,opNum,provNum,aptStatus:apptStatus,aptNote:note);
 			ProcedureT.CreateProcedure(pat,strApptProcCode,procStatus,toothNum,procFee,dateTimeAppt,provNum:provNum,aptNum:appt.AptNum);
 			Assert.IsFalse(Appointments.IsRecallAppointment(appt));
 		}
@@ -1134,8 +1133,8 @@ namespace UnitTests.Appointments_Tests {
 			RecallType recallType=RecallTypeT.CreateRecallType(description:strDesc,procedures:strRecallProcCode);
 			PrefT.UpdateString(PrefName.RecallTypesShowingInList,string.Join(",",PrefC.GetString(PrefName.RecallTypesShowingInList),recallType.RecallTypeNum));
 			Patient pat=PatientT.CreatePatient(priProvNum:provNum,lName:MethodBase.GetCurrentMethod().Name);
-			Recall recall=RecallT.CreateRecall(pat.PatNum,recallType.RecallTypeNum,dateTimeRecall,intervalRecall,dateScheduled:dateTimeRecall);
-			Appointment appt=AppointmentT.CreateAppointment(pat.PatNum,dateTimeAppt,opNum,provNum,aptStatus:apptStatus,aptNote:note);
+            _ = RecallT.CreateRecall(pat.PatNum, recallType.RecallTypeNum, dateTimeRecall, intervalRecall, dateScheduled: dateTimeRecall);
+            Appointment appt=AppointmentT.CreateAppointment(pat.PatNum,dateTimeAppt,opNum,provNum,aptStatus:apptStatus,aptNote:note);
 			ProcedureT.CreateProcedure(pat,strApptProcCode,procStatus,toothNum,procFee,dateTimeAppt,provNum:provNum,aptNum:appt.AptNum);
 			Assert.IsFalse(Appointments.IsRecallAppointment(appt));
 		}
@@ -1158,8 +1157,8 @@ namespace UnitTests.Appointments_Tests {
 			RecallType recallType=RecallTypeT.CreateRecallType(description:strDesc,procedures:strRecallProcCode);
 			Patient pat=PatientT.CreatePatient(priProvNum:provNum,lName:MethodBase.GetCurrentMethod().Name);
 			PrefT.UpdateString(PrefName.RecallTypesShowingInList,string.Join(",",PrefC.GetString(PrefName.RecallTypesShowingInList),recallType.RecallTypeNum));
-			Recall recall=RecallT.CreateRecall(pat.PatNum,recallType.RecallTypeNum,dateTimeRecall,intervalRecall,dateScheduled:dateTimeRecall);
-			Appointment appt=AppointmentT.CreateAppointment(pat.PatNum,dateTimeAppt,opNum,provNum,aptStatus:apptStatus,aptNote:note);
+            _ = RecallT.CreateRecall(pat.PatNum, recallType.RecallTypeNum, dateTimeRecall, intervalRecall, dateScheduled: dateTimeRecall);
+            Appointment appt=AppointmentT.CreateAppointment(pat.PatNum,dateTimeAppt,opNum,provNum,aptStatus:apptStatus,aptNote:note);
 			ProcedureT.CreateProcedure(pat,strApptProcCode,procStatus,toothNum,procFee,dateTimeAppt,provNum:provNum,aptNum:appt.AptNum);
 			Cache.Refresh(InvalidType.RecallTypes);
 			Assert.IsTrue(Appointments.IsRecallAppointment(appt));
