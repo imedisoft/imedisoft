@@ -48,17 +48,5 @@ namespace OpenDentBusiness {
 		NewPatientsGraph,
 		///<summary></summary>
 		BrokenApptGraph,
-		///<summary>HQ only. Will not be saved to DashboardCell table.</summary>
-		HQMtMessage,
-		///<summary>HQ only. Will not be saved to DashboardCell table.</summary>
-		HQBillingInboundOutbound,
-		///<summary>HQ only. Will not be saved to DashboardCell table.</summary>
-		HQBillingUsageAccess,
-		///<summary>HQ only. Will not be saved to DashboardCell table.</summary>
-		HQMoMessage,
-		///<summary>HQ only. Will not be saved to DashboardCell table.</summary>
-		HQPhone,
-		///<summary>HQ only. Will not be saved to DashboardCell table.</summary>
-		HQSignups=12,
 	}
 }

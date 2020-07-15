@@ -36,12 +36,6 @@ namespace OpenDentalGraph {
 					case DashboardCellType.NewPatientsGraph:
 					case DashboardCellType.BrokenApptGraph:
 					case DashboardCellType.AccountsReceivableGraph:
-					case DashboardCellType.HQMtMessage:
-					case DashboardCellType.HQBillingUsageAccess:
-					case DashboardCellType.HQSignups:
-					case DashboardCellType.HQPhone:
-					case DashboardCellType.HQMoMessage:
-					case DashboardCellType.HQBillingInboundOutbound:
 						return true;
 					default:
 						return false;
@@ -58,14 +52,8 @@ namespace OpenDentalGraph {
 					case DashboardCellType.IncomeGraph:
 					case DashboardCellType.BrokenApptGraph:
 					case DashboardCellType.NewPatientsGraph:
-					case DashboardCellType.HQMtMessage:
 						splitContainer.Panel1Collapsed=!graph.ShowFilters;
 						break;
-					case DashboardCellType.HQBillingUsageAccess:
-					case DashboardCellType.HQSignups:
-					case DashboardCellType.HQPhone:
-					case DashboardCellType.HQMoMessage:
-					case DashboardCellType.HQBillingInboundOutbound:
 					case DashboardCellType.AccountsReceivableGraph:
 					default:
 						break;					
@@ -143,15 +131,6 @@ namespace OpenDentalGraph {
 						graph.QuickRangePref=QuickRange.last12Months;
 						graph.QtyType=QuantityType.count;
 						break;
-					case DashboardCellType.HQMtMessage:
-						filterCtrl=_hqMsgRealTimeCtrl;
-						break;
-					case DashboardCellType.HQPhone:
-					case DashboardCellType.HQMoMessage:
-					case DashboardCellType.HQSignups:
-					case DashboardCellType.HQBillingUsageAccess:
-					case DashboardCellType.HQBillingInboundOutbound:
-						break;
 					default:
 						throw new Exception("Unsupported CellType: "+CellType.ToString());
 				}
@@ -178,19 +157,6 @@ namespace OpenDentalGraph {
 			{
 				groupingOptionsCtrl1.CurGrouping=value;
 			}
-		}
-
-		///<summary>Used in the Broadcast Monitor. Do not delete.</summary>
-		public HqMessagesRealTimeOptionsCtrl HqMessagesRealTimeCtrl
-		{
-			get
-			{
-				return _hqMsgRealTimeCtrl;
-			}
-		}
-		
-		public ConfirmationGraphType HQConfirmationGraphType {
-			get; set;
 		}
 
 		///<summary>Returns the Graph associated to this filter. From there the chart can be accessed.</summary>
@@ -428,17 +394,6 @@ namespace OpenDentalGraph {
 						}
 					}
 					break;
-				case DashboardCellType.HQMtMessage:
-				case DashboardCellType.HQBillingUsageAccess:
-				case DashboardCellType.HQPhone:
-				case DashboardCellType.HQSignups:
-				case DashboardCellType.HQMoMessage:
-				case DashboardCellType.HQBillingInboundOutbound:
-					if(_onGetODGraphPointsArgs==null) {
-						throw new Exception("OnGetODGraphPointsArgs delegate not set for CellType: "+CellType.ToString());
-					}
-					rawData=_onGetODGraphPointsArgs(this);
-					break;
 				default:
 					throw new Exception("Unsupported CellType: "+CellType.ToString());
 			}
@@ -487,13 +442,6 @@ namespace OpenDentalGraph {
 				return _onGetSeriesColorOverride(this,CellType,seriesName);
 			}
 			switch(CellType) {
-				case DashboardCellType.HQMtMessage:
-				case DashboardCellType.HQBillingUsageAccess:
-				case DashboardCellType.HQPhone:
-				case DashboardCellType.HQSignups:
-				case DashboardCellType.HQMoMessage:
-				case DashboardCellType.HQBillingInboundOutbound:
-					throw new Exception("This CellType cannot return a provider color");
 				case DashboardCellType.BrokenApptGraph:
 				case DashboardCellType.NewPatientsGraph:
 				case DashboardCellType.AccountsReceivableGraph:
@@ -587,7 +535,6 @@ namespace OpenDentalGraph {
 			public long AdjTypeDefNum { get; set; }
 			new public BrokenApptProcedure BrokenApptProcCode { get; set;}
 			public HqMessagesRealTimeOptionsCtrl.HQGrouping HQGrouping { get; set; }
-			public ConfirmationGraphType HQConfirmationGraphType { get; set; }
 
 		}
 		#endregion
@@ -622,20 +569,6 @@ namespace OpenDentalGraph {
 				case DashboardCellType.AccountsReceivableGraph:
 					//No custom filtering so do nothing.
 					return new GraphQuantityOverTimeFilterSettings();
-				case DashboardCellType.HQMtMessage: 
-					return new GraphQuantityOverTimeFilterSettings() {
-						HQGrouping=_hqMsgRealTimeCtrl.CurHQGroup,
-					};
-				case DashboardCellType.HQBillingUsageAccess:
-				case DashboardCellType.HQPhone:
-					return new GraphQuantityOverTimeFilterSettings() {
-						HQConfirmationGraphType=this.HQConfirmationGraphType,
-					};
-				case DashboardCellType.HQMoMessage:
-				case DashboardCellType.HQSignups:
-				case DashboardCellType.HQBillingInboundOutbound:
-					//No custom filtering so do nothing.
-					return new GraphQuantityOverTimeFilterSettings();
 				default:
 					throw new Exception("Unsupported CellType: "+CellType.ToString());
 			}
@@ -645,12 +578,6 @@ namespace OpenDentalGraph {
 			try {
 				if(string.IsNullOrEmpty(json)) {
 					return;
-				}
-				switch(CellType) {
-					case DashboardCellType.HQMoMessage:
-					case DashboardCellType.HQSignups:
-					case DashboardCellType.HQBillingInboundOutbound:
-						return;
 				}
 				GraphQuantityOverTimeFilterSettings settings=ODGraphSettingsBase.Deserialize<GraphQuantityOverTimeFilterSettings>(json);
 				switch(CellType) {
@@ -676,17 +603,6 @@ namespace OpenDentalGraph {
 						break;
 					case DashboardCellType.AccountsReceivableGraph:
 						break;
-					case DashboardCellType.HQMtMessage:
-						_hqMsgRealTimeCtrl.CurHQGroup=settings.HQGrouping;
-						return;
-					case DashboardCellType.HQBillingUsageAccess:
-					case DashboardCellType.HQPhone:
-						this.HQConfirmationGraphType=settings.HQConfirmationGraphType;
-						break;
-					case DashboardCellType.HQMoMessage:
-					case DashboardCellType.HQSignups:
-					case DashboardCellType.HQBillingInboundOutbound:
-						return;
 					default:
 						throw new Exception("Unsupported CellType: "+CellType.ToString());
 				}

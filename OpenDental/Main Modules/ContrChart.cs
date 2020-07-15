@@ -2251,7 +2251,6 @@ namespace OpenDental {
 					break;
 			}
 			ModuleSelected(_patCur.PatNum);
-			Reporting.Allocators.MyAllocator1_ProviderPayment.AllocateWithToolCheck(this._patCur.Guarantor);
 		}
 
 		private void gridProg_KeyDown(object sender,KeyEventArgs e) {

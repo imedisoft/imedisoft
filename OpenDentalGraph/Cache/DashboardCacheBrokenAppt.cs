@@ -1,41 +1,42 @@
-﻿using System;
+﻿using DataConnectionBase;
+using OpenDentBusiness;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using OpenDentBusiness;
 
 namespace OpenDentalGraph.Cache
 {
-	public class DashboardCacheBrokenAppt : DashboardCacheWithQuery<BrokenAppt>
+    public class DashboardCacheBrokenAppt : DashboardCacheWithQuery<BrokenAppt>
 	{
 		protected override string GetCommand(DashboardFilter filter)
 		{
 			string where = "WHERE AptStatus=" + (int)ApptStatus.Broken + " ";
 			if (filter.UseDateFilter)
 			{
-				where += "AND DATE(AptDateTime) BETWEEN " + POut.Date(filter.DateFrom) + " AND " + POut.Date(filter.DateTo) + " ";
+				where += "AND DATE(AptDateTime) BETWEEN " + SOut.Date(filter.DateFrom) + " AND " + SOut.Date(filter.DateTo) + " ";
 			}
+
 			if (filter.UseProvFilter)
 			{
-				where += "AND ProvNum=" + POut.Long(filter.ProvNum) + " ";
+				where += "AND ProvNum=" + SOut.Long(filter.ProvNum) + " ";
 			}
+
 			return
-				"SELECT DATE(AptDateTime) ApptDate,ProvNum,ClinicNum,COUNT(AptNum) ApptCount "
-				+ "FROM appointment "
-				+ where
-				+ "GROUP BY ApptDate,ProvNum,ClinicNum ";
+				"SELECT DATE(AptDateTime) ApptDate,ProvNum,ClinicNum,COUNT(AptNum) ApptCount " +
+				"FROM appointment " + where + "GROUP BY ApptDate,ProvNum,ClinicNum ";
 		}
 
 		protected override BrokenAppt GetInstanceFromDataRow(DataRow x)
 		{
 			return new BrokenAppt()
 			{
-				ProvNum = PIn.Long(x["ProvNum"].ToString()),
-				ClinicNum = PIn.Long(x["ClinicNum"].ToString()),
-				DateStamp = PIn.Date(x["ApptDate"].ToString()),
-				Count = PIn.Long(x["ApptCount"].ToString()),
-				Val = 0, //appointments do not have their own value.
+				ProvNum = SIn.Long(x["ProvNum"].ToString()),
+				ClinicNum = SIn.Long(x["ClinicNum"].ToString()),
+				DateStamp = SIn.Date(x["ApptDate"].ToString()),
+				Count = SIn.Long(x["ApptCount"].ToString()),
+				Val = 0, // Appointments do not have their own value.
 			};
 		}
 	}

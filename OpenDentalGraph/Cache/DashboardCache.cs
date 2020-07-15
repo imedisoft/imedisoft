@@ -89,17 +89,6 @@ namespace OpenDentalGraph.Cache
 			string groupName = cellType.ToString() + _rand.Next();
 			try
 			{
-				switch (cellType)
-				{
-					case DashboardCellType.HQPhone:
-					case DashboardCellType.HQMtMessage:
-					case DashboardCellType.HQBillingUsageAccess:
-					case DashboardCellType.HQMoMessage:
-					case DashboardCellType.HQBillingInboundOutbound:
-					case DashboardCellType.HQSignups:
-						//Broadcast monitor does not use the ODGraph cache.
-						return;
-				}
 				//Always fill certain caches first. These will not be threaded as they need to be available to the threads which will run below.
 				//It doesn't hurt to block momentarily here as the queries will run very quickly.			
 				Providers.Run(new DashboardFilter() { UseDateFilter = false }, invalidateFirst);

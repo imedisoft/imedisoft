@@ -244,9 +244,6 @@
     <Compile Include="Base\BaseGraphOptionsCtrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Base\BaseGraphOptionsCtrl.Designer.cs">
-      <DependentUpon>BaseGraphOptionsCtrl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Concrete\HqMessagesRealTimeOptionsCtrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -336,9 +333,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Base\GroupingOptionsCtrl.resx">
       <DependentUpon>GroupingOptionsCtrl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Base\BaseGraphOptionsCtrl.resx">
-      <DependentUpon>BaseGraphOptionsCtrl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Base\GraphIncome.resx">
       <DependentUpon>GraphIncome.cs</DependentUpon>

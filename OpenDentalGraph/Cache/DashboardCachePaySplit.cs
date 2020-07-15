@@ -21,7 +21,7 @@ namespace OpenDentalGraph.Cache
 			}
 
 			return
-				"SELECT ProvNum,DatePay,SUM(SplitAmt) AS GrossSplit,ClinicNum " + 
+				"SELECT ProvNum,DatePay,SUM(SplitAmt) AS GrossSplit,ClinicNum " +
 				"FROM paysplit WHERE " + where + "IsDiscount=0 " +
 				"GROUP BY ProvNum,DatePay,ClinicNum ";
 		}
@@ -39,5 +39,7 @@ namespace OpenDentalGraph.Cache
 		}
 	}
 
-	public class PaySplit : GraphQuantityOverTime.GraphDataPointClinic { }
+	public class PaySplit : GraphQuantityOverTime.GraphDataPointClinic
+	{
+	}
 }

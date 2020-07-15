@@ -1,61 +1,72 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.ServiceProcess;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
-using Microsoft.Win32;
+using System.ServiceProcess;
+using System.Windows.Forms;
 
-namespace OpenDentHL7 {
-	static class Program {
+namespace OpenDentHL7
+{
+    static class Program
+	{
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
-		static void Main(string[] args) {
+		static void Main(string[] args)
+		{
 #if DEBUG
-			string serviceName="OpenDentHL7";
-			ServiceController[] serviceControllersAll=ServiceController.GetServices();
-			for(int i=0;i<serviceControllersAll.Length;i++) {
-				if(serviceControllersAll[i].ServiceName.StartsWith("OpenDent")) {
-					serviceName=serviceControllersAll[i].ServiceName;
+			string serviceName = "OpenDentHL7";
+
+			var serviceControllers = ServiceController.GetServices();
+			foreach (var serviceController in serviceControllers)
+			{
+				if (serviceController.ServiceName.StartsWith("OpenDent"))
+				{
+					serviceName = serviceController.ServiceName;
 					break;
 				}
 			}
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new FormDebug(serviceName));
 #else
-			EventLog.WriteEntry("OpenDentHL7.Main", DateTime.Now.ToLongTimeString() +" - Service main method starting...");
-			ServiceHL7 serviceHL7=new ServiceHL7();
-			serviceHL7.ServiceName="OpenDentalHL7";//default
-			//Get the executing assembly location directory (location of this OpenDentHL7.exe)
-			string executingDir=Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-			//Get all installed services
-			List<ServiceController> serviceControllersOD=new List<ServiceController>();
-			ServiceController[] serviceControllersAll=ServiceController.GetServices();
-			//Get all installed services that have names that start with "OpenDent"
-			for(int i=0;i<serviceControllersAll.Length;i++) {
-				if(serviceControllersAll[i].ServiceName.StartsWith("OpenDent")) {
-					serviceControllersOD.Add(serviceControllersAll[i]);
+			EventLog.WriteEntry("OpenDentHL7.Main", DateTime.Now.ToLongTimeString() + " - Service main method starting...");
+
+			var serviceHL7 = new ServiceHL7();
+			serviceHL7.ServiceName = "OpenDentalHL7";
+
+			// Get all installed services.
+			var serviceControllers = new List<ServiceController>();
+			foreach (var serviceController in ServiceController.GetServices())
+			{
+				if (serviceController.ServiceName.StartsWith("OpenDent"))
+				{
+					serviceControllers.Add(serviceController);
 				}
 			}
-			string pathToODHL7exe;
-			//Get the service that is installed from the same directory as the current directory
-			for(int i=0;i<serviceControllersOD.Count;i++) {
-				RegistryKey hklm=Registry.LocalMachine;
-				hklm=hklm.OpenSubKey(@"System\CurrentControlSet\Services\"+serviceControllersOD[i].ServiceName);
-				pathToODHL7exe=hklm.GetValue("ImagePath").ToString();
-				pathToODHL7exe=pathToODHL7exe.Replace("\"","");
-				pathToODHL7exe=Path.GetDirectoryName(pathToODHL7exe);
-				if(pathToODHL7exe==executingDir) {
-					//Set the name of the service to run as the name of the service installed from this directory
-					serviceHL7.ServiceName=serviceControllersOD[i].ServiceName;
+
+			string executingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+			// Get the service that is installed from the same directory as the current directory.
+			for (int i = 0; i < serviceControllers.Count; i++)
+			{
+				var serviceRegKey = Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Services\" + serviceControllers[i].ServiceName);
+
+				var serviceDirectory = Path.GetDirectoryName(
+					serviceRegKey.GetValue("ImagePath").ToString().Replace("\"", ""));
+
+				if (serviceDirectory == executingDirectory)
+				{
+					serviceHL7.ServiceName = serviceControllers[i].ServiceName;
 					break;
 				}
 			}
+
 			ServiceBase.Run(serviceHL7);
-			EventLog.WriteEntry("OpenDentHL7.Main",DateTime.Now.ToLongTimeString() +" - Service main method exiting...");
+
+			EventLog.WriteEntry("OpenDentHL7.Main", DateTime.Now.ToLongTimeString() + " - Service main method exiting...");
 #endif
 		}
 	}

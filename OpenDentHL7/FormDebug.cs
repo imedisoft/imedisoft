@@ -1,33 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
-namespace OpenDentHL7 {
-	//WARNING!!  When run in debug from VS, must be run as admin.
+namespace OpenDentHL7
+{
+    public partial class FormDebug : Form
+	{
+        private readonly string serviceName;
 
-	public partial class FormDebug:Form {
-		string ServiceName;//just for debug
+		public FormDebug(string serviceName)
+		{
+			this.serviceName = serviceName;
 
-		public FormDebug(string serviceName) {
-			ServiceName=serviceName;
 			InitializeComponent();
 		}
 
-		private void FormDebug_Load(object sender,EventArgs e) {
-			ServiceHL7 service=new ServiceHL7();
-			service.ServiceName=ServiceName;
-			try {
+		private void FormDebug_Load(object sender, EventArgs e)
+		{
+			var service = new ServiceHL7();
+
+			try
+			{
+				service.ServiceName = serviceName;
 				service.StartManually();
 			}
-			catch(Exception ex) {
-				MessageBox.Show(ex.Message);
+			catch (Exception exception)
+			{
+				MessageBox.Show(this, 
+					exception.Message, "HL7", 
+					MessageBoxButtons.OK, 
+					MessageBoxIcon.Error);
 			}
 		}
-
-	
 	}
 }

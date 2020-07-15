@@ -5,7 +5,7 @@ using System.Data;
 
 namespace OpenDentalGraph.Cache
 {
-    public class DashboardCacheCompletedProc : DashboardCacheWithQuery<CompletedProc>
+	public class DashboardCacheCompletedProc : DashboardCacheWithQuery<CompletedProc>
 	{
 		protected override string GetCommand(DashboardFilter filter)
 		{
@@ -24,7 +24,7 @@ namespace OpenDentalGraph.Cache
 				"SELECT procedurelog.ProcDate,procedurelog.ProvNum,procedurelog.ClinicNum, " +
 				"SUM(procedurelog.ProcFee*(procedurelog.UnitQty+procedurelog.BaseUnits)) AS GrossProd, " +
 				"COUNT(procedurelog.ProcNum) AS ProcCount " +
-				"FROM procedurelog " + where + 
+				"FROM procedurelog " + where +
 				"GROUP BY procedurelog.ProcDate,procedurelog.ProvNum,procedurelog.ClinicNum ";
 		}
 
@@ -41,5 +41,7 @@ namespace OpenDentalGraph.Cache
 		}
 	}
 
-	public class CompletedProc : GraphQuantityOverTime.GraphDataPointClinic { }
+	public class CompletedProc : GraphQuantityOverTime.GraphDataPointClinic
+	{
+	}
 }
