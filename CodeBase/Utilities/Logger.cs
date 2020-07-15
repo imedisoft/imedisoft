@@ -88,7 +88,8 @@ namespace CodeBase
 
 			lock (logSyncLock)
 			{
-				using (var streamWriter = new StreamWriter(path))
+				using (var stream = File.Open(path, FileMode.Append, FileAccess.Write, FileShare.Read))
+				using (var streamWriter = new StreamWriter(stream))
 				{
 					streamWriter.Write(
 						$"[{DateTime.Now.ToString(DateTimeFormat)}]" +
