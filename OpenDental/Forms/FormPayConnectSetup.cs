@@ -1,20 +1,20 @@
+using CodeBase;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
-using CodeBase;
-using Ionic.Zip;
-using OpenDentBusiness;
-using OpenDental.Bridges;
 
-namespace OpenDental{
-	/// <summary>
-	/// Summary description for FormBasicTemplate.
-	/// </summary>
-	public class FormPayConnectSetup : ODForm {
+namespace OpenDental
+{
+    /// <summary>
+    /// Summary description for FormBasicTemplate.
+    /// </summary>
+    public class FormPayConnectSetup : ODForm {
 		private OpenDental.UI.Button butCancel;
 		private OpenDental.UI.Button butOK;
 		private LinkLabel linkLabel1;
@@ -641,17 +641,24 @@ namespace OpenDental{
 				MessageBox.Show(Lan.G(this,"Unable to download driver. Error message")+": "+ex.Message);
 				return;
 			}
+
 			MemoryStream ms=new MemoryStream();
 			string setupFileName="";
-			using(ZipFile unzipped=ZipFile.Read(zipFileName)) {
-				for(int unzipIndex=0;unzipIndex<unzipped.Count;unzipIndex++) {//Unzip/write all files to the temp directory
-					ZipEntry ze=unzipped[unzipIndex];
-					if(ze.FileName.ToLower()=="setup.exe") {
-						setupFileName=ze.FileName;
-					}
-					ze.Extract(PrefC.GetTempFolderPath(),ExtractExistingFileAction.OverwriteSilently);
-				}
-			}
+
+			var path = Path.GetTempPath();
+			using (var archive = ZipFile.OpenRead(zipFileName))
+            {
+				foreach (var entry in archive.Entries)
+                {
+					if (entry.Name.ToLower() == "setup.exe")
+                    {
+						setupFileName = entry.Name;
+                    }
+
+					entry.ExtractToFile(Path.Combine(path, entry.FullName), true);
+                }
+            }
+
 			Cursor=Cursors.Default;
 			if(setupFileName=="") {
 				MessageBox.Show("Unable to install driver. Setup.exe file not found.");

@@ -1,21 +1,12 @@
+using OpenDental.UI;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using OpenDentBusiness;
-using OpenDental.Forms;
-using System.Xml;
-using System.Threading;
-using System.Net;
-using System.IO;
-using Ionic.Zip;
-using OpenDental.UI;
 
-namespace OpenDental {
-	public partial class FormCDSSetup:ODForm {
+namespace OpenDental
+{
+    public partial class FormCDSSetup:ODForm {
 		private List<CDSPermission> _listCdsPermissions;
 		private List<CDSPermission> _listCdsPermissionsOld;
 

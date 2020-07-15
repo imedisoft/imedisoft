@@ -259,7 +259,6 @@
     <Compile Include="Utilities\ODMethodsT.cs" />
     <Compile Include="Utilities\ODprintout.cs" />
     <Compile Include="Utilities\ODTuple.cs" />
-    <Compile Include="Utilities\ServicesHelper.cs" />
     <Compile Include="Utilities\WindowsApiWrapper.cs" />
     <Compile Include="Utilities\ODPrimitiveExtensions.cs" />
     <Compile Include="Utilities\MiscUtils.cs" />
@@ -319,9 +318,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

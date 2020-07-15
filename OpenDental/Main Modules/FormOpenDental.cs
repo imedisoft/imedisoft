@@ -565,7 +565,7 @@ namespace OpenDental
 			}
 			//Spawn a thread so that attempting to start services on this computer does not hinder the loading time of Open Dental.
 			//This is placed before login on pupose so it will run even when the user does not login properly.
-			BeginODServiceStarterThread();
+
 			formSplash.Close();
 			LogOnOpenDentalUser(odUser, odPassword);
 			//At this point a user has successfully logged in.  Flag the userod cache as safe to cache data.

@@ -697,7 +697,6 @@ namespace OpenDental{
 			if(letterCur.ImageFolder==0) {//This shouldn't happen
 				return new Document();
 			}
-			string rawBase64="";
 			Document docSave=new Document();
 			docSave.DocNum=Documents.Insert(docSave);
 			docSave.ImgType=ImageType.Document;

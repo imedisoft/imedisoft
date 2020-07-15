@@ -596,26 +596,6 @@ namespace OpenDental {
 		#endregion
 		#region ODServiceStarterThread
 
-		///<summary>Spawns a thread that attempts to start all Open Dental services.</summary>
-		private void BeginODServiceStarterThread() {
-			if(IsThreadAlreadyRunning(FormODThreadNames.ODServiceStarter)) {
-				return;
-			}
-			ODThread odThread=new ODThread((o) => {
-				if(PrefC.GetString(PrefName.WebServiceServerName)!="" && ODEnvironment.IdIsThisComputer(PrefC.GetString(PrefName.WebServiceServerName))) {
-					//An InvalidOperationException can get thrown if services could not start.  E.g. current user is not running Open Dental as an 
-					//administrator.	We do not want to halt the startup sequence here.  If we want to notify customers of a downed service, there needs to 
-					//be an additional monitoring service installed.
-					ServicesHelper.StartServices(ServicesHelper.GetAllOpenDentServices());
-				}
-			});
-			//If the thread that attempts to start all Open Dental services fails for any reason, silently fail.
-			odThread.AddExceptionHandler(ex => { });
-			odThread.GroupName=FormODThreadNames.ODServiceStarter.GetDescription();
-			odThread.Name=FormODThreadNames.ODServiceStarter.GetDescription();
-			odThread.Start(true);
-		}
-
 		///<summary>Spawns a thread that attempts to start the Patient Dashboard.</summary>
 		private void BeginODDashboardStarterThread() {
 			if(IsThreadAlreadyRunning(FormODThreadNames.Dashboard)) {

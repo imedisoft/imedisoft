@@ -1,83 +1,77 @@
+using OpenDentBusiness;
 using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using OpenDentBusiness;
-using CodeBase;
-using Ionic.Zip;
-using System.Xml;
-using System.Text;
 
-namespace OpenDental{
-	/// <summary></summary>
-	public class FormUpdateSetup : ODForm {
-		private OpenDental.UI.Button butCancel;
-		private OpenDental.UI.Button butOK;
-		private TextBox textWebsitePath;
-		private Label label3;
-		private TextBox textRegKey;
-		private Label label2;
-		private Label label4;
-		private TextBox textUpdateServerAddress;
-		private Label label1;
-		private TextBox textMultiple;
-		private Label label5;
-		private Label label6;
-		private GroupBox groupBox1;
-		private TextBox textWebProxyPassword;
-		private Label label9;
-		private TextBox textWebProxyUserName;
-		private Label label8;
-		private TextBox textWebProxyAddress;
-		private Label label7;
-		private OpenDental.UI.Button butChangeRegKey;
-		private CheckBox checkShowMsi;
-		private Label label10;
-		private UI.Button butChangeTime;
-		private TextBox textUpdateTime;
-		private Label label12;
-		private DateTime _updateTime;
+namespace OpenDental
+{
+    /// <summary></summary>
+    public class FormUpdateSetup : ODForm
+    {
+        private OpenDental.UI.Button butCancel;
+        private OpenDental.UI.Button butOK;
+        private TextBox textWebsitePath;
+        private Label label3;
+        private TextBox textRegKey;
+        private Label label2;
+        private Label label4;
+        private TextBox textUpdateServerAddress;
+        private Label label1;
+        private TextBox textMultiple;
+        private Label label5;
+        private Label label6;
+        private GroupBox groupBox1;
+        private TextBox textWebProxyPassword;
+        private Label label9;
+        private TextBox textWebProxyUserName;
+        private Label label8;
+        private TextBox textWebProxyAddress;
+        private Label label7;
+        private OpenDental.UI.Button butChangeRegKey;
+        private CheckBox checkShowMsi;
+        private Label label10;
+        private UI.Button butChangeTime;
+        private TextBox textUpdateTime;
+        private Label label12;
+        private DateTime _updateTime;
 
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.Container components = null;
 
-		///<summary></summary>
-		public FormUpdateSetup()
-		{
-			//
-			// Required for Windows Form Designer support
-			//
-			InitializeComponent();
-			Lan.F(this);
-		}
+        ///<summary></summary>
+        public FormUpdateSetup()
+        {
+            //
+            // Required for Windows Form Designer support
+            //
+            InitializeComponent();
+            Lan.F(this);
+        }
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
-			if( disposing )
-			{
-				if(components != null)
-				{
-					components.Dispose();
-				}
-			}
-			base.Dispose( disposing );
-		}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+        #region Windows Form Designer generated code
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormUpdateSetup));
             this.textWebsitePath = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -368,110 +362,102 @@ namespace OpenDental{
             this.ResumeLayout(false);
             this.PerformLayout();
 
-		}
-		#endregion
+        }
+        #endregion
 
-		private void FormUpdateSetup_Load(object sender,EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.SecurityAdmin,true)) {
-				butChangeRegKey.Enabled=false;
-				butOK.Enabled=false;
-			}
-			textUpdateServerAddress.Text=PrefC.GetString(PrefName.UpdateServerAddress);
-			textWebsitePath.Text=PrefC.GetString(PrefName.UpdateWebsitePath);
-			textWebProxyAddress.Text=PrefC.GetString(PrefName.UpdateWebProxyAddress);
-			textWebProxyUserName.Text=PrefC.GetString(PrefName.UpdateWebProxyUserName);
-			textWebProxyPassword.Text=PrefC.GetString(PrefName.UpdateWebProxyPassword);
-			textMultiple.Text=PrefC.GetString(PrefName.UpdateMultipleDatabases);
-			checkShowMsi.Checked=PrefC.GetBool(PrefName.UpdateShowMsiButtons);
-			_updateTime=PrefC.GetDateT(PrefName.UpdateDateTime);
-			textUpdateTime.Text=_updateTime.ToString();
-		}
+        private void FormUpdateSetup_Load(object sender, EventArgs e)
+        {
+            if (!Security.IsAuthorized(Permissions.SecurityAdmin, true))
+            {
+                butChangeRegKey.Enabled = false;
+                butOK.Enabled = false;
+            }
+            textUpdateServerAddress.Text = PrefC.GetString(PrefName.UpdateServerAddress);
+            textWebsitePath.Text = PrefC.GetString(PrefName.UpdateWebsitePath);
+            textWebProxyAddress.Text = PrefC.GetString(PrefName.UpdateWebProxyAddress);
+            textWebProxyUserName.Text = PrefC.GetString(PrefName.UpdateWebProxyUserName);
+            textWebProxyPassword.Text = PrefC.GetString(PrefName.UpdateWebProxyPassword);
+            textMultiple.Text = PrefC.GetString(PrefName.UpdateMultipleDatabases);
+            checkShowMsi.Checked = PrefC.GetBool(PrefName.UpdateShowMsiButtons);
+            _updateTime = PrefC.GetDateT(PrefName.UpdateDateTime);
+            textUpdateTime.Text = _updateTime.ToString();
+        }
 
-		private void butChangeTime_Click(object sender,EventArgs e) {
-			FormTimePick FormTP=new FormTimePick(true);
-			if(_updateTime!=DateTime.MinValue) {
-				FormTP.SelectedDTime=_updateTime;
-			}
-			FormTP.ShowDialog();
-			if(FormTP.DialogResult==DialogResult.OK) {
-				_updateTime=FormTP.SelectedDTime;
-				textUpdateTime.Text=_updateTime.ToString();
-				if(Prefs.UpdateDateT(PrefName.UpdateDateTime,_updateTime)) {
-					//Updating to db now in case the user does not have enough permission to click the OK button on this form.			
-					Cursor=Cursors.WaitCursor;
-					DataValid.SetInvalid(InvalidType.Prefs);
-					Cursor=Cursors.Default;
-				}
-			}
-		}
+        private void butChangeTime_Click(object sender, EventArgs e)
+        {
+            FormTimePick FormTP = new FormTimePick(true);
+            if (_updateTime != DateTime.MinValue)
+            {
+                FormTP.SelectedDTime = _updateTime;
+            }
+            FormTP.ShowDialog();
+            if (FormTP.DialogResult == DialogResult.OK)
+            {
+                _updateTime = FormTP.SelectedDTime;
+                textUpdateTime.Text = _updateTime.ToString();
+                if (Prefs.UpdateDateT(PrefName.UpdateDateTime, _updateTime))
+                {
+                    //Updating to db now in case the user does not have enough permission to click the OK button on this form.			
+                    Cursor = Cursors.WaitCursor;
+                    DataValid.SetInvalid(InvalidType.Prefs);
+                    Cursor = Cursors.Default;
+                }
+            }
+        }
 
-		private void butOK_Click(object sender, System.EventArgs e) {
-			if(textRegKey.Text!="" 
-				&& !Regex.IsMatch(textRegKey.Text,@"^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$")
-				&& !Regex.IsMatch(textRegKey.Text,@"^[A-Z0-9]{16}$"))
-			{
-				MessageBox.Show("Invalid registration key format.");
-				return;
-			}
-			if(textMultiple.Text.Contains(" ")) {
-				MessageBox.Show("No spaces allowed in the database list.");
-				return;
-			}
-			string regkey="";
-			if(Regex.IsMatch(textRegKey.Text,@"^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$")){
-				regkey=textRegKey.Text.Substring(0,4)+textRegKey.Text.Substring(5,4)
-					+textRegKey.Text.Substring(10,4)+textRegKey.Text.Substring(15,4);
-			}
-			else if(Regex.IsMatch(textRegKey.Text,@"^[A-Z0-9]{16}$")){
-				regkey=textRegKey.Text;
-			}
-			bool refreshCache=false;
-			if(Prefs.UpdateString(PrefName.UpdateServerAddress,textUpdateServerAddress.Text)
-				| Prefs.UpdateBool(PrefName.UpdateShowMsiButtons,checkShowMsi.Checked)
-				| Prefs.UpdateString(PrefName.UpdateWebsitePath,textWebsitePath.Text)
-				| Prefs.UpdateString(PrefName.UpdateWebProxyAddress,textWebProxyAddress.Text)
-				| Prefs.UpdateString(PrefName.UpdateWebProxyUserName,textWebProxyUserName.Text)
-				| Prefs.UpdateString(PrefName.UpdateWebProxyPassword,textWebProxyPassword.Text)
-				| Prefs.UpdateString(PrefName.UpdateMultipleDatabases,textMultiple.Text)) 
-			{
-				refreshCache=true;
-			}
-			if(refreshCache) {
-				Cursor=Cursors.WaitCursor;
-				DataValid.SetInvalid(InvalidType.Prefs);
-				Cursor=Cursors.Default;
-			}
-			DialogResult=DialogResult.OK;
-		}
+        private void butOK_Click(object sender, System.EventArgs e)
+        {
+            if (textRegKey.Text != ""
+                && !Regex.IsMatch(textRegKey.Text, @"^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$")
+                && !Regex.IsMatch(textRegKey.Text, @"^[A-Z0-9]{16}$"))
+            {
+                MessageBox.Show("Invalid registration key format.");
+                return;
+            }
+            if (textMultiple.Text.Contains(" "))
+            {
+                MessageBox.Show("No spaces allowed in the database list.");
+                return;
+            }
+            string regkey = "";
+            if (Regex.IsMatch(textRegKey.Text, @"^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$"))
+            {
+                regkey = textRegKey.Text.Substring(0, 4) + textRegKey.Text.Substring(5, 4)
+                    + textRegKey.Text.Substring(10, 4) + textRegKey.Text.Substring(15, 4);
+            }
+            else if (Regex.IsMatch(textRegKey.Text, @"^[A-Z0-9]{16}$"))
+            {
+                regkey = textRegKey.Text;
+            }
+            bool refreshCache = false;
+            if (Prefs.UpdateString(PrefName.UpdateServerAddress, textUpdateServerAddress.Text)
+                | Prefs.UpdateBool(PrefName.UpdateShowMsiButtons, checkShowMsi.Checked)
+                | Prefs.UpdateString(PrefName.UpdateWebsitePath, textWebsitePath.Text)
+                | Prefs.UpdateString(PrefName.UpdateWebProxyAddress, textWebProxyAddress.Text)
+                | Prefs.UpdateString(PrefName.UpdateWebProxyUserName, textWebProxyUserName.Text)
+                | Prefs.UpdateString(PrefName.UpdateWebProxyPassword, textWebProxyPassword.Text)
+                | Prefs.UpdateString(PrefName.UpdateMultipleDatabases, textMultiple.Text))
+            {
+                refreshCache = true;
+            }
+            if (refreshCache)
+            {
+                Cursor = Cursors.WaitCursor;
+                DataValid.SetInvalid(InvalidType.Prefs);
+                Cursor = Cursors.Default;
+            }
+            DialogResult = DialogResult.OK;
+        }
 
-		private void butCancel_Click(object sender, System.EventArgs e) {
-			DialogResult=DialogResult.Cancel;
-		}
+        private void butCancel_Click(object sender, System.EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
 
-		private void FormUpdateSetup_FormClosing(object sender,FormClosingEventArgs e) {
-			Permissions perm=(DialogResult==DialogResult.OK ? Permissions.SecurityAdmin : Permissions.Setup);
-			SecurityLogs.MakeLogEntry(perm,0,"Update Setup window accesssed.");
-		}
-	}
+        private void FormUpdateSetup_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Permissions perm = (DialogResult == DialogResult.OK ? Permissions.SecurityAdmin : Permissions.Setup);
+            SecurityLogs.MakeLogEntry(perm, 0, "Update Setup window accesssed.");
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

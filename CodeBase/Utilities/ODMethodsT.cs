@@ -1,17 +1,10 @@
 ﻿namespace CodeBase
 {
-    public class ODMethodsT
+	public class ODMethodsT
 	{
 		/// <summary>
 		/// Returns a new instance of T if input is null.
 		/// </summary>
-		public static T Coalesce<T>(T input) where T : new()
-		{
-			if (input != null)
-			{
-				return input;
-			}
-			return new T();
-		}
+		public static T Coalesce<T>(T input) where T : new() => input ?? new T();
 	}
 }

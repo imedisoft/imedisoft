@@ -1,18 +1,19 @@
-using Ionic.Zip;
+using CodeBase;
+using OpenDentBusiness;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using OpenDentBusiness;
-using System.Collections.Generic;
-using CodeBase;
 
-namespace OpenDental {
-	public partial class FormEhrSetup:ODForm {
+namespace OpenDental
+{
+    public partial class FormEhrSetup:ODForm {
 		public FormEhrSetup() {
 			InitializeComponent();
 			Lan.F(this);
@@ -156,11 +157,17 @@ namespace OpenDental {
 			Thread.Sleep(100);//allow file to be released for use by the unzipper.
 			//Unzip the compressed file-----------------------------------------------------------------------------------------------------
 			MemoryStream ms=new MemoryStream();
-			using(ZipFile unzipped=ZipFile.Read(zipFileDestination)) {
-				ZipEntry ze=unzipped[0];
-				ze.Extract(PrefC.GetTempFolderPath(),ExtractExistingFileAction.OverwriteSilently);
-				return ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),unzipped[0].FileName);
-			}
+
+			var path = Path.GetTempPath();
+			using (var archive = ZipFile.OpenRead(zipFileDestination))
+            {
+				var entry = archive.Entries[0];
+				path = Path.Combine(path, entry.Name);
+
+				entry.ExtractToFile(path, true);
+
+				return path;
+            }
 		}
 
 		///<summary>This is the function that the worker thread uses to actually perform the download.  Can also call this method in the ordinary way if the file to be transferred is short.</summary>

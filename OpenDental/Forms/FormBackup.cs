@@ -495,12 +495,12 @@ namespace OpenDental {
 			}
 			Cursor=Cursors.WaitCursor;
 			//stop the service--------------------------------------------------------------------------------------
-			ServiceController sc=new ServiceController("MySQL");
-			if(!ServicesHelper.Stop(sc)) {
-				MessageBox.Show("Unable to stop MySQL service.");
-				Cursor=Cursors.Default;
-				return;
-			}
+			//ServiceController sc=new ServiceController("MySQL");
+			//if(!ServicesHelper.Stop(sc)) {
+			//	MessageBox.Show("Unable to stop MySQL service.");
+			//	Cursor=Cursors.Default;
+			//	return;
+			//}
 			//rename the current database---------------------------------------------------------------------------
 			//Get a name for the new directory
 			string newDb=dbName+"backup_"+DateTime.Today.ToString("MM_dd_yyyy");
@@ -525,8 +525,7 @@ namespace OpenDental {
 			for(int i=0;i<files.Length;i++){
 				File.Copy(files[i].FullName,ODFileUtils.CombinePaths(new string[] {toPath,dirInfo.Name,files[i].Name}));
 			}
-			//start the service--------------------------------------------------------------------------------------
-			ServicesHelper.Start(sc);
+
 			Cursor=Cursors.Default;
 			//restore A-Z folder, and give user a chance to cancel it.
 			if(ShouldUseAtoZFolder()) {

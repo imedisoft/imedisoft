@@ -1,19 +1,20 @@
-﻿using System;
+﻿using CodeBase;
+using OpenDental.UI;
+using OpenDentBusiness;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using CodeBase;
-using Ionic.Zip;
-using OpenDental.UI;
-using OpenDentBusiness;
 
-namespace OpenDental {
-	public partial class FormCodeSystemsImport:ODForm {
+namespace OpenDental
+{
+    public partial class FormCodeSystemsImport:ODForm {
 		///<summary>All code systems available.</summary>
 		private List<CodeSystem> _listCodeSystems;
 		///<summary>If true then SNOMED CT codes will show in the list of available code systems for download.</summary>
@@ -179,17 +180,24 @@ namespace OpenDental {
 						bool foundFile=false;
 						string meduFileName="MEDU.txt";//MEDU stands for MEDium desciption Upper case.
 						MemoryStream ms=new MemoryStream();
-						using(ZipFile unzipped=ZipFile.Read(fdlg.FileName)) {
-							for(int unzipIndex=0;unzipIndex<unzipped.Count;unzipIndex++) {//unzip/write all files to the temp directory
-								ZipEntry ze=unzipped[unzipIndex];
-								if(!ze.FileName.ToLower().Contains("medu.txt")) {  //This file used to be called "medu.txt.txt" and is now called "medu.txt".  Uses .Contains() to catch both cases.
+
+						using (var archive = ZipFile.OpenRead(fdlg.FileName))
+                        {
+							foreach (var entry in archive.Entries)
+                            {
+								if (entry.Name.ToLower() != "medu.txt")
+                                {
 									continue;
-								}
-								meduFileName=ze.FileName;
-								ze.Extract(PrefC.GetTempFolderPath(),ExtractExistingFileAction.OverwriteSilently);
-								foundFile=true;
-							}
-						}
+                                }
+
+								meduFileName = entry.Name;
+
+								entry.ExtractToFile(Path.Combine(Path.GetTempPath(), entry.Name), true);
+
+								foundFile = true;
+                            }
+                        }
+
 						if(!foundFile) {
 							_mapCodeSystemStatus[codeSystem.CodeSystemName]=Lan.G("CodeSystemImporter","MEDU.txt file not found in zip archive.");  //Used to be MEDU.txt.txt, For error purposes we'll just show .txt
 							continue;
@@ -829,23 +837,32 @@ If the master term dictionary or software program containing the UCUM table, UCU
 			}
 
 			///<summary>Returns temp file name used to download file.  Can throw exception.</summary>
-			private string DownloadFileHelper(string codeSystemURL) {
-				string zipFileDestination=PrefC.GetRandomTempFile(".tmp");
+			private string DownloadFileHelper(string codeSystemURL)
+			{
+				string zipFileDestination = PrefC.GetRandomTempFile(".tmp");
+
 				//Cleanup existing.
 				File.Delete(zipFileDestination);
-				try {
+				try
+				{
 					//Perform the download
-					DownloadFileWorker(codeSystemURL,zipFileDestination);
+					DownloadFileWorker(codeSystemURL, zipFileDestination);
 					Thread.Sleep(100);//allow file to be released for use by the unzipper.
-					//Unzip the compressed file-----------------------------------------------------------------------------------------------------
-					using(MemoryStream ms=new MemoryStream())
-					using(ZipFile unzipped=ZipFile.Read(zipFileDestination)) {
-						ZipEntry ze=unzipped[0];
-						ze.Extract(PrefC.GetTempFolderPath(),ExtractExistingFileAction.OverwriteSilently);
-						return ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),unzipped[0].FileName);
+									  //Unzip the compressed file-----------------------------------------------------------------------------------------------------
+					var path = Path.GetTempPath();
+					using (var archive = ZipFile.OpenRead(zipFileDestination))
+					{
+						var entry = archive.Entries[0];
+
+						path = Path.Combine(path, entry.Name);
+
+						entry.ExtractToFile(path, true);
+
+						return path;
 					}
 				}
-				finally{
+				finally
+				{
 					//We are done with the zip file.
 					File.Delete(zipFileDestination);
 				}

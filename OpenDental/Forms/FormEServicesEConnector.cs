@@ -48,18 +48,18 @@ namespace OpenDental {
 			//Check to see if the eConnector service is already installed.  If it is, disable the install button.
 			//Users who want to install multiple on one computer can use the Service Manager instead.
 			//Do nothing on error.  The Install button will simply be visible.
-			ODException.SwallowAnyException(() => {
-				if(ServicesHelper.GetServicesByExe("OpenDentalEConnector.exe").Count>0) {
-					butInstallEConnector.Enabled=false;
-				}
-			});
-			FillTextListenerServiceStatus();
-			FillGridListenerService();
-			//Default to not checked if it is unknown.
-			checkEmailsWithDiffProcess.Checked=((YN)PrefC.GetInt(PrefName.SendEmailsInDiffProcess)==YN.Yes);
-			//Disable certain buttons but let them continue to view.
-			bool allowEdit=Security.IsAuthorized(Permissions.EServicesSetup,true);
-			AuthorizeEConnector(allowEdit);
+			//ODException.SwallowAnyException(() => {
+			//	if(ServicesHelper.GetServicesByExe("OpenDentalEConnector.exe").Count>0) {
+			//		butInstallEConnector.Enabled=false;
+			//	}
+			//});
+			//FillTextListenerServiceStatus();
+			//FillGridListenerService();
+			////Default to not checked if it is unknown.
+			//checkEmailsWithDiffProcess.Checked=((YN)PrefC.GetInt(PrefName.SendEmailsInDiffProcess)==YN.Yes);
+			////Disable certain buttons but let them continue to view.
+			//bool allowEdit=Security.IsAuthorized(Permissions.EServicesSetup,true);
+			//AuthorizeEConnector(allowEdit);
 		}
 
 		private void AuthorizeEConnector(bool allowEdit) {
@@ -91,45 +91,45 @@ namespace OpenDental {
 			DialogResult result;
 			//Check to see if the update server preference is set.
 			//If set, make sure that this is set to the computer currently logged on.
-			string updateServerName=PrefC.GetString(PrefName.WebServiceServerName);
-			if(!string.IsNullOrEmpty(updateServerName)&&!ODEnvironment.IdIsThisComputer(updateServerName.ToLower())) {
-				result=MessageBox.Show(Lan.G(this,"The eConnector service should be installed on the Update Server")+": "+updateServerName+"\r\n"
-					+Lan.G(this,"Are you trying to install the eConnector on a different computer by accident?"),"",MessageBoxButtons.YesNoCancel);
-				//Only saying No to this message box pop up will allow the user to continue (meaning they fully understand what they are getting into).
-				if(result!=DialogResult.No) {
-					return;
-				}
-			}
-			//Only ask the user if they want to set the Update Server Name preference if it is not already set.
-			if(string.IsNullOrEmpty(updateServerName)) {
-				result=MessageBox.Show(Lan.G(this,"The computer that has the eConnector service installed should be set as the Update Server.")+"\r\n"
-					+Lan.G(this,"Would you like to make this computer the Update Server?"),"",MessageBoxButtons.YesNoCancel);
-				if(result==DialogResult.Cancel) {
-					return;
-				}
-				else if(result==DialogResult.Yes) {
-					Prefs.UpdateString(PrefName.WebServiceServerName,Dns.GetHostName());
-				}
-				try {
-					WebServiceMainHQProxy.SetEConnectorOn();
-				}
-				catch {
-					MessageBox.Show("The eConnector was disabled.  Please contact support.");
-					return;
-				}
-			}
-			//At this point the user wants to install the eConnector service (or upgrade the old cust listener to the eConnector).
-			bool isListening;
-			if(!PrefL.UpgradeOrInstallEConnector(false,out isListening)) {
-				//Warning messages would have already been shown to the user, simply return.
-				return;
-			}
-			//The eConnector service was successfully installed and is running, set the EConnectorEnabled flag true if false.
-			Prefs.UpdateBool(PrefName.EConnectorEnabled,true);
-			MessageBox.Show("eConnector successfully installed");
-			butInstallEConnector.Enabled=false;
-			FillTextListenerServiceStatus();
-			FillGridListenerService();
+			//string updateServerName=PrefC.GetString(PrefName.WebServiceServerName);
+			//if(!string.IsNullOrEmpty(updateServerName)&&!ODEnvironment.IdIsThisComputer(updateServerName.ToLower())) {
+			//	result=MessageBox.Show(Lan.G(this,"The eConnector service should be installed on the Update Server")+": "+updateServerName+"\r\n"
+			//		+Lan.G(this,"Are you trying to install the eConnector on a different computer by accident?"),"",MessageBoxButtons.YesNoCancel);
+			//	//Only saying No to this message box pop up will allow the user to continue (meaning they fully understand what they are getting into).
+			//	if(result!=DialogResult.No) {
+			//		return;
+			//	}
+			//}
+			////Only ask the user if they want to set the Update Server Name preference if it is not already set.
+			//if(string.IsNullOrEmpty(updateServerName)) {
+			//	result=MessageBox.Show(Lan.G(this,"The computer that has the eConnector service installed should be set as the Update Server.")+"\r\n"
+			//		+Lan.G(this,"Would you like to make this computer the Update Server?"),"",MessageBoxButtons.YesNoCancel);
+			//	if(result==DialogResult.Cancel) {
+			//		return;
+			//	}
+			//	else if(result==DialogResult.Yes) {
+			//		Prefs.UpdateString(PrefName.WebServiceServerName,Dns.GetHostName());
+			//	}
+			//	try {
+			//		WebServiceMainHQProxy.SetEConnectorOn();
+			//	}
+			//	catch {
+			//		MessageBox.Show("The eConnector was disabled.  Please contact support.");
+			//		return;
+			//	}
+			//}
+			////At this point the user wants to install the eConnector service (or upgrade the old cust listener to the eConnector).
+			//bool isListening;
+			//if(!PrefL.UpgradeOrInstallEConnector(false,out isListening)) {
+			//	//Warning messages would have already been shown to the user, simply return.
+			//	return;
+			//}
+			////The eConnector service was successfully installed and is running, set the EConnectorEnabled flag true if false.
+			//Prefs.UpdateBool(PrefName.EConnectorEnabled,true);
+			//MessageBox.Show("eConnector successfully installed");
+			//butInstallEConnector.Enabled=false;
+			//FillTextListenerServiceStatus();
+			//FillGridListenerService();
 		}
 
 		private void FillGridListenerService() {
@@ -160,41 +160,41 @@ namespace OpenDental {
 		}
 
 		private void butStartListenerService_Click(object sender,EventArgs e) {
-			//No setup permission check here so that anyone can hopefully get the service back up and running.
-			//Check to see if the service started up on its own while we were in this window.
-			if(FillTextListenerServiceStatus()==eServiceSignalSeverity.Working) {
-				//Use a slightly different message than below so that we can easily tell which part of this method customers reached.
-				MessageBox.Show("Listener Service already started.  Please call us for support if eServices are still not working.");
-				return;
-			}
-			//Check to see if the listener service is installed on this computer.
-			List<ServiceController> listEConnectorServices;
-			try {
-				listEConnectorServices=ServicesHelper.GetServicesByRegistryImagePath("OpenDentalEConnector.exe");
-			}
-			catch(Exception ex) {
-				string error=Lan.G(this,"There was an problem starting eConnector Services.  Try running eConnector in administrator "
-					+"mode or manually start the services.");
-				FriendlyException.Show(error,ex);
-				return;
-			}
-			if(listEConnectorServices.Count==0) {
-				MessageBox.Show("eConnector Service not found on this computer.  The service can only be started from the computer that is hosting eServices.");
-				return;
-			}
-			Cursor=Cursors.WaitCursor;
-			string serviceErrors=ServicesHelper.StartServices(listEConnectorServices);
-			Cursor=Cursors.Default;
-			if(!string.IsNullOrEmpty(serviceErrors)) {
-				string error=Lan.G(this,"There was a problem starting eConnector Services.  Please go manually start the following eConnector Services")
-					+":\r\n"+serviceErrors;
-				MessageBox.Show(error);
-			}
-			else {
-				MessageBox.Show("eConnector Services Started.");
-			}
-			FillTextListenerServiceStatus();
-			FillGridListenerService();
+			////No setup permission check here so that anyone can hopefully get the service back up and running.
+			////Check to see if the service started up on its own while we were in this window.
+			//if(FillTextListenerServiceStatus()==eServiceSignalSeverity.Working) {
+			//	//Use a slightly different message than below so that we can easily tell which part of this method customers reached.
+			//	MessageBox.Show("Listener Service already started.  Please call us for support if eServices are still not working.");
+			//	return;
+			//}
+			////Check to see if the listener service is installed on this computer.
+			//List<ServiceController> listEConnectorServices;
+			//try {
+			//	listEConnectorServices=ServicesHelper.GetServicesByRegistryImagePath("OpenDentalEConnector.exe");
+			//}
+			//catch(Exception ex) {
+			//	string error=Lan.G(this,"There was an problem starting eConnector Services.  Try running eConnector in administrator "
+			//		+"mode or manually start the services.");
+			//	FriendlyException.Show(error,ex);
+			//	return;
+			//}
+			//if(listEConnectorServices.Count==0) {
+			//	MessageBox.Show("eConnector Service not found on this computer.  The service can only be started from the computer that is hosting eServices.");
+			//	return;
+			//}
+			//Cursor=Cursors.WaitCursor;
+			//string serviceErrors=ServicesHelper.StartServices(listEConnectorServices);
+			//Cursor=Cursors.Default;
+			//if(!string.IsNullOrEmpty(serviceErrors)) {
+			//	string error=Lan.G(this,"There was a problem starting eConnector Services.  Please go manually start the following eConnector Services")
+			//		+":\r\n"+serviceErrors;
+			//	MessageBox.Show(error);
+			//}
+			//else {
+			//	MessageBox.Show("eConnector Services Started.");
+			//}
+			//FillTextListenerServiceStatus();
+			//FillGridListenerService();
 		}
 
 		private void butListenerServiceHistoryRefresh_Click(object sender,EventArgs e) {
