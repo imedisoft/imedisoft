@@ -123,10 +123,6 @@
       <Project>{29c41020-4411-41f2-9061-9b71b5b32b5d}</Project>
       <Name>xDataConnectionBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenDentalCloud\OpenDentalCloud.csproj">
-      <Project>{f90d0481-3d97-4c72-af6e-dd81177e3de1}</Project>
-      <Name>OpenDentalCloud</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenDentBusiness\OpenDentBusiness.csproj">
       <Project>{3D0FC76E-803C-4DE2-BDB1-47D63A4E2357}</Project>
       <Name>OpenDentBusiness</Name>

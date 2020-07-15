@@ -275,6 +275,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
     <Reference Include="RS232">
       <HintPath>..\Required dlls\RS232.dll</HintPath>
     </Reference>
@@ -484,6 +487,7 @@
     <Compile Include="Misc\FHIRUtils.cs" />
     <Compile Include="Misc\Introspection.cs" />
     <Compile Include="Misc\ReplaceTags.cs" />
+    <Compile Include="Misc\Sftp.cs" />
     <Compile Include="ODEvents\ODEvents.cs" />
     <Compile Include="ODEvents\MiddleTierConnectionEvent.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -1660,14 +1664,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-    <Compile Include="WebBridges\Dropbox.cs" />
     <Compile Include="WebBridges\Erx\DoseSpot.cs" />
     <Compile Include="WebBridges\Erx\Erx.cs" />
     <Compile Include="WebBridges\Erx\NewCrop\NewCrop.cs" />
     <Compile Include="WebBridges\PayConnect.cs" />
     <Compile Include="WebBridges\PaySimple.cs" />
     <Compile Include="WebBridges\Podium.cs" />
-    <Compile Include="WebBridges\Sftp.cs" />
     <Compile Include="WebServices\IOpenDentalServer.cs" />
     <Compile Include="WebServices\ISheetsSynch.cs" />
     <Compile Include="WebServices\IWebServiceMainHQ.cs" />
@@ -1936,10 +1938,6 @@
     <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">
       <Project>{063eccee-21c7-4300-b616-2f256ff12fce}</Project>
       <Name>Imedisoft.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenDentalCloud\OpenDentalCloud.csproj">
-      <Project>{f90d0481-3d97-4c72-af6e-dd81177e3de1}</Project>
-      <Name>OpenDentalCloud</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

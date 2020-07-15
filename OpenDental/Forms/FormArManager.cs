@@ -1,3 +1,6 @@
+using CodeBase;
+using OpenDental.UI;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -5,15 +8,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using CodeBase;
-using MySql.Data.MySqlClient;
-using OpenDental.UI;
-using OpenDentalCloud;
-using OpenDentalCloud.Core;
-using OpenDentBusiness;
 
-namespace OpenDental {
-	public partial class FormArManager:ODForm {
+namespace OpenDental
+{
+    public partial class FormArManager:ODForm {
 		private List<Provider> _listProviders;
 		private List<Clinic> _listClinics;
 		private List<Def> _listBillTypesNoColl;
@@ -1500,13 +1498,10 @@ namespace OpenDental {
 				string userPassword=listProps.Find(x => x.PropertyDesc=="SftpPassword")?.PropertyValue??"";
 				byte[] fileContents=Encoding.ASCII.GetBytes(TsiMsgConstructor.GetPlacementFileHeader()+"\r\n"+string.Join("\r\n",kvp.Value.Values));
 				try {
-					TaskStateUpload state=new Sftp.Upload(sftpAddress,userName,userPassword,sftpPort) {
-						Folder="/xfer/incoming",
-						FileName="TsiPlacements_"+DateTime.Now.ToString("yyyyMMddhhmmss")+".txt",
-						FileContent=fileContents,
-						HasExceptions=true
-					};
-					state.Execute(false);
+					Sftp.Upload(sftpAddress, userName, userPassword, sftpPort, 
+						"/xfer/incoming", 
+						"TsiPlacements_" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".txt", 
+						fileContents);
 				}
 				catch {
 					listFailedPatNums.AddRange(kvp.Value.Keys);
@@ -1552,13 +1547,10 @@ namespace OpenDental {
 				string userPassword=listProps.Find(x => x.PropertyDesc=="SftpPassword")?.PropertyValue??"";
 				byte[] fileContents=Encoding.ASCII.GetBytes(TsiMsgConstructor.GetUpdateFileHeader()+"\r\n"+string.Join("\r\n",kvp.Value.Values));
 				try {
-					TaskStateUpload state=new Sftp.Upload(sftpAddress,userName,userPassword,sftpPort) {
-						Folder="/xfer/incoming",
-						FileName="TsiUpdates_"+DateTime.Now.ToString("yyyyMMddhhmmss")+".txt",
-						FileContent=fileContents,
-						HasExceptions=true
-					};
-					state.Execute(false);
+					Sftp.Upload(sftpAddress, userName, userPassword, sftpPort,
+						"/xfer/incoming",
+						"TsiUpdates_" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".txt",
+						fileContents);
 				}
 				catch {
 					listFailedPatNums.AddRange(kvp.Value.Keys);
@@ -2051,13 +2043,10 @@ namespace OpenDental {
 				string userPassword=listProps.Find(x => x.PropertyDesc=="SftpPassword")?.PropertyValue??"";
 				byte[] fileContents=Encoding.ASCII.GetBytes(TsiMsgConstructor.GetUpdateFileHeader()+"\r\n"+string.Join("\r\n",kvp.Value.Values));
 				try {
-					TaskStateUpload state=new Sftp.Upload(sftpAddress,userName,userPassword,sftpPort) {
-						Folder="/xfer/incoming",
-						FileName="TsiUpdates_"+DateTime.Now.ToString("yyyyMMddhhmmss")+".txt",
-						FileContent=fileContents,
-						HasExceptions=true
-					};
-					state.Execute(false);
+					Sftp.Upload(sftpAddress, userName, userPassword, sftpPort,
+						"/xfer/incoming",
+						"TsiUpdates_" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".txt",
+						fileContents);
 				}
 				catch {
 					listFailedPatNums.AddRange(kvp.Value.Keys);

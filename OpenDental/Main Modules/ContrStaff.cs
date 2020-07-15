@@ -1,3 +1,6 @@
+using CodeBase;
+using OpenDental.UI;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -5,15 +8,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using CodeBase;
-using OpenDental.UI;
-using OpenDentalCloud;
-using OpenDentBusiness;
 
-namespace OpenDental{
+namespace OpenDental
+{
 
-	///<summary></summary>
-	public class ContrStaff : System.Windows.Forms.UserControl{
+    ///<summary></summary>
+    public class ContrStaff : System.Windows.Forms.UserControl{
 		private OpenDental.UI.Button butTimeCard;
 		private System.Windows.Forms.ListBox listStatus;
 		private System.Windows.Forms.Label textTime;
@@ -943,7 +943,7 @@ namespace OpenDental{
 				}
 				string userName=listPropsForClinic.Find(x => x.PropertyDesc=="SftpUsername")?.PropertyValue??"";
 				string userPassword=listPropsForClinic.Find(x => x.PropertyDesc=="SftpPassword")?.PropertyValue??"";
-				if(Sftp.IsConnectionValid(sftpAddress,userName,userPassword,sftpPort)) {
+				if(Sftp.TestConnection(sftpAddress,userName,userPassword,sftpPort)) {
 					return true;
 				}
 			}

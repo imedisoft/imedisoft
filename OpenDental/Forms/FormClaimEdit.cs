@@ -1,27 +1,21 @@
+using CodeBase;
+using OpenDental.UI;
+using OpenDentBusiness;
+using OpenDentBusiness.Eclaims;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Printing;
-using System.Drawing.Drawing2D;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using OpenDental.UI;
-using CodeBase;
-using OpenDentBusiness;
+using System.IO;
 using System.Linq;
-using OpenDentBusiness.Eclaims;
-using OpenDentalCloud.Core;
-using OpenDental.Thinfinity;
+using System.Windows.Forms;
 
-namespace OpenDental{
-	///<summary></summary>
-	public partial class FormClaimEdit : ODForm {
+namespace OpenDental
+{
+    ///<summary></summary>
+    public partial class FormClaimEdit : ODForm {
 		///<summary></summary>
 		public bool IsNew;
 		///<summary>Contains the claimprocs for the claim.</summary>

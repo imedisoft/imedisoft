@@ -9458,10 +9458,6 @@
       <Project>{84688345-BB6A-4F2F-8672-A82B52FD433B}</Project>
       <Name>xODR</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenDentalCloud\OpenDentalCloud.csproj">
-      <Project>{f90d0481-3d97-4c72-af6e-dd81177e3de1}</Project>
-      <Name>OpenDentalCloud</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenDentalGraph\OpenDentalGraph.csproj">
       <Project>{015e240b-23fb-4d91-b20c-ce221ddccb0f}</Project>
       <Name>OpenDentalGraph</Name>
