@@ -528,7 +528,6 @@
     <Compile Include="Misc\ReplaceTags.cs" />
     <Compile Include="Misc\Sftp.cs" />
     <Compile Include="ODEvents\ODEvents.cs" />
-    <Compile Include="ODEvents\MiddleTierConnectionEvent.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

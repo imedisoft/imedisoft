@@ -499,8 +499,6 @@ namespace OpenDental
 			DataConnection.ConnectionRetryTimeoutSeconds = (int)TimeSpan.FromHours(4).TotalSeconds;
 			DataConnectionEvent.Fired += DataConnection_ConnectionLost;//Hook up the connection lost event. Nothing prior to this point will have LostConnection events fired.
 
-			CrashedTableEvent.Fired += CrashedTable_Detected;
-			DataReaderNullEvent.Fired += DataReaderNull_Detected;
 			CredentialsFailedAfterLoginEvent.Fired += DataConnection_CredentialsFailedAfterLogin;
 			RefreshLocalData(InvalidType.Prefs);//should only refresh preferences so that SignalLastClearedDate preference can be used in ClearOldSignals()
 			Signalods.ClearOldSignals();
@@ -4126,21 +4124,6 @@ namespace OpenDental
 			BeginDataConnectionLostThread(e);
 		}
 
-		///<summary></summary>
-		private void CrashedTable_Detected(CrashedTableEventArgs e)
-		{
-			if (InvokeRequired)
-			{
-				this.BeginInvoke(() => CrashedTable_Detected(e));
-				return;
-			}
-			if (e == null || e.EventType != EventCategory.CrashedTable || !e.IsTableCrashed)
-			{
-				return;
-			}
-			BeginCrashedTableMonitorThread(e);
-		}
-
 		///<summary>This method stops all (local) timers and displays a bad credentials window that will let users attempt to login again.  This is to
 		///handle the situation where a user is logged into multiple computers via middle tier and changes their password on 1 connection.  The other
 		///connection(s) would attempt to access the database using the old password (for signal refreshes etc) and lock the user's account for too many
@@ -4186,16 +4169,6 @@ namespace OpenDental
 			{
 				_formLoginFailed = null;
 			}
-		}
-
-		///<summary></summary>
-		private void DataReaderNull_Detected(DataReaderNullEventArgs e)
-		{
-			if (e == null || e.IsQuerySuccessful)
-			{
-				return;
-			}
-			BeginDataReaderNullMonitorThread(e);
 		}
 
 		public static void S_TaskGoTo(TaskObjectType taskOT, long keyNum)
