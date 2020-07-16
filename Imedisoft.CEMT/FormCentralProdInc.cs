@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDental;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;

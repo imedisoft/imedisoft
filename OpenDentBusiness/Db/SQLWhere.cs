@@ -11,7 +11,6 @@ namespace OpenDentBusiness
 	/// <summary>
 	/// This class is used to dynamically construct WHERE clauses for SQL queries.
 	/// </summary>
-	[Serializable]
 	public class SQLWhere
 	{
 		/// <summary>
@@ -28,9 +27,11 @@ namespace OpenDentBusiness
 			{
 				columnName = tableName.ToLower() + "." + columnName;
 			}
+
 			SQLWhere sqlParam = new SQLWhere();
 			sqlParam._whereClause = (doTreatDtAsDate ? DbHelper.DtimeToDate(columnName) : columnName)
 				+ comparison.GetDescription() + POutObj(value, doTreatDtAsDate);
+
 			return sqlParam;
 		}
 
@@ -43,6 +44,7 @@ namespace OpenDentBusiness
 			{
 				columnName = tableName.ToLower() + "." + columnName;
 			}
+
 			SQLWhere sqlParam = new SQLWhere();
 			if (listValues.Count == 0)
 			{
@@ -65,9 +67,11 @@ namespace OpenDentBusiness
 			{
 				columnName = tableName.ToLower() + "." + columnName;
 			}
+
 			SQLWhere sqlParam = new SQLWhere();
 			sqlParam._whereClause = (doTreatDtAsDate ? DbHelper.DtimeToDate(columnName) : columnName)
 				+ " BETWEEN " + POutObj(valueLower, doTreatDtAsDate) + " AND " + POutObj(valueHigher, doTreatDtAsDate) + "";
+
 			return sqlParam;
 		}
 

@@ -1,6 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 
-namespace DataConnectionBase
+namespace Imedisoft.Data
 {
     public delegate T DataRecordBuilder<T>(MySqlDataReader dataReader);
 }

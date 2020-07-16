@@ -23,19 +23,17 @@ namespace UnitTestsCore {
 		}
 		///<summary></summary>
 		public static MobileAppDevice CreateMobileAppDevice(string deviceName,string uniqueID,long clinicNum,bool isAllowed) {
-			return DataAction.GetPractice(() => {
-				MobileAppDevice ret=new MobileAppDevice {
-					DeviceName=deviceName,UniqueID=uniqueID,ClinicNum=clinicNum,IsAllowed=isAllowed,LastAttempt=DateTime.Now
-				};
-				OpenDentBusiness.Crud.MobileAppDeviceCrud.Insert(ret);
-				return ret;
-			});
+			MobileAppDevice ret=new MobileAppDevice {
+				DeviceName=deviceName,UniqueID=uniqueID,ClinicNum=clinicNum,IsAllowed=isAllowed,LastAttempt=DateTime.Now
+			};
+			OpenDentBusiness.Crud.MobileAppDeviceCrud.Insert(ret);
+			return ret;
 		}
 
 		///<summary>Deletes everything from the mobileappdevice table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearMobileAppDevice() {
 			string command="DELETE FROM mobileappdevice";
-			DataAction.RunPractice(() => DataCore.NonQ(command));
+			DataCore.NonQ(command);
 		}
 	}
 }

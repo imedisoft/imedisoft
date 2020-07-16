@@ -97,6 +97,7 @@
     <Compile Include="Database.cs" />
     <Compile Include="DataConnection.cs" />
     <Compile Include="DataConnectionEvent.cs" />
+    <Compile Include="DataExtensions.cs" />
     <Compile Include="DataRecordBuilder.cs" />
     <Compile Include="DataRecord.cs" />
     <Compile Include="DataRecordBase.cs" />

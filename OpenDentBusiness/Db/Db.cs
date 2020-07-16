@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -338,20 +339,6 @@ namespace OpenDentBusiness
 			{
 				return dataConnection.SelectMany(command, recordBuilder);
 			}
-		}
-
-		/// <summary>
-		/// This is used for queries written by the user.
-		/// If using direct connection, it gets a table in the ordinary way.
-		/// If ServerWeb, it uses the user with lower privileges to prevent injection attack.
-		/// </summary>
-		internal static DataTable GetTableLow(string command)
-		{
-			LastCommand = command;
-			DataTable retVal;
-			retVal = DataCore.GetTable(command);
-			retVal.TableName = "";//this is needed for FormQuery dataGrid
-			return retVal;
 		}
 
 		/// <summary>

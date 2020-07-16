@@ -17,6 +17,7 @@ redistributed.
 //#define ORA_DB
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using Imedisoft.Forms;
 using Microsoft.Win32;
 //using OpenDental.SmartCards;

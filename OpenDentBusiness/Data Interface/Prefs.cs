@@ -91,34 +91,12 @@ namespace OpenDentBusiness
 				=> Crud.PrefCrud.ListToTable(preferences);
 		}
 
-		/// <summary>
-		/// The default cache that will be used if _dictCachesForDbs is not being used.
-		/// </summary>
-		private static readonly PrefCache defaultPreferenceCache = new PrefCache();
-		
-		/// <summary>
-		/// A dictionary that stores a different cache for each database connection.
-		/// This exists here in Prefs because some applications switch back and forth between DentalOffice and Customers.
-		/// </summary>
-		private static readonly Dictionary<ConnectionNames, PrefCache> preferenceCaches = new Dictionary<ConnectionNames, PrefCache>();
+        /// <summary>
+        /// The object that accesses the cache in a thread-safe manner.
+        /// </summary>
+        private static PrefCache Cache { get; } = new PrefCache();
 
-		/// <summary>
-		/// The object that accesses the cache in a thread-safe manner.
-		/// </summary>
-		private static PrefCache Cache
-		{
-			get
-			{
-                if (preferenceCaches.TryGetValue(ConnectionStore.CurrentConnection, out PrefCache cache))
-                {
-                    return cache;
-                }
-
-                return defaultPreferenceCache;
-			}
-		}
-
-		public static bool GetContainsKey(string prefName) 
+        public static bool GetContainsKey(string prefName) 
 			=> Cache.GetContainsKey(prefName);
 		
 		public static bool DictIsNull() 

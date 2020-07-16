@@ -26,8 +26,7 @@ namespace OpenDentBusiness {
 			}
 			Exception ex=null;
 			ODThread threadGetTable = new ODThread(new ODThread.WorkerDelegate((ODThread o) => {
-				DataAction.Run(() => { o.Tag=func(); } //set the tag to the func's output.
-					,ConnectionNames.DentalOfficeReportServer); //run on the report server. if not set up, automatically runs on the current server.
+				o.Tag=func(); //set the tag to the func's output.
 			}));
 			threadGetTable.AddExceptionHandler(new ODThread.ExceptionDelegate((Exception e) => {
 				ex=e;

@@ -478,7 +478,6 @@
     <Compile Include="Data Interface\ScheduledProcesses.cs" />
     <Compile Include="Db Multi Table\PayPlanProductionEntry.cs" />
     <Compile Include="Db Multi Table\ProcFeeHelper.cs" />
-    <Compile Include="Db\DataExtensions.cs" />
     <Compile Include="Data Interface\MobileAppDevices.cs" />
     <Compile Include="Data Interface\PayConnectResponseWebs.cs" />
     <Compile Include="Data Interface\PharmClinics.cs" />
@@ -606,8 +605,6 @@
     <Compile Include="Data Interface\UserGroupAttaches.cs" />
     <Compile Include="Data Interface\WebSchedRecalls.cs" />
     <Compile Include="Db Multi Table\TreatmentPlanModules.cs" />
-    <Compile Include="Db\ConnectionStore.cs" />
-    <Compile Include="Db\DataAction.cs" />
     <Compile Include="Db\DataConnectionCancelable.cs" />
     <Compile Include="Db\SQLWhere.cs" />
     <Compile Include="Eclaims\AOS.cs" />

@@ -1,13 +1,11 @@
-﻿using DataConnectionBase;
+﻿using Imedisoft.Data;
 using OpenDentBusiness;
 using System;
 using System.Diagnostics;
-using System.Text;
-using System.Windows.Forms;
 
 namespace CentralManager
 {
-	public class CentralConnectionHelper
+    public class CentralConnectionHelper
 	{
 		/// <summary>
 		/// Returns command-line arguments for launching Open Dental based off of the settings for the connection passed in.

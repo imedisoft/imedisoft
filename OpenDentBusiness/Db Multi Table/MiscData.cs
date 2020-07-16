@@ -1,5 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections;
@@ -301,8 +302,8 @@ namespace OpenDentBusiness
                     var dcon = new DataConnection(dbNames[i]);
 
 					dcon.NonQ(
-						"UPDATE preference SET ValueString ='" + SOut.String(Environment.MachineName) +
-						"' WHERE PrefName='UpdateInProgressOnComputerName'");
+						"UPDATE preference SET ValueString ='" + SOut.String(Environment.MachineName) + "' " +
+						"WHERE PrefName='UpdateInProgressOnComputerName'");
 				}
 				catch { }
 			}

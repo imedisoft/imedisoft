@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {

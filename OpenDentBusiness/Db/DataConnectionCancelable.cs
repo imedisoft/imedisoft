@@ -1,5 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections;
@@ -21,8 +22,6 @@ namespace OpenDentBusiness
 	{
 		/// <summary>
 		/// A static dictionary of connections via their ServerThread IDs.
-		/// 
-		/// Necessary for Middle Tier to be able to close the corresponding connection.
 		/// </summary>
 		private static readonly Dictionary<int, MySqlConnection> _dictCons = new Dictionary<int, MySqlConnection>();
 

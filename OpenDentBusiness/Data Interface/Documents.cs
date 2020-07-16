@@ -1,3 +1,8 @@
+using CodeBase;
+using DataConnectionBase;
+using Imedisoft.Data;
+using OpenDental.Thinfinity;
+using OpenDentBusiness.FileIO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,15 +14,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using CodeBase;
-using DataConnectionBase;
-using OpenDental.Thinfinity;
-using OpenDentBusiness.FileIO;
 
 namespace OpenDentBusiness
 {
-	///<summary>Handles documents and images for the Images module</summary>
-	public class Documents
+    ///<summary>Handles documents and images for the Images module</summary>
+    public class Documents
 	{
 		#region Get Methods
 		#endregion

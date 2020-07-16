@@ -20,6 +20,7 @@ using System.Globalization;
 using System.Threading;
 using System.Linq;
 using Imedisoft.CEMT.Forms;
+using Imedisoft.Data;
 
 namespace CentralManager
 {
@@ -896,12 +897,6 @@ namespace CentralManager
 				database = nav.SelectSingleNode("Database").Value;
 				user = nav.SelectSingleNode("User").Value;
 				password = nav.SelectSingleNode("Password").Value;
-				XPathNavigator passHashNode = nav.SelectSingleNode("MySQLPassHash");
-				string decryptedPwd;
-				if (password == "" && passHashNode != null && passHashNode.Value != "" && CDT.Class1.Decrypt(passHashNode.Value, out decryptedPwd))
-				{
-					password = decryptedPwd;
-				}
 				XPathNavigator nodeMT = nav.SelectSingleNode("MiddleTierAddr");
 				if (nodeMT != null)
 				{
@@ -910,8 +905,8 @@ namespace CentralManager
 			}
 			catch (Exception ex)
 			{
-				//Common error: root element is missing
-				OpenDental.MessageBox.Show(ex.Message);
+                //Common error: root element is missing
+                ODMessageBox.Show(ex.Message);
 				Application.Exit();
 				return false;
 			}

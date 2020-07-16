@@ -15,6 +15,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Threading;
 using System.Net;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormReportSetup:ODForm {
@@ -286,10 +287,6 @@ namespace OpenDental {
 			{
 				changed=true;
 			}
-      if(UpdateReportingServer()) {
-				ConnectionStore.ClearConnectionDictionary();
-        changed=true;
-      }
 			if(changed) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 				SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Report settings have been changed.");

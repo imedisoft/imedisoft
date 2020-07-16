@@ -1,3 +1,7 @@
+using CodeBase;
+using DataConnectionBase;
+using Imedisoft.Data;
+using OpenDentBusiness.HL7;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,14 +11,12 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using CodeBase;
-using DataConnectionBase;
-using OpenDentBusiness.HL7;
 
-namespace OpenDentBusiness{
+namespace OpenDentBusiness
+{
 
-	///<summary>Appointment S-Class.  Sends signalods for Invalid Appointments whenever a call to the db is made.</summary>
-	public class Appointments {
+    ///<summary>Appointment S-Class.  Sends signalods for Invalid Appointments whenever a call to the db is made.</summary>
+    public class Appointments {
 
 		#region Get Methods
 		public static DataTable GetCommTable(string patNum,long aptNum) {

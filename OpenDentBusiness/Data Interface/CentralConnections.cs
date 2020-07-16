@@ -1,5 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
@@ -21,6 +22,8 @@ namespace OpenDentBusiness
 {
     public class CentralConnections
 	{
+		// TODO: Move some methods to a more appropriate class...
+
 		/// <summary>
 		/// Gets all the central connections from the database ordered by ItemOrder.
 		/// </summary>

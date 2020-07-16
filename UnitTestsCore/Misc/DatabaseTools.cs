@@ -1,4 +1,5 @@
 ﻿using DataConnectionBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore

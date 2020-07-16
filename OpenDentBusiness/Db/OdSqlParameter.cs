@@ -11,7 +11,7 @@ namespace OpenDentBusiness
 	/// </summary>
 	public class OdSqlParameter
 	{
-        private OdDbType dbType;
+        private readonly OdDbType dbType;
 
         /// <summary>
         /// parameterName should not include the leading character such as @ or : . 

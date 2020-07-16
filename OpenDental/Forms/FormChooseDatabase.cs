@@ -1,4 +1,4 @@
-using DataConnectionBase;
+using Imedisoft.Data;
 using Imedisoft.Forms;
 using MySql.Data.MySqlClient;
 using OpenDentBusiness;
