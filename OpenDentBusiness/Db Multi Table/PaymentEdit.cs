@@ -2530,7 +2530,6 @@ namespace OpenDentBusiness {
 
 		#region Data Classes
 		///<summary>The data needed to load FormPayment.</summary>
-		[Serializable]
 		public class LoadData {
 			public Patient PatCur;
 			public Family Fam;
@@ -2539,7 +2538,6 @@ namespace OpenDentBusiness {
 			public List<CreditCard> ListCreditCards;
 			public XWebResponse XWebResponse;
 			public PayConnectResponseWeb PayConnectResponseWeb;
-			[XmlIgnore]
 			public DataTable TableBalances;
 			///<summary>List of splits associated to this payment</summary>
 			public List<PaySplit> ListSplits;
@@ -2552,23 +2550,6 @@ namespace OpenDentBusiness {
 			public List<Procedure> ListProcsForSplits;
 			public SerializableDictionary<long,long> DictPatToDPFeeScheds;
 			public List<Fee> ListFeesForDiscountPlans;
-
-			[XmlElement(nameof(TableBalances))]
-			public string TableBalancesXml {
-				get {
-					if(TableBalances==null) {
-						return null;
-					}
-					return XmlConverter.TableToXml(TableBalances);
-				}
-				set {
-					if(value==null) {
-						TableBalances=null;
-						return;
-					}
-					TableBalances=XmlConverter.XmlToTable(value);
-				}
-			}
 		}
 
 		///<summary>The data needed to construct a list of charges for FormPayment.</summary>

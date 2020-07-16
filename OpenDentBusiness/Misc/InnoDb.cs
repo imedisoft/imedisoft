@@ -22,9 +22,7 @@ namespace OpenDentBusiness
 		{
 			try
 			{
-				string innoDbOn = Db.GetScalar("SELECT @@have_innodb").ToString();
-
-				return innoDbOn == "YES";
+				return Db.GetScalar("SELECT @@have_innodb").ToString() == "YES";
 			}
 			catch // MySQL 5.6 and higher
 			{

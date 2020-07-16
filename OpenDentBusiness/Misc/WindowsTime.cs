@@ -2,13 +2,14 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-public class WindowsTime {
-
-	[DllImport("kernel32.dll", SetLastError=true)]
+public static class WindowsTime
+{
+	[DllImport("kernel32.dll", SetLastError = true)]
 	private extern static uint SetLocalTime(ref SYSTEMTIME lpSystemTime);
 
 	[StructLayout(LayoutKind.Sequential)]
-	private struct SYSTEMTIME {
+	private struct SYSTEMTIME
+	{
 		public ushort wYear;
 		public ushort wMonth;
 		public ushort wDayOfWeek;
@@ -19,25 +20,24 @@ public class WindowsTime {
 		public ushort wMilliseconds;
 	}
 
-	public WindowsTime() {
-	}
-
-	///<summary>Set the windows system time.</summary>
-	public static void SetTime(DateTime newTime) {
-		// Call the native SetLocalTime method 
-		// with the defined structure.
-		SYSTEMTIME systime=new SYSTEMTIME();
-		systime.wYear=(ushort)newTime.Year;
-		systime.wMonth=(ushort)newTime.Month;
-		systime.wDayOfWeek=(ushort)newTime.DayOfWeek;
-		systime.wDay=(ushort)newTime.Day;
-		systime.wHour=(ushort)newTime.Hour;
-		systime.wMinute=(ushort)newTime.Minute;
-		systime.wSecond=(ushort)newTime.Second;
-		systime.wMilliseconds=(ushort)newTime.Millisecond;
+	/// <summary>
+	/// Set the Windows system time.
+	/// </summary>
+	public static void SetTime(DateTime newTime)
+	{
+		SYSTEMTIME systime = new SYSTEMTIME
+		{
+			wYear = (ushort)newTime.Year,
+			wMonth = (ushort)newTime.Month,
+			wDayOfWeek = (ushort)newTime.DayOfWeek,
+			wDay = (ushort)newTime.Day,
+			wHour = (ushort)newTime.Hour,
+			wMinute = (ushort)newTime.Minute,
+			wSecond = (ushort)newTime.Second,
+			wMilliseconds = (ushort)newTime.Millisecond
+		};
 		SetLocalTime(ref systime);
-		string messageText="System date and time set to:  "+newTime.ToString("MM/dd/yyyy hh:mm:ss.fff tt")+".";
-		EventLog.WriteEntry("OpenDental",messageText,EventLogEntryType.Information);
+
+		EventLog.WriteEntry("OpenDental", "System date and time set to:  " + newTime.ToString("MM/dd/yyyy hh:mm:ss.fff tt") + ".", EventLogEntryType.Information);
 	}
 }
-

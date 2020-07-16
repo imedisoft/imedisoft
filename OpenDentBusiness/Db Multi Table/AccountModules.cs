@@ -16,11 +16,9 @@ namespace OpenDentBusiness
 {
 	public class AccountModules
 	{
-
 		///<summary>Data that is needed to load the Account module.</summary>
 		public class LoadData
 		{
-			[XmlIgnore]
 			public DataSet DataSetMain;
 			public Family Fam;
 			public PatientNote PatNote;
@@ -38,28 +36,6 @@ namespace OpenDentBusiness
 			public DateTime FirstOrthoProcDate;
 			public List<FieldDefLink> ListFieldDefLinksAcct;
 			public List<PatientLink> ListMergeLinks;
-
-			[XmlElement(nameof(DataSetMain))]
-			public string DataSetMainXml
-			{
-				get
-				{
-					if (DataSetMain == null)
-					{
-						return null;
-					}
-					return XmlConverter.DsToXml(DataSetMain);
-				}
-				set
-				{
-					if (value == null)
-					{
-						DataSetMain = null;
-						return;
-					}
-					DataSetMain = XmlConverter.XmlToDs(value);
-				}
-			}
 		}
 
 		///<summary>If intermingled=true, the patnum of any family member will get entire family intermingled.</summary>

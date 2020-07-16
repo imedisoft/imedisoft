@@ -12,8 +12,9 @@ namespace OpenDentBusiness
 {
 	public class ApptEdit
 	{
-
-		///<summary>Gets the data necesary to load FormApptEdit.</summary>
+		/// <summary>
+		/// Gets the data necesary to load FormApptEdit.
+		/// </summary>
 		public static LoadData GetLoadData(Appointment AptCur, bool IsNew)
 		{
 			LoadData data = new LoadData();
@@ -80,8 +81,9 @@ namespace OpenDentBusiness
 			return new ODTuple<List<Procedure>, List<Procedure>>(listAddedProcs, Procedures.GetProcsForApptEdit(apt));
 		}
 
-		///<summary>The data necesary to load FormApptEdit.</summary>
-		[Serializable]
+		/// <summary>
+		/// The data necesary to load FormApptEdit.
+		/// </summary>
 		public class LoadData
 		{
 			public List<Procedure> ListProcsForAppt;
@@ -91,84 +93,13 @@ namespace OpenDentBusiness
 			public List<Benefit> ListBenefits;
 			public List<InsSub> ListInsSubs;
 			public List<InsPlan> ListInsPlans;
-			[XmlIgnore]
 			public DataTable TableApptFields;
-			[XmlIgnore]
 			public DataTable TableComms;
 			public LabCase Lab;
-			[XmlIgnore]
 			public DataTable PatientTable;
 			public List<ReqStudent> ListStudents;
 			public List<ClaimProc> ListClaimProcs;
 			public List<Adjustment> ListAdjustments;
-
-
-			[XmlElement(nameof(TableApptFields))]
-			public string TableApptFieldsXml
-			{
-				get
-				{
-					if (TableApptFields == null)
-					{
-						return null;
-					}
-					return XmlConverter.TableToXml(TableApptFields);
-				}
-				set
-				{
-					if (value == null)
-					{
-						TableApptFields = null;
-						return;
-					}
-					TableApptFields = XmlConverter.XmlToTable(value);
-				}
-			}
-
-			[XmlElement(nameof(TableComms))]
-			public string TableCommsXml
-			{
-				get
-				{
-					if (TableComms == null)
-					{
-						return null;
-					}
-					return XmlConverter.TableToXml(TableComms);
-				}
-				set
-				{
-					if (value == null)
-					{
-						TableComms = null;
-						return;
-					}
-					TableComms = XmlConverter.XmlToTable(value);
-				}
-			}
-
-			[XmlElement(nameof(PatientTable))]
-			public string PatientTableXml
-			{
-				get
-				{
-					if (PatientTable == null)
-					{
-						return null;
-					}
-					return XmlConverter.TableToXml(PatientTable);
-				}
-				set
-				{
-					if (value == null)
-					{
-						PatientTable = null;
-						return;
-					}
-					PatientTable = XmlConverter.XmlToTable(value);
-				}
-			}
-
 		}
 	}
 }

@@ -309,12 +309,10 @@
     <Compile Include="IntegrationTests\FeeSchedToolsTests.cs" />
     <Compile Include="UnitTests\ODThreadTests.cs" />
     <Compile Include="UnitTests\ODProgressTests.cs" />
-    <Compile Include="UnitTests\DateTimeODTests.cs" />
     <Compile Include="UnitTests\ProcMultiVisitTests.cs" />
     <Compile Include="UnitTests\UserodsTests.cs" />
     <Compile Include="UnitTests\UserQueriesTests.cs" />
     <Compile Include="UnitTests\WebForms_SheetsTests.cs" />
-    <Compile Include="UnitTests\XmlConverterTests.cs" />
     <Compile Include="UnitTests\ProvidersTests.cs" />
     <Compile Include="UnitTests\ClaimProcsTests.cs" />
     <Compile Include="UnitTests\ODtextBoxTests.cs" />
@@ -324,7 +322,6 @@
     <Compile Include="UnitTests\InstrospectionTests.cs" />
     <Compile Include="UnitTests\TimeCardRulesTests.cs" />
     <Compile Include="UnitTests\RecurringChargesTests.cs" />
-    <Compile Include="UnitTests\aaTemplateTests.cs" />
     <Compile Include="UnitTests\AppointmentsTests.cs" />
     <Compile Include="UnitTests\CacheAbsTests.cs" />
     <Compile Include="UnitTests\InsPlansTests.cs" />

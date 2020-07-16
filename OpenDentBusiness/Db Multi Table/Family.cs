@@ -1,4 +1,5 @@
 using CodeBase;
+using DataConnectionBase;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,37 +8,34 @@ using System.Reflection;
 
 namespace OpenDentBusiness
 {
-	///<summary></summary>
-	public class Family
+    public class Family
 	{
-		///<summary></summary>
 		public Family()
 		{
 			ListPats = new Patient[0];
 		}
 
-		///<summary></summary>
 		public Family(List<Patient> listPats)
 		{
 			ListPats = listPats.ToArray();
 		}
 
-		///<summary>List of patients in the family.</summary>
+		/// <summary>
+		/// List of patients in the family.
+		/// </summary>
 		public Patient[] ListPats;
 
-		///<summary>The guarantor of the family.</summary>
-		public Patient Guarantor
-		{
-			get
-			{
-				return ListPats.FirstOrDefault(x => x.Guarantor == x.PatNum);
-			}
-		}
+		/// <summary>
+		/// Gets the guarantor of the family.
+		/// </summary>
+		public Patient Guarantor => ListPats.FirstOrDefault(x => x.Guarantor == x.PatNum);
 
-		///<summary>Tries to get the LastName,FirstName of the patient from this family.  If not found, then gets the name from the database.</summary>
+
+		/// <summary>
+		/// Tries to get the LastName,FirstName of the patient from this family. If not found, then gets the name from the database.
+		/// </summary>
 		public string GetNameInFamLF(long myPatNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			for (int i = 0; i < ListPats.Length; i++)
 			{
 				if (ListPats[i].PatNum == myPatNum)
@@ -49,16 +47,12 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Gets last, (preferred) first middle</summary>
-		public string GetNameInFamLFI(int myi)
-		{
-			//No need to check RemotingRole; no call to db.
-			return Patients.GetNameLF(ListPats[myi].LName, ListPats[myi].FName, ListPats[myi].Preferred, ListPats[myi].MiddleI);
-		}
+		public string GetNameInFamLFI(int myi) => Patients.GetNameLF(ListPats[myi].LName, ListPats[myi].FName, ListPats[myi].Preferred, ListPats[myi].MiddleI);
+		
 
 		///<summary>Gets a formatted name from the family list.  If the patient is not in the family list, then it gets that info from the database.</summary>
 		public string GetNameInFamFL(long myPatNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			for (int i = 0; i < ListPats.Length; i++)
 			{
 				if (ListPats[i].PatNum == myPatNum)
@@ -72,7 +66,6 @@ namespace OpenDentBusiness
 		///<summary>Gets a formatted name from the family list.  If the patient is not in the family list, then it gets that info from the database.</summary>
 		public string GetNameInFamFLnoPref(long myPatNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			for (int i = 0; i < ListPats.Length; i++)
 			{
 				if (ListPats[i].PatNum == myPatNum)
@@ -86,7 +79,6 @@ namespace OpenDentBusiness
 		///<summary>Gets (preferred)first middle last</summary>
 		public string GetNameInFamFLI(int myi)
 		{
-			//No need to check RemotingRole; no call to db.
 			string retStr = "";
 			if (ListPats[myi].Preferred != "")
 			{
@@ -99,7 +91,6 @@ namespace OpenDentBusiness
 		///<summary>Gets first name from the family list.  If the patient is not in the family list, then it gets that info from the database.  Includes preferred.</summary>
 		public string GetNameInFamFirst(long myPatNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			for (int i = 0; i < ListPats.Length; i++)
 			{
 				if (ListPats[i].PatNum == myPatNum)
@@ -113,7 +104,6 @@ namespace OpenDentBusiness
 		///<summary>Gets first name from the family list.  If the patient is not in the family list, then it gets that info from the database.  Includes preferred and last name.</summary>
 		public string GetNameInFamFirstOrPreferredOrLast(long myPatNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			for (int i = 0; i < ListPats.Length; i++)
 			{
 				if (ListPats[i].PatNum == myPatNum)
@@ -124,7 +114,9 @@ namespace OpenDentBusiness
 			return GetLim(myPatNum).GetNameFirstOrPreferredOrLast();
 		}
 
-		///<summary>Returns a list of all PatNums for the family.</summary>
+		/// <summary>
+		/// Returns a list of all PatNums for the family.
+		/// </summary>
 		public List<long> GetPatNums()
 		{
 			if (ListPats.IsNullOrEmpty())
@@ -134,10 +126,11 @@ namespace OpenDentBusiness
 			return ListPats.Select(x => x.PatNum).ToList();
 		}
 
-		///<summary>The index of the patient within the family.  Returns -1 if not found.</summary>
+		/// <summary>
+		/// The index of the patient within the family. Returns -1 if not found.
+		/// </summary>
 		public int GetIndex(long patNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			for (int i = 0; i < ListPats.Length; i++)
 			{
 				if (ListPats[i].PatNum == patNum)
@@ -148,10 +141,11 @@ namespace OpenDentBusiness
 			return -1;
 		}
 
-		///<summary>Gets a copy of a specific patient from within the family. Does not make a call to the database.</summary>
+		/// <summary>
+		/// Gets a copy of a specific patient from within the family. Does not make a call to the database.
+		/// </summary>
 		public Patient GetPatient(long patNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			Patient retVal = null;
 			for (int i = 0; i < ListPats.Length; i++)
 			{
@@ -164,7 +158,9 @@ namespace OpenDentBusiness
 			return retVal;
 		}
 
-		/// <summary>Duplicate of the same class in Patients.  Gets nine of the most useful fields from the db for the given patnum.</summary>
+		/// <summary>
+		/// Duplicate of the same class in Patients. Gets nine of the most useful fields from the db for the given patnum.
+		/// </summary>
 		public static Patient GetLim(long patNum)
 		{
 			if (patNum == 0)
@@ -181,15 +177,15 @@ namespace OpenDentBusiness
 				return new Patient();
 			}
 			Patient Lim = new Patient();
-			Lim.PatNum = PIn.Long(table.Rows[0][0].ToString());
-			Lim.LName = PIn.String(table.Rows[0][1].ToString());
-			Lim.FName = PIn.String(table.Rows[0][2].ToString());
-			Lim.MiddleI = PIn.String(table.Rows[0][3].ToString());
-			Lim.Preferred = PIn.String(table.Rows[0][4].ToString());
-			Lim.CreditType = PIn.String(table.Rows[0][5].ToString());
-			Lim.Guarantor = PIn.Long(table.Rows[0][6].ToString());
-			Lim.HasIns = PIn.String(table.Rows[0][7].ToString());
-			Lim.SSN = PIn.String(table.Rows[0][8].ToString());
+			Lim.PatNum = SIn.Long(table.Rows[0][0].ToString());
+			Lim.LName = SIn.String(table.Rows[0][1].ToString());
+			Lim.FName = SIn.String(table.Rows[0][2].ToString());
+			Lim.MiddleI = SIn.String(table.Rows[0][3].ToString());
+			Lim.Preferred = SIn.String(table.Rows[0][4].ToString());
+			Lim.CreditType = SIn.String(table.Rows[0][5].ToString());
+			Lim.Guarantor = SIn.Long(table.Rows[0][6].ToString());
+			Lim.HasIns = SIn.String(table.Rows[0][7].ToString());
+			Lim.SSN = SIn.String(table.Rows[0][8].ToString());
 			return Lim;
 		}
 

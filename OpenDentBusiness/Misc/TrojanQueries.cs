@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataConnectionBase;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,22 +11,19 @@ namespace OpenDentBusiness
 {
 	public class TrojanQueries
 	{
-		public static DateTime GetMaxProcedureDate(long PatNum)
-		{
-			string command = $@"SELECT MAX(ProcDate) FROM procedurelog,patient
-				WHERE patient.PatNum=procedurelog.PatNum
-				AND procedurelog.ProcStatus={DataConnectionBase.SOut.Int((int)ProcStat.C)}
-				AND patient.Guarantor={DataConnectionBase.SOut.Long(PatNum)}";
-			return PIn.Date(Db.GetScalar(command));
-		}
+		public static DateTime GetMaxProcedureDate(long PatNum) 
+			=> SIn.Date(Db.GetScalar(
+				$"SELECT MAX(ProcDate) FROM procedurelog,patient " +
+				$"WHERE patient.PatNum=procedurelog.PatNum " +
+				$"AND procedurelog.ProcStatus={SOut.Int((int)ProcStat.C)} " +
+				$"AND patient.Guarantor={SOut.Long(PatNum)}"));
 
-		public static DateTime GetMaxPaymentDate(long PatNum)
-		{
-			string command = $@"SELECT MAX(DatePay) FROM paysplit,patient
-				WHERE patient.PatNum=paysplit.PatNum
-				AND patient.Guarantor={DataConnectionBase.SOut.Long(PatNum)}";
-			return DataConnectionBase.SIn.Date(Db.GetScalar(command));
-		}
+		public static DateTime GetMaxPaymentDate(long PatNum) 
+			=> SIn.Date(Db.GetScalar(
+				$"SELECT MAX(DatePay) FROM paysplit,patient " +
+				$"WHERE patient.PatNum=paysplit.PatNum " +
+				$"AND patient.Guarantor={SOut.Long(PatNum)}"));
+		
 
 		/// <summary>
 		/// Increments the PreviousFileNumber program property to the next available int and returns that new file number.
@@ -33,11 +31,13 @@ namespace OpenDentBusiness
 		public static int GetUniqueFileNum()
 		{
 			long progNum = Programs.GetProgramNum(ProgramName.TrojanExpressCollect);
-			int fileNum = DataConnectionBase.SIn.Int(ProgramProperties.GetValFromDb(progNum, "PreviousFileNumber"), false) + 1;
+
+			int fileNum = SIn.Int(ProgramProperties.GetValFromDb(progNum, "PreviousFileNumber"), false) + 1;
 			while (ProgramProperties.SetProperty(progNum, "PreviousFileNumber", fileNum.ToString()) < 1)
 			{
 				fileNum++;
 			}
+
 			return fileNum;
 		}
 
@@ -53,8 +53,10 @@ namespace OpenDentBusiness
 				{
 					whereTrojanID += "OR ";
 				}
+
 				whereTrojanID += "i.TrojanID='" + deletePatientRecords[i][0] + "' ";
 			}
+
 			string command = "SELECT DISTINCT " +
 					"p.FName," +
 					"p.LName," +
@@ -77,6 +79,7 @@ namespace OpenDentBusiness
 					"(i.EmployerNum=e.EmployerNum OR i.EmployerNum=0) AND " +
 					"(SELECT COUNT(*) FROM patplan a WHERE a.PatNum=p.PatNum AND a.InsSubNum=s.InsSubNum) > 0 " +
 					"ORDER BY i.TrojanID,p.LName,p.FName";
+
 			return Db.GetTable(command);
 		}
 
@@ -119,42 +122,34 @@ namespace OpenDentBusiness
 			return Db.GetTable(command);
 		}
 
-		public static InsPlan GetPlanWithTrojanID(string trojanID)
-		{
-			string command = "SELECT * FROM insplan WHERE TrojanID = '" + POut.String(trojanID) + "'";
-			return Crud.InsPlanCrud.SelectOne(command);
-		}
+		public static InsPlan GetPlanWithTrojanID(string trojanID) 
+			=> Crud.InsPlanCrud.SelectOne("SELECT * FROM insplan WHERE TrojanID = '" + SOut.String(trojanID) + "'");
 
-		/// <summary>
-		/// This returns the number of plans affected.
-		/// </summary>
 		public static void UpdatePlan(TrojanObject troj, long planNum, bool updateBenefits)
 		{
 			long employerNum = Employers.GetEmployerNum(troj.ENAME);
-			string command;
-			//for(int i=0;i<planNums.Count;i++) {
-			command = "UPDATE insplan SET "
-				+ "EmployerNum=" + POut.Long(employerNum) + ", "
-				+ "GroupName='" + POut.String(troj.PLANDESC) + "', "
-				+ "GroupNum='" + POut.String(troj.POLICYNO) + "', "
-				+ "CarrierNum= " + POut.Long(troj.CarrierNum) + " "
-				+ "WHERE PlanNum=" + POut.Long(planNum);
-			Db.NonQ(command);
-			command = "UPDATE inssub SET "
-				+ "BenefitNotes='" + POut.String(troj.BenefitNotes) + "' "
-				+ "WHERE PlanNum=" + POut.Long(planNum);
-			Db.NonQ(command);
+
+			Db.NonQ(
+				"UPDATE insplan SET " +
+					"EmployerNum=" + SOut.Long(employerNum) + ", " +
+					"GroupName='" + SOut.String(troj.PLANDESC) + "', " +
+					"GroupNum='" + SOut.String(troj.POLICYNO) + "', " +
+					"CarrierNum= " + SOut.Long(troj.CarrierNum) + " " +
+				"WHERE PlanNum=" + SOut.Long(planNum));
+
+			Db.NonQ("UPDATE inssub SET BenefitNotes='" + SOut.String(troj.BenefitNotes) + "' HERE PlanNum=" + SOut.Long(planNum));
+
 			if (updateBenefits)
 			{
-				//clear benefits
-				command = "DELETE FROM benefit WHERE PlanNum=" + POut.Long(planNum);
-				Db.NonQ(command);
-				//benefitList
+				Db.NonQ("DELETE FROM benefit WHERE PlanNum=" + SOut.Long(planNum));
+
 				for (int j = 0; j < troj.BenefitList.Count; j++)
 				{
 					troj.BenefitList[j].PlanNum = planNum;
+
 					Benefits.Insert(troj.BenefitList[j]);
 				}
+
 				InsPlans.ComputeEstimatesForTrojanPlan(planNum);
 			}
 		}

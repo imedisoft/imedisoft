@@ -26,11 +26,6 @@ namespace CodeBase
 		/// </summary>
 		public static void Initialize()
 		{
-			// Causes all Application threads to use the same short date format. 
-			// Namely, forces computers with a two digit year format (e.g. M/d/yy) to use a four digit format inside OpenDental (bug manifested as DateTime.MinValue being pulled into OD as 01/01/2001), as well as two digit month 
-			// and year formatting, which is essential for threads that use date strings in validation.
-			DateTimeOD.NormalizeApplicationShortDateFormat();
-
 			// The default SecurityProtocol is "Ssl3|Tls".  We must add Tls12 in order to support Tls1.2 web reference handshakes, 
 			// without breaking any web references using Ssl3 or Tls. This is necessary for XWeb payments.
 			ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;

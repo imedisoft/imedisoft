@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenDentBusiness.Email {
-
+namespace OpenDentBusiness.Email
+{
 	///<summary>Represents an email address at its rawest form. Stays away from associating with Open Dental.</summary>
-	public class BasicEmailAddress {
-
+	public class BasicEmailAddress
+	{
 		///<summary>The SMTP server for the email. For example, smtp.gmail.com</summary>
 		public string SMTPserver;
 		///<summary>Username.</summary>
@@ -23,7 +23,5 @@ namespace OpenDentBusiness.Email {
 		public string AccessToken;
 		///<summary>OAuth token used to refresh the AccessToken.</summary>
 		public string RefreshToken;
-
 	}
-
 }

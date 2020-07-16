@@ -7,19 +7,23 @@ using System.Windows.Forms;
 using CodeBase;
 using DataConnectionBase;
 
-namespace OpenDentBusiness {
+namespace OpenDentBusiness
+{
 
-	public static class TsiMsgConstructor {
+	public static class TsiMsgConstructor
+	{
 
 		///<summary>Returns a message string used to place a patient or guarantor account with TSI for collection.</summary>
-		public static string GeneratePlacement(PatAging patAge,string clientID,TsiDemandType demandType) {
-			Family fam=Patients.GetFamily(patAge.PatNum);
-			Patient pat=fam.ListPats.FirstOrDefault(x => x.PatNum==patAge.PatNum);
-			Patient guar=fam.ListPats[0];
-			if(pat==null || guar==null) {
+		public static string GeneratePlacement(PatAging patAge, string clientID, TsiDemandType demandType)
+		{
+			Family fam = Patients.GetFamily(patAge.PatNum);
+			Patient pat = fam.ListPats.FirstOrDefault(x => x.PatNum == patAge.PatNum);
+			Patient guar = fam.ListPats[0];
+			if (pat == null || guar == null)
+			{
 				throw new ApplicationException("Invalid PatNum.  Please contact support.");
 			}
-			string[] fieldVals=new string[33] {
+			string[] fieldVals = new string[33] {
 				clientID,
 				"",//since PatNums can be larger than 10 digits, we will send in field 3 which can hold up to 20 digits
 				POut.Long(patAge.Guarantor),
@@ -53,35 +57,39 @@ namespace OpenDentBusiness {
 				Math.Max((int)demandType,1).ToString(),//(enum 0 based, send 1 for Accelerator - 0 and ProfitRecovery - 1) 1 - AcceleratorPr, 2 - Collection
 				((int)TsiServiceCode.Diplomatic+1).ToString(),//(enum 0 based, plus 1 to send to TSI) 1 - Diplomatic, 2 - Intensive or 3 - Bad Check.
 				"Transferred to TSI" };
-			return fieldVals.Aggregate((a,b) => (a??"")+"|"+(b??""));
+			return fieldVals.Aggregate((a, b) => (a ?? "") + "|" + (b ?? ""));
 		}
 
-		public static string GenerateUpdate(long patNum,string clientID,TsiTransType transType,double transAmount,double newBal) {
-			string[] fieldVals=new string[6] {
+		public static string GenerateUpdate(long patNum, string clientID, TsiTransType transType, double transAmount, double newBal)
+		{
+			string[] fieldVals = new string[6] {
 				clientID,
-                SOut.Long(patNum),
+				SOut.Long(patNum),
 				transType.ToString(),
 				DateTime.Today.ToString("MMddyyyy"),
-                SOut.Double(Math.Abs(transAmount)),//msgs sent with pos amt, Transworld uses tran type to determine whether it increases or decreases amt owed
+				SOut.Double(Math.Abs(transAmount)),//msgs sent with pos amt, Transworld uses tran type to determine whether it increases or decreases amt owed
 				SOut.Double(newBal)
 			};
-			return fieldVals.Aggregate((a,b) => (a??"")+"|"+(b??""));
+			return fieldVals.Aggregate((a, b) => (a ?? "") + "|" + (b ?? ""));
 		}
 
 		///<summary>0=self or default,1=spouse or significant other,2=parent or guardian,3=child,4=other.
 		///Defaults to 4 - other if not able to determine pat relationship to guar.</summary>
-		private static string gGetPatType(Patient guar,Patient pat) {
-			string retval="";
-			List<Guardian> listGuardians=Guardians.Refresh(pat.PatNum);
-			Guardian guard=listGuardians.Find(x => x.PatNumGuardian==guar.PatNum);
-			if(guard!=null) {
-				switch(guard.Relationship) {
+		private static string gGetPatType(Patient guar, Patient pat)
+		{
+			string retval = "";
+			List<Guardian> listGuardians = Guardians.Refresh(pat.PatNum);
+			Guardian guard = listGuardians.Find(x => x.PatNumGuardian == guar.PatNum);
+			if (guard != null)
+			{
+				switch (guard.Relationship)
+				{
 					case GuardianRelationship.Self:
-						retval="0";//self
+						retval = "0";//self
 						break;
 					case GuardianRelationship.Spouse:
 					case GuardianRelationship.LifePartner:
-						retval="1";//spouse or significant other
+						retval = "1";//spouse or significant other
 						break;
 					case GuardianRelationship.Father:
 					case GuardianRelationship.Stepfather:
@@ -90,13 +98,15 @@ namespace OpenDentBusiness {
 					case GuardianRelationship.Parent:
 					case GuardianRelationship.CareGiver:
 					case GuardianRelationship.Guardian:
-						retval="2";//parent or guardian
+						retval = "2";//parent or guardian
 						break;
+
 					case GuardianRelationship.Child:
 					case GuardianRelationship.Stepchild:
 					case GuardianRelationship.FosterChild:
-						retval="3";//child
+						retval = "3";//child
 						break;
+
 					case GuardianRelationship.Grandfather:
 					case GuardianRelationship.Grandmother:
 					case GuardianRelationship.Grandparent:
@@ -108,25 +118,31 @@ namespace OpenDentBusiness {
 					case GuardianRelationship.Sister:
 					case GuardianRelationship.Friend:
 					default:
-						retval="4";//other
+						retval = "4";//other
 						break;
 				}
 			}
-			else {
-				if(guar.PatNum==pat.PatNum) {
-					retval="0";//self or default
+			else
+			{
+				if (guar.PatNum == pat.PatNum)
+				{
+					retval = "0";//self or default
 				}
-				else if(guar.Position==PatientPosition.Married && pat.Position==PatientPosition.Married) {
-					retval="1";//spouse or significant other
+				else if (guar.Position == PatientPosition.Married && pat.Position == PatientPosition.Married)
+				{
+					retval = "1";//spouse or significant other
 				}
-				else if(guar.Position==PatientPosition.Child && pat.Position!=PatientPosition.Child) {
-					retval="2";//pat is parent or guardian of guarantor child?? not likely to happen that the guarantor is the child, but just in case
+				else if (guar.Position == PatientPosition.Child && pat.Position != PatientPosition.Child)
+				{
+					retval = "2";//pat is parent or guardian of guarantor child?? not likely to happen that the guarantor is the child, but just in case
 				}
-				else if(guar.Position!=PatientPosition.Child && pat.Position==PatientPosition.Child) {
-					retval="3";//pat is child of guar
+				else if (guar.Position != PatientPosition.Child && pat.Position == PatientPosition.Child)
+				{
+					retval = "3";//pat is child of guar
 				}
-				else {
-					retval="4";//can't determine relationship, default to other
+				else
+				{
+					retval = "4";//can't determine relationship, default to other
 				}
 			}
 			return retval;
@@ -143,13 +159,10 @@ namespace OpenDentBusiness {
 			return culture == null ? language : culture.DisplayName;
 		}
 
-		public static string GetPlacementFileHeader() {
-			return @"CLIENT NUMBER|TRANSMITTAL NUMBER|DEBTOR REFERENCE|DEBTOR NAME|ADDRESS|ADDRESS2|CITY|STATE|ZIP|DEBTOR PHONE|SECONDARY PHONE|DEBTOR SSN|DEBTOR DATE OF BIRTH|PATIENTTYPE|PATIENTFIRSTNAME|PATIENTLASTNAME|PATIENTPHONE1|PATIENTPHONE2|PATIENTDOB|PATIENTSSN|PATIENTADDRESS|PATIENTADDRESS2|PATIENTCITY|PATIENTSTATE|PATIENTZIP|PATIENTCOUNTRY|LANGUAGE|DATE OF DEBT|AMOUNT DUE|DATE OF LAST PAY|DEMANDTYPE|SERVICECODE|COMMENTS";
-		}
+		public static string GetPlacementFileHeader() 
+			=> @"CLIENT NUMBER|TRANSMITTAL NUMBER|DEBTOR REFERENCE|DEBTOR NAME|ADDRESS|ADDRESS2|CITY|STATE|ZIP|DEBTOR PHONE|SECONDARY PHONE|DEBTOR SSN|DEBTOR DATE OF BIRTH|PATIENTTYPE|PATIENTFIRSTNAME|PATIENTLASTNAME|PATIENTPHONE1|PATIENTPHONE2|PATIENTDOB|PATIENTSSN|PATIENTADDRESS|PATIENTADDRESS2|PATIENTCITY|PATIENTSTATE|PATIENTZIP|PATIENTCOUNTRY|LANGUAGE|DATE OF DEBT|AMOUNT DUE|DATE OF LAST PAY|DEMANDTYPE|SERVICECODE|COMMENTS";
 
-		public static string GetUpdateFileHeader() {
-			return @"CLIENT NUMBER|TRANSMITTAL/REFERENCE NUMBER|TRANSACTION TYPE|TRANSACTION DATE|TRANSACTION AMOUNT|NEW BALANCE";
-		}
-
+		public static string GetUpdateFileHeader() 
+			=> @"CLIENT NUMBER|TRANSMITTAL/REFERENCE NUMBER|TRANSACTION TYPE|TRANSACTION DATE|TRANSACTION AMOUNT|NEW BALANCE";
 	}
 }

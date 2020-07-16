@@ -419,7 +419,6 @@
     <Compile Include="Data Interface\PromotionLogs.cs" />
     <Compile Include="Data Interface\Promotions.cs" />
     <Compile Include="Email\EmailHosting\Account\AccountApi.cs" />
-    <Compile Include="Email\EmailHosting\Account\AccountApiMock.cs" />
     <Compile Include="Email\EmailHosting\Account\IAccountApi.cs" />
     <Compile Include="Email\EmailHosting\Account\Models\AppendAttachmentDataRequest.cs" />
     <Compile Include="Email\EmailHosting\Account\Models\AppendAttachmentDataResponse.cs" />
@@ -454,26 +453,6 @@
     <Compile Include="Email\EmailHosting\Account\Models\TemplateDestination.cs" />
     <Compile Include="Email\EmailHosting\Account\Models\UpdateTemplateRequest.cs" />
     <Compile Include="Email\EmailHosting\Account\Models\UpdateTemplateResponse.cs" />
-    <Compile Include="Email\EmailHosting\Models\AccountTransmissionType.cs" />
-    <Compile Include="Email\EmailHosting\Provider\IProviderApi.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\AccountResource.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\AccountUsage.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\CreateAccountGuarantorRequest.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\CreateAccountGuarantorResponse.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\CreateAccountRequest.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\CreateAccountResponse.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\GetAccountGuarantorRequest.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\GetAccountGuarantorResponse.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\GetAccountRequest.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\GetAccountResponse.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\GetGuarantorUsageRequest.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\GetGuarantorUsageResponse.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\UpdateAccountGuarantorStatusRequest.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\UpdateAccountGuarantorStatusResponse.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\UpdateAccountStatusRequest.cs" />
-    <Compile Include="Email\EmailHosting\Provider\Models\UpdateAccountStatusResponse.cs" />
-    <Compile Include="Email\EmailHosting\Provider\ProviderApi.cs" />
-    <Compile Include="Email\EmailHosting\Provider\ProviderApiDebugWSHQ.cs" />
     <Compile Include="Data Interface\ApptThankYouSents.cs" />
     <Compile Include="Data Interface\AsapComms.cs" />
     <Compile Include="Data Interface\ClaimTrackings.cs" />
@@ -510,10 +489,7 @@
     <Compile Include="Db Multi Table\ApptSearch.cs" />
     <Compile Include="Email\BasicEmailAddress.cs" />
     <Compile Include="Email\BasicEmailMessage.cs" />
-    <Compile Include="Email\EmailRequest.cs" />
-    <Compile Include="Email\EmailResult.cs" />
     <Compile Include="Email\SendEmails.cs" />
-    <Compile Include="Email\SerializeEmail.cs" />
     <Compile Include="Data Interface\ProviderClinics.cs" />
     <Compile Include="Data Interface\RecurringCharges.cs" />
     <Compile Include="Data Interface\TaskTakens.cs" />
@@ -598,8 +574,6 @@
     <Compile Include="WebBridges\PDMP\PDMPScript.cs" />
     <Compile Include="WebBridges\RESTfulTemplate.cs" />
     <Compile Include="WebServices\CustomerUpdatesProxy.cs" />
-    <Compile Include="Remoting\DtoProcessor.cs" />
-    <Compile Include="Remoting\NullObject.cs" />
     <Compile Include="TableTypes\CommOptOut.cs" />
     <Compile Include="TableTypes\DbmLog.cs" />
     <Compile Include="TableTypes\ProviderClinic.cs" />
@@ -1397,7 +1371,6 @@
     <Compile Include="Data Interface\UserGroups.cs" />
     <Compile Include="Data Interface\UserQueries.cs" />
     <Compile Include="Data Interface\ZipCodes.cs" />
-    <Compile Include="Remoting\DtoObject.cs" />
     <Compile Include="HL7old\EcwADT.cs" />
     <Compile Include="HL7\ComponentHL7.cs" />
     <Compile Include="HL7old\EcwDFT.cs" />
@@ -1409,7 +1382,6 @@
     <Compile Include="Imaging\ImageHelper.cs" />
     <Compile Include="Imaging\ImageStore.cs" />
     <Compile Include="Db Multi Table\MiscData.cs" />
-    <Compile Include="Remoting\DataTransferObject.cs" />
     <Compile Include="Db\Enumerations.cs" />
     <Compile Include="Data Interface\Lans.cs" />
     <Compile Include="Db Multi Table\AccountModules.cs" />
@@ -1424,14 +1396,12 @@
     <Compile Include="Logic\Tooth.cs" />
     <Compile Include="Logic\ToothComparer.cs" />
     <Compile Include="Data Interface\Userods.cs" />
-    <Compile Include="Remoting\Meth.cs" />
     <Compile Include="Db\DbHelper.cs" />
     <Compile Include="Misc\HouseCallsQueries.cs" />
     <Compile Include="Misc\LetterMergesQueries.cs" />
     <Compile Include="Db\OdSqlParameter.cs" />
     <Compile Include="Misc\TimeSpanExtension.cs" />
     <Compile Include="Misc\TrojanQueries.cs" />
-    <Compile Include="Mobile\ConvertDatabasem.cs" />
     <Compile Include="Mobile\Crud\AppointmentmCrud.cs" />
     <Compile Include="Mobile\Crud\PatientmCrud.cs" />
     <Compile Include="Mobile\Data Interface\Appointmentms.cs" />
@@ -1795,7 +1765,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Remoting\RemotingClient.cs" />
     <Compile Include="Reports\Reports.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SheetFramework\SheetEnums.cs">
@@ -1962,7 +1931,6 @@
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
     <Compile Include="X12\X12object.cs" />
-    <Compile Include="Remoting\XmlConverterSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeBase\xCodeBase.csproj">

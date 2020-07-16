@@ -8,16 +8,12 @@ using System.Text.RegularExpressions;
 using CodeBase;
 
 namespace OpenDentBusiness{
-	///<summary></summary>
 	public class EmailHostingTemplates{
 		#region Get Methods
 
 		///<summary>Returns an instance of the account api for the given Clinic Num.</summary>
 		public static IAccountApi GetAccountApi(long clinicNum)
 		{
-#if DEBUG
-			return new AccountApiMock();
-#else
 			string guid = ClinicPrefs.GetPrefValue(PrefName.MassEmailGuid, clinicNum);
 			string secret = ClinicPrefs.GetPrefValue(PrefName.MassEmailSecret, clinicNum);
 			if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(secret))
@@ -27,10 +23,8 @@ namespace OpenDentBusiness{
 				secret = ClinicPrefs.GetPrefValue(PrefName.MassEmailSecret, Clinics.ClinicNum);
 			}
 			return new AccountApi(guid, secret);
-#endif
 		}
 
-		///<summary></summary>
 		public static List<EmailHostingTemplate> Refresh(){
 			
 			string command="SELECT * FROM emailhostingtemplate";

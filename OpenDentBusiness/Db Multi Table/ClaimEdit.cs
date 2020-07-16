@@ -9,9 +9,8 @@ using System.Xml.Serialization;
 
 namespace OpenDentBusiness
 {
-	public class ClaimEdit
+    public class ClaimEdit
 	{
-
 		public static LoadData GetLoadData(Patient pat, Family fam, Claim claim)
 		{
 			LoadData data = new LoadData();
@@ -72,7 +71,6 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Most of the data needed to load FormClaimEdit.</summary>
-		[Serializable]
 		public class LoadData
 		{
 			public List<PatPlan> ListPatPlans;
@@ -82,32 +80,9 @@ namespace OpenDentBusiness
 			public List<Procedure> ListProcs;
 			public List<ClaimValCodeLog> ListClaimValCodes;
 			public ClaimCondCodeLog ClaimCondCodeLogCur;
-			[XmlIgnore]
 			public DataTable TablePayments;
 			public List<ToothInitial> ListToothInitials;
 			public List<ClaimTracking> ListCustomStatusEntries;
-
-			[XmlElement(nameof(TablePayments))]
-			public string TablePaymentsXml
-			{
-				get
-				{
-					if (TablePayments == null)
-					{
-						return null;
-					}
-					return XmlConverter.TableToXml(TablePayments);
-				}
-				set
-				{
-					if (value == null)
-					{
-						TablePayments = null;
-						return;
-					}
-					TablePayments = XmlConverter.XmlToTable(value);
-				}
-			}
 		}
 	}
 }
