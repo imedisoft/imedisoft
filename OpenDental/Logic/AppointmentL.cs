@@ -23,20 +23,20 @@ namespace OpenDental
 		{
 			var recalls = Recalls.GetList(patient.PatNum);
 
-			Recall recallCur = null;
+			Recall recall = null;
 			if (recallNum > 0)
 			{
-				recallCur = Recalls.GetRecall(recallNum);
+				recall = Recalls.GetRecall(recallNum);
 			}
 			else
 			{
-				for (int i = 0; i < recalls.Count; i++)
+				foreach (var r in recalls)
 				{
-					if (recalls[i].RecallTypeNum == RecallTypes.PerioType || recalls[i].RecallTypeNum == RecallTypes.ProphyType)
+					if (r.RecallTypeNum == RecallTypes.PerioType || r.RecallTypeNum == RecallTypes.ProphyType)
 					{
-						if (!recalls[i].IsDisabled)
+						if (!r.IsDisabled)
 						{
-							recallCur = recalls[i];
+							recall = r;
 						}
 
 						break;
@@ -44,49 +44,53 @@ namespace OpenDental
 				}
 			}
 
-			if (recallCur == null)
+			if (recall == null)
 			{
 				// Typically never happens because everyone has a recall. However, it can happen when patients have custom recalls due.
 				throw new ApplicationException("No special type recall is due.");
 			}
 
-			if (recallCur.DateScheduled.Date > DateTime.Today)
+			if (recall.DateScheduled.Date > DateTime.Today)
 			{
-				throw new ApplicationException("Recall has already been scheduled for " + recallCur.DateScheduled.ToShortDateString());
+				throw new ApplicationException("Recall has already been scheduled for " + recall.DateScheduled.ToShortDateString());
 			}
 
-			Appointment aptCur = new Appointment();
-			aptCur.AptDateTime = aptDateTime;
-			List<string> procs = RecallTypes.GetProcs(recallCur.RecallTypeNum);
-			List<Procedure> listProcs = Appointments.FillAppointmentForRecall(aptCur, recallCur, recalls, patient, procs, insPlans, insSubs);
-			
-			for (int i = 0; i < listProcs.Count; i++)
+            var appointment = new Appointment
+            {
+                AptDateTime = aptDateTime
+            };
+
+            var procedureCodes = RecallTypes.GetProcs(recall.RecallTypeNum);
+			var procedures = Appointments.FillAppointmentForRecall(appointment, recall, recalls, patient, procedureCodes, insPlans, insSubs);
+
+			if (Programs.UsingOrion)
 			{
-				if (Programs.UsingOrion)
+				for (int i = 0; i < procedures.Count; i++)
 				{
-					FormProcEdit FormP = new FormProcEdit(listProcs[i], patient.Copy(), Patients.GetFamily(patient.PatNum));
-					FormP.IsNew = true;
-					FormP.ShowDialog();
-					if (FormP.DialogResult == DialogResult.Cancel)
+					using (var formProcEdit = new FormProcEdit(procedures[i], patient.Copy(), Patients.GetFamily(patient.PatNum)))
 					{
-						//any created claimprocs are automatically deleted from within procEdit window.
-						try
+						formProcEdit.IsNew = true;
+
+						if (formProcEdit.ShowDialog() == DialogResult.Cancel)
 						{
-							Procedures.Delete(listProcs[i].ProcNum);//also deletes the claimprocs
+							try
+							{
+								Procedures.Delete(procedures[i].ProcNum);
+							}
+							catch (Exception ex)
+							{
+								ODMessageBox.Show(ex.Message);
+							}
 						}
-						catch (Exception ex)
+						else
 						{
-							MessageBox.Show(ex.Message);
+							// Do not synch. Recalls based on ScheduleByDate reports in Orion mode.
 						}
-					}
-					else
-					{
-						//Do not synch. Recalls based on ScheduleByDate reports in Orion mode.
-						//Recalls.Synch(PatCur.PatNum);
 					}
 				}
 			}
-			return aptCur;
+
+			return appointment;
 		}
 
 		/// <summary>
@@ -102,17 +106,18 @@ namespace OpenDental
 		/// </summary>
 		public static void BreakApptHelper(Appointment appt, Patient pat, ProcedureCode procCode)
 		{
-			//suppressHistory is true due to below logic creating a log with a specific HistAppointmentAction instead of the generic changed.
+			// suppressHistory is true due to below logic creating a log with a specific HistAppointmentAction instead of the generic changed.
 			DateTime datePrevious = appt.DateTStamp;
 			bool suppressHistory = false;
 			if (procCode != null)
 			{
-				suppressHistory = (procCode.ProcCode.In("D9986", "D9987"));
+				suppressHistory = procCode.ProcCode.In("D9986", "D9987");
 			}
 
 			Appointments.SetAptStatus(appt, ApptStatus.Broken, suppressHistory); // Appointments S-Class handles Signalods.
 			if (appt.AptStatus != ApptStatus.Complete)
-			{ //seperate log entry for completed appointments.
+			{ 
+				// Seperate log entry for completed appointments.
 				SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit, pat.PatNum,
 					appt.ProcDescript + ", " + appt.AptDateTime.ToString()
 					+ ", Broken from the Appts module.", appt.AptNum, datePrevious);
@@ -125,26 +130,32 @@ namespace OpenDental
 			}
 
 			#region HL7
-			//If there is an existing HL7 def enabled, send a SIU message if there is an outbound SIU message defined
+
+			// If there is an existing HL7 def enabled, send a SIU message if there is an outbound SIU message defined
 			if (HL7Defs.IsExistingHL7Enabled())
 			{
-				//S15 - Appt Cancellation event
+				// S15 - Appt Cancellation event
 				MessageHL7 messageHL7 = MessageConstructor.GenerateSIU(pat, Patients.GetPat(pat.Guarantor), EventTypeHL7.S15, appt);
-				//Will be null if there is no outbound SIU message defined, so do nothing
+
+				// Will be null if there is no outbound SIU message defined, so do nothing
 				if (messageHL7 != null)
 				{
-					HL7Msg hl7Msg = new HL7Msg();
-					hl7Msg.AptNum = appt.AptNum;
-					hl7Msg.HL7Status = HL7MessageStatus.OutPending;//it will be marked outSent by the HL7 service.
-					hl7Msg.MsgText = messageHL7.ToString();
-					hl7Msg.PatNum = pat.PatNum;
-					HL7Msgs.Insert(hl7Msg);
+                    HL7Msgs.Insert(new HL7Msg
+					{
+						AptNum = appt.AptNum,
+						HL7Status = HL7MessageStatus.OutPending,
+						MsgText = messageHL7.ToString(),
+						PatNum = pat.PatNum
+					});
+
 #if DEBUG
-					MessageBox.Show("Appointments", messageHL7.ToString());
+                    ODMessageBox.Show(messageHL7.ToString(), "Appointments");
 #endif
 				}
 			}
+
 			#endregion
+
 			List<Procedure> listProcedures = new List<Procedure>();
 			//splits should only exist on procs if they are using tp pre-payments
 			List<PaySplit> listSplitsForApptProcs = new List<PaySplit>();
@@ -257,15 +268,17 @@ namespace OpenDental
 			#region BrokenApptCommLog
 			if (PrefC.GetBool(PrefName.BrokenApptCommLog))
 			{
-				Commlog commlogCur = new Commlog();
-				commlogCur.PatNum = pat.PatNum;
-				commlogCur.CommDateTime = DateTime.Now;
-				commlogCur.CommType = Commlogs.GetTypeAuto(CommItemTypeAuto.APPT);
-				commlogCur.Note = Lan.G("Appointment", "Appt BROKEN for") + " " + appt.ProcDescript + "  " + appt.AptDateTime.ToString();
-				commlogCur.Mode_ = CommItemMode.None;
-				commlogCur.UserNum = Security.CurUser.UserNum;
-				commlogCur.IsNew = true;
-				FormCommItem FormCI = new FormCommItem(commlogCur);
+                Commlog commlogCur = new Commlog
+                {
+                    PatNum = pat.PatNum,
+                    CommDateTime = DateTime.Now,
+                    CommType = Commlogs.GetTypeAuto(CommItemTypeAuto.APPT),
+                    Note = Lan.G("Appointment", "Appt BROKEN for") + " " + appt.ProcDescript + "  " + appt.AptDateTime.ToString(),
+                    Mode_ = CommItemMode.None,
+                    UserNum = Security.CurUser.UserNum,
+                    IsNew = true
+                };
+                FormCommItem FormCI = new FormCommItem(commlogCur);
 				FormCI.ShowDialog();
 			}
 			#endregion
@@ -296,15 +309,17 @@ namespace OpenDental
 							//If the original prepayment amount is greater than the amt being specified for the appointment break, transfer
 							//the difference to an Unallocated Unearned Paysplit on the account.
 							double remainingAmt = amtPaidOnApt - amt;
-							//We have to create a new transfer payment here to correlate to the split.
-							Payment txfrPayment = new Payment();
-							txfrPayment.PayAmt = 0;
-							txfrPayment.PayDate = DateTime.Today;
-							txfrPayment.ClinicNum = split.ClinicNum;
-							txfrPayment.PayNote = "Automatic transfer from treatment planned procedure prepayment.";
-							txfrPayment.PatNum = split.PatNum;//ultimately where the payment ends up.
-							txfrPayment.PayType = 0;
-							Payments.Insert(txfrPayment);
+                            //We have to create a new transfer payment here to correlate to the split.
+                            Payment txfrPayment = new Payment
+                            {
+                                PayAmt = 0,
+                                PayDate = DateTime.Today,
+                                ClinicNum = split.ClinicNum,
+                                PayNote = "Automatic transfer from treatment planned procedure prepayment.",
+                                PatNum = split.PatNum,//ultimately where the payment ends up.
+                                PayType = 0
+                            };
+                            Payments.Insert(txfrPayment);
 							PaymentEdit.IncomeTransferData transferData = PaymentEdit.IncomeTransferData.CreateTransfer(split, txfrPayment.PayNum, true, remainingAmt);
 							PaySplit offset = transferData.ListSplitsCur.FirstOrDefault(x => x.FSplitNum != 0);
 							long offsetSplitNum = PaySplits.Insert(offset);//Get the FSplitNum from the offset

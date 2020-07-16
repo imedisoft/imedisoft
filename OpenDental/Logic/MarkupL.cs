@@ -18,9 +18,9 @@ namespace OpenDental
 			string s = tagStart + codeBox.SelectedText + tagClose;
 			codeBox.SelectedText = s;
 
-			//textContentEmail.Focus();
 			if (tempLength == 0)
-			{//nothing selected, place cursor in middle of new tags
+			{
+				// Nothing selected, place cursor in middle of new tags
 				codeBox.SelectionStart = tempStart + tagStart.Length + tempLength;
 			}
 			else

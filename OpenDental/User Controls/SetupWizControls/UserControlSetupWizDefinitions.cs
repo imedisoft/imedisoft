@@ -91,7 +91,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void gridDefs_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			Def selectedDef = (Def)gridDefs.ListGridRows[e.Row].Tag;
-			_isDefChanged=DefL.GridDefsDoubleClick(selectedDef,gridDefs,_selectedDefCatOpt,_listDefsCur,_listDefsAll,_isDefChanged);
+			_isDefChanged=DefL.GridDefsDoubleClick(selectedDef,_selectedDefCatOpt,_listDefsCur,_listDefsAll,_isDefChanged);
 			if(_isDefChanged) {
 				RefreshDefs();
 				FillGridDefs();

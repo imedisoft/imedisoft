@@ -66,7 +66,6 @@ namespace OpenDental {
 				BeginEServiceMonitorThread();
 				BeginLogOffThread();
 				BeginODServiceMonitorThread();
-				BeginUpdateFormTextThread();
 				BeginWebSyncThread();
 				BeginComputerHeartbeatThread();
 				BeginPodiumThread();
@@ -769,28 +768,6 @@ namespace OpenDental {
 					WindowsTime.SetTime(DateTime.Now.AddMilliseconds(nistOffset)); 
 				});
 			}
-		}
-
-		#endregion
-		#region UpdateFormTextThread
-
-		///<summary>Begins a thread that updates the title text if necessary in the case of an update. Always rounds down so as not to give users 
-		///the impression that there is more time than there really is until the update.</summary>
-		private void BeginUpdateFormTextThread() {
-			if(IsThreadAlreadyRunning(FormODThreadNames.UpdateFormText)) {
-				return;
-			}
-			ODThread odThreadUpdateFormText=new ODThread((int)TimeSpan.FromSeconds(1).TotalMilliseconds,(o) => {
-				string mainTitleText=PatientL.GetMainTitleSamePat();
-				//The Form.Text property is thead safe. Will invoke as a safety precaution still as the assignment will be nearly instant.
-				this.Invoke(() => {
-					this.Text=mainTitleText;
-				});
-			});
-			odThreadUpdateFormText.AddExceptionHandler((e) => { });
-			odThreadUpdateFormText.GroupName=FormODThreadNames.UpdateFormText.GetDescription();
-			odThreadUpdateFormText.Name=FormODThreadNames.UpdateFormText.GetDescription();
-			odThreadUpdateFormText.Start();
 		}
 
 		#endregion

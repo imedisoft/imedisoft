@@ -206,7 +206,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\MessageBox.cs" />
     <Compile Include="Controls\OpenGLWinFormsControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -216,6 +215,7 @@
     <Compile Include="Controls\PrintPanel.Designer.cs">
       <DependentUpon>PrintPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="MessageBox.cs" />
     <Compile Include="Progress\FormProgressBase.cs">
       <SubType>Form</SubType>
     </Compile>

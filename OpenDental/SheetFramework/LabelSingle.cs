@@ -10,7 +10,6 @@ namespace OpenDental
 		{
 		}
 
-		///<summary></summary>
 		public static void PrintPat(long patNum)
 		{
 			SheetDef sheetDef = SheetsInternal.GetSheetDef(SheetInternalType.LabelPatientMail);

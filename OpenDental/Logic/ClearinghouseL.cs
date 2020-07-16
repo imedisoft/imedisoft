@@ -1,3 +1,4 @@
+using CodeBase;
 using OpenDentBusiness;
 
 namespace OpenDental
@@ -16,7 +17,7 @@ namespace OpenDental
 
 			if (clearinghouse == null && !suppressError)
 			{
-				MsgBox.Show("Error. Could not locate Clearinghouse.");
+				ODMessageBox.Show("Error. Could not locate Clearinghouse.");
 			}
 
 			return clearinghouse;

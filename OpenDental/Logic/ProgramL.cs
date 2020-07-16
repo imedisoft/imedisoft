@@ -28,6 +28,7 @@ namespace OpenDental{
 			if(pat!=null && PrefC.GetBool(PrefName.ShowFeaturePatientClone)) {
 				pat=Patients.GetOriginalPatientForClone(pat);
 			}
+			
 			if(prog.PluginDllName!="") {
 				if(pat==null) {
 					Plugins.LaunchToolbarButton(programNum,0);

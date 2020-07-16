@@ -1509,7 +1509,7 @@ namespace OpenDental
 				pat = new Patient();
 			}
 			Text = PatientL.GetMainTitle(pat, Clinics.ClinicNum);
-			bool patChanged = PatientL.AddPatsToMenu(menuPatient, new EventHandler(menuPatient_Click), pat.GetNameLF(), pat.PatNum);
+			bool patChanged = PatientL.AddPatientToMenu(pat.GetNameLF(), pat.PatNum);
 			if (patChanged)
 			{
 				if (AutomationL.Trigger(AutomationTrigger.OpenPatient, null, pat.PatNum))

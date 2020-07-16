@@ -1,31 +1,26 @@
-﻿using System;
+﻿using OpenDentBusiness;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Drawing.Printing;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using CodeBase;
-using OpenDental.UI;
-using OpenDentBusiness;
-using PdfSharp;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
 
-namespace OpenDental {
-	public class SheetPrinting {
+namespace OpenDental
+{
+    public class SheetPrinting
+	{
 		///<summary>Print margin of the default printer. only used in page break calulations, and only top and bottom are used.</summary>
-		private static Margins _printMargin=new Margins(0,0,40,60);//jordan static only because it's an unchanging val.
+		private static Margins _printMargin = new Margins(0, 0, 40, 60);//jordan static only because it's an unchanging val.
 
 		#region Properties
 		///<summary>The treatment finder needs this so that it can use the same Margins in its page calculations.</summary>
-		public static Margins PrintMargin {
-			get {
+		public static Margins PrintMargin
+		{
+			get
+			{
 				return _printMargin;
 			}
 		}
@@ -33,65 +28,78 @@ namespace OpenDental {
 
 		#region Methods - Public Printing
 		///<summary>If printing a statement, use the polymorphism that takes a DataSet otherwise this method will make another call to the db.</summary>
-		public static void Print(Sheet sheet,int copies=1,bool isRxControlled=false,Statement stmt=null,MedLab medLab=null,bool isPrintDocument=true,bool isPreviewMode=false) {
-			SheetPrintingJob sheetPrintingJob=new SheetPrintingJob();
-			sheetPrintingJob.Print(sheet,copies,isRxControlled,stmt,medLab,isPrintDocument,isPreviewMode);
+		public static void Print(Sheet sheet, int copies = 1, bool isRxControlled = false, Statement stmt = null, MedLab medLab = null, bool isPrintDocument = true, bool isPreviewMode = false)
+		{
+			SheetPrintingJob sheetPrintingJob = new SheetPrintingJob();
+			sheetPrintingJob.Print(sheet, copies, isRxControlled, stmt, medLab, isPrintDocument, isPreviewMode);
 		}
 
 		///<Summary>DataSet should be prefilled with AccountModules.GetAccount() before calling this method if printing a statement.  Returns null if document failed to print.</Summary>
-		public static void Print(Sheet sheet,DataSet dataSet,int copies=1,bool isRxControlled=false,Statement stmt=null,MedLab medLab=null,
-			bool isPrintDocument=true,bool isPreviewMode=false)
+		public static void Print(Sheet sheet, DataSet dataSet, int copies = 1, bool isRxControlled = false, Statement stmt = null, MedLab medLab = null,
+			bool isPrintDocument = true, bool isPreviewMode = false)
 		{
-			SheetPrintingJob sheetPrintingJob=new SheetPrintingJob();
-			sheetPrintingJob.Print(sheet,dataSet,copies,isRxControlled,stmt,medLab);
+			SheetPrintingJob sheetPrintingJob = new SheetPrintingJob();
+			sheetPrintingJob.Print(sheet, dataSet, copies, isRxControlled, stmt, medLab);
 		}
 
-		public static void PrintBatch(List<Sheet> sheetBatch){
-			SheetPrintingJob sheetPrintingJob=new SheetPrintingJob();
+		public static void PrintBatch(List<Sheet> sheetBatch)
+		{
+			SheetPrintingJob sheetPrintingJob = new SheetPrintingJob();
 			sheetPrintingJob.PrintBatch(sheetBatch);
 		}
 
 		///<summary>Performs validation on each Rx before printing.  If one of the given Rx does not pass validation, then the entire batch is aborted, because it is easy for user to fix errors.</summary>
-		public static void PrintMultiRx(List<RxPat> listRxs) {
-			SheetPrintingJob sheetPrintingJob=new SheetPrintingJob();
+		public static void PrintMultiRx(List<RxPat> listRxs)
+		{
+			SheetPrintingJob sheetPrintingJob = new SheetPrintingJob();
 			sheetPrintingJob.PrintMultiRx(listRxs);
 		}
 
 		///<summary>Performs validation on the given Rx before printing.  Returns false if validation failed.</summary>
-		public static bool PrintRx(Sheet sheet,RxPat rx){
-			SheetPrintingJob sheetPrintingJob=new SheetPrintingJob();
-			return sheetPrintingJob.PrintRx(sheet,rx);
+		public static bool PrintRx(Sheet sheet, RxPat rx)
+		{
+			SheetPrintingJob sheetPrintingJob = new SheetPrintingJob();
+			return sheetPrintingJob.PrintRx(sheet, rx);
 		}
 
 		///<summary>Validates one Rx.  Returns a string of error messages.  Blank string indicates no errors.
 		///Some Rx require certain data to be present when printing.</summary>
-		public static string ValidateRxForSheet(RxPat rx) {
-			if(!PrefC.GetBool(PrefName.RxHasProc)) {
+		public static string ValidateRxForSheet(RxPat rx)
+		{
+			if (!PrefC.GetBool(PrefName.RxHasProc))
+			{
 				return "";//The global preference allows the user to completely disable Rx ProcCode validation, even if some Rx are flagged as required.
 			}
-			if(Clinics.ClinicNum!=0) {//Not HQ
-				Clinic clinic=Clinics.GetClinic(Clinics.ClinicNum);
-				if(!clinic.HasProcOnRx) {
+			if (Clinics.ClinicNum != 0)
+			{//Not HQ
+				Clinic clinic = Clinics.GetClinic(Clinics.ClinicNum);
+				if (!clinic.HasProcOnRx)
+				{
 					//The clinic option allows the user to completely disable Rx ProcCode validation for one clinic.
 					//A customer who needs this feature has some clinics in states which require ProCode and some clinics in states which do not.
 					return "";
 				}
 			}
-			if(!rx.IsProcRequired) {
+			if (!rx.IsProcRequired)
+			{
 				return "";//No ProCode validation required for this specific Rx.
 			}
-			StringBuilder sb=new StringBuilder();
-			if(rx.ProcNum==0) {
-				if(sb.Length > 0) {
+			StringBuilder sb = new StringBuilder();
+			if (rx.ProcNum == 0)
+			{
+				if (sb.Length > 0)
+				{
 					sb.Append(", ");
 				}
-				sb.Append(Lans.g("Sheets","Procedure"));
+				sb.Append(Lans.g("Sheets", "Procedure"));
 			}
-			if(rx.DaysOfSupply<=0) {
-				if(sb.Length > 0) {
+			if (rx.DaysOfSupply <= 0)
+			{
+				if (sb.Length > 0)
+				{
 					sb.Append(", ");
 				}
-				sb.Append(Lans.g("Sheets","Days of Supply"));
+				sb.Append(Lans.g("Sheets", "Days of Supply"));
 			}
 			return sb.ToString();
 		}
@@ -99,227 +107,263 @@ namespace OpenDental {
 
 		#region Methods - Drawing
 		///<Summary>DataSet should be prefilled with AccountModules.GetAccount() before calling this method if printing a statement.</Summary>
-		public static void DrawFieldGrid(SheetField field,Sheet sheet,Graphics g,XGraphics gx,DataSet dataSet,Statement stmt,MedLab medLab,
-			bool isPrinting=false,Patient pat=null,Patient patGuar=null) {
-			SheetDrawingJob sheetDrawingJob=new SheetDrawingJob();
-			sheetDrawingJob.DrawFieldGrid(field,sheet,g,gx,dataSet,stmt,medLab,isPrinting,pat,patGuar);
+		public static void DrawFieldGrid(SheetField field, Sheet sheet, Graphics g, XGraphics gx, DataSet dataSet, Statement stmt, MedLab medLab,
+			bool isPrinting = false, Patient pat = null, Patient patGuar = null)
+		{
+			SheetDrawingJob sheetDrawingJob = new SheetDrawingJob();
+			sheetDrawingJob.DrawFieldGrid(field, sheet, g, gx, dataSet, stmt, medLab, isPrinting, pat, patGuar);
 		}
 
-		public static void DrawProcsGraphics(List<Procedure> procList,ToothChartRelay toothChartRelay,List<ToothInitial> toothInitialList) {
+		public static void DrawProcsGraphics(List<Procedure> procList, ToothChartRelay toothChartRelay, List<ToothInitial> toothInitialList)
+		{
 			//this method must also stay in OD.exe
 			Procedure proc;
 			string[] teeth;
-			System.Drawing.Color cLight=System.Drawing.Color.White;
-			System.Drawing.Color cDark=System.Drawing.Color.White;
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors,true);
-			for(int i=0;i<procList.Count;i++) {
-				proc=procList[i];
+			System.Drawing.Color cLight = System.Drawing.Color.White;
+			System.Drawing.Color cDark = System.Drawing.Color.White;
+			List<Def> listDefs = Defs.GetDefsForCategory(DefCat.ChartGraphicColors, true);
+			for (int i = 0; i < procList.Count; i++)
+			{
+				proc = procList[i];
 				//if(proc.ProcStatus!=procStat) {
 				//  continue;
 				//}
-				if(proc.HideGraphics) {
+				if (proc.HideGraphics)
+				{
 					continue;
 				}
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).PaintType==ToothPaintingType.Extraction && (
-					proc.ProcStatus==ProcStat.C
-					|| proc.ProcStatus==ProcStat.EC
-					|| proc.ProcStatus==ProcStat.EO
-					)) {
+				if (ProcedureCodes.GetProcCode(proc.CodeNum).PaintType == ToothPaintingType.Extraction && (
+					proc.ProcStatus == ProcStat.C
+					|| proc.ProcStatus == ProcStat.EC
+					|| proc.ProcStatus == ProcStat.EO
+					))
+				{
 					continue;//prevents the red X. Missing teeth already handled.
 				}
-				if(ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor==System.Drawing.Color.FromArgb(0)) {
-					switch(proc.ProcStatus) {
+				if (ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor == System.Drawing.Color.FromArgb(0))
+				{
+					switch (proc.ProcStatus)
+					{
 						case ProcStat.C:
-							cDark=listDefs[1].ItemColor;
-							cLight=listDefs[6].ItemColor;
+							cDark = listDefs[1].ItemColor;
+							cLight = listDefs[6].ItemColor;
 							break;
 						case ProcStat.TP:
-							cDark=listDefs[0].ItemColor;
-							cLight=listDefs[5].ItemColor;
+							cDark = listDefs[0].ItemColor;
+							cLight = listDefs[5].ItemColor;
 							break;
 						case ProcStat.EC:
-							cDark=listDefs[2].ItemColor;
-							cLight=listDefs[7].ItemColor;
+							cDark = listDefs[2].ItemColor;
+							cLight = listDefs[7].ItemColor;
 							break;
 						case ProcStat.EO:
-							cDark=listDefs[3].ItemColor;
-							cLight=listDefs[8].ItemColor;
+							cDark = listDefs[3].ItemColor;
+							cLight = listDefs[8].ItemColor;
 							break;
 						case ProcStat.R:
-							cDark=listDefs[4].ItemColor;
-							cLight=listDefs[9].ItemColor;
+							cDark = listDefs[4].ItemColor;
+							cLight = listDefs[9].ItemColor;
 							break;
 						case ProcStat.Cn:
-							cDark=listDefs[16].ItemColor;
-							cLight=listDefs[17].ItemColor;
+							cDark = listDefs[16].ItemColor;
+							cLight = listDefs[17].ItemColor;
 							break;
 						case ProcStat.D://Can happen with invalidated locked procs.
 						default:
 							continue;//Don't draw.
 					}
 				}
-				else {
-					cDark=ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor;
-					cLight=ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor;
+				else
+				{
+					cDark = ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor;
+					cLight = ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor;
 				}
-				switch(ProcedureCodes.GetProcCode(proc.CodeNum).PaintType) {
+				switch (ProcedureCodes.GetProcCode(proc.CodeNum).PaintType)
+				{
 					case ToothPaintingType.BridgeDark:
-						if(ToothInitials.ToothIsMissingOrHidden(toothInitialList,proc.ToothNum)) {
-							toothChartRelay.SetPontic(proc.ToothNum,cDark);
+						if (ToothInitials.ToothIsMissingOrHidden(toothInitialList, proc.ToothNum))
+						{
+							toothChartRelay.SetPontic(proc.ToothNum, cDark);
 						}
-						else {
-							toothChartRelay.SetCrown(proc.ToothNum,cDark);
+						else
+						{
+							toothChartRelay.SetCrown(proc.ToothNum, cDark);
 						}
 						break;
 					case ToothPaintingType.BridgeLight:
-						if(ToothInitials.ToothIsMissingOrHidden(toothInitialList,proc.ToothNum)) {
-							toothChartRelay.SetPontic(proc.ToothNum,cLight);
+						if (ToothInitials.ToothIsMissingOrHidden(toothInitialList, proc.ToothNum))
+						{
+							toothChartRelay.SetPontic(proc.ToothNum, cLight);
 						}
-						else {
-							toothChartRelay.SetCrown(proc.ToothNum,cLight);
+						else
+						{
+							toothChartRelay.SetCrown(proc.ToothNum, cLight);
 						}
 						break;
 					case ToothPaintingType.CrownDark:
-						toothChartRelay.SetCrown(proc.ToothNum,cDark);
+						toothChartRelay.SetCrown(proc.ToothNum, cDark);
 						break;
 					case ToothPaintingType.CrownLight:
-						toothChartRelay.SetCrown(proc.ToothNum,cLight);
+						toothChartRelay.SetCrown(proc.ToothNum, cLight);
 						break;
 					case ToothPaintingType.DentureDark:
-						if(proc.Surf=="U") {
-							teeth=new string[14];
-							for(int t=0;t<14;t++) {
-								teeth[t]=(t+2).ToString();
+						if (proc.Surf == "U")
+						{
+							teeth = new string[14];
+							for (int t = 0; t < 14; t++)
+							{
+								teeth[t] = (t + 2).ToString();
 							}
 						}
-						else if(proc.Surf=="L") {
-							teeth=new string[14];
-							for(int t=0;t<14;t++) {
-								teeth[t]=(t+18).ToString();
+						else if (proc.Surf == "L")
+						{
+							teeth = new string[14];
+							for (int t = 0; t < 14; t++)
+							{
+								teeth[t] = (t + 18).ToString();
 							}
 						}
-						else {
-							teeth=proc.ToothRange.Split(new char[] { ',' });
+						else
+						{
+							teeth = proc.ToothRange.Split(new char[] { ',' });
 						}
-						for(int t=0;t<teeth.Length;t++) {
-							if(ToothInitials.ToothIsMissingOrHidden(toothInitialList,teeth[t])) {
-								toothChartRelay.SetPontic(teeth[t],cDark);
+						for (int t = 0; t < teeth.Length; t++)
+						{
+							if (ToothInitials.ToothIsMissingOrHidden(toothInitialList, teeth[t]))
+							{
+								toothChartRelay.SetPontic(teeth[t], cDark);
 							}
-							else {
-								toothChartRelay.SetCrown(teeth[t],cDark);
+							else
+							{
+								toothChartRelay.SetCrown(teeth[t], cDark);
 							}
 						}
 						break;
 					case ToothPaintingType.DentureLight:
-						if(proc.Surf=="U") {
-							teeth=new string[14];
-							for(int t=0;t<14;t++) {
-								teeth[t]=(t+2).ToString();
+						if (proc.Surf == "U")
+						{
+							teeth = new string[14];
+							for (int t = 0; t < 14; t++)
+							{
+								teeth[t] = (t + 2).ToString();
 							}
 						}
-						else if(proc.Surf=="L") {
-							teeth=new string[14];
-							for(int t=0;t<14;t++) {
-								teeth[t]=(t+18).ToString();
+						else if (proc.Surf == "L")
+						{
+							teeth = new string[14];
+							for (int t = 0; t < 14; t++)
+							{
+								teeth[t] = (t + 18).ToString();
 							}
 						}
-						else {
-							teeth=proc.ToothRange.Split(new char[] { ',' });
+						else
+						{
+							teeth = proc.ToothRange.Split(new char[] { ',' });
 						}
-						for(int t=0;t<teeth.Length;t++) {
-							if(ToothInitials.ToothIsMissingOrHidden(toothInitialList,teeth[t])) {
-								toothChartRelay.SetPontic(teeth[t],cLight);
+						for (int t = 0; t < teeth.Length; t++)
+						{
+							if (ToothInitials.ToothIsMissingOrHidden(toothInitialList, teeth[t]))
+							{
+								toothChartRelay.SetPontic(teeth[t], cLight);
 							}
-							else {
-								toothChartRelay.SetCrown(teeth[t],cLight);
+							else
+							{
+								toothChartRelay.SetCrown(teeth[t], cLight);
 							}
 						}
 						break;
 					case ToothPaintingType.Extraction:
-						toothChartRelay.SetBigX(proc.ToothNum,cDark);
+						toothChartRelay.SetBigX(proc.ToothNum, cDark);
 						break;
 					case ToothPaintingType.FillingDark:
-						toothChartRelay.SetSurfaceColors(proc.ToothNum,proc.Surf,cDark);
+						toothChartRelay.SetSurfaceColors(proc.ToothNum, proc.Surf, cDark);
 						break;
 					case ToothPaintingType.FillingLight:
-						toothChartRelay.SetSurfaceColors(proc.ToothNum,proc.Surf,cLight);
+						toothChartRelay.SetSurfaceColors(proc.ToothNum, proc.Surf, cLight);
 						break;
 					case ToothPaintingType.Implant:
-						toothChartRelay.SetImplant(proc.ToothNum,cDark);
+						toothChartRelay.SetImplant(proc.ToothNum, cDark);
 						break;
 					case ToothPaintingType.PostBU:
-						toothChartRelay.SetBU(proc.ToothNum,cDark);
+						toothChartRelay.SetBU(proc.ToothNum, cDark);
 						break;
 					case ToothPaintingType.RCT:
-						toothChartRelay.SetRCT(proc.ToothNum,cDark);
+						toothChartRelay.SetRCT(proc.ToothNum, cDark);
 						break;
 					case ToothPaintingType.Sealant:
-						toothChartRelay.SetSealant(proc.ToothNum,cDark);
+						toothChartRelay.SetSealant(proc.ToothNum, cDark);
 						break;
 					case ToothPaintingType.Veneer:
-						toothChartRelay.SetVeneer(proc.ToothNum,cLight);
+						toothChartRelay.SetVeneer(proc.ToothNum, cLight);
 						break;
 					case ToothPaintingType.Watch:
-						toothChartRelay.SetWatch(proc.ToothNum,cDark);
+						toothChartRelay.SetWatch(proc.ToothNum, cDark);
 						break;
 				}
 			}
 		}
 
 		///<summary>Generates an Image of the ToothChart.  Set isForSheet=true for dimensions and colors appropriate for Sheets, false for dimensions and colors appropriate for display in Patient Dashboard (matches dimensions for .</summary>
-		public static Image GetToothChartHelper(long patNum,bool showCompleted,TreatPlan treatPlan=null,List<Procedure> listProceduresFilteredOverride=null
-			,bool isInPatientDashboard=false) 
+		public static Image GetToothChartHelper(long patNum, bool showCompleted, TreatPlan treatPlan = null, List<Procedure> listProceduresFilteredOverride = null
+			, bool isInPatientDashboard = false)
 		{
 			//This method is designed to stay in the OD.exe.
-			int colorBackgroundIndex=14;
-			int colorTextIndex=15;
-			int width=500;
-			int height=370;
-			if(isInPatientDashboard) {
-				colorBackgroundIndex=10;
-				colorTextIndex=11;
-				width=410;
-				height=307;
+			int colorBackgroundIndex = 14;
+			int colorTextIndex = 15;
+			int width = 500;
+			int height = 370;
+			if (isInPatientDashboard)
+			{
+				colorBackgroundIndex = 10;
+				colorTextIndex = 11;
+				width = 410;
+				height = 307;
 			}
-			Form formOldBitmap=null;
-			SparksToothChart.ToothChartWrapper toothChartWrapper=new SparksToothChart.ToothChartWrapper();
-			ToothChartRelay toothChartRelay= new ToothChartRelay(false);
+			Form formOldBitmap = null;
+			SparksToothChart.ToothChartWrapper toothChartWrapper = new SparksToothChart.ToothChartWrapper();
+			ToothChartRelay toothChartRelay = new ToothChartRelay(false);
 			toothChartRelay.SetToothChartWrapper(toothChartWrapper);
-			Control toothChart=null;//the Sparks3D tooth chart
-			if(ToothChartRelay.IsSparks3DPresent){
-				toothChart=toothChartRelay.GetToothChart();
-				toothChart.Location=new Point(0,0);
-				toothChart.Size=new Size(width,height);
+			Control toothChart = null;//the Sparks3D tooth chart
+			if (ToothChartRelay.IsSparks3DPresent)
+			{
+				toothChart = toothChartRelay.GetToothChart();
+				toothChart.Location = new Point(0, 0);
+				toothChart.Size = new Size(width, height);
 				//form.Controls.Add(toothChart);
 			}
-			else{
-				toothChartWrapper.Size=new Size(width,height);
-				toothChartWrapper.UseHardware=ComputerPrefs.LocalComputer.GraphicsUseHardware;
-				toothChartWrapper.PreferredPixelFormatNumber=ComputerPrefs.LocalComputer.PreferredPixelFormatNum;
-				toothChartWrapper.DeviceFormat=new SparksToothChart.ToothChartDirectX.DirectXDeviceFormat(ComputerPrefs.LocalComputer.DirectXFormat);
-				toothChartWrapper.DrawMode=ComputerPrefs.LocalComputer.GraphicsSimple;
-				ComputerPrefs.LocalComputer.PreferredPixelFormatNum=toothChartWrapper.PreferredPixelFormatNumber;
+			else
+			{
+				toothChartWrapper.Size = new Size(width, height);
+				toothChartWrapper.UseHardware = ComputerPrefs.LocalComputer.GraphicsUseHardware;
+				toothChartWrapper.PreferredPixelFormatNumber = ComputerPrefs.LocalComputer.PreferredPixelFormatNum;
+				toothChartWrapper.DeviceFormat = new SparksToothChart.ToothChartDirectX.DirectXDeviceFormat(ComputerPrefs.LocalComputer.DirectXFormat);
+				toothChartWrapper.DrawMode = ComputerPrefs.LocalComputer.GraphicsSimple;
+				ComputerPrefs.LocalComputer.PreferredPixelFormatNum = toothChartWrapper.PreferredPixelFormatNumber;
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
-				formOldBitmap=new Form();
-				formOldBitmap.FormBorderStyle=FormBorderStyle.None;
-				formOldBitmap.Size=new Size(width,height);
+				formOldBitmap = new Form();
+				formOldBitmap.FormBorderStyle = FormBorderStyle.None;
+				formOldBitmap.Size = new Size(width, height);
 				formOldBitmap.Controls.Add(toothChartWrapper);
 				//formOldBitmap.Show();
 			}
 			toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
-			toothChartRelay.ColorBackgroundMain=listDefs[colorBackgroundIndex].ItemColor;
-			toothChartRelay.ColorText=listDefs[colorTextIndex].ItemColor;
+			List<Def> listDefs = Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
+			toothChartRelay.ColorBackgroundMain = listDefs[colorBackgroundIndex].ItemColor;
+			toothChartRelay.ColorText = listDefs[colorTextIndex].ItemColor;
 			toothChartRelay.ResetTeeth();
-			List<ToothInitial> toothInitialList=patNum==0?new List<ToothInitial>():ToothInitials.Refresh(patNum);
+			List<ToothInitial> toothInitialList = patNum == 0 ? new List<ToothInitial>() : ToothInitials.Refresh(patNum);
 			//first, primary.  That way, you can still set a primary tooth missing afterwards.
-			for(int i=0;i<toothInitialList.Count;i++) {
-				if(toothInitialList[i].InitialType==ToothInitialType.Primary) {
+			for (int i = 0; i < toothInitialList.Count; i++)
+			{
+				if (toothInitialList[i].InitialType == ToothInitialType.Primary)
+				{
 					toothChartRelay.SetPrimary(toothInitialList[i].ToothNum);
 				}
 			}
-			for(int i=0;i<toothInitialList.Count;i++) {
-				switch(toothInitialList[i].InitialType) {
+			for (int i = 0; i < toothInitialList.Count; i++)
+			{
+				switch (toothInitialList[i].InitialType)
+				{
 					case ToothInitialType.Missing:
 						toothChartRelay.SetMissing(toothInitialList[i].ToothNum);
 						break;
@@ -327,22 +371,22 @@ namespace OpenDental {
 						toothChartRelay.SetHidden(toothInitialList[i].ToothNum);
 						break;
 					case ToothInitialType.Rotate:
-						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum,toothInitialList[i].Movement,0,0,0,0,0);
+						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum, toothInitialList[i].Movement, 0, 0, 0, 0, 0);
 						break;
 					case ToothInitialType.TipM:
-						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum,0,toothInitialList[i].Movement,0,0,0,0);
+						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum, 0, toothInitialList[i].Movement, 0, 0, 0, 0);
 						break;
 					case ToothInitialType.TipB:
-						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum,0,0,toothInitialList[i].Movement,0,0,0);
+						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum, 0, 0, toothInitialList[i].Movement, 0, 0, 0);
 						break;
 					case ToothInitialType.ShiftM:
-						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum,0,0,0,toothInitialList[i].Movement,0,0);
+						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum, 0, 0, 0, toothInitialList[i].Movement, 0, 0);
 						break;
 					case ToothInitialType.ShiftO:
-						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum,0,0,0,0,toothInitialList[i].Movement,0);
+						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum, 0, 0, 0, 0, toothInitialList[i].Movement, 0);
 						break;
 					case ToothInitialType.ShiftB:
-						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum,0,0,0,0,0,toothInitialList[i].Movement);
+						toothChartRelay.MoveTooth(toothInitialList[i].ToothNum, 0, 0, 0, 0, 0, toothInitialList[i].Movement);
 						break;
 					case ToothInitialType.Drawing:
 						toothChartRelay.AddDrawingSegment(toothInitialList[i].Copy());
@@ -350,27 +394,32 @@ namespace OpenDental {
 				}
 			}
 			//We passed in a list of procs we want to see on the toothchart.  Use that.
-			List<Procedure> listProceduresFiltered=new List<Procedure>();
-			if(listProceduresFilteredOverride!=null) {
-				listProceduresFiltered=listProceduresFilteredOverride;
+			List<Procedure> listProceduresFiltered = new List<Procedure>();
+			if (listProceduresFilteredOverride != null)
+			{
+				listProceduresFiltered = listProceduresFilteredOverride;
 			}
-			else if(patNum>0) {//Custom list of procedures was not passed in, go get all for the patient like we always have.
-				List<Procedure> listProceduresAll=Procedures.Refresh(patNum);
-				listProceduresFiltered=OpenDentBusiness.SheetPrinting.FilterProceduresForToothChart(listProceduresAll,treatPlan,showCompleted);
+			else if (patNum > 0)
+			{//Custom list of procedures was not passed in, go get all for the patient like we always have.
+				List<Procedure> listProceduresAll = Procedures.Refresh(patNum);
+				listProceduresFiltered = OpenDentBusiness.SheetPrinting.FilterProceduresForToothChart(listProceduresAll, treatPlan, showCompleted);
 			}
 			listProceduresFiltered.Sort(OpenDentBusiness.SheetPrinting.CompareProcListFiltered);
 			//Draw tooth chart
-			DrawProcsGraphics(listProceduresFiltered,toothChartRelay,toothInitialList);
-			if(!ToothChartRelay.IsSparks3DPresent){
-				toothChartWrapper.AutoFinish=true;
+			DrawProcsGraphics(listProceduresFiltered, toothChartRelay, toothInitialList);
+			if (!ToothChartRelay.IsSparks3DPresent)
+			{
+				toothChartWrapper.AutoFinish = true;
 			}
 			toothChartRelay.EndUpdate();
-			if(ToothChartRelay.IsSparks3DPresent){
-				Image retVal=toothChartRelay.GetBitmap();
+			if (ToothChartRelay.IsSparks3DPresent)
+			{
+				Image retVal = toothChartRelay.GetBitmap();
 				return retVal;
 			}
-			else{
-				Image retVal=toothChartRelay.GetBitmap();
+			else
+			{
+				Image retVal = toothChartRelay.GetBitmap();
 				formOldBitmap.Close();//automatically disposes, too
 				return retVal;
 			}
@@ -391,72 +440,32 @@ namespace OpenDental {
 
 		#region Methods - CreatePdf
 		///<summary>Creates a PDF in memory and returns it, does not save to disk.</summary>
-		public static PdfDocument CreatePdf(Sheet sheet) {
-			SheetDrawingJob sheetDrawingJob=new SheetDrawingJob();
+		public static PdfDocument CreatePdf(Sheet sheet)
+		{
+			SheetDrawingJob sheetDrawingJob = new SheetDrawingJob();
 			return sheetDrawingJob.CreatePdf(sheet);
 		}
 
 		///<summary>If making a statement, use the overload that takes a DataSet otherwise this method will make another call to the db.  If fullFileName is in the A to Z folder, pass in fullFileName as a temp file and then upload that file to the cloud.</summary>
-		public static void CreatePdf(Sheet sheet,string fullFileName,Statement stmt,MedLab medLab=null) {
-			SheetDrawingJob sheetDrawingJob=new SheetDrawingJob();
-			sheetDrawingJob.CreatePdf(sheet,fullFileName,stmt,medLab);
+		public static void CreatePdf(Sheet sheet, string fullFileName, Statement stmt, MedLab medLab = null)
+		{
+			SheetDrawingJob sheetDrawingJob = new SheetDrawingJob();
+			sheetDrawingJob.CreatePdf(sheet, fullFileName, stmt, medLab);
 		}
 
 		///<summary>Creates a file where fullFileName is a local path. If fullFileName is in the A to Z folder, pass in fullFileName as a temp file and then upload that file to the cloud.</summary>
-		public static PdfDocument CreatePdf(Sheet sheet,string fullFileName,Statement stmt,DataSet dataSet,MedLab medLab,Patient pat=null,Patient patGuar=null,bool doSave=true){
-			SheetDrawingJob sheetDrawingJob=new SheetDrawingJob();
-			return sheetDrawingJob.CreatePdf(sheet,fullFileName,stmt,dataSet,medLab,pat,patGuar,doSave);
+		public static PdfDocument CreatePdf(Sheet sheet, string fullFileName, Statement stmt, DataSet dataSet, MedLab medLab, Patient pat = null, Patient patGuar = null, bool doSave = true)
+		{
+			SheetDrawingJob sheetDrawingJob = new SheetDrawingJob();
+			return sheetDrawingJob.CreatePdf(sheet, fullFileName, stmt, dataSet, medLab, pat, patGuar, doSave);
 		}
 
 		///<summary>Called for every page that is generated for a PDF document. Pages and yPos must be tracked outside of this function. See also pd_PrintPage.  DataSet should be prefilled with AccountModules.GetAccount() before calling this method if making a statement.</Summary>
-		public static int CreatePdfPage(Sheet sheet,PdfPage page,DataSet dataSet,Patient pat,Patient patGuar,int yPos) {
-			SheetDrawingJob sheetDrawingJob=new SheetDrawingJob();
-			return sheetDrawingJob.CreatePdfPage(sheet,page,dataSet,pat,patGuar,yPos);
+		public static int CreatePdfPage(Sheet sheet, PdfPage page, DataSet dataSet, Patient pat, Patient patGuar, int yPos)
+		{
+			SheetDrawingJob sheetDrawingJob = new SheetDrawingJob();
+			return sheetDrawingJob.CreatePdfPage(sheet, page, dataSet, pat, patGuar, yPos);
 		}
 		#endregion Methods - CreatePdf
-
-		///<summary>Draws all images from the sheet onto the graphic passed in.  Used when printing and rendering the sheet fill edit window.</summary>
-		//public static void DrawImages(Sheet sheet,Graphics graphic,bool drawAll=false) {
-		//	DrawImages(sheet,graphic,null,drawAll);
-		//}
-
-		//this was no longer being used, so comment it out
-
-		/*public void SetZero() {
-			_sheetsPrinted=0;
-			_yPosPrint=0;
-		}*/
-
-		/////<summary>Not used. This code is copied and pasted in several locations. Easiest to find by searching for "info.Verb="print";"</summary>
-		//public static void PrintStatement(object parameters) {
-		//	List<object> listParams=(List<object>)parameters;
-		//	SheetDef sheetDef=(SheetDef)listParams[0];
-		//	Statement stmt=(Statement)listParams[1];
-		//	string filePath=(string)listParams[2];
-		//	try {
-		//		ProcessStartInfo info=new ProcessStartInfo();
-		//		info.Arguments = "\"" + Printers.GetForSit(PrintSituation.Statement).PrinterName + "\"";
-		//		info.UseShellExecute = true;
-		//		info.Verb="PrintTo";
-		//		info.FileName=filePath;
-		//		info.CreateNoWindow=true;
-		//		info.WindowStyle=ProcessWindowStyle.Hidden;
-		//		Process p=new Process();
-		//		p.StartInfo=info;
-		//		p.Start();
-		//		p.WaitForInputIdle();
-		//		System.Threading.Thread.Sleep(3000);
-		//		if(p.CloseMainWindow()==false) {
-		//			p.Kill();
-		//		}
-		//	}
-		//	catch(Exception ex) {
-		//		//Must restet sheet, as PDF printing modifies fields.
-		//		Sheet sheet=SheetUtil.CreateSheet(sheetDef,stmt.PatNum,stmt.HidePayment);
-		//		SheetFiller.FillFields(sheet,stmt);
-		//		SheetUtil.CalculateHeights(sheet,GraphicsHelper.GM,stmt);
-		//		SheetPrinting.Print(sheet,1,false,stmt);//use GDI+ printing, which is slightly different than the pdf.
-		//	}
-		//}
 	}
 }

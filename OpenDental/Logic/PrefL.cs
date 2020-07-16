@@ -1,11 +1,9 @@
-﻿using CodeBase;
-using OpenDentBusiness;
+﻿using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -32,7 +30,10 @@ namespace OpenDental
 			return CheckProgramVersionClassic();
 		}
 
-		///<summary>Returns true if the download at the specified remoteUri with the given registration code should be downloaded and installed as an update, and false is returned otherwise. Also, information about the decision making process is stored in the updateInfoMajor and updateInfoMinor strings, but only holds significance to a human user.</summary>
+		/// <summary>
+		/// Returns true if the download at the specified remoteUri with the given registration code should be downloaded and installed as an update, and false is returned otherwise.
+		/// Also, information about the decision making process is stored in the updateInfoMajor and updateInfoMinor strings, but only holds significance to a human user.
+		/// </summary>
 		public static bool ShouldDownloadUpdate(string remoteUri, string updateCode, out string updateInfoMajor, out string updateInfoMinor)
 		{
 			updateInfoMajor = "";
@@ -41,67 +42,67 @@ namespace OpenDental
 			string fileName = "Manifest.txt";
 			WebClient myWebClient = new WebClient();
 			string myStringWebResource = remoteUri + updateCode + "/" + fileName;
-			Version versionNewBuild = null;
-			string strNewVersion = "";
-			string newBuild = "";
+            string strNewVersion = "";
+            string newBuild = "";
 			bool buildIsAlpha = false;
 			bool buildIsBeta = false;
 			bool versionIsAlpha = false;
 			bool versionIsBeta = false;
-			try
+            Version versionNewBuild;
+            try
+            {
+                using (StreamReader sr = new StreamReader(myWebClient.OpenRead(myStringWebResource)))
+                {
+                    newBuild = sr.ReadLine();//must be be 3 or 4 components (revision is optional)
+                    strNewVersion = sr.ReadLine();//returns null if no second line
+                }
+                if (newBuild.EndsWith("a"))
+                {
+                    buildIsAlpha = true;
+                    newBuild = newBuild.Replace("a", "");
+                }
+                if (newBuild.EndsWith("b"))
+                {
+                    buildIsBeta = true;
+                    newBuild = newBuild.Replace("b", "");
+                }
+                versionNewBuild = new Version(newBuild);
+                if (versionNewBuild.Revision == -1)
+                {
+                    versionNewBuild = new Version(versionNewBuild.Major, versionNewBuild.Minor, versionNewBuild.Build, 0);
+                }
+                if (strNewVersion != null && strNewVersion.EndsWith("a"))
+                {
+                    versionIsAlpha = true;
+                    strNewVersion = strNewVersion.Replace("a", "");
+                }
+                if (strNewVersion != null && strNewVersion.EndsWith("b"))
+                {
+                    versionIsBeta = true;
+                    strNewVersion = strNewVersion.Replace("b", "");
+                }
+            }
+            catch
+            {
+                updateInfoMajor += "Registration number not valid, or internet connection failed.  ";
+                return false;
+            }
+
+            if (versionNewBuild == new Version(Application.ProductVersion))
 			{
-				using (StreamReader sr = new StreamReader(myWebClient.OpenRead(myStringWebResource)))
-				{
-					newBuild = sr.ReadLine();//must be be 3 or 4 components (revision is optional)
-					strNewVersion = sr.ReadLine();//returns null if no second line
-				}
-				if (newBuild.EndsWith("a"))
-				{
-					buildIsAlpha = true;
-					newBuild = newBuild.Replace("a", "");
-				}
-				if (newBuild.EndsWith("b"))
-				{
-					buildIsBeta = true;
-					newBuild = newBuild.Replace("b", "");
-				}
-				versionNewBuild = new Version(newBuild);
-				if (versionNewBuild.Revision == -1)
-				{
-					versionNewBuild = new Version(versionNewBuild.Major, versionNewBuild.Minor, versionNewBuild.Build, 0);
-				}
-				if (strNewVersion != null && strNewVersion.EndsWith("a"))
-				{
-					versionIsAlpha = true;
-					strNewVersion = strNewVersion.Replace("a", "");
-				}
-				if (strNewVersion != null && strNewVersion.EndsWith("b"))
-				{
-					versionIsBeta = true;
-					strNewVersion = strNewVersion.Replace("b", "");
-				}
-			}
-			catch
-			{
-				updateInfoMajor += Lan.G("FormUpdate", "Registration number not valid, or internet connection failed.  ");
-				return false;
-			}
-			if (versionNewBuild == new Version(Application.ProductVersion))
-			{
-				updateInfoMajor += Lan.G("FormUpdate", "You are using the most current build of this version.  ");
+				updateInfoMajor += "You are using the most current build of this version.  ";
 			}
 			else
 			{
 				//this also allows users to install previous versions.
-				updateInfoMajor += Lan.G("FormUpdate", "A new build of this version is available for download:  ")
-					+ versionNewBuild.ToString();
+				updateInfoMajor += "A new build of this version is available for download:  " + versionNewBuild.ToString();
 				if (buildIsAlpha)
 				{
-					updateInfoMajor += Lan.G("FormUpdate", "(alpha)  ");
+					updateInfoMajor += "(alpha)  ";
 				}
 				if (buildIsBeta)
 				{
-					updateInfoMajor += Lan.G("FormUpdate", "(beta)  ");
+					updateInfoMajor += "(beta)  ";
 				}
 				shouldDownload = true;
 			}
@@ -124,39 +125,49 @@ namespace OpenDental
 			return shouldDownload;
 		}
 
-		/// <summary>destinationPath includes filename (Setup.exe).  destinationPath2 will create a second copy at the specified path/filename, or it will be skipped if null or empty.</summary>
+		/// <summary>
+		/// destinationPath includes filename (Setup.exe). 
+		/// destinationPath2 will create a second copy at the specified path/filename, or it will be skipped if null or empty.
+		/// </summary>
 		public static void DownloadInstallPatchFromURI(string downloadUri, string destinationPath, bool runSetupAfterDownload, bool showShutdownWindow, string destinationPath2)
 		{
 			string[] dblist = PrefC.GetString(PrefName.UpdateMultipleDatabases).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 			bool isShutdownWindowNeeded = showShutdownWindow;
 			while (isShutdownWindowNeeded)
 			{
-				//Even if updating multiple databases, extra shutdown signals are not needed.
-				FormShutdown FormSD = new FormShutdown();
-				FormSD.IsUpdate = true;
-				FormSD.ShowDialog();
-				if (FormSD.DialogResult == DialogResult.OK)
+				// Even if updating multiple databases, extra shutdown signals are not needed.
+				using (var formShutdown = new FormShutdown())
 				{
-					//turn off signal reception for 5 seconds so this workstation will not shut down.
-					Signalods.SignalLastRefreshed = MiscData.GetNowDateTime().AddSeconds(5);
-					Signalod sig = new Signalod();
-					sig.IType = InvalidType.ShutDownNow;
-					Signalods.Insert(sig);
-					Computers.ClearAllHeartBeats(Environment.MachineName);//always assume success
-					isShutdownWindowNeeded = false;
-					//SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Shutdown all workstations.");//can't do this because sometimes no user.
-				}
-				else if (FormSD.DialogResult == DialogResult.Cancel)
-				{//Cancel
-					if (MsgBox.Show("FormUpdate", MsgBoxButtons.YesNo, "Are you sure you want to cancel the update?"))
+					formShutdown.IsUpdate = true;
+
+					if (formShutdown.ShowDialog() == DialogResult.OK)
 					{
-						return;
+						// Turn off signal reception for 5 seconds so this workstation will not shut down.
+						Signalods.SignalLastRefreshed = MiscData.GetNowDateTime().AddSeconds(5);
+						Signalod sig = new Signalod
+						{
+							IType = InvalidType.ShutDownNow
+						};
+						Signalods.Insert(sig);
+						Computers.ClearAllHeartBeats(Environment.MachineName);//always assume success
+						isShutdownWindowNeeded = false;
+						//SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Shutdown all workstations.");//can't do this because sometimes no user.
 					}
-					continue;
+					else 
+					{
+						if (MsgBox.Show("FormUpdate", MsgBoxButtons.YesNo, "Are you sure you want to cancel the update?"))
+						{
+							return;
+						}
+
+						continue;
+					}
 				}
-				//no other workstation will be able to start up until this value is reset.
+
+				// No other workstation will be able to start up until this value is reset.
 				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, Environment.MachineName);
 			}
+
 			MiscData.LockWorkstationsForDbs(dblist);//lock workstations for other db's.
 			try
 			{
@@ -164,11 +175,12 @@ namespace OpenDental
 			}
 			catch (Exception ex)
 			{
-				FriendlyException.Show(Lan.G("FormUpdate", "Error deleting file:") + "\r\n" + ex.Message, ex);
+				FriendlyException.Show("Error deleting file:\r\n" + ex.Message, ex);
 				MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
 				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");
 				return;
 			}
+
 			WebRequest wr = WebRequest.Create(downloadUri);
 			WebResponse webResp = null;
 			try
@@ -183,6 +195,7 @@ namespace OpenDental
 				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");
 				return;
 			}
+
 			int fileSize = (int)webResp.ContentLength / 1024;
 			FormProgress FormP = new FormProgress();
 			//start the thread that will perform the download
@@ -202,7 +215,8 @@ namespace OpenDental
 				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");
 				return;
 			}
-			//copy to second destination directory
+
+			// copy to second destination directory
 
 			if (destinationPath2 != null && destinationPath2 != "")
 			{
@@ -214,17 +228,18 @@ namespace OpenDental
 					}
 					catch (Exception ex)
 					{
-						FriendlyException.Show(Lan.G("FormUpdate", "Error deleting file:") + "\r\n" + ex.Message, ex);
+						FriendlyException.Show("Error deleting file:\r\n" + ex.Message, ex);
 						MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
 						Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");
 						return;
 					}
 				}
+
 				File.Copy(destinationPath, destinationPath2);
 			}
 
+			// copy the Setup.exe to the AtoZ folders for the other db's.
 
-			//copy the Setup.exe to the AtoZ folders for the other db's.
 			List<string> atozNameList = MiscData.GetAtoZforDb(dblist);
 			for (int i = 0; i < atozNameList.Count; i++)
 			{
@@ -239,21 +254,25 @@ namespace OpenDental
 						true);//overwrite
 				}
 			}
+
 			if (!runSetupAfterDownload)
 			{
 				return;
 			}
-			string msg = Lan.G("FormUpdate", "Download succeeded.  Setup program will now begin.  When done, restart the program on this computer, then on the other computers.");
+
+			string msg = "Download succeeded.  Setup program will now begin.  When done, restart the program on this computer, then on the other computers.";
 			if (dblist.Length > 0)
 			{
 				msg = "Download succeeded.  Setup file probably copied to other AtoZ folders as well.  Setup program will now begin.  When done, restart the program for each database on this computer, then on the other computers.";
 			}
+
 			if (MessageBox.Show(msg, "", MessageBoxButtons.OKCancel) != DialogResult.OK)
 			{
 				//Clicking cancel gives the user a chance to avoid running the setup program,
 				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");//unlock workstations, since nothing was actually done.
 				return;
 			}
+
 			try
 			{
 				Process.Start(destinationPath);
@@ -266,8 +285,10 @@ namespace OpenDental
 			}
 		}
 
-		///<summary>This is the function that the worker thread uses to actually perform the download.
-		///Can also call this method in the ordinary way if the file to be transferred is short.</summary>
+		/// <summary>
+		/// This is the function that the worker thread uses to actually perform the download.
+		/// Can also call this method in the ordinary way if the file to be transferred is short.
+		/// </summary>
 		private static void DownloadInstallPatchWorker(string downloadUri, string destinationPath, long contentLength, ref FormProgress progressIndicator)
 		{
 			using (WebClient webClient = new WebClient())
@@ -349,7 +370,7 @@ namespace OpenDental
 					Prefs.UpdateString(PrefName.MySqlVersion, PrefC.GetString(PrefName.MySqlVersion).Replace(",", "."));
 				}
 				//Now check to see if the MySQL version has been updated.  If it has, make an automatic backup, repair, and optimize all tables.
-				if (Prefs.UpdateString(PrefName.MySqlVersion, (thisVersion)))
+				if (Prefs.UpdateString(PrefName.MySqlVersion, thisVersion))
 				{
 #if !DEBUG
 					if(!isSilent) {

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace OpenDental
 {
-    public partial class SheetCheckBox : Control
+	public partial class SheetCheckBox : Control
 	{
 		private bool isChecked;
 		private Pen pen;
