@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -110,20 +111,20 @@ namespace OpenDentBusiness{
 			//check for attached providers
 			string  command="SELECT COUNT(*) FROM provider WHERE SchoolClassNum = '"
 				+POut.Long(classNum)+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(PIn.String(table.Rows[0][0].ToString())!="0"){
 				throw new Exception(Lans.g("SchoolClasses","Class already in use by providers."));
 			}
 			//check for attached reqneededs.
 			command="SELECT COUNT(*) FROM reqneeded WHERE SchoolClassNum = '"
 				+POut.Long(classNum)+"'";
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(PIn.String(table.Rows[0][0].ToString())!="0") {
 				throw new Exception(Lans.g("SchoolClasses","Class already in use by 'requirements needed' table."));
 			}
 			command= "DELETE from schoolclass WHERE SchoolClassNum = '"
 				+POut.Long(classNum)+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		public static string GetDescript(long SchoolClassNum) {

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -125,7 +126,7 @@ namespace OpenDentBusiness{
 			
 			List<string> retVal=new List<string>();
 			string command="SELECT CdcRecCode FROM cdcrec";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++){
 				retVal.Add(table.Rows[i].ItemArray[0].ToString());
 			}
@@ -136,7 +137,7 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM cdcrec";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 
 		/*
@@ -159,7 +160,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long cdcrecNum) {
 			
 			string command= "DELETE FROM cdcrec WHERE CdcrecNum = "+POut.Long(cdcrecNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

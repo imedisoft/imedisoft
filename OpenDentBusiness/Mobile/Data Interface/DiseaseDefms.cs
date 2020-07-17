@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -66,7 +67,7 @@ namespace OpenDentBusiness.Mobile
 		public static void DeleteAll(long customerNum)
 		{
 			string command = "DELETE FROM diseasedefm WHERE CustomerNum = " + POut.Long(customerNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 	}

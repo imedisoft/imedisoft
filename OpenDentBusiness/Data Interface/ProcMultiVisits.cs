@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -196,7 +197,7 @@ namespace OpenDentBusiness{
 			string command="UPDATE procmultivisit "
 				+"SET IsInProcess="+POut.Bool(isGroupInProcess)+" "
 				+"WHERE GroupProcMultiVisitNum="+POut.Long(groupProcMultiVisitNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Update the parameter GroupProcMultiVisitNum to a new value.
@@ -206,7 +207,7 @@ namespace OpenDentBusiness{
 			string command="UPDATE procmultivisit "
 				+"SET GroupProcMultiVisitNum="+POut.Long(groupProcMultiVisitNumNew)+" "
 				+"WHERE GroupProcMultiVisitNum="+POut.Long(groupProcMultiVisitNumOld);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion Update

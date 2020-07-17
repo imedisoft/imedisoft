@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using OpenDentBusiness.WebTypes.WebForms;
 
 namespace OpenDentBusiness{
@@ -165,7 +166,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT MAX(ShowInTerminal) FROM sheet WHERE PatNum="+POut.Long(patNum)
 				+" AND IsDeleted=0";
-			return Db.GetInt(command);
+			return Database.ExecuteInt(command);
 		}
 
 		///<summary>Trys to set the out params with sheet fields valus for LName,FName,DOB,PhoneNumbers, and email. Used when importing CEMT patient transfers.</summary>
@@ -432,13 +433,13 @@ namespace OpenDentBusiness{
 		public static void Delete(long sheetNum,long patNum=0,byte showInTerminal=0) {
 			
 			string command="UPDATE sheet SET IsDeleted=1,ShowInTerminal=0 WHERE SheetNum="+POut.Long(sheetNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(patNum>0 && showInTerminal>0) {//showInTerminal must be at least 1, so decrementing those that are at least 2
 				command="UPDATE sheet SET ShowInTerminal=ShowInTerminal-1 "
 					+"WHERE PatNum="+POut.Long(patNum)+" "
 					+"AND IsDeleted=0 "
 					+"AND ShowInTerminal>"+POut.Byte(showInTerminal);//decrement ShowInTerminal for all sheets with a bigger ShowInTerminal than the one deleted
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				//Push deleted sheet to eClipboard.
 				WebTypes.PushNotificationUtils.CI_RemoveSheet(patNum,sheetNum);
 			}
@@ -523,7 +524,7 @@ namespace OpenDentBusiness{
 			}
 			command+=")";
 				//+"ORDER BY ShowInTerminal";//DATE(DateTimeSheet),ShowInTerminal,TIME(DateTimeSheet)";
-			DataTable rawSheet=Db.GetTable(command);
+			DataTable rawSheet=Database.ExecuteDataTable(command);
 			DateTime dateT;
 			for(int i=0;i<rawSheet.Rows.Count;i++) {
 				row=table.NewRow();
@@ -554,7 +555,7 @@ namespace OpenDentBusiness{
 				+" AND PatNum ="+POut.Long(patNum)
 				+" AND definition.ItemValue LIKE '%F%'";
 				//+" ORDER BY DateCreated";
-			DataTable rawDoc=Db.GetTable(command);
+			DataTable rawDoc=Database.ExecuteDataTable(command);
 			long docCat;
 			for(int i=0;i<rawDoc.Rows.Count;i++) {
 				row=table.NewRow();
@@ -625,7 +626,7 @@ namespace OpenDentBusiness{
 				+"AND IsWebForm = "+POut.Bool(true)+ " "
 				+"AND (SheetType="+POut.Long((int)SheetTypeEnum.PatientForm)+" OR SheetType="+POut.Long((int)SheetTypeEnum.MedicalHistory)+") "
 				+(PrefC.HasClinicsEnabled ? "AND ClinicNum IN ("+string.Join(",", listClinicNums)+") " : "");
-			DataTable rawSheet=Db.GetTable(command);
+			DataTable rawSheet=Database.ExecuteDataTable(command);
 			DateTime dateT;
 			for(int i=0;i<rawSheet.Rows.Count;i++) {
 				row=table.NewRow();
@@ -670,14 +671,14 @@ namespace OpenDentBusiness{
 		public static byte GetBiggestShowInTerminal(long patNum) {
 			
 			string command="SELECT MAX(ShowInTerminal) FROM sheet WHERE IsDeleted=0 AND PatNum="+POut.Long(patNum);
-			return PIn.Byte(Db.GetScalar(command));
+			return PIn.Byte(Database.ExecuteString(command));
 		}
 
 		///<summary></summary>
 		public static void ClearFromTerminal(long patNum) {
 			
 			string command="UPDATE sheet SET ShowInTerminal=0 WHERE PatNum="+POut.Long(patNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>This gives the number of pages required to print all fields. This must be calculated ahead of time when creating multi page pdfs.</summary>

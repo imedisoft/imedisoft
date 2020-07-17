@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -90,14 +91,14 @@ namespace OpenDentBusiness{
 			
 			string command = "DELETE FROM claimformitem "
 				+"WHERE ClaimFormItemNum = '"+POut.Long(item.ClaimFormItemNum)+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
 		public static void DeleteAllForClaimForm(long claimFormNum) {
 			
 			string command="DELETE FROM claimformitem WHERE ClaimFormNum = '"+POut.Long(claimFormNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets all claimformitems for the specified claimform from the preloaded List.</summary>

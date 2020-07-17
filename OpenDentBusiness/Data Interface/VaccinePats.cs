@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -50,7 +51,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long vaccinePatNum) {
 			
 			string command= "DELETE FROM vaccinepat WHERE VaccinePatNum = "+POut.Long(vaccinePatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Delete any attached observations.
 			VaccineObses.DeleteForVaccinePat(vaccinePatNum);
 		}

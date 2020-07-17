@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -65,7 +66,7 @@ namespace OpenDentBusiness
 				+ ") mostRecentTrans ON tsitranslog.PatNum=mostRecentTrans.PatNum "
 					+ "AND tsitranslog.TransDateTime=mostRecentTrans.transDateTime "
 				+ "WHERE tsitranslog.TransType=" + (int)TsiTransType.SS;
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		public static bool IsGuarSuspended(long guarNum)
@@ -82,7 +83,7 @@ namespace OpenDentBusiness
 					+ "AND TransDateTime>" + POut.DateT(DateTime.Now.AddDays(-50)) + " "
 					+ "GROUP BY PatNum"
 				+ ") mostRecentLog ON tsitranslog.PatNum=mostRecentLog.PatNum AND tsitranslog.TransDateTime=mostRecentLog.transDateTime";
-			return PIn.Bool(Db.GetScalar(command));
+			return PIn.Bool(Database.ExecuteString(command));
 		}
 
 		#endregion Get Methods
@@ -197,7 +198,7 @@ namespace OpenDentBusiness
 			}
 
 			string command = "DELETE FROM tsitranslog WHERE TsiTransLogNum IN(" + string.Join(",", listLogNums) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion Delete

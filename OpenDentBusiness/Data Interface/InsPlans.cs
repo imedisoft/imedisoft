@@ -7,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -215,7 +216,7 @@ namespace OpenDentBusiness {
 				+"AND DivisionNo = '"     +POut.String(like.DivisionNo)+"'"
 				+"AND CarrierNum = '"     +POut.Long   (like.CarrierNum)+"' "
 				+"AND IsMedical = '"      +POut.Bool  (like.IsMedical)+"'";
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}*/
 
 		///<summary>Gets a description of the specified plan, including carrier name and subscriber. It's fastest if you supply a plan list that contains the plan, but it also works just fine if it can't initally locate the plan in the list.  You can supply an array of length 0 for both family and planlist.</summary>
@@ -279,7 +280,7 @@ namespace OpenDentBusiness {
 				return new DataTable();
 			}
 			string command="SELECT PlanNum,CarrierNum,'' AS CarrierName,'' AS CarrierColor FROM insplan WHERE PlanNum IN ("+string.Join(",",listPlanNums)+")";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			foreach(DataRow row in table.Rows) {
 				Carrier carrierCur=Carriers.GetCarrier(PIn.Long(row["CarrierNum"].ToString()));
 				row["CarrierName"]=carrierCur.CarrierName;
@@ -497,7 +498,7 @@ namespace OpenDentBusiness {
 			string command="SELECT insplan.PlanNum,carrier.CarrierName "
 				+"FROM insplan,carrier "
 				+"WHERE insplan.CarrierNum=carrier.CarrierNum";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 		/*
 		///<summary>Used by Trojan.  Gets all distinct notes for the planNums supplied.  Includes blank notes.</summary>
@@ -543,7 +544,7 @@ namespace OpenDentBusiness {
 			}
 			string command="UPDATE insplan SET PlanNote='"+POut.String(newNote)+"' "
 				+"WHERE"+s;
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}*/
 
 		/*
@@ -660,7 +661,7 @@ namespace OpenDentBusiness {
 			if(!isIncludeAll) {
 				command+=DbHelper.LimitAnd(200);
 			}
-			DataTable rawT=Db.GetTable(command);
+			DataTable rawT=Database.ExecuteDataTable(command);
 			IOrderedEnumerable<DataRow> rawRows;
 			if(byEmployer) {
 				rawRows=rawT.Select().OrderBy(x => x["haveName"].ToString()).ThenBy(x => x["EmpName"].ToString()).ThenBy(x => x["CarrierName"].ToString());
@@ -721,7 +722,7 @@ namespace OpenDentBusiness {
 				command+="AND insplan."+pFeeSched+" ="+POut.Long(feeSchedWith)+" ";
 			}
 			command+="ORDER BY carrier.CarrierName,employer.EmpName,insplan.GroupNum";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Based on the four supplied parameters, it updates all similar plans.  Used in a specific tool: FormFeesForIns.</summary>
@@ -754,7 +755,7 @@ namespace OpenDentBusiness {
 			//table[i][1] = FeeSchedNum (FeeSched, CopayFeeSched, AllowedFeeSched, or FixedBenefit)
 			//table[i][2] = GroupNum 
 			//table[i][3] = GroupName
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0){
 				return 0;
 			}
@@ -785,7 +786,7 @@ namespace OpenDentBusiness {
 					table.Rows[i][2].ToString()+" - "+table.Rows[i][3].ToString());
 			}
 			command+=")";
-			return Db.NonQ(command);
+			return Database.ExecuteNonQuery(command);
 		}
 
 
@@ -801,7 +802,7 @@ namespace OpenDentBusiness {
 				+"AND insplan.PlanType='' "
 				+"AND insplan.IsHidden='0' "
 				+"GROUP BY carrier.CarrierName";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			//loop through all the carrier names
 			string carrierName;
 			FeeSched sched;
@@ -830,7 +831,7 @@ namespace OpenDentBusiness {
 				//assign the fee sched to many plans
 				//for compatibility with Oracle, get a list of all carrierNums that use the carriername
 				command="SELECT CarrierNum FROM carrier WHERE CarrierName='"+POut.String(carrierName)+"'";
-				listCarrierNums=Db.GetListLong(command);
+				listCarrierNums=Database.GetListLong(command);
 				if(listCarrierNums.Count==0){
 					continue;//I don't see how this could happen
 				}
@@ -843,7 +844,7 @@ namespace OpenDentBusiness {
 				command="UPDATE insplan "
 					+"SET AllowedFeeSched="+POut.Long(sched.FeeSchedNum)+" "
 					+"WHERE PlanNum IN ("+string.Join(",",listInsPlans.Select(x => x.PlanNum))+")";
-				retVal+=Db.NonQ(command);
+				retVal+=Database.ExecuteNonQuery(command);
 				//log updated InsPlan's AllowedFeeSched
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				listInsPlans.ForEach(x => {
@@ -858,7 +859,7 @@ namespace OpenDentBusiness {
 			
 			string command="SELECT COUNT(*) FROM insplan WHERE IsHidden=0 "
 				+"AND NOT EXISTS (SELECT * FROM inssub WHERE inssub.PlanNum=insplan.PlanNum)";
-			int count=PIn.Int(Db.GetCount(command));
+			int count=PIn.Int(Database.ExecuteString(command));
 			return count;
 		}
 		
@@ -873,7 +874,7 @@ namespace OpenDentBusiness {
 			}
 			command="UPDATE insplan SET IsHidden=1 "
 				+"WHERE PlanNum IN ("+string.Join(",",listInsPlans.Select(x => x.PlanNum))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//log newly hidden InsPlans
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listInsPlans.ForEach(x => {
@@ -1028,7 +1029,7 @@ namespace OpenDentBusiness {
 			string command=@"SELECT PatNum FROM patplan 
 					LEFT JOIN inssub ON patplan.InsSubNum=inssub.InsSubNum
 					WHERE inssub.PlanNum="+POut.Long(planNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<long> patnums=new List<long>();
 			for(int i=0;i<table.Rows.Count;i++) {
 				patnums.Add(PIn.Long(table.Rows[i][0].ToString()));
@@ -1040,7 +1041,7 @@ namespace OpenDentBusiness {
 		public static void ComputeEstimatesForSubscriber(long subscriber) {
 			
 			string command="SELECT PatNum FROM patplan,inssub WHERE Subscriber="+POut.Long(subscriber)+" AND patplan.InsSubNum=inssub.InsSubNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<long> patnums=new List<long>();
 			for(int i=0;i<table.Rows.Count;i++) {
 				patnums.Add(PIn.Long(table.Rows[i][0].ToString()));
@@ -1091,14 +1092,14 @@ namespace OpenDentBusiness {
 			#region Validation
 			//Claims
 			string command="SELECT 1 FROM claim WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(1);
-			if(!string.IsNullOrEmpty(Db.GetScalar(command))) {
+			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan with existing claims."));
 			}
 			//Claimprocs
 			command="SELECT 1 FROM claimproc "
 				+"WHERE PlanNum="+POut.Long(plan.PlanNum)+" AND Status!="+POut.Int((int)ClaimProcStatus.Estimate)+" "//ignore estimates
 				+DbHelper.LimitAnd(1);
-			if(!string.IsNullOrEmpty(Db.GetScalar(command))) {
+			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan attached to procedures."));
 			}
 			//Appointments
@@ -1109,18 +1110,18 @@ namespace OpenDentBusiness {
 					+POut.Int((int)ApptStatus.PtNote)+","
 					+POut.Int((int)ApptStatus.PtNoteCompleted)+") "//We only care about appt statuses that are excluded in Appointments.UpdateInsPlansForPat()
 					+DbHelper.LimitAnd(1);
-			if(!string.IsNullOrEmpty(Db.GetScalar(command))) {
+			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan attached to appointments."));
 			}
 			//PayPlans
 			command="SELECT 1 FROM payplan WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(1);
-			if(!string.IsNullOrEmpty(Db.GetScalar(command))) {
+			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan attached to payment plans."));
 			}
 			//InsSubs
 			//we want the InsSubNum if only 1, otherwise only need to know there's more than one.
 			command="SELECT InsSubNum FROM inssub WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(2);
-			List<long> listInsSubNums=Db.GetListLong(command);
+			List<long> listInsSubNums=Database.GetListLong(command);
 			if(listInsSubNums.Count>1) {
 				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan with more than one subscriber."));
 			}
@@ -1132,7 +1133,7 @@ namespace OpenDentBusiness {
 			List<Benefit> listBenefits=Crud.BenefitCrud.SelectMany(command);
 			if(listBenefits.Count>0) {
 				command="DELETE FROM benefit WHERE PlanNum="+POut.Long(plan.PlanNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				if(doInsertInsEditLogs) {
 					listBenefits.ForEach(x => {
@@ -1142,7 +1143,7 @@ namespace OpenDentBusiness {
 			}
 			ClearFkey(plan.PlanNum);//Zero securitylog FKey column for rows to be deleted.
 			command="DELETE FROM insplan WHERE PlanNum="+POut.Long(plan.PlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			if(doInsertInsEditLogs) {
 				InsEditLogs.MakeLogEntry(null,plan,InsEditLogType.InsPlan,Security.CurUser.UserNum); //log insplan deletion
@@ -1157,35 +1158,35 @@ namespace OpenDentBusiness {
 			//change all references to the old plan to point to the new plan.
 			//appointment.InsPlan1/2
 			command="UPDATE appointment SET InsPlan1="+POut.Long(planNumTo)+" WHERE InsPlan1="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE appointment SET InsPlan2="+POut.Long(planNumTo)+" WHERE InsPlan2="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//benefit.PlanNum -- DELETE unused
 			command="SELECT * FROM benefit WHERE PlanNum="+POut.Long(planNum);
 			List<Benefit> listBenefits=Crud.BenefitCrud.SelectMany(command);
 			command="DELETE FROM benefit WHERE PlanNum="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listBenefits.ForEach(x => {
 				InsEditLogs.MakeLogEntry(null,x,InsEditLogType.Benefit,Security.CurUser.UserNum);
 			});
 			//claim.PlanNum/PlanNum2
 			command="UPDATE claim SET PlanNum="+POut.Long(planNumTo)+" WHERE PlanNum="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE claim SET PlanNum2="+POut.Long(planNumTo)+" WHERE PlanNum2="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//claimproc.PlanNum
 			command="UPDATE claimproc SET PlanNum="+POut.Long(planNumTo)+" WHERE PlanNum="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//etrans.PlanNum
 			command="UPDATE etrans SET PlanNum="+POut.Long(planNumTo)+" WHERE PlanNum="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//inssub.PlanNum
 			command="UPDATE inssub SET PlanNum="+POut.Long(planNumTo)+" WHERE PlanNum="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//payplan.PlanNum
 			command="UPDATE payplan SET PlanNum="+POut.Long(planNumTo)+" WHERE PlanNum="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//the old plan should then be deleted.
 		}
 
@@ -1195,7 +1196,7 @@ namespace OpenDentBusiness {
 			string command="SELECT * FROM insplan WHERE ClaimsUseUCR = 0";
 			List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
 			command="UPDATE insplan SET ClaimsUseUCR=1";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listInsPlans.ForEach(x => { //log insplan ClaimsUseUCR change.
 				InsEditLogs.MakeLogEntry("ClaimsUseUCR",Security.CurUser.UserNum,"0","1",InsEditLogType.InsPlan,
@@ -1213,7 +1214,7 @@ namespace OpenDentBusiness {
 		public static List<long> GetPlanNumsByCarrierNum(long carrierNum) {
 			
 			string command="SELECT PlanNum FROM insplan WHERE CarrierNum="+POut.Long(carrierNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<long> planNums=new List<long>();
 			for(int i=0;i<table.Rows.Count;i++) {
 				planNums.Add(PIn.Long(table.Rows[i]["PlanNum"].ToString()));
@@ -1232,7 +1233,7 @@ namespace OpenDentBusiness {
 			string command = "SELECT * FROM insplan WHERE CobRule != "+POut.Int((int)cobRule);
 			List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
 			command="UPDATE insplan SET CobRule="+POut.Int((int)cobRule);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listInsPlans.ForEach(x => {
 				InsEditLogs.MakeLogEntry("CobRule",Security.CurUser.UserNum,x.CobRule.ToString(),POut.Int((int)cobRule),

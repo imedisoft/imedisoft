@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -154,7 +155,7 @@ namespace OpenDentBusiness
 		public static void SaveList(List<AccountingAutoPay> list)
 		{
 			string command = "DELETE FROM accountingautopay";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			for (int i = 0; i < list.Count; i++)
 			{
 				Insert(list[i]);

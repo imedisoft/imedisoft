@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -100,7 +101,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT SUM(paysplit.SplitAmt) FROM paysplit "
 				+"WHERE paysplit.ProcNum="+POut.Long(procNum);
-			return Db.GetScalar(command);
+			return Database.ExecuteString(command);
 
 		}
 
@@ -200,7 +201,7 @@ namespace OpenDentBusiness{
 					+"LEFT JOIN payment ON paysplit.PayNum=payment.PayNum "
 					+"WHERE paysplit.PayPlanNum="+POut.Long(payPlanNum)+" "
 					+"ORDER BY DatePay";
-			DataTable tableSplits=Db.GetTable(command);
+			DataTable tableSplits=Database.ExecuteDataTable(command);
 			return tableSplits;
 		}
 
@@ -313,7 +314,7 @@ namespace OpenDentBusiness{
 			
 			long fSplitNum=paySplit.FSplitNum;
 			if(paySplit.UnearnedType==0) {//paySplit is pos allocation split, find negative income transfer split first
-				fSplitNum=Db.GetLong("SELECT FSplitNum FROM paysplit WHERE paysplit.SplitNum="+POut.Long(paySplit.FSplitNum));
+				fSplitNum=Database.ExecuteLong("SELECT FSplitNum FROM paysplit WHERE paysplit.SplitNum="+POut.Long(paySplit.FSplitNum));
 			}
 			string command="SELECT * FROM paysplit WHERE paysplit.SplitNum="+POut.Long(fSplitNum);
 			return Crud.PaySplitCrud.SelectOne(command);
@@ -448,20 +449,20 @@ namespace OpenDentBusiness{
 			
 			string command="UPDATE paysplit SET FSplitNum="+POut.Long(paySplitNumOrig)
 				+" WHERE SplitNum="+POut.Long(paySplitNumLinked);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Takes a procedure and updates the provnum of each of the paysplits attached.
 		///Does nothing if there are no paysplits attached to the passed-in procedure.</summary>
 		public static void UpdateAttachedPaySplits(Procedure proc) {
 			
-			Db.NonQ($@"UPDATE paysplit SET ProvNum = {POut.Long(proc.ProvNum)} WHERE ProcNum = {POut.Long(proc.ProcNum)}");
+			Database.ExecuteNonQuery($@"UPDATE paysplit SET ProvNum = {POut.Long(proc.ProvNum)} WHERE ProcNum = {POut.Long(proc.ProcNum)}");
 		}
 
 		///<summary>Unlinks all paysplits that are currently linked to the passed-in adjustment. (Sets paysplit.AdjNum to 0)</summary>
 		public static void UnlinkForAdjust(Adjustment adj) {
 			
-			Db.NonQ($@"UPDATE paysplit SET AdjNum = 0 WHERE AdjNum = {POut.Long(adj.AdjNum)}");
+			Database.ExecuteNonQuery($@"UPDATE paysplit SET AdjNum = 0 WHERE AdjNum = {POut.Long(adj.AdjNum)}");
 		}
 
 		///<summary>Updates the provnum of all paysplits for a supplied adjustment.  Supply a list of splits to use that instead of querying the database.</summary>
@@ -471,10 +472,10 @@ namespace OpenDentBusiness{
 			}
 			
 			if(listSplits==null) {
-				Db.NonQ($@"UPDATE paysplit SET ProvNum = {POut.Long(adj.ProvNum)} WHERE AdjNum = {POut.Long(adj.AdjNum)}");
+				Database.ExecuteNonQuery($@"UPDATE paysplit SET ProvNum = {POut.Long(adj.ProvNum)} WHERE AdjNum = {POut.Long(adj.AdjNum)}");
 			}
 			else {
-				Db.NonQ($@"UPDATE paysplit SET ProvNum = {POut.Long(adj.ProvNum)}
+				Database.ExecuteNonQuery($@"UPDATE paysplit SET ProvNum = {POut.Long(adj.ProvNum)}
 					WHERE SplitNum IN({string.Join(",",listSplits.Select(x => POut.Long(x.SplitNum)))})");
 			}
 		}
@@ -492,7 +493,7 @@ namespace OpenDentBusiness{
 		public static void Delete(PaySplit split){
 			
 			string command= "DELETE from paysplit WHERE SplitNum = "+POut.Long(split.SplitNum);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Used from payment window AutoSplit button to delete paysplits when clicking AutoSplit more than once.</summary>
@@ -500,7 +501,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM paysplit"
 				+" WHERE PayNum="+POut.Long(payNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 
@@ -511,7 +512,7 @@ namespace OpenDentBusiness{
 		public static bool IsPaySplitAttached(long procNum) {
 			
 			string command="SELECT COUNT(*) FROM paysplit WHERE ProcNum="+POut.Long(procNum);
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;

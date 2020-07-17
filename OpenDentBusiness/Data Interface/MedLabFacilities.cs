@@ -112,7 +112,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long medLabFacilityNum) {
 			
 			string command= "DELETE FROM medlabfacility WHERE MedLabFacilityNum = "+POut.Long(medLabFacilityNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

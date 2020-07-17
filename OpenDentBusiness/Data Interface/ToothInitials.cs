@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -36,7 +37,7 @@ namespace OpenDentBusiness{
 		public static void Delete(ToothInitial init) {
 			
 			string command= "DELETE FROM toothinitial WHERE ToothInitialNum="+POut.Long(init.ToothInitialNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		///<summary>Sets teeth missing, or sets primary, or sets movement values.  It first clears the value from the database, then adds a new row to represent that value.  Movements require an amount.  If movement amt is 0, then no row gets added.</summary>
@@ -101,7 +102,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM toothinitial WHERE PatNum="+POut.Long(patNum)
 				+" AND ToothNum='"+POut.String(tooth_id)
 				+"' AND InitialType="+POut.Long((int)initialType);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Sets teeth not missing, or sets to perm, or clears movement values.  Clears all the values of one type for all teeth in the mouth.</summary>
@@ -109,7 +110,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM toothinitial WHERE PatNum="+POut.Long(patNum)
 				+" AND InitialType="+POut.Long((int)initialType);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets a list of missing teeth as strings. Includes "1"-"32", and "A"-"Z".</summary>

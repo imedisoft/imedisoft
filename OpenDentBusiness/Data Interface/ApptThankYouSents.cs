@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,7 +24,7 @@ namespace OpenDentBusiness
 		{
 			if (arrApptThankYouSentNums.IsNullOrEmpty()) return;
 
-			Db.NonQ(
+			Database.ExecuteNonQuery(
 				"DELETE FROM apptthankyousent " +
 				"WHERE ApptThankYouSentNum IN (" + string.Join(",", arrApptThankYouSentNums) + ")");
 		}

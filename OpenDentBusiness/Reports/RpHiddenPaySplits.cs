@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace OpenDentBusiness
 				command += $"AND paysplit.ClinicNum IN ({string.Join(",", listClinicNums)}) ";
 			}
 			command += "ORDER BY paysplit.DatePay,patient.LName,patient.FName";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 	}
 }

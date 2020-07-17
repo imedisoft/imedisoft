@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Imedisoft.Data;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace OpenDentBusiness.HL7 {
@@ -26,7 +27,7 @@ namespace OpenDentBusiness.HL7 {
 				def.EscapeCharacter=@"\";
 				def.IsInternal=true;
 				def.InternalType=HL7InternalType.HL7v2_6;
-				def.InternalTypeVersion=Assembly.GetAssembly(typeof(Db)).GetName().Version.ToString();
+				def.InternalTypeVersion=Assembly.GetAssembly(typeof(Database)).GetName().Version.ToString();
 				def.IsEnabled=false;
 				def.Note="";
 				def.ShowDemographics=HL7ShowDemographics.ChangeAndAdd;

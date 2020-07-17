@@ -5,6 +5,7 @@ using System.Data;
 using System.Reflection;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -100,7 +101,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE from quickpastecat WHERE QuickPasteCatNum = '"
 				+POut.Long(cat.QuickPasteCatNum)+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns a list of all categories for a single type. Will return an empty list if no type is selected.</summary>

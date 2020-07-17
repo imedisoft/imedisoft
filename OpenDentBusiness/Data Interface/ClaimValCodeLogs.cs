@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace OpenDentBusiness {
 			
 			//double total = 0;
 			string command="SELECT SUM(ValAmount) FROM claimvalcodelog WHERE ClaimNum="+POut.Long(claimNum)+" AND ValCode='"+POut.String(valCode)+"'";
-			return PIn.Double(Db.GetScalar(command));
+			return Database.ExecuteDouble(command);
 			//DataTable table=Db.GetTable(command);
 			//for(int i=0;i<table.Rows.Count;i++){
 			//	total+=PIn.Double(table.Rows[i][4].ToString());

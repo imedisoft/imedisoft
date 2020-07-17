@@ -8,6 +8,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using CodeBase;
 using OpenDentBusiness.WebTypes;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -59,7 +60,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long smsFromMobileNum) {
 			
 			string command= "DELETE FROM smsfrommobile WHERE SmsFromMobileNum = "+POut.Long(smsFromMobileNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 
@@ -85,7 +86,7 @@ namespace OpenDentBusiness{
 		public static string GetSmsNotification() {
 			
 			string command="SELECT COUNT(*) FROM smsfrommobile WHERE SmsStatus="+POut.Int((int)SmsFromStatus.ReceivedUnread);
-			int smsUnreadCount=PIn.Int(Db.GetCount(command));
+			int smsUnreadCount=PIn.Int(Database.ExecuteString(command));
 			if(smsUnreadCount==0) {
 				return "";
 			}
@@ -257,7 +258,7 @@ namespace OpenDentBusiness{
 				if(listClinicNums!=null&&listClinicNums.Count>0) {
 					command+=" AND ClinicNum IN("+string.Join(",",listClinicNums)+")";
 				}
-				DataTable table=Db.GetTable(command);
+				DataTable table=Database.ExecuteDataTable(command);
 				foreach(DataRow row in table.Rows) {
 					retVal.Add(new long[] { PIn.Long(row["PatNum"].ToString()),PIn.Long(row["Guarantor"].ToString()) });
 				}

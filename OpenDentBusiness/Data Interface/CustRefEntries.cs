@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -49,7 +50,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long custRefEntryNum) {
 			
 			string command= "DELETE FROM custrefentry WHERE CustRefEntryNum = "+POut.Long(custRefEntryNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		///<summary>Gets all the entries for the customer.</summary>

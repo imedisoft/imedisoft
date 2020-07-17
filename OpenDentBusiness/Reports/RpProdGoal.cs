@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class RpProdGoal {
@@ -319,10 +320,10 @@ namespace OpenDentBusiness {
 			command+=" ORDER BY ClinicNum,ProcDate";
 			DataTable tableProduction=new DataTable();
 			if(isCEMT) {
-				tableProduction=Db.GetTable(command);
+				tableProduction=Database.ExecuteDataTable(command);
 			}
 			else {
-				tableProduction=ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+				tableProduction=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 			}
 			tableProduction.TableName="tableProduction";
 			#endregion
@@ -346,10 +347,10 @@ namespace OpenDentBusiness {
 			command+=" ORDER BY ClinicNum,AdjDate";
 			DataTable tableAdj=new DataTable();
 			if(isCEMT) {
-				tableAdj=Db.GetTable(command);
+				tableAdj=Database.ExecuteDataTable(command);
 			}
 			else { 
-				tableAdj=ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+				tableAdj=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 			}
 			tableAdj.TableName="tableAdj";
 			#endregion
@@ -404,10 +405,10 @@ namespace OpenDentBusiness {
 			}
 			DataTable tableInsWriteoff=new DataTable();
 			if(isCEMT) {
-				tableInsWriteoff=Db.GetTable(command);
+				tableInsWriteoff=Database.ExecuteDataTable(command);
 			}
 			else { 
-				tableInsWriteoff=ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+				tableInsWriteoff=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 			}
 			tableInsWriteoff.TableName="tableInsWriteoff";
 			#endregion
@@ -446,10 +447,10 @@ namespace OpenDentBusiness {
 				+"GROUP BY SchedDate,ClinicNum "
 				+"ORDER BY SchedDate";
 			if(isCEMT) {
-				tableSched=Db.GetTable(command);
+				tableSched=Database.ExecuteDataTable(command);
 			}
 			else { 
-				tableSched=ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+				tableSched=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 			}
 			tableSched.TableName="tableSched";
 			#endregion
@@ -479,10 +480,10 @@ namespace OpenDentBusiness {
 				+whereProv
 				+whereClin;
 			if(isCEMT) {
-				tableProdGoal=Db.GetTable(command);
+				tableProdGoal=Database.ExecuteDataTable(command);
 			}
 			else {
-				tableProdGoal=ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+				tableProdGoal=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 			}
 			tableProdGoal.TableName="tableProdGoal";	
 			#endregion
@@ -508,10 +509,10 @@ namespace OpenDentBusiness {
 					{whereClin}
 					GROUP BY ClinicNum,DATE(claimproc.DateCP)";
 				if(isCEMT) {
-					tableWriteOffAdjustments=Db.GetTable(command);
+					tableWriteOffAdjustments=Database.ExecuteDataTable(command);
 				}
 				else { 
-					tableWriteOffAdjustments=ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+					tableWriteOffAdjustments=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 				}
 			}
 			tableWriteOffAdjustments.TableName="tableWriteOffAdjustments";

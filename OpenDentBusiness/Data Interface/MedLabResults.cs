@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -168,7 +169,7 @@ namespace OpenDentBusiness{
 		public static void DeleteAll(List<long> listResultNums) {
 			
 			string command= "DELETE FROM medlabresult WHERE MedLabResultNum IN("+String.Join(",",listResultNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Delete all of the MedLabResult objects by MedLabNum.</summary>
@@ -178,7 +179,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command= "DELETE FROM medlabresult WHERE MedLabNum IN("+String.Join(",",listMedLabNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static string GetAbnormalFlagDescript(AbnormalFlag abnormalFlag) {
@@ -236,7 +237,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long medLabResultNum) {
 			
 			string command= "DELETE FROM medlabresult WHERE MedLabResultNum = "+POut.Long(medLabResultNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

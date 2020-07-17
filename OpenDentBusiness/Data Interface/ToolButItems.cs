@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace OpenDentBusiness{
 			
 			string command = "DELETE from toolbutitem WHERE ToolButItemNum = '"
 				+POut.Long(Cur.ToolButItemNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all ToolButItems for the Programs.Cur.  This is used regularly when saving a Program link because of the way the user interface works.</summary>
@@ -101,7 +102,7 @@ namespace OpenDentBusiness{
 			
 			string command = "DELETE from toolbutitem WHERE ProgramNum = '"
 				+POut.Long(programNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Fills ForProgram with toolbutitems attached to the Programs.Cur</summary>

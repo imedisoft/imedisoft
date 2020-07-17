@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Diagnostics;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class RpPatPortionUncollected {
@@ -70,7 +71,7 @@ namespace OpenDentBusiness {
 				) pay ON pay.ProcNum=proc.ProcNum
 				WHERE proc.Fee-proc.InsEst+COALESCE(adj.adjAmt,0)-COALESCE(pay.splitAmt,0)>0.005
 				ORDER BY proc.ProcDate,patient.LName,patient.FName,procedurecode.ProcCode";
-			DataTable table=ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(query));
+			DataTable table=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(query));
 			#if DEBUG
 			s.Stop();
 			Console.WriteLine("Total time to generate report with "+string.Format("{0:#,##0.##}",table.Rows.Count)+" rows: "

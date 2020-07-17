@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Text;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDentBusiness {
@@ -22,9 +23,9 @@ namespace OpenDentBusiness {
 		public static void Delete(Mount mount){
 			
 			string command="DELETE FROM mount WHERE MountNum='"+POut.Long(mount.MountNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM mountitem WHERE MountItemNum='"+POut.Long(mount.MountNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns a single mount object corresponding to the given mount number key.</summary>

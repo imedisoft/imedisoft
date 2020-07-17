@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -121,7 +122,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long creditCardNum) {
 			
 			string command= "DELETE FROM creditcard WHERE CreditCardNum = "+POut.Long(creditCardNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets the masked CC# and exp date for all cards setup for monthly charges for the specified patient.  Only used for filling [CreditCardsOnFile] variable when emailing statements.</summary>
@@ -159,7 +160,7 @@ namespace OpenDentBusiness{
 				+" WHERE ("+DbHelper.Year("DateStop")+"<1880 OR DateStop>="+DbHelper.Curdate()+") "//Stop date has not past
 				+" AND ExcludeProcSync=0"
 				+" AND CCSource NOT IN ("+(int)CreditCardSource.XWeb+","+(int)CreditCardSource.XWebPortalLogin+") ";//Not created from the Patient Portal
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns list of credit cards that are ready for a recurring charge.  Filters by ClinicNums in list if provided.  List of ClinicNums
@@ -230,7 +231,7 @@ namespace OpenDentBusiness{
 					+"WHERE recurringcharge.ChargeStatus="+POut.Int((int)RecurringChargeStatus.NotYetCharged)+" "
 					+"AND "+DbHelper.DtimeToDate("recurringcharge.DateTimeCharge")+"="+DbHelper.DtimeToDate(DbHelper.Now())+") "
 				+"ORDER BY GuarLName,GuarFName,PatName,PayOrder DESC";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			//Query for latest payments seperately because this takes a very long time when run as a sub select
 			if(table.Rows.Count<1) {
 				return listChargeData;
@@ -242,7 +243,7 @@ namespace OpenDentBusiness{
 				+"AND PatNum IN ("+string.Join(",",table.Select().Select(x => POut.String(x["PatNum"].ToString())))+") "//table has at least 1 row
 				+"GROUP BY PatNum";
 			//dictionary is key=PatNum, value=LatestPayment which will be the lastest date a recurring charge payment was made
-			Dictionary<long,DateTime> dictPatNumDate=Db.GetTable(command).Select()
+			Dictionary<long,DateTime> dictPatNumDate=Database.ExecuteDataTable(command).Select()
 				.ToDictionary(x => PIn.Long(x["PatNum"].ToString()),x =>	PIn.Date(x["RecurringChargeDate"].ToString()));
 			table.Select().Where(x => dictPatNumDate.ContainsKey(PIn.Long(x["PatNum"].ToString()))).ToList()
 				.ForEach(x => x["LatestPayment"]=dictPatNumDate[PIn.Long(x["PatNum"].ToString())]);
@@ -352,7 +353,7 @@ namespace OpenDentBusiness{
 			else {
 				command+="AND pl.ProcDate>="+POut.Date(startBillingCycle);
 			}
-			return PIn.Double(Db.GetScalar(command));
+			return Database.ExecuteDouble(command);
 		}
 
 		/// <summary>Returns true if the procedure passed in is linked to any other active card on the patient's account.</summary>
@@ -364,7 +365,7 @@ namespace OpenDentBusiness{
 				+"AND DateStart<="+DbHelper.Curdate()+" AND "+DbHelper.Year("DateStart")+">1880 "
 				+"AND (DateStop>="+DbHelper.Curdate()+" OR "+DbHelper.Year("DateStop")+"<1880) "
 				+"AND CreditCardNum!="+POut.Long(cardNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return table.Rows.OfType<DataRow>().SelectMany(x => x["Procedures"].ToString().Split(',')).Any(x => x==procCode);
 		}
 

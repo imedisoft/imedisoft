@@ -1,5 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -155,10 +156,10 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Gets a pref of type bool without using the cache.
 		/// </summary>
-		public static bool GetBoolNoCache(PrefName preferenceName) => SIn.Bool(Db.GetScalar(
+		public static bool GetBoolNoCache(PrefName preferenceName) => SIn.Bool(Database.ExecuteString(
 			"SELECT ValueString FROM preference WHERE PrefName = '" + SOut.String(preferenceName.ToString()) + "'"));
 
-		public static void Update(Pref preference) => Db.NonQ(
+		public static void Update(Pref preference) => Database.ExecuteNonQuery(
 			"UPDATE preference SET ValueString = '" + SOut.String(preference.ValueString) + "' " +
 			"WHERE PrefName = '" + SOut.String(preference.PrefName) + "'");
 
@@ -203,7 +204,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Updates a pref of type int without using the cache. Useful for multithreaded connections.
 		/// </summary>
-		public static void UpdateIntNoCache(PrefName preferenceName, int newValue) => Db.NonQ(
+		public static void UpdateIntNoCache(PrefName preferenceName, int newValue) => Database.ExecuteNonQuery(
 			"UPDATE preference SET ValueString='" + SOut.Long(newValue) + "' " +
 			"WHERE PrefName='" + SOut.String(preferenceName.ToString()) + "'");
 
@@ -219,7 +220,7 @@ namespace OpenDentBusiness
 				return false;
 			}
 
-			Db.NonQ(
+			Database.ExecuteNonQuery(
 				"UPDATE preference SET ValueString = '" + SOut.Long(newValue) + "' " +
 				"WHERE PrefName = '" + SOut.String(prefName.ToString()) + "'");
 
@@ -260,7 +261,7 @@ namespace OpenDentBusiness
 				return false;
 			}
 
-			Db.NonQ(
+			Database.ExecuteNonQuery(
 				"UPDATE preference SET ValueString = '" + SOut.Double(newValue, doRounding, doUseEnUSFormat) + "' " +
 				"WHERE PrefName = '" + SOut.String(preferenceName.ToString()) + "'");
 
@@ -284,7 +285,7 @@ namespace OpenDentBusiness
 				return false;
 			}
 
-			Db.NonQ(
+			Database.ExecuteNonQuery(
 				 "UPDATE preference SET ValueString = '" + SOut.Bool(newValue) + "' " +
 				 "WHERE PrefName = '" + SOut.String(preferenceName.ToString()) + "'");
 
@@ -301,7 +302,7 @@ namespace OpenDentBusiness
 		/// Updates a bool without using cache classes. 
 		/// Useful for multithreaded connections.
 		/// </summary>
-		public static void UpdateBoolNoCache(PrefName preferenceName, bool newValue) => Db.NonQ(
+		public static void UpdateBoolNoCache(PrefName preferenceName, bool newValue) => Database.ExecuteNonQuery(
 			"UPDATE preference SET ValueString='" + SOut.Bool(newValue) + "' " +
 			"WHERE PrefName='" + SOut.String(preferenceName.ToString()) + "'");
 
@@ -316,7 +317,7 @@ namespace OpenDentBusiness
 				return false;
 			}
 
-			Db.NonQ(
+			Database.ExecuteNonQuery(
 				"UPDATE preference SET ValueString = '" + SOut.String(newValue) + "' " +
 				"WHERE PrefName = '" + SOut.String(preferenceName.ToString()) + "'");
 
@@ -333,7 +334,7 @@ namespace OpenDentBusiness
 		/// Updates a pref string without using the cache classes. 
 		/// Useful for multithreaded connections.
 		/// </summary>
-		public static void UpdateStringNoCache(PrefName preferenceName, string newValue) => Db.NonQ(
+		public static void UpdateStringNoCache(PrefName preferenceName, string newValue) => Database.ExecuteNonQuery(
 			"UPDATE preference SET ValueString='" + SOut.String(newValue) + "' " +
 			"WHERE PrefName='" + SOut.String(preferenceName.ToString()) + "'");
 
@@ -350,7 +351,7 @@ namespace OpenDentBusiness
 				return false;
 			}
 
-			Db.NonQ(
+			Database.ExecuteNonQuery(
 				"UPDATE preference SET ValueString = '" + SOut.String(newValue) + "' " +
 				"WHERE PrefName = '" + SOut.String(preferenceName) + "'");
 
@@ -374,7 +375,7 @@ namespace OpenDentBusiness
 				return false;
 			}
 
-			Db.NonQ(
+			Database.ExecuteNonQuery(
 				"UPDATE preference SET ValueString = '" + SOut.DateT(newValue, false) + "' " +
 				"WHERE PrefName = '" + SOut.String(prefName.ToString()) + "'");
 

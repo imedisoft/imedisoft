@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -90,7 +91,7 @@ namespace OpenDentBusiness{
 			
 			string command= "DELETE from emailtemplate WHERE EmailTemplateNum = '"
 				+template.EmailTemplateNum.ToString()+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 	}
 

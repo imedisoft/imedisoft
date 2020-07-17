@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -58,7 +59,7 @@ namespace OpenDentBusiness{
 				+"AND patient.HasSuperBilling=1 "
 				+"GROUP BY installmentplan.PatNum";
 
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<InstallmentPlan> listInstallmentPlans=Crud.InstallmentPlanCrud.TableToList(table);
 			SerializableDictionary<long,List<InstallmentPlan>> dictPlans=new SerializableDictionary<long,List<InstallmentPlan>>();
 			for(int i = 0;i<table.Rows.Count;i++) {
@@ -112,7 +113,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long installmentPlanNum) {
 			
 			string command= "DELETE FROM installmentplan WHERE InstallmentPlanNum = "+POut.Long(installmentPlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

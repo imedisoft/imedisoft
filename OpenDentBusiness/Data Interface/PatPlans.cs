@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -210,7 +211,7 @@ namespace OpenDentBusiness{
 		public static int SetOrdinal(long patPlanNum,int newOrdinal) {
 			
 			string command="SELECT PatNum FROM patplan WHERE PatPlanNum="+POut.Long(patPlanNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0){
 				return 1;
 			}
@@ -237,12 +238,12 @@ namespace OpenDentBusiness{
 				InsEditPatLogs.MakeLogEntry<PatPlan>(patPlanCur,patPlans[i],InsEditPatLogType.PatPlan);
 				command="UPDATE patplan SET Ordinal="+POut.Long(curOrdinal)
 					+" WHERE PatPlanNum="+POut.Long(patPlans[i].PatPlanNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				curOrdinal++;
 			}
 			command="UPDATE patplan SET Ordinal="+POut.Long(newOrdinal)
 				+" WHERE PatPlanNum="+POut.Long(patPlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 //Cameron_ Possibly create outbound ADT message to update insurance info
 			return newOrdinal;
 		}
@@ -292,14 +293,14 @@ namespace OpenDentBusiness{
 		public static int GetCountBySubNum(long insSubNum) {
 			
 			string command="SELECT COUNT(*) FROM patplan WHERE InsSubNum='"+POut.Long(insSubNum)+"'";
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		public static int GetCountForPatAndInsSub(long insSubNum, long patNum) {
 			
 			string command="SELECT COUNT(*) FROM patplan WHERE InsSubNum='"+POut.Long(insSubNum)+"' "
 				+"AND PatNum='"+POut.Long(patNum)+"'";
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Will return null if none exists.</summary>
@@ -340,7 +341,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long patPlanNum) {
 			 
 			string command="SELECT PatNum FROM patplan WHERE PatPlanNum="+POut.Long(patPlanNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return;
 			}
@@ -355,15 +356,15 @@ namespace OpenDentBusiness{
 					InsEditPatLogs.MakeLogEntry<PatPlan>(patPlanCur,patPlans[i],InsEditPatLogType.PatPlan);
 					command="UPDATE patplan SET Ordinal="+POut.Long(patPlans[i].Ordinal-1)
 						+" WHERE PatPlanNum="+POut.Long(patPlans[i].PatPlanNum);
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					continue;
 				}
 				if(patPlans[i].PatPlanNum==patPlanNum) {
 					RemoveAssignedUser(patPlans[i]);
 					command="DELETE FROM patplan WHERE PatPlanNum="+POut.Long(patPlanNum);
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="DELETE FROM benefit WHERE PatPlanNum=" +POut.Long(patPlanNum);
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					doDecrement=true;
 					InsVerifies.DeleteByFKey(patPlanNum,VerifyTypes.PatientEnrollment);
 				}
@@ -406,9 +407,9 @@ namespace OpenDentBusiness{
 		public static void DeleteNonContiguous(long patPlanNum) {
 			
 			string command="DELETE FROM patplan WHERE PatPlanNum="+POut.Long(patPlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM benefit WHERE PatPlanNum=" +POut.Long(patPlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			InsVerifies.DeleteByFKey(patPlanNum,VerifyTypes.PatientEnrollment);
 		}
 
@@ -486,7 +487,7 @@ namespace OpenDentBusiness{
 				ORDER BY patient.LName,patient.FName,patient.PatNum ";
 			//TODO: Consider the edge case where an office falls behind and the patient really needs to create multiple claims.
 			//E.g. NextClaimDate = 11/01/2016, today is 12/16/2016, this query would only show the Nov. row, but needs to also show a row for 12/01/2016.
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Checks all attached inssubs to make sure they have valid insplans. returns true if list is valid</summary>

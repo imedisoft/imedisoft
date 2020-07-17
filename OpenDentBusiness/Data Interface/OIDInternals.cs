@@ -1,5 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -119,7 +120,7 @@ namespace OpenDentBusiness{
 				//Insert missing row with blank OID.
 						command="INSERT INTO oidinternal (IDType,IDRoot) "
 						+"VALUES('"+((IdentifierType)i).ToString()+"','')";
-						Db.NonQ32(command);
+						Database.ExecuteNonQuery(command);
 
 			}
 		}
@@ -164,7 +165,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrOIDNum) {
 			
 			string command= "DELETE FROM oidinternal WHERE EhrOIDNum = "+POut.Long(ehrOIDNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

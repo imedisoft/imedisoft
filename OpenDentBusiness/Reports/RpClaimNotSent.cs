@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class RpClaimNotSent {
@@ -69,7 +70,7 @@ namespace OpenDentBusiness {
 				+" GROUP BY claim.ClaimNum";
 
 			command+=" ORDER BY claim.DateService";
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 		}
 	}
 }

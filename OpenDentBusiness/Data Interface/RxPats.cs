@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -76,7 +77,7 @@ namespace OpenDentBusiness{
 		public static List<long> GetChangedSinceRxNums(DateTime changedSince) {
 			
 			string command="SELECT RxNum FROM rxpat WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> rxnums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				rxnums.Add(PIn.Long(dt.Rows[i]["RxNum"].ToString()));
@@ -97,7 +98,7 @@ namespace OpenDentBusiness{
 					strRxNums+="RxNum='"+rxNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM rxpat WHERE "+strRxNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();

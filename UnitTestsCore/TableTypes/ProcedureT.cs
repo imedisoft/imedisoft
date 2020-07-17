@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using OpenDentBusiness;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace UnitTestsCore {
 	public class ProcedureT {
@@ -46,14 +47,8 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the procedurelog table.</summary>
 		public static void ClearProcedureTable() {
 			string command="DELETE FROM procedurelog WHERE ProcNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
-
-		/*public static void SetToothNum(Procedure procedure,string toothNum){
-			Procedure oldProcedure=procedure.Copy();
-			procedure.ToothNum=toothNum;
-			Procedures.Update(procedure,oldProcedure);
-		}*/
 
 		public static void SetPriority(Procedure procedure,int priority){
 			Procedure oldProcedure=procedure.Copy();

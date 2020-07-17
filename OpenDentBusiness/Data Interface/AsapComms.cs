@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -81,7 +82,7 @@ namespace OpenDentBusiness{
 				}
 				command+="AND asapcomm.ClinicNum IN("+string.Join(",",listClinicNums.Select(x => POut.Long(x)))+") ";
 			}
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<AsapCommHist> listHists=Crud.AsapCommCrud.TableToList(table).Select(x => new AsapCommHist() { AsapComm=x }).ToList();
 			for(int i=0;i<listHists.Count;i++) {
 				listHists[i].PatientName=PIn.String(table.Rows[i]["PatientName"].ToString());
@@ -153,7 +154,7 @@ namespace OpenDentBusiness{
 			}
 			string command="UPDATE asapcomm SET ResponseStatus="+POut.Int((int)rsvpStatus)
 				+" WHERE ShortGUID IN('"+string.Join("','",listShortGuids.Select(x => POut.String(x)))+"')";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion

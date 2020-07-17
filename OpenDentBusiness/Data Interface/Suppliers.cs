@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,12 +59,12 @@ namespace OpenDentBusiness{
 			
 			//validate that not already in use.
 			string command="SELECT COUNT(*) FROM supplyorder WHERE SupplierNum="+POut.Long(supp.SupplierNum);
-			int count=PIn.Int(Db.GetCount(command));
+			int count=PIn.Int(Database.ExecuteString(command));
 			if(count>0) {
 				throw new ApplicationException(Lans.g("Supplies","Supplier is already in use on an order. Not allowed to delete."));
 			}
 			command="SELECT COUNT(*) FROM supply WHERE SupplierNum="+POut.Long(supp.SupplierNum);
-			count=PIn.Int(Db.GetCount(command));
+			count=PIn.Int(Database.ExecuteString(command));
 			if(count>0) {
 				throw new ApplicationException(Lans.g("Supplies","Supplier is already in use on a supply. Not allowed to delete."));
 			}

@@ -77,38 +77,49 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static DataTable GetTableConAlreadyOpen(int serverThread, string command, bool isSqlValidated, bool isRunningOnReportServer = false)
 		{
-            // If the dictionary does not contain the ServerThread key, then something went wrong. Just stop and throw.
-            if (!_dictCons.TryGetValue(serverThread, out MySqlConnection con))
-            {
-                throw new ApplicationException(
-					"Critical error in GetTableConAlreadyOpen: A connection could not be found via the given server thread ID.");
-            }
+			throw new NotImplementedException();
+   //         // If the dictionary does not contain the ServerThread key, then something went wrong. Just stop and throw.
+   //         if (!_dictCons.TryGetValue(serverThread, out MySqlConnection con))
+   //         {
+   //             throw new ApplicationException(
+			//		"Critical error in GetTableConAlreadyOpen: A connection could not be found via the given server thread ID.");
+   //         }
 
-            // Throws Exception if Sql is not allowed, which is handled by the ExceptionThreadHandler and output in a MsgBox
-            if (!isSqlValidated && !Db.IsSqlAllowed(command))
-			{
-				throw new ApplicationException(
-					"Error: Command is either not safe or user does not have permission.");
-			}
+   //         // Throws Exception if Sql is not allowed, which is handled by the ExceptionThreadHandler and output in a MsgBox
+   //         if (!isSqlValidated && !Db.IsSqlAllowed(command))
+			//{
+			//	throw new ApplicationException(
+			//		"Error: Command is either not safe or user does not have permission.");
+			//}
 
-			// At this point, we know that _dictCons contains the current connection's ServerThread ID.
-			DataTable table = new DataTable();
-			MySqlDataAdapter da = new MySqlDataAdapter(new MySqlCommand(command, con));
-			try
-			{
-				Db.LastCommand = command;
-				QueryMonitor.RunMonitoredQuery(() => DataCore.ExecuteQueryFunc(() => da.Fill(table)), da.SelectCommand);
-			}
-			finally
-			{
-				con.Close(); // If the query was stopped or has finished executing, this will close the connection that it was executing on.
-				lock (_lockObj)
-				{
-					_dictCons.Remove(serverThread);
-				}
-			}
+			//// At this point, we know that _dictCons contains the current connection's ServerThread ID.
+			//DataTable table = new DataTable();
+			//MySqlDataAdapter da = new MySqlDataAdapter(new MySqlCommand(command, con));
+			//try
+			//{
+			//	Db.LastCommand = command;
 
-			return table;
+			//	QueryMonitor.RunMonitoredQuery(() =>
+			//	{
+			//		Db.Execute(() =>
+			//		{
+			//			da.Fill(table);
+
+			//		});
+
+
+			//	}, da.SelectCommand);
+			//}
+			//finally
+			//{
+			//	con.Close(); // If the query was stopped or has finished executing, this will close the connection that it was executing on.
+			//	lock (_lockObj)
+			//	{
+			//		_dictCons.Remove(serverThread);
+			//	}
+			//}
+
+			//return table;
 		}
 
 		/// <summary>
@@ -130,7 +141,7 @@ namespace OpenDentBusiness
 			// At this point we want to stop the query currently running on the MySQL connection that corresponds to the server thread passed in.
 			try
 			{
-				Db.NonQ("KILL QUERY " + serverThread);
+				Database.ExecuteNonQuery("KILL QUERY " + serverThread);
 			}
 			catch (MySqlException ex)
 			{

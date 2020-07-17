@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -140,7 +141,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long evaluationCriterionDefNum) {
 			
 			string command= "DELETE FROM evaluationcriteriondef WHERE EvaluationCriterionDefNum = "+POut.Long(evaluationCriterionDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

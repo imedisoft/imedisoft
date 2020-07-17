@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -52,7 +53,7 @@ namespace OpenDentBusiness{
 		public static List<string> GetDistinctFieldNames() {
 			
 			string command="SELECT FieldName FROM orthochart GROUP BY FieldName";
-			return Db.GetListString(command);
+			return Database.GetListString(command);
 		}
 
 		///<summary></summary>
@@ -96,7 +97,7 @@ namespace OpenDentBusiness{
 			}
 			command="UPDATE orthochart SET "+command
 				+" WHERE OrthoChartNum = "+POut.Long(oldOrthoChart.OrthoChartNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Crud.OrthoChartCrud.Update(orthoChartNew,orthoChartOld);
 		}
 		  
@@ -104,7 +105,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long orthoChartNum) {
 			
 			string command= "DELETE FROM orthochart WHERE OrthoChartNum = "+POut.Long(orthoChartNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Modified Sync pattern for the OrthoChart.  We cannot use the standard Sync pattern because we have to perform logging when updating 

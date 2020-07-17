@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -43,7 +44,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long reminderRuleNum) {
 			
 			string command= "DELETE FROM reminderrule WHERE ReminderRuleNum = "+POut.Long(reminderRuleNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

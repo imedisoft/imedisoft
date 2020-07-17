@@ -156,7 +156,7 @@ namespace OpenDentBusiness {
 		public static void Delete(long userodApptViewNum) {
 			
 			string command= "DELETE FROM userodapptview WHERE UserodApptViewNum = "+POut.Long(userodApptViewNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

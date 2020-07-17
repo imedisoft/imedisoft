@@ -60,12 +60,12 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Updates Status of the provided CentralConnection
 		/// </summary>
-		public static void UpdateStatus(CentralConnection centralConnection) => Db.NonQ(
+		public static void UpdateStatus(CentralConnection centralConnection) => Database.ExecuteNonQuery(
 			"UPDATE centralconnection " +
 			"SET ConnectionStatus='" + SOut.String(centralConnection.ConnectionStatus) + "' " +
 			"WHERE CentralConnectionNum=" + SOut.Long(centralConnection.CentralConnectionNum));
 		
-		public static void Delete(long centralConnectionNum) => Db.NonQ(
+		public static void Delete(long centralConnectionNum) => Database.ExecuteNonQuery(
 			"DELETE FROM centralconnection " +
 			"WHERE CentralConnectionNum = " + SOut.Long(centralConnectionNum));
 
@@ -83,7 +83,7 @@ namespace OpenDentBusiness
 					new DataConnection(centralConnection.ServerName, "mysql", "root", centralConnection.MySqlPassword) :
 					new DataConnection(centralConnection.ServerName, "mysql", centralConnection.MySqlUser, centralConnection.MySqlPassword);
 
-				dataTable = dataConnection.GetTable("SHOW DATABASES", false);
+				dataTable = dataConnection.ExecuteDataTable("SHOW DATABASES", false);
 			}
 			catch
 			{

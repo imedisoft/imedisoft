@@ -6,6 +6,7 @@ using System.Collections;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -94,7 +95,7 @@ namespace OpenDentBusiness {
 		public static void Delete(SigElementDef def) {
 			
 			string command="DELETE FROM sigelementdef WHERE SigElementDefNum ="+POut.Long(def.SigElementDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

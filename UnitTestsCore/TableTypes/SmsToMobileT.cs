@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBase;
+﻿using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
+using System;
+using System.Collections.Generic;
 
-namespace UnitTestsCore {
-	public class SmsToMobileT {
+namespace UnitTestsCore
+{
+    public class SmsToMobileT {
 
 		public static SmsToMobile CreateSmsToMobile(Patient pat,string guidMessage,SmsMessageSource source,long clinicNum=0) {
 			string guidBatch=Guid.NewGuid().ToString();
@@ -34,7 +33,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearSmsToMobileTable() {
 			string command="DELETE FROM smstomobile WHERE SmsToMobileNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

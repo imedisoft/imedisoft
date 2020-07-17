@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -89,7 +90,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long procApptColorNum) {
 			
 			string command= "DELETE FROM procapptcolor WHERE ProcApptColorNum = "+POut.Long(procApptColorNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

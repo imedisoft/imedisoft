@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -98,11 +99,11 @@ namespace OpenDentBusiness{
 			//Set all other orthocases inactive besides one being activated
 			string command=$@"UPDATE orthocase SET orthocase.IsActive={POut.Bool(false)}
 				WHERE orthocase.OrthoCaseNum IN({string.Join(",",listOrthoCaseNums)})";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Set OrthoPlanLinks inactive
 			command=$@"UPDATE orthoplanlink SET orthoplanlink.IsActive={POut.Bool(false)}
 				WHERE orthoplanlink.OrthoCaseNum IN({string.Join(",",listOrthoCaseNums)})";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Get All OrthoPlanLinks to deactivate
 			List<long> listOrthoScheduleNums=
 				OrthoPlanLinks.GetAllForOrthoCasesByType(listOrthoCaseNums,OrthoPlanLinkType.OrthoSchedule).Select(x => x.FKey).ToList();
@@ -112,7 +113,7 @@ namespace OpenDentBusiness{
 			//Set OrthoSchedules inactive
 			command=$@"UPDATE orthoschedule SET orthoschedule.IsActive={POut.Bool(false)}
 				WHERE orthoschedule.OrthoScheduleNum IN({string.Join(",",listOrthoScheduleNums)})";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Update the IsActive property for the OrthoCase, OrthoSchedule, and OrthoPlanLink between them.

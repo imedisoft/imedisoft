@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -18,7 +19,7 @@ namespace OpenDentBusiness{
 				+" TimeEntered1 AS 'In',TimeEntered2 AS 'Out'"
 				+" FROM clockevent WHERE EmployeeNum="+empNum+" AND TimeEntered1 BETWEEN "+POut.Date(startDate)+" AND "+POut.Date(stopDate)
 				+" ORDER BY TimeDisplayed1";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets the time a given employee clocked in for a given date. Datatable return type to allow easy binding in WPF.</summary>
@@ -27,7 +28,7 @@ namespace OpenDentBusiness{
 			string command="SELECT TimeEntered1, TimeEntered2 FROM clockevent"
 				+" WHERE EmployeeNum="+empNum+" AND TimeEntered1 BETWEEN "+POut.Date(date)+" AND "+POut.Date(date.AddDays(1))
 				+" GROUP BY EmployeeNum ORDER BY TimeEntered1 ASC";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 		#endregion
 
@@ -181,7 +182,7 @@ namespace OpenDentBusiness{
       if(PrefC.GetBool(PrefName.LocalTimeOverridesServerTime)) {
         //Cannot call update since we manually have to update the TimeEntered1 because it is a DateEntry column
         string command="UPDATE clockevent SET TimeEntered1="+POut.DateT(DateTime.Now)+", TimeDisplayed1="+POut.DateT(DateTime.Now)+" WHERE clockEventNum="+POut.Long(clockEventNum);
-        Db.NonQ(command);
+        Database.ExecuteNonQuery(command);
       }
       return clockEventNum;
 		}
@@ -196,7 +197,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long clockEventNum) {
 			
 			string command= "DELETE FROM clockevent WHERE ClockEventNum = "+POut.Long(clockEventNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets directly from the database.  If the last event is a completed break, then it instead grabs the half-finished clock in.

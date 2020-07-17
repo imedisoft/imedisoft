@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,7 +26,7 @@ namespace OpenDentBusiness.Mobile{
 		public static void LimitDocumentmsPerPatient(long customerNum) {
 			string command="DELETE FROM documentm WHERE CustomerNum = "+POut.Long(customerNum)
 			+" AND DocNum NOT IN (SELECT DocNum from statementm  WHERE CustomerNum = "+POut.Long(customerNum)+" )"; ;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		#endregion
@@ -71,13 +72,13 @@ namespace OpenDentBusiness.Mobile{
 		///<summary>used in tandem with Full synch</summary>
 		public static void DeleteAll(long customerNum) {
 			string command= "DELETE FROM documentm WHERE CustomerNum = "+POut.Long(customerNum); ;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Delete all documents of a particular patient</summary>
 		public static void Delete(long customerNum,long PatNum) {
 			string command= "DELETE FROM documentm WHERE CustomerNum = "+POut.Long(customerNum)+" AND PatNum = "+POut.Long(PatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 		/*
@@ -104,7 +105,7 @@ namespace OpenDentBusiness.Mobile{
 		///<summary></summary>
 		public static void Delete(long customerNum,long docNum) {
 			string command= "DELETE FROM documentm WHERE CustomerNum = "+POut.Long(customerNum)+" AND DocNum = "+POut.Long(docNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 
 		///<summary>First use GetChangedSince.  Then, use this to convert the list a list of 'm' objects.</summary>

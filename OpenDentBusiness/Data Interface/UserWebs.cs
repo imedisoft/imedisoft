@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 using ODCrypt;
 
 namespace OpenDentBusiness{
@@ -400,7 +401,7 @@ namespace OpenDentBusiness{
 		public static int GetUserNameCount(string userName,UserWebFKeyType fkeyType) {
 			
 			string command="SELECT COUNT(*) FROM userweb WHERE UserName='"+POut.String(userName)+"' AND FKeyType="+POut.Int((int)fkeyType);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		#endregion

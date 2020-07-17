@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class RpProcNote {
@@ -83,7 +84,7 @@ namespace OpenDentBusiness {
 				command+="GROUP BY procedurelog.ProcNum ";
 			}
 			command+=@"ORDER BY ProcDate, LName";
-			DataTable table=ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+			DataTable table=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 			foreach(DataRow row in table.Rows) {
 				row["ToothNum"]=Tooth.ToInternat(row["ToothNum"].ToString(),toothNumberFormat);
 			}

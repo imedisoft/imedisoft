@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -122,7 +123,7 @@ namespace OpenDentBusiness{
 		public static List<long> GetChangedSincePharmacyNums(DateTime changedSince) {
 			
 			string command="SELECT PharmacyNum FROM pharmacy WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> provnums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				provnums.Add(PIn.Long(dt.Rows[i]["PharmacyNum"].ToString()));
@@ -143,7 +144,7 @@ namespace OpenDentBusiness{
 					strPharmacyNums+="PharmacyNum='"+pharmacyNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM pharmacy WHERE "+strPharmacyNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();

@@ -1,4 +1,3 @@
-using DataConnectionBase;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace Imedisoft.Data
 		private const int ER_BAD_HOST_ERROR = 1042;
 		private const int ER_DBACCESS_DENIED_ERROR = 1044;
 		private const int ER_ACCESS_DENIED_ERROR = 1045;
-		private const int ER_NET_PACKET_TOO_LARGE = 1153;
+        private const int ER_NET_PACKET_TOO_LARGE = 1153;
 
 		private readonly MySqlConnection connection;
 		private readonly MySqlCommand command;
@@ -38,7 +37,7 @@ namespace Imedisoft.Data
 		///		</para>
 		/// </summary>
 		[ThreadStatic]
-		private static string connectionStringLocal = null;
+		private static string connectionStringLocal;
 
 		/// <summary>
 		///		<para>
@@ -49,7 +48,7 @@ namespace Imedisoft.Data
 		///			Defaults to 0 seconds.	
 		///		</para>
 		/// </summary>
-		private static int connectionRetryTimeoutSeconds = 0;
+		private static int connectionRetryTimeoutSeconds;
 
 		/// <summary>
 		///		<para>
@@ -65,7 +64,7 @@ namespace Imedisoft.Data
 		///		</para>
 		/// </summary>
 		[ThreadStatic]
-		private static int? connectionRetryTimeoutSecondsLocal = null;
+		private static int? connectionRetryTimeoutSecondsLocal;
 
 		/// <summary>
 		/// Gets the name of the current database server.
@@ -124,12 +123,9 @@ namespace Imedisoft.Data
 		/// when the connection has been lost.
 		/// </summary>
 		public static int ConnectionRetryTimeoutSeconds
-		{
-			get
-			{
-				return connectionRetryTimeoutSecondsLocal ?? connectionRetryTimeoutSeconds;
-			}
-			set => connectionRetryTimeoutSecondsLocal = connectionRetryTimeoutSeconds = value;
+        {
+            get => connectionRetryTimeoutSecondsLocal ?? connectionRetryTimeoutSeconds;
+            set => connectionRetryTimeoutSecondsLocal = connectionRetryTimeoutSeconds = value;
 		}
 
 		/// <summary>
@@ -314,6 +310,11 @@ namespace Imedisoft.Data
 			connectionStringLocal = connectionString;
 		}
 
+		/// <summary>
+		/// Attempts to open a connection with a database using the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string to test.</param>
+		/// <param name="skipValidation"></param>
 		private static void TestConnection(string connectionString, bool skipValidation)
 		{
 			var connection = new MySqlConnection(connectionString);
@@ -323,6 +324,7 @@ namespace Imedisoft.Data
 			if (!skipValidation)
 			{
 				var command = connection.CreateCommand();
+
 				command.CommandText = "UPDATE `preference` SET `ValueString` = '0' WHERE `ValueString` = '0'";
 
 				RunAction(() => command.ExecuteNonQuery(), connection, command);
@@ -331,26 +333,14 @@ namespace Imedisoft.Data
 			connection.Close();
 		}
 
-		public static bool IsTableCrashed(string tableName, bool doRetryConn = false)
-		{
-			try
-			{
-				using (DataConnection dconn = new DataConnection())
-				{
-					DataTable table = dconn.GetTable($"CHECK TABLE `{tableName}`", doRetryConn);//No need to POut.String when tableName surrounded by back quotes.
-					return (table.Rows[0]["Msg_text"].ToString().Trim().ToUpper() != "OK");//Any Msg_text other than 'OK' means the table is crashed.
-				}
-			}
-			catch 
-			{
-				return false;
-			}
-		}
-
 		/// <summary>
-		/// Fills table with data from the database.
+		/// Executes the specified command and returns the results as a <see cref="DataTable"/>.
 		/// </summary>
-		public DataTable GetTable(string commandText, bool autoRetry = true)
+		/// <param name="commandText">The command to execute.</param>
+		/// <param name="autoRetry">A value indicating whether to auto retry when the command fails.</param>
+		/// <param name="parameters">Optional command parameters.</param>
+		/// <returns>The results.</returns>
+		public DataTable ExecuteDataTable(string commandText, bool autoRetry = true, params MySqlParameter[] parameters)
 		{
 #if DEBUG
 			Debug.WriteLine(commandText);
@@ -359,6 +349,9 @@ namespace Imedisoft.Data
 			var dataTable = new DataTable();
 
 			command.CommandText = commandText;
+			command.Parameters.Clear();
+			command.Parameters.AddRange(parameters);
+
 			try
 			{
 				connection.Open();
@@ -377,7 +370,7 @@ namespace Imedisoft.Data
 				{
 					connection.Close();
 
-					return GetTable(commandText, autoRetry);
+					return ExecuteDataTable(commandText, true);
 				}
 
 				throw;
@@ -390,53 +383,13 @@ namespace Imedisoft.Data
 			return dataTable;
 		}
 
-		public List<T> GetList<T>(string commandText, Func<IDataRecord, T> rowBuilder, bool autoRetry = true)
-		{
-#if DEBUG
-			Debug.WriteLine(commandText);
-#endif
-
-			var results = new List<T>();
-
-			command.CommandText = commandText;
-			try
-			{
-				connection.Open();
-
-				RunAction(new Action(() =>
-				{
-					using (var dataReader = command.ExecuteReader())
-					{
-						while (dataReader.Read())
-						{
-							results.Add(rowBuilder(dataReader));
-						}
-					}
-				}));
-			}
-			catch (MySqlException exception)
-			{
-				connection.Close();
-
-				if (autoRetry && IsErrorHandled(exception))
-				{
-					return GetList(commandText, rowBuilder, autoRetry);
-				}
-
-				throw;
-			}
-			finally
-			{
-				connection.Close();
-			}
-
-			return results;
-		}
-
-		/// <summary>
-		/// Sends a non query command to the database and returns the number of rows affected. 
-		/// </summary>
-		public long NonQ(string commandText, bool autoRetry, params MySqlParameter[] parameters)
+        /// <summary>
+        /// Executes the specified command query.
+        /// </summary>
+        /// <param name="commandText">The command to execute.</param>
+        /// <param name="parameters">Optional command parameters.</param>
+        /// <returns>The number of rows affected.</returns>
+		public long ExecuteNonQuery(string commandText, bool autoRetry = false, params MySqlParameter[] parameters)
 		{
 #if DEBUG
 			Debug.WriteLine(commandText);
@@ -446,10 +399,7 @@ namespace Imedisoft.Data
 
 			command.CommandText = commandText;
 			command.Parameters.Clear();
-			foreach (var parameter in parameters)
-            {
-				command.Parameters.Add(parameter).Value = parameter.Value;
-            }
+			command.Parameters.AddRange(parameters);
 
 			try
 			{
@@ -470,7 +420,7 @@ namespace Imedisoft.Data
 
 				if (autoRetry && IsErrorHandled(ex))
 				{
-					return NonQ(commandText, autoRetry, parameters);
+					return ExecuteNonQuery(commandText, autoRetry, parameters);
 				}
 
 				throw;
@@ -484,22 +434,9 @@ namespace Imedisoft.Data
 		}
 
 		/// <summary>
-		/// Sends a non query command to the database and returns the number of rows affected.
-		/// </summary>
-		public long NonQ(string commandText) => NonQ(commandText, false);
-
-		/// <summary>
-		/// Use this for count(*) queries.
-		/// They are always guaranteed to return one and only one value.
-		/// Can also be used when retrieving prefs manually, since they will also return exactly one value
-		/// </summary>
-		public string GetCount(string commandText, bool autoRetry = true) 
-			=> GetScalar(commandText, autoRetry)?.ToString() ?? "";
-
-		/// <summary>
 		/// Get one value.
 		/// </summary>
-		public object GetScalar(string commandText, bool autoRetry = true)
+		public object ExecuteScalar(string commandText, bool autoRetry = true, params MySqlParameter[] parameters)
 		{
 #if DEBUG
 			Debug.WriteLine(commandText);
@@ -508,6 +445,9 @@ namespace Imedisoft.Data
 			object scalar = null;
 
 			command.CommandText = commandText;
+			command.Parameters.Clear();
+			command.Parameters.AddRange(parameters);
+
 			try
 			{
 				connection.Open();
@@ -520,7 +460,7 @@ namespace Imedisoft.Data
 
 				if (autoRetry && IsErrorHandled(exception))
 				{
-					return GetScalar(commandText, autoRetry);
+					return ExecuteScalar(commandText, autoRetry);
 				}
 
 				throw;
@@ -614,11 +554,14 @@ namespace Imedisoft.Data
 			return false;
 		}
 
-		///<summary>Fires an event to launch the LostConnection window and freezes the calling thread until connection has been restored or the timeout
-		///has been reached. This is only a blocking call when ConnectionRetrySeconds is greater than 0 or not the Middle Tier.
-		///Immediately returns if ConnectionRetrySeconds is 0 or this is the Middle Tier that has lost connection to the database.
-		///Returns true if the calling method should retry the db action that just failed.  E.g. recursively invoke GetTable()
-		///Returns false if the calling method should instead bubble up the original exception.</summary>
+		/// <summary>
+		/// Fires an event to launch the LostConnection window and freezes the calling thread until
+		/// connection has been restored or the timeout has been reached. This is only a blocking 
+		/// call when ConnectionRetrySeconds is greater than 0. Immediately returns if 
+		/// ConnectionRetrySeconds is 0. Returns true if the calling method should retry the db 
+		/// action that just failed. E.g. recursively invoke GetTable()
+		/// Returns false if the calling method should instead bubble up the original exception.
+		/// </summary>
 		private bool StartConnectionErrorRetry(string connectionString, DataConnectionEventType errorType)
 		{
 			if (ConnectionRetryTimeoutSeconds == 0) return false;

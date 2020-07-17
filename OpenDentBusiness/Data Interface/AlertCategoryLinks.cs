@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -97,7 +98,7 @@ namespace OpenDentBusiness{
 			}
 			string command="DELETE FROM alertcategorylink "
 				+"WHERE AlertCategoryNum = "+POut.Long(alertCategoryNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 			#endregion
 		#endregion

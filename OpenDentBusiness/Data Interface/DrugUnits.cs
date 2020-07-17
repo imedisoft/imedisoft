@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -109,11 +110,11 @@ namespace OpenDentBusiness{
 			//	throw new ApplicationException(Lans.g("FormDrugUnitEdit","Cannot delete: DrugUnit is in use by LabResult."));
 			//}
 			command="SELECT COUNT(*) FROM vaccinepat WHERE DrugUnitNum="+POut.Long(drugUnitNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new ApplicationException(Lans.g("FormDrugUnitEdit","Cannot delete: DrugUnit is in use by VaccinePat."));
 			}
 			command= "DELETE FROM drugunit WHERE DrugUnitNum = "+POut.Long(drugUnitNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*
@@ -142,7 +143,7 @@ namespace OpenDentBusiness{
 				strDrugUnitNums+="DrugUnitNum='"+drugUnitNums[i].ToString()+"' ";
 			}
 			string command="SELECT * FROM drugunit WHERE "+strDrugUnitNums;
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return Crud.DrugUnitCrud.TableToList(table);
 		}
 	}

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -43,7 +44,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(*) FROM gradingscale WHERE Description = '"+POut.String(gradingScaleCur.Description)+"' "
 				+"AND GradingScaleNum != "+POut.Long(gradingScaleCur.GradingScaleNum);
-			int count=PIn.Int(Db.GetCount(command));
+			int count=PIn.Int(Database.ExecuteString(command));
 			if(count>0) {
 				return true;
 			}
@@ -55,7 +56,7 @@ namespace OpenDentBusiness{
 			string command="SELECT COUNT(*) FROM evaluation,evaluationcriterion "
 				+"WHERE evaluation.GradingScaleNum = "+POut.Long(gradingScaleCur.GradingScaleNum)+" "
 				+"OR evaluationcriterion.GradingScaleNum = "+POut.Long(gradingScaleCur.GradingScaleNum);
-			int count=PIn.Int(Db.GetCount(command));
+			int count=PIn.Int(Database.ExecuteString(command));
 			if(count>0) {
 				return true;
 			}
@@ -79,19 +80,19 @@ namespace OpenDentBusiness{
 			
 			string error="";
 			string command="SELECT COUNT(*) FROM evaluationdef WHERE GradingScaleNum="+POut.Long(gradingScaleNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				error+=" EvaluationDef,";
 			}
 			command="SELECT COUNT(*) FROM evaluationcriteriondef WHERE GradingScaleNum="+POut.Long(gradingScaleNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				error+=" EvaluationCriterionDef,";
 			}
 			command="SELECT COUNT(*) FROM evaluation WHERE GradingScaleNum="+POut.Long(gradingScaleNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				error+=" Evaluation,";
 			}
 			command="SELECT COUNT(*) FROM evaluationcriterion WHERE GradingScaleNum="+POut.Long(gradingScaleNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				error+=" EvaluationCriterion,";
 			}
 			if(error!="") {
@@ -99,7 +100,7 @@ namespace OpenDentBusiness{
 			}
 			GradingScaleItems.DeleteAllByGradingScale(gradingScaleNum);
 			command= "DELETE FROM gradingscale WHERE GradingScaleNum = "+POut.Long(gradingScaleNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

@@ -1,135 +1,95 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenDentBusiness{
-	///<summary>This is an enumeration of all the enumeration types that are used in the database.  This is used in the reporting classes to make the data human-readable.  May need to be updated with recent additions.</summary>
-	public enum EnumType{
-		///<summary></summary>
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// This is an enumeration of all the enumeration types that are used in the database.
+	/// This is used in the reporting classes to make the data human-readable.
+	/// May need to be updated with recent additions.
+	/// </summary>
+	public enum EnumType
+	{
 		YN,
-		///<summary></summary>
 		Relat,
-		///<summary></summary>
 		Month,
-		///<summary></summary>
 		ProcStat,
-		///<summary></summary>
 		DefCat,
-		///<summary></summary>
 		TreatmentArea,
-		///<summary></summary>
 		DentalSpecialty,
-		///<summary></summary>
 		ApptStatus,
-		///<summary></summary>
 		PatientStatus,
-		///<summary></summary>
 		PatientGender,
-		///<summary></summary>
 		PatientPosition,
-		///<summary></summary>
 		ScheduleType,
-		///<summary></summary>
 		LabCase,
-		///<summary></summary>
 		PlaceOfService,
-		///<summary></summary>
 		PaintType,
-		///<summary></summary>
 		SchedStatus,
-		///<summary></summary>
 		AutoCondition,
-		///<summary></summary>
 		ClaimProcStatus,
-		///<summary></summary>
 		CommItemType,
-		///<summary></summary>
 		ToolBarsAvail,
-		///<summary></summary>
 		ProblemStatus,
-		///<summary></summary>
 		EZTwainErrorCode,
-		///<summary></summary>
 		ScaleType,
-		///<summary></summary>
 		SortStrategy,
-		///<summary></summary>
 		ProcCodeListSort
 	}
-	///<summary>0=Unknown,1=Yes, or 2=No. UI can be tricky. Some success with a 3x1 listbox, multicolumn, see FormPatientEdit. Radiobuttons are also an option.  You can also use another YN variable to store unknown, and then use a click event on the checkbox to change to Y or N.  You can also use a three state checkbox if you translate properly between the enums.</summary>
-	public enum YN{
-		///<summary>0</summary>
+
+	/// <summary>
+	/// 0=Unknown,1=Yes, or 2=No. UI can be tricky.
+	/// Some success with a 3x1 listbox, multicolumn, see FormPatientEdit. Radiobuttons are also an option.
+	/// You can also use another YN variable to store unknown, and then use a click event on the checkbox to change to Y or N.
+	/// You can also use a three state checkbox if you translate properly between the enums.
+	/// </summary>
+	public enum YN
+	{
 		Unknown,
-		///<summary>1</summary>
 		Yes,
-		///<summary>2</summary>
-		No}
-	///<summary>Relationship to subscriber for insurance.</summary>
-	public enum Relat{
-		///<summary>0</summary>
+		No
+	}
+
+	/// <summary>
+	/// Relationship to subscriber for insurance.
+	/// </summary>
+	public enum Relat
+	{
 		Self,
-		///<summary>1</summary>
 		Spouse,
-		///<summary>2</summary>
 		Child,
-		///<summary>3</summary>
 		Employee,
-		///<summary>4</summary>
 		HandicapDep,
-		///<summary>5</summary>
 		SignifOther,
-		///<summary>6</summary>
 		InjuredPlaintiff,
-		///<summary>7</summary>
 		LifePartner,
-		///<summary>8</summary>
 		Dependent
 	}
-	///<summary></summary>
-	public enum Month{
-		///<summary>1</summary>
-		Jan=1,
-		///<summary>2</summary>
+
+	public enum Month
+	{
+		Jan = 1,
 		Feb,
-		///<summary>3</summary>
 		Mar,
-		///<summary>4</summary>
 		Apr,
-		///<summary>5</summary>
 		May,
-		///<summary>6</summary>
 		Jun,
-		///<summary>7</summary>
 		Jul,
-		///<summary>8</summary>
 		Aug,
-		///<summary>9</summary>
 		Sep,
-		///<summary>10</summary>
 		Oct,
-		///<summary>11</summary>
 		Nov,
-		///<summary>12</summary>
-		Dec}
-	///<summary>Progress notes line type. Used when displaying lines in the Chart module.</summary>
-	public enum ProgType{
-		///<summary>1</summary>
-		Proc=1,
-		///<summary>2</summary>
-		Rx}
-	///<summary>Primary, secondary, or total. Used in some insurance estimates to specify which kind of estimate is needed.</summary>
-	public enum PriSecTot{
-		///<summary>0</summary>
-		Pri,
-		///<summary>1</summary>
-		Sec,
-		///<summary>2</summary>
-		Tot}
-		//<summary>3</summary>
-		//Other}
-	///<summary>Procedure Status.  These statuses are transalted via class type "enumProcStat" (ex Lan.g("enumProcStat","..."))</summary>
-	public enum ProcStat{
+		Dec
+	}
+
+	/// <summary>
+	/// Procedure Status.
+	/// These statuses are transalted via class type "enumProcStat" (ex Lan.g("enumProcStat","..."))
+	/// </summary>
+	public enum ProcStat
+	{
 		///<summary>1- Treatment Plan.</summary>
-		TP=1,
+		TP = 1,
 		///<summary>2- Complete.</summary>
 		C,
 		///<summary>3- Existing Current Provider.</summary>
@@ -149,34 +109,38 @@ namespace OpenDentBusiness{
 
 	///<summary>The pseudo statuses inside this extended enum must always be mutually exclusive of the values inside the ProcStat enum.
 	///These statuses are transalted via class type "enumProcStat" (ex Lan.g("enumProcStat",ProcStatExt.InProcess))</summary>
-	public class ProcStatExt {
+	public class ProcStatExt
+	{
 		///<summary>I - Stands for "Invalid".</summary>
-		public const string Invalid="I";
+		public const string Invalid = "I";
 		///<summary>C/P - Stands for "Complete (In Process)".</summary>
-		public const string InProcess="C/P";
-	}		
-	
-	//public enum StudentStat{None,Full,Part};
-	///<summary>Used in procedurecode setup to specify the treatment area for a procedure.  This determines what fields are available when editing an appointment.</summary>
-	public enum TreatmentArea{
-		///<summary>0-Same as 3 mouth.</summary>
+		public const string InProcess = "C/P";
+	}
+
+	/// <summary>
+	/// Used in procedurecode setup to specify the treatment area for a procedure.
+	/// This determines what fields are available when editing an appointment.
+	/// </summary>
+	public enum TreatmentArea
+	{
+		/// <summary>
+		/// Same as 3 mouth.
+		/// </summary>
 		None,
-		///<summary>1</summary>
+
 		Surf,
-		///<summary>2</summary>
 		Tooth,
-		///<summary>3</summary>
 		Mouth,
-		///<summary>4</summary>
 		Quad,
-		///<summary>5</summary>
 		Sextant,
-		///<summary>6</summary>
 		Arch,
-		///<summary>7</summary>
-		ToothRange}
+		ToothRange
+	}
+
+
 	///<summary>When the autorefresh message is sent to the other computers, this is the type.</summary>
-	public enum InvalidType{
+	public enum InvalidType
+	{
 		///<summary>0</summary>
 		None,
 		///<summary>1 Deprecated. Not used with any other flags</summary>
@@ -207,8 +171,8 @@ namespace OpenDentBusiness{
 		StartupOld,
 		///<summary>14</summary>
 		Defs,
-    ///<summary>15. Templates and addresses, but not messages.</summary>
-    Email,
+		///<summary>15. Templates and addresses, but not messages.</summary>
+		Email,
 		///<summary>16. Obsolete</summary>
 		Fees,
 		///<summary>17</summary>
@@ -328,10 +292,10 @@ namespace OpenDentBusiness{
 		VoiceMails,
 		///<summary>74. Used to refresh the active kiosk grid in FormTerminalManager and loaded patient with list of forms in FormTerminal.</summary>
 		Kiosk,
-    ///<summary>75</summary>
-    ClinicPrefs,
-    ///<summary>76. Not addresses or templates, but inbox and sent messages.</summary>
-    EmailMessages,
+		///<summary>75</summary>
+		ClinicPrefs,
+		///<summary>76. Not addresses or templates, but inbox and sent messages.</summary>
+		EmailMessages,
 		///<summary>77. The eConnector has finished sending web sched recall reminders.</summary>
 		WebSchedRecallReminders,
 		///<summary>78.</summary>
@@ -415,7 +379,8 @@ namespace OpenDentBusiness{
 	//	Radiology
 	//}
 	///<summary>Appointment status.</summary>
-	public enum ApptStatus{
+	public enum ApptStatus
+	{
 		///<summary>0- No appointment should ever have this status.</summary>
 		None,
 		///<summary>1- Shows as a regularly scheduled appointment.</summary>
@@ -433,10 +398,12 @@ namespace OpenDentBusiness{
 		///<summary>7- Patient "post-it" note on the schedule. Shows light yellow. Shows on day scheduled just like appt, as well as in prog notes, etc.</summary>
 		PtNote,
 		///<summary>8- Patient "post-it" note completed</summary>
-		PtNoteCompleted}
+		PtNoteCompleted
+	}
 
 	///<summary></summary>
-	public enum PatientStatus{
+	public enum PatientStatus
+	{
 		///<summary>0</summary>
 		Patient,
 		///<summary>1</summary>
@@ -454,15 +421,18 @@ namespace OpenDentBusiness{
 		Prospective
 	}
 	///<summary>Known as administrativeGender (HL7 OID of 2.16.840.1.113883.5.1) Male=M, Female=F, Unknown=Undifferentiated=UN.</summary>
-	public enum PatientGender{//known as administrativeGender HL7 OID of 2.16.840.1.113883.5.1
+	public enum PatientGender
+	{//known as administrativeGender HL7 OID of 2.16.840.1.113883.5.1
 		///<summary>0</summary>
 		Male,
 		///<summary>1</summary>
 		Female,
 		///<summary>2- Required by HIPAA for privacy.  Required by ehr to track missing entries. EHR/HL7 known as undifferentiated (UN).</summary>
-		Unknown}
+		Unknown
+	}
 	///<summary></summary>
-	public enum PatientPosition{
+	public enum PatientPosition
+	{
 		///<summary>0</summary>
 		Single,
 		///<summary>1</summary>
@@ -472,9 +442,11 @@ namespace OpenDentBusiness{
 		///<summary>3</summary>
 		Widowed,
 		///<summary>4</summary>
-		Divorced}
+		Divorced
+	}
 	///<summary>For schedule timeblocks.</summary>
-	public enum ScheduleType{
+	public enum ScheduleType
+	{
 		///<summary>0</summary>
 		Practice,
 		///<summary>1</summary>
@@ -487,7 +459,8 @@ namespace OpenDentBusiness{
 		WebSchedASAP,
 	}
 	///<summary>For actions taken on blockouts (cut,copy,paste, etc.)</summary>
-	public enum BlockoutAction {
+	public enum BlockoutAction
+	{
 		///<summary>0</summary>
 		Cut,
 		///<summary>1</summary>
@@ -514,14 +487,16 @@ namespace OpenDentBusiness{
 		///<summary>3</summary>
 		QualityChecked};*/
 	///<summary>Default sort method of the Procedure Code list.  0=Category, 1=ProcCode</summary>
-	public enum ProcCodeListSort{
+	public enum ProcCodeListSort
+	{
 		///<summary>0</summary>
 		Category,
 		///<summary>1</summary>
 		ProcCode
 	}
 	///<summary>Used in the other appointments window to keep track of the result when closing.</summary>
-	public enum OtherResult{
+	public enum OtherResult
+	{
 		///<summary></summary>
 		Cancel,
 		///<summary></summary>
@@ -537,7 +512,8 @@ namespace OpenDentBusiness{
 	}
 	//public enum SearchPatType{Lname,Fname,HmPhone,Address}
 	///<summary></summary>
-	public enum PaintType{
+	public enum PaintType
+	{
 		///<summary>0</summary>
 		Extraction,
 		///<summary>1</summary>
@@ -569,25 +545,29 @@ namespace OpenDentBusiness{
 		///<summary>14</summary>
 		RetainerOutline,
 		///<summary>15</summary>
-		RetainerHatch}
+		RetainerHatch
+	}
 	///<summary>Schedule status.  Open=0,Closed=1,Holiday=2.</summary>
-  public enum SchedStatus{
+	public enum SchedStatus
+	{
 		///<summary>0</summary>
 		Open,
 		///<summary>1</summary>
 		Closed,
 		///<summary>2</summary>
-		Holiday}
+		Holiday
+	}
 	//<summary></summary>
-  /*public enum BackupType{
-		///<summary></summary>
-		CopyFiles,
-		///<summary></summary>
-		CopyToServer,
-		///<summary></summary>
-		DataDump}*/
+	/*public enum BackupType{
+		  ///<summary></summary>
+		  CopyFiles,
+		  ///<summary></summary>
+		  CopyToServer,
+		  ///<summary></summary>
+		  DataDump}*/
 	///<summary></summary>
-  public enum AutoCondition{
+	public enum AutoCondition
+	{
 		///<summary>0</summary>
 		Anterior,
 		///<summary>1</summary>
@@ -623,9 +603,11 @@ namespace OpenDentBusiness{
 		///<summary>16</summary>
 		Retainer,
 		///<summary>17</summary>
-		AgeOver18}
+		AgeOver18
+	}
 	///<Summary>Used for insurance substitutions conditions of procedurecodes.  Mostly for posterior composites.</Summary>
-	public enum SubstitutionCondition{
+	public enum SubstitutionCondition
+	{
 		///<Summary>0</Summary>
 		Always,
 		///<Summary>1</Summary>
@@ -638,7 +620,8 @@ namespace OpenDentBusiness{
 		Posterior
 	}
 	///<summary>Claimproc Status.  The status must generally be the same as the claim, although it is sometimes not strictly enforced.</summary>
-	public enum ClaimProcStatus{
+	public enum ClaimProcStatus
+	{
 		///<summary>0: For claims that have been created or sent, but have not been received.</summary>
 		NotReceived,
 		///<summary>1: For claims that have been received.</summary>
@@ -680,7 +663,8 @@ namespace OpenDentBusiness{
 	}*/
 
 	///<summary></summary>
-	public enum ToolBarsAvail{
+	public enum ToolBarsAvail
+	{
 		///<summary>0</summary>
 		AccountModule,
 		///<summary>1</summary>
@@ -702,7 +686,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary></summary>
-	public enum TimeClockStatus{
+	public enum TimeClockStatus
+	{
 		///<summary>0</summary>
 		[Description("Home")]
 		Home,
@@ -715,7 +700,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>In perio, the type of measurements for a given row.</summary>
-	public enum PerioSequenceType{
+	public enum PerioSequenceType
+	{
 		///<summary>0</summary>
 		Mobility,
 		///<summary>1</summary>
@@ -735,7 +721,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Deprecated, use patientrace table instead.  Temporarily used for converting old patient races to patientrace entries and screening.  Race and ethnicity for patient. Used by public health.  The problem is that everyone seems to want different choices.  If we give these choices their own table, then we also need to include mapping functions.  These are currently used in ArizonaReports, HL7 w ECW, and EHR.  Foreign users would like their own mappings.</summary>
-	public enum PatientRaceOld {
+	public enum PatientRaceOld
+	{
 		///<summary>0</summary>
 		Unknown,
 		///<summary>1</summary>
@@ -761,7 +748,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Grade level used in public health.</summary>
-	public enum PatientGrade{
+	public enum PatientGrade
+	{
 		///<summary>0</summary>
 		Unknown,
 		///<summary>1</summary>
@@ -799,7 +787,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>For public health.  Unknown, NoProblems, NeedsCarE, or Urgent.</summary>
-	public enum TreatmentUrgency{
+	public enum TreatmentUrgency
+	{
 		///<summary></summary>
 		Unknown,
 		///<summary></summary>
@@ -811,7 +800,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>The type of image for images module.</summary>
-	public enum ImageType{
+	public enum ImageType
+	{
 		///<summary>0- Includes scanned documents and screenshots.</summary>
 		Document,
 		///<summary>1</summary>
@@ -823,7 +813,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used by QuickPasteCat to determine which category to default to when opening.</summary>
-	public enum QuickPasteType {
+	public enum QuickPasteType
+	{
 		///<summary>0 - None should never be used.  It is simply used as a "default" when adding a new control.  Searching for usage of "None" is an easy way to find spots where our pattern was not followed correctly.</summary>
 		None,
 		///<summary>1</summary>
@@ -911,7 +902,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>For every type of electronic claim format that Open Dental can create, there will be an item in this enumeration.  All e-claim formats are hard coded due to complexity.</summary>
-	public enum ElectronicClaimFormat{
+	public enum ElectronicClaimFormat
+	{
 		///<summary>0-Not in database, but used in various places in program.</summary>
 		None,
 		///<summary>1-The American standard through 12/31/11.</summary>
@@ -931,7 +923,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used when submitting e-claims to some carriers who require extra provider identifiers.  Usage varies by company.  Only used as needed.  SiteNumber is the only one that is still used on 5010s.  The other 3 have been deprecated and replaced by NPI.</summary>
-	public enum ProviderSupplementalID{
+	public enum ProviderSupplementalID
+	{
 		///<summary>0</summary>
 		BlueCross,
 		///<summary>1</summary>
@@ -943,7 +936,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Each clearinghouse can have a hard-coded comm bridge which handles all the communications of transfering the claim files to the clearinghouse/carrier.  Does not just include X12, but can include any format at all.</summary>
-	public enum EclaimsCommBridge{
+	public enum EclaimsCommBridge
+	{
 		///<summary>0-No comm bridge will be activated. The claim files will be created to the specified path, but they will not be uploaded.</summary>
 		None,
 		///<summary>1</summary>
@@ -987,7 +981,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used as the enumeration of FieldValueType.ForeignKey.  Basically, this allows lists to be included in the parameter list.  The lists are those common short lists that are used so frequently.  The user can only select one from the list, and the primary key of that item will be used as the parameter.</summary>
-	public enum ReportFKType{
+	public enum ReportFKType
+	{
 		///<summary>0</summary>
 		None,
 		///<summary>The schoolclass table in the database. Used for dental schools.</summary>
@@ -997,7 +992,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>The type of signal being sent.</summary>
-	public enum SignalType{
+	public enum SignalType
+	{
 		///<summary>0- Includes text messages.</summary>
 		Button,
 		///<summary>1</summary>
@@ -1005,7 +1001,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used in the benefit table.  Corresponds to X12 EB01.</summary>
-	public enum InsBenefitType{
+	public enum InsBenefitType
+	{
 		///<summary>0- Not usually used.  Would only be used if you are just indicating that the patient is covered, but without any specifics.</summary>
 		ActiveCoverage,
 		///<summary>1- Used for percentages to indicate portion that insurance will cover.  When interpreting electronic benefit information, this is the opposite percentage, the percentage that the patient will pay after deductible.</summary>
@@ -1023,7 +1020,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used in the benefit table.  Corresponds to X12 EB06.</summary>
-	public enum BenefitTimePeriod{
+	public enum BenefitTimePeriod
+	{
 		///<summary>0- A timeperiod is frequenly not needed.  For example, percentages.</summary>
 		None,
 		///<summary>1- The renewal month is not Jan.  In this case, we need to know the effective date so that we know which month the benefits start over in.</summary>
@@ -1039,7 +1037,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used in the benefit table in conjunction with an integer quantity.</summary>
-	public enum BenefitQuantity{
+	public enum BenefitQuantity
+	{
 		///<summary>0- This is used a lot. Most benefits do not need any sort of quantity.</summary>
 		None,
 		///<summary>1- For example, two exams per year</summary>
@@ -1055,19 +1054,21 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used in the benefit table.</summary>
-	public enum BenefitCoverageLevel{
+	public enum BenefitCoverageLevel
+	{
 		///<summary>0- Since this is a situational X12 field, we can also have none.  Typical for percentages and copayments.</summary>
 		None,
 		///<summary>1- The default for deductibles and maximums.</summary>
 		Individual,
 		///<summary>2- For example, family deductible or family maximum.</summary>
 		Family
-		
+
 	}
-	
+
 
 	///<summary>The X12 benefit categories.  Used to link the user-defined CovCats to the corresponding X12 category.</summary>
-	public enum EbenefitCategory{
+	public enum EbenefitCategory
+	{
 		///<summary>0- Default.  Applies to all codes.</summary>
 		None,
 		///<summary>1- X12: 30 and 35. All ADA codes except ortho.  D0000-D7999 and D9000-D9999</summary>
@@ -1101,7 +1102,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used in accounting for chart of accounts.</summary>
-	public enum AccountType{
+	public enum AccountType
+	{
 		///<summary>0</summary>
 		Asset,
 		///<summary>1</summary>
@@ -1114,8 +1116,8 @@ namespace OpenDentBusiness{
 		Expense
 	}
 
-	///<summary></summary>
-	public enum ToothPaintingType{
+	public enum ToothPaintingType
+	{
 		///<summary>0</summary>
 		None,
 		///<summary>1</summary>
@@ -1150,8 +1152,8 @@ namespace OpenDentBusiness{
 		Watch
 	}
 
-	///<summary></summary>
-	public enum ToothInitialType{
+	public enum ToothInitialType
+	{
 		///<summary>0</summary>
 		Missing,
 		///<summary>1 - Also hides the number.  This is now also allowed for primary teeth.</summary>
@@ -1173,9 +1175,10 @@ namespace OpenDentBusiness{
 		///<summary>9 One segment of a drawing.</summary>
 		Drawing
 	}
-	
+
 	///<summary>Indicates at what point the patient is in the sequence. 0=standby, 1=PatientInfo, 2=Medical, 3=UpdateOnly.</summary>
-	public enum TerminalStatusEnum{
+	public enum TerminalStatusEnum
+	{
 		///<summary>0</summary>
 		Standby,
 		///<summary>1</summary>
@@ -1186,16 +1189,18 @@ namespace OpenDentBusiness{
 		UpdateOnly
 	}
 
-	///<summary>0=FreeformText, 1=YesNoUnknown. Allows for later adding other types, 3=picklist, 4, etc</summary>
-	public enum QuestionType{
-		///<summary>0</summary>
+	/// <summary>
+	/// 0=FreeformText, 1=YesNoUnknown. Allows for later adding other types, 3=picklist, 4, etc
+	/// </summary>
+	public enum QuestionType
+	{
 		FreeformText,
-		///<summary>1</summary>
 		YesNoUnknown
 	}
 
 	///<summary>0=User,1=Extra,2=Message.</summary>
-	public enum SignalElementType{
+	public enum SignalElementType
+	{
 		///<summary>0-To and From lists.  Not tied in any way to the users that are part of security.</summary>
 		User,
 		///<summary>Typically used to insert "family" before "phone" signals.</summary>
@@ -1205,7 +1210,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary></summary>
-	public enum InsFilingCodeOldOld{
+	public enum InsFilingCodeOldOld
+	{
 		///<summary>0</summary>
 		Commercial_Insurance,
 		///<summary>1</summary>
@@ -1254,8 +1260,8 @@ namespace OpenDentBusiness{
 		MutuallyDefined
 	}
 
-	///<summary></summary>
-	public enum ContactMethod{
+	public enum ContactMethod
+	{
 		///<summary>0</summary>
 		None,
 		///<summary>1</summary>
@@ -1277,7 +1283,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>0=None,1=Declined,2=Scheduled,3=Consulted,4=InTreatment,5=Complete</summary>
-	public enum ReferralToStatus{
+	public enum ReferralToStatus
+	{
 		///<summary>0</summary>
 		None,
 		///<summary>1</summary>
@@ -1293,7 +1300,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary></summary>
-	public enum StatementMode{
+	public enum StatementMode
+	{
 		///<summary>0</summary>
 		Mail,
 		///<summary>1</summary>
@@ -1305,7 +1313,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary></summary>
-	public enum DeletedObjectType{
+	public enum DeletedObjectType
+	{
 		///<summary>0</summary>
 		Appointment,
 		///<summary>1 - A schedule object.  Only provider schedules are tracked for deletion.</summary>
@@ -1367,7 +1376,8 @@ namespace OpenDentBusiness{
 	//}
 
 	///<summary></summary>
-	public enum SmokingSnoMed {
+	public enum SmokingSnoMed
+	{
 		///<summary>0 - UnknownIfEver</summary>
 		_266927001,
 		///<summary>1 - SmokerUnknownCurrent</summary>
@@ -1387,7 +1397,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>0=Active, 1=Resolved, 2=Inactive</summary>
-	public enum ProblemStatus{
+	public enum ProblemStatus
+	{
 		/// <summary>0</summary>
 		Active,
 		/// <summary>1</summary>
@@ -1397,7 +1408,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>EZTwain Error Codes. 43 EZTEC_NO_PDF is because of a missing DLL.</summary>
-	public enum EZTwainErrorCode {
+	public enum EZTwainErrorCode
+	{
 		///<summary>0</summary>
 		EZTEC_NONE,
 		///<summary>1</summary>
@@ -1459,7 +1471,7 @@ namespace OpenDentBusiness{
 		///<summary>29</summary>
 		EZTEC_JPEG_GRAY_OR_RGB,
 		///<summary>30</summary>
-		EZTEC_JPEG_BAD_Q ,
+		EZTEC_JPEG_BAD_Q,
 		///<summary>31</summary>
 		EZTEC_BAD_DIB,
 		///<summary>32</summary>
@@ -1565,7 +1577,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Only applies to 15.4 and following.  This defines what and how the eConnector is running for a customer. Do not re-order and do not rename any values.</summary>
-	public enum ListenerServiceType {
+	public enum ListenerServiceType
+	{
 		///<summary>0.  Default for people who had been using the listener prior to the 15.3 proxy listener.</summary>
 		ListenerService,
 		///<summary>1.  Opt-in required to use the proxy service.</summary>
@@ -1577,7 +1590,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Defines a user-friendly way of describing sorting strategies.  Intended for user selection for sorting grids.  Can easily be added to.</summary>
-	public enum SortStrategy {
+	public enum SortStrategy
+	{
 		///<summary>0.</summary>
 		[Description("Name Asc")]
 		NameAsc,
@@ -1591,41 +1605,50 @@ namespace OpenDentBusiness{
 		[Description("PatNum Desc")]
 		PatNumDesc
 	}
-	
-	///<summary>The Enumeration value for which Claim Snapshot Trigger that will be stored.</summary>
-	public enum ClaimSnapshotTrigger {
-		///<summary>0</summary>
+
+	/// <summary>
+	/// The Enumeration value for which Claim Snapshot Trigger that will be stored.
+	/// </summary>
+	public enum ClaimSnapshotTrigger
+	{
 		[Description("Claim Created")]
 		ClaimCreate,
-		///<summary>1</summary>
+
 		[Description("Service - Specific Time")]
 		Service,
-		///<summary>2</summary>
+
 		[Description("Insurance Payment Received")]
 		InsPayment
 	}
 
-	///<summary>A permission that a FHIR APIKey possesses. The CRUD suffix (Create, Read, Update, Delete) matters here.
-	///Rows may be filtered by WebServiceHQ.CheckFHIRAPIKey() according to their suffix.</summary>
-	public enum APIPermission {
+	/// <summary>
+	/// A permission that a FHIR APIKey possesses.
+	/// The CRUD suffix (Create, Read, Update, Delete) matters here.
+	/// Rows may be filtered by WebServiceHQ.CheckFHIRAPIKey() according to their suffix.
+	/// </summary>
+	public enum APIPermission
+	{
 		AppointmentCreate,
 		AppointmentRead,
 		AppointmentUpdate,
-		///<summary>Even though this enum value isn't used, we can't delete it because it's being used in Java and Java can't assign int values to an
-		///enum.</summary>
+
+		/// <summary>
+		/// Even though this enum value isn't used, we can't delete it because it's being used in 
+		/// Java and Java can't assign int values to an enum.
+		/// </summary>
 		AppointmentDelete,
+
 		PatientCreate,
 		PatientRead,
 		PatientUpdate,
-		//No PatientDelete
 		Subscriptions,
 		LocationRead,
 		OrganizationRead,
 		PractitionerRead,
-		ScheduleRead,//Also used for Slot resources
+		ScheduleRead,
 		CapabilityStatement,
 		AllergyIntoleranceRead,
-		MedicationRead,//Used for both Medication and MedicationStatement resources
+		MedicationRead,
 		ConditionRead,
 		ServiceRequestRead,
 		ServiceRequestCreate,
@@ -1639,7 +1662,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Will be deprecated soon. FHIRKeyStatus has mostly replaced this.</summary>
-	public enum APIKeyStatus {
+	public enum APIKeyStatus
+	{
 		///<summary>Able to perform read operations. By default, all keys have this status.</summary>
 		ReadEnabled,
 		///<summary>For an API key to have write permissions, it must first pay ODHQ a fee. This key can still perform read operations.</summary>
@@ -1652,7 +1676,8 @@ namespace OpenDentBusiness{
 		Disabled
 	}
 
-	public enum FHIRKeyStatus {
+	public enum FHIRKeyStatus
+	{
 		///<summary>Nobody knows!</summary>
 		Unknown,
 		///<summary>This key can be used for queries.</summary>
@@ -1672,7 +1697,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary></summary>
-	public enum OAuthApplicationNames {
+	public enum OAuthApplicationNames
+	{
 		///<summary>0</summary>
 		Dropbox,
 		///<summary>1</summary>
@@ -1706,8 +1732,11 @@ namespace OpenDentBusiness{
 		DentalOffice_19_1,
 	}
 
-	///<summary>Only used by the Signup Portal</summary>
-	public enum SignupPortalPermission {
+	/// <summary>
+	/// Only used by the Signup Portal
+	/// </summary>
+	public enum SignupPortalPermission
+	{
 		///<summary>This user is denied access to the signup portal.</summary>
 		Denied,
 		///<summary>The user is only able to sign up any clinic for any eService</summary>
@@ -1726,32 +1755,32 @@ namespace OpenDentBusiness{
 		LimitedSmsOnly,
 	}
 
-	/// <summary></summary>
-	public enum ClaimProcCreditsGreaterThanProcFee {
-		///<summary>0</summary>
+	public enum ClaimProcCreditsGreaterThanProcFee
+	{
 		Allow,
-		///<summary>1</summary>
 		Warn,
-		///<summary>2</summary>
 		Block,
 	}
 
-	/// <summary>Determines behavior when an appointment is scheduled in an operatory assigned to a clinic for a patient with a specialty that does not
-	/// exist in the list of that clinic's specialties.</summary>
-	public enum ApptSchedEnforceSpecialty {
-		///<summary>0</summary>
+	/// <summary>
+	/// Determines behavior when an appointment is scheduled in an operatory assigned to a clinic
+	/// for a patient with a specialty that does not exist in the list of that clinic's specialties.
+	/// </summary>
+	public enum ApptSchedEnforceSpecialty
+	{
 		[Description("Don't Enforce")]
 		DontEnforce,
-		///<summary>1</summary>
+
 		[Description("Warn")]
 		Warn,
-		///<summary>2</summary>
+
 		[Description("Block")]
 		Block,
 	}
 
 	///<summary>String values that are stored for blockout defintions.</summary>
-	public enum BlockoutType {
+	public enum BlockoutType
+	{
 		///<summary>Do not schedule an appointment over this blockout.</summary>
 		[Description("NS")]
 		NoSchedule,
@@ -1760,30 +1789,45 @@ namespace OpenDentBusiness{
 		DontCopy,
 	}
 
-	///<summary>Scheduling priority used by Appointments.</summary>
-	public enum ApptPriority {
-		///<summary>0 - Default priority</summary>
+	/// <summary>
+	/// Scheduling priority used by Appointments.
+	/// </summary>
+	public enum ApptPriority
+	{
+		/// <summary>Default priority</summary>
 		Normal,
-		///<summary>1 - Used to identify items for the ASAP list</summary>
-		ASAP
-	}
-	
-	///<summary>Scheduling priority used by Recalls.</summary>
-	public enum RecallPriority {
-		///<summary>0 - Default priority</summary>
-		Normal,
-		///<summary>1 - Used to identify items for the ASAP list</summary>
+
+		/// <summary>Used to identify items for the ASAP list</summary>
 		ASAP
 	}
 
-	public enum ProcessingMethod {
-		///<summary>PayConnect will use the web service to process payments.</summary>
+	/// <summary>
+	/// Scheduling priority used by Recalls.
+	/// </summary>
+	public enum RecallPriority
+	{
+		/// <summary>Default priority</summary>
+		Normal,
+
+		/// <summary>Used to identify items for the ASAP list</summary>
+		ASAP
+	}
+
+	public enum ProcessingMethod
+	{
+		/// <summary>
+		/// PayConnect will use the web service to process payments.
+		/// </summary>
 		WebService,
-		///<summary>PayConnect will use the terminal to process payments.</summary>
+
+		/// <summary>
+		/// PayConnect will use the terminal to process payments.
+		/// </summary>
 		Terminal,
 	}
 
-	public enum WebSchedVerifyType {
+	public enum WebSchedVerifyType
+	{
 		None,
 		Text,
 		Email,
@@ -1792,7 +1836,8 @@ namespace OpenDentBusiness{
 
 	///<summary>Used by the OpenDentalService to determine how often a thread should perform a task.  Example:  For Transworld, account activity is sent
 	///to the SFTP server at a user specified frequency. Default once per day.  The user can specify a repeat in Days, Hours, or Minutes.</summary>
-	public enum FrequencyUnit {
+	public enum FrequencyUnit
+	{
 		///<summary>0 - Default frequency is repeating once per day (1 Days).</summary>
 		Days,
 		///<summary>1</summary>
@@ -1802,7 +1847,8 @@ namespace OpenDentBusiness{
 	}
 
 	///<summary>Used to determine how to handle creating claims with $0 procedures.</summary>
-	public enum ClaimZeroDollarProcBehavior {
+	public enum ClaimZeroDollarProcBehavior
+	{
 		///<summary>0.  Default value for the ClaimZeroDollarProcBehavior preference.  Allows all procedures to be attached to a claim</summary>
 		Allow,
 		///<summary>1.  Prompts the user to confirm attaching the $0 procedures to claims.</summary>
@@ -1811,53 +1857,62 @@ namespace OpenDentBusiness{
 		Block,
 	}
 
-	///<summary>Differentiate between transaction types.</summary>
-	public enum AccountEntryType {
-		///<summary>0 - adjustment.AdjNum.  Can be a positive (Debit) or negative (Credit) adjustment to the amount owed.</summary>
+	/// <summary>
+	/// Differentiate between transaction types.
+	/// </summary>
+	public enum AccountEntryType
+	{
+		/// <summary>adjustment.AdjNum.  Can be a positive (Debit) or negative (Credit) adjustment to the amount owed.</summary>
 		Adjustment = 0,
-		///<summary>1 - claimproc.ClaimProcNum. For ins payments and/or writeoffs entered.</summary>
+
+		/// <summary>claimproc.ClaimProcNum. For ins payments and/or writeoffs entered.</summary>
 		ClaimPayment,
-		///<summary>2 - paysplit.SplitNum.  Patient payment on an account.</summary>
+
+		/// <summary>paysplit.SplitNum.  Patient payment on an account.</summary>
 		Payment,
-		///<summary>3 - procedurelog.ProcNum.  Positive (debit, increases the amount owed).</summary>
+
+		/// <summary>procedurelog.ProcNum.  Positive (debit, increases the amount owed).</summary>
 		Procedure,
-		///<summary> 4 - claim</summary>
+
+		/// <summary>claim</summary>
 		Claim
 	}
 
-	///<summary></summary>
-	public enum SupplementalBackupStatuses {
-		///<summary>0</summary>
+	public enum SupplementalBackupStatuses
+	{
 		Disabled,
-		///<summary>1</summary>
 		Enabled,
-		///<summary>2</summary>
 		DisabledByHQ,
 	}
 
-	///<summary>Bit wise</summary>
 	[Flags]
-	public enum MassEmailStatus {
-		///<summary>0.</summary>
+	public enum MassEmailStatus
+	{
 		[Description("NotActivated")]
-		NotActivated=0,
-		///<summary>1. The absence of this flag prevents Enabled flag from having any effect.</summary>
+		NotActivated = 0,
+
+		/// <summary>
+		/// The absence of this flag prevents Enabled flag from having any effect.
+		/// </summary>
 		[Description("Activated")]
-		Activated=1,
-		///<summary>2. The absense of this flag is equivalent to Disabled.</summary>
+		Activated = 1,
+
+		/// <summary>
+		/// The absense of this flag is equivalent to Disabled.
+		/// </summary>
 		[Description("Enabled")]
-		Enabled=2,
+		Enabled = 2,
 	}
 
-	///<summary>Contains exit codes used for FormOpenDental. Not all codes used are listed here. If using a new exit code, you should add it to this
-	///enum.</summary>
-	public enum FormOpenDentalExitCodes {
-		///<summary>The database version is higher than the version of the current program.</summary>
-		DbVersionHigherThanCurrent=309,
+	/// <summary>
+	/// Contains exit codes used for FormOpenDental. Not all codes used are listed here.
+	/// If using a new exit code, you should add it to this enum.
+	/// </summary>
+	public enum FormOpenDentalExitCodes
+	{
+		/// <summary>
+		/// The database version is higher than the version of the current program.
+		/// </summary>
+		DbVersionHigherThanCurrent = 309,
 	}
 }
-
-
-
-
-

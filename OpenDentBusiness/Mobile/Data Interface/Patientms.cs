@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -85,7 +86,7 @@ namespace OpenDentBusiness.Mobile {
 			///<summary>used in tandem with Full synch</summary>
 			public static void DeleteAll(long customerNum) {
 				string command= "DELETE FROM patientm WHERE CustomerNum = "+POut.Long(customerNum); ;
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		#endregion
 

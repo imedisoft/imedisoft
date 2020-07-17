@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,7 +28,7 @@ namespace OpenDentBusiness.Mobile
 					+ " AND allergym.PatNum = " + POut.Long(patNum)
 					+ " AND allergym.StatusIsActive = " + POut.Bool(true) // get only active allergies
 					+ " AND allergydefm.CustomerNum = " + POut.Long(customerNum);
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		#endregion
@@ -82,14 +83,14 @@ namespace OpenDentBusiness.Mobile
 		public static void DeleteAll(long customerNum)
 		{
 			string command = "DELETE FROM allergym WHERE CustomerNum = " + POut.Long(customerNum); ;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Delete all allergies of a particular patient</summary>
 		public static void Delete(long customerNum, long PatNum)
 		{
 			string command = "DELETE FROM allergym WHERE CustomerNum = " + POut.Long(customerNum) + " AND PatNum = " + POut.Long(PatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 	}

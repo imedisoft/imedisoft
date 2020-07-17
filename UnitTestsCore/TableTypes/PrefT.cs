@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -30,7 +31,7 @@ namespace UnitTestsCore {
 			_dictPrefsOrig.Remove(prefName);
 			//Manaully delete the preference from the database here within the T class and not out in an S class.
 			//Deleting preferences should never be a thing in the real world so we don't want to create a method that easily does so.
-			DataCore.NonQ($"DELETE FROM preference WHERE PrefName='{POut.String(prefName)}'");
+			Database.ExecuteNonQuery($"DELETE FROM preference WHERE PrefName='{POut.String(prefName)}'");
 			//Refresh the local cache so that the preference is completely "removed", even from memory.
 			Prefs.RefreshCache();
 		}

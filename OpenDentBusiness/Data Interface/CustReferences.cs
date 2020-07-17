@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -50,7 +51,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long custReferenceNum) {
 			
 			string command= "DELETE FROM custreference WHERE CustReferenceNum = "+POut.Long(custReferenceNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Used only from FormReferenceSelect to get the list of references.</summary>
@@ -140,7 +141,7 @@ namespace OpenDentBusiness{
 			if(limit) {
 				command=DbHelper.LimitOrderBy(command,40);
 			}
-			DataTable rawtable=Db.GetTable(command);
+			DataTable rawtable=Database.ExecuteDataTable(command);
 			for(int i=0;i<rawtable.Rows.Count;i++) {
 				row=table.NewRow();
 				row["CustReferenceNum"]=rawtable.Rows[i]["CustReferenceNum"].ToString();

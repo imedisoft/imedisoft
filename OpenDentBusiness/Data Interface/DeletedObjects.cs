@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace OpenDentBusiness{
 		public static List<long> GetChangedSinceDeletedObjectNums(DateTime changedSince) {
 			
 			string command="SELECT DeletedObjectNum FROM deletedobject WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> deletedObjectnums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				deletedObjectnums.Add(PIn.Long(dt.Rows[i]["DeletedObjectNum"].ToString()));
@@ -78,7 +79,7 @@ namespace OpenDentBusiness{
 					strDeletedObjectNums+="DeletedObjectNum='"+deletedObjectNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM deletedobject WHERE "+strDeletedObjectNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();

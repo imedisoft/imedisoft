@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -20,7 +21,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the SiteLink table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearSiteTable() {
 			string command="DELETE FROM site WHERE SiteNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Sites.RefreshCache();
 		}
 	}

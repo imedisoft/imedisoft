@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,7 +26,7 @@ namespace OpenDentBusiness.Mobile{
 					+" AND medicationpatm.PatNum = "+POut.Long(patNum)
 					+" AND medicationpatm.DateStop = "+POut.Date(DateTime.MinValue) // filter out discontinued medications.
 					+" AND medicationm.CustomerNum = "+POut.Long(customerNum);
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 		#endregion
 
@@ -70,13 +71,13 @@ namespace OpenDentBusiness.Mobile{
 		///<summary>used in tandem with Full synch</summary>
 		public static void DeleteAll(long customerNum) {
 			string command= "DELETE FROM medicationpatm WHERE CustomerNum = "+POut.Long(customerNum); ;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Delete all medicationpats of a particular patient</summary>
 		public static void Delete(long customerNum,long PatNum) {
 			string command= "DELETE FROM medicationpatm WHERE CustomerNum = "+POut.Long(customerNum)+" AND PatNum = "+POut.Long(PatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion
@@ -107,7 +108,7 @@ namespace OpenDentBusiness.Mobile{
 		///<summary></summary>
 		public static void Delete(long customerNum,long medicationPatNum) {
 			string command= "DELETE FROM medicationpatm WHERE CustomerNum = "+POut.Long(customerNum)+" AND MedicationPatNum = "+POut.Long(medicationPatNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -31,7 +32,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the creditcard table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearCreditCardTable() {
 			string command="DELETE FROM creditcard WHERE CreditCardNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

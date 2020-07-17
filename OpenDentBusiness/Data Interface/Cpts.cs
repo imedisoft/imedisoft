@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -53,7 +54,7 @@ namespace OpenDentBusiness{
 			
 			List<string> retVal=new List<string>();
 			string command="SELECT CptCode FROM cpt";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++) {
 				retVal.Add(table.Rows[i][0].ToString());
 			}
@@ -71,7 +72,7 @@ namespace OpenDentBusiness{
 		public static bool CodeExists(string cptCode) {
 			
 			string command="SELECT COUNT(*) FROM cpt WHERE CptCode = '"+POut.String(cptCode)+"'";
-			string count=Db.GetCount(command);
+			string count=Database.ExecuteString(command);
 			if(count=="0") {
 				return false;
 			}
@@ -82,7 +83,7 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM cpt";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 
 		///<summary>Updates an existing CPT code description if versionID is newer than current versionIDs.  If versionID is different than existing versionIDs, it will be added to the comma delimited list.</summary>
@@ -136,7 +137,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long cptNum) {
 			
 			string command= "DELETE FROM cpt WHERE CptNum = "+POut.Long(cptNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

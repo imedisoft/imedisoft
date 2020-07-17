@@ -85,7 +85,7 @@ namespace UnitTestsCore
 				DELETE FROM timecardrule;
 				DELETE FROM userweb;";
 
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Providers.RefreshCache();
 			FeeScheds.RefreshCache();
 			PharmacyT.CreatePharmacies();

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -103,7 +104,7 @@ namespace OpenDentBusiness{
 				+" WHERE PopupNumArchive = "+POut.Long(popupNum)
 				+" ORDER BY DateTimeEntry DESC"
 				+" LIMIT 1";
-			DataTable rawTable=Db.GetTable(command);
+			DataTable rawTable=Database.ExecuteDataTable(command);
 			if(rawTable.Rows.Count==0) {
 				return DateTime.MinValue;
 			}
@@ -168,7 +169,7 @@ namespace OpenDentBusiness{
 						string commandUpdateFam="UPDATE popup "
 								+"SET PopupLevel = "+POut.Int((int)EnumPopupLevel.Family)+" "
 								+"WHERE PopupNum = "+POut.Long(popupCur.PopupNum);
-						Db.NonQ(commandUpdateFam);
+						Database.ExecuteNonQuery(commandUpdateFam);
 					}
 				}
 				else {//if popup is on some other super family member, then copy to this patient.
@@ -209,7 +210,7 @@ namespace OpenDentBusiness{
 					+"OR PopupLevel = "+POut.Int((int)EnumPopupLevel.SuperFamily)+") "
 					+"AND PatNum = "+POut.Long(pat.PatNum);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/// <summary>Popup dates are not normally changed.  This only occurs when creating exact copies of popups and their archives when moving a patient from a family or superfamily.</summary>
@@ -218,7 +219,7 @@ namespace OpenDentBusiness{
 			string commandUpdate="UPDATE popup "
 					+"SET DateTimeEntry = "+POut.DateT(oldDate)+" "
 					+"WHERE PopupNum = "+POut.Long(newPk);
-			Db.NonQ(commandUpdate);
+			Database.ExecuteNonQuery(commandUpdate);
 		}
 
 		/// <summary>Brings all superfamily level popups for a superfamily being disbanded to the family level.</summary>
@@ -229,7 +230,7 @@ namespace OpenDentBusiness{
 					+"WHERE PopupLevel = "+POut.Int((int)EnumPopupLevel.SuperFamily)+" "
 					+"AND PatNum IN (SELECT PatNum FROM patient WHERE SuperFamily="+POut.Long(pat.SuperFamily)+") "
 					+"AND PopupNumArchive = 0";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

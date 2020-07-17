@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -45,7 +46,7 @@ namespace OpenDentBusiness {
 				GROUP BY procedurelog.ProcNum
 				HAVING !MIN(insplan.IsMedical){(includeMedProcs?" OR MAX(insplan.IsMedical)":"")}{(showProcsBeforeIns?" OR ISNULL(MIN(insplan.PlanNum))":"")}
 				ORDER BY patient.LName,patient.FName,patient.PatNum,procedurelog.ProcDate";
-			DataTable table=Db.GetTable(query);
+			DataTable table=Database.ExecuteDataTable(query);
 			Dictionary<long,ProcedureCode> dictProcCodes=ProcedureCodes.GetListDeep().ToDictionary(x => x.CodeNum);
 			foreach(DataRow rawRow in table.Select()) {
 				if(!dictProcCodes.TryGetValue(PIn.Long(rawRow["CodeNum"].ToString()),out ProcedureCode procCode)) {

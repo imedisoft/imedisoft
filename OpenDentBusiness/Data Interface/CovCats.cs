@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -55,7 +56,7 @@ namespace OpenDentBusiness {
 			
 			string command="DELETE FROM covcat "
 				+"WHERE CovCatNum = '"+POut.Long(covCat.CovCatNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

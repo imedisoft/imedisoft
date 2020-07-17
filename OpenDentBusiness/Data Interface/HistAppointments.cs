@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -38,7 +39,7 @@ namespace OpenDentBusiness{
 		public static List<long> GetAptNumsChangedSince(DateTime dateTimeSince) {
 			
 			string command="SELECT AptNum FROM histappointment WHERE DateTStamp > "+POut.DateT(dateTimeSince);
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		#endregion

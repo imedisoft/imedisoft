@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -94,7 +95,7 @@ namespace OpenDentBusiness {
 		public static void Delete(SigButDef def) {
 			
 			string command="DELETE FROM sigbutdef WHERE SigButDefNum ="+POut.Long(def.SigButDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Loops through the SigButDefs passed in and updates the database if any of the ButtonIndexes chagned.  Returns true if any changes were made to the database so that the calling class can invalidate the cache.</summary>

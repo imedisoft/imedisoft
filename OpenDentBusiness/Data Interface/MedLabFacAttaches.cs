@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -139,7 +140,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM medlabfacattach "
 				+"WHERE MedLabNum IN("+String.Join(",",listLabNums)+") "
 				+"OR MedLabResultNum IN("+String.Join(",",listResultNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*
@@ -168,7 +169,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long medLabFacAttachNum) {
 			
 			string command= "DELETE FROM medlabfacattach WHERE MedLabFacAttachNum = "+POut.Long(medLabFacAttachNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

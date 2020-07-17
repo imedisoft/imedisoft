@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenDentBusiness;
 using System.Drawing;
+using Imedisoft.Data;
 
 namespace UnitTestsCore {
 	public class DefT {
@@ -23,7 +24,7 @@ namespace UnitTestsCore {
 
 		public static void DeleteAllForCategory(DefCat defCat) {
 			string command=$"DELETE FROM definition WHERE Category={POut.Int((int)defCat)}";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Defs.RefreshCache();
 		}
 

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,14 +6,16 @@ using System.Data;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class Automations {
+namespace OpenDentBusiness
+{
+    ///<summary></summary>
+    public class Automations
+	{
 		#region Get Methods
 		#endregion
 
 		#region Modification Methods
-		
+
 		#region Insert
 		#endregion
 
@@ -29,88 +32,78 @@ namespace OpenDentBusiness{
 
 		#region Cache Pattern
 
-		private class AutomationCache : CacheListAbs<Automation> {
-			protected override List<Automation> GetCacheFromDb() {
-				string command="SELECT * FROM automation";
+		private class AutomationCache : CacheListAbs<Automation>
+		{
+			protected override List<Automation> GetCacheFromDb()
+			{
+				string command = "SELECT * FROM automation";
 				return Crud.AutomationCrud.SelectMany(command);
 			}
-			protected override List<Automation> TableToList(DataTable table) {
+			protected override List<Automation> TableToList(DataTable table)
+			{
 				return Crud.AutomationCrud.TableToList(table);
 			}
-			protected override Automation Copy(Automation automation) {
+			protected override Automation Copy(Automation automation)
+			{
 				return automation.Copy();
 			}
-			protected override DataTable ListToTable(List<Automation> listAutomations) {
-				return Crud.AutomationCrud.ListToTable(listAutomations,"Automation");
+			protected override DataTable ListToTable(List<Automation> listAutomations)
+			{
+				return Crud.AutomationCrud.ListToTable(listAutomations, "Automation");
 			}
-			protected override void FillCacheIfNeeded() {
+			protected override void FillCacheIfNeeded()
+			{
 				Automations.GetTableFromCache(false);
 			}
 		}
-		
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static AutomationCache _automationCache=new AutomationCache();
 
-		public static List<Automation> GetDeepCopy(bool isShort=false) {
+		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
+		private static AutomationCache _automationCache = new AutomationCache();
+
+		public static List<Automation> GetDeepCopy(bool isShort = false)
+		{
 			return _automationCache.GetDeepCopy(isShort);
 		}
 
-		public static Automation GetFirstOrDefault(Func<Automation,bool> match,bool isShort=false) {
-			return _automationCache.GetFirstOrDefault(match,isShort);
+		public static Automation GetFirstOrDefault(Func<Automation, bool> match, bool isShort = false)
+		{
+			return _automationCache.GetFirstOrDefault(match, isShort);
 		}
 
 		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache() {
+		public static DataTable RefreshCache()
+		{
 			return GetTableFromCache(true);
 		}
 
 		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table) {
+		public static void FillCacheFromTable(DataTable table)
+		{
 			_automationCache.FillCacheFromTable(table);
 		}
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			
+		public static DataTable GetTableFromCache(bool doRefreshCache)
+		{
+
 			return _automationCache.GetTableFromCache(doRefreshCache);
 		}
 
 		#endregion Cache Pattern
 
-		///<summary></summary>
-		public static long Insert(Automation auto) {
-			
+		public static long Insert(Automation auto)
+		{
 			return Crud.AutomationCrud.Insert(auto);
 		}
 
-		///<summary></summary>
-		public static void Update(Automation auto) {
-			
+		public static void Update(Automation auto)
+		{
 			Crud.AutomationCrud.Update(auto);
 		}
 
-		///<summary></summary>
-		public static void Delete(Automation auto) {
-			
-			string command="DELETE FROM automation" 
-				+" WHERE AutomationNum = "+POut.Long(auto.AutomationNum);
- 			Db.NonQ(command);
+		public static void Delete(Automation auto)
+		{
+			Database.ExecuteNonQuery("DELETE FROM automation WHERE AutomationNum = " + POut.Long(auto.AutomationNum));
 		}
 	}
-	
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

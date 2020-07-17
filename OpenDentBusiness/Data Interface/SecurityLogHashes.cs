@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Security.Cryptography;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -31,7 +32,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command="DELETE FROM securityloghash WHERE SecurityLogHashNum <= "+POut.Long(maxSecurityLogHashNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DeleteForSecurityLogEntries(List<long> listSecurityLogNums) {
@@ -40,7 +41,7 @@ namespace OpenDentBusiness{
 			}
 			
 			string command=$"DELETE FROM securityloghash WHERE SecurityLogNum IN ({string.Join(",",listSecurityLogNums)})";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion
@@ -149,7 +150,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long securityLogHashNum) {
 			
 			string command= "DELETE FROM securityloghash WHERE SecurityLogHashNum = "+POut.Long(securityLogHashNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 	}

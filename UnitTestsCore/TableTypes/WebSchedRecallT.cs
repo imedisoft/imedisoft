@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -40,13 +41,13 @@ namespace UnitTestsCore {
 
 		public static void UpdateDateTEntry(WebSchedRecall wsRecall,DateTime dateTEntry) {
 			string command=$"UPDATE webschedrecall SET DateTimeEntry={POut.DateT(dateTEntry)} WHERE WebSchedRecallNum={wsRecall.WebSchedRecallNum}";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Clears the table. Does not truncate so that primary keys are not re-used.</summary>
 		public static void ClearWebSchedRecallTable() {
 			string command="DELETE FROM webschedrecall WHERE WebSchedRecallNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

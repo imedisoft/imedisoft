@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq;
 using CodeBase;
 using OpenDentBusiness.Eclaims;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -174,7 +175,7 @@ namespace OpenDentBusiness{
 		public static void DeleteByFKey(long fkey,VerifyTypes verifyType) {
 			
 			string command="DELETE FROM insverify WHERE FKey="+POut.Long(fkey)+" AND VerifyType="+POut.Int((int)verifyType);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<InsVerify> GetAll() {
@@ -186,7 +187,7 @@ namespace OpenDentBusiness{
 		public static List<long> GetAllInsVerifyUserNums() {
 			
 			string command="SELECT DISTINCT UserNum FROM insverify";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>UserNum=-1 is "All", UserNum=0 is "Unassigned". 
@@ -270,7 +271,7 @@ namespace OpenDentBusiness{
 				insVerifyJoin2+
 				whereClause+@"
 				ORDER BY AptDateTime";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<InsVerify> listInsVerifies=Crud.InsVerifyCrud.TableToList(table);
 			List<InsVerifyGridObject> retVal=new List<InsVerifyGridObject>();
 			for(int i=0;i<table.Rows.Count;i++) {
@@ -334,7 +335,7 @@ namespace OpenDentBusiness{
 			
 			//Nathan OK'd the necessity for a complex update query like this to avoid looping through update statements.  This will be changed to a crud update method sometime in the future.
 			string command="";
-			List<long> listInsVerifyNums=Db.GetListLong(GetInsVerifyCleanupQuery(startDate,endDate));
+			List<long> listInsVerifyNums=Database.GetListLong(GetInsVerifyCleanupQuery(startDate,endDate));
 			if(listInsVerifyNums.Count==0) {
 				return;
 			}
@@ -344,7 +345,7 @@ namespace OpenDentBusiness{
 				+"insverify.Note='', "
 				+"insverify.UserNum=0 "
 				+"WHERE insverify.InsVerifyNum IN ("+string.Join(",",listInsVerifyNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		private static string GetInsVerifyCleanupQuery(DateTime startDate, DateTime endDate) {

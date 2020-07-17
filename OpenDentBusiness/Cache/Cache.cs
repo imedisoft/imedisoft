@@ -6,16 +6,15 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
 	public class Cache
 	{
-		/// <summary>This is only used in the RefreshCache methods.  Used instead of Meth.  The command is only used if not ClientWeb.</summary>
 		public static DataTable GetTableRemotelyIfNeeded(MethodBase methodBase, string command)
 		{
-			return Db.GetTable(command);
-
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static void Refresh(params InvalidType[] arrayITypes)

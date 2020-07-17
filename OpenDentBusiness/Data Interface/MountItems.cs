@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class MountItems {
@@ -21,7 +22,7 @@ namespace OpenDentBusiness {
 		public static void Delete(MountItem mountItem) {
 			
 			string command="DELETE FROM mountitem WHERE MountItemNum='"+POut.Long(mountItem.MountItemNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns the list of mount items associated with the given mount key. In order by ItemOrder, which is 1-indexed.</summary>

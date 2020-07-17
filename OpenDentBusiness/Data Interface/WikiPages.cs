@@ -9,6 +9,7 @@ using System.Xml;
 using CodeBase;
 using OpenDentBusiness.FileIO;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -127,7 +128,7 @@ namespace OpenDentBusiness{
 		///Does not return drafts.</summary>
 		public static string GetTitle(string pageTitle) {
 			string command="SELECT PageTitle FROM wikipage WHERE PageTitle = '"+POut.String(pageTitle)+"' AND IsDraft=0";
-			return Db.GetScalar(command);
+			return Database.ExecuteString(command);
 		}
 
 		///<summary>Archives first by moving to WikiPageHist if it already exists.  Then, in either case, it inserts the new page.
@@ -192,7 +193,7 @@ namespace OpenDentBusiness{
 			command+=
 				"GROUP BY PageTitle "
 				+"ORDER BY PageTitle";
-			tableResults=Db.GetTable(command);
+			tableResults=Database.ExecuteDataTable(command);
 			for(int i=0;i<tableResults.Rows.Count;i++) {
 				if(!retVal.Contains(tableResults.Rows[i]["PageTitle"].ToString())) {
 					retVal.Add(tableResults.Rows[i]["PageTitle"].ToString());
@@ -209,7 +210,7 @@ namespace OpenDentBusiness{
 			command+=
 				"GROUP BY PageTitle "
 				+"ORDER BY PageTitle";
-			tableResults=Db.GetTable(command);
+			tableResults=Database.ExecuteDataTable(command);
 			for(int i=0;i<tableResults.Rows.Count;i++) {
 				if(!retVal.Contains(tableResults.Rows[i]["PageTitle"].ToString())) {
 					retVal.Add(tableResults.Rows[i]["PageTitle"].ToString());
@@ -227,7 +228,7 @@ namespace OpenDentBusiness{
 				command+=
 					"GROUP BY PageTitle "
 					+"ORDER BY PageTitle";
-				tableResults=Db.GetTable(command);
+				tableResults=Database.ExecuteDataTable(command);
 				for(int i=0;i<tableResults.Rows.Count;i++) {
 					if(!retVal.Contains(tableResults.Rows[i]["PageTitle"].ToString())) {
 						retVal.Add(tableResults.Rows[i]["PageTitle"].ToString());
@@ -258,14 +259,14 @@ namespace OpenDentBusiness{
 			InsertAndArchive(wikiPage);
 			//Rename all pages in both tables: wikiPage and wikiPageHist.
 			string command="UPDATE wikipage SET PageTitle='"+POut.String(newPageTitle)+"'WHERE PageTitle='"+POut.String(wikiPage.PageTitle)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE wikipagehist SET PageTitle='"+POut.String(newPageTitle)+"'WHERE PageTitle='"+POut.String(wikiPage.PageTitle)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Update all home pages for users.
 			command="UPDATE userodpref SET ValueString='"+POut.String(newPageTitle)+"' "
 				+"WHERE FkeyType="+POut.Int((int)UserOdFkeyType.WikiHomePage)+" "
 				+"AND ValueString='"+POut.String(wikiPage.PageTitle)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			return;
 		}
 
@@ -278,7 +279,7 @@ namespace OpenDentBusiness{
 				}
 				command+="PageTitle='"+POut.String(pageTitles[i])+"' ";
 			}
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<bool> retVal=new List<bool>();
 			for(int p=0;p<pageTitles.Count;p++) {
 				bool valForThisPage=false;
@@ -331,7 +332,7 @@ namespace OpenDentBusiness{
 			string command=@"SELECT PageTitle,MIN(WikiPageNum) WikiPageNum FROM wikipage 
 				WHERE IsDraft=0 AND PageTitle IN('"+string.Join("','",listWikiLinks.Select(x => POut.String(x)))+@"')
 				GROUP BY PageTitle";
-			Dictionary<string,long> dictTitleToNum=Db.GetTable(command).Select()
+			Dictionary<string,long> dictTitleToNum=Database.ExecuteDataTable(command).Select()
 				.ToDictionary(x => PIn.String(x["PageTitle"].ToString()),x => PIn.Long(x["WikiPageNum"].ToString()));
 			StringBuilder sbPageContent=new StringBuilder(pageContent);
 			foreach(string wikiLink in listWikiLinks) {
@@ -365,7 +366,7 @@ namespace OpenDentBusiness{
 			}
 			string command=@"SELECT PageTitle FROM wikipage 
 				WHERE IsDraft=0 AND PageTitle IN('"+string.Join("','",listWikiLinks.Select(x => POut.String(x)))+"')";
-			HashSet<string> setValidLinks=new HashSet<string>(Db.GetListString(command));
+			HashSet<string> setValidLinks=new HashSet<string>(Database.GetListString(command));
 			listInvalidLinks=listWikiLinks.FindAll(x => !setValidLinks.Contains(x));
 			return listInvalidLinks;
 		}

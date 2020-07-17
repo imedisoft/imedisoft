@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -1218,7 +1219,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrTriggerNum) {
 			
 			string command= "DELETE FROM ehrtrigger WHERE EhrTriggerNum = "+POut.Long(ehrTriggerNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

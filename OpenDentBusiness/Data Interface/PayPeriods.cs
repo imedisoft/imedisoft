@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -109,7 +110,7 @@ namespace OpenDentBusiness{
 		public static void Delete(PayPeriod pp) {
 			
 			string command= "DELETE FROM payperiod WHERE PayPeriodNum = "+POut.Long(pp.PayPeriodNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

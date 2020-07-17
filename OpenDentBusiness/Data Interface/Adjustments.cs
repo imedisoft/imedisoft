@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using CodeBase;
 using Avalara.AvaTax.RestClient;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -53,7 +54,7 @@ namespace OpenDentBusiness
 			{
 				command += " AND PayNum!=" + POut.Long(excludedPayNum);
 			}
-			return PIn.Double(Db.GetScalar(command));
+			return Database.ExecuteDouble(command);
 		}
 
 		///<summary>Gets all adjustments for the patients passed in.</summary>
@@ -108,7 +109,7 @@ namespace OpenDentBusiness
 			{
 				command += " AND AdjType NOT IN (" + string.Join(",", POut.Long(AvaTax.SalesTaxAdjType), POut.Long(AvaTax.SalesTaxReturnAdjType)) + ")";
 			}
-			return PIn.Double(Db.GetScalar(command));
+			return Database.ExecuteDouble(command);
 		}
 
 		///<summary></summary>
@@ -121,7 +122,7 @@ namespace OpenDentBusiness
 			string command = "SELECT SUM(AdjAmt) FROM adjustment"
 				+ " WHERE ProcNum=" + POut.Long(proc.ProcNum)
 				+ " AND AdjType IN (" + string.Join(",", POut.Long(AvaTax.SalesTaxAdjType), POut.Long(AvaTax.SalesTaxReturnAdjType)) + ")";
-			return PIn.Double(Db.GetScalar(command));
+			return Database.ExecuteDouble(command);
 		}
 
 		/// <summary>Returns a DataTable of adjustments of a given adjustment type and for a given pat</summary>
@@ -185,7 +186,7 @@ namespace OpenDentBusiness
 			{
 				command += "AND adjustment.ClinicNum=" + POut.Long(clinicNum);
 			}
-			return PIn.Decimal(Db.GetScalar(command));
+			return PIn.Decimal(Database.ExecuteString(command));
 		}
 		#endregion
 
@@ -285,7 +286,7 @@ namespace OpenDentBusiness
 		public static void DetachFromInvoice(long statementNum)
 		{
 			string command = "UPDATE adjustment SET StatementNum=0 WHERE StatementNum=" + POut.Long(statementNum) + "";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DetachAllFromInvoices(List<long> listStatementNums)
@@ -295,7 +296,7 @@ namespace OpenDentBusiness
 				return;
 			}
 			string command = "UPDATE adjustment SET StatementNum=0 WHERE StatementNum IN (" + string.Join(",", listStatementNums.Select(x => POut.Long(x))) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 
@@ -323,7 +324,7 @@ namespace OpenDentBusiness
 			}
 			//Delete each adjustment for the procedure.
 			command = "DELETE FROM adjustment WHERE ProcNum = " + POut.Long(procNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 		#endregion
@@ -432,7 +433,7 @@ namespace OpenDentBusiness
 				+ "INNER JOIN patient ON patient.PatNum=adjustment.PatNum "
 				+ "WHERE AdjDate=" + POut.Date(dateUndo) + " "
 				+ "AND AdjType=" + POut.Long(adjTypeDefNum);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<Action> listActions = new List<Action>();
 			int loopCount = 0;
 			foreach (DataRow row in table.Rows)
@@ -454,7 +455,7 @@ namespace OpenDentBusiness
 			command = "DELETE FROM adjustment WHERE AdjDate=" + POut.Date(dateUndo) + " AND AdjType=" + POut.Long(adjTypeDefNum);
 			BillingEvent.Fire(EventCategory.Billing, Lans.g("FinanceCharge", "Deleting") + " " + table.Rows.Count + " "
 				+ Lans.g("FinanceCharge", adjTypeStr.ToLower() + " charge adjustments") + "...");
-			return Db.NonQ(command);
+			return Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns a query string used to get adjustments for all patients who have an appointment in the date range and in one of the operatories

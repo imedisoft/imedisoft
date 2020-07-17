@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -68,7 +69,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long vitalsignNum) {
 			
 			string command= "DELETE FROM vitalsign WHERE VitalsignNum = "+POut.Long(vitalsignNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static float CalcBMI(float weight,float height) {

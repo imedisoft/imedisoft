@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -130,7 +131,7 @@ namespace OpenDentBusiness {
 				)ColC ON ColC.NumeratorPat = ColA.DenominatorPat
 				INNER JOIN provider ON provider.ProvNum = ColA.ProvNum
 				GROUP BY LName";
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 
 		}	
 	}

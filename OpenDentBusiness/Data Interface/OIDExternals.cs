@@ -95,7 +95,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long oIDExternalNum) {
 			
 			string command= "DELETE FROM oidexternal WHERE OIDExternalNum = "+POut.Long(oIDExternalNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

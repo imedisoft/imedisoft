@@ -70,7 +70,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long erxLogNum) {
 			
 			string command= "DELETE FROM erxlog WHERE ErxLogNum = "+POut.Long(erxLogNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

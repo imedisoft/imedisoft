@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -159,17 +160,17 @@ namespace OpenDentBusiness{
 			string command="SELECT * FROM insplan WHERE claimformnum = '"
 				+cf.ClaimFormNum.ToString()+"' ";
 			command+=DbHelper.LimitAnd(1);
- 			DataTable table=Db.GetTable(command);
+ 			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==1){
 				return false;
 			}
 			//Then, delete the claimform
 			command="DELETE FROM claimform "
 				+"WHERE ClaimFormNum = '"+POut.Long(cf.ClaimFormNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM claimformitem "
 				+"WHERE ClaimFormNum = '"+POut.Long(cf.ClaimFormNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			return true;
 		}
 		
@@ -201,7 +202,7 @@ namespace OpenDentBusiness{
 			
 			string command="UPDATE insplan SET ClaimFormNum="+POut.Long(newClaimFormNum)
 				+" WHERE ClaimFormNum="+POut.Long(oldClaimFormNum);
-			return Db.NonQ(command);
+			return Database.ExecuteNonQuery(command);
 		}
 	}
 

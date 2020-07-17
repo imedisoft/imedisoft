@@ -60,7 +60,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long toothGridCellNum) {
 			
 			string command= "DELETE FROM toothgridcell WHERE ToothGridCellNum = "+POut.Long(toothGridCellNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -56,7 +57,7 @@ namespace OpenDentBusiness
 				+ "AND procedurelog.ProcDate <= " + POut.Date(dateTo) + " "
 				+ "GROUP BY procedurelog.ProcNum "
 				+ "ORDER BY procedurelog.ProcDate,plfname,procedurecode.ProcCode,ToothNum";
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(query));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(query));
 		}
 
 		public static DataTable GetGroupedTable(DateTime dateFrom, DateTime dateTo, List<long> listProvNums, List<long> listClinicNums, string procCode, bool hasAllProvs)
@@ -87,7 +88,7 @@ namespace OpenDentBusiness
 				+ "GROUP BY procedurelog.ProcNum ) procs "
 				+ "GROUP BY procs.ProcCode "
 				+ "ORDER BY procs.ItemOrder,procs.ProcCode";
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(query));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(query));
 		}
 	}
 }

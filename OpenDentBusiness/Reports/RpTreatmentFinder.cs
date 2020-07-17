@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class RpTreatmentFinder {
@@ -208,7 +209,7 @@ namespace OpenDentBusiness {
 				GROUP BY procedurelog.PatNum
 				HAVING AmtPlanned>0
 				ORDER BY NULL";//Removes filesort reference from query explain
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static DataTable GetPatInfo(bool isProcsGeneral,DateTime renewDate,string patNumStr) {
@@ -219,7 +220,7 @@ namespace OpenDentBusiness {
 				{GetWhereCoverageStr(isProcsGeneral,renewDate,patNumStr)}
 				GROUP BY patplan.PatPlanNum
 				ORDER BY NULL";//Removes filesort reference from query explain
-			return Db.GetTable(commandIndInfo);
+			return Database.ExecuteDataTable(commandIndInfo);
 		}
 
 		public static DataTable GetFamInfo(bool isProcsGeneral,DateTime renewDate,string patNumStr) {
@@ -228,7 +229,7 @@ namespace OpenDentBusiness {
 				{GetWhereCoverageStr(isProcsGeneral,renewDate,patNumStr)}
 				GROUP BY claimproc.InsSubNum
 				ORDER BY NULL";//Removes filesort reference from query explain
-			return Db.GetTable(commandFamInfo);
+			return Database.ExecuteDataTable(commandFamInfo);
 		}
 
 		private static string GetSelectCoverageStr() {
@@ -281,7 +282,7 @@ namespace OpenDentBusiness {
 				AND patplan.PatNum IN ({patNumStr})
 				GROUP BY benefit.PlanNum
 				ORDER BY NULL";//Removes filesort reference from query explain
-			return Db.GetTable(commandAnnualMax);
+			return Database.ExecuteDataTable(commandAnnualMax);
 		}
 		
 		///<summary>It is known that patNumStr is not empty</summary>
@@ -298,7 +299,7 @@ namespace OpenDentBusiness {
 				WHERE patient.PatStatus={POut.Int((int)PatientStatus.Patient)}
 				AND patient.PatNum IN ({patNumStr}){(noIns?"":$@"
 				AND patplan.Ordinal=1 AND insplan.MonthRenew={POut.Int(monthStart)}")}";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 	}

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -132,14 +133,14 @@ namespace OpenDentBusiness{
 		public static void DeleteAllByGradingScale(long gradingScaleNum) {
 			
 			string command= "DELETE FROM gradingscaleitem WHERE GradingScaleNum = "+POut.Long(gradingScaleNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(long gradingScaleItemNum) {
 			
 			string command= "DELETE FROM gradingscaleitem WHERE GradingScaleItemNum = "+POut.Long(gradingScaleItemNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

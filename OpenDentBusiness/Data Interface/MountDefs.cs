@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -72,9 +73,9 @@ namespace OpenDentBusiness {
 		public static void Delete(long mountDefNum) {
 			
 			string command="DELETE FROM mountdef WHERE MountDefNum="+POut.Long(mountDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM mountitemdef WHERE MountDefNum ="+POut.Long(mountDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 

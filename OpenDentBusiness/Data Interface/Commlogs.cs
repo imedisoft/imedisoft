@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -41,7 +42,7 @@ namespace OpenDentBusiness{
 		public static bool HasAnyLongNotes()
 		{
 			string command = "SELECT COUNT(*) FROM commlog WHERE CHAR_LENGTH(commlog.Note)>65535";
-			return (Db.GetCount(command) != "0");
+			return (Database.ExecuteString(command) != "0");
 		}
 
 		///<summary>Tailored for OD HQ.  Gets the most recent commlog.CommDateTime for a given patNum of type "support call or chat".
@@ -56,7 +57,7 @@ namespace OpenDentBusiness{
 				+ "AND CommSource=" + POut.Int((int)CommItemSource.User) + " "
 				+ "ORDER BY CommDateTime DESC "
 				+ "LIMIT 1";
-			return PIn.Date(Db.GetScalar(command));
+			return PIn.Date(Database.ExecuteString(command));
 		}
 		#endregion
 
@@ -112,7 +113,7 @@ namespace OpenDentBusiness{
 		public static void Delete(Commlog comm)
 		{
 			string command = "SELECT COUNT(*) FROM smsfrommobile WHERE CommlogNum=" + POut.Long(comm.CommlogNum);
-			if (Db.GetCount(command) != "0")
+			if (Database.ExecuteString(command) != "0")
 			{
 				throw new Exception(Lans.g("CommLogs", "Not allowed to delete a commlog attached to a text message."));
 			}
@@ -225,7 +226,7 @@ namespace OpenDentBusiness{
 			string command = "SELECT COUNT(*) FROM commlog "
 				+ "WHERE " + DbHelper.DtimeToDate("CommDateTime") + " = " + POut.Date(date) + " "
 				+ "AND (SELECT ItemValue FROM definition WHERE definition.DefNum=commlog.CommType) ='" + CommItemTypeAuto.RECALL.ToString() + "'";
-			return PIn.Int(Db.GetScalar(command));
+			return Database.ExecuteInt(command);
 		}
 
 		public static void RecallUndo(DateTime date)
@@ -233,7 +234,7 @@ namespace OpenDentBusiness{
 			string command = "DELETE FROM commlog "
 				+ "WHERE " + DbHelper.DtimeToDate("CommDateTime") + " = " + POut.Date(date) + " "
 				+ "AND (SELECT ItemValue FROM definition WHERE definition.DefNum=commlog.CommType) ='" + CommItemTypeAuto.RECALL.ToString() + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns the message used to ask if the user would like to save the appointment/patient note as a commlog when deleting an appointment/patient note.  Only returns up to the first 30 characters of the note.</summary>

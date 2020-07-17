@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -117,7 +118,7 @@ namespace OpenDentBusiness{
 			
 			//validate that not already in use.
 			string command="SELECT LName,FName FROM patient WHERE SiteNum="+POut.Long(siteNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			//int count=PIn.PInt(Db.GetCount(command));
 			string pats="";
 			for(int i=0;i<table.Rows.Count;i++){

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
@@ -12,7 +13,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static DataTable GetTable(string command)
 		{
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 	}
 }

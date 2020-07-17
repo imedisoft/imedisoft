@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -46,7 +47,7 @@ namespace OpenDentBusiness{
 				+(isSimple?"":"INNER JOIN etrans ON etrans.EtransNum=etrans835attach.EtransNum ")
 				+"WHERE "+string.Join(" OR ",listWhereClauses)+" "
 				+"ORDER BY etrans835attach.DateTimeEntry";//Attaches created from splitting an ERA need to be after the original claim attach.
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(isSimple) {
 				return Crud.Etrans835AttachCrud.TableToList(table);
 			}
@@ -79,7 +80,7 @@ namespace OpenDentBusiness{
 				+(isSimple?"":"INNER JOIN etrans ON etrans.EtransNum=etrans835attach.EtransNum ")
 				+"WHERE etrans835attach.EtransNum IN ("+String.Join(",",listEtrans835Nums.Select(x => POut.Long(x)))+") "
 				+"ORDER BY etrans835attach.DateTimeEntry";//Attaches created from splitting an ERA need to be after the original claim attach.
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(isSimple) {
 				return Crud.Etrans835AttachCrud.TableToList(table);
 			}
@@ -111,7 +112,7 @@ namespace OpenDentBusiness{
 			if(clpSegmentIndex >= 0) {
 				command+=" AND ClpSegmentIndex="+POut.Int(clpSegmentIndex);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all attachments associated to the given listEtrans835AttachNums.  Can handle null.</summary>
@@ -120,7 +121,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			
-			Db.NonQ("DELETE FROM etrans835attach WHERE Etrans835AttachNum IN ("+string.Join(",",listEtrans835AttachNums.Select(x => POut.Long(x)))+")");
+			Database.ExecuteNonQuery("DELETE FROM etrans835attach WHERE Etrans835AttachNum IN ("+string.Join(",",listEtrans835AttachNums.Select(x => POut.Long(x)))+")");
 		}
 
 		public static void DetachEraClaim(Hx835_Claim claimPaid) {

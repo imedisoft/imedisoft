@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -34,7 +35,7 @@ namespace OpenDentBusiness{
 
 		public static bool CheckExists(string listName) {
 			string command = "SHOW TABLES LIKE 'wikilist\\_"+POut.String(listName)+"'";
-			if(Db.GetTable(command).Rows.Count==1) {
+			if(Database.ExecuteDataTable(command).Rows.Count==1) {
 				//found exacty one table with that name
 				return true;
 			}
@@ -51,7 +52,7 @@ namespace OpenDentBusiness{
 			if(!string.IsNullOrEmpty(orderBy)) {
 				command+=" ORDER BY "+POut.String(orderBy);//Manual ovverride of Order By
 			}
-			else using(DataTable tableDescript=Db.GetTable("DESCRIBE wikilist_"+POut.String(listName))) {
+			else using(DataTable tableDescript=Database.ExecuteDataTable("DESCRIBE wikilist_"+POut.String(listName))) {
 				if(tableDescript.Rows.Count==1) {
 					command+=" ORDER BY "+tableDescript.Rows[0]["Field"];//order by PK
 				}
@@ -59,7 +60,7 @@ namespace OpenDentBusiness{
 					command+=" ORDER BY "+tableDescript.Rows[1]["Field"];//order by the second column, even though we show the primary key
 				}
 			}
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		/// <summary>Creates empty table with a column for PK and optionally the columns in listHeaders. List name must be formatted correctly before
@@ -82,14 +83,14 @@ namespace OpenDentBusiness{
 					{string.Join(@",
 					",listColDefs)}
 					) DEFAULT CHARSET=utf8";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			WikiListHeaderWidths.InsertMany(listHeaders);
 		}
 
 		///<summary>Column is automatically named "Column#" where # is the number of columns+1.</summary>
 		public static void AddColumn(string listName) {
 			//Find Valid column name-----------------------------------------------------------------------------------------
-			DataTable columnNames = Db.GetTable("DESCRIBE wikilist_"+POut.String(listName));
+			DataTable columnNames = Database.ExecuteDataTable("DESCRIBE wikilist_"+POut.String(listName));
 			string newColumnName="Column1";//default in case table has no columns. Should never happen.
 			for(int i=0;i<columnNames.Rows.Count+1;i++) {//+1 to guarantee we can find a valid name.
 				newColumnName="Column"+(1+i);//ie. Column1, Column2, Column3...
@@ -109,7 +110,7 @@ namespace OpenDentBusiness{
 			}
 			//Add new column name--------------------------------------------------------------------------------------------
 			string command = "ALTER TABLE wikilist_"+POut.String(listName)+" ADD COLUMN "+POut.String(newColumnName)+" TEXT NOT NULL";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Add column widths to wikiListHeaderWidth Table-----------------------------------------------------------------
 			WikiListHeaderWidth headerWidth = new WikiListHeaderWidth();
 			headerWidth.ColName=newColumnName;
@@ -121,19 +122,19 @@ namespace OpenDentBusiness{
 		///<summary>Check to see if column can be deleted, returns true is the column contains only nulls.</summary>
 		public static bool CheckColumnEmpty(string listName,string colName) {
 			string command = "SELECT COUNT(*) FROM wikilist_"+POut.String(listName)+" WHERE "+POut.String(colName)+"!=''";
-			return Db.GetCount(command).Equals("0");
+			return Database.ExecuteString(command).Equals("0");
 		}
 
 		///<summary>Check to see if column can be deleted, returns true is the column contains only nulls.</summary>
 		public static void DeleteColumn(string listName,string colName) {
 			string command = "ALTER TABLE wikilist_"+POut.String(listName)+" DROP "+POut.String(colName);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			WikiListHeaderWidths.Delete(listName,colName);
 		}
 
 		/// <summary>Shifts the column to the left, does nothing if trying to shift leftmost two columns.</summary>
 		public static void ShiftColumnLeft(string listName,string colName) {
-			DataTable columnNames=Db.GetTable("DESCRIBE wikilist_"+POut.String(listName));
+			DataTable columnNames=Database.ExecuteDataTable("DESCRIBE wikilist_"+POut.String(listName));
 			if(columnNames.Rows.Count<3) {
 				return;//not enough columns to reorder.
 			}
@@ -141,13 +142,13 @@ namespace OpenDentBusiness{
 			if(index>1 && index<columnNames.Rows.Count) {
 				string command=$@"ALTER TABLE wikilist_{POut.String(listName)}
 					MODIFY {POut.String(colName)} TEXT NOT NULL AFTER {POut.String(columnNames.Rows[index-2][0].ToString())}";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 
 		/// <summary>Shifts the column to the right, does nothing if trying to shift the rightmost column.</summary>
 		public static void ShiftColumnRight(string listName,string colName) {
-			DataTable columnNames=Db.GetTable("DESCRIBE wikilist_"+POut.String(listName));
+			DataTable columnNames=Database.ExecuteDataTable("DESCRIBE wikilist_"+POut.String(listName));
 			if(columnNames.Rows.Count<3) {
 				return;//not enough columns to reorder.
 			}
@@ -155,14 +156,14 @@ namespace OpenDentBusiness{
 			if(index>0 && index<columnNames.Rows.Count-1) {
 				string command=$@"ALTER TABLE wikilist_{POut.String(listName)}
 					MODIFY {POut.String(colName)} TEXT NOT NULL AFTER {POut.String(columnNames.Rows[index+1][0].ToString())}";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 
 		///<summary>Adds one item to wiki list and returns the new PK.</summary>
 		public static long AddItem(string listName) {
 			string command = "INSERT INTO wikilist_"+POut.String(listName)+" VALUES ()";//inserts empty row with auto generated PK.
-			return Db.NonQ(command,true);
+			return Database.ExecuteInsert(command);
 		}
 
 		/// <summary></summary>
@@ -177,31 +178,31 @@ namespace OpenDentBusiness{
 			string command=$@"UPDATE wikilist_{POut.String(listName)} SET {string.Join(@",
 				",listRowSets)}
 				WHERE {POut.String(ItemTable.Columns[0].ColumnName)}={POut.Long(PIn.Long(ItemTable.Rows[0][0].ToString()))}";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static DataTable GetItem(string listName,long itemNum,string colName=null) {
 			colName=POut.String(string.IsNullOrEmpty(colName)?(listName+"Num"):colName);
 			string command=$"SELECT * FROM wikilist_{POut.String(listName)} WHERE {colName}={POut.Long(itemNum)}";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static void DeleteItem(string listName,long itemNum,string colName=null) {
 			colName=POut.String(string.IsNullOrEmpty(colName)?(listName+"Num"):colName);
 			string command=$@"DELETE FROM wikilist_{POut.String(listName)} WHERE {colName}={POut.Long(itemNum)}";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DeleteList(string listName) {
 			string command = "DROP TABLE wikilist_"+POut.String(listName);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			WikiListHeaderWidths.DeleteForList(listName);
 		}
 
 		public static List<string> GetAllLists() {
 			List<string> retVal = new List<string>();
 			string command = "SHOW TABLES LIKE 'wikilist\\_%'";//must escape _ (underscore) otherwise it is interpreted as a wildcard character.
-			DataTable Table = Db.GetTable(command);
+			DataTable Table = Database.ExecuteDataTable(command);
 			foreach(DataRow row in Table.Rows) {
 				retVal.Add(row[0].ToString());
 			}
@@ -213,18 +214,18 @@ namespace OpenDentBusiness{
 		public static void Rename(string nameOriginal,string nameNew) {
 			//Name should already have been validated and available.
 			string command="CREATE TABLE wikilist_"+POut.String(nameNew)+" AS SELECT * FROM wikilist_"+POut.String(nameOriginal);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Validate content before altering and deleting things
 			DataTable tableNew=GetByName(nameNew);
 			DataTable tableOld=GetByName(nameOriginal);
 			if(tableNew.Rows.Count!=tableOld.Rows.Count) {
 				command="DROP TABLE wikilist_"+POut.String(nameNew);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				throw new Exception("Error occurred renaming list.  Mismatch found in row count. No changes made.");
 			}
 			if(tableNew.Columns.Count!=tableOld.Columns.Count) {
 				command="DROP TABLE wikilist_"+POut.String(nameNew);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				throw new Exception("Error occurred renaming list.  Mismatch found in column count. No changes made.");
 			}
 			for(int r1=0;r1<tableNew.Rows.Count;r1++) {
@@ -246,15 +247,15 @@ namespace OpenDentBusiness{
 				priKeyColNameOrig=POut.String(tableNew.Columns[0].ColumnName);
 			}
 			command="ALTER TABLE wikilist_"+POut.String(nameNew)+" CHANGE "+priKeyColNameOrig+" "+POut.String(nameNew)+"Num bigint NOT NULL auto_increment PRIMARY KEY";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE wikilistheaderwidth SET ListName='"+POut.String(nameNew)+"' WHERE ListName='"+POut.String(nameOriginal)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command=$@"UPDATE wikilistheaderwidth SET ColName='{POut.String(nameNew)}Num'
 				WHERE ListName='{POut.String(nameNew)}' AND ColName='{priKeyColNameOrig}'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//drop old table---------------------
 			command="DROP TABLE wikilist_"+POut.String(nameOriginal);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			WikiListHeaderWidths.RefreshCache();
 		}
 

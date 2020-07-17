@@ -1,17 +1,18 @@
 ﻿using CodeBase;
+using DataConnectionBase;
 using System;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 
-namespace DataConnectionBase
+namespace Imedisoft.Data
 {
     public class QueryMonitor
 	{
 		/// <summary>
 		/// Set to true if monitoring queries from FormQueryMonitor.
 		/// This will cause the query log to contain runnable queries (i.e. with query parameters replaced with actual parameter value),
-		/// and will include the method name of the calling method in DataConnection (i.e. GetTable, NonQ, etc).
+		/// and will include the method name of the calling method in DataConnection (i.e. GetTable, ExecuteNonQuery, etc).
 		/// </summary>
 		public static bool IsMonitoring { get; set; } = false;
 

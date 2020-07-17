@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command="DELETE FROM securitylog WHERE SecurityLogNum <= "+POut.Long(securityLogMaxPriKey);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DeleteBeforeDateInclusive(DateTime date) {
@@ -67,7 +68,7 @@ namespace OpenDentBusiness{
 					Lans.g("FormBackup","Removing old data from securityloghash table. Rows deleted so far:")+" "+countDeleted);
 				//limiting to 500,000 to avoid out of memory exceptions
 				string command=$"SELECT SecurityLogNum FROM securitylog WHERE DATE(LogDateTime) <= {POut.DateT(date.Date)} LIMIT 500000";
-				listSecurityLogNums=Db.GetListLong(command);
+				listSecurityLogNums=Database.GetListLong(command);
 				if(listSecurityLogNums.Count<1) {
 					break;
 				}
@@ -76,7 +77,7 @@ namespace OpenDentBusiness{
 				MiscDataEvent.Fire(CodeBase.EventCategory.MiscData,
 					Lans.g("FormBackup","Removing old data from securitylog table. Rows deleted so far:")+" "+countDeleted);
 				command=$"DELETE FROM securitylog WHERE SecurityLogNum IN ({string.Join(",",listSecurityLogNums)})";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				countDeleted+=listSecurityLogNums.Count;
 			}
 			while(listSecurityLogNums.Count > 0);
@@ -116,7 +117,7 @@ namespace OpenDentBusiness{
 			if(limit>0) {
 				command=DbHelper.LimitOrderBy(command,limit);
 			}
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<SecurityLog> listLogs=Crud.SecurityLogCrud.TableToList(table);
 			for(int i=0;i<listLogs.Count;i++) {
 				if(table.Rows[i]["PatNum"].ToString()=="0") {

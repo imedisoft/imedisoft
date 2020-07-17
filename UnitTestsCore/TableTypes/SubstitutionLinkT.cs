@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -20,7 +21,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the substitutionlink table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearSubstitutionLinkTable() {
 			string command="DELETE FROM substitutionlink";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

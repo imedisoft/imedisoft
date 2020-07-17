@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Imedisoft.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenDentBusiness;
 using UnitTestsCore;
@@ -52,7 +53,7 @@ namespace UnitTests.AlertItems_Tests {
 			}
 			AlertItems_CreateAlertsForWebmailMethodCall();
 			//Count the total # of alertitem entries, not what the description is.
-			string alertCount=DataCore.GetScalar("SELECT COUNT(*) FROM alertitem WHERE UserNum IN ("+string.Join(",",listTestUsers.Select(x => POut.Long(x.UserNum)))
+			string alertCount=Database.ExecuteString("SELECT COUNT(*) FROM alertitem WHERE UserNum IN ("+string.Join(",",listTestUsers.Select(x => POut.Long(x.UserNum)))
 				+") AND Type="+POut.Int((int)AlertType.WebMailRecieved));
 			Assert.AreEqual("5",alertCount);
 			//
@@ -67,7 +68,7 @@ namespace UnitTests.AlertItems_Tests {
 			//This section tests adding more unread emails, and changing the description of the alertitem
 			Userod selectedUser=listTestUsers.First();
 			AlertItems_CreateAlertsForWebmailMethodCall();
-			alertCount=DataCore.GetScalar("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
+			alertCount=Database.ExecuteString("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
 			Assert.AreEqual("5",alertCount);
 			//
 			//Add 3 more unread emails.
@@ -75,23 +76,23 @@ namespace UnitTests.AlertItems_Tests {
 			EmailMessageT.CreateWebMail(selectedUser.ProvNum,examplePatnum);
 			EmailMessageT.CreateWebMail(selectedUser.ProvNum,examplePatnum);
 			AlertItems_CreateAlertsForWebmailMethodCall();
-			alertCount=DataCore.GetScalar("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
+			alertCount=Database.ExecuteString("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
 			Assert.AreEqual("8",alertCount);
 			//
 			//Mark 2 of the emails as read, to decrease the amount of unread emails
 			string command="UPDATE emailmessage SET SentOrReceived="+POut.Int((int)EmailSentOrReceived.WebMailRecdRead)+
 				" WHERE SentOrReceived="+POut.Int((int)EmailSentOrReceived.WebMailReceived)+" AND ProvNumWebMail="+POut.Long(selectedUser.ProvNum)+" LIMIT 2";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			AlertItems_CreateAlertsForWebmailMethodCall();
-			alertCount=DataCore.GetScalar("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
+			alertCount=Database.ExecuteString("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
 			Assert.AreEqual("6",alertCount);
 			//
 			//Now we mark all of this user's emails as read, as if that user has read all of their webmail.
 			command="UPDATE emailmessage SET SentOrReceived="+POut.Int((int)EmailSentOrReceived.WebMailRecdRead)+
 				" WHERE SentOrReceived="+POut.Int((int)EmailSentOrReceived.WebMailReceived)+" AND ProvNumWebMail="+POut.Long(selectedUser.ProvNum);
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			AlertItems_CreateAlertsForWebmailMethodCall();
-			alertCount=DataCore.GetScalar("SELECT COUNT(*) FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
+			alertCount=Database.ExecuteString("SELECT COUNT(*) FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
 			Assert.AreEqual("0",alertCount);
 		}
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -93,7 +94,7 @@ namespace OpenDentBusiness{
 		public static void SetForType(long recallTypeNum,List<RecallTrigger> triggerList) {
 			
 			string command="DELETE FROM recalltrigger WHERE RecallTypeNum="+POut.Long(recallTypeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			for(int i=0;i<triggerList.Count;i++){
 				triggerList[i].RecallTypeNum=recallTypeNum;
 				Insert(triggerList[i]);

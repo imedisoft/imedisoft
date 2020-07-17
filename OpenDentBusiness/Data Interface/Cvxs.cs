@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -125,7 +126,7 @@ namespace OpenDentBusiness{
 			
 			List<string> retVal=new List<string>();
 			string command="SELECT CvxCode FROM cvx";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++){
 				retVal.Add(table.Rows[i][0].ToString());
 			}
@@ -150,7 +151,7 @@ namespace OpenDentBusiness{
 		public static bool CodeExists(string cvxCode) {
 			
 			string command="SELECT COUNT(*) FROM cvx WHERE CvxCode='"+POut.String(cvxCode)+"'";
-			string count=Db.GetCount(command);
+			string count=Database.ExecuteString(command);
 			if(count=="0") {
 				return false;
 			}
@@ -161,7 +162,7 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM cvx";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 
 		public static List<Cvx> GetBySearchText(string searchText) {
@@ -195,7 +196,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long cvxNum) {
 			
 			string command= "DELETE FROM cvx WHERE CvxNum = "+POut.Long(cvxNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

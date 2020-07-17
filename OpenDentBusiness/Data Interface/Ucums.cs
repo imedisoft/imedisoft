@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -124,7 +125,7 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM ucum";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 
 		///<summary>Returns a list of just the codes for use in update or insert logic.</summary>
@@ -132,7 +133,7 @@ namespace OpenDentBusiness{
 			
 			List<string> retVal=new List<string>();
 			string command="SELECT UcumCode FROM ucum";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++) {
 				retVal.Add(table.Rows[i].ItemArray[0].ToString());
 			}
@@ -181,7 +182,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long uCUMNum) {
 			
 			string command= "DELETE FROM ucum WHERE UCUMNum = "+POut.Long(uCUMNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

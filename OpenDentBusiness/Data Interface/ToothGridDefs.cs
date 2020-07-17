@@ -138,7 +138,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long toothGridDefNum) {
 			
 			string command= "DELETE FROM toothgriddef WHERE ToothGridDefNum = "+POut.Long(toothGridDefNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

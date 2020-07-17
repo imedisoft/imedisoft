@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -89,14 +90,14 @@ namespace OpenDentBusiness {
 				+"WHERE sigmessage.AckDateTime < "+POut.Date(new DateTime(1880,1,1),true)+" "
 				+"AND MessageDateTime <= "+POut.DateT(time)+" "
 				+"AND sigelementdef.LightRow="+POut.Long(buttonIndex);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return;
 			}
 			listSigMessageNums=table.Select().Select(x => PIn.Long(x["SigMessageNum"].ToString())).ToList();
 			command="UPDATE sigmessage SET AckDateTime = "+DbHelper.Now()+" "
 				+"WHERE SigMessageNum IN ("+string.Join(",",listSigMessageNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			listSigMessageNums.ForEach(x => Signalods.SetInvalid(InvalidType.SigMessages,KeyType.SigMessage,x));
 		}
 
@@ -129,7 +130,7 @@ namespace OpenDentBusiness {
 				DataTable table;
 				command="SELECT SigMessageNum FROM sigmessage WHERE AckDateTime > "+POut.DateT(new DateTime(1880,1,1))+" "
 					+"AND AckDateTime < DATE_ADD(NOW(),INTERVAL -2 DAY)";
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 
 				if(table.Rows.Count < 1) {
 					return;//Nothing to delete.
@@ -137,7 +138,7 @@ namespace OpenDentBusiness {
 				//Delete all of the acks.
 				command="DELETE FROM sigmessage "
 					+"WHERE SigMessageNum IN ("+String.Join(",",table.Select().Select(x => PIn.Long(x["SigMessageNum"].ToString())))+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			catch(Exception) {
 				//fail silently

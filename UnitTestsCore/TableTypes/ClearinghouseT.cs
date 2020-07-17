@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -38,8 +39,8 @@ namespace UnitTestsCore {
 
 		///<summary>Deletes everything from the Clearinghouse table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearClearinghouseTable() {
-			string command="DELETE FROM clearinghouse WHERE ClearinghouseNum > 0";
-			DataCore.NonQ(command);
+            string command = "DELETE FROM clearinghouse WHERE ClearinghouseNum > 0";
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

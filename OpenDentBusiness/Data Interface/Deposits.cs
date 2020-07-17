@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -65,7 +66,7 @@ namespace OpenDentBusiness{
 			}
 			command+="GROUP BY deposit.DepositNum ";
 			command+="ORDER BY deposit.DateDeposit";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List <Deposit> listDeposits=Crud.DepositCrud.TableToList(table);
 			for(int i=0;i<listDeposits.Count;i++) {
 				listDeposits[i].ClinicAbbr=PIn.String(table.Rows[i]["ClinicAbbr"].ToString());
@@ -116,14 +117,14 @@ namespace OpenDentBusiness{
 			}
 			//check dependencies
 			string command="SELECT COUNT(*) FROM transaction WHERE DepositNum ="+POut.Long(dep.DepositNum);
-			if(PIn.Long(Db.GetCount(command))>0) {
+			if(PIn.Long(Database.ExecuteString(command))>0) {
 				throw new ApplicationException(Lans.g("Deposits","Cannot delete deposit because it is attached to a transaction."));
 			}
 			//ready to delete
 			command="UPDATE payment SET DepositNum=0 WHERE DepositNum="+POut.Long(dep.DepositNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE claimpayment SET DepositNum=0 WHERE DepositNum="+POut.Long(dep.DepositNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Crud.DepositCrud.Delete(dep.DepositNum);
 		}
 
@@ -134,12 +135,12 @@ namespace OpenDentBusiness{
 			if(listPayNums.Count>0) {
 				command="UPDATE payment SET DepositNum=0 WHERE DepositNum="+POut.Long(depositNum)
 					+" AND PayNum IN("+string.Join(",",listPayNums)+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			if(listClaimPaymentNums.Count>0) {
 				command="UPDATE claimpayment SET DepositNum=0 WHERE DepositNum="+POut.Long(depositNum)
 					+" AND ClaimPaymentNum IN("+string.Join(",",listClaimPaymentNums)+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 

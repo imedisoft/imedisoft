@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -117,7 +118,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long interventionNum) {
 			
 			string command= "DELETE FROM intervention WHERE InterventionNum = "+POut.Long(interventionNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -141,7 +142,7 @@ namespace OpenDentBusiness{
 			string command="SELECT CodeValue FROM intervention WHERE CodeSet="+POut.Int((int)codeSet)+" "
 				+"AND "+DbHelper.DtimeToDate("DateEntry")+">="+POut.Date(MiscData.GetNowDateTime().AddYears(-1))+" "
 				+"GROUP BY CodeValue,CodeSystem";
-			return Db.GetListString(command);
+			return Database.GetListString(command);
 		}
 
 		///<summary>Gets one Intervention from the db.</summary>

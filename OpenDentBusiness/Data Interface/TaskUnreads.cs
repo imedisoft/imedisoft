@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -66,7 +67,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM taskunread WHERE UserNum = "+POut.Long(userNum)+" "
 				+"AND TaskNum IN ("+string.Join(",",arrayTasks.Select(x => POut.Long(x.TaskNum)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static bool AddUnreads(Task task,long curUserNum) {
@@ -74,7 +75,7 @@ namespace OpenDentBusiness{
 			//if the task is done, don't add unreads
 			string command = "SELECT TaskStatus,UserNum,ReminderGroupId,DateTimeEntry,"+DbHelper.Now()+" DbTime "
 				+"FROM task WHERE TaskNum = "+POut.Long(task.TaskNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return task.IsUnread;//only happens when a task was deleted by one user but left open on another user's computer.
 			}
@@ -107,7 +108,7 @@ namespace OpenDentBusiness{
 								INNER JOIN taskancestor ON taskancestor.TaskListNum = tasklist.TaskListNum 
 									AND taskancestor.TaskNum = "+POut.Long(task.TaskNum)+" ";
 			command+="LEFT JOIN taskunread ON taskunread.UserNum = tasksubscription.UserNum AND taskunread.TaskNum=taskancestor.TaskNum";
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			List<long> listUserNums=new List<long>();
 			for(int i=0;i<table.Rows.Count;i++) {
 				userNum=PIn.Long(table.Rows[i]["UserNum"].ToString());
@@ -130,7 +131,7 @@ namespace OpenDentBusiness{
 			task.IsUnread=true;
 			string command="SELECT COUNT(*) FROM taskunread WHERE UserNum = "+POut.Long(userNum)+" "
 				+"AND TaskNum = "+POut.Long(task.TaskNum);
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				task.IsUnread=false;
 			}
 			return task.IsUnread;
@@ -168,7 +169,7 @@ namespace OpenDentBusiness{
 		public static void DeleteForTask(Task task) {
 			
 			string command="DELETE FROM taskunread WHERE TaskNum = "+POut.Long(task.TaskNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

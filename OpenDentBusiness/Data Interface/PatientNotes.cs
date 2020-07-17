@@ -3,6 +3,7 @@ using System.Collections;
 using System.Data;
 using System.Reflection;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	
@@ -72,7 +73,7 @@ namespace OpenDentBusiness{
 			string command = "UPDATE patientnote SET "
 				+ "FamFinancial = '"+POut.String(Cur.FamFinancial)+"'"
 				+" WHERE patnum = '"+POut.Long   (guarantor)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets the PatientNote for the patient passed in.  The FamFinancial note could be incorrect.
@@ -97,7 +98,7 @@ namespace OpenDentBusiness{
 					//Replication servers can insert a patient note with a primary key belonging to another replication server's key range.
 					command+=" ON DUPLICATE KEY UPDATE PatNum='"+patNum+"'";
 				
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			catch {
 				//Fail Silently.

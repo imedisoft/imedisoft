@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Reflection;
 using OpenDentBusiness;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary>Handles database commands related to the apptviewitem table in the database.</summary>
@@ -93,7 +94,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE from apptviewitem WHERE ApptViewItemNum = '"
 				+POut.Long(apptViewItem.ApptViewItemNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all apptviewitems for the current apptView.</summary>
@@ -101,7 +102,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE from apptviewitem WHERE ApptViewNum = '"
 				+POut.Long(view.ApptViewNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns a list of ApptViewItem for a given Provider.</summary>

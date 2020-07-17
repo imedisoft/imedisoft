@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -169,7 +170,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM userodpref WHERE UserNum="+POut.Long(userNum)
 				+" AND FkeyType="+POut.Int((int)fkeyType)
 				+" AND Fkey="+POut.Long(fkey);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<UserOdPref> GetByUserAndFkeyType(long userNum,UserOdFkeyType fkeyType) {
@@ -254,7 +255,7 @@ namespace OpenDentBusiness{
 			if(userNum!=0) {
 				command+=" AND UserNum="+POut.Long(userNum);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes UserOdPref with provided parameters.
@@ -266,7 +267,7 @@ namespace OpenDentBusiness{
 			if(userNum!=0) {
 				command+=" AND UserNum="+POut.Long(userNum);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -32,15 +33,15 @@ namespace OpenDentBusiness
 			string command;
 			//We need a very small table that tells us which tp is the most recent.
 			//command="DROP TABLE IF EXISTS temptp;";
-			//Db.NonQ(command);
+			//Db.ExecuteNonQuery(command);
 			//command=@"CREATE TABLE temptp(
 			//	DateTP date NOT NULL default '0001-01-01')";
-			//Db.NonQ(command);
+			//Db.ExecuteNonQuery(command);
 			//command+=@"CREATE TABLE temptp
 			//	SELECT MAX(treatplan.DateTP) DateTP
 			//	FROM treatplan
 			//	WHERE PatNum="+POut.PInt(PatCur.PatNum)+";";
-			//Db.NonQ(command);
+			//Db.ExecuteNonQuery(command);
 			command = "SET @maxTpDate=(SELECT MAX(treatplan.DateTP) FROM treatplan WHERE PatNum=" + POut.Long(PatCur.PatNum) + ");";
 			command += "SELECT ";
 			for (int i = 0; i < letter.Fields.Count; i++)
@@ -154,7 +155,7 @@ namespace OpenDentBusiness
 				+ "WHERE patient.PatNum=" + POut.Long(PatCur.PatNum)
 				+ " GROUP BY patient.PatNum "
 				+ "ORDER BY refattach.ItemOrder";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 	}
 }

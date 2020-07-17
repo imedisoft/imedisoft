@@ -17,17 +17,17 @@ namespace OpenDentBusiness
 		/// Returns the default storage engine.
 		/// </summary>
 		public static string GetDefaultEngine() 
-			=> Db.GetScalar("SELECT @@default_storage_engine").ToString();
+			=> Database.ExecuteScalar("SELECT @@default_storage_engine").ToString();
 
 		public static bool IsInnodbAvail()
 		{
 			try
 			{
-				return Db.GetScalar("SELECT @@have_innodb").ToString() == "YES";
+				return Database.ExecuteScalar("SELECT @@have_innodb").ToString() == "YES";
 			}
 			catch // MySQL 5.6 and higher
 			{
-				var dataTable = Db.GetTable("SHOW ENGINES");
+				var dataTable = Database.ExecuteDataTable("SHOW ENGINES");
 				foreach (DataRow row in dataTable.Rows)
 				{
 					if (row["Engine"].ToString().ToLower() == "innodb" && 
@@ -50,7 +50,7 @@ namespace OpenDentBusiness
 				FROM information_schema.tables
 				WHERE table_schema=(SELECT DATABASE())";
 
-			DataTable results = Db.GetTable(command);
+			DataTable results = Database.ExecuteDataTable(command);
 			string retval = Lans.g("FormInnoDb", "Number of MyISAM tables: ");
 			retval += Lans.g("FormInnoDb", results.Rows[0]["myisam"].ToString()) + "\r\n";
 			retval += Lans.g("FormInnoDb", "Number of InnoDB tables: ");
@@ -68,7 +68,7 @@ namespace OpenDentBusiness
 				+ "WHERE TABLE_SCHEMA='" + SOut.String(DataConnection.DatabaseName) + "' "
 				+ "AND TABLE_NAME!='phone' "//this table is used internally at OD HQ, and is always innodb.
 				+ "AND ENGINE NOT LIKE 'MyISAM'";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			string tableNames = "";
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
@@ -86,7 +86,7 @@ namespace OpenDentBusiness
 		/// Default db is DataConnection.GetDatabaseName().
 		/// </summary>
 		public static bool HasInnoDbTables(string dbName = "") 
-			=> Db.GetTable(
+			=> Database.ExecuteDataTable(
 				"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables " +
 				"WHERE TABLE_SCHEMA='" + SOut.String(string.IsNullOrEmpty(dbName) ? DataConnection.DatabaseName : dbName) + "' " +
 				"AND ENGINE NOT LIKE 'MyISAM'").Rows.Count > 1;
@@ -99,11 +99,11 @@ namespace OpenDentBusiness
 		{
 			int numtables = 0;
 			string command = "SELECT DATABASE()";
-			string database = Db.GetScalar(command);
+			string database = Database.ExecuteString(command);
 			command = @"SELECT table_name
 				FROM information_schema.tables
 				WHERE table_schema='" + POut.String(database) + "' AND information_schema.tables.engine='" + fromEngine + "'";
-			DataTable results = Db.GetTable(command);
+			DataTable results = Database.ExecuteDataTable(command);
 			command = "";
 			if (results.Rows.Count == 0)
 			{
@@ -114,7 +114,7 @@ namespace OpenDentBusiness
 				command += "ALTER TABLE `" + database + "`.`" + results.Rows[i]["table_name"].ToString() + "` ENGINE='" + toEngine + "'; ";
 				numtables++;
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			return numtables;
 		}
 	}

@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -136,7 +137,7 @@ namespace OpenDentBusiness{
 			if(clinicNum!=0) {
 				command+="AND payment.ClinicNum="+POut.Long(clinicNum);
 			}
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Used for display in ProcEdit. List MUST include the requested payment. Use GetPayments to get the list.</summary>
@@ -161,7 +162,7 @@ namespace OpenDentBusiness{
 			if(ignoreDepositNum!=0) {
 				command+=" AND DepositNum!="+POut.Long(ignoreDepositNum);
 			}
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		/*
@@ -316,7 +317,7 @@ namespace OpenDentBusiness{
 			Crud.PaymentCrud.Update(pay);
 			if(!excludeDepositNum) {
 				string command="UPDATE payment SET DepositNum="+POut.Long(pay.DepositNum)+" WHERE PayNum = "+POut.Long(pay.PayNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 
@@ -339,7 +340,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long payNum) {
 			
 			string command="SELECT DepositNum,PayAmt FROM payment WHERE PayNum="+POut.Long(payNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0){
 				return;
 			}
@@ -349,12 +350,12 @@ namespace OpenDentBusiness{
 				throw new ApplicationException(Lans.g("Payments","Not allowed to delete a payment attached to a deposit."));
 			}
 			command= "DELETE from payment WHERE PayNum = "+POut.Long(payNum);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 			//this needs to be improved to handle EstBal
 			command= "DELETE from paysplit WHERE PayNum = "+POut.Long(payNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE recurringcharge SET PayNum=0 WHERE PayNum="+POut.Long(payNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 
@@ -366,7 +367,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT EstBalance FROM patient "
 				+"WHERE PatNum = "+POut.Long(patNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			double estBal=0;
 			if(table.Rows.Count>0){
 				estBal=PIn.Double(table.Rows[0][0].ToString());
@@ -376,7 +377,7 @@ namespace OpenDentBusiness{
 					FROM claimproc
 					WHERE PatNum="+POut.Long(patNum)+" "
 					+"AND Status=0"; //NotReceived
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 				if(table.Rows.Count>0){
 					estBal-=PIn.Double(table.Rows[0][0].ToString());
 				}
@@ -393,7 +394,7 @@ namespace OpenDentBusiness{
 			string command= 
 				"SELECT Guarantor FROM patient "
 				+"WHERE PatNum = "+POut.Long(pay.PatNum);
- 			DataTable table=Db.GetTable(command);
+ 			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0){
 				return new List<PaySplit>();
 			}
@@ -405,7 +406,7 @@ namespace OpenDentBusiness{
 				+"WHERE Guarantor = "+table.Rows[0][0].ToString()+" "
 				+"GROUP BY  patient.PatNum,EstBalance,PriProv";
 				//+" ORDER BY PatNum!="+POut.PInt(pay.PatNum);//puts current patient in position 0 //Oracle does not allow
- 			table=Db.GetTable(command);
+ 			table=Database.ExecuteDataTable(command);
 			List<Patient> pats=new List<Patient>();
 			Patient pat;
 			//first, put the current patient at position 0.
@@ -480,7 +481,7 @@ namespace OpenDentBusiness{
 				}
 				command="UPDATE patient SET EstBalance=EstBalance-"+POut.PDouble(amtSplits[i])
 					+" WHERE PatNum="+POut.PInt(pats[i].PatNum);
-				Db.NonQ(command);
+				Db.ExecuteNonQuery(command);
 			}*/
 			return retVal;
 		}
@@ -677,14 +678,14 @@ namespace OpenDentBusiness{
 		public static DataTable GetFamilyBalancePayDatesCounts() {
 			
 			string command="SELECT DateEntry,COUNT(*) FROM payment WHERE PayNote LIKE '"+"Auto-created by Family Balancer tool%"+"' GROUP BY DateEntry";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return table;
 		}
 
 		public static DataTable GetFamilyBalanceTransferForDate(DateTime dateEntry) {
 			
 			string command="SELECT PayNum,PatNum FROM payment WHERE DateEntry="+POut.Date(dateEntry)+" AND PayNote LIKE '"+"Auto-created by Family Balancer tool%"+"'";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Returns a string that can be used for securitylog entries.</summary>

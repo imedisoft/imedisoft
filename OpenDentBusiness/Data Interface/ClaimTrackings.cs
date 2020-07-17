@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -63,7 +64,7 @@ namespace OpenDentBusiness{
 		public static long InsertClaimProcReceived(long claimNum,long userNum,string note="") {
 			string command="SELECT COUNT(*) FROM claimtracking WHERE TrackingType='"+POut.String(ClaimTrackingType.ClaimProcReceived.ToString())
 				+"' AND ClaimNum="+POut.Long(claimNum)+" AND UserNum='"+userNum+"'";
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				return 0;//Do nothing.
 			}
 			ClaimTracking claimTracking=new ClaimTracking();

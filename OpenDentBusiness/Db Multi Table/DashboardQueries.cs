@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Reflection;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -57,7 +58,7 @@ namespace OpenDentBusiness
 				//run historical aging on all patients based on the date entered.
 				command = "SELECT SUM(Bal_0_30+Bal_31_60+Bal_61_90+BalOver90),SUM(InsEst) "
 					+ "FROM (" + Ledgers.GetAgingQueryString(dateLastOfMonth, isHistoric: true) + ") guarBals";
-				DataTable table = ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+				DataTable table = ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 #if DEBUG
 				stopWatch.Stop();
 				_elapsedTimeAR += "Aging using Ledgers.GetHistoricAgingQueryString() #" + i + " : " + stopWatch.Elapsed.ToString() + "\r\n";
@@ -87,7 +88,7 @@ namespace OpenDentBusiness
 		#region OpenDentalGraph Queries
 		public static DataTable GetTable(string command, bool doRunOnReportServer = true)
 		{
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command), doRunOnReportServer);
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command), doRunOnReportServer);
 		}
 		#endregion
 	}

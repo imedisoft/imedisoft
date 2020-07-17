@@ -12,6 +12,7 @@ using DataConnectionBase;
 using OpenDentBusiness.UI;
 using System.Windows;
 using OpenDentBusiness.WebTypes;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -324,7 +325,7 @@ namespace OpenDentBusiness {
 			
 			string command="SELECT ClinicNum,COUNT(*) AS CountUnread FROM smsfrommobile WHERE SmsStatus=0 AND IsHidden=0 GROUP BY ClinicNum "
 				+"ORDER BY ClinicNum";
-			List<SmsFromMobiles.SmsNotification> ret=Db.GetTable(command).AsEnumerable()
+			List<SmsFromMobiles.SmsNotification> ret=Database.ExecuteDataTable(command).AsEnumerable()
 				.Select(x => new SmsFromMobiles.SmsNotification() {
 					ClinicNum=PIn.Long(x["ClinicNum"].ToString()),
 					Count=PIn.Int(x["CountUnread"].ToString()),
@@ -334,7 +335,7 @@ namespace OpenDentBusiness {
 			//FKeyType SmsMsgUnreadCount is written to db as a string. 
 			command="SELECT * FROM signalod WHERE IType="+POut.Int((int)InvalidType.SmsTextMsgReceivedUnreadCount)
 				+" AND FKeyType='"+POut.String(KeyType.SmsMsgUnreadCount.ToString())+"' ORDER BY SigDateTime DESC LIMIT 1";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			Signalod sig=Crud.SignalodCrud.TableToList(table).FirstOrDefault();
 			if(sig!=null && sig.MsgValue==json) {//No changes, not need to insert a new signal.
 				return ret;//Return the list of notifications, but do not update the existing signal.
@@ -479,7 +480,7 @@ namespace OpenDentBusiness {
 					return;//Do not run this process again.
 				}
 				string command="DELETE FROM signalod WHERE SigDateTime < DATE_ADD(NOW(),INTERVAL -2 DAY)";//Itypes only older than 2 days
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				SigMessages.ClearOldSigMessages();//Clear messaging buttons which use to be stored in the signal table.
 				//SigElements.DeleteOrphaned();
 				Prefs.UpdateDateT(PrefName.SignalLastClearedDate,MiscData.GetNowDateTime());//Set Last cleared to now.

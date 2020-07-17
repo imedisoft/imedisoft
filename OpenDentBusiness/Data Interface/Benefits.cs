@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Linq;
 using OpenDentBusiness.Eclaims;
 using System.Globalization;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -106,7 +107,7 @@ namespace OpenDentBusiness {
 		public static void Delete(Benefit ben) {
 			
 			string command="DELETE FROM benefit WHERE BenefitNum ="+POut.Long(ben.BenefitNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			InsEditLogs.MakeLogEntry(null,ben,InsEditLogType.Benefit,Security.CurUser.UserNum);
 		}
@@ -1582,7 +1583,7 @@ namespace OpenDentBusiness {
 			string command="SELECT * FROM benefit WHERE PlanNum="+POut.Long(planNum);
 			List<Benefit> listBenefits = Crud.BenefitCrud.SelectMany(command);
 			command ="DELETE FROM benefit WHERE PlanNum="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listBenefits.ForEach(x => {
 				InsEditLogs.MakeLogEntry(null,x,InsEditLogType.Benefit,Security.CurUser.UserNum);

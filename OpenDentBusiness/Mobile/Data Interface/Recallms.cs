@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -61,7 +62,7 @@ namespace OpenDentBusiness.Mobile {
 		///<summary>used in tandem with Full synch</summary>
 		public static void DeleteAll(long customerNum) {
 			string command= "DELETE FROM recallm WHERE CustomerNum = "+POut.Long(customerNum); ;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion

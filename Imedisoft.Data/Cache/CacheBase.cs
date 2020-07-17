@@ -18,10 +18,10 @@ namespace Imedisoft.Data.Cache
 		/// </summary>
 		/// <param name="predicate">A function to test each cache entry for a condition.</param>
 		/// <returns>All cache entires matching the condition.</returns>
-		public IEnumerable<T> Find(Func<T, bool> predicate)
+		public IEnumerable<T> Find(Predicate<T> predicate)
         {
 			if (predicate == null || IsEmpty) yield break;
-
+			
 			lock (items)
 			{
 				foreach (var item in items)
@@ -45,7 +45,7 @@ namespace Imedisoft.Data.Cache
 		/// </summary>
 		/// <param name="predicate">A function to test each cache entry for a condition.</param>
 		/// <returns>The number of cache entries.</returns>
-		public int Count(Func<T, bool> predicate)
+		public int Count(Predicate<T> predicate)
         {
 			if (predicate == null || IsEmpty) return 0;
 
@@ -110,7 +110,7 @@ namespace Imedisoft.Data.Cache
 		/// </summary>
 		/// <param name="predicate">A function to test each cache entry for a condition.</param>
 		/// <returns>The first entry that matched the given condition.</returns>
-		public T FirstOrDefault(Func<T, bool> predicate)
+		public T FirstOrDefault(Predicate<T> predicate)
         {
 			if (predicate == null) return default;
 

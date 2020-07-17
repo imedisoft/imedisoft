@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary>Use ListLong or ListShort to get a cached list of clinics that you can then filter upon.</summary>
@@ -37,7 +38,7 @@ namespace OpenDentBusiness{
 					+POut.Int((int)PatientStatus.Deceased)+","+POut.Int((int)PatientStatus.NonPatient)+") ";
 			} 
 			command+="GROUP BY ClinicNum";
-			return Db.GetTable(command).Select().ToSerializableDictionary(x => PIn.Long(x["ClinicNum"].ToString()),x => PIn.Int(x["Count"].ToString()));
+			return Database.ExecuteDataTable(command).Select().ToSerializableDictionary(x => PIn.Long(x["ClinicNum"].ToString()),x => PIn.Int(x["Count"].ToString()));
 		}
 
 		///<summary>Gets a list of Clinics for a given pharmacyNum.</summary>
@@ -65,7 +66,7 @@ namespace OpenDentBusiness{
 				+"INNER JOIN pharmclinic ON pharmclinic.ClinicNum=clinic.ClinicNum "
 				+"WHERE pharmclinic.PharmacyNum IN("+string.Join(",",arrPharmacyNums)+") "
 				+"ORDER BY clinic.Abbr";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<Clinic> listClinics=Crud.ClinicCrud.TableToList(table);
 			for(int i=0;i<table.Rows.Count;i++) {
 				long pharmacyNum=PIn.Long(table.Rows[i]["PharmacyNum"].ToString());
@@ -314,7 +315,7 @@ namespace OpenDentBusiness{
 			#region Patients
 			string command="SELECT LName,FName FROM patient WHERE ClinicNum ="
 				+POut.Long(clinic.ClinicNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				string pats="";
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -332,7 +333,7 @@ namespace OpenDentBusiness{
 			command="SELECT patient.LName,patient.FName FROM patient,payment "
 				+"WHERE payment.ClinicNum ="+POut.Long(clinic.ClinicNum)
 				+" AND patient.PatNum=payment.PatNum";
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				string pats="";
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -352,7 +353,7 @@ namespace OpenDentBusiness{
 				+" AND patient.PatNum=claimproc.PatNum"
 				+" AND claimproc.ClaimPaymentNum=claimpayment.ClaimPaymentNum "
 				+"GROUP BY patient.LName,patient.FName,claimpayment.ClaimPaymentNum";
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				string pats="";
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -370,7 +371,7 @@ namespace OpenDentBusiness{
 			command="SELECT patient.LName,patient.FName FROM patient,appointment "
 				+"WHERE appointment.ClinicNum ="+POut.Long(clinic.ClinicNum)
 				+" AND patient.PatNum=appointment.PatNum";
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				string pats="";
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -387,15 +388,15 @@ namespace OpenDentBusiness{
 			#region Procedures
 			//reassign procedure.ClinicNum=0 if the procs are status D.
 			command="SELECT ProcNum FROM procedurelog WHERE ProcStatus="+POut.Int((int)ProcStat.D)+" AND ClinicNum="+POut.Long(clinic.ClinicNum);
-			List<long> listProcNums=Db.GetListLong(command);
+			List<long> listProcNums=Database.GetListLong(command);
 			if(listProcNums.Count>0) {
 				command="UPDATE procedurelog SET ClinicNum=0 WHERE ProcNum IN ("+string.Join(",",listProcNums.Select(x => POut.Long(x)))+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			command="SELECT patient.LName,patient.FName FROM patient,procedurelog "
 				+"WHERE procedurelog.ClinicNum ="+POut.Long(clinic.ClinicNum)
 				+" AND patient.PatNum=procedurelog.PatNum";
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				string pats="";
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -412,7 +413,7 @@ namespace OpenDentBusiness{
 			#region Operatories
 			command="SELECT OpName FROM operatory "
 				+"WHERE ClinicNum ="+POut.Long(clinic.ClinicNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				string ops="";
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -429,7 +430,7 @@ namespace OpenDentBusiness{
 			#region Userod
 			command="SELECT UserName FROM userod "
 				+"WHERE ClinicNum ="+POut.Long(clinic.ClinicNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				string userNames="";
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -446,7 +447,7 @@ namespace OpenDentBusiness{
 			#region AlertSub
 			command="SELECT DISTINCT UserNum FROM AlertSub "
 				+"WHERE ClinicNum ="+POut.Long(clinic.ClinicNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				List<string> listUsers=new List<string>();
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -463,7 +464,7 @@ namespace OpenDentBusiness{
 			#region UserClinics
 			command="SELECT userod.UserName FROM userclinic INNER JOIN userod ON userclinic.UserNum=userod.UserNum "
 				+"WHERE userclinic.ClinicNum="+POut.Long(clinic.ClinicNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				string users="";
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -480,7 +481,7 @@ namespace OpenDentBusiness{
 			//Clinic is not being used, OK to delete.
 			//Delete clinic specific program properties.
 			command="DELETE FROM programproperty WHERE ClinicNum="+POut.Long(clinic.ClinicNum)+" AND ClinicNum!=0";//just in case a programming error tries to delete an invalid clinic.
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Crud.ClinicCrud.Delete(clinic.ClinicNum);
 		}
 
@@ -535,7 +536,7 @@ namespace OpenDentBusiness{
 				+"INNER JOIN recall ON patient.PatNum=recall.PatNum "
 				+"WHERE recall.RecallNum="+POut.Long(recallNum)+" "
 				+DbHelper.LimitAnd(1);
-			long patientClinicNum=PIn.Long(DataCore.GetScalar(command));
+			long patientClinicNum=Database.ExecuteLong(command);
 			if(patientClinicNum>0) {
 				return GetFirstOrDefault(x => x.ClinicNum==patientClinicNum);
 			}
@@ -546,7 +547,7 @@ namespace OpenDentBusiness{
 				WHERE appointment.AptStatus IN ("+POut.Int((int)ApptStatus.Scheduled)+","+POut.Int((int)ApptStatus.Complete)+")"+@"
 				ORDER BY AptDateTime DESC";
 			command=DbHelper.LimitOrderBy(command,1);
-			long appointmentClinicNum=PIn.Long(DataCore.GetScalar(command));
+			long appointmentClinicNum=Database.ExecuteLong(command);
 			if(appointmentClinicNum>0) {
 				return GetFirstOrDefault(x => x.ClinicNum==appointmentClinicNum);
 			}

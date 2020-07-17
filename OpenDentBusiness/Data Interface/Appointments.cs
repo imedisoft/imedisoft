@@ -32,7 +32,7 @@ namespace OpenDentBusiness
 			table.Columns.Add("EmailMessageHideIn");
 			string command="SELECT * FROM commlog WHERE PatNum="+patNum//+" AND IsStatementSent=0 "//don't include StatementSent
 				+" ORDER BY CommDateTime";
-			DataTable rawComm=Db.GetTable(command);
+			DataTable rawComm=Database.ExecuteDataTable(command);
 			for(int i=0;i<rawComm.Rows.Count;i++) {
 				row=table.NewRow();
 				row["commDateTime"]=PIn.Date(rawComm.Rows[i]["commDateTime"].ToString()).ToShortDateString();
@@ -48,7 +48,7 @@ namespace OpenDentBusiness
 				WHERE emailmessage.PatNum="+POut.String(patNum)+@"
 				AND emailmessage.AptNum="+POut.Long(aptNum);
 			rawComm.Clear();
-			rawComm=Db.GetTable(command);
+			rawComm=Database.ExecuteDataTable(command);
 			for(int i=0;i<rawComm.Rows.Count;i++) {
 				row=table.NewRow();
 				row["commDateTime"]=PIn.Date(rawComm.Rows[i]["MsgDateTime"].ToString()).ToShortDateString();
@@ -77,7 +77,7 @@ namespace OpenDentBusiness
 			else {
 				command+="labcase.AptNum="+aptNum;
 			}
-			DataTable raw=Db.GetTable(command);
+			DataTable raw=Database.ExecuteDataTable(command);
 			DateTime date;
 			DateTime dateDue;
 			//for(int i=0;i<raw.Rows.Count;i++) {//always return one row:
@@ -118,7 +118,7 @@ namespace OpenDentBusiness
 				+"FROM reqstudent,provider "//schoolcourse "
 				+"WHERE reqstudent.ProvNum=provider.ProvNum "
 				+"AND reqstudent.AptNum="+aptNum;
-			raw=Db.GetTable(command);
+			raw=Database.ExecuteDataTable(command);
 			row["requirements"]="";
 			for(int i=0;i<raw.Rows.Count;i++){
 				if(i!=0){
@@ -161,7 +161,7 @@ namespace OpenDentBusiness
 					}
 					command+=") ";
 				}
-			List<Appointment> retVal=Crud.AppointmentCrud.TableToList(Db.GetTable(command));
+			List<Appointment> retVal=Crud.AppointmentCrud.TableToList(Database.ExecuteDataTable(command));
 			return retVal;
 		}
 
@@ -213,7 +213,7 @@ namespace OpenDentBusiness
 				return new List<Appointment>();
 			}
 			string command="SELECT * FROM appointment WHERE PatNum IN("+string.Join(",",arrPatNums.Select(x => POut.Long(x)))+") ORDER BY AptDateTime";
-			return Crud.AppointmentCrud.TableToList(Db.GetTable(command));
+			return Crud.AppointmentCrud.TableToList(Database.ExecuteDataTable(command));
 		}
 
 		///<summary>Returns a dictionary containing the last completed appointment date of each patient.</summary>
@@ -223,7 +223,7 @@ namespace OpenDentBusiness
 					+"FROM appointment "
 					+"WHERE "+DbHelper.DtimeToDate("AptDateTime")+"<="+DbHelper.Curdate()+" "
 					+"GROUP BY PatNum";
-			DataTable tableLastVisit=Db.GetTable(command);
+			DataTable tableLastVisit=Database.ExecuteDataTable(command);
 			for(int i=0;i<tableLastVisit.Rows.Count;i++) {
 				long patNum=PIn.Long(tableLastVisit.Rows[i]["PatNum"].ToString());
 				DateTime dateLastAppt=PIn.Date(tableLastVisit.Rows[i]["DateLastAppt"].ToString());
@@ -257,7 +257,7 @@ namespace OpenDentBusiness
 			string command="SELECT appointment.AptNum,procedurelog.CodeNum "
 				+"FROM appointment "
 				+"LEFT JOIN procedurelog ON procedurelog.AptNum=appointment.AptNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++) {
 				long aptNum=PIn.Long(table.Rows[i]["AptNum"].ToString());
 				long codeNum=PIn.Long(table.Rows[i]["CodeNum"].ToString());
@@ -289,7 +289,7 @@ namespace OpenDentBusiness
 				+"WHERE AptDateTime >= "+POut.DateT(start)+" "
 				+"AND AptDateTime <= "+POut.DateT(end)+" "
 				+"AND AptStatus="+POut.Int((int)ApptStatus.Scheduled);
-			List<Appointment> retVal=Crud.AppointmentCrud.TableToList(Db.GetTable(command));
+			List<Appointment> retVal=Crud.AppointmentCrud.TableToList(Database.ExecuteDataTable(command));
 			return retVal;
 		}
 
@@ -412,7 +412,7 @@ namespace OpenDentBusiness
 				+" AND AptDateTime<="+POut.DateT(System.DateTime.Now)
 				+" AND PatNum="+POut.Long(patNum)
 				+" ORDER BY AptDateTime DESC LIMIT 1";
-			string result=Db.GetScalar(command);
+			string result=Database.ExecuteString(command);
 			if(String.IsNullOrWhiteSpace(result)) {
 				return 0;
 			}
@@ -422,7 +422,7 @@ namespace OpenDentBusiness
 		///<summary>Gets the appt confirmation status for a single appt.</summary>
 		public static long GetApptConfirmationStatus(long aptNum) {
 			string command="SELECT Confirmed FROM appointment WHERE AptNum="+POut.Long(aptNum);
-			return PIn.Long(Db.GetScalar(command));
+			return Database.ExecuteLong(command);
 		}
 		
 		///<summary></summary>
@@ -612,7 +612,7 @@ namespace OpenDentBusiness
 				}
 				command+=")";
 			}
-			DataTable raw=dcon.GetTable(command);
+			DataTable raw=dcon.ExecuteDataTable(command);
 			//rawProc table was historically used for other purposes.  It is currently only used for production--------------------------
 			//rawProcLab table is only used for Canada and goes hand in hand with the rawProc table, also only used for production.
 			DataTable rawProc;
@@ -667,7 +667,7 @@ namespace OpenDentBusiness
 				}
 				command+=") GROUP BY procedurelog.ProcNum";
 
-				rawProc=dcon.GetTable(command);
+				rawProc=dcon.ExecuteDataTable(command);
 				if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && rawProc.Rows.Count>0) {//Canadian. en-CA or fr-CA
 					command="SELECT procedurelog.ProcNum,ProcNumLab,ProcFee*(UnitQty+BaseUnits) ProcFee,"
 						+"SUM(CASE WHEN claimproc.Status IN("+POut.Int((int)ClaimProcStatus.CapComplete)+","
@@ -695,7 +695,7 @@ namespace OpenDentBusiness
 						command+=rawProc.Rows[i]["ProcNum"].ToString();
 					}
 					command+=") GROUP BY procedurelog.ProcNum";
-					rawProcLab=dcon.GetTable(command);
+					rawProcLab=dcon.ExecuteDataTable(command);
 				}
 			}
 			List<long> listPatNums=new List<long>();
@@ -729,7 +729,7 @@ namespace OpenDentBusiness
 					+"AND procedurelog.ProcDate >= "+POut.Date(DateTime.Now.AddYears(-1))+" "//I'm sure this is the slow part.  Should be easy to make faster with less range
 					+"AND procedurelog.ProcDate <= "+POut.Date(DateTime.Now)+ " "
 					+"GROUP BY patient.PatNum, patient.Guarantor"; 
-				rawInsProc=dcon.GetTable(command);
+				rawInsProc=dcon.ExecuteDataTable(command);
 			}
 			//Guardians-------------------------------------------------------------------------------------------------------------------
 			command="SELECT PatNumChild,PatNumGuardian,Relationship,patient.FName,patient.Preferred "
@@ -746,7 +746,7 @@ namespace OpenDentBusiness
 				command+=raw.Rows[i]["apptPatNum"].ToString();
 			}
 			command+=") ORDER BY Relationship";
-			DataTable rawGuardians=dcon.GetTable(command);
+			DataTable rawGuardians=dcon.ExecuteDataTable(command);
 			DataTable tableCarriers=InsPlans.GetCarrierNames(listPlanNums);
 			Dictionary<long,string> dictCarriers=tableCarriers.Select().ToDictionary(x => PIn.Long(x["PlanNum"].ToString()),x => PIn.String(x["CarrierName"].ToString()));
 			Dictionary<long,string> dictCarrierColors=tableCarriers.Select().ToDictionary(x => PIn.Long(x["PlanNum"].ToString()),x => x["CarrierColor"].ToString());
@@ -1193,7 +1193,7 @@ namespace OpenDentBusiness
 				FROM appointment appt
 				WHERE (appt.ProvNum="+POut.Long(provNum)+" OR appt.ProvHyg="+POut.Long(provNum)+")"+
 				" AND appt.AptDateTime BETWEEN "+POut.DateT(dateTimeAppointmentStart.Date)+" AND "+POut.DateT(dateTimeAppointmentStart.AddDays(1).Date);
-			return dcon.GetTable(command);
+			return dcon.ExecuteDataTable(command);
 		}
 
 		///<summary>Returns a DataTable with all the ApptFields for the appointments passed in.</summary>
@@ -1222,7 +1222,7 @@ namespace OpenDentBusiness
 			}
 			command+=")";
 			DataConnection dcon=new DataConnection();
-			DataTable table= dcon.GetTable(command);
+			DataTable table= dcon.ExecuteDataTable(command);
 			table.TableName="ApptFields";
 			return table;
 		}
@@ -1237,7 +1237,7 @@ namespace OpenDentBusiness
 				+"FROM patfield "
 				+"WHERE PatNum IN ("+String.Join(",",listPatNums)+")";
 			DataConnection dcon=new DataConnection();
-			DataTable table=dcon.GetTable(command);
+			DataTable table=dcon.ExecuteDataTable(command);
 			table.TableName="PatFields";
 			return table;
 		}
@@ -1258,7 +1258,7 @@ namespace OpenDentBusiness
 				+"WHERE fielddeflink.FieldDefLinkNum IS NULL "
 				+"ORDER BY apptfielddef.FieldName";
 			DataConnection dcon=new DataConnection();
-			DataTable table= dcon.GetTable(command);
+			DataTable table= dcon.ExecuteDataTable(command);
 			table.TableName="ApptFields";
 			return table;
 		}
@@ -1287,7 +1287,7 @@ namespace OpenDentBusiness
 			command+="AND AptStatus IN ("+POut.Int((int)ApptStatus.Complete)+","
 																	 +POut.Int((int)ApptStatus.Scheduled)+") "//None of the other statuses
 				+"ORDER BY AptDateTime";
-			DataTable raw=dcon.GetTable(command);
+			DataTable raw=dcon.ExecuteDataTable(command);
 			TimeSpan timeArrived;
 			//DateTime timeSeated;
 			DateTime waitTime;
@@ -1319,7 +1319,7 @@ namespace OpenDentBusiness
 
 		public static DataTable GetApptTable(long aptNum) {
 			string command="SELECT * FROM appointment WHERE AptNum="+aptNum.ToString();
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			table.TableName="Appointment";
 			return table;
 		}
@@ -1330,7 +1330,7 @@ namespace OpenDentBusiness
 			table.Columns.Add("field");
 			table.Columns.Add("value");
 			string command="SELECT * FROM patient WHERE PatNum="+patNum;
-			DataTable rawPat=Db.GetTable(command);
+			DataTable rawPat=Database.ExecuteDataTable(command);
 			DataRow row;
 			//Patient Name--------------------------------------------------------------------------
 			row=table.NewRow();
@@ -1396,7 +1396,7 @@ namespace OpenDentBusiness
 			table.Rows.Add(row);
 			//Patient family balance----------------------------------------------------------------
 			command="SELECT BalTotal,InsEst FROM patient WHERE PatNum="+POut.String(rawPat.Rows[0]["Guarantor"].ToString())+"";
-			DataTable familyBalance=Db.GetTable(command);
+			DataTable familyBalance=Database.ExecuteDataTable(command);
 			row=table.NewRow();
 			row["field"]=Lans.g("FormApptEdit","Family Balance");
 			double balance=PIn.Double(familyBalance.Rows[0]["BalTotal"].ToString())
@@ -1482,7 +1482,7 @@ namespace OpenDentBusiness
 			command+=") "
 				+"AND ProcStatus<>6 "//Not deleted.
 				+"AND IsCanadianLab=0";
-			DataTable rawProc=Db.GetTable(command);
+			DataTable rawProc=Database.ExecuteDataTable(command);
 			for(int i=0;i<rawProc.Rows.Count;i++) {
 				row=table.NewRow();
 				row["AbbrDesc"]=rawProc.Rows[i]["AbbrDesc"].ToString();
@@ -1626,7 +1626,7 @@ namespace OpenDentBusiness
 						+"AND procedurecode.IsHygiene=1)) ";
 			}
 			command+="ORDER BY AptDateTime";
-			DataTable rawtable=Db.GetTable(command);
+			DataTable rawtable=Database.ExecuteDataTable(command);
 			DateTime dateT;
 			DateTime timeAskedToArrive;
 			Patient pat;
@@ -1729,7 +1729,7 @@ namespace OpenDentBusiness
 				command+=" OR appointment.AptNum="+aptNums[i].ToString();
 			}
 			command+=") ORDER BY appointment.AptDateTime";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Manipulates ProcDescript and ProcsColored on the appointment passed in.  Does not update the database.
@@ -1870,7 +1870,7 @@ namespace OpenDentBusiness
 		public static List<long> GetChangedSinceAptNums(DateTime changedSince,DateTime excludeOlderThan) {
 			string command="SELECT AptNum FROM appointment WHERE DateTStamp > "+POut.DateT(changedSince)
 				+" AND AptDateTime > "+POut.DateT(excludeOlderThan);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> aptnums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				aptnums.Add(PIn.Long(dt.Rows[i]["AptNum"].ToString()));
@@ -1894,7 +1894,7 @@ namespace OpenDentBusiness
 				return new DataTable();
 			}
 			string command="SELECT AptNum, AptDateTime FROM appointment WHERE AptNum IN ("+string.Join(",",listAptNums)+")";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets a list of appointments for a period of time in the schedule, whether hidden or not.</summary>
@@ -1954,7 +1954,7 @@ namespace OpenDentBusiness
 				command+=POut.Long(appts[i].AptNum);
 			}
 			command+=")";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string str;
 			for(int i=0;i<appts.Count;i++){
 				str="";
@@ -1978,7 +1978,7 @@ namespace OpenDentBusiness
 			List<long> listCodeNums=new List<long>();
 			if(!string.IsNullOrEmpty(codeRangeStart)) {
 				//Get a list of CodeNums that meet the procedure code range passed in.
-				listCodeNums=Db.GetListLong(
+				listCodeNums=Database.GetListLong(
 					"SELECT CodeNum FROM procedurecode "
 					+"WHERE ProcCode BETWEEN '"+POut.String(codeRangeStart)+"' AND '"+POut.String(codeRangeEnd)+"' ");
 				if(listCodeNums.Count==0) { //ProcCodes do not exist.
@@ -2022,7 +2022,7 @@ namespace OpenDentBusiness
 					+"WHERE procedurelog.AptNum IN("+string.Join(",",listAppts.Select(x => POut.Long(x.AptNum)))+") "
 					+"GROUP BY procedurelog.AptNum,procedurelog.CodeNum";
 				//Sam and Saul tried to speed this up many different ways. This was the best way to make sure we always use indexes on procedurelog.
-				var listFilteredAptNum=Db.GetTable(command).AsEnumerable()
+				var listFilteredAptNum=Database.ExecuteDataTable(command).AsEnumerable()
 					.Select(x => new {
 						AptNum=PIn.Long(x["AptNum"].ToString()),
 						CodeNum=PIn.Long(x["CodeNum"].ToString()),
@@ -2205,7 +2205,7 @@ namespace OpenDentBusiness
 											  WHERE appointment.AptNum IN({String.Join(",",listAptNums)}) 
 											  AND AptStatus={POut.Int((int)ApptStatus.UnschedList)}
 											  GROUP BY appointment.AptNum";
-			return Db.GetTable(command).Select().ToSerializableDictionary(x => PIn.Long(x["AptNum"].ToString()),x => PIn.Int(x["ProcCount"].ToString()));
+			return Database.ExecuteDataTable(command).Select().ToSerializableDictionary(x => PIn.Long(x["AptNum"].ToString()),x => PIn.Int(x["ProcCount"].ToString()));
 		}
 
 		///<summary>Tests to see if this appointment will create a double booking. Returns arrayList with no items in it if no double bookings for 
@@ -2500,7 +2500,7 @@ namespace OpenDentBusiness
 				command+=",Op=0";//We do this so that this appointment does not stop an operatory from being hidden.
 			}
 			command+=" WHERE AptNum="+POut.Long(appt.AptNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(newStatus!=ApptStatus.Scheduled) {
 				AlertItems.DeleteFor(AlertType.CallbackRequested,new List<long> { appt.AptNum });
 			}
@@ -2522,7 +2522,7 @@ namespace OpenDentBusiness
 				+"InsPlan1="+POut.Long(planNum1)+", "
 				+"InsPlan2="+POut.Long(planNum2)+" "
 				+"WHERE AptNum="+POut.Long(appt.AptNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			AlertItems.DeleteFor(AlertType.CallbackRequested,new List<long> { appt.AptNum });
 			Signalods.SetInvalidAppt(appt);
 			HistAppointments.CreateHistoryEntry(appt.AptNum,HistAppointmentAction.Changed);
@@ -2532,7 +2532,7 @@ namespace OpenDentBusiness
 		public static void SetPriority(Appointment appt,ApptPriority priority) {
 			string command="UPDATE appointment SET Priority="+POut.Int((int)priority)
 				+" WHERE AptNum="+POut.Long(appt.AptNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Signalods.SetInvalidAppt(appt);
 			HistAppointments.CreateHistoryEntry(appt.AptNum,HistAppointmentAction.Changed);
 		}
@@ -2540,7 +2540,7 @@ namespace OpenDentBusiness
 		public static void SetAptTimeLocked() {
 			string command="UPDATE appointment SET TimeLocked="+POut.Bool(true);
 			Signalods.SetInvalid(InvalidType.Appointment);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>The confirmStatus will be a DefNum or 0.  Inserts an invalid appointment signalod.</summary>
@@ -2559,7 +2559,7 @@ namespace OpenDentBusiness
 				command+=",DateTimeDismissed="+POut.DateT(DateTime.Now);
 			}
 			command+=" WHERE AptNum="+POut.Long(appt.AptNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(confirmStatus!=PrefC.GetLong(PrefName.ApptEConfirmStatusDeclined)) {//now the status is not 'Callback'
 				AlertItems.DeleteFor(AlertType.CallbackRequested,new List<long> { appt.AptNum });
 			}
@@ -2572,7 +2572,7 @@ namespace OpenDentBusiness
 		///Inserts an invalid appointment signalod.</summary>
 		public static void SetPattern(Appointment appt,string newPattern) {
 			string command="UPDATE appointment SET Pattern='"+POut.String(newPattern)+"' WHERE AptNum="+POut.Long(appt.AptNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Signalods.SetInvalidAppt(appt);
 			HistAppointments.CreateHistoryEntry(appt.AptNum,HistAppointmentAction.Changed);
 		}
@@ -2632,10 +2632,10 @@ namespace OpenDentBusiness
 				command="SELECT COUNT(AptNum) FROM appointment "+where
 					+" AND "+DbHelper.BetweenDates("AptDateTime",DateTime.Today,DateTime.Today.AddDays(days));
 				//Will be true if they have any appointments that will be updated between the Appt Refresh Range.
-				addSignal=Db.GetCount(command)!="0";
+				addSignal=Database.ExecuteString(command)!="0";
 			}
 			command="UPDATE appointment SET appointment.InsPlan1="+planNum1+",appointment.InsPlan2="+planNum2+" "+where;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(addSignal) {
 				Signalods.SetInvalid(InvalidType.Appointment);
 			}
@@ -2818,7 +2818,7 @@ namespace OpenDentBusiness
 		public static void Delete(long aptNum,bool hasSignal=false) {
 			string command;
 			command="SELECT PatNum,IsNewPatient,AptStatus FROM appointment WHERE AptNum="+POut.Long(aptNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count<1){
 				return;//Already deleted or did not exist.
 			}
@@ -2831,19 +2831,19 @@ namespace OpenDentBusiness
 				+" WHERE ProcDate<"+POut.Date(new DateTime(1880,1,1))
 				+" AND PlannedAptNum="+POut.Long(aptNum)
 				+" AND procedurelog.ProcStatus="+POut.Int((int)ProcStat.TP);//Only change procdate for TP procedures
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE procedurelog SET ProcDate="+DbHelper.Curdate()
 				+" WHERE ProcDate<"+POut.Date(new DateTime(1880,1,1))
 				+" AND AptNum="+POut.Long(aptNum)
 				+" AND procedurelog.ProcStatus="+POut.Int((int)ProcStat.TP);//Only change procdate for TP procedures
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(table.Rows[0]["AptStatus"].ToString()=="6") {//planned
 				command="UPDATE procedurelog SET PlannedAptNum =0 WHERE PlannedAptNum = "+POut.Long(aptNum);
 			}
 			else {
 				command="UPDATE procedurelog SET AptNum =0 WHERE AptNum = "+POut.Long(aptNum);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//labcases
 			if(table.Rows[0]["AptStatus"].ToString()=="6") {//planned
 				command="UPDATE labcase SET PlannedAptNum =0 WHERE PlannedAptNum = "+POut.Long(aptNum);
@@ -2851,18 +2851,18 @@ namespace OpenDentBusiness
 			else {
 				command="UPDATE labcase SET AptNum =0 WHERE AptNum = "+POut.Long(aptNum);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//plannedappt
 			command="DELETE FROM plannedappt WHERE AptNum="+POut.Long(aptNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//if deleting a planned appt, make sure there are no appts with NextAptNum (which should be named PlannedAptNum) pointing to this appt
 			if(table.Rows[0]["AptStatus"].ToString()=="6") {//planned
 				command="UPDATE appointment SET NextAptNum=0 WHERE NextAptNum="+POut.Long(aptNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//apptfield
 			command="DELETE FROM apptfield WHERE AptNum = "+POut.Long(aptNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="SELECT * FROM appointment WHERE AptNum = "+POut.Long(aptNum);
 			Appointment apt=Crud.AppointmentCrud.SelectOne(command);
 			HistAppointments.CreateHistoryEntry(apt,HistAppointmentAction.Deleted);
@@ -2871,7 +2871,7 @@ namespace OpenDentBusiness
 			//we will not reset item orders here
 			command="DELETE FROM appointment WHERE AptNum = "+POut.Long(aptNum);
 			//ApptComms.DeleteForAppt(aptNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(hasSignal) {
 				Signalods.SetInvalidAppt(null,apt);//pass in the old appointment that we are deleting
 			}
@@ -2891,7 +2891,7 @@ namespace OpenDentBusiness
 				return;
 			}
 			string command="SELECT PatNum,IsNewPatient,AptStatus,AptNum FROM appointment WHERE AptNum IN("+String.Join(",",aptNums)+")";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if(table.Rows.Count<1) {
 				return;//All entries were already deleted or did not exist.
 			}
@@ -2917,35 +2917,35 @@ namespace OpenDentBusiness
 				+" WHERE ProcDate<"+POut.Date(new DateTime(1880,1,1))
 				+" AND (AptNum IN("+String.Join(",",listAllAptNums)+") OR PlannedAptNum IN("+String.Join(",",listAllAptNums)+"))"
 				+" AND procedurelog.ProcStatus="+POut.Int((int)ProcStat.TP);//Only change procdate for TP procedures
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(listPlannedAptNums.Count!=0) {
 				command="UPDATE procedurelog SET PlannedAptNum=0 WHERE PlannedAptNum IN("+String.Join(",",listPlannedAptNums)+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			if(listNotPlannedAptNums.Count!=0) {
 				command="UPDATE procedurelog SET AptNum=0 WHERE AptNum IN("+String.Join(",",listNotPlannedAptNums)+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//labcases
 			if(listPlannedAptNums.Count!=0) {
 				command="UPDATE labcase SET PlannedAptNum=0 WHERE PlannedAptNum IN("+String.Join(",",listPlannedAptNums)+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			if(listNotPlannedAptNums.Count!=0) {
 				command="UPDATE labcase SET AptNum=0 WHERE AptNum IN("+String.Join(",",listNotPlannedAptNums)+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//plannedappt
 			command="DELETE FROM plannedappt WHERE AptNum IN("+String.Join(",",listAllAptNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//if deleting a planned appt, make sure there are no appts with NextAptNum (which should be named PlannedAptNum) pointing to this appt
 			if(listPlannedAptNums.Count!=0) {
 				command="UPDATE appointment SET NextAptNum=0 WHERE NextAptNum IN("+String.Join(",",listNotPlannedAptNums)+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//apptfield
 			command="DELETE FROM apptfield WHERE AptNum IN("+String.Join(",",listAllAptNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Appointments.ClearFkey(listAllAptNums);//Zero securitylog FKey column for row to be deleted.
 			//we will not reset item orders here
 			//ApptComms.DeleteForAppts(listAllAptNums);
@@ -2954,7 +2954,7 @@ namespace OpenDentBusiness
 			listApts.ForEach(x => HistAppointments.CreateHistoryEntry(x,HistAppointmentAction.Deleted));
 			AlertItems.DeleteFor(AlertType.CallbackRequested,listApts.Select(x => x.AptNum).ToList());
 			command="DELETE FROM appointment WHERE AptNum IN("+String.Join(",",listAllAptNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Signalods.SetInvalid(InvalidType.Appointment);
 		}
 		#endregion
@@ -3054,7 +3054,7 @@ namespace OpenDentBusiness
 			if(appt.AptNum != 0) {//If we are checking for an already existing appointment, then we don't count this appointment as filling the slot.
 				command+="AND appointment.AptNum!="+POut.Long(appt.AptNum);
 			}
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				return false;
 			}
 			return !Appointments.CheckForBlockoutOverlap(appt);
@@ -3754,7 +3754,7 @@ namespace OpenDentBusiness
 						+"AND NOT EXISTS(SELECT * FROM appointment a2 WHERE a2.PatNum='"+POut.Long(patNum)+"' AND a2.NextAptNum=appointment.AptNum)) ";
 				}
 				command+=")";
-			if(Db.GetScalar(command)=="0") {
+			if(Database.ExecuteInt(command)==0) {
 				return false;
 			}
 			return true;
@@ -3763,7 +3763,7 @@ namespace OpenDentBusiness
 		///<summary>Returns true if appt has at least 1 proc attached.</summary>
 		public static bool HasProcsAttached(long aptNum) {
 			string command="SELECT COUNT(*) FROM procedurelog WHERE AptNum="+POut.Long(aptNum);
-			if(PIn.Int(Db.GetScalar(command))>0) {
+			if(Database.ExecuteInt(command)>0) {
 				return true;
 			}
 			return false;
@@ -3776,7 +3776,7 @@ namespace OpenDentBusiness
 			}
 			string command=$"SELECT COUNT(*) FROM procedurelog " +
 					$"WHERE AptNum={POut.Long(aptNum)} AND ProcStatus={POut.Int((int)ProcStat.C)}";
-			return Db.GetScalar(command)!="0";
+			return Database.ExecuteInt(command)!=0;
 		}
 
 		/// <summary>Checks if the specialty exists in the list of specialties for the clinic.</summary>

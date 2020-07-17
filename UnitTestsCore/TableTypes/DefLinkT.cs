@@ -1,4 +1,5 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the deflink table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearDefLinkTable() {
 			string command="DELETE FROM deflink WHERE DefLinkNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

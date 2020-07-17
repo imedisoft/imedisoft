@@ -6,13 +6,14 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Runtime.ExceptionServices;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class ReportsComplex {
 
 		///<summary>Gets a table of data using normal permissions.</summary>
 		public static DataTable GetTable(string command) {
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Wrapper method to call the passed-in func in a seperate thread connected to the reporting server.

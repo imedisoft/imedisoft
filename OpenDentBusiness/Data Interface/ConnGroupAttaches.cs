@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -36,7 +37,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM conngroupattach WHERE "
 				+"CentralConnectionNum="+POut.Long(centralConnectionNum)
 				+" AND ConnectionGroupNum="+POut.Long(connectionGroupNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -44,7 +45,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM conngroupattach WHERE "
 				+"ConnectionGroupNum="+POut.Long(connectionGroupNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

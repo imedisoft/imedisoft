@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 
@@ -135,7 +136,7 @@ namespace OpenDentBusiness{
 				throw new ApplicationException(Lans.g("Medications",s));
 			}
 			string command = "DELETE from medication WHERE medicationNum = '"+Cur.MedicationNum.ToString()+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns a string if medication is in use in medicationpat, allergydef, eduresources, or preference.MedicationsIndicateNone. The string will explain where the medication is in use.</summary>
@@ -152,19 +153,19 @@ namespace OpenDentBusiness{
 				return "You can not delete a medication that has brand names attached.";
 			}
 			string command="SELECT COUNT(*) FROM medicationpat WHERE MedicationNum="+POut.Long(med.MedicationNum);
-			if(PIn.Int(Db.GetCount(command))!=0) {
+			if(PIn.Int(Database.ExecuteString(command))!=0) {
 				return "Not allowed to delete medication because it is in use by a patient";
 			}
 			command="SELECT COUNT(*) FROM allergydef WHERE MedicationNum="+POut.Long(med.MedicationNum);
-			if(PIn.Int(Db.GetCount(command))!=0) {
+			if(PIn.Int(Database.ExecuteString(command))!=0) {
 				return "Not allowed to delete medication because it is in use by an allergy";
 			}
 			command="SELECT COUNT(*) FROM eduresource WHERE MedicationNum="+POut.Long(med.MedicationNum);
-			if(PIn.Int(Db.GetCount(command))!=0) {
+			if(PIn.Int(Database.ExecuteString(command))!=0) {
 				return "Not allowed to delete medication because it is in use by an education resource";
 			}
 			command="SELECT COUNT(*) FROM rxalert WHERE MedicationNum="+POut.Long(med.MedicationNum);
-			if(PIn.Int(Db.GetCount(command))!=0) {
+			if(PIn.Int(Database.ExecuteString(command))!=0) {
 				return "Not allowed to delete medication because it is in use by an Rx alert";
 			}
 			//If any more tables are added here in the future, then also update GetAllInUseMedicationNums() to include the new table.
@@ -181,7 +182,7 @@ namespace OpenDentBusiness{
 				+"UNION SELECT MedicationNum FROM allergydef WHERE MedicationNum!=0 "
 				+"UNION SELECT MedicationNum FROM eduresource WHERE MedicationNum!=0 "
 				+"GROUP BY MedicationNum";
-			List <long> listMedicationNums=Db.GetListLong(command);
+			List <long> listMedicationNums=Database.GetListLong(command);
 			if(PrefC.GetLong(PrefName.MedicationsIndicateNone)!=0) {
 				listMedicationNums.Add(PrefC.GetLong(PrefName.MedicationsIndicateNone));
 			}
@@ -195,7 +196,7 @@ namespace OpenDentBusiness{
 				"SELECT CONCAT(CONCAT(CONCAT(CONCAT(LName,', '),FName),' '),Preferred) FROM medicationpat,patient "
 				+"WHERE medicationpat.PatNum=patient.PatNum "
 				+"AND medicationpat.MedicationNum="+POut.Long(medicationNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string[] retVal=new string[table.Rows.Count];
 			for(int i=0;i<table.Rows.Count;i++){
 				retVal[i]=PIn.String(table.Rows[i][0].ToString());
@@ -210,7 +211,7 @@ namespace OpenDentBusiness{
 				"SELECT MedName FROM medication "
 				+"WHERE GenericNum="+medicationNum.ToString()
 				+" AND MedicationNum !="+medicationNum.ToString();//except this med
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string[] retVal=new string[table.Rows.Count];
 			for(int i=0;i<table.Rows.Count;i++){
 				retVal[i]=PIn.String(table.Rows[i][0].ToString());
@@ -303,7 +304,7 @@ namespace OpenDentBusiness{
 		public static List<long> GetChangedSinceMedicationNums(DateTime changedSince) {
 			
 			string command="SELECT MedicationNum FROM medication WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> medicationNums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				medicationNums.Add(PIn.Long(dt.Rows[i]["MedicationNum"].ToString()));
@@ -324,7 +325,7 @@ namespace OpenDentBusiness{
 					strMedicationNums+="MedicationNum='"+medicationNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM medication WHERE "+strMedicationNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();
@@ -374,7 +375,7 @@ namespace OpenDentBusiness{
 		public static long CountPats(long medNum) {
 			
 			string command="SELECT COUNT(DISTINCT medicationpat.PatNum) FROM medicationpat WHERE MedicationNum="+POut.Long(medNum);
-			return PIn.Long(Db.GetScalar(command));
+			return Database.ExecuteLong(command);
 		}
 
 		///<summary>Medication merge tool.  Returns the number of rows changed.  Deletes the medication associated with medNumInto.</summary>
@@ -394,12 +395,12 @@ namespace OpenDentBusiness{
 				command="UPDATE "+tableAndKeyName[0]
 					+" SET "+tableAndKeyName[1]+"="+POut.Long(medNumInto)
 					+" WHERE "+tableAndKeyName[1]+"="+POut.Long(medNumFrom);
-				rowsChanged+=Db.NonQ(command);
+				rowsChanged+=Database.ExecuteNonQuery(command);
 			}
 			command="SELECT medication.RxCui FROM medication WHERE MedicationNum="+medNumInto; //update medicationpat's RxNorms to match medication.
-			string rxNorm=Db.GetScalar(command);
+			string rxNorm=Database.ExecuteString(command);
 			command="UPDATE medicationpat SET RxCui="+rxNorm+" WHERE MedicationNum="+medNumInto;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="SELECT * FROM ehrtrigger WHERE MedicationNumList LIKE '% "+POut.Long(medNumFrom)+" %'";
 			List<EhrTrigger> ListEhrTrigger=Crud.EhrTriggerCrud.SelectMany(command); //get all ehr triggers with matching mednum in mednumlist
 			for(int i=0;i<ListEhrTrigger.Count;i++) {//for each trigger...

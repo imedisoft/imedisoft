@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -126,7 +127,7 @@ namespace OpenDentBusiness {
 		public static bool IsRestricted(long patNum,PatRestrict patRestrictType) {
 			
 			string command="SELECT COUNT(*) FROM patrestriction WHERE PatNum="+POut.Long(patNum)+" AND PatRestrictType="+POut.Int((int)patRestrictType);
-			if(PIn.Int(Db.GetCount(command))>0) {
+			if(PIn.Int(Database.ExecuteString(command))>0) {
 				return true;
 			}
 			else {
@@ -157,7 +158,7 @@ namespace OpenDentBusiness {
 		public static void RemovePatRestriction(long patNum,PatRestrict patRestrictType) {
 			
 			string command="DELETE FROM patrestriction WHERE PatNum="+POut.Long(patNum)+" AND PatRestrictType="+POut.Int((int)patRestrictType);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			return;
 		}
 

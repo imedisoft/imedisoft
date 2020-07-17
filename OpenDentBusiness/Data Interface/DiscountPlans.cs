@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -49,7 +50,7 @@ namespace OpenDentBusiness{
 				+ "FROM patient "
 				+ "LEFT JOIN discountplan ON discountplan.DiscountPlanNum=patient.DiscountPlanNum "
 				+ $"WHERE patient.PatNum IN ({string.Join(",",listPatNums)})";
-			return Db.GetTable(command).Select()
+			return Database.ExecuteDataTable(command).Select()
 				.ToSerializableDictionary(x => PIn.Long(x["PatNum"].ToString()),x => PIn.Long(x["FeeSchedNum"].ToString()));
 		}
 
@@ -75,7 +76,7 @@ namespace OpenDentBusiness{
 		public static void DropForPatient(long patNum) {
 			
 			string command="UPDATE patient SET DiscountPlanNum=0 WHERE PatNum="+POut.Long(patNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Changes the DiscountPlanNum of all patients that have _planFrom.DiscountPlanNum to _planInto.DiscountPlanNum</summary>
@@ -83,7 +84,7 @@ namespace OpenDentBusiness{
 			
 			string command="UPDATE patient SET DiscountPlanNum="+POut.Long(planInto.DiscountPlanNum)
 				+" WHERE DiscountPlanNum="+POut.Long(planFrom.DiscountPlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Delete the discount plan from the database.
 			Crud.DiscountPlanCrud.Delete(planFrom.DiscountPlanNum);
 		}
@@ -97,7 +98,7 @@ namespace OpenDentBusiness{
 			string command="SELECT LName,FName FROM patient WHERE DiscountPlanNum="+POut.Long(planNum)+" "+
 				"AND PatStatus NOT IN("+POut.Int((int)PatientStatus.Deleted)+","+POut.Int((int)PatientStatus.Deceased)+") ";
 			//No Preferred or MiddleI needed because this logic needs to match FormInsPlan.
-			return Db.GetTable(command).Select().Select(x => Patients.GetNameLFnoPref(x["LName"].ToString(),x["FName"].ToString(),"")).ToList();
+			return Database.ExecuteDataTable(command).Select().Select(x => Patients.GetNameLFnoPref(x["LName"].ToString(),x["FName"].ToString(),"")).ToList();
 		}
 
 		///<summary>Returns an empty list if planNum is 0.</summary>
@@ -108,7 +109,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(PatNum) FROM patient WHERE DiscountPlanNum="+POut.Long(planNum)+" "+
 				"AND PatStatus NOT IN("+POut.Int((int)PatientStatus.Deleted)+","+POut.Int((int)PatientStatus.Deceased)+") ";
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Returns a dictionary where key=DiscountPlanNum and value=count of patients for the DiscountPlanNum.
@@ -122,7 +123,7 @@ namespace OpenDentBusiness{
 				"WHERE DiscountPlanNum IN ("+string.Join(",",listPlanNums)+") " +
 				"AND PatStatus NOT IN("+POut.Int((int)PatientStatus.Deleted)+","+POut.Int((int)PatientStatus.Deceased)+") "+
 				"GROUP BY DiscountPlanNum";
-			return Db.GetTable(command).Select()
+			return Database.ExecuteDataTable(command).Select()
 				.ToSerializableDictionary(x => PIn.Long(x["DiscountPlanNum"].ToString()),x => PIn.Int(x["PatCount"].ToString()));
 		}
 	}

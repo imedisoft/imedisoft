@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Text;
+using Imedisoft.Data;
 using MySql.Data.MySqlClient;
 
 namespace OpenDentBusiness{
@@ -60,7 +61,7 @@ namespace OpenDentBusiness{
 			try
 			{
 
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 
 			}
 			catch (Exception ex)

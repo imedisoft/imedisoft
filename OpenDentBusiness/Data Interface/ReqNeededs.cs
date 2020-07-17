@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
+using Imedisoft.Data;
 using OpenDentBusiness.Crud;
 
 namespace OpenDentBusiness
@@ -36,7 +37,7 @@ namespace OpenDentBusiness
 			string command = "SELECT * FROM reqneeded WHERE SchoolClassNum=" + POut.Long(schoolClass)
 				+ " AND SchoolCourseNum=" + POut.Long(schoolCourse)
 				+ " ORDER BY Descript";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static ReqNeeded GetReq(long reqNeededNum)
@@ -67,7 +68,7 @@ namespace OpenDentBusiness
 			//still need to validate
 			string command = "DELETE FROM reqneeded "
 				+ "WHERE ReqNeededNum = " + POut.Long(reqNeededNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns a list with all reqneeded entries in the database.</summary>

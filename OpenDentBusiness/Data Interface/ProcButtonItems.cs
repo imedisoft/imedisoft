@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -94,7 +95,7 @@ namespace OpenDentBusiness{
 		public static void Delete(ProcButtonItem item) {
 			
 			string command="DELETE FROM procbuttonitem WHERE ProcButtonItemNum = '"+POut.Long(item.ProcButtonItemNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Sorted by Item Order.</summary>
@@ -118,7 +119,7 @@ namespace OpenDentBusiness{
 		public static void DeleteAllForButton(long procButtonNum) {
 			
 			string command= "DELETE from procbuttonitem WHERE procbuttonnum = '"+POut.Long(procButtonNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 

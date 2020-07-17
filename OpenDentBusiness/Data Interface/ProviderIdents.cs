@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace OpenDentBusiness{
 			
 			string command= "DELETE FROM providerident "
 				+"WHERE ProviderIdentNum = "+POut.Long(pi.ProviderIdentNum);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets all supplemental identifiers that have been attached to this provider. Used in the provider edit window.</summary>
@@ -112,7 +113,7 @@ namespace OpenDentBusiness{
 		public static void DeleteAllForProv(long provNum) {
 			
 			string command= "DELETE from providerident WHERE provnum = '"+POut.Long(provNum)+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		/// <summary></summary>

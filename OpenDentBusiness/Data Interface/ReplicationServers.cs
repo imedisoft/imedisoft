@@ -7,6 +7,7 @@ using System.Net;
 using System.Reflection;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	public class ReplicationServers{
@@ -128,7 +129,7 @@ namespace OpenDentBusiness{
 		public static long GetServer_id() {
 			
 			string command="SHOW VARIABLES LIKE 'server_id'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return PIn.Long(table.Rows[0][1].ToString());
 		}
 
@@ -194,7 +195,7 @@ namespace OpenDentBusiness{
 		public static bool KeyInUse(string tablename,string field,long keynum) {
 			
 			string command="SELECT COUNT(*) FROM "+tablename+" WHERE "+field+"="+keynum.ToString();
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;//already in use
@@ -218,7 +219,7 @@ namespace OpenDentBusiness{
 			string command="SELECT COUNT(*) FROM replicationserver WHERE ServerId="+POut.Long(Server_id)//does trigger another query if during startup
 				+" AND UpdateBlocked=1";
 			try {
-				if(Db.GetScalar(command)=="0") {
+				if(Database.ExecuteScalar(command)=="0") {
 					return false;
 				}
 				else {
@@ -247,7 +248,7 @@ namespace OpenDentBusiness{
 		public static DataTable GetSlaveStatus() {
 			
 			string command="SHOW SLAVE STATUS";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 	}
 }

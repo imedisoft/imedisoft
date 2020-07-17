@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,9 +51,9 @@ namespace OpenDentBusiness{
 		public static void Delete(long formPatNum) {
 			
 			string command="DELETE FROM formpat WHERE FormPatNum="+POut.Long(formPatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM question WHERE FormPatNum="+POut.Long(formPatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -65,7 +66,7 @@ namespace OpenDentBusiness
 
 			string command = "DELETE FROM guardian "
 				+ "WHERE PatNumChild IN (SELECT p.PatNum FROM patient p WHERE p.Guarantor=" + POut.Long(patNumGuar) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -74,7 +75,7 @@ namespace OpenDentBusiness
 
 			string command = "SELECT COUNT(*) FROM guardian "
 				+ "WHERE PatNumChild IN (SELECT p.PatNum FROM patient p WHERE p.Guarantor=" + POut.Long(patNumGuar) + ")";
-			if (Db.GetCount(command) == "0")
+			if (Database.ExecuteString(command) == "0")
 			{
 				return false;
 			}

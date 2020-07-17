@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,7 +46,7 @@ namespace OpenDentBusiness{
 		public static bool Exists(long claimPaymentNum) {
 			
 			string command="SELECT COUNT(*) FROM eobattach WHERE ClaimPaymentNum="+POut.Long(claimPaymentNum);
-			if(Db.GetScalar(command)=="0") {
+			if(Database.ExecuteScalar(command)=="0") {
 				return false;
 			}
 			return true;
@@ -74,7 +75,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long eobAttachNum) {
 			
 			string command= "DELETE FROM eobattach WHERE EobAttachNum = "+POut.Long(eobAttachNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 

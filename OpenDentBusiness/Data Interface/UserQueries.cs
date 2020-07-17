@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 
@@ -219,7 +220,7 @@ namespace OpenDentBusiness{
 		public static void Delete(UserQuery Cur){
 			
 			string command = "DELETE from userquery WHERE querynum = '"+POut.Long(Cur.QueryNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

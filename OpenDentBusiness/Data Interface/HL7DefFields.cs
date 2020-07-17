@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -101,7 +102,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long hL7DefFieldNum) {
 			
 			string command= "DELETE FROM hl7deffield WHERE HL7DefFieldNum = "+POut.Long(hL7DefFieldNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

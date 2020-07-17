@@ -1,4 +1,5 @@
 ﻿using DataConnectionBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,7 @@ namespace OpenDentBusiness
     public class HouseCallsQueries
 	{
 		public static DataTable GetHouseCalls(DateTime FromDate, DateTime ToDate) 
-			=> Db.GetTable(
+			=> Database.ExecuteDataTable(
 				"SELECT patient.LName,patient.FName,patient.Preferred,patient.PatNum,patient.ChartNumber," +
 				"patient.HmPhone,patient.WkPhone,patient.Email,patient.Address,patient.Address2," +
 				"patient.City,patient.State,patient.Zip,appointment.AptDateTime,appointment.ProcDescript,patient.PriProv," +

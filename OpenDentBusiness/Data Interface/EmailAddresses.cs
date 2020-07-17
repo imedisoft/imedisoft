@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -180,7 +181,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long emailAddressNum) {
 			
 			string command= "DELETE FROM emailaddress WHERE EmailAddressNum = "+POut.Long(emailAddressNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -50,7 +51,7 @@ namespace OpenDentBusiness{
 		///<summary></summary>
 		public static void Delete(long allergyNum) {
 			string command= "DELETE FROM allergy WHERE AllergyNum = "+POut.Long(allergyNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets all allergies for patient whether active or not.</summary>
@@ -64,7 +65,7 @@ namespace OpenDentBusiness{
 
 		public static List<long> GetChangedSinceAllergyNums(DateTime changedSince) {
 			string command="SELECT AllergyNum FROM allergy WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> allergynums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				allergynums.Add(PIn.Long(dt.Rows[i]["AllergyNum"].ToString()));
@@ -84,7 +85,7 @@ namespace OpenDentBusiness{
 					strAllergyNums+="AllergyNum='"+allergyNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM allergy WHERE "+strAllergyNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();
@@ -99,7 +100,7 @@ namespace OpenDentBusiness{
 			string command="SELECT CONCAT(CONCAT(CONCAT(CONCAT(LName,', '),FName),' '),Preferred) FROM allergy,patient "
 				+"WHERE allergy.PatNum=patient.PatNum "
 				+"AND allergy.AllergyDefNum="+POut.Long(allergyDefNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string[] retVal=new string[table.Rows.Count];
 			for(int i=0;i<table.Rows.Count;i++) {
 				retVal[i]=PIn.String(table.Rows[i][0].ToString());
@@ -114,13 +115,13 @@ namespace OpenDentBusiness{
 			}
 			string command="SELECT DISTINCT PatNum FROM allergy WHERE PatNum IN ("+string.Join(",",listPatNums)+") "
 				+"AND allergy.AllergyDefNum != "+POut.Long(PrefC.GetLong(PrefName.AllergiesIndicateNone));
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all allergies of a patient</summary>
 		public static void ResetTimeStamps(long patNum) {
 			string command="UPDATE allergy SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum ="+POut.Long(patNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all allergies of a patient that are the status specified</summary>
@@ -129,7 +130,7 @@ namespace OpenDentBusiness{
 			if(onlyActive) {
 				command+=" AND StatusIsActive = "+POut.Bool(onlyActive);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 

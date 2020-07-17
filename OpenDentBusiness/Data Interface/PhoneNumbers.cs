@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -46,7 +47,7 @@ namespace OpenDentBusiness{
 				SELECT 0,PatNum,WirelessPhone,'',{(int)PhoneType.WirelessPhone} FROM patient WHERE WirelessPhone!=''";
 			List<PhoneNumber> listPhNums=Crud.PhoneNumberCrud.SelectMany(command);
 			command="TRUNCATE TABLE phonenumber";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			listPhNums.ForEach(x => x.PhoneNumberDigits=RemoveNonDigitsAndTrimStart(x.PhoneNumberVal));
 			listPhNums.RemoveAll(x => x.PhoneType!=PhoneType.Other && string.IsNullOrEmpty(x.PhoneNumberDigits));
 			Crud.PhoneNumberCrud.InsertMany(listPhNums);
@@ -67,7 +68,7 @@ namespace OpenDentBusiness{
 			}
 			string command=$@"DELETE FROM phonenumber
 				WHERE PatNum IN ({string.Join(",",listPats.Select(x => POut.Long(x.PatNum)))}) AND PhoneType!={(int)PhoneType.Other}";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			List<PhoneNumber> listForInsert=listPats
 				.SelectMany(x => Enumerable.Range(1,3)
 					.Select(y => {

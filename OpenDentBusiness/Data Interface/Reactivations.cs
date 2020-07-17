@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -123,7 +124,7 @@ namespace OpenDentBusiness{
 					FROM commlog
 					WHERE commlog.CommType="+POut.Long(commType)+" "+
 					"AND commlog.PatNum="+POut.Long(patNum);
-			return PIn.Int(Db.GetScalar(cmd));
+			return Database.ExecuteInt(cmd);
 		}
 
 		public static DateTime GetDateLastContacted(long patNum) {
@@ -139,7 +140,7 @@ namespace OpenDentBusiness{
 					WHERE commlog.CommType="+POut.Long(commType)+" "+
 					"AND commlog.PatNum="+POut.Long(patNum)+" "+
 					"GROUP BY commlog.PatNum";
-			return PIn.Date(Db.GetScalar(cmd));
+			return PIn.Date(Database.ExecuteString(cmd));
 		}
 
 		///<summary>Gets the list of patients that need to be on the reactivation list based on the passed in filters.</summary>
@@ -243,7 +244,7 @@ namespace OpenDentBusiness{
 					cmd+=" ORDER BY MAX(proc.ProcDate)";
 					break;
 			}
-			DataTable dtReturn=Db.GetTable(cmd);
+			DataTable dtReturn=Database.ExecuteDataTable(cmd);
 			foreach(DataRow row in dtReturn.Rows) {
 				//FOR REVIEW: currently, we are displaying PreferRecallMethod, which is what RecallList also does.  Just want to make sure we don't want to use PreferContactMethod
 				row["ContactMethod"]=Recalls.GetContactFromMethod(PIn.Enum<ContactMethod>(row["PreferRecallMethod"].ToString()),groupFamilies
@@ -311,7 +312,7 @@ namespace OpenDentBusiness{
 		public static void UpdateStatus(long reactivationNum,long statusDefNum) {
 			
 			string cmd="UPDATE reactivation SET ReactivationStatus="+POut.Long(statusDefNum) +" WHERE ReactivationNum="+POut.Long(reactivationNum);
-			Db.NonQ(cmd);
+			Database.ExecuteNonQuery(cmd);
 		}
 
 		#endregion Update

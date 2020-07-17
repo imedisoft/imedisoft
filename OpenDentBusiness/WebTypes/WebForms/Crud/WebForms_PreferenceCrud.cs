@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using OpenDentBusiness.WebTypes.WebForms;
 
@@ -15,7 +16,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 		public static WebForms_Preference SelectOne(long dentalOfficeID) {
 			string command="SELECT * FROM webforms_preference "
 				+"WHERE DentalOfficeID = "+POut.Long(dentalOfficeID);
-			List<WebForms_Preference> list=TableToList(DataCore.GetTable(command));
+			List<WebForms_Preference> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -24,7 +25,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 
 		///<summary>Gets one WebForms_Preference object from the database using a query.</summary>
 		public static WebForms_Preference SelectOne(string command) {
-			List<WebForms_Preference> list=TableToList(DataCore.GetTable(command));
+			List<WebForms_Preference> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -33,7 +34,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 
 		///<summary>Gets a list of WebForms_Preference objects from the database using a query.</summary>
 		public static List<WebForms_Preference> SelectMany(string command) {
-			List<WebForms_Preference> list=TableToList(DataCore.GetTable(command));
+			List<WebForms_Preference> list=TableToList(Database.ExecuteDataTable(command));
 			return list;
 		}
 
@@ -93,10 +94,10 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 				+"'"+POut.String(webForms_Preference.CultureName)+"',"
 				+    POut.Bool  (webForms_Preference.DisableSignatures)+")";
 			if(useExistingPK) {
-				DataCore.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			else {
-				webForms_Preference.DentalOfficeID=DataCore.NonQ(command,true);
+				webForms_Preference.DentalOfficeID=Database.ExecuteInsert(command);
 			}
 			return webForms_Preference.DentalOfficeID;
 		}
@@ -134,7 +135,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 				sbRow.Append("'"+POut.String(webForms_Preference.CultureName)+"'"); sbRow.Append(",");
 				sbRow.Append(POut.Bool(webForms_Preference.DisableSignatures)); sbRow.Append(")");
 				if(sbCommands.Length+sbRow.Length+1 > TableBase.MaxAllowedPacketCount && countRows > 0) {
-					DataCore.NonQ(sbCommands.ToString());
+					Database.ExecuteNonQuery(sbCommands.ToString());
 					sbCommands=null;
 				}
 				else {
@@ -144,7 +145,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 					sbCommands.Append(sbRow.ToString());
 					countRows++;
 					if(index==listWebForms_Preferences.Count-1) {
-						DataCore.NonQ(sbCommands.ToString());
+						Database.ExecuteNonQuery(sbCommands.ToString());
 					}
 					index++;
 				}
@@ -158,7 +159,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 				+"CultureName      = '"+POut.String(webForms_Preference.CultureName)+"', "
 				+"DisableSignatures=  "+POut.Bool  (webForms_Preference.DisableSignatures)+" "
 				+"WHERE DentalOfficeID = "+POut.Long(webForms_Preference.DentalOfficeID);
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one WebForms_Preference in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
@@ -181,7 +182,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 			}
 			command="UPDATE webforms_preference SET "+command
 				+" WHERE DentalOfficeID = "+POut.Long(webForms_Preference.DentalOfficeID);
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			return true;
 		}
 
@@ -189,7 +190,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 		public static void Delete(long dentalOfficeID) {
 			string command="DELETE FROM webforms_preference "
 				+"WHERE DentalOfficeID = "+POut.Long(dentalOfficeID);
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

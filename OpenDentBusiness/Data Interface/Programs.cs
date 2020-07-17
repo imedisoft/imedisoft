@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -90,9 +91,9 @@ namespace OpenDentBusiness{
 		public static void Delete(Program prog){
 			
 			string command = "DELETE from toolbutitem WHERE ProgramNum = "+POut.Long(prog.ProgramNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command = "DELETE from program WHERE ProgramNum = '"+prog.ProgramNum.ToString()+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns true if a Program link with the given name or number exists and is enabled. Handles null.</summary>

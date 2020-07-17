@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing.Printing;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 
@@ -101,7 +102,7 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; private static.
 			string command="DELETE FROM printer "
 				+"WHERE PrinterNum = "+POut.Long(cur.PrinterNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static bool PrinterIsInstalled(string name){
@@ -131,7 +132,7 @@ namespace OpenDentBusiness{
 			//Computer compCur=Computers.GetCur();
 			string command="SELECT ComputerNum FROM computer "
 				+"WHERE CompName = '"+POut.String(computerName)+"'";
- 			DataTable table=Db.GetTable(command);
+ 			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0){
 				return;//computer not yet entered in db.
 			}
@@ -163,7 +164,7 @@ namespace OpenDentBusiness{
 			
 			//first, delete all entries
 			string command="DELETE FROM printer";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 			//then, add one printer for each computer. Default and show prompt
 			Computers.RefreshCache();
 			Printer cur;

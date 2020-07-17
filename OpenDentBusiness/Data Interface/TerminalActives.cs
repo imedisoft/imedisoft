@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace OpenDentBusiness {
 				return;//invalid TerminalActiveNum, just return
 			}
 			string command="UPDATE terminalactive SET PatNum="+POut.Long(patNum)+" WHERE TerminalActiveNum="+POut.Long(termNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Signalods.SetInvalid(InvalidType.EClipboard);
 		}
 
@@ -85,7 +86,7 @@ namespace OpenDentBusiness {
 		public static void DeleteAllForComputer(string computerName){
 			
 			string command="DELETE FROM terminalactive WHERE ComputerName ='"+POut.String(computerName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		///<summary>This can be used to delete a specific terminalactive by computer name, session ID and process ID, e.g. when the terminal window closes
@@ -101,7 +102,7 @@ namespace OpenDentBusiness {
 			if(excludeId>0) {
 				command+=" AND ProcessId!="+POut.Int(excludeId);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Signalods.SetInvalid(InvalidType.EClipboard);
 		}
 
@@ -112,7 +113,7 @@ namespace OpenDentBusiness {
 			string command="SELECT COUNT(*) FROM terminalactive WHERE PatNum="+POut.Long(patNum)
 				+" AND (TerminalStatus="+POut.Long((int)TerminalStatusEnum.PatientInfo)
 				+" OR TerminalStatus="+POut.Long((int)TerminalStatusEnum.UpdateOnly)+")";
-			return Db.GetCount(command)!="0";
+			return Database.ExecuteString(command)!="0";
 		}
 
 		///<summary>Returns true if a terminal is already in the database with ComputerName=compName and ClientName=clientName or if either names are null
@@ -125,7 +126,7 @@ namespace OpenDentBusiness {
 			string command="SELECT COUNT(*) FROM terminalactive "
 				+"WHERE ComputerName='"+POut.String(compName)+"' "
 				+"AND SessionName='"+POut.String(clientName)+"'";
-			return Db.GetCount(command)!="0";
+			return Database.ExecuteString(command)!="0";
 		}
 	
 		

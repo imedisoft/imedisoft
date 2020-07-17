@@ -12,6 +12,7 @@ using System.Threading;
 using System.Xml;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using OpenDentBusiness.WebTypes.WebSched.TimeSlot;
 
 namespace OpenDentBusiness {
@@ -415,7 +416,7 @@ namespace OpenDentBusiness {
 			#region Run Queries and Create Dictionaries
 			#region Recall query
 			sw.Restart();
-			DataTable rawRecallTable=Db.GetTable(command);
+			DataTable rawRecallTable=Database.ExecuteDataTable(command);
 			logQuery("recallTable",command,rawRecallTable.Rows.Count);
 			#endregion Recall query
 			if(rawRecallTable.Rows.Count<1) {
@@ -451,7 +452,7 @@ namespace OpenDentBusiness {
 				+"AND PatNum IN ("+string.Join(",",dictPatientRows.Keys)+")";
 			sw.Restart();
 			//Create dictionary of key=PatNum, value=List of CommDateTimes for that patient
-			Dictionary<long,List<DateTime>> dictCommlogs=Db.GetTable(command).Select()
+			Dictionary<long,List<DateTime>> dictCommlogs=Database.ExecuteDataTable(command).Select()
 				.GroupBy(x => PIn.Long(x["PatNum"].ToString()),x => PIn.Date(x["CommDateTime"].ToString()))
 				.ToDictionary(x => x.Key,x => x.ToList());
 			logQuery("dictCommlogs",command,dictCommlogs.Values.Sum(x => x.Count()));
@@ -466,7 +467,7 @@ namespace OpenDentBusiness {
 					+"GROUP BY PatNum "
 				+") recent ON recent.PatNum=webschedrecall.PatNum AND recent.DateTimeEntry=webschedrecall.DateTimeEntry";
 			sw.Restart();
-			DataTable tableWebSchedRecalls=Db.GetTable(command);
+			DataTable tableWebSchedRecalls=Database.ExecuteDataTable(command);
 			logQuery("tableWebSchedRecalls",command,tableWebSchedRecalls.Rows.Count);
 			//Create dictionary of key=PatNum, value=List of WebSchedRecalls for that patient
 			sw.Restart();
@@ -781,7 +782,7 @@ namespace OpenDentBusiness {
 		public static void Delete(Recall recall) {
 			
 			string command= "DELETE from recall WHERE RecallNum = "+POut.Long(recall.RecallNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			DeletedObjects.SetDeleted(DeletedObjectType.RecallPatNum,recall.PatNum);
 		}
 
@@ -825,7 +826,7 @@ namespace OpenDentBusiness {
 			string command="SELECT recalltype.RecallTypeNum,recalltype.DefaultInterval,recalltrigger.CodeNum "
 				+"FROM recalltype "
 				+"INNER JOIN recalltrigger ON recalltype.RecallTypeNum=recalltrigger.RecallTypeNum";
-			DataTable tableRecallTriggers=Db.GetTable(command);
+			DataTable tableRecallTriggers=Database.ExecuteDataTable(command);
 			if(tableRecallTriggers.Rows.Count==0) {//no recall triggers, nothing to do
 				_odThreadQueueData=null;
 				return true;
@@ -1081,7 +1082,7 @@ namespace OpenDentBusiness {
 						+(i>0?("AND patient.PatNum<="+_listPatNumMaxPerGroup[i]+" "):"")
 						+"GROUP BY patient.PatNum,procedurelog.CodeNum "
 						+"ORDER BY patient.PatNum";
-					Dictionary<long,PatBatchData> dictPatBatch=Db.GetTable(command).Select()
+					Dictionary<long,PatBatchData> dictPatBatch=Database.ExecuteDataTable(command).Select()
 						.GroupBy(x => PIn.Long(x["PatNum"].ToString()))
 						.ToDictionary(x => x.Key,x => new PatBatchData() {
 							DictLastProcDates=x.ToDictionary(y => PIn.Long(y["codeNum"].ToString()),y => PIn.Date(y["lastProcDate"].ToString()))
@@ -1116,7 +1117,7 @@ namespace OpenDentBusiness {
 						+(i>0?("procedurelog.PatNum<="+_listPatNumMaxPerGroup[i]+" "):"");
 					}
 					command+="GROUP BY procedurelog.PatNum,recalltrigger.RecallTypeNum";
-					Db.GetTable(command).Select()
+					Database.ExecuteDataTable(command).Select()
 						.GroupBy(x => PIn.Long(x["PatNum"].ToString()))
 						.Where(x => dictPatBatch.ContainsKey(x.Key)).ToList()
 						.ForEach(x => x.ToList()
@@ -1198,7 +1199,7 @@ namespace OpenDentBusiness {
 				+"OR ProcStatus = "+POut.Long((int)ProcStat.EC)+" "
 				+"OR ProcStatus = "+POut.Long((int)ProcStat.EO)+") "
 				+"GROUP BY RecallTypeNum";
-			DataTable tableDates=Db.GetTable(command);
+			DataTable tableDates=Database.ExecuteDataTable(command);
 			//Go through the type list and either update recalls, or create new recalls.
 			//Recalls that are no longer active because their type has no triggers will be ignored.
 			//It is assumed that there are no duplicate recall types for a patient.
@@ -1368,7 +1369,7 @@ namespace OpenDentBusiness {
 			string command="UPDATE recall "
 				+"SET recall.DateScheduled="+POut.Date(DateTime.MinValue)+" "
 				+"WHERE recall.PatNum="+POut.Long(patNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Get table of future appointments dates with recall type for this patient, where a procedure is attached that is a recall trigger procedure
 			command="SELECT recalltrigger.RecallTypeNum,MIN("+DbHelper.DtimeToDate("appointment.AptDateTime")+") AS AptDateTime "
 				+"FROM procedurelog "
@@ -1381,7 +1382,7 @@ namespace OpenDentBusiness {
 					+"AND appointment.AptDateTime > "+DbHelper.Curdate()+" "//early this morning
 				+"WHERE procedurelog.PatNum="+POut.Long(patNum)+" "
 				+"GROUP BY recalltrigger.RecallTypeNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			//Update the recalls for this patient with DATE(AptDateTime) where there is a future appointment with recall proc on it
 			for(int i=0;i<table.Rows.Count;i++) {
 				if(table.Rows[i]["RecallTypeNum"].ToString()=="") {
@@ -1390,7 +1391,7 @@ namespace OpenDentBusiness {
 				command=@"UPDATE recall	SET recall.DateScheduled="+POut.Date(PIn.Date(table.Rows[i]["AptDateTime"].ToString()))+" " 
 					+"WHERE recall.RecallTypeNum="+POut.Long(PIn.Long(table.Rows[i]["RecallTypeNum"].ToString()))+" "
 					+"AND recall.PatNum="+POut.Long(patNum)+" ";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 
@@ -1416,7 +1417,7 @@ namespace OpenDentBusiness {
 		public static void DeleteAllOfType(long recallTypeNum) {
 			
 			string command="DELETE FROM recall WHERE RecallTypeNum= "+POut.Long(recallTypeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Shared table structure for Recalls and Reactivations, be careful when making changes.</summary>
@@ -1671,7 +1672,7 @@ namespace OpenDentBusiness {
 				command+="recall.RecallNum="+POut.Long(recallNums[i]);
 			}
 			command+=") GROUP BY patient.Guarantor";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command=@"SELECT patient.Address,patguar.Address guarAddress,CONCAT('',patient.BillingType) billingType,
 				patient.Address2,patguar.Address2 guarAddress2,
 				patient.City,patguar.City guarCity,patient.ClinicNum,patguar.ClinicNum guarClinicNum,
@@ -1705,9 +1706,9 @@ namespace OpenDentBusiness {
 				patient.LName,patguar.LName,temprecallmaxdate.MaxDateDue,
 				patient.MiddleI,patient.PatNum,patient.Preferred,recall.RecallNum,
 				patient.State,patguar.State,patient.Zip,patguar.Zip,patguar.PreferRecallMethod";
-			DataTable rawTable=Db.GetTable(command);
+			DataTable rawTable=Database.ExecuteDataTable(command);
 			command="DROP TABLE IF EXISTS temprecallmaxdate";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			for(int i=0;i<rawTable.Rows.Count;i++) {
 				rawTable.Rows[i]["billingType"]=Defs.GetName(DefCat.BillingTypes,PIn.Long(rawTable.Rows[i]["billingType"].ToString()));
 			}
@@ -1719,7 +1720,7 @@ namespace OpenDentBusiness {
 			
 			string command="UPDATE recall SET RecallStatus="+newStatus.ToString()
 				+" WHERE RecallNum="+recallNum.ToString();
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static int GetCountForType(long recallTypeNum) {
@@ -1727,14 +1728,14 @@ namespace OpenDentBusiness {
 			string command="SELECT COUNT(*) FROM recall "
 				+"JOIN recalltype ON recall.RecallTypeNum=recalltype.RecallTypeNum "
 				+"WHERE recalltype.recallTypeNum="+POut.Long(recallTypeNum);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Return RecallNums that have changed since a paticular time. </summary>
 		public static List<long> GetChangedSinceRecallNums(DateTime changedSince) {
 			
 			string command="SELECT RecallNum FROM recall WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> recallnums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				recallnums.Add(PIn.Long(dt.Rows[i]["RecallNum"].ToString()));
@@ -1780,7 +1781,7 @@ namespace OpenDentBusiness {
 			if(listClinicNums.Count > 0) {
 				command+="HAVING ClinicNum IN("+string.Join(",",listClinicNums.Select(x => POut.Long(x)))+" )";
 			}
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<RecallRecent> listRecent=new List<RecallRecent>();
 			foreach(DataRow row in table.Rows) {
 				RecallRecent recent=new RecallRecent {

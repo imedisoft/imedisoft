@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -30,7 +31,7 @@ namespace OpenDentBusiness{
 		public static EhrPatient Refresh(long patNum) {
 			
 			string command="SELECT COUNT(*) FROM ehrpatient WHERE patnum='"+POut.Long(patNum)+"'";
-			if(Db.GetCount(command)=="0") {//A record does not exist for this patient yet.
+			if(Database.ExecuteString(command)=="0") {//A record does not exist for this patient yet.
 				Insert(patNum);//Create a new record.
 			}
 			command ="SELECT * FROM ehrpatient WHERE patnum ='"+POut.Long(patNum)+"'";
@@ -61,7 +62,7 @@ namespace OpenDentBusiness{
 				+"VALUES("+POut.Long(patNum)+",'','',0,'','','','','')";//VacShareOk cannot be NULL for Oracle.
 				command+=" ON DUPLICATE KEY UPDATE PatNum='"+patNum+"'";
 				
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			//}
 			//catch (Exception ex){
 			//	//Fail Silently.
@@ -88,7 +89,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long patNum) {
 			
 			string command= "DELETE FROM ehrpatient WHERE PatNum = "+POut.Long(patNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

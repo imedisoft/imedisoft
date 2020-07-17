@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace OpenDentBusiness{
 			string command =
 				"SELECT CountyName from county "
 				+"ORDER BY CountyName";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string[] ListNames=new string[table.Rows.Count];
 			for(int i=0;i<ListNames.Length;i++){
 				ListNames[i]=PIn.String(table.Rows[i]["CountyName"].ToString());
@@ -75,19 +76,19 @@ namespace OpenDentBusiness{
 				+"CountyName ='"  +POut.String(county.CountyName)+"'"
 				+",CountyCode ='" +POut.String(county.CountyCode)+"'"
 				+" WHERE CountyName = '"+POut.String(county.OldCountyName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//then, update all patients using that County
 			command = "UPDATE patient SET "
 				+"County ='"  +POut.String(county.CountyName)+"'"
 				+" WHERE County = '"+POut.String(county.OldCountyName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Must run UsedBy before running this.</summary>
 		public static void Delete(County Cur){
 			
 			string command= "DELETE from county WHERE CountyName = '"+POut.String(Cur.CountyName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Use before DeleteCur to determine if this County name is in use. Returns a formatted string that can be used to quickly display the names of all patients using the Countyname.</summary>
@@ -96,7 +97,7 @@ namespace OpenDentBusiness{
 			string command=
 				"SELECT LName,FName FROM patient "
 				+"WHERE County = '"+POut.String(countyName)+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return "";
 			}
@@ -117,7 +118,7 @@ namespace OpenDentBusiness{
 			string command =
 				"SELECT * FROM county "
 				+"WHERE CountyName = '"+POut.String(countyName)+"' ";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return false;
 			}

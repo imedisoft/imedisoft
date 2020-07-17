@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class Procedures {
@@ -56,7 +57,7 @@ namespace OpenDentBusiness {
 			if(clinicNum >= 0) {
 				command+=" AND procedurelog.ClinicNum="+clinicNum;
 			}
-			return Db.GetList(command,Crud.ProcedureCrud.RowToObj);
+			return Crud.ProcedureCrud.SelectMany(command);
 		}
 
 		///<summary>Gets all procedures for a single patient, without notes.  Does not include deleted procedures.</summary>
@@ -133,7 +134,7 @@ namespace OpenDentBusiness {
 				+" AND procedurelog.ProcNum IS NOT NULL "
 			+" )A "
 			+" ORDER BY A.ProcDate";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<DataRow> listSortedRows=new List<DataRow>();
 			for(int i=0;i<table.Rows.Count;i++) {//need to make new copy of each row so they don't belong to the old table any more.  Or make a fresh list of datarows.
 				listSortedRows.Add(table.Rows[i]);
@@ -156,7 +157,7 @@ namespace OpenDentBusiness {
 			string command = "SELECT ProcNum,CodeNum,AptNum,ProcDate,ClinicNum,ProcStatus,ProcFee,BaseUnits,UnitQty FROM procedurelog "
 				+"WHERE procedurelog.ProcNum IN ("+string.Join(",",listProcTP.Select(x => x.ProcNumOrig).ToList())+") "
 				+"AND procedurelog.ProcStatus IN (" +string.Join(",",procStats.Select(x => (int)x))+ ")";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<Procedure> listProcs = new List<Procedure>();
 			foreach(DataRow row in table.Rows) {
 				Procedure proc = new Procedure();
@@ -232,7 +233,7 @@ namespace OpenDentBusiness {
 			AND procedurelog.PatNum IN ("+string.Join(",",listAllFamilyPatNums.Select(x => POut.Long(x)))+@")
 			AND (procedurelog.ProcFee *(procedurelog.BaseUnits + procedurelog.UnitQty)) + COALESCE(adj.AdjAmt,0)
 				- (COALESCE(cp.WriteOff,0) + COALESCE(cp.InsPay,0) + COALESCE(cp.InsEst,0) + COALESCE(patpay.Amt,0)) > 0.005";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<RpUnearnedIncome.UnearnedProc> retVal = new List<RpUnearnedIncome.UnearnedProc>();
 			List<Procedure> listProcs = Crud.ProcedureCrud.TableToList(table);
 			for(int i = 0;i < listProcs.Count;i++) {
@@ -270,7 +271,7 @@ namespace OpenDentBusiness {
 			}
 			string command="SELECT * FROM procnote WHERE ProcNum="+POut.Long(procNum)+" ORDER BY EntryDateTime DESC";
 			DbHelper.LimitOrderBy(command,1);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return proc;
 			}
@@ -302,7 +303,7 @@ namespace OpenDentBusiness {
 				+"LEFT JOIN procnote procnoterow ON procnoterow.ProcNum=procedurelog.ProcNum AND procnoterow.EntryDateTime=procnotemax.EntryDateTime "
 				+"WHERE procedurelog.ProcNum IN ("+string.Join(",",listProcNums)+")";
 			//ProcNote stuff
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<Procedure> listProcs=Crud.ProcedureCrud.TableToList(table);
 			for(int i=0;i<table.Rows.Count;i++) {
 				if(table.Rows[i]["NoteNote"].ToString()=="") {
@@ -356,7 +357,7 @@ namespace OpenDentBusiness {
 			for(int i=0;i<result.Count;i++){
 				command="SELECT * FROM procnote WHERE ProcNum="+POut.Long(result[i].ProcNum)+" ORDER BY EntryDateTime DESC";
 				command=DbHelper.LimitOrderBy(command,1);
-				DataTable table=Db.GetTable(command);
+				DataTable table=Database.ExecuteDataTable(command);
 				if(table.Rows.Count==0) {
 					continue;
 				}
@@ -380,7 +381,7 @@ namespace OpenDentBusiness {
 			for(int i=0;i<result.Count;i++){
 				command="SELECT * FROM procnote WHERE ProcNum="+POut.Long(result[i].ProcNum)+" ORDER BY EntryDateTime DESC";
 				command=DbHelper.LimitOrderBy(command,1);
-				DataTable table=Db.GetTable(command);
+				DataTable table=Database.ExecuteDataTable(command);
 				if(table.Rows.Count==0) {
 					continue;
 				}
@@ -450,7 +451,7 @@ namespace OpenDentBusiness {
 					+")"
 				+") "
 				+"GROUP BY procedurelog.ProvNum";
-			return Db.GetTable(command).Select().ToSerializableDictionary(x => PIn.Long(x["ProvNum"].ToString()),x => PIn.Long(x["procCount"].ToString()));
+			return Database.ExecuteDataTable(command).Select().ToSerializableDictionary(x => PIn.Long(x["ProvNum"].ToString()),x => PIn.Long(x["procCount"].ToString()));
 		}
 
 		///<summary>Gets a list of TP or C procedures starting a year into the past that are flagged as IsRadiology and IsCpoe for the specified patient.
@@ -507,7 +508,7 @@ namespace OpenDentBusiness {
 				+"OR ProcStatus ="+POut.Int((int)ProcStat.EO)+") "
 				+"AND procedurecode.ProcCode >= '"+POut.String(code1)+"' "
 				+"AND procedurecode.ProcCode <= '"+POut.String(code2)+"' ";
-			DateTime date=PIn.Date(Db.GetScalar(command));
+			DateTime date=PIn.Date(Database.ExecuteString(command));
 			if(date.Year<1880) {
 				return "";
 			}
@@ -618,7 +619,7 @@ namespace OpenDentBusiness {
 					+"WHERE procnote.ProcNum IN("+string.Join(",",listProcs.Select(x => x.ProcNum))+") "
 					+"GROUP BY procnote.ProcNum"
 				+") procnotemax ON procnote.ProcNum=procnotemax.ProcNum AND procnote.EntryDateTime=procnotemax.EntryDateTime";
-			Dictionary<long,DataRow> dictProcNoteRows=Db.GetTable(command).Select().ToDictionary(x => PIn.Long(x["ProcNum"].ToString()));
+			Dictionary<long,DataRow> dictProcNoteRows=Database.ExecuteDataTable(command).Select().ToDictionary(x => PIn.Long(x["ProcNum"].ToString()));
 			if(dictProcNoteRows.Count==0) {//no notes for the procs, just return the list of procs
 				return listProcs;
 			}
@@ -713,7 +714,7 @@ namespace OpenDentBusiness {
 				+"WHERE PatNum IN ("+string.Join(",",listPatNums)+") "
 				+"AND ProcStatus="+POut.Int((int)ProcStat.C)+" "
 				+"GROUP BY procedurelog.ProvNum,PatNum";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets the ProvNum from the appointment that will be used on the procedure passed in.</summary>
@@ -876,7 +877,7 @@ namespace OpenDentBusiness {
 					+ ") a"
 				+ ") b "
 				+ "WHERE procNum=@maxProcNum OR rowNum%" + numPerGroup + "=0";
-			DataTable tableCur = Db.GetTable(command);
+			DataTable tableCur = Database.ExecuteDataTable(command);
 			if (tableCur.Rows.Count > 0)
 			{
 				_totCount = PIn.Int(tableCur.Rows[0]["totalCount"].ToString());
@@ -897,7 +898,7 @@ namespace OpenDentBusiness {
 		public static long GetClinicNum(long procNum) {
 			
 			string command="SELECT ClinicNum FROM procedurelog WHERE ProcNum="+POut.Long(procNum);
-			return PIn.Long(Db.GetScalar(command));
+			return Database.ExecuteLong(command);
 		}
 
 		///<summary>Returns all the unique diagnostic codes in the list.  If there is less than 12 unique codes then it will pad the list with empty
@@ -969,7 +970,7 @@ namespace OpenDentBusiness {
 				command+="AND DateProcComplete="+POut.Date(DateTime.MinValue)+" ";
 			}
 			command+="ORDER BY RefDate";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets all completed procedures within a date range with optional ProcCodeNum and PatientNum filters. Date range is inclusive.</summary>
@@ -981,7 +982,7 @@ namespace OpenDentBusiness {
 			if(listClinicNums != null && listClinicNums.Count > 0) {
 				command+=" AND ClinicNum IN ("+string.Join(",",listClinicNums)+")";
 			}
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<Procedure> listProcsLim = new List<Procedure>();
 			foreach(DataRow row in table.Rows) {
 				Procedure proc = new Procedure();
@@ -1210,14 +1211,14 @@ namespace OpenDentBusiness {
 			string command="UPDATE procedurelog "
 				+"SET "+(isPlannedAptNum?"PlannedAptNum =":"AptNum =")+POut.Long(newAptNum)+" "
 				+"WHERE ProcNum IN ("+string.Join(",",listProcNums.Select(x => POut.Long(x)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void UpdatePriority(long procNum,long newPriority) {
 			
 			string command="UPDATE procedurelog SET Priority = "+POut.Long(newPriority)
 				+" WHERE ProcNum = "+POut.Long(procNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates IsCpoe column in the procedurelog table with the passed in value for the corresponding procedure.
@@ -1238,7 +1239,7 @@ namespace OpenDentBusiness {
 			}
 			string command="UPDATE procedurelog SET IsCpoe = "+POut.Bool(isCpoe)
 				+" WHERE ProcNum IN ("+string.Join(",",listProcNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Sets the patient.DateFirstVisit if necessary. A visitDate is required to be passed in because it may not be today's date. This is triggered by:
@@ -1266,7 +1267,7 @@ namespace OpenDentBusiness {
 					+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 				+"WHERE PatNum = '"+POut.Long(pat.PatNum)+"' "
 				+"AND ProcStatus = '2'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(PIn.Long(table.Rows[0][0].ToString())>0) {
 				return;//there are already completed procs (for all situations)
 			}
@@ -1284,8 +1285,8 @@ namespace OpenDentBusiness {
 					+POut.Long(pat.PatNum)+"'";
 			}
 			//MessageBox.Show(cmd.CommandText);
-			//dcon.NonQ(command);
-			Db.NonQ(command);
+			//dcon.ExecuteNonQuery(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void AttachToApt(long procNum,long aptNum,bool isPlanned) {
@@ -1314,7 +1315,7 @@ namespace OpenDentBusiness {
 				}
 				command+="ProcNum="+POut.Long(procNums[i]);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DetachFromApt(List<long> procNums,bool isPlanned) {
@@ -1336,13 +1337,13 @@ namespace OpenDentBusiness {
 				}
 				command+="ProcNum="+POut.Long(procNums[i]);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DetachFromInvoice(long statementNum) {
 			
 			string command="UPDATE procedurelog SET StatementNum=0 WHERE StatementNum="+POut.Long(statementNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DetachAllFromInvoices(List<long> listStatementNums) {
@@ -1351,7 +1352,7 @@ namespace OpenDentBusiness {
 				return;
 			}
 			string command="UPDATE procedurelog SET StatementNum=0 WHERE StatementNum IN ("+string.Join(",",listStatementNums.Select(x => POut.Long(x)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<Summary>Supply the list of procedures attached to the appointment.  It will loop through each and assign the correct provider.
@@ -1456,7 +1457,7 @@ namespace OpenDentBusiness {
 				+"OR CodeNum="+POut.Long(ProcedureCodes.GetCodeNum(ProcedureCodes.GroupProcCode))+") "//or group note
 				+"AND ProcDate >= "+POut.Date(date1)+" "
 				+"AND ProcDate <= "+POut.Date(date2);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Inserts, updates, or deletes database rows to match supplied list.  Must always pass in two lists.</summary>
@@ -1470,14 +1471,14 @@ namespace OpenDentBusiness {
 			string command="UPDATE procedurelog SET ProcStatus="+POut.Int((int)ProcStat.TPi)+" WHERE PatNum="+POut.Long(patNum)+" "+
 			  "AND ProcStatus="+POut.Int((int)ProcStat.TP)+" ";
 			if(listProcNums.Count==0) {
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				return; //no procedures left on active plan
 			}
 			command+="AND ProcNum NOT IN ("+string.Join(",",listProcNums)+") ";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE procedurelog SET ProcStatus="+POut.Int((int)ProcStat.TP)+" WHERE PatNum="+POut.Long(patNum)+" "+
 			  "AND ProcStatus="+POut.Int((int)ProcStat.TPi)+" AND ProcNum IN ("+string.Join(",",listProcNums)+") ";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns true when automation needed.
@@ -1552,10 +1553,10 @@ namespace OpenDentBusiness {
 			if(forceDelete) {
 				//Delete referral attaches
 				command="DELETE FROM refattach WHERE ProcNum="+POut.Long(procNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				//Remove the procedure from the pay split
 				command="UPDATE paysplit SET ProcNum=0 WHERE ProcNum="+POut.Long(procNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				//Claimprocs deleted below
 			}
 			else {
@@ -1565,15 +1566,15 @@ namespace OpenDentBusiness {
 			Adjustments.DeleteForProcedure(procNum);
 			//delete claimprocs
 			command="DELETE from claimproc WHERE ProcNum = '"+POut.Long(procNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//detach procedure labs
 			command="UPDATE procedurelog SET ProcNumLab=0 WHERE ProcNumLab='"+POut.Long(procNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			PayPlanCharges.DeleteForProc(procNum);
 			//delete and update procmultivisits
 			ProcMultiVisits.UpdateGroupForProc(procNum,ProcStat.D);
 			command="SELECT AptNum,PlannedAptNum,DateComplete FROM procedurelog WHERE ProcNum = "+POut.Long(procNum);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			DateTime dateComplete = PIn.Date(table.Rows[0]["DateComplete"].ToString());
 			long aptNum = PIn.Long(table.Rows[0]["AptNum"].ToString());
 			long plannedAptNum = PIn.Long(table.Rows[0]["PlannedAptNum"].ToString());
@@ -1585,7 +1586,7 @@ namespace OpenDentBusiness {
 				command+=", DateComplete="+POut.Date(DateTime.MinValue);
 			}
 			command+=" WHERE ProcNum="+POut.Long(procNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//resynch appointment description-------------------------------------------------------------------------------------
 			if(aptNum != 0) {
 				Appointment apt = Appointments.GetOneApt(aptNum);
@@ -1698,7 +1699,7 @@ namespace OpenDentBusiness {
 					AND procedurecode.ProcCode NOT IN('D9986','D9987')
 				WHERE procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+@"
 				AND procedurelog.ProcDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Gets all procedures with a specific StatementNum.  Currently, procedurelog.StatementNum is only used for invoices.</summary>
@@ -1708,7 +1709,7 @@ namespace OpenDentBusiness {
 				return new List<long>();
 			}
 			string command="SELECT ProcNum FROM procedurelog WHERE procedurelog.StatementNum = "+POut.Long(statementNum);
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Throws an exception if the given procedure cannot be deleted safely.</summary>
@@ -1717,24 +1718,24 @@ namespace OpenDentBusiness {
 			//Test to see if the procedure is attached to a claim (excluding pre-auths)
 			string command="SELECT COUNT(*) FROM claimproc WHERE ProcNum="+POut.Long(procNum)
 				+" AND ClaimNum > 0 AND Status!="+POut.Int((int)ClaimProcStatus.Preauth);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to a claim."));
 			}
 			//Test to see if any payment at all has been received for this proc
 			command="SELECT COUNT(*) FROM claimproc WHERE ProcNum="+POut.Long(procNum)
 				+" AND InsPayAmt > 0 AND Status IN ("+POut.Int((int)ClaimProcStatus.Received)+","+POut.Int((int)ClaimProcStatus.Supplemental)+","
 					+POut.Int((int)ClaimProcStatus.CapClaim)+","+POut.Int((int)ClaimProcStatus.CapComplete)+")";
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to an insurance payment."));
 			}
 			//Test to see if any referrals exist for this proc
 			command="SELECT COUNT(*) FROM refattach WHERE ProcNum="+POut.Long(procNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure with referrals attached."));
 			}
 			//Test to see if any paysplits are attached to this proc
 			command="SELECT COUNT(*) FROM paysplit WHERE ProcNum="+POut.Long(procNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to a patient payment."));
 			}
 			command="SELECT COUNT(*) FROM adjustment WHERE ProcNum="+POut.Long(procNum);
@@ -1744,20 +1745,20 @@ namespace OpenDentBusiness {
 			if(AvaTax.IsEnabled()) {
 				command+=" AND AdjType<>"+POut.Long(AvaTax.SalesTaxAdjType);
 			}
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to an adjustment."));
 			}
 			command="SELECT COUNT(*) FROM rxpat WHERE ProcNum="+POut.Long(procNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to a prescription."));
 			}
 			command=$"SELECT COUNT(*) FROM payplancharge WHERE payplancharge.ProcNum={POut.Long(procNum)}";
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete procedure that is attached to a payment plan."));
 			}
 			command=$"SELECT COUNT(*) FROM payplanlink WHERE payplanlink.FKey={POut.Long(procNum)} " +
 				$"AND payplanlink.LinkType={POut.Int((int)PayPlanLinkType.Procedure)}";
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to a dynamic payment plan."));
 			}
 		}
@@ -1894,7 +1895,7 @@ namespace OpenDentBusiness {
 					+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 				+"WHERE PatNum="+patNum.ToString()
 				+" AND ProcStatus=2";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows[0][0].ToString()=="0") {
 				return false;
 			}
@@ -1909,7 +1910,7 @@ namespace OpenDentBusiness {
 				+"WHERE ToothNum='"+toothNum+"' "
 				+"AND PatNum="+POut.Long(patNum)
 				+" AND InitialType=0";//missing
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows[0][0].ToString()!="0") {
 				return true;
 			}
@@ -1920,7 +1921,7 @@ namespace OpenDentBusiness {
 				+"AND procedurelog.PatNum="+patNum.ToString()+" "
 				+"AND procedurelog.ProcStatus <> "+POut.Int((int)ProcStat.D)+" "//Not deleted procedures
 				+"AND procedurecode.PaintType=1";//extraction
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows[0][0].ToString()!="0") {
 				return true;
 			}
@@ -2008,7 +2009,7 @@ namespace OpenDentBusiness {
 			string command="SELECT COUNT(*) FROM claimproc "
 				+"WHERE ProcNum="+POut.Long(procNum)+" "
 				+"AND ClaimNum>0";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows[0][0].ToString()=="0") {
 				return false;
 			}
@@ -2032,7 +2033,7 @@ namespace OpenDentBusiness {
 		public static bool IsReferralAttached(long referralNum) {
 			
 			string command="SELECT COUNT(*) FROM procedurelog WHERE OrderingReferralNum="+POut.Long(referralNum);
- 			if(Db.GetCount(command)=="0") {
+ 			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;
@@ -2273,7 +2274,7 @@ namespace OpenDentBusiness {
 					+"GROUP BY patplan.PatNum ";
 				command+="ORDER BY NULL";
 				
-				dictPatNumMedFeeSchedNum=Db.GetTable(command).Select()
+				dictPatNumMedFeeSchedNum=Database.ExecuteDataTable(command).Select()
 					.ToDictionary(x => PIn.Long(x["PatNum"].ToString()),x => PIn.Long(x["medFeeSched"].ToString()));
 			}
 			#endregion Get Medical Fee Sched Dict
@@ -2440,7 +2441,7 @@ namespace OpenDentBusiness {
 					Stopwatch s1=new Stopwatch();
 					s1.Start();
 					#endif
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#if DEBUG
 					s1.Stop();
 					Console.WriteLine("Updated "+y.Count+" procedures, runtime: "+s1.Elapsed.TotalSeconds+" sec");
@@ -2528,7 +2529,7 @@ namespace OpenDentBusiness {
 					Stopwatch s1=new Stopwatch();
 					s1.Start();
 					#endif
-					DataTable table=Db.GetTable(x);
+					DataTable table=Database.ExecuteDataTable(x);
 					#if DEBUG
 					s1.Stop();
 					#endif
@@ -3405,7 +3406,7 @@ namespace OpenDentBusiness {
 			string command="SELECT * FROM procnote "
 				+"WHERE ProcNum IN("+string.Join(",",listProcsForAppt.Select(x => x.ProcNum))+") "
 				+"ORDER BY EntryDateTime DESC";
-			DataTable rawNotes=Db.GetTable(command);
+			DataTable rawNotes=Database.ExecuteDataTable(command);
 			List<SubstitutionLink> listSubstLinks=SubstitutionLinks.GetAllForPlans(planList);
 			List<ProcedureCode> listProcedureCodes=new List<ProcedureCode>();
 			for(int i=0;i<listProcsForAppt.Count;i++){

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -66,7 +67,7 @@ namespace OpenDentBusiness
 			query += @"INNER JOIN patient ON patient.PatNum=procs.PatNum
 				WHERE ROUND(procs.fee,3) < ROUND(cp.PayAmt,3)
 				ORDER BY patient.LName,patient.FName,procs.ProcDate ";
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(query));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(query));
 		}
 
 	}

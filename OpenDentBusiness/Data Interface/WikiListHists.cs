@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -102,14 +103,14 @@ namespace OpenDentBusiness{
 			for(int i=0;i<tableRevertedContent.Rows.Count;i++) {
 				string rowStr="("+string.Join(",",tableRevertedContent.Rows[i].ItemArray.Select(x => "'"+POut.String(x.ToString())+"'"))+")";
 				if(sb.Length+rowStr.Length+1>TableBase.MaxAllowedPacketCount) {
-					Db.NonQ(sb.ToString());
+					Database.ExecuteNonQuery(sb.ToString());
 					sb=new StringBuilder(commandStart);
 					commaStr="";
 				}
 				sb.Append(commaStr+rowStr);
 				commaStr=",";
 				if(i==tableRevertedContent.Rows.Count-1) {
-					Db.NonQ(sb.ToString());
+					Database.ExecuteNonQuery(sb.ToString());
 				}
 			}
 		}
@@ -118,7 +119,7 @@ namespace OpenDentBusiness{
 		public static void Rename(string WikiListCurName,string WikiListNewName) {
 
 			string command="UPDATE wikilisthist SET ListName = '"+POut.String(WikiListNewName)+"' WHERE ListName='"+POut.String(WikiListCurName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

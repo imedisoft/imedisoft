@@ -32,6 +32,7 @@ using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Requests;
 using Google;
 using Google.Apis.Services;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary>An email message is always attached to a patient.</summary>
@@ -204,7 +205,7 @@ namespace OpenDentBusiness{
 						+(int)EmailSentOrReceived.WebMailSent+","+(int)EmailSentOrReceived.WebMailSentRead+") "
 						+" AND FromAddress LIKE '%"+fromAddress+@"%') 
 			) address";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<EmailMessage> listMessages=new List<EmailMessage>();
 			foreach(DataRow row in table.Rows) {
 				EmailMessage emailMessage=new EmailMessage();
@@ -284,7 +285,7 @@ namespace OpenDentBusiness{
 				+" WHERE SentOrReceived="+POut.Int((int)EmailSentOrReceived.WebMailReceived) 
 				+" GROUP BY ProvNumWebMail;";
 			//Convert datatable to serializable dictionary and return it.
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return table.AsEnumerable().ToSerializableDictionary(row => PIn.Long(row["ProvNumWebMail"].ToString()),
 				row => PIn.Long(row["CountWebMail"].ToString()));
 		}
@@ -324,7 +325,7 @@ namespace OpenDentBusiness{
 				return sentOrReceived;//Nothing to do.
 			}
 			string command="UPDATE emailmessage SET SentOrReceived="+POut.Int((int)sentOrReceived)+" WHERE EmailMessageNum="+POut.Long(emailMessage.EmailMessageNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
       return sentOrReceived;
 		}
 
@@ -345,7 +346,7 @@ namespace OpenDentBusiness{
 				return sentOrReceived;//Nothing to do.
 			}
 			string command="UPDATE emailmessage SET SentOrReceived="+POut.Int((int)sentOrReceived)+" WHERE EmailMessageNum="+POut.Long(emailMessage.EmailMessageNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
       return sentOrReceived;
 		}
 
@@ -353,7 +354,7 @@ namespace OpenDentBusiness{
 		public static void UpdatePatNum(EmailMessage emailMessage) {
 			
 			string command="UPDATE emailmessage SET PatNum="+POut.Long(emailMessage.PatNum)+" WHERE EmailMessageNum="+POut.Long(emailMessage.EmailMessageNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(emailMessage.Attachments==null) {
 				return;
 			}
@@ -385,7 +386,7 @@ namespace OpenDentBusiness{
 				return;//this prevents deletion of all commlog entries of something goes wrong.
 			}
 			string command="DELETE FROM emailmessage WHERE EmailMessageNum="+POut.Long(message.EmailMessageNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
     #endregion
 
@@ -579,7 +580,7 @@ namespace OpenDentBusiness{
 					+"WHERE FromAddress='"+POut.String(emailAddressFrom.EmailUsername.Trim())+"' AND SentOrReceived="+POut.Long((int)EmailSentOrReceived.AckDirectProcessed)+" "
 					+"ORDER BY MsgDateTime DESC",
 				1);
-			DateTime dateTimeLastAck=PIn.Date(Db.GetScalar(command));//dateTimeLastAck will be 0001-01-01 if there is not yet any sent Acks.
+			DateTime dateTimeLastAck=PIn.Date(Database.ExecuteString(command));//dateTimeLastAck will be 0001-01-01 if there is not yet any sent Acks.
 			if((DateTime.Now-dateTimeLastAck).TotalSeconds<60) {
 				//Our last Ack sent was less than 15 seconds ago.  Abort sending Acks right now.
 				return;

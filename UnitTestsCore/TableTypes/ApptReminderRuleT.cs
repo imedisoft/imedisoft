@@ -1,10 +1,12 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnitTestsCore {
-	public class ApptReminderRuleT {
+namespace UnitTestsCore
+{
+    public class ApptReminderRuleT {
 		public static ApptReminderRule CreateApptReminderRule(long clinicNum,ApptReminderType type,TimeSpan tsPrior,
 			bool isSendAll = true,CommType priority1 = CommType.Preferred,CommType priority2 = CommType.Text,CommType priority3 = CommType.Email,
 			TimeSpan doNotSendWithin=default(TimeSpan),bool isAutoReplyEnabled=true,string language="") 
@@ -31,7 +33,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the apptreminderrule table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearApptReminderRuleTable() {
 			string command="DELETE FROM apptreminderrule WHERE ApptReminderRuleNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

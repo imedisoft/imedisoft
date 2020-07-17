@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -74,7 +75,7 @@ namespace OpenDentBusiness{
 					+POut.Int((int)eServiceSignalSeverity.Critical)+") "
 				+"ORDER BY SigDateTime DESC, Severity DESC ";
 			command=DbHelper.LimitOrderBy(command,1);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<EServiceSignal> listSignal=Crud.EServiceSignalCrud.TableToList(table);
 			if(listSignal.Count==0) { //No signals means the eConnector has never run. Nothing to report.				
 				return eServiceSignalSeverity.None;
@@ -158,7 +159,7 @@ namespace OpenDentBusiness{
 		public static void ProcessSignalsForSeverity(eServiceSignalSeverity severity) {
 			
 			string command="UPDATE eservicesignal SET IsProcessed=1 WHERE Severity="+POut.Int((int)severity);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(severity==eServiceSignalSeverity.Error) { //Delete corresponding alert.
 				AlertItems.DeleteFor(AlertType.EConnectorError);
 			}
@@ -173,7 +174,7 @@ namespace OpenDentBusiness{
 			string command="UPDATE eservicesignal SET IsProcessed=1 "
 				+"WHERE Severity="+POut.Int((int)eServiceSignalSeverity.Error)+" "
 				+"AND SigDateTime BETWEEN "+POut.DateT(dateTime.AddMinutes(-15))+" AND "+POut.DateT(dateTime.AddMinutes(15));
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*
@@ -208,7 +209,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long eServiceSignalNum) {
 			
 			string command= "DELETE FROM eservicesignal WHERE EServiceSignalNum = "+POut.Long(eServiceSignalNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -77,7 +78,7 @@ namespace OpenDentBusiness{
 			
 			Crud.FHIRSubscriptionCrud.Delete(fHIRSubscriptionNum);
 			string command="DELETE FROM fhircontactpoint WHERE FHIRSubscriptionNum="+POut.Long(fHIRSubscriptionNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

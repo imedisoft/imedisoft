@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class Defs {
@@ -14,7 +15,7 @@ namespace OpenDentBusiness {
 		public static Def[][] GetArrayLongNoCache() {
 			
 			string command="SELECT * FROM definition ORDER BY Category,ItemOrder";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<Def> list=Crud.DefCrud.TableToList(table);
 			Def[][] arrayLong=new Def[Enum.GetValues(typeof(DefCat)).Length][];
 			for(int j=0;j<Enum.GetValues(typeof(DefCat)).Length;j++) {
@@ -27,7 +28,7 @@ namespace OpenDentBusiness {
 		public static Def[][] GetArrayShortNoCache() {
 			
 			string command="SELECT * FROM definition ORDER BY Category,ItemOrder";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<Def> list=Crud.DefCrud.TableToList(table);
 			Def[][] arrayShort=new Def[Enum.GetValues(typeof(DefCat)).Length][];
 			for(int j=0;j<Enum.GetValues(typeof(DefCat)).Length;j++) {
@@ -283,7 +284,7 @@ namespace OpenDentBusiness {
 				case DefCat.WebSchedNewPatApptTypes:
 					//Do not let the user delete the last WebSchedNewPatApptTypes definition.  Must be at least one.
 					command="SELECT COUNT(*) FROM definition WHERE Category="+POut.Int((int)DefCat.WebSchedNewPatApptTypes);
-					if(PIn.Int(Db.GetCount(command),false)<=1) {
+					if(PIn.Int(Database.ExecuteString(command),false)<=1) {
 						throw new ApplicationException("NOT Allowed to delete the last def of this type.");
 					}
 					break;
@@ -291,16 +292,16 @@ namespace OpenDentBusiness {
 					throw new ApplicationException("NOT Allowed to delete this type of def.");
 			}
 			for(int i=0;i<listCommands.Count;i++) {
-				if(Db.GetCount(listCommands[i])!="0") {
+				if(Database.ExecuteString(listCommands[i])!="0") {
 					throw new ApplicationException(Lans.g("Defs","Def is in use.  Not allowed to delete."));
 				}
 			}
 			command="DELETE FROM definition WHERE DefNum="+POut.Long(def.DefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE definition SET ItemOrder=ItemOrder-1 "
 				+"WHERE Category="+POut.Long((int)def.Category)
 				+" AND ItemOrder > "+POut.Long(def.ItemOrder);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 
@@ -463,7 +464,7 @@ namespace OpenDentBusiness {
 				default:
 					break;
 			}
-			return listStrCommands.Any(x => Db.GetCount(x)!="0");
+			return listStrCommands.Any(x => Database.ExecuteString(x)!="0");
 		}
 
 		///<summary>Merges old document DocCategory(FK DefNum) into the new DocCategory(FK DefNum).</summary>
@@ -472,29 +473,29 @@ namespace OpenDentBusiness {
 			string command="UPDATE document"
 			+" SET DocCategory="+POut.Long(defNumTo)
 			+" WHERE DocCategory="+POut.Long(defNumFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE mount"
 			+" SET DocCategory="+POut.Long(defNumTo)
 			+" WHERE DocCategory="+POut.Long(defNumFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE lettermerge"
 			+" SET Category="+POut.Long(defNumTo)
 			+" WHERE Category="+POut.Long(defNumFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE sheetfielddef"
 			+" SET FieldName='"+POut.Long(defNumTo)+"'"
 			+" WHERE FieldType="+POut.Int((int)SheetFieldType.PatImage)+" AND FieldName='"+POut.Long(defNumFrom)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE sheetfield"
 			+" SET FieldName='"+POut.Long(defNumTo)+"'"
 			+" WHERE FieldType="+POut.Int((int)SheetFieldType.PatImage)+" AND FieldName='"+POut.Long(defNumFrom)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			long progNum=Programs.GetProgramNum(ProgramName.XVWeb);
 			if(progNum!=0) {
 				command="UPDATE programproperty"
 				+" SET PropertyValue='"+POut.Long(defNumTo)+"'"
 				+" WHERE ProgramNum="+POut.Long(progNum)+" AND PropertyDesc='ImageCategory' AND PropertyValue='"+POut.Long(defNumFrom)+"'";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 

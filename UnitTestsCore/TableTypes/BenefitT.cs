@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -261,7 +262,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the benefit table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearBenefitTable() {
 			string command="DELETE FROM benefit";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

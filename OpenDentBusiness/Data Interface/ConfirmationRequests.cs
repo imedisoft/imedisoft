@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using CodeBase;
+using Imedisoft.Data;
 using Newtonsoft.Json;
 
 namespace OpenDentBusiness{
@@ -140,7 +141,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM confirmationrequest "
 				+"WHERE ShortGUID IN('"+string.Join("','",listShortGuids.Select(x => POut.String(x)))+"')"
 				+" OR ShortGuidEmail IN('"+string.Join("','",listShortGuids.Select(x => POut.String(x)))+"')";			
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		//If this table type will exist as cached data, uncomment the CachePattern region below and edit.

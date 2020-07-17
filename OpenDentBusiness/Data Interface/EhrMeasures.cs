@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -338,12 +339,12 @@ namespace OpenDentBusiness{
 			command="SELECT "+DbHelper.GroupConcat("provider.ProvNum")+" FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
 				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"') ";
-			string provs=Db.GetScalar(command);
+			string provs=Database.ExecuteString(command);
 			command="SELECT "+DbHelper.GroupConcat("provider.NationalProvID")+" FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
 				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"') "
 				+"AND provider.NationalProvID !='' AND provider.NationalProvID !=','";
-			string provNPIs=Db.GetScalar(command);
+			string provNPIs=Database.ExecuteString(command);
 			provNPIs.Trim(',');
 			if(provNPIs=="") {
 				provNPIs="NULL";//No NPI entered, queries below use IN statements and require at least one value.
@@ -391,7 +392,7 @@ namespace OpenDentBusiness{
 						+"AND disease.DiseaseDefNum!="+POut.Long(PrefC.GetLong(PrefName.ProblemsIndicateNone))+" "
 						+"WHERE (diseasedef.SnomedCode!='' OR diseasedef.ICD9Code!='') "
 						+"GROUP BY PatNum) problemsAll ON problemsAll.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region MedicationList
@@ -410,7 +411,7 @@ namespace OpenDentBusiness{
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM medicationpat "
 						+"WHERE MedicationNum!="+POut.Long(PrefC.GetLong(PrefName.MedicationsIndicateNone))+" "
 						+"GROUP BY PatNum) medsAll ON medsAll.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region AllergyList
@@ -441,7 +442,7 @@ namespace OpenDentBusiness{
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM allergy	"
 						+"WHERE AllergyDefNum!="+POut.Long(PrefC.GetLong(PrefName.AllergiesIndicateNone))+" "
 						+"GROUP BY PatNum) allergiesAll ON allergiesAll.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Demographics
@@ -482,7 +483,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY PatNum "
 						+") AS ethnicity ON ethnicity.PatNum=patient.PatNum "
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Education
@@ -508,7 +509,7 @@ namespace OpenDentBusiness{
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM ehrmeasureevent "
 						+"WHERE EventType="+POut.Int((int)EhrMeasureEventType.EducationProvided)+" "
 						+"GROUP BY PatNum) edCount ON edCount.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ElectronicCopyAccess
@@ -525,14 +526,14 @@ namespace OpenDentBusiness{
 							+"FROM ehrmeasureevent "
 							+"WHERE EventType="+POut.Int((int)EhrMeasureEventType.OnlineAccessProvided)+") OnlineAccess ON patient.PatNum=OnlineAccess.PatNum "
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region TimelyAccess (Deprecated)
 				case EhrMeasureType.TimelyAccess:
 					//denominator is patients
 					command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="CREATE TABLE tempehrmeasure"+rndStr+@" (
 						PatNum bigint NOT NULL auto_increment PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -541,7 +542,7 @@ namespace OpenDentBusiness{
 						deadlineDate date NOT NULL,
 						accessProvided tinyint NOT NULL
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//get all patients who have been seen during the period, along with the most recent visit date during the period
 					command="INSERT INTO tempehrmeasure"+rndStr+" (PatNum,LName,FName,lastVisitDate) SELECT patient.PatNum,LName,FName, "
 						+"MAX(procedurelog.ProcDate) "
@@ -555,25 +556,25 @@ namespace OpenDentBusiness{
 						+"AND procedurelog.ProcDate >= "+POut.Date(dateStart)+" "
 						+"AND procedurelog.ProcDate <= "+POut.Date(dateEnd)+" "
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					//calculate the deadlineDate
 					command="UPDATE tempehrmeasure"+rndStr+" "
 						+"SET deadlineDate = ADDDATE(lastVisitDate, INTERVAL 4 DAY)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrmeasure"+rndStr+" "
 						+"SET deadlineDate = ADDDate(lastVisitDate, INTERVAL 2 DAY) "//add 2 more days for weekend
 						+"WHERE DAYOFWEEK(lastVisitDate) IN(3,4,5,6)";//tues, wed, thur, fri
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//date provided could be any date before deadline date if there was more than one visit
 					command="UPDATE tempehrmeasure"+rndStr+",ehrmeasureevent SET accessProvided = 1 "
 						+"WHERE ehrmeasureevent.PatNum=tempehrmeasure"+rndStr+".PatNum "
 						+"AND EventType="+POut.Int((int)EhrMeasureEventType.OnlineAccessProvided)+" "
 						+"AND DATE(ehrmeasureevent.DateTEvent) <= deadlineDate";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrmeasure"+rndStr;
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region ProvOrderEntry
@@ -613,7 +614,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patient.PatNum) allpats "//allpats seen by provider in date range with medication in med list that is not the 'None' medication
 						+"LEFT JOIN (SELECT medicationpat.PatNum,COUNT(*) AS 'Count' FROM medicationpat "
 						+"WHERE medicationpat.IsCpoe=1 GROUP BY medicationpat.PatNum) CountCpoe ON CountCpoe.PatNum=allpats.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region CPOE_MedOrdersOnly
@@ -628,7 +629,7 @@ namespace OpenDentBusiness{
 						+"AND medicationpat.DateStart BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" "
 						+"AND medicationpat.MedicationNum=0 "//MedicationNum is 0 when creating an Rx either manually or through NewCrop.  MedicationNum is not 0 when manually added through the medical window.
 						+"LEFT JOIN medication ON medication.MedicationNum=medicationpat.MedicationNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region CPOE_PreviouslyOrdered
@@ -650,7 +651,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patient.PatNum) allpatsprevordered "
 						+"LEFT JOIN (SELECT medicationpat.PatNum,COUNT(*) AS 'Count' FROM medicationpat "
 						+"WHERE medicationpat.IsCpoe=1 AND medicationpat.MedicationNum=0 GROUP BY PatNum) CountCpoe ON CountCpoe.PatNum=allpatsprevordered.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Rx
@@ -663,7 +664,7 @@ namespace OpenDentBusiness{
 						+"AND rxpat.ProvNum IN("+POut.String(provs)+")	"
 						+"AND RxDate >= "+POut.Date(dateStart)+" "
 						+"AND RxDate <= "+POut.Date(dateEnd);
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSigns
@@ -701,7 +702,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patient.PatNum) A "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign	WHERE Height>0 AND Weight>0 GROUP BY PatNum) hwCount ON hwCount.PatNum=A.PatNum "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign WHERE BpSystolic>0 AND BpDiastolic>0 GROUP BY PatNum) bpCount ON bpCount.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSigns2014
@@ -719,7 +720,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patient.PatNum) A "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign	WHERE Height>0 AND Weight>0 GROUP BY PatNum) hwCount ON hwCount.PatNum=A.PatNum "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign WHERE BpSystolic>0 AND BpDiastolic>0 GROUP BY PatNum) bpCount ON bpCount.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSignsBMIOnly
@@ -733,7 +734,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign	WHERE Height>0 AND Weight>0 GROUP BY PatNum) hwCount ON hwCount.PatNum=A.PatNum ";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSignsBPOnly
@@ -748,7 +749,7 @@ namespace OpenDentBusiness{
 						+"LEFT JOIN vitalsign ON vitalsign.PatNum=patient.PatNum AND BpSystolic!=0 AND BpDiastolic!=0 "
 						+"GROUP BY patient.PatNum "
 						+"HAVING Birthdate<=MAX(ProcDate)-INTERVAL 3 YEAR ";//only include in results if over 3 yrs old at date of last visit
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Smoking
@@ -771,7 +772,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"WHERE patient.Birthdate <= "+POut.Date(DateTime.Today.AddYears(-13))+" "//13 and older
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Lab
@@ -812,13 +813,13 @@ namespace OpenDentBusiness{
 						+"AND ehrlab.ObservationDateTimeStart BETWEEN DATE_FORMAT("+POut.Date(dateStart)+",'%Y%m%d') AND DATE_FORMAT("+POut.Date(dateEnd)+",'%Y%m%d') "
 						+"AND (CASE WHEN ehrlab.UsiCodeSystemName='LN' THEN ehrlab.UsiID WHEN ehrlab.UsiCodeSystemNameAlt='LN' THEN ehrlab.UsiIDAlt ELSE '' END) "
 							+"NOT IN (SELECT LoincCode FROM loinc WHERE loinc.ClassType LIKE '%RAD%')";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ElectronicCopy (Deprecated)
 				case EhrMeasureType.ElectronicCopy:
 					command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="CREATE TABLE tempehrmeasure"+rndStr+@" (
 						TempEhrMeasureNum bigint NOT NULL auto_increment PRIMARY KEY,
 						PatNum bigint NOT NULL,
@@ -829,7 +830,7 @@ namespace OpenDentBusiness{
 						copyProvided tinyint NOT NULL,
 						INDEX(PatNum)
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrmeasure"+rndStr+" (PatNum,LName,FName,dateRequested) SELECT patient.PatNum,LName,FName,DATE(DateTEvent) "
 						+"FROM ehrmeasureevent,patient "
 						+"WHERE patient.PatNum=ehrmeasureevent.PatNum "
@@ -838,29 +839,29 @@ namespace OpenDentBusiness{
 						+"AND DATE(DateTEvent) <= "+POut.Date(dateEnd)+" "
 						//+"AND patient.PriProv="+POut.Long(provNum);
 						+"AND patient.PriProv IN("+POut.String(provs)+")";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrmeasure"+rndStr+" "
 						+"SET dateDeadline = ADDDATE(dateRequested, INTERVAL 3 DAY)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrmeasure"+rndStr+" "
 						+"SET dateDeadline = ADDDate(dateDeadline, INTERVAL 2 DAY) "//add 2 more days for weekend
 						+"WHERE DAYOFWEEK(dateRequested) IN(4,5,6)";//wed, thur, fri
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrmeasure"+rndStr+",ehrmeasureevent SET copyProvided = 1 "
 						+"WHERE ehrmeasureevent.PatNum=tempehrmeasure"+rndStr+".PatNum AND EventType="+POut.Int((int)EhrMeasureEventType.ElectronicCopyProvidedToPt)+" "
 						+"AND DATE(ehrmeasureevent.DateTEvent) >= dateRequested "
 						+"AND DATE(ehrmeasureevent.DateTEvent) <= dateDeadline";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrmeasure"+rndStr;
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region ClinicalSummaries
 				case EhrMeasureType.ClinicalSummaries:
 					//command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="CREATE TABLE tempehrmeasure"+rndStr+@" (
 					//	TempEhrMeasureNum bigint NOT NULL auto_increment PRIMARY KEY,
 					//	PatNum bigint NOT NULL,
@@ -871,7 +872,7 @@ namespace OpenDentBusiness{
 					//	summaryProvided tinyint NOT NULL,
 					//	INDEX(PatNum)
 					//	) DEFAULT CHARSET=utf8";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="INSERT INTO tempehrmeasure"+rndStr+" (PatNum,LName,FName,visitDate) SELECT patient.PatNum,LName,FName,ProcDate "
 					//	+"FROM procedurelog "
 					//	+"LEFT JOIN patient ON patient.PatNum=procedurelog.PatNum "
@@ -881,23 +882,23 @@ namespace OpenDentBusiness{
 					//	+"AND procedurelog.ProvNum IN("+POut.String(provs)+") "
 					//	+"AND procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+" "
 					//	+"GROUP BY procedurelog.PatNum,ProcDate";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="UPDATE tempehrmeasure"+rndStr+" "
 					//	+"SET deadlineDate = ADDDATE(visitDate, INTERVAL 3 DAY)";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="UPDATE tempehrmeasure"+rndStr+" "
 					//	+"SET DeadlineDate = ADDDate(deadlineDate, INTERVAL 2 DAY) "//add 2 more days for weekend
 					//	+"WHERE DAYOFWEEK(visitDate) IN(4,5,6)";//wed, thur, fri
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="UPDATE tempehrmeasure"+rndStr+",ehrmeasureevent SET summaryProvided = 1 "
 					//	+"WHERE ehrmeasureevent.PatNum=tempehrmeasure"+rndStr+".PatNum AND EventType="+POut.Int((int)EhrMeasureEventType.ClinicalSummaryProvidedToPt)+" "
 					//	+"AND DATE(ehrmeasureevent.DateTEvent) >= visitDate "
 					//	+"AND DATE(ehrmeasureevent.DateTEvent) <= deadlineDate";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="SELECT * FROM tempehrmeasure"+rndStr;
 					//tableRaw=Db.GetTable(command);
 					//command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//We no longer have a TempEhrMeasureNum because it was never being used in this table.
 					command="SELECT Procs.*, (CASE WHEN ISNULL(ehrmeasureevent.EhrMeasureEventNum) THEN 0 ELSE 1 END) AS summaryProvided "
 							+"FROM ( "
@@ -918,7 +919,7 @@ namespace OpenDentBusiness{
 								+"AND "+DbHelper.DtimeToDate("ehrmeasureevent.DateTEvent")+" >= Procs.visitDate "
 								+"AND "+DbHelper.DtimeToDate("ehrmeasureevent.DateTEvent")+" <= Procs.deadlineDate "
 							+"GROUP BY Procs.PatNum,Procs.visitDate;";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Reminders
@@ -962,13 +963,13 @@ namespace OpenDentBusiness{
 						+"AND patient.PatStatus="+POut.Int((int)PatientStatus.Patient)+" "
 						+"AND patient.PriProv IN("+POut.String(provs)+") "
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region MedReconcile
 				case EhrMeasureType.MedReconcile:
 					//command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="CREATE TABLE tempehrmeasure"+rndStr+@" (
 					//	PatNum bigint NOT NULL PRIMARY KEY,
 					//	LName varchar(255) NOT NULL,
@@ -976,7 +977,7 @@ namespace OpenDentBusiness{
 					//	RefCount int NOT NULL,
 					//	ReconcileCount int NOT NULL
 					//	) DEFAULT CHARSET=utf8";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="INSERT INTO tempehrmeasure"+rndStr+" (PatNum,LName,FName,RefCount) SELECT patient.PatNum,LName,FName,COUNT(*) "
 					//	+"FROM refattach,patient "
 					//	+"WHERE patient.PatNum=refattach.PatNum "
@@ -986,17 +987,17 @@ namespace OpenDentBusiness{
 					//	+"AND RefDate <= "+POut.Date(dateEnd)+" "
 					//	+"AND RefType="+POut.Int((int)ReferralType.RefFrom)+" AND IsTransitionOfCare=1 "
 					//	+"GROUP BY refattach.PatNum";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="UPDATE tempehrmeasure"+rndStr+" "
 					//	+"SET ReconcileCount = (SELECT COUNT(*) FROM ehrmeasureevent "
 					//	+"WHERE ehrmeasureevent.PatNum=tempehrmeasure"+rndStr+".PatNum AND EventType="+POut.Int((int)EhrMeasureEventType.MedicationReconcile)+" "
 					//	+"AND DATE(ehrmeasureevent.DateTEvent) >= "+POut.Date(dateStart)+" "
 					//	+"AND DATE(ehrmeasureevent.DateTEvent) <= "+POut.Date(dateEnd)+")";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="SELECT * FROM tempehrmeasure"+rndStr;
 					//tableRaw=Db.GetTable(command);
 					//command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//Reworked to only count patients seen by this provider in the date range
 					command="SELECT ptsRefCnt.*,COALESCE(RecCount,0) AS ReconcileCount "
 						+"FROM (SELECT ptsSeen.*,COUNT(DISTINCT refattach.RefAttachNum) AS RefCount "
@@ -1015,13 +1016,13 @@ namespace OpenDentBusiness{
 							+"WHERE EventType="+POut.Int((int)EhrMeasureEventType.MedicationReconcile)+" "
 							+"AND DATE(ehrmeasureevent.DateTEvent) BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" "
 							+"GROUP BY ehrmeasureevent.PatNum) ptsRecCount ON ptsRefCnt.PatNum=ptsRecCount.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region SummaryOfCare
 				case EhrMeasureType.SummaryOfCare:
 					//command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="CREATE TABLE tempehrmeasure"+rndStr+@" (
 					//	PatNum bigint NOT NULL PRIMARY KEY,
 					//	LName varchar(255) NOT NULL,
@@ -1029,7 +1030,7 @@ namespace OpenDentBusiness{
 					//	RefCount int NOT NULL,
 					//	CcdCount int NOT NULL
 					//	) DEFAULT CHARSET=utf8";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="INSERT INTO tempehrmeasure"+rndStr+" (PatNum,LName,FName,RefCount) SELECT patient.PatNum,LName,FName,COUNT(*) "
 					//	+"FROM refattach,patient "
 					//	+"WHERE patient.PatNum=refattach.PatNum "
@@ -1039,17 +1040,17 @@ namespace OpenDentBusiness{
 					//	+"AND RefDate <= "+POut.Date(dateEnd)+" "
 					//	+"AND RefType="+POut.Int((int)ReferralType.RefTo)+" AND IsTransitionOfCare=1 "
 					//	+"GROUP BY refattach.PatNum";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="UPDATE tempehrmeasure"+rndStr+" "
 					//	+"SET CcdCount = (SELECT COUNT(*) FROM ehrmeasureevent "
 					//	+"WHERE ehrmeasureevent.PatNum=tempehrmeasure"+rndStr+".PatNum AND EventType="+POut.Int((int)EhrMeasureEventType.SummaryOfCareProvidedToDr)+" "
 					//	+"AND DATE(ehrmeasureevent.DateTEvent) >= "+POut.Date(dateStart)+" "
 					//	+"AND DATE(ehrmeasureevent.DateTEvent) <= "+POut.Date(dateEnd)+")";
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//command="SELECT * FROM tempehrmeasure"+rndStr;
 					//tableRaw=Db.GetTable(command);
 					//command="DROP TABLE IF EXISTS tempehrmeasure"+rndStr;
-					//Db.NonQ(command);
+					//Db.ExecuteNonQuery(command);
 					//Reworked to only count patients seen by this provider in the date range
 					command="SELECT patient.PatNum,patient.LName,patient.FName,refattach.RefDate, "
 						+"referral.FName AS RefFName,referral.LName AS RefLName,SUM(CASE WHEN ISNULL(socevent.FKey) THEN 0 ELSE 1 END) AS SOCSent "
@@ -1066,7 +1067,7 @@ namespace OpenDentBusiness{
 						+"AND RefType="+POut.Int((int)ReferralType.RefTo)+" AND IsTransitionOfCare=1 "
 						+"AND refattach.ProvNum IN("+POut.String(provs)+") "
 						+"GROUP BY refattach.RefAttachNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				default:
@@ -1618,7 +1619,7 @@ namespace OpenDentBusiness{
 			command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
 				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"')";
-			string provs=Db.GetScalar(command);
+			string provs=Database.ExecuteString(command);
 			switch(mtype) {
 				case EhrMeasureType.ProblemList:
 				case EhrMeasureType.MedicationList:
@@ -1647,7 +1648,7 @@ namespace OpenDentBusiness{
 						+"AND MedOrderType="+POut.Int((int)MedicalOrderType.Laboratory)+" "
 						+"AND medicalorder.ProvNum IN("+POut.String(provs)+") "
 						+"AND DATE(DateTimeOrder) BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" ";
-					retval+=PIn.Int(Db.GetCount(command));
+					retval+=PIn.Int(Database.ExecuteString(command));
 					//Excluded if problems, medications, or medication allergy information is not ordered or created for patients seen in the reporting period
 					command="SELECT SUM(COALESCE(allergies.Count,0)+COALESCE(problems.Count,0)+COALESCE(meds.Count,0)) AS 'Count' "
 						+"FROM (SELECT patient.PatNum	FROM patient "
@@ -1670,7 +1671,7 @@ namespace OpenDentBusiness{
 						+"WHERE DateStart BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" "
 						+"OR "+DbHelper.DtimeToDate("DateTStamp")+" BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" "
 						+"GROUP BY PatNum) meds ON meds.PatNum=A.PatNum";
-					return retval+=PIn.Int(Db.GetScalar(command));
+					return retval+=Database.ExecuteInt(command);
 				#endregion
 				#region CPOE_Rx
 				case EhrMeasureType.ProvOrderEntry:
@@ -1683,7 +1684,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN rxpat ON rxpat.PatNum=patient.PatNum "
 						+"AND rxpat.ProvNum IN("+POut.String(provs)+")	"
 						+"AND RxDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd);
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region VitalSigns
 				case EhrMeasureType.VitalSigns:
@@ -1699,7 +1700,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN procedurecode ON procedurelog.CodeNum = procedurecode.CodeNum "
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region Smoking
 				case EhrMeasureType.Smoking:
@@ -1713,7 +1714,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN procedurecode ON procedurelog.CodeNum = procedurecode.CodeNum "
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region ClinicalSummaries
 				case EhrMeasureType.ClinicalSummaries:
@@ -1723,7 +1724,7 @@ namespace OpenDentBusiness{
 						+"WHERE ProcStatus=2 AND ProvNum IN("+POut.String(provs)+")	"
 						+"AND procedurelog.ProcDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" "
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region Reminders
 				case EhrMeasureType.Reminders:
@@ -1739,7 +1740,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN procedurecode ON procedurelog.CodeNum = procedurecode.CodeNum "
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 			}
 			throw new ApplicationException("Type not found: "+mtype.ToString());
@@ -2829,7 +2830,7 @@ namespace OpenDentBusiness{
 			command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
 				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"')";
-			string provs=Db.GetScalar(command);
+			string provs=Database.ExecuteString(command);
 			string[] tempProv=provs.Split(',');
 			string provOID="";
 			for(int oi=0;oi<tempProv.Length;oi++) {
@@ -2842,7 +2843,7 @@ namespace OpenDentBusiness{
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
 				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"') "
 				+"AND provider.NationalProvID !='' AND provider.NationalProvID !=','";
-			string provNPIs=Db.GetScalar(command);
+			string provNPIs=Database.ExecuteString(command);
 			provNPIs.Trim(',');
 			if(provNPIs=="") {
 				provNPIs="NULL";//No NPI entered, queries below use IN statements and require at least one value.
@@ -2861,7 +2862,7 @@ namespace OpenDentBusiness{
 						+"WHERE medPat.ProvNum IN("+POut.String(provs)+") "
 						+"AND medPat.MedicationNum=0 "//MedicationNum is 0 when creating an Rx either manually or through NewCrop.  MedicationNum is not 0 when manually added through the medical window.
 						+"AND medPat.DateStart BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd);
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region CPOE_LabOrdersOnly
@@ -2878,7 +2879,7 @@ namespace OpenDentBusiness{
 						+"AND ehrlab.ObservationDateTimeStart BETWEEN DATE_FORMAT("+POut.Date(dateStart)+",'%Y%m%d') AND DATE_FORMAT("+POut.Date(dateEnd)+",'%Y%m%d') "
 						+"AND (CASE WHEN ehrlab.UsiCodeSystemName='LN' THEN ehrlab.UsiID WHEN ehrlab.UsiCodeSystemNameAlt='LN' THEN ehrlab.UsiIDAlt ELSE '' END) "
 							+"NOT IN (SELECT LoincCode FROM loinc WHERE loinc.ClassType LIKE '%RAD%')";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region CPOE_RadiologyOrdersOnly
@@ -2920,7 +2921,7 @@ namespace OpenDentBusiness{
 						+"AND procedurelog.ProvNum IN ("+POut.String(provs)+") "
 						+"AND procedurelog.DateEntryC BETWEEN "+dateStartStr+" AND "+POut.Date(dateEnd);
 					}
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Rx
@@ -2933,7 +2934,7 @@ namespace OpenDentBusiness{
 						+"AND rxpat.ProvNum IN("+POut.String(provs)+")	"
 						+"AND RxDate >= "+POut.Date(dateStart)+" "
 						+"AND RxDate <= "+POut.Date(dateEnd);
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Demographics
@@ -2972,7 +2973,7 @@ namespace OpenDentBusiness{
 							+"GROUP BY PatNum "
 							+"ORDER BY NULL "
 						+") race ON race.PatNum=patient.PatNum;";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSigns
@@ -2990,7 +2991,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patient.PatNum) A "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign	WHERE Height>0 AND Weight>0 GROUP BY PatNum) hwCount ON hwCount.PatNum=A.PatNum "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign WHERE BpSystolic>0 AND BpDiastolic>0 GROUP BY PatNum) bpCount ON bpCount.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSignsBMIOnly
@@ -3004,7 +3005,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign	WHERE Height>0 AND Weight>0 GROUP BY PatNum) hwCount ON hwCount.PatNum=A.PatNum ";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSignsBPOnly
@@ -3019,7 +3020,7 @@ namespace OpenDentBusiness{
 						+"LEFT JOIN vitalsign ON vitalsign.PatNum=patient.PatNum AND BpSystolic!=0 AND BpDiastolic!=0 "
 						+"GROUP BY patient.PatNum "
 						+"HAVING Birthdate<=MAX(ProcDate)-INTERVAL 3 YEAR ";//only include in results if over 3 yrs old at date of last visit
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Smoking
@@ -3032,7 +3033,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"WHERE patient.Birthdate <= "+POut.Date(DateTime.Today.AddYears(-13))+" "//13 and older
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ElectronicCopyAccess
@@ -3060,7 +3061,7 @@ namespace OpenDentBusiness{
 							+"GROUP BY ehrmeasureevent.PatNum "
 							+"ORDER BY NULL "
 						+") OnlineAccess ON patient.PatNum=OnlineAccess.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ElectronicCopy
@@ -3077,7 +3078,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patnum) "
 						+"OnlineAccess ON patient.PatNum=OnlineAccess.PatNum "
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ClinicalSummaries
@@ -3104,7 +3105,7 @@ namespace OpenDentBusiness{
 							+"ORDER BY NULL "
 						+") ClinSum ON patient.PatNum=ClinSum.PatNum "
 						+"GROUP BY patient.PatNum, ProcCheck.ProcDate";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Lab
@@ -3134,7 +3135,7 @@ namespace OpenDentBusiness{
 						+"AND ehrlab.ObservationDateTimeStart BETWEEN DATE_FORMAT("+POut.Date(dateStart)+",'%Y%m%d') AND DATE_FORMAT("+POut.Date(dateEnd)+",'%Y%m%d') "
 						+"AND (CASE WHEN ehrlab.UsiCodeSystemName='LN' THEN ehrlab.UsiID WHEN ehrlab.UsiCodeSystemNameAlt='LN' THEN ehrlab.UsiIDAlt ELSE '' END) "
 							+"NOT IN (SELECT LoincCode FROM loinc WHERE loinc.ClassType LIKE '%RAD%')"; //Not sure if we need this since rad labs shouldnt be set to numeric results
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Reminders
@@ -3156,7 +3157,7 @@ namespace OpenDentBusiness{
 						+"AND patient.PatStatus="+POut.Int((int)PatientStatus.Patient)+" "
 						+"AND patient.PriProv IN("+POut.String(provs)+") "
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Education
@@ -3172,7 +3173,7 @@ namespace OpenDentBusiness{
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM ehrmeasureevent "
 						+"WHERE EventType="+POut.Int((int)EhrMeasureEventType.EducationProvided)+" "
 						+"GROUP BY PatNum) edCount ON edCount.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region MedReconcile
@@ -3194,7 +3195,7 @@ namespace OpenDentBusiness{
 							+"WHERE EventType="+POut.Int((int)EhrMeasureEventType.MedicationReconcile)+" "
 							+"AND DATE(ehrmeasureevent.DateTEvent) BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" "
 							+"GROUP BY ehrmeasureevent.PatNum) ptsRecCount ON ptsRefCnt.PatNum=ptsRecCount.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region SummaryOfCare
@@ -3214,7 +3215,7 @@ namespace OpenDentBusiness{
 						+"AND RefType="+POut.Int((int)ReferralType.RefTo)+" AND IsTransitionOfCare=1 "
 						+"AND refattach.ProvNum IN("+POut.String(provs)+") "
 						+"GROUP BY refattach.RefAttachNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region SummaryOfCareElectronic
@@ -3234,7 +3235,7 @@ namespace OpenDentBusiness{
 						+"AND RefType="+POut.Int((int)ReferralType.RefTo)+" AND IsTransitionOfCare=1 "
 						+"AND refattach.ProvNum IN("+POut.String(provs)+") "
 						+"GROUP BY refattach.RefAttachNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region SecureMessaging
@@ -3252,7 +3253,7 @@ namespace OpenDentBusiness{
 						+"WHERE EventType="+POut.Int((int)EhrMeasureEventType.SecureMessageFromPat)+" GROUP BY ehrmeasureevent.PatNum) "
 						+"SecureMessage ON A.PatNum=SecureMessage.PatNum "
 						+"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region FamilyHistory
@@ -3267,7 +3268,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patient.PatNum) AS UniquePatsAndProcs "
 						+"LEFT JOIN familyhealth ON UniquePatsAndProcs.PatNum=familyhealth.PatNum "
 						+"GROUP BY UniquePatsAndProcs.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ElectricNote
@@ -3311,7 +3312,7 @@ namespace OpenDentBusiness{
 						ProcNum BIGINT(20) NOT NULL,
 						INDEX(PatNum)
 					)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempprocnotesigned"+rndStr+@" (
 						SELECT procnote.PatNum,procnote.ProcNum 
 						FROM procnote 
@@ -3327,7 +3328,7 @@ namespace OpenDentBusiness{
 						GROUP BY procnote.ProcNum 
 						ORDER BY NULL
 					)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"SELECT patient.PatNum,patient.LName,patient.FName,notes.NumNotes 
 						FROM patient 
 						INNER JOIN (
@@ -3346,9 +3347,9 @@ namespace OpenDentBusiness{
 							GROUP BY procedurelog.PatNum 
 							ORDER BY NULL
 						) notes ON notes.PatNum=patient.PatNum AND notes.ComplProcs=1";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempprocnotesigned"+rndStr;
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region LabImages
@@ -3366,7 +3367,7 @@ namespace OpenDentBusiness{
 							+"AND ehrlab.ObservationDateTimeStart BETWEEN DATE_FORMAT("+POut.Date(dateStart)+",'%Y%m%d') AND DATE_FORMAT("+POut.Date(dateEnd)+",'%Y%m%d') "
 						+") as labsTable "
 						+"INNER JOIN (SELECT DISTINCT EhrLabNum,DocNum FROM ehrlabimage) AS labImage ON labsTable.EhrLabNum=labImage.EhrLabNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				//default:
@@ -3903,7 +3904,7 @@ namespace OpenDentBusiness{
 			command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
 				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"')";
-			string provs=Db.GetScalar(command);
+			string provs=Database.ExecuteString(command);
 			switch(mtype) {
 				#region CPOE_MedOrdersOnly
 				case EhrMeasureType.CPOE_MedOrdersOnly:
@@ -3912,7 +3913,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN rxpat ON rxpat.PatNum=patient.PatNum "
 						+"AND rxpat.ProvNum IN("+POut.String(provs)+")	"
 						+"AND RxDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd);
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region CPOE_LabOrdersOnly
 				case EhrMeasureType.CPOE_LabOrdersOnly:
@@ -3923,7 +3924,7 @@ namespace OpenDentBusiness{
 						+"AND ObservationDateTimeStart BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)
 						+" INNER JOIN loinc on ehrlab.UsiID=loinc.LoincCode"
 						+" AND loinc.ClassType NOT LIKE '%rad%'";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region CPOE_RadiologyOrdersOnly
 				case EhrMeasureType.CPOE_RadiologyOrdersOnly:
@@ -3935,7 +3936,7 @@ namespace OpenDentBusiness{
 						+"AND ObservationDateTimeStart BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)
 						+" INNER JOIN loinc on ehrlab.UsiID=loinc.LoincCode"
 						+" AND loinc.ClassType LIKE '%rad%'";
-					countRadOrders=PIn.Int(Db.GetScalar(command));
+					countRadOrders=Database.ExecuteInt(command);
 					DateTime dateStartRad154=PrefC.GetDate(PrefName.RadiologyDateStartedUsing154);
 					//Only count radiology orders via the procedurelog table if the date that the office updated to v15.4.1 is less than the end date.
 					if(dateStartRad154 < dateEnd.Date) {
@@ -3955,7 +3956,7 @@ namespace OpenDentBusiness{
 							+"WHERE procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+" "
 							+"AND procedurelog.ProvNum IN ("+POut.String(provs)+") "
 							+"AND procedurelog.DateEntryC BETWEEN "+dateStartStr+" AND "+POut.Date(dateEnd);
-						countRadOrders+=PIn.Int(Db.GetCount(command));
+						countRadOrders+=PIn.Int(Database.ExecuteString(command));
 					}
 					return countRadOrders;
 				#endregion
@@ -3966,7 +3967,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN rxpat ON rxpat.PatNum=patient.PatNum "
 						+"AND rxpat.ProvNum IN("+POut.String(provs)+")	"
 						+"AND RxDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd);
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region Demographics
 				case EhrMeasureType.Demographics:
@@ -3983,7 +3984,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN procedurecode ON procedurelog.CodeNum = procedurecode.CodeNum "
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region VitalSignsBMIOnly
 				case EhrMeasureType.VitalSignsBMIOnly:
@@ -4000,7 +4001,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN procedurecode ON procedurelog.CodeNum = procedurecode.CodeNum "
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region Smoking
 				case EhrMeasureType.Smoking:
@@ -4013,7 +4014,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN procedurecode ON procedurelog.CodeNum = procedurecode.CodeNum "
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region ElectronicCopyAccess
 				case EhrMeasureType.ElectronicCopyAccess:
@@ -4031,7 +4032,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"WHERE ProcStatus=2 AND ProvNum IN("+POut.String(provs)+")	"
 						+"AND procedurelog.ProcDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region Lab
 				case EhrMeasureType.Lab:
@@ -4042,7 +4043,7 @@ namespace OpenDentBusiness{
 						+"AND ObservationDateTimeStart BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)
 						+" INNER JOIN loinc on ehrlab.UsiID=loinc.LoincCode"
 						+" AND loinc.ClassType NOT LIKE '%rad%'";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region Reminders
 				case EhrMeasureType.Reminders:
@@ -4052,7 +4053,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"WHERE ProcStatus=2 AND ProvNum IN("+POut.String(provs)+")	"
 						+"AND procedurelog.ProcDate BETWEEN "+POut.Date(dateStart.AddMonths(-24))+" AND "+POut.Date(dateStart)+" ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region Education
 				case EhrMeasureType.Education:
@@ -4062,7 +4063,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"WHERE ProcStatus=2 AND ProvNum IN("+POut.String(provs)+")	"
 						+"AND procedurelog.ProcDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region MedReconcile
 				case EhrMeasureType.MedReconcile:
@@ -4075,7 +4076,7 @@ namespace OpenDentBusiness{
 						+"AND provider.ProvNum="+POut.Long(provNum)+" "
 						+"LEFT JOIN refattach ON referral.referralNum=refattach.referralNum "
 						+"AND RefDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd);
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region SummaryOfCareElectronic
 				case EhrMeasureType.SummaryOfCareElectronic:
@@ -4084,7 +4085,7 @@ namespace OpenDentBusiness{
 						+"AND provider.ProvNum="+POut.Long(provNum)+" "
 						+"LEFT JOIN refattach ON referral.referralNum=refattach.referralNum "
 						+"AND RefDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd);
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region SecureMessaging
 				case EhrMeasureType.SecureMessaging:
@@ -4094,7 +4095,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"WHERE ProcStatus=2 AND ProvNum IN("+POut.String(provs)+")	"
 						+"AND procedurelog.ProcDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region FamilyHistory
 				case EhrMeasureType.FamilyHistory:
@@ -4104,7 +4105,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"WHERE ProcStatus=2 AND ProvNum IN("+POut.String(provs)+")	"
 						+"AND procedurelog.ProcDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" ";
-					return retval=PIn.Int(Db.GetScalar(command));
+					return retval=Database.ExecuteInt(command);
 				#endregion
 				#region ElectricNote
 				case EhrMeasureType.ElectronicNote:
@@ -5794,7 +5795,7 @@ namespace OpenDentBusiness{
 			command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
 				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"')";
-			string provs=Db.GetScalar(command);
+			string provs=Database.ExecuteString(command);
 			string[] tempProv=provs.Split(',');
 			string provOID="";
 			for(int oi=0;oi<tempProv.Length;oi++) {
@@ -5807,7 +5808,7 @@ namespace OpenDentBusiness{
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
 				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"') "
 				+"AND provider.NationalProvID !='' AND provider.NationalProvID !=','";
-			string provNPIs=Db.GetScalar(command);
+			string provNPIs=Database.ExecuteString(command);
 			provNPIs.Trim(',');
 			if(provNPIs=="") {
 				provNPIs="NULL";//No NPI entered, queries below use IN statements and require at least one value.
@@ -5826,7 +5827,7 @@ namespace OpenDentBusiness{
 						+"WHERE medPat.ProvNum IN("+POut.String(provs)+") "
 						+"AND medPat.MedicationNum=0 "//MedicationNum is 0 when creating an Rx either manually or through NewCrop.  MedicationNum is not 0 when manually added through the medical window.
 						+"AND medPat.DateStart BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd);
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region CPOE_LabOrdersOnly
@@ -5843,7 +5844,7 @@ namespace OpenDentBusiness{
 						+"AND ehrlab.ObservationDateTimeStart BETWEEN DATE_FORMAT("+POut.Date(dateStart)+",'%Y%m%d') AND DATE_FORMAT("+POut.Date(dateEnd)+",'%Y%m%d') "
 						+"AND (CASE WHEN ehrlab.UsiCodeSystemName='LN' THEN ehrlab.UsiID WHEN ehrlab.UsiCodeSystemNameAlt='LN' THEN ehrlab.UsiIDAlt ELSE '' END) "
 							+"NOT IN (SELECT LoincCode FROM loinc WHERE loinc.ClassType LIKE '%RAD%')";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region CPOE_RadiologyOrdersOnly
@@ -5885,7 +5886,7 @@ namespace OpenDentBusiness{
 						+"AND procedurelog.ProvNum IN ("+POut.String(provs)+") "
 						+"AND procedurelog.DateEntryC BETWEEN "+dateStartStr+" AND "+POut.Date(dateEnd);
 					}
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Rx
@@ -5898,7 +5899,7 @@ namespace OpenDentBusiness{
 						+"AND rxpat.ProvNum IN("+POut.String(provs)+")	"
 						+"AND RxDate >= "+POut.Date(dateStart)+" "
 						+"AND RxDate <= "+POut.Date(dateEnd);
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Demographics
@@ -5930,7 +5931,7 @@ namespace OpenDentBusiness{
 							+"GROUP BY PatNum "
 							+"ORDER BY NULL "
 						+") race ON race.PatNum=patient.PatNum;";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSigns
@@ -5948,7 +5949,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patient.PatNum) A "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign	WHERE Height>0 AND Weight>0 GROUP BY PatNum) hwCount ON hwCount.PatNum=A.PatNum "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign WHERE BpSystolic>0 AND BpDiastolic>0 GROUP BY PatNum) bpCount ON bpCount.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSignsBMIOnly
@@ -5962,7 +5963,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM vitalsign	WHERE Height>0 AND Weight>0 GROUP BY PatNum) hwCount ON hwCount.PatNum=A.PatNum ";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region VitalSignsBPOnly
@@ -5977,7 +5978,7 @@ namespace OpenDentBusiness{
 						+"LEFT JOIN vitalsign ON vitalsign.PatNum=patient.PatNum AND BpSystolic!=0 AND BpDiastolic!=0 "
 						+"GROUP BY patient.PatNum "
 						+"HAVING Birthdate<=MAX(ProcDate)-INTERVAL 3 YEAR ";//only include in results if over 3 yrs old at date of last visit
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Smoking
@@ -5990,7 +5991,7 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"WHERE patient.Birthdate <= "+POut.Date(DateTime.Today.AddYears(-13))+" "//13 and older
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ElectronicCopyAccess
@@ -6018,7 +6019,7 @@ namespace OpenDentBusiness{
 							+"GROUP BY ehrmeasureevent.PatNum "
 							+"ORDER BY NULL "
 						+") OnlineAccess ON patient.PatNum=OnlineAccess.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ElectronicCopy
@@ -6036,7 +6037,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patnum) "
 						+"OnlineAccess ON patient.PatNum=OnlineAccess.PatNum "
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ClinicalSummaries
@@ -6062,7 +6063,7 @@ namespace OpenDentBusiness{
 							+"GROUP BY ehrmeasureevent.PatNum "
 							+"ORDER BY NULL "
 						+") ClinSum ON patient.PatNum=ClinSum.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Lab
@@ -6092,7 +6093,7 @@ namespace OpenDentBusiness{
 						+"AND ehrlab.ObservationDateTimeStart BETWEEN DATE_FORMAT("+POut.Date(dateStart)+",'%Y%m%d') AND DATE_FORMAT("+POut.Date(dateEnd)+",'%Y%m%d') "
 						+"AND (CASE WHEN ehrlab.UsiCodeSystemName='LN' THEN ehrlab.UsiID WHEN ehrlab.UsiCodeSystemNameAlt='LN' THEN ehrlab.UsiIDAlt ELSE '' END) "
 							+"NOT IN (SELECT LoincCode FROM loinc WHERE loinc.ClassType LIKE '%RAD%')"; //Not sure if we need this since rad labs shouldnt be set to numeric results
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Reminders
@@ -6114,7 +6115,7 @@ namespace OpenDentBusiness{
 						+"AND patient.PatStatus="+POut.Int((int)PatientStatus.Patient)+" "
 						+"AND patient.PriProv IN("+POut.String(provs)+") "
 						+"GROUP BY patient.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region Education
@@ -6130,7 +6131,7 @@ namespace OpenDentBusiness{
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM ehrmeasureevent "
 						+"WHERE EventType="+POut.Int((int)EhrMeasureEventType.EducationProvided)+" "
 						+"GROUP BY PatNum) edCount ON edCount.PatNum=A.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region MedReconcile
@@ -6152,7 +6153,7 @@ namespace OpenDentBusiness{
 							+"WHERE EventType="+POut.Int((int)EhrMeasureEventType.MedicationReconcile)+" "
 							+"AND DATE(ehrmeasureevent.DateTEvent) BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" "
 							+"GROUP BY ehrmeasureevent.PatNum) ptsRecCount ON ptsRefCnt.PatNum=ptsRecCount.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region SummaryOfCare
@@ -6172,7 +6173,7 @@ namespace OpenDentBusiness{
 						+"AND RefType="+POut.Int((int)ReferralType.RefTo)+" AND IsTransitionOfCare=1 "
 						+"AND refattach.ProvNum IN("+POut.String(provs)+") "
 						+"GROUP BY refattach.RefAttachNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region SummaryOfCareElectronic
@@ -6192,7 +6193,7 @@ namespace OpenDentBusiness{
 						+"AND RefType="+POut.Int((int)ReferralType.RefTo)+" AND IsTransitionOfCare=1 "
 						+"AND refattach.ProvNum IN("+POut.String(provs)+") "
 						+"GROUP BY refattach.RefAttachNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region SecureMessaging
@@ -6216,7 +6217,7 @@ namespace OpenDentBusiness{
 						+"AND procedurelog.ProvNum IN("+POut.String(provs)+")	"
 						+"AND procedurelog.ProcDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" "
 						+"GROUP BY procedurelog.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region FamilyHistory
@@ -6231,7 +6232,7 @@ namespace OpenDentBusiness{
 						+"GROUP BY patient.PatNum) AS UniquePatsAndProcs "
 						+"LEFT JOIN familyhealth ON UniquePatsAndProcs.PatNum=familyhealth.PatNum "
 						+"GROUP BY UniquePatsAndProcs.PatNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				#region ElectricNote
@@ -6275,7 +6276,7 @@ namespace OpenDentBusiness{
 						ProcNum BIGINT(20) NOT NULL,
 						INDEX(PatNum)
 					)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempprocnotesigned"+rndStr+@" (
 						SELECT procnote.PatNum,procnote.ProcNum 
 						FROM procnote 
@@ -6291,7 +6292,7 @@ namespace OpenDentBusiness{
 						GROUP BY procnote.ProcNum 
 						ORDER BY NULL
 					)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"SELECT patient.PatNum,patient.LName,patient.FName,notes.NumNotes 
 						FROM patient 
 						INNER JOIN (
@@ -6310,9 +6311,9 @@ namespace OpenDentBusiness{
 							GROUP BY procedurelog.PatNum 
 							ORDER BY NULL
 						) notes ON notes.PatNum=patient.PatNum AND notes.ComplProcs=1";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempprocnotesigned"+rndStr;
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region LabImages
@@ -6330,7 +6331,7 @@ namespace OpenDentBusiness{
 							+"AND ehrlab.ObservationDateTimeStart BETWEEN DATE_FORMAT("+POut.Date(dateStart)+",'%Y%m%d') AND DATE_FORMAT("+POut.Date(dateEnd)+",'%Y%m%d') "
 						+") as labsTable "
 						+"INNER JOIN (SELECT DISTINCT EhrLabNum,DocNum FROM ehrlabimage) AS labImage ON labsTable.EhrLabNum=labImage.EhrLabNum";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					break;
 				#endregion
 				//default:

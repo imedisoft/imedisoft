@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace OpenDentBusiness{
 					+" OR AptStatus="+POut.Long((int)ApptStatus.Scheduled)
 					+" OR AptStatus="+POut.Long((int)ApptStatus.UnschedList)+") ";
 			}
-			DataTable raw=Db.GetTable(command);
+			DataTable raw=Database.ExecuteDataTable(command);
 			DateTime AptDateTime;
 			DateTime date;
 			for(int i=0;i<raw.Rows.Count;i++) {
@@ -105,7 +106,7 @@ namespace OpenDentBusiness{
 					+"LEFT JOIN patient ON labcase.PatNum=patient.PatNum "
 					+"LEFT JOIN laboratory ON labcase.LaboratoryNum=laboratory.LaboratoryNum "
 					+"WHERE AptNum=0";
-				raw=Db.GetTable(command);
+				raw=Database.ExecuteDataTable(command);
 				for(int i=0;i<raw.Rows.Count;i++) {
 					row=table.NewRow();
 					row["AptDateTime"]=DateTime.MinValue;
@@ -218,26 +219,26 @@ namespace OpenDentBusiness{
 				+" AND sheetfield.FieldType="+POut.Long((int)SheetFieldType.Parameter)
 				+" AND sheetfield.FieldName='LabCaseNum' "
 				+"AND sheetfield.FieldValue='"+POut.Long(labCaseNum)+"'";
-			if(PIn.Int(Db.GetCount(command))!=0) {
+			if(PIn.Int(Database.ExecuteString(command))!=0) {
 				throw new Exception(Lans.g("LabCases","Cannot delete LabCase because lab slip is still attached."));
 			}
 			//delete
 			command= "DELETE FROM labcase WHERE LabCaseNum = "+POut.Long(labCaseNum);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Attaches a labcase to an appointment.</summary>
 		public static void AttachToAppt(long labCaseNum,long aptNum) {
 			
 			string command="UPDATE labcase SET AptNum="+POut.Long(aptNum)+" WHERE LabCaseNum="+POut.Long(labCaseNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Attaches a labcase to a planned appointment.</summary>
 		public static void AttachToPlannedAppt(long labCaseNum,long plannedAptNum) {
 			
 			string command="UPDATE labcase SET PlannedAptNum="+POut.Long(plannedAptNum)+" WHERE LabCaseNum="+POut.Long(labCaseNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Frequently returns null.</summary>

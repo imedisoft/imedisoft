@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary>In ProcGroupItems the ProcNum is a procedure in a group and GroupNum is the group the procedure is in. GroupNum is a FK to the Procedure table. There is a special type of procedure with the procedure code "~GRP~" that is used to indicate this is a group Procedure.</summary>
@@ -75,7 +76,7 @@ namespace OpenDentBusiness{
 					DELETE
 					FROM procgroupitem
 					WHERE ProcGroupItemNum IN({string.Join(",",listProcGroupItemNums.Select(x => POut.Long(x)))})";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns a count of the number of procedures attached to a group note.  Takes the ProcNum of a group note.
@@ -93,7 +94,7 @@ namespace OpenDentBusiness{
 					ON procedurelog.ProcNum=procgroupitem.ProcNum
 					AND procedurelog.ProcStatus IN ({string.Join(",",listStatusComplete.Select(x => POut.Int((int)x)))}) 
 				WHERE GroupNum = {POut.Long(groupNum)}";
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>For the procnums passed in, returns a dictionary containing all grouped Procedures with the given statuses. The key is the groupNum.
@@ -110,7 +111,7 @@ namespace OpenDentBusiness{
 					ON procedurelog.ProcNum=procgroupitem.ProcNum
 					AND procedurelog.ProcStatus IN ({string.Join("",listStatusComplete.Select(x => POut.Int((int)x)))}) 
 				WHERE procgroupitem.GroupNum IN ({string.Join(",",listProcNums)})";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<Procedure> listProcs=Crud.ProcedureCrud.TableToList(table);
 			SerializableDictionary<long,List<Procedure>> retVal=new SerializableDictionary<long,List<Procedure>>();
 			for(int i=0;i<table.Rows.Count;i++) {
@@ -219,7 +220,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long procGroupItemNum) {
 			
 			string command= "DELETE FROM procgroupitem WHERE ProcGroupItemNum = "+POut.Long(procGroupItemNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

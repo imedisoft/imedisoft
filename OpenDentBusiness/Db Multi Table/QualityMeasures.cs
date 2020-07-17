@@ -8,6 +8,7 @@ using System.Xml.XPath;
 using System.Text.RegularExpressions;
 using Ionic.Zip;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary>Used in Ehr quality measures.</summary>
@@ -508,7 +509,7 @@ namespace OpenDentBusiness {
 				case QualityType.WeightOver65:
 					//WeightOver65-------------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -520,7 +521,7 @@ namespace OpenDentBusiness {
 						IsIneligible tinyint NOT NULL,
 						Documentation varchar(255) NOT NULL
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName,DateVisit) SELECT patient.PatNum,LName,FName,"
 						+"MAX(ProcDate) "//on the first pass, all we can obtain is the date of the visit
 						+"FROM patient "
@@ -532,7 +533,7 @@ namespace OpenDentBusiness {
 						+"AND procedurelog.ProcDate <= "+POut.Date(dateEnd)+" "
 						+"WHERE Birthdate > '1880-01-01' AND Birthdate <= "+POut.Date(DateTime.Today.AddYears(-65))+" "//65 or older
 						+"GROUP BY patient.PatNum";//there will frequently be multiple procedurelog events
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//now, find BMIs within 6 months of each visit date. No logic for picking one of multiple BMIs.
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".Height=vitalsign.Height, "
@@ -543,18 +544,18 @@ namespace OpenDentBusiness {
 						+"WHERE tempehrquality"+rndStr+@".PatNum=vitalsign.PatNum "
 						+"AND vitalsign.DateTaken <= tempehrquality"+rndStr+@".DateVisit "
 						+"AND vitalsign.DateTaken >= DATE_SUB(tempehrquality"+rndStr+@".DateVisit,INTERVAL 6 MONTH)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region WeightAdult
 				case QualityType.WeightAdult:
 					//WeightAdult---------------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -566,7 +567,7 @@ namespace OpenDentBusiness {
 						IsIneligible tinyint NOT NULL,
 						Documentation varchar(255) NOT NULL
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName,DateVisit) SELECT patient.PatNum,LName,FName,"
 						+"MAX(ProcDate) "//on the first pass, all we can obtain is the date of the visit
 						+"FROM patient "
@@ -579,7 +580,7 @@ namespace OpenDentBusiness {
 						+"WHERE Birthdate <= "+POut.Date(DateTime.Today.AddYears(-18))+" "//18+
 						+"AND Birthdate > "+POut.Date(DateTime.Today.AddYears(-65))+" "//less than 65
 						+"GROUP BY patient.PatNum";//there will frequently be multiple procedurelog events
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//now, find BMIs within 6 months of each visit date. No logic for picking one of multiple BMIs.
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".Height=vitalsign.Height, "
@@ -590,18 +591,18 @@ namespace OpenDentBusiness {
 						+"WHERE tempehrquality"+rndStr+@".PatNum=vitalsign.PatNum "
 						+"AND vitalsign.DateTaken <= tempehrquality"+rndStr+@".DateVisit "
 						+"AND vitalsign.DateTaken >= DATE_SUB(tempehrquality"+rndStr+@".DateVisit,INTERVAL 6 MONTH)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region Hypertension
 				case QualityType.Hypertension:
 					//Hypertension---------------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -611,7 +612,7 @@ namespace OpenDentBusiness {
 						Icd9Code varchar(255) NOT NULL,
 						DateBpEntered date NOT NULL DEFAULT '0001-01-01'
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName,DateVisit,VisitCount,Icd9Code) "
 						+"SELECT patient.PatNum,LName,FName,"
 						+"MAX(ProcDate), "// most recent visit
@@ -628,7 +629,7 @@ namespace OpenDentBusiness {
 						//+"AND icd9.ICD9Code REGEXP '^40[1-4]' "//starts with 401 through 404
 						+"WHERE Birthdate <= "+POut.Date(DateTime.Today.AddYears(-18))+" "//18+
 						+"GROUP BY patient.PatNum";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//now, find BMIs in measurement period.
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".DateBpEntered=vitalsign.DateTaken "
@@ -637,18 +638,18 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.BpDiastolic != 0 "
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd);
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region TobaccoUse
 				case QualityType.TobaccoUse:
 					//TobaccoUse---------------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -657,7 +658,7 @@ namespace OpenDentBusiness {
 						VisitCount int NOT NULL,
 						DateAssessment date NOT NULL DEFAULT '0001-01-01'
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName,DateVisit,VisitCount) "
 						+"SELECT patient.PatNum,LName,FName,"
 						+"MAX(ProcDate), "// most recent visit
@@ -669,27 +670,27 @@ namespace OpenDentBusiness {
 						+"AND procedurelog.ProvNum="+POut.Long(provNum)+" "
 						+"WHERE Birthdate <= "+POut.Date(DateTime.Today.AddYears(-18))+" "//18+
 						+"GROUP BY patient.PatNum";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//now, find most recent tobacco assessment date.  We will check later that it is within 2 years of last exam.
 					command="UPDATE tempehrquality"+rndStr+@" "//,ehrmeasureevent "
 						+"SET tempehrquality"+rndStr+@".DateAssessment=(SELECT MAX(DATE(ehrmeasureevent.DateTEvent)) "
 						+"FROM ehrmeasureevent "
 						+"WHERE tempehrquality"+rndStr+@".PatNum=ehrmeasureevent.PatNum "
 						+"AND ehrmeasureevent.EventType="+POut.Int((int)EhrMeasureEventType.TobaccoUseAssessed)+")";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@" SET DateAssessment='0001-01-01' WHERE DateAssessment='0000-00-00'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region TobaccoCessation
 				case QualityType.TobaccoCessation:
 					//TobaccoCessation----------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -699,7 +700,7 @@ namespace OpenDentBusiness {
 						DateCessation date NOT NULL DEFAULT '0001-01-01',
 						Documentation varchar(255) NOT NULL
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName,DateVisit) "
 						+"SELECT patient.PatNum,LName,FName,"
 						+"MAX(ProcDate) "// most recent visit
@@ -714,25 +715,25 @@ namespace OpenDentBusiness {
 						+POut.String(SmokingSnoMed._428061000124105.ToString().Substring(1))+"','"
 						+POut.String(SmokingSnoMed._428071000124103.ToString().Substring(1))+"') "//CurrentEveryDay,CurrentSomeDay,LightSmoker,HeavySmoker
 						+"GROUP BY patient.PatNum";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find most recent tobacco assessment date.
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET tempehrquality"+rndStr+@".DateAssessment=(SELECT MAX(DATE(ehrmeasureevent.DateTEvent)) "
 						+"FROM ehrmeasureevent "
 						+"WHERE tempehrquality"+rndStr+@".PatNum=ehrmeasureevent.PatNum "
 						+"AND ehrmeasureevent.EventType="+POut.Int((int)EhrMeasureEventType.TobaccoUseAssessed)+")";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@" SET DateAssessment='0001-01-01' WHERE DateAssessment='0000-00-00'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find most recent tobacco cessation date.
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET tempehrquality"+rndStr+@".DateCessation=(SELECT MAX(DATE(ehrmeasureevent.DateTEvent)) "
 						+"FROM ehrmeasureevent "
 						+"WHERE tempehrquality"+rndStr+@".PatNum=ehrmeasureevent.PatNum "
 						+"AND ehrmeasureevent.EventType="+POut.Int((int)EhrMeasureEventType.TobaccoCessation)+")";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@" SET DateCessation='0001-01-01' WHERE DateCessation='0000-00-00'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//Pull the documentation based on date
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET Documentation=(SELECT ehrmeasureevent.MoreInfo "
@@ -741,18 +742,18 @@ namespace OpenDentBusiness {
 						+"AND ehrmeasureevent.EventType="+POut.Int((int)EhrMeasureEventType.TobaccoCessation)+" "
 						+"AND DATE(ehrmeasureevent.DateTEvent)=tempehrquality"+rndStr+@".DateCessation) "
 						+"WHERE DateCessation > '1880-01-01'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region InfluenzaAdult
 				case QualityType.InfluenzaAdult:
 					//InfluenzaAdult----------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -761,7 +762,7 @@ namespace OpenDentBusiness {
 						NotGiven tinyint NOT NULL,
 						Documentation varchar(255) NOT NULL
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName) SELECT patient.PatNum,LName,FName "
 						+"FROM patient "
 						+"INNER JOIN procedurelog "
@@ -772,7 +773,7 @@ namespace OpenDentBusiness {
 						+"AND procedurelog.ProcDate <= "+POut.Date(dateEnd)+" "
 						+"WHERE Birthdate > '1880-01-01' AND Birthdate <= "+POut.Date(DateTime.Today.AddYears(-50))+" "//50 or older
 						+"GROUP BY patient.PatNum";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find most recent vaccine date
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET tempehrquality"+rndStr+@".DateVaccine=(SELECT MAX(DATE(vaccinepat.DateTimeStart)) "
@@ -780,9 +781,9 @@ namespace OpenDentBusiness {
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND vaccinedef.CVXCode IN('135','15'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@" SET DateVaccine='0001-01-01' WHERE DateVaccine='0000-00-00'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//pull documentation on vaccine exclusions based on date.
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET Documentation=Note, "
@@ -791,11 +792,11 @@ namespace OpenDentBusiness {
 						+"AND vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND DATE(vaccinepat.DateTimeStart)=tempehrquality"+rndStr+@".DateVaccine "
 						+"AND vaccinedef.CVXCode IN('135','15')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region WeightChild_1
@@ -804,7 +805,7 @@ namespace OpenDentBusiness {
 				case QualityType.WeightChild_1_3:
 					//WeightChild_1-----------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -814,7 +815,7 @@ namespace OpenDentBusiness {
 						ChildGotNutrition tinyint NOT NULL,
 						ChildGotPhysCouns tinyint NOT NULL				
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName) SELECT patient.PatNum,LName,FName "
 						+"FROM patient "
 						+"INNER JOIN procedurelog "
@@ -826,7 +827,7 @@ namespace OpenDentBusiness {
 						+"WHERE Birthdate <= "+POut.Date(DateTime.Today.AddYears(-2))+" "//2+
 						+"AND Birthdate > "+POut.Date(DateTime.Today.AddYears(-17))+" "//less than 17
 						+"GROUP BY patient.PatNum";//there will frequently be multiple procedurelog events
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period that indicate pregnancy
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".IsPregnant=1 "
@@ -834,7 +835,7 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.IsIneligible=1";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period with a valid BMI
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".HasBMI=1 "
@@ -843,7 +844,7 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.Height > 0 "
 						+"AND vitalsign.Weight > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period that indicate ChildGotNutrition
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".ChildGotNutrition=1 "
@@ -851,7 +852,7 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.ChildGotNutrition=1";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period that indicate ChildGotPhysCouns
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".ChildGotPhysCouns=1 "
@@ -859,11 +860,11 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.ChildGotPhysCouns=1";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region WeightChild_2
@@ -872,7 +873,7 @@ namespace OpenDentBusiness {
 				case QualityType.WeightChild_2_3:
 					//WeightChild_2-----------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -882,7 +883,7 @@ namespace OpenDentBusiness {
 						ChildGotNutrition tinyint NOT NULL,
 						ChildGotPhysCouns tinyint NOT NULL				
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName) SELECT patient.PatNum,LName,FName "
 						+"FROM patient "
 						+"INNER JOIN procedurelog "
@@ -894,7 +895,7 @@ namespace OpenDentBusiness {
 						+"WHERE Birthdate <= "+POut.Date(DateTime.Today.AddYears(-2))+" "//2+
 						+"AND Birthdate > "+POut.Date(DateTime.Today.AddYears(-11))+" "//less than 11
 						+"GROUP BY patient.PatNum";//there will frequently be multiple procedurelog events
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period that indicate pregnancy
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".IsPregnant=1 "
@@ -902,7 +903,7 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.IsIneligible=1";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period with a valid BMI
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".HasBMI=1 "
@@ -911,7 +912,7 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.Height > 0 "
 						+"AND vitalsign.Weight > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period that indicate ChildGotNutrition
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".ChildGotNutrition=1 "
@@ -919,7 +920,7 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.ChildGotNutrition=1";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period that indicate ChildGotPhysCouns
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".ChildGotPhysCouns=1 "
@@ -927,11 +928,11 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.ChildGotPhysCouns=1";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region WeightChild_3
@@ -940,7 +941,7 @@ namespace OpenDentBusiness {
 				case QualityType.WeightChild_3_3:
 					//WeightChild_3-----------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -950,7 +951,7 @@ namespace OpenDentBusiness {
 						ChildGotNutrition tinyint NOT NULL,
 						ChildGotPhysCouns tinyint NOT NULL			
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName) SELECT patient.PatNum,LName,FName "
 						+"FROM patient "
 						+"INNER JOIN procedurelog "
@@ -962,7 +963,7 @@ namespace OpenDentBusiness {
 						+"WHERE Birthdate <= "+POut.Date(DateTime.Today.AddYears(-11))+" "//11+
 						+"AND Birthdate > "+POut.Date(DateTime.Today.AddYears(-17))+" "//less than 17
 						+"GROUP BY patient.PatNum";//there will frequently be multiple procedurelog events
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period that indicate pregnancy
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".IsPregnant=1 "
@@ -970,7 +971,7 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.IsIneligible=1";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period with a valid BMI
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".HasBMI=1 "
@@ -979,7 +980,7 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.Height > 0 "
 						+"AND vitalsign.Weight > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period that indicate ChildGotNutrition
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".ChildGotNutrition=1 "
@@ -987,7 +988,7 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.ChildGotNutrition=1";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find any BMIs within the period that indicate ChildGotPhysCouns
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET tempehrquality"+rndStr+@".ChildGotPhysCouns=1 "
@@ -995,11 +996,11 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.DateTaken >= "+POut.Date(dateStart)+" "
 						+"AND vitalsign.DateTaken <= "+POut.Date(dateEnd)+" "
 						+"AND vitalsign.ChildGotPhysCouns=1";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region ImmunizeChild
@@ -1017,7 +1018,7 @@ namespace OpenDentBusiness {
 				case QualityType.ImmunizeChild_12:
 					//ImmunizeChild----------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -1063,7 +1064,7 @@ namespace OpenDentBusiness {
 						NotGiven10 tinyint NOT NULL,
 						Documentation10 varchar(255) NOT NULL
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName,Birthdate) SELECT patient.PatNum,LName,FName,Birthdate "
 						+"FROM patient "
 						+"INNER JOIN procedurelog "
@@ -1075,7 +1076,7 @@ namespace OpenDentBusiness {
 						+"WHERE DATE_ADD(Birthdate,INTERVAL 2 YEAR) >= "+POut.Date(dateStart)+" "//second birthdate is in meas period
 						+"AND DATE_ADD(Birthdate,INTERVAL 2 YEAR) <= "+POut.Date(dateEnd)+" "
 						+"GROUP BY patient.PatNum";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#region DTaP
 					//Count1, DTaP
 					command="UPDATE tempehrquality"+rndStr+@" "
@@ -1086,14 +1087,14 @@ namespace OpenDentBusiness {
 						+"AND DATE(DateTimeStart) >= DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 42 DAY) "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('110','120','20','50'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven1=1,Documentation1=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('110','120','20','50')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region IPV
 					//Count2, IPV
@@ -1105,14 +1106,14 @@ namespace OpenDentBusiness {
 						+"AND DATE(DateTimeStart) >= DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 42 DAY) "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('10','120'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven2=1,Documentation2=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('10','120')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region MMR
 					//Count3, MMR
@@ -1123,14 +1124,14 @@ namespace OpenDentBusiness {
 						+"AND NotGiven=0 "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('03','94'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven3=1,Documentation3=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('03','94')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region measles
 					//Count3a, measles
@@ -1141,14 +1142,14 @@ namespace OpenDentBusiness {
 						+"AND NotGiven=0 "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('05'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven3a=1,Documentation3a=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('05')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region mumps
 					//Count3b, mumps
@@ -1159,14 +1160,14 @@ namespace OpenDentBusiness {
 						+"AND NotGiven=0 "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('07'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven3b=1,Documentation3b=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('07')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region rubella
 					//Count3c, rubella
@@ -1177,14 +1178,14 @@ namespace OpenDentBusiness {
 						+"AND NotGiven=0 "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('06'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven3c=1,Documentation3c=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('06')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region HiB
 					//Count4, HiB
@@ -1196,14 +1197,14 @@ namespace OpenDentBusiness {
 						+"AND DATE(DateTimeStart) >= DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 42 DAY) "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('120','46','47','48','49','50','51'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven4=1,Documentation4=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('120','46','47','48','49','50','51')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region HepB
 					//Count5, HepB
@@ -1214,14 +1215,14 @@ namespace OpenDentBusiness {
 						+"AND NotGiven=0 "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('08','110','44','51'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven5=1,Documentation5=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('08','110','44','51')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region VZV
 					//Count6, VZV
@@ -1232,14 +1233,14 @@ namespace OpenDentBusiness {
 						+"AND NotGiven=0 "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('21','94'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven6=1,Documentation6=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('21','94')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region pneumococcal
 					//Count7, pneumococcal
@@ -1251,14 +1252,14 @@ namespace OpenDentBusiness {
 						+"AND DATE(DateTimeStart) >= DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 42 DAY) "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('100','133'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven7=1,Documentation7=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('100','133')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region HepA
 					//Count8, HepA
@@ -1269,14 +1270,14 @@ namespace OpenDentBusiness {
 						+"AND NotGiven=0 "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('83'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven8=1,Documentation8=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('83')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region rotavirus
 					//Count9, rotavirus
@@ -1288,14 +1289,14 @@ namespace OpenDentBusiness {
 						+"AND DATE(DateTimeStart) >= DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 42 DAY) "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('116','119'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven9=1,Documentation9=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('116','119')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					#region influenza
 					//Count10, influenza
@@ -1307,33 +1308,33 @@ namespace OpenDentBusiness {
 						+"AND DATE(DateTimeStart) >= DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 180 DAY) "
 						+"AND DATE(DateTimeStart) < DATE_ADD(tempehrquality"+rndStr+@".Birthdate,INTERVAL 2 YEAR) "
 						+"AND vaccinedef.CVXCode IN('135','15'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@",vaccinepat,vaccinedef "
 						+"SET NotGiven10=1,Documentation10=Note "
 						+"WHERE vaccinepat.VaccineDefNum=vaccinedef.VaccineDefNum "
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND NotGiven=1 "
 						+"AND vaccinedef.CVXCode IN('135','15')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					#endregion
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region Pneumonia
 				case QualityType.Pneumonia:
 					//Pneumonia----------------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
 						FName varchar(255) NOT NULL,
 						DateVaccine date NOT NULL
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName) SELECT patient.PatNum,LName,FName "
 						+"FROM patient "
 						+"INNER JOIN procedurelog "
@@ -1344,7 +1345,7 @@ namespace OpenDentBusiness {
 						+"AND procedurelog.ProcDate <= "+POut.Date(dateEnd)+" "
 						+"WHERE Birthdate > '1880-01-01' AND Birthdate <= "+POut.Date(dateStart.AddYears(-65))+" "//65 or older as of dateEnd
 						+"GROUP BY patient.PatNum";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//find most recent vaccine date
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET tempehrquality"+rndStr+@".DateVaccine=(SELECT MAX(DATE(vaccinepat.DateTimeStart)) "
@@ -1353,20 +1354,20 @@ namespace OpenDentBusiness {
 						+"AND tempehrquality"+rndStr+@".PatNum=vaccinepat.PatNum "
 						+"AND vaccinepat.NotGiven=0 "
 						+"AND vaccinedef.CVXCode IN('33','100','133'))";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@" SET DateVaccine='0001-01-01' WHERE DateVaccine='0000-00-00'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region DiabetesBloodPressure
 				case QualityType.DiabetesBloodPressure:
 					//DiabetesBloodPressure-------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -1379,7 +1380,7 @@ namespace OpenDentBusiness {
 						HasDiagnosisPolycystic tinyint NOT NULL,
 						HasDiagnosisAcuteDiabetes tinyint NOT NULL
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName) SELECT patient.PatNum,LName,FName "
 						+"FROM patient "
 						+"INNER JOIN procedurelog "
@@ -1391,7 +1392,7 @@ namespace OpenDentBusiness {
 						+"WHERE Birthdate <= "+POut.Date(dateStart.AddYears(-17))+" "
 						+"AND Birthdate >= "+POut.Date(dateStart.AddYears(-74))+" "//17-74 before dateStart
 						+"GROUP BY patient.PatNum";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//Medication
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET HasMedication = 1 "
@@ -1410,7 +1411,7 @@ namespace OpenDentBusiness {
 						+"AND (DateStop >= "+POut.Date(dateEnd.AddYears(-2))+" "//med active <= 2 years before or simultaneous to end date
 						+"OR DateStop < '1880-01-01') "//or still active
 						+") > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//HasDiagnosisDiabetes
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET HasDiagnosisDiabetes = 1 "
@@ -1429,7 +1430,7 @@ namespace OpenDentBusiness {
 							//Specs say: diagnosis active <= 2 years before or simultaneous to end date
 						+"OR disease.DateStop < '1880-01-01') "//or still active
 						+") > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//DateBP
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET tempehrquality"+rndStr+@".DateBP=(SELECT MAX(vitalsign.DateTaken) "
@@ -1438,16 +1439,16 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.BpSystolic != 0 "
 						+"AND vitalsign.BpDiastolic != 0 "
 						+"GROUP BY vitalsign.PatNum)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@" SET DateBP='0001-01-01' WHERE DateBP='0000-00-00'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//Systolic and diastolic
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET Systolic=BpSystolic, "
 						+"Diastolic=BpDiastolic "
 						+"WHERE tempehrquality"+rndStr+@".PatNum=vitalsign.PatNum "
 						+"AND tempehrquality"+rndStr+@".DateBP=vitalsign.DateTaken";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//HasDiagnosisPolycystic
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET HasDiagnosisPolycystic = 1 "
@@ -1460,7 +1461,7 @@ namespace OpenDentBusiness {
 						+"OR disease.DateStart < '1880-01-01') "
 						//no restrictions on datestop.  It could still be active or could have stopped before or after the period end.
 						+") > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//HasDiagnosisAcuteDiabetes
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET HasDiagnosisAcuteDiabetes = 1 "
@@ -1474,18 +1475,18 @@ namespace OpenDentBusiness {
 						+"OR disease.DateStart < '1880-01-01') "
 						//no restrictions on datestop.  It could still be active or could have stopped before or after the period end.
 						+") > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				#region BloodPressureManage
 				case QualityType.BloodPressureManage:
 					//DiabetesBloodPressure-------------------------------------------------------------------------------------------------------
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command=@"CREATE TABLE tempehrquality"+rndStr+@" (
 						PatNum bigint NOT NULL PRIMARY KEY,
 						LName varchar(255) NOT NULL,
@@ -1498,7 +1499,7 @@ namespace OpenDentBusiness {
 						Systolic int NOT NULL,
 						Diastolic int NOT NULL
 						) DEFAULT CHARSET=utf8";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="INSERT INTO tempehrquality"+rndStr+@" (PatNum,LName,FName) SELECT patient.PatNum,LName,FName "
 						+"FROM patient "
 						+"INNER JOIN procedurelog "
@@ -1510,7 +1511,7 @@ namespace OpenDentBusiness {
 						+"WHERE Birthdate <= "+POut.Date(dateStart.AddYears(-17))+" "
 						+"AND Birthdate >= "+POut.Date(dateStart.AddYears(-74))+" "//17-74 before dateStart
 						+"GROUP BY patient.PatNum";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//HasDiagnosisHypertension
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET HasDiagnosisHypertension = 1 "
@@ -1523,9 +1524,9 @@ namespace OpenDentBusiness {
 						+"OR disease.DateStart < '1880-01-01') "//no startdate
 						//no restrictions on datestop.  It could still be active or could have stopped before or after the period end.
 						+") > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="DELETE FROM tempehrquality"+rndStr+@" WHERE HasDiagnosisHypertension=0";//for speed
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//HasProcedureESRD
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET HasProcedureESRD = 1 "
@@ -1537,7 +1538,7 @@ namespace OpenDentBusiness {
 						+"AND procedurelog.ProcDate >= "+POut.Date(dateStart)+" "
 						+"AND procedurelog.ProcDate <= "+POut.Date(dateEnd)+" "
 						+") > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//HasDiagnosisPregnancy
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET HasDiagnosisPregnancy = 1 "
@@ -1559,7 +1560,7 @@ namespace OpenDentBusiness {
 						+"AND (disease.DateStop >= "+POut.Date(dateStart)+" "//if there's a datestop, it can't have stopped before the period.
 						+"OR disease.DateStop < '1880-01-01') "//or still active
 						+") > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//HasDiagnosisESRD
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET HasDiagnosisESRD = 1 "
@@ -1581,7 +1582,7 @@ namespace OpenDentBusiness {
 						+"AND (disease.DateStop >= "+POut.Date(dateStart)+" "
 						+"OR disease.DateStop < '1880-01-01') "
 						+") > 0";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//DateBP
 					command="UPDATE tempehrquality"+rndStr+@" "
 						+"SET tempehrquality"+rndStr+@".DateBP=(SELECT MAX(vitalsign.DateTaken) "
@@ -1590,20 +1591,20 @@ namespace OpenDentBusiness {
 						+"AND vitalsign.BpSystolic != 0 "
 						+"AND vitalsign.BpDiastolic != 0 "
 						+"GROUP BY vitalsign.PatNum)";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="UPDATE tempehrquality"+rndStr+@" SET DateBP='0001-01-01' WHERE DateBP='0000-00-00'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					//Systolic and diastolic
 					command="UPDATE tempehrquality"+rndStr+@",vitalsign "
 						+"SET Systolic=BpSystolic, "
 						+"Diastolic=BpDiastolic "
 						+"WHERE tempehrquality"+rndStr+@".PatNum=vitalsign.PatNum "
 						+"AND tempehrquality"+rndStr+@".DateBP=vitalsign.DateTaken";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					command="SELECT * FROM tempehrquality"+rndStr+@"";
-					tableRaw=Db.GetTable(command);
+					tableRaw=Database.ExecuteDataTable(command);
 					command="DROP TABLE IF EXISTS tempehrquality"+rndStr+@"";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					break;
 				#endregion
 				default:
@@ -2332,7 +2333,7 @@ namespace OpenDentBusiness {
 			string command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider "
 				+"WHERE provider.LName=(SELECT pv.LName FROM provider pv WHERE pv.ProvNum="+POut.Long(provNum)+")"
 				+"AND provider.FName=(SELECT pv.FName FROM provider pv WHERE pv.ProvNum="+POut.Long(provNum)+")";
-			string provs=Db.GetScalar(command);
+			string provs=Database.ExecuteString(command);
 			QualityMeasure measureCur=new QualityMeasure();
 			List<string> listOneOfEncOIDs=new List<string>();
 			List<string> listTwoOfEncOIDs=new List<string>();
@@ -3281,7 +3282,7 @@ namespace OpenDentBusiness {
 				command+="AND ehrmeasureevent.PatNum IN("+string.Join(",",listPatNums)+") ";
 			}
 			command+="ORDER BY ehrmeasureevent.PatNum,ehrmeasureevent.DateTEvent DESC";
-			DataTable tableEvents=Db.GetTable(command);
+			DataTable tableEvents=Database.ExecuteDataTable(command);
 			if(tableEvents.Rows.Count==0) {
 				return retval;
 			}
@@ -3457,7 +3458,7 @@ namespace OpenDentBusiness {
 				command+="AND (medicationpat.RxCui IN("+rxcuiCodes+") OR medication.RxCui IN("+rxcuiCodes+")) ";
 			}
 			command+="ORDER BY medicationpat.PatNum,medicationpat.DateStart DESC";
-			DataTable tableAllMedPats=Db.GetTable(command);
+			DataTable tableAllMedPats=Database.ExecuteDataTable(command);
 			if(tableAllMedPats.Rows.Count==0) {
 				return retval;
 			}
@@ -3536,7 +3537,7 @@ namespace OpenDentBusiness {
 			}
 			command+="GROUP BY ehrnotperformed.EhrNotPerformedNum "//just in case a code was in one of the code system tables more than once, should never happen
 				+"ORDER BY ehrnotperformed.PatNum,ehrnotperformed.DateEntry DESC";
-			DataTable tableNotPerfs=Db.GetTable(command);
+			DataTable tableNotPerfs=Database.ExecuteDataTable(command);
 			if(tableNotPerfs.Rows.Count==0) {
 				return retval;
 			}
@@ -3662,7 +3663,7 @@ namespace OpenDentBusiness {
 				command+=") ";
 			}
 			command+="ORDER BY disease.PatNum,disease.DateStart DESC";
-			DataTable tableAllProbs=Db.GetTable(command);
+			DataTable tableAllProbs=Database.ExecuteDataTable(command);
 			if(tableAllProbs.Rows.Count==0) {
 				return retval;
 			}
@@ -3716,7 +3717,7 @@ namespace OpenDentBusiness {
 				command+="AND ehrmeasureevent.PatNum IN("+string.Join(",",listPatNums)+") ";
 			}
 			command+="ORDER BY PatNum,DateTEvent DESC";
-			DataTable tableEvents=Db.GetTable(command);
+			DataTable tableEvents=Database.ExecuteDataTable(command);
 			if(tableEvents.Rows.Count==0) {
 				return retval;
 			}
@@ -3885,7 +3886,7 @@ namespace OpenDentBusiness {
 				command+="AND procedurecode.ProcCode IN("+codeList+") ";
 			}
 			command+="ORDER BY procedurelog.PatNum,procedurelog.ProcDate DESC";
-			DataTable tableAllProcs=Db.GetTable(command);
+			DataTable tableAllProcs=Database.ExecuteDataTable(command);
 			if(tableAllProcs.Rows.Count==0) {
 				return retval;
 			}
@@ -3942,7 +3943,7 @@ namespace OpenDentBusiness {
 				command+="AND vaccinepat.PatNum IN("+string.Join(",",listPatNums)+") ";
 			}
 			command+="ORDER BY vaccinepat.PatNum,vaccinepat.DateTimeStart DESC";
-			DataTable tableAllVaccinePats=Db.GetTable(command);
+			DataTable tableAllVaccinePats=Database.ExecuteDataTable(command);
 			if(tableAllVaccinePats.Rows.Count==0) {
 				return retval;
 			}

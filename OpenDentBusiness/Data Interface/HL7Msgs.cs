@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Reflection;
+using Imedisoft.Data;
 using OpenDentBusiness.HL7;
 
 namespace OpenDentBusiness{
@@ -122,7 +123,7 @@ namespace OpenDentBusiness{
 			//so if there is an OutSent or OutPending messages with matching AptNum, the button should say Revise so we will return true if count>0
 			string command="SELECT COUNT(*) FROM hl7msg WHERE AptNum="+POut.Long(aptNum)+" "
 				+"AND (HL7Status="+POut.Int((int)HL7MessageStatus.OutSent)+" OR HL7Status="+POut.Int((int)HL7MessageStatus.OutPending)+")";
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;
@@ -133,7 +134,7 @@ namespace OpenDentBusiness{
 			
 			string command="UPDATE hl7msg SET MsgText='' "
 				+"WHERE DateTStamp < ADDDATE(CURDATE(),INTERVAL -4 MONTH)";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<HL7Msg> GetOneExisting(HL7Msg hl7Msg) {
@@ -151,7 +152,7 @@ namespace OpenDentBusiness{
 			}
 			
 			string command="UPDATE hl7msg SET DateTStamp=CURRENT_TIMESTAMP WHERE MsgText='"+POut.String(hl7Msg.MsgText)+"' ";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

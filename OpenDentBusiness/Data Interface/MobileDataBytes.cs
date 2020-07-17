@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 using PdfSharp.Pdf;
 
 namespace OpenDentBusiness{
@@ -58,7 +59,7 @@ namespace OpenDentBusiness{
 		///<summary>Called by eConnector to remove expired rows.</summary>
 		public static void ClearExpiredRows(){
 			
-			Db.NonQ($@"DELETE FROM mobiledatabyte 
+			Database.ExecuteNonQuery($@"DELETE FROM mobiledatabyte 
 				WHERE DateTimeEntry <={POut.Date(DateTime.Today.AddDays(-1))}
 				OR DateTimeExpires <= {POut.Date(DateTime.Now)}"
 			);

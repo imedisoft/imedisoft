@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDentBusiness {
@@ -32,14 +33,14 @@ namespace OpenDentBusiness {
 		public static void Delete(long mountItemDefNum) {
 			
 			string command="DELETE FROM mountitemdef WHERE MountItemDefNum="+POut.Long(mountItemDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
 		public static void DeleteForMount(long mountDefNum) {
 			
 			string command="DELETE FROM mountitemdef WHERE MountDefNum="+POut.Long(mountDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		

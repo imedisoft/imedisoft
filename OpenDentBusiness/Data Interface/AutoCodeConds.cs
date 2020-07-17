@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -92,7 +93,7 @@ namespace OpenDentBusiness{
 		public static void Delete(AutoCodeCond Cur){
 			
 			string command="DELETE from autocodecond WHERE autocodecondnum = '"+POut.Long(Cur.AutoCodeCondNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -100,7 +101,7 @@ namespace OpenDentBusiness{
 			
 			string command= "DELETE from autocodecond WHERE autocodeitemnum = '"
 				+POut.Long(itemNum)+"'";//AutoCodeItems.Cur.AutoCodeItemNum)
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

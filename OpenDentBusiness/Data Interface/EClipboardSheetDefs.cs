@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -118,7 +119,7 @@ namespace OpenDentBusiness{
 		public static bool IsSheetDefInUse(long sheetDefNum) {
 			
 			string command="SELECT COUNT(*) FROM eclipboardsheetdef WHERE SheetDefNum="+POut.Long(sheetDefNum);
-			return PIn.Int(Db.GetCount(command))>0;
+			return PIn.Int(Database.ExecuteString(command))>0;
 		}
 
 		#endregion Get Methods

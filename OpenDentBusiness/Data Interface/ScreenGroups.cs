@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,14 +63,14 @@ namespace OpenDentBusiness{
 		public static void Delete(ScreenGroup Cur){
 			
 			string command="SELECT SheetNum FROM screen WHERE ScreenGroupNum="+POut.Long(Cur.ScreenGroupNum)+" AND SheetNum!=0";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			foreach(DataRow row in table.Rows) {//Delete any attached sheets if the screen gets deleted.
 				Sheets.Delete(PIn.Long(row["SheetNum"].ToString()));
 			}
 			command="DELETE FROM screen WHERE ScreenGroupNum ='"+POut.Long(Cur.ScreenGroupNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM screengroup WHERE ScreenGroupNum ='"+POut.Long(Cur.ScreenGroupNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

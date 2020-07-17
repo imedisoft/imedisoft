@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM dunning" 
 				+" WHERE DunningNum = "+POut.Long(dun.DunningNum);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		

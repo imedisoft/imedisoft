@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -98,7 +99,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM sheetfield WHERE SheetNum="+POut.Long(sheetNum)
 				+" AND FieldType="+POut.Long((int)SheetFieldType.Drawing);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			foreach(SheetField field in drawingList){
 				Insert(field);
 			}

@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,7 +26,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			
-			Db.NonQ($@"UPDATE treatplanattach SET Priority = {POut.Long(priority)}
+			Database.ExecuteNonQuery($@"UPDATE treatplanattach SET Priority = {POut.Long(priority)}
 				WHERE TreatPlanNum = {POut.Long(treatPlanNum)}
 				AND ProcNum IN({string.Join(",",listProcNums.Select(x => POut.Long(x)))})");
 		}
@@ -91,11 +92,11 @@ namespace OpenDentBusiness{
 			
 			//Orphaned TreatPlanAttaches due to missing treatment plans
 			string command="DELETE FROM treatplanattach WHERE TreatPlanNum NOT IN (SELECT TreatPlanNum FROM treatplan)";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Orphaned TreatPlanAttaches due to missing procedures or procedures that are no longer TP or TPi status.
 			command="DELETE FROM treatplanattach WHERE ProcNum NOT IN (SELECT ProcNum FROM procedurelog "+
 				"WHERE ProcStatus IN ("+string.Join(",",new[]{(int)ProcStat.TP,(int)ProcStat.TPi})+"))";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

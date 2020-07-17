@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -95,7 +96,7 @@ namespace OpenDentBusiness {
 		public static void Delete(long insFilingCodeSubtypeNum) {
 			
 			string command="SELECT COUNT(*) FROM insplan WHERE FilingCodeSubtype="+POut.Long(insFilingCodeSubtypeNum);
-			if(Db.GetScalar(command) != "0") {
+			if(Database.ExecuteScalar(command) != "0") {
 				throw new ApplicationException(Lans.g("InsFilingCodeSubtype","Already in use by insplans."));
 			}
 			Crud.InsFilingCodeSubtypeCrud.Delete(insFilingCodeSubtypeNum);
@@ -110,7 +111,7 @@ namespace OpenDentBusiness {
 			
 			string command="DELETE FROM insfilingcodesubtype "+
 				"WHERE InsFilingCodeNum="+POut.Long(insFilingCodeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

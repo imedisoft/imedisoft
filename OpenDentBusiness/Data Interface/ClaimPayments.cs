@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace OpenDentBusiness{
 				+"WHERE claimpayment.ClaimPaymentNum = claimproc.ClaimPaymentNum "
 				+"AND claimproc.ClaimNum = '"+POut.Long(claimNum)+"' "
 				+"GROUP BY claimpayment.ClaimPaymentNum, BankBranch, CheckDate, CheckNum, Note, PayType";
-			DataTable rawT=Db.GetTable(command);
+			DataTable rawT=Database.ExecuteDataTable(command);
 			DateTime date;
 			for(int i=0;i<rawT.Rows.Count;i++) {
 				row=table.NewRow();
@@ -81,7 +82,7 @@ namespace OpenDentBusiness{
 											INNER JOIN claimpayment ON claimpayment.ClaimPaymentNum=claimproc.ClaimPaymentNum
 											WHERE claimproc.ClaimNum IN ("+string.Join(",",listClaimNums)+") "+
 											"GROUP BY claimproc.ClaimNum";
-			List<long> listRetClaimNums=Db.GetListLong(command);
+			List<long> listRetClaimNums=Database.GetListLong(command);
 			foreach(long claimNum in listClaimNums) {
 				retVal.Add(claimNum,listRetClaimNums.Contains(claimNum));
 			}
@@ -104,7 +105,7 @@ namespace OpenDentBusiness{
 				command+="AND PayGroup="+POut.Long(claimpayGroup)+" ";
 			}
 			command+="ORDER BY CheckDate";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static List<ClaimPayment> GetClaimPaymentsWithEobAttach(List<long> listClaimPaymentNums) {
@@ -213,7 +214,7 @@ namespace OpenDentBusiness{
 					AND claimproc.IsTransfer=0
 					GROUP BY claimproc.ClaimNum)
 				) partialpayments";//claimproc.DateEntry is updated when payment is received.
-			return PIn.Int(Db.GetCount(command),false);
+			return PIn.Int(Database.ExecuteString(command),false);
 		}
 
 		///<summary></summary>
@@ -233,7 +234,7 @@ namespace OpenDentBusiness{
 					+"LEFT JOIN payment ON payment.DepositNum=deposit.DepositNum "
 					+"LEFT JOIN claimpayment ON claimpayment.DepositNum=deposit.DepositNum AND claimpayment.ClaimPaymentNum!="+POut.Long(cp.ClaimPaymentNum)+" "
 					+"WHERE deposit.DepositNum="+POut.Long(cp.DepositNum);
-				DataTable tble=Db.GetTable(cmd);
+				DataTable tble=Database.ExecuteDataTable(cmd);
 				if(tble.Rows.Count==0) {
 					cp.DepositNum=0;
 				}
@@ -244,7 +245,7 @@ namespace OpenDentBusiness{
 			else {
 				string command="SELECT DepositNum,CheckAmt FROM claimpayment "
 				+"WHERE ClaimPaymentNum="+POut.Long(cp.ClaimPaymentNum);
-				DataTable table=Db.GetTable(command);
+				DataTable table=Database.ExecuteDataTable(command);
 				if(table.Rows.Count==0){
 					return;
 				}
@@ -263,7 +264,7 @@ namespace OpenDentBusiness{
 			//validate deposits
 			string command="SELECT DepositNum FROM claimpayment "
 				+"WHERE ClaimPaymentNum="+POut.Long(cp.ClaimPaymentNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0){
 				return;
 			}
@@ -274,7 +275,7 @@ namespace OpenDentBusiness{
 			}
 			//validate eobs
 			command="SELECT COUNT(*) FROM eobattach WHERE ClaimPaymentNum="+POut.Long(cp.ClaimPaymentNum);
-			if(Db.GetScalar(command)!="0") {
+			if(Database.ExecuteScalar(command)!="0") {
 				throw new ApplicationException(Lans.g("ClaimPayments","Not allowed to delete this payment because EOBs are attached."));
 			}
 			if(table.Rows[0][0].ToString()!="0") {//deposit was created automatically. Delete deposit.
@@ -287,16 +288,16 @@ namespace OpenDentBusiness{
 				+"DateInsFinalized='0001-01-01' "
 				+"WHERE ClaimPaymentNum="+POut.Long(cp.ClaimPaymentNum)+" "
 				+"AND (SELECT SecDateEntry FROM claimpayment WHERE ClaimPaymentNum="+POut.Long(cp.ClaimPaymentNum)+")=CURDATE()";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command= "UPDATE claimproc SET "
 				+"ClaimPaymentNum=0 "
 				+"WHERE claimpaymentNum="+POut.Long(cp.ClaimPaymentNum);
 			//MessageBox.Show(string command);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command= "DELETE FROM claimpayment "
 				+"WHERE ClaimPaymentnum ="+POut.Long(cp.ClaimPaymentNum);
 			//MessageBox.Show(string command);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns the number of payments from the passed in claimpaymentnums that are attached to a deposit other than IgnoreDepositNum.</summary>
@@ -310,7 +311,7 @@ namespace OpenDentBusiness{
 			if(ignoreDepositNum!=0) {
 				command+=" AND DepositNum!="+POut.Long(ignoreDepositNum);
 			}
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		public static bool HasAutoDeposit(ClaimPayment cp) {
@@ -322,7 +323,7 @@ namespace OpenDentBusiness{
 			//A deposit is consided an "Auto Deposit" if the ShowAutoDeposit preference is turned on
 			//and only one claimpayment is attached to the deposit passed in. 
 			string command="SELECT COUNT(*) FROM claimpayment where DepositNum="+POut.Long(cp.DepositNum);
-			return PIn.Int(Db.GetCount(command))==1;
+			return PIn.Int(Database.ExecuteString(command))==1;
 		}
 
 	}

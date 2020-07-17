@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using CodeBase;
 using System.ComponentModel;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -160,7 +161,7 @@ namespace OpenDentBusiness
 				command += " AND BalTotal < 0 ";
 			}
 			command += " ORDER BY pat.LName, pat.FName ";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<AgingPat> retVal = new List<AgingPat>();
 			foreach (DataRow row in table.Rows)
 			{

@@ -232,14 +232,14 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			if (table.PrimaryKey != null && table.PrimaryKey.Type == typeof(long))
 			{
 				stringBuilder.AppendLine($"		public static long Insert({table.Type.Name} {param})");
-				stringBuilder.AppendLine($"			=> {param}.{table.PrimaryKey.Name} = Db.NonQ(");
+				stringBuilder.AppendLine($"			=> {param}.{table.PrimaryKey.Name} = Db.ExecuteNonQuery(");
 				stringBuilder.AppendLine($"				{queryBuilder}, true, \"{table.PrimaryKey.Name}\", \"{table.Name.ToLower()}\");");
 				stringBuilder.AppendLine();
 			}
             else
             {
 				stringBuilder.AppendLine($"		public static void Insert({table.Type.Name} {param})");
-				stringBuilder.AppendLine($"			=> Db.NonQ(");
+				stringBuilder.AppendLine($"			=> Db.ExecuteNonQuery(");
 				stringBuilder.AppendLine($"				{queryBuilder},");
 				stringBuilder.AppendLine($"				true, \"{table.PrimaryKey.Name}\", \"{table.Name.ToLower()}\");");
 				stringBuilder.AppendLine();
@@ -274,7 +274,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine(@"		/// Updates the specified <see cref=""" + table.Type.Name + @"""/> in the database.");
 			stringBuilder.AppendLine(@"		/// </summary>");
 			stringBuilder.AppendLine($"		public static void Update({table.Type.Name} {param})");
-			stringBuilder.AppendLine($"			=> Db.NonQ(");
+			stringBuilder.AppendLine($"			=> Db.ExecuteNonQuery(");
 			stringBuilder.AppendLine($"				{queryBuilder});");
 			stringBuilder.AppendLine();
 		}
@@ -308,7 +308,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine();
 			stringBuilder.AppendLine("			if (updates.Count == 0) return;");
 			stringBuilder.AppendLine();
-			stringBuilder.AppendLine($"			Db.NonQ(\"UPDATE `{table.Name}` \" + ");
+			stringBuilder.AppendLine($"			Db.ExecuteNonQuery(\"UPDATE `{table.Name}` \" + ");
 			stringBuilder.AppendLine($"				\"SET \" + string.Join(\", \", updates) + \" \" + ");
 			stringBuilder.AppendLine($"				\"WHERE `{table.PrimaryKey.Name}` = \" + " + ConvertValueToSql($"{paramNew}.{table.PrimaryKey.FieldName}", table.PrimaryKey) + ");");
 			stringBuilder.AppendLine(@"		}");
@@ -324,7 +324,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine(@"		/// <summary>");
 			stringBuilder.AppendLine(@"		/// Deletes a single <see cref=""" + table.Type.Name + @"""/> object from the database.");
 			stringBuilder.AppendLine(@"		/// </summary>");
-			stringBuilder.AppendLine($"		public static void Delete({table.PrimaryKey.Type.Name} {param}) => Db.NonQ({command});");
+			stringBuilder.AppendLine($"		public static void Delete({table.PrimaryKey.Type.Name} {param}) => Db.ExecuteNonQuery({command});");
 			stringBuilder.AppendLine();
 
 			param = ParamName(table.Type.Name);

@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -157,7 +158,7 @@ namespace OpenDentBusiness{
 			}
 			
 			string command=$"DELETE FROM orthoproclink WHERE OrthoProcLinkNum IN({string.Join(",",listOrthoProcLinkNums)})";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion Delete
 		#endregion Modification Methods

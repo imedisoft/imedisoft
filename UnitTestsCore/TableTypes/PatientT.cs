@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Imedisoft.Data;
 using OpenDentBusiness;
+using System;
+using System.Collections.Generic;
 
-namespace UnitTestsCore {
-	public class PatientT {
+namespace UnitTestsCore
+{
+    public class PatientT {
 		///<summary>Creates a patient.  Practice default provider and billing type.</summary>
 		public static Patient CreatePatient(string suffix="",long priProvNum=0,long clinicNum=0,string email="",string phone="",
 			ContactMethod contactMethod=ContactMethod.Email,string lName="",string fName="",string preferredName="",DateTime birthDate=default(DateTime)
@@ -88,7 +89,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the patient table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearPatientTable() {
 			string command="DELETE FROM patient WHERE PatNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/// <summary>Creates patient objects corresponding to the totalPat parameter. Each patient has a procedure
@@ -113,7 +114,7 @@ namespace UnitTestsCore {
 
 		public static void SetGuarantorToSelf(List<long> listPatNums) {
 			string command=$"UPDATE patient SET Guarantor=PatNum WHERE PatNum IN("+string.Join(",",listPatNums)+")";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

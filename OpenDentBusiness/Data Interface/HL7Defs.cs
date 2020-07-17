@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
+using Imedisoft.Data;
 using OpenDentBusiness.HL7;
 
 namespace OpenDentBusiness{
@@ -180,7 +181,7 @@ namespace OpenDentBusiness{
 			else {
 				command+=" AND InternalType!='"+POut.String(HL7InternalType.MedLabv2_3.ToString())+"'";
 			}
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;
@@ -241,7 +242,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long hL7DefNum) {
 			
 			string command= "DELETE FROM hl7def WHERE HL7DefNum = "+POut.Long(hL7DefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

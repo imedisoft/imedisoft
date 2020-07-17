@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -111,7 +112,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrMeasureEventNum) {
 			
 			string command= "DELETE FROM ehrmeasureevent WHERE EhrMeasureEventNum = "+POut.Long(ehrMeasureEventNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -135,7 +136,7 @@ namespace OpenDentBusiness{
 				+"AND CodeValueResult!='' "
 				+"AND "+DbHelper.DtimeToDate("DateTEvent")+">="+POut.Date(MiscData.GetNowDateTime().AddYears(-1))+" "
 				+"GROUP BY CodeValueResult";
-			return Db.GetListString(command);
+			return Database.GetListString(command);
 		}
 
 		/*

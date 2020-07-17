@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Globalization;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -72,7 +73,7 @@ namespace OpenDentBusiness{
 					WHERE tasksubscription.UserNum="+POut.Long(userNum)+@"
 					AND tasksubscription.TaskListNum!=0 
 					ORDER BY tasklist.Descript,tasklist.DateTimeEntry";
-			return TableToList(Db.GetTable(command));
+			return TableToList(Database.ExecuteDataTable(command));
 		}
 
 		///<summary>Gets all task lists for the main trunk.  Pass in the current user.  filterClinicFkey and filterRegionFkey are only used for 
@@ -120,7 +121,7 @@ namespace OpenDentBusiness{
 				+"AND DateTL < "+POut.Date(new DateTime(1880,01,01))+" "
 				+"AND IsRepeating=0 "
 				+"ORDER BY tasklist.Descript,tasklist.DateTimeEntry";
-			return TableToList(Db.GetTable(command));
+			return TableToList(Database.ExecuteDataTable(command));
 		}
 
 		///<summary>Gets all task lists for the repeating trunk.  filterClinicFkey and filterRegionFkey are only used for NewTaskCount and do not affect
@@ -143,7 +144,7 @@ namespace OpenDentBusiness{
 				+"AND DateTL < "+POut.Date(new DateTime(1880,01,01))+" "
 				+"AND IsRepeating=1 "
 				+"ORDER BY tasklist.Descript,tasklist.DateTimeEntry";
-			return TableToList(Db.GetTable(command));
+			return TableToList(Database.ExecuteDataTable(command));
 		}
 
 		///<summary>0 is not allowed, because that would be a trunk.  Pass in the current user.  Also, if this is in someone's inbox, then pass in the 
@@ -191,7 +192,7 @@ namespace OpenDentBusiness{
 				+"FROM tasklist "
 				+"WHERE Parent="+POut.Long(parent)+" "
 				+"ORDER BY tasklist.Descript,tasklist.DateTimeEntry";
-			return TableToList(Db.GetTable(command));
+			return TableToList(Database.ExecuteDataTable(command));
 		}
 
 		///<summary>All repeating items for one date type with no heirarchy.  filterClinicFkey and filterRegionFkey are only used for NewTaskCount and do
@@ -213,7 +214,7 @@ namespace OpenDentBusiness{
 				+"WHERE IsRepeating=1 "
 				+"AND DateType="+POut.Long((int)dateType)+" "
 				+"ORDER BY tasklist.Descript,tasklist.DateTimeEntry";
-			return TableToList(Db.GetTable(command));
+			return TableToList(Database.ExecuteDataTable(command));
 		}
 
 		///<summary>Gets all task lists for one of the 3 dated trunks.  filterClinicFkey and filterRegionFkey are only used for NewTaskCount and do not 
@@ -255,7 +256,7 @@ namespace OpenDentBusiness{
 				+" AND DateTL <= "+POut.Date(dateTo)
 				+" AND DateType="+POut.Long((int)dateType)
 				+" ORDER BY tasklist.Descript,tasklist.DateTimeEntry";
-			return TableToList(Db.GetTable(command));
+			return TableToList(Database.ExecuteDataTable(command));
 		}
 
 			///<summary>Builds JOIN clauses appropriate to the type of GlobalFilterType.  Returns empty string if not filtering.  Pass filterClinicFkey=0 
@@ -364,7 +365,7 @@ namespace OpenDentBusiness{
 		public static List<long> GetNumsByDescription(string descript,bool doRunOnReportServer) {
 			
 			string command="SELECT TaskListNum FROM tasklist WHERE Descript LIKE '%"+POut.String(descript)+"%'";
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetListLong(command),doRunOnReportServer);
+			return ReportsComplex.RunFuncOnReportServer(() => Database.GetListLong(command),doRunOnReportServer);
 		}
 
 		/*
@@ -460,23 +461,23 @@ namespace OpenDentBusiness{
 		public static void Delete(TaskList tlist){
 			
 			string command="SELECT COUNT(*) FROM tasklist WHERE Parent="+POut.Long(tlist.TaskListNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows[0][0].ToString()!="0"){
 				throw new Exception(Lans.g("TaskLists","Not allowed to delete task list because it still has child lists attached."));
 			}
 			command="SELECT COUNT(*) FROM task WHERE TaskListNum="+POut.Long(tlist.TaskListNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows[0][0].ToString()!="0"){
 				throw new Exception(Lans.g("TaskLists","Not allowed to delete task list because it still has child tasks attached."));
 			}
 			command="SELECT COUNT(*) FROM userod WHERE TaskListInBox="+POut.Long(tlist.TaskListNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows[0][0].ToString()!="0"){
 				throw new Exception(Lans.g("TaskLists","Not allowed to delete task list because it is attached to a user inbox."));
 			}
 			command= "DELETE from tasklist WHERE TaskListNum = '"
 				+POut.Long(tlist.TaskListNum)+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns true if the first TaskListNum passed in has a child list with the second TaskListNum passed in.</summary>
@@ -484,7 +485,7 @@ namespace OpenDentBusiness{
 			
 			long parentNum=taskListNumChild;
 			while(true) {
-				parentNum=PIn.Long(Db.GetScalar("SELECT parent FROM TaskList WHERE TaskListNum="+POut.Long(parentNum)));
+				parentNum=Database.ExecuteLong("SELECT parent FROM TaskList WHERE TaskListNum="+POut.Long(parentNum));
 				if(parentNum==0) {
 					return false;//Got to the top level of the tree for this list and it is the main list.
 				}
@@ -510,7 +511,7 @@ namespace OpenDentBusiness{
 		public static long GetMailboxUserNum(long taskListNum) {
 			
 			string command="SELECT UserNum FROM userod WHERE TaskListInBox="+POut.Long(taskListNum);
-			return PIn.Long(Db.GetScalar(command));
+			return Database.ExecuteLong(command);
 		}
 
 		///<summary>Checks all ancestors of a task.  Will return 0 if no ancestor is anyone's inbox.</summary>
@@ -519,7 +520,7 @@ namespace OpenDentBusiness{
 			string command="SELECT UserNum FROM taskancestor,userod "
 				+"WHERE taskancestor.TaskListNum=userod.TaskListInBox "
 				+"AND taskancestor.TaskNum="+POut.Long(taskNum);
-			return PIn.Long(Db.GetScalar(command));
+			return Database.ExecuteLong(command);
 		}
 		
 		///<summary>Build the full path to the passed in task list.  Returns the string in the standard Windows path format.</summary>

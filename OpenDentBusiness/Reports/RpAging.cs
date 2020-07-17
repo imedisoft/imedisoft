@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -14,7 +15,7 @@ namespace OpenDentBusiness
 		public static DataTable GetAgingTable(RpAgingParamObject rpo)
 		{
 			string queryAg = GetQueryString(rpo);
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(queryAg));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(queryAg));
 		}
 
 		public static string GetQueryString(RpAgingParamObject rpo)

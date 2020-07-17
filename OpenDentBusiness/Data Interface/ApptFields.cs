@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -59,7 +60,7 @@ namespace OpenDentBusiness {
 		public static void Delete(long apptFieldNum) {
 			
 			string command="DELETE FROM apptfield WHERE ApptFieldNum = "+POut.Long(apptFieldNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all fields for the appointment and field name passed in.</summary>
@@ -68,7 +69,7 @@ namespace OpenDentBusiness {
 			string command=$@"DELETE FROM apptfield 
 				WHERE AptNum = {POut.Long(aptNum)}
 				AND FieldName ='{POut.String(fieldName)}'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness.Crud;
 using OpenDentBusiness.Eclaims;
 
@@ -411,7 +412,7 @@ namespace OpenDentBusiness
 				return;
 			}
 			string command = "DELETE FROM claimproc WHERE ClaimNum IN (" + string.Join(",", listClaimNums) + ") AND IsTransfer!=0";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 
@@ -488,7 +489,7 @@ namespace OpenDentBusiness
 												AND claimproc.ClaimNum > 0
 												GROUP BY claimproc.ClaimNum 
 												HAVING SUM(claimproc.ProcNum)=0 ";
-			listClaimNumsNoProcedures = Db.GetListLong(command);
+			listClaimNumsNoProcedures = Database.GetListLong(command);
 			if (listClaimNumsNoProcedures.Count == 0)
 			{
 				return;
@@ -717,7 +718,7 @@ namespace OpenDentBusiness
 				+ "WHERE PlanNum=" + POut.Long(planNumOld) + " "
 				+ "AND PatNum=" + POut.Long(patNum) + " "
 				+ "AND Status=" + POut.Long((int)ClaimProcStatus.InsHist);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets a list of ClaimProcs for one claim.</summary>
@@ -814,14 +815,14 @@ namespace OpenDentBusiness
 			}
 			string command = "UPDATE claimproc SET ProcDate=" + POut.Date(procDate) + " "
 				+ "WHERE ProcNum IN (" + string.Join(",", listProcNums.Select(x => POut.Long(x))) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
 		public static void Delete(ClaimProc cp)
 		{
 			string command = "DELETE FROM claimproc WHERE ClaimProcNum = " + POut.Long(cp.ClaimProcNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Validates and deletes a claimproc. If there are any dependencies, then this will throw an exception.</summary>
@@ -831,7 +832,7 @@ namespace OpenDentBusiness
 			if (cp.ClaimNum != 0 && cp.Status != ClaimProcStatus.Supplemental)
 			{
 				command = "SELECT COUNT(*) FROM claimproc WHERE ProcNum=" + POut.Long(cp.ProcNum) + " AND ClaimNum=" + POut.Long(cp.ClaimNum) + " AND Status=" + (int)ClaimProcStatus.Supplemental;
-				long supplementalCP = PIn.Long(Db.GetCount(command));
+				long supplementalCP = PIn.Long(Database.ExecuteString(command));
 				if (supplementalCP != 0)
 				{
 					throw new ApplicationException(Lans.g("ClaimProcs", "Not allowed to delete this procedure until all supplementals for this procedure are deleted first."));
@@ -854,12 +855,12 @@ namespace OpenDentBusiness
 						INNER JOIN procedurelog ON claimproc.ProcNum=procedurelog.ProcNum
 						WHERE claimproc.ClaimNum={POut.Long(cp.ClaimNum)} AND claimproc.ClaimProcNum!={POut.Long(cp.ClaimProcNum)} AND claimproc.ProcNum!=0
 							AND procedurelog.ProcNumLab=0";//Ignore labs, only consider parent procedures.
-					remainingCP = Db.GetListLong(command).Count;
+					remainingCP = Database.GetListLong(command).Count;
 				}
 				else
 				{
 					command = "SELECT COUNT(*) FROM claimproc WHERE ClaimNum= " + POut.Long(cp.ClaimNum) + " AND ClaimProcNum!= " + POut.Long(cp.ClaimProcNum) + " AND ProcNum!=0";
-					remainingCP = PIn.Long(Db.GetCount(command));
+					remainingCP = PIn.Long(Database.ExecuteString(command));
 				}
 				if (remainingCP == 0)
 				{
@@ -875,12 +876,12 @@ namespace OpenDentBusiness
 					WHERE claimproc.ClaimProcNum={POut.Long(cp.ClaimProcNum)} 
 						OR (procedurelog.ProcNumLab={POut.Long(cp.ProcNum)} AND claimproc.Status={POut.Enum(cp.Status)} 
 						AND claimproc.ClaimNum={POut.Long(cp.ClaimNum)})";
-				listClaimProcsToDelete = Db.GetList(command, ClaimProcCrud.RowToObj);
+				listClaimProcsToDelete = ClaimProcCrud.SelectMany(command);
 				ClaimProcs.DeleteMany(listClaimProcsToDelete);
 				return;
 			}
 			command = "DELETE FROM claimproc WHERE ClaimProcNum=" + POut.Long(cp.ClaimProcNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes claimprocs passed in if they are associated to a dropped patplan for the patnum passed in.
@@ -900,7 +901,7 @@ namespace OpenDentBusiness
 					(int)ClaimProcStatus.CapClaim,(int)ClaimProcStatus.Estimate,(int)ClaimProcStatus.CapEstimate }.Select(x => POut.Long(x))) + @")
 				AND patplan.PatPlanNum IS NULL ";
 			//Remove claimprocs that are associated to to a dropped patient's patplan before removing the claim.
-			DeleteMany(Db.GetListLong(command));
+			DeleteMany(Database.GetListLong(command));
 		}
 
 		///<summary>Used when creating a claim to create any missing claimProcs. Also used in FormProcEdit if click button to add Estimate.  Inserts it into db. It will still be altered after this to fill in the fields that actually attach it to the claim.</summary>
@@ -1072,7 +1073,7 @@ namespace OpenDentBusiness
 				+ "AND claimproc.Status IN (" + POut.Long((long)ClaimProcStatus.Received) + "," + POut.Long((long)ClaimProcStatus.Supplemental) + "," + POut.Long((long)ClaimProcStatus.CapClaim) + ") "
 				+ "GROUP BY claimproc.ClaimNum,claimproc.DateCP,claimproc.ClaimPaymentNum,claimproc.ProvNum "
 				+ "ORDER BY claimproc.DateCP";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>When sending or printing a claim, this converts the supplied list into a list of ClaimProcs that need to be sent.</summary>
@@ -1157,7 +1158,7 @@ namespace OpenDentBusiness
 			}
 			if (useDataReader)
 			{
-				return Db.GetList(command, ClaimProcCrud.RowToObj);
+				return ClaimProcCrud.SelectMany(command);
 			}
 			return ClaimProcCrud.SelectMany(command);
 		}
@@ -1406,7 +1407,7 @@ namespace OpenDentBusiness
 				+ "claimproc.IsTransfer=0 AND "
 				+ "InsPayAmt!=0 AND ("
 				+ "ClaimPaymentNum=" + POut.Long(claimPaymentNum) + " OR ClaimPaymentNum=0)";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Attaches claimprocs to the specified claimPayment. Updates all claimprocs on a claim with one query.
@@ -1421,7 +1422,7 @@ namespace OpenDentBusiness
 				+ "AND Status IN (" + String.Join(",", ClaimProcs.GetInsPaidStatuses().Select(x => POut.Int((int)x))) + ") "
 				+ "AND ClaimPaymentNum=0 "
 				+ "AND claimproc.IsTransfer=0 ";
-			return Db.NonQ(command);
+			return Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Detaches claimprocs from the specified claimPayment. Updates all claimprocs on a list of claims with one query.</summary>
@@ -1436,13 +1437,13 @@ namespace OpenDentBusiness
 				+ "WHERE ClaimPaymentNum=" + POut.Long(claimPaymentNum) + " "
 				+ "AND (SELECT SecDateEntry FROM claimpayment WHERE ClaimPaymentNum=" + POut.Long(claimPaymentNum) + ")=" + DbHelper.Curdate() + " "
 				+ "AND ClaimNum IN(" + string.Join(",", listClaimNums.Select(x => POut.Long(x))) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command = "UPDATE claimproc SET ClaimPaymentNum=0, "
 				//+"DateCP="+POut.Date(DateTime.MinValue)+", "
 				+ "PaymentRow=0 "
 				+ "WHERE ClaimNum IN (" + string.Join(",", listClaimNums.Select(x => POut.Long(x))) + ") "
 				+ "AND ClaimPaymentNum=" + POut.Long(claimPaymentNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Synchs all claimproc DateCP's attached to the claim payment.  Used when an insurance check's date is changed.</summary>
@@ -1452,7 +1453,7 @@ namespace OpenDentBusiness
 				+ "DateCP=" + POut.Date(date) + " "
 				+ "WHERE ClaimPaymentNum=" + POut.Long(claimPaymentNum) + " "
 				+ "AND claimproc.IsTransfer=0 ";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*
@@ -1466,11 +1467,11 @@ namespace OpenDentBusiness
 				+"Status = "+POut.Int((int)ClaimProcStatus.NotReceived)+" "
 				+"WHERE ClaimNum="+POut.Long(claimNum)+" "
 				+"AND ClaimPaymentNum="+POut.Long(claimPaymentNum);
- 			Db.NonQ(command);
+ 			Db.ExecuteNonQuery(command);
 			command="UPDATE claim "
 				+"SET ClaimStatus = 'S' "
 				+"WHERE ClaimNum="+POut.Long(claimNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}*/
 
 		/*
@@ -2313,7 +2314,7 @@ namespace OpenDentBusiness
 				return 0;
 			}
 			string command = "SELECT InsSubNum,InsEstTotal,InsEstTotalOverride,InsPayAmt,Status FROM claimproc WHERE ProcNum=" + POut.Long(cp.ProcNum);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			double retVal = 0;
 			long subNum;
 			int ordinal;
@@ -2365,7 +2366,7 @@ namespace OpenDentBusiness
 				return 0;
 			}
 			string command = "SELECT InsSubNum,BaseEst,InsPayAmt,Status FROM claimproc WHERE ProcNum=" + POut.Long(cp.ProcNum);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			double retVal = 0;
 			long subNum;
 			int ordinal;
@@ -2408,7 +2409,7 @@ namespace OpenDentBusiness
 				return 0;
 			}
 			string command = "SELECT InsSubNum,WriteOffEst,WriteOffEstOverride,WriteOff,Status FROM claimproc WHERE ProcNum=" + POut.Long(cp.ProcNum);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			double retVal = 0;
 			long subNum;
 			int ordinal;
@@ -2794,7 +2795,7 @@ namespace OpenDentBusiness
 				{
 					command += " AND claimproc.ClaimNum != " + POut.Long(excludeClaimNum);
 				}
-				table = Db.GetTable(command);
+				table = Database.ExecuteDataTable(command);
 				for (int i = 0; i < table.Rows.Count; i++)
 				{
 					DateTime claimProcDate = PIn.Date(table.Rows[i]["ProcDate"].ToString());
@@ -2919,7 +2920,7 @@ namespace OpenDentBusiness
 			string command = "UPDATE claimproc SET PaymentRow=" + POut.Int(paymentRow) + " "
 				+ "WHERE ClaimNum=" + POut.Long(claimNum) + " "
 				+ "AND ClaimPaymentNum=" + POut.Long(claimPaymentNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>For moving rows up and down the batch insurance window. For each ClaimNum in listClaimNums, the value at the corresponding index in
@@ -2937,7 +2938,7 @@ namespace OpenDentBusiness
 			}
 			command += "END) WHERE ClaimNum IN (" + string.Join(",", listClaimNums.Select(x => POut.Long(x))) + ") "
 				+ "AND ClaimPaymentNum=" + POut.Long(claimPaymentNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Attaches all claimprocs that have an InsPayAmt entered to the specified ClaimPayment, 
@@ -2969,9 +2970,9 @@ namespace OpenDentBusiness
 			{//Finalizing individual claim.
 				command += "AND ClaimNum=" + POut.Long(onlyOneClaimNum);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command = "SELECT SUM(InsPayAmt) FROM claimproc WHERE ClaimPaymentNum=" + POut.Long(claimPaymentNum);
-			return PIn.Double(Db.GetScalar(command));
+			return Database.ExecuteDouble(command);
 		}
 
 		///<summary>Called when we want to try and update claimProc.DateInsFinalized for claimProcs associated to the given claimPaymentNum.
@@ -3002,7 +3003,7 @@ namespace OpenDentBusiness
 			{//Finalizing individual claim.
 				command += "AND ClaimNum=" + POut.Long(onlyOneClaimNum);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			return;
 		}
 
@@ -3038,7 +3039,7 @@ namespace OpenDentBusiness
 			}
 			string command = "SELECT ProcNum,Status,WriteOff FROM claimproc WHERE ProcNum IN(" + string.Join(",", listProcNums) + ") "
 				+ "AND Status IN(" + string.Join(",", listStatuses.Select(x => (int)x)) + ")";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			foreach (DataRow row in table.Rows)
 			{
 				ClaimProc claimProc = new ClaimProc();
@@ -3063,7 +3064,7 @@ namespace OpenDentBusiness
 				return;
 			}
 			string command = "DELETE FROM claimproc WHERE ClaimProcNum IN(" + string.Join(",", listClaimProcNums) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -120,7 +121,7 @@ namespace OpenDentBusiness{
 		public static void Delete(TimeAdjust adj) {
 			
 			string command= "DELETE FROM timeadjust WHERE TimeAdjustNum = "+POut.Long(adj.TimeAdjustNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns all automatically generated timeAdjusts for a given employee between the date range (inclusive).</summary>

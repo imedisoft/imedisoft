@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -55,7 +56,7 @@ namespace OpenDentBusiness{
 					return;
 			}
 			//Only delete records of the correct fieldDefType (Pat vs Appt)
-			Db.NonQ("DELETE FROM fieldDefLink WHERE FieldDefNum="+POut.Long(fieldDefNum)+" AND FieldDefType="+POut.Int((int)fieldDefType));
+			Database.ExecuteNonQuery("DELETE FROM fieldDefLink WHERE FieldDefNum="+POut.Long(fieldDefNum)+" AND FieldDefType="+POut.Int((int)fieldDefType));
 		}
 
 	}

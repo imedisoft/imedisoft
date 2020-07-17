@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -113,7 +114,7 @@ namespace OpenDentBusiness{
 		public static void UpdateTaskNums(Task oldTask,Task newTask) {
 			
 			string command="UPDATE taskhist SET TaskNum="+POut.Long(newTask.TaskNum)+" WHERE TaskNum="+POut.Long(oldTask.TaskNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets a list of task histories for a given taskNum.</summary>

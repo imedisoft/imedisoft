@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -41,7 +42,7 @@ namespace OpenDentBusiness{
 				return "";
 			}
 			string command="SELECT PageContent FROM wikipagehist WHERE WikiPageNum="+POut.Long(wikiPageNum);
-			return Db.GetScalar(command);
+			return Database.ExecuteString(command);
 		}
 
 		///<summary></summary>
@@ -52,7 +53,7 @@ namespace OpenDentBusiness{
 			string[] searchTokens = searchText.Split(' ');
 			string command="";
 			command="SELECT PageTitle, MAX(DateTimeSaved) AS DateTimeSaved FROM wikipagehist GROUP BY PageTitle";
-			tableNewestDateTimes=Db.GetTable(command);
+			tableNewestDateTimes=Database.ExecuteDataTable(command);
 			command=
 				"SELECT PageTitle,DateTimeSaved FROM wikipagehist "
 				// \_ represents a literal _ because _ has a special meaning in LIKE clauses.
@@ -65,7 +66,7 @@ namespace OpenDentBusiness{
 				"AND PageTitle NOT IN (SELECT PageTitle FROM wikipage WHERE IsDraft=0) "//ignore pages that were re-added after they were deleted
 				+"AND IsDeleted=1 "
 				+"ORDER BY PageTitle";
-			tableResults=Db.GetTable(command);
+			tableResults=Database.ExecuteDataTable(command);
 			for(int i=0;i<tableResults.Rows.Count;i++) {
 				if(retVal.Contains(tableResults.Rows[i]["PageTitle"].ToString())) {
 					//already found this page
@@ -97,7 +98,7 @@ namespace OpenDentBusiness{
 					"AND PageTitle NOT IN (SELECT PageTitle FROM wikipage WHERE IsDraft=0) "//ignore pages that exist again...
 					+"AND IsDeleted=1 "
 					+"ORDER BY PageTitle";
-				tableResults=Db.GetTable(command);
+				tableResults=Database.ExecuteDataTable(command);
 				for(int i=0;i<tableResults.Rows.Count;i++) {
 					if(retVal.Contains(tableResults.Rows[i]["PageTitle"].ToString())) {
 						//already found this page
@@ -181,7 +182,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long wikiPageNum) {
 			
 			string command= "DELETE FROM wikipagehist WHERE WikiPageNum = "+POut.Long(wikiPageNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

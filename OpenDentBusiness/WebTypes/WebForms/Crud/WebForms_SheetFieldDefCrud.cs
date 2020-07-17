@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using Imedisoft.Data;
+using MySql.Data.MySqlClient;
 using OpenDentBusiness;
 using OpenDentBusiness.WebTypes.WebForms;
 
@@ -15,7 +17,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 		public static WebForms_SheetFieldDef SelectOne(long webSheetFieldDefID) {
 			string command="SELECT * FROM webforms_sheetfielddef "
 				+"WHERE WebSheetFieldDefID = "+POut.Long(webSheetFieldDefID);
-			List<WebForms_SheetFieldDef> list=TableToList(DataCore.GetTable(command));
+			List<WebForms_SheetFieldDef> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -24,7 +26,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 
 		///<summary>Gets one WebForms_SheetFieldDef object from the database using a query.</summary>
 		public static WebForms_SheetFieldDef SelectOne(string command) {
-			List<WebForms_SheetFieldDef> list=TableToList(DataCore.GetTable(command));
+			List<WebForms_SheetFieldDef> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -33,7 +35,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 
 		///<summary>Gets a list of WebForms_SheetFieldDef objects from the database using a query.</summary>
 		public static List<WebForms_SheetFieldDef> SelectMany(string command) {
-			List<WebForms_SheetFieldDef> list=TableToList(DataCore.GetTable(command));
+			List<WebForms_SheetFieldDef> list=TableToList(Database.ExecuteDataTable(command));
 			return list;
 		}
 
@@ -175,16 +177,16 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 			if(webForms_SheetFieldDef.FieldValue==null) {
 				webForms_SheetFieldDef.FieldValue="";
 			}
-			OdSqlParameter paramFieldValue=new OdSqlParameter("paramFieldValue",OdDbType.Text,webForms_SheetFieldDef.FieldValue);
+			var paramFieldValue = new MySqlParameter("paramFieldValue", webForms_SheetFieldDef.FieldValue);
 			if(webForms_SheetFieldDef.ImageData==null) {
 				webForms_SheetFieldDef.ImageData="";
 			}
-			OdSqlParameter paramImageData=new OdSqlParameter("paramImageData",OdDbType.Text,webForms_SheetFieldDef.ImageData);
+			var paramImageData = new MySqlParameter("paramImageData", webForms_SheetFieldDef.ImageData);
 			if(useExistingPK) {
-				DataCore.NonQ(command,paramFieldValue,paramImageData);
+				Database.ExecuteNonQuery(command,paramFieldValue,paramImageData);
 			}
 			else {
-				webForms_SheetFieldDef.WebSheetFieldDefID=DataCore.NonQ(command,true,paramFieldValue,paramImageData);
+				webForms_SheetFieldDef.WebSheetFieldDefID=Database.ExecuteInsert(command,paramFieldValue,paramImageData);
 			}
 			return webForms_SheetFieldDef.WebSheetFieldDefID;
 		}
@@ -242,7 +244,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 				sbRow.Append("'"+POut.String(webForms_SheetFieldDef.UiLabelMobile)+"'"); sbRow.Append(",");
 				sbRow.Append("'"+POut.String(webForms_SheetFieldDef.UiLabelMobileRadioButton)+"'"); sbRow.Append(")");
 				if(sbCommands.Length+sbRow.Length+1 > TableBase.MaxAllowedPacketCount && countRows > 0) {
-					DataCore.NonQ(sbCommands.ToString());
+					Database.ExecuteNonQuery(sbCommands.ToString());
 					sbCommands=null;
 				}
 				else {
@@ -252,7 +254,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 					sbCommands.Append(sbRow.ToString());
 					countRows++;
 					if(index==listWebForms_SheetFieldDefs.Count-1) {
-						DataCore.NonQ(sbCommands.ToString());
+						Database.ExecuteNonQuery(sbCommands.ToString());
 					}
 					index++;
 				}
@@ -289,12 +291,12 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 			if(webForms_SheetFieldDef.FieldValue==null) {
 				webForms_SheetFieldDef.FieldValue="";
 			}
-			OdSqlParameter paramFieldValue=new OdSqlParameter("paramFieldValue",OdDbType.Text,webForms_SheetFieldDef.FieldValue);
+			var paramFieldValue = new MySqlParameter("paramFieldValue", webForms_SheetFieldDef.FieldValue);
 			if(webForms_SheetFieldDef.ImageData==null) {
 				webForms_SheetFieldDef.ImageData="";
 			}
-			OdSqlParameter paramImageData=new OdSqlParameter("paramImageData",OdDbType.Text,webForms_SheetFieldDef.ImageData);
-			DataCore.NonQ(command,paramFieldValue,paramImageData);
+			var paramImageData = new MySqlParameter("paramImageData", webForms_SheetFieldDef.ImageData);
+			Database.ExecuteNonQuery(command,paramFieldValue,paramImageData);
 		}
 
 		///<summary>Updates one WebForms_SheetFieldDef in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
@@ -398,14 +400,14 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 			if(webForms_SheetFieldDef.FieldValue==null) {
 				webForms_SheetFieldDef.FieldValue="";
 			}
-			OdSqlParameter paramFieldValue=new OdSqlParameter("paramFieldValue",OdDbType.Text,webForms_SheetFieldDef.FieldValue);
+			var paramFieldValue = new MySqlParameter("paramFieldValue", webForms_SheetFieldDef.FieldValue);
 			if(webForms_SheetFieldDef.ImageData==null) {
 				webForms_SheetFieldDef.ImageData="";
 			}
-			OdSqlParameter paramImageData=new OdSqlParameter("paramImageData",OdDbType.Text,webForms_SheetFieldDef.ImageData);
+			var paramImageData = new MySqlParameter("paramImageData", webForms_SheetFieldDef.ImageData);
 			command="UPDATE webforms_sheetfielddef SET "+command
 				+" WHERE WebSheetFieldDefID = "+POut.Long(webForms_SheetFieldDef.WebSheetFieldDefID);
-			DataCore.NonQ(command,paramFieldValue,paramImageData);
+			Database.ExecuteNonQuery(command,paramFieldValue,paramImageData);
 			return true;
 		}
 
@@ -413,7 +415,7 @@ namespace OpenDentBusiness.WebTypes.WebForms.Crud{
 		public static void Delete(long webSheetFieldDefID) {
 			string command="DELETE FROM webforms_sheetfielddef "
 				+"WHERE WebSheetFieldDefID = "+POut.Long(webSheetFieldDefID);
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

@@ -1,14 +1,16 @@
-﻿using System;
-using CodeBase;
+﻿using CodeBase;
+using Imedisoft.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenDentBusiness;
+using System;
 using System.Collections.Generic;
-using UnitTestsCore;
-using System.Reflection;
 using System.Data;
+using System.Reflection;
+using UnitTestsCore;
 
-namespace UnitTests {
-	[TestClass]
+namespace UnitTests
+{
+    [TestClass]
 	public abstract class TestBase {
 
 		protected const string UnitTestUserName="UnitTest";
@@ -104,11 +106,11 @@ namespace UnitTests {
 		///<summary>Creates a database and a preference table so that DataConnection can pass our arbitrary test query.</summary>
 		public static void CreateDatabaseIfNeeded(string databaseName) {
 			string command=$"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{POut.String(databaseName)}'";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			//Create a custom database if needed.
 			if(table.Rows.Count==0) {
-				DataCore.NonQ($"CREATE DATABASE `{POut.String(databaseName)}` CHARACTER SET utf8");
-				DataCore.NonQ($@"CREATE TABLE `{POut.String(databaseName)}`.`preference` (
+				Database.ExecuteNonQuery($"CREATE DATABASE `{POut.String(databaseName)}` CHARACTER SET utf8");
+				Database.ExecuteNonQuery($@"CREATE TABLE `{POut.String(databaseName)}`.`preference` (
 						`PrefName` varchar(255) NOT NULL DEFAULT '',
 						`ValueString` text NOT NULL,
 						`PrefNum` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -119,7 +121,7 @@ namespace UnitTests {
 		}
 
 		public static void DropDatabase(string databaseName) {
-			ODException.SwallowAnyException(() => DataCore.NonQ($"DROP DATABASE `{POut.String(databaseName)}`"));
+			ODException.SwallowAnyException(() => Database.ExecuteNonQuery($"DROP DATABASE `{POut.String(databaseName)}`"));
 		}
 
 		///<summary>Executes the createTableStatement passed in if the table does not exists in the current database context.</summary>
@@ -128,9 +130,9 @@ namespace UnitTests {
 				WHERE TABLE_SCHEMA = DATABASE()
 				AND TABLE_NAME = '{POut.String(tableName)}'
 				LIMIT 1";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
-				DataCore.NonQ(createTableStatement);
+				Database.ExecuteNonQuery(createTableStatement);
 			}
 		}
 	}

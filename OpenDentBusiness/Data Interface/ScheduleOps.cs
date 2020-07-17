@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command = "DELETE FROM scheduleop WHERE ScheduleOpNum IN ("+string.Join(",",listSchedOpNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

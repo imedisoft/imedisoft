@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -55,7 +56,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrAmendmentNum) {
 			
 			string command= "DELETE FROM ehramendment WHERE EhrAmendmentNum = "+POut.Long(ehrAmendmentNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 

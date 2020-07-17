@@ -1,5 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -171,7 +172,7 @@ namespace OpenDentBusiness
 				"SELECT PatNum,LName,FName,MiddleI,Preferred,CreditType,Guarantor,HasIns,SSN "
 				+ "FROM patient "
 				+ "WHERE PatNum = '" + patNum.ToString() + "'";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count == 0)
 			{
 				return new Patient();

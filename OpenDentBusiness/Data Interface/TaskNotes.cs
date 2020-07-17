@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,7 +29,7 @@ namespace OpenDentBusiness{
 		public static bool HasAnyLongNotes() {
 			
 			string command="SELECT COUNT(*) FROM tasknote WHERE CHAR_LENGTH(tasknote.Note)>65535";
-			return (Db.GetCount(command)!="0");
+			return (Database.ExecuteString(command)!="0");
 		}
 		#endregion
 
@@ -82,7 +83,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long taskNoteNum) {
 			
 			string command= "DELETE FROM tasknote WHERE TaskNoteNum = "+POut.Long(taskNoteNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

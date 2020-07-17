@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -97,7 +98,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM appointmentrule" 
 				+" WHERE AppointmentRuleNum = "+POut.Long(rule.AppointmentRuleNum);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Whenever an appointment is scheduled, the procedures which would be double booked are calculated.  In this method, those procedures are checked to see if the double booking should be blocked.  If double booking is indeed blocked, then a separate function will tell the user which category.</summary>

@@ -39,7 +39,7 @@ namespace OpenDentBusiness.Mobile{
 		///<summary></summary>
 		public static void Delete(long customerNum,long usermNum) {
 			string command= "DELETE FROM userm WHERE CustomerNum = "+POut.Long(customerNum)+" AND UsermNum = "+POut.Long(usermNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 
 		///<summary>First use GetChangedSince.  Then, use this to convert the list a list of 'm' objects.</summary>

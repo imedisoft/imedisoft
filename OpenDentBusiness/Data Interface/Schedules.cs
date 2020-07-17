@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -477,7 +478,7 @@ namespace OpenDentBusiness{
 				+whereProv
 				+whereClinic;
 			//The above query is also found in RpProdGoal (it has the addition of provider production goals)
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static List<Schedule> GetByScheduleNum(List<long> listScheduleNums) {
@@ -547,7 +548,7 @@ namespace OpenDentBusiness{
 				return listScheds;
 			}
 			command="SELECT ScheduleNum,OperatoryNum FROM scheduleop WHERE ScheduleNum IN("+string.Join(",",listScheds.Select(x => x.ScheduleNum))+")";
-			DataTable tableSO=Db.GetTable(command);
+			DataTable tableSO=Database.ExecuteDataTable(command);
 			if(tableSO.Rows.Count==0) {
 				return listScheds;
 			}
@@ -577,7 +578,7 @@ namespace OpenDentBusiness{
 			Validate(sched);
 			Crud.ScheduleCrud.Update(sched);
 			string command="DELETE FROM scheduleop WHERE ScheduleNum="+POut.Long(sched.ScheduleNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Signalods.SetInvalidSched(sched);
 			sched.Ops.ForEach(x => ScheduleOps.Insert(new ScheduleOp { ScheduleNum=sched.ScheduleNum,OperatoryNum=x }));
 		}
@@ -599,7 +600,7 @@ namespace OpenDentBusiness{
 				return;//no updates to ScheduleOps needed
 			}
 			string command="DELETE FROM scheduleop WHERE ScheduleNum="+POut.Long(schedNew.ScheduleNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//re-insert ScheduleOps based on the list of opnums in schedNew.Ops
 			schedNew.Ops.ForEach(x => ScheduleOps.Insert(new ScheduleOp { ScheduleNum=schedNew.ScheduleNum,OperatoryNum=x }));
 		}
@@ -690,9 +691,9 @@ namespace OpenDentBusiness{
 		public static void Delete(Schedule sched,bool hasSignal=false){
 			
 			string command= "DELETE from schedule WHERE schedulenum='"+POut.Long(sched.ScheduleNum)+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 			command="DELETE FROM scheduleop WHERE ScheduleNum="+POut.Long(sched.ScheduleNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(sched.SchedType==ScheduleType.Provider){
 				DeletedObjects.SetDeleted(DeletedObjectType.ScheduleProv,sched.ScheduleNum);
 			}
@@ -713,9 +714,9 @@ namespace OpenDentBusiness{
 			//We use RefreshAndFill() because we need both the Schedule and ScheduleOp information to perform our signal logic.
 			List <Schedule> listDeleteSchedules=RefreshAndFill("SELECT * FROM schedule WHERE ScheduleNum IN ("+string.Join(",",listSchedNums)+")");
 			string command="DELETE FROM schedule WHERE ScheduleNum IN("+string.Join(",",listSchedNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM scheduleop WHERE ScheduleNum IN("+string.Join(",",listSchedNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Signalods.SetInvalidSched(listDeleteSchedules.ToArray());
 		}
 	
@@ -938,17 +939,17 @@ namespace OpenDentBusiness{
 			
 			//Get ScheduleNums that are to be deleted so we can delete scheduleops
 			string command="SELECT ScheduleNum FROM schedule WHERE SchedDate="+POut.Date(date)+" AND SchedType="+POut.Int((int)ScheduleType.Blockout);
-			List<long> listSchedNums=Db.GetListLong(command);
+			List<long> listSchedNums=Database.GetListLong(command);
 			if(listSchedNums.Count==0) {
 				return;//nothing to delete
 			}
 			string schedNumStr=string.Join(",",listSchedNums.Select(x => POut.Long(x)));
 			//first delete schedules
 			command="DELETE FROM schedule WHERE ScheduleNum IN("+schedNumStr+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//then delete scheduleops for the deleted schedules.
 			command="DELETE FROM scheduleop WHERE ScheduleNum IN("+schedNumStr+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Signalods.SetInvalidSched(date);
 		}
 
@@ -992,14 +993,14 @@ namespace OpenDentBusiness{
 				return;//nothing to delete
 			}
 			string command=$@"SELECT ScheduleNum FROM scheduleop WHERE ScheduleNum IN ({ string.Join(",",listScheduleNums) })";
-			List<long> listScheduleNumsDoNotDelete=Db.GetListLong(command);
+			List<long> listScheduleNumsDoNotDelete=Database.GetListLong(command);
 			List<string> listSchedNumsForDelete=listScheduleNums.Where(x => !listScheduleNumsDoNotDelete.Contains(x)).Select(x => POut.Long(x))
 				.ToList();
 			if(listSchedNumsForDelete.Count==0) {
 				return;//nothing to delete
 			}
 			command="DELETE FROM schedule WHERE ScheduleNum IN ("+string.Join(",",listSchedNumsForDelete)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Similar to GetDayList but uses Crud pattern and classes.  No need to call RefreshAndFill since this is only used for the ScheduleNums</summary>
@@ -1017,7 +1018,7 @@ namespace OpenDentBusiness{
 				+"AND Status="+POut.Int((int)SchedStatus.Holiday)+" "
 				+"AND SchedType="+POut.Int((int)ScheduleType.Practice)+" "
 				+"AND SchedDate="+POut.Date(date);
-			string result=Db.GetCount(command);
+			string result=Database.ExecuteString(command);
 			return result!="0";
 		}
 
@@ -1132,7 +1133,7 @@ namespace OpenDentBusiness{
 			}
 			//If the for loop below changes to compare values in a row and the previous row, this query must be ordered by the additional comparison column
 			command+=" ORDER BY SchedDate,FName,ItemOrder,StartTime,ClinicNum,Status";
-			DataTable raw=Db.GetTable(command);
+			DataTable raw=Database.ExecuteDataTable(command);
 			DateTime startTime;
 			DateTime stopTime;
 			int rowI;
@@ -1517,13 +1518,13 @@ namespace OpenDentBusiness{
 				AND schedule.SchedDate BETWEEN {POut.Date(dateStart)} AND {POut.Date(dateEnd)}
 				{(includeWeekend ? "" : "AND DAYOFWEEK(schedule.SchedDate) BETWEEN 2 AND 6")/*1 is Sunday and 7 is Saturday in MySQL*/}
 				AND scheduleop.OperatoryNum IN({string.Join(",",listOpNums.Select(x => POut.Long(x)))})";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return;
 			}
 			command=$@"DELETE FROM scheduleop
 				WHERE ScheduleOpNum IN ({string.Join(",",table.Select().Select(x => x["ScheduleOpNum"].ToString()))})";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//If deleting the sched op above caused the schedule to be orphaned, it should be deleted.
 			DeleteOrphanedBlockouts(table.Select().Select(x => PIn.Long(x["ScheduleNum"].ToString())).Distinct().ToList());
 			Dictionary <DateTime,List<long>> dictOpNumsForDates=table.Select().GroupBy(x => PIn.Date(x["SchedDate"].ToString()))
@@ -1552,9 +1553,9 @@ namespace OpenDentBusiness{
 			//We use RefreshAndFill() because we need both the Schedule and ScheduleOp information to perform our signal logic.
 			List <Schedule> listDeleteSchedules=RefreshAndFill("SELECT * FROM schedule WHERE ScheduleNum IN ("+string.Join(",",listDupSchedNums)+")");
 			command="DELETE FROM schedule WHERE ScheduleNum IN("+string.Join(",",listDupSchedNums)+")";
-			long schedDel=Db.NonQ(command);
+			long schedDel=Database.ExecuteNonQuery(command);
 			command="DELETE FROM scheduleop WHERE ScheduleNum IN("+string.Join(",",listDupSchedNums)+")";
-			long schedOpsDel=Db.NonQ(command);
+			long schedOpsDel=Database.ExecuteNonQuery(command);
 			Signalods.SetInvalidSched(listDeleteSchedules.ToArray());
 		}
 
@@ -1591,7 +1592,7 @@ namespace OpenDentBusiness{
 
 			//Sort by Emp num so that sort is deterministic
 			command+="ORDER BY FName,LName,employee.EmployeeNum,StartTime";//order by FName for display, LName and EmployeeNum for emps with same FName
-			DataTable raw=Db.GetTable(command);
+			DataTable raw=Database.ExecuteDataTable(command);
 			DataRow row;
 			DateTime startTime;
 			DateTime stopTime;
@@ -1692,7 +1693,7 @@ namespace OpenDentBusiness{
 				command+="AND (scheduleop.OperatoryNum IN ("+string.Join(",",listOpNums.Select(x => POut.Long(x)))+") OR scheduleop.OperatoryNum IS NULL) ";
 			}
 			command+="ORDER BY StartTime";
-			DataTable raw=Db.GetTable(command);
+			DataTable raw=Database.ExecuteDataTable(command);
 			//Since we did a left join within the query above there could be duplicate rows for the same schedule (sans the OperatoryNum column).
 			//Group by ScheduleNum, using the first DataRow as the dictionary's key.
 			//Then pull out all OperatoryNums related to the current schedule as the dictionary's value.

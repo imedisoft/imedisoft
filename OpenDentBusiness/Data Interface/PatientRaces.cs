@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -38,7 +39,7 @@ namespace OpenDentBusiness{
 				FROM patientrace 
 				LEFT JOIN cdcrec ON cdcrec.CdcrecCode=patientrace.CdcrecCode
 				WHERE PatNum="+POut.Long(patNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<PatientRace> listPatientRaces=Crud.PatientRaceCrud.TableToList(table);
 			for(int i=0;i<table.Rows.Count;i++) {
 				switch(listPatientRaces[i].CdcrecCode) {
@@ -168,7 +169,7 @@ namespace OpenDentBusiness{
 			string command;
 			if(listPatRaces.Count==0) { //DELETE all for the patient if listPatRaces is empty.
 				command="DELETE FROM patientrace WHERE PatNum = "+POut.Long(patNum);//Can't use CRUD layer here because there might be multiple races for one patient.
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				return;
 			}
 			List<PatientRace> listPatientRacesDB;
@@ -228,7 +229,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long patientRaceNum) {
 			
 			string command= "DELETE FROM patientrace WHERE PatientRaceNum = "+POut.Long(patientRaceNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

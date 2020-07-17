@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,7 +29,7 @@ namespace OpenDentBusiness.Mobile
 					+ " AND diseasem.ProbStatus = " + POut.Int((int)ProblemStatus.Active) // get only active diseases
 					+ " AND diseasem.ICD9Num !=0" //get only ICD9NUM which are not zero. ICD9NUM and DiseaseDefNum are mutually exculsive. If one is zero the other is not.
 					+ " AND icd9m.CustomerNum = " + POut.Long(customerNum);
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 		#endregion
 
@@ -82,14 +83,14 @@ namespace OpenDentBusiness.Mobile
 		public static void DeleteAll(long customerNum)
 		{
 			string command = "DELETE FROM diseasem WHERE CustomerNum = " + POut.Long(customerNum); ;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Delete all diseases of a particular patient</summary>
 		public static void Delete(long customerNum, long PatNum)
 		{
 			string command = "DELETE FROM diseasem WHERE CustomerNum = " + POut.Long(customerNum) + " AND PatNum = " + POut.Long(PatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

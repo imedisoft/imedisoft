@@ -226,7 +226,7 @@ namespace OpenDental {
 				}
 				string command="SHOW DATABASES";
 				//if this next step fails, table will simply have 0 rows
-				DataTable table=dcon.GetTable(command,false);
+				DataTable table=dcon.ExecuteDataTable(command,false);
 				string[] dbNames=new string[table.Rows.Count];
 				for(int i=0;i<table.Rows.Count;i++) {
 					dbNames[i]=table.Rows[i][0].ToString();

@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -106,7 +107,7 @@ namespace OpenDentBusiness
 			{
 				queryIns = DbHelper.LimitOrderBy(queryIns, 0);
 			}
-			DataTable table = ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(queryIns));
+			DataTable table = ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(queryIns));
 			foreach (DataRow row in table.Rows)
 			{
 				//If there is more than one patient attached to a check, we will append an asterisk to the end.
@@ -205,7 +206,7 @@ namespace OpenDentBusiness
 				queryPat = DbHelper.LimitOrderBy(queryPat, 0);
 			}
 
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(queryPat));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(queryPat));
 		}
 	}
 }

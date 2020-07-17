@@ -11,6 +11,7 @@ using OpenDentBusiness;
 using CodeBase;
 using DataConnectionBase;
 using MySql.Data.MySqlClient;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -32,7 +33,7 @@ namespace OpenDentBusiness
 				+ (SELECT COUNT(*) FROM payplan)
 				+ (SELECT COUNT(*) FROM payplancharge)) * 0.0042680625638876 AgingInMilliseconds";
 
-			return SIn.Double(Db.GetScalar(command));
+			return Database.ExecuteDouble(command);
 		}
 
 		///<summary>This runs aging for all patients.  If using monthly aging, it always just runs the aging as of the last date again.  If using daily
@@ -112,7 +113,7 @@ namespace OpenDentBusiness
 					List<FamAging> listFamAgings = Crud.FamAgingCrud.SelectMany(GetAgingQueryString(asOfDate, listGuarantorNums)
 						+ " HAVING BalOver90!=0 OR Bal_61_90!=0 OR Bal_31_60!=0 OR Bal_0_30!=0 OR BalTotal!=0 OR PayPlanDue!=0 OR InsEst!=0");
 					command = "TRUNCATE TABLE famaging";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					SecurityLogs.MakeLogEntry(Permissions.FamAgingTruncate, 0, "Family aging table truncated");
 					FamAgings.InsertMany(listFamAgings);//use InsertMany so inserts are broken into statements no larger than max allowed packet
 					command = @"UPDATE patient p
@@ -178,7 +179,7 @@ namespace OpenDentBusiness
 					+ " WHERE p.Guarantor=famSums.PatNum";//Aging calculations only apply to guarantors, zero out non-guarantor bals
 				#endregion Not Using FamAging Table
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Computes aging for PaySplits not associated to the patient passed in. Does nothing if all PaySplits are for the passed in PatNum.
@@ -241,7 +242,7 @@ namespace OpenDentBusiness
 		public static Dictionary<long, double> GetBalancesForFamilies(List<long> listGuarantorNums)
 		{
 			string command = GetAgingQueryString(DateTime.Today, listGuarantorNums);
-			return Db.GetTable(command).Rows.OfType<DataRow>().ToDictionary(x => PIn.Long(x["PatNum"].ToString()), y => PIn.Double(y["BalTotal"].ToString()));
+			return Database.ExecuteDataTable(command).Rows.OfType<DataRow>().ToDictionary(x => PIn.Long(x["PatNum"].ToString()), y => PIn.Double(y["BalTotal"].ToString()));
 		}
 
 		///<summary>Returns a query string for selecting the guarantor and aged bals with InsEst and PayPlanDue.
@@ -293,7 +294,7 @@ namespace OpenDentBusiness
 		{
 			string command = GetAgingGuarTransQuery(asOfDate, listGuarantors, hasDateLastPay, isHistoric, isGroupByGuar,
 				isWoAged, doAgePatPayPlanPayments);
-			return Db.GetTable(command).Rows.OfType<DataRow>().ToDictionary(x => PIn.Long(x["PatNum"].ToString()), y => y);
+			return Database.ExecuteDataTable(command).Rows.OfType<DataRow>().ToDictionary(x => PIn.Long(x["PatNum"].ToString()), y => y);
 		}
 
 		///<summary>Returns a query string.</summary>
@@ -737,7 +738,7 @@ namespace OpenDentBusiness
 			if (listGuarNums != null && listGuarNums.Count > 0)
 			{
 				command = "SELECT p.PatNum FROM patient p WHERE p.Guarantor IN (" + string.Join(",", listGuarNums) + ")";
-				familyPatNums = string.Join(",", Db.GetListLong(command));//will contain at least one patnum (the guarantor)
+				familyPatNums = string.Join(",", Database.GetListLong(command));//will contain at least one patnum (the guarantor)
 			}
 			command = "SELECT patient.Guarantor,trans.TranType,trans.PriKey,trans.ProcNum,trans.PayNum,trans.PatNum,trans.TranDate,trans.TranAmount,"
 				+ "trans.InsWoEst+trans.InsPayEst InsEst "
@@ -751,7 +752,7 @@ namespace OpenDentBusiness
 				{ "PPComplete",TsiFKeyType.PayPlan },//v1: tranamount=-pp.CompletedAmt
 				{ "PPCComplete",TsiFKeyType.PayPlanCharge }//if (v2 & debit) OR (v3 & credit) then tranamount=-ppc.Principal, else if v2 & plannum==0 then tranamount=ppc.Principal+ppc.Interest
 			};
-			return Db.GetTable(command).Select()
+			return Database.ExecuteDataTable(command).Select()
 				.Where(x => dictTranTypes.ContainsKey(x["TranType"].ToString()))
 				.Select(x => new TsiTrans(
 					PIn.Long(x["PriKey"].ToString()),
@@ -900,7 +901,7 @@ namespace OpenDentBusiness
 				{clinicNumsJoin}
 				GROUP BY patient.Guarantor,RawPatTrans.TranDate
 				ORDER BY patient.Guarantor,RawPatTrans.TranDate";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count < 1)
 			{
 				return retval;

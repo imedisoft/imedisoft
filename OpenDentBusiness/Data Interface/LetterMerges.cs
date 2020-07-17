@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -114,7 +115,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM lettermerge "
 				+"WHERE LetterMergeNum = "+POut.Long(merge.LetterMergeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Supply the index of the cat within Defs.Short.</summary>

@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -19,7 +20,7 @@ namespace OpenDentBusiness{
 			string command="SELECT COUNT(*) FROM payplan"
 				+" WHERE PatNum = "+POut.Long(patNum)
 				+" OR Guarantor = "+POut.Long(patNum);
-			return PIn.Int(Db.GetScalar(command));
+			return Database.ExecuteInt(command);
 		}
 
 		public static PayPlan GetOne(long payPlanNum) {
@@ -160,7 +161,7 @@ namespace OpenDentBusiness{
 				command+=" AND (MAX(claimproc.ClaimNum) IS NULL OR MAX(claimproc.ClaimNum)=0)";
 			}
 			command+=" ORDER BY payplan.PayPlanDate";
-			DataTable payPlansWithClaimNum=Db.GetTable(command);
+			DataTable payPlansWithClaimNum=Database.ExecuteDataTable(command);
 			List<PayPlan> retval=new List<PayPlan>();
 			for(int i=0;i<payPlansWithClaimNum.Rows.Count;i++) {
 				PayPlan planCur=new PayPlan();
@@ -213,7 +214,7 @@ namespace OpenDentBusiness{
 						+POut.Int((int)ClaimProcStatus.CapClaim)+") "
 					+"AND claimproc.PayPlanNum="+POut.Long(payPlan.PayPlanNum);
 			}
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0){
 				return 0;
 			}
@@ -450,7 +451,7 @@ namespace OpenDentBusiness{
 			string command;
 			if(plan.PlanNum==0 || plan.IsDynamic) {  //Patient payment plan
 				command="SELECT COUNT(*) FROM paysplit WHERE PayPlanNum="+POut.Long(plan.PayPlanNum);
-				if(Db.GetCount(command)!="0") {
+				if(Database.ExecuteString(command)!="0") {
 					throw new ApplicationException
 						(Lans.g("PayPlans","You cannot delete a payment plan with patient payments attached.  Unattach the payments first."));
 				}
@@ -458,7 +459,7 @@ namespace OpenDentBusiness{
 			else {  //Insurance payment plan
 				command="SELECT COUNT(*) FROM claimproc WHERE PayPlanNum="+POut.Long(plan.PayPlanNum)+" AND claimproc.Status IN ("
 					+POut.Int((int)ClaimProcStatus.Received)+","+POut.Int((int)ClaimProcStatus.Supplemental)+")";
-				if(Db.GetCount(command)!="0") {
+				if(Database.ExecuteString(command)!="0") {
 					throw new ApplicationException
 						(Lans.g("PayPlans","You cannot delete a payment plan with insurance payments attached.  Unattach the payments first."));
 				}
@@ -470,15 +471,15 @@ namespace OpenDentBusiness{
 				}
 			}
 			command="DELETE FROM payplancharge WHERE PayPlanNum="+POut.Long(plan.PayPlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command=$"DELETE FROM payplanlink WHERE PayPlanNum={POut.Long(plan.PayPlanNum)}";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM payplan WHERE PayPlanNum ="+POut.Long(plan.PayPlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command=$"DELETE FROM orthoplanlink WHERE orthoplanlink.FKey={POut.Long(plan.PayPlanNum)} " +
 				$"AND orthoplanlink.LinkType IN ({POut.Enum<OrthoPlanLinkType>(OrthoPlanLinkType.PatPayPlan)}," +
 				$"{POut.Enum<OrthoPlanLinkType>(OrthoPlanLinkType.InsPayPlan)})";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 
@@ -492,12 +493,12 @@ namespace OpenDentBusiness{
 				+"INNER JOIN payplan ON paysplit.PayPlanNum=payplan.PayPlanNum "
 				+"WHERE payplan.PlanNum=0 "
 				+"AND payplan.Guarantor="+POut.Long(guarNum);
-			double amtPaid=PIn.Double(Db.GetScalar(command));
+			double amtPaid=Database.ExecuteDouble(command);
 			command="SELECT SUM(payplancharge.Principal+payplancharge.Interest) FROM payplancharge "
 				+"INNER JOIN payplan ON payplancharge.PayPlanNum=payplan.PayPlanNum "
 				+"WHERE payplancharge.ChargeType="+POut.Int((int)PayPlanChargeType.Debit)+" AND payplan.PlanNum=0 "
 				+"AND payplan.Guarantor="+POut.Long(guarNum);
-			double totalCost=PIn.Double(Db.GetScalar(command));
+			double totalCost=Database.ExecuteDouble(command);
 			if(totalCost-amtPaid < .01) {
 				return false;
 			}
@@ -510,10 +511,10 @@ namespace OpenDentBusiness{
 			string command="SELECT SUM(paysplit.SplitAmt) FROM paysplit "
 				+"WHERE PayPlanNum = "+POut.Long(payPlanNum);// +"' "
 				//+" GROUP BY paysplit.PayPlanNum";
-			double amtPaid=PIn.Double(Db.GetScalar(command));
+			double amtPaid=Database.ExecuteDouble(command);
 			command="SELECT SUM(Principal+Interest) FROM payplancharge "
 				+"WHERE ChargeType="+POut.Int((int)PayPlanChargeType.Debit)+" AND PayPlanNum="+POut.Long(payPlanNum);
-			double totalCost=PIn.Double(Db.GetScalar(command));
+			double totalCost=Database.ExecuteDouble(command);
 			if(totalCost-amtPaid < .01) {
 				return true;
 			}
@@ -546,7 +547,7 @@ namespace OpenDentBusiness{
 				+"WHERE payplan.IsClosed = 0 "
 				+"GROUP BY payplan.PayPlanNum "
 				+"HAVING Princ+Interest <= (TotPay + InsPay) AND LastDate <="+DbHelper.Curdate();
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			string payPlanNums="";
 			for(int i=0;i < table.Rows.Count;i++) {
 				if(i!=0) {
@@ -558,7 +559,7 @@ namespace OpenDentBusiness{
 				return 0; //no plans to close.
 			}
 			command="UPDATE payplan SET IsClosed=1 WHERE PayPlanNum IN ("+payPlanNums+")";
-			return Db.NonQ(command);
+			return Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

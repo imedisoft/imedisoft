@@ -576,7 +576,6 @@
     <Compile Include="TableTypes\CommOptOut.cs" />
     <Compile Include="TableTypes\DbmLog.cs" />
     <Compile Include="TableTypes\ProviderClinic.cs" />
-    <Compile Include="Db\LargeTableHelper.cs" />
     <Compile Include="Misc\CreditCardUtils\CreditCardUtils.cs" />
     <Compile Include="Misc\CreditCardUtils\MagstripCardParser.cs" />
     <Compile Include="TableTypes\RecurringCharge.cs" />
@@ -1123,7 +1122,6 @@
     <Compile Include="Db Multi Table\EhrPatListElement.cs" />
     <Compile Include="Db Multi Table\QualityMeasure.cs" />
     <Compile Include="Db Multi Table\QualityMeasures.cs" />
-    <Compile Include="Db\OdDbType.cs" />
     <Compile Include="TableTypes\PatientPortalInvite.cs" />
     <Compile Include="Web References\DentalxchangePartnerService\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -1341,7 +1339,6 @@
     <Compile Include="Data Interface\Statements.cs" />
     <Compile Include="Data Interface\Documents.cs" />
     <Compile Include="Db Multi Table\Family.cs" />
-    <Compile Include="Db\Db.cs" />
     <Compile Include="Db Multi Table\Ledgers.cs" />
     <Compile Include="Data Interface\MountDefs.cs" />
     <Compile Include="Data Interface\MountItemDefs.cs" />
@@ -1385,7 +1382,6 @@
     <Compile Include="Data Interface\Appointments.cs" />
     <Compile Include="Logic\BenefitLogic.cs" />
     <Compile Include="Db Multi Table\ChartModules.cs" />
-    <Compile Include="Db\DataCore.cs" />
     <Compile Include="Logic\PatientLogic.cs" />
     <Compile Include="Logic\ProcedureLogic.cs" />
     <Compile Include="Data Interface\ProcNotes.cs" />
@@ -1396,7 +1392,6 @@
     <Compile Include="Db\DbHelper.cs" />
     <Compile Include="Misc\HouseCallsQueries.cs" />
     <Compile Include="Misc\LetterMergesQueries.cs" />
-    <Compile Include="Db\OdSqlParameter.cs" />
     <Compile Include="Misc\TimeSpanExtension.cs" />
     <Compile Include="Misc\TrojanQueries.cs" />
     <Compile Include="Mobile\Crud\AppointmentmCrud.cs" />

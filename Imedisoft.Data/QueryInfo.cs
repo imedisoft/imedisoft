@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataConnectionBase
+namespace Imedisoft.Data
 {
     /// <summary>
     /// Helper object that holds metadata regarding a query that was executed by the program.

@@ -54,7 +54,7 @@ namespace OpenDentBusiness
 		{
 
 			string command = "SELECT * FROM document WHERE PatNum=" + POut.Long(patNum) + " ORDER BY DateCreated";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			return Crud.DocumentCrud.TableToList(table).ToArray();
 		}
 
@@ -133,7 +133,7 @@ namespace OpenDentBusiness
 				doc.FileName += doc.DocNum.ToString() + extension;//ensures unique name
 																  //there is still a slight chance that someone manually added a file with this name, so quick fix:
 				string command = "SELECT FileName FROM document WHERE PatNum=" + POut.Long(doc.PatNum);
-				DataTable table = Db.GetTable(command);
+				DataTable table = Database.ExecuteDataTable(command);
 				string[] usedNames = new string[table.Rows.Count];
 				for (int i = 0; i < table.Rows.Count; i++)
 				{
@@ -197,7 +197,7 @@ namespace OpenDentBusiness
 				command += " OR document.DocNum = '" + docNums[i].ToString() + "'";
 			}
 			//remember, they will not be in the correct order.
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			Hashtable hList = new Hashtable();//key=docNum, value=path
 											  //one row for each document, but in the wrong order
 			for (int i = 0; i < table.Rows.Count; i++)
@@ -245,7 +245,7 @@ namespace OpenDentBusiness
 				+ " AND document.DocCategory=" + POut.Long(defNumPicts)
 				+ " ORDER BY DateCreated DESC";
 			command = DbHelper.LimitOrderBy(command, 1);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			Document[] pictureDocs = Fill(table);
 			if (pictureDocs == null || pictureDocs.Length < 1)
 			{//no pictures
@@ -263,7 +263,7 @@ namespace OpenDentBusiness
 					+ "WHERE def.Category=" + POut.Int((int)DefCat.ImageCats) + " "
 					+ "AND def.IsHidden=0  "
 					+ "AND def.ItemValue LIKE '%S%' ";//Statements category indicator
-			List<long> listDefNums = Db.GetListLong(command);
+			List<long> listDefNums = Database.GetListLong(command);
 			if (listDefNums.Count == 0)
 			{//There are no Statement image categories
 				return new List<Document>();
@@ -288,7 +288,7 @@ namespace OpenDentBusiness
 					+ "WHERE def.Category=" + POut.Int((int)DefCat.ImageCats) + " "
 					+ "AND def.IsHidden=0  "
 					+ "AND def.ItemValue LIKE '%L%' ";//Patient Portal category indicator
-			List<long> listDefNums = Db.GetListLong(command);
+			List<long> listDefNums = Database.GetListLong(command);
 			if (listDefNums.Count == 0)
 			{//There are no Patient Portal image categories
 				return new List<Document>();
@@ -453,7 +453,7 @@ namespace OpenDentBusiness
 			for (int i = 0; i < mountItems.Count; i++)
 			{
 				string command = "SELECT * FROM document WHERE MountItemNum='" + POut.Long(mountItems[i].MountItemNum) + "'";
-				DataTable table = Db.GetTable(command);
+				DataTable table = Database.ExecuteDataTable(command);
 				if (table.Rows.Count < 1)
 				{
 					documents[i] = null;
@@ -517,7 +517,7 @@ namespace OpenDentBusiness
 		{
 
 			string command = "SELECT FileName FROM document WHERE PatNum='" + patNum + "' ORDER BY FileName";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<Summary>Parameters: 1:PatNum</Summary>
@@ -552,7 +552,7 @@ namespace OpenDentBusiness
 			//Move all documents which are invisible to the first document category.
 			command = "SELECT DocNum FROM document WHERE PatNum='" + patNum + "' AND "
 				+ "DocCategory<0";
-			raw = dcon.GetTable(command);
+			raw = dcon.ExecuteDataTable(command);
 			if (raw.Rows.Count > 0)
 			{//Are there any invisible documents?
 				command = "UPDATE document SET DocCategory='" + Defs.GetFirstForCategory(DefCat.ImageCats, true).DefNum
@@ -566,11 +566,11 @@ namespace OpenDentBusiness
 					}
 				}
 				command += ")";
-				dcon.NonQ(command);
+				dcon.ExecuteNonQuery(command);
 			}
 			//Load all documents into the result table.
 			command = "SELECT DocNum,DocCategory,DateCreated,Description,ImgType,MountItemNum FROM document WHERE PatNum='" + patNum + "'";
-			raw = dcon.GetTable(command);
+			raw = dcon.ExecuteDataTable(command);
 			for (int i = 0; i < raw.Rows.Count; i++)
 			{
 				//Make sure hidden documents are never added (there is a small possibility that one is added after all are made visible).
@@ -597,7 +597,7 @@ namespace OpenDentBusiness
 			//Move all mounts which are invisible to the first document category.
 			command = "SELECT MountNum FROM mount WHERE PatNum='" + patNum + "' AND "
 				+ "DocCategory<0";
-			raw = dcon.GetTable(command);
+			raw = dcon.ExecuteDataTable(command);
 			if (raw.Rows.Count > 0)
 			{//Are there any invisible mounts?
 				command = "UPDATE mount SET DocCategory='" + Defs.GetFirstForCategory(DefCat.ImageCats, true).DefNum
@@ -611,11 +611,11 @@ namespace OpenDentBusiness
 					}
 				}
 				command += ")";
-				dcon.NonQ(command);
+				dcon.ExecuteNonQuery(command);
 			}
 			//Load all mounts into the result table.
 			command = "SELECT MountNum,DocCategory,DateCreated,Description FROM mount WHERE PatNum='" + patNum + "'";
-			raw = dcon.GetTable(command);
+			raw = dcon.ExecuteDataTable(command);
 			for (int i = 0; i < raw.Rows.Count; i++)
 			{
 				//Make sure hidden mounts are never added (there is a small possibility that one is added after all are made visible).
@@ -710,7 +710,7 @@ namespace OpenDentBusiness
 					strStatementNums += "StatementNum='" + statementNumList[i].ToString() + "' ";
 				}
 				string command = "SELECT DocNum FROM document WHERE  DateTStamp > " + POut.DateT(changedSince) + " AND DocNum IN ( SELECT DocNum FROM statement WHERE " + strStatementNums + ")";
-				table = Db.GetTable(command);
+				table = Database.ExecuteDataTable(command);
 			}
 			else
 			{
@@ -740,7 +740,7 @@ namespace OpenDentBusiness
 					strDocumentNums += "DocNum='" + documentNums[i].ToString() + "' ";
 				}
 				string command = "SELECT * FROM document WHERE " + strDocumentNums;
-				table = Db.GetTable(command);
+				table = Database.ExecuteDataTable(command);
 			}
 			else
 			{
@@ -771,7 +771,7 @@ namespace OpenDentBusiness
 		public static void ResetTimeStamps(long patNum)
 		{
 			string command = "UPDATE document SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum =" + POut.Long(patNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Moves one document from one patient to another and updates the file name accordingly.
@@ -784,7 +784,7 @@ namespace OpenDentBusiness
 				+ " FileName='" + POut.String(newFileName) + "'"
 				+ " WHERE PatNum=" + POut.Long(patFrom)
 				+ " AND FileName='" + POut.String(oldFileName) + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Moves all documents from one patient to another.
@@ -795,7 +795,7 @@ namespace OpenDentBusiness
 			string command = "UPDATE document"
 				+ " SET PatNum=" + POut.Long(patTo)
 				+ " WHERE PatNum=" + POut.Long(patFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Attempts to open the document using the default program. If not using AtoZfolder saves a local temp file and opens it.</summary>
@@ -840,7 +840,7 @@ namespace OpenDentBusiness
 			string command = "SELECT COUNT(*) FROM document"
 				+ " WHERE document.ExternalGUID='" + POut.String(externalGUID) + "'"
 				+ " AND document.ExternalSource='" + POut.String(externalSource.ToString()) + "'";
-			if (Db.GetCount(command) != "0")
+			if (Database.ExecuteString(command) != "0")
 			{
 				return true;
 			}

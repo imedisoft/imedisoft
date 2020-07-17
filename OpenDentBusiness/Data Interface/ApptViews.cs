@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ namespace OpenDentBusiness {
 			
 			string command="DELETE FROM apptview WHERE ApptViewNum = '"
 				+POut.Long(Cur.ApptViewNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

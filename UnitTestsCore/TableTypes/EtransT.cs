@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDental;
 using OpenDentBusiness;
 
@@ -71,7 +72,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the etrans table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearEtransTable() {
 			string command="DELETE FROM etrans";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 

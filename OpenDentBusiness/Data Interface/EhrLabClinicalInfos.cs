@@ -1,12 +1,14 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Text;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class EhrLabClinicalInfos {
+namespace OpenDentBusiness
+{
+    ///<summary></summary>
+    public class EhrLabClinicalInfos {
 		#region Get Methods
 		#endregion
 
@@ -38,7 +40,7 @@ namespace OpenDentBusiness{
 		public static void DeleteForLab(long ehrLabNum) {
 			
 			string command="DELETE FROM ehrlabclinicalinfo WHERE EhrLabNum = "+POut.Long(ehrLabNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -148,7 +150,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrLabClinicalInfoNum) {
 			
 			string command= "DELETE FROM ehrlabclinicalinfo WHERE EhrLabClinicalInfoNum = "+POut.Long(ehrLabClinicalInfoNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

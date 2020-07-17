@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -161,7 +162,7 @@ namespace OpenDentBusiness{
 			
 			//validate that not already in use by a refferral.
 			string command="SELECT LName,FName FROM referral WHERE Slip="+POut.Long(sheetDefNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			//int count=PIn.PInt(Db.GetCount(command));
 			string referralNames="";
 			for(int i=0;i<table.Rows.Count;i++){
@@ -175,27 +176,27 @@ namespace OpenDentBusiness{
 			}
 			//validate that not already in use by automation.
 			command="SELECT AutomationNum FROM automation WHERE SheetDefNum="+POut.Long(sheetDefNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0){
 				throw new ApplicationException(Lans.g("sheetDefs","SheetDef is in use by automation. Not allowed to delete."));
 			}
 			//validate that not already in use by a laboratory
 			command="SELECT Description FROM laboratory WHERE Slip="+POut.Long(sheetDefNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count > 0) {
 				throw new ApplicationException(Lans.g("sheetDefs","SheetDef is in use by laboratories. Not allowed to delete.")
 					+"\r\n"+string.Join(", ",table.Select().Select(x => x["Description"].ToString())));
 			}
 			//validate that not already in use by clinicPref.
 			command="SELECT ClinicNum FROM clinicpref WHERE ValueString='"+POut.Long(sheetDefNum)+ "' AND PrefName='"+POut.String(PrefName.SheetsDefaultRx.ToString())+"'";
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				throw new ApplicationException(Lans.g("sheetDefs","SheetDef is in use by clinics. Not allowed to delete.")
 					+"\r\n"+string.Join(", ",table.Select().Select(x => Clinics.GetAbbr(PIn.Long(x["ClinicNum"].ToString())))));
 			}
 			//validate that not already in use by eClipboard
 			command="SELECT EClipboardSheetDefNum,ClinicNum FROM eclipboardsheetdef WHERE SheetDefNum="+POut.Long(sheetDefNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count > 0) {
 				if(PrefC.HasClinicsEnabled) {
 					throw new ApplicationException(Lans.g("sheetDefs","SheetDef is in use by eClipboard. Not allowed to delete.")
@@ -209,7 +210,7 @@ namespace OpenDentBusiness{
 				
 			}
 			command="DELETE FROM sheetfielddef WHERE SheetDefNum="+POut.Long(sheetDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Crud.SheetDefCrud.Delete(sheetDefNum);
 		}
 

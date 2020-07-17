@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
+﻿using Imedisoft.Data;
 using OpenDentBusiness;
-using DataConnectionBase;
+using System.Collections.Generic;
 
 namespace UnitTestsCore
 {
-	public class SignalodT
+    public class SignalodT
 	{
 		/// <summary>
 		/// Deletes everything from the Signalod table.
@@ -17,7 +14,7 @@ namespace UnitTestsCore
 		{
 			try
 			{
-				DataCore.NonQ("DELETE FROM signalod");
+				Database.ExecuteNonQuery("DELETE FROM signalod");
 			}
 			catch
 			{
@@ -34,7 +31,7 @@ namespace UnitTestsCore
             try
 			{
 				listSignals = OpenDentBusiness.Crud.SignalodCrud.TableToList(
-					DataCore.GetTable("SELECT * FROM signalod"));
+					Database.ExecuteDataTable("SELECT * FROM signalod"));
 			}
 			catch
 			{

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Data;
@@ -50,7 +51,7 @@ namespace OpenDentBusiness {
 		public static void Delete(QuestionDef def) {
 			
 			string command="DELETE FROM questiondef WHERE QuestionDefNum ="+POut.Long(def.QuestionDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

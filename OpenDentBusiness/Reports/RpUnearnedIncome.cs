@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -97,7 +98,7 @@ namespace OpenDentBusiness {
 				command+="HAVING ABS(UnallocAmt) > 0.005 ";
 			}
 			//one row per family
-			DataTable tableUnallocatedUnearned = ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+			DataTable tableUnallocatedUnearned = ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 			List<long> listGuarantors = tableUnallocatedUnearned.Rows.OfType<DataRow>().Select(x => PIn.Long(x["Guarantor"].ToString())).ToList();
 			//all procedures for the families that have not been explicitly paid off.
 			//Key: GuarantorNum | Val:ListRemainingProcsForFam
@@ -213,7 +214,7 @@ namespace OpenDentBusiness {
 			if(isExcludeNetZero) {
 				command+="HAVING ABS(UnallocatedAmt) > 0.005 ";
 			}
-			DataTable tableUnallocatedPrepayments = ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+			DataTable tableUnallocatedPrepayments = ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 			//get remaining amount for all procedures of the returned families.
 			List<long> listGuarantorNums = tableUnallocatedPrepayments.Rows.OfType<DataRow>().Select(x => PIn.Long(x["Guarantor"].ToString())).ToList();
 			if(listGuarantorNums.Count == 0) {

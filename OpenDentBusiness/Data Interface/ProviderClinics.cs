@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -124,7 +125,7 @@ namespace OpenDentBusiness{
 		public static string GetDEANum(long provNum,long clinicNum=0) {
 			
 			string command="SELECT DEANum FROM providerclinic WHERE ProvNum = "+POut.Long(provNum)+" AND ClinicNum = "+POut.Long(clinicNum);
-			string retVal=Db.GetScalar(command);
+			string retVal=Database.ExecuteString(command);
 			if(clinicNum!=0 && string.IsNullOrWhiteSpace(retVal)) {
 				retVal=GetDEANum(provNum);
 			}
@@ -136,7 +137,7 @@ namespace OpenDentBusiness{
 		public static string GetStateWhereLicensed(long provNum,long clinicNum=0) {
 			
 			string command="SELECT StateWhereLicensed FROM providerclinic WHERE ProvNum = "+POut.Long(provNum)+" AND ClinicNum = "+POut.Long(clinicNum);
-			string retVal=Db.GetScalar(command);
+			string retVal=Database.ExecuteString(command);
 			if(clinicNum!=0 && string.IsNullOrWhiteSpace(retVal)) {
 				retVal=GetStateWhereLicensed(provNum);
 			}

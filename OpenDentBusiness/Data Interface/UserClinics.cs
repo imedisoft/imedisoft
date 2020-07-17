@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -123,14 +124,14 @@ namespace OpenDentBusiness{
 		public static void DeleteForUser(long userNum) {
 			
 			string command="DELETE FROM userclinic WHERE UserNum="+POut.Long(userNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all User to Clinic associations for a specific clinic.</summary>
 		public static void DeleteForClinic(long clinicNum) {
 			
 			string command="DELETE FROM userclinic WHERE ClinicNum="+POut.Long(clinicNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

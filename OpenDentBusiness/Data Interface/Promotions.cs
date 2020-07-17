@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness.Crud;
 
 namespace OpenDentBusiness{
@@ -25,7 +26,7 @@ namespace OpenDentBusiness{
 				WHERE promotion.DateTimeCreated BETWEEN {POut.Date(lowerBound)} AND {POut.Date(upperBound)}
 					{(clinicNum < 0 ? "" : $"AND promotion.ClinicNum = {clinicNum}")}
 				GROUP BY promotion.PromotionNum,promotionlog.PromotionStatus";
-			DataTable table=Db.GetTable(query);
+			DataTable table=Database.ExecuteDataTable(query);
 			if(table.Rows.Count==0) {
 				return new List<PromotionAnalytic>();
 			}

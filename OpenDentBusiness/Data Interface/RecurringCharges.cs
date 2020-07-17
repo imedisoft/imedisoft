@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness.FileIO;
 using OpenDentBusiness.WebTypes.Shared.XWeb;
 
@@ -67,7 +68,7 @@ namespace OpenDentBusiness {
 			
 			string command=@"DELETE FROM recurringcharge
 				WHERE RecurringChargeNum IN("+string.Join(",",listRecurringCharges.Select(x => POut.Long(x.RecurringChargeNum)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>This method returns true ONLY if RecurringChargesAllowedWhenNoPatBal AND CanChargeWhenNoBal are true.

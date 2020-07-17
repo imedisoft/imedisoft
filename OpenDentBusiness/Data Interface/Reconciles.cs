@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Diagnostics;
 using System.Reflection;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary>The two lists get refreshed the first time they are needed rather than at startup.</summary>
@@ -41,12 +42,12 @@ namespace OpenDentBusiness{
 			
 			//check to see if any journal entries are attached to this Reconcile
 			string command="SELECT COUNT(*) FROM journalentry WHERE ReconcileNum="+POut.Long(reconcile.ReconcileNum);
-			if(Db.GetCount(command)!="0"){
+			if(Database.ExecuteString(command)!="0"){
 				throw new ApplicationException(Lans.g("FormReconcileEdit",
 					"Not allowed to delete a Reconcile with existing journal entries."));
 			}
 			command="DELETE FROM reconcile WHERE ReconcileNum = "+POut.Long(reconcile.ReconcileNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	

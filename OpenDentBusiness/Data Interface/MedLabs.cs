@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness.FileIO;
 using OpenDentBusiness.HL7;
 
@@ -46,7 +47,7 @@ namespace OpenDentBusiness{
 		public static int GetCountForPatient(long patNum) {
 			
 			string command="SELECT COUNT(*) FROM medlab WHERE PatNum="+POut.Long(patNum);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Get unique MedLab orders, grouped by PatNum, ProvNum, and SpecimenID.  Also returns the most recent DateTime the results
@@ -120,7 +121,7 @@ namespace OpenDentBusiness{
 		public static void UpdateFileNames(List<long> medLabNumList,string fileNameNew) {
 			
 			string command="UPDATE medlab SET FileName='"+POut.String(fileNameNew)+"' WHERE MedLabNum IN("+string.Join(",",medLabNumList)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -142,7 +143,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command="UPDATE medlab SET PatNum="+POut.Long(patNum)+" WHERE MedLabNum IN("+String.Join(",",listMedLabNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Reprocess the original HL7 msgs for any MedLabs with PatNum 0, creates the embedded PDF files from the base64 text in the ZEF segments
@@ -259,7 +260,7 @@ namespace OpenDentBusiness{
 		public static void DeleteAll(List<long> listLabNums) {
 			
 			string command= "DELETE FROM medlab WHERE MedLabNum IN("+String.Join(",",listLabNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

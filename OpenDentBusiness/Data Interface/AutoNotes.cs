@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.IO;
 using OpenDental.Thinfinity;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class AutoNotes {
@@ -125,7 +126,7 @@ namespace OpenDentBusiness {
 			
 			string command="DELETE FROM autonote "
 				+"WHERE AutoNoteNum = "+POut.Long(autoNoteNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static string GetByTitle(string autoNoteTitle) {
@@ -152,7 +153,7 @@ namespace OpenDentBusiness {
 		public static long RemoveFromCategory(long autoNoteCatDefNum) {
 			
 			string command="UPDATE autonote SET Category=0 WHERE Category="+POut.Long(autoNoteCatDefNum);
-			return Db.NonQ(command);
+			return Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Writes a set of serialized AutoNotes and AutoNoteControls in JSON format to the specified path.</summary>

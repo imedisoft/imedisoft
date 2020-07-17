@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace OpenDentBusiness{
 				throw new Exception(Lans.g("ReqStudents","Cannot delete requirement.  Delete the requirement needed instead."));
 			}
 			string command= "DELETE FROM reqstudent WHERE ReqStudentNum = "+POut.Long(reqStudentNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static DataTable RefreshOneStudent(long provNum) {
@@ -84,7 +85,7 @@ namespace OpenDentBusiness{
 				+"LEFT JOIN appointment ON reqstudent.AptNum=appointment.AptNum "
 				+"WHERE reqstudent.ProvNum="+POut.Long(provNum)
 				+" ORDER BY CourseID,ReqDescript";
-			DataTable raw=Db.GetTable(command);
+			DataTable raw=Database.ExecuteDataTable(command);
 			DateTime AptDateTime;
 			DateTime dateCompleted;
 			for(int i=0;i<raw.Rows.Count;i++) {
@@ -127,7 +128,7 @@ namespace OpenDentBusiness{
 				+"WHERE provider.SchoolClassNum="+POut.Long(classNum)
 				+" GROUP BY FName,LName,provider.ProvNum "
 				+"ORDER BY LName,FName";
-			DataTable raw=Db.GetTable(command);
+			DataTable raw=Database.ExecuteDataTable(command);
 			for(int i=0;i<raw.Rows.Count;i++) {
 				row=table.NewRow();
 				row["donereq"]=raw.Rows[i]["donereq"].ToString();
@@ -159,7 +160,7 @@ namespace OpenDentBusiness{
 			//}
 			+" AND SchoolClassNum="+POut.Long(schoolClass);
 			command+=" ORDER BY Descript";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		
@@ -171,11 +172,11 @@ namespace OpenDentBusiness{
 			if(listReqsRemoved.Count(x => x.ReqStudentNum != 0) > 0) {
 				command="DELETE FROM reqstudent WHERE ReqStudentNum IN("+string.Join(",",listReqsRemoved.Where(x => x.ReqStudentNum != 0)
 					.Select(x => x.ReqStudentNum))+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//second, detach all from this appt
 			command="UPDATE reqstudent SET AptNum=0 WHERE AptNum="+POut.Long(aptNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(listReqsAttached.Count==0) {
 				return;
 			}
@@ -196,7 +197,7 @@ namespace OpenDentBusiness{
 				+"WHERE provider.ProvNum=reqstudent.ProvNum "
 				+"AND reqstudent.ReqNeededNum="+POut.Long(reqNeededNum)
 				+" AND reqstudent.DateCompleted > "+POut.Date(new DateTime(1880,1,1));
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string retVal="";
 			for(int i=0;i<table.Rows.Count;i++){
 				retVal+=table.Rows[i]["LName"].ToString()+", "+table.Rows[i]["FName"].ToString()+"\r\n";
@@ -212,7 +213,7 @@ namespace OpenDentBusiness{
 			command="UPDATE reqstudent SET AptNum="+POut.PInt(aptNum)
 				+", PatNum="+patNum
 				+" WHERE ReqStudentNum="+POut.PInt(reqStudentNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}*/
 
 

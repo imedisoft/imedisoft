@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -51,7 +52,7 @@ namespace OpenDentBusiness{
 			string command="SELECT COUNT(*) NumEncounters FROM encounter WHERE encounter.PatNum="+POut.Long(patNum)+" "
 				+"AND encounter.DateEncounter="+POut.Date(date)+" "
 				+"AND encounter.ProvNum="+POut.Long(provNum);
-			int count=PIn.Int(Db.GetCount(command));
+			int count=PIn.Int(Database.ExecuteString(command));
 			if(count > 0) { //Encounter already exists for date
 				return;
 			}
@@ -83,7 +84,7 @@ namespace OpenDentBusiness{
         +"AND encounter.CodeValue='"+POut.String(codeValue)+"' "
         +"AND encounter.CodeSystem='"+POut.String(codeSystem)+"') "
         +"GROUP BY PatNum,ProvNum,ProcDate)";
-			return Db.NonQ(command);
+			return Database.ExecuteInsert(command);
 		}
 
 		///<summary></summary>
@@ -102,7 +103,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long encounterNum) {
 			
 			string command= "DELETE FROM encounter WHERE EncounterNum = "+POut.Long(encounterNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

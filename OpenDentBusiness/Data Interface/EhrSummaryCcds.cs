@@ -108,7 +108,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrSummaryCcdNum) {
 			
 			string command= "DELETE FROM ehrsummaryccd WHERE EhrSummaryCcdNum = "+POut.Long(ehrSummaryCcdNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

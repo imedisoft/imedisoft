@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness.FileIO;
 using System;
 using System.Collections;
@@ -108,7 +109,7 @@ namespace OpenDentBusiness
 			{
 				command += "ORDER BY patient.LName,patient.FName";
 			}
-			DataTable rawTable = Db.GetTable(command);
+			DataTable rawTable = Database.ExecuteDataTable(command);
 			double balTotal;
 			double insEst;
 			double payPlanDue;
@@ -185,7 +186,7 @@ namespace OpenDentBusiness
 		{
 
 			string command = @"SELECT Note FROM statement Where Patnum=" + PatientID;
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>This query is flawed.</summary>
@@ -215,7 +216,7 @@ namespace OpenDentBusiness
 				{
 					string command = "SELECT StatementNum FROM statement WHERE DateTStamp > " + POut.DateT(changedSince) + " AND PatNum='"
 						+ eligibleForUploadPatNumList[i].ToString() + "' ORDER BY DateSent DESC, StatementNum DESC " + limitStr;
-					table = Db.GetTable(command);
+					table = Database.ExecuteDataTable(command);
 					for (int j = 0; j < table.Rows.Count; j++)
 					{
 						statementnums.Add(PIn.Long(table.Rows[j]["StatementNum"].ToString()));
@@ -242,7 +243,7 @@ namespace OpenDentBusiness
 					strStatementNums += "StatementNum='" + statementNums[i].ToString() + "' ";
 				}
 				string command = "SELECT * FROM statement WHERE " + strStatementNums;
-				table = Db.GetTable(command);
+				table = Database.ExecuteDataTable(command);
 			}
 			else
 			{
@@ -364,7 +365,7 @@ namespace OpenDentBusiness
 
 			string command = "UPDATE statement SET SmsSendStatus=" + POut.Int((int)sendStatus)
 				+ " WHERE StatementNum IN(" + string.Join(",", listStmtNumsToUpdate.Select(x => POut.Long(x))) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -386,7 +387,7 @@ namespace OpenDentBusiness
 
 			string command = "UPDATE statement SET DateSent=" + POut.Date(dateSent) + ", "
 				+ "IsSent=1 WHERE StatementNum=" + POut.Long(statementNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void AttachDoc(long statementNum, Document doc, bool doUpdateDoc = true)
@@ -398,7 +399,7 @@ namespace OpenDentBusiness
 			}
 			string command = "UPDATE statement SET DocNum=" + POut.Long(doc.DocNum)
 				+ " WHERE StatementNum=" + POut.Long(statementNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DetachDocFromStatements(long docNum)
@@ -408,7 +409,7 @@ namespace OpenDentBusiness
 				return;//Avoid MiddleTier.
 			}
 
-			Db.NonQ("UPDATE statement SET DocNum=0 WHERE DocNum=" + POut.Long(docNum));
+			Database.ExecuteNonQuery("UPDATE statement SET DocNum=0 WHERE DocNum=" + POut.Long(docNum));
 		}
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all statements of a patient</summary>
@@ -416,7 +417,7 @@ namespace OpenDentBusiness
 		{
 
 			string command = "UPDATE statement SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum =" + POut.Long(patNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion
@@ -472,13 +473,13 @@ namespace OpenDentBusiness
 			//Removed all linked dependencies from these statements.
 			StmtLinks.DetachAllFromStatements(listStatementNums);
 			string command = DbHelper.WhereIn("UPDATE procedurelog SET StatementNum=0 WHERE StatementNum IN ({0})", false, listStatementNums.Select(x => POut.Long(x)).ToList());
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command = DbHelper.WhereIn("UPDATE adjustment SET StatementNum=0 WHERE StatementNum IN({0})", false, listStatementNums.Select(x => POut.Long(x)).ToList());
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command = DbHelper.WhereIn("UPDATE payplancharge SET StatementNum=0 WHERE StatementNum IN({0})", false, listStatementNums.Select(x => POut.Long(x)).ToList());
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command = DbHelper.WhereIn("DELETE FROM statement WHERE StatementNum IN ({0})", false, listStatementNums.Select(x => POut.Long(x)).ToList());
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 
@@ -490,7 +491,7 @@ namespace OpenDentBusiness
 		{
 
 			string command = "SELECT COUNT(*) FROM statement WHERE IsSent=0";
-			if (Db.GetCount(command) == "0")
+			if (Database.ExecuteString(command) == "0")
 			{
 				return false;
 			}
@@ -509,7 +510,7 @@ namespace OpenDentBusiness
 				LEFT JOIN patient ON statement.PatNum=patient.PatNum
 				WHERE statement.IsSent=0
 				AND patient.ClinicNum=" + clinicNum;
-			if (Db.GetCount(command) == "0")
+			if (Database.ExecuteString(command) == "0")
 			{
 				return false;
 			}

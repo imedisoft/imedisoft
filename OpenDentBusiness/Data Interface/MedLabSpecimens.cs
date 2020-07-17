@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -110,7 +111,7 @@ namespace OpenDentBusiness{
 		public static void DeleteAllForLabs(List<long> listLabNums) {
 			
 			string command="DELETE FROM medlabspecimen WHERE MedLabNum IN("+String.Join(",",listLabNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*
@@ -139,7 +140,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long medLabSpecimenNum) {
 			
 			string command= "DELETE FROM medlabspecimen WHERE MedLabSpecimenNum = "+POut.Long(medLabSpecimenNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

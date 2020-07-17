@@ -92,7 +92,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long cDSPermissionNum) {
 			
 			string command= "DELETE FROM cdspermission WHERE CDSPermissionNum = "+POut.Long(cDSPermissionNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

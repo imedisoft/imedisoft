@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness.WebTypes;
 
 namespace OpenDentBusiness{
@@ -99,13 +100,13 @@ namespace OpenDentBusiness{
 			
 			//check proctp for dependencies
 			string command="SELECT * FROM proctp WHERE TreatPlanNum ="+POut.Long(tp.TreatPlanNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				//this should never happen
 				throw new ApplicationException(Lans.g("TreatPlans","Cannot delete treatment plan because it has ProcTP's attached"));
 			}
 			command= "DELETE from treatplan WHERE TreatPlanNum = '"+POut.Long(tp.TreatPlanNum)+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 			if(!tp.TPStatus.In(TreatPlanStatus.Saved)) {
 			 return;
 			}
@@ -345,7 +346,7 @@ namespace OpenDentBusiness{
 			"AND TPStatus IN ("+POut.Int((int)TreatPlanStatus.Active)+","+POut.Int((int)TreatPlanStatus.Inactive)+")";
 			//string command="SELECT TreatPlanNum FROM treatplan WHERE Note='"+POut.String(oldNote)+"' "+
 			//	"AND TPStatus IN ("+POut.Int((int)TreatPlanStatus.Active)+","+POut.Int((int)TreatPlanStatus.Inactive)+")";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		/// <summary>	Updates the default note on active/inactive treatment plans with new note</summary>
@@ -356,7 +357,7 @@ namespace OpenDentBusiness{
 			}
 			string command="UPDATE treatplan SET Note='"+POut.String(newNote)+"' "
 				+"WHERE TreatPlanNum IN ("+string.Join(",",listTPNums)+")";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<TreatPlan> GetFromProcTPs(List<ProcTP> listProcTPs) {
@@ -378,7 +379,7 @@ namespace OpenDentBusiness{
 			
 			string command = "SELECT TreatPlanNum, PatNum, DateTP, SecUserNumEntry, UserNumPresenter "
 				+" FROM treatplan WHERE treatplan.TPStatus="+POut.Int((int)TreatPlanStatus.Saved);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<TreatPlan> listSavedTreatPlanLim = new List<TreatPlan>();
 			foreach(DataRow row in table.Rows) {
 				TreatPlan treatPlanCur = new TreatPlan();

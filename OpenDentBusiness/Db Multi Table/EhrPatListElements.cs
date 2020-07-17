@@ -1,4 +1,5 @@
 ﻿using EhrLaboratories;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -145,7 +146,7 @@ namespace OpenDentBusiness {
 				}
 			}
 			string command=select+" "+from+" "+where;
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>This is a potential fix to be backported to 13.2 so that patient lists can be used for MU1 2013. on large databases these queries take way to long to run. (At least several minutes).</summary>
@@ -192,7 +193,7 @@ namespace OpenDentBusiness {
 				}
 			}
 			string command=select+" "+from+" "+where+" ORDER BY Patient.LName, Patient.FName";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Tries to match input string to enum name of ContactMethod and returns an int(as a string). Returns empty string if no match.</summary>
@@ -293,7 +294,7 @@ namespace OpenDentBusiness {
 		//	Random rnd=new Random();
 		//	string rndStr=rnd.Next(1000000).ToString();
 		//	string command="DROP TABLE IF EXISTS tempehrlist"+rndStr+@"";
-		//	Db.NonQ(command);
+		//	Db.ExecuteNonQuery(command);
 		//	command="CREATE TABLE tempehrlist"+rndStr+@" SELECT patient.PatNum,patient.LName,patient.FName";
 		//	for(int i=0;i<elementList.Count;i++) {
 		//		string compStr=elementList[i].CompareString;
@@ -319,7 +320,7 @@ namespace OpenDentBusiness {
 		//		}
 		//	}
 		//	command+="FROM patient";
-		//	Db.NonQ(command);
+		//	Db.ExecuteNonQuery(command);
 		//	string order="";
 		//	command="SELECT * FROM tempehrlist"+rndStr+@" ";
 		//	for(int i=0;i<elementList.Count;i++) {
@@ -344,7 +345,7 @@ namespace OpenDentBusiness {
 		//	command+=order;
 		//	table=Db.GetTable(command);
 		//	command="DROP TABLE IF EXISTS tempehrlist"+rndStr+@"";
-		//	Db.NonQ(command);
+		//	Db.ExecuteNonQuery(command);
 		//	return table;
 		//}
 

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -38,7 +39,7 @@ namespace OpenDentBusiness{
 		public static void DeleteForLab(long ehrLabNum) {
 			
 			string command="DELETE FROM ehrlabresultscopyto WHERE EhrLabNum = "+POut.Long(ehrLabNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -73,7 +74,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrLabResultsCopyToNum) {
 			
 			string command= "DELETE FROM ehrlabresultscopyto WHERE EhrLabResultsCopyToNum = "+POut.Long(ehrLabResultsCopyToNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

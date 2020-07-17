@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -43,7 +44,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM commoptout WHERE CommOptOutNum IN("+string.Join(",",
 				listCommOptOuts.Select(x => POut.Long(x.CommOptOutNum)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

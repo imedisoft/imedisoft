@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -146,7 +147,7 @@ namespace OpenDentBusiness{
 		public static long Insert(ClaimSnapshot claimSnapshot) {
 			
 			string command="SELECT COUNT(*) FROM claimsnapshot WHERE ProcNum="+POut.Long(claimSnapshot.ProcNum)+" AND ClaimProcNum='"+claimSnapshot.ClaimProcNum+"'";
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				return 0;//Do nothing.
 			}
 			return Crud.ClaimSnapshotCrud.Insert(claimSnapshot);
@@ -174,7 +175,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command="DELETE FROM claimsnapshot WHERE ClaimProcNum IN ("+string.Join(",",listClaimProcNums.Select(x => POut.Long(x)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

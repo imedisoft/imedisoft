@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -25,7 +26,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the appointment table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearAppointmentRuleTable() {
 			string command="DELETE FROM appointmentrule WHERE AppointmentRuleNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			AppointmentRules.RefreshCache();
 		}
 	}

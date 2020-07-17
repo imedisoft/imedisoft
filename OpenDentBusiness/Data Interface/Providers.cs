@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 
@@ -174,7 +175,7 @@ namespace OpenDentBusiness{
 		public static long GetNextAvailableProvNum() {
 			
 			string command="SELECT MAX(provNum) FROM provider";
-			return PIn.Long(Db.GetScalar(command))+1;
+			return Database.ExecuteLong(command)+1;
 		}
 
 		///<summary>Increments all (privider.ItemOrder)s that are >= the ItemOrder of the provider passed in 
@@ -182,7 +183,7 @@ namespace OpenDentBusiness{
 		public static void MoveDownBelow(Provider provider) {
 			
 			//Add 1 to all item orders equal to or greater than new provider's item order
-			Db.NonQ("UPDATE provider SET ItemOrder=ItemOrder+1"
+			Database.ExecuteNonQuery("UPDATE provider SET ItemOrder=ItemOrder+1"
 				+" WHERE ProvNum!="+provider.ProvNum
 				+" AND ItemOrder>="+provider.ItemOrder);
 		}
@@ -191,7 +192,7 @@ namespace OpenDentBusiness{
 		public static void Delete(Provider prov){
 			
 			string command="DELETE from provider WHERE provnum = '"+prov.ProvNum.ToString()+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets table for the FormProviderSetup window.  Always orders by ItemOrder.</summary>
@@ -217,7 +218,7 @@ namespace OpenDentBusiness{
 				command+=",PatCountPri,PatCountSec ";
 			}
 			command+="ORDER BY ItemOrder";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets table for main provider edit list when in dental school mode.  Always orders alphabetically, but there will be lots of filters to get the list shorter.  Must be very fast because refreshes while typing.  selectAll will trump selectInstructors and always return all providers.</summary>
@@ -255,7 +256,7 @@ namespace OpenDentBusiness{
 			}
 			command+="GROUP BY Abbr,LName,FName,provider.IsHidden,provider.ItemOrder,provider.ProvNum,GradYear,IsInstructor,Descript,PatCountPri,PatCountSec "
 				+"ORDER BY LName,FName";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets list of all instructors.  Returns an empty list if none are found.</summary>
@@ -562,7 +563,7 @@ namespace OpenDentBusiness{
 		public static string GetDuplicateAbbrs(){
 			
 			string command="SELECT Abbr FROM provider WHERE ProvStatus!="+POut.Int((int)ProviderStatus.Deleted);
-			List<string> listDuplicates = Db.GetListString(command).GroupBy(x => x).Where(x => x.Count()>1).Select(x => x.Key).ToList();
+			List<string> listDuplicates = Database.GetListString(command).GroupBy(x => x).Where(x => x.Count()>1).Select(x => x.Key).ToList();
 			return string.Join(",",listDuplicates);//returns empty string when listDuplicates is empty
 		}
 
@@ -592,7 +593,7 @@ namespace OpenDentBusiness{
 			string command=@"SELECT FName,LName,Suffix,StateLicense
 				FROM provider
         WHERE provnum="+PrefC.GetString(PrefName.PracticeDefaultProv);
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>We should merge these results with GetDefaultPracticeProvider(), but
@@ -604,7 +605,7 @@ namespace OpenDentBusiness{
 				"FROM provider WHERE provnum="+
 				POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv));
 				//Convert.ToInt32(((Pref)PrefC.HList["PracticeDefaultProv"]).ValueString);
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>We should merge these results with GetDefaultPracticeProvider(), but
@@ -615,7 +616,7 @@ namespace OpenDentBusiness{
 			string command=@"SELECT NationalProvID "+
 				"FROM provider WHERE provnum="+
 				POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv));
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static DataTable GetPrimaryProviders(long PatNum) {
@@ -623,7 +624,7 @@ namespace OpenDentBusiness{
 			string command=@"SELECT Fname,Lname from provider
                         WHERE provnum in (select priprov from 
                         patient where patnum = "+PatNum+")";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Returns the patient's last seen hygienist.  Returns null if no hygienist has been seen.</summary>
@@ -636,7 +637,7 @@ namespace OpenDentBusiness{
 				AND appointment.ProvHyg!=0
 				AND appointment.AptStatus="+POut.Int((int)ApptStatus.Complete)+@"
 				ORDER BY AptDateTime DESC";
-			List<long> listPatHygNums=Db.GetListLong(command);
+			List<long> listPatHygNums=Database.GetListLong(command);
 			//Now that we have all hygienists for this patient.  Lets find the last non-hidden hygienist and return that one.
 			List<Provider> listProviders=Providers.GetDeepCopy(true);
 			List<long> listProvNums=listProviders.Select(x => x.ProvNum).Distinct().ToList();
@@ -689,7 +690,7 @@ namespace OpenDentBusiness{
 		public static List<long> GetChangedSinceProvNums(DateTime changedSince) {
 			
 			string command="SELECT ProvNum FROM provider WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> provnums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				provnums.Add(PIn.Long(dt.Rows[i]["ProvNum"].ToString()));
@@ -710,7 +711,7 @@ namespace OpenDentBusiness{
 					strProvNums+="ProvNum='"+provNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM provider WHERE "+strProvNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();
@@ -790,7 +791,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command="SELECT ScheduleNum FROM schedule WHERE ProvNum IN ("+provs+") AND SchedDate > "+DbHelper.Now();
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<string> listScheduleNums=new List<string>();//Used for deleting scheduleops below
 			for(int i=0;i<table.Rows.Count;i++) {
 				//Add entry to deletedobjects table if it is a provider schedule type
@@ -799,10 +800,10 @@ namespace OpenDentBusiness{
 			}
 			if(listScheduleNums.Count!=0) {
 				command="DELETE FROM scheduleop WHERE ScheduleNum IN("+POut.String(String.Join(",",listScheduleNums))+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			command="DELETE FROM schedule WHERE ProvNum IN ("+provs+") AND SchedDate > "+DbHelper.Now();
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static bool IsAttachedToUser(long provNum) {
@@ -810,7 +811,7 @@ namespace OpenDentBusiness{
 			string command="SELECT COUNT(*) FROM userod,provider "
 					+"WHERE userod.ProvNum=provider.ProvNum "
 					+"AND provider.provNum="+POut.Long(provNum);
-			int count=PIn.Int(Db.GetCount(command));
+			int count=PIn.Int(Database.ExecuteString(command));
 			if(count>0) {
 				return true;
 			}
@@ -821,7 +822,7 @@ namespace OpenDentBusiness{
 		public static bool IsSpecialtyInUse(long defNum) {
 			
 			string command="SELECT COUNT(*) FROM provider WHERE Specialty="+POut.Long(defNum);
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;
@@ -898,7 +899,7 @@ namespace OpenDentBusiness{
 				command="UPDATE "+tableAndKeyName[0]
 					+" SET "+tableAndKeyName[1]+"="+POut.Long(provNumInto)
 					+" WHERE "+tableAndKeyName[1]+"="+POut.Long(provNumFrom);
-				retVal+=Db.NonQ(command);
+				retVal+=Database.ExecuteNonQuery(command);
 			}
 			//Merge any providerclinic rows associated to the FROM provider where the INTO provider does not have a row for said clinic.
 			List<ProviderClinic> listProviderClinicsAll=ProviderClinics.GetByProvNums(new List<long>(){ provNumFrom,provNumInto});
@@ -910,12 +911,12 @@ namespace OpenDentBusiness{
 			if(!listProviderClinicNums.IsNullOrEmpty()) {
 				command=$@"UPDATE providerclinic SET ProvNum = {POut.Long(provNumInto)}
 					WHERE ProviderClinicNum IN({string.Join(",",listProviderClinicNums.Select(x => POut.Long(x)))})";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			command="UPDATE provider SET IsHidden=1 WHERE ProvNum="+POut.Long(provNumFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE provider SET ProvStatus="+POut.Int((int)ProviderStatus.Deleted)+" WHERE ProvNum="+POut.Long(provNumFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			return retVal;
 		}
 
@@ -924,7 +925,7 @@ namespace OpenDentBusiness{
 			string command="SELECT COUNT(DISTINCT patient.PatNum) FROM patient WHERE (patient.PriProv="+POut.Long(provNum)
 				+" OR patient.SecProv="+POut.Long(provNum)+")"
 				+" AND patient.PatStatus=0";
-			string retVal=Db.GetScalar(command);
+			string retVal=Database.ExecuteString(command);
 			return PIn.Long(retVal);
 		}
 
@@ -932,7 +933,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(DISTINCT claim.ClaimNum) FROM claim WHERE claim.ProvBill="+POut.Long(provNum)
 				+" OR claim.ProvTreat="+POut.Long(provNum);
-			string retVal=Db.GetScalar(command);
+			string retVal=Database.ExecuteString(command);
 			return PIn.Long(retVal);
 		}
 

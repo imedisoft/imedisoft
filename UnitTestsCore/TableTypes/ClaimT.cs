@@ -4,6 +4,7 @@ using System.Text;
 using OpenDentBusiness;
 using OpenDental;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace UnitTestsCore {
 	public class ClaimT {
@@ -165,7 +166,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the claim table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearClaimTable() {
 			string command="DELETE FROM claim";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

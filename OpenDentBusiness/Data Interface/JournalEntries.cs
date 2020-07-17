@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -94,7 +95,7 @@ namespace OpenDentBusiness{
 			//3. Double clicking on grid lets you change JEs not attached to reconcile.
 			//4. Double clicking on grid lets you change notes even if attached to reconcile.
 			string command= "DELETE FROM journalentry WHERE JournalEntryNum = "+POut.Long(je.JournalEntryNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Used in FormTransactionEdit to synch database with changes user made to the journalEntry list for a transaction.  Must supply an old list for comparison.  Only the differences are saved.  Surround with try/catch, because it will thrown an exception if any entries are negative.</summary>
@@ -183,7 +184,7 @@ namespace OpenDentBusiness{
 			}
 			if(str!=""){
 				command+=str;
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			command="UPDATE journalentry SET ReconcileNum="+POut.Long(reconcileNum)+" WHERE";
 			str="";
@@ -197,7 +198,7 @@ namespace OpenDentBusiness{
 			}
 			if(str!=""){
 				command+=str;
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 
@@ -205,7 +206,7 @@ namespace OpenDentBusiness{
 		public static void DeleteForTrans(int transactionNum){
 			string command="DELETE FROM journalentry WHERE TransactionNum="+POut.PInt(transactionNum);
 			DataConnection dcon=new DataConnection();
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}*/
 
 

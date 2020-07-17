@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -153,21 +154,21 @@ namespace OpenDentBusiness{
 				+"UserGroupNum=  "+POut.Long  (gp.UserGroupNum)+", "
 				+"PermType    =  "+POut.Int   ((int)gp.PermType)+" "
 				+"WHERE GroupPermNum = "+POut.Long(gp.GroupPermNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes GroupPermissions based on primary key.  Do not call this method unless you have checked specific dependencies first.  E.g. after deleting this permission, there will still be a security admin user.  This method is only called from the CEMT sync.  RemovePermission should probably be used instead.</summary>
 		public static void Delete(GroupPermission gp) {
 			
 			string command="DELETE FROM grouppermission WHERE GroupPermNum = "+POut.Long(gp.GroupPermNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes without using the cache.  Useful for multithreaded connections.</summary>
 		public static void DeleteNoCache(GroupPermission gp) {
 			
 			string command="DELETE FROM grouppermission WHERE GroupPermNum="+POut.Long(gp.GroupPermNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -187,7 +188,7 @@ namespace OpenDentBusiness{
 					+"INNER JOIN usergroupattach ON usergroupattach.UserNum=userod.UserNum "
 					+"WHERE userod.IsHidden=1 "
 					+"AND usergroupattach.UserGroupNum="+gp.UserGroupNum;
-				int count=PIn.Int(Db.GetCount(command));
+				int count=PIn.Int(Database.ExecuteString(command));
 				if(count!=0) {//there are hidden users in this group
 					throw new Exception(Lans.g("FormSecurity","The Security Admin permission cannot be given to a user group with hidden users."));
 				}
@@ -213,7 +214,7 @@ namespace OpenDentBusiness{
 					+"INNER JOIN userod ON userod.UserNum=usergroupattach.UserNum AND userod.IsHidden=0 "
 					+"WHERE grouppermission.PermType='"+POut.Long((int)permType)+"' "
 					+"AND grouppermission.UserGroupNum!="+POut.Long(groupNum)+") t";//This query is Oracle compatable
-				if(Db.GetScalar(command)=="0") {//no other users outside of this group have SecurityAdmin
+				if(Database.ExecuteScalar(command)=="0") {//no other users outside of this group have SecurityAdmin
 					throw new Exception(Lans.g("FormSecurity","There must always be at least one user in a user group that has the Security Admin permission."));
 				}
 			}
@@ -227,7 +228,7 @@ namespace OpenDentBusiness{
 				command="DELETE from grouppermission WHERE UserGroupNum='"+POut.Long(groupNum)+"' "
 					+"AND PermType='"+POut.Long((int)permType)+"'";
 			}
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		public static bool Sync(List<GroupPermission> listNew,List<GroupPermission> listOld) {
@@ -252,7 +253,7 @@ namespace OpenDentBusiness{
 			
 			List<GroupPermission> retVal=new List<GroupPermission>();
 			string command="SELECT * FROM grouppermission WHERE UserGroupNum="+POut.Long(userGroupNum);
-			DataTable tableGroupPerms=Db.GetTable(command);
+			DataTable tableGroupPerms=Database.ExecuteDataTable(command);
 			retVal=Crud.GroupPermissionCrud.TableToList(tableGroupPerms);
 			return retVal;
 		}

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace OpenDentBusiness{
 				+"AND refattach.ReferralNum=referral.ReferralNum "
 				+"AND refattach.RefType="+POut.Int((int)refType)+" "
 				+"AND referral.ReferralNum="+POut.Long(refNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string[] retStr=new string[table.Rows.Count];
 			for(int i=0;i<table.Rows.Count;i++){
 				retStr[i]=PIn.String(table.Rows[i][0].ToString());
@@ -72,7 +73,7 @@ namespace OpenDentBusiness{
 				+"AND refattach.RefType="+POut.Int((int)ReferralType.RefFrom)+" "
 				+"ORDER BY ItemOrder ";
 			command=DbHelper.LimitOrderBy(command,1);
-			return PIn.Long(Db.GetScalar(command));
+			return Database.ExecuteLong(command);
 		}
 
 		///<summary>Gets all RefAttaches for the patients in the list of PatNums.  Returns an empty list if no matches.</summary>
@@ -130,10 +131,10 @@ namespace OpenDentBusiness{
 			
 			string command="UPDATE refattach SET ItemOrder=ItemOrder-1 WHERE PatNum="+POut.Long(attach.PatNum)
 				+" AND ItemOrder > "+POut.Int(attach.ItemOrder);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command= "DELETE FROM refattach "
 				+"WHERE refattachnum = "+POut.Long(attach.RefAttachNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 
@@ -144,7 +145,7 @@ namespace OpenDentBusiness{
 		public static bool IsReferralAttached(long referralNum) {
 			
 			string command="SELECT COUNT(*) FROM refattach WHERE ReferralNum = '"+POut.Long(referralNum)+"'";
-			return (Db.GetCount(command)!="0");
+			return (Database.ExecuteString(command)!="0");
 		}
 		#endregion
 

@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -145,19 +146,19 @@ namespace OpenDentBusiness{
 				throw new ApplicationException(Lans.g("AppointmentTypes",s));
 			}
 			string command="DELETE FROM appointmenttype WHERE AppointmentTypeNum = "+POut.Long(appointmentTypeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Used when attempting to delete.  Returns empty string if not in use and an untranslated string if in use.</summary>
 		public static string CheckInUse(long appointmentTypeNum) {
 			string command="SELECT COUNT(*) FROM appointment WHERE AppointmentTypeNum = "+POut.Long(appointmentTypeNum);
-			if(PIn.Int(Db.GetCount(command))>0) {
+			if(PIn.Int(Database.ExecuteString(command))>0) {
 				return "Not allowed to delete appointment types that are in use on an appointment.";
 			}
 			command="SELECT COUNT(*) FROM deflink "
 				+"WHERE LinkType = "+POut.Int((int)DefLinkType.AppointmentType)+" "
 				+"AND FKey = "+POut.Long(appointmentTypeNum)+" ";
-			if(PIn.Int(Db.GetCount(command))>0) {
+			if(PIn.Int(Database.ExecuteString(command))>0) {
 				//This message will need to change in the future if more definition categories utilize appointment types with the deflink table.
 				return "Not allowed to delete appointment types that are in use by Web Sched New Pat Appt Types definitions.";
 			}

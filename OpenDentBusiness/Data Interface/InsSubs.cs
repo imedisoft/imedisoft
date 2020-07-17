@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -135,7 +136,7 @@ namespace OpenDentBusiness{
 					+") C "
 				+"WHERE D.InsSubNum=C.InsSubNum "
 				+"ORDER BY "+DbHelper.UnionOrderBy("DateEffective",4);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			foreach(Family family in listFamilies) {
 				List<long> listOnBehalfOfs=family.ListPats.Select(x => x.PatNum).ToList();
 				List<InsSub> listInsSubs=new List<InsSub>();
@@ -183,13 +184,13 @@ namespace OpenDentBusiness{
 			DataTable table;
 			//Remove from the patplan table just in case it is still there.
 			command="SELECT PatPlanNum FROM patplan WHERE InsSubNum = "+POut.Long(insSubNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++) {
 				//benefits with this PatPlanNum are also deleted here
 				PatPlans.Delete(PIn.Long(table.Rows[i]["PatPlanNum"].ToString()));
 			}
 			command="DELETE FROM claimproc WHERE InsSubNum = "+POut.Long(insSubNum);//Will delete all estimates, but nothing else due to ValidateNoKeys()
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Crud.InsSubCrud.Delete(insSubNum);
 		}
 
@@ -197,21 +198,21 @@ namespace OpenDentBusiness{
 		public static void ValidateNoKeys(long subNum, bool strict){
 			
 			string command="SELECT 1 FROM claim WHERE InsSubNum="+POut.Long(subNum)+" OR InsSubNum2="+POut.Long(subNum)+" "+DbHelper.LimitAnd(1);
-			if(!string.IsNullOrEmpty(Db.GetScalar(command))) {
+			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException(Lans.g("FormInsPlan","Subscriber has existing claims and so the subscriber cannot be deleted."));
 			}
 			if(strict) {
 				command="SELECT 1 FROM claimproc WHERE InsSubNum="+POut.Long(subNum)+" AND Status!="+POut.Int((int)ClaimProcStatus.Estimate)+" "+DbHelper.LimitAnd(1);//ignore estimates
-				if(!string.IsNullOrEmpty(Db.GetScalar(command))) {
+				if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 					throw new ApplicationException(Lans.g("FormInsPlan","Subscriber has existing claim procedures and so the subscriber cannot be deleted."));
 				}
 			}
 			command="SELECT 1 FROM etrans WHERE InsSubNum="+POut.Long(subNum)+" "+DbHelper.LimitAnd(1);
-			if(!string.IsNullOrEmpty(Db.GetScalar(command))) {
+			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException(Lans.g("FormInsPlan","Subscriber has existing etrans entry and so the subscriber cannot be deleted."));
 			}
 			command="SELECT 1 FROM payplan WHERE InsSubNum="+POut.Long(subNum)+" "+DbHelper.LimitAnd(1);
-			if(!string.IsNullOrEmpty(Db.GetScalar(command))) {
+			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
 				throw new ApplicationException(Lans.g("FormInsPlan","Subscriber has existing insurance linked payment plans and so the subscriber cannot be deleted."));
 			}
 		}
@@ -243,7 +244,7 @@ namespace OpenDentBusiness{
 			string command="SELECT COUNT(inssub.InsSubNum) "
 				+"FROM inssub "
 				+"WHERE inssub.PlanNum="+POut.Long(planNum)+" ";
-			int retVal=PIn.Int(Db.GetCount(command));
+			int retVal=PIn.Int(Database.ExecuteString(command));
 			if(excludeSub) {
 				retVal=Math.Max(retVal-1,0);
 			}
@@ -258,7 +259,7 @@ namespace OpenDentBusiness{
 				+"WHERE inssub.PlanNum="+POut.Long(planNum)+" "
 				+"AND inssub.InsSubNum !="+POut.Long(excludeSub)+" "
 				+" ORDER BY LName,FName";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<string> retStr=new List<string>(table.Rows.Count);
 			for(int i=0;i<table.Rows.Count;i++) {
 				retStr.Add(PIn.String(table.Rows[i][0].ToString()));
@@ -270,7 +271,7 @@ namespace OpenDentBusiness{
 		public static string GetBenefitNotes(long planNum,long subNumExclude) {
 			
 			string command="SELECT BenefitNotes FROM inssub WHERE BenefitNotes != '' AND PlanNum="+POut.Long(planNum)+" AND InsSubNum !="+POut.Long(subNumExclude)+" "+DbHelper.LimitAnd(1);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return "";
 			}
@@ -281,7 +282,7 @@ namespace OpenDentBusiness{
 		public static long SetAllSubsAssignBen(bool isAssignBen) {
 			
 			string command="UPDATE inssub SET AssignBen="+POut.Bool(isAssignBen)+" WHERE AssignBen!="+POut.Bool(isAssignBen);
-			return Db.NonQ(command);
+			return Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>This will assign all PlanNums to new value when Create New Plan If Needed is selected and there are multiple subscribers to a plan and an inssub object has been updated to point at a new PlanNum.  The PlanNum values need to be reflected in the claim, claimproc, payplan, and etrans tables, since those all both store inssub.InsSubNum and insplan.PlanNum.</summary>
@@ -290,23 +291,23 @@ namespace OpenDentBusiness{
 			//claim.PlanNum
 			string command="UPDATE claim SET claim.PlanNum="+POut.Long(SubCur.PlanNum)+" "
 				+"WHERE claim.InsSubNum="+POut.Long(SubCur.InsSubNum)+" AND claim.PlanNum!="+POut.Long(SubCur.PlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//claim.PlanNum2
 			command="UPDATE claim SET claim.PlanNum2="+POut.Long(SubCur.PlanNum)+" "
 				+"WHERE claim.InsSubNum2="+POut.Long(SubCur.InsSubNum)+" AND claim.PlanNum2!="+POut.Long(SubCur.PlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//claimproc.PlanNum
 			command="UPDATE claimproc SET claimproc.PlanNum="+POut.Long(SubCur.PlanNum)+" "
 				+"WHERE claimproc.InsSubNum="+POut.Long(SubCur.InsSubNum)+" AND claimproc.PlanNum!="+POut.Long(SubCur.PlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//payplan.PlanNum
 			command="UPDATE payplan SET payplan.PlanNum="+POut.Long(SubCur.PlanNum)+" "
 				+"WHERE payplan.InsSubNum="+POut.Long(SubCur.InsSubNum)+" AND payplan.PlanNum!="+POut.Long(SubCur.PlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//etrans.PlanNum, only used if EtransType.BenefitInquiry270 and BenefitResponse271 and Eligibility_CA.
 			command="UPDATE etrans SET etrans.PlanNum="+POut.Long(SubCur.PlanNum)+" "
 				+"WHERE etrans.InsSubNum!=0 AND etrans.InsSubNum="+POut.Long(SubCur.InsSubNum)+" AND etrans.PlanNum!="+POut.Long(SubCur.PlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns the number of subscribers moved.</summary>
@@ -363,7 +364,7 @@ namespace OpenDentBusiness{
 				inssub.SecUserNumEntry=Security.CurUser.UserNum;
 				long insSubNumNew=InsSubs.Insert(inssub);
 				string command="SELECT PatNum FROM patplan WHERE InsSubNum="+POut.Long(oldInsSubNum);
-				DataTable tablePatsForInsSub=Db.GetTable(command);
+				DataTable tablePatsForInsSub=Database.ExecuteDataTable(command);
 				if(tablePatsForInsSub.Rows.Count==0) {
 					continue;
 				}
@@ -375,7 +376,7 @@ namespace OpenDentBusiness{
 						PatPlan patPlan=listPatPlans[k];
 						if(patPlan.InsSubNum==oldInsSubNum) {
 							command="DELETE FROM benefit WHERE PatPlanNum=" +POut.Long(patPlan.PatPlanNum);//Delete patient specific benefits (rare).
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							patPlan.InsSubNum=insSubNumNew;
 							PatPlans.Update(patPlan);
 						}

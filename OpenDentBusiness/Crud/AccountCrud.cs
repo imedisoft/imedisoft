@@ -7,6 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Imedisoft.Data;
 using MySql.Data.MySqlClient;
 using OpenDentBusiness;
 using System;
@@ -35,7 +36,7 @@ namespace OpenDentBusiness.Crud
 		/// Selects a single Account object from the database using the specified SQL command.
 		/// </summary>
 		public static Account SelectOne(string command)
-			=> Db.SelectOne(command, FromReader);
+			=> Database.SelectOne(command, FromReader);
 
 		/// <summary>
 		/// Selects a single <see cref="Account"/> object from the database using the specified SQL command.
@@ -47,13 +48,13 @@ namespace OpenDentBusiness.Crud
 		/// Selects multiple <see cref="Account"/> objects from the database using the specified SQL command.
 		/// </summary>
 		public static IEnumerable<Account> SelectMany(string command)
-			=> Db.SelectMany(command, FromReader);
+			=> Database.SelectMany(command, FromReader);
 
 		/// <summary>
 		/// Inserts the specified <see cref="Account"/> into the database.
 		/// </summary>
 		public static long Insert(Account account)
-			=> account.AccountNum = Db.NonQ(
+			=> account.AccountNum = Database.ExecuteInsert(
 				"INSERT INTO `Account` " +
 				"(`Description`, `AcctType`, `BankNumber`, `Inactive`, `AccountColor`) " +
 				"VALUES (" +
@@ -62,13 +63,13 @@ namespace OpenDentBusiness.Crud
 					POut.String(account.BankNumber) + ", " +
 					(account.Inactive ? 1 : 0) + ", " +
 					account.AccountColor.ToArgb() +
-				")", true, "AccountNum", "account");
+				")");
 
 		/// <summary>
 		/// Updates the specified <see cref="Account"/> in the database.
 		/// </summary>
 		public static void Update(Account account)
-			=> Db.NonQ(
+			=> Database.ExecuteNonQuery(
 				"UPDATE `Account` SET " +
 					"`Description` = " + POut.String(account.Description) + ", " +
 					"`AcctType` = " + (int)account.AcctType + ", " +
@@ -97,14 +98,14 @@ namespace OpenDentBusiness.Crud
 
 			if (updates.Count == 0) return;
 
-			Db.NonQ("UPDATE `Account` " +
+			Database.ExecuteNonQuery("UPDATE `Account` " +
 				"SET " + string.Join(", ", updates) + " " +
 				"WHERE `AccountNum` = " + accountNew.AccountNum);
 		}
 		/// <summary>
 		/// Deletes a single <see cref="Account"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 accountNum) => Db.NonQ("DELETE FROM `Account` WHERE `AccountNum` = " + accountNum);
+		public static void Delete(Int64 accountNum) => Database.ExecuteNonQuery("DELETE FROM `Account` WHERE `AccountNum` = " + accountNum);
 
 		/// <summary>
 		/// Deletes the specified <see cref="Account"/> object from the database.

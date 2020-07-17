@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -72,7 +73,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long payorTypeNum) {
 			
 			string command= "DELETE FROM payortype WHERE PayorTypeNum = "+POut.Long(payorTypeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

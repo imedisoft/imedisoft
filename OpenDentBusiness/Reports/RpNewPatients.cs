@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -48,7 +49,7 @@ namespace OpenDentBusiness
 				query += " HAVING $HowMuch > 0";
 			}
 			query += " ORDER BY dateFirstProc,patient.LName,patient.FName) result";
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(query));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(query));
 		}
 	}
 }

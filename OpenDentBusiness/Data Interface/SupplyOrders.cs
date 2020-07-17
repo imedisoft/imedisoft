@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace OpenDentBusiness
 			//validate that not already in use-no
 			//delete associated orderItems
 			string command = "DELETE FROM supplyorderitem WHERE SupplyOrderNum=" + POut.Long(order.SupplyOrderNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Crud.SupplyOrderCrud.Delete(order.SupplyOrderNum);
 		}
 
@@ -51,7 +52,7 @@ namespace OpenDentBusiness
 		public static SupplyOrder UpdateOrderPrice(long orderNum)
 		{
 			string command = "SELECT SUM(Qty*Price) FROM supplyorderitem WHERE SupplyOrderNum=" + orderNum;
-			double amountTotal = PIn.Double(Db.GetScalar(command));
+			double amountTotal = Database.ExecuteDouble(command);
 			command = "SELECT * FROM supplyorder WHERE SupplyOrderNum=" + orderNum;
 			SupplyOrder so = Crud.SupplyOrderCrud.SelectOne(command);
 			so.AmountTotal = amountTotal;

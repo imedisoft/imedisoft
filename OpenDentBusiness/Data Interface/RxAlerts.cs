@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace OpenDentBusiness {
 		public static void Delete(RxAlert alert) {
 			
 			string command="DELETE FROM rxalert WHERE RxAlertNum ="+POut.Long(alert.RxAlertNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	

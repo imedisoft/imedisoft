@@ -15,6 +15,7 @@ using System.Xml;
 using System.Xml.XPath;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using ODCrypt;
 
 namespace OpenDentBusiness
@@ -40,7 +41,7 @@ namespace OpenDentBusiness
 				GROUP BY userod.UserNum
 				ORDER BY userod.UserName
 				LIMIT 1";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			long userNumAdminNoPass = 0;
 			if (table != null && table.Rows.Count > 0 && table.Rows[0]["HasPassword"].ToString() == "0")
 			{
@@ -61,7 +62,7 @@ namespace OpenDentBusiness
 		public static string GetUserNameNoCache(long userNum)
 		{
 			string command = "SELECT userod.UserName FROM userod WHERE userod.UserNum=" + POut.Long(userNum);
-			return Db.GetScalar(command);
+			return Database.ExecuteString(command);
 		}
 
 		///<summary>Returns a list of non-hidden, non-CEMT user names.  Set hasOnlyCEMT to true if you only want non-hidden CEMT users.
@@ -72,7 +73,7 @@ namespace OpenDentBusiness
 				WHERE userod.IsHidden=0 
 				{ (PrefC.GetBool(PrefName.UserNameManualEntry) ? " " : " AND userod.UserNumCEMT" + (hasOnlyCEMT ? "!=" : "=") + @"0 ") }
 				ORDER BY userod.UserName";
-			return Db.GetListString(command);
+			return Database.GetListString(command);
 		}
 
 		///<summary>Returns all non-hidden UserNums (key) and UserNames (value) associated with the domain user name passed in.
@@ -83,7 +84,7 @@ namespace OpenDentBusiness
 				FROM userod 
 				WHERE IsHidden=0";
 			//Not sure how to do an InvariantCultureIgnoreCase via a query so doing it over in C# in order to preserve old behavior.
-			return Db.GetTable(command).Select()
+			return Database.ExecuteDataTable(command).Select()
 				.Where(x => PIn.String(x["DomainUser"].ToString()).Equals(domainUser, StringComparison.InvariantCultureIgnoreCase))
 				.ToSerializableDictionary(x => PIn.Long(x["UserNum"].ToString()), x => PIn.String(x["UserName"].ToString()));
 		}
@@ -100,7 +101,7 @@ namespace OpenDentBusiness
 				INNER JOIN grouppermission ON usergroupattach.UserGroupNum=grouppermission.UserGroupNum 
 				WHERE userod.IsHidden=0
 				AND grouppermission.PermType=" + POut.Int((int)Permissions.SecurityAdmin);
-			return (Db.GetCount(command) != "0");
+			return (Database.ExecuteString(command) != "0");
 		}
 
 		///<summary>Returns true if there are any users (including hidden) with a UserNumCEMT set.  Otherwise; false.</summary>
@@ -108,7 +109,7 @@ namespace OpenDentBusiness
 		{
 			string command = @"SELECT COUNT(*) FROM userod
 				WHERE userod.UserNumCEMT > 0";
-			return (Db.GetCount(command) != "0");
+			return (Database.ExecuteString(command) != "0");
 		}
 
 		///<summary>Returns true if the user can sign notes. Uses the NotesProviderSignatureOnly preference to validate.</summary>
@@ -215,7 +216,7 @@ namespace OpenDentBusiness
 		public static List<Userod> GetAll()
 		{
 			string command = "SELECT * FROM userod ORDER BY UserName";
-			return Crud.UserodCrud.TableToList(Db.GetTable(command));
+			return Crud.UserodCrud.TableToList(Database.ExecuteDataTable(command));
 		}
 
 		///<summary></summary>
@@ -267,7 +268,7 @@ namespace OpenDentBusiness
 		{
 			List<Userod> retVal = new List<Userod>();
 			string command = "SELECT * FROM userod";
-			DataTable tableUsers = Db.GetTable(command);
+			DataTable tableUsers = Database.ExecuteDataTable(command);
 			retVal = Crud.UserodCrud.TableToList(tableUsers);
 			return retVal;
 		}
@@ -291,7 +292,7 @@ namespace OpenDentBusiness
 		public static Userod GetUserByNameNoCache(string userName)
 		{
 			string command = "SELECT * FROM userod WHERE UserName='" + POut.String(userName) + "'";
-			List<Userod> listUserods = Crud.UserodCrud.TableToList(Db.GetTable(command));
+			List<Userod> listUserods = Crud.UserodCrud.TableToList(Database.ExecuteDataTable(command));
 			return listUserods.FirstOrDefault(x => !x.IsHidden && x.UserName.ToLower() == userName.ToLower());
 		}
 
@@ -521,7 +522,7 @@ namespace OpenDentBusiness
 					command += "AND provider.IsInstructor=" + POut.Bool(isInstructor) + ") ";
 				}
 				command += "AND grouppermission.PermType=" + POut.Int((int)Permissions.SecurityAdmin) + " ";
-				int lastAdmin = PIn.Int(Db.GetCount(command));
+				int lastAdmin = PIn.Int(Database.ExecuteString(command));
 				if (lastAdmin == 0)
 				{
 					throw new Exception("Cannot move students or instructors to the new user group because it would leave no users with the SecurityAdmin permission.");
@@ -534,7 +535,7 @@ namespace OpenDentBusiness
 			{
 				command += " AND provider.SchoolClassNum!=0";
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Surround with try/catch because it can throw exceptions.</summary>
@@ -573,7 +574,7 @@ namespace OpenDentBusiness
 				+ "ClinicIsRestricted=  " + POut.Bool(userod.ClinicIsRestricted) + ", "
 				+ "InboxHidePopups   =  " + POut.Bool(userod.InboxHidePopups) + " "
 				+ "WHERE UserNumCEMT = " + POut.Long(userod.UserNumCEMT);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>DEPRICATED DO NOT USE. Use OpenDentBusiness.Authentication class instead.  For middle tier backward-compatability only.</summary>
@@ -603,7 +604,7 @@ namespace OpenDentBusiness
 		public static void DisassociateTaskListInBox(long taskListNum)
 		{
 			string command = "UPDATE userod SET TaskListInBox=0 WHERE TaskListInBox=" + POut.Long(taskListNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>A user must always have at least one associated userGroupAttach. Pass in the usergroup(s) that should be attached.
@@ -675,14 +676,14 @@ namespace OpenDentBusiness
 				+ "WHERE PermType='" + POut.Long((int)Permissions.SecurityAdmin) + "' "
 				+ "AND UserGroupNum IN (" + string.Join(",", listUserGroupNum) + ") ";
 			if (!isNew//Updating.
-				&& Db.GetCount(command) == "0"//if this user would not have admin
+				&& Database.ExecuteString(command) == "0"//if this user would not have admin
 				&& !IsSomeoneElseSecurityAdmin(user))//make sure someone else has admin
 			{
 				throw new ApplicationException(Lans.g("Users", "At least one user must have Security Admin permission."));
 			}
 			if (user.IsHidden//hidden 
 				&& user.UserNumCEMT == 0//and non-CEMT
-				&& Db.GetCount(command) != "0")//if this user is admin
+				&& Database.ExecuteString(command) != "0")//if this user is admin
 			{
 				throw new ApplicationException(Lans.g("Userods", "Admins cannot be hidden."));
 			}
@@ -697,7 +698,7 @@ namespace OpenDentBusiness
 				+ "WHERE grouppermission.PermType='" + POut.Long((int)Permissions.SecurityAdmin) + "'"
 				+ " AND userod.IsHidden =0"
 				+ " AND userod.UserNum != " + POut.Long(user.UserNum);
-			if (Db.GetCount(command) == "0")
+			if (Database.ExecuteString(command) == "0")
 			{//there are no other users with this permission
 				return false;
 			}
@@ -731,7 +732,7 @@ namespace OpenDentBusiness
 			{
 				command += "AND UserNumCEMT!=0";
 			}
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows[0][0].ToString() == "0")
 			{
 				return true;
@@ -918,7 +919,7 @@ namespace OpenDentBusiness
 		public static void ResetStrongPasswordFlags()
 		{
 			string command = "UPDATE userod SET PasswordIsStrong=0";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns true if the passed-in user is apart of the passed-in usergroup.</summary>

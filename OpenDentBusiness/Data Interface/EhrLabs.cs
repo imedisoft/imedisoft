@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using EhrLaboratories;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -734,7 +735,7 @@ namespace OpenDentBusiness{
 			string command="SELECT MAX(EhrLabNum) FROM ehrlab";
 			long retVal=0;
 			try {
-				retVal=PIn.Long(Db.GetScalar(command));//can be null if table is empty.
+				retVal=Database.ExecuteLong(command);//can be null if table is empty.
 			}
 			catch { }
 			return retVal+1;
@@ -924,7 +925,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrLabNum) {
 			
 			string command= "DELETE FROM ehrlab WHERE EhrLabNum = "+POut.Long(ehrLabNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			EhrLabNotes.DeleteForLab(ehrLabNum);
 			EhrLabResults.DeleteForLab(ehrLabNum);
 			EhrLabResultsCopyTos.DeleteForLab(ehrLabNum);

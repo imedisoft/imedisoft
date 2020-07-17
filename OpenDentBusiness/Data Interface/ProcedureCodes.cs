@@ -11,6 +11,7 @@ using System.Threading;
 using Word;
 using System.Globalization;
 using OpenDentBusiness.Eclaims;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -441,7 +442,7 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM procedurecode";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 
 		///<summary>Returns the ProcedureCode for the supplied procCode such as such as D####.
@@ -767,7 +768,7 @@ namespace OpenDentBusiness{
 			+"AND AbbrDesc LIKE '%"+POut.String(abbr)+"%' "
 			+"AND procedurecode.ProcCode LIKE '%"+POut.String(code)+"%' "
 			+"ORDER BY definition.ItemOrder,procedurecode.ProcCode";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Returns the LaymanTerm for the supplied codeNum, or the description if none present.</summary>
@@ -793,7 +794,7 @@ namespace OpenDentBusiness{
 				AND CodeNum NOT IN(SELECT CodeNum FROM benefit)
 				AND ProcCode NOT IN(SELECT CodeValue FROM encounter WHERE CodeSystem='CDT')
 				AND ProcCode LIKE 'T%'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<long> listCodeNums=new List<long>();
 			List<string> listRecallCodes=RecallTypes.GetDeepCopy()
 				.SelectMany(x => x.Procedures.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -806,19 +807,19 @@ namespace OpenDentBusiness{
 			if(listCodeNums.Count>0) {
 				ProcedureCodes.ClearFkey(listCodeNums);//Zero securitylog FKey column for rows to be deleted.
 				command="SELECT FeeNum FROM fee WHERE CodeNum IN("+String.Join(",",listCodeNums)+")";
-				List<long> listFeeNums=Db.GetListLong(command);
+				List<long> listFeeNums=Database.GetListLong(command);
 				Fees.DeleteMany(listFeeNums);
 				command="DELETE FROM proccodenote WHERE CodeNum IN("+String.Join(",",listCodeNums)+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				command="DELETE FROM procedurecode WHERE CodeNum IN("+String.Join(",",listCodeNums)+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//then, move any other T codes to obsolete category
 			command=@"SELECT DISTINCT ProcCat FROM procedurecode,definition 
 				WHERE procedurecode.ProcCode LIKE 'T%'
 				AND definition.IsHidden=0
 				AND procedurecode.ProcCat=definition.DefNum";
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			long catNum=Defs.GetByExactName(DefCat.ProcCodeCats,"Obsolete");//check to make sure an Obsolete category exists.
 			Def def;
 			if(catNum!=0) {//if a category exists with that name
@@ -844,7 +845,7 @@ namespace OpenDentBusiness{
 				command="UPDATE procedurecode SET ProcCat="+POut.Long(catNum)
 					+" WHERE ProcCat="+table.Rows[i][0].ToString()
 					+" AND procedurecode.ProcCode LIKE 'T%'";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//finally, set Never Used category to be hidden.  This isn't really part of clearing Tcodes, but is required
 			//because many customers won't have that category hidden
@@ -862,7 +863,7 @@ namespace OpenDentBusiness{
 		public static void ResetApptProcsQuickAdd() {
 			
 			string command= "DELETE FROM definition WHERE Category=3";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			string[] array=new string[] {
 				"CompEx-4BW-Pano-Pro-Flo","D0150,D0274,D0330,D1110,D1208",
 				"CompEx-2BW-Pano-ChPro-Flo","D0150,D0272,D0330,D1120,D1208",

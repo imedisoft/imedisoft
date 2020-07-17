@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -125,7 +126,7 @@ namespace OpenDentBusiness{
 			
 			List<string> retVal=new List<string>();
 			string command="SELECT Icd10Code FROM icd10";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++){
 				retVal.Add(table.Rows[i][0].ToString());
 			}
@@ -136,7 +137,7 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM icd10 WHERE IsCode!=0";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 		
 		///<summary>Gets one ICD10 object directly from the database by CodeValue.  If code does not exist, returns null.</summary>
@@ -160,7 +161,7 @@ namespace OpenDentBusiness{
 		public static bool CodeExists(string Icd10Code) {
 			
 			string command="SELECT COUNT(*) FROM icd10 WHERE Icd10Code='"+POut.String(Icd10Code)+"'";
-			string count=Db.GetCount(command);
+			string count=Database.ExecuteString(command);
 			if(count=="0") {
 				return false;
 			}
@@ -207,7 +208,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long icd10Num) {
 			
 			string command= "DELETE FROM icd10 WHERE Icd10Num = "+POut.Long(icd10Num);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

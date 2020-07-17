@@ -1,9 +1,10 @@
-﻿using System;
-using CodeBase;
+﻿using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
-namespace UnitTestsCore {
-	public class ProcedureCodeT {
+namespace UnitTestsCore
+{
+    public class ProcedureCodeT {
 
 		///<summary>Returns a procedure code object that utilizes the procCode passed in.
 		///Either returns the pre-existing code from the cache or creates a new one.  Throws an exception if procCode is longer than 15 chars.</summary>
@@ -38,7 +39,7 @@ namespace UnitTestsCore {
 		///<summary>Clears the procedurecode table.  Does not truncate as to not let the PKs repeat.</summary>
 		public static void ClearProcedureCodeTable() {
 			string command="DELETE FROM procedurecode";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			ProcedureCodes.RefreshCache();
 		}
 

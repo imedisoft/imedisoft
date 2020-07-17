@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -69,7 +70,7 @@ namespace OpenDentBusiness {
 		}
 
 		public static string NewCropProductVersion {
-			get { return Assembly.GetAssembly(typeof(Db)).GetName().Version.ToString(); }
+			get { return Assembly.GetAssembly(typeof(Database)).GetName().Version.ToString(); }
 		}
 
 		public static PersonNameType GetPersonNameForProvider(Provider prov) {

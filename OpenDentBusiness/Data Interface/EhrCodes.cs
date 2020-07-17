@@ -422,7 +422,7 @@ namespace OpenDentBusiness {
 		public static void Delete(long ehrCodeNum) {
 			
 			string command= "DELETE FROM ehrcode WHERE EhrCodeNum = "+POut.Long(ehrCodeNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

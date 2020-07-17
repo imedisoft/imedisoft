@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 ///<summary></summary>
@@ -115,7 +116,7 @@ namespace OpenDentBusiness{
 			}
 			string command="DELETE FROM referral "
 				+"WHERE ReferralNum = '"+POut.Long(refer.ReferralNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Get all matching rows where input email is found in the Email column.</summary>
@@ -298,11 +299,11 @@ namespace OpenDentBusiness{
 			string command="UPDATE claim "
 				+"SET ReferringProv="+POut.Long(refNumInto)+" "
 				+"WHERE ReferringProv="+POut.Long(refNumFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE refattach "
 				+"SET ReferralNum="+POut.Long(refNumInto)+" "
 				+"WHERE ReferralNum="+POut.Long(refNumFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Crud.ReferralCrud.Delete(refNumFrom);
 			return true;
 		}
@@ -312,14 +313,14 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(*) FROM refattach "
 				+"WHERE ReferralNum="+POut.Long(referralNum);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Used to check if a specialty is in use when user is trying to hide it.</summary>
 		public static bool IsSpecialtyInUse(long defNum) {
 			
 			string command="SELECT COUNT(*) FROM referral WHERE Specialty="+POut.Long(defNum);
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;

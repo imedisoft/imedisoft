@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -138,7 +139,7 @@ namespace OpenDentBusiness{
 		public static bool CodeExists(string snomedCode) {
 			
 			string command="SELECT COUNT(*) FROM snomed WHERE SnomedCode = '"+POut.String(snomedCode)+"'";
-			string count=Db.GetCount(command);
+			string count=Database.ExecuteString(command);
 			if(count=="0") {
 				return false;
 			}
@@ -162,14 +163,14 @@ namespace OpenDentBusiness{
 			
 			//No need to check FKs from other tables since there are none. Snomeds are copied into the DiseaseDef table when in use.
 			string command= "DELETE FROM snomed WHERE SnomedNum = "+POut.Long(snomedNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Delete all for import. Before importing Snomed Codes, delete the existing list.</summary>
 		public static void DeleteAll() {
 			
 			string command= "DELETE FROM snomed";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		//Not going to use the cache pattern for snomed, takes approximately 100 MB of ram.
@@ -188,7 +189,7 @@ namespace OpenDentBusiness{
 		public static string GetCodeAndDescription(string snomedCode) {
 			
 			string command="SELECT CONCAT(CONCAT(SnomedCode,'-'),Description) AS CodeAndDescription FROM snomed WHERE SnomedCode='"+POut.String(snomedCode)+"'";
-			return Db.GetScalar(command);
+			return Database.ExecuteString(command);
 		}
 
 		//Not going to use the cache pattern for snomed, takes approximately 100 MB of ram.
@@ -3562,7 +3563,7 @@ namespace OpenDentBusiness{
 			
 			List<string> retVal=new List<string>();
 			string command="SELECT SnomedCode FROM snomed";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++) {
 				retVal.Add(table.Rows[i].ItemArray[0].ToString());
 			}
@@ -3572,7 +3573,7 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM snomed";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 
 	}

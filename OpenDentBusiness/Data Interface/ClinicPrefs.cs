@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -216,7 +217,7 @@ namespace OpenDentBusiness{
 				+"AND ClinicNum='"+POut.Long(clinicNum)+"'";
 			bool retVal=true;
 			
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			
 			//Update local cache even though we should be invalidating the cache outside of this method.
 			ClinicPref cachedClinicPref=clinicPref;
@@ -256,7 +257,7 @@ namespace OpenDentBusiness{
 				return 0;
 			}
 			string command="DELETE FROM clinicpref WHERE ClinicPrefNum IN("+string.Join(",",listClinicPrefs.Select(x => x.ClinicPrefNum))+")";
-			return Db.NonQ(command);
+			return Database.ExecuteNonQuery(command);
 		}
 
 	}

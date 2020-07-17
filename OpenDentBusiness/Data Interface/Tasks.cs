@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary>Not part of cache refresh.</summary>
@@ -31,14 +32,14 @@ namespace OpenDentBusiness{
 		public static bool HasAnyLongDescripts() {
 			
 			string command="SELECT COUNT(*) FROM task WHERE CHAR_LENGTH(task.Descript)>65535";
-			return (Db.GetCount(command)!="0");
+			return (Database.ExecuteString(command)!="0");
 		}
 
 		///<summary>Returns true if task does not exist in the database.</summary>
 		public static bool IsTaskDeleted(long taskNum) {
 			
 			string command = "SELECT COUNT(*) FROM task WHERE TaskNum="+POut.Long(taskNum)+"";
-			return Db.GetCount(command)=="0";
+			return Database.ExecuteString(command)=="0";
 		}
 
 		///<summary>Returns true if task is a Reminder Task.</summary>
@@ -311,7 +312,7 @@ namespace OpenDentBusiness{
 				}
 				command+=")";
 			}
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Gets all tasks for a supplied list of task nums.</summary>
@@ -329,7 +330,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(*) FROM task "
 				+"WHERE task.ReminderGroupId='"+POut.String(reminderGroupId)+"' AND DateTimeEntry > "+POut.DateT(dateTimeAsOf);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>After a refresh, this is used to determine whether the Current user has received any new tasks through subscription.
@@ -358,7 +359,7 @@ namespace OpenDentBusiness{
 				command+=TaskLists.BuildFilterJoins(clinicNum);
 				command+=" WHERE TRUE "+TaskLists.BuildFilterWhereClause(userNum,clinicNum,Clinics.GetClinic(clinicNum)?.Region??0);
 			}
-			List<Task> ret=TableToList(Db.GetTable(command));//This is how we set the IsUnread column.
+			List<Task> ret=TableToList(Database.ExecuteDataTable(command));//This is how we set the IsUnread column.
 															 // TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.End);
 			return ret;
 		}
@@ -374,7 +375,7 @@ namespace OpenDentBusiness{
 				FROM appointment 
 				INNER JOIN patient ON patient.PatNum=appointment.PatNum 
 				WHERE appointment.AptNum IN ("+string.Join(",",listPatApts)+")";
-			DataTable table= Db.GetTable(command);
+			DataTable table= Database.ExecuteDataTable(command);
 			SerializableDictionary<long,string> dictTaskString=new SerializableDictionary<long, string>();
 			foreach(DataRow aptRow in table.Rows) {
 				string patname=Patients.GetNameLF(aptRow["LName"].ToString(),aptRow["FName"].ToString()
@@ -431,7 +432,7 @@ namespace OpenDentBusiness{
 			}
 			command+=BuildFilterWhereClause(currentUserNum,globalFilterType,listFilterFkeys);
 			command+=" ORDER BY DateTimeEntry";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return TableToList(table);
 		}
 
@@ -456,7 +457,7 @@ namespace OpenDentBusiness{
 			command+=BuildFilterWhereClause(userNum,globalFilterType,listFilterFkey);
 			command+="GROUP BY task.TaskNum "//in case there are duplicate unreads
 				+"ORDER BY task.DateTimeEntry";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<DataRow> listRows=new List<DataRow>();
 			for(int i=0;i<table.Rows.Count;i++) {
 				listRows.Add(table.Rows[i]);
@@ -514,7 +515,7 @@ namespace OpenDentBusiness{
 				+"AND TaskStatus!="+POut.Int((int)TaskStatusEnum.Done)+" ";
 			command+=BuildFilterWhereClause(userNum,globalFilterType,listFilterFkeys);
 			command+="ORDER BY DateTimeEntry";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return TableToList(table);
 		}
 
@@ -535,7 +536,7 @@ namespace OpenDentBusiness{
 				+"AND TaskStatus!="+POut.Int((int)TaskStatusEnum.Done)+" ";
 			command+=BuildFilterWhereClause(currentUserNum,globalFilterType,listFilterFkeys);
 			command+="ORDER BY DateTimeEntry";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return TableToList(table);
 		}
 
@@ -553,7 +554,7 @@ namespace OpenDentBusiness{
 				+"AND COALESCE(task.ReminderGroupId,'')='' ";//no reminders
 			command+=BuildFilterWhereClause(currentUserNum,globalFilterType,listFilterFkeys);
 			command+="ORDER BY DateTimeEntry";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return TableToList(table);
 		}
 
@@ -613,7 +614,7 @@ namespace OpenDentBusiness{
 			command+=BuildFilterWhereClause(currentUserNum,globalFilterType,listFilterFkey);
 			command+=" GROUP BY task.TaskNum "//Sorting happens below
 							+" ORDER BY DateTimeEntry";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<Task> taskList=new List<Task>();
 			//Note: Only used for HQ, Oracle does not matter.
 			List<DataRow> listRows=new List<DataRow>();
@@ -686,7 +687,7 @@ namespace OpenDentBusiness{
 				+"AND DateType="+POut.Long((int)dateType)+" ";
 			command+=BuildFilterWhereClause(currentUserNum,globalFilterType,listFilterFkeys);
 			command+="ORDER BY DateTimeEntry";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return TableToList(table);
 		}
 
@@ -730,7 +731,7 @@ namespace OpenDentBusiness{
 				command+=" AND TaskStatus !="+POut.Long((int)TaskStatusEnum.Done);
 			}
 			command+=" ORDER BY DateTimeEntry";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return TableToList(table);
 		}
 
@@ -1071,13 +1072,13 @@ namespace OpenDentBusiness{
 			
 			Tasks.ClearFkey(taskNum);//Zero securitylog FKey column for rows to be deleted.
 			string command= "DELETE FROM task WHERE TaskNum = "+POut.Long(taskNum);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 			command="DELETE FROM taskancestor WHERE TaskNum = "+POut.Long(taskNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM tasknote WHERE TaskNum = "+POut.Long(taskNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM taskunread WHERE TaskNum = "+POut.Long(taskNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*
@@ -1099,7 +1100,7 @@ namespace OpenDentBusiness{
 					+"TaskListNum="+POut.Long(taskListNum)+" "
 					+"WHERE TaskNum="+POut.Long(taskNum);
 			}
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}*/
 
 		public static int GetCountOpenTickets(long userNum) {
@@ -1116,7 +1117,7 @@ namespace OpenDentBusiness{
 				+"AND NOT(COALESCE(task.ReminderGroupId,'') != '' AND task.DateTimeEntry > "+DbHelper.Now()+") "//no future reminders
 				+"AND task.UserNum="+POut.Long(userNum)+" "
 				+"AND TaskStatus != "+POut.Int((int)TaskStatusEnum.Done);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		public static int GetCountPatientTickets(long patNum) {
@@ -1127,7 +1128,7 @@ namespace OpenDentBusiness{
 				+"AND task.IsRepeating=0 "
 				+"AND task.KeyNum="+POut.Long(patNum)+" "
 				+"AND TaskStatus != "+POut.Int((int)TaskStatusEnum.Done);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 		
 		///<summary>Only called for ODHQ. Gets the tasks that are in the Office Down task list. This method only returns the Task table row, not the

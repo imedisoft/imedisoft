@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -46,15 +48,15 @@ namespace OpenDentBusiness{
 			
 			string command="UPDATE documentmisc SET RawBase64=CONCAT("+DbHelper.IfNull("RawBase64","")+","+DbHelper.ParamChar+"paramRawBase64) "
 				+"WHERE DocMiscType="+POut.Int((int)DocumentMiscType.UpdateFiles);
-			OdSqlParameter paramRawBase64=new OdSqlParameter("paramRawBase64",OdDbType.Text,rawBase64);
-			Db.NonQ(command,paramRawBase64);
+			var paramRawBase64 = new MySqlParameter("paramRawBase64", rawBase64);
+			Database.ExecuteNonQuery(command,paramRawBase64);
 		}
 
 		///<summary></summary>
 		public static void DeleteAllForType(DocumentMiscType docMiscType) {
 			
 			string command="DELETE FROM documentmisc WHERE DocMiscType="+POut.Int((int)docMiscType);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*
@@ -83,7 +85,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long docMiscNum) {
 			
 			string command= "DELETE FROM documentmisc WHERE DocMiscNum = "+POut.Long(docMiscNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

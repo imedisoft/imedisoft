@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Linq;
 using Imedisoft.Data.Cache;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -27,7 +28,7 @@ namespace OpenDentBusiness
 
 		public static IEnumerable<Account> All => cache.All;
 
-		public static Account GetFirstOrDefault(Func<Account, bool> predicate)
+		public static Account GetFirstOrDefault(Predicate<Account> predicate)
 		{
 			return cache.FirstOrDefault(predicate);
 		}
@@ -62,7 +63,7 @@ namespace OpenDentBusiness
 					WHERE journalentry.AccountNum=" + POut.Long(acct.AccountNum) + @"
 					AND journalentry.DateDisplayed > " + POut.Date(PrefC.GetDate(PrefName.AccountingLockDate)) + @"
 					ORDER BY je2.TransactionNum";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count == 0)
 			{
 				return;
@@ -147,14 +148,14 @@ namespace OpenDentBusiness
 		{
 			//check to see if account has any journal entries
 			string command = "SELECT COUNT(*) FROM journalentry WHERE AccountNum=" + POut.Long(acct.AccountNum);
-			if (Db.GetCount(command) != "0")
+			if (Database.ExecuteString(command) != "0")
 			{
 				throw new ApplicationException(Lans.g("FormAccountEdit",
 					"Not allowed to delete an account with existing journal entries."));
 			}
 			//Check various preference entries
 			command = "SELECT ValueString FROM preference WHERE PrefName='AccountingDepositAccounts'";
-			string result = Db.GetCount(command);
+			string result = Database.ExecuteString(command);
 			string[] strArray = result.Split(new char[] { ',' });
 			for (int i = 0; i < strArray.Length; i++)
 			{
@@ -164,13 +165,13 @@ namespace OpenDentBusiness
 				}
 			}
 			command = "SELECT ValueString FROM preference WHERE PrefName='AccountingIncomeAccount'";
-			result = Db.GetCount(command);
+			result = Database.ExecuteString(command);
 			if (result == acct.AccountNum.ToString())
 			{
 				throw new ApplicationException(Lans.g("FormAccountEdit", "Account is in use in the setup section."));
 			}
 			command = "SELECT ValueString FROM preference WHERE PrefName='AccountingCashIncomeAccount'";
-			result = Db.GetCount(command);
+			result = Database.ExecuteString(command);
 			if (result == acct.AccountNum.ToString())
 			{
 				throw new ApplicationException(Lans.g("FormAccountEdit", "Account is in use in the setup section."));
@@ -189,7 +190,7 @@ namespace OpenDentBusiness
 				}
 			}
 			command = "DELETE FROM account WHERE AccountNum = " + POut.Long(acct.AccountNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Used to test the sign on debits and credits for the five different account types</summary>
@@ -215,7 +216,7 @@ namespace OpenDentBusiness
 			string command = "SELECT SUM(DebitAmt),SUM(CreditAmt) FROM journalentry "
 				+ "WHERE AccountNum=" + POut.Long(accountNum)
 				+ " GROUP BY AccountNum";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			double debit = 0;
 			double credit = 0;
 			if (table.Rows.Count > 0)
@@ -368,7 +369,7 @@ namespace OpenDentBusiness
 			}
 			command += "GROUP BY account.AccountNum, account.AcctType, account.Description, account.BankNumber,"
 				+ "account.Inactive, account.AccountColor ORDER BY AcctType, Description";
-			DataTable rawTable = Db.GetTable(command);
+			DataTable rawTable = Database.ExecuteDataTable(command);
 			AccountType aType;
 			decimal debit = 0;
 			decimal credit = 0;
@@ -409,7 +410,7 @@ namespace OpenDentBusiness
 				+ "AND DateDisplayed < " + POut.Date(firstofYear)//all from previous years
 				+ " AND (AcctType=3 OR AcctType=4) "//income or expenses
 				+ "GROUP BY AcctType ORDER BY AcctType";//income first, but could return zero rows.
-			rawTable = Db.GetTable(command);
+			rawTable = Database.ExecuteDataTable(command);
 			decimal balance = 0;
 			for (int i = 0; i < rawTable.Rows.Count; i++)
 			{
@@ -441,7 +442,7 @@ namespace OpenDentBusiness
 			}
 			command += "GROUP BY account.AccountNum, account.AcctType, account.Description, account.BankNumber,"
 				+ "account.Inactive, account.AccountColor ORDER BY AcctType, Description";
-			rawTable = Db.GetTable(command);
+			rawTable = Database.ExecuteDataTable(command);
 			for (int i = 0; i < rawTable.Rows.Count; i++)
 			{
 				row = table.NewRow();
@@ -540,7 +541,7 @@ namespace OpenDentBusiness
 				WHERE account.AcctType IN(3,4)
 				
 				ORDER BY AcctType, Description, DateDisplayed;";
-			return Db.GetTable(queryString);
+			return Database.ExecuteDataTable(queryString);
 		}
 
 		///<summary>Gets the full list to display in the Chart of Accounts, including balances.</summary>
@@ -580,7 +581,7 @@ namespace OpenDentBusiness
 				+ "WHERE account.AccountNum=journalentry.AccountNum AND DateDisplayed <= " + POut.Date(asOfDate) + " AND AcctType=" + POut.Int((int)acctType) + " "
 				+ "GROUP BY account.AccountNum "
 				+ "ORDER BY Description, DateDisplayed ";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static DataTable GetAccountTotalByType(DateTime dateStart, DateTime dateEnd, AccountType acctType)
@@ -601,7 +602,7 @@ namespace OpenDentBusiness
 				+ "AND AcctType=" + POut.Int((int)acctType) + " "
 				+ "GROUP BY account.AccountNum "
 				+ "ORDER BY Description, DateDisplayed ";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<Summary>Gets sum of all income-expenses for all previous years. asOfDate could be any date</Summary>
@@ -613,7 +614,7 @@ namespace OpenDentBusiness
 			+ "WHERE journalentry.AccountNum=account.AccountNum "
 			+ "AND DateDisplayed < " + POut.Date(firstOfYear)
 			+ " GROUP BY AcctType";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			double retVal = 0;
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
@@ -638,7 +639,7 @@ namespace OpenDentBusiness
 			+ "AND DateDisplayed >= " + POut.Date(firstOfYear)
 			+ " AND DateDisplayed <= " + POut.Date(asOfDate)
 			+ " GROUP BY AcctType";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			double retVal = 0;
 			for (int i = 0; i < table.Rows.Count; i++)
 			{

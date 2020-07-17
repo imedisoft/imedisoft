@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -63,14 +64,14 @@ namespace OpenDentBusiness{
 		public static bool HasProvHadKey(string lName,string fName) {
 			
 			string command="SELECT COUNT(*) FROM ehrprovkey WHERE ehrprovkey.LName='"+POut.String(lName)+"' AND ehrprovkey.FName='"+POut.String(fName)+"'";
-			return Db.GetCount(command)!="0";
+			return Database.ExecuteString(command)!="0";
 		}
 
 		///<summary>True if the ehrprovkey table has any rows, otherwise false.</summary>
 		public static bool HasEhrKeys() {
 			
 			string command="SELECT COUNT(*) FROM ehrprovkey";
-			return PIn.Bool(Db.GetScalar(command));
+			return PIn.Bool(Database.ExecuteString(command));
 		}
 
 		///<summary></summary>
@@ -89,7 +90,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrProvKeyNum) {
 			
 			string command= "DELETE FROM ehrprovkey WHERE EhrProvKeyNum = "+POut.Long(ehrProvKeyNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -108,7 +109,7 @@ namespace OpenDentBusiness{
 			string command="UPDATE usergroup SET "
 				+"Description = '"+POut.String(userGroupCEMT.Description)+"' "
 				+"WHERE UserGroupNumCEMT = "+POut.Long(userGroupCEMT.UserGroupNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<UserGroup> GetCEMTGroups() {
@@ -121,7 +122,7 @@ namespace OpenDentBusiness{
 			
 			List<UserGroup> retVal=new List<UserGroup>();
 			string command="SELECT * FROM usergroup WHERE UserGroupNumCEMT!=0";
-			DataTable tableUserGroups=Db.GetTable(command);
+			DataTable tableUserGroups=Database.ExecuteDataTable(command);
 			retVal=Crud.UserGroupCrud.TableToList(tableUserGroups);
 			return retVal;
 		}
@@ -143,7 +144,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(*) FROM usergroupattach WHERE UserGroupNum='"
 				+POut.Long(group.UserGroupNum)+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows[0][0].ToString()!="0"){
 				throw new Exception(Lans.g("UserGroups","Must move users to another group first."));
 			}
@@ -155,19 +156,19 @@ namespace OpenDentBusiness{
 			}
 			command= "DELETE FROM usergroup WHERE UserGroupNum='"
 				+POut.Long(group.UserGroupNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM grouppermission WHERE UserGroupNum='"
 				+POut.Long(group.UserGroupNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		///<summary>Deletes without using the cache.  Doesn't check dependencies.  Useful for multithreaded connections.</summary>
 		public static void DeleteNoCache(UserGroup group) {
 			
 			string command="DELETE FROM usergroup WHERE UserGroupNum="+POut.Long(group.UserGroupNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM grouppermission WHERE UserGroupNum="+POut.Long(group.UserGroupNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

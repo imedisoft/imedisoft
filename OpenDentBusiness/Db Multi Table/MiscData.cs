@@ -24,7 +24,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static DateTime GetNowDateTime()
 		{
-			return SIn.DateT(Db.GetScalar("SELECT NOW()"));
+			return SIn.DateT(Database.ExecuteString("SELECT NOW()"));
 		}
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace OpenDentBusiness
 			//	newDb = originalNewDb + "_" + uniqueID++.ToString();
 			//}
 			//command = "CREATE DATABASE `" + newDb + "` CHARACTER SET utf8";
-			//dconBackupServer.NonQ(command); //create the backup db on the backup server
+			//dconBackupServer.ExecuteNonQuery(command); //create the backup db on the backup server
 			//								//But get the tables from the current, not the backup server
 			//command = "SHOW FULL TABLES WHERE Table_type='BASE TABLE'";//Tables, not views.  Does not work in MySQL 4.1, however we test for MySQL version >= 5.0 in PrefL.
 			//table = dcon.GetTable(command);
@@ -122,13 +122,13 @@ namespace OpenDentBusiness
 			//		command = PIn.ByteArray(dtCreate.Rows[0][1]);
 			//		//The backup database tables will be MyISAM because it is significantly faster at doing bulk inserts.
 			//		command = command.Replace("ENGINE=InnoDB", "ENGINE=MyISAM");
-			//		dconBackupServerNoTimout.NonQ(command);
+			//		dconBackupServerNoTimout.ExecuteNonQuery(command);
 			//		//Then copy the data into the new table
 			//		if (useSameServer)
 			//		{
 			//			//If on the same server we can select into directly, which is faster
 			//			command = $"INSERT INTO `{newDb}`.`{tableName}` SELECT * FROM `{oldDb}`.`{tableName}`";//Added backticks around table name for unusual characters.
-			//			dconBackupServerNoTimout.NonQ(command);
+			//			dconBackupServerNoTimout.ExecuteNonQuery(command);
 			//		}
 			//		else
 			//		{
@@ -177,7 +177,7 @@ namespace OpenDentBusiness
 
 		public static string GetCurrentDatabase()
 		{
-			DataTable table = Db.GetTable("SELECT database()");
+			DataTable table = Database.ExecuteDataTable("SELECT database()");
 			return SIn.String(table.Rows[0][0].ToString());
 		}
 
@@ -187,7 +187,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static string GetMySqlVersion()
 		{
-			DataTable table = Db.GetTable("SELECT @@version");
+			DataTable table = Database.ExecuteDataTable("SELECT @@version");
 			string version = SIn.String(table.Rows[0][0].ToString());
 
 			string[] arrayVersion = version.Split('.');
@@ -238,7 +238,7 @@ namespace OpenDentBusiness
 			int maxAllowedPacket = 0;
 
 			//The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
-			DataTable table = Db.GetTable("SHOW GLOBAL VARIABLES WHERE Variable_name='max_allowed_packet'");
+			DataTable table = Database.ExecuteDataTable("SHOW GLOBAL VARIABLES WHERE Variable_name='max_allowed_packet'");
 			if (table.Rows.Count > 0)
 			{
 				maxAllowedPacket = SIn.Int(table.Rows[0]["Value"].ToString());
@@ -254,7 +254,7 @@ namespace OpenDentBusiness
 		public static int SetMaxAllowedPacket(int sizeBytes)
 		{
 			//As of MySQL 5.0.84 the session level max_allowed_packet variable is read only so we only need to change the global.
-			Db.NonQ("SET GLOBAL max_allowed_packet=" + SOut.Int(sizeBytes));
+			Database.ExecuteNonQuery("SET GLOBAL max_allowed_packet=" + SOut.Int(sizeBytes));
 			return GetMaxAllowedPacket();
 		}
 
@@ -274,7 +274,7 @@ namespace OpenDentBusiness
 				{
                     DataConnection dcon = new DataConnection(dbNames[i]);
                     string command = "SELECT ValueString FROM preference WHERE PrefName='DocPath'";
-					atozName = dcon.GetScalar(command)?.ToString()??"";
+					atozName = dcon.ExecuteScalar(command)?.ToString()??"";
 					if (retval.Contains(atozName))
 					{
 						continue;
@@ -301,7 +301,7 @@ namespace OpenDentBusiness
 				{
                     var dcon = new DataConnection(dbNames[i]);
 
-					dcon.NonQ(
+					dcon.ExecuteNonQuery(
 						"UPDATE preference SET ValueString ='" + SOut.String(Environment.MachineName) + "' " +
 						"WHERE PrefName='UpdateInProgressOnComputerName'");
 				}
@@ -317,7 +317,7 @@ namespace OpenDentBusiness
 				{
                     var dcon = new DataConnection(dbNames[i]);
 
-					dcon.NonQ(
+					dcon.ExecuteNonQuery(
 						"UPDATE preference SET ValueString ='' " +
 						"WHERE PrefName='UpdateInProgressOnComputerName'");
 				}
@@ -329,14 +329,14 @@ namespace OpenDentBusiness
 		{
 			// The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
 			string command = "SHOW GLOBAL VARIABLES WHERE Variable_name='sql_mode'";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			
 			// We want to run the SET GLOBAL command when no rows were returned (above query failed) or if the sql_mode is not blank or NO_AUTO_CREATE_USER
 			// (set to something that could cause errors).
 			if (table.Rows.Count < 1 || (table.Rows[0]["Value"].ToString() != "" && table.Rows[0]["Value"].ToString().ToUpper() != "NO_AUTO_CREATE_USER"))
 			{
 				command = "SET GLOBAL sql_mode=''";//in case user did not use our my.ini file.  http://www.opendental.com/manual/mysqlservervariables.html
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 	}

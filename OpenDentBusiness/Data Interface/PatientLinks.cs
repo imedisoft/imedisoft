@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,7 +18,7 @@ namespace OpenDentBusiness{
 			string command="SELECT PatNumTo FROM patientlink "
 				+"WHERE PatNumFrom="+POut.Long(patNumFrom)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Gets all of the 'PatNumFroms's linked to the passed-in patNumTo.   Does not recursively look up additional patient links.
@@ -27,7 +28,7 @@ namespace OpenDentBusiness{
 			string command="SELECT PatNumFrom FROM patientlink "
 				+"WHERE PatNumTo="+POut.Long(patNumTo)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Gets links to and from the patient passed in. Not recursive.</summary>
@@ -63,7 +64,7 @@ namespace OpenDentBusiness{
 			string command="SELECT PatNumTo FROM patientlink "
 				+"WHERE PatNumFrom="+POut.Long(patNumFrom)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
-			List<long> listPatNumTos=Db.GetListLong(command);
+			List<long> listPatNumTos=Database.GetListLong(command);
 			if(listPatNumTos.Count==0) {
 				return;//Base case
 			}
@@ -91,7 +92,7 @@ namespace OpenDentBusiness{
 			string command="SELECT PatNumFrom FROM patientlink "
 				+"WHERE PatNumTo="+POut.Long(patNumTo)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
-			List<long> listPatNumFroms=Db.GetListLong(command);
+			List<long> listPatNumFroms=Database.GetListLong(command);
 			if(listPatNumFroms.Count==0) {
 				return;//Base case
 			}
@@ -125,7 +126,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM patientlink "
 				+"WHERE PatNumFrom="+POut.Long(patNumFrom)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all of the entries for the patNumTo passed in of the specified type.</summary>
@@ -134,7 +135,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM patientlink "
 				+"WHERE PatNumTo="+POut.Long(patNumTo)+" "
 				+"AND LinkType="+POut.Int((int)patLinkType);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

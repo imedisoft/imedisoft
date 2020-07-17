@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -37,7 +38,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the operatory table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearOperatoryTable() {
 			string command="DELETE FROM operatory WHERE OperatoryNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

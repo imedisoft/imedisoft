@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -62,7 +63,7 @@ namespace OpenDentBusiness
 
 			string command = "DELETE from quickpastenote WHERE QuickPasteNoteNum = '"
 				+ POut.Long(note.QuickPasteNoteNum) + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

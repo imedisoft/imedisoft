@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -400,14 +401,14 @@ namespace OpenDentBusiness{
 		public static void Delete(OpenDentBusiness.Screen Cur){
 			
 			string command = "DELETE from screen WHERE ScreenNum = '"+POut.Long(Cur.ScreenNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes a Screen that has the attached sheetNum.  Deleting screen sheets are the same as deleting the screen itself.</summary>
 		public static void DeleteForSheet(long sheetNum) {
 			
 			string command="DELETE FROM screen WHERE SheetNum="+POut.Long(sheetNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

@@ -1,5 +1,6 @@
 ﻿using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -80,7 +81,7 @@ namespace OpenDentBusiness
 		public static string WhereIn(string query, bool isSelect = true, params List<string>[] argLists)
 		{
 			// The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
-			DataTable table = Db.GetTable("SHOW GLOBAL VARIABLES WHERE Variable_name='eq_range_index_dive_limit'");
+			DataTable table = Database.ExecuteDataTable("SHOW GLOBAL VARIABLES WHERE Variable_name='eq_range_index_dive_limit'");
 			int maxInValCount = 0;
 			if (table.Rows.Count > 0)
 			{
@@ -307,7 +308,7 @@ namespace OpenDentBusiness
 			//MISSING OPENING PAREND...ORA-00926: missing VALUES keyword
 			//CONNECTION LOST..........ORA-03113: end-of-file on communication channel
 			string command = "SELECT MAX(" + field + ")+1 FROM " + tablename;
-			long retval = SIn.Long(Db.GetCount(command));
+			long retval = SIn.Long(Database.ExecuteString(command));
 			if (retval == 0)
 			{//Happens when the table has no records
 				return 1;

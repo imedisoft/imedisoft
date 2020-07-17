@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary>Employers are refreshed as needed. A full refresh is frequently triggered if an employerNum cannot be found in the HList.  Important retrieval is done directly from the db.</summary>
@@ -122,7 +123,7 @@ namespace OpenDentBusiness{
 		public static void Delete(Employer Cur) {
 			
 			string command="DELETE from employer WHERE EmployerNum = '"+Cur.EmployerNum.ToString()+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			InsEditLogs.MakeLogEntry(null,Cur,InsEditLogType.Employer,Security.CurUser.UserNum);
 		}
@@ -132,7 +133,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT CONCAT(CONCAT(LName,', '),FName) FROM patient" 
 				+" WHERE EmployerNum = '"+POut.Long(Cur.EmployerNum)+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string retStr="";
 			for(int i=0;i<table.Rows.Count;i++){
 				if(i>0){
@@ -152,7 +153,7 @@ namespace OpenDentBusiness{
 				+"LEFT JOIN patient ON inssub.Subscriber=patient.PatNum "
 				+"LEFT JOIN carrier ON insplan.CarrierNum=carrier.CarrierNum "
 				+"WHERE insplan.EmployerNum = "+POut.Long(Cur.EmployerNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string retStr="";
 			for(int i=0;i<table.Rows.Count;i++){
 				if(i>0){
@@ -207,7 +208,7 @@ namespace OpenDentBusiness{
 			}
 			string command="SELECT EmployerNum FROM employer" 
 				+" WHERE EmpName = '"+POut.String(empName)+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0){
 				return PIn.Long(table.Rows[0][0].ToString());
 			}
@@ -238,12 +239,12 @@ namespace OpenDentBusiness{
 			for(int i=1;i<employerNums.Count;i++) {
 				string command="UPDATE patient SET EmployerNum = "+POut.Long(newNum)
 					+" WHERE EmployerNum = "+POut.Long(employerNums[i]);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				command="SELECT * FROM insplan WHERE EmployerNum = "+POut.Long(employerNums[i]);
 				List<InsPlan> listInsPlans=Crud.InsPlanCrud.SelectMany(command);
 				command="UPDATE insplan SET EmployerNum = "+POut.Long(newNum)
 					+" WHERE EmployerNum = "+POut.Long(employerNums[i]);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				listInsPlans.ForEach(x => { //log updated employernums for insplan.
 					InsEditLogs.MakeLogEntry("EmployerNum",Security.CurUser.UserNum,employerNums[i].ToString(),newNum.ToString(),

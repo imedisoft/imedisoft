@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,7 +17,7 @@ namespace OpenDentBusiness{
 			string command="SELECT FKey FROM stmtlink "
 				+"WHERE StatementNum="+POut.Long(statementNum)+" "
 				+"AND StmtLinkType="+POut.Int((int)statementType);
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 		#endregion
 
@@ -75,7 +76,7 @@ namespace OpenDentBusiness{
 		public static void DetachAllFromStatement(long statementNum) {
 			
 			string command="DELETE FROM stmtlink WHERE StatementNum="+POut.Long(statementNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -85,7 +86,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command=DbHelper.WhereIn("DELETE FROM stmtlink WHERE StatementNum IN ({0})",false,listStatementNums.Select(x => POut.Long(x)).ToList());
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 		#endregion

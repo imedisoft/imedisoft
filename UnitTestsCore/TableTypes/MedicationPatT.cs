@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -25,7 +26,7 @@ namespace UnitTestsCore {
 
 		public static void ClearMedicationPatTable() {
 			string command="DELETE FROM medicationpat";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Collections;
 using System.Reflection;
 using System.Collections.Generic;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -90,7 +91,7 @@ namespace OpenDentBusiness {
 			Crud.PatFieldDefCrud.Update(patFieldDef);
 			string command="UPDATE patfield SET FieldName='"+POut.String(patFieldDef.FieldName)+"' "
 				+"WHERE FieldName='"+POut.String(oldFieldName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -105,7 +106,7 @@ namespace OpenDentBusiness {
 			string command="SELECT LName,FName FROM patient,patfield WHERE "
 				+"patient.PatNum=patfield.PatNum "
 				+"AND FieldName='"+POut.String(patFieldDef.FieldName)+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0){
 				string s=Lans.g("PatFieldDef","Not allowed to delete. Already in use by ")+table.Rows.Count.ToString()
 					+" "+Lans.g("PatFieldDef","patients, including")+" \r\n";
@@ -118,7 +119,7 @@ namespace OpenDentBusiness {
 				throw new ApplicationException(s);
 			}
 			command="DELETE FROM patfielddef WHERE PatFieldDefNum ="+POut.Long(patFieldDef.PatFieldDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/// <summary>GetFieldName returns the field name identified by the field definition number passed as a parameter.</summary>

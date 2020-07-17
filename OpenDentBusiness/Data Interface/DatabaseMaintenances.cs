@@ -49,14 +49,14 @@ namespace OpenDentBusiness {
 		public static void MoveToOld(string methodName) {
 			string command="UPDATE databasemaintenance SET IsOld=1 "
 				+"WHERE MethodName='"+POut.String(methodName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates the DateLastRun column to NOW for any DBM method that matches the method name passed in.</summary>
 		public static void UpdateDateLastRun(string methodName) {
 			string command="UPDATE databasemaintenance SET DateLastRun="+DbHelper.Now()+" "
 				+"WHERE MethodName='"+POut.String(methodName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 		#region Delete
@@ -125,7 +125,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string MySQLServerOptionsValidate(bool verbose,DbmMode modeCur) {
 			string command="SHOW GLOBAL VARIABLES LIKE 'sql_mode'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count<1||table.Columns.Count<2) {//user may not have permission to access global variables?
 				return Lans.g("FormDatabaseMaintenance","Unable to access the MySQL server variable 'sql_mode', probably due to permissions")+".  "
 					+Lans.g("FormDatabaseMaintenance","The sql_mode must be blank or NO_AUTO_CREATE_USER")+".\r\n";
@@ -151,9 +151,9 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					try {
 						command="SET GLOBAL sql_mode=''";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						command="SET SESSION sql_mode=''";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						log+=Lans.g("FormDatabaseMaintenance","The MySQL server variable 'sql_mode' has been changed from")+" "+sqlmodeDisplay+" "
 							+Lans.g("FormDatabaseMaintenance","to blank")+".\r\n";
 					}
@@ -175,9 +175,9 @@ namespace OpenDentBusiness {
 				return new ODTuple<string,bool>("",success);
 			}
 			string command="DROP TABLE IF EXISTS `signal`";//Signal is keyword for MySQL 5.5.  Was renamed to signalod so drop if exists.
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="SHOW FULL TABLES WHERE Table_type='BASE TABLE'";//Tables, not views.  Does not work in MySQL 4.1, however we test for MySQL version >= 5.0 in PrefL.
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string[] tableNames=new string[table.Rows.Count];
 			int lastRow;
 			bool existsCorruptFiles=false;
@@ -191,7 +191,7 @@ namespace OpenDentBusiness {
 				DatabaseMaintEvent.Fire(EventCategory.DatabaseMaint,checkingTable+": "+tableNames[i]);
 				command="CHECK TABLE `"+tableNames[i]+"`";
 				try {
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					lastRow=table.Rows.Count-1;
 					string status=PIn.ByteArray(table.Rows[lastRow][3]);
 					if(status!="OK") {
@@ -229,7 +229,7 @@ namespace OpenDentBusiness {
 			StringBuilder retVal=new StringBuilder();
 			DataTable tableLog=null;
 			string command="SHOW FULL TABLES WHERE Table_type='BASE TABLE';";//Tables, not views.  Does not work in MySQL 4.1, however we test for MySQL version >= 5.0 in PrefL.
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string[] tableNames=new string[table.Rows.Count];
 			for(int i = 0;i<table.Rows.Count;i++) {
 				tableNames[i]=table.Rows[i][0].ToString();
@@ -247,10 +247,10 @@ namespace OpenDentBusiness {
 				MiscDataEvent.Fire(EventCategory.MiscData,Lans.g("MiscData","Repairing table")+": "+tableNames[i]);
 				command="REPAIR TABLE `"+tableNames[i]+"`";
 				if(!isLogged) {
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 				else {
-					tableLog=Db.GetTable(command);
+					tableLog=Database.ExecuteDataTable(command);
 					for(int r = 0;r<tableLog.Rows.Count;r++) {//usually only 1 row, unless something abnormal is found.
 						retVal.AppendLine(tableLog.Rows[r]["Table"].ToString().PadRight(50,' ')
 							+" | "+tableLog.Rows[r]["Op"].ToString()
@@ -275,7 +275,7 @@ namespace OpenDentBusiness {
 				command="SELECT ENGINE FROM information_schema.TABLES "
 					+"WHERE TABLE_SCHEMA='"+POut.String(DataConnection.DatabaseName)+"' "
 					+"AND TABLE_NAME='"+POut.String(tableName)+"' ";
-				string storageEngine=Db.GetScalar(command);
+				string storageEngine=Database.ExecuteString(command);
 				if(storageEngine.ToLower()=="innodb") {
 					retVal=tableName+" "+Lans.g("MiscData","skipped due to using the InnoDB storage engine.");
 				}
@@ -285,7 +285,7 @@ namespace OpenDentBusiness {
 				DataConnection.CommandTimeout=43200;//12 hours, because conversion commands may take longer to run.
 				command="OPTIMIZE TABLE `"+tableName+"`";//Ticks used in case user has added custom tables with unusual characters.
 				try {
-					DataTable tableLog=Db.GetTable(command);
+					DataTable tableLog=Database.ExecuteDataTable(command);
 					if(hasResult) {
 						//Loop through any rows returned and return the results.  Often times will only be one row unless there was a problem with optimizing.
 						foreach(DataRow row in tableLog.Rows) {
@@ -370,7 +370,7 @@ namespace OpenDentBusiness {
 				string tableName=_listTableAndColumns[i];
 				string columnName=_listTableAndColumns[i+1];
 				command="SELECT COUNT(*) FROM "+tableName+" WHERE "+columnName+" LIKE '%"+POut.String("\0")+"%'";
-				specialCharCount+=PIn.Int(Db.GetCount(command));
+				specialCharCount+=PIn.Int(Database.ExecuteString(command));
 			}
 			if(specialCharCount!=0 || verbose) {
 				log+=specialCharCount.ToString()+" "+Lans.g("FormDatabaseMaintenance","total special characters found.  The Spec Char tool will remove these characters.")+"\r\n";
@@ -405,7 +405,7 @@ namespace OpenDentBusiness {
 					case DbmMode.Breakdown:
 					case DbmMode.Check:
 						command="SELECT COUNT(*) FROM "+POut.String(tableName)+" WHERE "+POut.String(colName)+" LIKE '%"+POut.String(tooManyT)+"%'";
-						int countLocal=PIn.Int(Db.GetCount(command));
+						int countLocal=PIn.Int(Database.ExecuteString(command));
 						countTotal+=countLocal;
 						if(modeCur==DbmMode.Breakdown) {
 							logBreakdown+=POut.String(tableName)+"."+POut.String(colName)+" "+Lans.g("FormDatabaseMaintenance","rows with too many tabs found:")
@@ -414,14 +414,14 @@ namespace OpenDentBusiness {
 						break;
 					case DbmMode.Fix:
 						command="SELECT "+priKey+","+colName+" FROM "+POut.String(tableName)+" WHERE "+POut.String(colName)+" LIKE '%"+POut.String(tooManyT)+"%'";
-						DataTable resultTable=Db.GetTable(command);
+						DataTable resultTable=Database.ExecuteDataTable(command);
 						if(resultTable.Rows.Count>0 || verbose) {
 							for(int j=0;j<resultTable.Rows.Count;j++) {
 								long id=PIn.Long(resultTable.Rows[j][priKey].ToString());
 								string oldNote=PIn.String(resultTable.Rows[j][colName].ToString());
 								string newNote=Regex.Replace(oldNote,POut.String(tooManyT)+"[\t]*","");
 								command="UPDATE "+POut.String(tableName)+" SET "+POut.String(colName)+"='"+POut.String(newNote)+"' WHERE "+POut.String(priKey)+"="+POut.Long(id);
-								Db.NonQ(command);
+								Database.ExecuteNonQuery(command);
 								countTotal++;
 							}
 						}
@@ -435,7 +435,7 @@ namespace OpenDentBusiness {
 						command="SELECT COUNT(*) FROM "+POut.String(tableName)+" "
 							+"WHERE "+POut.String(colName)+" LIKE '%"+POut.String(tooManyRN)+"%' "
 							+"OR "+POut.String(colName)+" LIKE '%"+POut.String(tooManyN)+"%'";
-						int countLocal=PIn.Int(Db.GetCount(command));
+						int countLocal=PIn.Int(Database.ExecuteString(command));
 						countTotal+=countLocal;
 						if(modeCur==DbmMode.Breakdown) {
 							logBreakdown+=POut.String(tableName)+"."+POut.String(colName)+" "+Lans.g("FormDatabaseMaintenance","rows with too many newlines found:")
@@ -446,7 +446,7 @@ namespace OpenDentBusiness {
 						command="SELECT "+priKey+","+colName+" FROM "+POut.String(tableName)+" "
 							+"WHERE "+POut.String(colName)+" LIKE '%"+POut.String(tooManyRN)+"%' "
 							+"OR "+POut.String(colName)+" LIKE '%"+POut.String(tooManyN)+"%'";
-						DataTable resultTable=Db.GetTable(command);
+						DataTable resultTable=Database.ExecuteDataTable(command);
 						if(resultTable.Rows.Count>0 || verbose) {
 							for(int j=0;j<resultTable.Rows.Count;j++) {
 								long id=PIn.Long(resultTable.Rows[j][priKey].ToString());
@@ -454,7 +454,7 @@ namespace OpenDentBusiness {
 								string newNote=Regex.Replace(oldNote,POut.String(tooManyRN)+"[\r\n]*","\r\n");
 								newNote=Regex.Replace(newNote,POut.String(tooManyN)+"[\n]*","\r\n");
 								command="UPDATE "+POut.String(tableName)+" SET "+POut.String(colName)+"='"+POut.String(newNote)+"' WHERE "+POut.String(priKey)+"="+POut.Long(id);
-								Db.NonQ(command);
+								Database.ExecuteNonQuery(command);
 								countTotal++;
 							}
 						}
@@ -467,7 +467,7 @@ namespace OpenDentBusiness {
 					case DbmMode.Check:
 						command=@"SELECT COUNT(*) FROM "+POut.String(tableName)+" "
 							+@"WHERE "+POut.String(colName)+" LIKE '%"+POut.String(tooManySP)+"%' ";//This is Sparta!
-						int countLocal=PIn.Int(Db.GetCount(command));
+						int countLocal=PIn.Int(Database.ExecuteString(command));
 						countTotal+=countLocal;
 						if(modeCur==DbmMode.Breakdown) {
 							logBreakdown+=POut.String(tableName)+"."+POut.String(colName)+" "+Lans.g("FormDatabaseMaintenance","rows with too many trailing white spaces found:")
@@ -477,14 +477,14 @@ namespace OpenDentBusiness {
 					case DbmMode.Fix:
 						command="SELECT "+priKey+","+colName+" FROM "+POut.String(tableName)+" "
 							+"WHERE "+POut.String(colName)+" LIKE '%"+POut.String(tooManySP)+"%' ";
-						DataTable resultTable=Db.GetTable(command);
+						DataTable resultTable=Database.ExecuteDataTable(command);
 						if(resultTable.Rows.Count>0 || verbose) {
 							for(int j=0;j<resultTable.Rows.Count;j++) {
 								long id=PIn.Long(resultTable.Rows[j][priKey].ToString());
 								string oldNote=PIn.String(resultTable.Rows[j][colName].ToString());
 								string newNote=Regex.Replace(oldNote,POut.String(tooManySP)+"[ ]*","");
 								command="UPDATE "+POut.String(tableName)+" SET "+POut.String(colName)+"='"+POut.String(newNote)+"' WHERE "+POut.String(priKey)+"="+POut.Long(id);
-								Db.NonQ(command);
+								Database.ExecuteNonQuery(command);
 								countTotal++;
 							}
 						}
@@ -525,7 +525,7 @@ namespace OpenDentBusiness {
 			string command="SELECT CountInvalid,TableName FROM (\r\n"+string.Join("\r\nUNION ALL\r\n",listTablesToCheck.Select(x => 
 					$"SELECT COUNT(*) CountInvalid,'{x}' TableName FROM {x} WHERE ClinicNum < 0"))+"\r\n"+
 				") invalid WHERE CountInvalid > 0";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -537,7 +537,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					if(table.Rows.Count > 0) {
 						command=string.Join(";\r\n",listTablesToCheck.Select(x => $"UPDATE {x} SET ClinicNum=0 WHERE ClinicNum < 0"));
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					int numberFixed=table.Rows.Count;
 					if(numberFixed!=0 || verbose) {
@@ -558,7 +558,7 @@ namespace OpenDentBusiness {
 				return log;
 			}
 			string command=Ledgers.GetTransQueryString(DateTime.Today,"");
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			DataTable flaggedTransactions=table.Clone();
 			foreach(DataRow row in table.Rows) {
 				if(PIn.String(row["TranType"].ToString())!="PPCharge" && PIn.String(row["TranType"].ToString()) !="PPCComplete"
@@ -623,7 +623,7 @@ namespace OpenDentBusiness {
 				+"WHERE AptStatus="+POut.Int((int)ApptStatus.Complete)+" "
 				+"AND procedurelog.ProcStatus="+POut.Int((int)ProcStat.TP)+" "
 				+"ORDER BY PatName";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -657,7 +657,7 @@ namespace OpenDentBusiness {
 			//This pulls appointments that extend past the end of the day. CHAR_LENGTH(Pattern)-1 as if the appointment goes to midnight, it does
 			//not need to be fixed.
 			string command="SELECT AptNum FROM appointment WHERE DATE(AptDateTime) != DATE(AptDateTime + INTERVAL (CHAR_LENGTH(Pattern)-1)*5 MINUTE)";
-			List<long> listAptNums=Db.GetListLong(command);
+			List<long> listAptNums=Database.GetListLong(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -671,7 +671,7 @@ namespace OpenDentBusiness {
 						//number of 5 minute increments between the aptDateTime and midnight of the next day
 						command="UPDATE appointment SET Pattern = SUBSTRING(Pattern,1,TIMESTAMPDIFF(MINUTE,AptDateTime,DATE(AptDateTime) "
 							+"+ INTERVAL 1 DAY)/5) WHERE AptNum IN("+string.Join(",",listAptNums)+")";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					int numberFixed=listAptNums.Count;
 					if(numberFixed!=0 || verbose) {
@@ -685,7 +685,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string AppointmentsNoPattern(bool verbose,DbmMode modeCur) {
 			string command=@"SELECT AptNum FROM appointment WHERE Pattern=''";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -703,7 +703,7 @@ namespace OpenDentBusiness {
 						command="SELECT P.* FROM procedurelog P,appointment A "+where;
 						listProceduresModified=Crud.ProcedureCrud.SelectMany(command);
 						command="UPDATE procedurelog P, appointment A SET P.AptNum=0 "+where;
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						//Add changes to listDbmLogs
 						listProceduresModified.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ProcNum,DbmLogFKeyType.Procedure,
 							DbmLogActionType.Update,methodName,"Updated AptNum from "+x.AptNum+" to 0 from AppointmentsNoPattern")));
@@ -711,12 +711,12 @@ namespace OpenDentBusiness {
 						command="SELECT P.* FROM procedurelog P,appointment A "+where;
 						listProceduresModified=Crud.ProcedureCrud.SelectMany(command);
 						command="UPDATE procedurelog P, appointment A SET P.PlannedAptNum=0 "+where;
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						//Add changes to listDbmLogs
 						listProceduresModified.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ProcNum,DbmLogFKeyType.Procedure,
 							DbmLogActionType.Update,methodName,"Updated PlannedAptNum from "+x.PlannedAptNum+" to 0 from AppointmentsNoPattern")));
 						command="SELECT appointment.AptNum FROM appointment WHERE Pattern=''";
-						DataTable tableAptNums=Db.GetTable(command);
+						DataTable tableAptNums=Database.ExecuteDataTable(command);
 						List<long> listAptNums=new List<long>();
 						for(int i = 0;i<tableAptNums.Rows.Count;i++) {
 							listAptNums.Add(PIn.Long(tableAptNums.Rows[i]["AptNum"].ToString()));
@@ -742,7 +742,7 @@ namespace OpenDentBusiness {
 							}
 						}
 						command="DELETE FROM appointment WHERE Pattern=''";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						DbmLogs.InsertMany(listDbmLogs);
 					}
 					int numberFixed=table.Rows.Count;
@@ -764,7 +764,7 @@ namespace OpenDentBusiness {
 						+"WHERE AptStatus=1 "//scheduled 
 						+"AND "+DbHelper.Year("AptDateTime")+"<1880 "//scheduled but no date 
 						+"AND NOT EXISTS(SELECT * FROM procedurelog WHERE procedurelog.AptNum=appointment.AptNum)";//and no procs
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Appointments found with no date and no procs")+": "+numFound+"\r\n";
 					}
@@ -776,7 +776,7 @@ namespace OpenDentBusiness {
 						+"WHERE AptStatus="+POut.Int((int)ApptStatus.Scheduled)+" "
 						+"AND "+DbHelper.Year("AptDateTime")+"<1880 "//scheduled but no date 
 						+"AND NOT EXISTS(SELECT * FROM procedurelog WHERE procedurelog.AptNum=appointment.AptNum)";//and no procs
-					DataTable tableAptNums=Db.GetTable(command);
+					DataTable tableAptNums=Database.ExecuteDataTable(command);
 					List<long> listAptNums=new List<long>();
 					for(int i = 0;i<tableAptNums.Rows.Count;i++) {
 						listAptNums.Add(PIn.Long(tableAptNums.Rows[i]["AptNum"].ToString()));
@@ -805,7 +805,7 @@ namespace OpenDentBusiness {
 						+"WHERE AptStatus="+POut.Int((int)ApptStatus.Scheduled)+" "
 						+"AND "+DbHelper.Year("AptDateTime")+"<1880 "//scheduled but no date 
 						+"AND NOT EXISTS(SELECT * FROM procedurelog WHERE procedurelog.AptNum=appointment.AptNum)";//and no procs
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed!=0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
 						log+=Lans.g("FormDatabaseMaintenance","Appointments deleted due to no date and no procs")+": "+numberFixed.ToString()+"\r\n";
@@ -818,7 +818,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string AppointmentsNoPatients(bool verbose,DbmMode modeCur) {
 			string command="SELECT Count(*) FROM appointment WHERE PatNum NOT IN (SELECT PatNum FROM patient)";
-			int count=PIn.Int(Db.GetCount(command));
+			int count=PIn.Int(Database.ExecuteString(command));
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -833,7 +833,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					if(count!=0) {
 						command="SELECT PatNum FROM appointment WHERE PatNum NOT IN (SELECT PatNum FROM patient)";
-						List<long> patNums=Db.GetListLong(command).Distinct().ToList();
+						List<long> patNums=Database.GetListLong(command).Distinct().ToList();
 						if(patNums.Contains(0)) {//appointments with no patient.
 							Patient tempPat=new Patient() {
 								FName="MISSING",
@@ -858,7 +858,7 @@ namespace OpenDentBusiness {
 							//add the updated appointments to listDbmLogs
 							List<Appointment> listAppts=Crud.AppointmentCrud.SelectMany(command);
 							command="UPDATE appointment SET PatNum="+POut.Long(tempPat.PatNum)+" WHERE PatNum=0";
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							listAppts.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.AptNum,DbmLogFKeyType.Appointment,DbmLogActionType.Update,
 								methodName,"Updated the PatNum from 0 to "+tempPat.PatNum+" from AppointmentsNoPatients.")));
 							patientsAdded++;
@@ -902,14 +902,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM appointment WHERE AptStatus=6 AND AptNum NOT IN (SELECT AptNum FROM plannedappt)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Appointments with status set to planned without Planned Appointment: ")+numFound.ToString()+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="SELECT * FROM appointment WHERE AptStatus=6 AND AptNum NOT IN (SELECT AptNum FROM plannedappt)";
-					DataTable appts=Db.GetTable(command);
+					DataTable appts=Database.ExecuteDataTable(command);
 					if(appts.Rows.Count > 0 || verbose) {
 						PlannedAppt plannedAppt;
 						List<DbmLog> listDbmLogs=new List<DbmLog>();
@@ -940,7 +940,7 @@ namespace OpenDentBusiness {
 				+"WHERE AptStatus = "+POut.Int((int)ApptStatus.Scheduled)+" "
 				+"AND procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)+" "
 				+"ORDER BY PatName";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -1003,7 +1003,7 @@ namespace OpenDentBusiness {
 						string methodName=MethodBase.GetCurrentMethod().Name;
 						List<DbmLog> listDbmLogs=new List<DbmLog>();
 						command="DELETE FROM securitylog WHERE SecurityLogNum IN("+string.Join(",",listDupApptCreates.Select(x => x.SecurityLogNum))+")";
-						long numberFixed=Db.NonQ(command);
+						long numberFixed=Database.ExecuteNonQuery(command);
 						listDupApptCreates.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
 							DbmLogActionType.Delete,methodName,"Audit trail entry deleted from AuditTrailDeleteDuplicateApptCreate.")));
 						if(numberFixed>0 || verbose) {
@@ -1026,7 +1026,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Check:
 					command=@"SELECT DISTINCT AutoCodeNum FROM autocodeitem WHERE NOT EXISTS(
 						SELECT * FROM autocode WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					int numFound=table.Rows.Count;
 					if(numFound!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Auto codes missing due to invalid auto code items")+": "+numFound.ToString()+"\r\n";
@@ -1037,7 +1037,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command=@"SELECT DISTINCT AutoCodeNum FROM autocodeitem WHERE NOT EXISTS(
 						SELECT * FROM autocode WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					int numFixed=table.Rows.Count;
 					for(int i = 0;i<table.Rows.Count;i++) {
 						AutoCode autoCode=new AutoCode();
@@ -1067,7 +1067,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM autocode WHERE NOT EXISTS(
 						SELECT * FROM autocodeitem WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Autocodes found with no items: ")+numFound+"\r\n";
 					}
@@ -1079,7 +1079,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command=@"DELETE FROM autocode WHERE NOT EXISTS(
 						SELECT * FROM autocodeitem WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listAutoCodes.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.AutoCodeNum,DbmLogFKeyType.AutoCode,
 						DbmLogActionType.Delete,methodName,"Deleted AutoCode:"+x.Description+" from AutoCodesDeleteWithNoItems")));
 					if(numberFixed>0) {
@@ -1102,7 +1102,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM automation WHERE automation.SheetDefNum!=0 AND NOT EXISTS(
 					SELECT SheetDefNum FROM sheetdef WHERE automation.SheetDefNum=sheetdef.SheetDefNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Automation triggers found with no sheet defs: ")+numFound+"\r\n";
 					}
@@ -1115,7 +1115,7 @@ namespace OpenDentBusiness {
 					List<Automation> listAutomation=Crud.AutomationCrud.SelectMany(command);
 					command=@"DELETE FROM automation WHERE automation.SheetDefNum!=0 AND NOT EXISTS(
 					SELECT SheetDefNum FROM sheetdef WHERE automation.SheetDefNum=sheetdef.SheetDefNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					//Add to listDbmlogs
 					listAutomation.ForEach(x => listDbmlogs.Add(new DbmLog(Security.CurUser.UserNum,x.AutomationNum,DbmLogFKeyType.Automation,
 						DbmLogActionType.Delete,methodName,"Deleted automation from AutomationTriggersWithNoSheetDefs.")));
@@ -1153,7 +1153,7 @@ namespace OpenDentBusiness {
 						+"AND ben.CodeNum=ben2.CodeNum "
 						+"AND ben.CoverageLevel=ben2.CoverageLevel "
 						+"AND ben.BenefitNum<ben2.BenefitNum";  //This ensures that the benefit with the lowest primary key in the match will not be counted.
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Duplicate benefits found")+": "+numFound.ToString()+"\r\n";
 					}
@@ -1173,7 +1173,7 @@ namespace OpenDentBusiness {
 						+"AND ben.CodeNum=ben2.CodeNum "
 						+"AND ben.CoverageLevel=ben2.CoverageLevel "
 						+"AND ben.BenefitNum<ben2.BenefitNum";  //This ensures that the benefit with the lowest primary key in the match will not be deleted.
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					List<long> listBenefitNums=new List<long>();
 					if(table.Rows.Count>0 || verbose) {
 						for(int i = 0;i<table.Rows.Count;i++) {
@@ -1182,7 +1182,7 @@ namespace OpenDentBusiness {
 						long numFixed=0;
 						if(listBenefitNums.Count>0) {
 							command="DELETE FROM benefit WHERE BenefitNum IN ("+string.Join(",",listBenefitNums)+")";
-							numFixed=PIn.Long(Db.NonQ(command).ToString());
+							numFixed=PIn.Long(Database.ExecuteNonQuery(command).ToString());
 						}
 						log+=Lans.g("FormDatabaseMaintenance","Duplicate benefits deleted")+": "+numFixed.ToString()+"\r\n";
 					}
@@ -1212,7 +1212,7 @@ namespace OpenDentBusiness {
 				+"INNER JOIN insplan ON insplan.PlanNum=ben.PlanNum "
 				+"LEFT JOIN carrier ON carrier.CarrierNum=insplan.CarrierNum "
 				+"LEFT JOIN employer ON employer.EmployerNum=insplan.EmployerNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -1262,9 +1262,9 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string BillingTypesInvalid(bool verbose,DbmMode modeCur) {
 			string command="SELECT ValueString FROM preference WHERE PrefName='PracticeDefaultBillType'";
-			long billingType=PIn.Long(Db.GetScalar(command));
+			long billingType=PIn.Long(Database.ExecuteString(command));
 			command="SELECT COUNT(*) FROM definition WHERE Category=4 AND definition.DefNum="+billingType;
-			int prefExists=PIn.Int(Db.GetCount(command));
+			int prefExists=PIn.Int(Database.ExecuteString(command));
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -1276,7 +1276,7 @@ namespace OpenDentBusiness {
 					}
 					//Check for any patients with invalid billingtype.
 					command="SELECT COUNT(*) FROM patient WHERE NOT EXISTS(SELECT * FROM definition WHERE Category=4 AND patient.BillingType=definition.DefNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Patients with invalid billing type: ")+numFound.ToString()+"\r\n";
 					}
@@ -1285,20 +1285,20 @@ namespace OpenDentBusiness {
 					//Fix for default billingtype not being set.
 					if(prefExists!=1) {//invalid billing type
 						command="SELECT DefNum FROM definition WHERE Category=4 AND IsHidden=0 ORDER BY ItemOrder";
-						DataTable table=Db.GetTable(command);
+						DataTable table=Database.ExecuteDataTable(command);
 						if(table.Rows.Count==0) {//if all billing types are hidden
 							command="SELECT DefNum FROM definition WHERE Category=4 ORDER BY ItemOrder";
-							table=Db.GetTable(command);
+							table=Database.ExecuteDataTable(command);
 						}
 						command="UPDATE preference SET ValueString='"+table.Rows[0][0].ToString()+"' WHERE PrefName='PracticeDefaultBillType'";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						log+=Lans.g("FormDatabaseMaintenance","Default billing type preference was set due to being invalid.")+"\r\n";
 						Prefs.RefreshCache();//for the next line.
 					}
 					//Fix for patients with invalid billingtype.
 					command="UPDATE patient SET patient.BillingType="+POut.Long(PrefC.GetLong(PrefName.PracticeDefaultBillType));
 					command+=" WHERE NOT EXISTS(SELECT * FROM definition WHERE Category=4 AND patient.BillingType=definition.DefNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Patients billing type set to default due to being invalid: ")+numberFixed.ToString()+"\r\n";
 					}
@@ -1316,18 +1316,18 @@ namespace OpenDentBusiness {
 				return Lans.g("FormDatabaseMaintenance","Skipped. Local computer region must be set to Canada to run.");
 			}
 			string command="SELECT CanadianNetworkNum FROM canadiannetwork WHERE Abbrev='TELUS B' LIMIT 1";
-			long canadianNetworkNumTelusB=PIn.Long(Db.GetScalar(command));
+			long canadianNetworkNumTelusB=PIn.Long(Database.ExecuteString(command));
 			command="SELECT CanadianNetworkNum FROM canadiannetwork WHERE Abbrev='CSI' LIMIT 1";
 			//CSI is now known as "instream"
-			long canadianNetworkNumCSI=PIn.Long(Db.GetScalar(command));
+			long canadianNetworkNumCSI=PIn.Long(Database.ExecuteString(command));
 			command="SELECT CanadianNetworkNum FROM canadiannetwork WHERE Abbrev='CDCS' LIMIT 1";
-			long canadianNetworkNumCDCS=PIn.Long(Db.GetScalar(command));
+			long canadianNetworkNumCDCS=PIn.Long(Database.ExecuteString(command));
 			command="SELECT CanadianNetworkNum FROM canadiannetwork WHERE Abbrev='TELUS A' LIMIT 1";
-			long canadianNetworkNumTelusA=PIn.Long(Db.GetScalar(command));
+			long canadianNetworkNumTelusA=PIn.Long(Database.ExecuteString(command));
 			command="SELECT CanadianNetworkNum FROM canadiannetwork WHERE Abbrev='MBC' LIMIT 1";
-			long canadianNetworkNumMBC=PIn.Long(Db.GetScalar(command));
+			long canadianNetworkNumMBC=PIn.Long(Database.ExecuteString(command));
 			command="SELECT CanadianNetworkNum FROM canadiannetwork WHERE Abbrev='ABC' LIMIT 1";
-			long canadianNetworkNumABC=PIn.Long(Db.GetScalar(command));
+			long canadianNetworkNumABC=PIn.Long(Database.ExecuteString(command));
 			CanSupTransTypes claimTypes=CanSupTransTypes.ClaimAckEmbedded_11e|CanSupTransTypes.ClaimEobEmbedded_21e;//Claim 01, claim ack 11, and claim eob 21 are implied.
 			CanSupTransTypes reversalTypes=CanSupTransTypes.ClaimReversal_02|CanSupTransTypes.ClaimReversalResponse_12;
 			CanSupTransTypes predeterminationTypes=CanSupTransTypes.PredeterminationAck_13|CanSupTransTypes.PredeterminationAckEmbedded_13e|CanSupTransTypes.PredeterminationMultiPage_03|CanSupTransTypes.PredeterminationSinglePage_03;
@@ -1498,7 +1498,7 @@ namespace OpenDentBusiness {
 							"CDAnetVersion<>'"+POut.String((string)carrierInfo[i+2])+"' OR "+
 							"CanadianSupportedTypes<>"+POut.Int((int)carrierInfo[i+3])+" OR "+
 							"CanadianNetworkNum<>"+POut.Long((long)carrierInfo[i+4])+")";
-						numFound+=PIn.Int(Db.GetCount(command));
+						numFound+=PIn.Int(Database.ExecuteString(command));
 					}
 					if(numFound!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","CDANet carriers with incorrect network, encryption method or version, based on carrier identification number: ")+numFound+"\r\n";
@@ -1527,7 +1527,7 @@ namespace OpenDentBusiness {
 							"CDAnetVersion<>'"+POut.String((string)carrierInfo[i+2])+"' OR "+
 							"CanadianSupportedTypes<>"+POut.Int((int)carrierInfo[i+3])+" OR "+
 							"CanadianNetworkNum<>"+POut.Long((long)carrierInfo[i+4])+")";
-						long numUpdated=Db.NonQ(command);
+						long numUpdated=Database.ExecuteNonQuery(command);
 						numberFixed+=numUpdated;
 						//add changes to dbmLogs
 						if(numUpdated > 0) {
@@ -1552,7 +1552,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM claim WHERE NOT EXISTS(
 						SELECT * FROM claimproc WHERE claim.ClaimNum=claimproc.ClaimNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Claims found with no procedures")+": "+numFound+"\r\n";
 					}
@@ -1562,7 +1562,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="SELECT claim.ClaimNum FROM claim WHERE NOT EXISTS( "
 						+"SELECT * FROM claimproc WHERE claim.ClaimNum=claimproc.ClaimNum)";
-					DataTable tableClaimNums=Db.GetTable(command);
+					DataTable tableClaimNums=Database.ExecuteDataTable(command);
 					List<long> listClaimNums=new List<long>();
 					for(int i = 0;i<tableClaimNums.Rows.Count;i++) {
 						listClaimNums.Add(PIn.Long(tableClaimNums.Rows[i]["ClaimNum"].ToString()));
@@ -1578,7 +1578,7 @@ namespace OpenDentBusiness {
 					//Orphaned claims do not show in the account module (tested) so we need to delete them because no other way.
 					command=@"DELETE FROM claim WHERE NOT EXISTS(
 						SELECT * FROM claimproc WHERE claim.ClaimNum=claimproc.ClaimNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Claim,DbmLogActionType.Delete,
 						methodName,"Deleted claim from ClaimDeleteWithNoClaimProcs")));
 					if(numberFixed!=0 || verbose) {
@@ -1602,7 +1602,7 @@ namespace OpenDentBusiness {
 						LEFT JOIN inssub ON claim.InsSubNum=inssub.InsSubNum
 						WHERE claim.PlanNum=0 
 						AND ( inssub.PlanNum=0 OR inssub.PlanNum IS NULL )";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound!=0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Claims with invalid InsSubNum")+": "+numFound+"\r\n";
 						log+="   "+Lans.g("FormDatabaseMaintenance","Double click to see a break down.")+"\r\n";
@@ -1617,7 +1617,7 @@ namespace OpenDentBusiness {
 						WHERE claim.PlanNum=0 
 						AND ( inssub.PlanNum=0 OR inssub.PlanNum IS NULL )";
 					//Turn the query results into a dictionary in order to make it easier to create a breakdown for the user.
-					var dictPatClaims=Db.GetTable(command).Select().Select(x => new {
+					var dictPatClaims=Database.ExecuteDataTable(command).Select().Select(x => new {
 							ClaimNum=PIn.Long(x["ClaimNum"].ToString()),
 							PatNum=PIn.Long(x["PatNum"].ToString()),
 							DateService=PIn.Date(x["DateService"].ToString())
@@ -1648,7 +1648,7 @@ namespace OpenDentBusiness {
 						LEFT JOIN inssub ON claim.InsSubNum=inssub.InsSubNum 
 						WHERE claim.PlanNum=0 
 						AND ( inssub.PlanNum=0 OR inssub.PlanNum IS NULL )";
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					long numberFixed=table.Rows.Count;
 					InsPlan plan=null;
 					InsSub sub=null;
@@ -1677,13 +1677,13 @@ namespace OpenDentBusiness {
 							methodName,"Added new InsSub from ClaimWithInvalidInsSubNum."));
 						List<Claim> listClaims=Crud.ClaimCrud.SelectMany("SELECT * FROM claim WHERE ClaimNum="+claimNum);
 						command="UPDATE claim SET PlanNum="+plan.PlanNum+",InsSubNum="+sub.InsSubNum+" WHERE ClaimNum="+claimNum;
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
 							methodName,"Updated PlanNum from "+x.PlanNum+" to "+plan.PlanNum
 							+" and InsSubNum from "+x.InsSubNum+" to "+sub.InsSubNum+" from ClaimWithInvalidInsSubNum")));
 						List<ClaimProc> listClaimProc=Crud.ClaimProcCrud.SelectMany("SELECT * FROM claimproc WHERE ClaimNum="+claimNum);
 						command="UPDATE claimproc SET PlanNum="+plan.PlanNum+",InsSubNum="+sub.InsSubNum+" WHERE ClaimNum="+claimNum;
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listClaimProc.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 							DbmLogActionType.Update,methodName,"Updated PlanNum from "+x.PlanNum+" to "+plan.PlanNum
 							+" and InsSubNum from "+x.InsSubNum+" to "+sub.InsSubNum+" from ClaimWithInvalidInsSubNum")));
@@ -1708,7 +1708,7 @@ namespace OpenDentBusiness {
 				AND claimproc.ProcNum=procedurelog.ProcNum
 				AND procedurelog.PatNum!=0
 				GROUP BY claim.ClaimNum, procedurelog.PatNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -1724,7 +1724,7 @@ namespace OpenDentBusiness {
 						List<Claim> listClaims=Crud.ClaimCrud.SelectMany(command);
 						command="UPDATE claim SET PatNum='"+POut.Long(PIn.Long(table.Rows[i]["patNumCorrect"].ToString()))+"' "
 							+"WHERE ClaimNum="+POut.Long(PIn.Long(table.Rows[i]["ClaimNum"].ToString()));
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
 							methodName,"Updated PatNum from "+x.PatNum+" to "+table.Rows[i]["patNumCorrect"].ToString())));
 					}
@@ -1755,7 +1755,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="UPDATE claim SET ProvTreat="+POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv))+
 							" WHERE ProvTreat > 0 AND ProvTreat NOT IN (SELECT ProvNum FROM provider);";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
 						methodName,"Updated ProvTreat from "+x.ProvTreat+" to "+POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv)))));
 					if(numFixed>0 || verbose) {
@@ -1776,7 +1776,7 @@ namespace OpenDentBusiness {
 				GROUP BY claim.ClaimNum,claim.WriteOff
 				HAVING sumwo-claim.WriteOff > .01
 				OR sumwo-claim.WriteOff < -.01";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -1792,7 +1792,7 @@ namespace OpenDentBusiness {
 						List<Claim> listClaims=Crud.ClaimCrud.SelectMany(command);
 						command="UPDATE claim SET WriteOff='"+POut.Double(PIn.Double(table.Rows[i]["sumwo"].ToString()))+"' "
 							+"WHERE ClaimNum="+table.Rows[i]["ClaimNum"].ToString();
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
 							methodName,"Updated the WriteOff from "+table.Rows[i]["WriteOff"].ToString()
 							+" to "+table.Rows[i]["sumwo"].ToString()+" from ClaimWriteoffSum")));
@@ -1819,7 +1819,7 @@ namespace OpenDentBusiness {
 					WHERE claimpayment.ClaimPaymentNum=claimproc.ClaimPaymentNum
 					GROUP BY claimproc.ClaimPaymentNum,CheckAmt
 					HAVING _sumpay!=_checkamt";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -1841,7 +1841,7 @@ namespace OpenDentBusiness {
 						for(int i = 0;i<table.Rows.Count;i++) {
 							Patient pat=Patients.GetPat(PIn.Long(table.Rows[i]["PatNum"].ToString()));
 							command="SELECT CheckDate,CheckAmt,IsPartial FROM claimpayment WHERE ClaimPaymentNum="+table.Rows[i]["ClaimPaymentNum"].ToString();
-							DataTable claimPayTable=Db.GetTable(command);
+							DataTable claimPayTable=Database.ExecuteDataTable(command);
 							if(pat==null) {
 								//insert pat
 								Patient dummyPatient=new Patient();
@@ -1868,7 +1868,7 @@ namespace OpenDentBusiness {
 								command="SELECT * from claimpayment WHERE ClaimPaymentNum="+PIn.Long(table.Rows[i]["ClaimPaymentNum"].ToString()).ToString();
 								List<ClaimPayment> listClaimPayment=Crud.ClaimPaymentCrud.SelectMany(command);
 								command="UPDATE claimpayment SET IsPartial=1 WHERE ClaimPaymentNum="+PIn.Long(table.Rows[i]["ClaimPaymentNum"].ToString()).ToString();
-								Db.NonQ(command);
+								Database.ExecuteNonQuery(command);
 								listClaimPayment.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimPaymentNum,DbmLogFKeyType.ClaimPayment,
 									DbmLogActionType.Update,methodName,"Updated ClaimPaymentNum from "+x.IsPartial+" to True from ClaimPaymentCheckAmt.")));
 								log+=" (row has been unlocked and marked as partial)";
@@ -1884,7 +1884,7 @@ namespace OpenDentBusiness {
 						for(int i=0;i<table.Rows.Count;i++) {
 							command="UPDATE claimpayment SET CheckAmt='"+POut.Double(PIn.Double(table.Rows[i]["_sumpay"].ToString()))+"' "
 								+"WHERE ClaimPaymentNum="+table.Rows[i]["ClaimPaymentNum"].ToString();
-							Db.NonQ(command);
+							Db.ExecuteNonQuery(command);
 						}
 						int numberFixed=table.Rows.Count;
 						if(numberFixed>0 || verbose) {
@@ -1917,7 +1917,7 @@ namespace OpenDentBusiness {
 					command="UPDATE claimpayment SET DepositNum=0 "
 						+"WHERE DepositNum != 0 "
 						+"AND NOT EXISTS(SELECT * FROM deposit WHERE deposit.DepositNum=claimpayment.DepositNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimPayments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimPaymentNum,DbmLogFKeyType.ClaimPayment,
 						DbmLogActionType.Update,methodName,"Updated the DepositNum from "+x.DepositNum+" to 0 .")));
 					if(numberFixed>0 || verbose) {
@@ -1943,7 +1943,7 @@ namespace OpenDentBusiness {
 					"FROM claimproc "+
 					"WHERE claimproc.ClaimPaymentNum=claimpayment.ClaimPaymentNum "+
 				") ";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -2026,7 +2026,7 @@ namespace OpenDentBusiness {
 				+"INNER JOIN procedurelog ON claimproc.ProcNum=procedurelog.ProcNum "
 				+"INNER JOIN procedurecode ON procedurecode.CodeNum=procedurelog.CodeNum AND procedurecode.ProcCode='~GRP~' "
 				+"WHERE claimproc.Status="+POut.Int((int)ClaimProcStatus.Estimate)+" AND claimproc.ClaimNum=0 AND claimproc.ClaimPaymentNum=0";//Ensures that the claimproc has no relevant information attached to it.
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -2040,7 +2040,7 @@ namespace OpenDentBusiness {
 					if(table.Rows.Count>0) {
 						string inCommand=string.Join(",",table.Select().Select(x => PIn.Long(x["ClaimProcNum"].ToString())));
 						command="DELETE FROM claimproc WHERE claimproc.ClaimProcNum IN ("+inCommand+")";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						table.Select().Select(x => PIn.Long(x["ClaimProcNum"].ToString())).ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,
 							x,DbmLogFKeyType.ClaimProc,DbmLogActionType.Delete,methodName,"Deleted claimproc.")));
 					}
@@ -2070,7 +2070,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					//js ok
 					command="UPDATE claimproc SET DateCP=ProcDate WHERE Status=7 AND DateCP != ProcDate";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated the DateCp from "+x.DateCP+" to "+x.ProcDate+".")));
 					if(numberFixed>0 || verbose) {
@@ -2092,7 +2092,7 @@ namespace OpenDentBusiness {
 					command="SELECT claimproc.ClaimProcNum,claimpayment.CheckDate FROM claimproc,claimpayment "
 						+"WHERE claimproc.ClaimPaymentNum=claimpayment.ClaimPaymentNum "
 						+"AND claimproc.DateCP!=claimpayment.CheckDate";
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					if(table.Rows.Count>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Claim payments with mismatched dates found:")+" "+table.Rows.Count.ToString()+"\r\n";
 						log+="   "+Lans.g("FormDatabaseMaintenance","Double click to see a break down.")+"\r\n";
@@ -2111,7 +2111,7 @@ namespace OpenDentBusiness {
 						+"AND claimproc.ClaimNum=claim.ClaimNum "
 						+"AND claimproc.ClaimPaymentNum=claimpayment.ClaimPaymentNum "
 						+"AND claimproc.DateCP!=claimpayment.CheckDate";
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					string patientName;
 					string codeSent;
 					DateTime dateService;
@@ -2134,11 +2134,11 @@ namespace OpenDentBusiness {
 						newDateCP=PIn.Date(table.Rows[i]["CheckDate"].ToString());
 						claimProcNum=PIn.Long(table.Rows[i]["ClaimProcNum"].ToString());
 						command="SELECT ClaimProcNum FROM claimproc WHERE ClaimProcNum="+claimProcNum.ToString();
-						listClaimProcNums=Db.GetListLong(command);
+						listClaimProcNums=Database.GetListLong(command);
 						if(modeCur==DbmMode.Fix) {
 							command="UPDATE claimproc SET DateCP="+POut.Date(newDateCP)
 								+" WHERE ClaimProcNum="+claimProcNum.ToString();
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 								DbmLogActionType.Update,methodName,"Updated DateCP from "+oldDateCP+" to "+newDateCP+".")));
 						}
@@ -2178,7 +2178,7 @@ namespace OpenDentBusiness {
 				+" AND cp.ClaimNum=0";//Make sure the estimate is not already attached to a claim somehow.
 			
 
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -2192,9 +2192,9 @@ namespace OpenDentBusiness {
 					if(table.Rows.Count>0) {
 						string inCommand=string.Join(",",table.Select().Select(x => PIn.Long(x["ClaimProcNum"].ToString())));
 						command="SELECT ClaimProcNum FROM claimproc WHERE ClaimProcNum IN ("+inCommand+")";
-						List<long> listClaimProcNums=Db.GetListLong(command);
+						List<long> listClaimProcNums=Database.GetListLong(command);
 						command="DELETE FROM claimproc WHERE ClaimProcNum IN ("+inCommand+")";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 							DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteDuplicateEstimateForSameInsPlan.")));
 					}
@@ -2213,7 +2213,7 @@ namespace OpenDentBusiness {
 			string command="SELECT ClaimProcNum FROM claimproc WHERE claimproc.ClaimNum=0 "
 				+"AND NOT EXISTS(SELECT PlanNum FROM insplan WHERE insplan.PlanNum=claimproc.PlanNum) "
 				+"AND claimproc.Status="+POut.Int((int)ClaimProcStatus.Adjustment);
-			List<long> listClaimProcNums=Db.GetListLong(command);
+			List<long> listClaimProcNums=Database.GetListLong(command);
 			switch(modeCur) {
 				case DbmMode.Check:
 					int numFound=listClaimProcNums.Count;
@@ -2227,7 +2227,7 @@ namespace OpenDentBusiness {
 					command="DELETE FROM claimproc WHERE claimproc.ClaimNum=0 "
 						+"AND NOT EXISTS(SELECT PlanNum FROM insplan WHERE insplan.PlanNum=claimproc.PlanNum) "
 						+"AND claimproc.Status="+POut.Int((int)ClaimProcStatus.Adjustment);
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteInvalidAdjustments.")));
 					if(numberFixed>0 || verbose) {
@@ -2249,7 +2249,7 @@ namespace OpenDentBusiness {
 						+"AND claimproc.InsPayAmt=0 AND claimproc.WriteOff=0";
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Claimprocs found with invalid ClaimNum: ")+numFound+"\r\n";
 					}
@@ -2257,12 +2257,12 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listClaimProcNums=Db.GetListLong(command);
+					List<long> listClaimProcNums=Database.GetListLong(command);
 					command="DELETE FROM claimproc WHERE claimproc.ClaimNum!=0 "
 						+patWhere
 						+"AND NOT EXISTS(SELECT * FROM claim WHERE claim.ClaimNum=claimproc.ClaimNum) "
 						+"AND claimproc.InsPayAmt=0 AND claimproc.WriteOff=0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteWithInvalidClaimNum.")));
 					if(numberFixed>0 || verbose) {
@@ -2284,7 +2284,7 @@ namespace OpenDentBusiness {
 				+"AND(claimproc.WriteOff=0 "
 				+"OR(claimproc.Status="+(int)ClaimProcStatus.CapEstimate+" "
 				+"AND claimproc.WriteOff=procedurelog.ProcFee AND procedurelog.ProcStatus IN("+(int)ProcStat.TP+","+(int)ProcStat.TPi+")))";
-			List<long> listClaimProcNums=Db.GetListLong(command);
+			List<long> listClaimProcNums=Database.GetListLong(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -2298,7 +2298,7 @@ namespace OpenDentBusiness {
 						List<DbmLog> listDbmLogs=new List<DbmLog>();
 						string methodName=MethodBase.GetCurrentMethod().Name;
 						command="DELETE FROM claimproc WHERE ClaimProcNum IN("+string.Join(",",listClaimProcNums)+")";
-						long numberFixed=Db.NonQ(command);
+						long numberFixed=Database.ExecuteNonQuery(command);
 						listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 							DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteMismatchPatNum.")));
 						if(numberFixed>0 || verbose) {
@@ -2319,7 +2319,7 @@ namespace OpenDentBusiness {
 				+"AND Status="+POut.Int((int)ClaimProcStatus.Estimate)+" "
 				+"AND NOT EXISTS(SELECT * FROM procedurelog "
 				+"WHERE claimproc.ProcNum=procedurelog.ProcNum)";
-			List<long> listClaimProcNums=Db.GetListLong(command);
+			List<long> listClaimProcNums=Database.GetListLong(command);
 			switch(modeCur) {
 				case DbmMode.Check:
 					int numFound=listClaimProcNums.Count;
@@ -2335,7 +2335,7 @@ namespace OpenDentBusiness {
 						+"AND Status="+POut.Int((int)ClaimProcStatus.Estimate)+" "
 						+"AND NOT EXISTS(SELECT * FROM procedurelog "
 						+"WHERE claimproc.ProcNum=procedurelog.ProcNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteEstimateWithInvalidProcNum.")));
 					if(numberFixed>0 || verbose) {
@@ -2357,7 +2357,7 @@ namespace OpenDentBusiness {
 					+"WHERE claimproc.ProcNum=procedurelog.ProcNum "
 					+"AND procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)
 				+")";
-			List<long> listClaimProcNums=Db.GetListLong(command);
+			List<long> listClaimProcNums=Database.GetListLong(command);
 			switch(modeCur) {
 				case DbmMode.Check:
 					int numFound=listClaimProcNums.Count;
@@ -2375,7 +2375,7 @@ namespace OpenDentBusiness {
 							+"WHERE claimproc.ProcNum=procedurelog.ProcNum "
 							+"AND procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)
 						+")";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteCapEstimateWithProcComplete.")));
 					if(numberFixed>0 || verbose) {
@@ -2404,7 +2404,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					//This is just estimate info, regardless of the claimproc status, so totally safe.
 					command="UPDATE claimproc SET InsPayEst=0 WHERE NoBillIns=1 AND InsPayEst !=0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated InsPayEst from "+x.InsPayEst+" to 0 from ClaimProcEstNoBillIns.")));
 					if(numberFixed>0 || verbose) {
@@ -2433,7 +2433,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					//The InsPayAmt is already being ignored due to the status of the claimproc.  So changing its value is harmless.
 					command=@"UPDATE claimproc SET InsPayAmt=0 WHERE InsPayAmt > 0 AND ClaimNum=0 AND Status=6";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated InsPayAmt from "+x.InsPayEst+" to 0 from ClaimProcEstWithInsPaidAmt.")));
 					if(numberFixed>0 || verbose) {
@@ -2451,7 +2451,7 @@ namespace OpenDentBusiness {
 			string command="SELECT ClaimProcNum FROM claimproc WHERE PatNum=0 AND InsPayAmt=0 AND WriteOff=0";
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","ClaimProcs with missing patnums found: ")+numFound+"\r\n";
 					}
@@ -2459,9 +2459,9 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listClaimProcNums=Db.GetListLong(command);
+					List<long> listClaimProcNums=Database.GetListLong(command);
 					command="DELETE FROM claimproc WHERE PatNum=0 AND InsPayAmt=0 AND WriteOff=0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcPatNumMissing.")));
 					if(numberFixed>0 || verbose) {
@@ -2477,7 +2477,7 @@ namespace OpenDentBusiness {
 		public static string ClaimProcProvNumMissing(bool verbose,DbmMode modeCur) {
 			string log="";
 			string command="SELECT ClaimProcNum FROM claimproc WHERE ProvNum=0 AND Status="+POut.Int((int)ClaimProcStatus.Estimate);
-			List<long> listClaimProcNums=Db.GetListLong(command);
+			List<long> listClaimProcNums=Database.GetListLong(command);
 			switch(modeCur) {
 				case DbmMode.Check:
 					int numFound=listClaimProcNums.Count;
@@ -2490,7 +2490,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					//If estimate, set to default prov (doesn't affect finances)
 					command="UPDATE claimproc SET ProvNum="+PrefC.GetString(PrefName.PracticeDefaultProv)+" WHERE ProvNum=0 AND Status="+POut.Int((int)ClaimProcStatus.Estimate);
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated ProvNum from 0 to "+PrefC.GetString(PrefName.PracticeDefaultProv)+".")));
 					if(numberFixed>0 || verbose) {
@@ -2517,7 +2517,7 @@ namespace OpenDentBusiness {
 				WHERE claimproc.ClaimNum=claim.ClaimNum
 				AND claim.ClaimType='PreAuth'
 				AND claimproc.Status!=2";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -2560,7 +2560,7 @@ namespace OpenDentBusiness {
 			//no longer want to flag them as being a DBM issue.  They will show on the unreceived claims report and the user can go manually change the
 			//claim status to received if it really is a mistake caused by a user manually changing the claim or claimproc statuses.
 			//+"OR (claim.ClaimStatus!='R' AND claimproc.Status="+POut.Int((int)ClaimProcStatus.Received)+"))";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -2597,7 +2597,7 @@ namespace OpenDentBusiness {
 				+" AND claimproc.ProcDate < "+POut.Date(new DateTime(1880,1,1))//which have invalid dates
 				+" AND claimproc.ClaimNum=claim.ClaimNum"
 				+" AND claim.DateService > "+POut.Date(new DateTime(1880,1,1));//but have valid date of service on the claim
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -2614,7 +2614,7 @@ namespace OpenDentBusiness {
 							+" AND claimproc.ProcDate < "+POut.Date(new DateTime(1880,1,1))//which have invalid dates
 							+" AND claimproc.ClaimNum=claim.ClaimNum"
 							+" AND claim.DateService > "+POut.Date(new DateTime(1880,1,1));//but have valid date of service on the claim
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						table.Select().ToList().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(x["ClaimProcNum"].ToString()),
 							DbmLogFKeyType.ClaimProc,DbmLogActionType.Update,methodName,"Updated ProcDate from "+x["ProcDate"].ToString()
 							+" to "+x["DateService"].ToString()+" from ClaimProcTotalPaymentWithInvalidDate.")));
@@ -2637,7 +2637,7 @@ namespace OpenDentBusiness {
 				AND ClaimNum=0
 				AND InsPayAmt=0 
 				AND WriteOff=0";
-			List<long> listClaimProcNums=Db.GetListLong(command);
+			List<long> listClaimProcNums=Database.GetListLong(command);
 			string log="";
 			if(listClaimProcNums.Count==0 && !verbose) {
 				return log;
@@ -2654,7 +2654,7 @@ namespace OpenDentBusiness {
 					if(listClaimProcNums.Count>0) {
 						command=$"UPDATE claimproc SET Status={POut.Enum(ClaimProcStatus.Estimate)} "+
 							$"WHERE ClaimProcNum IN("+string.Join(",",listClaimProcNums)+")";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listClaimProcNums.ForEach(x=>listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 							DbmLogActionType.Update,methodName,$"Updated status of ClaimProc from '{ClaimProcStatus.NotReceived.GetDescription()}' to " +
 							$"'{ClaimProcStatus.Estimate.GetDescription()}' where no claim was attached.")));
@@ -2681,7 +2681,7 @@ namespace OpenDentBusiness {
 						+patWhere
 						+"AND NOT EXISTS(SELECT * FROM claim WHERE claim.ClaimNum=claimproc.ClaimNum) "
 						+"AND (claimproc.InsPayAmt!=0 OR claimproc.WriteOff!=0)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Claimprocs found with invalid ClaimNum:")+" "+numFound+"\r\n";
 						log+="   "+Lans.g("FormDatabaseMaintenance","Double click to see a break down.")+"\r\n";
@@ -2700,7 +2700,7 @@ namespace OpenDentBusiness {
 						+"AND NOT EXISTS(SELECT * FROM claim WHERE claim.ClaimNum=claimproc.ClaimNum) "
 						+"AND (claimproc.InsPayAmt!=0 OR claimproc.WriteOff!=0) "
 						+"GROUP BY claimproc.ClaimNum";
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					List<ClaimProc> cpList=Crud.ClaimProcCrud.TableToList(table);
 					Claim claim;
 					if(modeCur==DbmMode.Fix) {
@@ -2766,7 +2766,7 @@ namespace OpenDentBusiness {
 					command=@"UPDATE claimproc SET ClaimPaymentNum=0 WHERE claimpaymentnum !=0 "
 						+patWhere
 						+"AND NOT EXISTS(SELECT * FROM claimpayment WHERE claimpayment.ClaimPaymentNum=claimproc.ClaimPaymentNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated ClaimPaymentNum from "+x.ClaimPaymentNum+" to 0.")));
 					if(numberFixed>0 || verbose) {
@@ -2796,7 +2796,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					//safe, if the user wants to attach the claimprocs to a payplan for tracking the ins payments they would just need to attach to a valid payplan
 					command=@"UPDATE claimproc SET PayPlanNum=0 WHERE PayPlanNum>0 AND PayPlanNum NOT IN(SELECT PayPlanNum FROM payplan)";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						 DbmLogActionType.Update,methodName,"Updated PayPlanNum from "+x.PayPlanNum+" to 0.")));
 					if(numFixed>0 || verbose) {
@@ -2825,7 +2825,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="UPDATE claimproc SET ProvNum="+POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv))+
 							" WHERE ProvNum > 0 AND ProvNum NOT IN (SELECT ProvNum FROM provider)";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,
 						"Updated ProvNum from "+x.ProvNum+" to "+POut.String(PrefC.GetLong(PrefName.PracticeDefaultProv).ToString()))));
@@ -2845,7 +2845,7 @@ namespace OpenDentBusiness {
 				+" AND claimproc.InsSubNum NOT IN (SELECT inssub.InsSubNum FROM inssub)";
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Claimprocs with invalid InsSubNum found")+": "+numFound.ToString()+"\r\n";
 					}
@@ -2853,10 +2853,10 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listClaimProcNums=Db.GetListLong(command);
+					List<long> listClaimProcNums=Database.GetListLong(command);
 					command="DELETE FROM claimproc WHERE claimproc.InsSubNum > 0 AND claimproc.Status="+POut.Int((int)ClaimProcStatus.Estimate)
 						+" AND claimproc.InsSubNum NOT IN (SELECT inssub.InsSubNum FROM inssub)";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcWithInvalidSubNum.")));
 					if(numFixed>0 || verbose) {
@@ -2876,7 +2876,7 @@ namespace OpenDentBusiness {
 					LEFT JOIN procedurelog ON claimproc.ProcNum=procedurelog.ProcNum 
 					WHERE claimproc.WriteOff<0
 					AND claimproc.IsTransfer=0";//The income transfer tool creates claimprocs with negative writeoffs. These are valid.
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -2956,7 +2956,7 @@ namespace OpenDentBusiness {
 				+"FROM clearinghouse "
 				+"LEFT JOIN clinic on clinic.ClinicNum=clearinghouse.ClinicNum "
 				+"WHERE EFormat>"+formatEnumCount;
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			int numFound=table.Rows.Count;
 			if(numFound==0 && !verbose) {
 				return "";
@@ -2993,7 +2993,7 @@ namespace OpenDentBusiness {
 				+"FROM clearinghouse "
 				+"LEFT JOIN clinic on clinic.ClinicNum=clearinghouse.ClinicNum "
 				+"WHERE CommBridge>"+commBridgeEnumCount;
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			int numFound=table.Rows.Count;
 			if(numFound==0 && !verbose) {
 				return "";
@@ -3039,7 +3039,7 @@ namespace OpenDentBusiness {
 				FROM patient
 				WHERE patient.ClinicNum > 0 
 				AND patient.ClinicNum NOT IN (SELECT ClinicNum FROM clinic) ";
-			List<long> listInvalidClinicNums = Db.GetListLong(command);
+			List<long> listInvalidClinicNums = Database.GetListLong(command);
 			string log = "";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3053,7 +3053,7 @@ namespace OpenDentBusiness {
 						string methodName=MethodBase.GetCurrentMethod().Name;
 						foreach(long clinicNumInvalid in listInvalidClinicNums) {
 							command ="SELECT MAX(ItemOrder) FROM clinic";
-							int itemOrd = Db.GetInt(command) + 1;
+							int itemOrd = Database.ExecuteInt(command) + 1;
 							Clinic missingClinic = new Clinic() {
 								ClinicNum = clinicNumInvalid,
 								Description = "INVALID CLINIC #"+clinicNumInvalid,
@@ -3084,18 +3084,18 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM clockevent WHERE TimeDisplayed1 > "+DbHelper.Now()+"+INTERVAL 15 MINUTE";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					command=@"SELECT COUNT(*) FROM clockevent WHERE TimeDisplayed2 > "+DbHelper.Now()+"+INTERVAL 15 MINUTE";
-					numFound+=PIn.Int(Db.GetCount(command));
+					numFound+=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Time card entries invalid")+": "+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command=@"UPDATE clockevent SET TimeDisplayed1="+DbHelper.Now()+" WHERE TimeDisplayed1 > "+DbHelper.Now()+"+INTERVAL 15 MINUTE";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					command=@"UPDATE clockevent SET TimeDisplayed2="+DbHelper.Now()+" WHERE TimeDisplayed2 > "+DbHelper.Now()+"+INTERVAL 15 MINUTE";
-					numberFixed+=Db.NonQ(command);
+					numberFixed+=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Future timecard entry times fixed")+": "+numberFixed.ToString()+"\r\n";
 					}
@@ -3111,7 +3111,7 @@ namespace OpenDentBusiness {
 				+"FROM computerpref "
 				+"GROUP BY ComputerName "
 				+"HAVING COUNT(*)>1 ";
-			DataTable tableDupComputerPrefs=Db.GetTable(command);
+			DataTable tableDupComputerPrefs=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3126,7 +3126,7 @@ namespace OpenDentBusiness {
 							+string.Join(",",tableDupComputerPrefs.Select().Select(x => POut.Long(PIn.Long(x["ComputerPrefNum"].ToString()))))+") "
 							+"AND ComputerName IN ("
 							+string.Join(",",tableDupComputerPrefs.Select().Select(x => $"'{POut.String(PIn.String(x["ComputerName"].ToString()))}'"))+")";
-						numberFixed=Db.NonQ(command);
+						numberFixed=Database.ExecuteNonQuery(command);
 					}
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","ComputerPref duplicate computer name entries deleted:")+" "+numberFixed.ToString()+"\r\n";
@@ -3153,7 +3153,7 @@ namespace OpenDentBusiness {
 				GROUP BY deposit.DepositNum
 				HAVING ROUND(_sum,2) != ROUND(deposit.Amount,2)
 				ORDER BY deposit.DateDeposit,deposit.DepositNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -3188,7 +3188,7 @@ namespace OpenDentBusiness {
 		public static string DiseaseWithInvalidDiseaseDef(bool verbose,DbmMode modeCur) {
 			string log="";
 			string command=@"SELECT DiseaseNum,DiseaseDefNum FROM disease WHERE DiseaseDefNum NOT IN(SELECT DiseaseDefNum FROM diseasedef)";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			int numFound=table.Rows.Count;
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3203,7 +3203,7 @@ namespace OpenDentBusiness {
 					if(numFound > 0) {
 						//Check to see if there is already a diseasedef called UNKNOWN PROBLEM.
 						command="SELECT DiseaseDefNum FROM diseasedef WHERE DiseaseName='UNKNOWN PROBLEM'";
-						long diseaseDefNum=PIn.Long(Db.GetScalar(command));
+						long diseaseDefNum=Database.ExecuteLong(command);
 						if(diseaseDefNum==0) {
 							//Create a new DiseaseDef called UNKNOWN PROBLEM.
 							DiseaseDef diseaseDef=new DiseaseDef();
@@ -3214,7 +3214,7 @@ namespace OpenDentBusiness {
 						//Update the disease table.
 						command="UPDATE disease SET DiseaseDefNum="+POut.Long(diseaseDefNum)+" WHERE DiseaseNum IN("
 							+string.Join(",",table.Select().Select(x => PIn.Long(x["DiseaseNum"].ToString())))+")";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						log+=Lans.g("FormDatabaseMaintenance","All invalid references have been attached to the problem called")+" UNKNOWN PROBLEM.\r\n";
 					}
 					break;
@@ -3226,7 +3226,7 @@ namespace OpenDentBusiness {
 		public static string DocumentWithInvalidDate(bool verbose,DbmMode modeCur) {
 			//Gets a list of documents with dates that are invalid (0001-01-01). The list should be blank. If not, then the document's date will be set to 001-01-02 which will allow deletion.
 			string command="SELECT COUNT(*) FROM document WHERE DateCreated="+POut.Date(new DateTime(1,1,1));
-			int numFound=PIn.Int(Db.GetCount(command));
+			int numFound=PIn.Int(Database.ExecuteString(command));
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3237,7 +3237,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					if(numFound>0) {
 						command="UPDATE document SET DateCreated="+POut.Date(new DateTime(1,1,2))+" WHERE DateCreated="+POut.Date(new DateTime(1,1,1));
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Documents with invalid dates fixed")+": "+numFound.ToString()+"\r\n";
@@ -3250,7 +3250,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string DocumentWithNoCategory(bool verbose,DbmMode modeCur) {
 			string command="SELECT DocNum FROM document WHERE DocCategory=0";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3263,7 +3263,7 @@ namespace OpenDentBusiness {
 					for(int i = 0;i<table.Rows.Count;i++) {
 						command="UPDATE document SET DocCategory="+POut.Long(listDefs[0].DefNum)
 							+" WHERE DocNum="+table.Rows[i][0].ToString();
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					int numberFixed=table.Rows.Count;
 					if(numberFixed>0 || verbose) {
@@ -3283,7 +3283,7 @@ namespace OpenDentBusiness {
 			string command="SELECT MIN(EbillNum) EbillNum,COUNT(*) Count "
 				+"FROM ebill "
 				+"GROUP BY ClinicNum ";
-			DataTable tableEbills=Db.GetTable(command);
+			DataTable tableEbills=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3298,7 +3298,7 @@ namespace OpenDentBusiness {
 					if(tableEbills.Rows.Count>0) {
 						command="DELETE FROM ebill WHERE EbillNum NOT IN ("
 							+string.Join(",",tableEbills.Select().Select(x => PIn.Long(x["EbillNum"].ToString())))+")";
-						numberFixed=Db.NonQ(command);
+						numberFixed=Database.ExecuteNonQuery(command);
 					}
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Ebill duplicate clinic entries deleted: ")
@@ -3314,7 +3314,7 @@ namespace OpenDentBusiness {
 		public static string EbillMissingDefaultEntry(bool verbose,DbmMode modeCur) {
 			string log="";
 			string command="SELECT COUNT(*) FROM ebill WHERE ClinicNum=0";
-			int numFound=PIn.Int(Db.GetCount(command));
+			int numFound=PIn.Int(Database.ExecuteString(command));
 			switch(modeCur) {
 				case DbmMode.Check:
 					if(numFound==0) {
@@ -3350,7 +3350,7 @@ namespace OpenDentBusiness {
 					LEFT JOIN sheetdef 
 						ON sheetdef.SheetDefNum=eclipboardsheetdef.SheetDefNum 
 					WHERE sheetdef.SheetDefNum IS NULL";
-			List<long> listSheetNums=Db.GetListLong(command);
+			List<long> listSheetNums=Database.GetListLong(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3364,7 +3364,7 @@ namespace OpenDentBusiness {
 							DELETE 
 							FROM eclipboardsheetdef
 							WHERE EClipboardSheetDefNum IN({string.Join(",",listSheetNums.Select(POut.Long))})";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(listSheetNums.Count>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Invalid eClipbaord sheets removed")+": "+listSheetNums.Count+"\r\n";
@@ -3378,7 +3378,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string EduResourceInvalidDiseaseDefNum(bool verbose,DbmMode modeCur) {
 			string command="SELECT EduResourceNum FROM eduresource WHERE DiseaseDefNum != 0 AND DiseaseDefNum NOT IN (SELECT DiseaseDefNum FROM diseasedef)";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3388,10 +3388,10 @@ namespace OpenDentBusiness {
 					break;
 				case DbmMode.Fix:
 					command="SELECT DiseaseDefNum FROM diseasedef WHERE ItemOrder=(SELECT MIN(ItemOrder) FROM diseasedef WHERE IsHidden=0)";
-					long defNum=PIn.Long(Db.GetScalar(command));
+					long defNum=Database.ExecuteLong(command);
 					for(int i = 0;i<table.Rows.Count;i++) {
 						command="UPDATE eduresource SET DiseaseDefNum='"+defNum+"' WHERE EduResourceNum='"+table.Rows[i][0].ToString()+"'";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					int numberFixed=table.Rows.Count;
 					if(numberFixed>0 || verbose) {
@@ -3409,14 +3409,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM emailattach WHERE emailattach.EmailTemplateNum!=0 AND emailattach.EmailMessageNum!=0";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Email attachments attached to both an email and a template found")+": "+numFound.ToString()+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="UPDATE emailattach SET EmailTemplateNum=0 WHERE emailattach.EmailTemplateNum!=0 AND emailattach.EmailMessageNum!=0";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Email attachments attached to both an email and a template fixed")+": "+numFixed.ToString()+"\r\n";
 					}
@@ -3428,7 +3428,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string Etrans835AttachWithInvalidClaimNum(bool verbose,DbmMode modeCur) {
 			string log="";
-			List<long> listIssueEtrans835Attaches=Db.GetListLong(
+			List<long> listIssueEtrans835Attaches=Database.GetListLong(
 				@"SELECT etrans835attach.Etrans835AttachNum
 				FROM etrans835attach
 				LEFT JOIN claim ON claim.ClaimNum=etrans835attach.ClaimNum
@@ -3458,7 +3458,7 @@ namespace OpenDentBusiness {
 		public static string FeeDeleteDuplicates(bool verbose,DbmMode modeCur) {
 			string command="SELECT FeeNum,FeeSched,CodeNum,Amount,ClinicNum,ProvNum FROM fee "
 				+"GROUP BY FeeSched,CodeNum,ClinicNum,ProvNum HAVING COUNT(CodeNum)>1";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			int count=table.Rows.Count;
 			string log="";
 			switch(modeCur) {
@@ -3492,7 +3492,7 @@ namespace OpenDentBusiness {
 							+" AND ClinicNum="+table.Rows[i]["ClinicNum"].ToString()
 							+" AND ProvNum="+table.Rows[i]["ProvNum"].ToString()
 							+" AND FeeNum!="+table.Rows[i]["FeeNum"].ToString();//This is the random fee we will keep.
-						List<long> listFeeNums=Db.GetListLong(command);
+						List<long> listFeeNums=Database.GetListLong(command);
 						Fees.DeleteMany(listFeeNums);
 						listFeeNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Fee,
 							DbmLogActionType.Delete,methodName,"Deleted fee from FeeDeleteDuplicates.")));
@@ -3512,7 +3512,7 @@ namespace OpenDentBusiness {
 			string command=@"SELECT FeeNum,FeeSched,fee.CodeNum AS 'CodeNum' FROM fee 
 									LEFT JOIN procedurecode ON fee.CodeNum=procedurecode.CodeNum 
 									WHERE procedurecode.CodeNum IS NULL";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			int count=table.Rows.Count;
 			string log="";
 			switch(modeCur) {
@@ -3527,7 +3527,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					for(int i=0;i<count;i++) {
 						command="SELECT FeeNum FROM fee WHERE FeeNum="+table.Rows[i]["FeeNum"].ToString();
-						List<long> listFeeNums=Db.GetListLong(command);
+						List<long> listFeeNums=Database.GetListLong(command);
 						Fees.DeleteMany(listFeeNums);
 						listFeeNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Fee,
 							DbmLogActionType.Delete,methodName,"Deleted fee from FeeDeleteForInvalidProc.")));
@@ -3561,7 +3561,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="UPDATE procedurelog SET AptNum=0 "
 						+"WHERE AptNum!=0 AND CodeNum IN(SELECT CodeNum FROM procedurecode WHERE procedurecode.ProcCode='~GRP~')";
-					long numfixed=Db.NonQ(command);
+					long numfixed=Database.ExecuteNonQuery(command);
 					listProcedures.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ProcNum,DbmLogFKeyType.Procedure,
 						DbmLogActionType.Update,methodName,"Updated AptNum from "+x.AptNum+" to 0 from GroupNoteWithInvalidAptNum.")));
 					if(numfixed>0 || verbose) {
@@ -3594,7 +3594,7 @@ namespace OpenDentBusiness {
 					command="UPDATE procedurelog SET ProcStatus="+POut.Long((int)ProcStat.EC)+" "
 						+"WHERE ProcStatus NOT IN("+POut.Int((int)ProcStat.D)+","+POut.Int((int)ProcStat.EC)+") "
 						+"AND CodeNum IN(SELECT CodeNum FROM procedurecode WHERE procedurecode.ProcCode='~GRP~')";
-					long numfixed=Db.NonQ(command);
+					long numfixed=Database.ExecuteNonQuery(command);
 					listProcedures.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ProcNum,DbmLogFKeyType.Procedure,
 						DbmLogActionType.Update,methodName,"Updated ProcStatus from "+x.ProcStatus+" to "+POut.String(ProcStat.EC.ToString())
 						+" from GroupNoteWithInvalidProcStatus.")));
@@ -3616,7 +3616,7 @@ namespace OpenDentBusiness {
 					command="SELECT COUNT(DISTINCT(FeeSchedNum)) FROM patient "
 						+"INNER JOIN feesched ON patient.FeeSched=feesched.FeeSchedNum "
 						+"WHERE feesched.IsHidden=1";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Hidden Fee Schedules associated to patients: ")+numFound.ToString()+"\r\n";
 					}
@@ -3625,10 +3625,10 @@ namespace OpenDentBusiness {
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="SELECT FeeSchedNum FROM feesched WHERE IsHidden=1 AND FeeSchedNum IN (SELECT FeeSched FROM patient)";
-					List<long> listFeeSchedNums=Db.GetListLong(command);
+					List<long> listFeeSchedNums=Database.GetListLong(command);
 					command="UPDATE feesched SET IsHidden=0 "
 						+"WHERE IsHidden=1 AND FeeSchedNum IN (SELECT FeeSched FROM patient)";
-					long numfixed=Db.NonQ(command);
+					long numfixed=Database.ExecuteNonQuery(command);
 					listFeeSchedNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.FeeSched,
 						DbmLogActionType.Update,methodName,"Updated IsHidden from 1 to 0 from FeeScheduleHiddenWithPatient.")));
 					if(numfixed>0 || verbose) {
@@ -3647,7 +3647,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command=$"SELECT COUNT(GroupPermNum) FROM grouppermission WHERE NewerDays<0 OR NewerDays>{GroupPermissions.NewerDaysMax}";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Group permissions with invalid NewerDays found: ")+numFound.ToString()+"\r\n";
 					}
@@ -3657,7 +3657,7 @@ namespace OpenDentBusiness {
 					command=$@"UPDATE grouppermission 
 						SET NewerDays=(CASE WHEN NewerDays<0 THEN 0 ELSE {GroupPermissions.NewerDaysMax} END) 
 						WHERE NewerDays<0 OR NewerDays>{GroupPermissions.NewerDaysMax}";
-					long numfixed=Db.NonQ(command);
+					long numfixed=Database.ExecuteNonQuery(command);
 					if(numfixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Group permissions with invalid NewerDays fixed: ")+numfixed.ToString()+"\r\n";
 					}
@@ -3670,7 +3670,7 @@ namespace OpenDentBusiness {
 		#region Icd9
 		[DbmMethodAttr]
 		public static string Icd9InvalidCodes(bool verbose,DbmMode modeCur) {
-			List<long> listIcd9Nums=Db.GetListLong("SELECT ICD9Num FROM icd9 WHERE ICD9Code=''");
+			List<long> listIcd9Nums=Database.GetListLong("SELECT ICD9Num FROM icd9 WHERE ICD9Code=''");
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3680,7 +3680,7 @@ namespace OpenDentBusiness {
 				break;
 				case DbmMode.Fix:
 					if(listIcd9Nums.Count>0) {
-						Db.NonQ("DELETE FROM icd9 WHERE ICD9Num IN("+String.Join(",",listIcd9Nums)+")");
+						Database.ExecuteNonQuery("DELETE FROM icd9 WHERE ICD9Num IN("+String.Join(",",listIcd9Nums)+")");
 					}
 					int numberFixed=listIcd9Nums.Count;
 					if(numberFixed>0 || verbose) {
@@ -3707,7 +3707,7 @@ namespace OpenDentBusiness {
 							@"WHERE payplan.PlanNum!=0
 								AND claimproc.ClaimProcNum IS NULL
 								GROUP BY payplan.PayPlanNum";
-			List<long> listPayPlanNums=Db.GetListLong(command);
+			List<long> listPayPlanNums=Database.GetListLong(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -3721,7 +3721,7 @@ namespace OpenDentBusiness {
 					if(listPayPlanNums.Count>0) {
 						//Change the insurance payment plan to a patient payment plan so that the payments will be visible within the payment plan
 						command="UPDATE payplan SET PlanNum=0 WHERE PayPlanNum IN("+String.Join(",",listPayPlanNums)+")";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listPayPlanNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PayPlan,
 							DbmLogActionType.Update,methodName,"Updated PlanNum to 0 from InsPayPlanWithPatientPayments.")));
 					}
@@ -3743,14 +3743,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT PlanNum FROM insplan WHERE CarrierNum NOT IN (SELECT CarrierNum FROM carrier)";
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					if(table.Rows.Count>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Ins plans with carrier missing found: ")+table.Rows.Count+"\r\n";
 					}
 					break;
 				case DbmMode.Breakdown:
 					command="SELECT PlanNum, CarrierNum FROM insplan WHERE CarrierNum NOT IN (SELECT CarrierNum FROM carrier)";
-					var dictCarrierPlans=Db.GetTable(command).Select().Select(x=> new {
+					var dictCarrierPlans=Database.ExecuteDataTable(command).Select().Select(x=> new {
 						CarrierNum=PIn.Long(x["CarrierNum"].ToString()),
 						PlanNum=PIn.Long(x["PlanNum"].ToString())
 					}).GroupBy(x=>x.CarrierNum).ToDictionary(x=>x.Key,x=>x.ToList());
@@ -3766,7 +3766,7 @@ namespace OpenDentBusiness {
 					break;
 				case DbmMode.Fix:
 					command="SELECT PlanNum,CarrierNum FROM insplan WHERE CarrierNum NOT IN (SELECT CarrierNum FROM carrier)";
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					if(table.Rows.Count>0) {
@@ -3790,7 +3790,7 @@ namespace OpenDentBusiness {
 						if(carrierNum0!=0) {//If we had any plans with CarrierNum of 0
 							command="UPDATE insplan SET CarrierNum="+POut.Long(carrierNum0)//set this new carrier for the insplans
 								+" WHERE CarrierNum<=0";
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							table.Select().Where(x => PIn.Long(x["CarrierNum"].ToString())<=0)
 								.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(x["PlanNum"].ToString()),
 									DbmLogFKeyType.InsPlan,DbmLogActionType.Update,methodName,"Updated CarrierNum from "+x["CarrierNum"].ToString()+" to "+carrierNum0
@@ -3847,7 +3847,7 @@ namespace OpenDentBusiness {
 						+"WHERE appointment.InsPlan1 != 0 "
 						+(isPatSpecific ? "AND appointment.PatNum="+POut.Long(patNum)+" " : "")
 						+"AND NOT EXISTS(SELECT * FROM insplan WHERE insplan.PlanNum=appointment.InsPlan1)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Invalid appointment InsPlan1 values: ")+numFound+"\r\n";
 					}
@@ -3855,7 +3855,7 @@ namespace OpenDentBusiness {
 						+"WHERE appointment.InsPlan2 != 0 "
 						+(isPatSpecific ? "AND appointment.PatNum="+POut.Long(patNum)+" " : "")
 						+"AND NOT EXISTS(SELECT * FROM insplan WHERE insplan.PlanNum=appointment.InsPlan2)";
-					numFound=PIn.Int(Db.GetCount(command));
+					numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Invalid appointment InsPlan2 values: ")+numFound+"\r\n";
 					}
@@ -3870,14 +3870,14 @@ namespace OpenDentBusiness {
 						}
 					}
 					command+="AND NOT EXISTS(SELECT * FROM insplan WHERE insplan.PlanNum=benefit.PlanNum)";
-					numFound=PIn.Int(Db.GetCount(command));
+					numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Invalid benefit PlanNums: ")+numFound+"\r\n";
 					}
 					command="SELECT COUNT(*) FROM inssub "
 						+"WHERE "+(isPatSpecific ? "InsSubNum IN("+string.Join(",",listInsSubNums)+") AND " : "")
 						+"NOT EXISTS(SELECT * FROM insplan WHERE insplan.PlanNum=inssub.PlanNum)";
-					numFound=PIn.Int(Db.GetCount(command));
+					numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Invalid inssub PlanNums: ")+numFound+"\r\n";
 					}
@@ -3889,7 +3889,7 @@ namespace OpenDentBusiness {
 						+"WHERE appointment.InsPlan1 != 0 "
 						+(isPatSpecific ? "AND appointment.PatNum="+POut.Long(patNum)+" " : "")
 						+"AND NOT EXISTS(SELECT * FROM insplan WHERE insplan.PlanNum=appointment.InsPlan1)";
-					var dictBadAppts1=Db.GetTable(command).Select().Select(x=>new {
+					var dictBadAppts1=Database.ExecuteDataTable(command).Select().Select(x=>new {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						AptNum=PIn.Long(x["AptNum"].ToString()),
 						InsPlan1=PIn.Long(x["InsPlan1"].ToString())
@@ -3899,7 +3899,7 @@ namespace OpenDentBusiness {
 						+"WHERE appointment.InsPlan2 != 0 "
 						+(isPatSpecific ? "AND appointment.PatNum="+POut.Long(patNum)+" " : "")
 						+"AND NOT EXISTS(SELECT * FROM insplan WHERE insplan.PlanNum=appointment.InsPlan2)";
-					var dictBadAppts2=Db.GetTable(command).Select().Select(x=>new {
+					var dictBadAppts2=Database.ExecuteDataTable(command).Select().Select(x=>new {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						AptNum=PIn.Long(x["AptNum"].ToString()),
 						InsPlan2=PIn.Long(x["InsPlan2"].ToString())
@@ -3916,7 +3916,7 @@ namespace OpenDentBusiness {
 						}
 					}
 					command+="AND NOT EXISTS(SELECT * FROM insplan WHERE insplan.PlanNum=benefit.PlanNum)";
-					var dictBadBenefitsByPlan=Db.GetTable(command).Select().Select(x=>new {
+					var dictBadBenefitsByPlan=Database.ExecuteDataTable(command).Select().Select(x=>new {
 						//PatNum=PIn.Long(x["PatNum"].ToString()), //PatNum not available.
 						PlanNum=PIn.Long(x["PlanNum"].ToString()),
 						BenefitNum=PIn.Long(x["BenefitNum"].ToString())
@@ -3925,7 +3925,7 @@ namespace OpenDentBusiness {
 					command="SELECT Subscriber, InsSubNum, PlanNum FROM inssub "
 						+"WHERE "+(isPatSpecific ? "InsSubNum IN("+string.Join(",",listInsSubNums)+") AND " : "")
 						+"NOT EXISTS(SELECT * FROM insplan WHERE insplan.PlanNum=inssub.PlanNum)";
-					var dictBadInsSubs=Db.GetTable(command).Select().Select(x=>new {
+					var dictBadInsSubs=Database.ExecuteDataTable(command).Select().Select(x=>new {
 						Subscriber=PIn.Long(x["Subscriber"].ToString()),
 						InsSubNum=PIn.Long(x["InsSubNum"].ToString()),
 						PlanNum=PIn.Long(x["PlanNum"].ToString())
@@ -3981,7 +3981,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM appointment "+where;
 					List<Appointment> listAppointments=Crud.AppointmentCrud.SelectMany(command);
 					command="UPDATE appointment SET InsPlan1=0 "+where;
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					listAppointments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.AptNum,DbmLogFKeyType.Appointment,
 						DbmLogActionType.Update,methodName,"Updated InsPlan1 from "+x.InsPlan1+" to 0 from InsPlanInvalidNum.")));
 					if(numFixed>0 || verbose) {
@@ -3994,7 +3994,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM appointment "+where;
 					listAppointments=Crud.AppointmentCrud.SelectMany(command);
 					command="UPDATE appointment SET InsPlan2=0 "+where;
-					numFixed=Db.NonQ(command);
+					numFixed=Database.ExecuteNonQuery(command);
 					listAppointments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.AptNum,DbmLogFKeyType.Appointment,
 						DbmLogActionType.Update,methodName,"Updated InsPlan2 from "+x.InsPlan2+" to 0 from InsPlanInvalidNum.")));
 					if(numFixed>0 || verbose) {
@@ -4014,7 +4014,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM benefit "+where;
 					List<Benefit> listBenefits=Crud.BenefitCrud.SelectMany(command);
 					command="DELETE FROM benefit "+where;
-					numFixed=Db.NonQ(command);
+					numFixed=Database.ExecuteNonQuery(command);
 					listBenefits.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.BenefitNum,DbmLogFKeyType.Benefit,
 						DbmLogActionType.Delete,methodName,"Deleted benefit from InsPlanInvalidNum.")));
 					if(numFixed>0 || verbose) {
@@ -4026,26 +4026,26 @@ namespace OpenDentBusiness {
 					List<SecurityLog> listSecurityLogs= new List<SecurityLog>();
 					List<InsSub> listInsSubs=new List<InsSub>();
 					command="SELECT InsSubNum FROM inssub WHERE PlanNum=0 "+(isPatSpecific ? "AND InsSubNum IN("+string.Join(",",listInsSubNums)+")" : "");
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					for(int i = 0;i<table.Rows.Count;i++) {
 						long insSubNum=PIn.Long(table.Rows[i]["InsSubNum"].ToString());
 						command="SELECT COUNT(*) FROM claim WHERE InsSubNum="+POut.Long(insSubNum);
-						int countUsed=PIn.Int(Db.GetCount(command));
+						int countUsed=PIn.Int(Database.ExecuteString(command));
 						command="SELECT COUNT(*) FROM claimproc WHERE InsSubNum="+POut.Long(insSubNum)+" "
 							+"AND (ClaimNum<>0 OR (Status<>6 AND Status<>3))";//attached to a claim or (not an estimate or adjustment)
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						command="SELECT COUNT(*) FROM etrans WHERE InsSubNum="+POut.Long(insSubNum);
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						//command="SELECT COUNT(*) FROM patplan WHERE InsSubNum="+POut.Long(insSubNum);
 						//countUsed+=PIn.Int(Db.GetCount(command));
 						command="SELECT COUNT(*) FROM payplan WHERE InsSubNum="+POut.Long(insSubNum);
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						if(countUsed==0) {
 							where="WHERE InsSubNum="+POut.Long(insSubNum)+" AND ClaimNum=0 AND (Status=6 OR Status=3)";
 							command="SELECT * FROM claimproc "+where;
 							List<ClaimProc> listClaimProc=Crud.ClaimProcCrud.SelectMany(command);
 							command="DELETE FROM claimproc "+where;//ok to delete because no claim and just an estimate or adjustment
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							listClaimProc.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 								DbmLogActionType.Delete,methodName,"Deleted claimproc from InsPlanInvalidNum.")));
 							List<Permissions> listPerms=GroupPermissions.GetPermsFromCrudAuditPerm(CrudTableAttribute.GetCrudAuditPermForClass(typeof(InsSub)));
@@ -4056,13 +4056,13 @@ namespace OpenDentBusiness {
 							command="SELECT * FROM inssub WHERE InsSubNum="+POut.Long(insSubNum);
 							listInsSubs=Crud.InsSubCrud.SelectMany(command);
 							command="DELETE FROM inssub WHERE InsSubNum="+POut.Long(insSubNum);
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							listInsSubs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.InsSubNum,DbmLogFKeyType.InsSub,
 								DbmLogActionType.Delete,methodName,"Deleted inssub from InsPlanInvalidNum.")));
 							command="SELECT * FROM patplan WHERE InsSubNum="+POut.Long(insSubNum);
 							List<PatPlan> listPatPlans=Crud.PatPlanCrud.SelectMany(command);
 							command="DELETE FROM patplan WHERE InsSubNum="+POut.Long(insSubNum);//It's very safe to "drop coverage" for a patient.
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							listPatPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PatPlanNum,DbmLogFKeyType.PatPlan,
 								DbmLogActionType.Delete,methodName,"Deleted patplan from InsPlanInvalidNum.")));
 							numFixed++;
@@ -4073,27 +4073,27 @@ namespace OpenDentBusiness {
 					command="SELECT InsSubNum,PlanNum FROM inssub "
 						+"WHERE "+(isPatSpecific ? "InsSubNum IN("+string.Join(",",listInsSubNums)+") AND " : "")
 						+"NOT EXISTS(SELECT * FROM insplan WHERE insplan.PlanNum=inssub.PlanNum)";
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					for(int i = 0;i<table.Rows.Count;i++) {
 						long planNum=PIn.Long(table.Rows[i]["PlanNum"].ToString());
 						long insSubNum=PIn.Long(table.Rows[i]["InsSubNum"].ToString());
 						command="SELECT COUNT(*) FROM claim WHERE InsSubNum="+POut.Long(insSubNum);
-						int countUsed=PIn.Int(Db.GetCount(command));
+						int countUsed=PIn.Int(Database.ExecuteString(command));
 						command="SELECT COUNT(*) FROM claimproc WHERE InsSubNum="+POut.Long(insSubNum)+" AND Status NOT IN (6,3)";//Estimate,Adjustment
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						command="SELECT COUNT(*) FROM etrans WHERE InsSubNum="+POut.Long(insSubNum);
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						command="SELECT COUNT(*) FROM patplan WHERE InsSubNum="+POut.Long(insSubNum);
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						command="SELECT COUNT(*) FROM payplan WHERE InsSubNum="+POut.Long(insSubNum);
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						//planNum
 						command="SELECT COUNT(*) FROM benefit WHERE PlanNum="+POut.Long(planNum);
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						command="SELECT COUNT(*) FROM claim WHERE PlanNum="+POut.Long(planNum);
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						command="SELECT COUNT(*) FROM claimproc WHERE PlanNum="+POut.Long(planNum)+" AND Status NOT IN (6,3)";//Estimate,Adjustment
-						countUsed+=PIn.Int(Db.GetCount(command));
+						countUsed+=PIn.Int(Database.ExecuteString(command));
 						if(countUsed==0) {//There are no other pointers to this invalid plannum or this inssub, delete this inssub
 							List<Permissions> listPerms=GroupPermissions.GetPermsFromCrudAuditPerm(CrudTableAttribute.GetCrudAuditPermForClass(typeof(InsSub)));
 							listSecurityLogs=SecurityLogs.GetFromFKeysAndType(new List<long> { insSubNum },listPerms);
@@ -4103,11 +4103,11 @@ namespace OpenDentBusiness {
 							command="SELECT * FROM inssub WHERE InsSubNum="+POut.Long(insSubNum);
 							listInsSubs=Crud.InsSubCrud.SelectMany(command);
 							command="DELETE FROM inssub WHERE InsSubNum="+POut.Long(insSubNum);
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							command="DELETE FROM claimproc WHERE PlanNum="+POut.Long(planNum)+" AND Status IN (6,3)";//Estimate,Adjustment
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							command="DELETE FROM claimproc WHERE InsSubNum="+POut.Long(insSubNum)+" AND Status IN (6,3)";//Estimate,Adjustment
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							listInsSubs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.InsSubNum,DbmLogFKeyType.InsSub,
 								DbmLogActionType.Delete,methodName,"Deleted inssub from InsPlanInvalidNum.")));
 							numFixed++;
@@ -4125,7 +4125,7 @@ namespace OpenDentBusiness {
 							command="SELECT * FROM inssub WHERE InsSubNum="+POut.Long(insSubNum);
 							listInsSubs=Crud.InsSubCrud.SelectMany(command);
 							command="UPDATE inssub SET PlanNum="+POut.Long(insPlanNum)+" WHERE InsSubNum="+POut.Long(insSubNum);
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							listInsSubs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.InsSubNum,DbmLogFKeyType.InsSub,
 								DbmLogActionType.Update,methodName,"Updated PlanNum from "+x.PlanNum+" to "+insPlanNum+" InsPlanInvalidNum.")));
 							numFixed++;
@@ -4149,7 +4149,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM insplan WHERE ClaimFormNum=0";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Insplan claimforms missing: ")+numFound+"\r\n";
 					}
@@ -4161,7 +4161,7 @@ namespace OpenDentBusiness {
 					List<InsPlan> listInsPlans=Crud.InsPlanCrud.SelectMany(command);
 					command="UPDATE insplan SET ClaimFormNum="+POut.Long(PrefC.GetLong(PrefName.DefaultClaimForm))
 						+" WHERE ClaimFormNum=0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listInsPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PlanNum,DbmLogFKeyType.InsPlan,
 						DbmLogActionType.Update,methodName,"Updated ClaimFormNum from 0 to "+PrefC.GetLong(PrefName.DefaultClaimForm))));
 					if(numberFixed>0 || verbose) {
@@ -4180,7 +4180,7 @@ namespace OpenDentBusiness {
 				WHERE (patient.PatNum IS NULL OR patient.PatStatus="+POut.Int((int)PatientStatus.Deleted)+@")
 				AND inssub.Subscriber != 0 
 				GROUP BY inssub.Subscriber";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -4251,7 +4251,7 @@ namespace OpenDentBusiness {
 					command="SELECT COUNT(*) FROM claim "
 						+"WHERE PlanNum NOT IN (SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum) "
 						+PatientAndClauseHelper(patNumSpecific,"claim");
-					numFound=PIn.Int(Db.GetCount(command));
+					numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched claim InsSubNum/PlanNum values")+": "+numFound+"\r\n";
 						if(numFound>0) {
@@ -4263,7 +4263,7 @@ namespace OpenDentBusiness {
 						+"WHERE PlanNum2 != 0 "
 						+"AND PlanNum2 NOT IN (SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum2)"
 						+PatientAndClauseHelper(patNumSpecific,"claim");
-					numFound=PIn.Int(Db.GetCount(command));
+					numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched claim InsSubNum2/PlanNum2 values")+": "+numFound+"\r\n";
 						if(numFound>0) {
@@ -4274,7 +4274,7 @@ namespace OpenDentBusiness {
 					command="SELECT COUNT(*) FROM claimproc "
 						+"WHERE PlanNum NOT IN (SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claimproc.InsSubNum)"
 						+PatientAndClauseHelper(patNumSpecific,"claimproc");
-					numFound=PIn.Int(Db.GetCount(command));
+					numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched claimproc InsSubNum/PlanNum values")+": "+numFound+"\r\n";
 						if(numFound>0) {
@@ -4285,7 +4285,7 @@ namespace OpenDentBusiness {
 					command="SELECT COUNT(*) FROM etrans "
 						+"WHERE PlanNum!=0 AND PlanNum NOT IN (SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=etrans.InsSubNum)"
 						+PatientAndClauseHelper(patNumSpecific,"etrans");
-					numFound=PIn.Int(Db.GetCount(command));
+					numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched etrans InsSubNum/PlanNum values")+": "+numFound+"\r\n";
 						if(numFound>0) {
@@ -4296,7 +4296,7 @@ namespace OpenDentBusiness {
 					command="SELECT COUNT(*) FROM payplan "
 						+"WHERE EXISTS (SELECT PlanNum FROM inssub WHERE inssub.InsSubNum=payplan.InsSubNum AND inssub.PlanNum!=payplan.PlanNum)"
 						+PatientAndClauseHelper(patNumSpecific,"payplan");
-					numFound=PIn.Int(Db.GetCount(command));
+					numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched payplan InsSubNum/PlanNum values")+": "+numFound+"\r\n";
 						if(numFound>0) {
@@ -4315,7 +4315,7 @@ namespace OpenDentBusiness {
 					command="SELECT claim.PatNum,claim.PlanNum,claim.ClaimNum,claim.DateService FROM claim "
 						+"WHERE PlanNum NOT IN (SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum) "
 						+PatientAndClauseHelper(patNumSpecific,"claim");
-					var dictBadClaims1=Db.GetTable(command).Select().Select(x=>new {
+					var dictBadClaims1=Database.ExecuteDataTable(command).Select().Select(x=>new {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						PlanNum=PIn.Long(x["PlanNum"].ToString()),
 						ClaimNum=PIn.Long(x["ClaimNum"].ToString()),
@@ -4327,7 +4327,7 @@ namespace OpenDentBusiness {
 						+"WHERE PlanNum2 != 0 "
 						+"AND PlanNum2 NOT IN (SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum2)"
 						+PatientAndClauseHelper(patNumSpecific,"claim");
-					var dictBadClaims2=Db.GetTable(command).Select().Select(x=>new {
+					var dictBadClaims2=Database.ExecuteDataTable(command).Select().Select(x=>new {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						PlanNum2=PIn.Long(x["PlanNum2"].ToString()),
 						ClaimNum=PIn.Long(x["ClaimNum"].ToString()),
@@ -4338,7 +4338,7 @@ namespace OpenDentBusiness {
 					command="SELECT claimproc.PatNum,claimproc.ClaimProcNum,claimproc.InsSubNum,claimproc.ProcNum,claimproc.ClaimNum FROM claimproc "
 						+"WHERE PlanNum NOT IN (SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claimproc.InsSubNum)"
 						+PatientAndClauseHelper(patNumSpecific,"claimproc");
-					var dictBadClaimProcs=Db.GetTable(command).Select().Select(x=>new {
+					var dictBadClaimProcs=Database.ExecuteDataTable(command).Select().Select(x=>new {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						ClaimProcNum=PIn.Long(x["ClaimProcNum"].ToString()),
 						InsSubNum=PIn.Long(x["InsSubNum"].ToString()),
@@ -4350,7 +4350,7 @@ namespace OpenDentBusiness {
 					command="SELECT etrans.PatNum,etrans.PlanNum,etrans.EtransNum,etrans.DateTimeTrans FROM etrans "
 						+"WHERE PlanNum!=0 AND PlanNum NOT IN (SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=etrans.InsSubNum)"
 						+PatientAndClauseHelper(patNumSpecific,"etrans");
-					var dictBadEtrans=Db.GetTable(command).Select().Select(x=>new {
+					var dictBadEtrans=Database.ExecuteDataTable(command).Select().Select(x=>new {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						PlanNum=PIn.Long(x["PlanNum"].ToString()),
 						EtransNum=PIn.Long(x["EtransNum"].ToString()),
@@ -4361,7 +4361,7 @@ namespace OpenDentBusiness {
 					command="SELECT payplan.PatNum,payplan.PlanNum,payplan.PayPlanNum FROM payplan "
 						+"WHERE EXISTS (SELECT PlanNum FROM inssub WHERE inssub.InsSubNum=payplan.InsSubNum AND inssub.PlanNum!=payplan.PlanNum)"
 						+PatientAndClauseHelper(patNumSpecific,"payplan");
-					var dictBadPayPlans=Db.GetTable(command).Select().Select(x=>new {
+					var dictBadPayPlans=Database.ExecuteDataTable(command).Select().Select(x=>new {
 						PatNum=PIn.Long(x["PatNum"].ToString()),
 						PlanNum=PIn.Long(x["PlanNum"].ToString()),
 						PayPlanNum=PIn.Long(x["PayPlanNum"].ToString())
@@ -4419,7 +4419,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM claim "+where;
 					List<Claim> listClaims=Crud.ClaimCrud.SelectMany(command);
 					command="UPDATE claim SET PlanNum=(SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum) "+where;
-					numFixed=Db.NonQ(command);
+					numFixed=Database.ExecuteNonQuery(command);
 					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,
 						DbmLogActionType.Update,methodName,"Updated PlanNum from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
@@ -4432,7 +4432,7 @@ namespace OpenDentBusiness {
 					command="SELECT claim.ClaimNum FROM claim WHERE PlanNum=0 AND ClaimStatus IN ('PreAuth','W','U','H') "
 						+"AND NOT EXISTS(SELECT * FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum)"
 						+PatientAndClauseHelper(patNumSpecific,"claim");
-					DataTable tableClaimNums=Db.GetTable(command);
+					DataTable tableClaimNums=Database.ExecuteDataTable(command);
 					List<long> listClaimNums=new List<long>();
 					for(int i = 0;i<tableClaimNums.Rows.Count;i++) {
 						listClaimNums.Add(PIn.Long(tableClaimNums.Rows[i]["ClaimNum"].ToString()));
@@ -4447,9 +4447,9 @@ namespace OpenDentBusiness {
 					where="WHERE PlanNum=0 AND ClaimStatus IN('PreAuth','W','U','H') AND NOT EXISTS(SELECT * FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum)"
 						+PatientAndClauseHelper(patNumSpecific,"claim");
 					command="SELECT ClaimNum FROM claim "+where;
-					listClaimNums=Db.GetListLong(command);
+					listClaimNums=Database.GetListLong(command);
 					command="DELETE FROM claim "+where;
-					numFixed=Db.NonQ(command);
+					numFixed=Database.ExecuteNonQuery(command);
 					listClaimNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Claim,
 						DbmLogActionType.Delete,methodName,"Claim deleted with invalid InsSubNum and PlanNum=0 .")));
 					if(numFixed>0 || verbose) {
@@ -4462,14 +4462,14 @@ namespace OpenDentBusiness {
 						+"WHERE PlanNum NOT IN (SELECT insplan.PlanNum FROM insplan) "
 						+"AND InsSubNum NOT IN (SELECT inssub.InsSubNum FROM inssub) "
 						+PatientAndClauseHelper(patNumSpecific,"claim");
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					if(table.Rows.Count>0) {
 						log+=Lans.g("FormDatabaseMaintenance","List of patients who will need insurance information reentered:")+"\r\n";
 					}
 					for(int i = 0;i<table.Rows.Count;i++) {//Create simple InsPlans and InsSubs for each claim to replace the missing ones.
 						//make sure a plan does not exist from a previous insert in this loop
 						command="SELECT COUNT(*) FROM insplan WHERE PlanNum=" + table.Rows[i]["PlanNum"].ToString();
-						if(Db.GetCount(command)=="0") {
+						if(Database.ExecuteString(command)=="0") {
 							InsPlan plan=new InsPlan();
 							plan.PlanNum=PIn.Long(table.Rows[i]["PlanNum"].ToString());//reuse the existing FK
 							plan.IsHidden=true;
@@ -4483,7 +4483,7 @@ namespace OpenDentBusiness {
 						long patNum=PIn.Long(table.Rows[i]["PatNum"].ToString());
 						//make sure an inssub does not exist from a previous insert in this loop
 						command="SELECT COUNT(*) FROM inssub WHERE InsSubNum=" + table.Rows[i]["InsSubNum"].ToString();
-						if(Db.GetCount(command)=="0") {
+						if(Database.ExecuteString(command)=="0") {
 							InsSub sub=new InsSub();
 							sub.InsSubNum=PIn.Long(table.Rows[i]["InsSubNum"].ToString());//reuse the existing FK
 							sub.PlanNum=PIn.Long(table.Rows[i]["PlanNum"].ToString());
@@ -4509,7 +4509,7 @@ namespace OpenDentBusiness {
 						+"WHERE PlanNum IN (SELECT insplan.PlanNum FROM insplan) "
 						+"AND InsSubNum NOT IN (SELECT inssub.InsSubNum FROM inssub) GROUP BY InsSubNum"
 						+PatientAndClauseHelper(patNumSpecific,"claim");
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					//Create a dummy inssub and link it to the valid plan.
 					for(int i = 0;i<table.Rows.Count;i++) {
 						InsSub sub=new InsSub();
@@ -4538,7 +4538,7 @@ namespace OpenDentBusiness {
 					listClaims=Crud.ClaimCrud.SelectMany(command);
 					command="UPDATE claim SET PlanNum2=(SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum2) "+where;
 					//if InsSubNum2 was completely invalid, then PlanNum2 gets set to zero here.
-					numFixed=Db.NonQ(command);
+					numFixed=Database.ExecuteNonQuery(command);
 					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,
 						DbmLogActionType.Update,methodName,"Updated PlanNum2 from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
@@ -4552,7 +4552,7 @@ namespace OpenDentBusiness {
 						+"WHERE PlanNum IN (SELECT insplan.PlanNum FROM insplan) "
 						+PatientAndClauseHelper(patNumSpecific,"claimproc")
 						+"AND InsSubNum NOT IN (SELECT inssub.InsSubNum FROM inssub) GROUP BY InsSubNum";
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					//Create a dummy inssub and link it to the valid plan.
 					for(int i = 0;i<table.Rows.Count;i++) {
 						InsSub sub=new InsSub();
@@ -4577,7 +4577,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM claimproc "+where;
 					List<ClaimProc> listClaimProcs=Crud.ClaimProcCrud.SelectMany(command);
 					command="UPDATE claimproc SET PlanNum=(SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claimproc.InsSubNum) "+where;
-					numFixed=Db.NonQ(command);
+					numFixed=Database.ExecuteNonQuery(command);
 					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated PlanNum from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
@@ -4592,7 +4592,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM claimproc "+where;
 					listClaimProcs=Crud.ClaimProcCrud.SelectMany(command);
 					command="DELETE FROM claimproc "+where;
-					numFixed=Db.NonQ(command);
+					numFixed=Database.ExecuteNonQuery(command);
 					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						 DbmLogActionType.Delete,methodName,"Deleted claimproc from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
@@ -4607,7 +4607,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM etrans "+where;
 					List<Etrans> listEtrans=Crud.EtransCrud.SelectMany(command);
 					command="UPDATE etrans SET PlanNum=(SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=etrans.InsSubNum) "+where;
-					numFixed=Db.NonQ(command);
+					numFixed=Database.ExecuteNonQuery(command);
 					listEtrans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.EtransNum,DbmLogFKeyType.Etrans,
 						DbmLogActionType.Update,methodName,"Updated PlanNum from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
@@ -4622,7 +4622,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM payplan "+where;
 					List<PayPlan> listPayPlans=Crud.PayPlanCrud.SelectMany(command);
 					command="UPDATE payplan SET PlanNum=(SELECT PlanNum FROM inssub WHERE inssub.InsSubNum=payplan.InsSubNum) "+where;
-					numFixed=Db.NonQ(command);
+					numFixed=Database.ExecuteNonQuery(command);
 					listPayPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PayPlanNum,DbmLogFKeyType.PayPlan,
 						DbmLogActionType.Update,methodName,"Updated PlanNum from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
@@ -4642,7 +4642,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string JournalEntryInvalidAccountNum(bool verbose,DbmMode modeCur) {
 			string command="SELECT COUNT(*) FROM journalentry WHERE AccountNum NOT IN(SELECT AccountNum FROM account)";
-			int numFound=PIn.Int(Db.GetCount(command));
+			int numFound=PIn.Int(Database.ExecuteString(command));
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -4657,7 +4657,7 @@ namespace OpenDentBusiness {
 					if(numFound > 0) {
 						//Check to see if there is already an active account called UNKNOWN.
 						command="SELECT AccountNum FROM account WHERE Description='UNKNOWN' AND Inactive=0";
-						long accountNum=PIn.Long(Db.GetScalar(command));
+						long accountNum=Database.ExecuteLong(command);
 						if(accountNum==0) {
 							//Create a new Account called UNKNOWN.
 							Account account=new Account();
@@ -4668,7 +4668,7 @@ namespace OpenDentBusiness {
 						}
 						//Update the journalentry table.
 						command="UPDATE journalentry SET AccountNum="+POut.Long(accountNum)+" WHERE AccountNum NOT IN(SELECT AccountNum FROM account)";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						log+=Lans.g("FormDatabaseMaintenance","   All invalid transactions have been attached to the account called UNKNOWN.")+"\r\n";
 						log+=Lans.g("FormDatabaseMaintenance","   They need to be fixed manually.")+"\r\n";
 					}
@@ -4684,16 +4684,16 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM labcase WHERE laboratoryNum NOT IN(SELECT laboratoryNum FROM laboratory)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Lab cases found with invalid laboratories")+": "+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="SELECT COUNT(*) FROM labcase WHERE laboratoryNum NOT IN(SELECT laboratoryNum FROM laboratory)";
-					long numberFixed=long.Parse(Db.GetCount(command));
+					long numberFixed=long.Parse(Database.ExecuteString(command));
 					command="SELECT * FROM labcase WHERE laboratoryNum NOT IN(SELECT laboratoryNum FROM laboratory) GROUP BY LaboratoryNum";
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					long labnum;
 					for(int i = 0;i<table.Rows.Count;i++) {
 						Laboratory lab=new Laboratory();
@@ -4702,7 +4702,7 @@ namespace OpenDentBusiness {
 						//laboratoryNum is not allowed to be zero
 						labnum=Crud.LaboratoryCrud.Insert(lab);
 						command="UPDATE labcase SET LaboratoryNum="+POut.Long(labnum)+" WHERE LaboratoryNum="+table.Rows[i]["LaboratoryNum"].ToString();
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Lab cases fixed with invalid laboratories")+": "+numberFixed.ToString()+"\r\n";
@@ -4719,14 +4719,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM laboratory WHERE Slip NOT IN(SELECT SheetDefNum FROM sheetdef) AND Slip != 0";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Laboratories found with invalid lab slips")+": "+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="UPDATE laboratory SET Slip=0 WHERE Slip NOT IN(SELECT SheetDefNum FROM sheetdef) AND Slip != 0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Laboratories fixed with invalid lab slips")+": "+numberFixed.ToString()+"\r\n";
 					}
@@ -4746,7 +4746,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM medicationpat WHERE "//We no longer delete medicationpats where MedicationNum is 0 because we allow MedicationNums to be 0 for use in MU2.
 						+"(medicationpat.MedicationNum<>0 AND NOT EXISTS(SELECT * FROM medication WHERE medication.MedicationNum=medicationpat.MedicationNum))";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Medications found where no defition exists for them: ")+numFound+"\r\n";
 					}
@@ -4754,7 +4754,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					command="DELETE FROM medicationpat WHERE "//We no longer delete medicationpats where MedicationNum is 0 because we allow MedicationNums to be 0 for use in MU2.
 						+"(medicationpat.MedicationNum<>0 AND NOT EXISTS(SELECT * FROM medication WHERE medication.MedicationNum=medicationpat.MedicationNum))";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Medications deleted because no definition exists for them: ")+numberFixed.ToString()+"\r\n";
 					}
@@ -4770,7 +4770,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM medication WHERE GenericNum NOT IN (SELECT MedicationNum FROM medication)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Medications with missing generic brand found: ")+numFound+"\r\n";
 					}
@@ -4796,7 +4796,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string MessageButtonDuplicateButtonIndex(bool verbose,DbmMode modeCur) {
 			string queryStr="SELECT COUNT(*) NumFound,SigButDefNum,ButtonIndex,ComputerName FROM sigbutdef GROUP BY ComputerName,ButtonIndex HAVING COUNT(*) > 1";
-			DataTable table=Db.GetTable(queryStr);
+			DataTable table=Database.ExecuteDataTable(queryStr);
 			int numFound=table.Select().Sum(x => PIn.Int(x["NumFound"].ToString())-1);//sum the duplicates; one in each group is valid.
 			string log="";
 			string command;
@@ -4811,12 +4811,12 @@ namespace OpenDentBusiness {
 						//Loop through the messaging buttons and increment the duplicate button index by the max plus one.
 						for(int i = 0;i<table.Rows.Count;i++) {
 							command="SELECT MAX(ButtonIndex) FROM sigbutdef WHERE ComputerName='"+table.Rows[i]["ComputerName"].ToString()+"'";
-							int newIndex=PIn.Int(Db.GetScalar(command))+1;
+							int newIndex=Database.ExecuteInt(command)+1;
 							command="UPDATE sigbutdef SET ButtonIndex="+newIndex.ToString()+" WHERE SigButDefNum="+table.Rows[i]["SigButDefNum"].ToString();
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 						}
 						//It's possible we need to loop through several more times depending on how many items shared the same button index. 
-						table=Db.GetTable(queryStr);
+						table=Database.ExecuteDataTable(queryStr);
 					} while(table.Rows.Count > 0);
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Messaging buttons with invalid button orders fixed")+": "+numFound.ToString()+"\r\n";
@@ -4838,7 +4838,7 @@ namespace OpenDentBusiness {
 									SELECT scheduleop.OperatoryNum AS OpNum FROM scheduleop WHERE scheduleop.OperatoryNum!=0 AND NOT EXISTS(SELECT * FROM operatory WHERE operatory.OperatoryNum=scheduleop.OperatoryNum) 
 									UNION 
 									SELECT apptviewitem.OpNum AS OpNum FROM apptviewitem WHERE apptviewitem.OpNum!=0 AND NOT EXISTS(SELECT * FROM operatory WHERE operatory.OperatoryNum=apptviewitem.OpNum)";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -4875,7 +4875,7 @@ namespace OpenDentBusiness {
 						GROUP BY PatNum,DateService,BINARY FieldName,BINARY FieldValue 
 						HAVING COUNT(*) > 1
 					) duplicates";
-			long numFound = PIn.Long(Db.GetCount(command));
+			long numFound = PIn.Long(Database.ExecuteString(command));
 			switch(modeCur) {
 				case DbmMode.Check:
 					if(numFound > 0 || verbose) {
@@ -4897,9 +4897,9 @@ namespace OpenDentBusiness {
 											ORDER BY NULL
 										) o2
 										WHERE orthochartbak.OrthoChartNum=o2.maxNum";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						command="DROP TABLE IF EXISTS orthochartbak";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						log+=Lans.g("FormDatabaseMaintenance","All exact duplicate entries have been removed ");
 					}
 					//check to see if there are duplicate date entries,fieldnames which aren't supposed to occur. This means there is conflict one needs to be chosen.
@@ -4909,7 +4909,7 @@ namespace OpenDentBusiness {
 					//the ortho chart several times until the field that had duplicates loads with no data.  At that point all duplicates should have been
 					//removed and the new / correct value can be entered by the user.
 					command="SELECT * FROM orthochart GROUP BY PatNum,DateService,BINARY FieldName HAVING COUNT(*) > 1";
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					if(table.Rows.Count>0) {
 						log+=Lans.g("FormDatabaseMaintenance","Potential duplicate entries could not be deleted for all ortho charts. "+table.Rows.Count
 							+" possible duplicates remaining. Please call support and escalate to an engineer to confirm and remove entries.");
@@ -4922,7 +4922,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string OrthoChartFieldsWithoutValues(bool verbose,DbmMode modeCur) {
 			string queryStr="SELECT COUNT(*) FROM orthochart WHERE FieldValue=''";
-			int numFound=PIn.Int(Db.GetCount(queryStr));
+			int numFound=PIn.Int(Database.ExecuteString(queryStr));
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -4932,7 +4932,7 @@ namespace OpenDentBusiness {
 					break;
 				case DbmMode.Fix:
 					string command="DELETE FROM orthochart WHERE FieldValue=''";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Ortho chart fields without values fixed")+": "+numFound.ToString()+"\r\n";
 					}
@@ -4945,7 +4945,7 @@ namespace OpenDentBusiness {
 		public static string PatFieldsDeleteDuplicates(bool verbose,DbmMode modeCur) {
 			//This code is only needed for older db's. New DB's created after 12.2.30 and 12.3.2 shouldn't need this.
 			string command=@"DROP TABLE IF EXISTS tempduplicatepatfields";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			string tableName="tempduplicatepatfields"+MiscUtils.CreateRandomAlphaNumericString(8);//max size for a table name in oracle is 30 chars.
 																																														//This query run very fast on a db with no corruption.
 			command=@"CREATE TABLE "+tableName+@"
@@ -4953,12 +4953,12 @@ namespace OpenDentBusiness {
 								FROM patfield
 								GROUP BY PatNum,FieldName
 								HAVING COUNT(*)>1";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command=@"SELECT patient.PatNum,LName,FName
 								FROM patient 
 								INNER JOIN "+tableName+@" t ON t.PatNum=patient.PatNum
 								GROUP BY patient.PatNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -4983,13 +4983,13 @@ namespace OpenDentBusiness {
 					if(table.Rows.Count>0) {
 						//Without this index the delete process takes too long.
 						command="ALTER TABLE "+tableName+" ADD INDEX(PatNum)";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						command="ALTER TABLE "+tableName+" ADD INDEX(FieldName)";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						command="DELETE FROM patfield WHERE ((PatNum, FieldName) IN (SELECT PatNum, FieldName FROM "+tableName+"))";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						command="INSERT INTO patfield SELECT * FROM "+tableName;
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(table.Rows.Count>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Patients with duplicate field entries removed:")+" "+table.Rows.Count+"\r\n";
@@ -4997,7 +4997,7 @@ namespace OpenDentBusiness {
 					break;
 			}
 			command=@"DROP TABLE IF EXISTS "+tableName;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			return log;
 		}
 
@@ -5007,7 +5007,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string PatientBadGuarantor(bool verbose,DbmMode modeCur) {
 			string command="SELECT p.PatNum,p.Guarantor FROM patient p LEFT JOIN patient p2 ON p.Guarantor=p2.PatNum WHERE p2.PatNum IS NULL";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -5022,7 +5022,7 @@ namespace OpenDentBusiness {
 						long patNum=PIn.Long(table.Rows[i]["PatNum"].ToString());
 						long guarantor=PIn.Long(table.Rows[i]["Guarantor"].ToString());
 						command="UPDATE patient SET Guarantor=PatNum WHERE PatNum="+patNum;
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,patNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,methodName,
 							"Updated Guarantor from "+guarantor+" to "+patNum+" from PatientBadGuarantor."));
 					}
@@ -5039,7 +5039,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string PatientBadGuarantorWithAnotherGuarantor(bool verbose,DbmMode modeCur) {
 			string command="SELECT p.PatNum,p2.Guarantor FROM patient p LEFT JOIN patient p2 ON p.Guarantor=p2.PatNum WHERE p2.PatNum!=p2.Guarantor";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -5054,7 +5054,7 @@ namespace OpenDentBusiness {
 						long patNum=PIn.Long(table.Rows[i]["PatNum"].ToString());
 						long guarantor=PIn.Long(table.Rows[i]["Guarantor"].ToString());
 						command="UPDATE patient SET Guarantor="+guarantor+" WHERE PatNum="+patNum;
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,patNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,methodName,
 							"Updated Guarantor to "+guarantor+" from PatientBadGuarantorWithAnotherGuarantor."));
 					}
@@ -5075,7 +5075,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM patient WHERE ClinicNum!=0 AND PatStatus="+POut.Int((int)PatientStatus.Deleted);
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Deleted patients with a clinic still set: ")+numFound.ToString()+"\r\n";
 					}
@@ -5087,7 +5087,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM patient "+where;
 					List<Patient> listPatients=Crud.PatientCrud.SelectMany(command);
 					command="UPDATE patient SET ClinicNum=0 "+where;
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listPatients.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PatNum,DbmLogFKeyType.Patient,
 						DbmLogActionType.Update,methodName,"Updated ClinicNum from "+x.ClinicNum+" to 0.")));
 					if(numberFixed>0 || verbose) {
@@ -5111,7 +5111,7 @@ namespace OpenDentBusiness {
 						+"LEFT JOIN definition ON BillingType=definition.DefNum "
 							+"AND Category="+(int)DefCat.BillingTypes+" "
 						+"WHERE DefNum IS NULL ";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Patients found with invalid billing type")+": "+numFound+"\r\n";
 					}
@@ -5123,13 +5123,13 @@ namespace OpenDentBusiness {
 						+"LEFT JOIN definition ON BillingType=definition.DefNum "
 							+"AND Category="+(int)DefCat.BillingTypes+" "
 						+"WHERE DefNum IS NULL";
-					List<long> listPatNums=Db.GetListLong(command);
+					List<long> listPatNums=Database.GetListLong(command);
 					long numberFixed=0;
 					if(listPatNums.Count>0) {
 						command="UPDATE patient SET BillingType="
 							+"("+DbHelper.LimitOrderBy("SELECT DefNum FROM definition WHERE Category="+(int)DefCat.BillingTypes+" ORDER BY ItemOrder",1)+") "
 							+"WHERE PatNum IN ("+string.Join(",",listPatNums)+")";
-						numberFixed=Db.NonQ(command);
+						numberFixed=Database.ExecuteNonQuery(command);
 						listPatNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Patient,DbmLogActionType.Update,
 							methodName,"Updated the BillingType from PatientInvalidBillingType.")));
 					}
@@ -5149,7 +5149,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM patient WHERE GradeLevel < 0";//Any negative number is considered invalid.
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound > 0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Patients with invalid GradeLevel set")+": "+numFound.ToString()+"\r\n";
 					}
@@ -5161,7 +5161,7 @@ namespace OpenDentBusiness {
 					List<Patient> listPatients=Crud.PatientCrud.SelectMany(command);
 					//Set all invalid Grade Levels to Unknown.
 					command="UPDATE patient SET GradeLevel="+POut.Int((int)PatientGrade.Unknown)+" WHERE GradeLevel < 0";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					listPatients.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PatNum,DbmLogFKeyType.Patient,
 						DbmLogActionType.Update,methodName,"Updated GradeLevel from "+x.GradeLevel+" to "+POut.Int((int)PatientGrade.Unknown)+".")));
 					if(numFixed > 0 || verbose) {
@@ -5185,7 +5185,7 @@ namespace OpenDentBusiness {
 				+"FROM patient p1 "
 				+"INNER JOIN patient p2 on p1.SuperFamily=p2.PatNum "//Bring on patient SuperFamily head
 				+"AND p2.PatNum!=p2.SuperFamily";//Limit down to patients associated to invalid super family heads.
-			DataTable tablePatientsWithInvalidSuperHead=Db.GetTable(command);
+			DataTable tablePatientsWithInvalidSuperHead=Database.ExecuteDataTable(command);
 			switch(modeCur) {
 				case DbmMode.Check:
 					int numFound=tablePatientsWithInvalidSuperHead.Rows.Count;
@@ -5211,7 +5211,7 @@ namespace OpenDentBusiness {
 							command="SELECT patient.PatNum, patient.SuperFamily FROM patient "
 								+"WHERE (patient.PatNum="+newSuperFamilyHeadNum+" AND "+"patient.SuperFamily!="+newSuperFamilyHeadNum+") "//New super head.
 								+"OR (patient.Guarantor="+newSuperFamilyHeadNum+" AND "+"patient.SuperFamily!="+newSuperFamilyHeadNum+")";//Dependents.
-							DataTable tableValidPatientsMovingToNewSuperFamily=Db.GetTable(command);
+							DataTable tableValidPatientsMovingToNewSuperFamily=Database.ExecuteDataTable(command);
 							//Three groups of patients need to be updated.
 							//1. Update all the patients who had an invalid SuperFamily head because they were invalid.
 							//2. Update the new superfamily head to be in the SuperFamily because otherwise we would be reproducing the invalid SuperFamily head 
@@ -5223,7 +5223,7 @@ namespace OpenDentBusiness {
 								+"OR (patient.PatNum="+newSuperFamilyHeadNum+" AND "+"patient.SuperFamily!="+newSuperFamilyHeadNum+") "
 								+"OR (patient.Guarantor="+newSuperFamilyHeadNum+" AND "+"patient.SuperFamily!="+newSuperFamilyHeadNum+")";
 							//(All patients updated)-(prev valid patients)=patients fixed
-							countFixed+=Db.NonQ(command)-tableValidPatientsMovingToNewSuperFamily.Rows.Count;
+							countFixed+=Database.ExecuteNonQuery(command)-tableValidPatientsMovingToNewSuperFamily.Rows.Count;
 							countValidPatientsStartingNewSuperFamily+=tableValidPatientsMovingToNewSuperFamily.Rows.Count;
 							//Since we are changing the SuperFamily on previously valid patients, we need to log them as well.
 							foreach(DataRow rowValidPat in tableValidPatientsMovingToNewSuperFamily.Rows) {
@@ -5269,7 +5269,7 @@ namespace OpenDentBusiness {
 		//	}
 		//	else {//fix
 		//		command="";
-		//		long numberFixed=Db.NonQ(command);
+		//		long numberFixed=Db.ExecuteNonQuery(command);
 		//		if(numberFixed>0 || verbose) {
 		//			log+=Lans.g("FormDatabaseMaintenance",": ")+numberFixed.ToString()+"\r\n";
 		//		}
@@ -5284,7 +5284,7 @@ namespace OpenDentBusiness {
 			}
 			//Get patients not assigned to a clinic:
 			string command=@"SELECT PatNum,LName,FName FROM patient WHERE ClinicNum=0 AND PatStatus!="+POut.Int((int)PatientStatus.Deleted);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -5323,7 +5323,7 @@ namespace OpenDentBusiness {
 				INNER JOIN patient ON patient.PriProv=provider.ProvNum
 				WHERE provider.IsHidden=1
 				GROUP BY provider.ProvNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -5344,7 +5344,7 @@ namespace OpenDentBusiness {
 								log+="     "+table.Rows[i]["Abbr"].ToString()+": ";
 								command=@"SELECT PatNum,LName,FName FROM patient WHERE PriProv=(SELECT ProvNum FROM provider WHERE ProvNum="
 									+table.Rows[i]["ProvNum"].ToString()+" AND IsHidden=1) LIMIT 10";
-								patTable=Db.GetTable(command);
+								patTable=Database.ExecuteDataTable(command);
 								for(int j = 0;j<patTable.Rows.Count;j++) {
 									if(j>0) {
 										log+=", ";
@@ -5368,7 +5368,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM patient WHERE PriProv=0";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Patient pri provs not set: ")+numFound+"\r\n";
 					}
@@ -5377,11 +5377,11 @@ namespace OpenDentBusiness {
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="SELECT PatNum FROM patient WHERE PriProv=0";
-					List<long> listPatNums=Db.GetListLong(command);
+					List<long> listPatNums=Database.GetListLong(command);
 					//previous versions of the program just dealt gracefully with missing provnum.
 					//From now on, we can assum priprov is not missing, making coding easier.
 					command=@"UPDATE patient SET PriProv="+PrefC.GetString(PrefName.PracticeDefaultProv)+" WHERE PriProv=0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listPatNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Patient,DbmLogActionType.Update,
 						methodName,"Updated PriProv from 0 to "+PrefC.GetString(PrefName.PracticeDefaultProv))));
 					if(numberFixed>0 || verbose) {
@@ -5403,7 +5403,7 @@ namespace OpenDentBusiness {
 					+"OR BalOver90 !=0 "
 					+"OR InsEst !=0 "
 					+"OR BalTotal !=0)";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -5453,7 +5453,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM patplan WHERE InsSubNum NOT IN (SELECT InsSubNum FROM inssub)";
-					string countStr=Db.GetCount(command);
+					string countStr=Database.ExecuteString(command);
 					if(countStr!="0" || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Pat plans found with invalid InsSubNums: ")+countStr+"\r\n";
 					}
@@ -5462,9 +5462,9 @@ namespace OpenDentBusiness {
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="SELECT PatPlanNum FROM patplan WHERE InsSubNum NOT IN (SELECT InsSubNum FROM inssub)";
-					List<long> listPatPlanNums=Db.GetListLong(command);
+					List<long> listPatPlanNums=Database.GetListLong(command);
 					command="DELETE FROM patplan WHERE InsSubNum NOT IN (SELECT InsSubNum FROM inssub)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listPatPlanNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PatPlan,
 						DbmLogActionType.Delete,methodName,"Deleted patplan from PatPlanDeleteWithInvalidInsSubNum.")));
 					if(numberFixed>0 || verbose) {
@@ -5483,7 +5483,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM patplan WHERE PatNum NOT IN (SELECT PatNum FROM patient)";
-					string countStr=Db.GetCount(command);
+					string countStr=Database.ExecuteString(command);
 					if(countStr!="0" || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Pat plans found with invalid PatNums: ")+countStr+"\r\n";
 					}
@@ -5492,9 +5492,9 @@ namespace OpenDentBusiness {
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="SELECT PatPlanNum FROM patplan WHERE PatNum NOT IN (SELECT PatNum FROM patient)";
-					List<long> listPatPlanNums=Db.GetListLong(command);
+					List<long> listPatPlanNums=Database.GetListLong(command);
 					command="DELETE FROM patplan WHERE PatNum NOT IN (SELECT PatNum FROM patient)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listPatPlanNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PatPlan,
 						DbmLogActionType.Delete,methodName,"Deleted patplan from PatPlanDeleteWithInvalidPatNum.")));
 					if(numberFixed>0 || verbose) {
@@ -5513,7 +5513,7 @@ namespace OpenDentBusiness {
 				+"INNER JOIN patient ON patient.PatNum=patplan.PatNum "
 				+"GROUP BY patplan.PatNum,patplan.Ordinal "
 				+"HAVING COUNT(*)>1";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -5541,7 +5541,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string PatPlanOrdinalZeroToOne(bool verbose,DbmMode modeCur) {
 			string command="SELECT PatPlanNum,PatNum FROM patplan WHERE Ordinal=0";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -5575,7 +5575,7 @@ namespace OpenDentBusiness {
 		public static string PatPlanOrdinalTwoToOne(bool verbose,DbmMode modeCur) {
 			string command="SELECT PatPlanNum,PatNum FROM patplan patplan1 WHERE Ordinal=2 AND NOT EXISTS("
 				+"SELECT * FROM patplan patplan2 WHERE patplan1.PatNum=patplan2.PatNum AND patplan2.Ordinal=1)";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -5622,7 +5622,7 @@ namespace OpenDentBusiness {
 				+"WHERE payment.PayAmt!=0 "
 				+"AND ROUND(payment.PayAmt,2)!=ROUND(pstotals.totSplitAmt,2) "
 				+"ORDER BY patient.LName, patient.FName, payment.PayDate";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -5659,7 +5659,7 @@ namespace OpenDentBusiness {
 					command="SELECT COUNT(*) FROM payment "
 						+"WHERE DepositNum != 0 "
 						+"AND NOT EXISTS(SELECT * FROM deposit WHERE deposit.DepositNum=payment.DepositNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Payments attached to deposits that no longer exist: ")+numFound+"\r\n";
 					}
@@ -5671,7 +5671,7 @@ namespace OpenDentBusiness {
 					command="SELECT * FROM payment "+where;
 					List<Payment> listPayments=Crud.PaymentCrud.SelectMany(command);
 					command="UPDATE payment SET DepositNum=0 "+where;
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listPayments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PayNum,DbmLogFKeyType.Payment,
 						DbmLogActionType.Update,methodName,"Updated DepositNum from "+x.DepositNum+" to 0.")));
 					if(numberFixed>0 || verbose) {
@@ -5694,7 +5694,7 @@ namespace OpenDentBusiness {
 						+"WHERE PayNum NOT IN (SELECT PayNum FROM paysplit) "//Payments with no split that are
 						+"AND ((DepositNum=0) "                              //not attached to a deposit
 						+"OR (DepositNum!=0 AND PayAmt=0))";                 //or attached to a deposit with no amount.
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Payments with no attached paysplit: ")+numFound+"\r\n";
 					}
@@ -5706,9 +5706,9 @@ namespace OpenDentBusiness {
 						+"AND ((DepositNum=0) "                              //not attached to a deposit
 						+"OR (DepositNum!=0 AND PayAmt=0))";                 //or attached to a deposit with no amount.
 					command="SELECT PayNum FROM payment "+where;
-					List<long> listPayNums=Db.GetListLong(command);
+					List<long> listPayNums=Database.GetListLong(command);
 					command="DELETE FROM payment "+where;
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listPayNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Payment,
 						DbmLogActionType.Delete,methodName,"Deleted payment from PaymentMissingPaySplit.")));
 					if(numberFixed>0 || verbose) {
@@ -5754,13 +5754,13 @@ namespace OpenDentBusiness {
 		//			+"WHERE payplan.PayPlanNum=payplancharge.PayPlanNum "
 		//			+"AND payplancharge.Guarantor != payplan.Guarantor "
 		//		+"AND payplan.Guarantor != 0";
-		//		long numFixed=Db.NonQ(command);
+		//		long numFixed=Db.ExecuteNonQuery(command);
 		//		command="UPDATE payplan,payplancharge "
 		//			+"SET payplancharge.PatNum=payplan.PatNum "
 		//			+"WHERE payplan.PayPlanNum=payplancharge.PayPlanNum "
 		//			+"AND payplancharge.PatNum != payplan.PatNum "
 		//		+"AND payplan.PatNum != 0";
-		//		numFixed+=Db.NonQ(command);
+		//		numFixed+=Db.ExecuteNonQuery(command);
 		//		if(numFixed>0 || verbose) {
 		//			log+=Lans.g("FormDatabaseMaintenance","PayPlanCharge guarantors and pats fixed to match payplan: ")+numFixed+"\r\n";
 		//		}
@@ -5778,7 +5778,7 @@ namespace OpenDentBusiness {
 				+"LEFT JOIN patient guar ON payplan.Guarantor=guar.PatNum "
 				+"WHERE payplancharge.ProvNum=0 "
 				+"GROUP BY payplancharge.PayPlanNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -5809,7 +5809,7 @@ namespace OpenDentBusiness {
 		public static string PayPlanChargeWithInvalidPayPlanNum(bool verbose,DbmMode modeCur) {
 			string command="SELECT COUNT(DISTINCT PayPlanNum) FROM (SELECT PayPlanNum FROM payplancharge WHERE PayPlanNum NOT IN(SELECT PayPlanNum FROM payplan) "
 				+"UNION SELECT PayPlanNum FROM creditcard WHERE PayPlanNum>0 AND PayPlanNum NOT IN(SELECT PayPlanNum FROM payplan)) A";
-			string count=Db.GetCount(command);
+			string count=Database.ExecuteString(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -5825,15 +5825,15 @@ namespace OpenDentBusiness {
 						//Delete the payment plan charges and update credit cards that point to an invalid payment plan. Claimprocs and paysplits with an invalid
 						//PayPlanNum are taken care of in other DBM methods.
 						command="SELECT PayPlanChargeNum FROM payplancharge "+where;
-						List<long> listPrikeys=Db.GetListLong(command);
+						List<long> listPrikeys=Database.GetListLong(command);
 						command="DELETE FROM payplancharge "+where;
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listPrikeys.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PayPlanCharge,
 							DbmLogActionType.Delete,methodName,"Deleted paysplancharge from PayPlanChargeWithInvalidPayPlanNum.")));
 						command="SELECT CreditCardNum FROM creditcard "+where;
-						listPrikeys=Db.GetListLong(command);
+						listPrikeys=Database.GetListLong(command);
 						command="UPDATE creditcard SET PayPlanNum=0 "+where;
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						listPrikeys.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.CreditCard,
 							DbmLogActionType.Update,methodName,"Set creditcard.PayPlanNum to 0 from PayPlanChargeWithInvalidPayPlanNum.")));
 						log+=Lans.g("FormDatabaseMaintenance","PayPlan charges or credit cards with an invalid PayPlanNum fixed")+": "+count;
@@ -5847,7 +5847,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string PayPlanSetGuarantorToPatForIns(bool verbose,DbmMode modeCur) {
 			string command="SELECT COUNT(*) FROM payplan WHERE PlanNum>0 AND Guarantor != PatNum";
-			int numFound=PIn.Int(Db.GetCount(command));
+			int numFound=PIn.Int(Database.ExecuteString(command));
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -5878,7 +5878,7 @@ namespace OpenDentBusiness {
 				+"INNER JOIN patient pat ON pat.PatNum=payment.PatNum "
 				+"INNER JOIN patient splitpat ON splitpat.PatNum=paysplit.PatNum "
 				+"ORDER BY pat.LName, pat.FName, payment.PayDate, paysplit.DatePay, procedurecode.AbbrDesc";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -5945,7 +5945,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr(HasBreakDown = false)]
 		public static string PaySplitAttachedToItself(bool verbose,DbmMode modeCur) {
 			string command="SELECT * FROM paysplit WHERE FSplitNum=SplitNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -5959,7 +5959,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					List<long> listPaySplitNums=table.Select().Select(x => PIn.Long(x["SplitNum"].ToString())).ToList();
 					command="UPDATE paysplit SET paysplit.FSplitNum=0 WHERE paysplit.FSplitNum=paysplit.SplitNum";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					listPaySplitNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PaySplit,
 						DbmLogActionType.Update,methodName,"Updated FSplitNum to 0 from PaySplitAttachedToItself.")));
 					if(numFixed>0 || verbose) {
@@ -5986,7 +5986,7 @@ namespace OpenDentBusiness {
 				AND pschild.PayPlanNum=0
 				AND psparent.UnearnedType!=0
 				AND psparent.UnearnedType!=pschild.UnearnedType";
-			DataTable tableSplitsWithoutUnearnedType=Db.GetTable(command);
+			DataTable tableSplitsWithoutUnearnedType=Database.ExecuteDataTable(command);
 			int count=tableSplitsWithoutUnearnedType.Rows.Count;
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -6004,7 +6004,7 @@ namespace OpenDentBusiness {
 						command=$@"UPDATE paysplit 
 							SET UnearnedType = {POut.Long(unearnedType)} 
 							WHERE SplitNum = {POut.Long(splitNum)}";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					DbmLogs.InsertMany(listDbmLogs);
 					if(count > 0 || verbose) {
@@ -6026,7 +6026,7 @@ namespace OpenDentBusiness {
 					command="SELECT COUNT(*) FROM paysplit WHERE "
 						+patWhere
 						+"NOT EXISTS(SELECT * FROM payment WHERE paysplit.PayNum=payment.PayNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Paysplits found with invalid PayNum: ")+numFound+"\r\n";
 					}
@@ -6040,7 +6040,7 @@ namespace OpenDentBusiness {
 						+"NOT EXISTS(SELECT * FROM payment WHERE paysplit.PayNum=payment.PayNum) "
 						+"AND PayNum!=0 "
 						+"GROUP BY PayNum";
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					int rowsFixed=0;
 					if(table.Rows.Count>0) {
 						List<Def> listDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
@@ -6071,7 +6071,7 @@ namespace OpenDentBusiness {
 						+"NOT EXISTS(SELECT * FROM payment WHERE paysplit.PayNum=payment.PayNum) "
 						+"AND PayNum=0 "
 						+"GROUP BY PatNum,DatePay";
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					string where="";
 					if(table.Rows.Count>0) {
 						List<Def> listDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
@@ -6093,9 +6093,9 @@ namespace OpenDentBusiness {
 								DbmLogActionType.Insert,methodName,"Inserted payment from PaySplitWithInvalidPayNum."));
 							where=" WHERE PayNum=0 AND PatNum="+POut.Long(payment.PatNum)+" AND DatePay="+POut.Date(payment.PayDate);
 							command="SELECT SplitNum FROM paysplit"+where;
-							List<long> listPaySplitNums=Db.GetListLong(command);
+							List<long> listPaySplitNums=Database.GetListLong(command);
 							command="UPDATE paysplit SET PayNum="+POut.Long(payment.PayNum)+where;
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							listPaySplitNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Payment,
 								DbmLogActionType.Update,methodName,"Updated PayNum from 0 to "+payment.PayNum+".")));
 						}
@@ -6117,7 +6117,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM paysplit WHERE paysplit.PayPlanNum!=0 AND paysplit.PayPlanNum NOT IN(SELECT payplan.PayPlanNum FROM payplan)";
-					int numFound=PIn.Int(Db.GetScalar(command));
+					int numFound=Database.ExecuteInt(command);
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Paysplits found with invalid PayPlanNum: ")+numFound+"\r\n";
 					}
@@ -6127,9 +6127,9 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					string where="WHERE paysplit.PayPlanNum!=0 AND paysplit.PayPlanNum NOT IN(SELECT payplan.PayPlanNum FROM payplan)";
 					command="SELECT SplitNum FROM paysplit "+where;
-					List<long> listPaySplitNums=Db.GetListLong(command);
+					List<long> listPaySplitNums=Database.GetListLong(command);
 					command="UPDATE paysplit SET paysplit.PayPlanNum=0 "+where;
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					listPaySplitNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PaySplit,
 						DbmLogActionType.Update,methodName,"Updated PayPlanNum to 0 from PaySplitWithInvalidPayPlanNum.")));
 					if(numFixed>0 || verbose) {
@@ -6144,7 +6144,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string PaySplitWithInvalidPrePayNum(bool verbose,DbmMode modeCur) {
 			string command="SELECT ps1.* FROM paysplit ps1 LEFT JOIN paysplit ps2 ON ps1.FSplitNum=ps2.SplitNum WHERE ps1.FSplitNum!=0 AND ps2.SplitNum IS NULL";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -6182,14 +6182,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM periomeasure WHERE IntTooth > 32 OR IntTooth < 1";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","PerioMeasures found with invalid tooth number: ")+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command=@"DELETE FROM periomeasure WHERE IntTooth > 32 OR IntTooth < 1";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","PerioMeasures deleted due to invalid tooth number: ")+numberFixed.ToString()+"\r\n";
 					}
@@ -6205,7 +6205,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM plannedappt WHERE AptNum=0";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Planned appointments found with invalid AptNum")+": "+numFound+"\r\n";
 					}
@@ -6214,9 +6214,9 @@ namespace OpenDentBusiness {
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="SELECT PlannedApptNum FROM plannedappt WHERE AptNum=0";
-					List<long> listPlannedAppts=Db.GetListLong(command);
+					List<long> listPlannedAppts=Database.GetListLong(command);
 					command=@"DELETE FROM plannedappt WHERE AptNum=0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listPlannedAppts.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PlannedAppt,
 						DbmLogActionType.Delete,methodName,"Deleted plannedappt from PlannedApptsWithInvalidAptNum.")));
 					if(numberFixed>0 || verbose) {
@@ -6235,7 +6235,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM allergydef where AllergyDefNum="+POut.Long(PrefC.GetLong(PrefName.AllergiesIndicateNone));
-					if(PIn.Int(Db.GetCount(command))==0 && PrefC.GetString(PrefName.AllergiesIndicateNone)!="") {
+					if(PIn.Int(Database.ExecuteString(command))==0 && PrefC.GetString(PrefName.AllergiesIndicateNone)!="") {
 						log+=Lans.g("FormDatabaseMaintenance","Preference \"AllergyIndicatesNone\" is an invalid value.")+"\r\n";
 					}
 					else if(verbose) {
@@ -6244,7 +6244,7 @@ namespace OpenDentBusiness {
 					break;
 				case DbmMode.Fix:
 					command="SELECT COUNT(*) FROM allergydef where AllergyDefNum="+POut.Long(PrefC.GetLong(PrefName.AllergiesIndicateNone));
-					if(PIn.Int(Db.GetCount(command))==0 && PrefC.GetString(PrefName.AllergiesIndicateNone)!="") {
+					if(PIn.Int(Database.ExecuteString(command))==0 && PrefC.GetString(PrefName.AllergiesIndicateNone)!="") {
 						Prefs.UpdateString(PrefName.AllergiesIndicateNone,"");
 						Signalods.SetInvalid(InvalidType.Prefs);
 						log+=Lans.g("FormDatabaseMaintenance","Preference \"AllergyIndicatesNone\" set to blank due to an invalid value.")+"\r\n";
@@ -6276,7 +6276,7 @@ namespace OpenDentBusiness {
 					if(date<DateTime.Now.AddMonths(-1)) {
 						command="UPDATE preference SET ValueString="+POut.Date(DateTime.Today.AddDays(-21))
 						+" WHERE PrefName='DateDepositsStarted'";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 						Signalods.SetInvalid(InvalidType.Prefs);
 						log+=Lans.g("FormDatabaseMaintenance","Deposit start date reset.")+"\r\n";
 					}
@@ -6318,7 +6318,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM medication where MedicationNum="+POut.Long(PrefC.GetLong(PrefName.MedicationsIndicateNone));
-					if(PIn.Int(Db.GetCount(command))==0 && PrefC.GetString(PrefName.MedicationsIndicateNone)!="") {
+					if(PIn.Int(Database.ExecuteString(command))==0 && PrefC.GetString(PrefName.MedicationsIndicateNone)!="") {
 						log+=Lans.g("FormDatabaseMaintenance","Preference \"MedicationsIndicateNone\" is an invalid value.")+"\r\n";
 					}
 					else if(verbose) {
@@ -6327,7 +6327,7 @@ namespace OpenDentBusiness {
 					break;
 				case DbmMode.Fix:
 					command="SELECT COUNT(*) FROM medication where MedicationNum="+POut.Long(PrefC.GetLong(PrefName.MedicationsIndicateNone));
-					if(PIn.Int(Db.GetCount(command))==0 && PrefC.GetString(PrefName.MedicationsIndicateNone)!="") {
+					if(PIn.Int(Database.ExecuteString(command))==0 && PrefC.GetString(PrefName.MedicationsIndicateNone)!="") {
 						Prefs.UpdateString(PrefName.MedicationsIndicateNone,"");
 						Signalods.SetInvalid(InvalidType.Prefs);
 						log+=Lans.g("FormDatabaseMaintenance","Preference \"MedicationsIndicateNone\" set to blank due to an invalid value.")+"\r\n";
@@ -6347,7 +6347,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM diseasedef where DiseaseDefNum="+POut.Long(PrefC.GetLong(PrefName.ProblemsIndicateNone));
-					if(PIn.Int(Db.GetCount(command))==0 && PrefC.GetString(PrefName.ProblemsIndicateNone)!="") {
+					if(PIn.Int(Database.ExecuteString(command))==0 && PrefC.GetString(PrefName.ProblemsIndicateNone)!="") {
 						log+=Lans.g("FormDatabaseMaintenance","Preference \"ProblemsIndicateNone\" is an invalid value.")+"\r\n";
 					}
 					else if(verbose) {
@@ -6356,7 +6356,7 @@ namespace OpenDentBusiness {
 					break;
 				case DbmMode.Fix:
 					command="SELECT COUNT(*) FROM diseasedef where DiseaseDefNum="+POut.Long(PrefC.GetLong(PrefName.ProblemsIndicateNone));
-					if(PIn.Int(Db.GetCount(command))==0 && PrefC.GetString(PrefName.ProblemsIndicateNone)!="") {
+					if(PIn.Int(Database.ExecuteString(command))==0 && PrefC.GetString(PrefName.ProblemsIndicateNone)!="") {
 						Prefs.UpdateString(PrefName.ProblemsIndicateNone,"");
 						Signalods.SetInvalid(InvalidType.Prefs);
 						log+=Lans.g("FormDatabaseMaintenance","Preference \"ProblemsIndicateNone\" set to blank due to an invalid value.")+"\r\n";
@@ -6402,7 +6402,7 @@ namespace OpenDentBusiness {
 			}
 			string log="";
 			string command="SELECT valuestring FROM preference WHERE prefname='PracticeDefaultProv'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows[0][0].ToString()!="") {
 				if(verbose) {
 					log+=Lans.g("FormDatabaseMaintenance","Default practice provider verified.")+"\r\n";
@@ -6412,9 +6412,9 @@ namespace OpenDentBusiness {
 				log+=Lans.g("FormDatabaseMaintenance","No default provider set.")+"\r\n";
 				if(modeCur!=DbmMode.Check) {
 					command="SELECT provnum FROM provider WHERE IsHidden=0 ORDER BY itemorder LIMIT 1";
-					table=Db.GetTable(command);
+					table=Database.ExecuteDataTable(command);
 					command="UPDATE preference SET valuestring='"+table.Rows[0][0].ToString()+"' WHERE prefname='PracticeDefaultProv'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					log+="  "+Lans.g("FormDatabaseMaintenance","Fixed.")+"\r\n";
 				}
 			}
@@ -6432,7 +6432,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM procbuttonitem WHERE CodeNum=0 AND NOT EXISTS(
 						SELECT * FROM autocode WHERE autocode.AutoCodeNum=procbuttonitem.AutoCodeNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","ProcButtonItems found with invalid autocode: ")+numFound+"\r\n";
 					}
@@ -6440,7 +6440,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					command=@"DELETE FROM procbuttonitem WHERE CodeNum=0 AND NOT EXISTS(
 						SELECT * FROM autocode WHERE autocode.AutoCodeNum=procbuttonitem.AutoCodeNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0) {
 						Signalods.SetInvalid(InvalidType.ProcButtons);
 					}
@@ -6460,7 +6460,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM procedurecode WHERE procedurecode.ProcCat=0";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						if(listProcCodeCats.Count==0) {
 							log+=Lans.g("FormDatabaseMaintenance","Procedure codes with no categories found but cannot be fixed because there are no visible proc code categories.")+"\r\n";
@@ -6475,7 +6475,7 @@ namespace OpenDentBusiness {
 						return log;
 					}
 					command="UPDATE procedurecode SET procedurecode.ProcCat="+POut.Long(listProcCodeCats[0].DefNum)+" WHERE procedurecode.ProcCat=0";
-					long numberfixed=Db.NonQ(command);
+					long numberfixed=Database.ExecuteNonQuery(command);
 					if(numberfixed>0) {
 						Signalods.SetInvalid(InvalidType.ProcCodes);
 					}
@@ -6495,7 +6495,7 @@ namespace OpenDentBusiness {
 		public static string ProcedurecodeFixDuplicateProcedureCodes(bool verbose,DbmMode modeCur) {
 			string log="";
 			string command=@"SELECT ProcCode FROM procedurecode GROUP BY ProcCode HAVING COUNT(*) > 1";
-			List<string> listProcCodes=Db.GetListString(command);
+			List<string> listProcCodes=Database.GetListString(command);
 			switch(modeCur) {
 				case DbmMode.Check:
 					int numFound=listProcCodes.Count;
@@ -6511,7 +6511,7 @@ namespace OpenDentBusiness {
 						if(listProcCodes.Count>0){
 							//Get the PK and ProcCode for each duplicate so that we can make the ProcCodes unique.
 							command=@"SELECT CodeNum,ProcCode FROM procedurecode WHERE ProcCode IN ('"+String.Join("','",listProcCodes)+"') ORDER BY CodeNum";
-							DataTable table=Db.GetTable(command);
+							DataTable table=Database.ExecuteDataTable(command);
 							//Group up the duplicates by ProcCode.
 							Dictionary<string,List<DataRow>> dictDupeProcCodes=table.Select().GroupBy(x => x["ProcCode"].ToString()).ToDictionary(x => x.Key,x => x.ToList());
 							//Go through each ProcCode group and make the ProcCode string unique for each entry (except the first one).
@@ -6524,7 +6524,7 @@ namespace OpenDentBusiness {
 									string procCodeOriginal=kvp.Key;
 									string procCodeFix=kvp.Key+"-"+i;
 									command=@"UPDATE procedurecode SET ProcCode='"+POut.String(procCodeFix)+"' WHERE CodeNum="+POut.Long(codeNum);
-										Db.NonQ(command);
+										Database.ExecuteNonQuery(command);
 									listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,codeNum,DbmLogFKeyType.ProcedureCode,
 										DbmLogActionType.Update,methodName,$"Duplicate procedure code found, ProcCode Changed from '"
 											+POut.String(procCodeOriginal)+"' to '"+POut.String(procCodeFix)+"'"));
@@ -6548,7 +6548,7 @@ namespace OpenDentBusiness {
 				LEFT JOIN provider ON procedurecode.ProvNumDefault=provider.ProvNum 
 				WHERE provider.ProvNum IS NULL 
 				AND procedurecode.ProvNumDefault!=0";
-			List<long> listProcNums=Db.GetListLong(command);
+			List<long> listProcNums=Database.GetListLong(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -6559,7 +6559,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					if(listProcNums.Count>0) {
 						command="UPDATE procedurecode SET procedurecode.ProvNumDefault=0 WHERE procedurecode.CodeNum IN ("+String.Join(",",listProcNums)+")";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(listProcNums.Count>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedure codes with invalid Default Provider fixed")+": "+listProcNums.Count+"\r\n";
@@ -6579,7 +6579,7 @@ namespace OpenDentBusiness {
 						+"WHERE ProcStatus=6 AND (AptNum!=0 OR PlannedAptNum!=0)";
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Deleted procedures still attached to appointments: ")+numFound+"\r\n";
 					}
@@ -6587,11 +6587,11 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listProcNums=Db.GetListLong(command);
+					List<long> listProcNums=Database.GetListLong(command);
 					command="UPDATE procedurelog SET AptNum=0,PlannedAptNum=0 "
 						+"WHERE ProcStatus=6 "
 						+"AND (AptNum!=0 OR PlannedAptNum!=0)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Appointment detached.")));
 					if(numberFixed>0 || verbose) {
@@ -6610,7 +6610,7 @@ namespace OpenDentBusiness {
 							+"WHERE procedurelog.AptNum=appointment.AptNum AND procedurelog.PatNum != appointment.PatNum";
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures attached to appointments with incorrect patient: ")+numFound+"\r\n";
 					}
@@ -6618,10 +6618,10 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listProcNums=Db.GetListLong(command);
+					List<long> listProcNums=Database.GetListLong(command);
 					command="UPDATE appointment,procedurelog SET procedurelog.AptNum=0 "
 						+"WHERE procedurelog.AptNum=appointment.AptNum AND procedurelog.PatNum != appointment.PatNum";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Appointment detached from ProcedurelogAttachedToWrongAppts.")));
 					if(numberFixed>0 || verbose) {
@@ -6642,7 +6642,7 @@ namespace OpenDentBusiness {
 							AND procedurelog.ProcStatus=2";//only detach completed procs 
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures which are attached to appointments with mismatched dates: ")+numFound+"\r\n";
 					}
@@ -6650,13 +6650,13 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listProcNums=Db.GetListLong(command);
+					List<long> listProcNums=Database.GetListLong(command);
 					command=@"UPDATE procedurelog,appointment
 						SET procedurelog.AptNum=0
 						WHERE procedurelog.AptNum=appointment.AptNum
 						AND DATE(procedurelog.ProcDate) != DATE(appointment.AptDateTime)
 						AND procedurelog.ProcStatus=2";//only detach completed procs 
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Appointment detached from ProcedurelogAttachedToWrongApptDate.")));
 					if(numberFixed>0 || verbose) {
@@ -6679,7 +6679,7 @@ namespace OpenDentBusiness {
 						WHERE baseunits != (SELECT procedurecode.BaseUnits FROM procedurecode WHERE procedurecode.CodeNum=procedurelog.CodeNum)
 						AND baseunits=0";
 					//we do not want to change this automatically.  Do not fix these!
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedure BaseUnits are zero and are not matching procedurecode BaseUnits: ")+numFound+"\r\n";
 					}
@@ -6689,7 +6689,7 @@ namespace OpenDentBusiness {
 						WHERE BaseUnits!=0
 						AND (SELECT procedurecode.BaseUnits FROM procedurecode WHERE procedurecode.CodeNum=procedurelog.CodeNum)=0";
 					//very safe to change them back to zero.
-					numFound=PIn.Int(Db.GetCount(command));
+					numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedure BaseUnits not zero, but procedurecode BaseUnits are zero: ")+numFound+"\r\n";
 					}
@@ -6700,7 +6700,7 @@ namespace OpenDentBusiness {
 					command=@"SELECT ProcNum FROM procedurelog
 						WHERE BaseUnits!=0 
 						AND (SELECT procedurecode.BaseUnits FROM procedurecode WHERE procedurecode.CodeNum=procedurelog.CodeNum)=0";
-					List<long> listProcNums=Db.GetListLong(command);
+					List<long> listProcNums=Database.GetListLong(command);
 					//first situation: don't fix.
 					//second situation:
 					//Writing the query this way allows it to work with Oracle.
@@ -6708,7 +6708,7 @@ namespace OpenDentBusiness {
 						SET BaseUnits=0
 						WHERE BaseUnits!=0 
 						AND (SELECT procedurecode.BaseUnits FROM procedurecode WHERE procedurecode.CodeNum=procedurelog.CodeNum)=0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Procedure BaseUnit set to zero from ProcedurelogBaseUnitsZero.")));
 					if(numberFixed>0 || verbose) {
@@ -6726,7 +6726,7 @@ namespace OpenDentBusiness {
 			string command=@"SELECT ProcNum FROM procedurelog WHERE NOT EXISTS(SELECT * FROM procedurecode WHERE procedurecode.CodeNum=procedurelog.CodeNum)";
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures found with invalid CodeNum")+": "+numFound+"\r\n";
 					}
@@ -6734,7 +6734,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listProcNums=Db.GetListLong(command);
+					List<long> listProcNums=Database.GetListLong(command);
 					long badCodeNum=0;
 					if(!ProcedureCodes.IsValidCode("~BAD~")) {
 						ProcedureCode badCode=new ProcedureCode();
@@ -6749,7 +6749,7 @@ namespace OpenDentBusiness {
 						badCodeNum=ProcedureCodes.GetCodeNum("~BAD~");
 					}
 					command="UPDATE procedurelog SET CodeNum=" + POut.Long(badCodeNum) + " WHERE NOT EXISTS (SELECT * FROM procedurecode WHERE procedurecode.CodeNum=procedurelog.CodeNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Procedure fixed with invalid CodeNum from ProcedurelogCodeNumInvalid.")));
 					if(numberFixed>0 || verbose) {
@@ -6774,7 +6774,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM procedurelog WHERE ToothRange REGEXP '[A-Z]{2}|[0-9]{3}'"+patWhere;//2 letters or 3 numbers
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures found with invalid ToothRange")+": "+numFound.ToString()+"\r\n";
 					}
@@ -6783,7 +6783,7 @@ namespace OpenDentBusiness {
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="SELECT PatNum,ProcNum,ToothRange FROM procedurelog WHERE ToothRange REGEXP '[A-Z]{2}|[0-9]{3}'"+patWhere;
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					int numFixed=0;
 					if(table.Rows.Count>0) {
 						foreach(DataRow row in table.Rows) {
@@ -6840,7 +6840,7 @@ namespace OpenDentBusiness {
 							if(toothRangeUpdate!=toothRange) {
 								command=$"UPDATE procedurelog SET ToothRange='{POut.String(toothRangeUpdate)}' "
 									+"WHERE ProcNum="+POut.Long(procNum)+patWhere;
-								Db.NonQ(command);
+								Database.ExecuteNonQuery(command);
 								numFixed++;
 								listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,procNum,DbmLogFKeyType.Procedure,
 									DbmLogActionType.Update,methodName,$"Invalid ToothRange of '{POut.String(toothRange)}' changed to '{POut.String(toothRangeUpdate)}'"));
@@ -6867,7 +6867,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM procedurelog "
 						+"WHERE ProcStatus=2 AND ProcNumLab IN(SELECT ProcNum FROM procedurelog WHERE ProcStatus=6)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Completed procedure labs attached to deleted procedures: ")+numFound;
 						log+="\r\n   "+Lans.g("FormDatabaseMaintenance","Double click to see a break down.")+"\r\n";
@@ -6880,13 +6880,13 @@ namespace OpenDentBusiness {
 						+"WHERE ProcStatus="+POut.Int((int)ProcStat.C)+" "
 						+"AND ProcNumLab IN(SELECT ProcNum FROM procedurelog WHERE ProcStatus="+POut.Int((int)ProcStat.D)+") "
 						+"GROUP BY patient.PatNum ";
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					if(table.Rows.Count>0 || verbose) {
 						if(modeCur==DbmMode.Fix) {
 							command="UPDATE procedurelog plab,procedurelog p "
 								+"SET plab.ProcNumLab=0 "
 								+"WHERE plab.ProcStatus="+POut.Int((int)ProcStat.C)+" AND plab.ProcNumLab=p.ProcNum AND p.ProcStatus="+POut.Int((int)ProcStat.D);
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							List<DbmLog> listDbmLogs=new List<DbmLog>();
 							string methodName=MethodBase.GetCurrentMethod().Name;
 							table.Select().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(x["ProcNum"].ToString()),
@@ -6920,7 +6920,7 @@ namespace OpenDentBusiness {
 					+", patient.PatNum, patient.LName, patient.FName, procedurelog.ProcDate, procedurecode.ProcCode "//For Oracle.
 				+"HAVING COUNT(*)>1 "
 				+"ORDER BY patient.LName, patient.FName, procedurelog.ProcDate, procedurecode.ProcCode";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -6950,7 +6950,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string ProcedurelogProvNumMissing(bool verbose,DbmMode modeCur) {
 			string command="SELECT COUNT(*) FROM procedurelog WHERE ProvNum=0";
-			int numFound=PIn.Int(Db.GetCount(command));
+			int numFound=PIn.Int(Database.ExecuteString(command));
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -6977,7 +6977,7 @@ namespace OpenDentBusiness {
 				+"AND (ToothNum NOT REGEXP '^[1-9][0-9]?$' "//matches 1 or 2 digits, leading 0 not allowed
 				+"OR (CAST(ToothNum AS UNSIGNED)>32 AND CAST(ToothNum AS UNSIGNED)<51) "
 				+"OR CAST(ToothNum AS UNSIGNED)>82) ";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			Patient Lim=null;
 			string toothNum;
 			int numberFixed=0;
@@ -6992,7 +6992,7 @@ namespace OpenDentBusiness {
 				if(string.CompareOrdinal(toothNum,"a")>=0 && string.CompareOrdinal(toothNum,"t")<=0) {
 					if(modeCur!=DbmMode.Check) {
 						command="UPDATE procedurelog SET ToothNum='"+toothNum.ToUpper()+"' WHERE ProcNum="+table.Rows[i][0].ToString();
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(verbose) {
 						log+=Lim.GetNameLF()+" "+toothNum+" - "+toothNum.ToUpper()+"\r\n";
@@ -7002,7 +7002,7 @@ namespace OpenDentBusiness {
 				else {
 					if(modeCur!=DbmMode.Check) {
 						command="UPDATE procedurelog SET ToothNum='1' WHERE ProcNum="+table.Rows[i][0].ToString();
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(verbose) {
 						log+=Lim.GetNameLF()+" "+toothNum+" - 1\r\n";
@@ -7015,7 +7015,7 @@ namespace OpenDentBusiness {
 			if(numberFixed!=0 || verbose) {
 				Crud.DbmLogCrud.InsertMany(listDbmLogs);
 				log+=Lans.g("FormDatabaseMaintenance","Check for invalid tooth numbers complete.  Records checked: ")
-					+Db.GetCount("SELECT COUNT(*) FROM procedurelog")+". "+Lans.g("FormDatabaseMaintenance","Records invalid: ")+numberFixed.ToString()+"\r\n";
+					+Database.ExecuteString("SELECT COUNT(*) FROM procedurelog")+". "+Lans.g("FormDatabaseMaintenance","Records invalid: ")+numberFixed.ToString()+"\r\n";
 			}
 			return log;
 		}
@@ -7031,7 +7031,7 @@ namespace OpenDentBusiness {
 				+"AND procedurelog.ProcStatus!="+POut.Long((int)ProcStat.C)+" "//procedure not complete
 				+"AND (claim.ClaimStatus='W' OR claim.ClaimStatus='S' OR claim.ClaimStatus='R') "//waiting, sent, or received
 				+"AND (claim.ClaimType='P' OR claim.ClaimType='S' OR claim.ClaimType='Other')";//pri, sec, or other.  Eliminates preauths.
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -7072,7 +7072,7 @@ namespace OpenDentBusiness {
 				+"INNER JOIN procedurelog lab ON proc.ProcNum=lab.ProcNumLab AND lab.ProcStatus="+POut.Long((int)ProcStat.C)+" "
 				+"INNER JOIN procedurecode pclab ON pclab.CodeNum=lab.CodeNum "
 				+"WHERE proc.ProcStatus!="+POut.Long((int)ProcStat.C);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -7106,7 +7106,7 @@ namespace OpenDentBusiness {
 			string command="SELECT ProcNum FROM procedurelog WHERE UnitQty=0";
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures with UnitQty=0 found: ")+numFound+"\r\n";
 					}
@@ -7114,11 +7114,11 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listProcNums=Db.GetListLong(command);
+					List<long> listProcNums=Database.GetListLong(command);
 					command=@"UPDATE procedurelog        
 						SET UnitQty=1
 						WHERE UnitQty=0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Procedure changed from UnitQty=0 to UnitQty=1.")));
 					if(numberFixed>0 || verbose) {
@@ -7136,7 +7136,7 @@ namespace OpenDentBusiness {
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures with invalid ProvNum found")+": "+numFound.ToString()+"\r\n";
 					}
@@ -7144,10 +7144,10 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listProcNums=Db.GetListLong(command);
+					List<long> listProcNums=Database.GetListLong(command);
 					command="UPDATE procedurelog SET ProvNum="+POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv))+
 							" WHERE ProvNum > 0 AND ProvNum NOT IN (SELECT ProvNum FROM provider)";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Updated invalid provider from ProcedurelogWithInvalidProvNum.")));
 					if(numFixed>0 || verbose) {
@@ -7168,7 +7168,7 @@ namespace OpenDentBusiness {
 						+"OR (PlannedAptNum NOT IN(SELECT AptNum FROM appointment) AND PlannedAptNum!=0)";
 			switch(modeCur) {
 				case DbmMode.Check:
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures attached to invalid appointments")+": "+numFound+"\r\n";
 					}
@@ -7176,13 +7176,13 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listProcNums=Db.GetListLong(command);
+					List<long> listProcNums=Database.GetListLong(command);
 					command="UPDATE procedurelog SET AptNum=0 "
 						+"WHERE AptNum NOT IN(SELECT AptNum FROM appointment) AND AptNum!=0";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					command="UPDATE procedurelog SET PlannedAptNum=0 "
 						+"WHERE PlannedAptNum NOT IN(SELECT AptNum FROM appointment) AND PlannedAptNum!=0";
-					numberFixed+=Db.NonQ(command);
+					numberFixed+=Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Set AptNum to 0 from ProcedurelogWithInvalidAptNum.")));
 					if(numberFixed>0 || verbose) {
@@ -7202,7 +7202,7 @@ namespace OpenDentBusiness {
 						+"WHERE ClinicNum NOT IN(SELECT ClinicNum FROM clinic) AND ClinicNum!=0 ";
 			switch(modeCur) {
 				case DbmMode.Check:					
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Procedures attached to invalid clinics")+": "+numFound+"\r\n";
 					}
@@ -7210,10 +7210,10 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
-					List<long> listProcNums=Db.GetListLong(command);
+					List<long> listProcNums=Database.GetListLong(command);
 					command="UPDATE procedurelog SET ClinicNum=0 "
 						+"WHERE ClinicNum NOT IN(SELECT ClinicNum FROM clinic) and ClinicNum!=0 ";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
 							 DbmLogActionType.Update,methodName,"Fixed invalid clinicnum from ProcedurelogWithInvalidClinicNum.")));
 					if(numberFixed>0 || verbose) {
@@ -7234,7 +7234,7 @@ namespace OpenDentBusiness {
 					+"FROM programproperty "
 					+"WHERE PropertyDesc='' "//Blank for workstation overrides of program path.
 					+"GROUP BY ProgramNum,ComputerName,ClinicNum";
-			DataTable tableProgProps=Db.GetTable(command);
+			DataTable tableProgProps=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -7251,7 +7251,7 @@ namespace OpenDentBusiness {
 						command="DELETE FROM programproperty WHERE PropertyDesc='' "
 							+"AND ProgramPropertyNum NOT IN "
 							+"("+validProgramPropertyNums+")";
-						numberFixed=Db.NonQ(command);
+						numberFixed=Database.ExecuteNonQuery(command);
 					}
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Duplicate local path program properties entries found: ")
@@ -7271,7 +7271,7 @@ namespace OpenDentBusiness {
 					+"WHERE ClinicNum=0 "
 					+"AND ProgramNum IN ("+progNumStr+") "
 					+"GROUP BY ProgramNum,PropertyDesc";
-			DataTable tableProgProps=Db.GetTable(command);
+			DataTable tableProgProps=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -7284,7 +7284,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					command="DELETE FROM programproperty WHERE ClinicNum=0 AND ProgramNum IN ("+progNumStr+") "
 						+"AND ProgramPropertyNum NOT IN ("+string.Join(",",tableProgProps.Select().Select(x => PIn.Long(x["ProgramPropertyNum"].ToString())))+")";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","X-Charge and/or PayConnect duplicate program property entries deleted: ")
 							+numberFixed.ToString()+"\r\n";
@@ -7308,7 +7308,7 @@ namespace OpenDentBusiness {
 				+"AND pphq.ClinicNum=0 "
 				+"AND pphq.PropertyDesc!='' "
 				+"AND ppcl.ClinicNum IS NULL ";
-			DataTable tableProgProps=Db.GetTable(command);
+			DataTable tableProgProps=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -7342,7 +7342,7 @@ namespace OpenDentBusiness {
 				AND provider.IsHidden=1
 				AND claimproc.InsPayAmt>0
 				GROUP BY provider.ProvNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -7377,7 +7377,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM provider WHERE FeeSched NOT IN (SELECT FeeSchedNum FROM feesched)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Providers found with invalid FeeSched: ")+numFound+"\r\n";
 					}
@@ -7385,7 +7385,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					command=@"UPDATE provider SET FeeSched="+POut.Long(FeeScheds.GetFirst(true).FeeSchedNum)+" "
 						+"WHERE FeeSched NOT IN (SELECT FeeSchedNum FROM feesched)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Providers whose FeeSched has been changed: ")
 						+numberFixed.ToString()+"\r\n";
@@ -7398,7 +7398,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string QuickPasteNoteWithInvalidCatNum(bool verbose,DbmMode modeCur) {
 			string command=@"SELECT COUNT(*) FROM quickpastenote WHERE QuickPasteCatNum=0";
-			int numFound=PIn.Int(Db.GetCount(command));
+			int numFound=PIn.Int(Database.ExecuteString(command));
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -7413,7 +7413,7 @@ namespace OpenDentBusiness {
 						quickPasteCatNew.Description="DBM GENERATED";
 						QuickPasteCats.Insert(quickPasteCatNew);
 						command=@"UPDATE quickpastenote SET QuickPasteCatNum="+POut.Long(quickPasteCatNew.QuickPasteCatNum)+" WHERE QuickPasteCatNum=0";
-						numberFixed=Db.NonQ(command);
+						numberFixed=Database.ExecuteNonQuery(command);
 					}
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Quick Paste Notes with an invalid category num fixed")+": "+numberFixed.ToString()+"\r\n";
@@ -7435,7 +7435,7 @@ namespace OpenDentBusiness {
 				+"AND (recall.RecallTypeNum="+POut.Long(RecallTypes.PerioType)+" "
 				+"OR recall.RecallTypeNum="+POut.Long(RecallTypes.ProphyType)+") "
 				+"GROUP BY FName,LName,patient.PatNum HAVING countDups>1";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -7469,7 +7469,7 @@ namespace OpenDentBusiness {
 				FROM recall 
 				LEFT JOIN recalltype ON recalltype.RecallTypeNum=recall.RecallTypeNum 
 				WHERE recalltype.RecallTypeNum IS NULL";
-			List<long> listRecallTypeNums=Db.GetListLong(command);
+			List<long> listRecallTypeNums=Database.GetListLong(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -7485,7 +7485,7 @@ namespace OpenDentBusiness {
 					for(int i = 0;i<listRecallTypeNums.Count;i++) {
 						command="INSERT INTO recalltype (RecallTypeNum,Description,DefaultInterval,TimePattern,Procedures) VALUES ("
 							+POut.Long(listRecallTypeNums[i])+",'Temporary Recall "+POut.Int(i+1)+"',0,'','')";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					long numberFixedTypes=listRecallTypeNums.Count;
 					if(numberFixedTypes > 0) {
@@ -7509,7 +7509,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM recalltrigger WHERE NOT EXISTS (SELECT * FROM procedurecode WHERE procedurecode.CodeNum=recalltrigger.CodeNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Recall triggers found with bad codenum: ")+numFound+"\r\n";
 					}
@@ -7517,7 +7517,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					command=@"DELETE FROM recalltrigger
 						WHERE NOT EXISTS (SELECT * FROM procedurecode WHERE procedurecode.CodeNum=recalltrigger.CodeNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0) {
 						Signalods.SetInvalid(InvalidType.RecallTypes);
 					}
@@ -7536,14 +7536,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM refattach WHERE ReferralNum NOT IN (SELECT ReferralNum FROM referral)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Ref attachments found with invalid referrals: ")+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="DELETE FROM refattach WHERE ReferralNum NOT IN (SELECT ReferralNum FROM referral)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Ref attachments with invalid referrals deleted: ")+numberFixed.ToString()+"\r\n";
 					}
@@ -7563,7 +7563,7 @@ namespace OpenDentBusiness {
 						FROM refattach 
 						GROUP BY PatNum,ItemOrder
 						HAVING COUNT(*) > 1";
-					int numFound=Db.GetListLong(command).Count;
+					int numFound=Database.GetListLong(command).Count;
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Patients found with multiple referral attachments of the same order:")+" "+numFound+"\r\n";
 					}
@@ -7603,7 +7603,7 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM rxalert WHERE rxalert.AllergyDefNum!=0 AND NOT EXISTS (SELECT * FROM allergydef WHERE allergydef.AllergyDefNum=rxalert.AllergyDefNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Rx alerts with bad allergy definitions: ")+numFound+"\r\n";
 					}
@@ -7612,7 +7612,7 @@ namespace OpenDentBusiness {
 					//command=@"SELECT * FROM rxalert WHERE NOT EXISTS (SELECT * FROM allergydef WHERE allergydef.AllergyDefNum=rxalert.AllergyDefNum)";
 					//table=Db.GetTable(command);
 					command="UPDATE rxalert SET AllergyDefNum=0 WHERE rxalert.AllergyDefNum!=0 AND NOT EXISTS (SELECT * FROM allergydef WHERE allergydef.AllergyDefNum=rxalert.AllergyDefNum)";
-					long rowsChanged=Db.NonQ(command);
+					long rowsChanged=Database.ExecuteNonQuery(command);
 					if(rowsChanged>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Rx alerts with bad allergy definitions cleared: ")+rowsChanged.ToString()+"\r\n";
 					}
@@ -7631,14 +7631,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM scheduleop WHERE NOT EXISTS(SELECT * FROM schedule WHERE scheduleop.ScheduleNum=schedule.ScheduleNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Scheduleops with invalid ScheduleNums found")+": "+numFound.ToString()+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="DELETE FROM scheduleop WHERE NOT EXISTS(SELECT * FROM schedule WHERE scheduleop.ScheduleNum=schedule.ScheduleNum)";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Scheduleops with invalid ScheduleNums deleted")+": "+numFixed.ToString()+"\r\n";
 					}
@@ -7654,14 +7654,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM schedule WHERE StopTime<StartTime";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Schedules and blockouts having stop time before start time: ")+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="DELETE FROM schedule WHERE StopTime<StartTime";
-					long numFixed=Db.NonQ(command);
+					long numFixed=Database.ExecuteNonQuery(command);
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Schedules and blockouts having stop time before start time fixed: ")+numFixed.ToString()+"\r\n";
 					}
@@ -7677,14 +7677,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM provider WHERE IsHidden=1 AND ProvNum IN (SELECT ProvNum FROM schedule WHERE SchedDate > "+DbHelper.Now()+" GROUP BY ProvNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Hidden providers found on future schedules: ")+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="SELECT ProvNum FROM provider WHERE IsHidden=1 AND ProvNum IN (SELECT ProvNum FROM schedule WHERE SchedDate > "+DbHelper.Now()+" GROUP BY ProvNum)";
-					DataTable table=Db.GetTable(command);
+					DataTable table=Database.ExecuteDataTable(command);
 					List<long> provNums=new List<long>();
 					for(int i = 0;i<table.Rows.Count;i++) {
 						provNums.Add(PIn.Long(table.Rows[i]["ProvNum"].ToString()));
@@ -7707,7 +7707,7 @@ namespace OpenDentBusiness {
 				AND TIMEDIFF(schedule.StopTime,schedule.StartTime)<'00:05:00'
 				AND (schedule.Note=''"/*we don't want to remove provider notes, employee notes, or pratice notes.*/+@"
 				OR schedule.SchedType="+POut.Int((int)ScheduleType.WebSchedASAP)+")";
-			List<long> listSchedulesToDelete=Db.GetListLong(command);
+			List<long> listSchedulesToDelete=Database.GetListLong(command);
 			switch(modeCur) {
 				case DbmMode.Check:
 					int numFound=listSchedulesToDelete.Count;
@@ -7719,7 +7719,7 @@ namespace OpenDentBusiness {
 					int numberFixed=listSchedulesToDelete.Count;
 					if(listSchedulesToDelete.Count > 0) {
 						command="DELETE FROM schedule WHERE ScheduleNum IN("+string.Join(",",listSchedulesToDelete)+")";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Schedule blocks fixed:")+" "+numberFixed.ToString()+"\r\n";
@@ -7736,14 +7736,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM schedule WHERE SchedType=1 AND Status=1";//type=prov,status=closed
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Schedules found which are causing printing issues: ")+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="DELETE FROM schedule WHERE SchedType=1 AND Status=1";//type=prov,status=closed
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Schedules deleted that were causing printing issues: ")+numberFixed.ToString()+"\r\n";
 					}
@@ -7755,7 +7755,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string SheetDepositSlips(bool verbose,DbmMode modeCur) {
 			string command="SELECT SheetNum FROM sheet WHERE SheetType="+POut.Int((int)SheetTypeEnum.DepositSlip);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -7768,9 +7768,9 @@ namespace OpenDentBusiness {
 						for(int i = 0;i<table.Rows.Count;i++) {
 							long sheetNum=PIn.Long(table.Rows[i]["SheetNum"].ToString());
 							command="DELETE FROM sheetfield WHERE SheetNum="+POut.Long(sheetNum);
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 							command="DELETE FROM sheet WHERE SheetNum="+POut.Long(sheetNum);
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 						}
 					}
 					if(table.Rows.Count>0 || verbose) {
@@ -7789,7 +7789,7 @@ namespace OpenDentBusiness {
 				LEFT JOIN sheetfield ON sheetfield.SheetNum=sheet.SheetNum
 				WHERE sheet.IsWebForm=1
 				AND sheetfield.SheetNum IS NULL";
-			List<long> listSheetNums=Db.GetListLong(command);
+			List<long> listSheetNums=Database.GetListLong(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -7800,7 +7800,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					if(listSheetNums.Count>0) {
 						command="DELETE FROM sheet WHERE SheetNum IN("+string.Join(",",listSheetNums.Select(POut.Long))+")";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(listSheetNums.Count>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Blank Web Forms sheets deleted")+": "+listSheetNums.Count+"\r\n";
@@ -7820,14 +7820,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM signalod WHERE SigDateTime > "+DbHelper.Now();
-					long numFound=PIn.Long(Db.GetCount(command));
+					long numFound=PIn.Long(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Signalod entries with future time:")+" "+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command=@"DELETE FROM signalod WHERE SigDateTime > "+DbHelper.Now();
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Signalod entries with future times deleted:")+" "+numberFixed.ToString()+"\r\n";
 					}
@@ -7843,14 +7843,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command=@"SELECT COUNT(*) FROM sigmessage WHERE MessageDateTime > "+DbHelper.Now()+" OR AckDateTime > "+DbHelper.Now();
-					long numFound=PIn.Long(Db.GetCount(command));
+					long numFound=PIn.Long(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Sigmessage entries with future time:")+" "+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command=@"DELETE FROM sigmessage WHERE MessageDateTime > "+DbHelper.Now()+" OR AckDateTime > "+DbHelper.Now();
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Sigmessage entries with future times deleted:")+" "+numberFixed.ToString()+"\r\n";
 					}
@@ -7866,14 +7866,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM statement WHERE DateRangeTo='9999-12-31'";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Statement DateRangeTo max found: ")+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="UPDATE statement SET DateRangeTo='2200-01-01' WHERE DateRangeTo='9999-12-31'";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Statement DateRangeTo max fixed: ")+numberFixed.ToString()+"\r\n";
 					}
@@ -7889,14 +7889,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM statement WHERE DocNum>0 AND DocNum NOT IN (SELECT DocNum FROM document)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Statements with invalid DocNum found")+": "+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="UPDATE statement SET DocNum=0 WHERE DocNum>0 AND DocNum NOT IN (SELECT DocNum FROM document)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Statements with invalid DocNum fixed")+": "+numberFixed+"\r\n";
 					}
@@ -7990,12 +7990,12 @@ namespace OpenDentBusiness {
 					long taskListNum=0;
 					if(listAllTaskLists.Count>0) {
 						command="INSERT INTO tasklist (Descript,Parent,DateTL,IsRepeating,DateType,FromNum,ObjectType,DateTimeEntry) VALUES('FIX TASKLISTS',0,'0001-01-01',0,0,0,0,CURDATE())";
-						taskListNum=Db.NonQ(command,true);
+						taskListNum=Database.ExecuteInsert(command);
 					}
 					foreach(TaskList taskList in listAllTaskLists) {
 						//We will set each TaskList's parent to be 0 so the user can again access them via the Main tab and put them wherever they want.
 						command="UPDATE tasklist SET Parent="+POut.Long(taskListNum)+" WHERE TaskListNum="+taskList.TaskListNum.ToString();
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(listAllTaskLists.Count>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Task Lists with circular parent-child relationship corrected")+": "+listAllTaskLists.Count.ToString()+"\r\n";
@@ -8013,7 +8013,7 @@ namespace OpenDentBusiness {
 				+"WHERE task.TaskStatus="+POut.Int((int)TaskStatusEnum.Done)+" "
 				+"AND task.DateTimeFinished="+POut.DateT(new DateTime(1,1,1))+" "
 				+"GROUP BY task.TaskNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -8029,7 +8029,7 @@ namespace OpenDentBusiness {
 						DateTime dateTimeNoteMax=PIn.Date(row["DateTimeNoteMax"].ToString());
 						command="UPDATE task SET DateTimeFinished="+POut.DateT(dateTimeNoteMax)+" "
 							+"WHERE TaskNum="+row["TaskNum"].ToString();
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(table.Rows.Count>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Tasks completed with invalid Finished Date/Times corrected")+": "+table.Rows.Count.ToString()+"\r\n";
@@ -8047,7 +8047,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM tasksubscription "
 						+"WHERE NOT EXISTS(SELECT * FROM tasklist WHERE tasksubscription.TaskListNum=tasklist.TaskListNum)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Task subscriptions invalid: ")+numFound+"\r\n";
 					}
@@ -8055,7 +8055,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					command="DELETE FROM tasksubscription "
 						+"WHERE NOT EXISTS(SELECT * FROM tasklist WHERE tasksubscription.TaskListNum=tasklist.TaskListNum)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Task subscriptions deleted: ")+numberFixed.ToString()+"\r\n";
 					}
@@ -8072,7 +8072,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM taskunread "
 						+"WHERE taskunread.TaskNum NOT IN(SELECT TaskNum FROM task)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Unread task notifications for deleted tasks")+": "+numFound+"\r\n";
 					}
@@ -8080,7 +8080,7 @@ namespace OpenDentBusiness {
 				case DbmMode.Fix:
 					command="DELETE FROM taskunread "
 						+"WHERE taskunread.TaskNum NOT IN(SELECT TaskNum FROM task)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Unread task notifications for deleted tasks removed")+": "+numberFixed.ToString()+"\r\n";
 					}
@@ -8098,7 +8098,7 @@ namespace OpenDentBusiness {
 					command="SELECT COUNT(*) FROM timecardrule "
 						+"WHERE timecardrule.EmployeeNum!=0 " //0 is all employees, so it is a 'valid' employee number
 						+"AND timecardrule.EmployeeNum NOT IN(SELECT employee.EmployeeNum FROM employee)";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Time card rules found with invalid employee number: ")+numFound+"\r\n";
 					}
@@ -8108,7 +8108,7 @@ namespace OpenDentBusiness {
 						+"SET timecardrule.EmployeeNum=0 "
 						+"WHERE timecardrule.EmployeeNum!=0 " //don't set to 0 if already 0
 						+"AND timecardrule.EmployeeNum NOT IN(SELECT employee.EmployeeNum FROM employee)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Time card rules applied to All Employees due to invalid employee number: ")+numberFixed.ToString()+"\r\n";
 					}
@@ -8124,7 +8124,7 @@ namespace OpenDentBusiness {
 					+"INNER JOIN treatplan ON treatplan.TreatPlanNum=treatplanattach.TreatPlanNum AND procedurelog.PatNum!=treatplan.PatNum "
 					+"UNION "//more than 1 active treatment plan
 					+"SELECT PatNum FROM treatplan WHERE TPStatus=1 GROUP BY PatNum HAVING COUNT(DISTINCT TreatPlanNum)>1";
-			List<long> listPatNumsForAudit=Db.GetListLong(command).Distinct().ToList();
+			List<long> listPatNumsForAudit=Database.GetListLong(command).Distinct().ToList();
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -8153,7 +8153,7 @@ namespace OpenDentBusiness {
 			+ " FROM treatplanattach "
 			+ " GROUP BY treatplanattach.treatplannum, treatplanattach.ProcNum "
 			+ " HAVING NumDupes > 1 ";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -8166,7 +8166,7 @@ namespace OpenDentBusiness {
 						command="DELETE FROM treatplanattach WHERE treatplanattach.TreatPlanNum="+table.Rows[i]["TreatPlanNum"]
 							+" AND treatplanattach.ProcNum="+table.Rows[i]["ProcNum"]
 							+" AND treatplanattach.TreatPlanAttachNum != "+table.Rows[i]["OriginalTPANum"];
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					if(table.Rows.Count>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","TreatPlanAttaches with duplicate ProcNums and TreatPlanNums deleted")+": "+table.Rows.Count.ToString()+"\r\n";
@@ -8184,7 +8184,7 @@ namespace OpenDentBusiness {
 				LEFT JOIN treatplan ON treatplan.TreatPlanNum = proctp.TreatPlanNum 
 				WHERE treatplan.TreatPlanNum IS NULL 
 				GROUP BY proctp.TreatPlanNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log = "";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -8219,7 +8219,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr]
 		public static string UnscheduledApptsWithInvalidOpNum(bool verbose,DbmMode modeCur) {
 			string command="SELECT AptNum FROM appointment WHERE Op != 0 AND AptStatus=3";//UnschedList
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string log="";
 			switch(modeCur) {
 				case DbmMode.Check:
@@ -8231,7 +8231,7 @@ namespace OpenDentBusiness {
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="UPDATE appointment SET Op=0 WHERE AptStatus=3";//UnschedList
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					table.Select().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(x["AptNum"].ToString()),DbmLogFKeyType.Appointment,
 						DbmLogActionType.Update,methodName,"Fixed invalid OpNum from UnscheduledApptsWithInvalidOpNum.")));
 					if(table.Rows.Count>0 || verbose) {
@@ -8247,7 +8247,7 @@ namespace OpenDentBusiness {
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string UserodDuplicateUser(bool verbose,DbmMode modeCur) {
 			string command="SELECT UserName FROM userod WHERE IsHidden=0 GROUP BY UserName HAVING Count(*)>1;";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0 && !verbose) {
 				return "";
 			}
@@ -8279,14 +8279,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT Count(*) FROM userod WHERE ClinicNum<>0 AND ClinicNum NOT IN (SELECT ClinicNum FROM clinic)";
-					long numFound=PIn.Long(Db.GetCount(command));
+					long numFound=PIn.Long(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Users found with invalid ClinicNum: ")+numFound+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="UPDATE userod SET ClinicNum=0 WHERE ClinicNum<>0 AND ClinicNum NOT IN (SELECT ClinicNum FROM clinic)";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Users fixed with invalid ClinicNum: ")+numberFixed.ToString()+"\r\n";
 					}
@@ -8303,14 +8303,14 @@ namespace OpenDentBusiness {
 			switch(modeCur) {
 				case DbmMode.Check:
 					command="SELECT COUNT(*) FROM userod WHERE ClinicNum=0 AND ClinicIsRestricted=1";
-					int numFound=PIn.Int(Db.GetCount(command));
+					int numFound=PIn.Int(Database.ExecuteString(command));
 					if(numFound>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Users found restricted to an invalid clinic")+": "+numFound.ToString()+"\r\n";
 					}
 					break;
 				case DbmMode.Fix:
 					command="UPDATE userod SET ClinicIsRestricted=0 WHERE ClinicNum=0 AND ClinicIsRestricted=1";
-					long numberFixed=Db.NonQ(command);
+					long numberFixed=Database.ExecuteNonQuery(command);
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Users fixed with restriction to an invalid clinic")+": "+numberFixed.ToString()+"\r\n";
 					}
@@ -8328,7 +8328,7 @@ namespace OpenDentBusiness {
 			List<string> retVal=new List<string>();
 			string command="SHOW DATABASES";
 			//if this next step fails, table will simply have 0 rows
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i = 0;i<table.Rows.Count;i++) {
 				retVal.Add(table.Rows[i][0].ToString());
 			}
@@ -8346,7 +8346,7 @@ AND ProcNum>0
 AND Status!=4/*exclude supplemental*/
 GROUP BY LName,FName,patient.PatNum,ClaimNum,FeeBilled,Status,ProcNum,ProcDate,ClaimProcNum,InsPayAmt,LineNumber 
 HAVING cnt>1";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return "";
 			}
@@ -8379,7 +8379,7 @@ AND ProcNum>0
 AND Status=4/*only supplemental*/
 GROUP BY LName,FName,patient.PatNum,ClaimNum,FeeBilled,Status,ProcNum,ProcDate,ClaimProcNum,InsPayAmt,LineNumber
 HAVING cnt>1";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return "";
 			}
@@ -8409,7 +8409,7 @@ HAVING cnt>1";
 				+"LEFT JOIN "+olddb+".patient ON "+olddb+".patient.PatNum="+olddb+".claimproc.PatNum "
 				+"WHERE NOT EXISTS(SELECT * FROM claimproc WHERE claimproc.ClaimProcNum="+olddb+".claimproc.ClaimProcNum) "
 				+"AND ClaimNum > 0 AND ProcNum>0";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			double insPayAmt;
 			double feeBilled;
 			int count=0;
@@ -8423,7 +8423,7 @@ HAVING cnt>1";
 					+"AND InsPayAmt= '"+POut.Double(insPayAmt)+"' "
 					+"AND FeeBilled= '"+POut.Double(feeBilled)+"' "
 					+"AND LineNumber= "+table.Rows[i]["LineNumber"].ToString();
-				string result=Db.GetCount(command);
+				string result=Database.ExecuteString(command);
 				if(result!="1") {//only include in result if there are duplicates in old db.
 					count++;
 				}
@@ -8431,7 +8431,7 @@ HAVING cnt>1";
 			command="SELECT ClaimPaymentNum "
 				+"FROM "+olddb+".claimpayment "
 				+"WHERE NOT EXISTS(SELECT * FROM claimpayment WHERE claimpayment.ClaimPaymentNum="+olddb+".claimpayment.ClaimPaymentNum) ";
-			DataTable table2=Db.GetTable(command);
+			DataTable table2=Database.ExecuteDataTable(command);
 			if(count==0 && table2.Rows.Count==0) {
 				return "";
 			}
@@ -8495,7 +8495,7 @@ HAVING cnt>1";
 				}
 				foreach(char c in specialCharsFound) {
 					command="UPDATE appointment SET Note=REPLACE(Note,'"+POut.String(c.ToString())+"',''), ProcDescript=REPLACE(ProcDescript,'"+POut.String(c.ToString())+"','')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 			}
 			command="SELECT * FROM patient WHERE AddrNote REGEXP '[^[:alnum:]^[:space:]]+'";
@@ -8522,7 +8522,7 @@ HAVING cnt>1";
 				}
 				foreach(char c in specialCharsFound) {
 					command="UPDATE patient SET AddrNote=REPLACE(AddrNote,'"+POut.String(c.ToString())+"','')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 			}
 			for(int i = 0;i<_listTableAndColumns.Count;i+=2) {
@@ -8531,7 +8531,7 @@ HAVING cnt>1";
 				command="UPDATE "+tableName+" "
 					+"SET "+columnName+"=REPLACE("+columnName+",CHAR(0),'') "
 					+"WHERE "+columnName+" LIKE '%"+POut.String("\0")+"%'";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			return;
 		}
@@ -8547,13 +8547,13 @@ HAVING cnt>1";
 					OR data_type='text' 
 					OR data_type='varchar') 
 				AND is_nullable='YES'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			long changeCount=0;
 			for(int i = 0;i<table.Rows.Count;i++) {
 				command="UPDATE `"+table.Rows[i]["table_name"].ToString()+"` "
 					+"SET `"+table.Rows[i]["column_name"].ToString()
 					+"`='' WHERE `"+table.Rows[i]["column_name"].ToString()+"` IS NULL";
-				changeCount+=Db.NonQ(command);
+				changeCount+=Database.ExecuteNonQuery(command);
 			}
 			return changeCount;
 		}
@@ -8565,21 +8565,21 @@ HAVING cnt>1";
 			string command="UPDATE etrans "
 				+"SET EtransMessageTextNum=0 "
 				+"WHERE DATE(DateTimeTrans)<ADDDATE(CURDATE(),INTERVAL -1 YEAR) AND Etype!="+POut.Long((int)EtransType.ERA_835);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Create a temporary table to hold all of the EtransMessageTextNum foreign keys which are sill in use within etrans.  The temporary table speeds up the next query.
 			string tableName="tempetransnomessage"+MiscUtils.CreateRandomAlphaNumericString(8);//max size for a table name in oracle is 30 chars.
 			command="DROP TABLE IF EXISTS "+tableName+"; "
 				+"CREATE TABLE "+tableName+" "
 				+"SELECT DISTINCT EtransMessageTextNum FROM etrans WHERE EtransMessageTextNum!=0; "
 				+"ALTER TABLE "+tableName+" ADD INDEX (EtransMessageTextNum);";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Delete unlinked etransmessagetext entries.  Remember, multiple etrans records might point to a single etransmessagetext record.  Therefore, we must keep a particular etransmessagetext record if at least one etrans record needs it.
 			command="DELETE FROM etransmessagetext "
 				+"WHERE EtransMessageTextNum NOT IN (SELECT EtransMessageTextNum FROM "+tableName+");";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Remove the temporary table which is no longer needed.
 			command="DROP TABLE "+tableName+";";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//To reclaim that space on the disk you have to do an Optimize.
 			//The reasons listed at [[Database Storage Engine Comparison: InnoDB vs MyISAM]] do not apply to these two tables.
 			//We just did a massive delete and therefore optimzing a table which is not an "insert only table".
@@ -8641,7 +8641,7 @@ HAVING cnt>1";
 			//we would need to take an extra step at the end (after cleaning up attachments) to re-encrypt the modified email message. 
 			//The current customers complaining only have bloat with clear text emails so that is where we are going to start with the clean up tool.
 			DatabaseMaintEvent.Fire(EventCategory.DatabaseMaint,Lans.g("DatabaseMaintenance","Getting email messages from the database..."));
-			DataTable tableEmailMessageNums=Db.GetTable(command);
+			DataTable tableEmailMessageNums=Database.ExecuteDataTable(command);
 			if(tableEmailMessageNums.Rows.Count==0) {
 				return Lans.g("DatabaseMaintenance","There are no email messages that need to be cleaned up.");
 			}
@@ -8778,7 +8778,7 @@ HAVING cnt>1";
 			if(table.Rows.Count > 0) {
 				string command="UPDATE paysplit SET PayPlanNum=0 WHERE SplitNum IN("
 					+string.Join(",",table.Select().Select(x => x["SplitNum"].ToString()))+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				resultsMsg+=Lans.g(_lanThis,"The following patient payments were detached from insurance payment plans.  It is recommended you verify "
 					+"these accounts are correct.");
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -8792,7 +8792,7 @@ HAVING cnt>1";
 			if(table.Rows.Count > 0) {
 				string command="UPDATE claimproc SET PayPlanNum=0 WHERE ClaimProcNum IN("
 					+string.Join(",",table.Select().Select(x => x["ClaimProcNum"].ToString()))+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				if(resultsMsg!="") {
 					resultsMsg+="\r\n\r\n";
 				}
@@ -8819,7 +8819,7 @@ HAVING cnt>1";
 				+"INNER JOIN payplan ON payplan.PayPlanNum=paysplit.PayPlanNum "
 				+"WHERE paysplit.PayPlanNum!=0 "
 				+"AND payplan.PlanNum!=0 ";//insurance payment plan
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets claim procs that are attached to patient payment plans.
@@ -8830,7 +8830,7 @@ HAVING cnt>1";
 				+"INNER JOIN payplan ON payplan.PayPlanNum=claimproc.PayPlanNum "
 				+"WHERE claimproc.PayPlanNum!=0 "
 				+"AND payplan.PlanNum=0 ";//standard payment plan
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Given a patnum and the name of a table this helper builds the MySQL AND clause string used for our patient specific DBMs. 
@@ -8951,12 +8951,12 @@ HAVING cnt>1";
 					)
 				)
 				GROUP BY table1.TABLE_NAME,INDEX_NAME";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static string DropRedundantIndexes(List<DataRow> listRows) {
 			bool hasInnoDbFilePerTable=false;
-			using(DataTable table=Db.GetTable("SHOW GLOBAL VARIABLES LIKE 'INNODB_FILE_PER_TABLE'")) {
+			using(DataTable table=Database.ExecuteDataTable("SHOW GLOBAL VARIABLES LIKE 'INNODB_FILE_PER_TABLE'")) {
 				if(table.Rows.Count>0 && table.Columns.Count>1) {
 					hasInnoDbFilePerTable=PIn.Bool(table.Rows[0][1].ToString());
 				}
@@ -8982,7 +8982,7 @@ HAVING cnt>1";
 					DatabaseMaintEvent.Fire(EventCategory.DatabaseMaint,Lans.g("DatabaseMaintenance","Dropping redundant indexes")+" "
 						+(doOptimize?(Lans.g("DatabaseMaintenance","and optimizing")+" "):"")+Lans.g("DatabaseMaintenance","table")+" "
 						+fullTableName.Replace("`","")+".");
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				});
 			DataConnection.CommandTimeout=3600;//set back to 1 hour default
 			return sbLog.ToString();

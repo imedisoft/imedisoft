@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -66,7 +67,7 @@ namespace OpenDentBusiness
 		public static void Delete(long xChargeTransactionNum)
 		{
 			string command = "DELETE FROM xchargetransaction WHERE XChargeTransactionNum = " + POut.Long(xChargeTransactionNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static DataTable GetMissingPaymentsTable(DateTime dateStart, DateTime dateEnd)
@@ -137,7 +138,7 @@ namespace OpenDentBusiness
 				+ "WHERE payment.DateEntry BETWEEN " + POut.Date(dateStart) + " AND " + POut.Date(dateEnd) + " "
 				+ "AND TransactionDateTime IS NULL "
 				+ "ORDER BY payment.PayDate ASC,LName,FName";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 	}
 }

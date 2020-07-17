@@ -1,4 +1,5 @@
 ﻿using DataConnectionBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,14 +13,14 @@ namespace OpenDentBusiness
 	public class TrojanQueries
 	{
 		public static DateTime GetMaxProcedureDate(long PatNum) 
-			=> SIn.Date(Db.GetScalar(
+			=> SIn.Date(Database.ExecuteString(
 				$"SELECT MAX(ProcDate) FROM procedurelog,patient " +
 				$"WHERE patient.PatNum=procedurelog.PatNum " +
 				$"AND procedurelog.ProcStatus={SOut.Int((int)ProcStat.C)} " +
 				$"AND patient.Guarantor={SOut.Long(PatNum)}"));
 
 		public static DateTime GetMaxPaymentDate(long PatNum) 
-			=> SIn.Date(Db.GetScalar(
+			=> SIn.Date(Database.ExecuteString(
 				$"SELECT MAX(DatePay) FROM paysplit,patient " +
 				$"WHERE patient.PatNum=paysplit.PatNum " +
 				$"AND patient.Guarantor={SOut.Long(PatNum)}"));
@@ -80,7 +81,7 @@ namespace OpenDentBusiness
 					"(SELECT COUNT(*) FROM patplan a WHERE a.PatNum=p.PatNum AND a.InsSubNum=s.InsSubNum) > 0 " +
 					"ORDER BY i.TrojanID,p.LName,p.FName";
 
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		/// <summary>
@@ -119,7 +120,7 @@ namespace OpenDentBusiness
 					"(i.EmployerNum=e.EmployerNum OR i.EmployerNum=0) AND " +
 					"(SELECT COUNT(*) FROM patplan a WHERE a.PatNum=p.PatNum AND a.InsSubNum=s.InsSubNum) > 0 " +
 					"ORDER BY i.TrojanID,p.LName,p.FName";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static InsPlan GetPlanWithTrojanID(string trojanID) 
@@ -129,7 +130,7 @@ namespace OpenDentBusiness
 		{
 			long employerNum = Employers.GetEmployerNum(troj.ENAME);
 
-			Db.NonQ(
+			Database.ExecuteNonQuery(
 				"UPDATE insplan SET " +
 					"EmployerNum=" + SOut.Long(employerNum) + ", " +
 					"GroupName='" + SOut.String(troj.PLANDESC) + "', " +
@@ -137,11 +138,11 @@ namespace OpenDentBusiness
 					"CarrierNum= " + SOut.Long(troj.CarrierNum) + " " +
 				"WHERE PlanNum=" + SOut.Long(planNum));
 
-			Db.NonQ("UPDATE inssub SET BenefitNotes='" + SOut.String(troj.BenefitNotes) + "' HERE PlanNum=" + SOut.Long(planNum));
+			Database.ExecuteNonQuery("UPDATE inssub SET BenefitNotes='" + SOut.String(troj.BenefitNotes) + "' HERE PlanNum=" + SOut.Long(planNum));
 
 			if (updateBenefits)
 			{
-				Db.NonQ("DELETE FROM benefit WHERE PlanNum=" + SOut.Long(planNum));
+				Database.ExecuteNonQuery("DELETE FROM benefit WHERE PlanNum=" + SOut.Long(planNum));
 
 				for (int j = 0; j < troj.BenefitList.Count; j++)
 				{

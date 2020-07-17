@@ -1,17 +1,14 @@
-﻿using OpenDentBusiness;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Imedisoft.Data;
+using OpenDentBusiness;
 
-namespace UnitTestsCore {
-	///<summary>Has methods for Pharmacy.</summary>
-	public class PharmacyT {
+namespace UnitTestsCore
+{
+    ///<summary>Has methods for Pharmacy.</summary>
+    public class PharmacyT {
 		///<summary>Deletes everything from Pharmacy.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearPharmacies() {
 			string command="DELETE FROM pharmacy WHERE PharmacyNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void CreatePharmacy(string name,string addr,string city,string state,string zip,string phone) {

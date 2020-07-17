@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -43,9 +44,9 @@ namespace OpenDentBusiness{
 		public static void Truncate() {
 			
 			string command = "TRUNCATE dashboardar";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(!string.IsNullOrEmpty(PrefC.ReportingServer.Server)) { //only attempt to insert into the reporting server if the reporting server is set up.
-				ReportsComplex.RunFuncOnReportServer(() => Db.NonQ(command));
+				ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteNonQuery(command));
 			}
 		}
 
@@ -68,7 +69,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long dashboardARNum) {
 			
 			string command= "DELETE FROM dashboardar WHERE DashboardARNum = "+POut.Long(dashboardARNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

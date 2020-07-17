@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace OpenDentBusiness {
 			
 			string command="UPDATE repeatcharge SET ChargeAmt="+POut.Double(chargeAmt)+" "
 				+"WHERE RepeatChargeNum="+POut.Long(repeatChargeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -62,7 +63,7 @@ namespace OpenDentBusiness {
 		public static void Delete(RepeatCharge charge){
 			
 			string command="DELETE FROM repeatcharge WHERE RepeatChargeNum ="+POut.Long(charge.RepeatChargeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>For internal use only.  Returns all eRx repeating charges for all customers.</summary>
@@ -101,7 +102,7 @@ namespace OpenDentBusiness {
 			string command="SELECT COUNT(*) FROM repeatcharge "
 				+"WHERE PatNum="+POut.Long(patNum)+" AND DateStart BETWEEN '1880-01-01' AND "+DbHelper.Curdate()+" "
 				+"AND (DateStop='0001-01-01' OR DateStop>="+DbHelper.Curdate()+")";
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;

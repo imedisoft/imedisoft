@@ -1,5 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -147,7 +148,7 @@ namespace OpenDentBusiness{
 			}
 			command+="GROUP BY carrier.CarrierNum ";
 			command+="ORDER BY CarrierName";
-			tableRaw=Db.GetTable(command);
+			tableRaw=Database.ExecuteDataTable(command);
 			table=new DataTable();
 			table.Columns.Add("Address");
 			table.Columns.Add("Address2");
@@ -224,14 +225,14 @@ namespace OpenDentBusiness{
 				}
 				//so the edited carrier looks good, but now we need to make sure that the original was allowed to be changed.
 				command="SELECT ElectID,IsCDA FROM carrier WHERE CarrierNum = '"+POut.Long(carrier.CarrierNum)+"'";
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 				if(PIn.Bool(table.Rows[0]["IsCDA"].ToString())//if original carrier IsCDA
 					&& PIn.String(table.Rows[0]["ElectID"].ToString()).Trim()!="" //and the ElectID was already set
 					&& PIn.String(table.Rows[0]["ElectID"].ToString())!=carrier.ElectID)//and the ElectID was changed
 				{
 					command="SELECT COUNT(*) FROM etrans WHERE CarrierNum= "+POut.Long(carrier.CarrierNum)
 						+" OR CarrierNum2="+POut.Long(carrier.CarrierNum);
-					if(Db.GetCount(command)!="0"){
+					if(Database.ExecuteString(command)!="0"){
 						throw new ApplicationException(Lans.g("Carriers","Not allowed to change Carrier Identification Number because it's in use in the claim history."));
 					}
 				}
@@ -279,7 +280,7 @@ namespace OpenDentBusiness{
 				+"LEFT JOIN patient ON inssub.Subscriber=patient.PatNum " 
 				+"WHERE insplan.CarrierNum = "+POut.Long(Cur.CarrierNum)+" "
 				+"ORDER BY LName,FName";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			string strInUse;
 			if(table.Rows.Count>0){
 				strInUse="";//new string[table.Rows.Count];
@@ -294,7 +295,7 @@ namespace OpenDentBusiness{
 			//look for dependencies in etrans table.
 			command="SELECT DateTimeTrans FROM etrans WHERE CarrierNum="+POut.Long(Cur.CarrierNum)
 				+" OR CarrierNum2="+POut.Long(Cur.CarrierNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0){
 				strInUse="";
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -306,7 +307,7 @@ namespace OpenDentBusiness{
 				throw new ApplicationException(Lans.g("Carriers","Not allowed to delete carrier because it is in use in the etrans table.  Dates of claim sent history include ")+strInUse);
 			}
 			command="DELETE from carrier WHERE CarrierNum = "+POut.Long(Cur.CarrierNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			InsEditLogs.MakeLogEntry(null,Cur,InsEditLogType.Carrier,Security.CurUser.UserNum);
 		}
@@ -319,7 +320,7 @@ namespace OpenDentBusiness{
 				+" AND insplan.PlanNum=inssub.PlanNum"
 				+" AND insplan.CarrierNum = '"+POut.Long(Cur.CarrierNum)+"'"
 				+" ORDER BY LName,FName";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<string> retStr=new List<string>();
 			for(int i=0;i<table.Rows.Count;i++) {
 				retStr.Add(PIn.String(table.Rows[i][0].ToString()));
@@ -383,7 +384,7 @@ namespace OpenDentBusiness{
 				+"AND Zip = '"        +POut.String(carrier.Zip)+"' "
 				+"AND ElectID = '"    +POut.String(carrier.ElectID)+"' "
 				+"AND NoSendElect = " +POut.Int((int)carrier.NoSendElect);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			//Previously carrier.Phone has been given to us after being formatted by ValidPhone in the UI (FormInsPlan).
 			//Strip all formatting from the given phone number and the DB phone numbers to compare.
 			//The phone in the database could be in a different format if it was imported in an old version.
@@ -458,13 +459,13 @@ namespace OpenDentBusiness{
 				List<InsPlan> listInsPlan = Crud.InsPlanCrud.SelectMany(command);
 				command="UPDATE insplan SET CarrierNum = '"+POut.Long(pickedCarrierNum)+"' "
 					+"WHERE CarrierNum = "+POut.Long(carrierNums[i]);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				command="UPDATE etrans SET CarrierNum='"+POut.Long(pickedCarrierNum)+"' "
 					+"WHERE CarrierNum="+POut.Long(carrierNums[i]);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				command="UPDATE etrans SET CarrierNum2='"+POut.Long(pickedCarrierNum)+"' "
 					+"WHERE CarrierNum2="+POut.Long(carrierNums[i]);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				listInsPlan.ForEach(x => { //Log InsPlan CarrierNum change.
 					InsEditLogs.MakeLogEntry("CarrierNum",Security.CurUser.UserNum,POut.Long(carrierNums[i]),POut.Long(pickedCarrierNum),
@@ -473,7 +474,7 @@ namespace OpenDentBusiness{
 				Carrier carrierCur = GetCarrier(carrierNums[i]); //gets from cache
 				command="DELETE FROM carrier"
 					+" WHERE CarrierNum = '"+carrierNums[i].ToString()+"'";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				InsEditLogs.MakeLogEntry(null,carrierCur,InsEditLogType.Carrier,Security.CurUser.UserNum);
 			}

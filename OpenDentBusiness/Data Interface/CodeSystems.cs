@@ -589,7 +589,7 @@ namespace OpenDentBusiness{
 //											SELECT SnomedCode FROM snomed
 //											UNION ALL
 //											SELECT SopCode FROM sop";
-//			DataTable T = DataCore.GetTable(command);
+//			DataTable T = Database.GetTable(command);
 //			HashSet<string> allCodeHash=new HashSet<string>();
 //			for(int i=0;i<T.Rows.Count;i++) {
 //				allCodeHash.Add(T.Rows[i][0].ToString());
@@ -641,7 +641,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long codeSystemNum) {
 			
 			string command= "DELETE FROM codesystem WHERE CodeSystemNum = "+POut.Long(codeSystemNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

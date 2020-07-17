@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -276,58 +277,58 @@ namespace OpenDentBusiness{
 		public static void SetToDefault() {
 			
 			string command="DELETE FROM recalltype WHERE RecallTypeNum >= 1 AND RecallTypeNum <= 7";//Don't delete manually added recall types
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltype (RecallTypeNum,Description,DefaultInterval,TimePattern,Procedures) VALUES (1,'Prophy',393217,'/XXXX/','D1110')";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltype (RecallTypeNum,Description,DefaultInterval,TimePattern,Procedures) VALUES (2,'Child Prophy',0,'XXX','D1120,D1208')";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltype (RecallTypeNum,Description,DefaultInterval,TimePattern,Procedures) VALUES (3,'Perio',262144,'/XXXX/','D4910')";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltype (RecallTypeNum,Description,DefaultInterval,Procedures,AppendToSpecial) VALUES (4,'4BW',16777216,'D0274',1)";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltype (RecallTypeNum,Description,DefaultInterval,Procedures,AppendToSpecial) VALUES (5,'Pano',83886080,'D0330',1)";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltype (RecallTypeNum,Description,DefaultInterval,Procedures,AppendToSpecial) VALUES (6,'FMX',83886080,'D0210',1)";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltype (RecallTypeNum,Description,DefaultInterval,Procedures,AppendToSpecial) VALUES (7,'Exam',393217,'D0120',1)";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM recalltrigger";//OK to delete triggers for manually added recalls, because deleting the triggers disables the recall type.
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (1,1,"+ProcedureCodes.GetCodeNum("D0415")+")";//collection of microorg for culture
-			//Db.NonQ(command);
+			//Db.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (1,7,"+ProcedureCodes.GetCodeNum("D0150")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (2,4,"+ProcedureCodes.GetCodeNum("D0274")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (3,5,"+ProcedureCodes.GetCodeNum("D0330")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (4,6,"+ProcedureCodes.GetCodeNum("D0210")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (5,1,"+ProcedureCodes.GetCodeNum("D1110")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (6,1,"+ProcedureCodes.GetCodeNum("D1120")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (7,3,"+ProcedureCodes.GetCodeNum("D4910")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (8,3,"+ProcedureCodes.GetCodeNum("D4341")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (9,7,"+ProcedureCodes.GetCodeNum("D0120")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="INSERT INTO recalltrigger (RecallTriggerNum,RecallTypeNum,CodeNum) VALUES (10,7,"+ProcedureCodes.GetCodeNum("D0180")+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Update the special types in preference table.
 			command="UPDATE preference SET ValueString='1' WHERE PrefName='RecallTypeSpecialProphy'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE preference SET ValueString='2' WHERE PrefName='RecallTypeSpecialChildProphy'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE preference SET ValueString='3' WHERE PrefName='RecallTypeSpecialPerio'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="UPDATE preference SET ValueString='1,2,3' WHERE PrefName='RecallTypesShowingInList'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Delete recalls for manually added recall types.  This is the same strategy we use in FormRecallTypeEdit
 			//Types 1 through 6 were reinserted above, and thus the foreign keys will still be correct.
 			command="DELETE FROM recall WHERE RecallTypeNum < 1 OR RecallTypeNum > 7";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns true if any recall types that are not the default types are in use in patient recalls.</summary>
@@ -336,7 +337,7 @@ namespace OpenDentBusiness{
 			string command="SELECT COUNT(*) "
 				+"FROM recall "
 				+"WHERE RecallTypeNum < 1 OR RecallTypeNum > 6";//1 through 6 are the default recall types
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;

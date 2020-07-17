@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -84,20 +85,20 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(*) FROM apptfielddef WHERE FieldName='"+POut.String(apptFieldDef.FieldName)+"' "
 				+"AND ApptFieldDefNum != "+POut.Long(apptFieldDef.ApptFieldDefNum);
-			if(Db.GetCount(command)!="0"){
+			if(Database.ExecuteString(command)!="0"){
 				throw new ApplicationException(Lans.g("FormApptFieldDefEdit","Field name already in use."));
 			}
 			Crud.ApptFieldDefCrud.Update(apptFieldDef);
 			command="UPDATE apptfield SET FieldName='"+POut.String(apptFieldDef.FieldName)+"' "
 				+"WHERE FieldName='"+POut.String(oldFieldName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Surround with try/catch in case field name already in use.</summary>
 		public static long Insert(ApptFieldDef apptFieldDef) {
 			
 			string command="SELECT COUNT(*) FROM apptfielddef WHERE FieldName='"+POut.String(apptFieldDef.FieldName)+"'";
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new ApplicationException(Lans.g("FormApptFieldDefEdit","Field name already in use."));
 			}
 			return Crud.ApptFieldDefCrud.Insert(apptFieldDef);
@@ -111,7 +112,7 @@ namespace OpenDentBusiness{
 				+"patient.PatNum=appointment.PatNum "
 				+"AND appointment.AptNum=apptfield.AptNum "
 				+"AND FieldName='"+POut.String(apptFieldDef.FieldName)+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			DateTime aptDateTime;
 			if(table.Rows.Count>0) {
 				string s=Lans.g("FormApptFieldDefEdit","Not allowed to delete. Already in use by ")+table.Rows.Count.ToString()
@@ -126,7 +127,7 @@ namespace OpenDentBusiness{
 				throw new ApplicationException(s);
 			}
 			command="DELETE FROM apptfielddef WHERE ApptFieldDefNum ="+POut.Long(apptFieldDef.ApptFieldDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		/*
@@ -163,7 +164,7 @@ namespace OpenDentBusiness{
 		public static bool HasDuplicateFieldNames() {
 			
 			string command="SELECT COUNT(*) FROM apptfielddef GROUP BY FieldName HAVING COUNT(FieldName) > 1";
-			return (Db.GetScalar(command)!="");
+			return (Database.ExecuteScalar(command)!="");
 		}
 
 		///<summary>Returns the ApptFieldDef for the specified field name. Returns null if an ApptFieldDef does not exist for that field name.</summary>

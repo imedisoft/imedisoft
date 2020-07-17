@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace OpenDentBusiness{
 		public static List<LabTurnaround> GetForLab(long laboratoryNum) {
 			
 			string command="SELECT * FROM labturnaround WHERE LaboratoryNum="+POut.Long(laboratoryNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<LabTurnaround> retVal=new List<LabTurnaround>();
 			LabTurnaround lab;
 			for(int i=0;i<table.Rows.Count;i++) {
@@ -50,7 +51,7 @@ namespace OpenDentBusiness{
 		public static void SetForLab(long labNum,List<LabTurnaround> lablist) {
 			
 			string command="DELETE FROM labturnaround WHERE LaboratoryNum="+POut.Long(labNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			for(int i=0;i<lablist.Count;i++){
 				lablist[i].LaboratoryNum=labNum;
 				Insert(lablist[i]);

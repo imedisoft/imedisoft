@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,7 +46,7 @@ namespace OpenDentBusiness{
 			if(!includeDiscontinued) {//only include current orders
 				command+=" AND IsDiscontinued=0";//false
 			}
-			DataTable rawOrder=Db.GetTable(command);
+			DataTable rawOrder=Database.ExecuteDataTable(command);
 			DateTime dateT;
 			MedicalOrderType medOrderType;
 			long medicalOrderNum;
@@ -161,7 +162,7 @@ namespace OpenDentBusiness{
 		public static bool LabHasResultsAttached(long medicalOrderNum) {
 			
 			string command= "SELECT COUNT(*) FROM labpanel WHERE MedicalOrderNum = "+POut.Long(medicalOrderNum);
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			else {
@@ -193,12 +194,12 @@ namespace OpenDentBusiness{
 			string command;
 			//validation
 			command="SELECT COUNT(*) FROM labpanel WHERE MedicalOrderNum="+POut.Long(medicalOrderNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new ApplicationException(Lans.g("MedicalOrders","Not allowed to delete a lab order that has attached lab panels."));
 			}
 			//end of validation
 			command = "DELETE FROM medicalorder WHERE MedicalOrderNum = "+POut.Long(medicalOrderNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		

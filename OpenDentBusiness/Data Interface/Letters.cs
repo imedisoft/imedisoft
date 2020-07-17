@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -90,7 +91,7 @@ namespace OpenDentBusiness{
 		public static void Delete(Letter Cur){
 			
 			string command="DELETE from letter WHERE LetterNum = '"+Cur.LetterNum.ToString()+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 

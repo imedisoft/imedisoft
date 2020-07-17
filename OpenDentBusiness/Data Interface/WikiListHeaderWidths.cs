@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -79,7 +80,7 @@ namespace OpenDentBusiness{
 		public static List<WikiListHeaderWidth> GetForList(string listName) {
 			List<WikiListHeaderWidth> retVal = new List<WikiListHeaderWidth>();
 			string command = "DESCRIBE wikilist_"+POut.String(listName);//TODO: Oracle compatible?
-			DataTable tableDescripts = Db.GetTable(command);
+			DataTable tableDescripts = Database.ExecuteDataTable(command);
 			List<WikiListHeaderWidth> listHeaderWidths=GetWhere(x => x.ListName==listName);
 			for(int i = 0;i<tableDescripts.Rows.Count;i++) {
 				WikiListHeaderWidth addWidth = listHeaderWidths.Where(x => x.ColName == tableDescripts.Rows[i][0].ToString()).FirstOrDefault();
@@ -93,7 +94,7 @@ namespace OpenDentBusiness{
 		///<summary>Also alters the db table for the list itself.  Throws exception if number of columns does not match.</summary>
 		public static void UpdateNamesAndWidths(string listName,List<WikiListHeaderWidth> columnDefs) {
 			string command="DESCRIBE wikilist_"+POut.String(listName);
-			DataTable tableListDescription=Db.GetTable(command);
+			DataTable tableListDescription=Database.ExecuteDataTable(command);
 			if(tableListDescription.Rows.Count!=columnDefs.Count) {
 				throw new ApplicationException("List schema has been altered. Unable to save changes to list.");
 			}
@@ -105,9 +106,9 @@ namespace OpenDentBusiness{
 				command=$@"UPDATE wikilistheaderwidth SET ColName='{POut.String(DummyColName+i)}'
 					WHERE ListName='{POut.String(listName)}'
 					AND ColName='{POut.String(row[0].ToString())}'";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
-			Db.NonQ($"ALTER TABLE wikilist_{POut.String(listName)} {string.Join(",",listChanges)}");
+			Database.ExecuteNonQuery($"ALTER TABLE wikilist_{POut.String(listName)} {string.Join(",",listChanges)}");
 			listChanges=new List<string>();
 			//rename columns names and widths-------------------------------------------------------------------------------------------------------
 			for(int i=1;i<tableListDescription.Rows.Count;i++) {//start with index 1 to skip PK col
@@ -117,16 +118,16 @@ namespace OpenDentBusiness{
 					SET ColName='{POut.String(wCur.ColName)}',ColWidth='{POut.Int(wCur.ColWidth)}',PickList='{POut.String(wCur.PickList)}'
 					WHERE ListName='{POut.String(listName)}'
 					AND ColName='{POut.String(DummyColName+i)}'";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
-			Db.NonQ($"ALTER TABLE wikilist_{POut.String(listName)} {string.Join(",",listChanges)}");
+			Database.ExecuteNonQuery($"ALTER TABLE wikilist_{POut.String(listName)} {string.Join(",",listChanges)}");
 			//handle width of PK seperately because we do not rename the PK column, ever.
 			command=$@"UPDATE wikilistheaderwidth
 				SET ColWidth='{POut.Int(columnDefs[0].ColWidth)}',
 				PickList='{POut.String(columnDefs[0].PickList)}'
 				WHERE ListName='{POut.String(listName)}'
 				AND ColName='{POut.String(columnDefs[0].ColName)}'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			RefreshCache();
 		}
 
@@ -144,13 +145,13 @@ namespace OpenDentBusiness{
 		///<summary>No error checking. Only called from WikiLists after the corresponding column has been dropped from its respective table.</summary>
 		public static void Delete(string listName,string colName) {
 			string command = "DELETE FROM wikilistheaderwidth WHERE ListName='"+POut.String(listName)+"' AND ColName='"+POut.String(colName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			RefreshCache();
 		}
 
 		public static void DeleteForList(string listName) {
 			string command = "DELETE FROM wikilistheaderwidth WHERE ListName='"+POut.String(listName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			RefreshCache();
 		}
 

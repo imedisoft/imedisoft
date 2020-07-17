@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class RpProcOverpaid {
@@ -46,7 +47,7 @@ namespace OpenDentBusiness {
 				command+="AND procedurelog.PatNum="+POut.Long(patNum)+" ";
 			}
 			command+="ORDER BY procedurelog.ProcDate,patientName,procedurecode.ProcCode,provider.Abbr";
-			DataTable rawCompletedProcTable=Db.GetTable(command);
+			DataTable rawCompletedProcTable=Database.ExecuteDataTable(command);
 			Dictionary<long,DataRow> dictCompletedProcRows=rawCompletedProcTable.Select().ToDictionary(x => PIn.Long(x["ProcNum"].ToString()));
 			#endregion
 			DataTable table=new DataTable();
@@ -66,7 +67,7 @@ namespace OpenDentBusiness {
 				+@"GROUP BY claimproc.ProcNum
 				HAVING SUM(claimproc.InsPayAmt+claimproc.Writeoff)>0
 				ORDER BY NULL";
-			Dictionary<long,DataRow> dictClaimProcRows=Db.GetTable(command).Select().ToDictionary(x => PIn.Long(x["ProcNum"].ToString()));
+			Dictionary<long,DataRow> dictClaimProcRows=Database.ExecuteDataTable(command).Select().ToDictionary(x => PIn.Long(x["ProcNum"].ToString()));
 			#endregion
 			#region Patient Payments
 			command=@"SELECT paysplit.ProcNum,SUM(paysplit.SplitAmt) ptAmt
@@ -79,7 +80,7 @@ namespace OpenDentBusiness {
 			command+=@"
 				GROUP BY paysplit.ProcNum
 				ORDER BY NULL";
-			Dictionary<long,DataRow> dictPatPayRows=Db.GetTable(command).Select().ToDictionary(x => PIn.Long(x["ProcNum"].ToString()));
+			Dictionary<long,DataRow> dictPatPayRows=Database.ExecuteDataTable(command).Select().ToDictionary(x => PIn.Long(x["ProcNum"].ToString()));
 			#endregion
 			#region Adjustments
 			command=@"SELECT adjustment.ProcNum,SUM(adjustment.AdjAmt) AdjAmt
@@ -88,7 +89,7 @@ namespace OpenDentBusiness {
 				AND adjustment.PatNum IN("+string.Join(",",listPatNums.Select(x => POut.Long(x)))+@")
 				GROUP BY adjustment.ProcNum
 				ORDER BY NULL";
-			Dictionary<long,DataRow> dictAdjRows=Db.GetTable(command).Select().ToDictionary(x => PIn.Long(x["ProcNum"].ToString()));
+			Dictionary<long,DataRow> dictAdjRows=Database.ExecuteDataTable(command).Select().ToDictionary(x => PIn.Long(x["ProcNum"].ToString()));
 			#endregion
 			//columns that start with lowercase are altered for display rather than being raw data.
 			table.Columns.Add("patientName");

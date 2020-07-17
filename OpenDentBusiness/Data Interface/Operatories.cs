@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using OpenDentBusiness.Crud;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -108,7 +109,7 @@ namespace OpenDentBusiness{
 					GROUP BY apptviewitem.OpNum
 				)apptviewop ON operatory.OperatoryNum = apptviewop.OpNum
 				ORDER BY ItemOrder";
-				return TableToList(Db.GetTable(command));
+				return TableToList(Database.ExecuteDataTable(command));
 			}
 			protected override List<Operatory> TableToList(DataTable table) {
 				List<Operatory> listOps=Crud.OperatoryCrud.TableToList(table);
@@ -258,7 +259,7 @@ namespace OpenDentBusiness{
 				command+=") ";
 			}
 			command+="AND AptDateTime > "+DbHelper.Now();
-			return PIn.Int(Db.GetScalar(command))>0;
+			return Database.ExecuteInt(command)>0;
 		}
 
 		///<summary>Returns a list of all appointments and whether that appointment has a conflict for the given listChildOpNums.

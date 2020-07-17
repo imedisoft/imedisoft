@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -112,14 +113,14 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM covspan"
 				+" WHERE CovSpanNum = '"+POut.Long(span.CovSpanNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
 		public static void DeleteForCat(long covCatNum) {
 			
 			string command="DELETE FROM covspan WHERE CovCatNum = "+POut.Long(covCatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

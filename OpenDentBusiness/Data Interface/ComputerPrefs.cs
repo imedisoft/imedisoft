@@ -5,6 +5,7 @@ using System.Data;
 using System.Net;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class ComputerPrefs {
@@ -103,7 +104,7 @@ namespace OpenDentBusiness {
 			
 			string command="SELECT * FROM computerpref WHERE ComputerName='"+POut.String(computerName)+"'";
 			try {
-				return Db.GetTable(command);
+				return Database.ExecuteDataTable(command);
 			} 
 			catch {
 				return null;
@@ -147,7 +148,7 @@ namespace OpenDentBusiness {
 		public static void SetToSimpleGraphics(string computerName) {
 			
 			string command="UPDATE computerpref SET GraphicsSimple=1 WHERE ComputerName='"+POut.String(computerName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates the local computerpref's ComputerOS if it is different than what is stored.</summary>
@@ -168,7 +169,7 @@ namespace OpenDentBusiness {
 			//Environment.OSVersion.Platform enum is different than the computerpref.ComputerOS enum.
 			string command="UPDATE computerpref SET ComputerOS = '"+platformId+"' "
 				+"WHERE ComputerPrefNum = "+POut.Long(computerPrefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

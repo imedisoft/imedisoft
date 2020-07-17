@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -152,7 +153,7 @@ namespace OpenDentBusiness
 		{
 			string command = "DELETE FROM alertread "
 				+ "WHERE AlertItemNum = " + POut.Long(alertItemNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all alertreads for the listAlertItemNums.  Used by the OpenDentalService AlertRadiologyProceduresThread.</summary>
@@ -165,7 +166,7 @@ namespace OpenDentBusiness
 
 			string command = "DELETE FROM alertread "
 				+ "WHERE AlertItemNum IN (" + string.Join(",", listAlertItemNums.Select(x => POut.Long(x))) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Inserts, updates, or deletes db rows to match listNew.  No need to pass in userNum, it's set before remoting role check and passed to

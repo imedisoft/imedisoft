@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -137,7 +138,7 @@ namespace OpenDentBusiness {
 				+"WHERE patient.PatNum=disease.PatNum "
 				+"AND disease.DiseaseDefNum IN ("+String.Join(",",listDiseaseDefNums)+") ";
 			try {
-				listDiseaseDefNumsNotDeletable.AddRange(Db.GetListLong(command));
+				listDiseaseDefNumsNotDeletable.AddRange(Database.GetListLong(command));
 			}
 			catch {
 				//Do Nothing
@@ -145,7 +146,7 @@ namespace OpenDentBusiness {
 			//Validate edu resource attached
 			command="SELECT DISTINCT eduresource.DiseaseDefNum FROM eduresource WHERE eduresource.DiseaseDefNum IN ("+String.Join(",",listDiseaseDefNums)+") ";
 			try {
-				listDiseaseDefNumsNotDeletable.AddRange(Db.GetListLong(command));
+				listDiseaseDefNumsNotDeletable.AddRange(Database.GetListLong(command));
 			}
 			catch {
 				//Do Nothing
@@ -155,7 +156,7 @@ namespace OpenDentBusiness {
 				+"WHERE patient.PatNum=familyhealth.PatNum "
 				+"AND familyhealth.DiseaseDefNum IN ("+String.Join(",",listDiseaseDefNums)+") ";
 			try {
-				listDiseaseDefNumsNotDeletable.AddRange(Db.GetListLong(command));
+				listDiseaseDefNumsNotDeletable.AddRange(Database.GetListLong(command));
 			}
 			catch {
 				//Do Nothing
@@ -235,7 +236,7 @@ namespace OpenDentBusiness {
 		public static List<long> GetChangedSinceDiseaseDefNums(DateTime changedSince) {
 			
 			string command="SELECT DiseaseDefNum FROM diseasedef WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> diseaseDefNums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				diseaseDefNums.Add(PIn.Long(dt.Rows[i]["DiseaseDefNum"].ToString()));
@@ -256,7 +257,7 @@ namespace OpenDentBusiness {
 					strDiseaseDefNums+="DiseaseDefNum='"+diseaseDefNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM diseasedef WHERE "+strDiseaseDefNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();

@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -191,7 +192,7 @@ namespace OpenDentBusiness{
 							  0.0 ReceivedCharge 
 							FROM
 							  DUAL";//this is a cute way to get a data table with the correct layout without having to query any real data.
-			DataTable retVal=Db.GetTable(command).Clone();//use .Clone() to get schema only, with no rows.
+			DataTable retVal=Database.ExecuteDataTable(command).Clone();//use .Clone() to get schema only, with no rows.
 			retVal.TableName="SmsUsageLocal";
 			for(int i=0;i<listClinicNums.Count;i++) {
 				DataRow row=retVal.NewRow();
@@ -223,7 +224,7 @@ namespace OpenDentBusiness{
 				+"WHERE DateTimeSent >="+POut.Date(dateStart)+" "
 				+"AND DateTimeSent<"+POut.Date(dateEnd)+" "
 				+"AND MsgChargeUSD>0 GROUP BY ClinicNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++) {
 				for(int j=0;j<retVal.Rows.Count;j++) {
 					if(retVal.Rows[j]["ClinicNum"].ToString()!=table.Rows[i]["ClinicNum"].ToString()) {
@@ -245,7 +246,7 @@ namespace OpenDentBusiness{
 				+"WHERE DateTimeReceived >="+POut.Date(dateStart)+" "
 				+"AND DateTimeReceived<"+POut.Date(dateEnd)+" "
 				+"GROUP BY ClinicNum";
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++) {
 				for(int j=0;j<retVal.Rows.Count;j++) {
 					if(retVal.Rows[j]["ClinicNum"].ToString()!=table.Rows[i]["ClinicNum"].ToString()) {
@@ -323,7 +324,7 @@ namespace OpenDentBusiness{
 			DateTime dtEnd=dtStart.AddMonths(1);
 			string command="SELECT SUM(MsgChargeUSD) FROM smstomobile WHERE ClinicNum="+POut.Long(clinicNum)+" "
 				+"AND DateTimeSent>="+POut.Date(dtStart)+" AND DateTimeSent<"+POut.Date(dtEnd);
-			limit-=PIn.Double(Db.GetScalar(command));
+			limit-=Database.ExecuteDouble(command);
 			return limit;
 		}
 
@@ -359,7 +360,7 @@ namespace OpenDentBusiness{
 			}
 			
 			string command = "SELECT COUNT(*) FROM smsphone WHERE CountryCode IN ("+string.Join(",",countryCodes.Select(x=>"'"+POut.String(x)+"'"))+") AND "+DbHelper.Year("DateTimeInactive")+"<1880";
-			return Db.GetScalar(command)!="0";
+			return Database.ExecuteScalar(command)!="0";
 		}
 
 		/*
@@ -382,7 +383,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long smsVlnNum) {
 			
 			string command= "DELETE FROM smsvln WHERE SmsVlnNum = "+POut.Long(smsVlnNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

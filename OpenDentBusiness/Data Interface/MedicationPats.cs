@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -147,7 +148,7 @@ namespace OpenDentBusiness{
 			
 			string command = "DELETE from medicationpat WHERE medicationpatNum = '"
 				+Cur.MedicationPatNum.ToString()+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<long> GetChangedSinceMedicationPatNums(DateTime changedSince,List<long> eligibleForUploadPatNumList) {
@@ -162,7 +163,7 @@ namespace OpenDentBusiness{
 					strEligibleForUploadPatNums+="PatNum='"+eligibleForUploadPatNumList[i].ToString()+"' ";
 				}
 				string command="SELECT MedicationPatNum FROM medicationpat WHERE DateTStamp > "+POut.DateT(changedSince)+" AND ("+strEligibleForUploadPatNums+")";
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();
@@ -187,7 +188,7 @@ namespace OpenDentBusiness{
 					strMedicationPatNums+="MedicationPatNum='"+medicationPatNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM medicationpat WHERE "+strMedicationPatNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();
@@ -209,7 +210,7 @@ namespace OpenDentBusiness{
 		public static void ResetTimeStamps(long patNum) {
 			
 			string command="UPDATE medicationpat SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum ="+POut.Long(patNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all medicationpats of a patient that are the status specified.</summary>
@@ -219,7 +220,7 @@ namespace OpenDentBusiness{
 				if(onlyActive) {
 					command+=" AND (DateStop > 1880 OR DateStop <= CURDATE())";
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Used for NewCrop medication orders only.</summary>
@@ -240,7 +241,7 @@ namespace OpenDentBusiness{
 		public static void UpdateRxCuiForMedication(long medicationNum,long rxCui) {
 			
 			string command="UPDATE medicationpat SET RxCui="+POut.Long(rxCui)+" WHERE MedicationNum="+POut.Long(medicationNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static bool IsMedActive(MedicationPat medicationPat) {
@@ -260,7 +261,7 @@ namespace OpenDentBusiness{
 			string command="SELECT RxCui FROM medicationpat WHERE RxCui IN("+string.Join(",",listRxCuis)+") "
 				+"AND "+DbHelper.DtimeToDate("DateStart")+">="+POut.Date(MiscData.GetNowDateTime().AddYears(-1))+" "
 				+"GROUP BY RxCui";
-			return Db.GetListString(command);
+			return Database.GetListString(command);
 		}
 
 		public static List<MedicationPat> GetForRxCuis(List<string> listRxCuis) {
@@ -286,7 +287,7 @@ namespace OpenDentBusiness{
 			}
 			string command="UPDATE medicationpat SET MedicationNum="+POut.Long(medicationNum)+" "
 				+"WHERE MedicationPatNum IN ("+string.Join(",",listMedicationPatNums.Select(x =>POut.Long(x)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 

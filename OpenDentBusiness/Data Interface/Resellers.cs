@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -48,7 +49,7 @@ namespace OpenDentBusiness {
 				+"LEFT JOIN phonenumber ON phonenumber.PatNum=patient.PatNum "
 				+"GROUP BY patient.PatNum "
 				+"ORDER BY LName ";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets all of the customers of the reseller (family members) that have active services.
@@ -65,7 +66,7 @@ namespace OpenDentBusiness {
 				+"WHERE patient.PatNum!="+POut.Long(patNum)+" "
 				+"AND (patient.Guarantor="+POut.Long(patNum)+" OR patient.SuperFamily="+POut.Long(patNum)+") "
 				+"ORDER BY registrationkey.RegKey ";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		#endregion
@@ -98,7 +99,7 @@ namespace OpenDentBusiness {
 		public static void Delete(long resellerNum) {
 			
 			string command= "DELETE FROM reseller WHERE ResellerNum = "+POut.Long(resellerNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion
@@ -111,7 +112,7 @@ namespace OpenDentBusiness {
 		public static bool IsUserNameInUse(long patNum,string userName) {
 			
 			string command="SELECT COUNT(*) FROM reseller WHERE PatNum!="+POut.Long(patNum)+" AND UserName='"+POut.String(userName)+"'";
-			if(PIn.Int(Db.GetScalar(command))>0) {
+			if(Database.ExecuteInt(command)>0) {
 				return true;//User name in use.
 			}
 			return false;
@@ -123,7 +124,7 @@ namespace OpenDentBusiness {
 			
 			string command="SELECT COUNT(*) FROM reseller "
 				+"WHERE PatNum IN("+POut.Long(patient.Guarantor)+","+POut.Long(patient.SuperFamily)+")";
-			if(PIn.Int(Db.GetScalar(command))>0) {
+			if(Database.ExecuteInt(command)>0) {
 				return true;
 			}
 			return false;
@@ -145,7 +146,7 @@ namespace OpenDentBusiness {
 					+"((YEAR(repeatcharge.DateStop)<1880) OR (DATE(NOW()<DATE(repeatcharge.DateStop)))))"
 				+") "
 				+"GROUP BY patient.PatNum";
-			if(PIn.Int(Db.GetScalar(command))>0) {
+			if(Database.ExecuteInt(command)>0) {
 				return true;
 			}
 			return false;

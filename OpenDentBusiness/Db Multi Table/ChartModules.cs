@@ -286,12 +286,12 @@ namespace OpenDentBusiness
 						+ " OR IsLocked=1)";//Any locked proc should show.  This forces invalidated (deleted locked) procs to show.
 				}
 				command += " ORDER BY ProcDate";//we'll just have to reorder it anyway
-				DataTable rawProcs = dcon.GetTable(command);
+				DataTable rawProcs = dcon.ExecuteDataTable(command);
 				command = "SELECT ProcNum,EntryDateTime,UserNum,Note,"
 				+ "CASE WHEN Signature!='' THEN 1 ELSE 0 END AS SigPresent "
 				+ "FROM procnote WHERE PatNum=" + POut.Long(patNum)
 				+ " ORDER BY EntryDateTime";// but this helps when looping for notes
-				DataTable rawNotes = dcon.GetTable(command);
+				DataTable rawNotes = dcon.ExecuteDataTable(command);
 				Dictionary<string, List<DataRow>> dictNotes = rawNotes.Select().GroupBy(x => x["ProcNum"].ToString())
 					.ToDictionary(x => x.Key, x => x.OrderByDescending(y => PIn.Date(y["EntryDateTime"].ToString())).ToList());
 				Dictionary<string, ProcedureCode> dictProcCodes = ProcedureCodes.GetAllCodes().GroupBy(x => x.CodeNum)
@@ -632,7 +632,7 @@ namespace OpenDentBusiness
 				+ "AND p2.PatNum=" + POut.Long(patNum) + " "
 				+ wherePodiumCommlog
 				+ "ORDER BY CommDateTime";
-				DataTable rawComm = dcon.GetTable(command);
+				DataTable rawComm = dcon.ExecuteDataTable(command);
 				for (int i = 0; i < rawComm.Rows.Count; i++)
 				{
 					row = table.NewRow();
@@ -741,7 +741,7 @@ namespace OpenDentBusiness
 				#region formpat
 				command = "SELECT FormDateTime,FormPatNum "
 					+ "FROM formpat WHERE PatNum =" + POut.Long(patNum) + " ORDER BY FormDateTime";
-				DataTable rawForm = dcon.GetTable(command);
+				DataTable rawForm = dcon.ExecuteDataTable(command);
 				for (int i = 0; i < rawForm.Rows.Count; i++)
 				{
 					row = table.NewRow();
@@ -826,7 +826,7 @@ namespace OpenDentBusiness
 				#region Rx
 				command = "SELECT RxNum,RxDate,Drug,Disp,ProvNum,Notes,PharmacyNum FROM rxpat WHERE PatNum=" + POut.Long(patNum)
 				+ " ORDER BY RxDate";
-				DataTable rawRx = dcon.GetTable(command);
+				DataTable rawRx = dcon.ExecuteDataTable(command);
 				for (int i = 0; i < rawRx.Rows.Count; i++)
 				{
 					row = table.NewRow();
@@ -910,7 +910,7 @@ namespace OpenDentBusiness
 				+ "WHERE labcase.LaboratoryNum=laboratory.LaboratoryNum "
 				+ "AND PatNum=" + POut.Long(patNum)
 				+ " ORDER BY DateTimeCreated";
-				DataTable rawLab = dcon.GetTable(command);
+				DataTable rawLab = dcon.ExecuteDataTable(command);
 				DateTime duedate;
 				for (int i = 0; i < rawLab.Rows.Count; i++)
 				{
@@ -1024,7 +1024,7 @@ namespace OpenDentBusiness
 				+ "LEFT JOIN patient ON patient.PatNum=appointment.PatNum "
 				+ "WHERE appointment.PatNum IN (" + string.Join(",", family.ListPats.Select(x => x.PatNum)) + ") "
 				+ "ORDER BY DateTimeEntry";
-				DataTable rawTask = dcon.GetTable(command);
+				DataTable rawTask = dcon.ExecuteDataTable(command);
 				List<long> taskNums = rawTask.Select().Select(x => PIn.Long(x["TaskNum"].ToString())).ToList();
 				List<TaskList> listTaskLists = TaskLists.GetAll();
 				Dictionary<long, List<TaskNote>> dictTaskNotes = TaskNotes.RefreshForTasks(taskNums).GroupBy(x => x.TaskNum).ToDictionary(x => x.Key, x => x.ToList());
@@ -1187,7 +1187,7 @@ namespace OpenDentBusiness
 				command += " AND AptStatus = " + POut.Int((int)ApptStatus.Planned);
 			}
 			command += " ORDER BY AptDateTime";
-			rawApt = dcon.GetTable(command);
+			rawApt = dcon.ExecuteDataTable(command);
 			long apptStatus;
 			for (int i = 0; i < rawApt.Rows.Count; i++)
 			{
@@ -1328,7 +1328,7 @@ namespace OpenDentBusiness
 				+ "WHERE PatNum=" + POut.Long(patNum) + " AND SentOrReceived NOT IN (" + POut.Int((int)EmailSentOrReceived.AckDirectProcessed) + ","
 					+ POut.Int((int)EmailSentOrReceived.AckDirectNotSent) + ") "//Do not show Direct message acknowledgements in Chart progress notes
 				+ "ORDER BY MsgDateTime";
-				DataTable rawEmail = dcon.GetTable(command);
+				DataTable rawEmail = dcon.ExecuteDataTable(command);
 				for (int i = 0; i < rawEmail.Rows.Count; i++)
 				{
 					row = table.NewRow();
@@ -1438,7 +1438,7 @@ namespace OpenDentBusiness
 				}
 				command += "GROUP BY sheet.SheetNum,PatNum,Description,DateTimeSheet,SheetType "//Oracle compatible
 				+ "ORDER BY DateTimeSheet";
-				DataTable rawSheet = dcon.GetTable(command);
+				DataTable rawSheet = dcon.ExecuteDataTable(command);
 				//SheetTypeEnum sheetType;
 				for (int i = 0; i < rawSheet.Rows.Count; i++)
 				{
@@ -1599,7 +1599,7 @@ namespace OpenDentBusiness
 			command += "GROUP BY plannedappt.AptNum ";
 			command += "ORDER BY ItemOrder";
 			//plannedappt.AptNum does refer to the planned appt, but the other fields in the result are for the linked scheduled appt.
-			DataTable rawPlannedAppts = dcon.GetTable(command);
+			DataTable rawPlannedAppts = dcon.ExecuteDataTable(command);
 			DataRow aptRow;
 			int itemOrder = 1;
 			DateTime dateSched;
@@ -1625,7 +1625,7 @@ namespace OpenDentBusiness
 				{
 					command = "UPDATE plannedappt SET ItemOrder=" + POut.Long(itemOrder)
 						+ " WHERE PlannedApptNum=" + rawPlannedAppts.Rows[i]["PlannedApptNum"].ToString();
-					dcon.NonQ(command);
+					dcon.ExecuteNonQuery(command);
 				}
 				//end of repair
 				row = table.NewRow();

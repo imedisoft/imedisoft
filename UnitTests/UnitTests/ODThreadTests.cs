@@ -47,7 +47,7 @@ namespace UnitTests.ODThread_Tests {
 			string odThreadGroupName=methodName+"_GroupName";
 			//The main thread needs to connect to a unique database that the child thread should NOT end up getting connected to.
 			//Use a query to get our current database context because unit tests utilizes a connection string and we only care about DataConnection.Database
-			string databaseMain=LargeTableHelper.GetCurrentDatabase();//should be pointing to a 'unittestXXX' database
+			string databaseMain=Database.CurrentDatabase;//should be pointing to a 'unittestXXX' database
 			Assert.IsFalse(string.IsNullOrEmpty(databaseMain));
 			try {
 				ODThread odThreadParent=new ODThread(workerParent => {
@@ -91,11 +91,11 @@ namespace UnitTests.ODThread_Tests {
 			string methodName=MethodBase.GetCurrentMethod().Name;
 			string databaseName=POut.String(methodName).ToLower();
 			string odThreadGroupName=methodName+"_GroupName";
-			string databaseMain=LargeTableHelper.GetCurrentDatabase();//should be pointing to a 'unittestXXX' database
+			string databaseMain= Database.CurrentDatabase;//should be pointing to a 'unittestXXX' database
 			Assert.IsFalse(string.IsNullOrEmpty(databaseMain));
 			try {
 				ODThread odThreadAffect=new ODThread((o) => {
-					string databaseBefore=LargeTableHelper.GetCurrentDatabase();//should be pointing to a 'unittestXXX' database
+					string databaseBefore= Database.CurrentDatabase;//should be pointing to a 'unittestXXX' database
 					Assert.AreEqual(databaseMain,databaseBefore);
 					ODThread odThreadChangeDb=new ODThread(workerChild => {
 						//The parent thread needs to call SetDb on a different database than the main thread is connected to.
@@ -139,7 +139,7 @@ namespace UnitTests.ODThread_Tests {
 		}
 
 		private void VerifyCurrentDatabaseName(string expected) {
-			Assert.AreEqual(expected,LargeTableHelper.GetCurrentDatabase());
+			Assert.AreEqual(expected, Database.CurrentDatabase);
 		}
 
 		[TestMethod]

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -38,7 +39,7 @@ namespace OpenDentBusiness{
 				"SELECT * from perioexam"
 				+" WHERE PatNum = '"+patNum.ToString()+"'"
 				+" ORDER BY perioexam.ExamDate";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return table;
 		}
 
@@ -128,9 +129,9 @@ namespace OpenDentBusiness{
 		public static void Delete(PerioExam Cur){
 			
 			string command= "DELETE from perioexam WHERE PerioExamNum = '"+Cur.PerioExamNum.ToString()+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command= "DELETE from periomeasure WHERE PerioExamNum = '"+Cur.PerioExamNum.ToString()+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Used by PerioMeasures when refreshing to organize array.</summary>

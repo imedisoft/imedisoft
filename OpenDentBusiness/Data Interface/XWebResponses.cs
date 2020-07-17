@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -76,7 +77,7 @@ namespace OpenDentBusiness{
 				command+="AND payment.ClinicNum IN ("+string.Join(",",listClinicNums.Select(x => POut.Long(x)))+") ";
 			}
 			command+="ORDER BY DateTUpdate,Patient;";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets the XWebResponse that is associated with this payNum. Returns null if the XWebResponse does not exist.</summary>
@@ -110,7 +111,7 @@ namespace OpenDentBusiness{
 			while(++attempts<1000) {
 				string orderId=MiscUtils.CreateRandomNumericString(10);
 				string command=$"SELECT COUNT(*) FROM xwebresponse WHERE OrderId='{POut.String(orderId)}'";
-				if(Db.GetCount(command)=="0") {
+				if(Database.ExecuteString(command)=="0") {
 					return orderId;
 				}
 			}

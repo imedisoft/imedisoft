@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,7 +35,7 @@ namespace OpenDentBusiness{
 				+"FROM dispsupply LEFT JOIN supply ON dispsupply.SupplyNum=supply.SupplyNum "
 					+"WHERE dispsupply.ProvNum="+POut.Long(provNum)+" "
 					+"ORDER BY DateDispensed,Descript";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary></summary>
@@ -71,7 +72,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long dispSupplyNum) {
 			
 			string command= "DELETE FROM dispsupply WHERE DispSupplyNum = "+POut.Long(dispSupplyNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

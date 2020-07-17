@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace UnitTestsCore {
@@ -42,7 +43,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the appointment table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearAppointmentTable() {
 			string command="DELETE FROM appointment WHERE AptNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Optionally pass in daysForSchedule to create a schedule for the number of days for each provider. Schedules will all be default 8 to 4. </summary>
@@ -246,7 +247,7 @@ namespace UnitTestsCore {
 		public static void SetSecDateTEntry(Appointment appt,DateTime dateTime) {
 			appt.SecDateTEntry=dateTime;
 			string command=$"UPDATE appointment SET {nameof(Appointment.SecDateTEntry)}={POut.DateT(dateTime)} WHERE {nameof(Appointment.AptNum)}={appt.AptNum}";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 	}

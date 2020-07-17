@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -37,20 +38,20 @@ namespace OpenDentBusiness{
 		public static void Delete(long labResultNum) {
 			
 			string command= "DELETE FROM labresult WHERE LabResultNum = "+POut.Long(labResultNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all Lab Results associated with Lab Panel.</summary>
 		public static void DeleteForPanel(long labPanelNum) {
 			
 			string command= "DELETE FROM labresult WHERE LabPanelNum = "+POut.Long(labPanelNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<long> GetChangedSinceLabResultNums(DateTime changedSince) {
 			
 			string command="SELECT LabResultNum FROM labresult WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> labresultNums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				labresultNums.Add(PIn.Long(dt.Rows[i]["LabResultNum"].ToString()));
@@ -71,7 +72,7 @@ namespace OpenDentBusiness{
 					strLabResultNums+="LabResultNum='"+labresultNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM labresult WHERE "+strLabResultNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();

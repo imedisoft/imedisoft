@@ -11,6 +11,7 @@ using System.Diagnostics;
 using OpenDentBusiness.Eclaims;
 using System.Threading;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -107,7 +108,7 @@ namespace OpenDentBusiness
 		public static int GetNextBatchNumber(Clearinghouse clearinghouseClin)
 		{
 			// Get last batch number
-			DataTable table = Db.GetTable(
+			DataTable table = Database.ExecuteDataTable(
 				"SELECT LastBatchNumber FROM clearinghouse " +
 				"WHERE ClearinghouseNum = " + SOut.Long(clearinghouseClin.HqClearinghouseNum));
 			
@@ -136,7 +137,7 @@ namespace OpenDentBusiness
 				}
 			}
 
-			Db.NonQ(
+			Database.ExecuteNonQuery(
 				"UPDATE clearinghouse SET LastBatchNumber=" + batchNumber + " " +
 				"WHERE ClearinghouseNum = " + SOut.Long(clearinghouseClin.HqClearinghouseNum));
 
@@ -322,9 +323,9 @@ namespace OpenDentBusiness
 		public static void Delete(Clearinghouse clearinghouseHq)
 		{
 			string command = "DELETE FROM clearinghouse WHERE ClearinghouseNum = '" + POut.Long(clearinghouseHq.ClearinghouseNum) + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command = "DELETE FROM clearinghouse WHERE HqClearinghouseNum='" + POut.Long(clearinghouseHq.ClearinghouseNum) + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

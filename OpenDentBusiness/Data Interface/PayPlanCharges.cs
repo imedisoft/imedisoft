@@ -5,6 +5,7 @@ using System.Data;
 using System.Reflection;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -217,7 +218,7 @@ namespace OpenDentBusiness{
 			}
 			List<PayPlan> listPayPlans=PayPlans.GetAllForCharges(GetFromProc(procNum));
 			string command="DELETE FROM payplancharge WHERE ProcNum="+POut.Long(procNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			PayPlans.UpdateTreatmentCompletedAmt(listPayPlans);
 		}
 
@@ -226,7 +227,7 @@ namespace OpenDentBusiness{
 			
 			string command= "DELETE from payplancharge WHERE PayPlanChargeNum = '"
 				+POut.Long(charge.PayPlanChargeNum)+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}	
 
 		public static void DeleteMany(List<long> listCharges) {
@@ -235,7 +236,7 @@ namespace OpenDentBusiness{
 			}
 			
 			string command=$"DELETE from payplancharge WHERE PayPlanChargeNum IN ({string.Join(",",listCharges.Select(x => POut.Long(x)))})";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 

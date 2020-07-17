@@ -1,6 +1,5 @@
 using CodeBase;
-using DataConnectionBase;
-using Imedisoft.Forms;
+using Imedisoft.Data;
 using Imedisoft.Properties;
 using OpenDental;
 using OpenDental.UI;

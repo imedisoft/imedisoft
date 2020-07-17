@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,7 +63,7 @@ namespace OpenDentBusiness{
 				+"WHERE patient.PatNum=labcase.PatNum "
 				+"AND LaboratoryNum ="+POut.Long(laboratoryNum)+" "
 				+DbHelper.LimitAnd(30);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0){
 				string pats="";
 				for(int i=0;i<table.Rows.Count;i++){
@@ -73,7 +74,7 @@ namespace OpenDentBusiness{
 			}
 			//delete
 			command= "DELETE FROM laboratory WHERE LaboratoryNum = "+POut.Long(laboratoryNum);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		

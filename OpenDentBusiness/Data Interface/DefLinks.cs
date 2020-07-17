@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -169,7 +170,7 @@ namespace OpenDentBusiness{
 			string command="UPDATE deflink SET FKey="+POut.Long(fKey)+" "
 				+"WHERE LinkType="+POut.Int((int)defType)+" "
 				+"AND DefNum="+POut.Long(defNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Syncs two supplied lists of DefLink.</summary>
@@ -194,7 +195,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM deflink "
 				+"WHERE LinkType="+POut.Int((int)defType)+" "
 				+"AND FKey IN("+string.Join(",",listFKeys.Select(x => POut.Long(x)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all links for the specified definition and link type.</summary>
@@ -203,16 +204,16 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM deflink "
 				+"WHERE LinkType="+POut.Int((int)defType)+" "
 				+"AND DefNum="+POut.Long(defNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DeleteDefLinks(List<long> listDefLinkNums) {
 			if(listDefLinkNums==null || listDefLinkNums.Count < 1) {
 				return;
 			}
-			
-			string command="DELETE FROM deflink WHERE DefLinkNum IN ("+string.Join(",",listDefLinkNums)+")";
-			Db.NonQ(command);
+
+            string command = "DELETE FROM deflink WHERE DefLinkNum IN (" + string.Join(",", listDefLinkNums) + ")";
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 		#endregion

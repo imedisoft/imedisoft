@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -17,11 +18,11 @@ namespace OpenDentBusiness
 				return;
 			}
 			string command = "DELETE FROM alertsub WHERE UserNum IN(" + string.Join(",", listUsers.Select(x => x.UserNum).ToList()) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			foreach (AlertSub alertSub in listAlertSubs)
 			{
 				command = "INSERT INTO alertsub (UserNum,ClinicNum,Type) VALUES(" + alertSub.UserNum.ToString() + "," + alertSub.ClinicNum.ToString() + "," + ((int)alertSub.Type).ToString() + ")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 

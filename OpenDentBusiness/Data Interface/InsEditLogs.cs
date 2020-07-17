@@ -5,6 +5,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -16,11 +17,11 @@ namespace OpenDentBusiness {
 			listCarrierNums.Add(carrierNum);
 			List<InsEditLog> retVal=new List<InsEditLog>();
 			string command=@"SELECT PlanNum FROM insplan WHERE PlanNum = "+POut.Long(planNum);
-			long insPlanNum=Db.GetLong(command);
+			long insPlanNum=Database.ExecuteLong(command);
 			command=@"SELECT CarrierNum FROM carrier WHERE CarrierNum IN ("+string.Join(",",listCarrierNums)+@")";
-			listCarrierNums=Db.GetListLong(command);
+			listCarrierNums=Database.GetListLong(command);
 			command=@"SELECT EmployerNum FROM employer WHERE EmployerNum="+POut.Long(employerNum);
-			long empNum=Db.GetLong(command);
+			long empNum=Database.ExecuteLong(command);
 			List<string> listWhereOrs=new List<string>();
 			if(insPlanNum>0) {
 				listWhereOrs.Add("(LogType="+POut.Int((int)InsEditLogType.InsPlan)+" AND FKey = "+POut.Long(insPlanNum)+")");
@@ -130,7 +131,7 @@ namespace OpenDentBusiness {
 					AND inseditlog.OldValue!=0 
 					AND inseditlog.NewValue!=0
 					AND inseditlog.FKey="+POut.Long(insPlanNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<long> retVal=new List<long>();
 			for(int i=0;i<table.Rows.Count;i++) {
 				retVal.Add(PIn.Long(table.Rows[i][0].ToString()));
@@ -261,10 +262,10 @@ namespace OpenDentBusiness {
 			
 			string command="DELETE FROM inseditlog "
 				+"WHERE LogType="+POut.Int((int)InsEditLogType.Benefit)+" AND ParentKey="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM inseditlog "
 				+"WHERE LogType="+POut.Int((int)InsEditLogType.InsPlan)+" AND FKey="+POut.Long(planNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

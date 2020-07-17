@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,7 +32,7 @@ namespace OpenDentBusiness {
 		public static void Delete(long familyHealthNum) {
 			
 			string command= "DELETE FROM familyhealth WHERE FamilyHealthNum = "+POut.Long(familyHealthNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>

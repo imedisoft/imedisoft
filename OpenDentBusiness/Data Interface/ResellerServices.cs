@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -58,7 +59,7 @@ namespace OpenDentBusiness {
 		public static void Delete(long resellerServiceNum) {
 			
 			string command= "DELETE FROM resellerservice WHERE ResellerServiceNum = "+POut.Long(resellerServiceNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		#endregion

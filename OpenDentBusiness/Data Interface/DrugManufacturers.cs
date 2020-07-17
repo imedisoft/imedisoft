@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -104,11 +105,11 @@ namespace OpenDentBusiness{
 			//validation
 			string command;
 			command="SELECT COUNT(*) FROM VaccineDef WHERE drugManufacturerNum="+POut.Long(drugManufacturerNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new ApplicationException(Lans.g("FormDrugUnitEdit","Cannot delete: DrugManufacturer is in use by VaccineDef."));
 			}
 			command= "DELETE FROM drugmanufacturer WHERE DrugManufacturerNum = "+POut.Long(drugManufacturerNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDentBusiness{
@@ -43,7 +44,7 @@ namespace OpenDentBusiness{
 				return "";
 			}
 			string command="SELECT MessageText FROM etransmessagetext WHERE EtransMessageTextNum="+POut.Long(etransMessageTextNum);
-			string msgText=Db.GetScalar(command);
+			string msgText=Database.ExecuteString(command);
 			if(isFormattingNeededX12) {
 				return TidyMessageTextX12(msgText);
 			}
@@ -73,7 +74,7 @@ namespace OpenDentBusiness{
 				return retVal;
 			}
 			string command="SELECT EtransMessageTextNum,MessageText FROM etransmessagetext WHERE EtransMessageTextNum IN("+string.Join(",",listEtransMessageTextNums)+")";
-			DataTable dataTable=Db.GetTable(command);
+			DataTable dataTable=Database.ExecuteDataTable(command);
 			foreach(DataRow row in dataTable.Rows) {
 				long msgNum=PIn.Long(row["EtransMessageTextNum"].ToString());
 				string msgText=row["MessageText"].ToString();
@@ -107,7 +108,7 @@ namespace OpenDentBusiness{
 				+"Note= '"                +POut.PString(EtransMessageText.Note)+"', "
 				+"EtransMessageTextMessageTextNum= '"+POut.PInt   (EtransMessageText.EtransMessageTextMessageTextNum)+"' "
 				+"WHERE EtransMessageTextNum = "+POut.PInt(EtransMessageText.EtransMessageTextNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 */
 
@@ -128,7 +129,7 @@ namespace OpenDentBusiness{
 					+"WHERE etransMessageText.EtransMessageTextNum="+POut.Long(etransMessageTextNum)+" "
 					+"AND etrans.EtransNum IS NULL";
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 

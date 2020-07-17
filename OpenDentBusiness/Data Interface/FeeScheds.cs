@@ -9,6 +9,7 @@ using System.Reflection;
 using OpenDentBusiness;
 using System.IO;
 using System.Windows.Forms;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -252,15 +253,15 @@ namespace OpenDentBusiness{
 			string command;
 			//change specific row in question.
 			command="UPDATE feesched SET ItemOrder="+POut.Int(newItemOrder)+" WHERE FeeSchedNum="+POut.Long(feeSched.FeeSchedNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//decrement items below old pos to close the gap, except the one we're moving
 			command="UPDATE feesched SET ItemOrder=ItemOrder-1 WHERE ItemOrder >"+POut.Int(feeSched.ItemOrder)
 				+" AND FeeSchedNum !="+POut.Long(feeSched.FeeSchedNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//increment items (move down) at or below new pos, except the one we're moving
 			command="UPDATE feesched SET ItemOrder=ItemOrder+1 WHERE ItemOrder >= "+POut.Int(newItemOrder)
 			 +" AND FeeSchedNum !="+POut.Long(feeSched.FeeSchedNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Used for sorting feesched based on FeeSchedType followed by Description.</summary>
@@ -272,7 +273,7 @@ namespace OpenDentBusiness{
 				ORDER BY FeeSchedType,Description) AS feesched2
 				SET feesched.ItemOrder=feesched2.NewOrderCol
 				WHERE feesched.FeeSchedNum=feesched2.FeeSchedNum";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Used for checking to make sure that the feesched ItemOrder column is in sequential order.</summary>
@@ -284,7 +285,7 @@ namespace OpenDentBusiness{
 				ORDER BY ItemOrder) AS feesched2
 				SET feesched.ItemOrder=feesched2.NewOrderCol
 				WHERE feesched.FeeSchedNum=feesched2.FeeSchedNum";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates writeoff estimated for claimprocs for the passed in clinics. Called only in FormFeeSchedTools, located here to allow unit
@@ -626,16 +627,16 @@ namespace OpenDentBusiness{
 			string command="UPDATE insplan "
 				+"SET AllowedFeeSched=0 "
 				+"WHERE IsHidden=1";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Delete unattached FeeSchedules.
 			command="DELETE FROM feesched "
 				+"WHERE FeeSchedNum NOT IN (SELECT AllowedFeeSched FROM insplan) "
 				+"AND FeeSchedType="+POut.Int((int)FeeScheduleType.OutNetwork);
-			result=Db.NonQ(command);
+			result=Database.ExecuteNonQuery(command);
 			//Delete all orphaned fees.
 			command="SELECT FeeNum FROM fee "
 				+"WHERE FeeSched NOT IN (SELECT FeeSchedNum FROM feesched)";
-			List<long> listFeeNums=Db.GetListLong(command);
+			List<long> listFeeNums=Database.GetListLong(command);
 			Fees.DeleteMany(listFeeNums);
 			return result;
 		}
@@ -654,13 +655,13 @@ namespace OpenDentBusiness{
 				LEFT JOIN discountplan ON discountplan.FeeSchedNum=feesched.FeeSchedNum
 				WHERE COALESCE(provider.FeeSched,patient.FeeSched,insplan.FeeSched,discountplan.FeeSchedNum) IS NULL
 				AND feesched.IsHidden=0";
-			List<long> listFeeScheds=Db.GetListLong(command);
+			List<long> listFeeScheds=Database.GetListLong(command);
 			if(listFeeScheds.Count==0) {
 				return 0;
 			}
 			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,Lans.g("FormFeeScheds","Hiding unused fee schedules..."));
 			command="UPDATE feesched SET IsHidden=1 WHERE FeeSchedNum IN("+string.Join(",",listFeeScheds.Select(x => POut.Long(x)))+")";
-			long rowsChanged=Db.NonQ(command);
+			long rowsChanged=Database.ExecuteNonQuery(command);
 			return rowsChanged;
 		}
 

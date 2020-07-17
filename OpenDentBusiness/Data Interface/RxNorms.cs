@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Imedisoft.Data;
 using Ionic.Zip;
 
 namespace OpenDentBusiness{
@@ -108,7 +109,7 @@ namespace OpenDentBusiness{
 		public static bool IsRxNormTableSmall() {
 			
 			string command="SELECT COUNT(*) FROM rxnorm";
-			if(PIn.Int(Db.GetCount(command))<50) {
+			if(PIn.Int(Database.ExecuteString(command))<50) {
 				return true;
 			}
 			return false;
@@ -148,14 +149,14 @@ namespace OpenDentBusiness{
 		public static string GetMmslCodeByRxCui(string rxCui) {
 			
 			string command="SELECT MmslCode FROM rxnorm WHERE MmslCode!='' AND RxCui='"+rxCui+"'";
-			return Db.GetScalar(command);
+			return Database.ExecuteString(command);
 		}
 
 		///<summary></summary>
 		public static string GetDescByRxCui(string rxCui) {
 			
 			string command="SELECT Description FROM rxnorm WHERE MmslCode='' AND RxCui='"+rxCui+"'";
-			return Db.GetScalar(command);
+			return Database.ExecuteString(command);
 		}
 
 		///<summary>Gets one RxNorm from the db.</summary>
@@ -188,7 +189,7 @@ namespace OpenDentBusiness{
 			
 			List<string> retVal=new List<string>();
 			string command="SELECT RxCui FROM rxnorm";//will return some duplicates due to the nature of the data in the table. This is acceptable.
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++) {
 				retVal.Add(table.Rows[i].ItemArray[0].ToString());
 			}
@@ -199,7 +200,7 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM rxnorm";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 
 		/*

@@ -7,6 +7,7 @@ using System.Reflection;
 using CodeBase;
 using DataConnectionBase;
 using System.Text.RegularExpressions;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 
@@ -141,7 +142,7 @@ namespace OpenDentBusiness {
 					+ "WHERE ProgramNum=" + POut.Long(programNum) + " "
 					+ "AND ClinicNum=0";
 			}
-			hasInsert = (Db.NonQ(command) > 0);
+			hasInsert = (Database.ExecuteInsert(command) > 0);
 
 
 			return hasInsert;
@@ -213,7 +214,7 @@ namespace OpenDentBusiness {
 			string command=$@"UPDATE programproperty SET PropertyValue='{POut.String(propval)}'
 				WHERE ProgramNum={POut.Long(programNum)}
 				AND PropertyDesc='{POut.String(desc)}'";
-			return Db.NonQ(command);
+			return Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>After GetForProgram has been run, this gets one of those properties.  DO NOT MODIFY the returned property.  Read only.</summary>
@@ -286,7 +287,7 @@ namespace OpenDentBusiness {
 			
 			string command="SELECT PropertyValue FROM programproperty WHERE ProgramNum="+POut.Long(programNum)
 				+" AND PropertyDesc='"+POut.String(desc)+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0){
 				return "";
 			}
@@ -413,7 +414,7 @@ namespace OpenDentBusiness {
 				throw new Exception("Not allowed to delete the ProgramProperty with a description of: "+prop.PropertyDesc);
 			}
 			string command="DELETE FROM programproperty WHERE ProgramPropertyNum="+POut.Long(prop.ProgramPropertyNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deleting from the ProgramProperty table should be considered dangerous and extremely deliberate, anyone looking to do so must

@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq;
 using DataConnectionBase;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -62,7 +63,7 @@ namespace OpenDentBusiness{
 		public static bool IsODServiceRunning() {
 			
 			string command="SELECT ValueString,NOW() FROM preference WHERE PrefName='OpenDentalServiceHeartbeat'";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			DateTime lastHeartbeat=PIn.Date(table.Rows[0][0].ToString());
 			DateTime dateTimeNow=PIn.Date(table.Rows[0][1].ToString());
 			if(lastHeartbeat.AddMinutes(6)<dateTimeNow) {
@@ -80,7 +81,7 @@ namespace OpenDentBusiness{
 			DataTable table=null;
 			//Check to make sure the asterisk server is still processing messages.
 			ODException.SwallowAnyException(() => {
-				table=DataCore.GetTable("SELECT ValueString,NOW() DateTNow FROM preference WHERE PrefName='AsteriskServerHeartbeat'");
+				table=Database.ExecuteDataTable("SELECT ValueString,NOW() DateTNow FROM preference WHERE PrefName='AsteriskServerHeartbeat'");
 			});
 			if(table!=null && table.Rows.Count>=1 && table.Columns.Count>=2) {
 				dateTimeRecentHeartbeat=PIn.Date(table.Rows[0]["ValueString"].ToString());
@@ -305,7 +306,7 @@ namespace OpenDentBusiness{
 			
 			AlertReads.DeleteForAlertItems(listAlertItemNums);
 			string command="DELETE FROM alertitem WHERE AlertItemNum IN("+string.Join(",",listAlertItemNums.Select(POut.Long))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Inserts, updates, or deletes db rows to match listNew.  No need to pass in userNum, it's set before remoting role check and passed to

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -78,16 +79,16 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT IsLocked FROM journalentry j, reconcile r WHERE j.TransactionNum="+POut.Long(trans.TransactionNum)
 				+" AND j.ReconcileNum = r.ReconcileNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				if(PIn.Int(table.Rows[0][0].ToString())==1) {
 					throw new ApplicationException(Lans.g("Transactions","Not allowed to delete transactions because it is attached to a reconcile that is locked."));
 				}
 			}
 			command="DELETE FROM journalentry WHERE TransactionNum="+POut.Long(trans.TransactionNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command= "DELETE FROM transaction WHERE TransactionNum="+POut.Long(trans.TransactionNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	
@@ -97,7 +98,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(*) FROM journalentry WHERE ReconcileNum !=0"
 				+" AND TransactionNum="+POut.Long(trans.TransactionNum);
-			if(Db.GetCount(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;

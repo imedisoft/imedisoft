@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -109,7 +110,7 @@ namespace OpenDentBusiness
 				+ "AND fee.ClinicNum='" + POut.Long(clinicNum) + "' "
 				+ "AND fee.ProvNum='" + POut.Long(provNum) + "' "
 				+ "ORDER BY procedurecode.ProcCode";
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetTable(command));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
 		}
 	}
 }

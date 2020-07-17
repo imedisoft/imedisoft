@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -73,7 +74,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM equipment" 
 				+" WHERE EquipmentNum = "+POut.Long(equip.EquipmentNum);
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Generates a unique 3 char alphanumeric serialnumber.  Checks to make sure it's not already in use.</summary>
@@ -94,7 +95,7 @@ namespace OpenDentBusiness{
 					}
 				}
 				string command="SELECT COUNT(*) FROM equipment WHERE SerialNumber = '"+POut.String(retVal)+"'";
-				if(Db.GetScalar(command)=="0") {
+				if(Database.ExecuteScalar(command)=="0") {
 					isDuplicate=false;
 				}
 			}
@@ -105,7 +106,7 @@ namespace OpenDentBusiness{
 		public static bool HasExisting(Equipment equip) {
 			
 			string command="SELECT COUNT(*) FROM equipment WHERE SerialNumber = '"+POut.String(equip.SerialNumber)+"' AND EquipmentNum != "+POut.Long(equip.EquipmentNum);
-			if(Db.GetScalar(command)=="0") {
+			if(Database.ExecuteScalar(command)=="0") {
 				return false;
 			}
 			return true;

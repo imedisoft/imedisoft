@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace OpenDentBusiness {
 			}
 			string command="SELECT DISTINCT PatNum FROM disease WHERE PatNum IN ("+string.Join(",",listPatNums)+") "
 				+"AND disease.DiseaseDefNum != "+POut.Long(PrefC.GetLong(PrefName.ProblemsIndicateNone));
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Gets one disease by DiseaseNum from the db.</summary>
@@ -113,14 +114,14 @@ namespace OpenDentBusiness {
 		public static void Delete(Disease disease) {
 			
 			string command="DELETE FROM disease WHERE DiseaseNum ="+POut.Long(disease.DiseaseNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all diseases for one patient.</summary>
 		public static void DeleteAllForPt(long patNum) {
 			
 			string command="DELETE FROM disease WHERE PatNum ="+POut.Long(patNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<long> GetChangedSinceDiseaseNums(DateTime changedSince,List<long> eligibleForUploadPatNumList) {
@@ -135,7 +136,7 @@ namespace OpenDentBusiness {
 					strEligibleForUploadPatNums+="PatNum='"+eligibleForUploadPatNumList[i].ToString()+"' ";
 				}
 				string command="SELECT DiseaseNum FROM disease WHERE DateTStamp > "+POut.DateT(changedSince)+" AND ("+strEligibleForUploadPatNums+")";
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();
@@ -160,7 +161,7 @@ namespace OpenDentBusiness {
 					strDiseaseNums+="DiseaseNum='"+diseaseNums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM disease WHERE "+strDiseaseNums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();
@@ -174,7 +175,7 @@ namespace OpenDentBusiness {
 		public static void ResetTimeStamps(long patNum) {
 			
 			string command="UPDATE disease SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum ="+POut.Long(patNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Changes the value of the DateTStamp column to the current time stamp for all diseases of a patient that are the status specified.</summary>
@@ -182,7 +183,7 @@ namespace OpenDentBusiness {
 			
 			string command="UPDATE disease SET DateTStamp = CURRENT_TIMESTAMP WHERE PatNum ="+POut.Long(patNum);
 				command+=" AND ProbStatus = "+POut.Int((int)status);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		

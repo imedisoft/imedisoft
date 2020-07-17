@@ -6,6 +6,7 @@ using System.Data;
 using System.Reflection;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -121,7 +122,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM tasksubscription "
 				+"WHERE UserNum="+POut.Long(userNum)
 				+" AND TaskListNum="+POut.Long(taskListNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			List<Task> listStillSubscribed=Tasks.GetNewTasksThisUser(userNum,0)//Use clinicnum=0 to get all tasks, no task clinic filtering.
 				.Where(x => Tasks.IsReminderTask(x) && x.DateTimeEntry>=DateTime.Now).ToList();
 			List<Task> listUnSubTasksForUser=listFutureUnreadReminders.Where(x => !x.TaskNum.In(listStillSubscribed.Select(y => y.TaskNum))).ToList();
@@ -139,7 +140,7 @@ namespace OpenDentBusiness{
 			else {
 				command="UPDATE tasksubscription SET TaskListNum="+POut.Long(taskListNumNew)+" WHERE TaskListNum="+POut.Long(taskListNumOld);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		///<summary>Deletes rows for given PK tasksubscription.TaskSubscriptionNums.</summary>
@@ -149,7 +150,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command="DELETE FROM tasksubscription WHERE TaskSubscriptionNum IN ("+String.Join(",",listTaskSubscriptionNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

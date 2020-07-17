@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -119,7 +120,7 @@ namespace OpenDentBusiness{
 				command+=" AND schoolcourse.SchoolCourseNum = '"+POut.Long(schoolCourseNum)+"'";
 			}
 			command+=" ORDER BY CourseID,EvalTitle";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets one EvaluationDef from the db.</summary>
@@ -144,9 +145,9 @@ namespace OpenDentBusiness{
 		public static void Delete(long evaluationDefNum) {
 			
 			string command= "DELETE FROM evaluationdef WHERE EvaluationDefNum = "+POut.Long(evaluationDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command= "DELETE FROM evaluationcriteriondef WHERE EvaluationDefNum = "+POut.Long(evaluationDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 

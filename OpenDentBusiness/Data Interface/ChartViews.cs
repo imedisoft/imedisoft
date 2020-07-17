@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -92,7 +93,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long chartViewNum) {
 			
 			string command= "DELETE FROM chartview WHERE ChartViewNum = "+POut.Long(chartViewNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

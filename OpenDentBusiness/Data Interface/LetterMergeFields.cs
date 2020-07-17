@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,7 +88,7 @@ namespace OpenDentBusiness{
 				+",FieldName = '"    +POut.PString(FieldName)+"' "
 				+"WHERE FieldNum = '"+POut.PInt(FieldNum)+"'";
 			DataConnection dcon=new DataConnection();
- 			Db.NonQ(command);
+ 			Db.ExecuteNonQuery(command);
 		}*/
 
 		/*
@@ -96,7 +97,7 @@ namespace OpenDentBusiness{
 			string command="DELETE FROM lettermergefield "
 				+"WHERE FieldNum = "+POut.PInt(FieldNum);
 			DataConnection dcon=new DataConnection();
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}*/
 
 		///<summary>Called from LetterMerge.Refresh() to get all field names for a given letter.  The result is a collection of strings representing field names.</summary>
@@ -110,7 +111,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM lettermergefield "
 				+"WHERE LetterMergeNum = "+POut.Long(letterMergeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		

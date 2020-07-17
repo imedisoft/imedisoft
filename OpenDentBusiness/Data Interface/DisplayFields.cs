@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class DisplayFields {
@@ -93,14 +94,14 @@ namespace OpenDentBusiness {
 		public static void Delete(long displayFieldNum) {
 			
 			string command="DELETE FROM displayfield WHERE DisplayFieldNum = "+POut.Long(displayFieldNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
 		public static void DeleteForChartView(long chartViewNum) {
 			
 			string command="DELETE FROM displayfield WHERE ChartViewNum = "+POut.Long(chartViewNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<Summary>Returns an ordered list for just one category.  Do not use with None, or it will malfunction.  These are display fields that the user has entered, which are stored in the db, and then are pulled into the cache.  Categories with no display fields will return the default list.</Summary>
@@ -1067,7 +1068,7 @@ namespace OpenDentBusiness {
 				}
 			}
 			string command="DELETE FROM displayfield WHERE Category="+POut.Long((int)category);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(isDefault){
 				return;
 			}
@@ -1081,7 +1082,7 @@ namespace OpenDentBusiness {
 			
 			//Odds are, that if they are creating a custom view, that the fields are not default. If they are default, this code still works.
 			string command="DELETE FROM displayfield WHERE ChartViewNum="+POut.Long((long)ChartViewNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			for(int i=0;i<ListShowing.Count;i++) {
 				ListShowing[i].ItemOrder=i;
 				ListShowing[i].ChartViewNum=ChartViewNum;

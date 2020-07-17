@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -13,7 +14,7 @@ namespace OpenDentBusiness.Mobile {
 		#region Only used on Patient Portal
 			public static PrefmC LoadPreferences(long customerNum) {
 				string command="SELECT * FROM preferencem WHERE CustomerNum = "+POut.Long(customerNum); 
-				DataTable table=Db.GetTable(command);
+				DataTable table=Database.ExecuteDataTable(command);
 				Prefm prefm=new Prefm(); 
 				PrefmC prefmc=new PrefmC();
 				for(int i=0;i<table.Rows.Count;i++) {
@@ -65,36 +66,36 @@ namespace OpenDentBusiness.Mobile {
 			public void UpdateString(long customerNum,PrefmName prefmName,string newValue) {
 				string command="SELECT * FROM preferencem "
 					+"WHERE CustomerNum =" +POut.Long(customerNum)+" AND PrefName = '"+POut.String(prefmName.ToString())+"'";
-				DataTable table=Db.GetTable(command);
+				DataTable table=Database.ExecuteDataTable(command);
 				if(table.Rows.Count>0) {
 					command = "UPDATE preferencem SET "
 					+"ValueString = '"+POut.String(newValue)+"' "
 					+"WHERE CustomerNum =" +POut.Long(customerNum)+" AND PrefName = '"+POut.String(prefmName.ToString())+"'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 				else {
 					command = "INSERT into preferencem " 
 					+"(CustomerNum,PrefName,ValueString) VALUES "
 					+"("+POut.Long(customerNum)+",'"+POut.String(prefmName.ToString())+"','"+POut.String(newValue)+"')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 			}
 	
 			public static void UpdatePreference(Prefm prefm) {
 				string command="SELECT * FROM preferencem "
 					+"WHERE CustomerNum =" +POut.Long(prefm.CustomerNum)+" AND PrefNum = "+POut.Long(prefm.PrefNum);
-				DataTable table=Db.GetTable(command);
+				DataTable table=Database.ExecuteDataTable(command);
 				if(table.Rows.Count>0) {
 					command = "UPDATE preferencem SET "
 					+"ValueString = '"+POut.String(prefm.ValueString)+"' "
 					+"WHERE CustomerNum =" +POut.Long(prefm.CustomerNum)+" AND PrefNum = "+POut.Long(prefm.PrefNum);
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 				else {
 					command = "INSERT into preferencem " 
 					+"(CustomerNum,PrefNum,PrefName,ValueString) VALUES "
 					+"("+POut.Long(prefm.CustomerNum)+","+POut.Long(prefm.PrefNum)+",'"+POut.String(prefm.PrefmName.ToString())+"','"+POut.String(prefm.ValueString)+"')";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 			}
 		

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -66,7 +67,7 @@ namespace OpenDentBusiness
 		public static void Delete(long allergyDefNum)
 		{
 			string command = "DELETE FROM allergydef WHERE AllergyDefNum = " + POut.Long(allergyDefNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets all AllergyDefs based on hidden status.</summary>
@@ -89,12 +90,12 @@ namespace OpenDentBusiness
 		public static bool DefIsInUse(long allergyDefNum)
 		{
 			string command = "SELECT COUNT(*) FROM allergy WHERE AllergyDefNum=" + POut.Long(allergyDefNum);
-			if (Db.GetCount(command) != "0")
+			if (Database.ExecuteString(command) != "0")
 			{
 				return true;
 			}
 			command = "SELECT COUNT(*) FROM rxalert WHERE AllergyDefNum=" + POut.Long(allergyDefNum);
-			if (Db.GetCount(command) != "0")
+			if (Database.ExecuteString(command) != "0")
 			{
 				return true;
 			}
@@ -108,7 +109,7 @@ namespace OpenDentBusiness
 		public static List<long> GetChangedSinceAllergyDefNums(DateTime changedSince)
 		{
 			string command = "SELECT AllergyDefNum FROM allergydef WHERE DateTStamp > " + POut.DateT(changedSince);
-			DataTable dt = Db.GetTable(command);
+			DataTable dt = Database.ExecuteDataTable(command);
 			List<long> allergyDefNums = new List<long>(dt.Rows.Count);
 			for (int i = 0; i < dt.Rows.Count; i++)
 			{
@@ -133,7 +134,7 @@ namespace OpenDentBusiness
 					strAllergyDefNums += "AllergyDefNum='" + allergyDefNums[i].ToString() + "' ";
 				}
 				string command = "SELECT * FROM allergydef WHERE " + strAllergyDefNums;
-				table = Db.GetTable(command);
+				table = Database.ExecuteDataTable(command);
 			}
 			else
 			{
@@ -155,7 +156,7 @@ namespace OpenDentBusiness
 			{
 				command += "AND allergy.StatusIsActive!=0";
 			}
-			return Crud.AllergyDefCrud.TableToList(Db.GetTable(command));
+			return Crud.AllergyDefCrud.TableToList(Database.ExecuteDataTable(command));
 		}
 
 		///<summary>Do not call from outside of ehr.  Returns the text for a SnomedAllergy Enum as it should appear in human readable form for a CCD.</summary>

@@ -59,7 +59,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long emailMessageUidNum) {
 			
 			string command= "DELETE FROM emailmessageuid WHERE EmailMessageUidNum = "+POut.Long(emailMessageUidNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

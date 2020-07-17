@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace OpenDentBusiness
 				command += "AND ClinicNum IN (" + string.Join(",", listClinicNums) + ") ";
 			}
 			command += "ORDER BY AptDateTime";
-			return ReportsComplex.RunFuncOnReportServer(() => Db.GetListLong(command));
+			return ReportsComplex.RunFuncOnReportServer(() => Database.GetListLong(command));
 		}
 	}
 }

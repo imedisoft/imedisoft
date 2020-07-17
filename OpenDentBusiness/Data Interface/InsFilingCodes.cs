@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -127,7 +128,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long insFilingCodeNum) {
 			
 			string command="SELECT COUNT(*) FROM insplan WHERE FilingCode="+POut.Long(insFilingCodeNum);
-			if(Db.GetScalar(command) != "0") {
+			if(Database.ExecuteScalar(command) != "0") {
 				throw new ApplicationException(Lans.g("InsFilingCode","Already in use by insplans."));
 			}
 			Crud.InsFilingCodeCrud.Delete(insFilingCodeNum);

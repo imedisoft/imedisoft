@@ -72,7 +72,7 @@ namespace OpenDentBusiness {
 		public static void Delete(long screenPatNum) {
 			
 			string command= "DELETE FROM screenpat WHERE ScreenPatNum = "+POut.Long(screenPatNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

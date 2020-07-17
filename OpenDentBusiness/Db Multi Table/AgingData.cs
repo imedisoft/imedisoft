@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary>Helper class that holds all of the data necessary for generating a billing list.
@@ -46,7 +47,7 @@ namespace OpenDentBusiness {
 					{whereAndClinNum}
 					GROUP BY {guarOrPat}.PatNum
 					ORDER BY NULL";
-				using(DataTable tableChangedAndUnsent=Db.GetTable(command)) {
+				using(DataTable tableChangedAndUnsent=Database.ExecuteDataTable(command)) {
 					foreach(DataRow row in tableChangedAndUnsent.Rows) {
 						long patNum=PIn.Long(row["PatNum"].ToString());
 						if(!dictPatAgingData.ContainsKey(patNum)) {
@@ -70,7 +71,7 @@ namespace OpenDentBusiness {
 					WHERE claimproc.InsPayAmt > 0
 					{whereAndClinNum}
 					GROUP BY {guarOrPat}.PatNum";
-				using(DataTable tableMaxPayDate=Db.GetTable(command)) {
+				using(DataTable tableMaxPayDate=Database.ExecuteDataTable(command)) {
 					foreach(DataRow row in tableMaxPayDate.Rows) {
 						long patNum=PIn.Long(row["PatNum"].ToString());
 						if(!dictPatAgingData.ContainsKey(patNum)) {
@@ -93,7 +94,7 @@ namespace OpenDentBusiness {
 					+$@"AND payplancharge.ChargeDate <= {POut.Date(DateTime.Today.AddDays(PrefC.GetDouble(PrefName.PayPlansBillInAdvanceDays)))}
 					{whereAndClinNum}
 					GROUP BY {guarOrPat}.PatNum";
-				using(DataTable tableMaxPPCDate=Db.GetTable(command)) {
+				using(DataTable tableMaxPPCDate=Database.ExecuteDataTable(command)) {
 					foreach(DataRow row in tableMaxPPCDate.Rows) {
 						long patNum=PIn.Long(row["PatNum"].ToString());
 						if(!dictPatAgingData.ContainsKey(patNum)) {
@@ -117,7 +118,7 @@ namespace OpenDentBusiness {
 					AND claim.ClaimType IN ('P','S','Other')
 					{whereAndClinNum}
 					GROUP BY {guarOrPat}.PatNum";
-				using(DataTable tableInsPending=Db.GetTable(command)) {
+				using(DataTable tableInsPending=Database.ExecuteDataTable(command)) {
 					foreach(DataRow row in tableInsPending.Rows) {
 						long patNum=PIn.Long(row["PatNum"].ToString());
 						if(!dictPatAgingData.ContainsKey(patNum)) {

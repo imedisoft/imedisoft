@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Data;
@@ -52,7 +53,7 @@ namespace OpenDentBusiness{
 		public static void Delete(Contact Cur){
 			
 			string command = "DELETE FROM contact WHERE contactnum = '"+Cur.ContactNum.ToString()+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 	}

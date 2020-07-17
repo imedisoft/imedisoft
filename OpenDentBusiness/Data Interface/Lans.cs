@@ -1,5 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -164,12 +165,12 @@ namespace OpenDentBusiness
 
 			command += ")";
 
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static string[] GetListCat()
 		{
-			DataTable table = Db.GetTable("SELECT Distinct ClassType FROM language ORDER BY ClassType");
+			DataTable table = Database.ExecuteDataTable("SELECT Distinct ClassType FROM language ORDER BY ClassType");
 
 			string[] ListCat = new string[table.Rows.Count];
 			for (int i = 0; i < table.Rows.Count; i++)
@@ -244,6 +245,6 @@ namespace OpenDentBusiness
 		/// This is one rare situation where queries can be passed.
 		/// But it will always fail for client web and server web.
 		/// </summary>
-		public static void LoadTranslationsFromTextFile(string content) => Db.NonQ(content);
+		public static void LoadTranslationsFromTextFile(string content) => Database.ExecuteNonQuery(content);
 	}
 }

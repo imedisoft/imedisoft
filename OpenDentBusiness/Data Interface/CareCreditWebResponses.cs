@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 using Newtonsoft.Json;
 
 namespace OpenDentBusiness{
@@ -59,7 +60,7 @@ namespace OpenDentBusiness{
 			string command="SELECT PatNum FROM carecreditwebresponse "
 				+$"WHERE ProcessingStatus IN({string.Join(",",GetExclusionStatuses().Select(x => $"'{POut.String(x.ToString())}'")).ToList()}) "
 				+$"AND {DbHelper.BetweenDates("DateTimeEntry",dateFrom,dateTo)}";
-			return Db.GetListLong(command).Distinct().ToList();
+			return Database.GetListLong(command).Distinct().ToList();
 		}
 
 		#endregion Get Methods

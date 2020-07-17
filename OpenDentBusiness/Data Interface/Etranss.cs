@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using OpenDentBusiness.Eclaims;
 
@@ -57,7 +58,7 @@ namespace OpenDentBusiness{
 				//For transaction types related to claims where the claimnum=0, we do not want them to show in the history section of Manage | Send Claims because they have been undone.
 				+"AND (ClaimNum<>0 OR Etype NOT IN ("+POut.Long((int)EtransType.Claim_CA)+","+POut.Long((int)EtransType.ClaimCOB_CA)+","+POut.Long((int)EtransType.Predeterm_CA)+","+POut.Long((int)EtransType.ClaimReversal_CA)+")) "
 				+"ORDER BY DateTimeTrans";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			DataTable tHist=new DataTable("Table");
 			tHist.Columns.Add("patName");
 			tHist.Columns.Add("CarrierName");
@@ -177,7 +178,7 @@ namespace OpenDentBusiness{
 					//CLP = match CLP, . = match any character, then up to 16 other chars after.
 				+" WHERE Etype="+POut.Int((int)EtransType.ERA_835)+" AND etrans.DateTimeTrans >= "+POut.Date(dateClaimService);
 			if(claimIdentifier.Length<16) {
-				DataTable tableEtrans=Db.GetTable(command);
+				DataTable tableEtrans=Database.ExecuteDataTable(command);
 				List<Etrans> listEtrans=Crud.EtransCrud.TableToList(tableEtrans);
 				List<Etrans> retVal=new List<Etrans>();
 				for(int i=0;i<tableEtrans.Rows.Count;i++) {
@@ -322,7 +323,7 @@ namespace OpenDentBusiness{
 			etrans.OfficeSequenceNumber=0;
 			//find the next officeSequenceNumber
 			string command="SELECT MAX(OfficeSequenceNumber) FROM etrans";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				etrans.OfficeSequenceNumber=PIn.Int(table.Rows[0][0].ToString());
 				if(etrans.OfficeSequenceNumber==999999){//if the office has sent > 1 million messages, and has looped back around to 1.
@@ -335,7 +336,7 @@ namespace OpenDentBusiness{
 			etrans.CarrierTransCounter=0;
 			command="SELECT MAX(CarrierTransCounter) FROM etrans "
 				+"WHERE CarrierNum="+POut.Long(etrans.CarrierNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			int tempcounter=0;
 			if(table.Rows.Count>0) {
 				tempcounter=PIn.Int(table.Rows[0][0].ToString());
@@ -345,7 +346,7 @@ namespace OpenDentBusiness{
 			}
 			command="SELECT MAX(CarrierTransCounter2) FROM etrans "
 				+"WHERE CarrierNum2="+POut.Long(etrans.CarrierNum);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				tempcounter=PIn.Int(table.Rows[0][0].ToString());
 			}
@@ -365,7 +366,7 @@ namespace OpenDentBusiness{
 			etrans.CarrierTransCounter2=1;
 			command="SELECT MAX(CarrierTransCounter) FROM etrans "
 				+"WHERE CarrierNum="+POut.Long(etrans.CarrierNum2);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				tempcounter=PIn.Int(table.Rows[0][0].ToString());
 			}
@@ -374,7 +375,7 @@ namespace OpenDentBusiness{
 			}
 			command="SELECT MAX(CarrierTransCounter2) FROM etrans "
 				+"WHERE CarrierNum2="+POut.Long(etrans.CarrierNum2);
-			table=Db.GetTable(command);
+			table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				tempcounter=PIn.Int(table.Rows[0][0].ToString());
 			}
@@ -400,7 +401,7 @@ namespace OpenDentBusiness{
 			//string command=
 			string command= "UPDATE etrans SET EtransMessageTextNum="+POut.Long(msg.EtransMessageTextNum)+" "
 				+"WHERE EtransNum = '"+POut.Long(etransNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			return msg.EtransMessageTextNum;
 		}
 
@@ -409,7 +410,7 @@ namespace OpenDentBusiness{
 			
 			//see if it's a claim.
 			string command="SELECT ClaimNum FROM etrans WHERE EtransNum="+POut.Long(etransNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			long claimNum=PIn.Long(table.Rows[0][0].ToString());
 			if(claimNum==0){//if no claim
 				return;//for now
@@ -418,19 +419,19 @@ namespace OpenDentBusiness{
 
 			//Change the claim back to W.
 			command="UPDATE claim SET ClaimStatus='W' WHERE ClaimNum="+POut.Long(claimNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				//We cannot delete etrans entries, because we need to retain the OfficeSequenceNumber in order to prevent reuse.
 				//We used to allow deleting here, but some customers were getting the "invalid dental claim number or office sequence number" error message when sending claims thereafter.
 				//Office sequence numbers must be unique for every request and response, whether related to a claim or not.
 				//Instead of deleting, we simply detach from the claim, so that this historic entry will no longer display within the Manage | Send Claims window.
 				command="UPDATE etrans SET ClaimNum=0 WHERE EtransNum="+POut.Long(etransNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			else {
 				//Delete this etrans
 				command="DELETE FROM etrans WHERE EtransNum="+POut.Long(etransNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 
@@ -439,7 +440,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long etransNum) {
 			
 			string command="DELETE FROM etrans WHERE EtransNum="+POut.Long(etransNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void Delete835(Etrans etrans) {
@@ -476,7 +477,7 @@ namespace OpenDentBusiness{
 				+"LEFT JOIN insplan insplan2 ON insplan2.PlanNum=claim.PlanNum2 "
 				+"LEFT JOIN carrier carrier2 ON carrier2.CarrierNum=insplan2.CarrierNum "
 				+"WHERE claim.ClaimNum="+POut.Long(claimNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count > 0) {//The claim could have been deleted by someone else.  Don't worry about preserving the carrier information.  Set to 0.
 				etrans.CarrierNum=PIn.Long(table.Rows[0][0].ToString());
 				etrans.CarrierNum2=PIn.Long(table.Rows[0][1].ToString());//might be 0 if no secondary on this claim
@@ -516,7 +517,7 @@ namespace OpenDentBusiness{
 							+" AND DateTimeTrans > "+POut.DateT(dateTimeTrans.AddDays(-14))
 							+" AND DateTimeTrans < "+POut.DateT(dateTimeTrans.AddDays(1))
 							+" AND AckEtransNum=0";
-						Db.NonQ(command);
+						Database.ExecuteNonQuery(command);
 					}
 					else {//partially accepted
 						List<int> transNums=x997.GetTransNums();
@@ -532,7 +533,7 @@ namespace OpenDentBusiness{
 									+" AND DateTimeTrans > "+POut.DateT(dateTimeTrans.AddDays(-14))
 									+" AND DateTimeTrans < "+POut.DateT(dateTimeTrans.AddDays(1))
 									+" AND AckEtransNum=0";
-								Db.NonQ(command);
+								Database.ExecuteNonQuery(command);
 							}
 						}
 					}
@@ -552,7 +553,7 @@ namespace OpenDentBusiness{
 					    +" AND DateTimeTrans > "+POut.DateT(dateTimeTrans.AddDays(-14))
 					    +" AND DateTimeTrans < "+POut.DateT(dateTimeTrans.AddDays(1))
 					    +" AND AckEtransNum=0";
-					  Db.NonQ(command);
+					  Database.ExecuteNonQuery(command);
 					}
 					else {//partially accepted
 					  List<int> transNums=x999.GetTransNums();
@@ -568,7 +569,7 @@ namespace OpenDentBusiness{
 					        +" AND DateTimeTrans > "+POut.DateT(dateTimeTrans.AddDays(-14))
 					        +" AND DateTimeTrans < "+POut.DateT(dateTimeTrans.AddDays(1))
 					        +" AND AckEtransNum=0";
-					      Db.NonQ(command);
+					      Database.ExecuteNonQuery(command);
 					    }
 					  }
 					}
@@ -612,7 +613,7 @@ namespace OpenDentBusiness{
 									+" AND ClearinghouseNum="+POut.Long(hqClearinghouseNum)
 									+" AND DateTimeTrans > "+POut.DateT(dateTimeTrans.AddDays(-14))
 									+" AND DateTimeTrans < "+POut.DateT(dateTimeTrans.AddDays(1));
-								Db.NonQ(command);
+								Database.ExecuteNonQuery(command);
 							}
 						}
 						//none of the other fields make sense, because this ack could refer to many claims.
@@ -663,7 +664,7 @@ namespace OpenDentBusiness{
 								+" AND ClearinghouseNum="+POut.Long(hqClearinghouseNum)
 								+" AND DateTimeTrans > "+POut.DateT(dateTimeTrans.AddDays(-14))
 								+" AND DateTimeTrans < "+POut.DateT(dateTimeTrans.AddDays(1));
-							Db.NonQ(command);
+							Database.ExecuteNonQuery(command);
 						}
 						//none of the other fields make sense, because this ack could refer to many claims.
 					}
@@ -699,7 +700,7 @@ namespace OpenDentBusiness{
 				+"WHERE (Etype="+POut.Int((int)EtransType.BenefitInquiry270)+" "
 				+"OR Etype="+POut.Int((int)EtransType.Eligibility_CA)+") "
 				+" AND PlanNum="+POut.Long(planNum);
-			return PIn.Date(Db.GetScalar(command));
+			return PIn.Date(Database.ExecuteString(command));
 		}
 
 

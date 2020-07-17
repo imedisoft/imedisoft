@@ -1,4 +1,5 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the Unit Test ProgramProperty table.</summary>
 		public static void ClearProgamPropertyTable() {
 			string command="DELETE FROM programproperty WHERE ProgramPropertyNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			ProgramProperties.RefreshCache();
 		}
 

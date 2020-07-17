@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness.Mobile{
 	///<summary></summary>
@@ -31,7 +32,7 @@ namespace OpenDentBusiness.Mobile{
 			for(int i=0;i<patList.Count;i++) {
 				string command="SELECT StatementNum FROM statementm WHERE CustomerNum = "+POut.Long(customerNum)+" AND PatNum = "+POut.Long(patList[i])
 					+" ORDER BY DateSent DESC, StatementNum DESC " + limitStr;
-				DataTable table=Db.GetTable(command);
+				DataTable table=Database.ExecuteDataTable(command);
 				if(table.Rows.Count>0) {
 					string strStatementNums=" AND ( ";
 					for(int j=0;j<table.Rows.Count;j++) {
@@ -43,7 +44,7 @@ namespace OpenDentBusiness.Mobile{
 					strStatementNums+=" )";
 					command="DELETE FROM statementm WHERE CustomerNum = "+POut.Long(customerNum)+" AND PatNum = "+POut.Long(patList[i])
 						+strStatementNums;
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 			}
 			//Note: this statement does not work: error =This version of MySQL doesn't yet support 'LIMIT & IN/ALL/ANY/SOME subquery'
@@ -93,13 +94,13 @@ namespace OpenDentBusiness.Mobile{
 		///<summary>used in tandem with Full synch</summary>
 		public static void DeleteAll(long customerNum) {
 			string command= "DELETE FROM statementm WHERE CustomerNum = "+POut.Long(customerNum); ;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Delete all statements of a particular patient</summary>
 		public static void Delete(long customerNum,long PatNum) {
 			string command= "DELETE FROM statementm WHERE CustomerNum = "+POut.Long(customerNum)+" AND PatNum = "+POut.Long(PatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion
 		/*
@@ -129,7 +130,7 @@ namespace OpenDentBusiness.Mobile{
 		///<summary></summary>
 		public static void Delete(long customerNum,long statementNum) {
 			string command= "DELETE FROM statementm WHERE CustomerNum = "+POut.Long(customerNum)+" AND StatementNum = "+POut.Long(statementNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 
 		///<summary>First use GetChangedSince.  Then, use this to convert the list a list of 'm' objects.</summary>

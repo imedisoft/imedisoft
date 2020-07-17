@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace OpenDentBusiness{
 				+"AND supply.SupplyNum=supplyorderitem.SupplyNum "
 				+"AND supplyorderitem.SupplyOrderNum="+POut.Long(orderNum)+" "
 				+"ORDER BY definition.ItemOrder,supply.ItemOrder";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static SupplyOrderItem SelectOne(long supplyOrderItemNum) {

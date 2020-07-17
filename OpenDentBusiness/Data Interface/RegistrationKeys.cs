@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 		#region Get Methods
@@ -81,14 +82,14 @@ namespace OpenDentBusiness {
 			
 			string command="DELETE FROM registrationkey WHERE RegistrationKeyNum='"
 				+POut.Long(registrationKeyNum)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns true if the given registration key is currently in use by a customer, false otherwise.</summary>
 		public static bool KeyIsInUse(string regKey) {
 			
 			string command="SELECT RegKey FROM registrationkey WHERE RegKey='"+POut.String(regKey)+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return (table.Rows.Count>0);
 		}
 
@@ -206,7 +207,7 @@ namespace OpenDentBusiness {
 				AND registrationkey.IsFreeVersion=0 
 				AND registrationkey.IsOnlyForTesting=0
 				AND ISNULL(activecharges.PatNum)";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 		
 		///<summary>Does not validate regkey like GetByKey().
@@ -217,7 +218,7 @@ namespace OpenDentBusiness {
 				return new SerializableDictionary<string, Patient>();
 			}
 			string command="SELECT * FROM  registrationkey WHERE RegKey IN("+String.Join(",",listRegKeyStrs.Distinct().Select(x => "'"+POut.String(x)+"'").ToList())+")";
-			List<RegistrationKey> listRegKeys=Crud.RegistrationKeyCrud.TableToList(Db.GetTable(command));
+			List<RegistrationKey> listRegKeys=Crud.RegistrationKeyCrud.TableToList(Database.ExecuteDataTable(command));
 			Patient[] pats=Patients.GetMultPats(listRegKeys.Select(x => x.PatNum).ToList());
 			return listRegKeys.Select(x => new { RegKeyStr=x.RegKey, PatientCur=pats.FirstOrDefault(y => y.PatNum==x.PatNum)??new Patient() })
 				.ToSerializableDictionary(x => x.RegKeyStr,x => x.PatientCur);

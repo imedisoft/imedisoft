@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -60,7 +61,7 @@ namespace OpenDentBusiness{
 		public static void DeleteForLab(long ehrLabNum) {
 			
 			string command="DELETE FROM ehrlabresult WHERE EhrLabNum = "+POut.Long(ehrLabNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Helper function to return a list of descriptions for the HL70078 enumeration.</summary>
@@ -339,7 +340,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long ehrLabResultNum) {
 			
 			string command= "DELETE FROM ehrlabresult WHERE EhrLabResultNum = "+POut.Long(ehrLabResultNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

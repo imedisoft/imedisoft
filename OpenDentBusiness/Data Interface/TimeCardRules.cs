@@ -6,6 +6,7 @@ using System.Text;
 using System.Collections;
 using System.Globalization;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -104,7 +105,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long timeCardRuleNum) {
 			
 			string command= "DELETE FROM timecardrule WHERE TimeCardRuleNum = "+POut.Long(timeCardRuleNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		
@@ -115,7 +116,7 @@ namespace OpenDentBusiness{
 			}
 			
 			string command="DELETE FROM timecardrule WHERE TimeCardRuleNum IN ("+string.Join(",",listTimeCardRuleNums.Select(x => POut.Long(x)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Validates pay period before making any adjustments.

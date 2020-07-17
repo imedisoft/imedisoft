@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental.UI {
 	//Jordan is the only one allowed to edit this file.
@@ -643,7 +644,7 @@ namespace OpenDental.UI {
 		///<summary>This runs on load and with certain property changes that would only change at initialization.  Performance hit should be very small. This also does an Invalidate so that the "combobox" will update.  This also automatically selects a reasonable initial clinic, usually the current clinic. </summary>
 		private void FillClinics() {
 			if(!IsTestModeNoDb){
-				if(!Db.HasDatabaseConnection && !Security.IsUserLoggedIn) {
+				if(!Database.HasDatabaseConnection && !Security.IsUserLoggedIn) {
 					return;
 				}
 			}

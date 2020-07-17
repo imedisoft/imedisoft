@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			
-			Db.NonQ($@"UPDATE proctp SET Priority = {POut.Long(priority)}
+			Database.ExecuteNonQuery($@"UPDATE proctp SET Priority = {POut.Long(priority)}
 				WHERE TreatPlanNum = {POut.Long(treatPlanNum)}
 				AND ProcNumOrig IN({string.Join(",",listProcNums.Select(x => POut.Long(x)))})");
 		}
@@ -55,7 +56,7 @@ namespace OpenDentBusiness{
 			string command="SELECT * FROM proctp "
 				+"WHERE TreatPlanNum="+POut.Long(tpNum)
 				+" ORDER BY ItemOrder";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return Crud.ProcTPCrud.SelectMany(command);
 		}
 
@@ -88,7 +89,7 @@ namespace OpenDentBusiness{
 		public static void Delete(ProcTP proc){
 			
 			string command= "DELETE from proctp WHERE ProcTPNum = '"+POut.Long(proc.ProcTPNum)+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets a list for just one tp.  Used in TP module.  Supply a list of all ProcTPs for pt.</summary>
@@ -111,7 +112,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM proctp "
 				+"WHERE TreatPlanNum="+POut.Long(treatPlanNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<ProcTP> GetForProcs(List<long> listProcNums) {
@@ -128,7 +129,7 @@ namespace OpenDentBusiness{
 		public static List<ProcTP> GetAllLim() {
 			
 			string command = "SELECT TreatPlanNum,PatNum,ProcNumOrig FROM proctp";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<ProcTP> listProcTpsLim = new List<ProcTP>();
 			foreach(DataRow row in table.Rows) {
 				ProcTP procTp = new ProcTP();

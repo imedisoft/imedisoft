@@ -1,5 +1,6 @@
 ﻿using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using System;
 using System.Collections;
@@ -293,7 +294,7 @@ namespace OpenDentBusiness
 		/// Gets a pref of type string without using the cache.
 		/// </summary>
 		public static string GetStringNoCache(PrefName preferenceName) 
-			=> Db.GetScalar("SELECT ValueString FROM preference WHERE PrefName='" + SOut.String(preferenceName.ToString()) + "'");
+			=> Database.ExecuteString("SELECT ValueString FROM preference WHERE PrefName='" + SOut.String(preferenceName.ToString()) + "'");
 
 		/// <summary>
 		/// Gets a pref of type string.  Will not throw an exception if null or not found.

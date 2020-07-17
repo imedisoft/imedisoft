@@ -9,6 +9,7 @@ using CodeBase;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using OpenDentBusiness.AutoComm;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 
@@ -60,7 +61,7 @@ namespace OpenDentBusiness{
 				return false;
 			}
 			
-			return Db.GetLong("SELECT count(*) FROM ApptReminderRule WHERE TSPrior>0")>0;
+			return Database.ExecuteLong("SELECT count(*) FROM ApptReminderRule WHERE TSPrior>0")>0;
 		}
 
 		#endregion
@@ -80,7 +81,7 @@ namespace OpenDentBusiness{
 			
 			//We can't use CRUD here as we may be in between versions so use DataTable directly.
 			string command="SELECT ApptReminderRuleNum, TypeCur, TSPrior, ClinicNum FROM apptreminderrule WHERE TypeCur=0";
-			var groups=Db.GetTable(command).Select().Select(x => new {
+			var groups=Database.ExecuteDataTable(command).Select().Select(x => new {
 				ApptReminderRuleNum = PIn.Long(x[0].ToString()),
 				TypeCur = PIn.Int(x[1].ToString()),
 				TSPrior = TimeSpan.FromTicks(PIn.Long(x[2].ToString())),

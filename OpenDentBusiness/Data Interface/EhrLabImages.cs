@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -81,7 +82,7 @@ namespace OpenDentBusiness{
 			
 			//Delete existing rows for this EhrLabNum.
 			string cmd="DELETE FROM ehrlabimage WHERE EhrLabNum = "+POut.Long(ehrLabNum);
-			Db.NonQ(cmd);			
+			Database.ExecuteNonQuery(cmd);			
 		}
 
 		///<summary>From local list. Returns true if EhrLabImage is found. Otherwise returns false.</summary>

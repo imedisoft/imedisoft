@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -99,14 +100,14 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM icd9";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 
 		///<summary>Directly from db.</summary>
 		public static bool CodeExists(string iCD9Code) {
 			
 			string command="SELECT COUNT(*) FROM icd9 WHERE ICD9Code = '"+POut.String(iCD9Code)+"'";
-			string count=Db.GetCount(command);
+			string count=Database.ExecuteString(command);
 			if(count=="0") {
 				return false;
 			}
@@ -134,7 +135,7 @@ namespace OpenDentBusiness{
 				+"AND diseasedef.ICD9Code=icd9.ICD9Code "
 				+"AND icd9.ICD9Num='"+POut.Long(icd9Num)+"' "
 				+"GROUP BY patient.PatNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				string s=Lans.g("ICD9","Not allowed to delete. Already in use by ")+table.Rows.Count.ToString()
 					+" "+Lans.g("ICD9","patients, including")+" \r\n";
@@ -147,7 +148,7 @@ namespace OpenDentBusiness{
 				throw new ApplicationException(s);
 			}
 			command= "DELETE FROM icd9 WHERE ICD9Num = "+POut.Long(icd9Num);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>This method uploads only the ICD9s that are used by the disease table. This is to reduce upload time.</summary>
@@ -156,7 +157,7 @@ namespace OpenDentBusiness{
 			//string command="SELECT ICD9Num FROM icd9 WHERE DateTStamp > "+POut.DateT(changedSince);//Dennis: delete this line later
 			string command="SELECT ICD9Num FROM icd9 WHERE DateTStamp > "+POut.DateT(changedSince)
 				+" AND ICD9Num in (SELECT ICD9Num FROM disease)";
-			DataTable dt=Db.GetTable(command);
+			DataTable dt=Database.ExecuteDataTable(command);
 			List<long> icd9Nums = new List<long>(dt.Rows.Count);
 			for(int i=0;i<dt.Rows.Count;i++) {
 				icd9Nums.Add(PIn.Long(dt.Rows[i]["ICD9Num"].ToString()));
@@ -177,7 +178,7 @@ namespace OpenDentBusiness{
 					strICD9Nums+="ICD9Num='"+icd9Nums[i].ToString()+"' ";
 				}
 				string command="SELECT * FROM icd9 WHERE "+strICD9Nums;
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 			}
 			else {
 				table=new DataTable();
@@ -207,7 +208,7 @@ namespace OpenDentBusiness{
 		public static bool IsOldDescriptions() {
 			
 			string command=@"SELECT COUNT(*) FROM icd9 WHERE BINARY description = UPPER(description)";//count rows that are all caps
-			if(PIn.Int(Db.GetScalar(command))>10000) {//"Normal" DB should have 4, might be more if hand entered, over 10k means it is the old import.
+			if(Database.ExecuteInt(command)>10000) {//"Normal" DB should have 4, might be more if hand entered, over 10k means it is the old import.
 				return true;
 			}
 			return false;
@@ -218,7 +219,7 @@ namespace OpenDentBusiness{
 			
 			List<string> retVal=new List<string>();
 			string command="SELECT icd9code FROM icd9";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++){
 				retVal.Add(table.Rows[i].ItemArray[0].ToString());
 			}

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -67,7 +68,7 @@ namespace OpenDentBusiness{
 			}
 			command+=" AND evaluation.DateEval BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd);
 			command+=" ORDER BY DateEval,LName";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets all Evaluations from the DB.  List filters are available.</summary>
@@ -101,7 +102,7 @@ namespace OpenDentBusiness{
 				}
 			}
 			command+=" ORDER BY LName,FName";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary></summary>
@@ -120,7 +121,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long evaluationNum) {
 			
 			string command= "DELETE FROM evaluation WHERE EvaluationNum = "+POut.Long(evaluationNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 

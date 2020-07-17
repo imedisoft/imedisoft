@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace OpenDentBusiness{
 		public static void Synch(Task task){
 			
 			string command="DELETE FROM taskancestor WHERE TaskNum="+POut.Long(task.TaskNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			long taskListNum=0;
 			long parentNum=task.TaskListNum;
 			DataTable table;
@@ -56,7 +57,7 @@ namespace OpenDentBusiness{
 				}
 				//get the parent
 				command="SELECT TaskListNum,Parent FROM tasklist WHERE TaskListNum="+POut.Long(parentNum);
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 				if(table.Rows.Count==0){//in case of database inconsistency
 					break;
 				}
@@ -78,7 +79,7 @@ namespace OpenDentBusiness{
 			}
 			
 			string command="DELETE FROM taskancestor WHERE TaskNum IN ("+string.Join(",",listTasks.Select(x => POut.Long(x.TaskNum)))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			DataTable table;
 			while(true){
 				List<TaskAncestor> listTaskAncestors = new List<TaskAncestor>();
@@ -94,7 +95,7 @@ namespace OpenDentBusiness{
 				}
 				//get the parent
 				command="SELECT TaskListNum,Parent FROM tasklist WHERE TaskListNum="+POut.Long(taskListParent);
-				table=Db.GetTable(command);
+				table=Database.ExecuteDataTable(command);
 				if(table.Rows.Count==0) {//in case of database inconsistency
 					break;
 				}

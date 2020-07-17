@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Reflection;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -56,13 +57,13 @@ namespace OpenDentBusiness{
 			
 			//validate that not already in use.
 			string command="SELECT COUNT(*) FROM supplyorderitem WHERE SupplyNum="+POut.Long(supply.SupplyNum);
-			int count=PIn.Int(Db.GetCount(command));
+			int count=PIn.Int(Database.ExecuteString(command));
 			if(count>0){
 				throw new ApplicationException(Lans.g("Supplies","Supply is already in use on an order. Not allowed to delete."));
 			}
 			Crud.SupplyCrud.Delete(supply.SupplyNum);
 			command="UPDATE supply SET ItemOrder=(ItemOrder-1) WHERE Category="+POut.Long(supply.Category)+" AND ItemOrder>"+POut.Int(supply.ItemOrder);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Uses single query to subtract a count, typically 1, from each supply in the list.</summary>
@@ -73,7 +74,7 @@ namespace OpenDentBusiness{
 			}
 			string command="UPDATE supply SET ItemOrder=(ItemOrder-"+countMove.ToString()+") WHERE SupplyNum IN("
 				+String.Join(",",listSupplyNums.ConvertAll(x=>x.ToString()))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 
 		}
 
@@ -85,7 +86,7 @@ namespace OpenDentBusiness{
 			}
 			string command="UPDATE supply SET ItemOrder=(ItemOrder+"+countMove.ToString()+") WHERE SupplyNum IN("
 				+String.Join(",",listSupplyNums.ConvertAll(x=>x.ToString()))+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 
 		}
 
@@ -96,7 +97,7 @@ namespace OpenDentBusiness{
 				+"WHERE ItemOrder >= "+POut.Int(itemOrder)
 				+" AND Category="+POut.Long(category)
 				+" AND SupplyNum !="+POut.Long(excludeSupplyNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets the last ItemOrder for a category.  -1 if none in that category yet.</summary>
@@ -104,7 +105,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT MAX(ItemOrder) FROM supply "
 				+"WHERE Category="+POut.Long(category);
-			string result=Db.GetScalar(command);
+			string result=Database.ExecuteString(command);
 			if(result==""){
 				return -1;
 			}

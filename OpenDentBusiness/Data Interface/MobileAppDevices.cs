@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -57,7 +58,7 @@ namespace OpenDentBusiness{
 			
 			string command="UPDATE mobileappdevice SET PatNum="+POut.Long(patNum)+",LastCheckInActivity="+POut.DateT(DateTime.Now)
 				+" WHERE MobileAppDeviceNum="+POut.Long(mobileAppDeviceNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			Signalods.SetInvalid(InvalidType.EClipboard);
 		}
 
@@ -90,14 +91,14 @@ namespace OpenDentBusiness{
 			if(!listClinicNums.IsNullOrEmpty()) {
 				command+=" WHERE ClinicNum NOT IN("+string.Join(",",listClinicNums)+")";
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns true if this PatNum is currently linked to a MobileAppDevice row.</summary>
 		public static bool PatientIsAlreadyUsingDevice(long patNum) {
 			
 			string command=$"SELECT COUNT(*) FROM mobileappdevice WHERE PatNum={POut.Long(patNum)}";
-			return PIn.Long(Db.GetCount(command))>0;
+			return PIn.Long(Database.ExecuteString(command))>0;
 		}
 
 		///<summary>Returns true if this clinicNum is subscribed for eClipboard.</summary>

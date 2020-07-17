@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -158,24 +159,24 @@ namespace OpenDentBusiness{
 			//appointment.Assistant will not block deletion
 			//schedule.EmployeeNum will not block deletion
 			string command="SELECT COUNT(*) FROM clockevent WHERE EmployeeNum="+POut.Long(employeeNum);
-			if(Db.GetCount(command)!="0"){
+			if(Database.ExecuteString(command)!="0"){
 				throw new ApplicationException(Lans.g("FormEmployeeSelect",
 					"Not allowed to delete employee because of attached clock events."));
 			}
 			command="SELECT COUNT(*) FROM timeadjust WHERE EmployeeNum="+POut.Long(employeeNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new ApplicationException(Lans.g("FormEmployeeSelect",
 					"Not allowed to delete employee because of attached time adjustments."));
 			}
 			command="SELECT COUNT(*) FROM userod WHERE EmployeeNum="+POut.Long(employeeNum);
-			if(Db.GetCount(command)!="0") {
+			if(Database.ExecuteString(command)!="0") {
 				throw new ApplicationException(Lans.g("FormEmployeeSelect",
 					"Not allowed to delete employee because of attached user."));
 			}
 			command="UPDATE appointment SET Assistant=0 WHERE Assistant="+POut.Long(employeeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="SELECT ScheduleNum FROM schedule WHERE EmployeeNum="+POut.Long(employeeNum);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			List<string> listScheduleNums=new List<string>();//Used for deleting scheduleops below
 			for(int i=0;i<table.Rows.Count;i++) {
 				//Add entry to deletedobjects table if it is a provider schedule type
@@ -184,16 +185,16 @@ namespace OpenDentBusiness{
 			}
 			if(listScheduleNums.Count>0) {
 				command="DELETE FROM scheduleop WHERE ScheduleNum IN("+POut.String(String.Join(",",listScheduleNums))+")";
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//command="DELETE FROM scheduleop WHERE ScheduleNum IN(SELECT ScheduleNum FROM schedule WHERE EmployeeNum="+POut.Long(employeeNum)+")";
-			//Db.NonQ(command);
+			//Db.ExecuteNonQuery(command);
 			command="DELETE FROM schedule WHERE EmployeeNum="+POut.Long(employeeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command= "DELETE FROM employee WHERE EmployeeNum ="+POut.Long(employeeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command="DELETE FROM timecardrule WHERE EmployeeNum="+POut.Long(employeeNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

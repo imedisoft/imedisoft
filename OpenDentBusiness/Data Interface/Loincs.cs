@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -133,7 +134,7 @@ namespace OpenDentBusiness{
 		public static long GetCodeCount() {
 			
 			string command="SELECT COUNT(*) FROM loinc";
-			return PIn.Long(Db.GetCount(command));
+			return PIn.Long(Database.ExecuteString(command));
 		}
 
 		///<summary>Gets one Loinc from the db based on LoincCode, returns null if not found.</summary>
@@ -167,10 +168,10 @@ namespace OpenDentBusiness{
 		{
 
 			string command = "DELETE FROM loinc";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 
 			command = "ALTER TABLE loinc AUTO_INCREMENT = 1";//resets the primary key to start counting from 1 again.
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 
 			return;
 		}
@@ -180,7 +181,7 @@ namespace OpenDentBusiness{
 			
 			List<string> retVal=new List<string>();
 			string command="SELECT LoincCode FROM loinc";
-			DataTable table=DataCore.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			for(int i=0;i<table.Rows.Count;i++) {
 				retVal.Add(table.Rows[i].ItemArray[0].ToString());
 			}
@@ -191,7 +192,7 @@ namespace OpenDentBusiness{
 		public static bool CodeExists(string LoincCode) {
 			
 			string command="SELECT COUNT(*) FROM loinc WHERE LoincCode='"+POut.String(LoincCode)+"'";
-			string count=Db.GetCount(command);
+			string count=Database.ExecuteString(command);
 			if(count=="0") {
 				return false;
 			}
@@ -218,7 +219,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long lOINCNum) {
 			
 			string command= "DELETE FROM loinc WHERE LoincNum = "+POut.Long(lOINCNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		*/
 

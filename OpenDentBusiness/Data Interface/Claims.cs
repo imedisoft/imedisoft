@@ -10,6 +10,7 @@ using OpenDentBusiness.Crud;
 using CodeBase;
 using DataConnectionBase;
 using System.Xml.Serialization;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -35,7 +36,7 @@ namespace OpenDentBusiness{
 				+"AND claim.DateService > "+POut.Date(dateTerm)+" "
 				+"GROUP BY claim.ClaimNum "
 				+"ORDER BY clinic.Description,patient.PatNum";
-			return ClaimPaySplitTableToList(Db.GetTable(command));
+			return ClaimPaySplitTableToList(Database.ExecuteDataTable(command));
 		}
 
 		#endregion
@@ -80,7 +81,7 @@ namespace OpenDentBusiness{
 				+",carrier.CarrierName,claim.ClaimNum"
 				+",claimproc.ClaimPaymentNum,claim.PatNum";
 			command+=" ORDER BY patName_";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return ClaimPaySplitTableToList(table);
 		}
 
@@ -148,7 +149,7 @@ namespace OpenDentBusiness{
 			if(PrefC.HasClinicsEnabled && Clinics.GetCount() > 0) {
 				command+="LEFT JOIN clinic ON clinic.ClinicNum = outstanding.ClinicNum ";
 			}
-			return ClaimPaySplitTableToList(Db.GetTable(command)).OrderByDescending(x => x.Carrier.StartsWith(carrierName)).ThenBy(x => x.Carrier)
+			return ClaimPaySplitTableToList(Database.ExecuteDataTable(command)).OrderByDescending(x => x.Carrier.StartsWith(carrierName)).ThenBy(x => x.Carrier)
 				.ThenBy(x => x.PatName).ToList();
 		}
 
@@ -170,7 +171,7 @@ namespace OpenDentBusiness{
 			
 
 			command+="ORDER BY claimproc.PaymentRow";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return ClaimPaySplitTableToList(table);
 		}
 
@@ -187,7 +188,7 @@ namespace OpenDentBusiness{
 			}
 			command+=claimNums+") AND ProcNum!=0";
 			//List<ClaimProc> tempClaimProcs=ClaimProcCrud.SelectMany(command);
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return new DataTable();//No procedures are attached to these claims.  This frequently happens in conversions.  No need to look for related secondary claims.
 			}
@@ -204,7 +205,7 @@ namespace OpenDentBusiness{
 			command+=") AND claimproc.ClaimNum NOT IN ("+claimNums+")"
 				+" AND ClaimType = 'S'"
 				+" GROUP BY claimproc.ClaimNum,claimproc.PatNum,claimproc.ProcDate";
-			DataTable secondaryClaims=Db.GetTable(command);
+			DataTable secondaryClaims=Database.ExecuteDataTable(command);
 			return secondaryClaims;
 		}
 
@@ -227,7 +228,7 @@ namespace OpenDentBusiness{
 				+" GROUP BY claim.DateService,claim.ProvTreat,CONCAT(CONCAT(patient.LName,', '),patient.FName)"
 				+",carrier.CarrierName,claim.ClaimNum,claimproc.ClaimPaymentNum,claim.PatNum"
 				+" ORDER BY patName_";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			return ClaimPaySplitTableToList(table);
 		}
 
@@ -316,7 +317,7 @@ namespace OpenDentBusiness{
 			Crud.ClaimCrud.Update(claim);
 			//now, delete all attachments and recreate.
 			string command="DELETE FROM claimattach WHERE ClaimNum="+POut.Long(claim.ClaimNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			for(int i=0;i<claim.Attachments.Count;i++) {
 				claim.Attachments[i].ClaimNum=claim.ClaimNum;
 				ClaimAttaches.Insert(claim.Attachments[i]);
@@ -374,7 +375,7 @@ namespace OpenDentBusiness{
 				LEFT JOIN carrier ON insplan.CarrierNum=carrier.CarrierNum
 				WHERE {string.Join("AND ",listWhereAnds)}
 				ORDER BY claim.DateService,patient.LName,patient.FName";
-			Dictionary<long,DataRow> dictClaimRows=Db.GetTable(command).Select().GroupBy(x => PIn.Long(x["ClaimNum"].ToString())).ToDictionary(x => x.Key,x => x.First());
+			Dictionary<long,DataRow> dictClaimRows=Database.ExecuteDataTable(command).Select().GroupBy(x => PIn.Long(x["ClaimNum"].ToString())).ToDictionary(x => x.Key,x => x.First());
 			List<ClaimProc> listClaimProcs=ClaimProcs.RefreshForClaims(dictClaimRows.Keys.ToList());
 			Dictionary<long,string> dictProcCodeStrs=Procedures.GetProcsFromClaimProcs(listClaimProcs)
 				.ToDictionary(x => x.ProcNum,x => ProcedureCodes.GetStringProcCode(x.CodeNum));
@@ -426,7 +427,7 @@ namespace OpenDentBusiness{
 				+"AND carrier.CarrierNum=insplan.CarrierNum "
 				+"AND claim.ClaimNum IN ("+String.Join(",",claimNums)+") "
 				+"ORDER BY carrier.ElectID,claim.ProvBill,inssub.Subscriber,subscNotPatient,claim.PatNum";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			//object[,] myA=new object[5,table.Rows.Count];
 			X12TransactionItem item;
 			for(int i=0;i<table.Rows.Count;i++){
@@ -449,7 +450,7 @@ namespace OpenDentBusiness{
 				+"DateSent="+POut.Date(dateT)+", "
 				+"DateSentOrig=(CASE WHEN DateSentOrig='0001-01-01' THEN "+POut.Date(dateT)+" ELSE DateSentOrig END) "
 				+"WHERE ClaimNum = "+POut.Long(claimNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static bool IsClaimIdentifierInUse(string claimIdentifier,long claimNumExclude,string claimType) {
@@ -461,13 +462,13 @@ namespace OpenDentBusiness{
 			else {
 				command+=" AND ClaimType!='PreAuth'";
 			}
-			return (Db.GetTable(command).Rows[0][0].ToString()!="0");
+			return (Database.ExecuteDataTable(command).Rows[0][0].ToString()!="0");
 		}
 
 		public static bool IsReferralAttached(long referralNum) {
 			
 			string command="SELECT COUNT(*) FROM claim WHERE OrderingReferralNum="+POut.Long(referralNum);
- 			if(Db.GetCount(command)=="0") {
+ 			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}
 			return true;
@@ -819,7 +820,7 @@ namespace OpenDentBusiness{
 				INNER JOIN inssub ON inssub.InsSubNum=claim.InsSubNum AND claim.PlanNum=inssub.PlanNum
 				WHERE {DbHelper.BetweenDates("DateService",dateMin,dateMax)}
 				AND ROUND(ClaimFee,2) BETWEEN {POut.Double(feeMin)} AND {POut.Double(feeMax)}";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Returns the number of received claims attached to specified insplan.</summary>
@@ -839,7 +840,7 @@ namespace OpenDentBusiness{
 			if(insSubNum!=0) {
 				command+="AND claim.InsSubNum="+POut.Long(insSubNum);
 			}
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Returns a human readable ClaimStatus string.</summary>
@@ -872,7 +873,7 @@ namespace OpenDentBusiness{
 		public static void UpdateClaimIdentifier(long claimNum,string claimIdentifier) {
 			
 			string command="UPDATE claim SET ClaimIdentifier='"+POut.String(claimIdentifier)+"' WHERE ClaimNum="+POut.Long(claimNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		
 		///<summary>Updates all claimproc estimates and also updates claim totals to db. Must supply procList which includes all procedures that this 
@@ -1351,7 +1352,7 @@ namespace OpenDentBusiness{
 				AND claim.PatNum = "+patPlanCur.PatNum+@"
 				AND claim.InsSubNum = "+patPlanCur.InsSubNum;
 			}
-			return PIn.Date(Db.GetScalar(command));
+			return PIn.Date(Database.ExecuteString(command));
 		}
 
 		public static List<Claim> GetForPat(long patNum) {

@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using System;
 
@@ -22,7 +23,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the recurringcharge table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearRecurringChargeTable() {
 			string command="DELETE FROM recurringcharge WHERE RecurringChargeNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

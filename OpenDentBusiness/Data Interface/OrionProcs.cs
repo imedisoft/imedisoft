@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -147,7 +148,7 @@ namespace OpenDentBusiness{
 				+" AND "+DbHelper.Year("orionproc.DateScheduleBy")+">1880"
 				+" ORDER BY orionproc.DateScheduleBy ";
 			command=DbHelper.LimitOrderBy(command,1);
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Loops through every procedure attached to an appt and sets the Status2 to complete.</summary>
@@ -176,7 +177,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long orionProcNum) {
 			
 			string command= "DELETE FROM orionproc WHERE OrionProcNum = "+POut.Long(orionProcNum);
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		
 

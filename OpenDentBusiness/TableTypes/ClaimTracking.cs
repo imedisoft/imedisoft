@@ -49,7 +49,7 @@ namespace OpenDentBusiness{
 	/*
 		if(DataConnection.DBtype==DatabaseType.MySql) {
 			command="DROP TABLE IF EXISTS claimtracking";
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 			command=@"CREATE TABLE claimtracking (
 				ClaimTrackingNum bigint NOT NULL auto_increment PRIMARY KEY,
 				ClaimNum bigint NOT NULL,
@@ -62,11 +62,11 @@ namespace OpenDentBusiness{
 				INDEX(UserNum),
 				INDEX(TrackingDefNum)
 				) DEFAULT CHARSET=utf8";
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 		else {//oracle
 			command="BEGIN EXECUTE IMMEDIATE 'DROP TABLE claimtracking'; EXCEPTION WHEN OTHERS THEN NULL; END;";
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 			command=@"CREATE TABLE claimtracking (
 				ClaimTrackingNum number(20) NOT NULL,
 				ClaimNum number(20) NOT NULL,
@@ -77,12 +77,12 @@ namespace OpenDentBusiness{
 				TrackingDefNum number(20) NOT NULL,
 				CONSTRAINT claimtracking_ClaimTrackingNum PRIMARY KEY (ClaimTrackingNum)
 				)";
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 			command=@"CREATE INDEX claimtracking_ClaimNum ON claimtracking (ClaimNum)";
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 			command=@"CREATE INDEX claimtracking_UserNum ON claimtracking (UserNum)";
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 			command=@"CREATE INDEX claimtracking_TrackingDefNum ON claimtracking (TrackingDefNum)";
-			Db.NonQ(command);
+			Db.ExecuteNonQuery(command);
 		}
 */

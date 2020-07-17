@@ -1,4 +1,5 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace UnitTestsCore {
 		///<summary>Deletes everything from the apptview table.  Does not truncate the table so that PKs are not reused on accident.</summary>
 		public static void ClearApptView() {
 			string command="DELETE FROM apptview WHERE ApptViewNum > 0";
-			DataCore.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

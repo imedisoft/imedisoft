@@ -1,5 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -88,7 +89,7 @@ namespace OpenDentBusiness{
 			string command=
 				"SELECT * from computer "
 				+"WHERE compname = '"+computerName+"'";
-			DataTable table=Db.GetTable(command);
+			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				Computer Cur=new Computer();
 				Cur.CompName=computerName;
@@ -102,23 +103,10 @@ namespace OpenDentBusiness{
 			return Crud.ComputerCrud.Insert(comp);
 		}
 
-		/*
-		///<summary></summary>
-		public static void Update(){
-			string command= "UPDATE computer SET "
-				+"compname = '"    +POut.PString(CompName)+"' "
-				//+"printername = '" +POut.PString(PrinterName)+"' "
-				+"WHERE ComputerNum = '"+POut.PInt(ComputerNum)+"'";
-			//MessageBox.Show(string command);
-			DataConnection dcon=new DataConnection();
- 			Db.NonQ(command);
-		}*/
-
-		///<summary></summary>
 		public static void Delete(Computer comp){
 			
 			string command= "DELETE FROM computer WHERE computernum = '"+comp.ComputerNum.ToString()+"'";
- 			Db.NonQ(command);
+ 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Only called from Printers.GetForSit</summary>
@@ -144,25 +132,25 @@ namespace OpenDentBusiness{
 					RefreshCache();//adds new computer to list
 				}
 				command="SELECT LastHeartBeat<"+DbHelper.DateAddMinute(DbHelper.Now(),"-3")+" FROM computer WHERE CompName='"+POut.String(computerName)+"'";
-				if(!PIn.Bool(Db.GetScalar(command))) {//no need to update if LastHeartBeat is already within the last 3 mins
+				if(!PIn.Bool(Database.ExecuteString(command))) {//no need to update if LastHeartBeat is already within the last 3 mins
 					return;//remote app servers with multiple connections would fight over the lock on a single row to update the heartbeat unnecessarily
 				}
 			}
 			command="UPDATE computer SET LastHeartBeat="+DbHelper.Now()+" WHERE CompName = '"+POut.String(computerName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void ClearHeartBeat(string computerName) {
 			
 			string command= "UPDATE computer SET LastHeartBeat="+POut.Date(new DateTime(0001,1,1),true)+" WHERE CompName = '"+POut.String(computerName)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void ClearAllHeartBeats(string machineNameException) {
 			
 			string command= "UPDATE computer SET LastHeartBeat="+POut.Date(new DateTime(0001,1,1),true)+" "
 				+"WHERE CompName != '"+POut.String(machineNameException)+"'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Returns a list of strings in a specific order.  
@@ -171,14 +159,14 @@ namespace OpenDentBusiness{
 		public static List<string> GetServiceInfo() {
 			
 			List<string> retVal=new List<string>();
-			DataTable table=Db.GetTable("SHOW VARIABLES WHERE Variable_name='socket'");//service name
+			DataTable table=Database.ExecuteDataTable("SHOW VARIABLES WHERE Variable_name='socket'");//service name
 			if(table.Rows.Count>0) {
 				retVal.Add(table.Rows[0]["VALUE"].ToString());
 			}
 			else {
 				retVal.Add("Not Found");
 			}
-			table=Db.GetTable("SHOW VARIABLES WHERE Variable_name='version_comment'");//service comment
+			table=Database.ExecuteDataTable("SHOW VARIABLES WHERE Variable_name='version_comment'");//service comment
 			if(table.Rows.Count>0) {
 				retVal.Add(table.Rows[0]["VALUE"].ToString());
 			}
@@ -186,7 +174,7 @@ namespace OpenDentBusiness{
 				retVal.Add("Not Found");
 			}
 			try { 
-				table=Db.GetTable("SELECT @@hostname");//server name
+				table=Database.ExecuteDataTable("SELECT @@hostname");//server name
 				if(table.Rows.Count>0) {
 					retVal.Add(table.Rows[0][0].ToString());
 				}

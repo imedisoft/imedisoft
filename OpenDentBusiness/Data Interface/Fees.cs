@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -47,7 +48,7 @@ namespace OpenDentBusiness{
 			string command="SELECT FeeNum,Amount,FeeSched,CodeNum,ClinicNum,ProvNum,SecDateTEdit FROM fee "
 				+"WHERE FeeSched IN ("+string.Join(",",listFeeSchedNums.Select(x => POut.Long(x)))+") "
 				+"AND ClinicNum IN ("+string.Join(",",listClinicNums.Select(x => POut.Long(x)))+")";
-			return Db.GetTable(command).AsEnumerable()
+			return Database.ExecuteDataTable(command).AsEnumerable()
 				.Select(x => new FeeLim {
 					FeeNum=PIn.Long(x["FeeNum"].ToString()),
 					Amount=PIn.Double(x["Amount"].ToString()),
@@ -63,7 +64,7 @@ namespace OpenDentBusiness{
 		public static int GetCountByFeeSchedNum(long feeSchedNum) {
 			
 			string command="SELECT COUNT(*) FROM fee WHERE FeeSched ="+POut.Long(feeSchedNum);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Searches for the given codeNum and feeSchedNum and finds the most appropriate match for the clinicNum and provNum.  If listFees is null, it will go to db.</summary>
@@ -512,7 +513,7 @@ namespace OpenDentBusiness{
 			
 			ClearFkey(feeNum);
 			string command="DELETE FROM fee WHERE FeeNum="+feeNum;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Only set doCheckFeeSchedGroups to false from FeeSchedGroups.</summary>
@@ -526,14 +527,14 @@ namespace OpenDentBusiness{
 			}
 			ClearFkey(listFeeNums);
 			string command="DELETE FROM fee WHERE FeeNum IN ("+string.Join(",",listFeeNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Deletes all fees for the supplied FeeSched that aren't for the HQ clinic.</summary>
 		public static void DeleteNonHQFeesForSched(long feeSchedNum) {
 			
 			string command="SELECT FeeNum FROM fee WHERE FeeSched="+POut.Long(feeSchedNum)+" AND ClinicNum!=0";
-			List<long> listFeeNums=Db.GetListLong(command);
+			List<long> listFeeNums=Database.GetListLong(command);
 			DeleteMany(listFeeNums);
 		}
 
@@ -542,7 +543,7 @@ namespace OpenDentBusiness{
 			
 			string command="DELETE FROM fee WHERE "
 				+"FeeSched="+POut.Long(feeSched)+" AND ClinicNum="+POut.Long(clinicNum)+" AND ProvNum="+POut.Long(provNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		#endregion Delete
 

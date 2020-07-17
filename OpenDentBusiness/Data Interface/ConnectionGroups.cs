@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -30,7 +31,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long connectionGroupNum) {
 			
 			string command= "DELETE FROM connectiongroup WHERE ConnectionGroupNum = "+POut.Long(connectionGroupNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 	}
 }

@@ -94,13 +94,15 @@
     <Compile Include="Annotations\PrimaryKeyAttribute.cs" />
     <Compile Include="Annotations\TableAttribute.cs" />
     <Compile Include="Cache\CacheBase.cs" />
-    <Compile Include="Database.cs" />
     <Compile Include="DataConnection.cs" />
     <Compile Include="DataConnectionEvent.cs" />
+    <Compile Include="DataConnectionEventArgs.cs" />
+    <Compile Include="DataConnectionEventType.cs" />
     <Compile Include="DataExtensions.cs" />
     <Compile Include="DataRecordBuilder.cs" />
     <Compile Include="DataRecord.cs" />
     <Compile Include="DataRecordBase.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryInfo.cs" />
     <Compile Include="QueryMonitor.cs" />

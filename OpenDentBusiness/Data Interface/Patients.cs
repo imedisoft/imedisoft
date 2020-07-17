@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -133,7 +134,7 @@ namespace OpenDentBusiness
 					+ whereCollBillType + @"
 				)";
 			Dictionary<long, PatAging> dictAll = new Dictionary<long, PatAging>();
-			using (DataTable table = Db.GetTable(command))
+			using (DataTable table = Database.ExecuteDataTable(command))
 			{
 				if (table.Rows.Count == 0)
 				{
@@ -191,7 +192,7 @@ namespace OpenDentBusiness
 				) ps
 				GROUP BY ps.Guarantor
 				ORDER BY NULL";
-			using (DataTable table = Db.GetTable(command))
+			using (DataTable table = Database.ExecuteDataTable(command))
 			{
 				foreach (DataRow row in table.Rows)
 				{
@@ -208,7 +209,7 @@ namespace OpenDentBusiness
 				INNER JOIN claim ON patient.PatNum=claim.PatNum
 					AND claim.ClaimStatus IN ('U','H','W','S')
 					AND claim.ClaimType IN ('P','S','Other')";
-			foreach (long guarNum in Db.GetListLong(command))
+			foreach (long guarNum in Database.GetListLong(command))
 			{
 				if (!dictAll.ContainsKey(guarNum))
 				{
@@ -227,7 +228,7 @@ namespace OpenDentBusiness
 				AND procedurelog.ProcStatus=" + POut.Int((int)ProcStat.C) + @"
 				GROUP BY patient.Guarantor
 				ORDER BY NULL";
-			using (DataTable table = Db.GetTable(command))
+			using (DataTable table = Database.ExecuteDataTable(command))
 			{
 				foreach (DataRow row in table.Rows)
 				{
@@ -274,7 +275,7 @@ namespace OpenDentBusiness
 				+ "FROM patient "
 				+ "WHERE patient.PatNum=patient.Guarantor "
 				+ "AND patient.BillingType IN (" + string.Join(",", listBillTypes.Select(x => POut.Long(x.DefNum))) + ")";
-			return Db.GetListLong(command).Union(listSuspendedGuarNums).ToList();
+			return Database.GetListLong(command).Union(listSuspendedGuarNums).ToList();
 		}
 
 		///<summary>Used to determine whether or not the guarantor of a family is sent to collections.  Used in order to prompt the user to specify
@@ -296,7 +297,7 @@ namespace OpenDentBusiness
 				+ "AND PatNum=Guarantor "
 				+ "AND BillingType=" + POut.Long(billTypeColl.DefNum) + " "
 				+ DbHelper.LimitAnd(1);
-			return PIn.Bool(Db.GetScalar(command));
+			return PIn.Bool(Database.ExecuteString(command));
 		}
 
 		///<summary>Fetches all Gurantor patnums who have family members where some have a positive estimated balance and some negative.</summary>
@@ -311,7 +312,7 @@ namespace OpenDentBusiness
 				WHERE PatStatus=" + POut.Int((int)PatientStatus.Patient) + @"
 				GROUP BY patient.Guarantor
 				HAVING GreaterThan>0 AND LessThan>0) family";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		public static List<long> GetGuarantorsForPatNums(List<long> listPatNums)
@@ -322,20 +323,20 @@ namespace OpenDentBusiness
 			}
 			//If two patients in the same family are passed in, it will still only return that families guarantor once.
 			string command = "SELECT DISTINCT Guarantor FROM patient WHERE PatNum IN (" + String.Join<long>(",", listPatNums) + ") ";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Returns a list of PatNums for every guarantor in the database that hasn't been flagged as deleted.</summary>
 		public static List<long> GetAllGuarantors()
 		{
 			string command = $"SELECT DISTINCT Guarantor FROM patient WHERE patient.PatStatus!={POut.Int((int)PatientStatus.Deleted)}";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		public static List<long> GetAllGuarantorsWithFamilies()
 		{
 			string command = "SELECT DISTINCT Guarantor FROM patient WHERE Guarantor<>PatNum";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Returns a list of PatNums for every guarantor in the database that has at least one other patient in the family.</summary>
@@ -348,7 +349,7 @@ namespace OpenDentBusiness
 				WHERE patient.Guarantor!=patient.PatNum
 				AND patient.PatStatus!={POut.Int((int)PatientStatus.Deleted)}
 				ORDER BY guar.LName, guar.FName, guar.PatNum";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		public static Patient GetGuarForPat(long patNum)
@@ -425,7 +426,7 @@ namespace OpenDentBusiness
 				command += @$"AND DATE(apt.DateTimeLastApt) BETWEEN {POut.Date(dateNotSeenSince)} AND {POut.Date(dateSeenSince)} ";
 			}
 			command += "ORDER BY patient.LName,patient.FName ";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		#endregion
@@ -1444,7 +1445,7 @@ namespace OpenDentBusiness
 					+ "SELECT DISTINCT Guarantor FROM patient WHERE PatNum IN (" + string.Join(",", listPatNums) + ")"
 					+ ") guarnums ON guarnums.Guarantor=patient.Guarantor "
 				+ "WHERE patient.PatStatus!=" + POut.Int((int)PatientStatus.Deleted);
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Gets all of the PatNums for the family members of the Guarantor nums passed in.  Returns a distinct list of PatNums that will include
@@ -1456,7 +1457,7 @@ namespace OpenDentBusiness
 				return new List<long>();
 			}
 			string command = "SELECT PatNum FROM patient WHERE Guarantor IN (" + string.Join(",", listGuarNums) + ")";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		public static List<long> GetAllFamilyPatNumsForSuperFam(List<long> listSuperFamNums)
@@ -1467,7 +1468,7 @@ namespace OpenDentBusiness
 				return new List<long>();
 			}
 			string command = "SELECT PatNum FROM patient WHERE SuperFamily IN (" + string.Join(",", listSuperFamNums.Distinct()) + ")";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		public static List<Patient> GetChangedSince(DateTime changedSince)
@@ -1481,7 +1482,7 @@ namespace OpenDentBusiness
 		public static List<long> GetChangedSincePatNums(DateTime changedSince)
 		{
 			string command = "SELECT PatNum From patient WHERE DateTStamp > " + POut.DateT(changedSince);
-			DataTable dt = Db.GetTable(command);
+			DataTable dt = Database.ExecuteDataTable(command);
 			List<long> patnums = new List<long>(dt.Rows.Count);
 			for (int i = 0; i < dt.Rows.Count; i++)
 			{
@@ -1497,7 +1498,7 @@ namespace OpenDentBusiness
 				+ "LEFT JOIN userweb ON userweb.FKey=patient.PatNum "
 					+ "AND userweb.FKeyType=" + POut.Int((int)UserWebFKeyType.PatientPortal) + " "
 				+ "WHERE userweb.FKey IS NULL OR userweb.Password='' ";
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>ONLY for new patients. Set includePatNum to true for use the patnum from the import function.  Used in HL7.  Otherwise, uses InsertID to fill PatNum.</summary>
@@ -1534,7 +1535,7 @@ namespace OpenDentBusiness
 			string command = "UPDATE patient SET PatStatus=" + POut.Long((int)PatientStatus.Deleted) + ", "
 				+ "Guarantor=PatNum "
 				+ "WHERE PatNum =" + pat.PatNum.ToString();
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//no need to call PhoneNumbers.SyncPat since only the status and guar are changed here
 		}
 
@@ -1686,7 +1687,7 @@ namespace OpenDentBusiness
 			{
 				command = DbHelper.LimitOrderBy(command, 40);
 			}
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			Dictionary<string, Tuple<DateTime, DateTime>> dictNextLastApts = new Dictionary<string, Tuple<DateTime, DateTime>>();
 			if (ptSearchArgs.HasNextLastVisit && ptSearchArgs.DoLimit && table.Rows.Count > 0)
 			{
@@ -1700,7 +1701,7 @@ namespace OpenDentBusiness
 					WHERE AptStatus IN({SOut.Int((int)ApptStatus.Scheduled)},{SOut.Int((int)ApptStatus.Complete)})
 				  AND PatNum IN ({string.Join(",", listPatNums)})
 					GROUP BY PatNum";
-				dictNextLastApts = Db.GetTable(command).Select()
+				dictNextLastApts = Database.ExecuteDataTable(command).Select()
 					.ToDictionary(x => x["PatNum"].ToString(), x => Tuple.Create(SIn.DateT(x["NextVisit"].ToString()), SIn.DateT(x["LastVisit"].ToString())));
 			}
 			DataTable PtDataTable = table.Clone();//does not copy any data
@@ -1819,7 +1820,7 @@ namespace OpenDentBusiness
 			if (patNums.Count > 0)
 			{
 				string command = "SELECT * FROM patient WHERE PatNum IN (" + String.Join<long>(",", patNums) + ") ";
-				table = Db.GetTable(command);
+				table = Database.ExecuteDataTable(command);
 			}
 			Patient[] multPats = Crud.PatientCrud.TableToList(table).ToArray();
 			return multPats;
@@ -1850,7 +1851,7 @@ namespace OpenDentBusiness
 				"SELECT PatNum,LName,FName,MiddleI,Preferred,CreditType,Guarantor,HasIns,SSN "
 				+ "FROM patient "
 				+ "WHERE PatNum = '" + patNum.ToString() + "'";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count == 0)
 			{
 				return new Patient();
@@ -1879,7 +1880,7 @@ namespace OpenDentBusiness
 			string command = "SELECT PatNum,State "
 				+ "FROM patient "
 				+ "WHERE PatNum IN (" + string.Join(",", listPatNums) + ")";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
 				Patient patLim = new Patient();
@@ -1901,7 +1902,7 @@ namespace OpenDentBusiness
 			string command = "SELECT PatNum,LName,FName,MiddleI,Preferred,CreditType,Guarantor,HasIns,SSN" + (doIncludeClinicNum ? ",ClinicNum" : "") + " "
 				+ "FROM patient "
 				+ "WHERE PatNum IN (" + string.Join(",", listPatNums) + ")";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			foreach (DataRow row in table.Rows)
 			{
 				Patient patLim = new Patient();
@@ -2016,7 +2017,7 @@ namespace OpenDentBusiness
 					HAVING ((StartBal>0.005 OR StartBal<-0.005) OR (AfterIns>0.005 OR AfterIns<-0.005))
 					ORDER BY IsNotGuar,Birthdate,ProvNum,FName,Preferred";
 
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary></summary>
@@ -2026,29 +2027,29 @@ namespace OpenDentBusiness
 			string command = "UPDATE patient SET "
 				+ "FamFinUrgNote = '" + POut.String(Fam.ListPats[0].FamFinUrgNote) + "' "
 				+ "WHERE PatNum = " + POut.Long(Pat.PatNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			command = "UPDATE patient SET FamFinUrgNote = '' "
 				+ "WHERE PatNum = '" + Pat.Guarantor.ToString() + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Move family financial note to current patient:
 			command = "SELECT FamFinancial FROM patientnote "
 				+ "WHERE PatNum = " + POut.Long(Pat.Guarantor);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count == 1)
 			{
 				command = "UPDATE patientnote SET "
 					+ "FamFinancial = '" + POut.String(table.Rows[0][0].ToString()) + "' "
 					+ "WHERE PatNum = " + POut.Long(Pat.PatNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			command = "UPDATE patientnote SET FamFinancial = '' "
 				+ "WHERE PatNum = " + POut.Long(Pat.Guarantor);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//change guarantor of all family members:
 			command = "UPDATE patient SET "
 				+ "Guarantor = " + POut.Long(Pat.PatNum)
 				+ " WHERE Guarantor = " + POut.Long(Pat.Guarantor);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary></summary>
@@ -2062,14 +2063,14 @@ namespace OpenDentBusiness
 				+ "famfinurgnote = '" + POut.String(Fam.ListPats[0].FamFinUrgNote)
 				+ POut.String(Pat.FamFinUrgNote) + "' "
 				+ "WHERE patnum = '" + Pat.Guarantor.ToString() + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//delete cur notes
 			command =
 				"UPDATE patient SET "
 				//+"famaddrnote = '', "
 				+ "famfinurgnote = '' "
 				+ "WHERE patnum = '" + Pat.PatNum + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//concat family financial notes
 			PatientNote PatientNoteCur = PatientNotes.Refresh(Pat.PatNum, Pat.Guarantor);
 			//patientnote table must have been refreshed for this to work.
@@ -2080,19 +2081,19 @@ namespace OpenDentBusiness
 				"SELECT famfinancial "
 				+ "FROM patientnote WHERE patnum ='" + POut.Long(Pat.PatNum) + "'";
 			//MessageBox.Show(string command);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			string strCur = PIn.String(table.Rows[0][0].ToString());
 			command =
 				"UPDATE patientnote SET "
 				+ "famfinancial = '" + POut.String(strGuar + strCur) + "' "
 				+ "WHERE patnum = '" + Pat.Guarantor.ToString() + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//delete cur financial notes
 			command =
 				"UPDATE patientnote SET "
 				+ "famfinancial = ''"
 				+ "WHERE patnum = '" + Pat.PatNum.ToString() + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Key=patNum, value=formatted name.</summary>
@@ -2136,7 +2137,7 @@ namespace OpenDentBusiness
 		{
 			string command = "SELECT patnum,lname,fname,middlei,preferred "
 				+ "FROM patient";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			return table;
 		}
 
@@ -2166,7 +2167,7 @@ namespace OpenDentBusiness
 			{
 				command += "AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Archived);
 			}
-			if (PIn.Int(Db.GetCount(command)) == 0)
+			if (PIn.Int(Database.ExecuteString(command)) == 0)
 			{//Everybody in the superfamily has the same information
 				return true;
 			}
@@ -2205,7 +2206,7 @@ namespace OpenDentBusiness
 				+ ",Zip = '" + POut.String(pat.Zip) + "'"
 				+ ",HmPhone = '" + POut.String(pat.HmPhone) + "'"
 				+ strWhere;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Get the list of patients after the changes
 			List<Patient> listPatsNew = Crud.PatientCrud.SelectMany(strSelect);
 			//Add securitylog entries for any changes made.
@@ -2310,7 +2311,7 @@ namespace OpenDentBusiness
 			{
 				command += " AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Archived);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Get the list of patients after the changes
 			List<Patient> listPatsNew = Crud.PatientCrud.SelectMany(strSelect);
 			foreach (Patient patOld in listPatsOld)
@@ -2336,7 +2337,7 @@ namespace OpenDentBusiness
 				+ ",Zip = '" + POut.String(pat.Zip) + "'"
 				+ ",HmPhone = '" + POut.String(pat.HmPhone) + "'"
 				+ " WHERE guarantor = '" + POut.Long(pat.Guarantor) + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if (PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable))
 			{
 				PhoneNumbers.SyncPats(GetFamily(pat.PatNum).ListPats.ToList());
@@ -2354,7 +2355,7 @@ namespace OpenDentBusiness
 			{
 				command += " AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Archived);
 			}
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 		}
 
 		///<summary></summary>
@@ -2367,7 +2368,7 @@ namespace OpenDentBusiness
 			{
 				command += " AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Archived);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates every family members' Email, WirelessPhone, WkPhone, and TxtMsgOk to the passed in patient object.</summary>
@@ -2387,7 +2388,7 @@ namespace OpenDentBusiness
 			{
 				command += " AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Archived);
 			}
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			if (PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable))
 			{
 				PhoneNumbers.SyncPats(GetFamily(pat.PatNum).ListPats.ToList());
@@ -2528,7 +2529,7 @@ namespace OpenDentBusiness
 				+ "WHERE " + string.Join(" AND ", listWhereAnds) + " "
 				+ "GROUP BY " + guarOrPat + ".PatNum "
 				+ "ORDER BY " + guarOrPat + ".LName," + guarOrPat + ".FName ";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<PatAging> agingList = new List<PatAging>();
 			if (table.Rows.Count < 1)
 			{
@@ -2555,7 +2556,7 @@ namespace OpenDentBusiness
 					+ "WHERE " + guarOrPat + ".PatNum IN(" + string.Join(",", listSuperFamilyNumsNeeded.Select(x => POut.Long(x))) + ") "
 					+ "GROUP BY " + guarOrPat + ".PatNum "
 					+ "ORDER BY " + guarOrPat + ".LName," + guarOrPat + ".FName ";
-					DataTable superHeadTable = Db.GetTable(command);
+					DataTable superHeadTable = Database.ExecuteDataTable(command);
 					if (superHeadTable.Rows.Count > 0)
 					{
 						table.Merge(superHeadTable);
@@ -2579,7 +2580,7 @@ namespace OpenDentBusiness
 					+ "AND supe.HasSuperBilling=1 "
 					+ "GROUP BY supe.PatNum "
 					+ "ORDER BY NULL";
-				dictSuperFamPatAging = Db.GetTable(command).Select().Where(x => listSuperFamNums.Contains(x["PatNum"].ToString()))
+				dictSuperFamPatAging = Database.ExecuteDataTable(command).Select().Where(x => listSuperFamNums.Contains(x["PatNum"].ToString()))
 					.ToDictionary(x => PIn.Long(x["PatNum"].ToString()), x => new PatAging()
 					{
 						PatNum = PIn.Long(x["PatNum"].ToString()),
@@ -2728,7 +2729,7 @@ namespace OpenDentBusiness
 				FROM patient
 				{whereClause}
 				ORDER BY LName,FName";
-			return Db.GetTable(command).Select().Select(x =>
+			return Database.ExecuteDataTable(command).Select().Select(x =>
 				new PatAging()
 				{
 					PatNum = PIn.Long(x["PatNum"].ToString()),
@@ -2762,7 +2763,7 @@ namespace OpenDentBusiness
 				+ "FROM patient "
 				+ "WHERE patient.PatNum IN (" + string.Join(",", listGuarNums.Select(x => POut.Long(x))) + ") "
 				+ "AND patient.Guarantor=patient.PatNum";
-			List<PatAging> listPatAgings = Db.GetTable(command).Select().Select(x => new PatAging()
+			List<PatAging> listPatAgings = Database.ExecuteDataTable(command).Select().Select(x => new PatAging()
 			{
 				PatNum = PIn.Long(x["PatNum"].ToString()),
 				Guarantor = PIn.Long(x["Guarantor"].ToString()),
@@ -2803,7 +2804,7 @@ namespace OpenDentBusiness
 				+ DbHelper.Regexp("ChartNumber", "^[0-9]+$") + " "//matches any positive number of digits
 				+ "ORDER BY (chartnumber+0) DESC";//1/13/05 by Keyush Shaw-added 0.
 			command = DbHelper.LimitOrderBy(command, 1);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count == 0)
 			{//no existing chart numbers
 				return "1";
@@ -2826,7 +2827,7 @@ namespace OpenDentBusiness
 			string command = "SELECT LName,FName from patient WHERE "
 				+ "ChartNumber = '" + POut.String(chartNum)
 				+ "' AND PatNum != '" + excludePatNum.ToString() + "'";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			string retVal = "";
 			if (table.Rows.Count != 0)
 			{//found duplicate chart number
@@ -2839,7 +2840,7 @@ namespace OpenDentBusiness
 		public static int GetNumberPatients()
 		{
 			string command = "SELECT Count(*) FROM patient";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			return PIn.Int(table.Rows[0][0].ToString());
 		}
 
@@ -2850,7 +2851,7 @@ namespace OpenDentBusiness
 				+ "LEFT JOIN patplan ON patplan.PatNum=patient.PatNum"
 				+ " WHERE patient.PatNum=" + POut.Long(patNum)
 				+ " GROUP BY patplan.PatNum,patient.HasIns";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			string newVal = "";
 			if (table.Rows[0][1].ToString() != "0")
 			{
@@ -2860,7 +2861,7 @@ namespace OpenDentBusiness
 			{
 				command = "UPDATE patient SET HasIns='" + POut.String(newVal)
 					+ "' WHERE PatNum=" + POut.Long(patNum);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 		}
 
@@ -2901,7 +2902,7 @@ namespace OpenDentBusiness
 			{
 				command = "SELECT PatNum FROM patient WHERE patient.PatStatus!=4";
 			}
-			DataTable dt = Db.GetTable(command);
+			DataTable dt = Database.ExecuteDataTable(command);
 			long[] patnums = new long[dt.Rows.Count];
 			for (int i = 0; i < patnums.Length; i++)
 			{
@@ -2964,7 +2965,7 @@ namespace OpenDentBusiness
 			string newTel;
 			string idNum;
 			string command = "select * from patient";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<long> listPatNumsForPhNumSync = new List<long>();
 			bool doSyncPhNumTable = PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable);
 			for (int i = 0; i < table.Rows.Count; i++)
@@ -2978,7 +2979,7 @@ namespace OpenDentBusiness
 				{
 					command = "UPDATE patient SET hmphone = '"
 						+ POut.String(newTel) + "' WHERE patNum = '" + idNum + "'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					if (doSyncPhNumTable)
 					{
 						listPatNumsForPhNumSync.Add(patNum);
@@ -2991,7 +2992,7 @@ namespace OpenDentBusiness
 				{
 					command = "UPDATE patient SET wkphone = '"
 						+ POut.String(newTel) + "' WHERE patNum = '" + idNum + "'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					if (doSyncPhNumTable)
 					{
 						listPatNumsForPhNumSync.Add(patNum);
@@ -3004,7 +3005,7 @@ namespace OpenDentBusiness
 				{
 					command = "UPDATE patient SET wirelessphone = '"
 						+ POut.String(newTel) + "' WHERE patNum = '" + idNum + "'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 					if (doSyncPhNumTable)
 					{
 						listPatNumsForPhNumSync.Add(patNum);
@@ -3016,7 +3017,7 @@ namespace OpenDentBusiness
 				PhoneNumbers.SyncPats(GetMultPats(listPatNumsForPhNumSync.Distinct().ToList()).ToList());
 			}
 			command = "SELECT * from carrier";
-			table = Db.GetTable(command);
+			table = Database.ExecuteDataTable(command);
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
 				idNum = PIn.String(table.Rows[i][0].ToString());
@@ -3027,11 +3028,11 @@ namespace OpenDentBusiness
 				{
 					command = "UPDATE carrier SET Phone = '"
 						+ POut.String(newTel) + "' WHERE CarrierNum = '" + idNum + "'";
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 			}
 			command = "SELECT PatNum,ICEPhone FROM patientnote";
-			table = Db.GetTable(command);
+			table = Database.ExecuteDataTable(command);
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
 				idNum = PIn.String(table.Rows[i]["PatNum"].ToString());
@@ -3040,7 +3041,7 @@ namespace OpenDentBusiness
 				if (oldTel != newTel)
 				{
 					command = "UPDATE patientnote SET ICEPhone='" + POut.String(newTel) + "' WHERE PatNum=" + idNum;
-					Db.NonQ(command);
+					Database.ExecuteNonQuery(command);
 				}
 			}
 		}
@@ -3052,7 +3053,7 @@ namespace OpenDentBusiness
 								BalTotal,Bal_0_30,Bal_31_60,Bal_61_90,BalOver90
 						FROM Patient Where Patnum=" + PatientID +
 				" AND patnum=guarantor";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Will return 0 if can't find exact matching pat.</summary>
@@ -3064,7 +3065,7 @@ namespace OpenDentBusiness
 				+ "AND Birthdate=" + POut.Date(birthdate) + " "
 				+ "AND PatStatus!=" + POut.Int((int)PatientStatus.Archived) + " "//Not Archived
 				+ "AND PatStatus!=" + POut.Int((int)PatientStatus.Deleted);//Not Deleted
-			return PIn.Long(Db.GetScalar(command));
+			return Database.ExecuteLong(command);
 		}
 
 		///<summary>Will return an empty list if it can't find exact matching pat.</summary>
@@ -3076,7 +3077,7 @@ namespace OpenDentBusiness
 				+ "AND Birthdate=" + POut.Date(birthdate) + " "
 				+ "AND PatStatus!=" + POut.Int((int)PatientStatus.Archived) + " "//Not Archived
 				+ "AND PatStatus!=" + POut.Int((int)PatientStatus.Deleted);//Not Deleted
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Returns a list of all patients within listSortedPatients which match the given pat.LName, pat.FName and pat.Birthdate.
@@ -3139,7 +3140,7 @@ namespace OpenDentBusiness
 				+ "AND fam.PatStatus != " + POut.Int((int)PatientStatus.Deleted);
 			listPhones = listPhones.Where(x => !string.IsNullOrEmpty(x)) //Get rid of blank numbers
 				.Select(x => x.StripNonDigits()).ToList();//Get rid of non-digit characters
-			List<long> listMatchingContacts = Db.GetTable(command).Rows.Cast<DataRow>()
+			List<long> listMatchingContacts = Database.ExecuteDataTable(command).Rows.Cast<DataRow>()
 				.Where(x => PIn.String(x["Email"].ToString()) == email
 					|| listPhones.Any(y => y == PIn.String(x["HmPhone"].ToString()).StripNonDigits())
 					|| listPhones.Any(y => y == PIn.String(x["WkPhone"].ToString()).StripNonDigits())
@@ -3184,7 +3185,7 @@ namespace OpenDentBusiness
 				command = "SELECT COUNT(*) FROM patient "
 				+ "WHERE patient.Email='" + POut.String(email) + "' "
 				+ "AND PatNum IN (" + string.Join(",", listFamilyPatNums) + ")";
-				if (Db.GetCount(command) != "0")
+				if (Database.ExecuteString(command) != "0")
 				{
 					return true;//The name and birth date match AND someone in the family has the exact email address passed in.  This is consider a duplicate.
 				}
@@ -3194,7 +3195,7 @@ namespace OpenDentBusiness
 				+ "UNION SELECT WkPhone Phone FROM patient WHERE PatNum IN (" + string.Join(",", listFamilyPatNums) + ") "
 				+ "UNION SELECT WirelessPhone Phone FROM patient WHERE PatNum IN (" + string.Join(",", listFamilyPatNums) + ") "
 				+ "UNION SELECT PhoneNumberVal Phone FROM phonenumber WHERE PatNum IN (" + string.Join(",", listFamilyPatNums) + ") ";
-			List<string> listAllFamilyPhones = Db.GetListString(command).Where(x => !string.IsNullOrEmpty(x)).ToList();
+			List<string> listAllFamilyPhones = Database.GetListString(command).Where(x => !string.IsNullOrEmpty(x)).ToList();
 			listPhones = listPhones.Where(x => x != null)
 				.Select(x => x.StripNonDigits()).ToList();//Get rid of non-digit characters
 														  //Go through each phone number and strip out all non-digit chars and compare them to the phone passed in.
@@ -3217,7 +3218,7 @@ namespace OpenDentBusiness
 				+ "AND FName='" + POut.String(fName) + "' "
 				+ "AND PatStatus!=4 "//not deleted
 				+ "LIMIT 1";
-			return PIn.Long(Db.GetScalar(command));
+			return Database.ExecuteLong(command);
 		}
 
 		///<summary>Gets a list of patients that have any part of their name (last, first, middle, preferred) that matches the given criteria.
@@ -3286,7 +3287,7 @@ namespace OpenDentBusiness
 		{
 			string command = "UPDATE patient SET BillingType=" + POut.Long(billingType) +
 				" WHERE Guarantor=" + POut.Long(Guarantor);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void UpdateAllFamilyBillingTypes(long billingType, List<long> listGuarNums)
@@ -3297,28 +3298,28 @@ namespace OpenDentBusiness
 			}
 			string command = "UPDATE patient SET BillingType=" + POut.Long(billingType) + " "
 				+ "WHERE Guarantor IN (" + string.Join(",", listGuarNums.Select(x => POut.Long(x))) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static DataTable GetPartialPatientData(long PatNum)
 		{
 			string command = "SELECT FName,LName," + DbHelper.DateFormatColumn("birthdate", "%m/%d/%Y") + " BirthDate,Gender "
 				+ "FROM patient WHERE patient.PatNum=" + PatNum;
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static DataTable GetPartialPatientData2(long PatNum)
 		{
 			string command = @"SELECT FName,LName," + DbHelper.DateFormatColumn("birthdate", "%m/%d/%Y") + " BirthDate,Gender "
 				+ "FROM patient WHERE PatNum In (SELECT Guarantor FROM PATIENT WHERE patnum = " + PatNum + ")";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		public static string GetEligibilityDisplayName(long patId)
 		{
 			string command = @"SELECT FName,LName," + DbHelper.DateFormatColumn("birthdate", "%m/%d/%Y") + " BirthDate,Gender "
 				+ "FROM patient WHERE patient.PatNum=" + POut.Long(patId);
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count == 0)
 			{
 				return "Patient(???) is Eligible";
@@ -3330,7 +3331,7 @@ namespace OpenDentBusiness
 		public static bool IsTrophyFolderInUse(string folderName)
 		{
 			string command = "SELECT COUNT(*) FROM patient WHERE TrophyFolder LIKE '%" + POut.String(folderName) + "%'";
-			if (Db.GetCount(command) == "0")
+			if (Database.ExecuteString(command) == "0")
 			{
 				return false;
 			}
@@ -3341,12 +3342,12 @@ namespace OpenDentBusiness
 		public static bool IsBillingTypeInUse(long defNum)
 		{
 			string command = "SELECT COUNT(*) FROM patient WHERE BillingType=" + POut.Long(defNum) + " AND PatStatus!=" + POut.Int((int)PatientStatus.Deleted);
-			if (Db.GetCount(command) != "0")
+			if (Database.ExecuteString(command) != "0")
 			{
 				return true;
 			}
 			command = "SELECT COUNT(*) FROM insplan WHERE BillingType=" + POut.Long(defNum);
-			if (Db.GetCount(command) != "0")
+			if (Database.ExecuteString(command) != "0")
 			{
 				return true;
 			}
@@ -3632,7 +3633,7 @@ namespace OpenDentBusiness
 			command = "DELETE FROM guardian"
 				+ " WHERE PatNumChild=" + POut.Long(patFrom)
 				+ " OR PatNumGuardian=" + POut.Long(patFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Merge patient notes prior to updating the patient table, otherwise the wrong notes might bet set.
 			PatientNotes.Merge(patientFrom, patientTo);
 			//Update all guarantor foreign keys to change them from 'patFrom' to 
@@ -3645,7 +3646,7 @@ namespace OpenDentBusiness
 			command = "UPDATE patient "
 				+ "SET Guarantor=" + POut.Long(newGuarantor) + " "
 				+ "WHERE Guarantor=" + POut.Long(patFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Update tables where the PatNum should be changed to the guarantor of the patient being merged into.
 			//Only accomplishes anything if the patFrom is a guarantor. Otherwise, no effect.
 			string[] listGuarantorToGuarantor = { "famaging", "tsitranslog" };
@@ -3654,7 +3655,7 @@ namespace OpenDentBusiness
 				command = "UPDATE " + POut.String(listGuarantorToGuarantor[i]) + " "
 					+ "SET PatNum=" + POut.Long(newGuarantor) + " "
 					+ "WHERE PatNum=" + POut.Long(patFrom);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//At this point, the 'patFrom' is a regular patient and is absoloutely not a guarantor.
 			//Now modify all PatNum foreign keys from 'patFrom' to 'patTo' to complete the majority of the
@@ -3665,7 +3666,7 @@ namespace OpenDentBusiness
 				command = "UPDATE " + tableAndKeyName[0]
 					+ " SET " + tableAndKeyName[1] + "=" + POut.Long(patTo)
 					+ " WHERE " + tableAndKeyName[1] + "=" + POut.Long(patFrom);
-				Db.NonQ(command);
+				Database.ExecuteNonQuery(command);
 			}
 			//We have to move over the tasks belonging to the 'patFrom' patient in a seperate step because
 			//the KeyNum field of the task table might be a foreign key to something other than a patnum,
@@ -3673,13 +3674,13 @@ namespace OpenDentBusiness
 			command = "UPDATE task "
 				+ "SET KeyNum=" + POut.Long(patTo) + " "
 				+ "WHERE KeyNum=" + POut.Long(patFrom) + " AND ObjectType=" + ((int)TaskObjectType.Patient);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//We have to move over the tasks belonging to the 'patFrom' patient in a seperate step because the KeyNum field of the taskhist table might be 
 			//  a foreign key to something other than a patnum, including possibly an appointment number.
 			command = "UPDATE taskhist "
 				+ "SET KeyNum=" + POut.Long(patTo) + " "
 				+ "WHERE KeyNum=" + POut.Long(patFrom) + " AND ObjectType=" + ((int)TaskObjectType.Patient);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//We have to move over the tasks belonging to the 'patFrom' patient in a seperate step because the IDInternal field of the oidexternal table 
 			//  might be a foreign key to something other than a patnum depending on the IDType
 			//There are 4 cases:
@@ -3698,7 +3699,7 @@ namespace OpenDentBusiness
 				+ "SET IDInternal=" + POut.Long(patTo) + " "
 				+ "WHERE IDInternal=" + POut.Long(patFrom) + " AND IDType='" + (IdentifierType.Patient.ToString()) + "' "
 				+ (hasPatToUsedDoseSpot ? "AND rootExternal!='" + DoseSpot.GetDoseSpotRoot() + "." + POut.Int((int)IdentifierType.Patient) + "'" : "");
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Mark the patient where data was pulled from as archived unless the patient is already marked as deceased.
 			//We need to have the patient marked either archived or deceased so that it is hidden by default, and
 			//we also need the customer to be able to access the account again in case a particular table gets missed
@@ -3708,7 +3709,7 @@ namespace OpenDentBusiness
 				+ "SET PatStatus=" + ((int)PatientStatus.Archived) + " "
 				+ "WHERE PatNum=" + POut.Long(patFrom) + " "
 				+ "AND PatStatus!=" + ((int)PatientStatus.Deceased);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 			//Update patplan.Ordinal in case multiple patplans wound up with the same Ordinal
 			List<PatPlan> listPatPlans = PatPlans.GetPatPlansForPat(patTo).OrderBy(x => x.Ordinal).ToList();
 			PatPlan patPlanPrimary = listPatPlans.FirstOrDefault();
@@ -3994,7 +3995,7 @@ namespace OpenDentBusiness
 		public static void ChangePrimaryProviders(long provNumFrom, long provNumTo)
 		{
 			string command = "UPDATE patient SET PriProv=" + POut.Long(provNumTo) + " WHERE PriProv=" + POut.Long(provNumFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Change secondary provider for all patients with provNumFrom to provNumTo.</summary>
@@ -4003,7 +4004,7 @@ namespace OpenDentBusiness
 			string command = "UPDATE patient "
 				+ "SET SecProv = '" + provNumTo + "' "
 				+ "WHERE SecProv = '" + provNumFrom + "'";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/// <summary>Gets all patients whose primary provider PriProv is in the list provNums.</summary>
@@ -4014,7 +4015,7 @@ namespace OpenDentBusiness
 				return new DataTable();
 			}
 			string command = "SELECT PatNum,PriProv FROM patient WHERE PriProv IN (" + string.Join(",", listProvNums) + ")";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Gets the PatNum and ClinicNum for all patients whose ClinicNum is in listClinicNums.</summary>
@@ -4025,14 +4026,14 @@ namespace OpenDentBusiness
 				return new DataTable();
 			}
 			string command = "SELECT PatNum,ClinicNum FROM patient WHERE ClinicNum IN (" + string.Join(",", listClinicNums) + ")";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		/// <summary>Change clinic for all patients with clinicNumFrom to clinicNumTo.</summary>
 		public static void ChangeClinicsForAll(long clinicNumFrom, long clinicNumTo)
 		{
 			string command = "UPDATE patient SET ClinicNum=" + POut.Long(clinicNumTo) + " WHERE ClinicNum=" + POut.Long(clinicNumFrom);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 		/// <summary>Find the most used provider for a single patient. Bias towards the most recently used provider if they have done an equal number of procedures.</summary>
 		public static long ReassignProvGetMostUsed(long patNum)
@@ -4042,7 +4043,7 @@ namespace OpenDentBusiness
 				+ "WHERE PatNum=" + POut.Long(patNum) + " "
 				+ "AND ProcStatus=" + POut.Int((int)ProcStat.C) + " "
 				+ "GROUP BY ProvNum";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			long newProv = 0;
 			int mostVisits = 0;
 			DateTime maxProcDate = new DateTime();
@@ -4075,7 +4076,7 @@ namespace OpenDentBusiness
 				return;
 			}
 			string command = "UPDATE patient SET PriProv=" + POut.Long(provNum) + " WHERE PatNum IN (" + string.Join(",", listPatNums) + ")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets the number of patients with unknown Zip.</summary>
@@ -4091,7 +4092,7 @@ namespace OpenDentBusiness
 					+ "AND DateEntryC <= " + POut.Date(dateTo) + ") "
 				+ "AND Birthdate<=CURDATE() "//Birthday not in the future (at least 0 years old)
 				+ "AND Birthdate>SUBDATE(CURDATE(),INTERVAL 200 YEAR) ";//Younger than 200 years old
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Gets the number of qualified patients (having a completed procedure within the given time frame) in zip codes with less than 9 other qualified patients in that same zip code.</summary>
@@ -4110,7 +4111,7 @@ namespace OpenDentBusiness
 				+ "AND Birthdate>SUBDATE(CURDATE(),INTERVAL 200 YEAR) "//Younger than 200 years old
 				+ "GROUP BY Zip "
 				+ "HAVING COUNT(*) < 10) patzip";//Has less than 10 patients in that zip code for the given time frame.
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Gets the total number of patients with completed procedures between dateFrom and dateTo. Also checks for age between 0 and 200.</summary>
@@ -4125,14 +4126,14 @@ namespace OpenDentBusiness
 					+ "AND DateEntryC <= " + POut.Date(dateTo) + ") "
 				+ "AND Birthdate<=CURDATE() "//Birthday not in the future (at least 0 years old)
 				+ "AND Birthdate>SUBDATE(CURDATE(),INTERVAL 200 YEAR) ";//Younger than 200 years old
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Counts all patients that are not deleted.</summary>
 		public static int GetPatCountAll()
 		{
 			string command = "SELECT COUNT(*) FROM patient WHERE PatStatus!=" + POut.Int((int)PatientStatus.Deleted);
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 
@@ -4154,7 +4155,7 @@ namespace OpenDentBusiness
 				+ "AND Gender" + (male ? "=0" : "!=0") + " "
 				+ "AND Birthdate<=SUBDATE(CURDATE(),INTERVAL " + agelow + " YEAR) "//Born before this date
 				+ "AND Birthdate>SUBDATE(CURDATE(),INTERVAL " + agehigh + " YEAR)";//Born after this date
-			return PIn.Int(Db.GetCount(command));
+			return PIn.Int(Database.ExecuteString(command));
 		}
 
 		///<summary>Gets completed procedures, adjustments, and pay plan charges for a superfamily, ordered by datetime.</summary>
@@ -4194,7 +4195,7 @@ namespace OpenDentBusiness
 				+ "AND " + POut.Bool(PrefC.GetInt(PrefName.PayPlansVersion) == (int)PayPlanVersions.AgeCreditsAndDebits) + " "
 				+ "AND payplancharge.ChargeDate<" + DbHelper.DateAddMonth(DbHelper.Now(), "3") + " "//Only show payplan charges less than 3 mos into the future
 			+ ") procadj ORDER BY procadj.Date DESC";
-			return Db.GetTable(command);
+			return Database.ExecuteDataTable(command);
 		}
 
 		///<summary>Returns a list of patients belonging to the SuperFamily</summary>
@@ -4223,13 +4224,13 @@ namespace OpenDentBusiness
 			//optimized to 0.001 second runtime on same db
 			string command = "SELECT DISTINCT * FROM patient WHERE SuperFamily=" + POut.Long(SuperFamilyNum)
 				+ " AND PatStatus!=" + POut.Int((int)PatientStatus.Deleted) + " AND PatNum=Guarantor";
-			return Crud.PatientCrud.TableToList(Db.GetTable(command));
+			return Crud.PatientCrud.TableToList(Database.ExecuteDataTable(command));
 		}
 
 		public static void AssignToSuperfamily(long guarantor, long superFamilyNum)
 		{
 			string command = "UPDATE patient SET SuperFamily=" + POut.Long(superFamilyNum) + ", HasSuperBilling=1 WHERE Guarantor=" + POut.Long(guarantor);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void MoveSuperFamily(long oldSuperFamilyNum, long newSuperFamilyNum)
@@ -4239,7 +4240,7 @@ namespace OpenDentBusiness
 				return;
 			}
 			string command = "UPDATE patient SET SuperFamily=" + newSuperFamilyNum + " WHERE SuperFamily=" + oldSuperFamilyNum;
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static void DisbandSuperFamily(long SuperFamilyNum)
@@ -4249,7 +4250,7 @@ namespace OpenDentBusiness
 				return;
 			}
 			string command = "UPDATE patient SET SuperFamily=0 WHERE SuperFamily=" + POut.Long(SuperFamilyNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		public static List<Patient> GetPatsForScreenGroup(long screenGroupNum)
@@ -4296,7 +4297,7 @@ namespace OpenDentBusiness
 				command += "AND site.SiteNum = " + POut.Long(siteNum) + " ";
 			}
 			command += "ORDER BY patient.LName,patient.FName ";
-			return (Db.GetTable(command));
+			return (Database.ExecuteDataTable(command));
 		}
 
 		///<summary>Returns a list of Patients of which this PatNum is eligible to view given PHI constraints.</summary>
@@ -4318,7 +4319,7 @@ namespace OpenDentBusiness
 			{ //Include guarantor's family if pref is set.
 			  //Include any patient where this PatNum is the Guarantor.
 				command = "SELECT PatNum FROM patient WHERE Guarantor = " + POut.Long(patNum);
-				DataTable tablePatientsG = Db.GetTable(command);
+				DataTable tablePatientsG = Database.ExecuteDataTable(command);
 				for (int i = 0; i < tablePatientsG.Rows.Count; i++)
 				{
 					listPatNums.Add(PIn.Long(tablePatientsG.Rows[i]["PatNum"].ToString()));
@@ -4326,7 +4327,7 @@ namespace OpenDentBusiness
 			}
 			//Include any patient where the given patient is the responsible party.
 			command = "SELECT PatNum FROM patient WHERE ResponsParty = " + POut.Long(patNum);
-			DataTable tablePatientsR = Db.GetTable(command);
+			DataTable tablePatientsR = Database.ExecuteDataTable(command);
 			for (int i = 0; i < tablePatientsR.Rows.Count; i++)
 			{
 				listPatNums.Add(PIn.Long(tablePatientsR.Rows[i]["PatNum"].ToString()));
@@ -4334,7 +4335,7 @@ namespace OpenDentBusiness
 			//Include any patient where this patient is the guardian.
 			command = "SELECT PatNum FROM patient "
 				+ "WHERE PatNum IN (SELECT guardian.PatNumChild FROM guardian WHERE guardian.IsGuardian = 1 AND guardian.PatNumGuardian=" + POut.Long(patNum) + ") ";
-			DataTable tablePatientsD = Db.GetTable(command);
+			DataTable tablePatientsD = Database.ExecuteDataTable(command);
 			for (int i = 0; i < tablePatientsD.Rows.Count; i++)
 			{
 				listPatNums.Add(PIn.Long(tablePatientsD.Rows[i]["PatNum"].ToString()));
@@ -4371,7 +4372,7 @@ namespace OpenDentBusiness
 			string clinicGuarantors = "";
 			//Get guarantor of patients with clinic from comma delimited list
 			string command = "SELECT DISTINCT Guarantor FROM patient WHERE ClinicNum IN (" + clinicNums + ")";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
 				if (i > 0 || clinicGuarantors != "")
@@ -4387,7 +4388,7 @@ namespace OpenDentBusiness
 					+ "AND patient.PatStatus !=4 "
 				+ "WHERE procedurelog.ProcStatus IN (1,2) "
 				+ "AND procedurelog.ClinicNum IN (" + clinicNums + ")";
-			table = Db.GetTable(command);
+			table = Database.ExecuteDataTable(command);
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
 				if (i > 0 || clinicGuarantors != "")
@@ -4410,7 +4411,7 @@ namespace OpenDentBusiness
 		public static List<long> GetDependents(long patNum)
 		{
 			string command = "SELECT PatNum FROM patient WHERE Guarantor=" + POut.Long(patNum);
-			return Db.GetListLong(command);
+			return Database.GetListLong(command);
 		}
 
 		///<summary>Zeros securitylog FKey column for rows that are using the matching patNum as FKey and are related to Patient.
@@ -4440,7 +4441,7 @@ namespace OpenDentBusiness
 				+ "WHERE pat.PatNum = " + POut.Long(patNum) + " "
 				+ "AND payplan.IsClosed = 0 "
 				+ "GROUP BY pplans.PatNum,pplans.LName,pplans.FName,pplans.MiddleI,pplans.Preferred,pplans.CreditType,pplans.Guarantor,pplans.HasIns,pplans.SSN ";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count == 0)
 			{
 				return new List<Patient>();
@@ -4475,7 +4476,7 @@ namespace OpenDentBusiness
 			if (isGetFamily)
 			{
 				command = "SELECT Guarantor FROM patient WHERE PatNum IN (" + string.Join(",", patNumsSearch.Distinct()) + ")";
-				patNumsSearch = patNumsSearch.Union(Db.GetListLong(command)).ToList();//combines and removes duplicates.
+				patNumsSearch = patNumsSearch.Union(Database.GetListLong(command)).ToList();//combines and removes duplicates.
 			}
 			command = "SELECT PatNum, PatStatus, PreferConfirmMethod, PreferContactMethod, PreferRecallMethod, PreferContactConfidential, "
 				+ "TxtMsgOk,HmPhone,WkPhone,WirelessPhone,Email,FName,LName,Guarantor,Language,";
@@ -4502,7 +4503,7 @@ namespace OpenDentBusiness
 			bool isEmailValidForClinic;
 			bool isTextingEnabledForClinic;
 			string clinicCountryCode;
-			List<PatComm> listPatComms = Db.GetTable(command).Select()
+			List<PatComm> listPatComms = Database.ExecuteDataTable(command).Select()
 				.Select(x => new PatComm(
 					x,
 					(dictEmailValidForClinics.TryGetValue(x["ClinicNum"].ToString(), out isEmailValidForClinic) ? isEmailValidForClinic : false),
@@ -4571,7 +4572,7 @@ namespace OpenDentBusiness
 					retval.Add(groupMaxPatNum);
 				}
 				command = "SELECT MAX(PatNum) FROM (SELECT PatNum FROM patient " + whereClause + "ORDER BY PatNum LIMIT " + groupNum + "," + numPerGroup + ") patNumGroup";
-				groupMaxPatNum = Db.GetLong(command);
+				groupMaxPatNum = Database.ExecuteLong(command);
 				groupNum += numPerGroup;
 			} while (groupMaxPatNum > 0);
 			return retval;
@@ -4614,7 +4615,7 @@ namespace OpenDentBusiness
 				+ ")";
 			}
 			string command = "SELECT patnum,patstatus,fname,lname,birthdate,clinicnum FROM patient " + whereClause + ") ORDER BY patnum";
-			DataTable table = Db.GetTable(command);
+			DataTable table = Database.ExecuteDataTable(command);
 			List<Patient> listPatients = new List<Patient>();
 			foreach (DataRow row in table.Rows)
 			{

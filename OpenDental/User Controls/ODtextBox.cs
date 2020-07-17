@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	/// <summary>This is used instead of a regular textbox when quickpaste functionality is needed.</summary>
@@ -170,7 +171,7 @@ namespace OpenDental {
 			//We have to try catch this just in case an ODTextBox is shown before upgrading to a version that already has this preference.
 			try {
 				if(System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime
-					|| this.DesignMode || !Db.HasDatabaseConnection) 
+					|| this.DesignMode || !Database.HasDatabaseConnection) 
 				{
 					isImeComposition=false;
 				}

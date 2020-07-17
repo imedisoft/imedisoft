@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -94,7 +95,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			string command="DELETE FROM requiredfieldcondition WHERE RequiredFieldConditionNum IN("+string.Join(",",listRequiredFieldCondNums)+")";
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		/*

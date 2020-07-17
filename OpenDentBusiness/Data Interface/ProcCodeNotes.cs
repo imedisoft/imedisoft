@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -101,7 +102,7 @@ namespace OpenDentBusiness{
 		public static void Delete(long procCodeNoteNum) {
 			
 			string command="DELETE FROM proccodenote WHERE ProcCodeNoteNum = "+POut.Long(procCodeNoteNum);
-			Db.NonQ(command);
+			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Gets the note for the given provider, if one exists.  Otherwise, gets the proccode.defaultnote.
