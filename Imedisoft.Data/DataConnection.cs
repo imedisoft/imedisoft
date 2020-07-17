@@ -170,36 +170,94 @@ namespace Imedisoft.Data
 			command = connection.CreateCommand();
 		}
 
-		public T SelectOne<T>(string command, DataRecordBuilder<T> recordBuilder)
+		/// <summary>
+		/// Executes the specified command and returns the first result.
+		/// </summary>
+		/// <typeparam name="T">The record type.</typeparam>
+		/// <param name="commandText">The SQL command to execute.</param>
+		/// <param name="recordBuilder">Action that converts database records into instances of type <typeparamref name="T"/>.</param>
+		/// <param name="parameters">Optional command parameters.</param>
+		/// <returns>The first result.</returns>
+		public T SelectOne<T>(string commandText, DataRecordBuilder<T> recordBuilder, params MySqlParameter[] parameters)
 		{
+			// TODO: Add support for monitoring queries run by this method...
+
 			if (recordBuilder == null) return default;
 
-			this.command.CommandText = command;
+			command.CommandText = commandText;
+			command.Parameters.Clear();
+			command.Parameters.AddRange(parameters);
 
-			using (var dataReader = this.command.ExecuteReader())
+			try
 			{
-				if (dataReader.Read())
+				connection.Open();
+
+				using (var dataReader = command.ExecuteReader())
 				{
-					return recordBuilder(dataReader);
+					if (dataReader.Read())
+					{
+						return recordBuilder(dataReader);
+					}
 				}
 			}
+            catch (MySqlException exception)
+            {
+				if (!IsErrorHandled(exception))
+				{
+					throw;
+				}
+			}
+            finally
+            {
+				connection.Close();
+            }
 
 			return default;
 		}
 
-		public IEnumerable<T> SelectMany<T>(string command, DataRecordBuilder<T> recordBuilder)
+		/// <summary>
+		/// Executes the specified command and returns all results.
+		/// </summary>
+		/// <typeparam name="T">The record type.</typeparam>
+		/// <param name="commandText">The SQL command to execute.</param>
+		/// <param name="recordBuilder">Action that converts database records into instances of type <typeparamref name="T"/>.</param>
+		/// <param name="parameters">Optional command parameters.</param>
+		/// <returns>All results.</returns>
+		public IEnumerable<T> SelectMany<T>(string commandText, DataRecordBuilder<T> recordBuilder, params MySqlParameter[] parameters)
 		{
+			// TODO: Add support for monitoring queries run by this method...
+
 			if (recordBuilder == null) yield break;
 
-			this.command.CommandText = command;
+			command.CommandText = commandText;
+			command.Parameters.Clear();
+			command.Parameters.AddRange(parameters);
 
-			using (var dataReader = this.command.ExecuteReader())
+			MySqlDataReader dataReader;
+			try
 			{
-				while (dataReader.Read())
-				{
-					yield return recordBuilder(dataReader);
-				}
+				connection.Open();
+
+				dataReader = command.ExecuteReader();
 			}
+			catch (MySqlException exception)
+			{
+				connection.Close();
+
+				if (!IsErrorHandled(exception))
+                {
+					throw;
+                }
+
+				yield break;
+			}
+
+			while (dataReader.Read())
+			{
+				yield return recordBuilder(dataReader);
+			}
+
+			connection.Close();
 		}
 
 		/// <summary>

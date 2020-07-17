@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using MySql.Data.MySqlClient;
 
 namespace OpenDentBusiness
 {
@@ -20,15 +21,15 @@ namespace OpenDentBusiness
 		/// A thread safe and thread specific value containing the last SQL command attempted.
 		/// </summary>
 		[ThreadStatic]
-		private static string _lastCommand;
+		private static string lastCommand;
 
 		/// <summary>
 		/// The last SQL command attempted.
 		/// </summary>
 		public static string LastCommand
 		{
-			get => _lastCommand ?? "[COMMAND NOT SET]";
-			internal set => _lastCommand = value;
+			get => lastCommand ?? "[COMMAND NOT SET]";
+			internal set => lastCommand = value;
 		}
 
 		/// <summary>
@@ -317,7 +318,7 @@ namespace OpenDentBusiness
 			return DataCore.GetTable(command);
 		}
 
-		public static T SelectOne<T>(string command, DataRecordBuilder<T> recordBuilder)
+		public static T SelectOne<T>(string command, DataRecordBuilder<T> recordBuilder, params MySqlParameter[] parameters)
 		{
 			LastCommand = command;
 
@@ -329,7 +330,7 @@ namespace OpenDentBusiness
 			}
 		}
 
-		public static IEnumerable<T> SelectMany<T>(string command, DataRecordBuilder<T> recordBuilder)
+		public static IEnumerable<T> SelectMany<T>(string command, DataRecordBuilder<T> recordBuilder, params MySqlParameter[] parameters)
 		{
 			LastCommand = command;
 
