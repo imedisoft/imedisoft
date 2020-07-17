@@ -67,5 +67,7 @@ namespace OpenDentBusiness
 		{
 			return this != null && ConnectionStatus == "OK";
 		}
-	}
+
+		public override string ToString() => $"{ServerName}, {DatabaseName}";
+    }
 }

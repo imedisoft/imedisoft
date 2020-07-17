@@ -38,6 +38,9 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet />
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>imedisoft-cemt.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.6.1\lib\BouncyCastle.Crypto.dll</HintPath>
@@ -56,6 +59,9 @@
     </Reference>
     <Reference Include="MySql.Data, Version=8.0.21.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.8.0.21\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
@@ -103,37 +109,37 @@
     <Compile Include="Db\CentralSyncHelper.cs" />
     <Compile Include="Db\CentralUserGroups.cs" />
     <Compile Include="Db\CentralUserods.cs" />
-    <Compile Include="FormCentralConnectionGroupEdit.cs">
+    <Compile Include="Forms\FormCentralConnectionGroupEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralConnectionGroupEdit.Designer.cs">
+    <Compile Include="Forms\FormCentralConnectionGroupEdit.Designer.cs">
       <DependentUpon>FormCentralConnectionGroupEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralConnectionGroups.cs">
+    <Compile Include="Forms\FormCentralConnectionGroups.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralConnectionGroups.Designer.cs">
+    <Compile Include="Forms\FormCentralConnectionGroups.Designer.cs">
       <DependentUpon>FormCentralConnectionGroups.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormCentralLogOn.Designer.cs">
       <DependentUpon>FormCentralLogOn.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralPatientTransfer.cs">
+    <Compile Include="Forms\FormCentralPatientTransfer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralPatientTransfer.Designer.cs">
+    <Compile Include="Forms\FormCentralPatientTransfer.Designer.cs">
       <DependentUpon>FormCentralPatientTransfer.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralGroupPermEdit.cs">
+    <Compile Include="Forms\FormCentralGroupPermEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralGroupPermEdit.Designer.cs">
+    <Compile Include="Forms\FormCentralGroupPermEdit.Designer.cs">
       <DependentUpon>FormCentralGroupPermEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralPatientSearch.cs">
+    <Compile Include="Forms\FormCentralPatientSearch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralPatientSearch.Designer.cs">
+    <Compile Include="Forms\FormCentralPatientSearch.Designer.cs">
       <DependentUpon>FormCentralPatientSearch.cs</DependentUpon>
     </Compile>
     <Compile Include="FormCentralProdInc.cs">
@@ -166,22 +172,22 @@
     <Compile Include="FormCentralManager.Designer.cs">
       <DependentUpon>FormCentralManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralReportSetup.cs">
+    <Compile Include="Forms\FormCentralReportSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralReportSetup.Designer.cs">
+    <Compile Include="Forms\FormCentralReportSetup.Designer.cs">
       <DependentUpon>FormCentralReportSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralSecurity.cs">
+    <Compile Include="Forms\FormCentralSecurity.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralSecurity.Designer.cs">
+    <Compile Include="Forms\FormCentralSecurity.Designer.cs">
       <DependentUpon>FormCentralSecurity.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralUserEdit.cs">
+    <Compile Include="Forms\FormCentralUserEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralUserEdit.Designer.cs">
+    <Compile Include="Forms\FormCentralUserEdit.Designer.cs">
       <DependentUpon>FormCentralUserEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormCentralUserGroupEdit.cs">
@@ -202,22 +208,18 @@
     <Compile Include="Forms\FormCentralUserPasswordEdit.Designer.cs">
       <DependentUpon>FormCentralUserPasswordEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCentralConnections.cs">
+    <Compile Include="Forms\FormCentralConnections.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralConnections.Designer.cs">
+    <Compile Include="Forms\FormCentralConnections.Designer.cs">
       <DependentUpon>FormCentralConnections.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormCentralLogOn.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCentralChooseDatabase.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\FormBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -225,20 +227,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="WindowInfo.cs" />
-    <EmbeddedResource Include="FormCentralConnectionGroupEdit.resx">
+    <EmbeddedResource Include="Forms\FormCentralConnectionGroupEdit.resx">
       <DependentUpon>FormCentralConnectionGroupEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralConnectionGroups.resx">
+    <EmbeddedResource Include="Forms\FormCentralConnectionGroups.resx">
       <DependentUpon>FormCentralConnectionGroups.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralPatientTransfer.resx">
+    <EmbeddedResource Include="Forms\FormCentralPatientTransfer.resx">
       <DependentUpon>FormCentralPatientTransfer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralGroupPermEdit.resx">
+    <EmbeddedResource Include="Forms\FormCentralGroupPermEdit.resx">
       <DependentUpon>FormCentralGroupPermEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralPatientSearch.resx">
+    <EmbeddedResource Include="Forms\FormCentralPatientSearch.resx">
       <DependentUpon>FormCentralPatientSearch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormCentralProdInc.resx">
@@ -259,16 +260,16 @@
     <EmbeddedResource Include="FormCentralManager.resx">
       <DependentUpon>FormCentralManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralConnections.resx">
+    <EmbeddedResource Include="Forms\FormCentralConnections.resx">
       <DependentUpon>FormCentralConnections.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralReportSetup.resx">
+    <EmbeddedResource Include="Forms\FormCentralReportSetup.resx">
       <DependentUpon>FormCentralReportSetup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralSecurity.resx">
+    <EmbeddedResource Include="Forms\FormCentralSecurity.resx">
       <DependentUpon>FormCentralSecurity.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralUserEdit.resx">
+    <EmbeddedResource Include="Forms\FormCentralUserEdit.resx">
       <DependentUpon>FormCentralUserEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormCentralUserGroupEdit.resx">
@@ -282,10 +283,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormCentralLogOn.resx">
       <DependentUpon>FormCentralLogOn.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormCentralChooseDatabase.resx">
-      <DependentUpon>FormCentralChooseDatabase.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -329,7 +326,9 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="imedisoft-cemt.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

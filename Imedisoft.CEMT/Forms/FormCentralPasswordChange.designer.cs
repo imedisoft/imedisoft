@@ -41,7 +41,7 @@ namespace Imedisoft.CEMT.Forms
             // acceptButton
             // 
             this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.acceptButton.Location = new System.Drawing.Point(206, 164);
+            this.acceptButton.Location = new System.Drawing.Point(205, 163);
             this.acceptButton.Name = "acceptButton";
             this.acceptButton.Size = new System.Drawing.Size(80, 25);
             this.acceptButton.TabIndex = 5;
@@ -52,7 +52,7 @@ namespace Imedisoft.CEMT.Forms
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(292, 164);
+            this.cancelButton.Location = new System.Drawing.Point(291, 163);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(80, 25);
             this.cancelButton.TabIndex = 6;
@@ -60,18 +60,18 @@ namespace Imedisoft.CEMT.Forms
             // 
             // newPasswordTextBox
             // 
-            this.newPasswordTextBox.Location = new System.Drawing.Point(140, 108);
+            this.newPasswordTextBox.Location = new System.Drawing.Point(140, 106);
             this.newPasswordTextBox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.newPasswordTextBox.Name = "newPasswordTextBox";
-            this.newPasswordTextBox.Size = new System.Drawing.Size(190, 23);
+            this.newPasswordTextBox.Size = new System.Drawing.Size(190, 20);
             this.newPasswordTextBox.TabIndex = 4;
             // 
             // newPasswordLabel
             // 
             this.newPasswordLabel.AutoSize = true;
-            this.newPasswordLabel.Location = new System.Drawing.Point(50, 111);
+            this.newPasswordLabel.Location = new System.Drawing.Point(57, 109);
             this.newPasswordLabel.Name = "newPasswordLabel";
-            this.newPasswordLabel.Size = new System.Drawing.Size(84, 15);
+            this.newPasswordLabel.Size = new System.Drawing.Size(77, 13);
             this.newPasswordLabel.TabIndex = 3;
             this.newPasswordLabel.Text = "New Password";
             // 
@@ -80,9 +80,9 @@ namespace Imedisoft.CEMT.Forms
             this.infoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.infoLabel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.infoLabel.Location = new System.Drawing.Point(12, 9);
+            this.infoLabel.Location = new System.Drawing.Point(13, 10);
             this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(360, 60);
+            this.infoLabel.Size = new System.Drawing.Size(358, 60);
             this.infoLabel.TabIndex = 0;
             this.infoLabel.Text = "Only the administrator should change the password.  If you are not the administra" +
     "tor, click Cancel.  If you are the administrator, you will need the access code " +
@@ -92,17 +92,17 @@ namespace Imedisoft.CEMT.Forms
             // accessCodeLabel
             // 
             this.accessCodeLabel.AutoSize = true;
-            this.accessCodeLabel.Location = new System.Drawing.Point(60, 75);
+            this.accessCodeLabel.Location = new System.Drawing.Point(66, 76);
             this.accessCodeLabel.Name = "accessCodeLabel";
-            this.accessCodeLabel.Size = new System.Drawing.Size(74, 15);
+            this.accessCodeLabel.Size = new System.Drawing.Size(68, 13);
             this.accessCodeLabel.TabIndex = 1;
             this.accessCodeLabel.Text = "Access Code";
             // 
             // accessCodeTextBox
             // 
-            this.accessCodeTextBox.Location = new System.Drawing.Point(140, 72);
+            this.accessCodeTextBox.Location = new System.Drawing.Point(140, 73);
             this.accessCodeTextBox.Name = "accessCodeTextBox";
-            this.accessCodeTextBox.Size = new System.Drawing.Size(190, 23);
+            this.accessCodeTextBox.Size = new System.Drawing.Size(190, 20);
             this.accessCodeTextBox.TabIndex = 2;
             // 
             // FormCentralPasswordChange

@@ -39,7 +39,7 @@
             // deleteButton
             // 
             this.deleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.deleteButton.Location = new System.Drawing.Point(12, 94);
+            this.deleteButton.Location = new System.Drawing.Point(13, 93);
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(80, 25);
             this.deleteButton.TabIndex = 2;
@@ -51,22 +51,22 @@
             this.descriptionTextBox.Location = new System.Drawing.Point(100, 29);
             this.descriptionTextBox.Margin = new System.Windows.Forms.Padding(3, 20, 3, 3);
             this.descriptionTextBox.Name = "descriptionTextBox";
-            this.descriptionTextBox.Size = new System.Drawing.Size(238, 23);
+            this.descriptionTextBox.Size = new System.Drawing.Size(238, 20);
             this.descriptionTextBox.TabIndex = 1;
             // 
             // descriptionLabel
             // 
             this.descriptionLabel.AutoSize = true;
-            this.descriptionLabel.Location = new System.Drawing.Point(27, 32);
+            this.descriptionLabel.Location = new System.Drawing.Point(34, 32);
             this.descriptionLabel.Name = "descriptionLabel";
-            this.descriptionLabel.Size = new System.Drawing.Size(67, 15);
+            this.descriptionLabel.Size = new System.Drawing.Size(60, 13);
             this.descriptionLabel.TabIndex = 0;
             this.descriptionLabel.Text = "Description";
             // 
             // acceptButton
             // 
             this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.acceptButton.Location = new System.Drawing.Point(186, 94);
+            this.acceptButton.Location = new System.Drawing.Point(185, 93);
             this.acceptButton.Name = "acceptButton";
             this.acceptButton.Size = new System.Drawing.Size(80, 25);
             this.acceptButton.TabIndex = 3;
@@ -77,7 +77,7 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(272, 94);
+            this.cancelButton.Location = new System.Drawing.Point(271, 93);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(80, 25);
             this.cancelButton.TabIndex = 4;
@@ -101,7 +101,7 @@
             this.Name = "FormCentralUserGroupEdit";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "User Group Edit";
+            this.Text = "User Group";
             this.Load += new System.EventHandler(this.FormCentralUserGroupEdit_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

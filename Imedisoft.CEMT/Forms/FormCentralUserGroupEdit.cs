@@ -29,15 +29,18 @@ namespace Imedisoft.CEMT.Forms
 				return;
 			}
 
-			try
+			if (Confirm("Are you sure you want to delete this user group?") == DialogResult.Yes)
 			{
-				UserGroups.Delete(userGroup);
+				try
+				{
+					UserGroups.Delete(userGroup);
 
-				DialogResult = DialogResult.OK;
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
+					DialogResult = DialogResult.OK;
+				}
+				catch (Exception exception)
+				{
+					ShowError(exception.Message);
+				}
 			}
 		}
 
@@ -55,20 +58,21 @@ namespace Imedisoft.CEMT.Forms
 			{
 				if (userGroup.IsNew)
 				{
-					long userGroupNum = UserGroups.Insert(userGroup);
+					long userGroupId = UserGroups.Insert(userGroup);
 
-					userGroup.UserGroupNumCEMT = userGroupNum;
+					userGroup.UserGroupNumCEMT = userGroupId;
 
-					UserGroups.Update(userGroup); // Doing this so we don't have to make another version of Insert
+					UserGroups.Update(userGroup);
 				}
 				else
 				{
 					UserGroups.Update(userGroup);
 				}
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
-				ShowError(ex.Message);
+				ShowError(exception.Message);
+
 				return;
 			}
 

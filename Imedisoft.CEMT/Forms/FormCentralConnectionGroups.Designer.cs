@@ -29,30 +29,31 @@
 		private void InitializeComponent()
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCentralConnectionGroups));
-            this.gridMain = new OpenDental.UI.ODGrid();
+            this.connectionGroupsGrid = new OpenDental.UI.ODGrid();
             this.closeButton = new OpenDental.UI.Button();
             this.addButton = new OpenDental.UI.Button();
             this.connectionGroupComboBox = new System.Windows.Forms.ComboBox();
             this.connectionGroupLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // gridMain
+            // connectionGroupsGrid
             // 
-            this.gridMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.connectionGroupsGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gridMain.Location = new System.Drawing.Point(12, 41);
-            this.gridMain.Name = "gridMain";
-            this.gridMain.Size = new System.Drawing.Size(334, 368);
-            this.gridMain.TabIndex = 0;
-            this.gridMain.Title = "Groups";
-            this.gridMain.TranslationName = "TableGroups";
-            this.gridMain.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridMain_CellDoubleClick);
+            this.connectionGroupsGrid.Location = new System.Drawing.Point(13, 40);
+            this.connectionGroupsGrid.Name = "connectionGroupsGrid";
+            this.connectionGroupsGrid.Size = new System.Drawing.Size(332, 368);
+            this.connectionGroupsGrid.TabIndex = 0;
+            this.connectionGroupsGrid.Title = "Groups";
+            this.connectionGroupsGrid.TranslationName = "TableGroups";
+            this.connectionGroupsGrid.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.ConnectionGroupsGrid_CellDoubleClick);
             // 
             // closeButton
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeButton.Location = new System.Drawing.Point(352, 384);
+            this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.closeButton.Location = new System.Drawing.Point(351, 383);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(80, 25);
             this.closeButton.TabIndex = 2;
@@ -62,42 +63,44 @@
             // addButton
             // 
             this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addButton.Location = new System.Drawing.Point(352, 41);
+            this.addButton.Location = new System.Drawing.Point(351, 40);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(80, 25);
-            this.addButton.TabIndex = 218;
+            this.addButton.TabIndex = 1;
             this.addButton.Text = "&Add";
-            this.addButton.Click += new System.EventHandler(this.butAdd_Click);
+            this.addButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // connectionGroupComboBox
             // 
             this.connectionGroupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.connectionGroupComboBox.FormattingEnabled = true;
-            this.connectionGroupComboBox.Location = new System.Drawing.Point(12, 12);
+            this.connectionGroupComboBox.Location = new System.Drawing.Point(13, 13);
             this.connectionGroupComboBox.MaxDropDownItems = 20;
             this.connectionGroupComboBox.Name = "connectionGroupComboBox";
-            this.connectionGroupComboBox.Size = new System.Drawing.Size(169, 23);
-            this.connectionGroupComboBox.TabIndex = 221;
-            this.connectionGroupComboBox.SelectionChangeCommitted += new System.EventHandler(this.comboConnectionGroup_SelectionChangeCommitted);
+            this.connectionGroupComboBox.Size = new System.Drawing.Size(169, 21);
+            this.connectionGroupComboBox.TabIndex = 3;
+            this.connectionGroupComboBox.SelectionChangeCommitted += new System.EventHandler(this.ConnectionGroupsComboBox_SelectionChangeCommitted);
             // 
             // connectionGroupLabel
             // 
             this.connectionGroupLabel.AutoSize = true;
-            this.connectionGroupLabel.Location = new System.Drawing.Point(187, 15);
+            this.connectionGroupLabel.Location = new System.Drawing.Point(188, 16);
             this.connectionGroupLabel.Name = "connectionGroupLabel";
-            this.connectionGroupLabel.Size = new System.Drawing.Size(139, 15);
-            this.connectionGroupLabel.TabIndex = 220;
+            this.connectionGroupLabel.Size = new System.Drawing.Size(128, 13);
+            this.connectionGroupLabel.TabIndex = 4;
             this.connectionGroupLabel.Text = "Default Group on Startup";
             // 
             // FormCentralConnectionGroups
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(444, 421);
             this.Controls.Add(this.connectionGroupComboBox);
             this.Controls.Add(this.connectionGroupLabel);
             this.Controls.Add(this.addButton);
             this.Controls.Add(this.closeButton);
-            this.Controls.Add(this.gridMain);
+            this.Controls.Add(this.connectionGroupsGrid);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -113,7 +116,7 @@
 
 		#endregion
 
-		private OpenDental.UI.ODGrid gridMain;
+		private OpenDental.UI.ODGrid connectionGroupsGrid;
 		private OpenDental.UI.Button closeButton;
 		private OpenDental.UI.Button addButton;
 		private System.Windows.Forms.ComboBox connectionGroupComboBox;

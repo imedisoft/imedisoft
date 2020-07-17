@@ -217,29 +217,6 @@ namespace OpenDentBusiness
 		}
 
 		/// <summary>
-		/// Filters _listConns to only include connections that are associated to the selected connection group.
-		/// </summary>
-		public static List<CentralConnection> FilterConnections(List<CentralConnection> connections, string filterText, ConnectionGroup connectionGroup)
-		{
-			var result = connections;
-			if (connectionGroup != null)
-			{
-				var connectionGroupAttaches = ConnGroupAttaches.GetForGroup(connectionGroup.ConnectionGroupNum);
-
-				result = result.FindAll(
-					x => connectionGroupAttaches.Exists(
-						y => y.CentralConnectionNum == x.CentralConnectionNum));
-			}
-
-			// Find all central connections that meet the filterText criteria
-			result = result.FindAll(
-				x => x.DatabaseName.ToLower().Contains(filterText.ToLower()) || 
-				     x.ServerName.ToLower().Contains(filterText.ToLower()));
-
-			return result;
-		}
-
-		/// <summary>
 		/// Supply a CentralConnection and this method will go through the logic to put together the connection string.
 		/// </summary>
 		public static string GetConnectionString(CentralConnection conn)

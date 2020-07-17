@@ -24,7 +24,8 @@ namespace CentralManager {
 		public DateTime DateEnd;
 		/// <summary>Must be set externally.</summary>
 		public List<CentralConnection> ConnList;
-		public byte[] EncryptionKey;
+
+
 		private Userod _userOld;
 		private string _passwordTypedOld;
 

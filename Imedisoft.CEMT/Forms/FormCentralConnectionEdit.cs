@@ -1,4 +1,3 @@
-using CentralManager;
 using OpenDentBusiness;
 using System;
 using System.Windows.Forms;
@@ -7,15 +6,9 @@ namespace Imedisoft.CEMT.Forms
 {
     public partial class FormCentralConnectionEdit : FormBase
 	{
-		// TODO: Implement the port field
-
-		// TODO: Add a dropdown to set SSL mode...
-
-		// TODO: Change the database field into a dropdown...
-
-		public int LastItemOrder;
-
 		private readonly CentralConnection centralConnection;
+
+		public int LastItemOrder { get; set; }
 
 		public FormCentralConnectionEdit(CentralConnection centralConnection)
         {
@@ -43,11 +36,12 @@ namespace Imedisoft.CEMT.Forms
 				return;
 			}
 
-			// TODO: Confirm...
+			if (Confirm("Are you sure you want to delete this connection?") == DialogResult.Yes)
+			{
+				CentralConnections.Delete(centralConnection.CentralConnectionNum);
 
-			CentralConnections.Delete(centralConnection.CentralConnectionNum);
-
-			DialogResult = DialogResult.OK;
+				DialogResult = DialogResult.OK;
+			}
 		}
 
 		private void AcceptButton_Click(object sender, EventArgs e)
@@ -64,7 +58,7 @@ namespace Imedisoft.CEMT.Forms
 				centralConnection.ItemOrder = LastItemOrder + 1;
 				CentralConnections.Insert(centralConnection);
 
-				centralConnection.IsNew = false;//so a double-click immediately in FormCentralConnections doesn't insert again
+				centralConnection.IsNew = false;
 			}
 			else
 			{

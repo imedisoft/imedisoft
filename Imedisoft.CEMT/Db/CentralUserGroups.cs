@@ -23,6 +23,7 @@ namespace CentralManager
 			int idxDB = 0;
 			UserGroup fieldNew;
 			UserGroup fieldDB;
+
 			//Because both lists have been sorted using the same criteria, we can now walk each list to determine which list contians the next element.  The next element is determined by Primary Key.
 			//If the New list contains the next item it will be inserted.  If the DB contains the next item, it will be deleted.  If both lists contain the next item, the item will be updated.
 			while (idxNew < listNew.Count || idxDB < listDB.Count)

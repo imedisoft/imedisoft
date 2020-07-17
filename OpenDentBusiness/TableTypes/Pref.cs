@@ -445,10 +445,12 @@ namespace OpenDentBusiness
 		CentralManagerPassSalt,
 		///<summary>Blank by default.  Contains a key for the CEMT.  Each CEMT database contains a unique sync code.  Syncing from the CEMT will skip any databases without the correct sync code.</summary>
 		CentralManagerSyncCode,
+		
 		///<summary>Connections initiated from within CEMT will use dynamic mode, allowing connection to db of mismatched version.</summary>
-		CentralManagerUseDynamicMode,
+		[Obsolete] CentralManagerUseDynamicMode,
 		///<summary>Connections initiated from within CEMT will automatically log on the CEMT user.</summary>
-		CentralManagerIsAutoLogon,
+		[Obsolete] CentralManagerIsAutoLogon,
+
 		///<summary>Deprecated.</summary>
 		ChartQuickAddHideAmalgam,
 		///<summary>Deprecated. If set to true (1), then after adding a proc, a row will be added to datatable instead of rebuilding entire datatable by making queries to the database.

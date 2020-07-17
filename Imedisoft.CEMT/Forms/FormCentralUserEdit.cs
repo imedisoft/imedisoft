@@ -10,8 +10,7 @@ namespace Imedisoft.CEMT.Forms
     public partial class FormCentralUserEdit : FormBase
 	{
 		private readonly Userod user;
-		private List<AlertSub> oldAlertSubscriptions;
-		private bool _isFillingList;
+		private List<AlertSub> alertSubscriptions;
 
 		public FormCentralUserEdit(Userod user)
 		{
@@ -25,7 +24,7 @@ namespace Imedisoft.CEMT.Forms
 			checkIsHidden.Checked = user.IsHidden;
 			usernameTextBox.Text = user.UserName;
 
-			_isFillingList = true;
+			securityTreeUser.FillTreePermissionsInitial();
 
 			var userGroups = UserGroups.GetDeepCopy();
 			foreach (var userGroup in userGroups)
@@ -38,50 +37,37 @@ namespace Imedisoft.CEMT.Forms
                 }
             }
 
-
 			if (userGroupsListBox.SelectedIndex == -1)
-			{//never allowed to delete last group, so this won't fail
+			{
 				userGroupsListBox.SelectedIndex = 0;
 			}
-
-			_isFillingList = false;
-			securityTreeUser.FillTreePermissionsInitial();
-			RefreshUserTree();
-
+			
 			if (user.PasswordHash == "")
 			{
 				passwordButton.Text = "Create Password";
 			}
 
-			oldAlertSubscriptions = AlertSubs.GetAllForUser(Security.CurUser.UserNum);
-			listAlertSubMulti.Items.Clear();
-			string[] arrayAlertTypes = Enum.GetNames(typeof(AlertType));
-			for (int i = 0; i < arrayAlertTypes.Length; i++)
+			alertSubscriptions = AlertSubs.GetAllForUser(Security.CurUser.UserNum);
+			alertSubscriptionsListBox.Items.Clear();
+
+			var alertTypes = Enum.GetNames(typeof(AlertType));
+			for (int i = 0; i < alertTypes.Length; i++)
 			{
-				listAlertSubMulti.Items.Add(arrayAlertTypes[i]);
-				listAlertSubMulti.SetSelected(i, oldAlertSubscriptions.Exists(x => x.Type == (AlertType)i));
+				alertSubscriptionsListBox.Items.Add(alertTypes[i]);
+				alertSubscriptionsListBox.SetSelected(i, alertSubscriptions.Exists(x => x.Type == (AlertType)i));
 			}
-			if (user.IsNew)
-			{
-				unlockButton.Visible = false;
-			}
+
+			if (user.IsNew) unlockButton.Visible = false;
 		}
 
-		private void RefreshUserTree()
-		{
-			securityTreeUser.FillForUserGroup(
+		private void RefreshUserTree() 
+			=> securityTreeUser.FillForUserGroup(
 				userGroupsListBox.SelectedItems.OfType<UserGroup>()
 					.Select(userGroup => userGroup.UserGroupNum)
 					.ToList());
-		}
 
 		private void UserGroupsListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (_isFillingList)
-			{
-				return;
-			}
-
 			RefreshUserTree();
 		}
 
@@ -111,11 +97,9 @@ namespace Imedisoft.CEMT.Forms
 
 		private void UnlockButton_Click(object sender, EventArgs e)
 		{
-			var result = MessageBox.Show(this, 
+			var result = Confirm(
 				"Users can become locked when invalid credentials have been entered several times in a row.\r\n" +
-				"Unlock this user so that more log in attempts can be made?", "CEMT", 
-				MessageBoxButtons.YesNo, 
-				MessageBoxIcon.Question);
+				"Unlock this user so that more log in attempts can be made?");
 
 			if (result == DialogResult.No)
             {
@@ -129,10 +113,7 @@ namespace Imedisoft.CEMT.Forms
 			{
 				Userods.Update(user);
 
-				MessageBox.Show(this, 
-					"User has been unlocked.", "CEMT", 
-					MessageBoxButtons.OK,
-					MessageBoxIcon.Information);
+				ShowInfo("User has been unlocked.");
 			}
 			catch
 			{
@@ -157,18 +138,18 @@ namespace Imedisoft.CEMT.Forms
 
 			var alertSubscriptions = new List<AlertSub>();
 
-			foreach (int index in listAlertSubMulti.SelectedIndices)
+			foreach (int index in alertSubscriptionsListBox.SelectedIndices)
 			{
-                var alertSub = new AlertSub
+                var alertSubscription = new AlertSub
                 {
                     ClinicNum = 0,
                     UserNum = Security.CurUser.UserNum,
                     Type = (AlertType)index
                 };
-                alertSubscriptions.Add(alertSub);
+                alertSubscriptions.Add(alertSubscription);
 			}
 
-			AlertSubs.Sync(alertSubscriptions, oldAlertSubscriptions);
+            AlertSubs.Sync(alertSubscriptions, this.alertSubscriptions);
 
 			user.IsHidden = checkIsHidden.Checked;
 			user.UserName = username;
@@ -180,14 +161,13 @@ namespace Imedisoft.CEMT.Forms
 			if (user.UserNum == Security.CurUser.UserNum)
 			{
 				Security.CurUser.UserName = username;
-				//They changed their logged in user's information.  Update for when they sync then attempt to connect to remote DB.
 			}
 
 			try
 			{
 				if (user.IsNew)
 				{
-					long userNum = Userods.Insert(user, 
+					long userId = Userods.Insert(user, 
 						userGroupsListBox.SelectedItems.OfType<UserGroup>().Select(x => x.UserGroupNum).ToList(),
 						true);
 				}
@@ -207,9 +187,5 @@ namespace Imedisoft.CEMT.Forms
 
 			DialogResult = DialogResult.OK;
 		}
-
-        private void checkIsHidden_CheckedChanged(object sender, EventArgs e)
-        {
-        }
     }
 }

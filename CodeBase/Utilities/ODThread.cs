@@ -345,6 +345,7 @@ namespace CodeBase
 			if (_thread.ThreadState == ThreadState.Unstarted) return true; // Thread has not even started yet to we cannot join.
 
 			bool hasJoined = _thread.Join(timeoutMS);
+
 			if (!hasJoined)
 			{
 				// The timeout expired and the thread is still alive so we want to abort it manually.

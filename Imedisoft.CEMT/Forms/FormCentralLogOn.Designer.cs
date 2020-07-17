@@ -40,7 +40,7 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(262, 114);
+            this.cancelButton.Location = new System.Drawing.Point(261, 113);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(80, 25);
             this.cancelButton.TabIndex = 5;
@@ -49,7 +49,7 @@
             // acceptButton
             // 
             this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.acceptButton.Location = new System.Drawing.Point(176, 114);
+            this.acceptButton.Location = new System.Drawing.Point(175, 113);
             this.acceptButton.Name = "acceptButton";
             this.acceptButton.Size = new System.Drawing.Size(80, 25);
             this.acceptButton.TabIndex = 4;
@@ -59,28 +59,28 @@
             // usernameLabel
             // 
             this.usernameLabel.AutoSize = true;
-            this.usernameLabel.Location = new System.Drawing.Point(44, 32);
+            this.usernameLabel.Location = new System.Drawing.Point(49, 32);
             this.usernameLabel.Name = "usernameLabel";
-            this.usernameLabel.Size = new System.Drawing.Size(60, 15);
+            this.usernameLabel.Size = new System.Drawing.Size(55, 13);
             this.usernameLabel.TabIndex = 0;
             this.usernameLabel.Text = "Username";
             // 
             // passwordLabel
             // 
             this.passwordLabel.AutoSize = true;
-            this.passwordLabel.Location = new System.Drawing.Point(47, 63);
+            this.passwordLabel.Location = new System.Drawing.Point(51, 60);
             this.passwordLabel.Name = "passwordLabel";
-            this.passwordLabel.Size = new System.Drawing.Size(57, 15);
+            this.passwordLabel.Size = new System.Drawing.Size(53, 13);
             this.passwordLabel.TabIndex = 2;
             this.passwordLabel.Text = "Password";
             // 
             // passwordTextBox
             // 
-            this.passwordTextBox.Location = new System.Drawing.Point(110, 60);
+            this.passwordTextBox.Location = new System.Drawing.Point(110, 57);
             this.passwordTextBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.PasswordChar = '*';
-            this.passwordTextBox.Size = new System.Drawing.Size(200, 23);
+            this.passwordTextBox.Size = new System.Drawing.Size(200, 20);
             this.passwordTextBox.TabIndex = 3;
             // 
             // usernameTextBox
@@ -88,7 +88,7 @@
             this.usernameTextBox.Location = new System.Drawing.Point(110, 29);
             this.usernameTextBox.Margin = new System.Windows.Forms.Padding(3, 20, 3, 3);
             this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(200, 23);
+            this.usernameTextBox.Size = new System.Drawing.Size(200, 20);
             this.usernameTextBox.TabIndex = 1;
             // 
             // FormCentralLogOn
@@ -108,9 +108,8 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormCentralLogOn";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Login";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Central Manager";
             this.Load += new System.EventHandler(this.FormCentralLogOn_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

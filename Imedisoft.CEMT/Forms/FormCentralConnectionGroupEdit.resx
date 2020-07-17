@@ -117,16 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="gridMainRightClickMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>127, 17</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>54</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="addButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        R0lGODlhFgAWAIIAAAAAAAAAeH9/fwAA/3V1//rvrwAAAAAAACH/C05FVFNDQVBFMi4wAwEBAAAh+QQB
+        AAAFACwAAAAAFgAWAAAIYQALCBxIsKDBgwgTKlzIsGFCAA4NAgAgIOJAAAQoWiyAMePEiQ07Dhg5UqNC
+        kSRLVnxIgEBKkiYPonw5IKZMmjBXPsRZU+fOkQGCBrD58+NEnyd7CliK9CTRiE83Sp3qMCAAOw==
+</value>
+  </data>
+  <data name="removeButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        R0lGODlhFgAWAIIAAAAAAAAAeH9/fwAA/3V1//rvrwAAAAAAACH/C05FVFNDQVBFMi4wAwEBAAAh+QQB
+        AAAFACwAAAAAFgAWAAAIYQALCBxIsKDBgwgTKlzIsOFBAA4NCgAAMeLAiQQqNqTIkUDGhhMHiBTpUWPC
+        kCNJflSIMuWAkiwBuBwJE2HLmSYlypw5IKfOAEADjPSpk+NOohIFKA2JNGbTmBajSp16MCAAOw==
+</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAQAgIAAAAEAIAAoCAEARgAAABAQAAABACAAaAQAAG4IAQAgIAAAAQAgAKgQAADWDAEAMDAAAAEA

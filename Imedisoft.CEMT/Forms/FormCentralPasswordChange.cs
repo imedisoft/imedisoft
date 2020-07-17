@@ -21,5 +21,5 @@ namespace Imedisoft.CEMT.Forms
 
 			DialogResult = DialogResult.OK;
 		}
-	}
+    }
 }

@@ -38,7 +38,7 @@ namespace Imedisoft.CEMT.Forms
             // acceptButton
             // 
             this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.acceptButton.Location = new System.Drawing.Point(192, 67);
+            this.acceptButton.Location = new System.Drawing.Point(191, 66);
             this.acceptButton.Name = "acceptButton";
             this.acceptButton.Size = new System.Drawing.Size(80, 25);
             this.acceptButton.TabIndex = 2;
@@ -49,7 +49,7 @@ namespace Imedisoft.CEMT.Forms
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(278, 67);
+            this.cancelButton.Location = new System.Drawing.Point(277, 66);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(80, 25);
             this.cancelButton.TabIndex = 3;
@@ -61,15 +61,15 @@ namespace Imedisoft.CEMT.Forms
             this.passwordTextBox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.PasswordChar = '*';
-            this.passwordTextBox.Size = new System.Drawing.Size(228, 23);
+            this.passwordTextBox.Size = new System.Drawing.Size(227, 20);
             this.passwordTextBox.TabIndex = 1;
             // 
             // passwordLabel
             // 
             this.passwordLabel.AutoSize = true;
-            this.passwordLabel.Location = new System.Drawing.Point(37, 22);
+            this.passwordLabel.Location = new System.Drawing.Point(42, 22);
             this.passwordLabel.Name = "passwordLabel";
-            this.passwordLabel.Size = new System.Drawing.Size(87, 15);
+            this.passwordLabel.Size = new System.Drawing.Size(82, 13);
             this.passwordLabel.TabIndex = 0;
             this.passwordLabel.Text = "Enter Password";
             // 

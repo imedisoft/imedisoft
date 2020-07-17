@@ -37,7 +37,7 @@
             // addButton
             // 
             this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addButton.Location = new System.Drawing.Point(232, 12);
+            this.addButton.Location = new System.Drawing.Point(231, 13);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(80, 25);
             this.addButton.TabIndex = 2;
@@ -51,10 +51,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.userGroupsListBox.FormattingEnabled = true;
             this.userGroupsListBox.IntegralHeight = false;
-            this.userGroupsListBox.ItemHeight = 15;
-            this.userGroupsListBox.Location = new System.Drawing.Point(12, 12);
+            this.userGroupsListBox.Location = new System.Drawing.Point(13, 13);
             this.userGroupsListBox.Name = "userGroupsListBox";
-            this.userGroupsListBox.Size = new System.Drawing.Size(214, 357);
+            this.userGroupsListBox.Size = new System.Drawing.Size(212, 355);
             this.userGroupsListBox.TabIndex = 1;
             this.userGroupsListBox.DoubleClick += new System.EventHandler(this.UserGroupsListBox_DoubleClick);
             // 
@@ -62,7 +61,7 @@
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.closeButton.Location = new System.Drawing.Point(232, 344);
+            this.closeButton.Location = new System.Drawing.Point(231, 343);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(80, 25);
             this.closeButton.TabIndex = 0;
