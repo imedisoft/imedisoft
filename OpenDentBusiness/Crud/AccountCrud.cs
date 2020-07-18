@@ -24,9 +24,9 @@ namespace OpenDentBusiness.Crud
 			return new Account
 			{
 				AccountNum = (long)dataReader["AccountNum"],
-				Description = dataReader["Description"] as string,
+				Description = (string)dataReader["Description"],
 				AcctType = (AccountType)Convert.ToInt32(dataReader["AcctType"]),
-				BankNumber = dataReader["BankNumber"] as string,
+				BankNumber = (string)dataReader["BankNumber"],
 				Inactive = (Convert.ToInt32(dataReader["Inactive"]) == 1),
 				AccountColor = Color.FromArgb((int)dataReader["AccountColor"])
 			};
@@ -58,11 +58,7 @@ namespace OpenDentBusiness.Crud
 				"INSERT INTO `Account` " +
 				"(`Description`, `AcctType`, `BankNumber`, `Inactive`, `AccountColor`) " +
 				"VALUES (" +
-					POut.String(account.Description) + ", " +
-					(int)account.AcctType + ", " +
-					POut.String(account.BankNumber) + ", " +
-					(account.Inactive ? 1 : 0) + ", " +
-					account.AccountColor.ToArgb() +
+					"@Description, @AcctType, @BankNumber, @Inactive, @AccountColor" +
 				")");
 
 		/// <summary>
@@ -71,12 +67,18 @@ namespace OpenDentBusiness.Crud
 		public static void Update(Account account)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `Account` SET " +
-					"`Description` = " + POut.String(account.Description) + ", " +
-					"`AcctType` = " + (int)account.AcctType + ", " +
-					"`BankNumber` = " + POut.String(account.BankNumber) + ", " +
-					"`Inactive` = " + (account.Inactive ? 1 : 0) + ", " +
-					"`AccountColor` = " + account.AccountColor.ToArgb() + " " +
-				"WHERE `AccountNum` = " + account.AccountNum);
+					"`Description` = @Description, " +
+					"`AcctType` = @AcctType, " +
+					"`BankNumber` = @BankNumber, " +
+					"`Inactive` = @Inactive, " +
+					"`AccountColor` = @AccountColor" +
+				"WHERE `AccountNum` = @AccountNum",
+					new MySqlParameter("AccountNum", account.AccountNum),
+					new MySqlParameter("Description", account.Description ?? ""),
+					new MySqlParameter("AcctType", (int)account.AcctType),
+					new MySqlParameter("BankNumber", account.BankNumber ?? ""),
+					new MySqlParameter("Inactive", (account.Inactive ? 1 : 0)),
+					new MySqlParameter("AccountColor", account.AccountColor.ToArgb()));
 
 		/// <summary>
 		/// Updates the specified <see cref="Account"/> in the database.
@@ -84,32 +86,58 @@ namespace OpenDentBusiness.Crud
 		public static void Update(Account accountNew, Account accountOld)
 		{
 			var updates = new List<string>();
+			var parameters = new List<MySqlParameter>();
 
 			if (accountNew.Description != accountOld.Description)
-				updates.Add("`Description` = " + POut.String(accountNew.Description));
+			{
+				updates.Add("`Description` = @Description");
+				parameters.Add(new MySqlParameter("Description", accountNew.Description ?? ""));
+			}
+
 			if (accountNew.AcctType != accountOld.AcctType)
-				updates.Add("`AcctType` = " + (int)accountNew.AcctType);
+			{
+				updates.Add("`AcctType` = @AcctType");
+				parameters.Add(new MySqlParameter("AcctType", (int)accountNew.AcctType));
+			}
+
 			if (accountNew.BankNumber != accountOld.BankNumber)
-				updates.Add("`BankNumber` = " + POut.String(accountNew.BankNumber));
+			{
+				updates.Add("`BankNumber` = @BankNumber");
+				parameters.Add(new MySqlParameter("BankNumber", accountNew.BankNumber ?? ""));
+			}
+
 			if (accountNew.Inactive != accountOld.Inactive)
-				updates.Add("`Inactive` = " + (accountNew.Inactive ? 1 : 0));
+			{
+				updates.Add("`Inactive` = @Inactive");
+				parameters.Add(new MySqlParameter("Inactive", (accountNew.Inactive ? 1 : 0)));
+			}
+
 			if (accountNew.AccountColor != accountOld.AccountColor)
-				updates.Add("`AccountColor` = " + accountNew.AccountColor.ToArgb());
+			{
+				updates.Add("`AccountColor` = @AccountColor");
+				parameters.Add(new MySqlParameter("AccountColor", accountNew.AccountColor.ToArgb()));
+			}
 
 			if (updates.Count == 0) return;
 
+			parameters.Add(new MySqlParameter("AccountNum", accountNew.AccountNum));
+
 			Database.ExecuteNonQuery("UPDATE `Account` " +
 				"SET " + string.Join(", ", updates) + " " +
-				"WHERE `AccountNum` = " + accountNew.AccountNum);
+				"WHERE `AccountNum` = @AccountNum",
+					parameters.ToArray());
 		}
+
 		/// <summary>
 		/// Deletes a single <see cref="Account"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 accountNum) => Database.ExecuteNonQuery("DELETE FROM `Account` WHERE `AccountNum` = " + accountNum);
+		public static void Delete(Int64 accountNum)
+			 => Database.ExecuteNonQuery("DELETE FROM `Account` WHERE `AccountNum` = " + accountNum);
 
 		/// <summary>
 		/// Deletes the specified <see cref="Account"/> object from the database.
 		/// </summary>
-		public static void Delete(Account account) => Delete(account.AccountNum);
+		public static void Delete(Account account)
+			=> Delete(account.AccountNum);
 	}
 }

@@ -27,7 +27,7 @@ namespace Imedisoft.Data.CrudGenerator
 
         public static void SetTabStopWidth(this TextBox textbox, int width)
         {
-            SendMessage(textbox.Handle, EM_SETTABSTOPS, 1, new int[] { width * 4 });
+            SendMessage(textbox.Handle, EM_SETTABSTOPS, 1, new [] { width * 4 });
         }
     }
 }

@@ -1,14 +1,16 @@
-﻿using Imedisoft.Data.CrudGenerator.Schema;
+﻿using System;
+using Imedisoft.Data.CrudGenerator.Schema;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Imedisoft.Data.CrudGenerator.Generator
 {
     public static class EntityClassGenerator
     {
-		private static List<string> namespaces = new List<string>();
+		private static readonly List<string> namespaces = new List<string>();
 
 		private static void AddNamespace(string ns)
         {
@@ -30,6 +32,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			var stringBuilder = new StringBuilder();
 
 			namespaces.Clear();
+			AddNamespace("Imedisoft.Data");
 			AddNamespace("System");
 			AddNamespace("System.Collections");
 			AddNamespace("System.Collections.Generic");
@@ -88,7 +91,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine(@"		/// Selects a single " + table.Type.Name + " object from the database using the specified SQL command.");
 			stringBuilder.AppendLine(@"		/// </summary>");
 			stringBuilder.AppendLine($"		public static {table.Type.Name} SelectOne(string command)");
-			stringBuilder.AppendLine("			=> Db.SelectOne(command, FromReader);");
+			stringBuilder.AppendLine("			=> Database.SelectOne(command, FromReader);");
 			stringBuilder.AppendLine("");
 
 			if (table.PrimaryKey != null) GenerateSelectOnePK(stringBuilder, table);
@@ -99,14 +102,27 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 		private static void GenerateSelectOnePK(StringBuilder stringBuilder, Table table)
         {
 			var param = ParamName(table.PrimaryKey.Name);
-			var command = $"\"SELECT * FROM `{table.Name}` WHERE `{table.PrimaryKey.Name}` = \" + {ConvertValueToSql(param, table.PrimaryKey)}";
 
-			stringBuilder.AppendLine(@"		/// <summary>");
-			stringBuilder.AppendLine(@"		/// Selects a single <see cref=""" + table.Type.Name + @"""/> object from the database using the specified SQL command.");
-			stringBuilder.AppendLine(@"		/// </summary>");
-			stringBuilder.AppendLine($"		public static {table.Type.Name} SelectOne({table.PrimaryKey.Type.Name} {param})");
-			stringBuilder.AppendLine($"			=> SelectOne({command});");
-			stringBuilder.AppendLine("");
+            stringBuilder.AppendLine(@"		/// <summary>");
+            stringBuilder.AppendLine(@"		/// Selects a single <see cref=""" + table.Type.Name + @"""/> object from the database using the specified SQL command.");
+            stringBuilder.AppendLine(@"		/// </summary>");
+            stringBuilder.AppendLine($"		public static {table.Type.Name} SelectOne({table.PrimaryKey.Type.Name} {param})");
+
+			if (table.PrimaryKey.Type == typeof(long) || table.PrimaryKey.Type == typeof(int))
+            {
+                var command = $"\"SELECT * FROM `{table.Name}` WHERE `{table.PrimaryKey.Name}` = \" + {param}";
+                
+                stringBuilder.AppendLine($"			=> SelectOne({command});");
+			}
+			else // If the table uses a non numeric primary key use a parameterized query...
+            {
+                var command = $"\"SELECT * FROM `{table.Name}` WHERE `{table.PrimaryKey.Name}` = {ParameterName(table.PrimaryKey)}\"";
+
+                stringBuilder.AppendLine($"			=> SelectOne({command},");
+                stringBuilder.AppendLine($"				{GenerateParameter(table.PrimaryKey, param)});");
+            }
+
+            stringBuilder.AppendLine("");
 		}
 
 		public static void GenerateSelectMany(StringBuilder stringBuilder, Table table)
@@ -115,11 +131,11 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine(@"		/// Selects multiple <see cref=""" + table.Type.Name + @"""/> objects from the database using the specified SQL command.");
 			stringBuilder.AppendLine(@"		/// </summary>");
 			stringBuilder.AppendLine($"		public static IEnumerable<{table.Type.Name}> SelectMany(string command)");
-			stringBuilder.AppendLine("			=> Db.SelectMany(command, FromReader);");
+			stringBuilder.AppendLine("			=> Database.SelectMany(command, FromReader);");
 			stringBuilder.AppendLine("");
 		}
 
-		private static string GenerateBuilder(StringBuilder stringBuilder, Table table)
+		private static void GenerateBuilder(StringBuilder stringBuilder, Table table)
         {
 			stringBuilder.AppendLine($"		public static {table.Type.Name} FromReader(MySqlDataReader dataReader)");
 			stringBuilder.AppendLine("		{");
@@ -131,7 +147,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 				var column = table.Columns[i];
 				var value = $"dataReader[\"{column.Name}\"]";
 
-				stringBuilder.Append($"				{column.FieldName} = {ConvertValueFromSql(value, column)}");
+				stringBuilder.Append($"				{column.FieldName} = {Unpack(value, column)}");
 				if (i <= (table.Columns.Count - 2))
                 {
 					stringBuilder.Append(',');
@@ -142,11 +158,9 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine("			};");
 			stringBuilder.AppendLine("		}");
 			stringBuilder.AppendLine();
-
-			return stringBuilder.ToString();
         }
 
-		private static string ConvertValueFromSql(string value, Column column)
+		private static string Unpack(string value, Column column)
         {
 			if (column.Type.IsEnum)
             {
@@ -165,28 +179,49 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			if (column.Type == typeof(ulong)) return $"(ulong){value}";
 			if (column.Type == typeof(short)) return $"(short){value}";
 			if (column.Type == typeof(ushort)) return $"(ushort){value}";
-			if (column.Type == typeof(string)) return $"{value} as string";
-			if (column.Type == typeof(Color)) return $"Color.FromArgb((int){value})";
 
-			return value;
+            if (column.Type == typeof(string))
+            {
+                if (column.Nullable)
+                {
+                    return $"{value} as string";
+                }
+
+                return "(string)" + value;
+            }
+
+            if (column.Type == typeof(Color)) return $"Color.FromArgb((int){value})";
+            if (column.Type == typeof(DateTime)) return $"(DateTime){value}";
+
+            return value;
         }
 
-		private static string ConvertValueToSql(string value, Column column)
+        private static string Pack(string value, Column column)
         {
 			if (column.Type.IsEnum) return $"(int){value}";
 			if (column.Type == typeof(bool)) return $"({value} ? 1 : 0)";
 			if (column.Type == typeof(byte)) return value;
 			if (column.Type == typeof(sbyte)) return value;
 			if (column.Type == typeof(char)) return value;
-			if (column.Type == typeof(double)) return $"POut.Double({value})";
-			if (column.Type == typeof(float)) return $"POut.Float({value})";
+			if (column.Type == typeof(double)) return value;
+			if (column.Type == typeof(float)) return value;
 			if (column.Type == typeof(int)) return value;
 			if (column.Type == typeof(uint)) return value;
 			if (column.Type == typeof(long)) return value;
 			if (column.Type == typeof(ulong)) return value;
 			if (column.Type == typeof(short)) return value;
 			if (column.Type == typeof(ushort)) return value;
-			if (column.Type == typeof(string)) return $"POut.String({value})";
+
+            if (column.Type == typeof(string))
+            {
+                if (column.Nullable)
+                {
+                    return value;
+                }
+
+                return $"{value} ?? \"\"";
+            }
+
 			if (column.Type == typeof(Color)) return $"{value}.ToArgb()";
 
 			return value;
@@ -214,37 +249,36 @@ namespace Imedisoft.Data.CrudGenerator.Generator
                 }
 				columns.Add($"`{column.Name}`");
 				
-				values.Add(ConvertValueToSql(
-					$"{param}.{column.FieldName}", column));
+				values.Add(ParameterName(column));
 			}
 
 			var queryBuilder = new StringBuilder();
 			queryBuilder.AppendLine($"\"INSERT INTO `{table.Name}` \" + ");
 			queryBuilder.AppendLine($"				\"({string.Join(", ", columns)}) \" + ");
-			queryBuilder.AppendLine($"				\"VALUES (\" + ");
-			queryBuilder.AppendLine($"					{string.Join(" + \", \" +\r\n					", values)} + ");
-			queryBuilder.Append($"				\")\"");
+			queryBuilder.AppendLine( "				\"VALUES (\" + ");
+			queryBuilder.AppendLine($"					\"{string.Join(", ", values)}\" + ");
+			queryBuilder.Append(     "				\")\"");
+
+            if (table.PrimaryKey == null) return;
 
 			stringBuilder.AppendLine(@"		/// <summary>");
 			stringBuilder.AppendLine(@"		/// Inserts the specified <see cref=""" + table.Type.Name + @"""/> into the database.");
 			stringBuilder.AppendLine(@"		/// </summary>");
-
-			if (table.PrimaryKey != null && table.PrimaryKey.Type == typeof(long))
-			{
-				stringBuilder.AppendLine($"		public static long Insert({table.Type.Name} {param})");
-				stringBuilder.AppendLine($"			=> {param}.{table.PrimaryKey.Name} = Db.ExecuteNonQuery(");
-				stringBuilder.AppendLine($"				{queryBuilder}, true, \"{table.PrimaryKey.Name}\", \"{table.Name.ToLower()}\");");
-				stringBuilder.AppendLine();
-			}
+            if (table.PrimaryKey.Type == typeof(long) || table.PrimaryKey.Type == typeof(int))
+            {
+                stringBuilder.AppendLine($"		public static long Insert({table.Type.Name} {param})");
+                stringBuilder.AppendLine($"			=> {param}.{table.PrimaryKey.Name} = Database.ExecuteInsert(");
+                stringBuilder.AppendLine($"				{queryBuilder});");
+                stringBuilder.AppendLine();
+            }
             else
             {
-				stringBuilder.AppendLine($"		public static void Insert({table.Type.Name} {param})");
-				stringBuilder.AppendLine($"			=> Db.ExecuteNonQuery(");
-				stringBuilder.AppendLine($"				{queryBuilder},");
-				stringBuilder.AppendLine($"				true, \"{table.PrimaryKey.Name}\", \"{table.Name.ToLower()}\");");
-				stringBuilder.AppendLine();
-			}
-		}
+                stringBuilder.AppendLine($"		public static void Insert({table.Type.Name} {param})");
+                stringBuilder.AppendLine( "			=> Database.ExecuteNonQuery(");
+                stringBuilder.AppendLine($"				{queryBuilder})");
+                stringBuilder.AppendLine();
+            }
+        }
 
 		private static void GenerateUpdate(StringBuilder stringBuilder, Table table)
         {
@@ -260,28 +294,54 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 					continue;
 				}
 
-				updates.Add($"\"`{column.Name}` = \" + {ConvertValueToSql($"{param}.{column.FieldName}", column)}");
+				updates.Add($"\"`{column.Name}` = {ParameterName(column)}");
 			}
 
-			string.Join(" + \", \" + \r\n					", updates);
-
-			var queryBuilder = new StringBuilder();
+            var queryBuilder = new StringBuilder();
 			queryBuilder.AppendLine($"\"UPDATE `{table.Name}` SET \" + ");
-			queryBuilder.AppendLine($"					{string.Join(" + \", \" + \r\n					", updates)} + \" \" + ");
-			queryBuilder.Append($"				\"WHERE `{table.PrimaryKey.Name}` = \" + {ConvertValueToSql($"{param}.{table.PrimaryKey.FieldName}", table.PrimaryKey)}");
+			queryBuilder.AppendLine($"					{string.Join(", \" + \r\n					", updates)}\" + ");
+			queryBuilder.Append($"				\"WHERE `{table.PrimaryKey.Name}` = {ParameterName(table.PrimaryKey)}\"");
 
 			stringBuilder.AppendLine(@"		/// <summary>");
 			stringBuilder.AppendLine(@"		/// Updates the specified <see cref=""" + table.Type.Name + @"""/> in the database.");
 			stringBuilder.AppendLine(@"		/// </summary>");
 			stringBuilder.AppendLine($"		public static void Update({table.Type.Name} {param})");
-			stringBuilder.AppendLine($"			=> Db.ExecuteNonQuery(");
-			stringBuilder.AppendLine($"				{queryBuilder});");
+			stringBuilder.AppendLine("			=> Database.ExecuteNonQuery(");
+			stringBuilder.AppendLine($"				{queryBuilder},");
+
+            GenerateParameters(stringBuilder, table, param, true);
+            stringBuilder.AppendLine(");");
+
 			stringBuilder.AppendLine();
 		}
 
+        private static string ParameterName(Column column) => '@' + column.Name;
 
-		private static void GenerateUpdateCompare(StringBuilder stringBuilder, Table table)
+        private static string GenerateParameter(Column column, string paramName) 
+            => $"new MySqlParameter(\"{column.Name}\", {Pack($"{paramName}.{column.FieldName}", column)})";
+
+        private static void GenerateParameters(StringBuilder stringBuilder, Table table, string paramName, bool includePrimaryKeys = false)
         {
+            for (int i = 0; i < table.Columns.Count;i++)
+            {
+                var column = table.Columns[i];
+                if (column.IsPrimaryKey && !includePrimaryKeys)
+                {
+                    continue;
+                }
+
+                stringBuilder.Append($"					{GenerateParameter(column, paramName)}");
+                if (i < table.Columns.Count - 1)
+                {
+                    stringBuilder.AppendLine(",");
+                }
+            }
+        }
+
+        private static void GenerateUpdateCompare(StringBuilder stringBuilder, Table table)
+        {
+            if (table.PrimaryKey == null) return;
+
 			var param = ParamName(table.Name);
 			var paramNew = param + "New";
 			var paramOld = param + "Old";
@@ -291,8 +351,8 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine(@"		/// </summary>");
 			stringBuilder.AppendLine($"		public static void Update({table.Type.Name} {paramNew}, {table.Type.Name} {paramOld})");
 			stringBuilder.AppendLine(@"		{");
-			stringBuilder.AppendLine(@"			var updates = new List<string>();");
-			stringBuilder.AppendLine();
+            stringBuilder.AppendLine(@"			var updates = new List<string>();");
+            stringBuilder.AppendLine(@"			var parameters = new List<MySqlParameter>();");
 
 			foreach (var column in table.Columns)
             {
@@ -301,38 +361,61 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 					continue;
                 }
 
+                stringBuilder.AppendLine();
 				stringBuilder.AppendLine($"			if ({paramNew}.{column.FieldName} != {paramOld}.{column.FieldName})");
-				stringBuilder.AppendLine($"				updates.Add(\"`{column.Name}` = \" + " + ConvertValueToSql($"{paramNew}.{column.FieldName}", column) + ");");
+                stringBuilder.AppendLine($"			{{");
+                stringBuilder.AppendLine($"				updates.Add(\"`{column.Name}` = {ParameterName(column)}\");");
+                stringBuilder.AppendLine($"				parameters.Add({GenerateParameter(column, paramNew)});");
+				stringBuilder.AppendLine($"			}}");
 			}
 
 			stringBuilder.AppendLine();
 			stringBuilder.AppendLine("			if (updates.Count == 0) return;");
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine($"			parameters.Add({GenerateParameter(table.PrimaryKey, paramNew)});");
 			stringBuilder.AppendLine();
-			stringBuilder.AppendLine($"			Db.ExecuteNonQuery(\"UPDATE `{table.Name}` \" + ");
-			stringBuilder.AppendLine($"				\"SET \" + string.Join(\", \", updates) + \" \" + ");
-			stringBuilder.AppendLine($"				\"WHERE `{table.PrimaryKey.Name}` = \" + " + ConvertValueToSql($"{paramNew}.{table.PrimaryKey.FieldName}", table.PrimaryKey) + ");");
+			stringBuilder.AppendLine($"			Database.ExecuteNonQuery(\"UPDATE `{table.Name}` \" + ");
+			stringBuilder.AppendLine( "				\"SET \" + string.Join(\", \", updates) + \" \" + ");
+			stringBuilder.AppendLine($"				\"WHERE `{table.PrimaryKey.Name}` = {ParameterName(table.PrimaryKey)}\",");
+            stringBuilder.AppendLine($"					parameters.ToArray());");
 			stringBuilder.AppendLine(@"		}");
-		}
+            stringBuilder.AppendLine();
+        }
 
 		private static void GenerateDelete(StringBuilder stringBuilder, Table table)
         {
 			if (table.PrimaryKey == null) return;
 
 			var param = ParamName(table.PrimaryKey.Name);
-			var command = $"\"DELETE FROM `{table.Name}` WHERE `{table.PrimaryKey.Name}` = \" + " + ConvertValueToSql(param, table.PrimaryKey);
 
 			stringBuilder.AppendLine(@"		/// <summary>");
 			stringBuilder.AppendLine(@"		/// Deletes a single <see cref=""" + table.Type.Name + @"""/> object from the database.");
 			stringBuilder.AppendLine(@"		/// </summary>");
-			stringBuilder.AppendLine($"		public static void Delete({table.PrimaryKey.Type.Name} {param}) => Db.ExecuteNonQuery({command});");
-			stringBuilder.AppendLine();
+			stringBuilder.AppendLine($"		public static void Delete({table.PrimaryKey.Type.Name} {param})");
+            if (table.PrimaryKey.Type == typeof(long) || table.PrimaryKey.Type == typeof(int))
+            {
+                var command = $"\"DELETE FROM `{table.Name}` WHERE `{table.PrimaryKey.Name}` = \" + {param}";
+
+                stringBuilder.AppendLine($"			 => Database.ExecuteNonQuery({command});");
+            }
+            else
+            {
+                var command = $"\"DELETE FROM `{table.Name}` WHERE `{table.PrimaryKey.Name}` = {ParameterName(table.PrimaryKey)}\"";
+
+
+				stringBuilder.AppendLine($"			 => Database.ExecuteNonQuery({command},");
+                stringBuilder.AppendLine($"					{GenerateParameter(table.PrimaryKey, param)});");
+            }
+
+            stringBuilder.AppendLine();
 
 			param = ParamName(table.Type.Name);
 
 			stringBuilder.AppendLine(@"		/// <summary>");
 			stringBuilder.AppendLine(@"		/// Deletes the specified <see cref=""" + table.Type.Name + @"""/> object from the database.");
 			stringBuilder.AppendLine(@"		/// </summary>");
-			stringBuilder.AppendLine($"		public static void Delete({table.Type.Name} {param}) => Delete({param}.{table.PrimaryKey.FieldName});");
-		}
+			stringBuilder.AppendLine($"		public static void Delete({table.Type.Name} {param})");
+            stringBuilder.AppendLine($"			=> Delete({param}.{table.PrimaryKey.FieldName});");
+        }
 	}
 }

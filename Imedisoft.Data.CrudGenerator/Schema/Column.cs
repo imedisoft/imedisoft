@@ -27,9 +27,14 @@ namespace Imedisoft.Data.CrudGenerator.Schema
         public Type Type { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the column is nullable.
+        /// </summary>
+        public bool Nullable { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Column"/> class.
         /// </summary>
-        /// <param name="propertyInfo">The field that represents the column.</param>
+        /// <param name="fieldInfo">The field that represents the column.</param>
         internal Column(FieldInfo fieldInfo)
         {
             var columnAttribute = fieldInfo.GetCustomAttribute<ColumnAttribute>();

@@ -31,6 +31,9 @@ namespace Imedisoft.Data.CrudGenerator.Schema
         /// Initializes a new instance of the <see cref="Table"/> class.
         /// </summary>
         /// <param name="type">The type that represents the table.</param>
+        /// <exception cref="ArgumentException">
+        ///     If the specified type does not have a <see cref="TableAttribute"/> attribute.
+        /// </exception>
         public Table(Type type)
         {
             Type = type;
@@ -44,7 +47,7 @@ namespace Imedisoft.Data.CrudGenerator.Schema
 
             Name = tableAttribute.Name ?? type.Name;
 
-            List<Column> primaryKeys = new List<Column>();
+            var primaryKeys = new List<Column>();
 
             var properties = type.GetFields();
 
@@ -70,7 +73,7 @@ namespace Imedisoft.Data.CrudGenerator.Schema
                 if (primaryKeys.Count > 1) 
                     throw new Exception(
                         $"The type '{type.FullName}' has multiple primary keys. " +
-                        $"Composite primary keys are not supported.");
+                        "Composite primary keys are not supported.");
 
                 PrimaryKey = primaryKeys[0];
             }
