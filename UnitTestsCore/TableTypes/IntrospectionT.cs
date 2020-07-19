@@ -28,7 +28,7 @@ namespace UnitTestsCore {
 		///Always sets ValueString to the value passed in.  Manually refreshes the preference cache so that the change instantly takes place.</summary>
 		public static void UpsertPref(string valueString="") {
 			string command="SELECT COUNT(*) FROM preference WHERE PrefName='IntrospectionItems'";
-			if(Database.ExecuteScalar(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				command="INSERT INTO preference (PrefName,ValueString) VALUES('IntrospectionItems','"+POut.String(valueString)+"')";
 				Database.ExecuteNonQuery(command);
 			}
