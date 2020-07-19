@@ -353,7 +353,7 @@ namespace OpenDental{
 				}
 			}
 			comboPermission.SelectedIndex=0;
-			_listUserods=Userods.GetDeepCopy();
+			_listUserods=Userods.GetAll();
 			comboUser.Items.Add(Lan.G(this,"All"));
 			comboUser.SelectedIndex=0;
 			for(int i=0;i<_listUserods.Count;i++){

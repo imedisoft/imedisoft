@@ -327,9 +327,8 @@ namespace OpenDental
 				System.Windows.Automation.AutomationElement.FromHandle(this.Handle); // Just invoking this method wakes up something deep within Windows...
 			});
 
-			//Flag the userod cache as NOT allowed to cache any items for security purposes.
-			Userods.SetIsCacheAllowed(false);
-			TopMost = true;
+			//Flag the userod cache as NOT allowed to cache any items for security purposes
+            TopMost = true;
 			Application.DoEvents();
 			TopMost = false;
 			Activate();
@@ -567,8 +566,7 @@ namespace OpenDental
 
 			formSplash.Close();
 			LogOnOpenDentalUser(odUser, odPassword);
-			//At this point a user has successfully logged in.  Flag the userod cache as safe to cache data.
-			Userods.SetIsCacheAllowed(true);
+
 			//If clinics are enabled, we will set the public ClinicNum variable
 			//If the user is restricted to a clinic(s), and the computerpref clinic is not one of the user's restricted clinics, the user's clinic will be selected
 			//If the user is not restricted, or if the user is restricted but has access to the computerpref clinic, the computerpref clinic will be selected
@@ -7454,8 +7452,7 @@ namespace OpenDental
 		///<summary>Show the log on window.</summary>
 		private void ShowLogOn()
 		{
-			Userods.SetIsCacheAllowed(false);
-			FormLogOn_ = new FormLogOn(doRefreshSecurityCache: false);
+            FormLogOn_ = new FormLogOn(doRefreshSecurityCache: false);
 			FormLogOn_.ShowDialog(this);
 			if (FormLogOn_.DialogResult != DialogResult.OK)
 			{
@@ -7464,8 +7461,8 @@ namespace OpenDental
 				Application.Exit();
 			}
 			CheckForPasswordReset();
-			Userods.SetIsCacheAllowed(true);
-			if (FormLogOn_.RefreshSecurityCache)
+
+            if (FormLogOn_.RefreshSecurityCache)
 			{//Refresh the cache if we need to since cache allowed was just set to true
 				DataValid.SetInvalid(InvalidType.Security);
 			}

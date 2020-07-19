@@ -404,7 +404,7 @@ namespace OpenDentBusiness{
 		public static List<Provider> GetProvsByClinic(long clinicNum) {
 			//No need to check RemotingRole; no call to db.
 			List<Provider> listProvsWithClinics=new List<Provider>();
-			List<Userod> listUsersShort=Userods.GetDeepCopy(true);
+			List<Userod> listUsersShort=Userods.GetAll();
 			for(int i=0;i<listUsersShort.Count;i++) {
 				Provider prov=Providers.GetProv(listUsersShort[i].ProvNum);
 				if(prov==null) {
@@ -487,15 +487,15 @@ namespace OpenDentBusiness{
 			return _providerCache.GetFindIndex(x => x.ProvNum==provNum,true);
 		}
 
-		public static List<Userod> GetAttachedUsers(long provNum) {
-			
-			string command="SELECT userod.* FROM userod,provider "
-					+"WHERE userod.ProvNum=provider.ProvNum "
-					+"AND provider.provNum="+POut.Long(provNum);
-			return Crud.UserodCrud.SelectMany(command);
-		}
+        public static List<Userod> GetAttachedUsers(long provNum)
+        {
+            return Crud.UserodCrud.SelectMany(
+                "SELECT userod.* FROM userod,provider " +
+                "WHERE userod.ProvNum=provider.ProvNum " +
+                "AND provider.provNum=" + provNum).ToList();
+        }
 
-		///<summary>Returns the billing provnum to use based on practice/clinic settings.  Takes the treating provider provnum and clinicnum.
+        ///<summary>Returns the billing provnum to use based on practice/clinic settings.  Takes the treating provider provnum and clinicnum.
 		///If clinics are enabled and clinicnum is passed in, the clinic's billing provider will be used.  Otherwise will use pactice defaults.
 		///It will return a valid provNum unless the supplied treatProv was invalid.</summary>
 		public static long GetBillingProvNum(long treatProv,long clinicNum) {
@@ -546,7 +546,7 @@ namespace OpenDentBusiness{
 			}
 			//The GetWhere uses a "UserClinicNum>-1" in its selection to behave as a "Where true" to retrieve everything from the cache 
 			Dictionary<long,List<long>> dictUserClinicsReference=UserClinics.GetWhere(x => x.UserClinicNum>-1).GroupBy(x => x.UserNum).ToDictionary(x => x.Key,x => x.Select(y => y.ClinicNum).ToList());
-			Dictionary<long,List<long>> dictUserClinics=Userods.GetDeepCopy()
+			Dictionary<long,List<long>> dictUserClinics=Userods.GetAll()
 				.ToDictionary(x => x.UserNum,x => dictUserClinicsReference.ContainsKey(x.UserNum)?dictUserClinicsReference[x.UserNum]:new List<long>());
 			Dictionary<long,List<long>> dictProvUsers=Userods.GetWhere(x => x.ProvNum>0).GroupBy(x => x.ProvNum)
 				.ToDictionary(x => x.Key,x => x.Select(y => y.UserNum).ToList());

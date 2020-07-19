@@ -502,7 +502,7 @@ namespace OpenDental{
 
 		private void butPickPresenter_Click(object sender,EventArgs e) {
 			FormUserPick FormUP=new FormUserPick();
-			List<Userod> listUsers=Userods.GetWhere(x => x.ClinicIsRestricted == false || x.ClinicNum == Clinics.ClinicNum,true);
+			List<Userod> listUsers=Userods.GetWhere(x => !x.IsHidden && (x.ClinicIsRestricted == false || x.ClinicNum == Clinics.ClinicNum));
 			FormUP.ListUserodsFiltered=listUsers;
 			if(_presenterCur!=null) {
 				FormUP.SuggestedUserNum=_presenterCur.UserNum;

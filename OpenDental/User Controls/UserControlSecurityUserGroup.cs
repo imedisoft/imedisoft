@@ -164,12 +164,12 @@ namespace OpenDental {
 
 		///<summary>Returns a filtered list of userods that should be displayed. Returns all users when IsCEMT is true.</summary>
 		private List<Userod> GetFilteredUsersHelper() {
-			List<Userod> retVal = Userods.GetDeepCopy();
+			List<Userod> retVal = Userods.GetAll();
 			if(IsForCEMT) {
 				return retVal;
 			}
 			if(_dictProvNumProvs == null) { //fill the dictionary if needed
-				_dictProvNumProvs=Providers.GetMultProviders(Userods.GetDeepCopy().Select(x => x.ProvNum).ToList()).ToDictionary(x => x.ProvNum,x => x);
+				_dictProvNumProvs=Providers.GetMultProviders(Userods.GetAll().Select(x => x.ProvNum).ToList()).ToDictionary(x => x.ProvNum,x => x);
 			}
 			retVal.RemoveAll(x => x.UserNumCEMT>0);//NEVER show CEMT users when not in the CEMT tool.
 			if(!checkShowHidden.Checked) {

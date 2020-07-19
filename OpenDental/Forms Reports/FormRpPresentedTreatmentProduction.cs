@@ -21,7 +21,7 @@ namespace OpenDental {
 		private void FormRpTreatPlanPresenter_Load(object sender,EventArgs e) {
 			date1.SelectionStart=new DateTime(DateTime.Today.Year,DateTime.Today.Month,1).AddMonths(-1);
 			date2.SelectionStart=new DateTime(DateTime.Today.Year,DateTime.Today.Month,1).AddDays(-1);
-			_listUsers=Userods.GetDeepCopy(true);
+			_listUsers=Userods.GetAll(true);
 			listUser.Items.AddRange(_listUsers.Select(x => x.UserName).ToArray());
 			checkAllUsers.Checked=true;
 			if(PrefC.HasClinicsEnabled) {

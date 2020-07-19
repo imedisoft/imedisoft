@@ -247,7 +247,7 @@ namespace OpenDental {
 
 		///<summary>Returns a list of TaskList inboxes for non hidden users with an inbox setup.</summary>
 		private List<TaskList> GetUserInboxTaskLists() {
-			List<TaskList> listUserInboxTaskLists=TaskLists.GetMany(Userods.GetDeepCopy(true).Select(x => x.TaskListInBox).ToList());
+			List<TaskList> listUserInboxTaskLists=TaskLists.GetMany(Userods.GetAll(true).Select(x => x.TaskListInBox).ToList());
 			return listUserInboxTaskLists.OrderBy(x => x.Descript).ThenBy(x => x.DateTimeEntry).ToList();
 		}
 

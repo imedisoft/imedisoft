@@ -103,7 +103,7 @@ namespace OpenDental
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
-			List<Userod> ListUsers=Userods.GetDeepCopy(true);
+			List<Userod> ListUsers=Userods.GetAll(true);
 			UserGroup[] ArrayGroups=UserGroups.GetDeepCopy().ToArray();
 			//if(radioUser.Checked) {//by user
 			for(int i=0;i<ListUsers.Count;i++) {

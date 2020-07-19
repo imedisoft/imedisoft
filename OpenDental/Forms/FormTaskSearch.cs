@@ -40,7 +40,7 @@ namespace OpenDental {
 			comboUsers.Items.Add(Lan.G(this,"All"));
 			comboUsers.Items.Add(Lan.G(this,"Me"));
 			comboUsers.SelectedIndex=0;//Always default to All.
-			_listUsers=Userods.GetDeepCopy();//List of all users for searching.  I figure we don't want to exclude hidden ones for searching.
+			_listUsers=Userods.GetAll();//List of all users for searching.  I figure we don't want to exclude hidden ones for searching.
 			_listUsers.ForEach(x => comboUsers.Items.Add(x.UserName));
 			comboPriority.Items.Add(Lan.G(this,"All"));
 			for(int i=0;i<_listTaskPriorities.Count;i++) {
@@ -171,7 +171,7 @@ namespace OpenDental {
 
 		private void butUserPicker_Click(object sender,EventArgs e) {
 			FormUserPick FormUP=new FormUserPick();
-			FormUP.ListUserodsFiltered=Userods.GetDeepCopy();
+			FormUP.ListUserodsFiltered=Userods.GetAll();
 			if(FormUP.ShowDialog()==DialogResult.OK) {
 				comboUsers.SelectedIndex=_listUsers.FindIndex(x => x.UserNum==FormUP.SelectedUserNum)+2;
 			}

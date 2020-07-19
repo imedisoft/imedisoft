@@ -1,18 +1,18 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Cache;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Linq;
-using Imedisoft.Data.Cache;
-using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
-	public class Accounts
+    public class Accounts
 	{
 		#region Cache Pattern
 
@@ -35,7 +35,6 @@ namespace OpenDentBusiness
 
 		#endregion Cache Pattern
 
-		///<summary></summary>
 		public static long Insert(Account acct)
 		{
 			return Crud.AccountCrud.Insert(acct);

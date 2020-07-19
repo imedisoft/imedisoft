@@ -39,14 +39,14 @@ namespace OpenDental {
 			listUserPrefDoseSpotIds=listUserPrefDoseSpotIds.FindAll(x => string.IsNullOrWhiteSpace(x.ValueString));
 			if(includeProv) {
 				retVal=Userods.GetWhere(
-					(x => listProviders.Exists(y => y.ProvNum==x.ProvNum) //Find users that have a link to the NPI that has been passed in
-						&& !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.UserNum)) //Also, these users shouldn't already have a DoseSpot User ID.
-					,true);//Only consider non-hidden users.
+					x => !x.IsHidden && listProviders.Exists(y => y.ProvNum==x.ProvNum) //Find users that have a link to the NPI that has been passed in
+						&& !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.UserNum) //Also, these users shouldn't already have a DoseSpot User ID.
+					);
 			}
 			else {
 				retVal=Userods.GetWhere(
-					(x => !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.UserNum)) //All users that don't already have a DoseSpot User ID.
-					,true);//Only consider non-hidden users.
+					(x => !x.IsHidden && !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.UserNum)) //All users that don't already have a DoseSpot User ID.
+					);//Only consider non-hidden users.
 			}
 			return retVal;
 		}

@@ -8113,7 +8113,7 @@ namespace OpenDental {
 							if(formProviderPick.DialogResult==DialogResult.Cancel) {
 								return;
 							}
-							List<Userod> listDoseUsers=Userods.GetWhere(x => x.ProvNum==formProviderPick.SelectedProvNum,true);//Only consider non-hidden users.
+							List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && x.ProvNum==formProviderPick.SelectedProvNum);//Only consider non-hidden users.
 							listDoseUsers=listDoseUsers.FindAll(x => {//Finds users that have a DoseSpot ID
 								try {
 									return !string.IsNullOrWhiteSpace(DoseSpot.GetUserID(x,clinicNum));

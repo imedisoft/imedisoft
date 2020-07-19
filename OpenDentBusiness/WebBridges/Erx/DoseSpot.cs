@@ -119,7 +119,7 @@ namespace OpenDentBusiness {
 			}
 			//get a list of users that correspond to a non-hidden provider
 			List<Provider> listProviders=Providers.GetWhere(x => x.NationalProvID==providerErx.NationalProviderID,true);
-			List<Userod> listDoseUsers=Userods.GetWhere(x => listProviders.Exists(y => y.ProvNum==x.ProvNum),true);//Only consider non-hidden users.
+			List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && listProviders.Exists(y => y.ProvNum==x.ProvNum));//Only consider non-hidden users.
 			if(listDoseUsers.Count==1) {//One provider matched so simply notify the office and set the DoseSpot User Id.
 				alert=new AlertItem {
 					Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.ShowItemValue,

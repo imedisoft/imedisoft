@@ -63,7 +63,7 @@ namespace OpenDental {
 
 		private void FillList(List<Userod> listUserods) {
 			if(listUserods==null) {
-				listUserods=Userods.GetDeepCopy(true);
+				listUserods=Userods.GetAll(true);
 			}
 			ListUserodsShowing=listUserods.Select(x => x.Copy()).ToList();
 			listUserods.ForEach(x => listUser.Items.Add(x));

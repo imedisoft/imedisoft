@@ -343,10 +343,8 @@ namespace OpenDentBusiness
 				//There is a chance that some future engineer will introduce a signal that tells another workstation to refresh the users when it shouldn't.
 				//It is completely safe to skip over getting the user cache when IsCacheAllowed is false because the setter for that boolean nulls the cache.
 				//This means that the cache will refill itself automatically the next time it is accessed as soon as the boolean flips back to true.
-				if (Userods.GetIsCacheAllowed())
-				{
-					ds.Tables.Add(Userods.GetTableFromCache(doRefreshServerCache));
-				}
+                Userods.RefreshCache();
+
 				ds.Tables.Add(UserGroups.GetTableFromCache(doRefreshServerCache));
 				ds.Tables.Add(GroupPermissions.GetTableFromCache(doRefreshServerCache));
 				ds.Tables.Add(UserGroupAttaches.GetTableFromCache(doRefreshServerCache));
@@ -732,10 +730,8 @@ namespace OpenDentBusiness
 				//There is a chance that some future engineer will introduce a signal that tells another workstation to refresh the users when it shouldn't.
 				//It is completely safe to skip over filling the user cache when IsCacheAllowed is false because the setter for that boolean nulls the cache.
 				//This means that as soon as the boolean flips back to true the cache will refill itself automatically the next time it is accessed.
-				if (Userods.GetIsCacheAllowed() && ds.Tables.Contains("Userod"))
-				{
-					Userods.FillCacheFromTable(ds.Tables["Userod"]);
-				}
+                Userods.RefreshCache();
+
 				//Always refresh the user groups,group permissions, and group attaches.  There is no harm in caching this data.
 				UserGroups.FillCacheFromTable(ds.Tables["UserGroup"]);
 				GroupPermissions.FillCacheFromTable(ds.Tables["GroupPermission"]);

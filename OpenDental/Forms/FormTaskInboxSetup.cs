@@ -20,8 +20,8 @@ namespace OpenDental {
 		}
 
 		private void FormTaskInboxSetup_Load(object sender,EventArgs e) {
-			UserList=Userods.GetDeepCopy(true);
-			UserListOld=Userods.GetDeepCopy(true);
+			UserList=Userods.GetAll(true);
+			UserListOld=Userods.GetAll(true);
 			TrunkList=TaskLists.RefreshMainTrunk(Security.CurUser.UserNum,TaskType.All)
 				.FindAll(x => x.TaskListStatus==TaskListStatusEnum.Active);
 			listMain.Items.Add(Lan.G(this,"none"));

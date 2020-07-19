@@ -1,3 +1,7 @@
+using CodeBase;
+using DataConnectionBase;
+using Imedisoft.Data;
+using ODCrypt;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,15 +17,13 @@ using System.Web.Services;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using CodeBase;
-using DataConnectionBase;
-using Imedisoft.Data;
-using ODCrypt;
+using Imedisoft.Data.Cache;
+using OpenDentBusiness.Crud;
 
 namespace OpenDentBusiness
 {
-	///<summary>(Users OD)</summary>
-	public class Userods
+    ///<summary>(Users OD)</summary>
+    public class Userods
 	{
 		#region Get Methods
 
@@ -128,157 +130,85 @@ namespace OpenDentBusiness
 
 		#region CachePattern
 
-		private class UserodCache : CacheListAbs<Userod>
-		{
-			protected override List<Userod> GetCacheFromDb()
-			{
-				string command = "SELECT * FROM userod ORDER BY UserName";
-				return Crud.UserodCrud.SelectMany(command);
-			}
-			protected override List<Userod> TableToList(DataTable table)
-			{
-				return Crud.UserodCrud.TableToList(table);
-			}
-			protected override Userod Copy(Userod userod)
-			{
-				return userod.Copy();
-			}
-			protected override DataTable ListToTable(List<Userod> listUserods)
-			{
-				return Crud.UserodCrud.ListToTable(listUserods, "Userod");
-			}
-			protected override void FillCacheIfNeeded()
-			{
-				Userods.GetTableFromCache(false);
-			}
-			protected override bool IsInListShort(Userod userod)
-			{
-				return !userod.IsHidden && userod.UserNumCEMT == 0;
-			}
-		}
+        private class UserodsCache : CacheBase<Userod>
+        {
+            protected override IEnumerable<Userod> Load()
+                => Crud.UserodCrud.SelectMany("SELECT * FROM userod ORDER BY UserName");
+        }
 
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static UserodCache _userodCache = new UserodCache();
+        private static readonly UserodsCache cache = new UserodsCache();
 
-		public static Userod GetFirstOrDefault(Func<Userod, bool> match, bool isShort = false)
-		{
-			return _userodCache.GetFirstOrDefault(match, isShort);
-		}
+        public static List<Userod> RefreshCache() => cache.Refresh();
 
-		///<summary>Gets a deep copy of all matching items from the cache via ListLong.  Set isShort true to search through ListShort instead.</summary>
-		public static List<Userod> GetWhere(Predicate<Userod> match, bool isShort = false)
-		{
-			return _userodCache.GetWhere(match, isShort);
-		}
+        public static IEnumerable<Userod> All => cache.All;
 
-		public static List<Userod> GetDeepCopy(bool isShort = false)
-		{
-			return _userodCache.GetDeepCopy(isShort);
-		}
+        public static Userod GetFirstOrDefault(Predicate<Userod> predicate)
+        {
+            return cache.FirstOrDefault(predicate);
+        }
 
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache()
-		{
-			return GetTableFromCache(true);
-		}
+        #endregion
 
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table)
-		{
-			_userodCache.FillCacheFromTable(table);
-		}
+		public static List<Userod> GetAll(bool isShort = false)
+        {
+            if (isShort)
+            {
+                return UserodCrud.SelectMany("SELECT * FROM userod WHERE IsHidden = 0 ORDER BY UserName").ToList();
+            }
 
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache)
-		{
-			DataTable table = _userodCache.GetTableFromCache(doRefreshCache);
-			Security.SyncCurUser();//Cache can have a stale reference to the Security.CurUser to ensure it has a current one.
-			return table;
-		}
+            return UserodCrud.SelectMany("SELECT * FROM userod ORDER BY UserName").ToList();
+        }
 
-		///<summary>Returns the boolean indicating if the user cache has been turned off or not.</summary>
-		public static bool GetIsCacheAllowed()
-		{
-			return _userodCache.IsCacheAllowed;
-		}
-
-		///<summary>Set isCacheAllowed false to immediately clear out the userod cache and then set the cache into a state where it will throw an
-		///exception if any method attempts to have the cache fill itself.  This is designed to keep sensitive data from being cached until a
-		///verified user has logged in to the program.  Once a user has logged in then it is acceptable to fill the userod cache.</summary>
-		public static void SetIsCacheAllowed(bool isCacheAllowed)
-		{
-			_userodCache.IsCacheAllowed = isCacheAllowed;
-		}
-
-		#endregion
-
-		///<summary></summary>
-		public static List<Userod> GetAll()
-		{
-			string command = "SELECT * FROM userod ORDER BY UserName";
-			return Crud.UserodCrud.TableToList(Database.ExecuteDataTable(command));
-		}
-
-		///<summary></summary>
 		public static Userod GetUser(long userNum)
 		{
-			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.UserNum == userNum);
+            return GetFirstOrDefault(x => x.UserNum == userNum);
 		}
 
-		///<summary>Returns a list of users from the list of usernums.</summary>
+		/// <summary>
+		/// Returns a list of users from the list of usernums.
+		/// </summary>
 		public static List<Userod> GetUsers(List<long> listUserNums)
-		{
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => listUserNums.Contains(x.UserNum));
-		}
+        {
+            return cache.Find(user => listUserNums.Contains(user.UserNum)).ToList();
+        }
 
-		///<summary>Returns a list of all non-hidden users.  Set includeCEMT to true if you want CEMT users included.</summary>
+		/// <summary>
+		/// Returns a list of all non-hidden users.
+		/// Set includeCEMT to true if you want CEMT users included.
+		/// </summary>
 		public static List<Userod> GetUsers(bool includeCEMT = false)
 		{
-			//No need to check RemotingRole; no call to db.
-			List<Userod> retVal = new List<Userod>();
-			List<Userod> listUsersLong = Userods.GetDeepCopy();
-			for (int i = 0; i < listUsersLong.Count; i++)
-			{
-				if (listUsersLong[i].IsHidden)
-				{
-					continue;
-				}
-				if (!includeCEMT && listUsersLong[i].UserNumCEMT != 0)
-				{
-					continue;
-				}
-				retVal.Add(listUsersLong[i]);
-			}
-			return retVal;
-		}
+            return cache.Find(user => !user.IsHidden && (!includeCEMT || user.UserNumCEMT != 0)).ToList();
+        }
 
-		///<summary>Returns a list of all non-hidden users.  Does not include CEMT users.</summary>
+		/// <summary>
+		/// Returns a list of all non-hidden users.  Does not include CEMT users.
+		/// </summary>
 		public static List<Userod> GetUsersByClinic(long clinicNum)
-		{
-			//No need to check RemotingRole; no call to db.
-			return Userods.GetWhere(x => !x.IsHidden)//all non-hidden users
-				.FindAll(x => !x.ClinicIsRestricted || x.ClinicNum == clinicNum); //for the given clinic or unassigned to clinic
-																				  //CEMT user filter not required. CEMT users SHOULD be unrestricted to a clinic.
-		}
+        {
+            return cache.Find(
+                user => !user.IsHidden && (user.ClinicIsRestricted || user.ClinicNum == clinicNum)).ToList();
+        }
 
-		///<summary>Returns a list of all users without using the local cache.  Useful for multithreaded connections.</summary>
+        public static List<Userod> GetWhere(Predicate<Userod> predicate)
+            => cache.Find(predicate).ToList();
+
+		/// <summary>
+		/// Returns a list of all users without using the local cache.
+		/// Useful for multithreaded connections.
+		/// </summary>
 		public static List<Userod> GetUsersNoCache()
-		{
-			List<Userod> retVal = new List<Userod>();
-			string command = "SELECT * FROM userod";
-			DataTable tableUsers = Database.ExecuteDataTable(command);
-			retVal = Crud.UserodCrud.TableToList(tableUsers);
-			return retVal;
-		}
+        {
+            return UserodCrud.SelectMany("SELECT * FROM userod").ToList();
+        }
 
-		///<summary>Returns a list of all CEMT users.</summary>
+		/// <summary>
+		/// Returns a list of all CEMT users.
+		/// </summary>
 		public static List<Userod> GetUsersForCEMT()
-		{
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.UserNumCEMT != 0);
-		}
+        {
+            return cache.Find(user => user.UserNumCEMT != 0).ToList();
+        }
 
 		///<summary>Returns null if not found.  Is not case sensitive.  isEcwTight isn't even used.</summary>
 		public static Userod GetUserByName(string userName, bool isEcwTight)
@@ -290,69 +220,69 @@ namespace OpenDentBusiness
 		///<summary>Gets the first user with the matching userName passed in.  Not case sensitive.  Returns null if not found.
 		///Does not use the cache to find a corresponding user with the passed in userName.  Every middle tier call passes through here.</summary>
 		public static Userod GetUserByNameNoCache(string userName)
-		{
-			string command = "SELECT * FROM userod WHERE UserName='" + POut.String(userName) + "'";
-			List<Userod> listUserods = Crud.UserodCrud.TableToList(Database.ExecuteDataTable(command));
-			return listUserods.FirstOrDefault(x => !x.IsHidden && x.UserName.ToLower() == userName.ToLower());
-		}
+        {
+            return UserodCrud.SelectMany("SELECT * FROM userod WHERE UserName='" + POut.String(userName) + "'")
+                .FirstOrDefault(user => !user.IsHidden && user.UserName.ToLower() == userName.ToLower());
+        }
 
-		///<summary>Returns null if not found.</summary>
+		/// <summary>
+		/// Returns null if not found.
+		/// </summary>
 		public static Userod GetUserByEmployeeNum(long employeeNum)
 		{
 			//No need to check RemotingRole; no call to db.
 			return GetFirstOrDefault(x => x.EmployeeNum == employeeNum);
 		}
 
-		///<summary>Returns all users that are associated to the employee passed in.  Returns empty list if no matches found.</summary>
+		/// <summary>
+		/// Returns all users that are associated to the employee passed in.
+		/// Returns empty list if no matches found.
+		/// </summary>
 		public static List<Userod> GetUsersByEmployeeNum(long employeeNum)
 		{
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.EmployeeNum == employeeNum);
+            return cache.Find(x => x.EmployeeNum == employeeNum).ToList();
 		}
 
-		///<summary>Returns all users that are associated to the permission passed in.  Returns empty list if no matches found.</summary>
+		/// <summary>
+		/// Returns all users that are associated to the permission passed in.
+		/// Returns empty list if no matches found.
+		/// </summary>
 		public static List<Userod> GetUsersByPermission(Permissions permission, bool showHidden)
-		{
-			//No need to check RemotingRole; no call to db.
-			List<Userod> listAllUsers = Userods.GetDeepCopy(!showHidden);
-			List<Userod> listUserods = new List<Userod>();
-			for (int i = 0; i < listAllUsers.Count; i++)
-			{
-				if (GroupPermissions.HasPermission(listAllUsers[i], permission, 0))
-				{
-					listUserods.Add(listAllUsers[i]);
-				}
-			}
-			return listUserods;
-		}
+        {
+            return cache.Find(user =>
+                (showHidden || !user.IsHidden) && GroupPermissions.HasPermission(user, permission, 0)).ToList();
+        }
 
-		///<summary>Gets all non-hidden users that have an associated provider.</summary>
+		/// <summary>
+		/// Gets all non-hidden users that have an associated provider.
+		/// </summary>
 		public static List<Userod> GetUsersWithProviders()
 		{
-			//No need to check RemotingRole; no call to db.
-			return Userods.GetWhere(x => x.ProvNum != 0, true);
+            return cache.Find(x => x.ProvNum != 0).ToList();
 		}
 
-		///<summary>Returns all users associated to the provider passed in.  Returns empty list if no matches found.</summary>
+		/// <summary>
+		/// Returns all users associated to the provider passed in.
+		/// Returns empty list if no matches found.
+		/// </summary>
 		public static List<Userod> GetUsersByProvNum(long provNum)
 		{
-			//No need to check RemotingRole; no call to db.
-			return Userods.GetWhere(x => x.ProvNum == provNum, true);
+            return cache.Find(x => x.ProvNum == provNum).ToList();
 		}
 
 		public static List<Userod> GetUsersByInbox(long taskListNum)
 		{
-			//No need to check RemotingRole; no call to db.
-			return Userods.GetWhere(x => x.TaskListInBox == taskListNum, true);
+            return cache.Find(x => x.TaskListInBox == taskListNum).ToList();
 		}
 
-		///<summary>Returns all users selectable for the insurance verification list.  
-		///Pass in an empty list to not filter by clinic.  
-		///Set isAssigning to false to return only users who have an insurance already assigned.</summary>
+		/// <summary>
+		/// Returns all users selectable for the insurance verification list.
+		/// Pass in an empty list to not filter by clinic.
+		/// Set isAssigning to false to return only users who have an insurance already assigned.
+		/// </summary>
 		public static List<Userod> GetUsersForVerifyList(List<long> listClinicNums, bool isAssigning)
 		{
-			//No need to check RemotingRole; no explicit call to db.
-			List<long> listUserNumsInInsVerify = InsVerifies.GetAllInsVerifyUserNums();
+            List<long> listUserNumsInInsVerify = InsVerifies.GetAllInsVerifyUserNums();
 			List<long> listUserNumsInClinic = new List<long>();
 			if (listClinicNums.Count > 0)
 			{
@@ -383,21 +313,27 @@ namespace OpenDentBusiness
 			return listUsersWithPerm.FindAll(x => listUserNumsInInsVerify.Contains(x.UserNum));//Return users limited by permission, clinic, and having an insurance already assigned.
 		}
 
-		///<summary>Returns all non-hidden users associated with the domain user name passed in. Returns an empty list if no matches found.</summary>
+		/// <summary>
+		/// Returns all non-hidden users associated with the domain user name passed in.
+		/// Returns an empty list if no matches found.
+		/// </summary>
 		public static List<Userod> GetUsersByDomainUserName(string domainUser)
 		{
-			return Userods.GetWhere(x => x.DomainUser.Equals(domainUser, StringComparison.InvariantCultureIgnoreCase), true);
+			return cache.Find(x => x.DomainUser.Equals(domainUser, StringComparison.InvariantCultureIgnoreCase)).ToList();
 		}
 
-		///<summary>This handles situations where we have a usernum, but not a user.  And it handles usernum of zero.</summary>
+		/// <summary>
+		/// This handles situations where we have a usernum, but not a user.
+		/// And it handles usernum of zero.
+		/// </summary>
 		public static string GetName(long userNum)
 		{
-			//No need to check RemotingRole; no call to db.
-			Userod user = GetFirstOrDefault(x => x.UserNum == userNum);
-			return (user == null ? "" : user.UserName);
-		}
+            return GetFirstOrDefault(x => x.UserNum == userNum)?.UserName ?? "";
+        }
 
-		///<summary>Returns true if the user passed in is associated with a provider that has (or had) an EHR prov key.</summary>
+		/// <summary>
+		/// Returns true if the user passed in is associated with a provider that has (or had) an EHR prov key.
+		/// </summary>
 		public static bool IsUserCpoe(Userod user)
 		{
 			//No need to check RemotingRole; no call to db.
@@ -628,7 +564,7 @@ namespace OpenDentBusiness
 
 		public static long InsertNoCache(Userod userod)
 		{
-			return Crud.UserodCrud.InsertNoCache(userod);
+			return Crud.UserodCrud.Insert(userod);
 		}
 
 		///<summary>Surround with try/catch because it can throw exceptions.  
@@ -805,11 +741,12 @@ namespace OpenDentBusiness
 
 		public static List<Userod> GetForGroup(long userGroupNum)
 		{
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.IsInUserGroup(userGroupNum));
+            return cache.Find(x => x.IsInUserGroup(userGroupNum)).ToList();
 		}
 
-		///<summary>Gets a list of users for which the passed-in clinicNum is the only one they have access to.</summary>
+		/// <summary>
+		/// Gets a list of users for which the passed-in clinicNum is the only one they have access to.
+		/// </summary>
 		public static List<Userod> GetUsersOnlyThisClinic(long clinicNum)
 		{
 			string command = "SELECT userod.* "
@@ -821,31 +758,32 @@ namespace OpenDentBusiness
 			+ "INNER JOIN userclinic ON userclinic.UserNum = users.UserNum "
 				+ "AND userclinic.ClinicNum = " + POut.Long(clinicNum) + " "
 			+ "INNER JOIN userod ON userod.UserNum = userclinic.UserNum ";
-			return Crud.UserodCrud.SelectMany(command);
+
+			return UserodCrud.SelectMany(command).ToList();
 		}
 
-		/// <summary>Will return 0 if no inbox found for user.</summary>
+		/// <summary>
+		/// Will return 0 if no inbox found for user.
+		/// </summary>
 		public static long GetInbox(long userNum)
 		{
-			//No need to check RemotingRole; no call to db.
-			Userod userod = GetFirstOrDefault(x => x.UserNum == userNum);
-			return (userod == null ? 0 : userod.TaskListInBox);
-		}
+            return GetFirstOrDefault(x => x.UserNum == userNum)?.TaskListInBox ?? 0;
+        }
 
-		///<summary>Returns 3, which is non-admin provider type, if no match found.</summary>
+		/// <summary>
+		/// Returns 3, which is non-admin provider type, if no match found.
+		/// </summary>
 		public static long GetAnesthProvType(long anesthProvType)
 		{
-			//No need to check RemotingRole; no call to db.
-			Userod userod = GetFirstOrDefault(x => x.AnesthProvType == anesthProvType);
-			return (userod == null ? 3 : userod.AnesthProvType);
-		}
+			return GetFirstOrDefault(x => x.AnesthProvType == anesthProvType)?.AnesthProvType ?? 3;
+        }
 
 		public static List<Userod> GetUsersForJobs()
 		{
 			string command = "SELECT * FROM userod "
 				+ "INNER JOIN jobpermission ON userod.UserNum=jobpermission.UserNum "
 				+ "WHERE IsHidden=0 GROUP BY userod.UserNum ORDER BY UserName";
-			return Crud.UserodCrud.SelectMany(command);
+			return UserodCrud.SelectMany(command).ToList();
 		}
 
 		///<summary>Returns empty string if password is strong enough.  Otherwise, returns explanation of why it's not strong enough.</summary>
