@@ -1,10 +1,9 @@
-﻿using System;
-using Imedisoft.Data.CrudGenerator.Schema;
+﻿using Imedisoft.Data.CrudGenerator.Schema;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
-using System.Windows.Forms;
 
 namespace Imedisoft.Data.CrudGenerator.Generator
 {
@@ -26,8 +25,9 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 		/// Generates the entity class for the specified table.
 		/// </summary>
 		/// <param name="table">The table.</param>
+		/// <param name="ns">The namespace in which the class is created.</param>
 		/// <returns>The code that defines the entity class.</returns>
-		public static string Generate(Table table)
+		public static string Generate(Table table, string ns)
         {
 			var stringBuilder = new StringBuilder();
 
@@ -55,13 +55,13 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine("// </auto-generated>");
 			stringBuilder.AppendLine("//------------------------------------------------------------------------------");
 
-			foreach (var ns in namespaces)
+			foreach (var import in namespaces)
             {
-				stringBuilder.AppendLine($"using {ns};");
+				stringBuilder.AppendLine($"using {import};");
             }
 			stringBuilder.AppendLine();
 
-			GenerateHeader(stringBuilder, table);
+			GenerateHeader(stringBuilder, table, ns);
 			GenerateBuilder(stringBuilder, table);
 			GenerateSelectOne(stringBuilder, table);
 			GenerateSelectMany(stringBuilder, table);
@@ -71,9 +71,9 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			return stringBuilder.ToString();
         }
 
-		private static void GenerateHeader(StringBuilder stringBuilder, Table table)
+		private static void GenerateHeader(StringBuilder stringBuilder, Table table, string ns)
         {
-			stringBuilder.AppendLine("namespace OpenDentBusiness.Crud");
+			stringBuilder.AppendLine($"namespace {ns}");
 			stringBuilder.AppendLine("{");
 			stringBuilder.AppendLine($"	public class {table.Type.Name}Crud");
 			stringBuilder.AppendLine("	{");

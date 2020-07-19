@@ -12,6 +12,8 @@ namespace Imedisoft.Data.CrudGenerator
 {
     public partial class FormMain : Form
 	{
+		private Assembly assembly;
+
 		public FormMain() => InitializeComponent();
 
 		private void DiscoverTableTypes(Assembly assembly)
@@ -45,13 +47,13 @@ namespace Imedisoft.Data.CrudGenerator
 			typesComboBox.EndUpdate();
         }
 
-
 		private void FormMain_Load(object sender, EventArgs e)
 		{
 			snippetTextBox.SetTabStopWidth(4);
 
 			Type typeTableBase = typeof(TableBase);
-			Assembly assembly = Assembly.GetAssembly(typeTableBase);
+
+			assembly = Assembly.GetAssembly(typeTableBase);
 
 			DiscoverTableTypes(assembly);
 		}
@@ -95,34 +97,35 @@ namespace Imedisoft.Data.CrudGenerator
 
 			typesComboBox.SelectedIndex = index;
 
-			GenerateButton_Click(this, EventArgs.Empty);
-		}
-
-		private void GenerateButton_Click(object sender, EventArgs e)
-		{
 			if (typesComboBox.SelectedItem is Type type)
-            {
-                try
-                {
+			{
+				try
+				{
 					var table = new Table(type);
 
-					var snippet = snippetTextBox.Text = EntityClassGenerator.Generate(table);
-
-					Clipboard.SetText(snippet);
-                }
+					snippetTextBox.Text = EntityClassGenerator.Generate(table, "OpenDentBusiness.Crud");
+				}
 				catch (Exception ex)
-                {
+				{
 					MessageBox.Show(this,
 						ex.Message, Text,
-						MessageBoxButtons.OK, 
+						MessageBoxButtons.OK,
 						MessageBoxIcon.Error);
 				}
-            }
-            else
-            {
+			}
+			else
+			{
 				MessageBox.Show(this,
-					"Please select a type for which the generate the snippet.", Text, 
+					"Please select a type for which the generate the snippet.", Text,
 					MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+
+		private void ExportButton_Click(object sender, EventArgs e)
+		{
+			using (var formGenerate = new FormGenerate(assembly))
+            {
+				formGenerate.ShowDialog(this);
             }
 		}
     }

@@ -30,23 +30,22 @@ namespace Imedisoft.Data.CrudGenerator
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            this.generateButton = new System.Windows.Forms.Button();
+            this.exportButton = new System.Windows.Forms.Button();
             this.snippetTextBox = new System.Windows.Forms.TextBox();
-            this.infoLabel = new System.Windows.Forms.Label();
             this.typesComboBox = new System.Windows.Forms.ListBox();
             this.iconsImageList = new System.Windows.Forms.ImageList(this.components);
             this.assemblyTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // generateButton
+            // exportButton
             // 
-            this.generateButton.Location = new System.Drawing.Point(82, 507);
-            this.generateButton.Name = "generateButton";
-            this.generateButton.Size = new System.Drawing.Size(110, 30);
-            this.generateButton.TabIndex = 3;
-            this.generateButton.Text = "&Generate";
-            this.generateButton.UseVisualStyleBackColor = true;
-            this.generateButton.Click += new System.EventHandler(this.GenerateButton_Click);
+            this.exportButton.Location = new System.Drawing.Point(12, 438);
+            this.exportButton.Name = "exportButton";
+            this.exportButton.Size = new System.Drawing.Size(110, 30);
+            this.exportButton.TabIndex = 2;
+            this.exportButton.Text = "&Generate All";
+            this.exportButton.UseVisualStyleBackColor = true;
+            this.exportButton.Click += new System.EventHandler(this.ExportButton_Click);
             // 
             // snippetTextBox
             // 
@@ -58,17 +57,9 @@ namespace Imedisoft.Data.CrudGenerator
             this.snippetTextBox.Multiline = true;
             this.snippetTextBox.Name = "snippetTextBox";
             this.snippetTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.snippetTextBox.Size = new System.Drawing.Size(891, 691);
-            this.snippetTextBox.TabIndex = 4;
+            this.snippetTextBox.Size = new System.Drawing.Size(774, 637);
+            this.snippetTextBox.TabIndex = 3;
             this.snippetTextBox.WordWrap = false;
-            // 
-            // infoLabel
-            // 
-            this.infoLabel.Location = new System.Drawing.Point(12, 9);
-            this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(180, 50);
-            this.infoLabel.TabIndex = 0;
-            this.infoLabel.Text = "A copy of the snippet will automatically be placed on the clipboard";
             // 
             // typesComboBox
             // 
@@ -77,10 +68,10 @@ namespace Imedisoft.Data.CrudGenerator
             this.typesComboBox.FormattingEnabled = true;
             this.typesComboBox.IntegralHeight = false;
             this.typesComboBox.ItemHeight = 18;
-            this.typesComboBox.Location = new System.Drawing.Point(12, 108);
+            this.typesComboBox.Location = new System.Drawing.Point(12, 39);
             this.typesComboBox.Name = "typesComboBox";
             this.typesComboBox.Size = new System.Drawing.Size(180, 393);
-            this.typesComboBox.TabIndex = 2;
+            this.typesComboBox.TabIndex = 1;
             this.typesComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TypesComboBox_DrawItem);
             this.typesComboBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TypesComboBox_MouseDoubleClick);
             // 
@@ -92,24 +83,22 @@ namespace Imedisoft.Data.CrudGenerator
             // 
             // assemblyTextBox
             // 
-            this.assemblyTextBox.Location = new System.Drawing.Point(12, 79);
-            this.assemblyTextBox.Margin = new System.Windows.Forms.Padding(3, 20, 3, 3);
+            this.assemblyTextBox.Location = new System.Drawing.Point(12, 12);
             this.assemblyTextBox.Name = "assemblyTextBox";
             this.assemblyTextBox.ReadOnly = true;
-            this.assemblyTextBox.Size = new System.Drawing.Size(180, 23);
-            this.assemblyTextBox.TabIndex = 1;
+            this.assemblyTextBox.Size = new System.Drawing.Size(180, 21);
+            this.assemblyTextBox.TabIndex = 0;
             this.assemblyTextBox.TabStop = false;
             // 
             // FormMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1101, 715);
+            this.ClientSize = new System.Drawing.Size(984, 661);
             this.Controls.Add(this.assemblyTextBox);
             this.Controls.Add(this.typesComboBox);
-            this.Controls.Add(this.infoLabel);
             this.Controls.Add(this.snippetTextBox);
-            this.Controls.Add(this.generateButton);
-            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Controls.Add(this.exportButton);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -121,9 +110,8 @@ namespace Imedisoft.Data.CrudGenerator
         }
 
         #endregion
-        private System.Windows.Forms.Button generateButton;
+        private System.Windows.Forms.Button exportButton;
         private System.Windows.Forms.TextBox snippetTextBox;
-        private System.Windows.Forms.Label infoLabel;
         private System.Windows.Forms.ListBox typesComboBox;
         private System.Windows.Forms.ImageList iconsImageList;
         private System.Windows.Forms.TextBox assemblyTextBox;
