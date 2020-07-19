@@ -55,10 +55,10 @@ namespace OpenDentBusiness.Crud
 		/// </summary>
 		public static long Insert(Account account)
 			=> account.AccountNum = Database.ExecuteInsert(
-				"INSERT INTO `Account` " +
-				"(`Description`, `AcctType`, `BankNumber`, `Inactive`, `AccountColor`) " +
-				"VALUES (" +
-					"@Description, @AcctType, @BankNumber, @Inactive, @AccountColor" +
+				"INSERT INTO `Account` " + 
+				"(`Description`, `AcctType`, `BankNumber`, `Inactive`, `AccountColor`) " + 
+				"VALUES (" + 
+					"@Description, @AcctType, @BankNumber, @Inactive, @AccountColor" + 
 				")");
 
 		/// <summary>
@@ -66,12 +66,12 @@ namespace OpenDentBusiness.Crud
 		/// </summary>
 		public static void Update(Account account)
 			=> Database.ExecuteNonQuery(
-				"UPDATE `Account` SET " +
-					"`Description` = @Description, " +
-					"`AcctType` = @AcctType, " +
-					"`BankNumber` = @BankNumber, " +
-					"`Inactive` = @Inactive, " +
-					"`AccountColor` = @AccountColor " +
+				"UPDATE `Account` SET " + 
+					"`Description` = @Description, " + 
+					"`AcctType` = @AcctType, " + 
+					"`BankNumber` = @BankNumber, " + 
+					"`Inactive` = @Inactive, " + 
+					"`AccountColor` = @AccountColor " + 
 				"WHERE `AccountNum` = @AccountNum",
 					new MySqlParameter("AccountNum", account.AccountNum),
 					new MySqlParameter("Description", account.Description ?? ""),
@@ -122,8 +122,8 @@ namespace OpenDentBusiness.Crud
 
 			parameters.Add(new MySqlParameter("AccountNum", accountNew.AccountNum));
 
-			Database.ExecuteNonQuery("UPDATE `Account` " +
-				"SET " + string.Join(", ", updates) + " " +
+			Database.ExecuteNonQuery("UPDATE `Account` " + 
+				"SET " + string.Join(", ", updates) + " " + 
 				"WHERE `AccountNum` = @AccountNum",
 					parameters.ToArray());
 		}

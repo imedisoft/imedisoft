@@ -1043,7 +1043,7 @@ namespace OpenDentBusiness {
 						AutoCode autoCode=new AutoCode();
 						autoCode.AutoCodeNum=PIn.Long(table.Rows[i]["AutoCodeNum"].ToString());
 						autoCode.Description="UNKNOWN";
-						Crud.AutoCodeCrud.Insert(autoCode,true);
+						Crud.AutoCodeCrud.Insert(autoCode);
 						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,autoCode.AutoCodeNum,DbmLogFKeyType.AutoCode,DbmLogActionType.Insert,methodName,
 							"Added a new AutoCode from AutoCodeItemsWithNoAutoCode"));
 					}
@@ -1074,7 +1074,7 @@ namespace OpenDentBusiness {
 					break;
 				case DbmMode.Fix:
 					command=@"SELECT * FROM autocode WHERE NOT EXISTS(SELECT * FROM autocodeitem WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
-					List<AutoCode> listAutoCodes=Crud.AutoCodeCrud.SelectMany(command);
+					List<AutoCode> listAutoCodes=Crud.AutoCodeCrud.SelectMany(command).ToList();
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command=@"DELETE FROM autocode WHERE NOT EXISTS(

@@ -21,7 +21,7 @@ namespace OpenDentBusiness
 				return new List<Adjustment>();
 			}
 			string command = $"SELECT * FROM adjustment WHERE adjustment.AdjNum IN ({string.Join(",", listAdjNums.Select(x => POut.Long(x)))})";
-			return Crud.AdjustmentCrud.SelectMany(command);
+			return Crud.AdjustmentCrud.SelectMany(command).ToList();
 		}
 
 		///<summary>Gets all adjustments for a single patient.</summary>
@@ -62,7 +62,7 @@ namespace OpenDentBusiness
 		{
 			string command = "SELECT * FROM adjustment "
 				+ "WHERE PatNum IN(" + String.Join(", ", listPatNums) + ") ";
-			return Crud.AdjustmentCrud.SelectMany(command);
+			return Crud.AdjustmentCrud.SelectMany(command).ToList();
 		}
 
 		///<summary>Loops through the supplied list of adjustments and returns an ArrayList of adjustments for the given proc.</summary>
@@ -88,7 +88,7 @@ namespace OpenDentBusiness
 				return listAdjustments;
 			}
 			string command = "SELECT * FROM adjustment WHERE ProcNum IN(" + string.Join(",", listProcNums) + ")";
-			return Crud.AdjustmentCrud.SelectMany(command);
+			return Crud.AdjustmentCrud.SelectMany(command).ToList();
 		}
 
 		///<summary>Returns the sales tax adjustment attached to this procedure with a TaxTransID. We do not use the AvaTax.SalesTaxAdjType in case the
@@ -130,7 +130,7 @@ namespace OpenDentBusiness
 		{
 			string queryBrokenApts = "SELECT * FROM adjustment WHERE PatNum=" + POut.Long(patNum)
 				+ " AND AdjType=" + POut.Long(adjType);
-			return Crud.AdjustmentCrud.SelectMany(queryBrokenApts);
+			return Crud.AdjustmentCrud.SelectMany(queryBrokenApts).ToList();
 		}
 
 		/// <summary>Returns a dictionary of adjustments of a given adjustment type and for the given pats such that the key is the patNum.
@@ -146,7 +146,7 @@ namespace OpenDentBusiness
 				+ "WHERE PatNum IN (" + string.Join(",", listPatNums) + ") "
 				+ "AND AdjType=" + POut.Long(adjType) + " "
 				+ "AND " + DbHelper.DateTConditionColumn("AdjDate", ConditionOperator.LessThan, maxAdjDate);
-			List<Adjustment> listAdjs = Crud.AdjustmentCrud.SelectMany(queryBrokenApts);
+			List<Adjustment> listAdjs = Crud.AdjustmentCrud.SelectMany(queryBrokenApts).ToList();
 			SerializableDictionary<long, List<Adjustment>> retVal = new SerializableDictionary<long, List<Adjustment>>();
 			foreach (long patNum in listPatNums)
 			{
@@ -314,7 +314,7 @@ namespace OpenDentBusiness
 		{
 			//Create log for each adjustment that is going to be deleted.
 			string command = "SELECT * FROM adjustment WHERE ProcNum = " + POut.Long(procNum); //query for all adjustments of a procedure 
-			List<Adjustment> listAdjustments = Crud.AdjustmentCrud.SelectMany(command);
+			List<Adjustment> listAdjustments = Crud.AdjustmentCrud.SelectMany(command).ToList();
 			for (int i = 0; i < listAdjustments.Count; i++)
 			{ //loops through the rows
 				SecurityLogs.MakeLogEntry(Permissions.AdjustmentEdit, listAdjustments[i].PatNum, //and creates audit trail entry for every row to be deleted

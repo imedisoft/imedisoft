@@ -1,343 +1,333 @@
-﻿using System;
+﻿using CodeBase;
+using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using CodeBase;
-using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
-	public class Cache
+    public class Cache
 	{
-		public static DataTable GetTableRemotelyIfNeeded(MethodBase methodBase, string command)
+		public static void Refresh(params InvalidType[] invalidTypes) => Refresh(true, invalidTypes);
+
+		/// <summary>
+		/// itypesStr= comma-delimited list of int.
+		/// Called directly from UI in one spot.
+		/// Called from above repeatedly.
+		/// The end result is that both server and client have been properly refreshed.
+		/// </summary>
+		public static void Refresh(bool doRefreshServerCache, params InvalidType[] invalidTypes)
 		{
-			return Database.ExecuteDataTable(command);
+			GetCacheDs(invalidTypes);
 		}
 
-		public static void Refresh(params InvalidType[] arrayITypes)
+		private static void GetCacheDs(params InvalidType[] invalidTypes)
 		{
-			Refresh(true, arrayITypes);
-		}
+			string suffix = "Refreshing Caches: ";
 
-		///<summary>itypesStr= comma-delimited list of int.  Called directly from UI in one spot.  Called from above repeatedly.  The end result is that both server and client have been properly refreshed.</summary>
-		public static void Refresh(bool doRefreshServerCache, params InvalidType[] arrayITypes)
-		{
-			DataSet ds = GetCacheDs(doRefreshServerCache, arrayITypes);
-		}
+            // TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.Start, "InvalidType(s): " + string.Join(" - ", arrayITypes.OrderBy(x => x.ToString())));
 
-		///<summary>Necessary for backwards compatibility when workstations version 17.1 or earlier connect to a 17.2 server.</summary>
-		public static DataSet GetCacheDs(params InvalidType[] arrayITypes)
-		{
-			return GetCacheDs(false, arrayITypes);
-		}
-
-		///<summary>If ClientWeb, then this method is instead run on the server, and the result passed back to the client.  And since it's ClientWeb, FillCache will be run on the client.</summary>
-		public static DataSet GetCacheDs(bool doRefreshServerCache, params InvalidType[] arrayITypes)
-		{
-			string suffix = Lans.g(nameof(Cache), "Refreshing Caches") + ": ";
-			// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.Start, "InvalidType(s): " + string.Join(" - ", arrayITypes.OrderBy(x => x.ToString())));
-			List<InvalidType> listITypes = arrayITypes.ToList();
-			//so this part below only happens if direct or server------------------------------------------------
-			bool isAll = false;
-			if (listITypes.Contains(InvalidType.AllLocal))
+			bool refreshAll = false;
+			if (invalidTypes.Contains(InvalidType.AllLocal))
 			{
-				isAll = true;
+				refreshAll = true;
 			}
-			DataSet ds = new DataSet();
 
-			//All cached public tables go here
-			if (listITypes.Contains(InvalidType.AccountingAutoPays) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.AccountingAutoPays) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AccountingAutoPays.ToString());
-				ds.Tables.Add(AccountingAutoPays.GetTableFromCache(doRefreshServerCache));
+				AccountingAutoPays.RefreshCache();
 			}
-			//if(listITypes.Contains(InvalidType.AlertItems) || isAll) {//THIS IS NOT CACHED. But is used to make server run the alert logic in OpenDentalService.
-			//	ds.Tables.Add(AlertItems.RefreshCache());
-			//}
-			if (listITypes.Contains(InvalidType.AlertCategories) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.AlertCategories) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AlertCategories.ToString());
-				ds.Tables.Add(AlertCategories.GetTableFromCache(doRefreshServerCache));
+				AlertCategories.RefreshCache();
 			}
-			if (listITypes.Contains(InvalidType.AlertCategoryLinks) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.AlertCategoryLinks) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AlertCategoryLinks.ToString());
-				ds.Tables.Add(AlertCategoryLinks.GetTableFromCache(doRefreshServerCache));
+				AlertCategoryLinks.RefreshCache();
 			}
-			if (listITypes.Contains(InvalidType.AppointmentTypes) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.AppointmentTypes) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AppointmentTypes.ToString());
-				ds.Tables.Add(AppointmentTypes.GetTableFromCache(doRefreshServerCache));
+				AppointmentTypes.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.AutoCodes) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.AutoCodes) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AutoCodes.ToString());
-				ds.Tables.Add(AutoCodes.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(AutoCodeItems.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(AutoCodeConds.GetTableFromCache(doRefreshServerCache));
+				AutoCodes.RefreshCache();
+				AutoCodeItems.RefreshCache();
+				AutoCodeConds.RefreshCache();
 			}
-			if (listITypes.Contains(InvalidType.Automation) || isAll)
+
+			if (refreshAll || invalidTypes.Contains(InvalidType.Automation))
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Automation.ToString());
-				ds.Tables.Add(Automations.GetTableFromCache(doRefreshServerCache));
+				Automations.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.AutoNotes) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.AutoNotes) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AutoNotes.ToString());
-				ds.Tables.Add(AutoNotes.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(AutoNoteControls.GetTableFromCache(doRefreshServerCache));
+				AutoNotes.GetTableFromCache(true);
+				AutoNoteControls.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Carriers) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.Carriers) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Carriers.ToString());
-				ds.Tables.Add(Carriers.GetTableFromCache(doRefreshServerCache));//run on startup, after telephone reformat, after list edit.
+				Carriers.GetTableFromCache(true); // run on startup, after telephone reformat, after list edit.
 			}
-			if (listITypes.Contains(InvalidType.ClaimForms) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.ClaimForms) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ClaimForms.ToString());
-				ds.Tables.Add(ClaimFormItems.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(ClaimForms.GetTableFromCache(doRefreshServerCache));
+				ClaimFormItems.GetTableFromCache(true);
+				ClaimForms.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ClearHouses) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.ClearHouses) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ClearHouses.ToString());
-				ds.Tables.Add(Clearinghouses.GetTableFromCache(doRefreshServerCache));
+				Clearinghouses.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ClinicErxs) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.ClinicErxs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ClinicErxs.ToString());
-				ds.Tables.Add(ClinicErxs.GetTableFromCache(doRefreshServerCache));
+				ClinicErxs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ClinicPrefs) || isAll)
+
+			if (invalidTypes.Contains(InvalidType.ClinicPrefs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ClinicPrefs.ToString());
-				ds.Tables.Add(ClinicPrefs.GetTableFromCache(doRefreshServerCache));
+				ClinicPrefs.GetTableFromCache(true);
 			}
+
 			//InvalidType.Clinics see InvalidType.Providers
-			if (listITypes.Contains(InvalidType.Computers) || isAll)
+			if (invalidTypes.Contains(InvalidType.Computers) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Computers.ToString());
-				ds.Tables.Add(Computers.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(Printers.GetTableFromCache(doRefreshServerCache));
+				Computers.GetTableFromCache(true);
+				Printers.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Defs) || isAll)
+			if (invalidTypes.Contains(InvalidType.Defs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Defs.ToString());
-				ds.Tables.Add(Defs.GetTableFromCache(doRefreshServerCache));
+				Defs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.DentalSchools) || isAll)
+			if (invalidTypes.Contains(InvalidType.DentalSchools) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.DentalSchools.ToString());
-				ds.Tables.Add(SchoolClasses.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(SchoolCourses.GetTableFromCache(doRefreshServerCache));
+				SchoolClasses.GetTableFromCache(true);
+				SchoolCourses.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.DictCustoms) || isAll)
+			if (invalidTypes.Contains(InvalidType.DictCustoms) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.DictCustoms.ToString());
-				ds.Tables.Add(DictCustoms.GetTableFromCache(doRefreshServerCache));
+				DictCustoms.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Diseases) || isAll)
+			if (invalidTypes.Contains(InvalidType.Diseases) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Diseases.ToString());
-				ds.Tables.Add(DiseaseDefs.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(ICD9s.GetTableFromCache(doRefreshServerCache));
+				DiseaseDefs.GetTableFromCache(true);
+				ICD9s.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.DisplayFields) || isAll)
+			if (invalidTypes.Contains(InvalidType.DisplayFields) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.DisplayFields.ToString());
-				ds.Tables.Add(DisplayFields.GetTableFromCache(doRefreshServerCache));
+				DisplayFields.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.DisplayReports) || isAll)
+			if (invalidTypes.Contains(InvalidType.DisplayReports) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.DisplayReports.ToString());
-				ds.Tables.Add(DisplayReports.GetTableFromCache(doRefreshServerCache));
+				DisplayReports.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Ebills) || isAll)
+			if (invalidTypes.Contains(InvalidType.Ebills) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Ebills.ToString());
-				ds.Tables.Add(Ebills.GetTableFromCache(doRefreshServerCache));
+				Ebills.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.EhrCodes))
+			if (invalidTypes.Contains(InvalidType.EhrCodes))
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.EhrCodes.ToString());
 				EhrCodes.UpdateList();//Unusual pattern for an unusual "table".  Not really a table, but a mishmash of hard coded partial code systems that are needed for CQMs.
 			}
-			if (listITypes.Contains(InvalidType.ElectIDs) || isAll)
+			if (invalidTypes.Contains(InvalidType.ElectIDs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ElectIDs.ToString());
-				ds.Tables.Add(ElectIDs.GetTableFromCache(doRefreshServerCache));
+				ElectIDs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Email) || isAll)
+			if (invalidTypes.Contains(InvalidType.Email) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Email.ToString());
-				ds.Tables.Add(EmailAddresses.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(EmailTemplates.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(EmailAutographs.GetTableFromCache(doRefreshServerCache));
+				EmailAddresses.GetTableFromCache(true);
+				EmailTemplates.GetTableFromCache(true);
+				EmailAutographs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Employees) || isAll)
+			if (invalidTypes.Contains(InvalidType.Employees) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Employees.ToString());
-				ds.Tables.Add(Employees.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(PayPeriods.GetTableFromCache(doRefreshServerCache));
+				Employees.GetTableFromCache(true);
+				PayPeriods.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Employers) || isAll)
+			if (invalidTypes.Contains(InvalidType.Employers) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Employers.ToString());
-				ds.Tables.Add(Employers.GetTableFromCache(doRefreshServerCache));
+				Employers.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.FeeScheds) || isAll)
+			if (invalidTypes.Contains(InvalidType.FeeScheds) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.FeeScheds.ToString());
-				ds.Tables.Add(FeeScheds.GetTableFromCache(doRefreshServerCache));
+				FeeScheds.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.HL7Defs) || isAll)
+			if (invalidTypes.Contains(InvalidType.HL7Defs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.HL7Defs.ToString());
-				ds.Tables.Add(HL7Defs.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(HL7DefMessages.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(HL7DefSegments.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(HL7DefFields.GetTableFromCache(doRefreshServerCache));
+				HL7Defs.GetTableFromCache(true);
+				HL7DefMessages.GetTableFromCache(true);
+				HL7DefSegments.GetTableFromCache(true);
+				HL7DefFields.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.InsCats) || isAll)
+			if (invalidTypes.Contains(InvalidType.InsCats) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.InsCats.ToString());
-				ds.Tables.Add(CovCats.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(CovSpans.GetTableFromCache(doRefreshServerCache));
+				CovCats.GetTableFromCache(true);
+				CovSpans.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.InsFilingCodes) || isAll)
+			if (invalidTypes.Contains(InvalidType.InsFilingCodes) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.InsFilingCodes.ToString());
-				ds.Tables.Add(InsFilingCodes.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(InsFilingCodeSubtypes.GetTableFromCache(doRefreshServerCache));
+				InsFilingCodes.GetTableFromCache(true);
+				InsFilingCodeSubtypes.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Languages) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Languages.ToString());
-				if (CultureInfo.CurrentCulture.Name != "en-US")
-				{
-					ds.Tables.Add(Lans.GetTableFromCache(doRefreshServerCache));
-				}
-			}
-			if (listITypes.Contains(InvalidType.Letters) || isAll)
+			if (invalidTypes.Contains(InvalidType.Letters) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Letters.ToString());
-				ds.Tables.Add(Letters.GetTableFromCache(doRefreshServerCache));
+				Letters.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.LetterMerge) || isAll)
+			if (invalidTypes.Contains(InvalidType.LetterMerge) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.LetterMerge.ToString());
-				ds.Tables.Add(LetterMergeFields.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(LetterMerges.GetTableFromCache(doRefreshServerCache));
+				LetterMergeFields.GetTableFromCache(true);
+				LetterMerges.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Medications) || isAll)
+			if (invalidTypes.Contains(InvalidType.Medications) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Medications.ToString());
-				ds.Tables.Add(Medications.GetTableFromCache(doRefreshServerCache));
+				Medications.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Operatories) || isAll)
+			if (invalidTypes.Contains(InvalidType.Operatories) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Operatories.ToString());
-				ds.Tables.Add(Operatories.GetTableFromCache(doRefreshServerCache));
+				Operatories.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.OrthoChartTabs) || isAll)
+			if (invalidTypes.Contains(InvalidType.OrthoChartTabs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.OrthoChartTabs.ToString());
-				ds.Tables.Add(OrthoChartTabs.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(OrthoChartTabLinks.GetTableFromCache(doRefreshServerCache));
+				OrthoChartTabs.GetTableFromCache(true);
+				OrthoChartTabLinks.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.PatFields) || isAll)
+			if (invalidTypes.Contains(InvalidType.PatFields) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.PatFields.ToString());
-				ds.Tables.Add(PatFieldDefs.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(ApptFieldDefs.GetTableFromCache(doRefreshServerCache));
+				PatFieldDefs.GetTableFromCache(true);
+				ApptFieldDefs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Pharmacies) || isAll)
+			if (invalidTypes.Contains(InvalidType.Pharmacies) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Pharmacies.ToString());
-				ds.Tables.Add(Pharmacies.GetTableFromCache(doRefreshServerCache));
+				Pharmacies.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Prefs) || isAll)
+			if (invalidTypes.Contains(InvalidType.Prefs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Prefs.ToString());
-				ds.Tables.Add(Prefs.GetTableFromCache(doRefreshServerCache));
+				Prefs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ProcButtons) || isAll)
+			if (invalidTypes.Contains(InvalidType.ProcButtons) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProcButtons.ToString());
-				ds.Tables.Add(ProcButtons.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(ProcButtonItems.GetTableFromCache(doRefreshServerCache));
+				ProcButtons.GetTableFromCache(true);
+				ProcButtonItems.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ProcMultiVisits) || isAll)
+			if (invalidTypes.Contains(InvalidType.ProcMultiVisits) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProcMultiVisits.ToString());
-				ds.Tables.Add(ProcMultiVisits.GetTableFromCache(doRefreshServerCache));
+				ProcMultiVisits.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ProcCodes) || isAll)
+			if (invalidTypes.Contains(InvalidType.ProcCodes) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProcCodes.ToString());
-				ds.Tables.Add(ProcedureCodes.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(ProcCodeNotes.GetTableFromCache(doRefreshServerCache));
+				ProcedureCodes.GetTableFromCache(true);
+				ProcCodeNotes.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Programs) || isAll)
+			if (invalidTypes.Contains(InvalidType.Programs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Programs.ToString());
-				ds.Tables.Add(Programs.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(ProgramProperties.GetTableFromCache(doRefreshServerCache));
+				Programs.GetTableFromCache(true);
+				ProgramProperties.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ProviderErxs) || isAll)
+			if (invalidTypes.Contains(InvalidType.ProviderErxs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProviderErxs.ToString());
-				ds.Tables.Add(ProviderErxs.GetTableFromCache(doRefreshServerCache));
+				ProviderErxs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ProviderClinicLink) || isAll)
+			if (invalidTypes.Contains(InvalidType.ProviderClinicLink) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProviderClinicLink.ToString());
-				ds.Tables.Add(ProviderClinicLinks.GetTableFromCache(doRefreshServerCache));
+				ProviderClinicLinks.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ProviderIdents) || isAll)
+			if (invalidTypes.Contains(InvalidType.ProviderIdents) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProviderIdents.ToString());
-				ds.Tables.Add(ProviderIdents.GetTableFromCache(doRefreshServerCache));
+				ProviderIdents.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Providers) || isAll)
+			if (invalidTypes.Contains(InvalidType.Providers) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Providers.ToString());
-				ds.Tables.Add(Providers.GetTableFromCache(doRefreshServerCache));
+				Providers.GetTableFromCache(true);
 				//Refresh the clinics as well because InvalidType.Providers has a comment that says "also includes clinics".  Also, there currently isn't an itype for Clinics.
-				ds.Tables.Add(Clinics.GetTableFromCache(doRefreshServerCache));
+				Clinics.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.QuickPaste) || isAll)
+			if (invalidTypes.Contains(InvalidType.QuickPaste) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.QuickPaste.ToString());
-				ds.Tables.Add(QuickPasteNotes.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(QuickPasteCats.GetTableFromCache(doRefreshServerCache));
+				QuickPasteNotes.GetTableFromCache(true);
+				QuickPasteCats.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.RecallTypes) || isAll)
+			if (invalidTypes.Contains(InvalidType.RecallTypes) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.RecallTypes.ToString());
-				ds.Tables.Add(RecallTypes.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(RecallTriggers.GetTableFromCache(doRefreshServerCache));
+				RecallTypes.GetTableFromCache(true);
+				RecallTriggers.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Referral) || isAll)
+			if (invalidTypes.Contains(InvalidType.Referral) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Referral.ToString());
-				ds.Tables.Add(Referrals.GetTableFromCache(doRefreshServerCache));
+				Referrals.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ReplicationServers) || isAll)
+			if (invalidTypes.Contains(InvalidType.ReplicationServers) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ReplicationServers.ToString());
-				ds.Tables.Add(ReplicationServers.GetTableFromCache(doRefreshServerCache));
+				ReplicationServers.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.RequiredFields) || isAll)
+			if (invalidTypes.Contains(InvalidType.RequiredFields) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.RequiredFields.ToString());
-				ds.Tables.Add(RequiredFields.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(RequiredFieldConditions.GetTableFromCache(doRefreshServerCache));
+				RequiredFields.GetTableFromCache(true);
+				RequiredFieldConditions.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Security) || isAll)
+			if (invalidTypes.Contains(InvalidType.Security) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Security.ToString());
 				//There is a chance that some future engineer will introduce a signal that tells another workstation to refresh the users when it shouldn't.
@@ -345,576 +335,172 @@ namespace OpenDentBusiness
 				//This means that the cache will refill itself automatically the next time it is accessed as soon as the boolean flips back to true.
                 Userods.RefreshCache();
 
-				ds.Tables.Add(UserGroups.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(GroupPermissions.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(UserGroupAttaches.GetTableFromCache(doRefreshServerCache));
+				UserGroups.GetTableFromCache(true);
+				GroupPermissions.GetTableFromCache(true);
+				UserGroupAttaches.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Sheets) || isAll)
+			if (invalidTypes.Contains(InvalidType.Sheets) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Sheets.ToString());
-				ds.Tables.Add(SheetDefs.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(SheetFieldDefs.GetTableFromCache(doRefreshServerCache));
+				SheetDefs.GetTableFromCache(true);
+				SheetFieldDefs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.SigMessages) || isAll)
+			if (invalidTypes.Contains(InvalidType.SigMessages) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.SigMessages.ToString());
-				ds.Tables.Add(SigElementDefs.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(SigButDefs.GetTableFromCache(doRefreshServerCache));
+				SigElementDefs.GetTableFromCache(true);
+				SigButDefs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Sites) || isAll)
+			if (invalidTypes.Contains(InvalidType.Sites) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Sites.ToString());
-				ds.Tables.Add(Sites.GetTableFromCache(doRefreshServerCache));
+				Sites.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.SmsBlockPhones) || isAll)
+			if (invalidTypes.Contains(InvalidType.SmsBlockPhones) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.SmsBlockPhones.ToString());
-				ds.Tables.Add(SmsBlockPhones.GetTableFromCache(doRefreshServerCache));
+				SmsBlockPhones.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.SmsPhones) || isAll)
+			if (invalidTypes.Contains(InvalidType.SmsPhones) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.SmsPhones.ToString());
-				ds.Tables.Add(SmsPhones.GetTableFromCache(doRefreshServerCache));
+				SmsPhones.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Sops) || isAll)
+			if (invalidTypes.Contains(InvalidType.Sops) || refreshAll)
 			{  //InvalidType.Sops is currently never used 11/14/2014
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Sops.ToString());
-				ds.Tables.Add(Sops.GetTableFromCache(doRefreshServerCache));
+				Sops.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.StateAbbrs) || isAll)
+			if (invalidTypes.Contains(InvalidType.StateAbbrs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.StateAbbrs.ToString());
-				ds.Tables.Add(StateAbbrs.GetTableFromCache(doRefreshServerCache));
+				StateAbbrs.GetTableFromCache(true);
 			}
 			//InvalidTypes.Tasks not handled here.
-			if (listITypes.Contains(InvalidType.TimeCardRules) || isAll)
+			if (invalidTypes.Contains(InvalidType.TimeCardRules) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.TimeCardRules.ToString());
-				ds.Tables.Add(TimeCardRules.GetTableFromCache(doRefreshServerCache));
+				TimeCardRules.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.ToolButsAndMounts) || isAll)
+			if (invalidTypes.Contains(InvalidType.ToolButsAndMounts) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ToolButsAndMounts.ToString());
-				ds.Tables.Add(ToolButItems.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(MountDefs.GetTableFromCache(doRefreshServerCache));
+				ToolButItems.GetTableFromCache(true);
+				MountDefs.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.UserClinics) || isAll)
+			if (invalidTypes.Contains(InvalidType.UserClinics) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.UserClinics.ToString());
-				ds.Tables.Add(UserClinics.GetTableFromCache(doRefreshServerCache));
+				UserClinics.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.UserQueries) || isAll)
+			if (invalidTypes.Contains(InvalidType.UserQueries) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.UserQueries.ToString());
-				ds.Tables.Add(UserQueries.GetTableFromCache(doRefreshServerCache));
+				UserQueries.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Vaccines) || isAll)
+			if (invalidTypes.Contains(InvalidType.Vaccines) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Vaccines.ToString());
-				ds.Tables.Add(VaccineDefs.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(DrugManufacturers.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(DrugUnits.GetTableFromCache(doRefreshServerCache));
+				VaccineDefs.GetTableFromCache(true);
+				DrugManufacturers.GetTableFromCache(true);
+				DrugUnits.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Views) || isAll)
+			if (invalidTypes.Contains(InvalidType.Views) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Views.ToString());
-				ds.Tables.Add(ApptViews.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(ApptViewItems.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(AppointmentRules.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(ProcApptColors.GetTableFromCache(doRefreshServerCache));
+				ApptViews.GetTableFromCache(true);
+				ApptViewItems.GetTableFromCache(true);
+				AppointmentRules.GetTableFromCache(true);
+				ProcApptColors.GetTableFromCache(true);
 			}
-			if (listITypes.Contains(InvalidType.Wiki) || isAll)
+			if (invalidTypes.Contains(InvalidType.Wiki) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Wiki.ToString());
-				ds.Tables.Add(WikiListHeaderWidths.GetTableFromCache(doRefreshServerCache));
-				ds.Tables.Add(WikiPages.RefreshCache());
+				WikiListHeaderWidths.GetTableFromCache(true);
+				WikiPages.RefreshCache();
 			}
-			if (listITypes.Contains(InvalidType.ZipCodes) || isAll)
+			if (invalidTypes.Contains(InvalidType.ZipCodes) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ZipCodes.ToString());
-				ds.Tables.Add(ZipCodes.GetTableFromCache(doRefreshServerCache));
+				ZipCodes.GetTableFromCache(true);
 			}
+
 			// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.End);
-			return ds;
 		}
 
-		///<summary>only if ClientWeb</summary>
-		public static void FillCache(DataSet ds, params InvalidType[] arrayITypes)
-		{
-			string suffix = Lans.g(nameof(Cache), "Refreshing Caches") + ": ";
-			List<InvalidType> listITypes = arrayITypes.ToList();
-			bool isAll = false;
-			if (listITypes.Contains(InvalidType.AllLocal))
-			{
-				isAll = true;
-			}
-			//All Internal OD Tables that are cached go here
-			if (listITypes.Contains(InvalidType.AccountingAutoPays) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AccountingAutoPays.ToString());
-				AccountingAutoPays.FillCacheFromTable(ds.Tables["AccountingAutoPay"]);
-			}
-			//if(listITypes.Contains(InvalidType.AlertItems) || isAll) {//THIS IS NOT CACHED. But is used to make server run the alert logic in OpenDentalService.
-			//	AlertSubs.FillCache(ds.Tables["AlertItem"]);
-			//}
-			if (listITypes.Contains(InvalidType.AlertCategories) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AlertCategories.ToString());
-				AlertCategories.FillCacheFromTable(ds.Tables["AlertCategory"]);
-			}
-			if (listITypes.Contains(InvalidType.AlertCategoryLinks) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AlertCategoryLinks.ToString());
-				AlertCategoryLinks.FillCacheFromTable(ds.Tables["AlertCategoryLink"]);
-			}
-			if (listITypes.Contains(InvalidType.AppointmentTypes) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AppointmentTypes.ToString());
-				AppointmentTypes.FillCacheFromTable(ds.Tables["AppointmentType"]);
-			}
-			if (listITypes.Contains(InvalidType.AutoCodes) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AutoCodes.ToString());
-				AutoCodes.FillCacheFromTable(ds.Tables["AutoCode"]);
-				AutoCodeItems.FillCacheFromTable(ds.Tables["AutoCodeItem"]);
-				AutoCodeConds.FillCacheFromTable(ds.Tables["AutoCodeCond"]);
-			}
-			if (listITypes.Contains(InvalidType.Automation) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Automation.ToString());
-				Automations.FillCacheFromTable(ds.Tables["Automation"]);
-			}
-			if (listITypes.Contains(InvalidType.AutoNotes) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AutoNotes.ToString());
-				AutoNotes.FillCacheFromTable(ds.Tables["AutoNote"]);
-				AutoNoteControls.FillCacheFromTable(ds.Tables["AutoNoteControl"]);
-			}
-			if (listITypes.Contains(InvalidType.Carriers) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Carriers.ToString());
-				Carriers.FillCacheFromTable(ds.Tables["Carrier"]);//run on startup, after telephone reformat, after list edit.
-			}
-			if (listITypes.Contains(InvalidType.ClaimForms) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ClaimForms.ToString());
-				ClaimFormItems.FillCacheFromTable(ds.Tables["ClaimFormItem"]);
-				ClaimForms.FillCacheFromTable(ds.Tables["ClaimForm"]);
-			}
-			if (listITypes.Contains(InvalidType.ClearHouses) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ClearHouses.ToString());
-				Clearinghouses.FillCacheFromTable(ds.Tables["Clearinghouse"]);
-			}
-			if (listITypes.Contains(InvalidType.ClinicErxs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ClinicErxs.ToString());
-				ClinicErxs.FillCacheFromTable(ds.Tables["ClinicErx"]);
-			}
-			if (listITypes.Contains(InvalidType.ClinicPrefs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ClinicPrefs.ToString());
-				ClinicPrefs.FillCacheFromTable(ds.Tables["ClinicPref"]);
-			}
-			if (listITypes.Contains(InvalidType.Computers) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Computers.ToString());
-				Computers.FillCacheFromTable(ds.Tables["Computer"]);
-				Printers.FillCacheFromTable(ds.Tables["Printer"]);
-			}
-			if (listITypes.Contains(InvalidType.Defs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Defs.ToString());
-				Defs.FillCacheFromTable(ds.Tables["Def"]);
-			}
-			if (listITypes.Contains(InvalidType.DentalSchools) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.DentalSchools.ToString());
-				SchoolClasses.FillCacheFromTable(ds.Tables["SchoolClass"]);
-				SchoolCourses.FillCacheFromTable(ds.Tables["SchoolCourse"]);
-			}
-			if (listITypes.Contains(InvalidType.DictCustoms) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.DictCustoms.ToString());
-				DictCustoms.FillCacheFromTable(ds.Tables["DictCustom"]);
-			}
-			if (listITypes.Contains(InvalidType.Diseases) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Diseases.ToString());
-				DiseaseDefs.FillCacheFromTable(ds.Tables["DiseaseDef"]);
-				ICD9s.FillCacheFromTable(ds.Tables["ICD9"]);
-			}
-			if (listITypes.Contains(InvalidType.DisplayFields) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.DisplayFields.ToString());
-				DisplayFields.FillCacheFromTable(ds.Tables["DisplayField"]);
-			}
-			if (listITypes.Contains(InvalidType.DisplayReports) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.DisplayReports.ToString());
-				DisplayReports.FillCacheFromTable(ds.Tables["DisplayReport"]);
-			}
-			if (listITypes.Contains(InvalidType.Ebills) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Ebills.ToString());
-				Ebills.FillCacheFromTable(ds.Tables["Ebill"]);
-			}
-			if (listITypes.Contains(InvalidType.ElectIDs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ElectIDs.ToString());
-				ElectIDs.FillCacheFromTable(ds.Tables["ElectID"]);
-			}
-			if (listITypes.Contains(InvalidType.Email) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Email.ToString());
-				EmailAddresses.FillCacheFromTable(ds.Tables["EmailAddress"]);
-				EmailTemplates.FillCacheFromTable(ds.Tables["EmailTemplate"]);
-			}
-			if (listITypes.Contains(InvalidType.Employees) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Employees.ToString());
-				Employees.FillCacheFromTable(ds.Tables["Employee"]);
-				PayPeriods.FillCacheFromTable(ds.Tables["PayPeriod"]);
-			}
-			if (listITypes.Contains(InvalidType.Employers) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Employers.ToString());
-				Employers.FillCacheFromTable(ds.Tables["Employer"]);
-			}
-			if (listITypes.Contains(InvalidType.FeeScheds) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.FeeScheds.ToString());
-				FeeScheds.FillCacheFromTable(ds.Tables["FeeSched"]);
-			}
-			if (listITypes.Contains(InvalidType.HL7Defs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.HL7Defs.ToString());
-				HL7Defs.FillCacheFromTable(ds.Tables["HL7Def"]);
-				HL7DefMessages.FillCacheFromTable(ds.Tables["HL7DefMessage"]);
-				HL7DefSegments.FillCacheFromTable(ds.Tables["HL7DefSegment"]);
-				HL7DefFields.FillCacheFromTable(ds.Tables["HL7DefField"]);
-			}
-			if (listITypes.Contains(InvalidType.InsCats) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.InsCats.ToString());
-				CovCats.FillCacheFromTable(ds.Tables["CovCat"]);
-				CovSpans.FillCacheFromTable(ds.Tables["CovSpan"]);
-			}
-			if (listITypes.Contains(InvalidType.InsFilingCodes) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.InsFilingCodes.ToString());
-				InsFilingCodes.FillCacheFromTable(ds.Tables["InsFilingCode"]);
-				InsFilingCodeSubtypes.FillCacheFromTable(ds.Tables["InsFilingCodeSubtype"]);
-			}
-			if (listITypes.Contains(InvalidType.Languages) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Languages.ToString());
-				Lans.FillCacheFromTable(ds.Tables["Language"]);
-			}
-			if (listITypes.Contains(InvalidType.Letters) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Letters.ToString());
-				Letters.FillCacheFromTable(ds.Tables["Letter"]);
-			}
-			if (listITypes.Contains(InvalidType.LetterMerge) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.LetterMerge.ToString());
-				LetterMergeFields.FillCacheFromTable(ds.Tables["LetterMergeField"]);
-				LetterMerges.FillCacheFromTable(ds.Tables["LetterMerge"]);
-			}
-			if (listITypes.Contains(InvalidType.Medications) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Medications.ToString());
-				Medications.FillCacheFromTable(ds.Tables["Medication"]);
-			}
-			if (listITypes.Contains(InvalidType.Operatories) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Operatories.ToString());
-				Operatories.FillCacheFromTable(ds.Tables["Operatory"]);
-			}
-			if (listITypes.Contains(InvalidType.OrthoChartTabs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.OrthoChartTabs.ToString());
-				OrthoChartTabs.FillCacheFromTable(ds.Tables["OrthoChartTab"]);
-				OrthoChartTabLinks.FillCacheFromTable(ds.Tables["OrthoChartTabLink"]);
-			}
-			if (listITypes.Contains(InvalidType.PatFields) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.PatFields.ToString());
-				PatFieldDefs.FillCacheFromTable(ds.Tables["PatFieldDef"]);
-				ApptFieldDefs.FillCacheFromTable(ds.Tables["ApptFieldDef"]);
-			}
-			if (listITypes.Contains(InvalidType.Pharmacies) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Pharmacies.ToString());
-				Pharmacies.FillCacheFromTable(ds.Tables["Pharmacy"]);
-			}
-			if (listITypes.Contains(InvalidType.Prefs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Prefs.ToString());
-				Prefs.FillCacheFromTable(ds.Tables["Pref"]);
-			}
-			if (listITypes.Contains(InvalidType.ProcButtons) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProcButtons.ToString());
-				ProcButtons.FillCacheFromTable(ds.Tables["ProcButton"]);
-				ProcButtonItems.FillCacheFromTable(ds.Tables["ProcButtonItem"]);
-			}
-			if (listITypes.Contains(InvalidType.ProcCodes) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProcCodes.ToString());
-				ProcedureCodes.FillCacheFromTable(ds.Tables["ProcedureCode"]);
-				ProcCodeNotes.FillCacheFromTable(ds.Tables["ProcCodeNote"]);
-			}
-			if (listITypes.Contains(InvalidType.ProcMultiVisits) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProcMultiVisits.ToString());
-				ProcMultiVisits.FillCacheFromTable(ds.Tables["ProcMultiVisit"]);
-			}
-			if (listITypes.Contains(InvalidType.Programs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Programs.ToString());
-				Programs.FillCacheFromTable(ds.Tables["Program"]);
-				ProgramProperties.FillCacheFromTable(ds.Tables["ProgramProperty"]);
-			}
-			if (listITypes.Contains(InvalidType.ProviderErxs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProviderErxs.ToString());
-				ProviderErxs.FillCacheFromTable(ds.Tables["ProviderErx"]);
-			}
-			if (listITypes.Contains(InvalidType.ProviderClinicLink) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProviderClinicLink.ToString());
-				ProviderClinicLinks.FillCacheFromTable(ds.Tables["ProviderClinicLink"]);
-			}
-			if (listITypes.Contains(InvalidType.ProviderIdents) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ProviderIdents.ToString());
-				ProviderIdents.FillCacheFromTable(ds.Tables["ProviderIdent"]);
-			}
-			if (listITypes.Contains(InvalidType.Providers) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Providers.ToString());
-				Providers.FillCacheFromTable(ds.Tables["Provider"]);
-				//Refresh the clinics as well because InvalidType.Providers has a comment that says "also includes clinics".  Also, there currently isn't an itype for Clinics.
-				Clinics.FillCacheFromTable(ds.Tables["clinic"]);//Case must match the table name in Clinics.RefrechCache().
-			}
-			if (listITypes.Contains(InvalidType.QuickPaste) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.QuickPaste.ToString());
-				QuickPasteNotes.FillCacheFromTable(ds.Tables["QuickPasteNote"]);
-				QuickPasteCats.FillCacheFromTable(ds.Tables["QuickPasteCat"]);
-			}
-			if (listITypes.Contains(InvalidType.RecallTypes) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.RecallTypes.ToString());
-				RecallTypes.FillCacheFromTable(ds.Tables["RecallType"]);
-				RecallTriggers.FillCacheFromTable(ds.Tables["RecallTrigger"]);
-			}
-			if (listITypes.Contains(InvalidType.Referral) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Referral.ToString());
-				Referrals.FillCacheFromTable(ds.Tables["Referral"]);
-			}
-			if (listITypes.Contains(InvalidType.ReplicationServers) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ReplicationServers.ToString());
-				ReplicationServers.FillCacheFromTable(ds.Tables["ReplicationServer"]);
-			}
-			//if(itypes.Contains(InvalidType.RequiredFields) || isAll) {
-			//	RequiredFields.FillCache(ds.Tables["RequiredField"]);
-			//}
-			if (listITypes.Contains(InvalidType.Security) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Security.ToString());
-				//There is a chance that some future engineer will introduce a signal that tells another workstation to refresh the users when it shouldn't.
-				//It is completely safe to skip over filling the user cache when IsCacheAllowed is false because the setter for that boolean nulls the cache.
-				//This means that as soon as the boolean flips back to true the cache will refill itself automatically the next time it is accessed.
-                Userods.RefreshCache();
-
-				//Always refresh the user groups,group permissions, and group attaches.  There is no harm in caching this data.
-				UserGroups.FillCacheFromTable(ds.Tables["UserGroup"]);
-				GroupPermissions.FillCacheFromTable(ds.Tables["GroupPermission"]);
-				UserGroupAttaches.FillCacheFromTable(ds.Tables["UserGroupAttach"]);
-			}
-			if (listITypes.Contains(InvalidType.Sheets) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Sheets.ToString());
-				SheetDefs.FillCacheFromTable(ds.Tables["SheetDef"]);
-				SheetFieldDefs.FillCacheFromTable(ds.Tables["SheetFieldDef"]);
-			}
-			if (listITypes.Contains(InvalidType.SigMessages) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.SigMessages.ToString());
-				SigElementDefs.FillCacheFromTable(ds.Tables["SigElementDef"]);
-				SigButDefs.FillCacheFromTable(ds.Tables["SigButDef"]);
-			}
-			if (listITypes.Contains(InvalidType.Sites) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Sites.ToString());
-				Sites.FillCacheFromTable(ds.Tables["Site"]);
-			}
-			if (listITypes.Contains(InvalidType.SmsBlockPhones) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.SmsBlockPhones.ToString());
-				SmsBlockPhones.FillCacheFromTable(ds.Tables["SmsBlockPhone"]);
-			}
-			if (listITypes.Contains(InvalidType.SmsPhones) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.SmsPhones.ToString());
-				SmsPhones.FillCacheFromTable(ds.Tables["SmsPhone"]);
-			}
-			if (listITypes.Contains(InvalidType.Sops) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Sops.ToString());
-				Sops.FillCacheFromTable(ds.Tables["Sop"]);
-			}
-			if (listITypes.Contains(InvalidType.StateAbbrs) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.StateAbbrs.ToString());
-				StateAbbrs.FillCacheFromTable(ds.Tables["StateAbbr"]);
-			}
-			if (listITypes.Contains(InvalidType.TimeCardRules) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.TimeCardRules.ToString());
-				TimeCardRules.FillCacheFromTable(ds.Tables["TimeCardRule"]);
-			}
-			//InvalidTypes.Tasks not handled here.
-			if (listITypes.Contains(InvalidType.ToolButsAndMounts) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ToolButsAndMounts.ToString());
-				ToolButItems.FillCacheFromTable(ds.Tables["ToolButItem"]);
-				MountDefs.FillCacheFromTable(ds.Tables["MountDef"]);
-			}
-			if (listITypes.Contains(InvalidType.UserClinics) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.UserClinics.ToString());
-				UserClinics.FillCacheFromTable(ds.Tables["UserClinic"]);
-			}
-			if (listITypes.Contains(InvalidType.UserQueries) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.UserQueries.ToString());
-				UserQueries.FillCacheFromTable(ds.Tables["UserQuery"]);
-			}
-			if (listITypes.Contains(InvalidType.Vaccines) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Vaccines.ToString());
-				VaccineDefs.FillCacheFromTable(ds.Tables["VaccineDef"]);
-				DrugManufacturers.FillCacheFromTable(ds.Tables["DrugManufacturer"]);
-				DrugUnits.FillCacheFromTable(ds.Tables["DrugUnit"]);
-			}
-			if (listITypes.Contains(InvalidType.Views) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Views.ToString());
-				ApptViews.FillCacheFromTable(ds.Tables["ApptView"]);
-				ApptViewItems.FillCacheFromTable(ds.Tables["ApptViewItem"]);
-				AppointmentRules.FillCacheFromTable(ds.Tables["AppointmentRule"]);
-				ProcApptColors.FillCacheFromTable(ds.Tables["ProcApptColor"]);
-			}
-			if (listITypes.Contains(InvalidType.Wiki) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Wiki.ToString());
-				WikiListHeaderWidths.FillCacheFromTable(ds.Tables["WikiListHeaderWidth"]);
-				WikiPages.FillCache(ds.Tables["WikiPage"]);
-			}
-			if (listITypes.Contains(InvalidType.ZipCodes) || isAll)
-			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ZipCodes.ToString());
-				ZipCodes.FillCacheFromTable(ds.Tables["ZipCode"]);
-			}
-		}
-
-		///<summary>Returns a list of all invalid types that are used for the cache.</summary>
+		/// <summary>
+		/// Returns a list of all invalid types that are used for the cache.
+		/// </summary>
 		public static List<InvalidType> GetAllCachedInvalidTypes()
 		{
-			List<InvalidType> listInvalidTypes = new List<InvalidType>();
-			//Below is a list of all invalid types in the same order the appear in the InvalidType enum.  
-			//Comment out any rows that are not used for cache table refreshes.  See Cache.GetCacheDs() for more info.
-			//listInvalidTypes.Add(InvalidType.None);  //No need to send a signal
-			//listInvalidTypes.Add(InvalidType.Date);  //Not used with any other flags, not cached
-			//listInvalidTypes.Add(InvalidType.AllLocal);  //Deprecated
-			//listInvalidTypes.Add(InvalidType.Task);  //Not used with any other flags, not cached
-			listInvalidTypes.Add(InvalidType.ProcCodes);
-			listInvalidTypes.Add(InvalidType.Prefs);
-			listInvalidTypes.Add(InvalidType.Views);
-			listInvalidTypes.Add(InvalidType.AutoCodes);
-			listInvalidTypes.Add(InvalidType.Carriers);
-			listInvalidTypes.Add(InvalidType.ClearHouses);
-			listInvalidTypes.Add(InvalidType.Computers);
-			listInvalidTypes.Add(InvalidType.InsCats);
-			listInvalidTypes.Add(InvalidType.Employees);
-			//listInvalidTypes.Add(InvalidType.StartupOld);  //Deprecated
-			listInvalidTypes.Add(InvalidType.Defs);
-			listInvalidTypes.Add(InvalidType.Email);
-			//listInvalidTypes.Add(InvalidType.Fees);//deprecated
-			listInvalidTypes.Add(InvalidType.Letters);
-			listInvalidTypes.Add(InvalidType.QuickPaste);
-			listInvalidTypes.Add(InvalidType.Security);
-			listInvalidTypes.Add(InvalidType.Programs);
-			listInvalidTypes.Add(InvalidType.ToolButsAndMounts);
-			listInvalidTypes.Add(InvalidType.Providers);
-			listInvalidTypes.Add(InvalidType.ClaimForms);
-			listInvalidTypes.Add(InvalidType.ZipCodes);
-			listInvalidTypes.Add(InvalidType.LetterMerge);
-			listInvalidTypes.Add(InvalidType.DentalSchools);
-			listInvalidTypes.Add(InvalidType.Operatories);
-			//listInvalidTypes.Add(InvalidType.TaskPopup);  //Not needed, not cached
-			listInvalidTypes.Add(InvalidType.Sites);
-			listInvalidTypes.Add(InvalidType.Pharmacies);
-			listInvalidTypes.Add(InvalidType.Sheets);
-			listInvalidTypes.Add(InvalidType.RecallTypes);
-			listInvalidTypes.Add(InvalidType.FeeScheds);
-			//listInvalidTypes.Add(InvalidType.PhoneNumbers);  //Internal only, not cached
-			//listInvalidTypes.Add(InvalidType.Signals);  //Deprecated
-			listInvalidTypes.Add(InvalidType.DisplayFields);
-			listInvalidTypes.Add(InvalidType.PatFields);
-			listInvalidTypes.Add(InvalidType.AccountingAutoPays);
-			listInvalidTypes.Add(InvalidType.ProcButtons);
-			listInvalidTypes.Add(InvalidType.Diseases);
-			listInvalidTypes.Add(InvalidType.Languages);
-			listInvalidTypes.Add(InvalidType.AutoNotes);
-			listInvalidTypes.Add(InvalidType.ElectIDs);
-			listInvalidTypes.Add(InvalidType.Employers);
-			listInvalidTypes.Add(InvalidType.ProviderIdents);
-			//listInvalidTypes.Add(InvalidType.ShutDownNow);  //Do not want to send shutdown signal
-			listInvalidTypes.Add(InvalidType.InsFilingCodes);
-			listInvalidTypes.Add(InvalidType.ReplicationServers);
-			listInvalidTypes.Add(InvalidType.Automation);
-			//listInvalidTypes.Add(InvalidType.PhoneAsteriskReload);  //Internal only, not cached
-			listInvalidTypes.Add(InvalidType.TimeCardRules);
-			listInvalidTypes.Add(InvalidType.Vaccines);
-			listInvalidTypes.Add(InvalidType.HL7Defs);
-			listInvalidTypes.Add(InvalidType.DictCustoms);
-			listInvalidTypes.Add(InvalidType.Wiki);
-			listInvalidTypes.Add(InvalidType.Sops);
-			listInvalidTypes.Add(InvalidType.EhrCodes);
-			listInvalidTypes.Add(InvalidType.AppointmentTypes);
-			listInvalidTypes.Add(InvalidType.Medications);
-			//listInvalidTypes.Add(InvalidType.SmsTextMsgReceivedUnreadCount);  //Special InvalidType that would break things if we sent, not cached
-			listInvalidTypes.Add(InvalidType.ProviderErxs);
-			//listInvalidTypes.Add(InvalidType.Jobs);  //Internal only, not needed
-			//listInvalidTypes.Add(InvalidType.JobRoles);  //Internal only, not needed
-			listInvalidTypes.Add(InvalidType.StateAbbrs);
-			listInvalidTypes.Add(InvalidType.RequiredFields);
-			listInvalidTypes.Add(InvalidType.Ebills);
-			listInvalidTypes.Add(InvalidType.UserClinics);
-			listInvalidTypes.Add(InvalidType.OrthoChartTabs);
-			listInvalidTypes.Add(InvalidType.SigMessages);
-			//listInvalidTypes.Add(InvalidType.AlertItems);//THIS IS NOT CACHED. But is used to make server run the alert logic in OpenDentalService.
-			listInvalidTypes.Add(InvalidType.ClinicPrefs);
-			listInvalidTypes.Add(InvalidType.SmsBlockPhones);
-			listInvalidTypes.Add(InvalidType.ClinicErxs);
-			listInvalidTypes.Add(InvalidType.DisplayReports);
-			listInvalidTypes.Add(InvalidType.UserQueries);
-			listInvalidTypes.Add(InvalidType.SmsPhones);
-			//listInvalidTypes.Add(InvalidType.WebChatSessions);
-			//listInvalidTypes.Add(InvalidType.TaskList);
-			//listInvalidTypes.Add(InvalidType.TaskAuthor);
-			//listInvalidTypes.Add(InvalidType.TaskPatient);
-			listInvalidTypes.Add(InvalidType.Referral);
-			listInvalidTypes.Add(InvalidType.ProcMultiVisits);
-			listInvalidTypes.Add(InvalidType.ProviderClinicLink);
-			return listInvalidTypes;
+            return new List<InvalidType>
+            {
+                InvalidType.ProcCodes,
+                InvalidType.Prefs,
+                InvalidType.Views,
+                InvalidType.AutoCodes,
+                InvalidType.Carriers,
+                InvalidType.ClearHouses,
+                InvalidType.Computers,
+                InvalidType.InsCats,
+                InvalidType.Employees,
+                InvalidType.Defs,
+                InvalidType.Email,
+                InvalidType.Letters,
+                InvalidType.QuickPaste,
+                InvalidType.Security,
+                InvalidType.Programs,
+                InvalidType.ToolButsAndMounts,
+                InvalidType.Providers,
+                InvalidType.ClaimForms,
+                InvalidType.ZipCodes,
+                InvalidType.LetterMerge,
+                InvalidType.DentalSchools,
+                InvalidType.Operatories,
+                InvalidType.Sites,
+                InvalidType.Pharmacies,
+                InvalidType.Sheets,
+                InvalidType.RecallTypes,
+                InvalidType.FeeScheds,
+                InvalidType.DisplayFields,
+                InvalidType.PatFields,
+                InvalidType.AccountingAutoPays,
+                InvalidType.ProcButtons,
+                InvalidType.Diseases,
+                InvalidType.Languages,
+                InvalidType.AutoNotes,
+                InvalidType.ElectIDs,
+                InvalidType.Employers,
+                InvalidType.ProviderIdents,
+                InvalidType.InsFilingCodes,
+                InvalidType.ReplicationServers,
+                InvalidType.Automation,
+                InvalidType.TimeCardRules,
+                InvalidType.Vaccines,
+                InvalidType.HL7Defs,
+                InvalidType.DictCustoms,
+                InvalidType.Wiki,
+                InvalidType.Sops,
+                InvalidType.EhrCodes,
+                InvalidType.AppointmentTypes,
+                InvalidType.Medications,
+                InvalidType.ProviderErxs,
+                InvalidType.StateAbbrs,
+                InvalidType.RequiredFields,
+                InvalidType.Ebills,
+                InvalidType.UserClinics,
+                InvalidType.OrthoChartTabs,
+                InvalidType.SigMessages,
+                InvalidType.ClinicPrefs,
+                InvalidType.SmsBlockPhones,
+                InvalidType.ClinicErxs,
+                InvalidType.DisplayReports,
+                InvalidType.UserQueries,
+                InvalidType.SmsPhones,
+                InvalidType.Referral,
+                InvalidType.ProcMultiVisits,
+                InvalidType.ProviderClinicLink
+            };
 		}
 	}
 }

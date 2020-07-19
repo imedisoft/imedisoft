@@ -1,119 +1,142 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Cache;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class AlertCategoryLinks{
-		#region Cache Pattern
-		//This region can be eliminated if this is not a table type with cached data.
-		//If leaving this region in place, be sure to add GetTableFromCache and FillCacheFromTable to the Cache.cs file with all the other Cache types.
-		//Also, consider making an invalid type for this class in Cache.GetAllCachedInvalidTypes() if needed.
-
-		private class AlertCategoryLinkCache : CacheListAbs<AlertCategoryLink> {
-			protected override List<AlertCategoryLink> GetCacheFromDb() {
-				string command="SELECT * FROM alertcategorylink";
-				return Crud.AlertCategoryLinkCrud.SelectMany(command);
-			}
-			protected override List<AlertCategoryLink> TableToList(DataTable table) {
-				return Crud.AlertCategoryLinkCrud.TableToList(table);
-			}
-			protected override AlertCategoryLink Copy(AlertCategoryLink alertCategoryLink) {
-				return alertCategoryLink.Copy();
-			}
-			protected override DataTable ListToTable(List<AlertCategoryLink> listAlertCategoryLinks) {
-				return Crud.AlertCategoryLinkCrud.ListToTable(listAlertCategoryLinks,"AlertCategoryLink");
-			}
-			protected override void FillCacheIfNeeded() {
-				AlertCategoryLinks.GetTableFromCache(false);
-			}
+namespace OpenDentBusiness
+{
+    public class AlertCategoryLinks
+	{
+		[CacheGroup(nameof(InvalidType.AlertCategoryLinks))]
+		private class AlertCategoryLinkCache : ListCache<AlertCategoryLink>
+		{
+			protected override IEnumerable<AlertCategoryLink> Load()
+				=> Crud.AlertCategoryLinkCrud.SelectMany("SELECT * FROM alertcategorylink");
 		}
 
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static AlertCategoryLinkCache _alertCategoryLinkCache=new AlertCategoryLinkCache();
+		private static readonly AlertCategoryLinkCache cache = new AlertCategoryLinkCache();
 
-		public static List<AlertCategoryLink> GetWhere(Predicate<AlertCategoryLink> match,bool isShort=false) {
-			return _alertCategoryLinkCache.GetWhere(match,isShort);
-		}
+		public static List<AlertCategoryLink> GetWhere(Predicate<AlertCategoryLink> match) 
+			=> cache.Find(match);
 
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table) {
-			_alertCategoryLinkCache.FillCacheFromTable(table);
-		}
+		public static void RefreshCache() 
+			=> cache.Refresh();
 
-		///<summary>Returns the cache in the form of a DataTable. Always refreshes the ClientWeb's cache.</summary>
-		///<param name="doRefreshCache">If true, will refresh the cache if RemotingRole is ClientDirect or ServerWeb.</param> 
-		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			
-			return _alertCategoryLinkCache.GetTableFromCache(doRefreshCache);
-		}
-		#endregion Cache Pattern
+		public static AlertCategoryLink GetOne(long alertCategoryLinkNum) 
+			=> Crud.AlertCategoryLinkCrud.SelectOne(alertCategoryLinkNum);
 
-		#region Get Methods
-		
-		///<summary>Gets one AlertCategoryLink from the db.</summary>
-		public static AlertCategoryLink GetOne(long alertCategoryLinkNum){
-			
-			return Crud.AlertCategoryLinkCrud.SelectOne(alertCategoryLinkNum);
-		}
-
-		public static List<AlertCategoryLink> GetForCategory(long alertCategoryNum) {
-			
-			if(alertCategoryNum==0) {
+		public static List<AlertCategoryLink> GetForCategory(long alertCategoryNum)
+		{
+			if (alertCategoryNum == 0)
+			{
 				return new List<AlertCategoryLink>();
 			}
-			string command="SELECT * FROM alertcategorylink WHERE AlertCategoryNum = "+POut.Long(alertCategoryNum);
-			return Crud.AlertCategoryLinkCrud.SelectMany(command);
-		}
-		#endregion
-		#region Modification Methods
-			#region Insert
-		///<summary></summary>
-		public static long Insert(AlertCategoryLink alertCategoryLink){
-			
-			return Crud.AlertCategoryLinkCrud.Insert(alertCategoryLink);
-		}
-			#endregion
-			#region Update
-		///<summary></summary>
-		public static void Update(AlertCategoryLink alertCategoryLink){
-			
-			Crud.AlertCategoryLinkCrud.Update(alertCategoryLink);
-		}
-			#endregion
-			#region Delete
-		///<summary></summary>
-		public static void Delete(long alertCategoryLinkNum) {
-			
-			Crud.AlertCategoryLinkCrud.Delete(alertCategoryLinkNum);
+
+			return Crud.AlertCategoryLinkCrud.SelectMany(
+				"SELECT * FROM alertcategorylink WHERE AlertCategoryNum = " + alertCategoryNum).ToList();
 		}
 
-		public static void DeleteForCategory(long alertCategoryNum) {
-			
-			if(alertCategoryNum==0) {
-				return;
+		public static long Insert(AlertCategoryLink alertCategoryLink) 
+			=> Crud.AlertCategoryLinkCrud.Insert(alertCategoryLink);
+
+		public static void Update(AlertCategoryLink alertCategoryLink) 
+			=> Crud.AlertCategoryLinkCrud.Update(alertCategoryLink);
+
+		public static void Delete(long alertCategoryLinkNum) 
+			=> Crud.AlertCategoryLinkCrud.Delete(alertCategoryLinkNum);
+
+		public static void DeleteForCategory(long alertCategoryNum)
+			=> Database.ExecuteNonQuery("DELETE FROM alertcategorylink WHERE AlertCategoryNum = " + alertCategoryNum);
+
+		/// <summary>
+		/// Inserts, updates, or deletes db rows to match listNew.
+		/// No need to pass in userNum, it's set before remoting role check and passed to the server if necessary.
+		/// Doesn't create ApptComm items, but will delete them.  If you use Sync, you must create new AlertCategoryLink items.
+		/// </summary>
+		public static bool Sync(List<AlertCategoryLink> listNew, List<AlertCategoryLink> listDB)
+		{
+			//Adding items to lists changes the order of operation. All inserts are completed first, then updates, then deletes.
+			List<AlertCategoryLink> listIns = new List<AlertCategoryLink>();
+			List<AlertCategoryLink> listUpdNew = new List<AlertCategoryLink>();
+			List<AlertCategoryLink> listUpdDB = new List<AlertCategoryLink>();
+			List<AlertCategoryLink> listDel = new List<AlertCategoryLink>();
+			listNew.Sort((AlertCategoryLink x, AlertCategoryLink y) => { return x.AlertCategoryLinkNum.CompareTo(y.AlertCategoryLinkNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((AlertCategoryLink x, AlertCategoryLink y) => { return x.AlertCategoryLinkNum.CompareTo(y.AlertCategoryLinkNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			int idxNew = 0;
+			int idxDB = 0;
+			int rowsUpdatedCount = 0;
+			AlertCategoryLink fieldNew;
+			AlertCategoryLink fieldDB;
+			//Because both lists have been sorted using the same criteria, we can now walk each list to determine which list contians the next element.  The next element is determined by Primary Key.
+			//If the New list contains the next item it will be inserted.  If the DB contains the next item, it will be deleted.  If both lists contain the next item, the item will be updated.
+			while (idxNew < listNew.Count || idxDB < listDB.Count)
+			{
+				fieldNew = null;
+				if (idxNew < listNew.Count)
+				{
+					fieldNew = listNew[idxNew];
+				}
+				fieldDB = null;
+				if (idxDB < listDB.Count)
+				{
+					fieldDB = listDB[idxDB];
+				}
+				//begin compare
+				if (fieldNew != null && fieldDB == null)
+				{//listNew has more items, listDB does not.
+					listIns.Add(fieldNew);
+					idxNew++;
+					continue;
+				}
+				else if (fieldNew == null && fieldDB != null)
+				{//listDB has more items, listNew does not.
+					listDel.Add(fieldDB);
+					idxDB++;
+					continue;
+				}
+				else if (fieldNew.AlertCategoryLinkNum < fieldDB.AlertCategoryLinkNum)
+				{//newPK less than dbPK, newItem is 'next'
+					listIns.Add(fieldNew);
+					idxNew++;
+					continue;
+				}
+				else if (fieldNew.AlertCategoryLinkNum > fieldDB.AlertCategoryLinkNum)
+				{//dbPK less than newPK, dbItem is 'next'
+					listDel.Add(fieldDB);
+					idxDB++;
+					continue;
+				}
+				//Both lists contain the 'next' item, update required
+				listUpdNew.Add(fieldNew);
+				listUpdDB.Add(fieldDB);
+				idxNew++;
+				idxDB++;
 			}
-			string command="DELETE FROM alertcategorylink "
-				+"WHERE AlertCategoryNum = "+POut.Long(alertCategoryNum);
-			Database.ExecuteNonQuery(command);
+			//Commit changes to DB
+			for (int i = 0; i < listIns.Count; i++)
+			{
+				Insert(listIns[i]);
+			}
+			for (int i = 0; i < listUpdNew.Count; i++)
+			{
+				if (Crud.AlertCategoryLinkCrud.Update(listUpdNew[i], listUpdDB[i]))
+				{
+					rowsUpdatedCount++;
+				}
+			}
+			for (int i = 0; i < listDel.Count; i++)
+			{
+				Delete(listDel[i].AlertCategoryLinkNum);
+			}
+			if (rowsUpdatedCount > 0 || listIns.Count > 0 || listDel.Count > 0)
+			{
+				return true;
+			}
+			return false;
 		}
-			#endregion
-		#endregion
-		#region Misc Methods
-		
-		///<summary>Inserts, updates, or deletes db rows to match listNew.  No need to pass in userNum, it's set before remoting role check and passed to
-		///the server if necessary.  Doesn't create ApptComm items, but will delete them.  If you use Sync, you must create new AlertCategoryLink items.</summary>
-		public static bool Sync(List<AlertCategoryLink> listNew,List<AlertCategoryLink> listOld) {
-			
-			return Crud.AlertCategoryLinkCrud.Sync(listNew,listOld);
-		}
-
-		#endregion
-
-
-
 	}
 }

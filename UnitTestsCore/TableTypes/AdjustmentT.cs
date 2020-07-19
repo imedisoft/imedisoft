@@ -29,7 +29,7 @@ namespace UnitTestsCore {
 		}
 
 		public static void InsertMany(List<Adjustment> listAdjustments) {
-			OpenDentBusiness.Crud.AdjustmentCrud.InsertMany(listAdjustments);
+			// TODO: OpenDentBusiness.Crud.AdjustmentCrud.InsertMany(listAdjustments);
 		}
 	}
 }

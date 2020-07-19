@@ -128,26 +128,21 @@ namespace OpenDentBusiness
 
 		#endregion
 
-		#region CachePattern
-
-        private class UserodsCache : CacheBase<Userod>
+        private class UserodsCache : ListCache<Userod>
         {
             protected override IEnumerable<Userod> Load()
-                => Crud.UserodCrud.SelectMany("SELECT * FROM userod ORDER BY UserName");
+                => UserodCrud.SelectMany("SELECT * FROM userod ORDER BY UserName");
         }
 
         private static readonly UserodsCache cache = new UserodsCache();
 
-        public static List<Userod> RefreshCache() => cache.Refresh();
+        public static void RefreshCache() 
+			=> cache.Refresh();
 
-        public static IEnumerable<Userod> All => cache.All;
+        public static List<Userod> All => cache.GetAll();
 
-        public static Userod GetFirstOrDefault(Predicate<Userod> predicate)
-        {
-            return cache.FirstOrDefault(predicate);
-        }
-
-        #endregion
+        public static Userod GetFirstOrDefault(Predicate<Userod> predicate) 
+			=> cache.FirstOrDefault(predicate);
 
 		public static List<Userod> GetAll(bool isShort = false)
         {

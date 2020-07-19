@@ -93,7 +93,11 @@
     <Compile Include="Annotations\IgnoreAttribute.cs" />
     <Compile Include="Annotations\PrimaryKeyAttribute.cs" />
     <Compile Include="Annotations\TableAttribute.cs" />
-    <Compile Include="Cache\CacheBase.cs" />
+    <Compile Include="Cache\ListCache.cs" />
+    <Compile Include="Cache\CacheGroupAttribute.cs" />
+    <Compile Include="Cache\CacheManager.cs" />
+    <Compile Include="Cache\DictionaryCache.cs" />
+    <Compile Include="Cache\ICache.cs" />
     <Compile Include="DataConnection.cs" />
     <Compile Include="DataConnectionEvent.cs" />
     <Compile Include="DataConnectionEventArgs.cs" />

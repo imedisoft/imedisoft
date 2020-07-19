@@ -1,119 +1,52 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Cache;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 
-namespace OpenDentBusiness{
-  ///<summary></summary>
-	public class AutoCodeConds{
-		#region Get Methods
-		#endregion
-
-		#region Modification Methods
-
-		#region Insert
-		#endregion
-
-		#region Update
-		#endregion
-
-		#region Delete
-		#endregion
-
-		#endregion
-
-		#region Misc Methods
-		#endregion
-
-		#region Cache Pattern
-
-		private class AutoCodeCondCache : CacheListAbs<AutoCodeCond> {
-			protected override List<AutoCodeCond> GetCacheFromDb() {
-				string command="SELECT * from autocodecond ORDER BY Cond";
-				return Crud.AutoCodeCondCrud.SelectMany(command);
-			}
-			protected override List<AutoCodeCond> TableToList(DataTable table) {
-				return Crud.AutoCodeCondCrud.TableToList(table);
-			}
-			protected override AutoCodeCond Copy(AutoCodeCond AutoCodeCond) {
-				return AutoCodeCond.Copy();
-			}
-			protected override DataTable ListToTable(List<AutoCodeCond> listAutoCodeConds) {
-				return Crud.AutoCodeCondCrud.ListToTable(listAutoCodeConds,"AutoCodeCond");
-			}
-			protected override void FillCacheIfNeeded() {
-				AutoCodeConds.GetTableFromCache(false);
-			}
-		}
-		
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static AutoCodeCondCache _autoCodeCondCache=new AutoCodeCondCache();
-
-		public static List<AutoCodeCond> GetDeepCopy(bool isShort=false) {
-			return _autoCodeCondCache.GetDeepCopy(isShort);
+namespace OpenDentBusiness
+{
+	public class AutoCodeConds
+	{
+		[CacheGroup(nameof(InvalidType.AutoCodes))]
+		private class AutoCodeCondCache : ListCache<AutoCodeCond>
+		{
+			protected override IEnumerable<AutoCodeCond> Load()
+				=> Crud.AutoCodeCondCrud.SelectMany("SELECT * from autocodecond ORDER BY Cond");
 		}
 
-		public static List<AutoCodeCond> GetWhere(Predicate<AutoCodeCond> match,bool isShort=false) {
-			return _autoCodeCondCache.GetWhere(match,isShort);
-		}
+		private static readonly AutoCodeCondCache cache = new AutoCodeCondCache();
 
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache() {
-			return GetTableFromCache(true);
-		}
+		public static List<AutoCodeCond> GetDeepCopy()
+			=> cache.GetAll();
 
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table) {
-			_autoCodeCondCache.FillCacheFromTable(table);
-		}
+		public static List<AutoCodeCond> GetWhere(Predicate<AutoCodeCond> match)
+			=> cache.Find(match);
 
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			
-			return _autoCodeCondCache.GetTableFromCache(doRefreshCache);
-		}
+		public static void RefreshCache()
+			=> cache.Refresh();
 
-		#endregion Cache Pattern
+		public static long Insert(AutoCodeCond Cur)
+			=> Crud.AutoCodeCondCrud.Insert(Cur);
 
-		///<summary></summary>
-		public static long Insert(AutoCodeCond Cur){
-			
-			return Crud.AutoCodeCondCrud.Insert(Cur);
-		}
+		public static void Update(AutoCodeCond Cur)
+			=> Crud.AutoCodeCondCrud.Update(Cur);
 
-		///<summary></summary>
-		public static void Update(AutoCodeCond Cur){
-			
-			Crud.AutoCodeCondCrud.Update(Cur);
-		}
+		public static void Delete(AutoCodeCond Cur)
+			=> Database.ExecuteNonQuery("DELETE from autocodecond WHERE autocodecondnum = " + Cur.AutoCodeCondNum);
 
-		///<summary></summary>
-		public static void Delete(AutoCodeCond Cur){
-			
-			string command="DELETE from autocodecond WHERE autocodecondnum = '"+POut.Long(Cur.AutoCodeCondNum)+"'";
-			Database.ExecuteNonQuery(command);
-		}
+		public static void DeleteForItemNum(long itemNum)
+			=> Database.ExecuteNonQuery("DELETE from autocodecond WHERE autocodeitemnum = " + itemNum);
 
-		///<summary></summary>
-		public static void DeleteForItemNum(long itemNum) {
-			
-			string command= "DELETE from autocodecond WHERE autocodeitemnum = '"
-				+POut.Long(itemNum)+"'";//AutoCodeItems.Cur.AutoCodeItemNum)
-			Database.ExecuteNonQuery(command);
-		}
+		public static List<AutoCodeCond> GetListForItem(long autoCodeItemNum)
+			=> GetWhere(x => x.AutoCodeItemNum == autoCodeItemNum);
 
-		///<summary></summary>
-		public static List<AutoCodeCond> GetListForItem(long autoCodeItemNum) {
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.AutoCodeItemNum==autoCodeItemNum);
-		}
-
-		///<summary></summary>
-		public static bool IsSurf(AutoCondition myAutoCondition){
-			//No need to check RemotingRole; no call to db.
-			switch(myAutoCondition){
+		public static bool IsSurf(AutoCondition myAutoCondition)
+		{
+			switch (myAutoCondition)
+			{
 				case AutoCondition.One_Surf:
 				case AutoCondition.Two_Surf:
 				case AutoCondition.Three_Surf:
@@ -125,28 +58,33 @@ namespace OpenDentBusiness{
 			}
 		}
 
-		///<summary></summary>
-		public static bool ConditionIsMet(AutoCondition myAutoCondition, string toothNum,string surf,bool isAdditional,bool willBeMissing,int age){
-			//No need to check RemotingRole; no call to db.
-			switch(myAutoCondition){
+		public static bool ConditionIsMet(AutoCondition myAutoCondition, string toothNum, string surf, bool isAdditional, bool willBeMissing, int age)
+		{
+			switch (myAutoCondition)
+			{
 				case AutoCondition.Anterior:
 					return Tooth.IsAnterior(toothNum);
+
 				case AutoCondition.Posterior:
 					return Tooth.IsPosterior(toothNum);
+
 				case AutoCondition.Premolar:
 					return Tooth.IsPreMolar(toothNum);
+
 				case AutoCondition.Molar:
 					return Tooth.IsMolar(toothNum);
+
 				case AutoCondition.One_Surf:
-					return surf.Length==1;
+					return surf.Length == 1;
 				case AutoCondition.Two_Surf:
-					return surf.Length==2;
+					return surf.Length == 2;
 				case AutoCondition.Three_Surf:
-					return surf.Length==3;
+					return surf.Length == 3;
 				case AutoCondition.Four_Surf:
-					return surf.Length==4;
+					return surf.Length == 4;
 				case AutoCondition.Five_Surf:
-					return surf.Length==5;
+					return surf.Length == 5;
+
 				case AutoCondition.First:
 					return !isAdditional;
 				case AutoCondition.EachAdditional:
@@ -163,26 +101,12 @@ namespace OpenDentBusiness{
 					return willBeMissing;
 				case AutoCondition.Retainer:
 					return !willBeMissing;
-				case AutoCondition.AgeOver18:
-					return age>18;
-				default:
-					return false;
+
+                case AutoCondition.AgeOver18:
+					return age > 18;
 			}
+
+			return false;
 		}
 	}
-
-	
-
-	
-
-
 }
-
-
-
-
-
-
-
-
-

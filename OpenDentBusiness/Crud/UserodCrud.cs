@@ -69,10 +69,10 @@ namespace OpenDentBusiness.Crud
 		/// </summary>
 		public static long Insert(Userod userod)
 			=> userod.Id = Database.ExecuteInsert(
-				"INSERT INTO `Userod` " +
-				"(`UserName`, `Password`, `UserGroupNum`, `EmployeeNum`, `ClinicNum`, `ProvNum`, `IsHidden`, `TaskListInBox`, `AnesthProvType`, `DefaultHidePopups`, `PasswordIsStrong`, `ClinicIsRestricted`, `InboxHidePopups`, `UserNumCEMT`, `DateTFail`, `FailedAttempts`, `DomainUser`, `IsPasswordResetRequired`, `MobileWebPin`, `MobileWebPinFailedAttempts`, `DateTLastLogin`) " +
-				"VALUES (" +
-					"@UserName, @Password, @UserGroupNum, @EmployeeNum, @ClinicNum, @ProvNum, @IsHidden, @TaskListInBox, @AnesthProvType, @DefaultHidePopups, @PasswordIsStrong, @ClinicIsRestricted, @InboxHidePopups, @UserNumCEMT, @DateTFail, @FailedAttempts, @DomainUser, @IsPasswordResetRequired, @MobileWebPin, @MobileWebPinFailedAttempts, @DateTLastLogin" +
+				"INSERT INTO `Userod` " + 
+				"(`UserName`, `Password`, `UserGroupNum`, `EmployeeNum`, `ClinicNum`, `ProvNum`, `IsHidden`, `TaskListInBox`, `AnesthProvType`, `DefaultHidePopups`, `PasswordIsStrong`, `ClinicIsRestricted`, `InboxHidePopups`, `UserNumCEMT`, `DateTFail`, `FailedAttempts`, `DomainUser`, `IsPasswordResetRequired`, `MobileWebPin`, `MobileWebPinFailedAttempts`, `DateTLastLogin`) " + 
+				"VALUES (" + 
+					"@UserName, @Password, @UserGroupNum, @EmployeeNum, @ClinicNum, @ProvNum, @IsHidden, @TaskListInBox, @AnesthProvType, @DefaultHidePopups, @PasswordIsStrong, @ClinicIsRestricted, @InboxHidePopups, @UserNumCEMT, @DateTFail, @FailedAttempts, @DomainUser, @IsPasswordResetRequired, @MobileWebPin, @MobileWebPinFailedAttempts, @DateTLastLogin" + 
 				")");
 
 		/// <summary>
@@ -80,28 +80,28 @@ namespace OpenDentBusiness.Crud
 		/// </summary>
 		public static void Update(Userod userod)
 			=> Database.ExecuteNonQuery(
-				"UPDATE `Userod` SET " +
-					"`UserName` = @UserName, " +
-					"`Password` = @Password, " +
-					"`UserGroupNum` = @UserGroupNum, " +
-					"`EmployeeNum` = @EmployeeNum, " +
-					"`ClinicNum` = @ClinicNum, " +
-					"`ProvNum` = @ProvNum, " +
-					"`IsHidden` = @IsHidden, " +
-					"`TaskListInBox` = @TaskListInBox, " +
-					"`AnesthProvType` = @AnesthProvType, " +
-					"`DefaultHidePopups` = @DefaultHidePopups, " +
-					"`PasswordIsStrong` = @PasswordIsStrong, " +
-					"`ClinicIsRestricted` = @ClinicIsRestricted, " +
-					"`InboxHidePopups` = @InboxHidePopups, " +
-					"`UserNumCEMT` = @UserNumCEMT, " +
-					"`DateTFail` = @DateTFail, " +
-					"`FailedAttempts` = @FailedAttempts, " +
-					"`DomainUser` = @DomainUser, " +
-					"`IsPasswordResetRequired` = @IsPasswordResetRequired, " +
-					"`MobileWebPin` = @MobileWebPin, " +
-					"`MobileWebPinFailedAttempts` = @MobileWebPinFailedAttempts, " +
-					"`DateTLastLogin` = @DateTLastLogin " +
+				"UPDATE `Userod` SET " + 
+					"`UserName` = @UserName, " + 
+					"`Password` = @Password, " + 
+					"`UserGroupNum` = @UserGroupNum, " + 
+					"`EmployeeNum` = @EmployeeNum, " + 
+					"`ClinicNum` = @ClinicNum, " + 
+					"`ProvNum` = @ProvNum, " + 
+					"`IsHidden` = @IsHidden, " + 
+					"`TaskListInBox` = @TaskListInBox, " + 
+					"`AnesthProvType` = @AnesthProvType, " + 
+					"`DefaultHidePopups` = @DefaultHidePopups, " + 
+					"`PasswordIsStrong` = @PasswordIsStrong, " + 
+					"`ClinicIsRestricted` = @ClinicIsRestricted, " + 
+					"`InboxHidePopups` = @InboxHidePopups, " + 
+					"`UserNumCEMT` = @UserNumCEMT, " + 
+					"`DateTFail` = @DateTFail, " + 
+					"`FailedAttempts` = @FailedAttempts, " + 
+					"`DomainUser` = @DomainUser, " + 
+					"`IsPasswordResetRequired` = @IsPasswordResetRequired, " + 
+					"`MobileWebPin` = @MobileWebPin, " + 
+					"`MobileWebPinFailedAttempts` = @MobileWebPinFailedAttempts, " + 
+					"`DateTLastLogin` = @DateTLastLogin " + 
 				"WHERE `UserNum` = @UserNum",
 					new MySqlParameter("UserNum", userod.Id),
 					new MySqlParameter("UserName", userod.UserName ?? ""),
@@ -264,8 +264,8 @@ namespace OpenDentBusiness.Crud
 
 			parameters.Add(new MySqlParameter("UserNum", userodNew.Id));
 
-			Database.ExecuteNonQuery("UPDATE `Userod` " +
-				"SET " + string.Join(", ", updates) + " " +
+			Database.ExecuteNonQuery("UPDATE `Userod` " + 
+				"SET " + string.Join(", ", updates) + " " + 
 				"WHERE `UserNum` = @UserNum",
 					parameters.ToArray());
 		}

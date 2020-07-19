@@ -68,7 +68,7 @@ namespace OpenDentBusiness{
 		public static DataTable RefreshCache() {
 			//No need to check RemotingRole; Calls GetTableRemotelyIfNeeded().
 			string command="SELECT * FROM wikipage WHERE PageTitle='_Master' AND IsDraft=0";//There is currently no way for a master page to be a draft.
-			DataTable table=Cache.GetTableRemotelyIfNeeded(MethodBase.GetCurrentMethod(),command);
+			DataTable table= Database.ExecuteDataTable(command);
 			table.TableName="WikiPage";
 			FillCache(table);
 			return table;

@@ -802,7 +802,7 @@ namespace OpenDentBusiness
 				command+=@" UNION 
 					SELECT * FROM adjustment WHERE ProcNum IN("+procNums+")";
 			}
-			List<Adjustment> listAdjustments=Crud.AdjustmentCrud.SelectMany(command);
+			List<Adjustment> listAdjustments=Crud.AdjustmentCrud.SelectMany(command).ToList();
 			//This will be set to all rows out of convenience. It will only be accessed from row-0.
 			decimal adjustmentAmt=listAdjustments.Sum(x => (decimal)x.AdjAmt);
 			List<Action> actions=new List<Action>();

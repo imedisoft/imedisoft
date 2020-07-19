@@ -1,17 +1,16 @@
 using Imedisoft.Data;
+using OpenDentBusiness.Crud;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
 namespace OpenDentBusiness
 {
-	///<summary></summary>
 	public class AllergyDefs
 	{
-
-
 		///<summary>Gets one AllergyDef from the db.</summary>
 		public static AllergyDef GetOne(long allergyDefNum)
 		{
@@ -36,7 +35,7 @@ namespace OpenDentBusiness
 		public static AllergyDef GetByDescription(string allergyDescription)
 		{
 			string command = "SELECT * FROM allergydef WHERE Description='" + POut.String(allergyDescription) + "'";
-			List<AllergyDef> retVal = Crud.AllergyDefCrud.SelectMany(command);
+			List<AllergyDef> retVal = Crud.AllergyDefCrud.SelectMany(command).ToList();
 			if (retVal.Count > 0)
 			{
 				return retVal[0];
@@ -54,13 +53,6 @@ namespace OpenDentBusiness
 		public static void Update(AllergyDef allergyDef)
 		{
 			Crud.AllergyDefCrud.Update(allergyDef);
-		}
-
-		///<summary></summary>
-		public static List<AllergyDef> TableToList(DataTable table)
-		{
-			//No need to check RemotingRole; no call to db.
-			return Crud.AllergyDefCrud.TableToList(table);
 		}
 
 		///<summary></summary>
@@ -83,7 +75,7 @@ namespace OpenDentBusiness
 			{
 				command = "SELECT * FROM allergydef ORDER BY Description";
 			}
-			return Crud.AllergyDefCrud.SelectMany(command);
+			return Crud.AllergyDefCrud.SelectMany(command).ToList();
 		}
 
 		///<summary>Returns true if the allergy def is in use and false if not.</summary>
@@ -118,11 +110,13 @@ namespace OpenDentBusiness
 			return allergyDefNums;
 		}
 
-		///<summary>Used along with GetChangedSinceAllergyDefNums</summary>
+		/// <summary>
+		/// Used along with GetChangedSinceAllergyDefNums
+		/// </summary>
 		public static List<AllergyDef> GetMultAllergyDefs(List<long> allergyDefNums)
 		{
 			string strAllergyDefNums = "";
-			DataTable table;
+
 			if (allergyDefNums.Count > 0)
 			{
 				for (int i = 0; i < allergyDefNums.Count; i++)
@@ -134,15 +128,11 @@ namespace OpenDentBusiness
 					strAllergyDefNums += "AllergyDefNum='" + allergyDefNums[i].ToString() + "' ";
 				}
 				string command = "SELECT * FROM allergydef WHERE " + strAllergyDefNums;
-				table = Database.ExecuteDataTable(command);
+
+				return AllergyDefCrud.SelectMany(command).ToList();
 			}
-			else
-			{
-				table = new DataTable();
-			}
-			AllergyDef[] multAllergyDefs = Crud.AllergyDefCrud.TableToList(table).ToArray();
-			List<AllergyDef> allergyDefList = new List<AllergyDef>(multAllergyDefs);
-			return allergyDefList;
+
+			return new List<AllergyDef>();
 		}
 
 		///<summary>Gets all the AllergyDefs for the given patient, including those linked to an Allergy such that StatisIsActive!=0 if 
@@ -156,7 +146,8 @@ namespace OpenDentBusiness
 			{
 				command += "AND allergy.StatusIsActive!=0";
 			}
-			return Crud.AllergyDefCrud.TableToList(Database.ExecuteDataTable(command));
+
+			return AllergyDefCrud.SelectMany(command).ToList();
 		}
 
 		///<summary>Do not call from outside of ehr.  Returns the text for a SnomedAllergy Enum as it should appear in human readable form for a CCD.</summary>

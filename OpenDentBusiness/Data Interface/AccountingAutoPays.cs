@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Cache;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,92 +9,37 @@ using System.Windows.Forms;
 
 namespace OpenDentBusiness
 {
-	///<summary></summary>
-	public class AccountingAutoPays
+    public class AccountingAutoPays
 	{
-		#region Get Methods
-		#endregion
-
-		#region Modification Methods
-
-		#region Insert
-		#endregion
-
-		#region Update
-		#endregion
-
-		#region Delete
-		#endregion
-
-		#endregion
-
-		#region Misc Methods
-		#endregion
-
 		#region Cache Pattern
 
-		private class AccountingAutoPayCache : CacheListAbs<AccountingAutoPay>
+		[CacheGroup(nameof(InvalidType.AccountingAutoPays))]
+		private class AccountingAutoPayCache : ListCache<AccountingAutoPay>
 		{
-			protected override AccountingAutoPay Copy(AccountingAutoPay accountingAutoPay)
-			{
-				return accountingAutoPay.Clone();
-			}
-
-			protected override void FillCacheIfNeeded()
-			{
-				AccountingAutoPays.GetTableFromCache(false);
-			}
-
-			protected override List<AccountingAutoPay> GetCacheFromDb()
-			{
-				string command = "SELECT * FROM accountingautopay";
-				return Crud.AccountingAutoPayCrud.SelectMany(command);
-			}
-
-			protected override DataTable ListToTable(List<AccountingAutoPay> listAccountingAutoPays)
-			{
-				return Crud.AccountingAutoPayCrud.ListToTable(listAccountingAutoPays, "AccountingAutoPay");
-			}
-
-			protected override List<AccountingAutoPay> TableToList(DataTable table)
-			{
-				return Crud.AccountingAutoPayCrud.TableToList(table);
-			}
+			protected override IEnumerable<AccountingAutoPay> Load()
+				=> Crud.AccountingAutoPayCrud.SelectMany("SELECT * FROM accountingautopay");
 		}
 
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static AccountingAutoPayCache _accountingAutoPayCache = new AccountingAutoPayCache();
+		private static readonly AccountingAutoPayCache cache = new AccountingAutoPayCache();
 
-		public static List<AccountingAutoPay> GetDeepCopy(bool isShort = false)
+		public static List<AccountingAutoPay> GetDeepCopy()
 		{
-			return _accountingAutoPayCache.GetDeepCopy(isShort);
+			return cache.GetAll();
 		}
 
-		public static AccountingAutoPay GetFirstOrDefault(Func<AccountingAutoPay, bool> match, bool isShort = false)
+		public static AccountingAutoPay GetFirstOrDefault(Predicate<AccountingAutoPay> match)
 		{
-			return _accountingAutoPayCache.GetFirstOrDefault(match, isShort);
+			return cache.FirstOrDefault(match);
 		}
 
-		public static int GetCount(bool isShort = false)
+		public static int GetCount()
 		{
-			return _accountingAutoPayCache.GetCount(isShort);
+			return cache.Count();
 		}
 
-		///<summary>Gets a list of all AccountingAutoPays.</summary>
-		public static DataTable RefreshCache()
+		public static void RefreshCache()
 		{
-			return GetTableFromCache(true);
-		}
-
-		public static void FillCacheFromTable(DataTable table)
-		{
-			_accountingAutoPayCache.FillCacheFromTable(table);
-		}
-
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache)
-		{
-			return _accountingAutoPayCache.GetTableFromCache(doRefreshCache);
+			cache.Refresh();
 		}
 
 		#endregion Cache Pattern

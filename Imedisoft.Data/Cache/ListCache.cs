@@ -4,9 +4,14 @@ using System.Linq;
 
 namespace Imedisoft.Data.Cache
 {
-    public abstract class CacheBase<T>
+    public abstract class ListCache<TValue> : ICache<TValue>
     {
-		private readonly List<T> items = new List<T>();
+		private readonly List<TValue> items = new List<TValue>();
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ListCache{TValue}"/> class.
+		/// </summary>
+		public ListCache() => CacheManager.Register(this);
 
 		/// <summary>
 		/// Gets a value indicating whether the cache is empty.
@@ -18,21 +23,20 @@ namespace Imedisoft.Data.Cache
 		/// </summary>
 		/// <param name="predicate">A function to test each cache entry for a condition.</param>
 		/// <returns>All cache entires matching the condition.</returns>
-		public IEnumerable<T> Find(Predicate<T> predicate)
+		public List<TValue> Find(Predicate<TValue> predicate)
         {
-			if (predicate == null || IsEmpty) yield break;
-			
-			lock (items)
+			var result = new List<TValue>();
+
+			if (predicate != null && !IsEmpty)
 			{
-				foreach (var item in items)
+				lock (items)
 				{
-					if (predicate(item))
-					{
-						yield return item;
-					}
+					result.AddRange(items.Where(item => predicate(item)));
 				}
 			}
-        }
+
+			return result;
+		}
 
 		/// <summary>
 		/// Returns the number of cache entries.
@@ -45,7 +49,7 @@ namespace Imedisoft.Data.Cache
 		/// </summary>
 		/// <param name="predicate">A function to test each cache entry for a condition.</param>
 		/// <returns>The number of cache entries.</returns>
-		public int Count(Predicate<T> predicate)
+		public int Count(Predicate<TValue> predicate)
         {
 			if (predicate == null || IsEmpty) return 0;
 
@@ -69,7 +73,7 @@ namespace Imedisoft.Data.Cache
 		/// Refreshes the contents of the cache by reloaded data from the database and returns the new entries as a list.
 		/// </summary>
 		/// <returns>A list containing the refreshed entries.</returns>
-		public List<T> Refresh()
+		public void Refresh()
         {
 			var entries = Load().ToList();
 
@@ -82,26 +86,22 @@ namespace Imedisoft.Data.Cache
 					items.AddRange(entries);
 				}
 			}
-
-			return entries;
         }
 
 		/// <summary>
 		/// Loads cache content from the database.
 		/// </summary>
-		protected abstract IEnumerable<T> Load();
+		protected abstract IEnumerable<TValue> Load();
 
 		/// <summary>
-		/// Enumerates all cache entries.
+		/// Gets a shallow copy of all cache entries.
 		/// </summary>
-		public IEnumerable<T> All
+		/// <returns>All cache entries.</returns>
+		public List<TValue> GetAll()
 		{
-			get
+			lock (items)
 			{
-				lock (items)
-				{
-					foreach (var item in items) yield return item;
-				}
+				return new List<TValue>(items);
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace Imedisoft.Data.Cache
 		/// </summary>
 		/// <param name="predicate">A function to test each cache entry for a condition.</param>
 		/// <returns>The first entry that matched the given condition.</returns>
-		public T FirstOrDefault(Predicate<T> predicate)
+		public TValue FirstOrDefault(Predicate<TValue> predicate)
         {
 			if (predicate == null) return default;
 

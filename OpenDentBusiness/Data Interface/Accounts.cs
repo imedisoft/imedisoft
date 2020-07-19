@@ -14,9 +14,7 @@ namespace OpenDentBusiness
 {
     public class Accounts
 	{
-		#region Cache Pattern
-
-		private class AccountCache : CacheBase<Account>
+		private class AccountCache : ListCache<Account>
 		{
 			protected override IEnumerable<Account> Load()
 				=> Crud.AccountCrud.SelectMany("SELECT * FROM account ORDER BY AcctType, Description");
@@ -24,27 +22,25 @@ namespace OpenDentBusiness
 
 		private static readonly AccountCache cache = new AccountCache();
 
-		public static List<Account> RefreshCache() => cache.Refresh();
+		public static void RefreshCache() 
+			=> cache.Refresh();
 
-		public static IEnumerable<Account> All => cache.All;
+		public static List<Account> All 
+			=> cache.GetAll();
 
-		public static Account GetFirstOrDefault(Predicate<Account> predicate)
-		{
-			return cache.FirstOrDefault(predicate);
-		}
+		public static Account GetFirstOrDefault(Predicate<Account> predicate) 
+			=> cache.FirstOrDefault(predicate);
 
-		#endregion Cache Pattern
+		public static long Insert(Account acct) 
+			=> Crud.AccountCrud.Insert(acct);
 
-		public static long Insert(Account acct)
-		{
-			return Crud.AccountCrud.Insert(acct);
-		}
-
-		///<summary>Does not update existing journal splits. To that use the other overload for this method.</summary>
-		public static void Update(Account acct)
-		{
-			Crud.AccountCrud.Update(acct);
-		}
+		/// <summary>
+		/// Does not update existing journal splits.
+		/// To that use the other overload for this method.
+		/// </summary>
+		public static void Update(Account acct) 
+			=> Crud.AccountCrud.Update(acct);
+		
 
 		///<summary>Also updates existing journal entry splits linked to this account that have not been locked.</summary>
 		public static void Update(Account acct, Account acctOld)
