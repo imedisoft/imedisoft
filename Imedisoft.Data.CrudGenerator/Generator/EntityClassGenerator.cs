@@ -267,7 +267,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
             if (table.PrimaryKey.Type == typeof(long) || table.PrimaryKey.Type == typeof(int))
             {
                 stringBuilder.AppendLine($"		public static long Insert({table.Type.Name} {param})");
-                stringBuilder.AppendLine($"			=> {param}.{table.PrimaryKey.Name} = Database.ExecuteInsert(");
+                stringBuilder.AppendLine($"			=> {param}.{table.PrimaryKey.FieldName} = Database.ExecuteInsert(");
                 stringBuilder.AppendLine($"				{queryBuilder});");
                 stringBuilder.AppendLine();
             }
