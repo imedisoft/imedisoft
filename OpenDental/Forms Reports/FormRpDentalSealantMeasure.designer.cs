@@ -89,7 +89,6 @@ namespace OpenDental{
 
 		private OpenDental.UI.Button butOK;
 		private OpenDental.UI.Button butCancel;
-		private ValidNumber validNumber1;
 		private System.Windows.Forms.Label label1;
 		private ValidNumber textYear;
 	}

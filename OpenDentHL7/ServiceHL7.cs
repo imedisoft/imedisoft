@@ -489,7 +489,7 @@ namespace OpenDentHL7
 							numBytes = fileStream.Read(fileBytes, 0, fileBytes.Length);
 						}
 						string msgArchiveFilePath = "";
-						string fileName = "";
+						//string fileName = "";
 						if (isMedLab && msgArchivePath != "")
 						{
 							if (IsVerboseLogging)

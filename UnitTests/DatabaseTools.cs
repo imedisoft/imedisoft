@@ -42,7 +42,7 @@ namespace UnitTests
 		///<summary>Manually adds the few CDCREC codes necessary for the HL7 unit tests.</summary>
 		private static void AddCdcrecCodes() {
 			string command="SELECT COUNT(*) FROM cdcrec";
-			if(Database.ExecuteScalar(command)=="0") {
+			if(Database.ExecuteString(command)=="0") {
 				Cdcrecs.Insert(new Cdcrec() {
 					CdcrecCode="2106-3",
 					HeirarchicalCode="R5",
