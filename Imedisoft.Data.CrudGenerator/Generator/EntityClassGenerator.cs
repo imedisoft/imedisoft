@@ -299,7 +299,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 
             var queryBuilder = new StringBuilder();
 			queryBuilder.AppendLine($"\"UPDATE `{table.Name}` SET \" + ");
-			queryBuilder.AppendLine($"					{string.Join(", \" + \r\n					", updates)}\" + ");
+			queryBuilder.AppendLine($"					{string.Join(", \" + \r\n					", updates)} \" + ");
 			queryBuilder.Append($"				\"WHERE `{table.PrimaryKey.Name}` = {ParameterName(table.PrimaryKey)}\"");
 
 			stringBuilder.AppendLine(@"		/// <summary>");
