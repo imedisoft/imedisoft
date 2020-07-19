@@ -540,7 +540,7 @@ namespace OpenDental.UI {
 				digitalSignature+=provCur.GetLongDesc();
 			}
 			else if(curUser!=null) {
-				digitalSignature+=curUser.UserName+" (UserNum:"+curUser.UserNum+")";
+				digitalSignature+=curUser.UserName+" (UserNum:"+curUser.Id+")";
 			}
 			else {
 				//should never happen

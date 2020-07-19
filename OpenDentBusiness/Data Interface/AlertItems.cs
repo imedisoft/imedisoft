@@ -117,7 +117,7 @@ namespace OpenDentBusiness{
 			foreach(KeyValuePair<long,long> kvp in dictRecievedCount) {
 				List<Userod> listUsers=Providers.GetAttachedUsers(kvp.Key);
 				//Go through each usernum and create/update their alert item.
-				foreach(long usernum in listUsers.Select(x => x.UserNum)) {
+				foreach(long usernum in listUsers.Select(x => x.Id)) {
 					AlertItem alertForUser=listOldAlerts.FirstOrDefault(x => x.UserNum==usernum);
 					//If an alert doesn't exist for the user, we'll create it.
 					if(alertForUser==null) {
@@ -230,7 +230,7 @@ namespace OpenDentBusiness{
 			long curUserNum = 0;
 			if (Security.CurUser != null)
 			{
-				curUserNum = Security.CurUser.UserNum;
+				curUserNum = Security.CurUser.Id;
 			}
 			string command = "";
 			command = "SELECT * FROM alertitem "

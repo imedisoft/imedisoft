@@ -40,12 +40,12 @@ namespace OpenDental {
 			if(includeProv) {
 				retVal=Userods.GetWhere(
 					x => !x.IsHidden && listProviders.Exists(y => y.ProvNum==x.ProvNum) //Find users that have a link to the NPI that has been passed in
-						&& !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.UserNum) //Also, these users shouldn't already have a DoseSpot User ID.
+						&& !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.Id) //Also, these users shouldn't already have a DoseSpot User ID.
 					);
 			}
 			else {
 				retVal=Userods.GetWhere(
-					(x => !x.IsHidden && !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.UserNum)) //All users that don't already have a DoseSpot User ID.
+					(x => !x.IsHidden && !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.Id)) //All users that don't already have a DoseSpot User ID.
 					);//Only consider non-hidden users.
 			}
 			return retVal;
@@ -58,7 +58,7 @@ namespace OpenDental {
 			foreach(Userod userCur in _listUsersInComboBox) {
 				ODBoxItem<Userod> boxItemCur=new ODBoxItem<Userod>(userCur.UserName,userCur);
 				comboDoseUsers.Items.Add(boxItemCur);
-				if(userCur.UserNum==_selectedUserNum) {
+				if(userCur.Id==_selectedUserNum) {
 					comboDoseUsers.SelectedIndex=comboDoseUsers.Items.Count-1;//Select The item that was just added if it is the selected num.
 				}
 			}
@@ -103,7 +103,7 @@ namespace OpenDental {
 				_selectedUserNum=0;
 				return;
 			}
-			_selectedUserNum=_listUsersInComboBox[comboDoseUsers.SelectedIndex-1].UserNum;
+			_selectedUserNum=_listUsersInComboBox[comboDoseUsers.SelectedIndex-1].Id;
 		}
 	}
 }

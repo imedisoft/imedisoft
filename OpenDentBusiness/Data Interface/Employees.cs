@@ -290,14 +290,14 @@ namespace OpenDentBusiness{
 						listEmpsUnassigned.Add(empCur);
 						continue;
 					}
-					if(!dictUserClinics.ContainsKey(userCur.UserNum)) {//User is restricted to a clinic(s).  Compare to clinicNum
-						dictUserClinics[userCur.UserNum]=UserClinics.GetForUser(userCur.UserNum);//run only once per user
+					if(!dictUserClinics.ContainsKey(userCur.Id)) {//User is restricted to a clinic(s).  Compare to clinicNum
+						dictUserClinics[userCur.Id]=UserClinics.GetForUser(userCur.Id);//run only once per user
 					}
-					if(dictUserClinics[userCur.UserNum].Count==0) {//unrestricted user, employee should show in all lists
+					if(dictUserClinics[userCur.Id].Count==0) {//unrestricted user, employee should show in all lists
 						listEmpsUnassigned.Add(empCur);
 						listEmpsWithClinic.Add(empCur);
 					}
-					else if(dictUserClinics[userCur.UserNum].Any(x => x.ClinicNum==clinicNum)) {//user restricted to this clinic
+					else if(dictUserClinics[userCur.Id].Any(x => x.ClinicNum==clinicNum)) {//user restricted to this clinic
 						listEmpsWithClinic.Add(empCur);
 					}
 				}

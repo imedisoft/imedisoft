@@ -53,7 +53,7 @@ namespace UnitTests.AlertItems_Tests {
 			}
 			AlertItems_CreateAlertsForWebmailMethodCall();
 			//Count the total # of alertitem entries, not what the description is.
-			string alertCount=Database.ExecuteString("SELECT COUNT(*) FROM alertitem WHERE UserNum IN ("+string.Join(",",listTestUsers.Select(x => POut.Long(x.UserNum)))
+			string alertCount=Database.ExecuteString("SELECT COUNT(*) FROM alertitem WHERE UserNum IN ("+string.Join(",",listTestUsers.Select(x => POut.Long(x.Id)))
 				+") AND Type="+POut.Int((int)AlertType.WebMailRecieved));
 			Assert.AreEqual("5",alertCount);
 			//
@@ -68,7 +68,7 @@ namespace UnitTests.AlertItems_Tests {
 			//This section tests adding more unread emails, and changing the description of the alertitem
 			Userod selectedUser=listTestUsers.First();
 			AlertItems_CreateAlertsForWebmailMethodCall();
-			alertCount=Database.ExecuteString("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
+			alertCount=Database.ExecuteString("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.Id);
 			Assert.AreEqual("5",alertCount);
 			//
 			//Add 3 more unread emails.
@@ -76,7 +76,7 @@ namespace UnitTests.AlertItems_Tests {
 			EmailMessageT.CreateWebMail(selectedUser.ProvNum,examplePatnum);
 			EmailMessageT.CreateWebMail(selectedUser.ProvNum,examplePatnum);
 			AlertItems_CreateAlertsForWebmailMethodCall();
-			alertCount=Database.ExecuteString("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
+			alertCount=Database.ExecuteString("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.Id);
 			Assert.AreEqual("8",alertCount);
 			//
 			//Mark 2 of the emails as read, to decrease the amount of unread emails
@@ -84,7 +84,7 @@ namespace UnitTests.AlertItems_Tests {
 				" WHERE SentOrReceived="+POut.Int((int)EmailSentOrReceived.WebMailReceived)+" AND ProvNumWebMail="+POut.Long(selectedUser.ProvNum)+" LIMIT 2";
 			Database.ExecuteNonQuery(command);
 			AlertItems_CreateAlertsForWebmailMethodCall();
-			alertCount=Database.ExecuteString("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
+			alertCount=Database.ExecuteString("SELECT Description FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.Id);
 			Assert.AreEqual("6",alertCount);
 			//
 			//Now we mark all of this user's emails as read, as if that user has read all of their webmail.
@@ -92,7 +92,7 @@ namespace UnitTests.AlertItems_Tests {
 				" WHERE SentOrReceived="+POut.Int((int)EmailSentOrReceived.WebMailReceived)+" AND ProvNumWebMail="+POut.Long(selectedUser.ProvNum);
 			Database.ExecuteNonQuery(command);
 			AlertItems_CreateAlertsForWebmailMethodCall();
-			alertCount=Database.ExecuteString("SELECT COUNT(*) FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.UserNum);
+			alertCount=Database.ExecuteString("SELECT COUNT(*) FROM alertitem WHERE Type="+POut.Int((int)AlertType.WebMailRecieved)+" AND UserNum="+selectedUser.Id);
 			Assert.AreEqual("0",alertCount);
 		}
 
@@ -125,14 +125,14 @@ namespace UnitTests.AlertItems_Tests {
 			List<AlertSub> listAlertSubOld=new List<AlertSub>();
 			List<AlertSub> listAlertSubNew=new List<AlertSub>();
 			foreach(AlertCategory alertCat in listAlertCats) {
-				AlertSub alSub=new AlertSub(userAdmin.UserNum,-1,alertCat.AlertCategoryNum);
+				AlertSub alSub=new AlertSub(userAdmin.Id,-1,alertCat.AlertCategoryNum);
 				listAlertSubNew.Add(alSub);
 			}
 			AlertSubs.Sync(listAlertSubNew,listAlertSubOld);
 			//Check number of alerts which will display in headquarters clinic.
 			//Call CheckUniqueAlerts for user subscribed to all alert categories
-			List<List<AlertItem>> listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.UserNum,0);
-			List<List<AlertItem>> listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.UserNum,0);
+			List<List<AlertItem>> listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.Id,0);
+			List<List<AlertItem>> listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.Id,0);
 			//Assert lists are correct
 			//UserAdmin should see two alerts, one for the generic headquarters alert and one for the eConnector all clinics alert.
 			Assert.AreEqual(2,listUniqueAlertsAll.Count());
@@ -141,18 +141,18 @@ namespace UnitTests.AlertItems_Tests {
 			//Add clinic
 			listClinics.Add(ClinicT.CreateClinic());
 			//Check that alert for all clinics is included for userAdmin(subscribed to all clinics)
-			listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.UserNum,listClinics.LastOrDefault().ClinicNum);
+			listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.Id,listClinics.LastOrDefault().ClinicNum);
 			Assert.AreEqual(1,listUniqueAlertsAll.Count());
 			//Check new clinic for user who is not subscribed to all alerts. 
-			listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.UserNum,listClinics.LastOrDefault().ClinicNum);
+			listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.Id,listClinics.LastOrDefault().ClinicNum);
 			Assert.AreEqual(0,listUniqueAlertsOne.Count());
 			//Add new alert for new clinic only.
 			CreateAlertItem(false,listClinics.LastOrDefault().ClinicNum);
 			//Check that userAdmin sees new alert item in new clinic. Should have 2, one all clinic econnector alert and the new clinic specific alert.
-			listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.UserNum,listClinics.LastOrDefault().ClinicNum);
+			listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.Id,listClinics.LastOrDefault().ClinicNum);
 			Assert.AreEqual(2,listUniqueAlertsAll.Count());
 			//Check that userNormal sees no alerts in new clinic, as they are not subscribed to any alert categories, nor clinics.
-			listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.UserNum,listClinics.LastOrDefault().ClinicNum);
+			listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.Id,listClinics.LastOrDefault().ClinicNum);
 			Assert.AreEqual(0,listUniqueAlertsOne.Count());
 		}
 

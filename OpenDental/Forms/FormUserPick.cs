@@ -69,12 +69,12 @@ namespace OpenDental {
 			listUserods.ForEach(x => listUser.Items.Add(x));
 			if(_isMultiSelect) {
 				foreach(long userNum in ListSuggestedUserNums) {
-					int index=listUserods.FindIndex(x => x.UserNum==userNum);
+					int index=listUserods.FindIndex(x => x.Id==userNum);
 					listUser.SetSelected(index,true);
 				}
 			}
 			else { 
-				listUser.SelectedIndex=listUserods.FindIndex(x => x.UserNum==SuggestedUserNum);
+				listUser.SelectedIndex=listUserods.FindIndex(x => x.Id==SuggestedUserNum);
 			}
 		}
 
@@ -82,13 +82,13 @@ namespace OpenDental {
 			if(listUser.SelectedIndex==-1) {
 				return;
 			}
-			if(!Security.IsAuthorized(Permissions.TaskEdit,true) && Userods.GetInbox(ListUserodsShowing[listUser.SelectedIndex].UserNum)!=0 && !IsSelectionmode) {
+			if(!Security.IsAuthorized(Permissions.TaskEdit,true) && Userods.GetInbox(ListUserodsShowing[listUser.SelectedIndex].Id)!=0 && !IsSelectionmode) {
 				MessageBox.Show("Please select a user that does not have an inbox.");
 				return;
 			}
-			SelectedUserNum=ListUserodsShowing[listUser.SelectedIndex].UserNum;
+			SelectedUserNum=ListUserodsShowing[listUser.SelectedIndex].Id;
 			foreach(int index in listUser.SelectedIndices) {
-				ListSelectedUserNums.Add(ListUserodsShowing[index].UserNum);
+				ListSelectedUserNums.Add(ListUserodsShowing[index].Id);
 			}
 			DialogResult=DialogResult.OK;
 		}
@@ -98,20 +98,20 @@ namespace OpenDental {
 				MessageBox.Show("Please pick a user first.");
 				return;
 			}
-			if(!IsSelectionmode && !Security.IsAuthorized(Permissions.TaskEdit,true) && Userods.GetInbox(ListUserodsShowing[listUser.SelectedIndex].UserNum)!=0) {
+			if(!IsSelectionmode && !Security.IsAuthorized(Permissions.TaskEdit,true) && Userods.GetInbox(ListUserodsShowing[listUser.SelectedIndex].Id)!=0) {
 				MessageBox.Show("Please select a user that does not have an inbox.");
 				return;
 			}
-			SelectedUserNum=ListUserodsShowing[listUser.SelectedIndex].UserNum;
+			SelectedUserNum=ListUserodsShowing[listUser.SelectedIndex].Id;
 			foreach(int index in listUser.SelectedIndices) {
-				ListSelectedUserNums.Add(ListUserodsShowing[index].UserNum);
+				ListSelectedUserNums.Add(ListUserodsShowing[index].Id);
 			}
 			DialogResult=DialogResult.OK;
 		}
 
 		private void butAll_Click(object sender,EventArgs e) {
 			SelectedUserNum=-1;
-			ListSelectedUserNums=ListUserodsShowing.Select(x => x.UserNum).ToList();
+			ListSelectedUserNums=ListUserodsShowing.Select(x => x.Id).ToList();
 			DialogResult=DialogResult.OK;
 		}
 
@@ -122,7 +122,7 @@ namespace OpenDental {
 		}
 
 		private void butMe_Click(object sender,EventArgs e) {
-			SelectedUserNum=Security.CurUser.UserNum;
+			SelectedUserNum=Security.CurUser.Id;
 			ListSelectedUserNums=new List<long>() { };
 			DialogResult=DialogResult.OK;
 		}

@@ -642,13 +642,13 @@ namespace OpenDental{
 
 		private void butPickUserod_Click(object sender,EventArgs e) {
 			FormUserPick formUserPick=new FormUserPick();
-			formUserPick.SuggestedUserNum=((Userod)textUserod.Tag)?.UserNum??0;//Preselect current selection.
+			formUserPick.SuggestedUserNum=((Userod)textUserod.Tag)?.Id??0;//Preselect current selection.
 			if(formUserPick.ShowDialog()==DialogResult.OK) {
 				Userod user=Userods.GetUser(formUserPick.SelectedUserNum);
-				if(user.UserNum==(((Userod)textUserod.Tag)?.UserNum??0)) {
+				if(user.Id==(((Userod)textUserod.Tag)?.Id??0)) {
 					return;//No change.
 				}
-				EmailAddress emailUserExisting=EmailAddresses.GetForUser(user.UserNum);
+				EmailAddress emailUserExisting=EmailAddresses.GetForUser(user.Id);
 				if(emailUserExisting!=null) {
 					MessageBox.Show("User email already exists for "+user.UserName);
 					return;
@@ -761,7 +761,7 @@ namespace OpenDental{
 			_emailAddressCur.SenderAddress=PIn.String(textSender.Text);
 			_emailAddressCur.Pop3ServerIncoming=PIn.String(textSMTPserverIncoming.Text);
 			_emailAddressCur.ServerPortIncoming=PIn.Int(textPortIncoming.Text);
-			_emailAddressCur.UserNum=((Userod)(textUserod.Tag))?.UserNum??0;
+			_emailAddressCur.UserNum=((Userod)(textUserod.Tag))?.Id??0;
 			if(_isNew) {
 				EmailAddresses.Insert(_emailAddressCur);
 			}

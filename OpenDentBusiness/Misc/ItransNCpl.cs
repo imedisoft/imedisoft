@@ -201,7 +201,7 @@ namespace OpenDentBusiness {
 			try {
 				long userNum=0;
 				if(!isAutomatic) {
-					userNum=Security.CurUser.UserNum;
+					userNum=Security.CurUser.Id;
 				}
 				Carriers.Update(odCarrier,odCarrierOld,userNum);
 			}

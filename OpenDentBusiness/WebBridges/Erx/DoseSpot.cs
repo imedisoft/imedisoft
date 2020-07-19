@@ -128,13 +128,13 @@ namespace OpenDentBusiness {
 					Type=AlertType.DoseSpotProviderRegistered,
 					FKey=providerErx.ProviderErxNum,
 					ClinicNum=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific
-					ItemValue=Lans.g("DoseSpot","User: ")+listDoseUsers[0].UserNum+", "+listDoseUsers[0].UserName+" "
+					ItemValue=Lans.g("DoseSpot","User: ")+listDoseUsers[0].Id+", "+listDoseUsers[0].UserName+" "
 					+Lans.g("DoseSpot","has been assigned a DoseSpot User ID of: ")+providerErx.UserId,
 				};
 				AlertItems.Insert(alert);
 				//set userodpref to UserId
 				Program programErx=Programs.GetCur(ProgramName.eRx);
-				UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(listDoseUsers[0].UserNum,programErx.ProgramNum,UserOdFkeyType.Program);
+				UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(listDoseUsers[0].Id,programErx.ProgramNum,UserOdFkeyType.Program);
 				userDosePref.ValueString=providerErx.UserId;//assign DoseSpot User ID
 				if(userDosePref.IsNew) {
 					userDosePref.Fkey=programErx.ProgramNum;
@@ -619,7 +619,7 @@ namespace OpenDentBusiness {
 			//At this point we know that we have a valid clinic/practice info and valid provider.
 			Program programErx=Programs.GetCur(ProgramName.eRx);
 			//Get the DoseSpotID for the current user
-			UserOdPref userPrefDoseSpotID=GetDoseSpotUserIdFromPref(userCur.UserNum,clinicNum);
+			UserOdPref userPrefDoseSpotID=GetDoseSpotUserIdFromPref(userCur.Id,clinicNum);
 			//If the current user doesn't have a valid User ID, go retreive one from DoseSpot.
 			if(userPrefDoseSpotID==null || string.IsNullOrWhiteSpace(userPrefDoseSpotID.ValueString)) {
 				//If there is no UserId for this user, throw an exception.  The below code was when we thought the Podio database matched the DoseSpot database.

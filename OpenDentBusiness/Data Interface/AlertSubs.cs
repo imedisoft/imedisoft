@@ -17,7 +17,7 @@ namespace OpenDentBusiness
 			{
 				return;
 			}
-			string command = "DELETE FROM alertsub WHERE UserNum IN(" + string.Join(",", listUsers.Select(x => x.UserNum).ToList()) + ")";
+			string command = "DELETE FROM alertsub WHERE UserNum IN(" + string.Join(",", listUsers.Select(x => x.Id).ToList()) + ")";
 			Database.ExecuteNonQuery(command);
 			foreach (AlertSub alertSub in listAlertSubs)
 			{

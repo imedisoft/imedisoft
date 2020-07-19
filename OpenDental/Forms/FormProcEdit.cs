@@ -368,7 +368,7 @@ namespace OpenDental {
 			if(Security.IsAuthorized(Permissions.ProcedureNoteFull,true)) {
 				canEditNote=true;
 			}
-			else if(Security.IsAuthorized(Permissions.ProcedureNoteUser,true) && (_procCur.UserNum==Security.CurUser.UserNum || signatureBoxWrapper.SigIsBlank)) {
+			else if(Security.IsAuthorized(Permissions.ProcedureNoteUser,true) && (_procCur.UserNum==Security.CurUser.Id || signatureBoxWrapper.SigIsBlank)) {
 				canEditNote=true;//They have limited permission and this is their note that they signed.
 			}
 			if(!canEditNote) {
@@ -2028,7 +2028,7 @@ namespace OpenDental {
 
 		private void signatureBoxWrapper_SignatureChanged(object sender,EventArgs e) {
 			_sigChanged=true;
-			_procCur.UserNum=_curUser.UserNum;
+			_procCur.UserNum=_curUser.Id;
 			textUser.Text=_curUser.UserName;
 		}
 

@@ -74,9 +74,9 @@ namespace UnitTests.Userods_Tests
 		{
 			Userod user = UserodT.CreateUser();
 			Clinic clinic = ClinicT.CreateClinic();
-			UserClinics.Insert(new UserClinic(clinic.ClinicNum, user.UserNum));
-			AlertSubs.Insert(new AlertSub(user.UserNum, clinic.ClinicNum, 1));
-			UserOdPrefs.Insert(new UserOdPref() { UserNum = user.UserNum, ClinicNum = clinic.ClinicNum, Fkey = clinic.ClinicNum, FkeyType = UserOdFkeyType.ClinicLast });
+			UserClinics.Insert(new UserClinic(clinic.ClinicNum, user.Id));
+			AlertSubs.Insert(new AlertSub(user.Id, clinic.ClinicNum, 1));
+			UserOdPrefs.Insert(new UserOdPref() { UserNum = user.Id, ClinicNum = clinic.ClinicNum, Fkey = clinic.ClinicNum, FkeyType = UserOdFkeyType.ClinicLast });
 			//Setup user
 			//Fields given by method caller
 			PasswordContainer loginDetailsNotExpected = user.LoginDetails;
@@ -87,11 +87,11 @@ namespace UnitTests.Userods_Tests
 			//Fields directly copied
 			bool clinicIsRestrictedExpected = user.ClinicIsRestricted;
 			long clinicNumExpected = user.ClinicNum;
-			List<UserGroupAttach> listAttachesExpected = UserGroupAttaches.GetForUser(user.UserNum);//Mimics Userods.Insert(...)
-			List<UserClinic> listUserClinicsExpected = UserClinics.GetForUser(user.UserNum);//Mimics 
-			List<AlertSub> listAlertSubsExpected = AlertSubs.GetAllForUser(user.UserNum);
+			List<UserGroupAttach> listAttachesExpected = UserGroupAttaches.GetForUser(user.Id);//Mimics Userods.Insert(...)
+			List<UserClinic> listUserClinicsExpected = UserClinics.GetForUser(user.Id);//Mimics 
+			List<AlertSub> listAlertSubsExpected = AlertSubs.GetAllForUser(user.Id);
 			//Copy User
-			long copiedUserNum = Userods.CopyUser(user, loginDetails, isPasswordStrong, copiedUserName, isForCemt: false).UserNum;
+			long copiedUserNum = Userods.CopyUser(user, loginDetails, isPasswordStrong, copiedUserName, isForCemt: false).Id;
 			Cache.Refresh(InvalidType.AllLocal);
 			Userod copy = Userods.GetUser(copiedUserNum);
 			//Assert
@@ -103,19 +103,19 @@ namespace UnitTests.Userods_Tests
 																				  //Fields directly copied
 			Assert.AreEqual(clinicIsRestrictedExpected, copy.ClinicIsRestricted);
 			Assert.AreEqual(clinicNumExpected, copy.ClinicNum);
-			List<UserGroupAttach> listAttaches = UserGroupAttaches.GetForUser(copy.UserNum);
+			List<UserGroupAttach> listAttaches = UserGroupAttaches.GetForUser(copy.Id);
 			Assert.AreEqual(listAttachesExpected.Count, listAttaches.Count);
 			foreach (UserGroupAttach expected in listAttachesExpected)
 			{
 				Assert.IsTrue(listAttaches.Exists(x => x.UserGroupNum == expected.UserGroupNum));
 			}
-			List<UserClinic> listUserClinics = UserClinics.GetForUser(copy.UserNum);
+			List<UserClinic> listUserClinics = UserClinics.GetForUser(copy.Id);
 			Assert.AreEqual(listUserClinicsExpected.Count, listUserClinics.Count);
 			foreach (UserClinic expected in listUserClinicsExpected)
 			{
 				Assert.IsTrue(listUserClinics.Exists(x => x.ClinicNum == expected.ClinicNum));
 			}
-			List<AlertSub> listAlertSubs = AlertSubs.GetAllForUser(copy.UserNum);
+			List<AlertSub> listAlertSubs = AlertSubs.GetAllForUser(copy.Id);
 			Assert.AreEqual(listAlertSubsExpected.Count, listAlertSubs.Count);
 			foreach (AlertSub expected in listAlertSubsExpected)
 			{
@@ -136,7 +136,7 @@ namespace UnitTests.Userods_Tests
 			Assert.AreEqual("", copy.MobileWebPin);
 			Assert.AreEqual(0, copy.MobileWebPinFailedAttempts);
 			Assert.AreEqual(DateTime.MinValue, copy.DateTLastLogin);
-			List<UserOdPref> listUserOdPrefs = UserOdPrefT.GetByUser(copy.UserNum);
+			List<UserOdPref> listUserOdPrefs = UserOdPrefT.GetByUser(copy.Id);
 			Assert.AreEqual(0, listUserOdPrefs.Count);
 		}
 
@@ -150,7 +150,7 @@ namespace UnitTests.Userods_Tests
 			//Setup user
 			//Fields given by method caller
 			Userods.CopyUser(user, user.LoginDetails, false, isForCemt: false);//First copy
-			long copiedUserNum2 = Userods.CopyUser(user, user.LoginDetails, false, isForCemt: false).UserNum;//Second copy
+			long copiedUserNum2 = Userods.CopyUser(user, user.LoginDetails, false, isForCemt: false).Id;//Second copy
 			Cache.Refresh(InvalidType.Security);
 			Userod copy = Userods.GetUser(copiedUserNum2);
 			Assert.AreEqual(user.UserName + "(Copy)(2)", copy.UserName);

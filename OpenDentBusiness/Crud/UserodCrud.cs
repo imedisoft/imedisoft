@@ -21,7 +21,7 @@ namespace OpenDentBusiness.Crud
 		{
 			return new Userod
 			{
-				UserNum = (long)dataReader["UserNum"],
+				Id = (long)dataReader["UserNum"],
 				UserName = (string)dataReader["UserName"],
 				Password = (string)dataReader["Password"],
 				UserGroupNum = (long)dataReader["UserGroupNum"],
@@ -68,7 +68,7 @@ namespace OpenDentBusiness.Crud
 		/// Inserts the specified <see cref="Userod"/> into the database.
 		/// </summary>
 		public static long Insert(Userod userod)
-			=> userod.UserNum = Database.ExecuteInsert(
+			=> userod.Id = Database.ExecuteInsert(
 				"INSERT INTO `Userod` " +
 				"(`UserName`, `Password`, `UserGroupNum`, `EmployeeNum`, `ClinicNum`, `ProvNum`, `IsHidden`, `TaskListInBox`, `AnesthProvType`, `DefaultHidePopups`, `PasswordIsStrong`, `ClinicIsRestricted`, `InboxHidePopups`, `UserNumCEMT`, `DateTFail`, `FailedAttempts`, `DomainUser`, `IsPasswordResetRequired`, `MobileWebPin`, `MobileWebPinFailedAttempts`, `DateTLastLogin`) " +
 				"VALUES (" +
@@ -103,7 +103,7 @@ namespace OpenDentBusiness.Crud
 					"`MobileWebPinFailedAttempts` = @MobileWebPinFailedAttempts, " +
 					"`DateTLastLogin` = @DateTLastLogin " +
 				"WHERE `UserNum` = @UserNum",
-					new MySqlParameter("UserNum", userod.UserNum),
+					new MySqlParameter("UserNum", userod.Id),
 					new MySqlParameter("UserName", userod.UserName ?? ""),
 					new MySqlParameter("Password", userod.Password ?? ""),
 					new MySqlParameter("UserGroupNum", userod.UserGroupNum),
@@ -262,7 +262,7 @@ namespace OpenDentBusiness.Crud
 
 			if (updates.Count == 0) return;
 
-			parameters.Add(new MySqlParameter("UserNum", userodNew.UserNum));
+			parameters.Add(new MySqlParameter("UserNum", userodNew.Id));
 
 			Database.ExecuteNonQuery("UPDATE `Userod` " +
 				"SET " + string.Join(", ", updates) + " " +
@@ -280,6 +280,6 @@ namespace OpenDentBusiness.Crud
 		/// Deletes the specified <see cref="Userod"/> object from the database.
 		/// </summary>
 		public static void Delete(Userod userod)
-			=> Delete(userod.UserNum);
+			=> Delete(userod.Id);
 	}
 }

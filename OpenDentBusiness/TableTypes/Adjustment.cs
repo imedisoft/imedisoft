@@ -4,17 +4,17 @@ using System.Collections;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// An adjustment in the patient account.
-	/// Usually, adjustments are very simple, just being assigned to one patient and provider.
-	/// But they can also be attached to a procedure to represent a discount on that procedure.
-	/// Attaching adjustments to procedures is not automated, so it is not very common.
-	/// </summary>
-	[CrudTable(IsSecurityStamped = true, HasBatchWriteMethods = true)]
+    /// <summary>
+    /// An adjustment in the patient account.
+    /// Usually, adjustments are very simple, just being assigned to one patient and provider.
+    /// But they can also be attached to a procedure to represent a discount on that procedure.
+    /// Attaching adjustments to procedures is not automated, so it is not very common.
+    /// </summary>
+    [CrudTable(IsSecurityStamped = true, HasBatchWriteMethods = true)]
 	[Table]
 	public class Adjustment : TableBase
 	{
-		[CrudColumn(IsPriKey = true)]
+		[PrimaryKey]
 		public long AdjNum;
 
 		///<summary>The date that the adjustment shows in the patient account.</summary>

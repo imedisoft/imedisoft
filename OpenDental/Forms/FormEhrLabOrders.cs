@@ -117,7 +117,7 @@ namespace OpenDental {
 				}
 				listEhrLabs[i]=EhrLabs.SaveToDB(listEhrLabs[i]);//SAVE
 				for(int j=0;j<listEhrLabs[i].ListEhrLabResults.Count;j++) {//EHR TRIGGER
-					if(CDSPermissions.GetForUser(Security.CurUser.UserNum).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.UserNum).LabTestCDS) {
+					if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).LabTestCDS) {
 						FormCDSIntervention FormCDSI=new FormCDSIntervention();
 						FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(listEhrLabs[i].ListEhrLabResults[j],PatCur);
 						FormCDSI.ShowIfRequired(false);
@@ -149,7 +149,7 @@ namespace OpenDental {
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			EhrLabs.SaveToDB(FormLOE.EhrLabCur);
 			for(int i=0;i<FormLOE.EhrLabCur.ListEhrLabResults.Count;i++) {
-				if(CDSPermissions.GetForUser(Security.CurUser.UserNum).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.UserNum).LabTestCDS) {
+				if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).LabTestCDS) {
 					FormCDSIntervention FormCDSI=new FormCDSIntervention();
 					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(FormLOE.EhrLabCur.ListEhrLabResults[i],PatCur);
 					FormCDSI.ShowIfRequired(false);

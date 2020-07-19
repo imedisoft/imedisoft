@@ -3049,7 +3049,7 @@ namespace OpenDental{
 			if(PatCur.Birthdate!=PatOld.Birthdate || PatCur.Gender!=PatOld.Gender) {
 				CDSinterventionCheckRequired=true;
 			}
-			if(CDSinterventionCheckRequired && CDSPermissions.GetForUser(Security.CurUser.UserNum).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.UserNum).LabTestCDS) {
+			if(CDSinterventionCheckRequired && CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).LabTestCDS) {
 				FormCDSIntervention FormCDSI=new FormCDSIntervention();
 				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(PatCur,PatCur);//both should be patCur.
 				FormCDSI.ShowIfRequired(false);

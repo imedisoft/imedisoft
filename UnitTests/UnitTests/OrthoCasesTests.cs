@@ -135,10 +135,10 @@ namespace UnitTests.OrthoCases_Tests {
 			Assert.AreEqual(orthoCase.IsActive,false);
 			Assert.AreEqual(listAllProcLinks.Count,3);
 			Assert.AreEqual(debondProcLink.ProcNum,debondProc.ProcNum);
-			Assert.AreEqual(debondProcLink.SecUserNumEntry,Security.CurUser.UserNum);
+			Assert.AreEqual(debondProcLink.SecUserNumEntry,Security.CurUser.Id);
 			Assert.AreEqual(listVisitProcLinks.Count,1);
 			Assert.AreEqual(listVisitProcLinks[0].ProcNum,visitProc.ProcNum);
-			Assert.AreEqual(listVisitProcLinks[0].SecUserNumEntry,Security.CurUser.UserNum);
+			Assert.AreEqual(listVisitProcLinks[0].SecUserNumEntry,Security.CurUser.Id);
 		}
 
 		///<summary>Make sure that fees for procedures linked to orthocases are set correctly.</summary>
@@ -243,7 +243,7 @@ namespace UnitTests.OrthoCases_Tests {
 			orthoPlanLinkPatPayPlan.OrthoCaseNum=orthoCaseNum;
 			orthoPlanLinkPatPayPlan.FKey=payPlanDynamic1.PayPlanNum;
 			orthoPlanLinkPatPayPlan.IsActive=true;
-			orthoPlanLinkPatPayPlan.SecUserNumEntry=Security.CurUser.UserNum;
+			orthoPlanLinkPatPayPlan.SecUserNumEntry=Security.CurUser.Id;
 			orthoPlanLinkPatPayPlan.OrthoPlanLinkNum=OrthoPlanLinks.Insert(orthoPlanLinkPatPayPlan);
 			//Link visitProc1 to ortho case and confirm that it linked to payPlanDynamic1.
 			OrthoCaseProcLinkingData orthoCaseProcLinkingData=new OrthoCaseProcLinkingData(pat.PatNum);

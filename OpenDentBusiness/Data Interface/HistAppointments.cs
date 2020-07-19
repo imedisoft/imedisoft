@@ -81,7 +81,7 @@ namespace OpenDentBusiness{
 				return null;//There is no user currently logged on so do not create a HistAppointment.
 			}
 			HistAppointment hist=new HistAppointment();
-			hist.HistUserNum=Security.CurUser.UserNum;
+			hist.HistUserNum=Security.CurUser.Id;
 			hist.ApptSource=Security.CurUser.EServiceType;
 			hist.HistApptAction=action;
 			if(appt!=null) {//Null if deleted

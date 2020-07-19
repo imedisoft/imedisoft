@@ -4,14 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenDentBusiness {
-	///<summary>For extra addresses.  Currently only for tax physical address for customers.</summary>
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// For extra addresses.
+	/// Currently only for tax physical address for customers.
+	/// </summary>
 	[Serializable]
-	[CrudTable(IsMissingInGeneral=true)]
-	
-	public class Address : TableBase {
+	[CrudTable(IsMissingInGeneral = true)]
+	public class Address : TableBase
+	{
 		///<summary></summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long AddressNum;
 		///<summary>Address line one</summary>
 		public string Address1;

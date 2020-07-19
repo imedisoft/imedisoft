@@ -705,7 +705,7 @@ namespace OpenDentBusiness {
 						command="UPDATE procedurelog P, appointment A SET P.AptNum=0 "+where;
 						Database.ExecuteNonQuery(command);
 						//Add changes to listDbmLogs
-						listProceduresModified.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ProcNum,DbmLogFKeyType.Procedure,
+						listProceduresModified.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ProcNum,DbmLogFKeyType.Procedure,
 							DbmLogActionType.Update,methodName,"Updated AptNum from "+x.AptNum+" to 0 from AppointmentsNoPattern")));
 						where="WHERE P.PlannedAptNum=A.AptNum AND A.Pattern=''";
 						command="SELECT P.* FROM procedurelog P,appointment A "+where;
@@ -713,7 +713,7 @@ namespace OpenDentBusiness {
 						command="UPDATE procedurelog P, appointment A SET P.PlannedAptNum=0 "+where;
 						Database.ExecuteNonQuery(command);
 						//Add changes to listDbmLogs
-						listProceduresModified.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ProcNum,DbmLogFKeyType.Procedure,
+						listProceduresModified.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ProcNum,DbmLogFKeyType.Procedure,
 							DbmLogActionType.Update,methodName,"Updated PlannedAptNum from "+x.PlannedAptNum+" to 0 from AppointmentsNoPattern")));
 						command="SELECT appointment.AptNum FROM appointment WHERE Pattern=''";
 						DataTable tableAptNums=Database.ExecuteDataTable(command);
@@ -726,9 +726,9 @@ namespace OpenDentBusiness {
 							List<SecurityLog> listSecurityLogs=SecurityLogs.GetFromFKeysAndType(listAptNums,listPerms);
 							Appointments.ClearFkey(listAptNums);//Zero securitylog FKey column for rows to be deleted.
 							//Add securitylog changes to listDbmLogs
-							listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
+							listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
 								DbmLogActionType.Delete,methodName,"Updated FKey from "+x.FKey+" to 0.")));
-							listAptNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Appointment,
+							listAptNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Appointment,
 								DbmLogActionType.Delete,methodName,"Deleted appointment with no pattern")));
 							command="SELECT * FROM appointment WHERE AptNum IN("+String.Join(",",listAptNums)+")";
 							List<Appointment> listApts=Crud.AppointmentCrud.SelectMany(command);
@@ -737,7 +737,7 @@ namespace OpenDentBusiness {
 								if(hist==null) {
 									continue;
 								}
-								listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,hist.HistApptNum,DbmLogFKeyType.HistAppointment,DbmLogActionType.Insert,
+								listDbmLogs.Add(new DbmLog(Security.CurUser.Id,hist.HistApptNum,DbmLogFKeyType.HistAppointment,DbmLogActionType.Insert,
 									methodName,"Inserted hist appointment."));
 							}
 						}
@@ -786,9 +786,9 @@ namespace OpenDentBusiness {
 						List<SecurityLog> listSecurityLogs=SecurityLogs.GetFromFKeysAndType(listAptNums,listPerms);
 						Appointments.ClearFkey(listAptNums);//Zero securitylog FKey column for rows to be deleted.
 						//Add changes to listDbmLogs
-						listAptNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Appointment,
+						listAptNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Appointment,
 								DbmLogActionType.Delete,methodName,"Deleted appointment from AppointmentsNoDateOrProcs.")));
-						listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
+						listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
 								 DbmLogActionType.Update,methodName,"Cleared securitylog FKey column.")));
 						command="SELECT * FROM appointment WHERE AptNum IN("+String.Join(",",listAptNums)+")";
 						List<Appointment> listApts=Crud.AppointmentCrud.SelectMany(command);
@@ -797,7 +797,7 @@ namespace OpenDentBusiness {
 							if(hist==null) {
 								continue;
 							}
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,hist.HistApptNum,DbmLogFKeyType.HistAppointment,DbmLogActionType.Insert,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,hist.HistApptNum,DbmLogFKeyType.HistAppointment,DbmLogActionType.Insert,
 								methodName,"Inserted hist appointment."));
 						}
 					}
@@ -845,21 +845,21 @@ namespace OpenDentBusiness {
 								PriProv=PrefC.GetLong(PrefName.PracticeDefaultProv)
 							};
 							//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-							tempPat.SecUserNumEntry=Security.CurUser.UserNum;
+							tempPat.SecUserNumEntry=Security.CurUser.Id;
 							Patients.Insert(tempPat,false);
 							SecurityLogs.MakeLogEntry(Permissions.PatientCreate,tempPat.PatNum,"Recreated from DBM fix for AppointmentsNoPatients.",LogSources.DBM);
 							Patient oldPat=tempPat.Copy();
 							tempPat.Guarantor=tempPat.PatNum;
 							Patients.Update(tempPat,oldPat);//update guarantor
 							//Add new patient to listDbmLogs
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,tempPat.PatNum,DbmLogFKeyType.Patient,DbmLogActionType.Insert,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,tempPat.PatNum,DbmLogFKeyType.Patient,DbmLogActionType.Insert,
 								methodName,"Inserted patient from AppointmentsNoPatients."));
 							command="SELECT * FROM appointment WHERE PatNum=0";
 							//add the updated appointments to listDbmLogs
 							List<Appointment> listAppts=Crud.AppointmentCrud.SelectMany(command);
 							command="UPDATE appointment SET PatNum="+POut.Long(tempPat.PatNum)+" WHERE PatNum=0";
 							Database.ExecuteNonQuery(command);
-							listAppts.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.AptNum,DbmLogFKeyType.Appointment,DbmLogActionType.Update,
+							listAppts.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.AptNum,DbmLogFKeyType.Appointment,DbmLogActionType.Update,
 								methodName,"Updated the PatNum from 0 to "+tempPat.PatNum+" from AppointmentsNoPatients.")));
 							patientsAdded++;
 							patNums.Remove(0);
@@ -876,10 +876,10 @@ namespace OpenDentBusiness {
 								PatStatus=PatientStatus.Inactive,
 								PriProv=PrefC.GetLong(PrefName.PracticeDefaultProv),
 								//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-								SecUserNumEntry=Security.CurUser.UserNum
+								SecUserNumEntry=Security.CurUser.Id
 							},true);
 							//Add new patients to listDbmLogs
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,patnum,DbmLogFKeyType.Patient,DbmLogActionType.Insert,methodName,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,patnum,DbmLogFKeyType.Patient,DbmLogActionType.Insert,methodName,
 								"Inserted patient from AppointmentsNoPatients."));
 							SecurityLogs.MakeLogEntry(Permissions.PatientCreate,patnum,"Recreated from DBM fix for AppointmentsNoPatients.",LogSources.DBM);
 							patientsAdded++;
@@ -920,7 +920,7 @@ namespace OpenDentBusiness {
 							plannedAppt.AptNum=PIn.Long(appts.Rows[i]["AptNum"].ToString());
 							plannedAppt.ItemOrder=1;
 							PlannedAppts.Insert(plannedAppt);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,plannedAppt.PlannedApptNum,DbmLogFKeyType.PlannedAppt,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,plannedAppt.PlannedApptNum,DbmLogFKeyType.PlannedAppt,
 								DbmLogActionType.Insert,methodName,"Created a new planned appointment from AppointmentPlannedNoPlannedApt."));
 						}
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -1004,7 +1004,7 @@ namespace OpenDentBusiness {
 						List<DbmLog> listDbmLogs=new List<DbmLog>();
 						command="DELETE FROM securitylog WHERE SecurityLogNum IN("+string.Join(",",listDupApptCreates.Select(x => x.SecurityLogNum))+")";
 						long numberFixed=Database.ExecuteNonQuery(command);
-						listDupApptCreates.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
+						listDupApptCreates.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
 							DbmLogActionType.Delete,methodName,"Audit trail entry deleted from AuditTrailDeleteDuplicateApptCreate.")));
 						if(numberFixed>0 || verbose) {
 							Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -1044,7 +1044,7 @@ namespace OpenDentBusiness {
 						autoCode.AutoCodeNum=PIn.Long(table.Rows[i]["AutoCodeNum"].ToString());
 						autoCode.Description="UNKNOWN";
 						Crud.AutoCodeCrud.Insert(autoCode,true);
-						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,autoCode.AutoCodeNum,DbmLogFKeyType.AutoCode,DbmLogActionType.Insert,methodName,
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,autoCode.AutoCodeNum,DbmLogFKeyType.AutoCode,DbmLogActionType.Insert,methodName,
 							"Added a new AutoCode from AutoCodeItemsWithNoAutoCode"));
 					}
 					if(numFixed>0) {
@@ -1080,7 +1080,7 @@ namespace OpenDentBusiness {
 					command=@"DELETE FROM autocode WHERE NOT EXISTS(
 						SELECT * FROM autocodeitem WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listAutoCodes.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.AutoCodeNum,DbmLogFKeyType.AutoCode,
+					listAutoCodes.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.AutoCodeNum,DbmLogFKeyType.AutoCode,
 						DbmLogActionType.Delete,methodName,"Deleted AutoCode:"+x.Description+" from AutoCodesDeleteWithNoItems")));
 					if(numberFixed>0) {
 						Signalods.SetInvalid(InvalidType.AutoCodes);
@@ -1117,7 +1117,7 @@ namespace OpenDentBusiness {
 					SELECT SheetDefNum FROM sheetdef WHERE automation.SheetDefNum=sheetdef.SheetDefNum)";
 					long numberFixed=Database.ExecuteNonQuery(command);
 					//Add to listDbmlogs
-					listAutomation.ForEach(x => listDbmlogs.Add(new DbmLog(Security.CurUser.UserNum,x.AutomationNum,DbmLogFKeyType.Automation,
+					listAutomation.ForEach(x => listDbmlogs.Add(new DbmLog(Security.CurUser.Id,x.AutomationNum,DbmLogFKeyType.Automation,
 						DbmLogActionType.Delete,methodName,"Deleted automation from AutomationTriggersWithNoSheetDefs.")));
 					if(numberFixed!=0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmlogs);
@@ -1531,7 +1531,7 @@ namespace OpenDentBusiness {
 						numberFixed+=numUpdated;
 						//add changes to dbmLogs
 						if(numUpdated > 0) {
-							listCarriers.ForEach(x => listDbmlogs.Add(new DbmLog(Security.CurUser.UserNum,x.CarrierNum,DbmLogFKeyType.Carrier,
+							listCarriers.ForEach(x => listDbmlogs.Add(new DbmLog(Security.CurUser.Id,x.CarrierNum,DbmLogFKeyType.Carrier,
 								DbmLogActionType.Update,methodName,"Updated Carrier info for carrier: "+x.CarrierName)));
 						}
 					}
@@ -1572,14 +1572,14 @@ namespace OpenDentBusiness {
 						List<SecurityLog> listSecurityLogs=SecurityLogs.GetFromFKeysAndType(listClaimNums,listPerms);
 						Claims.ClearFkey(listClaimNums);//Zero securitylog FKey column for rows to be deleted.
 						//Insert changes to DbmLogs
-						listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
+						listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
 							DbmLogActionType.Update,methodName,"Updated FKey from "+x.FKey+" to 0 from ClaimDeleteWithNoClaimProcs.")));
 					}
 					//Orphaned claims do not show in the account module (tested) so we need to delete them because no other way.
 					command=@"DELETE FROM claim WHERE NOT EXISTS(
 						SELECT * FROM claimproc WHERE claim.ClaimNum=claimproc.ClaimNum)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Claim,DbmLogActionType.Delete,
+					listClaimNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Claim,DbmLogActionType.Delete,
 						methodName,"Deleted claim from ClaimDeleteWithNoClaimProcs")));
 					if(numberFixed!=0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -1663,7 +1663,7 @@ namespace OpenDentBusiness {
 						plan.IsHidden=true;
 						plan.CarrierNum=unknownCarrierNum;
 						//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-						plan.SecUserNumEntry=Security.CurUser.UserNum;
+						plan.SecUserNumEntry=Security.CurUser.Id;
 						InsPlans.Insert(plan);
 						long claimNum=PIn.Long(table.Rows[i]["ClaimNum"].ToString());
 						sub=new InsSub();//Create inssubs and attach claim and procs to both plan and inssub.
@@ -1671,20 +1671,20 @@ namespace OpenDentBusiness {
 						sub.Subscriber=PIn.Long(table.Rows[i]["PatNum"].ToString());
 						sub.SubscriberID="unknown";
 						//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-						sub.SecUserNumEntry=Security.CurUser.UserNum;
+						sub.SecUserNumEntry=Security.CurUser.Id;
 						InsSubs.Insert(sub);
-						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,sub.InsSubNum,DbmLogFKeyType.InsSub,DbmLogActionType.Insert,
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,sub.InsSubNum,DbmLogFKeyType.InsSub,DbmLogActionType.Insert,
 							methodName,"Added new InsSub from ClaimWithInvalidInsSubNum."));
 						List<Claim> listClaims=Crud.ClaimCrud.SelectMany("SELECT * FROM claim WHERE ClaimNum="+claimNum);
 						command="UPDATE claim SET PlanNum="+plan.PlanNum+",InsSubNum="+sub.InsSubNum+" WHERE ClaimNum="+claimNum;
 						Database.ExecuteNonQuery(command);
-						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
+						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
 							methodName,"Updated PlanNum from "+x.PlanNum+" to "+plan.PlanNum
 							+" and InsSubNum from "+x.InsSubNum+" to "+sub.InsSubNum+" from ClaimWithInvalidInsSubNum")));
 						List<ClaimProc> listClaimProc=Crud.ClaimProcCrud.SelectMany("SELECT * FROM claimproc WHERE ClaimNum="+claimNum);
 						command="UPDATE claimproc SET PlanNum="+plan.PlanNum+",InsSubNum="+sub.InsSubNum+" WHERE ClaimNum="+claimNum;
 						Database.ExecuteNonQuery(command);
-						listClaimProc.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+						listClaimProc.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 							DbmLogActionType.Update,methodName,"Updated PlanNum from "+x.PlanNum+" to "+plan.PlanNum
 							+" and InsSubNum from "+x.InsSubNum+" to "+sub.InsSubNum+" from ClaimWithInvalidInsSubNum")));
 					}
@@ -1725,7 +1725,7 @@ namespace OpenDentBusiness {
 						command="UPDATE claim SET PatNum='"+POut.Long(PIn.Long(table.Rows[i]["patNumCorrect"].ToString()))+"' "
 							+"WHERE ClaimNum="+POut.Long(PIn.Long(table.Rows[i]["ClaimNum"].ToString()));
 						Database.ExecuteNonQuery(command);
-						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
+						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
 							methodName,"Updated PatNum from "+x.PatNum+" to "+table.Rows[i]["patNumCorrect"].ToString())));
 					}
 					int numberFixed=table.Rows.Count;
@@ -1756,7 +1756,7 @@ namespace OpenDentBusiness {
 					command="UPDATE claim SET ProvTreat="+POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv))+
 							" WHERE ProvTreat > 0 AND ProvTreat NOT IN (SELECT ProvNum FROM provider);";
 					long numFixed=Database.ExecuteNonQuery(command);
-					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
+					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
 						methodName,"Updated ProvTreat from "+x.ProvTreat+" to "+POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv)))));
 					if(numFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -1793,7 +1793,7 @@ namespace OpenDentBusiness {
 						command="UPDATE claim SET WriteOff='"+POut.Double(PIn.Double(table.Rows[i]["sumwo"].ToString()))+"' "
 							+"WHERE ClaimNum="+table.Rows[i]["ClaimNum"].ToString();
 						Database.ExecuteNonQuery(command);
-						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
+						listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Update,
 							methodName,"Updated the WriteOff from "+table.Rows[i]["WriteOff"].ToString()
 							+" to "+table.Rows[i]["sumwo"].ToString()+" from ClaimWriteoffSum")));
 					}
@@ -1854,9 +1854,9 @@ namespace OpenDentBusiness {
 								dummyPatient.PatStatus=PatientStatus.Archived;
 								dummyPatient.PriProv=PrefC.GetLong(PrefName.PracticeDefaultProv);
 								//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-								dummyPatient.SecUserNumEntry=Security.CurUser.UserNum;
+								dummyPatient.SecUserNumEntry=Security.CurUser.Id;
 								long dummyPatNum=Patients.Insert(dummyPatient,true);
-								listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,dummyPatNum,DbmLogFKeyType.Patient,DbmLogActionType.Insert,
+								listDbmLogs.Add(new DbmLog(Security.CurUser.Id,dummyPatNum,DbmLogFKeyType.Patient,DbmLogActionType.Insert,
 									methodName,"Inserted new patient from ClaimPaymentCheckAmt."));
 								SecurityLogs.MakeLogEntry(Permissions.PatientCreate,dummyPatNum,"Recreated from DBM fix for ClaimPaymentCheckAmt.",LogSources.DBM);
 								pat=Patients.GetPat(dummyPatient.PatNum);
@@ -1869,7 +1869,7 @@ namespace OpenDentBusiness {
 								List<ClaimPayment> listClaimPayment=Crud.ClaimPaymentCrud.SelectMany(command);
 								command="UPDATE claimpayment SET IsPartial=1 WHERE ClaimPaymentNum="+PIn.Long(table.Rows[i]["ClaimPaymentNum"].ToString()).ToString();
 								Database.ExecuteNonQuery(command);
-								listClaimPayment.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimPaymentNum,DbmLogFKeyType.ClaimPayment,
+								listClaimPayment.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimPaymentNum,DbmLogFKeyType.ClaimPayment,
 									DbmLogActionType.Update,methodName,"Updated ClaimPaymentNum from "+x.IsPartial+" to True from ClaimPaymentCheckAmt.")));
 								log+=" (row has been unlocked and marked as partial)";
 							}
@@ -1918,7 +1918,7 @@ namespace OpenDentBusiness {
 						+"WHERE DepositNum != 0 "
 						+"AND NOT EXISTS(SELECT * FROM deposit WHERE deposit.DepositNum=claimpayment.DepositNum)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimPayments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimPaymentNum,DbmLogFKeyType.ClaimPayment,
+					listClaimPayments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimPaymentNum,DbmLogFKeyType.ClaimPayment,
 						DbmLogActionType.Update,methodName,"Updated the DepositNum from "+x.DepositNum+" to 0 .")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2041,7 +2041,7 @@ namespace OpenDentBusiness {
 						string inCommand=string.Join(",",table.Select().Select(x => PIn.Long(x["ClaimProcNum"].ToString())));
 						command="DELETE FROM claimproc WHERE claimproc.ClaimProcNum IN ("+inCommand+")";
 						Database.ExecuteNonQuery(command);
-						table.Select().Select(x => PIn.Long(x["ClaimProcNum"].ToString())).ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,
+						table.Select().Select(x => PIn.Long(x["ClaimProcNum"].ToString())).ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,
 							x,DbmLogFKeyType.ClaimProc,DbmLogActionType.Delete,methodName,"Deleted claimproc.")));
 					}
 					if(table.Rows.Count>0 || verbose) {
@@ -2071,7 +2071,7 @@ namespace OpenDentBusiness {
 					//js ok
 					command="UPDATE claimproc SET DateCP=ProcDate WHERE Status=7 AND DateCP != ProcDate";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated the DateCp from "+x.DateCP+" to "+x.ProcDate+".")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2139,7 +2139,7 @@ namespace OpenDentBusiness {
 							command="UPDATE claimproc SET DateCP="+POut.Date(newDateCP)
 								+" WHERE ClaimProcNum="+claimProcNum.ToString();
 							Database.ExecuteNonQuery(command);
-							listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+							listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 								DbmLogActionType.Update,methodName,"Updated DateCP from "+oldDateCP+" to "+newDateCP+".")));
 						}
 						else {//Breakdown
@@ -2195,7 +2195,7 @@ namespace OpenDentBusiness {
 						List<long> listClaimProcNums=Database.GetListLong(command);
 						command="DELETE FROM claimproc WHERE ClaimProcNum IN ("+inCommand+")";
 						Database.ExecuteNonQuery(command);
-						listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+						listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 							DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteDuplicateEstimateForSameInsPlan.")));
 					}
 					if(table.Rows.Count>0 || verbose) {
@@ -2228,7 +2228,7 @@ namespace OpenDentBusiness {
 						+"AND NOT EXISTS(SELECT PlanNum FROM insplan WHERE insplan.PlanNum=claimproc.PlanNum) "
 						+"AND claimproc.Status="+POut.Int((int)ClaimProcStatus.Adjustment);
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteInvalidAdjustments.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2263,7 +2263,7 @@ namespace OpenDentBusiness {
 						+"AND NOT EXISTS(SELECT * FROM claim WHERE claim.ClaimNum=claimproc.ClaimNum) "
 						+"AND claimproc.InsPayAmt=0 AND claimproc.WriteOff=0";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteWithInvalidClaimNum.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2299,7 +2299,7 @@ namespace OpenDentBusiness {
 						string methodName=MethodBase.GetCurrentMethod().Name;
 						command="DELETE FROM claimproc WHERE ClaimProcNum IN("+string.Join(",",listClaimProcNums)+")";
 						long numberFixed=Database.ExecuteNonQuery(command);
-						listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+						listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 							DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteMismatchPatNum.")));
 						if(numberFixed>0 || verbose) {
 							log+=Lans.g("FormDatabaseMaintenance","Claimprocs deleted due to PatNum not matching the procedure PatNum:")+" "
@@ -2336,7 +2336,7 @@ namespace OpenDentBusiness {
 						+"AND NOT EXISTS(SELECT * FROM procedurelog "
 						+"WHERE claimproc.ProcNum=procedurelog.ProcNum)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteEstimateWithInvalidProcNum.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2376,7 +2376,7 @@ namespace OpenDentBusiness {
 							+"AND procedurelog.ProcStatus="+POut.Int((int)ProcStat.C)
 						+")";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcDeleteCapEstimateWithProcComplete.")));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Capitation estimates deleted for completed procedures: ")+numberFixed.ToString()+"\r\n";
@@ -2405,7 +2405,7 @@ namespace OpenDentBusiness {
 					//This is just estimate info, regardless of the claimproc status, so totally safe.
 					command="UPDATE claimproc SET InsPayEst=0 WHERE NoBillIns=1 AND InsPayEst !=0";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated InsPayEst from "+x.InsPayEst+" to 0 from ClaimProcEstNoBillIns.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2434,7 +2434,7 @@ namespace OpenDentBusiness {
 					//The InsPayAmt is already being ignored due to the status of the claimproc.  So changing its value is harmless.
 					command=@"UPDATE claimproc SET InsPayAmt=0 WHERE InsPayAmt > 0 AND ClaimNum=0 AND Status=6";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated InsPayAmt from "+x.InsPayEst+" to 0 from ClaimProcEstWithInsPaidAmt.")));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","ClaimProc estimates with InsPaidAmt > 0 fixed: ")+numberFixed.ToString()+"\r\n";
@@ -2462,7 +2462,7 @@ namespace OpenDentBusiness {
 					List<long> listClaimProcNums=Database.GetListLong(command);
 					command="DELETE FROM claimproc WHERE PatNum=0 AND InsPayAmt=0 AND WriteOff=0";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcPatNumMissing.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2491,7 +2491,7 @@ namespace OpenDentBusiness {
 					//If estimate, set to default prov (doesn't affect finances)
 					command="UPDATE claimproc SET ProvNum="+PrefC.GetString(PrefName.PracticeDefaultProv)+" WHERE ProvNum=0 AND Status="+POut.Int((int)ClaimProcStatus.Estimate);
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated ProvNum from 0 to "+PrefC.GetString(PrefName.PracticeDefaultProv)+".")));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","ClaimProcs with missing provnums fixed: ")+numberFixed.ToString()+"\r\n";
@@ -2615,7 +2615,7 @@ namespace OpenDentBusiness {
 							+" AND claimproc.ClaimNum=claim.ClaimNum"
 							+" AND claim.DateService > "+POut.Date(new DateTime(1880,1,1));//but have valid date of service on the claim
 						Database.ExecuteNonQuery(command);
-						table.Select().ToList().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(x["ClaimProcNum"].ToString()),
+						table.Select().ToList().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,PIn.Long(x["ClaimProcNum"].ToString()),
 							DbmLogFKeyType.ClaimProc,DbmLogActionType.Update,methodName,"Updated ProcDate from "+x["ProcDate"].ToString()
 							+" to "+x["DateService"].ToString()+" from ClaimProcTotalPaymentWithInvalidDate.")));
 					}
@@ -2655,7 +2655,7 @@ namespace OpenDentBusiness {
 						command=$"UPDATE claimproc SET Status={POut.Enum(ClaimProcStatus.Estimate)} "+
 							$"WHERE ClaimProcNum IN("+string.Join(",",listClaimProcNums)+")";
 						Database.ExecuteNonQuery(command);
-						listClaimProcNums.ForEach(x=>listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+						listClaimProcNums.ForEach(x=>listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 							DbmLogActionType.Update,methodName,$"Updated status of ClaimProc from '{ClaimProcStatus.NotReceived.GetDescription()}' to " +
 							$"'{ClaimProcStatus.Estimate.GetDescription()}' where no claim was attached.")));
 					}
@@ -2719,9 +2719,9 @@ namespace OpenDentBusiness {
 							claim.InsSubNum=cpList[i].InsSubNum;
 							claim.ProvTreat=cpList[i].ProvNum;
 							//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-							claim.SecUserNumEntry=Security.CurUser.UserNum;
+							claim.SecUserNumEntry=Security.CurUser.Id;
 							Crud.ClaimCrud.Insert(claim,true);//Allows us to use a primary key that was "used".
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,claim.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Insert,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,claim.ClaimNum,DbmLogFKeyType.Claim,DbmLogActionType.Insert,
 								methodName,"Added new claim from ClaimProcWithInvalidClaimNum."));
 						}
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2767,7 +2767,7 @@ namespace OpenDentBusiness {
 						+patWhere
 						+"AND NOT EXISTS(SELECT * FROM claimpayment WHERE claimpayment.ClaimPaymentNum=claimproc.ClaimPaymentNum)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated ClaimPaymentNum from "+x.ClaimPaymentNum+" to 0.")));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","ClaimProcs with with invalid ClaimPaymentNumber fixed: ")+numberFixed.ToString()+"\r\n";
@@ -2797,7 +2797,7 @@ namespace OpenDentBusiness {
 					//safe, if the user wants to attach the claimprocs to a payplan for tracking the ins payments they would just need to attach to a valid payplan
 					command=@"UPDATE claimproc SET PayPlanNum=0 WHERE PayPlanNum>0 AND PayPlanNum NOT IN(SELECT PayPlanNum FROM payplan)";
 					long numFixed=Database.ExecuteNonQuery(command);
-					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						 DbmLogActionType.Update,methodName,"Updated PayPlanNum from "+x.PayPlanNum+" to 0.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","ClaimProcs with with invalid PayPlanNum fixed")+": "+numFixed.ToString()+"\r\n";
@@ -2826,7 +2826,7 @@ namespace OpenDentBusiness {
 					command="UPDATE claimproc SET ProvNum="+POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv))+
 							" WHERE ProvNum > 0 AND ProvNum NOT IN (SELECT ProvNum FROM provider)";
 					long numFixed=Database.ExecuteNonQuery(command);
-					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,
 						"Updated ProvNum from "+x.ProvNum+" to "+POut.String(PrefC.GetLong(PrefName.PracticeDefaultProv).ToString()))));
 					if(numFixed>0 || verbose) {
@@ -2857,7 +2857,7 @@ namespace OpenDentBusiness {
 					command="DELETE FROM claimproc WHERE claimproc.InsSubNum > 0 AND claimproc.Status="+POut.Int((int)ClaimProcStatus.Estimate)
 						+" AND claimproc.InsSubNum NOT IN (SELECT inssub.InsSubNum FROM inssub)";
 					long numFixed=Database.ExecuteNonQuery(command);
-					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.ClaimProc,
+					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from ClaimProcWithInvalidSubNum.")));
 					if(numFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2937,7 +2937,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					foreach(ClaimProc claimProc in listClaimProcs) {
 						ClaimProcs.Delete(claimProc);
-						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,claimProc.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,claimProc.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Delete,methodName,"Deleted ClaimProc from CanadaClaimProcForWrongPatient."));
 					}
 					Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -3061,7 +3061,7 @@ namespace OpenDentBusiness {
 								ItemOrder = itemOrd
 							};
 							Clinics.Insert(missingClinic,true);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,missingClinic.ClinicNum,DbmLogFKeyType.Clinic,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,missingClinic.ClinicNum,DbmLogFKeyType.Clinic,
 								DbmLogActionType.Insert,methodName,"Inserted clinic from ClinicNumMissingInvalid."));
 						}
 						if(listInvalidClinicNums.Count>0 || verbose) {
@@ -3494,7 +3494,7 @@ namespace OpenDentBusiness {
 							+" AND FeeNum!="+table.Rows[i]["FeeNum"].ToString();//This is the random fee we will keep.
 						List<long> listFeeNums=Database.GetListLong(command);
 						Fees.DeleteMany(listFeeNums);
-						listFeeNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Fee,
+						listFeeNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Fee,
 							DbmLogActionType.Delete,methodName,"Deleted fee from FeeDeleteDuplicates.")));
 						numberFixed+=listFeeNums.Count;
 					}
@@ -3529,7 +3529,7 @@ namespace OpenDentBusiness {
 						command="SELECT FeeNum FROM fee WHERE FeeNum="+table.Rows[i]["FeeNum"].ToString();
 						List<long> listFeeNums=Database.GetListLong(command);
 						Fees.DeleteMany(listFeeNums);
-						listFeeNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Fee,
+						listFeeNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Fee,
 							DbmLogActionType.Delete,methodName,"Deleted fee from FeeDeleteForInvalidProc.")));
 						numberFixed+=listFeeNums.Count;
 					}
@@ -3562,7 +3562,7 @@ namespace OpenDentBusiness {
 					command="UPDATE procedurelog SET AptNum=0 "
 						+"WHERE AptNum!=0 AND CodeNum IN(SELECT CodeNum FROM procedurecode WHERE procedurecode.ProcCode='~GRP~')";
 					long numfixed=Database.ExecuteNonQuery(command);
-					listProcedures.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ProcNum,DbmLogFKeyType.Procedure,
+					listProcedures.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ProcNum,DbmLogFKeyType.Procedure,
 						DbmLogActionType.Update,methodName,"Updated AptNum from "+x.AptNum+" to 0 from GroupNoteWithInvalidAptNum.")));
 					if(numfixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Group notes attached to appointments fixed: ")+numfixed.ToString()+"\r\n";
@@ -3595,7 +3595,7 @@ namespace OpenDentBusiness {
 						+"WHERE ProcStatus NOT IN("+POut.Int((int)ProcStat.D)+","+POut.Int((int)ProcStat.EC)+") "
 						+"AND CodeNum IN(SELECT CodeNum FROM procedurecode WHERE procedurecode.ProcCode='~GRP~')";
 					long numfixed=Database.ExecuteNonQuery(command);
-					listProcedures.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ProcNum,DbmLogFKeyType.Procedure,
+					listProcedures.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ProcNum,DbmLogFKeyType.Procedure,
 						DbmLogActionType.Update,methodName,"Updated ProcStatus from "+x.ProcStatus+" to "+POut.String(ProcStat.EC.ToString())
 						+" from GroupNoteWithInvalidProcStatus.")));
 					if(numfixed>0 || verbose) {
@@ -3629,7 +3629,7 @@ namespace OpenDentBusiness {
 					command="UPDATE feesched SET IsHidden=0 "
 						+"WHERE IsHidden=1 AND FeeSchedNum IN (SELECT FeeSched FROM patient)";
 					long numfixed=Database.ExecuteNonQuery(command);
-					listFeeSchedNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.FeeSched,
+					listFeeSchedNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.FeeSched,
 						DbmLogActionType.Update,methodName,"Updated IsHidden from 1 to 0 from FeeScheduleHiddenWithPatient.")));
 					if(numfixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Hidden Fee Schedules associated to patients unhidden: ")+numfixed.ToString()+"\r\n";
@@ -3722,7 +3722,7 @@ namespace OpenDentBusiness {
 						//Change the insurance payment plan to a patient payment plan so that the payments will be visible within the payment plan
 						command="UPDATE payplan SET PlanNum=0 WHERE PayPlanNum IN("+String.Join(",",listPayPlanNums)+")";
 						Database.ExecuteNonQuery(command);
-						listPayPlanNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PayPlan,
+						listPayPlanNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.PayPlan,
 							DbmLogActionType.Update,methodName,"Updated PlanNum to 0 from InsPayPlanWithPatientPayments.")));
 					}
 					int numberFixed=listPayPlanNums.Count;
@@ -3784,7 +3784,7 @@ namespace OpenDentBusiness {
 							if(carrierNum<=0) {
 								carrierNum0=carrier.CarrierNum;
 							}
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,carrierNum,DbmLogFKeyType.Carrier,DbmLogActionType.Insert,methodName,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,carrierNum,DbmLogFKeyType.Carrier,DbmLogActionType.Insert,methodName,
 								$"Created new carrier '{carrier.CarrierName}' from InsPlanInvalidCarrier."));
 						}
 						if(carrierNum0!=0) {//If we had any plans with CarrierNum of 0
@@ -3792,7 +3792,7 @@ namespace OpenDentBusiness {
 								+" WHERE CarrierNum<=0";
 							Database.ExecuteNonQuery(command);
 							table.Select().Where(x => PIn.Long(x["CarrierNum"].ToString())<=0)
-								.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(x["PlanNum"].ToString()),
+								.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,PIn.Long(x["PlanNum"].ToString()),
 									DbmLogFKeyType.InsPlan,DbmLogActionType.Update,methodName,"Updated CarrierNum from "+x["CarrierNum"].ToString()+" to "+carrierNum0
 									+" from InsPlanInvalidCarrier.")));
 						}
@@ -3982,7 +3982,7 @@ namespace OpenDentBusiness {
 					List<Appointment> listAppointments=Crud.AppointmentCrud.SelectMany(command);
 					command="UPDATE appointment SET InsPlan1=0 "+where;
 					long numFixed=Database.ExecuteNonQuery(command);
-					listAppointments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.AptNum,DbmLogFKeyType.Appointment,
+					listAppointments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.AptNum,DbmLogFKeyType.Appointment,
 						DbmLogActionType.Update,methodName,"Updated InsPlan1 from "+x.InsPlan1+" to 0 from InsPlanInvalidNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Invalid appointment InsPlan1 values fixed: ")+numFixed+"\r\n";
@@ -3995,7 +3995,7 @@ namespace OpenDentBusiness {
 					listAppointments=Crud.AppointmentCrud.SelectMany(command);
 					command="UPDATE appointment SET InsPlan2=0 "+where;
 					numFixed=Database.ExecuteNonQuery(command);
-					listAppointments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.AptNum,DbmLogFKeyType.Appointment,
+					listAppointments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.AptNum,DbmLogFKeyType.Appointment,
 						DbmLogActionType.Update,methodName,"Updated InsPlan2 from "+x.InsPlan2+" to 0 from InsPlanInvalidNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Invalid appointment InsPlan2 values fixed: ")+numFixed+"\r\n";
@@ -4015,7 +4015,7 @@ namespace OpenDentBusiness {
 					List<Benefit> listBenefits=Crud.BenefitCrud.SelectMany(command);
 					command="DELETE FROM benefit "+where;
 					numFixed=Database.ExecuteNonQuery(command);
-					listBenefits.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.BenefitNum,DbmLogFKeyType.Benefit,
+					listBenefits.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.BenefitNum,DbmLogFKeyType.Benefit,
 						DbmLogActionType.Delete,methodName,"Deleted benefit from InsPlanInvalidNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Invalid benefit PlanNums fixed: ")+numFixed+"\r\n";
@@ -4046,24 +4046,24 @@ namespace OpenDentBusiness {
 							List<ClaimProc> listClaimProc=Crud.ClaimProcCrud.SelectMany(command);
 							command="DELETE FROM claimproc "+where;//ok to delete because no claim and just an estimate or adjustment
 							Database.ExecuteNonQuery(command);
-							listClaimProc.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+							listClaimProc.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 								DbmLogActionType.Delete,methodName,"Deleted claimproc from InsPlanInvalidNum.")));
 							List<Permissions> listPerms=GroupPermissions.GetPermsFromCrudAuditPerm(CrudTableAttribute.GetCrudAuditPermForClass(typeof(InsSub)));
 							listSecurityLogs=SecurityLogs.GetFromFKeysAndType(new List<long> { insSubNum },listPerms);
 							InsSubs.ClearFkey(insSubNum);
-							listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
+							listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
 								DbmLogActionType.Update,methodName,"Updated securitylog by setting FKey to 0 from InsPlanInvalidNum.")));
 							command="SELECT * FROM inssub WHERE InsSubNum="+POut.Long(insSubNum);
 							listInsSubs=Crud.InsSubCrud.SelectMany(command);
 							command="DELETE FROM inssub WHERE InsSubNum="+POut.Long(insSubNum);
 							Database.ExecuteNonQuery(command);
-							listInsSubs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.InsSubNum,DbmLogFKeyType.InsSub,
+							listInsSubs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.InsSubNum,DbmLogFKeyType.InsSub,
 								DbmLogActionType.Delete,methodName,"Deleted inssub from InsPlanInvalidNum.")));
 							command="SELECT * FROM patplan WHERE InsSubNum="+POut.Long(insSubNum);
 							List<PatPlan> listPatPlans=Crud.PatPlanCrud.SelectMany(command);
 							command="DELETE FROM patplan WHERE InsSubNum="+POut.Long(insSubNum);//It's very safe to "drop coverage" for a patient.
 							Database.ExecuteNonQuery(command);
-							listPatPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PatPlanNum,DbmLogFKeyType.PatPlan,
+							listPatPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.PatPlanNum,DbmLogFKeyType.PatPlan,
 								DbmLogActionType.Delete,methodName,"Deleted patplan from InsPlanInvalidNum.")));
 							numFixed++;
 							continue;
@@ -4098,7 +4098,7 @@ namespace OpenDentBusiness {
 							List<Permissions> listPerms=GroupPermissions.GetPermsFromCrudAuditPerm(CrudTableAttribute.GetCrudAuditPermForClass(typeof(InsSub)));
 							listSecurityLogs=SecurityLogs.GetFromFKeysAndType(new List<long> { insSubNum },listPerms);
 							InsSubs.ClearFkey(insSubNum);
-							listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
+							listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
 								DbmLogActionType.Update,methodName,"Updated securitylog by setting FKey to 0 from InsPlanInvalidNum.")));
 							command="SELECT * FROM inssub WHERE InsSubNum="+POut.Long(insSubNum);
 							listInsSubs=Crud.InsSubCrud.SelectMany(command);
@@ -4108,7 +4108,7 @@ namespace OpenDentBusiness {
 							Database.ExecuteNonQuery(command);
 							command="DELETE FROM claimproc WHERE InsSubNum="+POut.Long(insSubNum)+" AND Status IN (6,3)";//Estimate,Adjustment
 							Database.ExecuteNonQuery(command);
-							listInsSubs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.InsSubNum,DbmLogFKeyType.InsSub,
+							listInsSubs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.InsSubNum,DbmLogFKeyType.InsSub,
 								DbmLogActionType.Delete,methodName,"Deleted inssub from InsPlanInvalidNum.")));
 							numFixed++;
 							continue;
@@ -4118,15 +4118,15 @@ namespace OpenDentBusiness {
 							insplan.IsHidden=true;
 							insplan.CarrierNum=Carriers.GetByNameAndPhone("UNKNOWN CARRIER","",true).CarrierNum;
 							//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-							insplan.SecUserNumEntry=Security.CurUser.UserNum;
+							insplan.SecUserNumEntry=Security.CurUser.Id;
 							long insPlanNum=InsPlans.Insert(insplan);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,insPlanNum,DbmLogFKeyType.InsPlan,DbmLogActionType.Insert,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,insPlanNum,DbmLogFKeyType.InsPlan,DbmLogActionType.Insert,
 								methodName,"Inserted a new insplan from InsPlanInvalidNum"));
 							command="SELECT * FROM inssub WHERE InsSubNum="+POut.Long(insSubNum);
 							listInsSubs=Crud.InsSubCrud.SelectMany(command);
 							command="UPDATE inssub SET PlanNum="+POut.Long(insPlanNum)+" WHERE InsSubNum="+POut.Long(insSubNum);
 							Database.ExecuteNonQuery(command);
-							listInsSubs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.InsSubNum,DbmLogFKeyType.InsSub,
+							listInsSubs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.InsSubNum,DbmLogFKeyType.InsSub,
 								DbmLogActionType.Update,methodName,"Updated PlanNum from "+x.PlanNum+" to "+insPlanNum+" InsPlanInvalidNum.")));
 							numFixed++;
 							continue;
@@ -4162,7 +4162,7 @@ namespace OpenDentBusiness {
 					command="UPDATE insplan SET ClaimFormNum="+POut.Long(PrefC.GetLong(PrefName.DefaultClaimForm))
 						+" WHERE ClaimFormNum=0";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listInsPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PlanNum,DbmLogFKeyType.InsPlan,
+					listInsPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.PlanNum,DbmLogFKeyType.InsPlan,
 						DbmLogActionType.Update,methodName,"Updated ClaimFormNum from 0 to "+PrefC.GetLong(PrefName.DefaultClaimForm))));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -4201,7 +4201,7 @@ namespace OpenDentBusiness {
 							Patient patOld=pat.Copy();
 							pat.PatStatus=PatientStatus.Archived;
 							Patients.Update(pat,patOld);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,pat.PatNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,pat.PatNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,
 								methodName,"Updated PatStatus from"+patOld.PatStatus+" to "+PatientStatus.Archived+"."));
 							SecurityLogs.MakeLogEntry(Permissions.PatientEdit,pat.PatNum,
 								"Patient status changed from 'Deleted' to 'Archived' from DBM fix for InsSubInvalidSubscriber.",LogSources.DBM);
@@ -4216,9 +4216,9 @@ namespace OpenDentBusiness {
 							pat.PriProv=priProv;
 							pat.BillingType=billType;
 							//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-							pat.SecUserNumEntry=Security.CurUser.UserNum;
+							pat.SecUserNumEntry=Security.CurUser.Id;
 							Patients.Insert(pat,true);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,pat.PatNum,DbmLogFKeyType.Patient,DbmLogActionType.Insert,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,pat.PatNum,DbmLogFKeyType.Patient,DbmLogActionType.Insert,
 								methodName,"Inserted patient from InsSubInvalidSubscriber."));
 							SecurityLogs.MakeLogEntry(Permissions.PatientCreate,pat.PatNum,"Recreated from DBM fix for InsSubInvalidSubscriber.",LogSources.DBM);
 						}
@@ -4420,7 +4420,7 @@ namespace OpenDentBusiness {
 					List<Claim> listClaims=Crud.ClaimCrud.SelectMany(command);
 					command="UPDATE claim SET PlanNum=(SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum) "+where;
 					numFixed=Database.ExecuteNonQuery(command);
-					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,
+					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimNum,DbmLogFKeyType.Claim,
 						DbmLogActionType.Update,methodName,"Updated PlanNum from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched claim InsSubNum/PlanNum fixed")+": "+numFixed.ToString()+"\r\n";
@@ -4441,7 +4441,7 @@ namespace OpenDentBusiness {
 						List<Permissions> listPerms=GroupPermissions.GetPermsFromCrudAuditPerm(CrudTableAttribute.GetCrudAuditPermForClass(typeof(Claim)));
 						List<SecurityLog> listSecurityLogs=SecurityLogs.GetFromFKeysAndType(listClaimNums,listPerms);
 						Claims.ClearFkey(listClaimNums);//Zero securitylog FKey column for rows to be deleted.
-						listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
+						listSecurityLogs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.SecurityLogNum,DbmLogFKeyType.Securitylog,
 							DbmLogActionType.Update,methodName,"Set FKey to 0 from InsSubNumMismatchPlanNum.")));
 					}
 					where="WHERE PlanNum=0 AND ClaimStatus IN('PreAuth','W','U','H') AND NOT EXISTS(SELECT * FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum)"
@@ -4450,7 +4450,7 @@ namespace OpenDentBusiness {
 					listClaimNums=Database.GetListLong(command);
 					command="DELETE FROM claim "+where;
 					numFixed=Database.ExecuteNonQuery(command);
-					listClaimNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Claim,
+					listClaimNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Claim,
 						DbmLogActionType.Delete,methodName,"Claim deleted with invalid InsSubNum and PlanNum=0 .")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Claims deleted with invalid InsSubNum and PlanNum=0")+": "+numFixed.ToString()+"\r\n";
@@ -4475,9 +4475,9 @@ namespace OpenDentBusiness {
 							plan.IsHidden=true;
 							plan.CarrierNum=Carriers.GetByNameAndPhone("UNKNOWN CARRIER","",true).CarrierNum;
 							//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-							plan.SecUserNumEntry=Security.CurUser.UserNum;
+							plan.SecUserNumEntry=Security.CurUser.Id;
 							InsPlans.Insert(plan,true);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,plan.PlanNum,DbmLogFKeyType.InsPlan,DbmLogActionType.Insert,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,plan.PlanNum,DbmLogFKeyType.InsPlan,DbmLogActionType.Insert,
 								methodName,"Inserted new insplan from InsSubNumMismatchPlanNum."));
 						}
 						long patNum=PIn.Long(table.Rows[i]["PatNum"].ToString());
@@ -4490,9 +4490,9 @@ namespace OpenDentBusiness {
 							sub.Subscriber=patNum;//if this sub was created on a previous loop, this may be some other patient.
 							sub.SubscriberID="unknown";
 							//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-							sub.SecUserNumEntry=Security.CurUser.UserNum;
+							sub.SecUserNumEntry=Security.CurUser.Id;
 							InsSubs.Insert(sub,true);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,sub.InsSubNum,DbmLogFKeyType.InsSub,DbmLogActionType.Insert,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,sub.InsSubNum,DbmLogFKeyType.InsSub,DbmLogActionType.Insert,
 								methodName,"Inserted new inssub from InsSubNumMismatchPlanNum."));
 						}
 						Patient pat=Patients.GetLim(patNum);
@@ -4518,9 +4518,9 @@ namespace OpenDentBusiness {
 						sub.Subscriber=PIn.Long(table.Rows[i]["PatNum"].ToString());
 						sub.SubscriberID="unknown";
 						//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-						sub.SecUserNumEntry=Security.CurUser.UserNum;
+						sub.SecUserNumEntry=Security.CurUser.Id;
 						InsSubs.Insert(sub,true);
-						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,sub.InsSubNum,DbmLogFKeyType.InsSub,DbmLogActionType.Insert,
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,sub.InsSubNum,DbmLogFKeyType.InsSub,DbmLogActionType.Insert,
 							methodName,"Inserted new inssub from InsSubNumMismatchPlanNum."));
 					}
 					numFixed=table.Rows.Count;
@@ -4539,7 +4539,7 @@ namespace OpenDentBusiness {
 					command="UPDATE claim SET PlanNum2=(SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claim.InsSubNum2) "+where;
 					//if InsSubNum2 was completely invalid, then PlanNum2 gets set to zero here.
 					numFixed=Database.ExecuteNonQuery(command);
-					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimNum,DbmLogFKeyType.Claim,
+					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimNum,DbmLogFKeyType.Claim,
 						DbmLogActionType.Update,methodName,"Updated PlanNum2 from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched claim InsSubNum2/PlanNum2 fixed: ")+numFixed.ToString()+"\r\n";
@@ -4561,9 +4561,9 @@ namespace OpenDentBusiness {
 						sub.Subscriber=PIn.Long(table.Rows[i]["PatNum"].ToString());
 						sub.SubscriberID="unknown";
 						//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-						sub.SecUserNumEntry=Security.CurUser.UserNum;
+						sub.SecUserNumEntry=Security.CurUser.Id;
 						InsSubs.Insert(sub,true);
-						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,sub.InsSubNum,DbmLogFKeyType.InsSub,DbmLogActionType.Insert,
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,sub.InsSubNum,DbmLogFKeyType.InsSub,DbmLogActionType.Insert,
 							methodName,"Inserted new inssub from InsSubNumMismatchPlanNum."));
 					}
 					numFixed=table.Rows.Count;
@@ -4578,7 +4578,7 @@ namespace OpenDentBusiness {
 					List<ClaimProc> listClaimProcs=Crud.ClaimProcCrud.SelectMany(command);
 					command="UPDATE claimproc SET PlanNum=(SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=claimproc.InsSubNum) "+where;
 					numFixed=Database.ExecuteNonQuery(command);
-					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update,methodName,"Updated PlanNum from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched claimproc InsSubNum/PlanNum fixed: ")+numFixed.ToString()+"\r\n";
@@ -4593,7 +4593,7 @@ namespace OpenDentBusiness {
 					listClaimProcs=Crud.ClaimProcCrud.SelectMany(command);
 					command="DELETE FROM claimproc "+where;
 					numFixed=Database.ExecuteNonQuery(command);
-					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
+					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.ClaimProcNum,DbmLogFKeyType.ClaimProc,
 						 DbmLogActionType.Delete,methodName,"Deleted claimproc from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Claimprocs deleted with invalid InsSubNum and PlanNum=0: ")+numFixed.ToString()+"\r\n";
@@ -4608,7 +4608,7 @@ namespace OpenDentBusiness {
 					List<Etrans> listEtrans=Crud.EtransCrud.SelectMany(command);
 					command="UPDATE etrans SET PlanNum=(SELECT inssub.PlanNum FROM inssub WHERE inssub.InsSubNum=etrans.InsSubNum) "+where;
 					numFixed=Database.ExecuteNonQuery(command);
-					listEtrans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.EtransNum,DbmLogFKeyType.Etrans,
+					listEtrans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.EtransNum,DbmLogFKeyType.Etrans,
 						DbmLogActionType.Update,methodName,"Updated PlanNum from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched etrans InsSubNum/PlanNum fixed: ")+numFixed.ToString()+"\r\n";
@@ -4623,7 +4623,7 @@ namespace OpenDentBusiness {
 					List<PayPlan> listPayPlans=Crud.PayPlanCrud.SelectMany(command);
 					command="UPDATE payplan SET PlanNum=(SELECT PlanNum FROM inssub WHERE inssub.InsSubNum=payplan.InsSubNum) "+where;
 					numFixed=Database.ExecuteNonQuery(command);
-					listPayPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PayPlanNum,DbmLogFKeyType.PayPlan,
+					listPayPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.PayPlanNum,DbmLogFKeyType.PayPlan,
 						DbmLogActionType.Update,methodName,"Updated PlanNum from InsSubNumMismatchPlanNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Mismatched payplan InsSubNum/PlanNum fixed: ")+numFixed.ToString()+"\r\n";
@@ -5023,7 +5023,7 @@ namespace OpenDentBusiness {
 						long guarantor=PIn.Long(table.Rows[i]["Guarantor"].ToString());
 						command="UPDATE patient SET Guarantor=PatNum WHERE PatNum="+patNum;
 						Database.ExecuteNonQuery(command);
-						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,patNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,methodName,
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,patNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,methodName,
 							"Updated Guarantor from "+guarantor+" to "+patNum+" from PatientBadGuarantor."));
 					}
 					int numberFixed=table.Rows.Count;
@@ -5055,7 +5055,7 @@ namespace OpenDentBusiness {
 						long guarantor=PIn.Long(table.Rows[i]["Guarantor"].ToString());
 						command="UPDATE patient SET Guarantor="+guarantor+" WHERE PatNum="+patNum;
 						Database.ExecuteNonQuery(command);
-						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,patNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,methodName,
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,patNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,methodName,
 							"Updated Guarantor to "+guarantor+" from PatientBadGuarantorWithAnotherGuarantor."));
 					}
 					int numberFixed=table.Rows.Count;
@@ -5088,7 +5088,7 @@ namespace OpenDentBusiness {
 					List<Patient> listPatients=Crud.PatientCrud.SelectMany(command);
 					command="UPDATE patient SET ClinicNum=0 "+where;
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listPatients.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PatNum,DbmLogFKeyType.Patient,
+					listPatients.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.PatNum,DbmLogFKeyType.Patient,
 						DbmLogActionType.Update,methodName,"Updated ClinicNum from "+x.ClinicNum+" to 0.")));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Deleted patients with clinics cleared: ")+numberFixed.ToString()+"\r\n";
@@ -5130,7 +5130,7 @@ namespace OpenDentBusiness {
 							+"("+DbHelper.LimitOrderBy("SELECT DefNum FROM definition WHERE Category="+(int)DefCat.BillingTypes+" ORDER BY ItemOrder",1)+") "
 							+"WHERE PatNum IN ("+string.Join(",",listPatNums)+")";
 						numberFixed=Database.ExecuteNonQuery(command);
-						listPatNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Patient,DbmLogActionType.Update,
+						listPatNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Patient,DbmLogActionType.Update,
 							methodName,"Updated the BillingType from PatientInvalidBillingType.")));
 					}
 					if(numberFixed>0 || verbose) {
@@ -5162,7 +5162,7 @@ namespace OpenDentBusiness {
 					//Set all invalid Grade Levels to Unknown.
 					command="UPDATE patient SET GradeLevel="+POut.Int((int)PatientGrade.Unknown)+" WHERE GradeLevel < 0";
 					long numFixed=Database.ExecuteNonQuery(command);
-					listPatients.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PatNum,DbmLogFKeyType.Patient,
+					listPatients.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.PatNum,DbmLogFKeyType.Patient,
 						DbmLogActionType.Update,methodName,"Updated GradeLevel from "+x.GradeLevel+" to "+POut.Int((int)PatientGrade.Unknown)+".")));
 					if(numFixed > 0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Patients with invalid GradeLevel fixed")+": "+numFixed.ToString()+"\r\n";
@@ -5229,11 +5229,11 @@ namespace OpenDentBusiness {
 							foreach(DataRow rowValidPat in tableValidPatientsMovingToNewSuperFamily.Rows) {
 								long validPatNum=PIn.Long(rowValidPat["PatNum"].ToString());
 								long validSuperFamilyNum=PIn.Long(rowValidPat["SuperFamily"].ToString());
-								listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,validPatNum,DbmLogFKeyType.Patient,//Log for each patient.
+								listDbmLogs.Add(new DbmLog(Security.CurUser.Id,validPatNum,DbmLogFKeyType.Patient,//Log for each patient.
 									DbmLogActionType.Update,methodName,"Updated SuperFamily from "+validSuperFamilyNum+" to "+newSuperFamilyHeadNum+"."));
 							}
 						}
-						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(patNum),DbmLogFKeyType.Patient,//Log for each patient.
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,PIn.Long(patNum),DbmLogFKeyType.Patient,//Log for each patient.
 							DbmLogActionType.Update,methodName,"Updated SuperFamily from "+oldSuperFamilyHeadNum+" to "+newSuperFamilyHeadNum+"."));
 					}
 					if(countFixed > 0 || verbose) {
@@ -5382,7 +5382,7 @@ namespace OpenDentBusiness {
 					//From now on, we can assum priprov is not missing, making coding easier.
 					command=@"UPDATE patient SET PriProv="+PrefC.GetString(PrefName.PracticeDefaultProv)+" WHERE PriProv=0";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listPatNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Patient,DbmLogActionType.Update,
+					listPatNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Patient,DbmLogActionType.Update,
 						methodName,"Updated PriProv from 0 to "+PrefC.GetString(PrefName.PracticeDefaultProv))));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Patient pri provs fixed: ")+numberFixed.ToString()+"\r\n";
@@ -5425,7 +5425,7 @@ namespace OpenDentBusiness {
 								pat.LName=pat.LName+Lans.g("FormDatabaseMaintenance","DELETED");
 								pat.PatStatus=PatientStatus.Archived;
 								Patients.Update(pat,old);
-								listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,pat.PatNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,
+								listDbmLogs.Add(new DbmLog(Security.CurUser.Id,pat.PatNum,DbmLogFKeyType.Patient,DbmLogActionType.Update,
 									methodName,"Updated the PatStatus from Deleted to Archived from PatientUnDeleteWithBalance"));
 							}
 							Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -5465,7 +5465,7 @@ namespace OpenDentBusiness {
 					List<long> listPatPlanNums=Database.GetListLong(command);
 					command="DELETE FROM patplan WHERE InsSubNum NOT IN (SELECT InsSubNum FROM inssub)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listPatPlanNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PatPlan,
+					listPatPlanNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.PatPlan,
 						DbmLogActionType.Delete,methodName,"Deleted patplan from PatPlanDeleteWithInvalidInsSubNum.")));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Pat plans with invalid InsSubNums deleted: ")+numberFixed.ToString()+"\r\n";
@@ -5495,7 +5495,7 @@ namespace OpenDentBusiness {
 					List<long> listPatPlanNums=Database.GetListLong(command);
 					command="DELETE FROM patplan WHERE PatNum NOT IN (SELECT PatNum FROM patient)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listPatPlanNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PatPlan,
+					listPatPlanNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.PatPlan,
 						DbmLogActionType.Delete,methodName,"Deleted patplan from PatPlanDeleteWithInvalidPatNum.")));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Pat plans with invalid PatNums deleted: ")+numberFixed.ToString()+"\r\n";
@@ -5557,7 +5557,7 @@ namespace OpenDentBusiness {
 						PatPlan patPlan=PatPlans.GetPatPlan(PIn.Long(table.Rows[i][1].ToString()),0);
 						if(patPlan!=null) {//Unlikely but possible if plan gets deleted by a user during this check.
 							PatPlans.SetOrdinal(patPlan.PatPlanNum,1);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,patPlan.PatPlanNum,DbmLogFKeyType.PatPlan,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,patPlan.PatPlanNum,DbmLogFKeyType.PatPlan,
 								DbmLogActionType.Update,methodName,"PatPlan ordinal changed from 0 to 1 from PatPlanOrdinalZeroToOne."));
 							numberFixed++;
 						}
@@ -5591,7 +5591,7 @@ namespace OpenDentBusiness {
 						PatPlan patPlan=PatPlans.GetPatPlan(PIn.Long(table.Rows[i][1].ToString()),2);
 						if(patPlan!=null) {//Unlikely but possible if plan gets deleted by a user during this check.
 							PatPlans.SetOrdinal(patPlan.PatPlanNum,1);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,patPlan.PatPlanNum,DbmLogFKeyType.PatPlan,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,patPlan.PatPlanNum,DbmLogFKeyType.PatPlan,
 								DbmLogActionType.Update,methodName,"PatPlan ordinal changed from 2 to 1 from PatPlanOrdinalTwoToOne."));
 							numberFixed++;
 						}
@@ -5672,7 +5672,7 @@ namespace OpenDentBusiness {
 					List<Payment> listPayments=Crud.PaymentCrud.SelectMany(command);
 					command="UPDATE payment SET DepositNum=0 "+where;
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listPayments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x.PayNum,DbmLogFKeyType.Payment,
+					listPayments.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.PayNum,DbmLogFKeyType.Payment,
 						DbmLogActionType.Update,methodName,"Updated DepositNum from "+x.DepositNum+" to 0.")));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Payments detached from deposits that no longer exist: ")
@@ -5709,7 +5709,7 @@ namespace OpenDentBusiness {
 					List<long> listPayNums=Database.GetListLong(command);
 					command="DELETE FROM payment "+where;
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listPayNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Payment,
+					listPayNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Payment,
 						DbmLogActionType.Delete,methodName,"Deleted payment from PaymentMissingPaySplit.")));
 					if(numberFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Payments with no attached paysplit fixed: ")+numberFixed+"\r\n";
@@ -5828,13 +5828,13 @@ namespace OpenDentBusiness {
 						List<long> listPrikeys=Database.GetListLong(command);
 						command="DELETE FROM payplancharge "+where;
 						Database.ExecuteNonQuery(command);
-						listPrikeys.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PayPlanCharge,
+						listPrikeys.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.PayPlanCharge,
 							DbmLogActionType.Delete,methodName,"Deleted paysplancharge from PayPlanChargeWithInvalidPayPlanNum.")));
 						command="SELECT CreditCardNum FROM creditcard "+where;
 						listPrikeys=Database.GetListLong(command);
 						command="UPDATE creditcard SET PayPlanNum=0 "+where;
 						Database.ExecuteNonQuery(command);
-						listPrikeys.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.CreditCard,
+						listPrikeys.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.CreditCard,
 							DbmLogActionType.Update,methodName,"Set creditcard.PayPlanNum to 0 from PayPlanChargeWithInvalidPayPlanNum.")));
 						log+=Lans.g("FormDatabaseMaintenance","PayPlan charges or credit cards with an invalid PayPlanNum fixed")+": "+count;
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -5960,7 +5960,7 @@ namespace OpenDentBusiness {
 					List<long> listPaySplitNums=table.Select().Select(x => PIn.Long(x["SplitNum"].ToString())).ToList();
 					command="UPDATE paysplit SET paysplit.FSplitNum=0 WHERE paysplit.FSplitNum=paysplit.SplitNum";
 					long numFixed=Database.ExecuteNonQuery(command);
-					listPaySplitNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PaySplit,
+					listPaySplitNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.PaySplit,
 						DbmLogActionType.Update,methodName,"Updated FSplitNum to 0 from PaySplitAttachedToItself.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Paysplits with invalid FSplitNums fixed: ")+numFixed+"\r\n";
@@ -5999,7 +5999,7 @@ namespace OpenDentBusiness {
 					foreach(DataRow row in tableSplitsWithoutUnearnedType.Rows) {
 						long splitNum=PIn.Long(row["SplitNum"].ToString());
 						long unearnedType=PIn.Long(row["UnearnedType"].ToString());
-						listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,splitNum,DbmLogFKeyType.PaySplit
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,splitNum,DbmLogFKeyType.PaySplit
 							,DbmLogActionType.Update,methodName,$"Updated unearned type from 0 to {unearnedType}"));
 						command=$@"UPDATE paysplit 
 							SET UnearnedType = {POut.Long(unearnedType)} 
@@ -6055,11 +6055,11 @@ namespace OpenDentBusiness {
 							payment.PayNote="Dummy payment. Original payment entry missing from the database.";
 							payment.PayNum=PIn.Long(table.Rows[i]["PayNum"].ToString());
 							//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-							payment.SecUserNumEntry=Security.CurUser.UserNum;
+							payment.SecUserNumEntry=Security.CurUser.Id;
 							payment.PaymentSource=CreditCardSource.None;
 							payment.ProcessStatus=ProcessStat.OfficeProcessed;
 							Payments.Insert(payment,true);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,payment.PayNum,DbmLogFKeyType.Payment,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,payment.PayNum,DbmLogFKeyType.Payment,
 								DbmLogActionType.Insert,methodName,"Inserted payment from PaySplitWithInvalidPayNum."));
 						}
 						rowsFixed+=table.Rows.Count;
@@ -6085,18 +6085,18 @@ namespace OpenDentBusiness {
 							payment.PayNote="Dummy payment. Original payment entry number was 0.";
 							payment.PayNum=PIn.Long(table.Rows[i]["PayNum"].ToString());
 							//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-							payment.SecUserNumEntry=Security.CurUser.UserNum;
+							payment.SecUserNumEntry=Security.CurUser.Id;
 							payment.PaymentSource=CreditCardSource.None;
 							payment.ProcessStatus=ProcessStat.OfficeProcessed;
 							Payments.Insert(payment);
-							listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,payment.PayNum,DbmLogFKeyType.Payment,
+							listDbmLogs.Add(new DbmLog(Security.CurUser.Id,payment.PayNum,DbmLogFKeyType.Payment,
 								DbmLogActionType.Insert,methodName,"Inserted payment from PaySplitWithInvalidPayNum."));
 							where=" WHERE PayNum=0 AND PatNum="+POut.Long(payment.PatNum)+" AND DatePay="+POut.Date(payment.PayDate);
 							command="SELECT SplitNum FROM paysplit"+where;
 							List<long> listPaySplitNums=Database.GetListLong(command);
 							command="UPDATE paysplit SET PayNum="+POut.Long(payment.PayNum)+where;
 							Database.ExecuteNonQuery(command);
-							listPaySplitNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Payment,
+							listPaySplitNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Payment,
 								DbmLogActionType.Update,methodName,"Updated PayNum from 0 to "+payment.PayNum+".")));
 						}
 						rowsFixed+=table.Rows.Count;
@@ -6130,7 +6130,7 @@ namespace OpenDentBusiness {
 					List<long> listPaySplitNums=Database.GetListLong(command);
 					command="UPDATE paysplit SET paysplit.PayPlanNum=0 "+where;
 					long numFixed=Database.ExecuteNonQuery(command);
-					listPaySplitNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PaySplit,
+					listPaySplitNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.PaySplit,
 						DbmLogActionType.Update,methodName,"Updated PayPlanNum to 0 from PaySplitWithInvalidPayPlanNum.")));
 					if(numFixed>0 || verbose) {
 						log+=Lans.g("FormDatabaseMaintenance","Paysplits with invalid PayPlanNums fixed: ")+numFixed+"\r\n";
@@ -6217,7 +6217,7 @@ namespace OpenDentBusiness {
 					List<long> listPlannedAppts=Database.GetListLong(command);
 					command=@"DELETE FROM plannedappt WHERE AptNum=0";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listPlannedAppts.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.PlannedAppt,
+					listPlannedAppts.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.PlannedAppt,
 						DbmLogActionType.Delete,methodName,"Deleted plannedappt from PlannedApptsWithInvalidAptNum.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -6525,7 +6525,7 @@ namespace OpenDentBusiness {
 									string procCodeFix=kvp.Key+"-"+i;
 									command=@"UPDATE procedurecode SET ProcCode='"+POut.String(procCodeFix)+"' WHERE CodeNum="+POut.Long(codeNum);
 										Database.ExecuteNonQuery(command);
-									listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,codeNum,DbmLogFKeyType.ProcedureCode,
+									listDbmLogs.Add(new DbmLog(Security.CurUser.Id,codeNum,DbmLogFKeyType.ProcedureCode,
 										DbmLogActionType.Update,methodName,$"Duplicate procedure code found, ProcCode Changed from '"
 											+POut.String(procCodeOriginal)+"' to '"+POut.String(procCodeFix)+"'"));
 									numFixed++;
@@ -6592,7 +6592,7 @@ namespace OpenDentBusiness {
 						+"WHERE ProcStatus=6 "
 						+"AND (AptNum!=0 OR PlannedAptNum!=0)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
+					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Appointment detached.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -6622,7 +6622,7 @@ namespace OpenDentBusiness {
 					command="UPDATE appointment,procedurelog SET procedurelog.AptNum=0 "
 						+"WHERE procedurelog.AptNum=appointment.AptNum AND procedurelog.PatNum != appointment.PatNum";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
+					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Appointment detached from ProcedurelogAttachedToWrongAppts.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -6657,7 +6657,7 @@ namespace OpenDentBusiness {
 						AND DATE(procedurelog.ProcDate) != DATE(appointment.AptDateTime)
 						AND procedurelog.ProcStatus=2";//only detach completed procs 
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
+					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Appointment detached from ProcedurelogAttachedToWrongApptDate.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -6709,7 +6709,7 @@ namespace OpenDentBusiness {
 						WHERE BaseUnits!=0 
 						AND (SELECT procedurecode.BaseUnits FROM procedurecode WHERE procedurecode.CodeNum=procedurelog.CodeNum)=0";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
+					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Procedure BaseUnit set to zero from ProcedurelogBaseUnitsZero.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -6750,7 +6750,7 @@ namespace OpenDentBusiness {
 					}
 					command="UPDATE procedurelog SET CodeNum=" + POut.Long(badCodeNum) + " WHERE NOT EXISTS (SELECT * FROM procedurecode WHERE procedurecode.CodeNum=procedurelog.CodeNum)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
+					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Procedure fixed with invalid CodeNum from ProcedurelogCodeNumInvalid.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -6842,7 +6842,7 @@ namespace OpenDentBusiness {
 									+"WHERE ProcNum="+POut.Long(procNum)+patWhere;
 								Database.ExecuteNonQuery(command);
 								numFixed++;
-								listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,procNum,DbmLogFKeyType.Procedure,
+								listDbmLogs.Add(new DbmLog(Security.CurUser.Id,procNum,DbmLogFKeyType.Procedure,
 									DbmLogActionType.Update,methodName,$"Invalid ToothRange of '{POut.String(toothRange)}' changed to '{POut.String(toothRangeUpdate)}'"));
 							}
 						}
@@ -6889,7 +6889,7 @@ namespace OpenDentBusiness {
 							Database.ExecuteNonQuery(command);
 							List<DbmLog> listDbmLogs=new List<DbmLog>();
 							string methodName=MethodBase.GetCurrentMethod().Name;
-							table.Select().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(x["ProcNum"].ToString()),
+							table.Select().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,PIn.Long(x["ProcNum"].ToString()),
 								DbmLogFKeyType.Procedure,DbmLogActionType.Update,methodName,"Lab procedure detached from ProcedurelogLabAttachedToDeletedProc.")));
 							Crud.DbmLogCrud.InsertMany(listDbmLogs);
 							log+=Lans.g("FormDatabaseMaintenance","Patients with completed lab procedures detached from deleted procedures: ")+table.Rows.Count;
@@ -7010,7 +7010,7 @@ namespace OpenDentBusiness {
 					numberFixed++;
 				}
 			}
-			table.Select().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(x["ProcNum"].ToString()),DbmLogFKeyType.Procedure,
+			table.Select().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,PIn.Long(x["ProcNum"].ToString()),DbmLogFKeyType.Procedure,
 					 DbmLogActionType.Update,methodName,"Fixed invalid tooth number from ProcedurelogToothNums.")));
 			if(numberFixed!=0 || verbose) {
 				Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -7119,7 +7119,7 @@ namespace OpenDentBusiness {
 						SET UnitQty=1
 						WHERE UnitQty=0";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
+					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Procedure changed from UnitQty=0 to UnitQty=1.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -7148,7 +7148,7 @@ namespace OpenDentBusiness {
 					command="UPDATE procedurelog SET ProvNum="+POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv))+
 							" WHERE ProvNum > 0 AND ProvNum NOT IN (SELECT ProvNum FROM provider)";
 					long numFixed=Database.ExecuteNonQuery(command);
-					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
+					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Updated invalid provider from ProcedurelogWithInvalidProvNum.")));
 					if(numFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -7183,7 +7183,7 @@ namespace OpenDentBusiness {
 					command="UPDATE procedurelog SET PlannedAptNum=0 "
 						+"WHERE PlannedAptNum NOT IN(SELECT AptNum FROM appointment) AND PlannedAptNum!=0";
 					numberFixed+=Database.ExecuteNonQuery(command);
-					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
+					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Procedure,
 						 DbmLogActionType.Update,methodName,"Set AptNum to 0 from ProcedurelogWithInvalidAptNum.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -7214,7 +7214,7 @@ namespace OpenDentBusiness {
 					command="UPDATE procedurelog SET ClinicNum=0 "
 						+"WHERE ClinicNum NOT IN(SELECT ClinicNum FROM clinic) and ClinicNum!=0 ";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,x,DbmLogFKeyType.Procedure,
+					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x,DbmLogFKeyType.Procedure,
 							 DbmLogActionType.Update,methodName,"Fixed invalid clinicnum from ProcedurelogWithInvalidClinicNum.")));
 					if(numberFixed>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -8199,7 +8199,7 @@ namespace OpenDentBusiness {
 							Heading = "MISSING TREATMENT PLAN",
 							Note = "This treatment plan was created by Database Maintenence because of orphaned proctps.",
 							PatNum = PIn.Long(table.Rows[i]["PatNum"].ToString()),
-							SecUserNumEntry = Security.CurUser.UserNum,
+							SecUserNumEntry = Security.CurUser.Id,
 							TreatPlanNum = PIn.Long(table.Rows[i]["TreatPlanNum"].ToString()),
 							TPStatus = TreatPlanStatus.Saved
 						};
@@ -8232,7 +8232,7 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command="UPDATE appointment SET Op=0 WHERE AptStatus=3";//UnschedList
 					Database.ExecuteNonQuery(command);
-					table.Select().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.UserNum,PIn.Long(x["AptNum"].ToString()),DbmLogFKeyType.Appointment,
+					table.Select().ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,PIn.Long(x["AptNum"].ToString()),DbmLogFKeyType.Appointment,
 						DbmLogActionType.Update,methodName,"Fixed invalid OpNum from UnscheduledApptsWithInvalidOpNum.")));
 					if(table.Rows.Count>0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -8616,7 +8616,7 @@ HAVING cnt>1";
 						PatNum=procCur.PatNum,
 						//UserNumPresenter=userNum,
 						//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-						SecUserNumEntry=Security.CurUser.UserNum,
+						SecUserNumEntry=Security.CurUser.Id,
 						TPType=(Patients.GetPat(procCur.PatNum).DiscountPlanNum==0 ? TreatPlanType.Insurance : TreatPlanType.Discount)
 					};
 					activePlan.TreatPlanNum=TreatPlans.Insert(activePlan);

@@ -395,7 +395,7 @@ namespace CentralManager
 		{
 			if (!Security.IsAuthorized(Permissions.Setup)) return;
 
-			using (var formCentralReportSetup = new FormCentralReportSetup(Security.CurUser.UserNum, true))
+			using (var formCentralReportSetup = new FormCentralReportSetup(Security.CurUser.Id, true))
 			{
 				formCentralReportSetup.ShowDialog();
 			}

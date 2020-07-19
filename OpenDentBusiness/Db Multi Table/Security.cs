@@ -51,7 +51,7 @@ namespace OpenDentBusiness{
 				}
 				_curUserT=value;
 				curUser=value;
-				UserodChangedEvent.Fire(EventCategory.Userod,_curUserT?.UserNum??curUser?.UserNum??0);
+				UserodChangedEvent.Fire(EventCategory.Userod,_curUserT?.Id??curUser?.Id??0);
 			}
 		}
 
@@ -328,11 +328,11 @@ namespace OpenDentBusiness{
 		///<summary>Synchronizes CurUser with the corresponding userod object from the user cache.  Used to update CurUser with any changes from cache refreshes.
 		///Throws an exception if CurUser was instantiated but is no longer in the user cache.  Does nothing if CurUser is null when invoked.</summary>
 		public static void SyncCurUser() {
-			if(CurUser==null || CurUser.UserNum==0) {//Usernum will be 0 for users instantiated for web. See InitWebcore.Init.
+			if(CurUser==null || CurUser.Id==0) {//Usernum will be 0 for users instantiated for web. See InitWebcore.Init.
 				return;
 			}
 			//Update CurUser with the user from the cache synchronizing any fields that could have been updated.  E.g. TaskListInBox
-			CurUser=Userods.GetFirstOrDefault(x => x.UserNum==CurUser.UserNum);
+			CurUser=Userods.GetFirstOrDefault(x => x.Id==CurUser.Id);
 			//The user could have been deleted and/or data loss could have occurred and the CurUser is no longer in the db.
 			if(CurUser==null && !ODInitialize.IsRunningInUnitTest) {
 				throw new ODException("The current user has been removed from the cache.");

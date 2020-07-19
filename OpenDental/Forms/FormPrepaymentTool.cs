@@ -359,7 +359,7 @@ namespace OpenDental {
 			prepaymentCommlog.CommType=Commlogs.GetTypeAuto(CommItemTypeAuto.FIN);
 			prepaymentCommlog.Mode_=CommItemMode.None;
 			prepaymentCommlog.Note="";//Appended to below.
-			prepaymentCommlog.UserNum=Security.CurUser.UserNum;
+			prepaymentCommlog.UserNum=Security.CurUser.Id;
 			string note="From PrepaymentTool: \r\n";
 			bool hasBeenBilledThisMonth=(DateTimeOD.Today.Day>=_patCur.BillingCycleDay);
 			//Get all applicable repeat charges.

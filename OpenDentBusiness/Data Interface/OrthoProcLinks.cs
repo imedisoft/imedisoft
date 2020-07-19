@@ -171,7 +171,7 @@ namespace OpenDentBusiness{
 			orthoProcLink.OrthoCaseNum=orthoCaseNum;
 			orthoProcLink.ProcNum=procNum;
 			orthoProcLink.ProcLinkType=procType;
-			orthoProcLink.SecUserNumEntry=Security.CurUser.UserNum;
+			orthoProcLink.SecUserNumEntry=Security.CurUser.Id;
 			return orthoProcLink;
 		}
 

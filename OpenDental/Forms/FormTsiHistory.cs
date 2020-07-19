@@ -116,7 +116,7 @@ namespace OpenDental {
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.Where(x => x.ClinicNum>0).ToDictionary(x => x.ClinicNum,x => x.Abbr);
 			Dictionary<long,string> dictPatClinicAbbrs=listFilteredPatLims.ToDictionary(x => x.PatNum,x => Clinics.GetAbbr(x.ClinicNum));
 			Dictionary<long,string> dictUserNames=Userods.GetUsers(listLogIndexesFiltered.Select(x => _listTsiTransLogsAll[x].UserNum).Distinct().ToList())
-				.ToDictionary(x => x.UserNum,x => x.UserName);
+				.ToDictionary(x => x.Id,x => x.UserName);
 			gridMain.ListGridRows.Clear();
 			int rowToReselect=-1;
 			GridRow row;

@@ -117,7 +117,7 @@ namespace OpenDental
 					break;
 				}
 				for(int p=0;p<_listCdsPermissions.Count;p++) {
-					if(ListUsers[i].UserNum!=_listCdsPermissions[p].UserNum) {
+					if(ListUsers[i].Id!=_listCdsPermissions[p].UserNum) {
 						continue;
 					}
 					row.Cells.Add((_listCdsPermissions[p].ShowCDS						?"X":""));//"X" if user has permission

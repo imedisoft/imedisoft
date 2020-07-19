@@ -108,13 +108,13 @@ namespace OpenDentBusiness{
 			
 			Crud.EmployerCrud.Update(empCur,empOld);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			InsEditLogs.MakeLogEntry(empCur,empOld,InsEditLogType.Employer,Security.CurUser.UserNum);
+			InsEditLogs.MakeLogEntry(empCur,empOld,InsEditLogType.Employer,Security.CurUser.Id);
 		}
 		
 		public static long Insert(Employer Cur) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			InsEditLogs.MakeLogEntry(Cur,null,InsEditLogType.Employer,Security.CurUser.UserNum);
+			InsEditLogs.MakeLogEntry(Cur,null,InsEditLogType.Employer,Security.CurUser.Id);
 			return Crud.EmployerCrud.Insert(Cur);
 		}
 
@@ -125,7 +125,7 @@ namespace OpenDentBusiness{
 			string command="DELETE from employer WHERE EmployerNum = '"+Cur.EmployerNum.ToString()+"'";
 			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			InsEditLogs.MakeLogEntry(null,Cur,InsEditLogType.Employer,Security.CurUser.UserNum);
+			InsEditLogs.MakeLogEntry(null,Cur,InsEditLogType.Employer,Security.CurUser.Id);
 		}
 
 		///<summary>Returns a list of patients that are dependent on the Cur employer. The list includes carriage returns for easy display.  Used before deleting an employer to make sure employer is not in use.</summary>
@@ -247,7 +247,7 @@ namespace OpenDentBusiness{
 				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				listInsPlans.ForEach(x => { //log updated employernums for insplan.
-					InsEditLogs.MakeLogEntry("EmployerNum",Security.CurUser.UserNum,employerNums[i].ToString(),newNum.ToString(),
+					InsEditLogs.MakeLogEntry("EmployerNum",Security.CurUser.Id,employerNums[i].ToString(),newNum.ToString(),
 						InsEditLogType.InsPlan,x.PlanNum,0,x.GroupNum+" - "+x.GroupName);
 				});
 				Employer employerCur=Employers.GetEmployer(employerNums[i]);//from the cache

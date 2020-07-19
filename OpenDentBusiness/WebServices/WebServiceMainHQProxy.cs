@@ -333,7 +333,7 @@ namespace OpenDentBusiness {
 
 		private static void LogEServiceSetup(EServiceSetup.SignupOut signupNew, EServiceSetup.SignupOut signupOld=null) {
 			bool includeSecurityLogEntry=false;
-			string logText=$"GetEServicesSetupFull called by user {Security.CurUser.UserName} ({Security.CurUser.UserNum})";
+			string logText=$"GetEServicesSetupFull called by user {Security.CurUser.UserName} ({Security.CurUser.Id})";
 			Lookup<long,EServiceSetup.SignupOut.SignupOutEService> signupsLookupNew=
 				(Lookup<long,EServiceSetup.SignupOut.SignupOutEService>)signupNew.EServices.ToLookup(x => x.ClinicNum);
 			#region comparative logging

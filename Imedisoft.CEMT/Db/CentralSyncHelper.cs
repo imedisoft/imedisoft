@@ -243,7 +243,7 @@ namespace CentralManager
 					AlertSub alert = new AlertSub();
 					alert.ClinicNum = clinic.ClinicNum;
 					alert.Type = alertSub.Type;
-					alert.UserNum = listRemoteUsers.Find(x => x.UserName == _listCEMTUsers.Find(y => y.UserNum == alertSub.UserNum).UserName).UserNum;
+					alert.UserNum = listRemoteUsers.Find(x => x.UserName == _listCEMTUsers.Find(y => y.Id == alertSub.UserNum).UserName).Id;
 					listAlertSubsToInsert.Add(alert);
 				}
 			}
@@ -363,7 +363,7 @@ namespace CentralManager
                     {
                         ClinicNum = clinic.ClinicNum,
                         Type = alertSub.Type,
-                        UserNum = listRemoteUsers.Find(x => x.UserName == _listCEMTUsers.Find(y => y.UserNum == alertSub.UserNum).UserName).UserNum
+                        UserNum = listRemoteUsers.Find(x => x.UserName == _listCEMTUsers.Find(y => y.Id == alertSub.UserNum).UserName).Id
                     };
                     listAlertSubsToInsert.Add(alert);
 				}

@@ -197,7 +197,7 @@ namespace OpenDentBusiness
 		public static long Insert(Adjustment adj)
 		{
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			adj.SecUserNumEntry = Security.CurUser.UserNum;
+			adj.SecUserNumEntry = Security.CurUser.Id;
 			long adjNum = Crud.AdjustmentCrud.Insert(adj);
 			CreateOrUpdateSalesTaxIfNeeded(adj); //Do the update after the insert so the AvaTax API can include the new adjustment in the calculation
 			return adjNum;

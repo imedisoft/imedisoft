@@ -47,7 +47,7 @@ namespace Imedisoft.CEMT.Forms
 				passwordButton.Text = "Create Password";
 			}
 
-			alertSubscriptions = AlertSubs.GetAllForUser(Security.CurUser.UserNum);
+			alertSubscriptions = AlertSubs.GetAllForUser(Security.CurUser.Id);
 			alertSubscriptionsListBox.Items.Clear();
 
 			var alertTypes = Enum.GetNames(typeof(AlertType));
@@ -143,7 +143,7 @@ namespace Imedisoft.CEMT.Forms
                 var alertSubscription = new AlertSub
                 {
                     ClinicNum = 0,
-                    UserNum = Security.CurUser.UserNum,
+                    UserNum = Security.CurUser.Id,
                     Type = (AlertType)index
                 };
                 alertSubscriptions.Add(alertSubscription);
@@ -158,7 +158,7 @@ namespace Imedisoft.CEMT.Forms
 			user.ClinicNum = 0;
 			user.ClinicIsRestricted = false;
 
-			if (user.UserNum == Security.CurUser.UserNum)
+			if (user.Id == Security.CurUser.Id)
 			{
 				Security.CurUser.UserName = username;
 			}

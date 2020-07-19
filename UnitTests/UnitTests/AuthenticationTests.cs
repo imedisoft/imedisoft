@@ -27,7 +27,7 @@ namespace UnitTests.Authentication_Tests {
 			Security.PasswordTyped="awesomePassword";
 			//Refresh our user object;
 			Userods.RefreshCache();
-			user=Userods.GetUser(user.UserNum);
+			user=Userods.GetUser(user.Id);
 			Assert.AreEqual(88,user.PasswordHash.Length);
 			string passhash=Authentication.HashPasswordSHA512("awesomePassword",user.LoginDetails.Salt);
 			Assert.IsTrue(Authentication.ConstantEquals(passhash,user.PasswordHash));
@@ -36,7 +36,7 @@ namespace UnitTests.Authentication_Tests {
 			//Reset typed password
 			Security.PasswordTyped=UnitTestPassword;
 			Userods.RefreshCache();
-			Security.CurUser=Userods.GetUser(user.UserNum);
+			Security.CurUser=Userods.GetUser(user.Id);
 		}
 
 		[TestMethod]
@@ -77,7 +77,7 @@ namespace UnitTests.Authentication_Tests {
 			//If this is middletier, we need the password to match in our current user object to refill the cache
 			Security.PasswordTyped="brandSpankinNewPassword";
 			Userods.RefreshCache();
-			user=Userods.GetUser(user.UserNum);
+			user=Userods.GetUser(user.Id);
 			Assert.IsTrue(result);
 			result=Authentication.CheckPassword(user,"brandSpankinNewPassword");
 			Assert.IsTrue(result);
@@ -86,7 +86,7 @@ namespace UnitTests.Authentication_Tests {
 			//Reset typed password
 			Security.PasswordTyped=UnitTestPassword;
 			Userods.RefreshCache();
-			Security.CurUser=Userods.GetUser(user.UserNum);
+			Security.CurUser=Userods.GetUser(user.Id);
 		}
 
 		[TestMethod]

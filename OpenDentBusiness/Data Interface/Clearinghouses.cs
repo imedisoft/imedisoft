@@ -802,7 +802,7 @@ namespace OpenDentBusiness
 						File.GetCreationTime(fileDestination),
 						clearinghouseClin.HqClearinghouseNum,
 						File.ReadAllText(fileDestination),
-						Security.CurUser.UserNum);
+						Security.CurUser.Id);
 				}
 				catch
 				{

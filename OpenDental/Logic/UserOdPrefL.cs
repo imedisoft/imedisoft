@@ -32,7 +32,7 @@ namespace OpenDental
 				return;
 			}
 
-			UserOdPref userOdPref = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum, UserOdFkeyType.UserTheme).FirstOrDefault();
+			UserOdPref userOdPref = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id, UserOdFkeyType.UserTheme).FirstOrDefault();
 
 			if (!PrefC.GetBool(PrefName.ThemeSetByUser) || userOdPref == null)
 			{

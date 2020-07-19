@@ -111,7 +111,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(charge.DateTimeCharge.ToString());
 				row.Cells.Add(Lans.g(this,charge.ChargeStatus.GetDescription()));
-				row.Cells.Add(Userods.GetFirstOrDefault(x => x.UserNum==charge.UserNum)?.UserName??"");
+				row.Cells.Add(Userods.GetFirstOrDefault(x => x.Id==charge.UserNum)?.UserName??"");
 				row.Cells.Add(charge.FamBal.ToString("c"));
 				row.Cells.Add(charge.PayPlanDue.ToString("c"));
 				row.Cells.Add(charge.TotalDue.ToString("c"));

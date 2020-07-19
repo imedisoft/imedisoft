@@ -1404,7 +1404,7 @@ namespace OpenDental
 						}
 						dictClinicNumListTransLogs[clinicNum].Add(new TsiTransLog() {
 							PatNum=pAgingCur.PatNum,
-							UserNum=Security.CurUser.UserNum,
+							UserNum=Security.CurUser.Id,
 							TransType=TsiTransType.RI,
 							//TransDateTime=DateTime.Now,//set on insert, not editable by user
 							//DemandType=TsiDemandType.Accelerator,//only used for placement messages
@@ -1427,7 +1427,7 @@ namespace OpenDental
 						dictClinicPlacementMsgs[clinicNum].Add(pAgingCur.PatNum,msg);
 						TsiTransLog logCur=new TsiTransLog() {
 							PatNum=pAgingCur.PatNum,
-							UserNum=Security.CurUser.UserNum,
+							UserNum=Security.CurUser.Id,
 							TransType=TsiTransType.PL,
 							//TransDateTime=DateTime.Now,//set on insert, not editable by user
 							DemandType=demandType,
@@ -1989,7 +1989,7 @@ namespace OpenDental
 					}
 					dictClinicNumListTransLogs[clinicNum].Add(new TsiTransLog() {
 						PatNum=pAgingCur.PatNum,
-						UserNum=Security.CurUser.UserNum,
+						UserNum=Security.CurUser.Id,
 						TransType=transType,
 						//TransDateTime=DateTime.Now,//set on insert, not editable by user
 						//DemandType=TsiDemandType.Accelerator,//only valid for placement msgs

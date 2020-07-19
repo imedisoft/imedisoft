@@ -22,7 +22,7 @@ namespace UnitTestsCore {
 			newOrthoCase.BandingDate=bandingOrTransferDate;
 			newOrthoCase.DebondDateExpected=debondDateExpected;
 			newOrthoCase.IsTransfer=isTransfer;
-			newOrthoCase.SecUserNumEntry=Security.CurUser.UserNum;
+			newOrthoCase.SecUserNumEntry=Security.CurUser.Id;
 			newOrthoCase.IsActive=true;//New Ortho Cases can only be added if there are no other active ones. So we automatically set a new ortho case as active.
 			if(bandingProc!=null && bandingProc.AptNum!=0) {//If banding is scheduled save the appointment date instead.
 				newOrthoCase.BandingDate=bandingProc.ProcDate;
@@ -41,7 +41,7 @@ namespace UnitTestsCore {
 			newOrthoPlanLink.LinkType=OrthoPlanLinkType.OrthoSchedule;
 			newOrthoPlanLink.FKey=orthoScheduleNum;
 			newOrthoPlanLink.IsActive=true;
-			newOrthoPlanLink.SecUserNumEntry=Security.CurUser.UserNum; 
+			newOrthoPlanLink.SecUserNumEntry=Security.CurUser.Id; 
 			OrthoPlanLinks.Insert(newOrthoPlanLink);
 			//Banding Proc Link
 			if(!newOrthoCase.IsTransfer && bandingProc!=null) {

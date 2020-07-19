@@ -84,7 +84,7 @@ namespace OpenDentBusiness{
 			
 			foreach(PaySplit split in listSplits) {
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-				split.SecUserNumEntry=Security.CurUser.UserNum;
+				split.SecUserNumEntry=Security.CurUser.Id;
 			}
 			Crud.PaySplitCrud.InsertMany(listSplits);
 		}
@@ -404,7 +404,7 @@ namespace OpenDentBusiness{
 		public static long Insert(PaySplit split) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			split.SecUserNumEntry=Security.CurUser.UserNum;
+			split.SecUserNumEntry=Security.CurUser.Id;
 			return Crud.PaySplitCrud.Insert(split);
 		}
 
@@ -484,7 +484,7 @@ namespace OpenDentBusiness{
 		public static bool Sync(List<PaySplit> listNew,List<PaySplit> listOld) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			return Crud.PaySplitCrud.Sync(listNew,listOld,Security.CurUser.UserNum);
+			return Crud.PaySplitCrud.Sync(listNew,listOld,Security.CurUser.Id);
 		}
 		#endregion
 

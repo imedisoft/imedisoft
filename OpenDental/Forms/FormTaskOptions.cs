@@ -19,7 +19,7 @@ namespace OpenDental {
 			checkShowArchivedTaskLists.Checked=isShowArchivedTaskLists;
 			textStartDate.Text=dateTimeStartShowFinished.ToShortDateString();
 			checkTaskSortApptDateTime.Checked=isAptDateTimeSort;
-			List<UserOdPref> listPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.TaskCollapse);
+			List<UserOdPref> listPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.TaskCollapse);
 			_taskCollapsedPref=listPrefs.Count==0? null : listPrefs[0];
 			checkCollapsed.Checked=_taskCollapsedPref==null ? false : PIn.Bool(_taskCollapsedPref.ValueString);
 			if(!isShowFinishedTasks) {
@@ -54,7 +54,7 @@ namespace OpenDental {
 				_taskCollapsedPref=new UserOdPref();
 				_taskCollapsedPref.Fkey=0;
 				_taskCollapsedPref.FkeyType=UserOdFkeyType.TaskCollapse;
-				_taskCollapsedPref.UserNum=Security.CurUser.UserNum;
+				_taskCollapsedPref.UserNum=Security.CurUser.Id;
 				_taskCollapsedPref.ValueString=POut.Bool(checkCollapsed.Checked);
 				UserOdPrefs.Insert(_taskCollapsedPref);
 			}

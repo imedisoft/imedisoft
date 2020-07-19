@@ -65,7 +65,7 @@ namespace OpenDental {
 				listUsers.Add(Security.CurUser);//Otherwise, just this user.
 			}
 			foreach(Userod user in listUsers) {
-				EmailAddress userAddress=EmailAddresses.GetForUser(user.UserNum);
+				EmailAddress userAddress=EmailAddresses.GetForUser(user.Id);
 				if(userAddress!=null) {
 					_listEmailAddresses.Insert(0,userAddress);
 				}

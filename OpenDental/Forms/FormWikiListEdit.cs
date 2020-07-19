@@ -34,7 +34,7 @@ namespace OpenDental {
 				IsNew=true;
 				WikiLists.CreateNewWikiList(WikiListCurName);
 			}
-			_wikiListOld=WikiListHists.GenerateFromName(WikiListCurName,Security.CurUser.UserNum)??new WikiListHist();
+			_wikiListOld=WikiListHists.GenerateFromName(WikiListCurName,Security.CurUser.Id)??new WikiListHist();
 			FillGrid();
 			ActiveControl=textSearch;//start in search box.
 		}
@@ -290,7 +290,7 @@ namespace OpenDental {
 				}
 			}
 			//Reversion has already saved a copy of the current revision.
-			_wikiListOld=WikiListHists.GenerateFromName(WikiListCurName,Security.CurUser.UserNum);
+			_wikiListOld=WikiListHists.GenerateFromName(WikiListCurName,Security.CurUser.Id);
 			FillGrid();
 			_isEdited=false;
 			IsNew=false;

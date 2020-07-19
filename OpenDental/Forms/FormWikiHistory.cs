@@ -82,7 +82,7 @@ namespace OpenDental {
 				listWikiPageHists.Add(WikiPages.PageToHist(wp));
 			}
 			Dictionary<long,string> dictUsers=Userods.GetUsers(listWikiPageHists.Select(x => x.UserNum).Distinct().ToList())//gets from cache, very fast
-				.ToDictionary(x => x.UserNum,x => x.UserName);//create dictionary of key=UserNum, value=UserName for fast lookup
+				.ToDictionary(x => x.Id,x => x.UserName);//create dictionary of key=UserNum, value=UserName for fast lookup
 			foreach(WikiPageHist wPage in listWikiPageHists) {
 				GridRow row=new GridRow();
 				string userName;
@@ -138,7 +138,7 @@ namespace OpenDental {
 				return;
 			}
 			WikiPage wikiPageNew = WikiPageHists.RevertFrom(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag as WikiPageHist);
-			wikiPageNew.UserNum=Security.CurUser.UserNum;
+			wikiPageNew.UserNum=Security.CurUser.Id;
 			WikiPages.InsertAndArchive(wikiPageNew);
 			FillGrid();
 		}

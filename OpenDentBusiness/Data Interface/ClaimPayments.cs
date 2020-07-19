@@ -221,7 +221,7 @@ namespace OpenDentBusiness{
 		public static long Insert(ClaimPayment cp) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			cp.SecUserNumEntry=Security.CurUser.UserNum;
+			cp.SecUserNumEntry=Security.CurUser.Id;
 			return Crud.ClaimPaymentCrud.Insert(cp);
 		}
 

@@ -57,7 +57,7 @@ namespace OpenDentBusiness{
             {
                 Insert(new CDSPermission
                 {
-                    UserNum = user.UserNum
+                    UserNum = user.Id
                 });
 			}
         }

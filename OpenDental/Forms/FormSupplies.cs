@@ -474,7 +474,7 @@ namespace OpenDental {
 					supplyOrder.IsNew=true;
 					supplyOrder.DatePlaced=new DateTime(2500,1,1); //date used for new 'pending' orders. 
 					supplyOrder.Note="";
-					supplyOrder.UserNum=Security.CurUser.UserNum;
+					supplyOrder.UserNum=Security.CurUser.Id;
 					supplyOrder.SupplyOrderNum=SupplyOrders.Insert(supplyOrder);
 					listSupplyOrders.Add(supplyOrder);
 				}
@@ -508,7 +508,7 @@ namespace OpenDental {
 					supplyOrder.IsNew=true;
 					supplyOrder.DatePlaced=new DateTime(2500,1,1); //date used for new 'pending' orders. 
 					supplyOrder.Note="";
-					supplyOrder.UserNum=Security.CurUser.UserNum;
+					supplyOrder.UserNum=Security.CurUser.Id;
 					supplyOrder.SupplyOrderNum=SupplyOrders.Insert(supplyOrder);
 					listSupplyOrders.Add(supplyOrder);
 				}

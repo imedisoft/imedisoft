@@ -837,7 +837,7 @@ namespace OpenDentBusiness{
 			}
 			//Always send the email through this centralized method.  We cannot assume we have a database context inside SendEmail.
 			SendEmail.WireEmailUnsecure(ODEmailAddressToBasic(emailAddress),ODEmailMessageToBasic(emailMessage),nameValueCollectionHeaders,arrayAlternateViews);
-			emailMessage.UserNum=Security.CurUser.UserNum;
+			emailMessage.UserNum=Security.CurUser.Id;
 			SecurityLogs.MakeLogEntry(Permissions.EmailSend,emailMessage.PatNum,"Email Sent");
 		}
 
@@ -848,7 +848,7 @@ namespace OpenDentBusiness{
 				throw new Exception(Lans.g("EmailMessages","Digitally signed messages cannot be sent over implicit SSL."));//See detailed comments in the private version of SendEmailUnsecure().
 			}
 			//No need to check RemotingRole; no call to db.
-			emailMessage.UserNum=Security.CurUser.UserNum;
+			emailMessage.UserNum=Security.CurUser.Id;
 			emailMessage.FromAddress=emailAddressFrom.EmailUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the correct signing certificate.  Used in ConvertEmailMessageToMessage().
 			Health.Direct.Common.Mail.Message msg=ConvertEmailMessageToMessage(emailMessage,true);
 			Health.Direct.Agent.MessageEnvelope msgEnvelope=new Health.Direct.Agent.MessageEnvelope(msg);

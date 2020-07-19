@@ -39,7 +39,7 @@ namespace OpenDental {
 			UserOdPref userPrefDefault=_listUserPref.Find(x => x.ClinicNum==0);
 			//Doesn't exist in Db, create one
 			if(userPrefDefault==null) {
-				userPrefDefault=UserOdPrefs.GetByCompositeKey(_userCur.UserNum,Programs.GetCur(ProgramName.eRx).ProgramNum,UserOdFkeyType.Program,0);
+				userPrefDefault=UserOdPrefs.GetByCompositeKey(_userCur.Id,Programs.GetCur(ProgramName.eRx).ProgramNum,UserOdFkeyType.Program,0);
 				//Doesn't exist in db, add to list to be synced later
 				_listUserPref.Add(userPrefDefault);
 			}
@@ -53,7 +53,7 @@ namespace OpenDental {
 				UserOdPref userPrefCur=_listUserPref.Find(x => x.ClinicNum==clinicCur.ClinicNum);
 				//wasn't in list, check Db and create a new one if needed
 				if(userPrefCur==null) {
-					userPrefCur=UserOdPrefs.GetByCompositeKey(_userCur.UserNum,Programs.GetCur(ProgramName.eRx).ProgramNum,UserOdFkeyType.Program,clinicCur.ClinicNum);
+					userPrefCur=UserOdPrefs.GetByCompositeKey(_userCur.Id,Programs.GetCur(ProgramName.eRx).ProgramNum,UserOdFkeyType.Program,clinicCur.ClinicNum);
 					//Doesn't exist in db, add to list to be synced later
 					_listUserPref.Add(userPrefCur);
 				}

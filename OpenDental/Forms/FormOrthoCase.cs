@@ -1010,7 +1010,7 @@ namespace OpenDental {
 				newOrthoCase.BandingDate=PIn.Date(textBandingDate.Text);
 				newOrthoCase.DebondDateExpected=PIn.Date(textExpectedDebondDate.Text);
 				newOrthoCase.IsTransfer=checkIsTransfer.Checked;
-				newOrthoCase.SecUserNumEntry=Security.CurUser.UserNum;
+				newOrthoCase.SecUserNumEntry=Security.CurUser.Id;
 				newOrthoCase.IsActive=true;//New Ortho Cases can only be added if there are no other active ones. So we automatically set a new ortho case as active.
 				if(_bandingProc!=null && _bandingProc.AptNum!=0) {//If banding is scheduled save the appointment date instead.
 					newOrthoCase.BandingDate=_bandingProc.ProcDate;
@@ -1030,7 +1030,7 @@ namespace OpenDental {
 				newOrthoSchedulePlanLink.LinkType=OrthoPlanLinkType.OrthoSchedule;
 				newOrthoSchedulePlanLink.FKey=orthoScheduleNum;
 				newOrthoSchedulePlanLink.IsActive=true;
-				newOrthoSchedulePlanLink.SecUserNumEntry=Security.CurUser.UserNum;
+				newOrthoSchedulePlanLink.SecUserNumEntry=Security.CurUser.Id;
 				OrthoPlanLinks.Insert(newOrthoSchedulePlanLink);
 				//Banding Proc Link
 				if(!newOrthoCase.IsTransfer) {
@@ -1047,7 +1047,7 @@ namespace OpenDental {
 				_orthoPlanLinkPatPayPlan.FKey=_patPayPlan.PayPlanNum;
 				_orthoPlanLinkPatPayPlan.OrthoCaseNum=_orthoCaseCur.OrthoCaseNum;
 				_orthoPlanLinkPatPayPlan.IsActive=true;
-				_orthoPlanLinkPatPayPlan.SecUserNumEntry=Security.CurUser.UserNum;
+				_orthoPlanLinkPatPayPlan.SecUserNumEntry=Security.CurUser.Id;
 				OrthoPlanLinks.Insert(_orthoPlanLinkPatPayPlan);
 			}
 			DialogResult=DialogResult.OK;

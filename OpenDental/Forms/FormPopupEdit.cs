@@ -343,7 +343,7 @@ namespace OpenDental{
 			comboPopupLevel.SelectedIndex=(int)PopupCur.PopupLevel;
 			checkIsDisabled.Checked=PopupCur.IsDisabled;
 			textDescription.Text=PopupCur.Description;
-			if(!PopupCur.IsNew && PopupCur.UserNum != Security.CurUser.UserNum 
+			if(!PopupCur.IsNew && PopupCur.UserNum != Security.CurUser.Id 
 				&& !Security.IsAuthorized(Permissions.PopupEdit,true)) 
 			{
 				butDelete.Enabled=false;
@@ -395,7 +395,7 @@ namespace OpenDental{
 				PopupCur.PopupLevel=(EnumPopupLevel)comboPopupLevel.SelectedIndex;
 				PopupCur.IsDisabled=checkIsDisabled.Checked;
 				PopupCur.Description=textDescription.Text;
-				PopupCur.UserNum=Security.CurUser.UserNum;
+				PopupCur.UserNum=Security.CurUser.Id;
 				Popups.Insert(PopupCur);
 			}
 			else {
@@ -405,7 +405,7 @@ namespace OpenDental{
 					popupArchive.PopupNumArchive=PopupCur.PopupNum;
 					Popups.Insert(popupArchive);
 					PopupCur.Description=textDescription.Text;
-					PopupCur.UserNum=Security.CurUser.UserNum;
+					PopupCur.UserNum=Security.CurUser.Id;
 				}//No need to make an archive entry for changes to PopupLevel or IsDisabled so they get set on every OK Click.
 				PopupCur.PopupLevel=(EnumPopupLevel)comboPopupLevel.SelectedIndex;
 				PopupCur.IsDisabled=checkIsDisabled.Checked;

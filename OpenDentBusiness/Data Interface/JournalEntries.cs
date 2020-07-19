@@ -66,8 +66,8 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(JournalEntry je) {
-			je.SecUserNumEntry=Security.CurUser.UserNum;//Before middle tier check to catch user at workstation
-			je.SecUserNumEdit=Security.CurUser.UserNum;
+			je.SecUserNumEntry=Security.CurUser.Id;//Before middle tier check to catch user at workstation
+			je.SecUserNumEdit=Security.CurUser.Id;
 			
 			if(je.DebitAmt<0 || je.CreditAmt<0){
 				throw new ApplicationException(Lans.g("JournalEntries","Error. Credit and debit must both be positive."));
@@ -77,7 +77,7 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static void Update(JournalEntry je) {
-			je.SecUserNumEdit=Security.CurUser.UserNum;//Before middle tier check to catch user at workstation
+			je.SecUserNumEdit=Security.CurUser.Id;//Before middle tier check to catch user at workstation
 			
 			if(je.DebitAmt<0 || je.CreditAmt<0) {
 				throw new ApplicationException(Lans.g("JournalEntries","Error. Credit and debit must both be positive."));

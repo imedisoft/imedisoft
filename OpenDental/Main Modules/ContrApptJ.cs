@@ -953,7 +953,7 @@ namespace OpenDental {
 						CommlogCur.CommType =Commlogs.GetTypeAuto(CommItemTypeAuto.APPT);
 						CommlogCur.Note = Lan.G(this,"Deleted Patient NOTE from schedule, saved copy: ");
 						CommlogCur.Note += appt.Note;
-						CommlogCur.UserNum=Security.CurUser.UserNum;
+						CommlogCur.UserNum=Security.CurUser.Id;
 						//there is no dialog here because it is just a simple entry
 						Commlogs.Insert(CommlogCur);
 					}
@@ -977,7 +977,7 @@ namespace OpenDental {
 							CommlogCur.Note += appt.ProcDescript + ": ";
 						}
 						CommlogCur.Note += appt.Note;
-						CommlogCur.UserNum=Security.CurUser.UserNum;
+						CommlogCur.UserNum=Security.CurUser.Id;
 						//there is no dialog here because it is just a simple entry
 						Commlogs.Insert(CommlogCur);
 					}
@@ -1702,7 +1702,7 @@ namespace OpenDental {
 			if(clickedCol==0){//check tasks off
 				if(PrefC.GetBool(PrefName.TasksNewTrackedByUser)) {
 					long userNumInbox=TaskLists.GetMailboxUserNum(reminderTask.TaskListNum);
-					if(userNumInbox != 0 && userNumInbox != Security.CurUser.UserNum) {
+					if(userNumInbox != 0 && userNumInbox != Security.CurUser.Id) {
 						MessageBox.Show("Not allowed to mark off tasks in someone else's inbox.");
 						return;
 					}
@@ -1710,8 +1710,8 @@ namespace OpenDental {
 					//might be able to check this:
 					//if(task.IsUnread) {
 					//But seems safer to go to db.
-					if(TaskUnreads.IsUnread(Security.CurUser.UserNum,reminderTask)) {
-						TaskUnreads.SetRead(Security.CurUser.UserNum,reminderTask);
+					if(TaskUnreads.IsUnread(Security.CurUser.Id,reminderTask)) {
+						TaskUnreads.SetRead(Security.CurUser.Id,reminderTask);
 						reminderTask.TaskStatus=TaskStatusEnum.Viewed;
 						gridReminders.BeginUpdate();
 						SetReminderGridRow(row,reminderTask);//To get the status to immediately show up in the reminders grid.
@@ -1766,7 +1766,7 @@ namespace OpenDental {
 			}
 			TaskUnreads.DeleteForTask(task);
 			TaskHist taskHist=new TaskHist(oldTask);
-			taskHist.UserNumHist=Security.CurUser.UserNum;
+			taskHist.UserNumHist=Security.CurUser.Id;
 			TaskHists.Insert(taskHist);
 			long signalNum=Signalods.SetInvalid(InvalidType.Task,KeyType.Task,task.TaskNum);
 			UserControlTasks.RefillLocalTaskGrids(task,TaskNotes.GetForTask(task.TaskNum),new List<long>() { signalNum });
@@ -3625,7 +3625,7 @@ namespace OpenDental {
 		private ApptView GetApptViewForUser() {
 			//load the recently used apptview from the db, either the userodapptview table if an entry exists or the computerpref table if an entry for this computer exists
 			ApptView apptView=null;
-			UserodApptView userodApptViewCur=UserodApptViews.GetOneForUserAndClinic(Security.CurUser.UserNum,Clinics.ClinicNum);
+			UserodApptView userodApptViewCur=UserodApptViews.GetOneForUserAndClinic(Security.CurUser.Id,Clinics.ClinicNum);
 			if(userodApptViewCur!=null) { //if there is an entry in the userodapptview table for this user
 				if(_hasInitializedOnStartup //if either ContrAppt has already been initialized
 					|| (Security.CurUser.ClinicIsRestricted //or the current user is restricted
@@ -4145,7 +4145,7 @@ namespace OpenDental {
 			CommlogCur.CommType=Commlogs.GetTypeAuto(CommItemTypeAuto.MISC);
 			CommlogCur.Note=Lan.G(this,"Appointment card sent");
 			CommlogCur.PatNum=pat.PatNum;
-			CommlogCur.UserNum=Security.CurUser.UserNum;
+			CommlogCur.UserNum=Security.CurUser.Id;
 			//there is no dialog here because it is just a simple entry
 			Commlogs.Insert(CommlogCur);
 			ev.HasMorePages = false;
@@ -4453,7 +4453,7 @@ namespace OpenDental {
 				ComputerPrefs.LocalComputer.ApptViewNum=apptViewNum;
 				ComputerPrefs.LocalComputer.ClinicNum=Clinics.ClinicNum;
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
-				UserodApptViews.InsertOrUpdate(Security.CurUser.UserNum,Clinics.ClinicNum,apptViewNum);
+				UserodApptViews.InsertOrUpdate(Security.CurUser.Id,Clinics.ClinicNum,apptViewNum);
 			}
 			if(_patCur==null) {
 				ModuleSelected(0,listOpNums:ApptViewItems.GetOpsForView(apptViewNum),listProvNums:ApptViewItems.GetProvsForView(apptViewNum));

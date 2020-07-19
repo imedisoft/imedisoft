@@ -848,7 +848,7 @@ namespace OpenDentBusiness {
 				DateTime newPayDate=GetPayDate(chargeCur);
 				//Test if the user can create a payment with the new pay date.
 				bool isBeforeLockDate;
-				if(Security.CurUser.UserNum > 0) {
+				if(Security.CurUser.Id > 0) {
 					isBeforeLockDate=(!Security.IsAuthorized(Permissions.PaymentCreate,newPayDate,true));
 				}
 				else {

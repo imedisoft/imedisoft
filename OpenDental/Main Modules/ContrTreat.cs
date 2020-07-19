@@ -3370,7 +3370,7 @@ namespace OpenDental{
 			tp.PatNum=PatCur.PatNum;
 			tp.Note=_listTreatPlans[gridPlans.SelectedIndices[0]].Note;
 			tp.ResponsParty=PatCur.ResponsParty;
-			tp.UserNumPresenter=Security.CurUser.UserNum;
+			tp.UserNumPresenter=Security.CurUser.Id;
 			tp.TPType=_listTreatPlans[gridPlans.SelectedIndices[0]].TPType;
 			TreatPlans.Insert(tp);
 			ProcTP procTP;

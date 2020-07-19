@@ -71,7 +71,7 @@ namespace OpenDentBusiness.Crud
 					"`AcctType` = @AcctType, " +
 					"`BankNumber` = @BankNumber, " +
 					"`Inactive` = @Inactive, " +
-					"`AccountColor` = @AccountColor" +
+					"`AccountColor` = @AccountColor " +
 				"WHERE `AccountNum` = @AccountNum",
 					new MySqlParameter("AccountNum", account.AccountNum),
 					new MySqlParameter("Description", account.Description ?? ""),

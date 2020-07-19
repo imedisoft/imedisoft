@@ -6,10 +6,6 @@ using System.Xml.Serialization;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// Used in the accounting section in chart of accounts.  
-	/// Not related to patient accounts in any way.
-	/// </summary>
 	[Table]
 	public class Account : TableBase
 	{
@@ -33,22 +29,8 @@ namespace OpenDentBusiness
 		/// </summary>
 		public bool Inactive;
 
-		[XmlIgnore]
 		public Color AccountColor;
 
 		public Account Clone() => (Account)MemberwiseClone();
-
-		[XmlElement("AccountColor", typeof(int))]
-		public int AccountColorXml
-		{
-			get
-			{
-				return AccountColor.ToArgb();
-			}
-			set
-			{
-				AccountColor = Color.FromArgb(value);
-			}
-		}
 	}
 }

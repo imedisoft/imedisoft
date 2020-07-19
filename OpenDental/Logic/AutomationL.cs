@@ -60,7 +60,7 @@ namespace OpenDental {
 						commlogCur.CommType=listAutomations[i].CommType;
 						commlogCur.Note=listAutomations[i].MessageContent;
 						commlogCur.Mode_=CommItemMode.None;
-						commlogCur.UserNum=Security.CurUser.UserNum;
+						commlogCur.UserNum=Security.CurUser.Id;
 						commlogCur.IsNew=true;
 						FormCommItem commItemView=new FormCommItem(commlogCur);
 						commItemView.ShowDialog();

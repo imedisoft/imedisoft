@@ -125,7 +125,7 @@ namespace OpenDentBusiness
 			Insert(new TsiTransLog()
 			{
 				PatNum = patAgingCur.PatNum,
-				UserNum = Security.CurUser.UserNum,
+				UserNum = Security.CurUser.Id,
 				TransType = transType,
 				//TransDateTime=DateTime.Now,//set on insert, not editable by user
 				//DemandType=TsiDemandType.Accelerator,//only valid for placement msgs
@@ -377,7 +377,7 @@ namespace OpenDentBusiness
 			TsiTransLog log = new TsiTransLog()
 			{
 				PatNum = patAging.PatNum,
-				UserNum = Security.CurUser.UserNum,
+				UserNum = Security.CurUser.Id,
 				TransType = TsiTransType.SS,
 				//TransDateTime=DateTime.Now,//set on insert, not editable by user
 				//DemandType=TsiDemandType.Accelerator,//only valid for placement msgs

@@ -43,12 +43,12 @@ namespace OpenDental{
 		}
 
 		private void FormUserEdit_Load(object sender, System.EventArgs e) {
-			_logOffAfterMinutes=UserOdPrefs.GetByUserAndFkeyType(UserCur.UserNum,UserOdFkeyType.LogOffTimerOverride).FirstOrDefault();
+			_logOffAfterMinutes=UserOdPrefs.GetByUserAndFkeyType(UserCur.Id,UserOdFkeyType.LogOffTimerOverride).FirstOrDefault();
 			_logOffAfterMinutesInitialValue=(_logOffAfterMinutes==null) ? "" : _logOffAfterMinutes.ValueString;
 			textLogOffAfterMinutes.Text=_logOffAfterMinutesInitialValue;
 			checkIsHidden.Checked=UserCur.IsHidden;
-			if(UserCur.UserNum!=0) {
-				textUserNum.Text=UserCur.UserNum.ToString();
+			if(UserCur.Id!=0) {
+				textUserNum.Text=UserCur.Id.ToString();
 			}
 			textUserName.Text=UserCur.UserName;
 			textDomainUser.Text=UserCur.DomainUser;
@@ -96,7 +96,7 @@ namespace OpenDental{
 				}
 			}
 			_listClinics=Clinics.GetDeepCopy(true);
-			_listUserAlertTypesOld=AlertSubs.GetAllForUser(UserCur.UserNum);
+			_listUserAlertTypesOld=AlertSubs.GetAllForUser(UserCur.Id);
 			List<long> listSubscribedClinics;
 			bool isAllClinicsSubscribed=false;
 			if(_listUserAlertTypesOld.Select(x => x.ClinicNum).Contains(-1)) {//User subscribed to all clinics
@@ -134,7 +134,7 @@ namespace OpenDental{
 				else if(listSubscribedClinics.Contains(0)) {//They are subscribed to Headquarters
 					listAlertSubsClinicsMulti.SetSelected(1,true);
 				}
-				List<UserClinic> listUserClinics=UserClinics.GetForUser(UserCur.UserNum);
+				List<UserClinic> listUserClinics=UserClinics.GetForUser(UserCur.Id);
 				for(int i=0;i<_listClinics.Count;i++) {
 					listClinic.Items.Add(_listClinics[i].Abbr);
 					listClinicMulti.Items.Add(_listClinics[i].Abbr);
@@ -158,7 +158,7 @@ namespace OpenDental{
 			if(IsNew) {
 				butUnlock.Visible=false;
 			}
-			_listDoseSpotUserPrefOld=UserOdPrefs.GetByUserAndFkeyAndFkeyType(UserCur.UserNum,
+			_listDoseSpotUserPrefOld=UserOdPrefs.GetByUserAndFkeyAndFkeyType(UserCur.Id,
 				Programs.GetCur(ProgramName.eRx).ProgramNum,UserOdFkeyType.Program,
 				Clinics.GetForUserod(Security.CurUser,true).Select(x => x.ClinicNum)
 				.Union(new List<long>() { 0 })//Always include 0 clinic, this is the default, NOT a headquarters only value.
@@ -167,7 +167,7 @@ namespace OpenDental{
 			_listDoseSpotUserPrefNew=_listDoseSpotUserPrefOld.Select(x => x.Clone()).ToList();
 			_doseSpotUserPrefDefault=_listDoseSpotUserPrefNew.Find(x => x.ClinicNum==0);
 			if(_doseSpotUserPrefDefault==null) {
-				_doseSpotUserPrefDefault=DoseSpot.GetDoseSpotUserIdFromPref(UserCur.UserNum,0);
+				_doseSpotUserPrefDefault=DoseSpot.GetDoseSpotUserIdFromPref(UserCur.Id,0);
 				_listDoseSpotUserPrefNew.Add(_doseSpotUserPrefDefault);
 			}
 			textDoseSpotUserID.Text=_doseSpotUserPrefDefault.ValueString;
@@ -293,7 +293,7 @@ namespace OpenDental{
 			}
 			else if(textLogOffAfterMinutes.Text!=_logOffAfterMinutesInitialValue) { //Only do this if the value has changed
 				if(_logOffAfterMinutes==null) {
-					_logOffAfterMinutes=new UserOdPref() { Fkey=0, FkeyType=UserOdFkeyType.LogOffTimerOverride, UserNum=UserCur.UserNum };
+					_logOffAfterMinutes=new UserOdPref() { Fkey=0, FkeyType=UserOdFkeyType.LogOffTimerOverride, UserNum=UserCur.Id };
 				}
 				_logOffAfterMinutes.ValueString=textLogOffAfterMinutes.Text;
 				UserOdPrefs.Upsert(_logOffAfterMinutes);
@@ -340,7 +340,7 @@ namespace OpenDental{
 			List<UserClinic> listUserClinics=new List<UserClinic>();
 			if(PrefC.HasClinicsEnabled && checkClinicIsRestricted.Checked) {//They want to restrict the user to certain clinics or clinics are enabled.  
 				for(int i=0;i<listClinicMulti.SelectedIndices.Count;i++) {
-					listUserClinics.Add(new UserClinic(_listClinics[listClinicMulti.SelectedIndices[i]].ClinicNum,UserCur.UserNum));
+					listUserClinics.Add(new UserClinic(_listClinics[listClinicMulti.SelectedIndices[i]].ClinicNum,UserCur.Id));
 				}
 				//If they set the user up with a default clinic and it's not in the restricted list, return.
 				if(!listUserClinics.Exists(x => x.ClinicNum==_listClinics[listClinic.SelectedIndex-1].ClinicNum)) {
@@ -386,8 +386,8 @@ namespace OpenDental{
 				if(IsNew){
 					Userods.Insert(UserCur,listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.UserGroupNum).ToList());
 					//Set the userodprefs to the new user's UserNum that was just retreived from the database.
-					_listDoseSpotUserPrefNew.ForEach(x => x.UserNum=UserCur.UserNum);
-					listUserClinics.ForEach(x => x.UserNum=UserCur.UserNum);//Set the user clinic's UserNum to the one we just inserted.
+					_listDoseSpotUserPrefNew.ForEach(x => x.UserNum=UserCur.Id);
+					listUserClinics.ForEach(x => x.UserNum=UserCur.Id);//Set the user clinic's UserNum to the one we just inserted.
 					SecurityLogs.MakeLogEntry(Permissions.AddNewUser,0,"New user '"+UserCur.UserName+"' added");
 				}
 				else{
@@ -395,7 +395,7 @@ namespace OpenDental{
 					List<UserGroup> listOldUserGroups=UserCur.GetGroups();
 					Userods.Update(UserCur,listNewUserGroups.Select(x => x.UserGroupNum).ToList());
 					//if this is the current user, update the user, credentials, etc.
-					if(UserCur.UserNum==Security.CurUser.UserNum) {
+					if(UserCur.Id==Security.CurUser.Id) {
 						Security.CurUser=UserCur.Copy();
 						if(_passwordTyped!=null) {
 							Security.PasswordTyped=_passwordTyped; //update the password typed for middle tier refresh
@@ -423,7 +423,7 @@ namespace OpenDental{
 							" added to User group(s): "+string.Join(", ",listAddedGroups.Select(x => x.Description).ToArray())+" by: "+Security.CurUser.UserName);
 					}
 				}
-				if(UserClinics.Sync(listUserClinics,UserCur.UserNum)) {//Either syncs new list, or clears old list if no longer restricted.
+				if(UserClinics.Sync(listUserClinics,UserCur.Id)) {//Either syncs new list, or clears old list if no longer restricted.
 					DataValid.SetInvalid(InvalidType.UserClinics);
 				}
 			}
@@ -469,13 +469,13 @@ namespace OpenDental{
 			foreach(long alertCatNum in listUserAlertCats) {
 				if(!PrefC.HasClinicsEnabled) {
 					if(!_listUserAlertTypesOld.Exists(x => x.AlertCategoryNum==alertCatNum)) {//Was not subscribed to type.
-						_listUserAlertTypesNew.Add(new AlertSub(UserCur.UserNum,0,alertCatNum));
+						_listUserAlertTypesNew.Add(new AlertSub(UserCur.Id,0,alertCatNum));
 					}
 				}
 				else {//Clinics enabled.
 					foreach(long clinicNumCur in listClinics) {
 						if(!_listUserAlertTypesOld.Exists(x => x.ClinicNum==clinicNumCur && x.AlertCategoryNum==alertCatNum)) {//Was not subscribed to type.
-							_listUserAlertTypesNew.Add(new AlertSub(UserCur.UserNum,clinicNumCur,alertCatNum));
+							_listUserAlertTypesNew.Add(new AlertSub(UserCur.Id,clinicNumCur,alertCatNum));
 							continue;
 						}
 					}

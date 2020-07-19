@@ -213,10 +213,10 @@ namespace OpenDental {
 			List<long> listUserNums=new List<long>();
 			List<long> listClinicNums=new List<long>();
 			if(checkAllUsers.Checked) {
-				listUserNums=_listUsers.Select(x => x.UserNum).ToList();
+				listUserNums=_listUsers.Select(x => x.Id).ToList();
 			}
 			else {
-				listUserNums=listUser.SelectedIndices.OfType<int>().ToList().Select(x => _listUsers[x].UserNum).ToList();
+				listUserNums=listUser.SelectedIndices.OfType<int>().ToList().Select(x => _listUsers[x].Id).ToList();
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClinics.Checked) {

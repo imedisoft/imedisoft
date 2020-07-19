@@ -15,8 +15,9 @@ namespace OpenDentBusiness
     [Table]
     public class Userod : TableBase
     {
-        [PrimaryKey] 
-        public long UserNum;
+        [PrimaryKey]
+        [Column(Name = "UserNum")]
+        public long Id;
 
         public string UserName;
 
@@ -31,14 +32,24 @@ namespace OpenDentBusiness
         ///<summary>FK to employee.EmployeeNum. Cannot be used if provnum is used. Used for timecards to block access by other users.</summary>
         public long EmployeeNum;
 
-        ///<summary>FK to clinic.ClinicNum.  Default clinic for this user.  It causes new patients to default to this clinic when entered by this user.  
-        ///If 0, then user has no default clinic or default clinic is HQ if clinics are enabled.</summary> 		
+        /// <summary>
+        /// FK to clinic.ClinicNum.
+        /// Default clinic for this user.
+        /// It causes new patients to default to this clinic when entered by this user.  
+        /// If 0, then user has no default clinic or default clinic is HQ if clinics are enabled.
+        /// </summary> 		
         public long ClinicNum;
 
-        ///<summary>FK to provider.ProvNum.  Cannot be used if EmployeeNum is used.  It is possible to have multiple userods attached to a single provider.</summary>
+        /// <summary>
+        /// FK to provider.ProvNum.
+        /// Cannot be used if EmployeeNum is used.
+        /// It is possible to have multiple userods attached to a single provider.
+        /// </summary>
         public long ProvNum;
 
-        ///<summary>Set true to hide user from login list.</summary>
+        /// <summary>
+        /// Set true to hide user from login list.
+        /// </summary>
         public bool IsHidden;
 
         ///<summary>FK to tasklist.TaskListNum.  0 if no inbox setup yet.  It is assumed that the TaskList is in the main trunk, but this is not strictly enforced.  User can't delete an attached TaskList, but they could move it.</summary>
@@ -114,13 +125,13 @@ namespace OpenDentBusiness
 
         public bool IsInUserGroup(long userGroupNum)
         {
-            return Userods.IsInUserGroup(UserNum, userGroupNum);
+            return Userods.IsInUserGroup(Id, userGroupNum);
         }
 
         ///<summary>Gets all of the usergroups attached to this user.</summary>
         public List<UserGroup> GetGroups(bool includeCEMT = false)
         {
-            return UserGroups.GetForUser(UserNum, includeCEMT);
+            return UserGroups.GetForUser(Id, includeCEMT);
         }
     }
 

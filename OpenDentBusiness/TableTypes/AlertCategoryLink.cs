@@ -1,31 +1,34 @@
-﻿using System;
+﻿using Imedisoft.Data.Annotations;
+using System;
 
-namespace OpenDentBusiness {
-	///<summary></summary>
-	[Serializable()]
-	[CrudTable(IsSynchable=true)]
-	public class AlertCategoryLink:TableBase{
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+namespace OpenDentBusiness
+{
+    [Table]
+	public class AlertCategoryLink : TableBase
+	{
+		[PrimaryKey]
 		public long AlertCategoryLinkNum;
-		///<summary>FK to AlertCategory.AlertCategoryNum.</summary>
+
+		/// <summary>
+		/// FK to AlertCategory.AlertCategoryNum.
+		/// </summary>
 		public long AlertCategoryNum;
-		///<summary>Enum:AlertType Identifies what types of alert this row is assocaited to.</summary>
+
+		/// <summary>
+		/// Enum:AlertType Identifies what types of alert this row is assocaited to.
+		/// </summary>
 		public AlertType AlertType;
 
-		public AlertCategoryLink() {
-			
+		public AlertCategoryLink()
+		{
 		}
 
-		public AlertCategoryLink(long alertCategoryNum, AlertType alertType) {
-			this.AlertCategoryNum=alertCategoryNum;
-			this.AlertType=alertType;
+		public AlertCategoryLink(long alertCategoryNum, AlertType alertType)
+		{
+			AlertCategoryNum = alertCategoryNum;
+			AlertType = alertType;
 		}
 
-		///<summary></summary>
-		public AlertCategoryLink Copy() {
-			return (AlertCategoryLink)this.MemberwiseClone();
-		}
+		public AlertCategoryLink Copy() => (AlertCategoryLink)MemberwiseClone();
 	}
 }
-

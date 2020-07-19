@@ -410,7 +410,7 @@ namespace OpenDentBusiness{
 				if(prov==null) {
 					continue;
 				}
-				List<UserClinic> listUserClinics=UserClinics.GetForUser(listUsersShort[i].UserNum);
+				List<UserClinic> listUserClinics=UserClinics.GetForUser(listUsersShort[i].Id);
 				//If filtering by a specific clinic, make sure the clinic matches the clinic passed in.
 				//If the user is associated to multiple clinics we check to make sure one of them isn't the clinic in question.
 				if(clinicNum > 0 && !listUserClinics.Exists(x => x.ClinicNum==clinicNum)) {
@@ -547,9 +547,9 @@ namespace OpenDentBusiness{
 			//The GetWhere uses a "UserClinicNum>-1" in its selection to behave as a "Where true" to retrieve everything from the cache 
 			Dictionary<long,List<long>> dictUserClinicsReference=UserClinics.GetWhere(x => x.UserClinicNum>-1).GroupBy(x => x.UserNum).ToDictionary(x => x.Key,x => x.Select(y => y.ClinicNum).ToList());
 			Dictionary<long,List<long>> dictUserClinics=Userods.GetAll()
-				.ToDictionary(x => x.UserNum,x => dictUserClinicsReference.ContainsKey(x.UserNum)?dictUserClinicsReference[x.UserNum]:new List<long>());
+				.ToDictionary(x => x.Id,x => dictUserClinicsReference.ContainsKey(x.Id)?dictUserClinicsReference[x.Id]:new List<long>());
 			Dictionary<long,List<long>> dictProvUsers=Userods.GetWhere(x => x.ProvNum>0).GroupBy(x => x.ProvNum)
-				.ToDictionary(x => x.Key,x => x.Select(y => y.UserNum).ToList());
+				.ToDictionary(x => x.Key,x => x.Select(y => y.Id).ToList());
 			HashSet<long> hashSetProvsRestrictedOtherClinic=new HashSet<long>(ProviderClinicLinks.GetProvsRestrictedToOtherClinics(clinicNum));
 			return Providers.GetWhere(x => 
 				(!dictProvUsers.ContainsKey(x.ProvNum) //provider not associated to any users.

@@ -139,7 +139,7 @@ namespace OpenDental {
 			commlog.Note=msg;//phone,note
 			commlog.PatNum=patNum;
 			commlog.SentOrReceived=CommSentOrReceived.Sent;
-			commlog.UserNum=Security.CurUser.UserNum;
+			commlog.UserNum=Security.CurUser.Id;
 			commlog.DateTimeEnd=DateTime.Now;
 			Commlogs.Insert(commlog);
 			SecurityLogs.MakeLogEntry(Permissions.CommlogEdit,commlog.PatNum,"Insert Text Message");

@@ -193,7 +193,7 @@ namespace OpenDentBusiness{
 					RecipientAddress=uniqueIdPair.Key,
 					SentOrReceived=EmailSentOrReceived.Sent,
 					ToAddress=uniqueIdPair.Key,
-					UserNum=Security.CurUser?.UserNum??0,
+					UserNum=Security.CurUser?.Id??0,
 					Subject=subject,
 				};
 				//Insert so we have the primary key available.

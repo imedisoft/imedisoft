@@ -1438,7 +1438,7 @@ namespace OpenDental {
 				TaskUnreads.DeleteForTask(taskCur);//clear out taskunreads. We have too many tasks to read the done ones.
 				Tasks.Update(taskCur,taskOld);
 				TaskHist taskHist=new TaskHist(taskOld);
-				taskHist.UserNumHist=Security.CurUser.UserNum;
+				taskHist.UserNumHist=Security.CurUser.Id;
 				TaskHists.Insert(taskHist);
 				long signalNum=Signalods.SetInvalid(InvalidType.Task,KeyType.Task,taskCur.TaskNum);
 				UserControlTasks.RefillLocalTaskGrids(taskCur,TaskNotes.GetForTask(taskCur.TaskNum),new List<long>() { signalNum });
@@ -7125,7 +7125,7 @@ namespace OpenDental {
 			if(Security.CurUser.ProvNum!=0) {//If the current OD user is associated to a doctor, then the request is from a doctor, otherwise from a staff member.
 			  patientInfoRequester.UserType="Doctor";
 			}
-			patientInfoRequester.UserId=POut.Long(Security.CurUser.UserNum);
+			patientInfoRequester.UserId=POut.Long(Security.CurUser.Id);
 			//Send the request to NewCrop. Always returns all current medications, and returns medications between the StartHistory and EndHistory dates if requesting archived medications.
 			//The patientIdType parameter was added for another vendor and is not often used. We do not use this field. We must pass empty string.
 			//The includeSchema parameter is useful for first-time debugging, but in release mode, we should pass N for no.
@@ -7879,7 +7879,7 @@ namespace OpenDental {
 			commlogCur.CommType=Commlogs.GetTypeAuto(CommItemTypeAuto.MISC);
 			commlogCur.Mode_=CommItemMode.Phone;
 			commlogCur.SentOrReceived=CommSentOrReceived.Received;
-			commlogCur.UserNum=Security.CurUser.UserNum;
+			commlogCur.UserNum=Security.CurUser.Id;
 			commlogCur.IsNew=true;
 			FormCommItem formCommItem=new FormCommItem(commlogCur);
 			if(formCommItem.ShowDialog()==DialogResult.OK) {
@@ -8211,7 +8211,7 @@ namespace OpenDental {
 				erxDoseSpotLog.PatNum=_patCur.PatNum;
 				erxDoseSpotLog.MsgText=queryString;
 				erxDoseSpotLog.ProvNum=prov.ProvNum;
-				erxDoseSpotLog.UserNum=Security.CurUser.UserNum;
+				erxDoseSpotLog.UserNum=Security.CurUser.Id;
 				SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxDoseSpotLog.PatNum,Lan.G(this,"eRx DoseSpot entry made for provider")+" "+Providers.GetAbbr(erxDoseSpotLog.ProvNum));
 				ErxLogs.Insert(erxDoseSpotLog);
 				return;
@@ -8334,7 +8334,7 @@ namespace OpenDental {
 			erxLog.PatNum=_patCur.PatNum;
 			erxLog.MsgText=clickThroughXml;
 			erxLog.ProvNum=prov.ProvNum;
-			erxLog.UserNum=Security.CurUser.UserNum;
+			erxLog.UserNum=Security.CurUser.Id;
 			SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxLog.PatNum,Lan.G(this,"eRx entry made for provider")+" "+Providers.GetAbbr(erxLog.ProvNum));
 			ErxLogs.Insert(erxLog);
 		}

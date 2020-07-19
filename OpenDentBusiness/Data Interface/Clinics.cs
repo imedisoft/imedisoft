@@ -199,7 +199,7 @@ namespace OpenDentBusiness{
 				if(PrefC.GetString(PrefName.ClinicTrackLast)!="User") {
 					return;
 				}
-				List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.ClinicLast);//should only be one.
+				List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.ClinicLast);//should only be one.
 				if(prefs.Count>0) {
 					prefs.ForEach(x => x.Fkey=value);
 					prefs.ForEach(UserOdPrefs.Update);
@@ -207,7 +207,7 @@ namespace OpenDentBusiness{
 				}
 				UserOdPrefs.Insert(
 					new UserOdPref() {
-						UserNum=Security.CurUser.UserNum,
+						UserNum=Security.CurUser.Id,
 						FkeyType=UserOdFkeyType.ClinicLast,
 						Fkey=value,
 					});
@@ -238,11 +238,11 @@ namespace OpenDentBusiness{
 					}
 					return;//Error
 				case "User":
-					List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.ClinicLast);//should only be one or none.
+					List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.ClinicLast);//should only be one or none.
 					if(prefs.Count==0) {
 						UserOdPref pref =
 							new UserOdPref() {
-								UserNum=Security.CurUser.UserNum,
+								UserNum=Security.CurUser.Id,
 								FkeyType=UserOdFkeyType.ClinicLast,
 								Fkey=Security.CurUser.ClinicNum//default clinic num
 							};
@@ -280,10 +280,10 @@ namespace OpenDentBusiness{
 			}
 			//We want to always upsert a user pref for the user because we will be looking at it for MobileWeb regardless of the preference for 
 			//ClinicTrackLast.
-			List<UserOdPref> UserPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.ClinicLast);//should only be one or none.
+			List<UserOdPref> UserPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.ClinicLast);//should only be one or none.
 			if(UserPrefs.Count==0) {
 				UserOdPref pref=new UserOdPref() {
-					UserNum=Security.CurUser.UserNum,
+					UserNum=Security.CurUser.Id,
 					FkeyType=UserOdFkeyType.ClinicLast,
 					Fkey=Clinics.ClinicNum
 				};
@@ -622,7 +622,7 @@ namespace OpenDentBusiness{
 			listClinics.AddRange(GetDeepCopy(true));//don't include hidden clinics
 			if(PrefC.HasClinicsEnabled && curUser.ClinicIsRestricted && curUser.ClinicNum!=0) {
 				//If Clinics are enabled and user is restricted, then only return clinics the person has permission for.
-				List<long> listUserClinicNums=UserClinics.GetForUser(curUser.UserNum).Select(x => x.ClinicNum).ToList();
+				List<long> listUserClinicNums=UserClinics.GetForUser(curUser.Id).Select(x => x.ClinicNum).ToList();
 				listClinics.RemoveAll(x => !listUserClinicNums.Contains(x.ClinicNum));//Remove all clinics that are not in the list of UserClinics.
 			}
 			return listClinics;
@@ -636,7 +636,7 @@ namespace OpenDentBusiness{
 				return listClinics;
 			}
 			if(curUser.ClinicIsRestricted && curUser.ClinicNum!=0) {
-				List<UserClinic> listUserClinics=UserClinics.GetForUser(curUser.UserNum);
+				List<UserClinic> listUserClinics=UserClinics.GetForUser(curUser.Id);
 				return listClinics.FindAll(x => listUserClinics.Exists(y => y.ClinicNum==x.ClinicNum)).ToList();
 			}
 			return listClinics;

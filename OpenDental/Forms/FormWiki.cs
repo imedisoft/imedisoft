@@ -55,7 +55,7 @@ namespace OpenDental {
 		///<summary>Loads the user's home page or the wiki page with the title of "Home" if a custom home page has not been set before.</summary>
 		private void LoadWikiPageHome() {
 			historyNavBack--;//We have to decrement historyNavBack to tell whether or not we need to branch our page history or add to page history
-			List<UserOdPref> listUserOdPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.WikiHomePage);
+			List<UserOdPref> listUserOdPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.WikiHomePage);
 			if(listUserOdPrefs.Count > 0) {
 				LoadWikiPage(listUserOdPrefs[0].ValueString);
 			}
@@ -246,7 +246,7 @@ namespace OpenDental {
 				MessageBox.Show("Invalid wiki page selected.");
 				return;
 			}
-			List<UserOdPref> listUserOdPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.WikiHomePage);
+			List<UserOdPref> listUserOdPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.WikiHomePage);
 			if(listUserOdPrefs.Count > 0) {
 				//User is updating their current home page to a new one.
 				listUserOdPrefs[0].ValueString=WikiPageCur.PageTitle;
@@ -255,7 +255,7 @@ namespace OpenDental {
 			else {
 				//User is saving a custom home page for the first time.
 				UserOdPref userOdPref=new UserOdPref();
-				userOdPref.UserNum=Security.CurUser.UserNum;
+				userOdPref.UserNum=Security.CurUser.Id;
 				userOdPref.ValueString=WikiPageCur.PageTitle;
 				userOdPref.FkeyType=UserOdFkeyType.WikiHomePage;
 				UserOdPrefs.Insert(userOdPref);
@@ -399,7 +399,7 @@ namespace OpenDental {
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Archive this wiki page?  It will still be available from the Search window if needed.")) {
 				return;
 			}
-			WikiPages.Archive(WikiPageCur.PageTitle,Security.CurUser.UserNum);
+			WikiPages.Archive(WikiPageCur.PageTitle,Security.CurUser.Id);
 			//historyNavBack--;//do not decrement, load will consider this a branch and put "wiki:Home" in place of the deleted page and remove "forward" history.
 			LoadWikiPage("Home");
 		}
@@ -543,7 +543,7 @@ namespace OpenDental {
 					}
 					else {
 						//User wants to restore the WikiPage.
-						WikiPages.WikiPageRestore(wikiPageDeleted,Security.CurUser.UserNum);
+						WikiPages.WikiPageRestore(wikiPageDeleted,Security.CurUser.Id);
 					}
 				}
 				historyNavBack--;//We have to decrement historyNavBack to tell whether or not we need to branch our page history or add to page history

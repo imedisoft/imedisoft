@@ -612,7 +612,7 @@ namespace OpenDentBusiness.Eclaims {
 			Etrans etrans=new Etrans();
 			etrans.ClaimNum=claim.ClaimNum;
 			etrans.PatNum=claim.PatNum;
-			etrans.UserNum=Security.CurUser.UserNum;
+			etrans.UserNum=Security.CurUser.Id;
 			etrans.DateTimeTrans=DateTime.Now;
 			etrans.ClearingHouseNum=clearingHouse.ClearinghouseNum;
 			etrans.Etype=EtransType.DXCAttachments;

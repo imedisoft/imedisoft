@@ -36,9 +36,9 @@ namespace OpenDental.Bridges
 				{
 					clientUrl = "https://" + clientUrl;
 				}
-				UserOdPref userNamePref = UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurUser.UserNum, progOryx.ProgramNum, UserOdFkeyType.ProgramUserName)
+				UserOdPref userNamePref = UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurUser.Id, progOryx.ProgramNum, UserOdFkeyType.ProgramUserName)
 					.FirstOrDefault();
-				UserOdPref passwordPref = UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurUser.UserNum, progOryx.ProgramNum, UserOdFkeyType.ProgramPassword)
+				UserOdPref passwordPref = UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurUser.Id, progOryx.ProgramNum, UserOdFkeyType.ProgramPassword)
 					.FirstOrDefault();
 				if ((userNamePref == null || userNamePref.ValueString == "") && (passwordPref == null || passwordPref.ValueString == ""))
 				{

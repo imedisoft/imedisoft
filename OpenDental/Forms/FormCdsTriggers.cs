@@ -26,7 +26,7 @@ namespace OpenDental {
 			mainMenu1.MenuItems[0].Enabled=false;
 			butAddTrigger.Enabled=false;
 			gridMain.Enabled=false;
-			if(CDSPermissions.GetForUser(Security.CurUser.UserNum).SetupCDS || Security.IsAuthorized(Permissions.SecurityAdmin,true)) {
+			if(CDSPermissions.GetForUser(Security.CurUser.Id).SetupCDS || Security.IsAuthorized(Permissions.SecurityAdmin,true)) {
 				mainMenu1.MenuItems[0].Enabled=true;
 				butAddTrigger.Enabled=true;
 				gridMain.Enabled=true;

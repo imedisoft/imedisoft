@@ -172,7 +172,7 @@ namespace OpenDental {
 			checkSent.Checked=isSent;
 			checkRead.Checked=isReceived;
 			_smsNotifier=smsNotifier;
-			_groupByPref=UserOdPrefs.GetFirstOrNewByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.SmsGroupBy);
+			_groupByPref=UserOdPrefs.GetFirstOrNewByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.SmsGroupBy);
 			if(_groupByPref.ValueString=="1") {
 				radioGroupByPatient.Checked=true;
 			}

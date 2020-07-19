@@ -19,10 +19,10 @@ namespace OpenDental {
 		}
 		private void FormUserSetting_Load(object sender,EventArgs e) {
 			//Logoff After Minutes
-			UserOdPref logOffAfterMinutes=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.LogOffTimerOverride).FirstOrDefault();
+			UserOdPref logOffAfterMinutes=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.LogOffTimerOverride).FirstOrDefault();
 			textLogOffAfterMinutes.Text=(logOffAfterMinutes==null) ? "" : logOffAfterMinutes.ValueString;
 			//Suppress Logoff Message
-			_suppressLogOffMessage=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.SuppressLogOffMessage).FirstOrDefault();
+			_suppressLogOffMessage=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.SuppressLogOffMessage).FirstOrDefault();
 			if(_suppressLogOffMessage!=null) {//Does exist in the database
 				checkSuppressMessage.Checked=true;
 			}
@@ -31,7 +31,7 @@ namespace OpenDental {
 		}
 
 		private void FillThemeCombo() {
-			_userODPrefTheme=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.UserTheme).FirstOrDefault();
+			_userODPrefTheme=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.UserTheme).FirstOrDefault();
 			if(_userODPrefTheme!=null) {//user has chosen a theme before. Display their currently chosen theme.
 				checkAlternateIcons.Checked=PIn.Bool(_userODPrefTheme.Fkey.ToString());
 			}
@@ -44,7 +44,7 @@ namespace OpenDental {
 			#region Suppress Logoff Message
 			if(checkSuppressMessage.Checked && _suppressLogOffMessage==null) {
 				UserOdPrefs.Insert(new UserOdPref() {
-					UserNum=Security.CurUser.UserNum,
+					UserNum=Security.CurUser.Id,
 					FkeyType=UserOdFkeyType.SuppressLogOffMessage
 				});
 			}
@@ -54,7 +54,7 @@ namespace OpenDental {
 			#endregion
 			#region Theme Change
 			if(_userODPrefTheme==null) {
-				_userODPrefTheme=new UserOdPref() {UserNum=Security.CurUser.UserNum,FkeyType=UserOdFkeyType.UserTheme};
+				_userODPrefTheme=new UserOdPref() {UserNum=Security.CurUser.Id,FkeyType=UserOdFkeyType.UserTheme};
 			}
 			if(checkAlternateIcons.Checked){
 				_userODPrefTheme.Fkey=1;

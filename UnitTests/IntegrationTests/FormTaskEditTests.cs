@@ -36,8 +36,8 @@ namespace UnitTests.IntegrationTests.FormTaskEdit_Tests {
 			_taskListChild=TaskListT.CreateTaskList(descript:"TaskListChild",parent:_taskListParent.TaskListNum,parentDesc:_taskListParent.Descript);
 			_taskListGrandchild=TaskListT.CreateTaskList(descript:"TaskListGrandchild",parent:_taskListChild.TaskListNum,
 				parentDesc:_taskListChild.Descript);
-			_task=TaskT.CreateTask(_taskListGrandchild.TaskListNum,descript:"Test Task",fromNum:Security.CurUser.UserNum,priorityDefNum:1);//Starts in _taskListGrandchild
-			TaskSubscriptionT.CreateTaskSubscription(Security.CurUser.UserNum,_taskListParent.TaskListNum);//current user subscribes to top level tasklist.
+			_task=TaskT.CreateTask(_taskListGrandchild.TaskListNum,descript:"Test Task",fromNum:Security.CurUser.Id,priorityDefNum:1);//Starts in _taskListGrandchild
+			TaskSubscriptionT.CreateTaskSubscription(Security.CurUser.Id,_taskListParent.TaskListNum);//current user subscribes to top level tasklist.
 			Security.CurUser.TaskListInBox=_taskListParent.TaskListNum;//Set inbox for current user to _taskListParent.
 			try {
 				Userods.Update(Security.CurUser);
@@ -97,7 +97,7 @@ namespace UnitTests.IntegrationTests.FormTaskEdit_Tests {
 		///<summary>Correct signals are sent when user clicks "Reply" button, and Task.TaskListNum is correctly updated in database.</summary>
 		public void FormTaskEdit_butReply_Click() {
 			long oldTaskListNum=_task.TaskListNum;
-			_formTaskEditAccessor.SetField("_replyToUserNum",Security.CurUser.UserNum);//User we are replying to.
+			_formTaskEditAccessor.SetField("_replyToUserNum",Security.CurUser.Id);//User we are replying to.
 			_formTaskEditAccessor.SetField("NotesChanged",true);//Causes butReply_Click to skip UI interaction.
 			_formTaskEditAccessor.Invoke("butReply_Click",new object(),new EventArgs());
 			List<Signalod> listSignals=SignalodT.GetAllSignalods();
@@ -113,7 +113,7 @@ namespace UnitTests.IntegrationTests.FormTaskEdit_Tests {
 		///<summary>Correct signals are sent when user clicks "Reply" button (without having added a TaskNote), and Task.TaskListNum is correctly updated in database.</summary>
 		public void FormTaskEdit_OnNoteEditComplete_Reply() {
 			long oldTaskListNum=_task.TaskListNum;
-			_formTaskEditAccessor.SetField("_replyToUserNum",Security.CurUser.UserNum);//User we are replying to.
+			_formTaskEditAccessor.SetField("_replyToUserNum",Security.CurUser.Id);//User we are replying to.
 			_formTaskEditAccessor.Invoke("OnNoteEditComplete_Reply",new object());
 			List<Signalod> listSignals=SignalodT.GetAllSignalods();
 			Assert.AreEqual(4,listSignals.Count);
@@ -133,7 +133,7 @@ namespace UnitTests.IntegrationTests.FormTaskEdit_Tests {
 			_formTaskEditAccessor.Invoke("SaveCopy",listTaskListNums);
 			List<Signalod> listSignals=SignalodT.GetAllSignalods();
 			Assert.AreEqual(2,listSignals.Count);//One popup signal, one tasklist signal.
-			List<OpenDentBusiness.Task> listAllTasks=Tasks.GetNewTasksThisUser(Security.CurUser.UserNum,Clinics.ClinicNum);
+			List<OpenDentBusiness.Task> listAllTasks=Tasks.GetNewTasksThisUser(Security.CurUser.Id,Clinics.ClinicNum);
 			OpenDentBusiness.Task task=listAllTasks.FirstOrDefault(x => x.TaskListNum==_taskListChild.TaskListNum);//copied task.
 			Assert.IsNotNull(task);//Task was copied correctly.
 			//popup signal for copied task.
@@ -198,9 +198,9 @@ namespace UnitTests.IntegrationTests.FormTaskEdit_Tests {
 		[TestMethod]
 		///<summary>Correct signals are sent when changing the UserNum of the Task.</summary>
 		public void FormTaskEdit_SendSignalsRefillLocal_ChangeUser() {
-			long oldUserNum= Security.CurUser.UserNum;
+			long oldUserNum= Security.CurUser.Id;
 			_formTaskEditAccessor.SetField("_userNumFrom",oldUserNum);
-			_task.UserNum=Security.CurUser.UserNum+1;
+			_task.UserNum=Security.CurUser.Id+1;
 			_formTaskEditAccessor.Invoke("SendSignalsRefillLocal",_task,_task.TaskListNum,true);
 			List<Signalod> listSignals=SignalodT.GetAllSignalods();
 			Assert.AreEqual(4,listSignals.Count);//Three signals sent.

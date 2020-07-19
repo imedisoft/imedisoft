@@ -111,7 +111,7 @@ namespace OpenDentBusiness.Eclaims {
 				throw new ApplicationException(error);
 			}
 			Etrans etrans=Etranss.CreateCanadianOutput(patNum,carrier.CarrierNum,0,
-				clearinghouseClin.HqClearinghouseNum,EtransType.Eligibility_CA,plan.PlanNum,insSub.InsSubNum,Security.CurUser.UserNum);
+				clearinghouseClin.HqClearinghouseNum,EtransType.Eligibility_CA,plan.PlanNum,insSub.InsSubNum,Security.CurUser.Id);
 			StringBuilder strb=new StringBuilder();
 			//create message----------------------------------------------------------------------------------------------
 			//A01 transaction prefix 12 AN
@@ -255,7 +255,7 @@ namespace OpenDentBusiness.Eclaims {
 			etransAck.InsSubNum=etrans.InsSubNum;
 			etransAck.CarrierNum=etrans.CarrierNum;
 			etransAck.DateTimeTrans=DateTime.Now;
-			etransAck.UserNum=Security.CurUser.UserNum;
+			etransAck.UserNum=Security.CurUser.Id;
 			CCDFieldInputter fieldInputter=null;
 			if(errorMsg!="") {
 				etransAck.Etype=EtransType.AckError;
@@ -334,7 +334,7 @@ namespace OpenDentBusiness.Eclaims {
 			}
 			CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkNum,clearinghouseClin);
 			Etrans etrans=Etranss.CreateCanadianOutput(claim.PatNum,carrier.CarrierNum,carrier.CanadianNetworkNum,
-				clearinghouseClin.HqClearinghouseNum,EtransType.ClaimReversal_CA,plan.PlanNum,insSub.InsSubNum,Security.CurUser.UserNum);
+				clearinghouseClin.HqClearinghouseNum,EtransType.ClaimReversal_CA,plan.PlanNum,insSub.InsSubNum,Security.CurUser.Id);
 			etrans.ClaimNum=claim.ClaimNum;//We don't normally use a claim number with Etranss.CreateCanadianOutput(), but here we need the claim number so that we can show the claim reversal in the claim history.
 			Etranss.Update(etrans);
 			Patient patient=Patients.GetPat(claim.PatNum);
@@ -478,7 +478,7 @@ namespace OpenDentBusiness.Eclaims {
 			etransAck.InsSubNum=etrans.InsSubNum;
 			etransAck.CarrierNum=etrans.CarrierNum;
 			etransAck.DateTimeTrans=DateTime.Now;
-			etransAck.UserNum=Security.CurUser.UserNum;
+			etransAck.UserNum=Security.CurUser.Id;
 			if(errorMsg!="") {
 				etransAck.AckCode="R";//To allow the user to try and reverse the claim again.
 				etransAck.Etype=EtransType.AckError;
@@ -540,7 +540,7 @@ namespace OpenDentBusiness.Eclaims {
 				}
 				CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkNum,clearinghouseClin);
 				Etrans etrans=Etranss.CreateCanadianOutput(0,carrier.CarrierNum,carrier.CanadianNetworkNum,
-					clearinghouseClin.HqClearinghouseNum,EtransType.RequestPay_CA,0,0,Security.CurUser.UserNum);
+					clearinghouseClin.HqClearinghouseNum,EtransType.RequestPay_CA,0,0,Security.CurUser.Id);
 				//A01 transaction prefix 12 AN
 				strb.Append(Canadian.TidyAN(network.CanadianTransactionPrefix,12));
 				//A02 office sequence number 6 N
@@ -592,7 +592,7 @@ namespace OpenDentBusiness.Eclaims {
 				etransAck.InsSubNum=etrans.InsSubNum;
 				etransAck.CarrierNum=etrans.CarrierNum;
 				etransAck.DateTimeTrans=DateTime.Now;
-				etransAck.UserNum=Security.CurUser.UserNum;
+				etransAck.UserNum=Security.CurUser.Id;
 				CCDFieldInputter fieldInputter=null;
 				if(errorMsg!="") {
 					etransAck.Etype=EtransType.AckError;
@@ -643,11 +643,11 @@ namespace OpenDentBusiness.Eclaims {
 					throw new ApplicationException("The carrier does not support summary reconciliation transactions.");
 				}
 				etrans=Etranss.CreateCanadianOutput(0,carrier.CarrierNum,carrier.CanadianNetworkNum,
-					clearinghouseClin.HqClearinghouseNum,EtransType.RequestSumm_CA,0,0,Security.CurUser.UserNum);
+					clearinghouseClin.HqClearinghouseNum,EtransType.RequestSumm_CA,0,0,Security.CurUser.Id);
 			}
 			else {//Assume network!=null
 				etrans=Etranss.CreateCanadianOutput(0,0,network.CanadianNetworkNum,
-					clearinghouseClin.HqClearinghouseNum,EtransType.RequestSumm_CA,0,0,Security.CurUser.UserNum);
+					clearinghouseClin.HqClearinghouseNum,EtransType.RequestSumm_CA,0,0,Security.CurUser.Id);
 			}
 			//A01 transaction prefix 12 AN
 			strb.Append(Canadian.TidyAN(network.CanadianTransactionPrefix,12));
@@ -693,7 +693,7 @@ namespace OpenDentBusiness.Eclaims {
 			etransAck.InsSubNum=etrans.InsSubNum;
 			etransAck.CarrierNum=etrans.CarrierNum;
 			etransAck.DateTimeTrans=DateTime.Now;
-			etransAck.UserNum=Security.CurUser.UserNum;
+			etransAck.UserNum=Security.CurUser.Id;
 			CCDFieldInputter fieldInputter=null;
 			if(errorMsg!="") {
 				etransAck.Etype=EtransType.AckError;
@@ -753,7 +753,7 @@ namespace OpenDentBusiness.Eclaims {
 					throw new ApplicationException("The carrier does not support request for outstanding transactions.");
 				}					
 				Etrans etrans=Etranss.CreateCanadianOutput(0,(carrier==null)?0:carrier.CarrierNum,(network==null)?0:network.CanadianNetworkNum,
-					clearinghouseClin.HqClearinghouseNum,EtransType.RequestOutstand_CA,0,0,Security.CurUser.UserNum);
+					clearinghouseClin.HqClearinghouseNum,EtransType.RequestOutstand_CA,0,0,Security.CurUser.Id);
 				//A01 transaction prefix 12 AN
 				if(network==null) {//iTrans will always hit this, or running for Version 2 or Version 4 for all carriers.
 					strb.Append("            ");

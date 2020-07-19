@@ -170,7 +170,7 @@ namespace OpenDental {
 				}
 			}
 			EmailAddress emailAddressPractice=EmailAddresses.GetOne(PrefC.GetLong(PrefName.EmailDefaultAddressNum));
-			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurUser.UserNum);
+			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurUser.Id);
 			//Add addresses which are: not associated to anything, or not default, or unique per clinic.			
 			_listEmailAddresses=new List<EmailAddress>();
 			comboEmailAddress.Items.Clear();

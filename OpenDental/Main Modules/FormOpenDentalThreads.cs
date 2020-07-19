@@ -171,7 +171,7 @@ namespace OpenDental
 					return;//user has been inactive for a while, so stop checking alerts.
 				}
 				long clinicNumCur = Clinics.ClinicNum;
-				long userNumCur = Security.CurUser.UserNum;
+				long userNumCur = Security.CurUser.Id;
 				// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 				List<List<AlertItem>> listUniqueAlerts = AlertItems.GetUniqueAlerts(userNumCur, clinicNumCur);
 				//We will set the alert's tag to all the items in its list so that all can be marked read/deleted later.
@@ -635,15 +635,15 @@ namespace OpenDental
 				RefreshMenuDashboards();
 				if (Security.CurUser != null)
 				{
-					InitDashboards(Security.CurUser.UserNum);
+					InitDashboards(Security.CurUser.Id);
 				}
 			});
 			//If the thread that attempts to start Open Dental dashboard fails for any reason, silently fail.
 			odThread.AddExceptionHandler(ex =>
 			{
-				if (Security.CurUser != null && Security.CurUser.UserNum != 0)
+				if (Security.CurUser != null && Security.CurUser.Id != 0)
 				{//Defensive to ensure all Patient Dashboard userprefs are not deleted.
-					UserOdPrefs.DeleteForValueString(Security.CurUser.UserNum, UserOdFkeyType.Dashboard, string.Empty);//All Dashboard userodprefs for this user.
+					UserOdPrefs.DeleteForValueString(Security.CurUser.Id, UserOdFkeyType.Dashboard, string.Empty);//All Dashboard userodprefs for this user.
 				}
 			});
 			odThread.GroupName = FormODThreadNames.Dashboard.GetDescription();
@@ -772,7 +772,7 @@ namespace OpenDental
 				List<TaskNote> listRefreshedTaskNotes = null;
 				List<UserOdPref> listBlockedTaskLists = null;
 				//JM: Bug fix, but we do not know what would cause Security.CurUser to be null. Worst case task wont show till next signal tick.
-				long userNumCur = Security.CurUser?.UserNum ?? 0;
+				long userNumCur = Security.CurUser?.Id ?? 0;
 				List<OpenDentBusiness.Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(userNumCur, Clinics.ClinicNum, listEditedTaskNums);
 				if (listRefreshedTasks.Count > 0)
 				{

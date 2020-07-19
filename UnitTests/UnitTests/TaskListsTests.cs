@@ -35,8 +35,8 @@ namespace UnitTests.TaskLists_Tests {
 			_userA=UserodT.CreateUser(userName: "TaskUserA",clinicNum: _clinicN.ClinicNum,isClinicIsRestricted: false);
 			_userNW=UserodT.CreateUser(userName: "TaskUserNW",clinicNum: _clinicNW.ClinicNum,isClinicIsRestricted: true);
 			Userods.RefreshCache();
-			List<UserClinic> listUserClinics = new List<UserClinic>() { new UserClinic(_clinicNW.ClinicNum,_userNW.UserNum) };
-			if(UserClinics.Sync(listUserClinics,_userNW.UserNum)) {//Either syncs new list, or clears old list if no longer restricted.
+			List<UserClinic> listUserClinics = new List<UserClinic>() { new UserClinic(_clinicNW.ClinicNum,_userNW.Id) };
+			if(UserClinics.Sync(listUserClinics,_userNW.Id)) {//Either syncs new list, or clears old list if no longer restricted.
 				UserClinics.RefreshCache();
 			}
 		}
@@ -52,10 +52,10 @@ namespace UnitTests.TaskLists_Tests {
 			_taskListClinic=TaskListT.CreateTaskList(descript:"Clinic Filter",parent:_taskListMainNoFilter.TaskListNum,globalTaskFilterType:GlobalTaskFilterType.Clinic);
 			_taskListRegion=TaskListT.CreateTaskList(descript:"Region Filter",parent:_taskListMainNoFilter.TaskListNum,globalTaskFilterType:GlobalTaskFilterType.Region);
 			_taskListRepeating=TaskListT.CreateTaskList("Repeating",isRepeating:true);
-			TaskSubscriptions.TrySubscList(_taskListMainNoFilter.TaskListNum,_userA.UserNum);
-			TaskSubscriptions.TrySubscList(_taskListClinic.TaskListNum,_userA.UserNum);
-			TaskSubscriptions.TrySubscList(_taskListRegion.TaskListNum,_userA.UserNum);
-			TaskSubscriptions.TrySubscList(_taskListRegion.TaskListNum,_userNW.UserNum);
+			TaskSubscriptions.TrySubscList(_taskListMainNoFilter.TaskListNum,_userA.Id);
+			TaskSubscriptions.TrySubscList(_taskListClinic.TaskListNum,_userA.Id);
+			TaskSubscriptions.TrySubscList(_taskListRegion.TaskListNum,_userA.Id);
+			TaskSubscriptions.TrySubscList(_taskListRegion.TaskListNum,_userNW.Id);
 		}
 
 		[TestCleanup]
@@ -78,7 +78,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,_taskListMainNoFilter.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshMainTrunk(_userA.UserNum,TaskType.All,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshMainTrunk(_userA.Id,TaskType.All,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskListMain=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListMainNoFilter.TaskListNum);
 			Assert.IsTrue(taskListMain!=null && taskListMain.NewTaskCount==3);
 		}
@@ -87,11 +87,11 @@ namespace UnitTests.TaskLists_Tests {
 		public void TaskLists_RefreshMainTrunk_ClinicFilter() {
 			string suffix = MethodBase.GetCurrentMethod().Name;
 			TaskList taskListMainClinicFilter=TaskListT.CreateTaskList(descript:"Main Clinic Filter",parent:0,globalTaskFilterType:GlobalTaskFilterType.Clinic);
-			TaskSubscriptions.TrySubscList(taskListMainClinicFilter.TaskListNum,_userA.UserNum);
+			TaskSubscriptions.TrySubscList(taskListMainClinicFilter.TaskListNum,_userA.Id);
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,taskListMainClinicFilter.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshMainTrunk(_userA.UserNum,TaskType.All,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshMainTrunk(_userA.Id,TaskType.All,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskListMain=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListMainClinicFilter.TaskListNum);
 			Assert.IsTrue(taskListMain!=null && taskListMain.NewTaskCount==1);
 		}
@@ -100,11 +100,11 @@ namespace UnitTests.TaskLists_Tests {
 		public void TaskLists_RefreshMainTrunk_RegionFilter() {
 			string suffix = MethodBase.GetCurrentMethod().Name;
 			TaskList taskListMainRegionFilter=TaskListT.CreateTaskList(descript:"Main Region Filter",parent:0,globalTaskFilterType:GlobalTaskFilterType.Region);
-			TaskSubscriptions.TrySubscList(taskListMainRegionFilter.TaskListNum,_userA.UserNum);
+			TaskSubscriptions.TrySubscList(taskListMainRegionFilter.TaskListNum,_userA.Id);
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,taskListMainRegionFilter.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshMainTrunk(_userA.UserNum,TaskType.All,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshMainTrunk(_userA.Id,TaskType.All,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListMainRegionFilter.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -113,11 +113,11 @@ namespace UnitTests.TaskLists_Tests {
 		public void TaskLists_RefreshMainTrunk_RegionFilterClinicRestriction() {
 			string suffix = MethodBase.GetCurrentMethod().Name;
 			TaskList taskListMainRegionFilter=TaskListT.CreateTaskList(descript:"Main Region Filter",parent:0,globalTaskFilterType:GlobalTaskFilterType.Region);
-			TaskSubscriptions.TrySubscList(taskListMainRegionFilter.TaskListNum,_userNW.UserNum);
+			TaskSubscriptions.TrySubscList(taskListMainRegionFilter.TaskListNum,_userNW.Id);
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,taskListMainRegionFilter.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshMainTrunk(_userNW.UserNum,TaskType.All,_clinicNW.ClinicNum,_clinicNW.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshMainTrunk(_userNW.Id,TaskType.All,_clinicNW.ClinicNum,_clinicNW.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListMainRegionFilter.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -130,7 +130,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,_taskListMainNoFilter.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshUserTrunk(_userA.UserNum,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshUserTrunk(_userA.Id,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListMainNoFilter.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==3);
 		}
@@ -141,7 +141,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,_taskListClinic.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshUserTrunk(_userA.UserNum,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshUserTrunk(_userA.Id,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListClinic.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -152,7 +152,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,_taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshUserTrunk(_userA.UserNum,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshUserTrunk(_userA.Id,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -163,7 +163,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,_taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshUserTrunk(_userNW.UserNum,_clinicNW.ClinicNum,_clinicNW.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshUserTrunk(_userNW.Id,_clinicNW.ClinicNum,_clinicNW.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -176,7 +176,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,_taskListRepeating.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeatingTrunk(_userA.UserNum,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeatingTrunk(_userA.Id,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListRepeating.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==3);
 		}
@@ -189,7 +189,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,taskListClinic.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeatingTrunk(_userA.UserNum,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeatingTrunk(_userA.Id,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListClinic.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -202,7 +202,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeatingTrunk(_userA.UserNum,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeatingTrunk(_userA.Id,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -215,7 +215,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeatingTrunk(_userNW.UserNum,_clinicNW.ClinicNum,_clinicNW.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeatingTrunk(_userNW.Id,_clinicNW.ClinicNum,_clinicNW.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -230,7 +230,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,taskListNoFilter.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshChildren(_taskListMainNoFilter.TaskListNum,_userA.UserNum,userInbox,TaskType.All
+			List<TaskList> listTaskListsActual=TaskLists.RefreshChildren(_taskListMainNoFilter.TaskListNum,_userA.Id,userInbox,TaskType.All
 				,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListNoFilter.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==3);
@@ -243,7 +243,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,_taskListClinic.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshChildren(_taskListMainNoFilter.TaskListNum,_userA.UserNum,userInbox,TaskType.All
+			List<TaskList> listTaskListsActual=TaskLists.RefreshChildren(_taskListMainNoFilter.TaskListNum,_userA.Id,userInbox,TaskType.All
 				,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskListUserA=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListClinic.TaskListNum);
 			Assert.IsTrue(taskListUserA!=null && taskListUserA.NewTaskCount==1);
@@ -256,7 +256,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,_taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshChildren(_taskListMainNoFilter.TaskListNum,_userA.UserNum,userInbox,TaskType.All
+			List<TaskList> listTaskListsActual=TaskLists.RefreshChildren(_taskListMainNoFilter.TaskListNum,_userA.Id,userInbox,TaskType.All
 				,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
@@ -269,7 +269,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,_taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshChildren(_taskListMainNoFilter.TaskListNum,_userNW.UserNum,userInbox,TaskType.All
+			List<TaskList> listTaskListsActual=TaskLists.RefreshChildren(_taskListMainNoFilter.TaskListNum,_userNW.Id,userInbox,TaskType.All
 				,_clinicNW.ClinicNum,_clinicNW.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
@@ -283,7 +283,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,_taskListRepeating.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeating(TaskDateType.None,_userA.UserNum,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeating(TaskDateType.None,_userA.Id,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListRepeating.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==3);
 		}
@@ -296,7 +296,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,taskListClinic.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeating(TaskDateType.None,_userA.UserNum,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeating(TaskDateType.None,_userA.Id,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListClinic.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -309,7 +309,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeating(TaskDateType.None,_userA.UserNum,_clinicN.ClinicNum,_clinicN.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeating(TaskDateType.None,_userA.Id,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -322,7 +322,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeating(TaskDateType.None,_userNW.UserNum,_clinicNW.ClinicNum,_clinicNW.Region);
+			List<TaskList> listTaskListsActual=TaskLists.RefreshRepeating(TaskDateType.None,_userNW.Id,_clinicNW.ClinicNum,_clinicNW.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
 		}
@@ -336,7 +336,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,taskListNoFilter.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshDatedTrunk(DateTime.Today,TaskDateType.None,_userA.UserNum
+			List<TaskList> listTaskListsActual=TaskLists.RefreshDatedTrunk(DateTime.Today,TaskDateType.None,_userA.Id
 				,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==taskListNoFilter.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==3);
@@ -348,7 +348,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,_taskListClinic.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshDatedTrunk(DateTime.Today,TaskDateType.None,_userA.UserNum
+			List<TaskList> listTaskListsActual=TaskLists.RefreshDatedTrunk(DateTime.Today,TaskDateType.None,_userA.Id
 				,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskListUserA=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListClinic.TaskListNum);
 			Assert.IsTrue(taskListUserA!=null && taskListUserA.NewTaskCount==1);
@@ -360,7 +360,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patS,_userA,_taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshDatedTrunk(DateTime.Today,TaskDateType.None,_userA.UserNum
+			List<TaskList> listTaskListsActual=TaskLists.RefreshDatedTrunk(DateTime.Today,TaskDateType.None,_userA.Id
 				,_clinicN.ClinicNum,_clinicN.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
@@ -372,7 +372,7 @@ namespace UnitTests.TaskLists_Tests {
 			//Add clinicS appointment and patient Tasks.
 			CreateTasks(suffix,_patN,_userA,_taskListRegion.TaskListNum);
 			//Hashtag No filter
-			List<TaskList> listTaskListsActual=TaskLists.RefreshDatedTrunk(DateTime.Today,TaskDateType.None,_userNW.UserNum
+			List<TaskList> listTaskListsActual=TaskLists.RefreshDatedTrunk(DateTime.Today,TaskDateType.None,_userNW.Id
 				,_clinicNW.ClinicNum,_clinicNW.Region);
 			TaskList taskList=listTaskListsActual.FirstOrDefault(x => x.TaskListNum==_taskListRegion.TaskListNum);
 			Assert.IsTrue(taskList!=null && taskList.NewTaskCount==1);
@@ -383,19 +383,19 @@ namespace UnitTests.TaskLists_Tests {
 		///<summary>Creates an Appointment Task and a Patient Task using pat and clinic, and adds them to _listTasks.</summary>
 		private void CreateTasks(string suffix,Patient pat,Userod user,long taskListNum,bool isRepeating = false) {
 			Appointment appt = AppointmentT.CreateAppointment(pat.PatNum,DateTime.Today,0,0,clinicNum: pat.ClinicNum);
-			Task taskAppt = TaskT.CreateTask(taskListNum,appt.AptNum,suffix,isRepeating: isRepeating,dateType: TaskDateType.None,objectType: TaskObjectType.Appointment,userNum: user.UserNum);
-			Task taskPat = TaskT.CreateTask(taskListNum,pat.PatNum,suffix,isRepeating: isRepeating,dateType: TaskDateType.None,objectType: TaskObjectType.Patient,userNum: user.UserNum);
-			Task taskNone = TaskT.CreateTask(taskListNum,0,suffix,isRepeating: isRepeating,dateType: TaskDateType.None,objectType: TaskObjectType.None,userNum: user.UserNum);
+			Task taskAppt = TaskT.CreateTask(taskListNum,appt.AptNum,suffix,isRepeating: isRepeating,dateType: TaskDateType.None,objectType: TaskObjectType.Appointment,userNum: user.Id);
+			Task taskPat = TaskT.CreateTask(taskListNum,pat.PatNum,suffix,isRepeating: isRepeating,dateType: TaskDateType.None,objectType: TaskObjectType.Patient,userNum: user.Id);
+			Task taskNone = TaskT.CreateTask(taskListNum,0,suffix,isRepeating: isRepeating,dateType: TaskDateType.None,objectType: TaskObjectType.None,userNum: user.Id);
 			//Manage test lists of "subscribed" tasks so we don't have to do database logic to determine if a user is subscribed to a task.
-			if(OpenDental.UserControlTasks.GetSubscribedTaskLists(_userA.UserNum).Exists(x => x.TaskListNum==taskListNum)) {
-				TaskUnreads.SetUnread(_userA.UserNum,taskAppt);
-				TaskUnreads.SetUnread(_userA.UserNum,taskPat);
-				TaskUnreads.SetUnread(_userA.UserNum,taskNone);
+			if(OpenDental.UserControlTasks.GetSubscribedTaskLists(_userA.Id).Exists(x => x.TaskListNum==taskListNum)) {
+				TaskUnreads.SetUnread(_userA.Id,taskAppt);
+				TaskUnreads.SetUnread(_userA.Id,taskPat);
+				TaskUnreads.SetUnread(_userA.Id,taskNone);
 			}
-			if(OpenDental.UserControlTasks.GetSubscribedTaskLists(_userNW.UserNum).Exists(x => x.TaskListNum==taskListNum)) {
-				TaskUnreads.SetUnread(_userNW.UserNum,taskAppt);
-				TaskUnreads.SetUnread(_userNW.UserNum,taskPat);
-				TaskUnreads.SetUnread(_userNW.UserNum,taskNone);
+			if(OpenDental.UserControlTasks.GetSubscribedTaskLists(_userNW.Id).Exists(x => x.TaskListNum==taskListNum)) {
+				TaskUnreads.SetUnread(_userNW.Id,taskAppt);
+				TaskUnreads.SetUnread(_userNW.Id,taskPat);
+				TaskUnreads.SetUnread(_userNW.Id,taskNone);
 			}
 		}
 

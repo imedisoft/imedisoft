@@ -96,7 +96,7 @@ namespace OpenDentBusiness{
 					continue;
 				}
 				UserGroupAttach userGroupAttachNew = new UserGroupAttach() {
-					UserNum = userCur.UserNum,
+					UserNum = userCur.Id,
 					UserGroupNum = userGroupCur.UserGroupNum
 				};
 				retVal.Add(userGroupAttachNew);
@@ -144,7 +144,7 @@ namespace OpenDentBusiness{
 			foreach(UserGroupAttach userGroupAdd in listAdd) {
 				rowsChanged++;
 				UserGroupAttaches.Insert(userGroupAdd);
-				Userod user=listRemoteUsers.FirstOrDefault(x => x.UserNum==userGroupAdd.UserNum);
+				Userod user=listRemoteUsers.FirstOrDefault(x => x.Id==userGroupAdd.UserNum);
 				UserGroup userGroup=listRemoteGroups.FirstOrDefault(x => x.UserGroupNum==userGroupAdd.UserGroupNum);
 				SecurityLogs.MakeLogEntryNoCache(Permissions.SecurityAdmin,0,"User: "+user.UserName+" added to user group: "
 					+userGroup.Description+" by CEMT user: "+Security.CurUser.UserName);
@@ -152,7 +152,7 @@ namespace OpenDentBusiness{
 			foreach(UserGroupAttach userGroupDel in listDel) {
 				rowsChanged++;
 				UserGroupAttaches.Delete(userGroupDel);
-				Userod user=listRemoteUsers.FirstOrDefault(x => x.UserNum==userGroupDel.UserNum);
+				Userod user=listRemoteUsers.FirstOrDefault(x => x.Id==userGroupDel.UserNum);
 				UserGroup userGroup=listRemoteGroups.FirstOrDefault(x => x.UserGroupNum==userGroupDel.UserGroupNum);
 				SecurityLogs.MakeLogEntryNoCache(Permissions.SecurityAdmin,0,"User: "+user.UserName+" removed from user group: "
 					+userGroup.Description+" by CEMT user: "+Security.CurUser.UserName);
@@ -173,7 +173,7 @@ namespace OpenDentBusiness{
 			if(!userCur.IsInUserGroup(userGroupNum)) {
 				UserGroupAttach userGroupAttach = new UserGroupAttach();
 				userGroupAttach.UserGroupNum = userGroupNum;
-				userGroupAttach.UserNum = userCur.UserNum;
+				userGroupAttach.UserNum = userCur.Id;
 				Crud.UserGroupAttachCrud.Insert(userGroupAttach);
 			}
 		}
@@ -188,12 +188,12 @@ namespace OpenDentBusiness{
 				if(!userCur.IsInUserGroup(userGroupNum)) {
 					UserGroupAttach userGroupAttach = new UserGroupAttach();
 					userGroupAttach.UserGroupNum = userGroupNum;
-					userGroupAttach.UserNum = userCur.UserNum;
+					userGroupAttach.UserNum = userCur.Id;
 					Crud.UserGroupAttachCrud.Insert(userGroupAttach);
 					rowsChanged++;
 				}
 			}
-			foreach(UserGroupAttach userGroupAttach in UserGroupAttaches.GetForUser(userCur.UserNum)) {
+			foreach(UserGroupAttach userGroupAttach in UserGroupAttaches.GetForUser(userCur.Id)) {
 				if(!listUserGroupNums.Contains(userGroupAttach.UserGroupNum)) {
 					Crud.UserGroupAttachCrud.Delete(userGroupAttach.UserGroupAttachNum);
 					rowsChanged++;

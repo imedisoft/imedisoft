@@ -778,7 +778,7 @@ namespace OpenDental{
 			string keyData=GetSignatureKey();
 			signatureBoxWrapper.FillSignature(GroupCur.SigIsTopaz,keyData,GroupCur.Signature);
 			signatureBoxWrapper.BringToFront();
-			if(!(Security.IsAuthorized(Permissions.GroupNoteEditSigned,true) || signatureBoxWrapper.SigIsBlank || GroupCur.UserNum==Security.CurUser.UserNum)) {
+			if(!(Security.IsAuthorized(Permissions.GroupNoteEditSigned,true) || signatureBoxWrapper.SigIsBlank || GroupCur.UserNum==Security.CurUser.Id)) {
 				//User does not have permission and this note was signed by someone else.
 				textNotes.ReadOnly=true;
 				signatureBoxWrapper.Enabled=false;
@@ -1345,7 +1345,7 @@ namespace OpenDental{
 		}
 
 		private void signatureBoxWrapper_SignatureChanged(object sender,EventArgs e) {
-			GroupCur.UserNum=_curUser.UserNum;
+			GroupCur.UserNum=_curUser.Id;
 			textUser.Text=_curUser.UserName;
 			SigChanged=true;
 		}

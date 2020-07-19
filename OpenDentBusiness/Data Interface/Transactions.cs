@@ -62,14 +62,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Transaction trans) {
-			trans.SecUserNumEdit=Security.CurUser.UserNum;//Before middle tier check to catch user at workstation
+			trans.SecUserNumEdit=Security.CurUser.Id;//Before middle tier check to catch user at workstation
 			
 			return Crud.TransactionCrud.Insert(trans);
 		}
 
 		///<summary></summary>
 		public static void Update(Transaction trans) {
-			trans.SecUserNumEdit=Security.CurUser.UserNum;//Before middle tier check to catch user at workstation
+			trans.SecUserNumEdit=Security.CurUser.Id;//Before middle tier check to catch user at workstation
 			
 			Crud.TransactionCrud.Update(trans);
 		}

@@ -161,7 +161,7 @@ namespace OpenDentBusiness
 
 		public static Userod GetUser(long userNum)
 		{
-            return GetFirstOrDefault(x => x.UserNum == userNum);
+            return GetFirstOrDefault(x => x.Id == userNum);
 		}
 
 		/// <summary>
@@ -169,7 +169,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<Userod> GetUsers(List<long> listUserNums)
         {
-            return cache.Find(user => listUserNums.Contains(user.UserNum)).ToList();
+            return cache.Find(user => listUserNums.Contains(user.Id)).ToList();
         }
 
 		/// <summary>
@@ -291,13 +291,13 @@ namespace OpenDentBusiness
 				{
 					listUserNumsInClinic.AddRange(UserClinics.GetForClinic(listClinicNums[i]).Select(y => y.UserNum).Distinct().ToList());
 				}
-				listUserNumsInClinic.AddRange(GetUsers().FindAll(x => !x.ClinicIsRestricted).Select(x => x.UserNum).Distinct().ToList());//Always add unrestricted users into the list.
+				listUserNumsInClinic.AddRange(GetUsers().FindAll(x => !x.ClinicIsRestricted).Select(x => x.Id).Distinct().ToList());//Always add unrestricted users into the list.
 				listUserNumsInClinic = listUserNumsInClinic.Distinct().ToList();//Remove duplicates that could possibly be in the list.
 				if (listUserNumsInClinic.Count > 0)
 				{
 					listUserNumsInInsVerify = listUserNumsInInsVerify.FindAll(x => listUserNumsInClinic.Contains(x));
 				}
-				listUserNumsInInsVerify.AddRange(GetUsers(listUserNumsInInsVerify).FindAll(x => !x.ClinicIsRestricted).Select(x => x.UserNum).Distinct().ToList());//Always add unrestricted users into the list.
+				listUserNumsInInsVerify.AddRange(GetUsers(listUserNumsInInsVerify).FindAll(x => !x.ClinicIsRestricted).Select(x => x.Id).Distinct().ToList());//Always add unrestricted users into the list.
 				listUserNumsInInsVerify = listUserNumsInInsVerify.Distinct().ToList();
 			}
 			List<Userod> listUsersWithPerm = GetUsersByPermission(Permissions.InsPlanVerifyList, false);
@@ -308,9 +308,9 @@ namespace OpenDentBusiness
 					return listUsersWithPerm;//Return unfiltered list of users with permission
 				}
 				//Don't limit user list to already assigned insurance verifications.
-				return listUsersWithPerm.FindAll(x => listUserNumsInClinic.Contains(x.UserNum));//Return users with permission, limited by their clinics
+				return listUsersWithPerm.FindAll(x => listUserNumsInClinic.Contains(x.Id));//Return users with permission, limited by their clinics
 			}
-			return listUsersWithPerm.FindAll(x => listUserNumsInInsVerify.Contains(x.UserNum));//Return users limited by permission, clinic, and having an insurance already assigned.
+			return listUsersWithPerm.FindAll(x => listUserNumsInInsVerify.Contains(x.Id));//Return users limited by permission, clinic, and having an insurance already assigned.
 		}
 
 		/// <summary>
@@ -328,7 +328,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static string GetName(long userNum)
 		{
-            return GetFirstOrDefault(x => x.UserNum == userNum)?.UserName ?? "";
+            return GetFirstOrDefault(x => x.Id == userNum)?.UserName ?? "";
         }
 
 		/// <summary>
@@ -420,7 +420,7 @@ namespace OpenDentBusiness
 					//Update the password to the default hash type which should be the most secure hashing algorithm possible.
 					Authentication.UpdatePasswordUserod(userNew, plaintext, HashTypes.SHA3_512);
 					//The above method is almost guaranteed to have changed the password for userNew so go back out the db and get the changes that were made.
-					userNew = GetUserNoCache(userNew.UserNum);
+					userNew = GetUserNoCache(userNew.Id);
 				}
 				return userNew;
 			}
@@ -582,7 +582,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				excludeUserNum = user.UserNum;//it's ok if the name matches the current username
+				excludeUserNum = user.Id;//it's ok if the name matches the current username
 			}
 			//It doesn't matter if the UserName is already in use if the user being updated is going to be hidden.  This check will block them from unhiding duplicate users.
 			if (!user.IsHidden)
@@ -633,7 +633,7 @@ namespace OpenDentBusiness
 				+ "INNER JOIN grouppermission ON usergroupattach.UserGroupNum=grouppermission.UserGroupNum "
 				+ "WHERE grouppermission.PermType='" + POut.Long((int)Permissions.SecurityAdmin) + "'"
 				+ " AND userod.IsHidden =0"
-				+ " AND userod.UserNum != " + POut.Long(user.UserNum);
+				+ " AND userod.UserNum != " + POut.Long(user.Id);
 			if (Database.ExecuteString(command) == "0")
 			{//there are no other users with this permission
 				return false;
@@ -725,15 +725,15 @@ namespace OpenDentBusiness
 			copy.ClinicIsRestricted = user.ClinicIsRestricted;
 			copy.ClinicNum = user.ClinicNum;
 			//Insert also validates the user.
-			copy.UserNum = Insert(copy, UserGroups.GetForUser(user.UserNum, isForCemt).Select(x => x.UserGroupNum).ToList(), isForCemt);
+			copy.Id = Insert(copy, UserGroups.GetForUser(user.Id, isForCemt).Select(x => x.UserGroupNum).ToList(), isForCemt);
 			#region UserClinics
-			List<UserClinic> listUserClinics = new List<UserClinic>(UserClinics.GetForUser(user.UserNum));
-			listUserClinics.ForEach(x => x.UserNum = copy.UserNum);
-			UserClinics.Sync(listUserClinics, copy.UserNum);
+			List<UserClinic> listUserClinics = new List<UserClinic>(UserClinics.GetForUser(user.Id));
+			listUserClinics.ForEach(x => x.UserNum = copy.Id);
+			UserClinics.Sync(listUserClinics, copy.Id);
 			#endregion
 			#region Alerts
-			List<AlertSub> listUserAlert = AlertSubs.GetAllForUser(user.UserNum);
-			listUserAlert.ForEach(x => x.UserNum = copy.UserNum);
+			List<AlertSub> listUserAlert = AlertSubs.GetAllForUser(user.Id);
+			listUserAlert.ForEach(x => x.UserNum = copy.Id);
 			AlertSubs.Sync(listUserAlert, new List<AlertSub>());
 			#endregion
 			return copy;
@@ -767,7 +767,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static long GetInbox(long userNum)
 		{
-            return GetFirstOrDefault(x => x.UserNum == userNum)?.TaskListInBox ?? 0;
+            return GetFirstOrDefault(x => x.Id == userNum)?.TaskListInBox ?? 0;
         }
 
 		/// <summary>

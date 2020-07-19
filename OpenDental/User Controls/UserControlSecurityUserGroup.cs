@@ -70,7 +70,7 @@ namespace OpenDental {
 				}
 				labelUserCurr.Text=_selectedUser.UserName;
 				for(int i=0;i<gridUsers.ListGridRows.Count;i++){
-					if(((Userod)(gridUsers.ListGridRows[i].Tag)).UserNum==_selectedUser.UserNum) {
+					if(((Userod)(gridUsers.ListGridRows[i].Tag)).Id==_selectedUser.Id) {
 						gridUsers.SetSelected(i,true);
 						break;
 					}
@@ -331,7 +331,7 @@ namespace OpenDental {
 			//Selection logic has to occur after ODGrid.EndUpdate().
 			if(selectedUser!=null) {
 				//Reselect previously selected user.  SelectedUser is allowed to be null (ex. on load).
-				SelectedUser=listFilteredUsers.FirstOrDefault(x => x.UserNum==selectedUser.UserNum);
+				SelectedUser=listFilteredUsers.FirstOrDefault(x => x.Id==selectedUser.Id);
 			}
 			RefreshUserTabGroups();
 		}

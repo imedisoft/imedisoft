@@ -205,7 +205,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Surround with try/catch.</summary>
 		public static void Update(Carrier carrier,Carrier oldCarrier) {
-			Update(carrier,oldCarrier,Security.CurUser.UserNum);
+			Update(carrier,oldCarrier,Security.CurUser.Id);
 		}
 
 		///<summary>Surround with try/catch.
@@ -245,7 +245,7 @@ namespace OpenDentBusiness{
 		public static long Insert(Carrier carrier, Carrier carrierOld=null,bool useExistingPriKey=false) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			carrier.SecUserNumEntry=Security.CurUser.UserNum;
+			carrier.SecUserNumEntry=Security.CurUser.Id;
 			//string command;
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				if(carrier.IsCDA){
@@ -309,7 +309,7 @@ namespace OpenDentBusiness{
 			command="DELETE from carrier WHERE CarrierNum = "+POut.Long(Cur.CarrierNum);
 			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			InsEditLogs.MakeLogEntry(null,Cur,InsEditLogType.Carrier,Security.CurUser.UserNum);
+			InsEditLogs.MakeLogEntry(null,Cur,InsEditLogType.Carrier,Security.CurUser.Id);
 		}
 
 		///<summary>Returns a list of insplans that are dependent on the Cur carrier. Used to display in carrier edit.</summary>
@@ -403,7 +403,7 @@ namespace OpenDentBusiness{
 				throw new ApplicationException(Lans.g("Carriers","Carrier not found."));//gives user a chance to add manually.
 			}
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			carrier.SecUserNumEntry=Security.CurUser.UserNum;
+			carrier.SecUserNumEntry=Security.CurUser.Id;
 			Insert(carrier,carrierOld); //insert function takes care of logging.
 			retVal.CarrierNum=carrier.CarrierNum;
 			return retVal;
@@ -468,7 +468,7 @@ namespace OpenDentBusiness{
 				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 				listInsPlan.ForEach(x => { //Log InsPlan CarrierNum change.
-					InsEditLogs.MakeLogEntry("CarrierNum",Security.CurUser.UserNum,POut.Long(carrierNums[i]),POut.Long(pickedCarrierNum),
+					InsEditLogs.MakeLogEntry("CarrierNum",Security.CurUser.Id,POut.Long(carrierNums[i]),POut.Long(pickedCarrierNum),
 						InsEditLogType.InsPlan,x.PlanNum,0,x.GroupNum+" - "+x.GroupName);
 				});
 				Carrier carrierCur = GetCarrier(carrierNums[i]); //gets from cache
@@ -476,7 +476,7 @@ namespace OpenDentBusiness{
 					+" WHERE CarrierNum = '"+carrierNums[i].ToString()+"'";
 				Database.ExecuteNonQuery(command);
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-				InsEditLogs.MakeLogEntry(null,carrierCur,InsEditLogType.Carrier,Security.CurUser.UserNum);
+				InsEditLogs.MakeLogEntry(null,carrierCur,InsEditLogType.Carrier,Security.CurUser.Id);
 			}
 		}
 

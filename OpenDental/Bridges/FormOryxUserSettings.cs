@@ -20,9 +20,9 @@ namespace OpenDental {
 
 		private void FormUserSetting_Load(object sender,EventArgs e) {
 			_progOryx=Programs.GetCur(ProgramName.Oryx);
-			_userNamePref=UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurUser.UserNum,_progOryx.ProgramNum,UserOdFkeyType.ProgramUserName)
+			_userNamePref=UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurUser.Id,_progOryx.ProgramNum,UserOdFkeyType.ProgramUserName)
 				.FirstOrDefault();
-			_passwordPref=UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurUser.UserNum,_progOryx.ProgramNum,UserOdFkeyType.ProgramPassword)
+			_passwordPref=UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurUser.Id,_progOryx.ProgramNum,UserOdFkeyType.ProgramPassword)
 				.FirstOrDefault();
 			if(_userNamePref!=null) {
 				textUsername.Text=_userNamePref.ValueString;
@@ -38,12 +38,12 @@ namespace OpenDental {
 			_userNamePref=_userNamePref??new UserOdPref {
 				Fkey=_progOryx.ProgramNum,
 				FkeyType=UserOdFkeyType.ProgramUserName,
-				UserNum=Security.CurUser.UserNum,
+				UserNum=Security.CurUser.Id,
 			};
 			_passwordPref=_passwordPref??new UserOdPref {
 				Fkey=_progOryx.ProgramNum,
 				FkeyType=UserOdFkeyType.ProgramPassword,
-				UserNum=Security.CurUser.UserNum,
+				UserNum=Security.CurUser.Id,
 			};
 			_userNamePref.ValueString=textUsername.Text;
 			CDT.Class1.Encrypt(textPassword.Text,out _passwordPref.ValueString);

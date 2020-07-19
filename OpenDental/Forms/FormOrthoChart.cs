@@ -551,7 +551,7 @@ namespace OpenDental {
 				return true;
 			}
 			OrthoChart sigChart=_dictOrthoCharts[orthoDate].Find(x => x.FieldName==_listDisplayFieldNames[_sigTableOrthoColIdx]);
-			if(sigChart==null || sigChart.UserNum==_curUser.UserNum) {
+			if(sigChart==null || sigChart.UserNum==_curUser.Id) {
 				_dictCanEditDay[orthoDate]=true;
 				return true;
 			}
@@ -604,12 +604,12 @@ namespace OpenDental {
 				chart.FieldName=columnHeading;
 				chart.FieldValue=newValue;
 				chart.PatNum=_patCur.PatNum;
-				chart.UserNum=_curUser.UserNum;
+				chart.UserNum=_curUser.Id;
 				_dictOrthoCharts[orthoDate].Add(chart);
 				return;
 			}
 			_dictOrthoCharts[orthoDate].Find(x => x.FieldName==columnHeading).FieldValue=newValue;
-			_dictOrthoCharts[orthoDate].Find(x => x.FieldName==columnHeading).UserNum=_curUser.UserNum;
+			_dictOrthoCharts[orthoDate].Find(x => x.FieldName==columnHeading).UserNum=_curUser.Id;
 		}
 
 		///<summary>Sets the value in _dictOrthoCharts for the specified date and index.</summary>

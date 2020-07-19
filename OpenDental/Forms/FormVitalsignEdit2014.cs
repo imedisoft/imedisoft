@@ -1449,7 +1449,7 @@ Do you want to remove the pregnancy diagnosis?"))
 			#endregion
 			#endregion
 			#region CDS Intervention Trigger
-			if(CDSPermissions.GetForUser(Security.CurUser.UserNum).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.UserNum).VitalCDS) {
+			if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).VitalCDS) {
 				FormCDSIntervention FormCDSI=new FormCDSIntervention();
 				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(VitalsignCur,Patients.GetPat(VitalsignCur.PatNum));
 				FormCDSI.ShowIfRequired(false);

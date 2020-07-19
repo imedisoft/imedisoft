@@ -112,7 +112,7 @@ namespace OpenDental {
 				return;
 			}
 			try {
-				WikiListHists.RevertFrom(gridMain.SelectedTag<WikiListHist>(),Security.CurUser.UserNum);
+				WikiListHists.RevertFrom(gridMain.SelectedTag<WikiListHist>(),Security.CurUser.Id);
 			}
 			catch(Exception) {
 				MessageBox.Show("There was an error when trying to revert changes.  Please call us for support.");

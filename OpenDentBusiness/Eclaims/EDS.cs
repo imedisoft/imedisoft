@@ -73,7 +73,7 @@ namespace OpenDentBusiness.Eclaims {
 				}
 				string htmlMessage=xmlDoc.SelectSingleNode(@"content/body/htmlData")?.InnerText.ToString();//can be null
 				if(!string.IsNullOrEmpty(htmlMessage)) {
-					etransHtml=Etranss.CreateEtrans(DateTime.Now,clearinghouseClin.HqClearinghouseNum,htmlMessage,Security.CurUser.UserNum);
+					etransHtml=Etranss.CreateEtrans(DateTime.Now,clearinghouseClin.HqClearinghouseNum,htmlMessage,Security.CurUser.Id);
 					etransHtml.Etype=EtransType.HTML;
 					Etranss.Insert(etransHtml);
 				}

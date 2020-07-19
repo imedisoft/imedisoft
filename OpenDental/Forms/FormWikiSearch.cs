@@ -120,7 +120,7 @@ namespace OpenDental {
 				MessageBox.Show("Selected page has already been restored.");//should never happen.
 				return;
 			}
-			WikiPages.WikiPageRestore(wikiPageRestored,Security.CurUser.UserNum);
+			WikiPages.WikiPageRestore(wikiPageRestored,Security.CurUser.Id);
 			Close();
 		}
 

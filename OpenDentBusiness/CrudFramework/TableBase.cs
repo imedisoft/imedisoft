@@ -1,10 +1,10 @@
-﻿using System;
+﻿using DataConnectionBase;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using DataConnectionBase;
 
 namespace OpenDentBusiness
 {
@@ -12,12 +12,11 @@ namespace OpenDentBusiness
 	/// The base class for classes that correspond to a table in the database.
 	/// Make sure to mark each derived class [Serializable].
 	/// </summary>
-	abstract public class TableBase
+	public abstract class TableBase
 	{
-		private static int _maxAllowedPacket = 0;
+		private static int maxAllowedPacketSize = 0;
 
 		/// <summary>
-		/// Not a db column.
 		/// Always false by default.
 		/// Will only be true if explicitly set to true by programmer.
 		/// When CRUD grabs a table from db, it is naturally set to False.
@@ -30,7 +29,6 @@ namespace OpenDentBusiness
 		/// Not a db column.
 		/// Tag can be useful when you need to associate this object to another object and do not have a control Tag.
 		/// </summary>
-        [XmlIgnore]
         public object TagOD { get; set; }
 
 		/// <summary>
@@ -41,22 +39,20 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				if (_maxAllowedPacket > 0)
+				if (maxAllowedPacketSize > 0)
 				{
-					// This value is not expected to change often. 
-					// Return cached value to prevent running a query below for MySQL (most of our customers).
-					return _maxAllowedPacket;
+					return maxAllowedPacketSize;
 				}
 
-				int kilobyte = 1024;//1KB
-				int megabyte = kilobyte * kilobyte;//1MB
+				const int kilobyte = 1024; // 1KB
+				const int megabyte = kilobyte * kilobyte; // 1MB
 
-                int retVal = MiscData.GetMaxAllowedPacket() - 8 * kilobyte;
+                int result = MiscData.GetMaxAllowedPacket() - 8 * kilobyte;
 
 				// Minimum of 8K (for network packet headers), maximum of 1MB for parallel.
-				_maxAllowedPacket = Math.Min(Math.Max(retVal, 8 * kilobyte), megabyte); 
+				maxAllowedPacketSize = Math.Min(Math.Max(result, 8 * kilobyte), megabyte); 
 
-				return _maxAllowedPacket;
+				return maxAllowedPacketSize;
 			}
 		}
 	}

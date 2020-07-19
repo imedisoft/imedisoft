@@ -179,7 +179,7 @@ namespace OpenDentBusiness{
 				if(smsToMobile.PatNum!=0 && makeCommLog) {  //Patient specified and calling code won't make commlog, make it here.
 					long userNum=0;
 					if(user!=null) {
-						userNum=user.UserNum;
+						userNum=user.Id;
 					}
 					if(smsToMobile.SmsStatus==SmsDeliveryStatus.FailNoCharge) {
 						continue;

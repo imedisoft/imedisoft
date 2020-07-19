@@ -30,7 +30,7 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			if(CDSPermissions.GetForUser(Security.CurUser.UserNum).ShowInfobutton) {
+			if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowInfobutton) {
 				col=new GridColumn("",18);//infobutton
 				col.ImageList=imageListInfoButton;
 				gridMain.ListGridColumns.Add(col);
@@ -45,7 +45,7 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<_table.Rows.Count;i++) {
 				row=new GridRow();
-				if(CDSPermissions.GetForUser(Security.CurUser.UserNum).ShowInfobutton) {
+				if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowInfobutton) {
 					row.Cells.Add(_table.Rows[i][0].ToString());//infobutton
 				}
 				row.Cells.Add(_table.Rows[i][1].ToString());//Trigger Text
@@ -58,7 +58,7 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
-			if(!CDSPermissions.GetForUser(Security.CurUser.UserNum).ShowInfobutton) {
+			if(!CDSPermissions.GetForUser(Security.CurUser.Id).ShowInfobutton) {
 				return;
 			}
 			if(e.Col!=0) {

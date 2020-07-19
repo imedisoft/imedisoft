@@ -24,12 +24,12 @@ namespace UnitTestsCore {
 			do {
 				//In case the username is already taken
 				try {
-					newUser.UserNum=Userods.Insert(newUser,userGroupNumbers);
+					newUser.Id=Userods.Insert(newUser,userGroupNumbers);
 				}
 				catch {
 					newUser.UserName="Username"+MiscUtils.CreateRandomAlphaNumericString(8);
 				}
-			}while(newUser.UserNum==0);
+			}while(newUser.Id==0);
 			Userods.RefreshCache();
 			UserGroupAttaches.RefreshCache();
 			return newUser;

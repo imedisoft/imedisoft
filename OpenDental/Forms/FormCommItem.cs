@@ -141,12 +141,12 @@ namespace OpenDental {
 		}
 
 		private void RefreshUserOdPrefs() {
-			if(Security.CurUser==null || Security.CurUser.UserNum < 1) {
+			if(Security.CurUser==null || Security.CurUser.Id < 1) {
 				return;
 			}
-			_userOdPrefClearNote=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.CommlogPersistClearNote).FirstOrDefault();
-			_userOdPrefEndDate=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.CommlogPersistClearEndDate).FirstOrDefault();
-			_userOdPrefUpdateDateTimeNewPat=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.UserNum,UserOdFkeyType.CommlogPersistUpdateDateTimeWithNewPatient).FirstOrDefault();
+			_userOdPrefClearNote=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.CommlogPersistClearNote).FirstOrDefault();
+			_userOdPrefEndDate=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.CommlogPersistClearEndDate).FirstOrDefault();
+			_userOdPrefUpdateDateTimeNewPat=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.CommlogPersistUpdateDateTimeWithNewPatient).FirstOrDefault();
 		}
 
 		///<summary>Helper method to update textDateTime with DateTime.Now</summary>
@@ -167,8 +167,8 @@ namespace OpenDental {
 		}
 
 		private void signatureBoxWrapper_SignatureChanged(object sender,EventArgs e) {
-			_commlogCur.UserNum=Security.CurUser.UserNum;
-			textUser.Text=Userods.GetName(Security.CurUser.UserNum);//might be blank.
+			_commlogCur.UserNum=Security.CurUser.Id;
+			textUser.Text=Userods.GetName(Security.CurUser.Id);//might be blank.
 			_sigChanged=true;
 		}
 		

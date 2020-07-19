@@ -275,7 +275,7 @@ namespace OpenDentBusiness{
 				return false;
 			}
 			List<GroupPermission> listReportPermissions=GroupPermissions.GetPermsForReports();
-			if(listReportPermissions.Exists(x => x.FKey==report.DisplayReportNum && Userods.IsInUserGroup(user.UserNum,x.UserGroupNum))) {
+			if(listReportPermissions.Exists(x => x.FKey==report.DisplayReportNum && Userods.IsInUserGroup(user.Id,x.UserGroupNum))) {
 				return true;
 			}
 			return false;

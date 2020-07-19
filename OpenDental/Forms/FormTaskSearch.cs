@@ -105,10 +105,10 @@ namespace OpenDental {
 			}
 			long userNum=0;
 			if(comboUsers.SelectedIndex==1){//Me
-				userNum=Security.CurUser.UserNum;
+				userNum=Security.CurUser.Id;
 			}
 			else if(comboUsers.SelectedIndex!=0) {
-				userNum=_listUsers[comboUsers.SelectedIndex-2].UserNum;//1(All) + 1(Me)= 2
+				userNum=_listUsers[comboUsers.SelectedIndex-2].Id;//1(All) + 1(Me)= 2
 			}
 			List<long> listTaskListNums=new List<long>();
 			if(textTaskList.Text!="") {
@@ -173,7 +173,7 @@ namespace OpenDental {
 			FormUserPick FormUP=new FormUserPick();
 			FormUP.ListUserodsFiltered=Userods.GetAll();
 			if(FormUP.ShowDialog()==DialogResult.OK) {
-				comboUsers.SelectedIndex=_listUsers.FindIndex(x => x.UserNum==FormUP.SelectedUserNum)+2;
+				comboUsers.SelectedIndex=_listUsers.FindIndex(x => x.Id==FormUP.SelectedUserNum)+2;
 			}
 		}
 
@@ -217,7 +217,7 @@ namespace OpenDental {
 			Task task = new Task() { TaskListNum=-1 };//don't show it in any list yet.
 			Tasks.Insert(task);
 			Task taskOld = task.Copy();
-			task.UserNum=Security.CurUser.UserNum;
+			task.UserNum=Security.CurUser.Id;
 			task.TaskListNum=FormTLS.ListSelectedLists[0];
 			FormTaskEdit FormTE = new FormTaskEdit(task,taskOld);
 			FormTE.IsNew=true;

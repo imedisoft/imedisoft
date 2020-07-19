@@ -517,7 +517,7 @@ namespace OpenDental{
 							commlogCur.Note+=apptCur.ProcDescript+": ";
 						}
 						commlogCur.Note+=apptCur.Note;
-						commlogCur.UserNum=Security.CurUser.UserNum;
+						commlogCur.UserNum=Security.CurUser.Id;
 						//there is no dialog here because it is just a simple entry
 						Commlogs.Insert(commlogCur);
 					}

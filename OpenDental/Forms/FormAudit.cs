@@ -413,7 +413,7 @@ namespace OpenDental{
 			}
 			long userNum=0;
 			if(comboUser.SelectedIndex>0) {
-				userNum=_listUserods[comboUser.SelectedIndex-1].UserNum;
+				userNum=_listUserods[comboUser.SelectedIndex-1].Id;
 			}
 			SecurityLog[] logList=null;
 			DateTime datePreviousFrom=PIn.Date(textDateEditedFrom.Text);

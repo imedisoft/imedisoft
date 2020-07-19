@@ -24,7 +24,7 @@ namespace OpenDental {
 			textSupplier.Text=Suppliers.GetName(ListSuppliersAll,SupplyOrderCur.SupplierNum);
 			if(SupplyOrderCur.DatePlaced.Year>2200){
 				textDatePlaced.Text=DateTime.Today.ToShortDateString();
-				SupplyOrderCur.UserNum=Security.CurUser.UserNum;
+				SupplyOrderCur.UserNum=Security.CurUser.Id;
 			}
 			else{
 				textDatePlaced.Text=SupplyOrderCur.DatePlaced.ToShortDateString();
@@ -37,7 +37,7 @@ namespace OpenDental {
 			textNote.Text=SupplyOrderCur.Note;
 			comboUser.Items.AddNone<Userod>();
 			comboUser.Items.AddList(Userods.GetUsers().FindAll(x => !x.IsHidden),x=>x.UserName);//the abbr parameter is usually skipped. <T> is inferred.
-			comboUser.SetSelectedKey<Userod>(SupplyOrderCur.UserNum,x=>x.UserNum,x=>Userods.GetName(x)); 
+			comboUser.SetSelectedKey<Userod>(SupplyOrderCur.UserNum,x=>x.Id,x=>Userods.GetName(x)); 
 		}
 				
 		private void butToday_Click(object sender,EventArgs e) {
@@ -67,7 +67,7 @@ namespace OpenDental {
 			}
 			else{
 				SupplyOrderCur.DatePlaced=PIn.Date(textDatePlaced.Text);
-				SupplyOrderCur.UserNum=comboUser.GetSelectedKey<Userod>(x=>x.UserNum);
+				SupplyOrderCur.UserNum=comboUser.GetSelectedKey<Userod>(x=>x.Id);
 			}
 			SupplyOrderCur.AmountTotal=PIn.Double(textAmountTotal.Text);
 			SupplyOrderCur.Note=textNote.Text;

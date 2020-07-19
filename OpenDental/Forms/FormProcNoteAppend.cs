@@ -71,7 +71,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			Procedure procOld=ProcCur.Copy();
-			ProcCur.UserNum=Security.CurUser.UserNum;
+			ProcCur.UserNum=Security.CurUser.Id;
 			ProcCur.Note=textNotes.Text+"\r\n"
 				+DateTime.Now.ToShortDateString()+" "+DateTime.Now.ToShortTimeString()+" "+Security.CurUser.UserName+":  "
 				+textAppended.Text;

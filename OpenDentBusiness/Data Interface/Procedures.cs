@@ -1031,7 +1031,7 @@ namespace OpenDentBusiness {
 		public static long Insert(Procedure procedure,bool doCalcTax=true,bool isRepeatCharge=false,bool skipDiscountPlanAdjustment=false) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			procedure.SecUserNumEntry=Security.CurUser.UserNum;
+			procedure.SecUserNumEntry=Security.CurUser.Id;
 			if(procedure.ProcStatus==ProcStat.C) {
 				procedure.DateComplete=DateTime.Today;
 			}
@@ -1464,7 +1464,7 @@ namespace OpenDentBusiness {
 		public static void Sync(List<Procedure> listNew,List<Procedure> listOld) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			Crud.ProcedureCrud.Sync(listNew,listOld,Security.CurUser.UserNum);
+			Crud.ProcedureCrud.Sync(listNew,listOld,Security.CurUser.Id);
 		}
 
 		public static void SetTPActive(long patNum,List<long> listProcNums) {
@@ -1803,7 +1803,7 @@ namespace OpenDentBusiness {
 			else {
 				proc.ToothNum=toothNum;
 			}
-			proc.UserNum=Security.CurUser.UserNum;
+			proc.UserNum=Security.CurUser.Id;
 			proc.CodeNum=codeNum;
 			proc.ProcDate=DateTime.Today;
 			proc.DateTP=DateTime.Today;
@@ -1876,7 +1876,7 @@ namespace OpenDentBusiness {
 				ProcStatus=ProcStat.C,
 				Surf="",
 				ToothNum="",
-				UserNum=Security.CurUser.UserNum,
+				UserNum=Security.CurUser.Id,
 				ProcDate=procDate,
 				DateEntryC=DateTime.Today,
 				SecDateEntry=DateTime.Today,
