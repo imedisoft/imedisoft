@@ -46,9 +46,14 @@ namespace OpenDental.UI
 		}
 
 		/// <summary>
-		/// Gets the default size of the button.
+		/// Gets the default padding of the button.
 		/// </summary>
-		protected override Size DefaultSize => new Size(80, 25);
+		protected override Padding DefaultPadding => new Padding(3);
+
+        /// <summary>
+        /// Gets the default size of the button.
+        /// </summary>
+        protected override Size DefaultSize => new Size(80, 25);
 
 		private StringFormat GetStringFormat(ContentAlignment contentAlignment)
 		{
@@ -267,7 +272,7 @@ namespace OpenDental.UI
 			// Default to center the image..
 			return new Point(
 				bounds.Width / 2 - image.Width / 2, 
-				bounds.Height / 2 - bounds.Height / 2);
+				bounds.Height / 2 - image.Height / 2);
 		}
 
 		private static Rectangle GetTextRectangleRelativeToImage(Rectangle rect, Image image, ContentAlignment imageAlignment)
