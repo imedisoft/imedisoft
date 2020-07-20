@@ -328,6 +328,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="imedisoft-cemt.ico" />
+    <None Include="Resources\IconUp.png" />
+    <None Include="Resources\IconRight.png" />
+    <None Include="Resources\IconRemove.png" />
+    <None Include="Resources\IconPlus.png" />
+    <None Include="Resources\IconMinus.png" />
+    <None Include="Resources\IconLeft.png" />
+    <None Include="Resources\IconDown.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

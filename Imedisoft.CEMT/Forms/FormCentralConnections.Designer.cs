@@ -94,7 +94,7 @@
             // upButton
             // 
             this.upButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.upButton.Image = ((System.Drawing.Image)(resources.GetObject("upButton.Image")));
+            this.upButton.Image = global::Imedisoft.CEMT.Properties.Resources.IconUp;
             this.upButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.upButton.Location = new System.Drawing.Point(641, 118);
             this.upButton.Name = "upButton";
@@ -106,7 +106,7 @@
             // downButton
             // 
             this.downButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.downButton.Image = ((System.Drawing.Image)(resources.GetObject("downButton.Image")));
+            this.downButton.Image = global::Imedisoft.CEMT.Properties.Resources.IconDown;
             this.downButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.downButton.Location = new System.Drawing.Point(641, 149);
             this.downButton.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
@@ -119,7 +119,7 @@
             // addButton
             // 
             this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addButton.Image = ((System.Drawing.Image)(resources.GetObject("addButton.Image")));
+            this.addButton.Image = global::Imedisoft.CEMT.Properties.Resources.IconPlus;
             this.addButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.addButton.Location = new System.Drawing.Point(641, 40);
             this.addButton.Margin = new System.Windows.Forms.Padding(3, 3, 3, 50);

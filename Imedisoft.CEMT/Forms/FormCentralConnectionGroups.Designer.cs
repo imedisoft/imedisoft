@@ -43,7 +43,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.connectionGroupsGrid.Location = new System.Drawing.Point(13, 40);
             this.connectionGroupsGrid.Name = "connectionGroupsGrid";
-            this.connectionGroupsGrid.Size = new System.Drawing.Size(332, 368);
+            this.connectionGroupsGrid.Size = new System.Drawing.Size(338, 337);
             this.connectionGroupsGrid.TabIndex = 0;
             this.connectionGroupsGrid.Title = "Groups";
             this.connectionGroupsGrid.TranslationName = "TableGroups";
@@ -53,7 +53,7 @@
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.closeButton.Location = new System.Drawing.Point(351, 383);
+            this.closeButton.Location = new System.Drawing.Point(271, 383);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(80, 25);
             this.closeButton.TabIndex = 2;
@@ -62,10 +62,11 @@
             // 
             // addButton
             // 
-            this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addButton.Location = new System.Drawing.Point(351, 40);
+            this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.addButton.Image = global::Imedisoft.CEMT.Properties.Resources.IconPlus;
+            this.addButton.Location = new System.Drawing.Point(13, 383);
             this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(80, 25);
+            this.addButton.Size = new System.Drawing.Size(40, 25);
             this.addButton.TabIndex = 1;
             this.addButton.Text = "&Add";
             this.addButton.Click += new System.EventHandler(this.AddButton_Click);
@@ -94,7 +95,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.closeButton;
-            this.ClientSize = new System.Drawing.Size(444, 421);
+            this.ClientSize = new System.Drawing.Size(364, 421);
             this.Controls.Add(this.connectionGroupComboBox);
             this.Controls.Add(this.connectionGroupLabel);
             this.Controls.Add(this.addButton);
@@ -104,7 +105,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(460, 460);
             this.Name = "FormCentralConnectionGroups";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Connection Groups";

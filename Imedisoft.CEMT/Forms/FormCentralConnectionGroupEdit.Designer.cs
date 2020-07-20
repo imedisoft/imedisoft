@@ -83,6 +83,7 @@
             // deleteButton
             // 
             this.deleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.deleteButton.Image = global::Imedisoft.CEMT.Properties.Resources.IconRemove;
             this.deleteButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.deleteButton.Location = new System.Drawing.Point(13, 523);
             this.deleteButton.Name = "deleteButton";
@@ -93,7 +94,7 @@
             // 
             // addButton
             // 
-            this.addButton.Image = ((System.Drawing.Image)(resources.GetObject("addButton.Image")));
+            this.addButton.Image = global::Imedisoft.CEMT.Properties.Resources.IconLeft;
             this.addButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.addButton.Location = new System.Drawing.Point(472, 220);
             this.addButton.Name = "addButton";
@@ -104,14 +105,13 @@
             // 
             // removeButton
             // 
-            this.removeButton.Image = ((System.Drawing.Image)(resources.GetObject("removeButton.Image")));
+            this.removeButton.Image = global::Imedisoft.CEMT.Properties.Resources.IconRight;
             this.removeButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.removeButton.Location = new System.Drawing.Point(472, 251);
             this.removeButton.Name = "removeButton";
             this.removeButton.Size = new System.Drawing.Size(80, 25);
             this.removeButton.TabIndex = 5;
             this.removeButton.Text = "Remove";
-            this.removeButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.removeButton.UseVisualStyleBackColor = true;
             this.removeButton.Click += new System.EventHandler(this.RemoveButton_Click);
             // 

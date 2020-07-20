@@ -99,9 +99,10 @@
             // patientsAddButton
             // 
             this.patientsAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.patientsAddButton.Image = ((System.Drawing.Image)(resources.GetObject("patientsAddButton.Image")));
             this.patientsAddButton.Location = new System.Drawing.Point(13, 443);
             this.patientsAddButton.Name = "patientsAddButton";
-            this.patientsAddButton.Size = new System.Drawing.Size(80, 25);
+            this.patientsAddButton.Size = new System.Drawing.Size(40, 25);
             this.patientsAddButton.TabIndex = 2;
             this.patientsAddButton.Text = "Add";
             this.patientsAddButton.UseVisualStyleBackColor = true;
@@ -110,9 +111,10 @@
             // databasesAddButton
             // 
             this.databasesAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.databasesAddButton.Image = ((System.Drawing.Image)(resources.GetObject("databasesAddButton.Image")));
             this.databasesAddButton.Location = new System.Drawing.Point(469, 443);
             this.databasesAddButton.Name = "databasesAddButton";
-            this.databasesAddButton.Size = new System.Drawing.Size(80, 25);
+            this.databasesAddButton.Size = new System.Drawing.Size(40, 25);
             this.databasesAddButton.TabIndex = 5;
             this.databasesAddButton.Text = "Add";
             this.databasesAddButton.UseVisualStyleBackColor = true;
@@ -121,9 +123,10 @@
             // patientsRemoveButton
             // 
             this.patientsRemoveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.patientsRemoveButton.Location = new System.Drawing.Point(99, 443);
+            this.patientsRemoveButton.Image = ((System.Drawing.Image)(resources.GetObject("patientsRemoveButton.Image")));
+            this.patientsRemoveButton.Location = new System.Drawing.Point(59, 443);
             this.patientsRemoveButton.Name = "patientsRemoveButton";
-            this.patientsRemoveButton.Size = new System.Drawing.Size(80, 25);
+            this.patientsRemoveButton.Size = new System.Drawing.Size(40, 25);
             this.patientsRemoveButton.TabIndex = 3;
             this.patientsRemoveButton.Text = "Remove";
             this.patientsRemoveButton.UseVisualStyleBackColor = true;
@@ -132,9 +135,10 @@
             // databasesRemoveButton
             // 
             this.databasesRemoveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.databasesRemoveButton.Location = new System.Drawing.Point(555, 443);
+            this.databasesRemoveButton.Image = ((System.Drawing.Image)(resources.GetObject("databasesRemoveButton.Image")));
+            this.databasesRemoveButton.Location = new System.Drawing.Point(515, 443);
             this.databasesRemoveButton.Name = "databasesRemoveButton";
-            this.databasesRemoveButton.Size = new System.Drawing.Size(80, 25);
+            this.databasesRemoveButton.Size = new System.Drawing.Size(40, 25);
             this.databasesRemoveButton.TabIndex = 6;
             this.databasesRemoveButton.Text = "Remove";
             this.databasesRemoveButton.UseVisualStyleBackColor = true;

@@ -36,10 +36,11 @@
             // 
             // addButton
             // 
-            this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addButton.Location = new System.Drawing.Point(231, 13);
+            this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.addButton.Image = global::Imedisoft.CEMT.Properties.Resources.IconPlus;
+            this.addButton.Location = new System.Drawing.Point(13, 323);
             this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(80, 25);
+            this.addButton.Size = new System.Drawing.Size(40, 25);
             this.addButton.TabIndex = 2;
             this.addButton.Text = "Add";
             this.addButton.Click += new System.EventHandler(this.AddButton_Click);
@@ -53,7 +54,7 @@
             this.userGroupsListBox.IntegralHeight = false;
             this.userGroupsListBox.Location = new System.Drawing.Point(13, 13);
             this.userGroupsListBox.Name = "userGroupsListBox";
-            this.userGroupsListBox.Size = new System.Drawing.Size(212, 355);
+            this.userGroupsListBox.Size = new System.Drawing.Size(258, 304);
             this.userGroupsListBox.TabIndex = 1;
             this.userGroupsListBox.DoubleClick += new System.EventHandler(this.UserGroupsListBox_DoubleClick);
             // 
@@ -61,7 +62,7 @@
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.closeButton.Location = new System.Drawing.Point(231, 343);
+            this.closeButton.Location = new System.Drawing.Point(191, 323);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(80, 25);
             this.closeButton.TabIndex = 0;
@@ -71,7 +72,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.closeButton;
-            this.ClientSize = new System.Drawing.Size(324, 381);
+            this.ClientSize = new System.Drawing.Size(284, 361);
             this.Controls.Add(this.addButton);
             this.Controls.Add(this.userGroupsListBox);
             this.Controls.Add(this.closeButton);
