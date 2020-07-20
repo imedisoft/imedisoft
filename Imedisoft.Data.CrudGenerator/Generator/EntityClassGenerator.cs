@@ -90,8 +90,8 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine(@"		/// <summary>");
 			stringBuilder.AppendLine(@"		/// Selects a single " + table.Type.Name + " object from the database using the specified SQL command.");
 			stringBuilder.AppendLine(@"		/// </summary>");
-			stringBuilder.AppendLine($"		public static {table.Type.Name} SelectOne(string command)");
-			stringBuilder.AppendLine("			=> Database.SelectOne(command, FromReader);");
+			stringBuilder.AppendLine($"		public static {table.Type.Name} SelectOne(string command, params MySqlParameter[] parameters)");
+			stringBuilder.AppendLine("			=> Database.SelectOne(command, FromReader, parameters);");
 			stringBuilder.AppendLine("");
 
 			if (table.PrimaryKey != null) GenerateSelectOnePK(stringBuilder, table);
@@ -104,7 +104,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			var param = ParamName(table.PrimaryKey.Name);
 
             stringBuilder.AppendLine(@"		/// <summary>");
-            stringBuilder.AppendLine(@"		/// Selects a single <see cref=""" + table.Type.Name + @"""/> object from the database using the specified SQL command.");
+            stringBuilder.AppendLine(@"		/// Selects the <see cref=""" + table.Type.Name + @"""/> object with the specified key from the database.");
             stringBuilder.AppendLine(@"		/// </summary>");
             stringBuilder.AppendLine($"		public static {table.Type.Name} SelectOne({table.PrimaryKey.Type.Name} {param})");
 
@@ -130,8 +130,8 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine(@"		/// <summary>");
 			stringBuilder.AppendLine(@"		/// Selects multiple <see cref=""" + table.Type.Name + @"""/> objects from the database using the specified SQL command.");
 			stringBuilder.AppendLine(@"		/// </summary>");
-			stringBuilder.AppendLine($"		public static IEnumerable<{table.Type.Name}> SelectMany(string command)");
-			stringBuilder.AppendLine("			=> Database.SelectMany(command, FromReader);");
+			stringBuilder.AppendLine($"		public static IEnumerable<{table.Type.Name}> SelectMany(string command, params MySqlParameter[] parameters)");
+			stringBuilder.AppendLine("			=> Database.SelectMany(command, FromReader, parameters);");
 			stringBuilder.AppendLine("");
 		}
 
@@ -349,7 +349,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine(@"		/// <summary>");
 			stringBuilder.AppendLine(@"		/// Updates the specified <see cref=""" + table.Type.Name + @"""/> in the database.");
 			stringBuilder.AppendLine(@"		/// </summary>");
-			stringBuilder.AppendLine($"		public static void Update({table.Type.Name} {paramNew}, {table.Type.Name} {paramOld})");
+			stringBuilder.AppendLine($"		public static bool Update({table.Type.Name} {paramNew}, {table.Type.Name} {paramOld})");
 			stringBuilder.AppendLine(@"		{");
             stringBuilder.AppendLine(@"			var updates = new List<string>();");
             stringBuilder.AppendLine(@"			var parameters = new List<MySqlParameter>();");
@@ -370,7 +370,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			}
 
 			stringBuilder.AppendLine();
-			stringBuilder.AppendLine("			if (updates.Count == 0) return;");
+			stringBuilder.AppendLine("			if (updates.Count == 0) return false;");
             stringBuilder.AppendLine();
             stringBuilder.AppendLine($"			parameters.Add({GenerateParameter(table.PrimaryKey, paramNew)});");
 			stringBuilder.AppendLine();
@@ -378,6 +378,8 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine( "				\"SET \" + string.Join(\", \", updates) + \" \" + ");
 			stringBuilder.AppendLine($"				\"WHERE `{table.PrimaryKey.Name}` = {ParameterName(table.PrimaryKey)}\",");
             stringBuilder.AppendLine($"					parameters.ToArray());");
+			stringBuilder.AppendLine();
+			stringBuilder.AppendLine("			return true;");
 			stringBuilder.AppendLine(@"		}");
             stringBuilder.AppendLine();
         }
