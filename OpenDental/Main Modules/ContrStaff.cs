@@ -623,7 +623,7 @@ namespace OpenDental
 			// 
 			// butTasks
 			// 
-			this.butTasks.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butTasks.Image = ((System.Drawing.Image)(resources.GetObject("butTasks.Image")));
 			this.butTasks.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butTasks.Location = new System.Drawing.Point(148, 19);
@@ -635,7 +635,7 @@ namespace OpenDental
 			// 
 			// butManageAR
 			// 
-			this.butManageAR.AdjustImageLocation = new System.Drawing.Point(-2, 0);
+			
 			this.butManageAR.Image = global::Imedisoft.Properties.Resources.TSI_Icon;
 			this.butManageAR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butManageAR.Location = new System.Drawing.Point(16, 149);

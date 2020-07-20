@@ -1255,7 +1255,7 @@ namespace OpenDental {
 			// 
 			// butClearReferralSource
 			// 
-			this.butClearReferralSource.AdjustImageLocation = new System.Drawing.Point(1, 1);
+			
 			this.butClearReferralSource.Image = global::Imedisoft.Properties.Resources.deleteX18;
 			this.butClearReferralSource.Location = new System.Drawing.Point(411, 618);
 			this.butClearReferralSource.Name = "butClearReferralSource";

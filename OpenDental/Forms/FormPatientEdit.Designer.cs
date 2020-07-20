@@ -902,7 +902,7 @@ namespace OpenDental{
 			// 
 			// butClearResponsParty
 			// 
-			this.butClearResponsParty.AdjustImageLocation = new System.Drawing.Point(1, 1);
+			
 			this.butClearResponsParty.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butClearResponsParty.Location = new System.Drawing.Point(409, 129);
 			this.butClearResponsParty.Name = "butClearResponsParty";

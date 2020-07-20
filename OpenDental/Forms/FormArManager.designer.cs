@@ -448,7 +448,6 @@ namespace OpenDental{
 			// 
 			// butSend
 			// 
-			this.butSend.AdjustImageLocation = new System.Drawing.Point(-4, 0);
 			this.butSend.Image = ((System.Drawing.Image)(resources.GetObject("butSend.Image")));
 			this.butSend.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butSend.Location = new System.Drawing.Point(253, 14);
@@ -1105,7 +1104,6 @@ namespace OpenDental{
 			// 
 			// butUpdateStatus
 			// 
-			this.butUpdateStatus.AdjustImageLocation = new System.Drawing.Point(-4, 0);
 			this.butUpdateStatus.Image = ((System.Drawing.Image)(resources.GetObject("butUpdateStatus.Image")));
 			this.butUpdateStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUpdateStatus.Location = new System.Drawing.Point(424, 14);
@@ -1359,7 +1357,6 @@ namespace OpenDental{
 			// 
 			// butExcludedSend
 			// 
-			this.butExcludedSend.AdjustImageLocation = new System.Drawing.Point(-4, 0);
 			this.butExcludedSend.Image = ((System.Drawing.Image)(resources.GetObject("butExcludedSend.Image")));
 			this.butExcludedSend.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butExcludedSend.Location = new System.Drawing.Point(253, 14);

@@ -206,7 +206,7 @@ namespace OpenDental{
 			// 
 			// butBackMonth
 			// 
-			this.butBackMonth.AdjustImageLocation = new System.Drawing.Point(-3, -1);
+			
 			this.butBackMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.butBackMonth.Image = ((System.Drawing.Image)(resources.GetObject("butBackMonth.Image")));
 			this.butBackMonth.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -240,7 +240,7 @@ namespace OpenDental{
 			// 
 			// butFwdMonth
 			// 
-			this.butFwdMonth.AdjustImageLocation = new System.Drawing.Point(5, -1);
+			
 			this.butFwdMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.butFwdMonth.Image = ((System.Drawing.Image)(resources.GetObject("butFwdMonth.Image")));
 			this.butFwdMonth.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;

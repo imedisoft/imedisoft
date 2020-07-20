@@ -103,7 +103,6 @@ namespace OpenDental{
 			// 
 			// butDelete
 			// 
-			butDelete.AdjustImageLocation = new System.Drawing.Point(0, 0);
 			butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;

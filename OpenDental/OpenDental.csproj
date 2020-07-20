@@ -975,9 +975,6 @@
     <Compile Include="UI\Button.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\Button.Designer.cs">
-      <DependentUpon>Button.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\ClinicSelector\ClinicPrefHelper.cs" />
     <Compile Include="UI\ClinicSelector\FormComboPicker.cs">
       <SubType>Form</SubType>
@@ -8142,10 +8139,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Appt J\ContrApptProvSlider.resx">
       <DependentUpon>ContrApptProvSlider.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Button.resx">
-      <DependentUpon>Button.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ClinicSelector\FormComboPicker.resx">
       <DependentUpon>FormComboPicker.cs</DependentUpon>

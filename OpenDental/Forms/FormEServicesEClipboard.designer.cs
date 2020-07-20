@@ -253,7 +253,6 @@ namespace OpenDental{
 			// 
 			// butEClipboardUp
 			// 
-			this.butEClipboardUp.AdjustImageLocation = new System.Drawing.Point(0, 1);
 			this.butEClipboardUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butEClipboardUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butEClipboardUp.Location = new System.Drawing.Point(444, 208);
@@ -283,7 +282,7 @@ namespace OpenDental{
 			// 
 			// butEClipboardLeft
 			// 
-			this.butEClipboardLeft.AdjustImageLocation = new System.Drawing.Point(-1, 0);
+			
 			this.butEClipboardLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butEClipboardLeft.Location = new System.Drawing.Point(182, 131);
 			this.butEClipboardLeft.Name = "butEClipboardLeft";

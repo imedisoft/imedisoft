@@ -93,7 +93,6 @@
             // 
             // upButton
             // 
-            this.upButton.AdjustImageLocation = new System.Drawing.Point(0, 1);
             this.upButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.upButton.Image = ((System.Drawing.Image)(resources.GetObject("upButton.Image")));
             this.upButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;

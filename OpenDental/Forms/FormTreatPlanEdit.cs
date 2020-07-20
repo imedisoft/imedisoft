@@ -176,7 +176,7 @@ namespace OpenDental{
 			// 
 			// butClearResponsParty
 			// 
-			this.butClearResponsParty.AdjustImageLocation = new System.Drawing.Point(1, 1);
+			
 			this.butClearResponsParty.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butClearResponsParty.Location = new System.Drawing.Point(385, 257);
 			this.butClearResponsParty.Name = "butClearResponsParty";
@@ -215,7 +215,7 @@ namespace OpenDental{
 			// 
 			// butSigClear
 			// 
-			this.butSigClear.AdjustImageLocation = new System.Drawing.Point(1, 1);
+			
 			this.butSigClear.Location = new System.Drawing.Point(275, 385);
 			this.butSigClear.Name = "butSigClear";
 			this.butSigClear.Size = new System.Drawing.Size(110, 23);
@@ -244,7 +244,7 @@ namespace OpenDental{
 			// 
 			// butDocumentDetach
 			// 
-			this.butDocumentDetach.AdjustImageLocation = new System.Drawing.Point(1, 1);
+			
 			this.butDocumentDetach.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDocumentDetach.Location = new System.Drawing.Point(385, 283);
 			this.butDocumentDetach.Name = "butDocumentDetach";
@@ -298,7 +298,7 @@ namespace OpenDental{
 			// 
 			// butPickPresenter
 			// 
-			this.butPickPresenter.AdjustImageLocation = new System.Drawing.Point(1, 1);
+			
 			this.butPickPresenter.Location = new System.Drawing.Point(337, 310);
 			this.butPickPresenter.Name = "butPickPresenter";
 			this.butPickPresenter.Size = new System.Drawing.Size(23, 21);

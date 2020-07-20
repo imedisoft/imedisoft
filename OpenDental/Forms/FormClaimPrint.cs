@@ -147,7 +147,6 @@ namespace OpenDental{
 			// 
 			// butFwd
 			// 
-			this.butFwd.AdjustImageLocation = new System.Drawing.Point(1,0);
 			this.butFwd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.butFwd.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butFwd.Location = new System.Drawing.Point(830,676);

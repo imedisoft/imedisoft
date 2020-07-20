@@ -173,7 +173,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<Userod> GetUsers(bool includeCEMT = false)
 		{
-            return cache.Find(user => !user.IsHidden && (!includeCEMT || user.UserNumCEMT != 0)).ToList();
+            return cache.Find(user => !user.IsHidden && (includeCEMT || user.UserNumCEMT == 0)).ToList();
         }
 
 		/// <summary>

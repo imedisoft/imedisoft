@@ -257,7 +257,7 @@ namespace OpenDental {
 			// 
 			// butClearValue
 			// 
-			this.butClearValue.AdjustImageLocation = new System.Drawing.Point(1, 0);
+			
 			this.butClearValue.Image = global::Imedisoft.Properties.Resources.deleteX18;
 			this.butClearValue.Location = new System.Drawing.Point(395, 106);
 			this.butClearValue.Name = "butClearValue";

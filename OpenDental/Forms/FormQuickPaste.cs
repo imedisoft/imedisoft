@@ -167,7 +167,7 @@ namespace OpenDental{
 			// 
 			// butUpCat
 			// 
-			this.butUpCat.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butUpCat.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUpCat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUpCat.Location = new System.Drawing.Point(98, 348);
@@ -225,7 +225,7 @@ namespace OpenDental{
 			// 
 			// butUpNote
 			// 
-			this.butUpNote.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butUpNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.butUpNote.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUpNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;

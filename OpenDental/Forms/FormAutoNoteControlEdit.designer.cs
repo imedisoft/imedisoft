@@ -287,7 +287,6 @@ namespace OpenDental {
 			// 
 			// butDown
 			// 
-			this.butDown.AdjustImageLocation = new System.Drawing.Point(1,0);
 			this.butDown.Image = global::Imedisoft.Properties.Resources.down;
 			this.butDown.Location = new System.Drawing.Point(584,184);
 			this.butDown.Name = "butDown";
@@ -297,7 +296,6 @@ namespace OpenDental {
 			// 
 			// butUp
 			// 
-			this.butUp.AdjustImageLocation = new System.Drawing.Point(1,0);
 			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.Location = new System.Drawing.Point(556,184);
 			this.butUp.Name = "butUp";

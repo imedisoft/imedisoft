@@ -305,7 +305,7 @@
 			// 
 			// butEmailReceipt
 			// 
-			this.butEmailReceipt.AdjustImageLocation = new System.Drawing.Point(-3, 0);
+			
 			this.butEmailReceipt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.butEmailReceipt.Image = global::Imedisoft.Properties.Resources.email1;
 			this.butEmailReceipt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;

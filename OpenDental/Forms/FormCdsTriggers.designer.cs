@@ -48,7 +48,7 @@ namespace OpenDental{
 			// 
 			// butAddTrigger
 			// 
-			this.butAddTrigger.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butAddTrigger.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.butAddTrigger.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddTrigger.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;

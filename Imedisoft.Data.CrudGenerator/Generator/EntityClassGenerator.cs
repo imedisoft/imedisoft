@@ -108,7 +108,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
             stringBuilder.AppendLine(@"		/// </summary>");
             stringBuilder.AppendLine($"		public static {table.Type.Name} SelectOne({table.PrimaryKey.Type.Name} {param})");
 
-			if (table.PrimaryKey.Type == typeof(long) || table.PrimaryKey.Type == typeof(int))
+			if (table.PrimaryKey.IsNumeric)
             {
                 var command = $"\"SELECT * FROM `{table.Name}` WHERE `{table.PrimaryKey.Name}` = \" + {param}";
                 
@@ -264,7 +264,8 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			stringBuilder.AppendLine(@"		/// <summary>");
 			stringBuilder.AppendLine(@"		/// Inserts the specified <see cref=""" + table.Type.Name + @"""/> into the database.");
 			stringBuilder.AppendLine(@"		/// </summary>");
-            if (table.PrimaryKey.Type == typeof(long) || table.PrimaryKey.Type == typeof(int))
+
+            if (table.PrimaryKey.IsNumeric)
             {
                 stringBuilder.AppendLine($"		public static long Insert({table.Type.Name} {param})");
                 stringBuilder.AppendLine($"			=> {param}.{table.PrimaryKey.FieldName} = Database.ExecuteInsert(");

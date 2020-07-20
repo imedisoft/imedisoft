@@ -86,7 +86,7 @@ namespace OpenDental{
 			// 
 			// butLeft
 			// 
-			this.butLeft.AdjustImageLocation = new System.Drawing.Point(-1, 0);
+			
 			this.butLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butLeft.Location = new System.Drawing.Point(275, 205);
 			this.butLeft.Name = "butLeft";

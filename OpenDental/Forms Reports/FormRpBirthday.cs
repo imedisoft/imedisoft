@@ -77,7 +77,6 @@ namespace OpenDental
 			// 
 			// butSave
 			// 
-			butSave.AdjustImageLocation = new System.Drawing.Point(0,0);
 			butSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			butSave.Location = new System.Drawing.Point(202,30);
 			butSave.Name = "butSave";

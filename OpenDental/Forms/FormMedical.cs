@@ -273,7 +273,7 @@ namespace OpenDental{
 			// 
 			// butAdd
 			// 
-			this.butAdd.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAdd.Location = new System.Drawing.Point(6, 6);
@@ -285,7 +285,7 @@ namespace OpenDental{
 			// 
 			// butAddDisease
 			// 
-			this.butAddDisease.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butAddDisease.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddDisease.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddDisease.Location = new System.Drawing.Point(6, 6);
@@ -351,7 +351,7 @@ namespace OpenDental{
 			// 
 			// butAddAllergy
 			// 
-			this.butAddAllergy.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butAddAllergy.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddAllergy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddAllergy.Location = new System.Drawing.Point(6, 6);
@@ -416,7 +416,7 @@ namespace OpenDental{
 			// 
 			// butAddFamilyHistory
 			// 
-			this.butAddFamilyHistory.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butAddFamilyHistory.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddFamilyHistory.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddFamilyHistory.Location = new System.Drawing.Point(6, 6);
@@ -697,7 +697,7 @@ namespace OpenDental{
 			// 
 			// butGrowthChart
 			// 
-			this.butGrowthChart.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butGrowthChart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butGrowthChart.Location = new System.Drawing.Point(122, 6);
 			this.butGrowthChart.Name = "butGrowthChart";
@@ -708,7 +708,7 @@ namespace OpenDental{
 			// 
 			// butAddVitalSign
 			// 
-			this.butAddVitalSign.AdjustImageLocation = new System.Drawing.Point(0, 1);
+			
 			this.butAddVitalSign.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAddVitalSign.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butAddVitalSign.Location = new System.Drawing.Point(6, 6);

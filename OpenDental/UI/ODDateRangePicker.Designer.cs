@@ -75,7 +75,7 @@
 			// 
 			// butWeekPrevious
 			// 
-			this.butWeekPrevious.AdjustImageLocation = new System.Drawing.Point(-3, -1);
+			
 			this.butWeekPrevious.Anchor = System.Windows.Forms.AnchorStyles.Top;
 			this.butWeekPrevious.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.butWeekPrevious.Image = ((System.Drawing.Image)(resources.GetObject("butWeekPrevious.Image")));
@@ -89,7 +89,7 @@
 			// 
 			// butWeekNext
 			// 
-			this.butWeekNext.AdjustImageLocation = new System.Drawing.Point(5, -1);
+			
 			this.butWeekNext.Anchor = System.Windows.Forms.AnchorStyles.Top;
 			this.butWeekNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.butWeekNext.Image = ((System.Drawing.Image)(resources.GetObject("butWeekNext.Image")));

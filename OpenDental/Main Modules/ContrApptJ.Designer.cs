@@ -221,7 +221,7 @@
 			// 
 			// butBackMonth
 			// 
-			this.butBackMonth.AdjustImageLocation = new System.Drawing.Point(-3, -1);
+			
 			this.butBackMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.butBackMonth.Image = ((System.Drawing.Image)(resources.GetObject("butBackMonth.Image")));
 			this.butBackMonth.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -234,7 +234,7 @@
 			// 
 			// butFwdMonth
 			// 
-			this.butFwdMonth.AdjustImageLocation = new System.Drawing.Point(5, -1);
+			
 			this.butFwdMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.butFwdMonth.Image = ((System.Drawing.Image)(resources.GetObject("butFwdMonth.Image")));
 			this.butFwdMonth.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -248,7 +248,7 @@
 			// 
 			// butBackWeek
 			// 
-			this.butBackWeek.AdjustImageLocation = new System.Drawing.Point(-3, -1);
+			
 			this.butBackWeek.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.butBackWeek.Image = ((System.Drawing.Image)(resources.GetObject("butBackWeek.Image")));
 			this.butBackWeek.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -261,7 +261,7 @@
 			// 
 			// butFwdWeek
 			// 
-			this.butFwdWeek.AdjustImageLocation = new System.Drawing.Point(5, -1);
+			
 			this.butFwdWeek.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.butFwdWeek.Image = ((System.Drawing.Image)(resources.GetObject("butFwdWeek.Image")));
 			this.butFwdWeek.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -295,7 +295,7 @@
 			// 
 			// butFwd
 			// 
-			this.butFwd.AdjustImageLocation = new System.Drawing.Point(5, -1);
+			
 			this.butFwd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.butFwd.Image = ((System.Drawing.Image)(resources.GetObject("butFwd.Image")));
 			this.butFwd.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;

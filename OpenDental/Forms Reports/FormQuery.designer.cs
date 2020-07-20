@@ -283,7 +283,6 @@
 			// 
 			// butFwd
 			// 
-			this.butFwd.AdjustImageLocation = new System.Drawing.Point(1, 0);
 			this.butFwd.Image = global::Imedisoft.Properties.Resources.Right;
 			this.butFwd.Location = new System.Drawing.Point(118, 7);
 			this.butFwd.Name = "butFwd";

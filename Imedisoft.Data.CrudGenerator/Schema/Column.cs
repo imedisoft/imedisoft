@@ -27,6 +27,14 @@ namespace Imedisoft.Data.CrudGenerator.Schema
         public Type Type { get; }
 
         /// <summary>
+        /// Determines whether the column represents a numeric type.
+        /// </summary>
+        public bool IsNumeric => 
+            Type == typeof(byte) || 
+            Type == typeof(short) || Type == typeof(int) || Type == typeof(long) ||
+            Type == typeof(ushort) || Type == typeof(uint) || Type == typeof(ulong);
+
+        /// <summary>
         /// Gets a value indicating whether the column is nullable.
         /// </summary>
         public bool Nullable { get; }

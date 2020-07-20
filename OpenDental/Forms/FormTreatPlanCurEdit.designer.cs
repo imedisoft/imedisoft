@@ -120,7 +120,7 @@ namespace OpenDental{
 			// 
 			// butMakeActive
 			// 
-			this.butMakeActive.AdjustImageLocation = new System.Drawing.Point(1, 1);
+			
 			this.butMakeActive.Location = new System.Drawing.Point(274, 604);
 			this.butMakeActive.Name = "butMakeActive";
 			this.butMakeActive.Size = new System.Drawing.Size(164, 24);
@@ -152,7 +152,7 @@ namespace OpenDental{
 			// 
 			// butLeft
 			// 
-			this.butLeft.AdjustImageLocation = new System.Drawing.Point(-1, 0);
+			
 			this.butLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butLeft.Location = new System.Drawing.Point(444, 282);
 			this.butLeft.Name = "butLeft";
