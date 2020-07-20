@@ -11,6 +11,16 @@ namespace Imedisoft.Data.Annotations
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether records in this table may be modified.
+        /// </summary>
+        public bool AllowUpdate { get; set; } = true;
+
+        /// <summary>
+        /// Gets or set a value indicating whether records may be deleted from this table.
+        /// </summary>
+        public bool AllowDelete { get; set; } = true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TableAttribute"/> class.
         /// </summary>
         public TableAttribute()

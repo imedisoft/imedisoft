@@ -230,9 +230,17 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 		private static void GenerateCrud(StringBuilder stringBuilder, Table table)
         {
 			GenerateInsert(stringBuilder, table);
-			GenerateUpdate(stringBuilder, table);
-			GenerateUpdateCompare(stringBuilder, table);
-			GenerateDelete(stringBuilder, table);
+
+			if (table.AllowUpdate)
+			{
+				GenerateUpdate(stringBuilder, table);
+				GenerateUpdateCompare(stringBuilder, table);
+			}
+
+			if (table.AllowDelete)
+			{
+				GenerateDelete(stringBuilder, table);
+			}
 		}
 
 		private static void GenerateInsert(StringBuilder stringBuilder, Table table)
