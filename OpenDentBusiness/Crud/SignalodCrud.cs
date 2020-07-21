@@ -60,7 +60,7 @@ namespace OpenDentBusiness.Crud{
 					signalod.FKeyType =(OpenDentBusiness.KeyType)0;
 				}
 				signalod.IType      = (OpenDentBusiness.InvalidType)PIn.Int(row["IType"].ToString());
-				signalod.RemoteRole = (OpenDentBusiness.RemotingRole)PIn.Int(row["RemoteRole"].ToString());
+				//signalod.RemoteRole = (OpenDentBusiness.RemotingRole)PIn.Int(row["RemoteRole"].ToString());
 				signalod.MsgValue   = PIn.String(row["MsgValue"].ToString());
 				retVal.Add(signalod);
 			}
@@ -79,7 +79,6 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("FKey");
 			table.Columns.Add("FKeyType");
 			table.Columns.Add("IType");
-			table.Columns.Add("RemoteRole");
 			table.Columns.Add("MsgValue");
 			foreach(Signalod signalod in listSignalods) {
 				table.Rows.Add(new object[] {
@@ -89,7 +88,6 @@ namespace OpenDentBusiness.Crud{
 					POut.Long  (signalod.FKey),
 					POut.Int   ((int)signalod.FKeyType),
 					POut.Int   ((int)signalod.IType),
-					POut.Int   ((int)signalod.RemoteRole),
 					            signalod.MsgValue,
 				});
 			}
@@ -110,7 +108,7 @@ namespace OpenDentBusiness.Crud{
 			if(useExistingPK || PrefC.RandomKeys) {
 				command+="SignalNum,";
 			}
-			command+="DateViewing,SigDateTime,FKey,FKeyType,IType,RemoteRole,MsgValue) VALUES(";
+			command+="DateViewing,SigDateTime,FKey,FKeyType,IType,MsgValue) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
 				command+=POut.Long(signalod.SignalNum)+",";
 			}
@@ -120,7 +118,6 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (signalod.FKey)+","
 				+"'"+POut.String(signalod.FKeyType.ToString())+"',"
 				+    POut.Int   ((int)signalod.IType)+","
-				+    POut.Int   ((int)signalod.RemoteRole)+","
 				+    DbHelper.ParamChar+"paramMsgValue)";
 			if(signalod.MsgValue==null) {
 				signalod.MsgValue="";
@@ -161,7 +158,7 @@ namespace OpenDentBusiness.Crud{
 						if(useExistingPK) {
 							sbCommands.Append("SignalNum,");
 						}
-						sbCommands.Append("DateViewing,SigDateTime,FKey,FKeyType,IType,RemoteRole,MsgValue) VALUES ");
+						sbCommands.Append("DateViewing,SigDateTime,FKey,FKeyType,IType,MsgValue) VALUES ");
 						countRows=0;
 					}
 					else {
@@ -175,7 +172,6 @@ namespace OpenDentBusiness.Crud{
 					sbRow.Append(POut.Long(signalod.FKey)); sbRow.Append(",");
 					sbRow.Append("'"+POut.String(signalod.FKeyType.ToString())+"'"); sbRow.Append(",");
 					sbRow.Append(POut.Int((int)signalod.IType)); sbRow.Append(",");
-					sbRow.Append(POut.Int((int)signalod.RemoteRole)); sbRow.Append(",");
 					sbRow.Append("'"+POut.String(signalod.MsgValue)+"'"); sbRow.Append(")");
 					if(sbCommands.Length+sbRow.Length+1 > TableBase.MaxAllowedPacketCount && countRows > 0) {
 						Database.ExecuteNonQuery(sbCommands.ToString());
@@ -211,7 +207,7 @@ namespace OpenDentBusiness.Crud{
 			if(useExistingPK) {
 				command+="SignalNum,";
 			}
-			command+="DateViewing,SigDateTime,FKey,FKeyType,IType,RemoteRole,MsgValue) VALUES(";
+			command+="DateViewing,SigDateTime,FKey,FKeyType,IType,MsgValue) VALUES(";
 			if(useExistingPK) {
 				command+=POut.Long(signalod.SignalNum)+",";
 			}
@@ -221,7 +217,6 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (signalod.FKey)+","
 				+"'"+POut.String(signalod.FKeyType.ToString())+"',"
 				+    POut.Int   ((int)signalod.IType)+","
-				+    POut.Int   ((int)signalod.RemoteRole)+","
 				+    DbHelper.ParamChar+"paramMsgValue)";
 			if(signalod.MsgValue==null) {
 				signalod.MsgValue="";
@@ -244,7 +239,6 @@ namespace OpenDentBusiness.Crud{
 				+"FKey       =  "+POut.Long  (signalod.FKey)+", "
 				+"FKeyType   = '"+POut.String(signalod.FKeyType.ToString())+"', "
 				+"IType      =  "+POut.Int   ((int)signalod.IType)+", "
-				+"RemoteRole =  "+POut.Int   ((int)signalod.RemoteRole)+", "
 				+"MsgValue   =  "+DbHelper.ParamChar+"paramMsgValue "
 				+"WHERE SignalNum = "+POut.Long(signalod.SignalNum);
 			if(signalod.MsgValue==null) {
@@ -273,10 +267,6 @@ namespace OpenDentBusiness.Crud{
 			if(signalod.IType != oldSignalod.IType) {
 				if(command!="") { command+=",";}
 				command+="IType = "+POut.Int   ((int)signalod.IType)+"";
-			}
-			if(signalod.RemoteRole != oldSignalod.RemoteRole) {
-				if(command!="") { command+=",";}
-				command+="RemoteRole = "+POut.Int   ((int)signalod.RemoteRole)+"";
 			}
 			if(signalod.MsgValue != oldSignalod.MsgValue) {
 				if(command!="") { command+=",";}
@@ -309,9 +299,6 @@ namespace OpenDentBusiness.Crud{
 				return true;
 			}
 			if(signalod.IType != oldSignalod.IType) {
-				return true;
-			}
-			if(signalod.RemoteRole != oldSignalod.RemoteRole) {
 				return true;
 			}
 			if(signalod.MsgValue != oldSignalod.MsgValue) {

@@ -1,6 +1,7 @@
 using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
@@ -660,7 +661,7 @@ namespace OpenDental
 					}
 					listSheets.Add(sheet);
 				}
-				filePathAndName = PrefC.GetRandomTempFile(".pdf");
+				filePathAndName = Storage.GetTempFileName(".pdf");
 				document.Save(filePathAndName);
 
 				Process.Start(filePathAndName);

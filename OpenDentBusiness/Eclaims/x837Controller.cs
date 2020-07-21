@@ -1,33 +1,50 @@
+using CodeBase;
+using OpenDentBusiness;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using OpenDentBusiness;
-using CodeBase;
-using System.Linq;
 
 namespace OpenDentBusiness.Eclaims
 {
-	/// <summary></summary>
-	public partial class x837Controller {
+    public  class x837Controller {
 
-		private static string RECSFileExistsMsg => Lans.g("FormClaimsSend","You must send your existing claims from the RECS program before you can "
-			+"create another batch.");
+		private static string RECSFileExistsMsg => 
+			"You must send your existing claims from the RECS program before you can create another batch.";
 
-		static x837Controller() {
-			//Need to initiliaze this here because ODCloudClient doesn't have access to OpenDentBusiness.Lans.
-			_lans_g=Lans.g;
-		}
-
-		///<summary></summary>
-		public x837Controller()
+		///<summary>Copies the given file to an archive directory within the same directory as the file.</summary>
+		public static void CopyToArchive(string fileName, bool doThrow = false)
 		{
-			
+			string direct = Path.GetDirectoryName(fileName);
+			string fileOnly = Path.GetFileName(fileName);
+			string archiveDir = ODFileUtils.CombinePaths(direct, "archive");
+			try
+			{
+				if (!Directory.Exists(archiveDir))
+				{
+					Directory.CreateDirectory(archiveDir);
+				}
+				File.Copy(fileName, ODFileUtils.CombinePaths(archiveDir, fileOnly), true);
+			}
+			catch (Exception ex)
+			{
+				string error = 
+					"Unable to copy file to the archive directory. " +
+					"Check to make sure you have permission to modify the archive located at " + archiveDir + "\r\n\r\n" +
+					"Error message: " + ex.Message;
+
+				if (doThrow)
+				{
+					throw new ODException(error, ODException.ErrorCodes.ClaimArchiveFailed);
+				}
+				MessageBox.Show(error);
+			}
 		}
 
 		///<summary>Gets the filename for this batch. Used when saving.</summary>
@@ -141,15 +158,5 @@ namespace OpenDentBusiness.Eclaims
 			}
 			return error.IsNullOrEmpty();
 		}
-
-		
-
-		
-	
-
-
-
-		
-
 	}
 }

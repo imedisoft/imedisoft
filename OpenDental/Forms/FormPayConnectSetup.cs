@@ -1,5 +1,6 @@
 using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -632,7 +633,7 @@ namespace OpenDental
 			Cursor=Cursors.WaitCursor;
 			WebClient client=new WebClient();
 			//The VeriFone driver is necessary for PayConnect users to process payments on the VeriFone terminal.
-			string zipFileName=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),"VeriFoneUSBUARTDriver_Vx_1.0.0.52_B5.zip");
+			string zipFileName=Storage.CombinePaths(Storage.GetTempPath(),"VeriFoneUSBUARTDriver_Vx_1.0.0.52_B5.zip");
 			try {
 				client.DownloadFile(@"http://www.opendental.com/download/drivers/VeriFoneUSBUARTDriver_Vx_1.0.0.52_B5.zip",zipFileName);
 			}
@@ -665,8 +666,8 @@ namespace OpenDental
 				return;
 			}
 			//Run the setup.exe file
-			Process.Start(ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),setupFileName));
-			MessageBox.Show(Lans.g(this,"Download complete. Run the Setup.exe file in")+" "+PrefC.GetTempFolderPath()+" "
+			Process.Start(ODFileUtils.CombinePaths(Storage.GetTempPath(),setupFileName));
+			MessageBox.Show(Lans.g(this,"Download complete. Run the Setup.exe file in")+" "+ Storage.GetTempPath() + " "
 				+Lans.g(this,"if it does not start automatically."));
 		}
 

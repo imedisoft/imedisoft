@@ -178,7 +178,6 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Updates a pref of type YN.  Returns true if a change was required, or false if no change needed.
 		/// </summary>
-		[Obsolete("UI logic shouldn't be here...")]
 		public static bool UpdateYN(PrefName preferenceName, System.Windows.Forms.CheckState checkState)
 		{
 			YN yn = YN.Unknown;

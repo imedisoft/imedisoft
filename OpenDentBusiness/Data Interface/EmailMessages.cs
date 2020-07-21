@@ -3235,6 +3235,8 @@ b21wb25lbnQ+DQogICA8L2NvbXBvbmVudD4NCjwvQ2xpbmljYWxEb2N1bWVudD4=
 			return true;
 		}
 
+#pragma warning disable 67
 		public event Action<ICertificateResolver, Exception> Error;
+#pragma warning restore 67
 	}
 }

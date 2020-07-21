@@ -10,6 +10,7 @@ using OpenDentBusiness;
 using System.Text.RegularExpressions;
 using OpenDental.Bridges;
 using CodeBase;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public partial class FormCreditCardManage:ODForm {
@@ -174,7 +175,7 @@ namespace OpenDental {
 					}
 					xPassword=CodeBase.MiscUtils.Decrypt(xPassword);
 					ProcessStartInfo info=new ProcessStartInfo(path);
-					string resultfile=PrefC.GetRandomTempFile("txt");
+					string resultfile=Storage.GetTempFileName(".txt");
 					try {
 						File.Delete(resultfile);//delete the old result file.
 					}

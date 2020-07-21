@@ -1702,7 +1702,7 @@ namespace OpenDentBusiness
 				  AND PatNum IN ({string.Join(",", listPatNums)})
 					GROUP BY PatNum";
 				dictNextLastApts = Database.ExecuteDataTable(command).Select()
-					.ToDictionary(x => x["PatNum"].ToString(), x => Tuple.Create(SIn.DateT(x["NextVisit"].ToString()), SIn.DateT(x["LastVisit"].ToString())));
+					.ToDictionary(x => x["PatNum"].ToString(), x => Tuple.Create(SIn.Date(x["NextVisit"].ToString()), SIn.Date(x["LastVisit"].ToString())));
 			}
 			DataTable PtDataTable = table.Clone();//does not copy any data
 			PtDataTable.TableName = "table";

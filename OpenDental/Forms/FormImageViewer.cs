@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 	///<summary>Eventually, the user will be able to edit some image display settings and do a Documents.UpdateCur, but they can't actually make changes to the image.</summary>
@@ -155,11 +156,11 @@ namespace OpenDental{
 			List<long> docNums=new List<long>();
 			docNums.Add(thisDocument.DocNum);
 			string fileName=Documents.GetPaths(docNums, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath())[0];
-			if(!FileAtoZ.Exists(fileName)) {
+			if(!Storage.FileExists(fileName)) {
 				MessageBox.Show(fileName+" +"+Lan.G(this,"could not be found."));
 				return;
 			}
-			ImageCurrent= FileAtoZ.GetImage(fileName);
+			ImageCurrent= Storage.GetImage(fileName);
 			DisplayImage();
 		}
 

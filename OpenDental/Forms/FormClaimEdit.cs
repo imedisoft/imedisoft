@@ -2,6 +2,7 @@ using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.Eclaims;
+using OpenDentBusiness.IO;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -2200,15 +2201,15 @@ namespace OpenDental
 				}
 			}
 			for(int i=0;i<ClaimCur.Attachments.Count;i++){
-				string curAttachPath=FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),ClaimCur.Attachments[i].ActualFileName);
+				string curAttachPath=Storage.CombinePaths(EmailAttaches.GetAttachPath(),ClaimCur.Attachments[i].ActualFileName);
 				string newFilePath=ODFileUtils.CombinePaths(exportPath,
 					PatCur.FName+PatCur.LName+PatCur.PatNum+"_"+i+Path.GetExtension(ClaimCur.Attachments[i].ActualFileName));
-				if(!FileAtoZ.Exists(curAttachPath)) {
+				if(!Storage.FileExists(curAttachPath)) {
 					MessageBox.Show(Lan.G(this,"The attachment file")+" "+curAttachPath+" "+Lan.G(this,"has been moved, deleted or is inaccessible."));
 					return;
 				}
 				try {
-					FileAtoZ.Copy(curAttachPath,newFilePath);
+					Storage.Copy(curAttachPath,newFilePath);
 				}
 				catch {
 					MessageBox.Show(Lan.G(this,"The attachment")+" "+curAttachPath+" "
@@ -2233,7 +2234,7 @@ namespace OpenDental
 		}
 
 		private void menuItemOpen_Click(object sender,EventArgs e) {
-			FileAtoZ.OpenFile(FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),ClaimCur.Attachments[listAttachments.SelectedIndex].ActualFileName),
+			Storage.Run(Storage.CombinePaths(EmailAttaches.GetAttachPath(),ClaimCur.Attachments[listAttachments.SelectedIndex].ActualFileName),
 				ClaimCur.Attachments[listAttachments.SelectedIndex].DisplayedFileName);
 		}
 
@@ -2257,7 +2258,7 @@ namespace OpenDental
 			if(listAttachments.SelectedIndex==-1) {
 				return;
 			}
-			FileAtoZ.OpenFile(FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),ClaimCur.Attachments[listAttachments.SelectedIndex].ActualFileName),
+			Storage.Run(Storage.CombinePaths(EmailAttaches.GetAttachPath(),ClaimCur.Attachments[listAttachments.SelectedIndex].ActualFileName),
 				ClaimCur.Attachments[listAttachments.SelectedIndex].DisplayedFileName);
 		}		
 

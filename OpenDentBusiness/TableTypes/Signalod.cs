@@ -24,8 +24,6 @@ namespace OpenDentBusiness {
 		public KeyType FKeyType;
 		///<summary>Enum:InvalidType Indicates what cache or entity has been changed.</summary>
 		public InvalidType IType;
-		///<summary>Enum:RemotingRole The RemotingRole of the instance that created this signal.</summary>
-		public RemotingRole RemoteRole;
 		///<summary>Message value of the signal.</summary>
 		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
 		public string MsgValue;
@@ -57,9 +55,6 @@ namespace OpenDentBusiness {
 				return false;
 			}
 			if(IType!=signalOther.IType) {
-				return false;
-			}
-			if(RemoteRole!=signalOther.RemoteRole) {
 				return false;
 			}
 			if(MsgValue!=signalOther.MsgValue) {

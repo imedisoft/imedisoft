@@ -1,4 +1,5 @@
 ﻿using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -109,8 +110,8 @@ namespace OpenDental
 				{
 					for (int i = 0; i < matches.Count; i++)
 					{
-						string imgPath = FileAtoZ.CombinePaths(wikiImagePath, matches[i].Value.Substring(6).Trim(']'));
-						if (!FileAtoZ.Exists(imgPath))
+						string imgPath = Storage.CombinePaths(wikiImagePath, matches[i].Value.Substring(6).Trim(']'));
+						if (!Storage.FileExists(imgPath))
 						{
 							if (showMsgBox)
 							{
@@ -140,8 +141,8 @@ namespace OpenDental
 				{
 					for (int i = 0; i < matches.Count; i++)
 					{
-						string imgPath = FileAtoZ.CombinePaths(emailImagePath, matches[i].Value.Substring(6).Trim(']'));
-						if (!FileAtoZ.Exists(imgPath))
+						string imgPath = Storage.CombinePaths(emailImagePath, matches[i].Value.Substring(6).Trim(']'));
+						if (!Storage.FileExists(imgPath))
 						{
 							if (showMsgBox)
 							{

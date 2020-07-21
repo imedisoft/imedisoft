@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using CodeBase;
 using OpenDentBusiness;
 using System.Linq;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	///<summary>DialogResult will be Abort if message was unable to be read. 
@@ -341,7 +342,7 @@ namespace OpenDental {
 				return;
 			}
 			EmailAttach attach=_listAttachments[listAttachments.SelectedIndex];
-			FileAtoZ.OpenFile(FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),attach.ActualFileName),attach.DisplayedFileName);		
+			Storage.Run(Storage.CombinePaths(EmailAttaches.GetAttachPath(),attach.ActualFileName),attach.DisplayedFileName);		
 		}
 
 		private void menuItemAttachmentPreview_Click(object sender,EventArgs e) {
@@ -353,7 +354,7 @@ namespace OpenDental {
 				if(listAttachments.SelectedIndex==-1) {
 					return;
 				}
-				FileAtoZ.Delete(FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),_listAttachments[listAttachments.SelectedIndex].ActualFileName));				
+				Storage.DeleteFile(Storage.CombinePaths(EmailAttaches.GetAttachPath(),_listAttachments[listAttachments.SelectedIndex].ActualFileName));				
 				_listAttachments.RemoveAt(listAttachments.SelectedIndex);
 				FillAttachments();
 			}
@@ -490,7 +491,7 @@ namespace OpenDental {
 					//Insert the notification email into the emailmessage table so we have a record that it was sent.
 					EmailMessages.Insert(_insecureMessage);
 				}
-				catch(Exception ex) {
+				catch {
 					MessageBox.Show(this,"An error occurred sending the message. Please try again later or contact support.");
 					// TODO: Logger.openlog.LogMB(this,System.Reflection.MethodBase.GetCurrentMethod().Name,ex.Message,Logger.Severity.Error);
 					butSend.Enabled=true;

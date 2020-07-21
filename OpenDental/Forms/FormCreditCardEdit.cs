@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public partial class FormCreditCardEdit:ODForm {
@@ -420,7 +421,7 @@ namespace OpenDental {
 				return;
 			}
 			ProcessStartInfo info=new ProcessStartInfo(path);
-			string resultfile=PrefC.GetRandomTempFile("txt");
+			string resultfile= Storage.GetTempFileName(".txt");
 			try {
 				File.Delete(resultfile);//delete the old result file.
 			}
@@ -572,7 +573,7 @@ namespace OpenDental {
 					}
 					//Either update the exp date or update credit card number by deleting archive so new token can be created next time it's used.
 					ProcessStartInfo info=new ProcessStartInfo(path);
-					string resultfile=PrefC.GetRandomTempFile("txt");
+					string resultfile= Storage.GetTempFileName(".txt");
 					try {
 						File.Delete(resultfile);//delete the old result file.
 					}

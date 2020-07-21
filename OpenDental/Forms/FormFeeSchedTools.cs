@@ -15,6 +15,7 @@ using CodeBase;
 using OpenDentBusiness;
 using OpenDental.Thinfinity;
 using OpenDental.UI;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	///<summary></summary>
@@ -1369,7 +1370,7 @@ namespace OpenDental {
 			}
 			else {
 				FeeSchedEvent.Fire(EventCategory.FeeSched,Lan.G(this,"Downloading fee schedule")+"...");
-				string tempFile=PrefC.GetRandomTempFile(".tmp");
+				string tempFile= Storage.GetTempFileName(".tmp");
 				WebClient myWebClient=new WebClient();
 				try {
 					myWebClient.DownloadFile(formPick.FileChosenUrl,tempFile);

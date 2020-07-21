@@ -52,13 +52,13 @@ namespace OpenDentBusiness.Crud{
 				clockEvent.Note              = PIn.String(row["Note"].ToString());
 				clockEvent.TimeEntered2      = PIn.Date (row["TimeEntered2"].ToString());
 				clockEvent.TimeDisplayed2    = PIn.Date (row["TimeDisplayed2"].ToString());
-				clockEvent.OTimeHours        = PIn.TSpan (row["OTimeHours"].ToString());
-				clockEvent.OTimeAuto         = PIn.TSpan (row["OTimeAuto"].ToString());
-				clockEvent.Adjust            = PIn.TSpan (row["Adjust"].ToString());
-				clockEvent.AdjustAuto        = PIn.TSpan (row["AdjustAuto"].ToString());
+				clockEvent.OTimeHours        = PIn.Time (row["OTimeHours"].ToString());
+				clockEvent.OTimeAuto         = PIn.Time(row["OTimeAuto"].ToString());
+				clockEvent.Adjust            = PIn.Time(row["Adjust"].ToString());
+				clockEvent.AdjustAuto        = PIn.Time(row["AdjustAuto"].ToString());
 				clockEvent.AdjustIsOverridden= PIn.Bool  (row["AdjustIsOverridden"].ToString());
-				clockEvent.Rate2Hours        = PIn.TSpan (row["Rate2Hours"].ToString());
-				clockEvent.Rate2Auto         = PIn.TSpan (row["Rate2Auto"].ToString());
+				clockEvent.Rate2Hours        = PIn.Time(row["Rate2Hours"].ToString());
+				clockEvent.Rate2Auto         = PIn.Time(row["Rate2Auto"].ToString());
 				clockEvent.ClinicNum         = PIn.Long  (row["ClinicNum"].ToString());
 				retVal.Add(clockEvent);
 			}

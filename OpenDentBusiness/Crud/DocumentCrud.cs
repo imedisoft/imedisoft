@@ -65,7 +65,6 @@ namespace OpenDentBusiness.Crud{
 				document.WindowingMax  = PIn.Int   (row["WindowingMax"].ToString());
 				document.MountItemNum  = PIn.Long  (row["MountItemNum"].ToString());
 				document.DateTStamp    = PIn.Date (row["DateTStamp"].ToString());
-				document.RawBase64     = PIn.String(row["RawBase64"].ToString());
 				document.Thumbnail     = PIn.String(row["Thumbnail"].ToString());
 				document.ExternalGUID  = PIn.String(row["ExternalGUID"].ToString());
 				string externalSource=row["ExternalSource"].ToString();
@@ -110,7 +109,6 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("WindowingMax");
 			table.Columns.Add("MountItemNum");
 			table.Columns.Add("DateTStamp");
-			table.Columns.Add("RawBase64");
 			table.Columns.Add("Thumbnail");
 			table.Columns.Add("ExternalGUID");
 			table.Columns.Add("ExternalSource");
@@ -137,7 +135,6 @@ namespace OpenDentBusiness.Crud{
 					POut.Int   (document.WindowingMax),
 					POut.Long  (document.MountItemNum),
 					POut.DateT (document.DateTStamp,false),
-					            document.RawBase64,
 					            document.Thumbnail,
 					            document.ExternalGUID,
 					POut.Int   ((int)document.ExternalSource),
@@ -160,7 +157,7 @@ namespace OpenDentBusiness.Crud{
 			if(useExistingPK || PrefC.RandomKeys) {
 				command+="DocNum,";
 			}
-			command+="Description,DateCreated,DocCategory,PatNum,FileName,ImgType,IsFlipped,DegreesRotated,ToothNumbers,Note,SigIsTopaz,Signature,CropX,CropY,CropW,CropH,WindowingMin,WindowingMax,MountItemNum,RawBase64,Thumbnail,ExternalGUID,ExternalSource) VALUES(";
+			command+="Description,DateCreated,DocCategory,PatNum,FileName,ImgType,IsFlipped,DegreesRotated,ToothNumbers,Note,SigIsTopaz,Signature,CropX,CropY,CropW,CropH,WindowingMin,WindowingMax,MountItemNum,Thumbnail,ExternalGUID,ExternalSource) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
 				command+=POut.Long(document.DocNum)+",";
 			}
@@ -185,7 +182,6 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   (document.WindowingMax)+","
 				+    POut.Long  (document.MountItemNum)+","
 				//DateTStamp can only be set by MySQL
-				+    DbHelper.ParamChar+"paramRawBase64,"
 				+    DbHelper.ParamChar+"paramThumbnail,"
 				+"'"+POut.String(document.ExternalGUID)+"',"
 				+"'"+POut.String(document.ExternalSource.ToString())+"')";
@@ -197,19 +193,15 @@ namespace OpenDentBusiness.Crud{
 				document.Signature="";
 			}
 			var paramSignature = new MySqlParameter("paramSignature", POut.StringParam(document.Signature));
-			if(document.RawBase64==null) {
-				document.RawBase64="";
-			}
-			var paramRawBase64 = new MySqlParameter("paramRawBase64", POut.StringParam(document.RawBase64));
 			if(document.Thumbnail==null) {
 				document.Thumbnail="";
 			}
 			var paramThumbnail = new MySqlParameter("paramThumbnail", POut.StringParam(document.Thumbnail));
 			if(useExistingPK || PrefC.RandomKeys) {
-				Database.ExecuteNonQuery(command,paramNote,paramSignature,paramRawBase64,paramThumbnail);
+				Database.ExecuteNonQuery(command,paramNote,paramSignature,paramThumbnail);
 			}
 			else {
-				document.DocNum=Database.ExecuteInsert(command,paramNote,paramSignature,paramRawBase64,paramThumbnail);
+				document.DocNum=Database.ExecuteInsert(command,paramNote,paramSignature,paramThumbnail);
 			}
 			return document.DocNum;
 		}
@@ -229,7 +221,7 @@ namespace OpenDentBusiness.Crud{
 			if(useExistingPK) {
 				command+="DocNum,";
 			}
-			command+="Description,DateCreated,DocCategory,PatNum,FileName,ImgType,IsFlipped,DegreesRotated,ToothNumbers,Note,SigIsTopaz,Signature,CropX,CropY,CropW,CropH,WindowingMin,WindowingMax,MountItemNum,RawBase64,Thumbnail,ExternalGUID,ExternalSource) VALUES(";
+			command+="Description,DateCreated,DocCategory,PatNum,FileName,ImgType,IsFlipped,DegreesRotated,ToothNumbers,Note,SigIsTopaz,Signature,CropX,CropY,CropW,CropH,WindowingMin,WindowingMax,MountItemNum,Thumbnail,ExternalGUID,ExternalSource) VALUES(";
 			if(useExistingPK) {
 				command+=POut.Long(document.DocNum)+",";
 			}
@@ -254,7 +246,6 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   (document.WindowingMax)+","
 				+    POut.Long  (document.MountItemNum)+","
 				//DateTStamp can only be set by MySQL
-				+    DbHelper.ParamChar+"paramRawBase64,"
 				+    DbHelper.ParamChar+"paramThumbnail,"
 				+"'"+POut.String(document.ExternalGUID)+"',"
 				+"'"+POut.String(document.ExternalSource.ToString())+"')";
@@ -266,19 +257,15 @@ namespace OpenDentBusiness.Crud{
 				document.Signature="";
 			}
 			var paramSignature = new MySqlParameter("paramSignature", POut.StringParam(document.Signature));
-			if(document.RawBase64==null) {
-				document.RawBase64="";
-			}
-			var paramRawBase64 = new MySqlParameter("paramRawBase64", POut.StringParam(document.RawBase64));
 			if(document.Thumbnail==null) {
 				document.Thumbnail="";
 			}
 			var paramThumbnail = new MySqlParameter("paramThumbnail", POut.StringParam(document.Thumbnail));
 			if(useExistingPK) {
-				Database.ExecuteNonQuery(command,paramNote,paramSignature,paramRawBase64,paramThumbnail);
+				Database.ExecuteNonQuery(command,paramNote,paramSignature,paramThumbnail);
 			}
 			else {
-				document.DocNum=Database.ExecuteInsert(command,paramNote,paramSignature,paramRawBase64,paramThumbnail);
+				document.DocNum=Database.ExecuteInsert(command,paramNote,paramSignature,paramThumbnail);
 			}
 			return document.DocNum;
 		}
@@ -306,7 +293,6 @@ namespace OpenDentBusiness.Crud{
 				+"WindowingMax  =  "+POut.Int   (document.WindowingMax)+", "
 				+"MountItemNum  =  "+POut.Long  (document.MountItemNum)+", "
 				//DateTStamp can only be set by MySQL
-				+"RawBase64     =  "+DbHelper.ParamChar+"paramRawBase64, "
 				+"Thumbnail     =  "+DbHelper.ParamChar+"paramThumbnail, "
 				+"ExternalGUID  = '"+POut.String(document.ExternalGUID)+"', "
 				+"ExternalSource= '"+POut.String(document.ExternalSource.ToString())+"' "
@@ -319,15 +305,11 @@ namespace OpenDentBusiness.Crud{
 				document.Signature="";
 			}
 			var paramSignature = new MySqlParameter("paramSignature", POut.StringParam(document.Signature));
-			if(document.RawBase64==null) {
-				document.RawBase64="";
-			}
-			var paramRawBase64 = new MySqlParameter("paramRawBase64", POut.StringParam(document.RawBase64));
 			if(document.Thumbnail==null) {
 				document.Thumbnail="";
 			}
 			var paramThumbnail = new MySqlParameter("paramThumbnail", POut.StringParam(document.Thumbnail));
-			Database.ExecuteNonQuery(command,paramNote,paramSignature,paramRawBase64,paramThumbnail);
+			Database.ExecuteNonQuery(command,paramNote,paramSignature,paramThumbnail);
 		}
 
 		///<summary>Updates one Document in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
@@ -410,10 +392,6 @@ namespace OpenDentBusiness.Crud{
 				command+="MountItemNum = "+POut.Long(document.MountItemNum)+"";
 			}
 			//DateTStamp can only be set by MySQL
-			if(document.RawBase64 != oldDocument.RawBase64) {
-				if(command!="") { command+=",";}
-				command+="RawBase64 = "+DbHelper.ParamChar+"paramRawBase64";
-			}
 			if(document.Thumbnail != oldDocument.Thumbnail) {
 				if(command!="") { command+=",";}
 				command+="Thumbnail = "+DbHelper.ParamChar+"paramThumbnail";
@@ -437,17 +415,13 @@ namespace OpenDentBusiness.Crud{
 				document.Signature="";
 			}
 			var paramSignature = new MySqlParameter("paramSignature", POut.StringParam(document.Signature));
-			if(document.RawBase64==null) {
-				document.RawBase64="";
-			}
-			var paramRawBase64 = new MySqlParameter("paramRawBase64", POut.StringParam(document.RawBase64));
 			if(document.Thumbnail==null) {
 				document.Thumbnail="";
 			}
 			var paramThumbnail = new MySqlParameter("paramThumbnail", POut.StringParam(document.Thumbnail));
 			command="UPDATE document SET "+command
 				+" WHERE DocNum = "+POut.Long(document.DocNum);
-			Database.ExecuteNonQuery(command,paramNote,paramSignature,paramRawBase64,paramThumbnail);
+			Database.ExecuteNonQuery(command,paramNote,paramSignature,paramThumbnail);
 			return true;
 		}
 
@@ -512,9 +486,6 @@ namespace OpenDentBusiness.Crud{
 				return true;
 			}
 			//DateTStamp can only be set by MySQL
-			if(document.RawBase64 != oldDocument.RawBase64) {
-				return true;
-			}
 			if(document.Thumbnail != oldDocument.Thumbnail) {
 				return true;
 			}

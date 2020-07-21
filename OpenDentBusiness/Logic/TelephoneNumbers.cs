@@ -9,16 +9,18 @@ namespace OpenDentBusiness
 {
 	public class TelephoneNumbers
 	{
-		///<summary>Formatting is only allowed when computer is set to en-US, en-CA, or fr-CA.</summary>
+		/// <summary>
+		/// Formatting is only allowed when computer is set to en-US, en-CA, or fr-CA.
+		/// </summary>
 		public static bool IsFormattingAllowed
-		{
-			get
-			{
-				return (CultureInfo.CurrentCulture.Name == "en-US" || CultureInfo.CurrentCulture.Name.EndsWith("CA"));
-			}
-		}
+			=> CultureInfo.CurrentCulture.Name == "en-US" || CultureInfo.CurrentCulture.Name.EndsWith("CA");
 
-		///<summary>Returns true if the phone number is a valid format.  The number passed in can contain formating.  Will strip out formatting of the passed in phone number.  Phone number will be considered invalid if a '1' is found at the beginning.</summary>
+		/// <summary>
+		/// Returns true if the phone number is a valid format.
+		/// The number passed in can contain formating.
+		/// Will strip out formatting of the passed in phone number. 
+		/// Phone number will be considered invalid if a '1' is found at the beginning.
+		/// </summary>
 		public static bool IsNumberValidTenDigit(ref string phoneNum)
 		{
 			if (IsFormattingAllowed)
@@ -27,11 +29,13 @@ namespace OpenDentBusiness
 				phoneNum = phoneNum.Replace(")", "");
 				phoneNum = phoneNum.Replace(" ", "");
 				phoneNum = phoneNum.Replace("-", "");
+
 				if (phoneNum.Length != 0 && phoneNum.Length != 10)
 				{
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -200,21 +204,26 @@ namespace OpenDentBusiness
 			return "";
 		}
 
-		///<summary>Returns true if these are the same numbers. Will still return true if the numbers have differnt formatting or only one of them has 
-		///a leading 1.</summary>
+		/// <summary>
+		/// Returns true if these are the same numbers.
+		/// Will still return true if the numbers have differnt formatting or only one of them has a leading 1.
+		/// </summary>
 		public static bool AreNumbersEqual(string phoneNum1, string phoneNum2)
 		{
 			phoneNum1 = phoneNum1.StripNonDigits();
 			phoneNum2 = phoneNum2.StripNonDigits();
+
 			if (phoneNum1.Length == 10 && phoneNum2.Length == 11 && phoneNum2[0] == '1')
 			{
 				phoneNum1 = "1" + phoneNum1;
 			}
+
 			if (phoneNum2.Length == 10 && phoneNum1.Length == 11 && phoneNum1[0] == '1')
 			{
 				phoneNum2 = "1" + phoneNum2;
 			}
-			return (phoneNum1 == phoneNum2);
+
+			return phoneNum1 == phoneNum2;
 		}
 	}
 }

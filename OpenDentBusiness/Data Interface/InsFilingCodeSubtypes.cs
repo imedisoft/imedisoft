@@ -6,113 +6,60 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Reflection;
 
-namespace OpenDentBusiness {
-	///<summary></summary>
-	public class InsFilingCodeSubtypes {
-		#region Get Methods
-		#endregion
+namespace OpenDentBusiness
+{
+    public class InsFilingCodeSubtypes
+	{
+		private class InsFilingCodeSubtypeCache : CacheListAbs<InsFilingCodeSubtype>
+		{
+			protected override List<InsFilingCodeSubtype> GetCacheFromDb() 
+				=> Crud.InsFilingCodeSubtypeCrud.SelectMany("SELECT * FROM insfilingcodesubtype ORDER BY Descript");
 
-		#region Modification Methods
-		
-		#region Insert
-		#endregion
+			protected override List<InsFilingCodeSubtype> TableToList(DataTable table) 
+				=> Crud.InsFilingCodeSubtypeCrud.TableToList(table);
 
-		#region Update
-		#endregion
+			protected override InsFilingCodeSubtype Copy(InsFilingCodeSubtype InsFilingCodeSubtype) 
+				=> InsFilingCodeSubtype.Clone();
 
-		#region Delete
-		#endregion
+			protected override DataTable ListToTable(List<InsFilingCodeSubtype> listInsFilingCodeSubtypes) 
+				=> Crud.InsFilingCodeSubtypeCrud.ListToTable(listInsFilingCodeSubtypes, "InsFilingCodeSubtype");
 
-		#endregion
+			protected override void FillCacheIfNeeded() 
+				=> InsFilingCodeSubtypes.GetTableFromCache(false);
+		}
 
-		#region Misc Methods
-		#endregion
+		private static readonly InsFilingCodeSubtypeCache cache = new InsFilingCodeSubtypeCache();
 
-		#region CachePattern
+		public static List<InsFilingCodeSubtype> GetWhere(Predicate<InsFilingCodeSubtype> match, bool isShort = false) 
+			=> cache.GetWhere(match, isShort);
 
-		private class InsFilingCodeSubtypeCache : CacheListAbs<InsFilingCodeSubtype> {
-			protected override List<InsFilingCodeSubtype> GetCacheFromDb() {
-				string command="SELECT * FROM insfilingcodesubtype ORDER BY Descript";
-				return Crud.InsFilingCodeSubtypeCrud.SelectMany(command);
+		public static DataTable RefreshCache() 
+			=> GetTableFromCache(true);
+
+		public static DataTable GetTableFromCache(bool doRefreshCache) 
+			=> cache.GetTableFromCache(doRefreshCache);
+
+		public static long Insert(InsFilingCodeSubtype insFilingCodeSubtype) 
+			=> Crud.InsFilingCodeSubtypeCrud.Insert(insFilingCodeSubtype);
+
+		public static void Update(InsFilingCodeSubtype insFilingCodeSubtype) 
+			=> Crud.InsFilingCodeSubtypeCrud.Update(insFilingCodeSubtype);
+
+		public static void Delete(long insFilingCodeSubtypeNum)
+		{
+			string command = "SELECT COUNT(*) FROM insplan WHERE FilingCodeSubtype=" + insFilingCodeSubtypeNum;
+			if (Database.ExecuteLong(command) != 0)
+			{
+				throw new ApplicationException("Already in use by insplans.");
 			}
-			protected override List<InsFilingCodeSubtype> TableToList(DataTable table) {
-				return Crud.InsFilingCodeSubtypeCrud.TableToList(table);
-			}
-			protected override InsFilingCodeSubtype Copy(InsFilingCodeSubtype InsFilingCodeSubtype) {
-				return InsFilingCodeSubtype.Clone();
-			}
-			protected override DataTable ListToTable(List<InsFilingCodeSubtype> listInsFilingCodeSubtypes) {
-				return Crud.InsFilingCodeSubtypeCrud.ListToTable(listInsFilingCodeSubtypes,"InsFilingCodeSubtype");
-			}
-			protected override void FillCacheIfNeeded() {
-				InsFilingCodeSubtypes.GetTableFromCache(false);
-			}
-		}
-		
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static InsFilingCodeSubtypeCache _InsFilingCodeSubtypeCache=new InsFilingCodeSubtypeCache();
 
-		public static List<InsFilingCodeSubtype> GetWhere(Predicate<InsFilingCodeSubtype> match,bool isShort=false) {
-			return _InsFilingCodeSubtypeCache.GetWhere(match,isShort);
-		}
-
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache() {
-			return GetTableFromCache(true);
-		}
-
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table) {
-			_InsFilingCodeSubtypeCache.FillCacheFromTable(table);
-		}
-
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			
-			return _InsFilingCodeSubtypeCache.GetTableFromCache(doRefreshCache);
-		}
-
-		#endregion
-
-		///<Summary>Gets one InsFilingCodeSubtype from the database.</Summary>
-		public static InsFilingCodeSubtype GetOne(long insFilingCodeSubtypeNum) {
-			
-			return Crud.InsFilingCodeSubtypeCrud.SelectOne(insFilingCodeSubtypeNum);
-		}
-
-		///<summary></summary>
-		public static long Insert(InsFilingCodeSubtype insFilingCodeSubtype) {
-			
-			return Crud.InsFilingCodeSubtypeCrud.Insert(insFilingCodeSubtype);
-		}
-
-		///<summary></summary>
-		public static void Update(InsFilingCodeSubtype insFilingCodeSubtype) {
-			
-			Crud.InsFilingCodeSubtypeCrud.Update(insFilingCodeSubtype);
-		}
-
-		///<summary>Surround with try/catch</summary>
-		public static void Delete(long insFilingCodeSubtypeNum) {
-			
-			string command="SELECT COUNT(*) FROM insplan WHERE FilingCodeSubtype="+POut.Long(insFilingCodeSubtypeNum);
-			if(Database.ExecuteScalar(command) != "0") {
-				throw new ApplicationException(Lans.g("InsFilingCodeSubtype","Already in use by insplans."));
-			}
 			Crud.InsFilingCodeSubtypeCrud.Delete(insFilingCodeSubtypeNum);
 		}
 
-		public static List<InsFilingCodeSubtype> GetForInsFilingCode(long insFilingCodeNum) {
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.InsFilingCodeNum==insFilingCodeNum);
-		}
+		public static List<InsFilingCodeSubtype> GetForInsFilingCode(long insFilingCodeNum) 
+			=> GetWhere(x => x.InsFilingCodeNum == insFilingCodeNum);
 
-		public static void DeleteForInsFilingCode(long insFilingCodeNum) {
-			
-			string command="DELETE FROM insfilingcodesubtype "+
-				"WHERE InsFilingCodeNum="+POut.Long(insFilingCodeNum);
-			Database.ExecuteNonQuery(command);
-		}
-
+		public static void DeleteForInsFilingCode(long insFilingCodeNum) 
+			=> Database.ExecuteNonQuery("DELETE FROM insfilingcodesubtype WHERE InsFilingCodeNum=" + insFilingCodeNum);
 	}
 }

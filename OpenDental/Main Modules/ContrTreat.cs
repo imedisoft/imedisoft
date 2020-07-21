@@ -20,6 +20,7 @@ using MigraDoc.Rendering.Printing;
 using Document=OpenDentBusiness.Document;
 using OpenDentBusiness.WebTypes;
 using System.Text.RegularExpressions;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -2120,7 +2121,7 @@ namespace OpenDental{
 			string attachPath=EmailAttaches.GetAttachPath();
 			Random rnd=new Random();
 			string fileName=DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
-			string filePathAndName=FileAtoZ.CombinePaths(attachPath,fileName);
+			string filePathAndName=Storage.CombinePaths(attachPath,fileName);
 
 			if(gridPlans.SelectedIndices[0]>0 //not the default plan.
 				&& PrefC.GetBool(PrefName.TreatPlanSaveSignedToPdf) //preference enabled
@@ -3577,7 +3578,7 @@ namespace OpenDental{
 			}
 			//Gauranteed to have at least one image category at this point.
 			//Saving pdf to tempfile first simplifies this code, but can use extra bandwidth copying the file to and from the temp directory/Open Dent imgs.
-			string tempFile=PrefC.GetRandomTempFile(".pdf");
+			string tempFile=Storage.GetTempFileName(".pdf");
 
 			if(DoPrintUsingSheets()) {
 				SheetPrinting.CreatePdf(sheet,tempFile,null);

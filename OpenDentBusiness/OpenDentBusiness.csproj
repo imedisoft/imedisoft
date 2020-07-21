@@ -495,6 +495,7 @@
     <Compile Include="Db Multi Table\AgingData.cs" />
     <Compile Include="Db Multi Table\MarkupEdit.cs" />
     <Compile Include="Db Multi Table\PayPlanEdit.cs" />
+    <Compile Include="IO\Storage.cs" />
     <Compile Include="Logic\CodeMapping.cs" />
     <Compile Include="Logic\USlocales.cs" />
     <Compile Include="Misc\Authentication.cs" />
@@ -514,8 +515,6 @@
     <Compile Include="Reports\RpProcOverpaid.cs" />
     <Compile Include="Reports\RpProdGoal.cs" />
     <Compile Include="Reports\RpServiceDateView.cs" />
-    <Compile Include="Shared\ODCloudClient\Sirona.cs" />
-    <Compile Include="Shared\ODCloudClient\x837Controller.cs" />
     <Compile Include="SheetFramework\GraphicsHelper.cs" />
     <Compile Include="SheetFramework\SheetDataTableUtil.cs" />
     <Compile Include="SheetFramework\SheetDrawingJob.cs" />
@@ -563,15 +562,12 @@
       <DependentUpon>SignatureBoxWrapper.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\TopazWrapper.cs" />
-    <Compile Include="WebBridges\APIRequest.cs" />
     <Compile Include="WebBridges\AvaTax.cs" />
     <Compile Include="WebBridges\Google\Google.cs" />
     <Compile Include="WebBridges\Google\GoogleApiConnector.cs" />
-    <Compile Include="WebBridges\IApiRequest.cs" />
     <Compile Include="WebBridges\PDMP\PDMP.cs" />
     <Compile Include="WebBridges\PDMP\PDMPLogicoy.cs" />
     <Compile Include="WebBridges\PDMP\PDMPScript.cs" />
-    <Compile Include="WebBridges\RESTfulTemplate.cs" />
     <Compile Include="WebServices\CustomerUpdatesProxy.cs" />
     <Compile Include="TableTypes\CommOptOut.cs" />
     <Compile Include="TableTypes\DbmLog.cs" />
@@ -628,9 +624,7 @@
     <Compile Include="Eclaims\Ramq.cs" />
     <Compile Include="Eclaims\RECS.cs" />
     <Compile Include="Eclaims\Renaissance.cs" />
-    <Compile Include="Eclaims\Rs232.cs" />
     <Compile Include="Eclaims\TerminalConnector.cs" />
-    <Compile Include="Eclaims\Tesia.cs" />
     <Compile Include="Eclaims\WebMD.cs" />
     <Compile Include="Eclaims\x270Controller.cs" />
     <Compile Include="Eclaims\x837Controller.cs" />
@@ -1105,7 +1099,6 @@
     <Compile Include="Data Interface\TaskNotes.cs" />
     <Compile Include="Data Interface\TaskUnreads.cs" />
     <Compile Include="Cache\Cache.cs" />
-    <Compile Include="Cache\EnumRemotingRole.cs" />
     <Compile Include="Cache\PrefC.cs" />
     <Compile Include="Data Interface\TimeCardRules.cs" />
     <Compile Include="Data Interface\ToothGridCells.cs" />
@@ -1164,60 +1157,6 @@
     <Compile Include="Misc\NTPv4.cs" />
     <Compile Include="Misc\TsiMsgConstructor.cs" />
     <Compile Include="Misc\WindowsTime.cs" />
-    <Compile Include="Mobile\Crud\AllergyDefmCrud.cs" />
-    <Compile Include="Mobile\Crud\AllergymCrud.cs" />
-    <Compile Include="Mobile\Crud\DiseaseDefmCrud.cs" />
-    <Compile Include="Mobile\Crud\DiseasemCrud.cs" />
-    <Compile Include="Mobile\Crud\DocumentmCrud.cs" />
-    <Compile Include="Mobile\Crud\ICD9mCrud.cs" />
-    <Compile Include="Mobile\Crud\LabPanelmCrud.cs" />
-    <Compile Include="Mobile\Crud\LabResultmCrud.cs" />
-    <Compile Include="Mobile\Crud\MedicationmCrud.cs" />
-    <Compile Include="Mobile\Crud\MedicationPatmCrud.cs" />
-    <Compile Include="Mobile\Crud\PharmacymCrud.cs" />
-    <Compile Include="Mobile\Crud\ProvidermCrud.cs" />
-    <Compile Include="Mobile\Crud\RecallmCrud.cs" />
-    <Compile Include="Mobile\Crud\RxPatmCrud.cs" />
-    <Compile Include="Mobile\Crud\StatementmCrud.cs" />
-    <Compile Include="Mobile\Crud\UsermCrud.cs" />
-    <Compile Include="Mobile\Data Interface\AllergyDefms.cs" />
-    <Compile Include="Mobile\Data Interface\Allergyms.cs" />
-    <Compile Include="Mobile\Data Interface\DiseaseDefms.cs" />
-    <Compile Include="Mobile\Data Interface\Diseasems.cs" />
-    <Compile Include="Mobile\Data Interface\Documentms.cs" />
-    <Compile Include="Mobile\Data Interface\ICD9ms.cs" />
-    <Compile Include="Mobile\Data Interface\LabPanelms.cs" />
-    <Compile Include="Mobile\Data Interface\LabResultms.cs" />
-    <Compile Include="Mobile\Data Interface\Medicationms.cs" />
-    <Compile Include="Mobile\Data Interface\MedicationPatms.cs" />
-    <Compile Include="Mobile\Data Interface\Pharmacyms.cs" />
-    <Compile Include="Mobile\Data Interface\PrefmC.cs" />
-    <Compile Include="Mobile\Data Interface\Prefms.cs" />
-    <Compile Include="Mobile\Data Interface\Providerms.cs" />
-    <Compile Include="Mobile\Data Interface\Recallms.cs" />
-    <Compile Include="Mobile\Data Interface\RxPatms.cs" />
-    <Compile Include="Mobile\Data Interface\Statementms.cs" />
-    <Compile Include="Mobile\Data Interface\Userms.cs" />
-    <Compile Include="Mobile\TableTypes\AllergyDefm.cs" />
-    <Compile Include="Mobile\TableTypes\Allergym.cs" />
-    <Compile Include="Mobile\TableTypes\DiseaseDefm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Mobile\TableTypes\Diseasem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Mobile\TableTypes\Documentm.cs" />
-    <Compile Include="Mobile\TableTypes\ICD9m.cs" />
-    <Compile Include="Mobile\TableTypes\LabPanelm.cs" />
-    <Compile Include="Mobile\TableTypes\LabResultm.cs" />
-    <Compile Include="Mobile\TableTypes\Medicationm.cs" />
-    <Compile Include="Mobile\TableTypes\MedicationPatm.cs" />
-    <Compile Include="Mobile\TableTypes\Pharmacym.cs" />
-    <Compile Include="Mobile\TableTypes\Providerm.cs" />
-    <Compile Include="Mobile\TableTypes\Recallm.cs" />
-    <Compile Include="Mobile\TableTypes\Statementm.cs" />
-    <Compile Include="Mobile\TableTypes\Userm.cs" />
-    <Compile Include="Mobile\TableTypes\RxPatm.cs" />
     <Compile Include="Data Interface\AccountingAutoPays.cs" />
     <Compile Include="Data Interface\Accounts.cs" />
     <Compile Include="Data Interface\Adjustments.cs" />
@@ -1394,13 +1333,6 @@
     <Compile Include="Misc\LetterMergesQueries.cs" />
     <Compile Include="Misc\TimeSpanExtension.cs" />
     <Compile Include="Misc\TrojanQueries.cs" />
-    <Compile Include="Mobile\Crud\AppointmentmCrud.cs" />
-    <Compile Include="Mobile\Crud\PatientmCrud.cs" />
-    <Compile Include="Mobile\Data Interface\Appointmentms.cs" />
-    <Compile Include="Mobile\Data Interface\Patientms.cs" />
-    <Compile Include="Mobile\TableTypes\Appointmentm.cs" />
-    <Compile Include="Mobile\TableTypes\Patientm.cs" />
-    <Compile Include="Mobile\TableTypes\Prefm.cs" />
     <Compile Include="Plugins\PluginBase.cs" />
     <Compile Include="Plugins\PluginContainer.cs" />
     <Compile Include="Plugins\Plugins.cs" />
@@ -1696,26 +1628,13 @@
     <Compile Include="WebTypes\AutoComm\TagReplacementPhiSafe\RecallTagReplacer.cs" />
     <Compile Include="WebTypes\AutoComm\TagReplacementPhiSafe\TagReplacer.cs" />
     <Compile Include="WebTypes\AutoComm\TagReplacementPhiSafe\ThankYouTagReplacer.cs" />
-    <Compile Include="WebTypes\eConnector\EConnectorRequest.cs" />
-    <Compile Include="WebTypes\eConnector\EConnectorStatistics.cs" />
-    <Compile Include="WebTypes\eConnector\InvalidTypeHistory.cs" />
-    <Compile Include="WebTypes\eConnector\ShutDownAlert.cs" />
     <Compile Include="WebTypes\PushNotifications\PushNotificationAction.cs" />
     <Compile Include="WebTypes\PushNotifications\PushNotificationPayload.cs" />
     <Compile Include="WebTypes\PushNotifications\PushNotificationConstants.cs" />
     <Compile Include="WebTypes\PushNotifications\PushNotificationUtils.cs" />
-    <Compile Include="WebTypes\Payments\PaySimpleStatus.cs" />
     <Compile Include="WebTypes\Shared\XWeb\EdgeExpressResponse.cs" />
-    <Compile Include="WebTypes\Shared\XWeb\XWeb.cs" />
-    <Compile Include="WebTypes\Shared\XWeb\XWebCrud.cs" />
+    <Compile Include="WebTypes\Shared\XWeb\WebPaymentProperties.cs" />
     <Compile Include="WebTypes\Shared\XWeb\XWebs.cs" />
-    <Compile Include="WebTypes\WebForms\Crud\WebForms_LogCrud.cs" />
-    <Compile Include="WebTypes\WebForms\Crud\WebForms_PreferenceCrud.cs" />
-    <Compile Include="WebTypes\WebForms\Crud\WebForms_SheetCrud.cs" />
-    <Compile Include="WebTypes\WebForms\Crud\WebForms_SheetDefCrud.cs" />
-    <Compile Include="WebTypes\WebForms\Crud\WebForms_SheetFieldCrud.cs" />
-    <Compile Include="WebTypes\WebForms\Crud\WebForms_SheetFieldDefCrud.cs" />
-    <Compile Include="WebTypes\WebForms\Data Interface\WebForms_Logs.cs" />
     <Compile Include="WebTypes\WebForms\Data Interface\WebForms_Preferences.cs" />
     <Compile Include="WebTypes\WebForms\Data Interface\WebForms_SheetDefs.cs" />
     <Compile Include="WebTypes\WebForms\Data Interface\WebForms_SheetFieldDefs.cs" />
@@ -1729,7 +1648,6 @@
     <Compile Include="WebTypes\WebForms\TableTypes\WebForms_SheetFieldDef.cs" />
     <Compile Include="WebTypes\WebForms\WebUtils.cs" />
     <Compile Include="WebTypes\WebSched\TimeSlot\TimeSlot.cs" />
-    <Compile Include="WebTypes\WebSched\TimeSlot\TimeSlotCrud.cs" />
     <Compile Include="WebTypes\WebSched\TimeSlot\TimeSlots.cs" />
     <Compile Include="WebTypes\WebBase.cs" />
     <Compile Include="X12\X834.cs" />
@@ -2355,7 +2273,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\COVID19.xml" />
-    <Content Include="Shared\README.txt" />
     <Resource Include="Resources\topazPen10.gif" />
     <None Include="Resources\RecallPastDue_R.png" />
     <None Include="Resources\RecallPastDue_P.png" />

@@ -3,12 +3,14 @@ using OpenDentBusiness;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness.WebTypes.WebForms {
+namespace OpenDentBusiness.WebTypes.WebForms
+{
 	[Serializable]
-	[CrudTable(IsMissingInGeneral=true,CrudLocationOverride=@"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud",NamespaceOverride="OpenDentBusiness.WebTypes.WebForms.Crud",CrudExcludePrefC=true)]
-	public class WebForms_SheetDef:TableBase {
+	[CrudTable(IsMissingInGeneral = true, CrudLocationOverride = @"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud", NamespaceOverride = "OpenDentBusiness.WebTypes.WebForms.Crud", CrudExcludePrefC = true)]
+	public class WebForms_SheetDef : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long WebSheetDefID;
 		///<summary>FK to customers.patient.PatNum.</summary>
 		public long DentalOfficeID;
@@ -39,35 +41,8 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 		///This field needs to be treated as if it were a real db column so that the GWT to and from data table row methods contain ClinicNum.</summary>
 		public long ClinicNum;
 
-		///<Summary></Summary>
-		[CrudColumn(IsNotDbColumn=true)]
+		[CrudColumn(IsNotDbColumn = true)]
 		[XmlIgnore]
 		public List<WebForms_SheetFieldDef> SheetFieldDefs;
-
-		public WebForms_SheetDef(){
-
-		}
-		
-    public WebForms_SheetDef Copy(){
-			return (WebForms_SheetDef)this.MemberwiseClone();
-		}
-
-		///<summary>Used only for serialization purposes</summary>
-		[XmlElement("SheetFieldDefs",typeof(WebForms_SheetFieldDef[]))]
-		public WebForms_SheetFieldDef[] SheetFieldDefsXml {
-			get {
-				if(SheetFieldDefs==null) {
-					return new WebForms_SheetFieldDef[0];
-				}
-				return SheetFieldDefs.ToArray();
-			}
-			set {
-				SheetFieldDefs=new List<WebForms_SheetFieldDef>();
-				for(int i=0;i<value.Length;i++) {
-					SheetFieldDefs.Add(value[i]);
-				}
-			}
-		}
-
 	}
 }

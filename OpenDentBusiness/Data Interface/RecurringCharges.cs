@@ -10,6 +10,7 @@ using System.Threading;
 using CodeBase;
 using Imedisoft.Data;
 using OpenDentBusiness.FileIO;
+using OpenDentBusiness.IO;
 using OpenDentBusiness.WebTypes.Shared.XWeb;
 
 namespace OpenDentBusiness {
@@ -427,7 +428,7 @@ namespace OpenDentBusiness {
 				return false;
 			}
 			password=MiscUtils.Decrypt(password);
-			string resultfile=PrefC.GetRandomTempFile("txt");
+			string resultfile=Storage.GetTempFileName(".txt");
 			try {
 				File.Delete(resultfile);//delete the old result file.
 			}

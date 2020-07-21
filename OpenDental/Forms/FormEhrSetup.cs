@@ -1,5 +1,6 @@
 using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -143,7 +144,7 @@ namespace OpenDental
 		}
 
 		private static string downloadFileHelper(string codeSystemURL,string codeSystemName) {
-			string zipFileDestination=PrefC.GetRandomTempFile(".tmp");//@"c:\users\ryan\desktop\"+codeSystemName+".tmp";
+			string zipFileDestination=Storage.GetTempFileName(".tmp");//@"c:\users\ryan\desktop\"+codeSystemName+".tmp";
 			File.Delete(zipFileDestination);
 			WebRequest wr=WebRequest.Create(codeSystemURL);
 			WebResponse webResp=null;

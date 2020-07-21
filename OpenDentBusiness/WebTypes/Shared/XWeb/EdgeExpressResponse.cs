@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OpenDentBusiness.WebTypes.Shared.XWeb {
-	///<summary>All the fields from an Edge Express API response.</summary>
-	public class EdgeExpressResponse {
+﻿namespace OpenDentBusiness.WebTypes.Shared.XWeb
+{
+    /// <summary>
+    /// All the fields from an Edge Express API response.
+    /// </summary>
+    public class EdgeExpressResponse
+	{
 		public string ALIAS;
 		public decimal APPROVEDAMOUNT;
 		public string APPROVALCODE;
@@ -38,5 +36,4 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb {
 		public string TRANSACTIONID;
 		public string TRANSACTIONTYPE;
 	}
-
 }

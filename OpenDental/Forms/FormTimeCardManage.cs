@@ -1003,23 +1003,23 @@ namespace OpenDental {
 				catch {
 					employeeName="Error";
 				}
-				string r1hours	=(PIn.TSpan(MainTable.Rows[i]["rate1Hours"  ].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
+				string r1hours	=(PIn.Time(MainTable.Rows[i]["rate1Hours"  ].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
 				if(r1hours=="0.00"){//Was changing Exactly 80.00 hours with 8 hours.
 					r1hours="";
 				}
-				string r1OThours=(PIn.TSpan(MainTable.Rows[i]["rate1OTHours"].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
+				string r1OThours=(PIn.Time(MainTable.Rows[i]["rate1OTHours"].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
 				if(r1OThours=="0.00") {
 					r1OThours="";
 				}
-				string r2hours	=(PIn.TSpan(MainTable.Rows[i]["rate2Hours"].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
+				string r2hours	=(PIn.Time(MainTable.Rows[i]["rate2Hours"].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
 				if(r2hours=="0.00") {
 					r2hours="";
 				}
-				string r2OThours=(PIn.TSpan(MainTable.Rows[i]["rate2OTHours"].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
+				string r2OThours=(PIn.Time(MainTable.Rows[i]["rate2OTHours"].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
 				if(r2OThours=="0.00") {
 					r2OThours="";
 				}
-				string r3hours=(PIn.TSpan(MainTable.Rows[i]["rate3Hours"].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
+				string r3hours=(PIn.Time(MainTable.Rows[i]["rate3Hours"].ToString())).TotalHours.ToString("F2");//adp allows 2 digit precision
 				if(r3hours=="0.00") {
 					r3hours="";
 				}

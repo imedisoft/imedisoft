@@ -28,6 +28,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using OpenDental.Bridges;
 using OpenDental.Thinfinity;
+using OpenDentBusiness.IO;
 #endregion using
 
 namespace OpenDental {
@@ -1286,7 +1287,7 @@ namespace OpenDental {
 				button=new ODToolBarButton(Lan.G(this,"Templates"),-1,"","Forms");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				menuForms=new ContextMenu();
-				string formDir=FileAtoZ.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),"Forms");
+				string formDir=Storage.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),"Forms");
 
 					if(Directory.Exists(formDir)) {
 						DirectoryInfo dirInfo=new DirectoryInfo(formDir);
@@ -2425,7 +2426,7 @@ namespace OpenDental {
 					}
 				}
 			}
-			string tempFile=PrefC.GetRandomTempFile(".pdf");
+			string tempFile=Storage.GetTempFileName(".pdf");
 			try {
 				xImageDeviceManager.Obfuscator.ActivateEZTwain();
 			}
@@ -2824,7 +2825,7 @@ namespace OpenDental {
 		private void DeleteTempPdf(long docNum) {
 			Document doc=Documents.GetByNum(docNum,doReturnNullIfNotFound:true);//Get old document.
 			if(doc!=null && Path.GetExtension(doc.FileName).ToLower()==".pdf") {//Adobe acrobat file.
-				string pdfFilePath=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),doc.DocNum+(_patCur!=null ? _patCur.PatNum.ToString() : "")+".pdf");
+				string pdfFilePath=Storage.CombinePaths(Storage.GetTempPath(),doc.DocNum+(_patCur!=null ? _patCur.PatNum.ToString() : "")+".pdf");
 				if(!_suniDeviceControl.IsDisposed){
 					_suniDeviceControl.Dispose();
 				}
@@ -3459,7 +3460,7 @@ namespace OpenDental {
 					doc=apteryxDoc;
 				}
 				tempFilePath=ODFileUtils.CombinePaths(Path.GetTempPath(),doc.FileName);
-				docPath=FileAtoZ.CombinePaths(ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),doc.FileName);
+				docPath= Storage.CombinePaths(ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),doc.FileName);
 			}
 			else if(nodeIdTag.NodeType==EnumNodeType.Eob) {
 				EobAttach eob=EobAttaches.GetOne(nodeIdTag.PriKey);
@@ -3472,7 +3473,7 @@ namespace OpenDental {
 				docPath=ODFileUtils.CombinePaths(ImageStore.GetAmdFolder(),amd.FileName);
 			}
 			if(!string.IsNullOrEmpty(docPath)) {
-				FileAtoZ.Copy(docPath,tempFilePath/*,FileAtoZSourceDestination.AtoZToLocal,"Exporting file..."*/);
+				Storage.Copy(docPath,tempFilePath/*,FileAtoZSourceDestination.AtoZToLocal,"Exporting file..."*/);
 				ThinfinityUtils.ExportForDownload(tempFilePath);
 			}
 			else {

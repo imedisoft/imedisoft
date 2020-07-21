@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -990,7 +991,7 @@ namespace OpenDental{
 			if(StmtCur.DocNum!=0 && checkIsSent.Checked) {
 				Patient pat=Patients.GetPat(StmtCur.PatNum);
 				string patFolder=ImageStore.GetPatientFolder(pat, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
-				if(!FileAtoZ.Exists(ImageStore.GetFilePath(Documents.GetByNum(StmtCur.DocNum),patFolder))) { 
+				if(!Storage.FileExists(ImageStore.GetFilePath(Documents.GetByNum(StmtCur.DocNum),patFolder))) { 
 					MessageBox.Show("File not found: " + Documents.GetByNum(StmtCur.DocNum).FileName);
 					return;
 				}
@@ -1076,7 +1077,7 @@ namespace OpenDental{
 					SheetFiller.FillFields(sheet,dataSet,StmtCur);
 					SheetUtil.CalculateHeights(sheet,dataSet,StmtCur);
 				}
-				tempPath=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),StmtCur.PatNum.ToString()+".pdf");
+				tempPath=Storage.CombinePaths(Storage.GetTempPath(),StmtCur.PatNum.ToString()+".pdf");
 				SheetPrinting.CreatePdf(sheet,tempPath,StmtCur,dataSet,null);
 			}
 			else {
@@ -1226,7 +1227,7 @@ namespace OpenDental{
 			sheet.Parameters.Add(new SheetParameter(true,"Statement") { ParamValue=StmtCur });
 			SheetFiller.FillFields(sheet,dataSet,StmtCur);
 			SheetUtil.CalculateHeights(sheet,dataSet,StmtCur);
-			string tempPath=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),StmtCur.PatNum.ToString()+".pdf");
+			string tempPath=Storage.CombinePaths(Storage.GetTempPath(), StmtCur.PatNum.ToString()+".pdf");
 			SheetPrinting.CreatePdf(sheet,tempPath,StmtCur,dataSet,null);
 			long category=0;
 			for(int i=0;i<_listImageCatDefs.Count;i++) {
@@ -1379,12 +1380,12 @@ namespace OpenDental{
 			string patFolder=ImageStore.GetPatientFolder(patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 			Document doc=Documents.GetByNum(StmtCur.DocNum);
 			string fileName=ImageStore.GetFilePath(doc,patFolder);
-			if(!FileAtoZ.Exists(fileName)) {
+			if(!Storage.FileExists(fileName)) {
 				MessageBox.Show(Lan.G(this,"File not found:")+" "+doc.FileName);
 				return;
 			}
 			try {
-				FileAtoZ.StartProcess(fileName);
+				Storage.Run(fileName);
 			}
 			catch(Exception ex) {
 				FriendlyException.Show($"Unable to open the following file: {doc.FileName}",ex);

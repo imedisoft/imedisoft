@@ -1,30 +1,14 @@
-using CodeBase;
-using Microsoft.Win32;
 using OpenDental.UI;
 using OpenDentBusiness;
-using OpenDentBusiness.Mobile;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Net;
-using System.ServiceProcess;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
-using System.Globalization;
-using System.Data;
-using System.Linq;
-using System.IO;
-using WebServiceSerializer;
-using OpenDentBusiness.WebServiceMainHQ;
-using OpenDentBusiness.WebTypes.WebSched.TimeSlot;
 
-namespace OpenDental {
+namespace OpenDental
+{
 
-	public partial class FormEServicesEConnector:ODForm {
+    public partial class FormEServicesEConnector:ODForm {
 		///<summary>The background color used when the OpenDentalCustListener service is down.  Using Red was deemed too harsh.
 		///This variable should be treated as a constant which is why it is in all caps.  The type 'System.Drawing.Color' cannot be declared const.</summary>
 		private Color COLOR_ESERVICE_CRITICAL_BACKGROUND=Color.OrangeRed;
@@ -88,7 +72,7 @@ namespace OpenDental {
 		}
 
 		private void butInstallEConnector_Click(object sender,EventArgs e) {
-			DialogResult result;
+			//DialogResult result;
 			//Check to see if the update server preference is set.
 			//If set, make sure that this is set to the computer currently logged on.
 			//string updateServerName=PrefC.GetString(PrefName.WebServiceServerName);

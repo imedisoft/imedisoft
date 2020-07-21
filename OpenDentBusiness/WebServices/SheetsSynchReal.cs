@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenDentBusiness {
-	public class SheetsSynchReal : OpenDentBusiness.SheetsSynch.SheetsSynch, ISheetsSynch {
-		
+namespace OpenDentBusiness
+{
+	public class SheetsSynchReal : SheetsSynch.SheetsSynch, ISheetsSynch
+	{
 	}
 }

@@ -16,7 +16,6 @@ namespace OpenDental {
 
 		public FormAvaTax() {
 			InitializeComponent();
-			Lan.F(this);
 		}
 
 		private void FormAvaTax_Load(object sender,EventArgs e) {
@@ -25,13 +24,17 @@ namespace OpenDental {
 		}
 
 		///<summary>Fill both listboxes with the states that are taxed and non-taxed based on the current bridge settings.</summary>
-		private void FillListStates() {
-			foreach(USlocale locale in USlocales.ListAll) {
-				ODBoxItem<string> boxItem=new ODBoxItem<string>(locale.Name,locale.PostalAbbr);
-				if(AvaTax.ListTaxableStates.Contains(locale.PostalAbbr)) {
+		private void FillListStates()
+		{
+			foreach (var locale in USlocales.ListAll)
+			{
+				ODBoxItem<string> boxItem = new ODBoxItem<string>(locale.State, locale.Abbr);
+				if (AvaTax.ListTaxableStates.Contains(locale.Abbr))
+				{
 					listBoxTaxedStates.Items.Add(boxItem);
 				}
-				else {
+				else
+				{
 					listBoxNonTaxedStates.Items.Add(boxItem);
 				}
 			}

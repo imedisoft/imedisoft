@@ -1,6 +1,7 @@
 ﻿using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -214,7 +215,7 @@ namespace OpenDental
 							versionID=input.textResult.Text;
 						}
 						//Add a new thread. We will run these all in parallel once we have them all queued.
-						UpdateCodeSystemThread.Add(ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),meduFileName),
+						UpdateCodeSystemThread.Add(Storage.CombinePaths(Storage.GetTempPath(),meduFileName),
 							_listCodeSystems[gridMain.SelectedIndices[i]],new UpdateCodeSystemThread.UpdateCodeSystemArgs(UpdateCodeSystemThread_UpdateSafe),
 							versionID,!checkKeepDescriptions.Checked);
 						//We got this far so the local file was retreived successfully. No initial status to report.
@@ -839,7 +840,7 @@ If the master term dictionary or software program containing the UCUM table, UCU
 			///<summary>Returns temp file name used to download file.  Can throw exception.</summary>
 			private string DownloadFileHelper(string codeSystemURL)
 			{
-				string zipFileDestination = PrefC.GetRandomTempFile(".tmp");
+				string zipFileDestination = Storage.GetTempFileName(".tmp");
 
 				//Cleanup existing.
 				File.Delete(zipFileDestination);

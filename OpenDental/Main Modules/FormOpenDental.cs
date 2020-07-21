@@ -12,17 +12,13 @@ for more details, available at http://www.opensource.org/licenses/gpl-license.ph
 Any changes to this program must follow the guidelines of the GPL license if a modified version is to be
 redistributed.
 ===============================================================================================================*/
-
-
-//#define ORA_DB
 using CodeBase;
-using DataConnectionBase;
 using Imedisoft.Data;
 using Imedisoft.Forms;
 using Microsoft.Win32;
-//using OpenDental.SmartCards;
 using OpenDental.UI;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,13 +37,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-#if EHRTEST
-using EHR;
-#endif
-
-//#if(ORA_DB)
-//using OD_CRYPTO;
-//#endif
 
 namespace OpenDental
 {
@@ -62,9 +51,6 @@ namespace OpenDental
 		private Bitmap bitmapIcon;
 		///<summary>A list of button definitions for this computer.  These button defs display in the lightSignalGrid1 control.</summary>
 		private SigButDef[] SigButDefList;
-
-		private string key;
-
 		private bool IsMouseDownOnSplitter;
 		private Point PointSplitterOriginalLocation;
 		private Point PointOriginalMouse;
@@ -393,18 +379,6 @@ namespace OpenDental
 						useDynamicMode = CommandLineArgs[i].ToLower().Contains("true");
 					}
 				}
-			}
-			YN noShow = YN.Unknown;
-			if (webServiceUri != "")
-			{//a web service was specified
-				if (odUser != "" && odPassword != "")
-				{//and both a username and password were specified
-					noShow = YN.Yes;
-				}
-			}
-			else if (databaseName != "")
-			{
-				noShow = YN.Yes;
 			}
 
 			FormSplash formSplash = new FormSplash();
@@ -848,14 +822,6 @@ namespace OpenDental
 				return false;
 			}
 
-			//This must be done at startup in case the user does not perform any action to save something to temp file.
-			//This will cause slowdown, but only for the first week.
-			if (DateTime.Today < PrefC.GetDate(PrefName.TempFolderDateFirstCleaned).AddDays(7))
-			{
-				PrefC.GetTempFolderPath();//We don't care about the return value.  Just trying to trigger the one-time cleanup and create the temp/opendental directory.
-			}
-
-			Lans.RefreshCache();//automatically skips if current culture is en-US
 			LanguageForeigns.RefreshCache();//automatically skips if current culture is en-US
 											//menuItemMergeDatabases.Visible=PrefC.GetBool(PrefName.RandomPrimaryKeys");
 			return true;
@@ -868,7 +834,7 @@ namespace OpenDental
 			{
 				return;//Just in case.
 			}
-			Cache.Refresh(true, arrayITypes);
+			Cache.Refresh(arrayITypes);
 			RefreshLocalDataPostCleanup(arrayITypes);
 		}
 
@@ -7982,7 +7948,10 @@ namespace OpenDental
 			List<string> listDirectories;
 			try
 			{
-				tempPath = PrefC.GetTempFolderPath();
+
+				// TODO: Cleanup temp files...
+
+				tempPath = Storage.GetTempPath();
 				arrayFileNames = Directory.GetFiles(tempPath, "*.*", SearchOption.AllDirectories);//All files in the current directory plus all files in all subdirectories.
 				listDirectories = new List<string>(Directory.GetDirectories(tempPath, "*", SearchOption.AllDirectories));//All subdirectories.
 			}

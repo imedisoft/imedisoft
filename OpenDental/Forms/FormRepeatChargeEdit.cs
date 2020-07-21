@@ -66,11 +66,12 @@ namespace OpenDental{
 		private Label label2;
 
 		///<summary>The eService that this procedure is associated to if it associated to one.</summary>
-		private eServiceCode _eService;
+		//private eServiceCode _eService;
 
 		private bool _isForZipwhip {
 			get {
-				return _eService.In(eServiceCode.IntegratedTexting,eServiceCode.ConfirmationRequest);
+				return false;
+				//return _eService.In(eServiceCode.IntegratedTexting,eServiceCode.ConfirmationRequest);
 			}
 		}
 

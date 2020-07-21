@@ -6,6 +6,7 @@ using System.Net;
 using System.Windows.Forms;
 using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 	/// <summary>
@@ -259,7 +260,7 @@ namespace OpenDental{
 			Cursor=Cursors.WaitCursor;
 			_codeList=new List<ProcedureCode>();
 			string url=@"http://www.opendental.com/feescanada/procedurecodes.txt";
-			string tempFile=PrefC.GetRandomTempFile(".tmp");
+			string tempFile=Storage.GetTempFileName(".tmp");
 			WebClient myWebClient=new WebClient();
 			try {
 				myWebClient.DownloadFile(url,tempFile);

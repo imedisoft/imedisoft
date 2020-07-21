@@ -12,11 +12,6 @@ namespace OpenDentBusiness.Eclaims {
 		private static string emdeonITSUrl="https://its.changehealthcare.com/ITS/ITSWS.asmx";//production url
 		public static string ErrorMessage="";
 
-		///<summary></summary>
-		public EmdeonMedical()
-		{			
-		}
-
 		///<summary>Returns true if the communications were successful, and false if they failed. If they failed, a rollback will happen automatically by deleting the previously created X12 file. The batchnum is supplied for the possible rollback.  Also used for mail retrieval.</summary>
 		public static bool Launch(Clearinghouse clearinghouseClin,int batchNum,EnumClaimMedType medType){ //called from Eclaims.cs. Clinic-level clearinghouse passed in.
 			string batchFile="";

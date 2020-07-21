@@ -11,6 +11,7 @@ using OpenDentBusiness;
 using System.Linq;
 using OpenDental.UI;
 using Health.Direct.Common.Mime;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public partial class EmailPreviewControl:UserControl {
@@ -418,9 +419,9 @@ namespace OpenDental {
 			for(int i=0;i<_emailMessage.Attachments.Count;i++) {
 				if(_emailMessage.Attachments[i].DisplayedFileName.ToLower()=="smime.p7s") {
 					if(!_isComposing) {
-						string smimeP7sFilePath=FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),_emailMessage.Attachments[i].ActualFileName);
-						string localFile=PrefC.GetRandomTempFile(".p7s");
-						FileAtoZ.Copy(smimeP7sFilePath,localFile,true);
+						string smimeP7sFilePath=Storage.CombinePaths(EmailAttaches.GetAttachPath(),_emailMessage.Attachments[i].ActualFileName);
+						string localFile=Storage.GetTempFileName(".p7s");
+						Storage.Copy(smimeP7sFilePath,localFile,true);
 						SetSig(EmailMessages.GetEmailSignatureFromSmimeP7sFile(localFile));
 					}
 					//Do not display email signatures in the attachment list, because "smime.p7s" has no meaning to a user
@@ -489,10 +490,10 @@ namespace OpenDental {
 
 		private void OpenFile() {
 			EmailAttach emailAttach=_listEmailAttachDisplayed[gridAttachments.SelectedIndices[0]];
-			string strFilePathAttach=FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),emailAttach.ActualFileName);
+			string strFilePathAttach= Storage.CombinePaths(EmailAttaches.GetAttachPath(),emailAttach.ActualFileName);
 			try {
 				if(EhrCCD.IsCcdEmailAttachment(emailAttach)) {
-					string strTextXml=FileAtoZ.ReadAllText(strFilePathAttach);
+					string strTextXml=Storage.ReadAllText(strFilePathAttach);
 					if(EhrCCD.IsCCD(strTextXml)) {
 						Patient patEmail=null;//Will be null for most email messages.
 						if(_emailMessage.SentOrReceived==EmailSentOrReceived.ReadDirect || _emailMessage.SentOrReceived==EmailSentOrReceived.ReceivedDirect) {
@@ -502,7 +503,7 @@ namespace OpenDental {
 						//Try to find a corresponding stylesheet. This will only be used in the event that the default stylesheet cannot be loaded from the EHR dll.
 						for(int i=0;i<_listEmailAttachDisplayed.Count;i++) {
 							if(Path.GetExtension(_listEmailAttachDisplayed[i].ActualFileName).ToLower()==".xsl") {
-								strAlterateFilPathXslCCD=FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),_listEmailAttachDisplayed[i].ActualFileName);
+								strAlterateFilPathXslCCD=Storage.CombinePaths(EmailAttaches.GetAttachPath(),_listEmailAttachDisplayed[i].ActualFileName);
 								break;
 							}
 						}
@@ -512,12 +513,12 @@ namespace OpenDental {
 				}
 				else if(IsORU_R01message(strFilePathAttach)) {
 						FormEhrLabOrderImport FormELOI =new FormEhrLabOrderImport();
-						FormELOI.Hl7LabMessage=FileAtoZ.ReadAllText(strFilePathAttach);
+						FormELOI.Hl7LabMessage=Storage.ReadAllText(strFilePathAttach);
 						FormELOI.ShowDialog();
 						return;
 					
 				}
-				FileAtoZ.OpenFile(FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),emailAttach.ActualFileName),emailAttach.DisplayedFileName);
+				Storage.Run(Storage.CombinePaths(EmailAttaches.GetAttachPath(),emailAttach.ActualFileName),emailAttach.DisplayedFileName);
 			}
 			catch(Exception ex) {
 				MessageBox.Show(ex.Message);
@@ -539,7 +540,7 @@ namespace OpenDental {
 				return false;
 			}
 			try {
-				string[] ArrayMSHFields=FileAtoZ.ReadAllText(strFilePathAttach).Split(new string[] { "\r\n" },
+				string[] ArrayMSHFields=Storage.ReadAllText(strFilePathAttach).Split(new string[] { "\r\n" },
 					StringSplitOptions.RemoveEmptyEntries)[0].Split('|');
 				if(ArrayMSHFields[8]!="ORU^R01^ORU_R01") {
 					return false;
@@ -651,7 +652,7 @@ namespace OpenDental {
 		private void butShowImages_Click(object sender,EventArgs e) {
 			try {
 				//We need a folder in order to place the images beside the html file in order for the relative image paths to work correctly.
-				string htmlFolderPath=ODFileUtils.CreateRandomFolder(PrefC.GetTempFolderPath());//Throws exceptions.
+				string htmlFolderPath=ODFileUtils.CreateRandomFolder(Storage.GetTempPath());//Throws exceptions.
 				string filePathHtml=ODFileUtils.CreateRandomFile(htmlFolderPath,".html");
 				string html=webBrowser.DocumentText;
 				List<MimeEntity> listMimeEntries=new List<MimeEntity>();

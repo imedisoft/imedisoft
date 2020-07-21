@@ -26,6 +26,7 @@ using OpenDental.Bridges;
 using System.Drawing.Imaging;
 using System.Threading;
 using SharpDX;
+using OpenDentBusiness.IO;
 #if EHRTEST
 using EHR;
 #endif
@@ -957,7 +958,7 @@ namespace OpenDental {
 			Document docCur=_arrayDocuments[(int)_arrayListVisImages[listViewImages.SelectedIndices[0]]];
 			if(!ImageHelper.HasImageExtension(docCur.FileName)) {
 				try {
-					FileAtoZ.StartProcess(ODFileUtils.CombinePaths(_patFolder,docCur.FileName));
+					Storage.Run(Storage.CombinePaths(_patFolder,docCur.FileName));
 				}
 				catch(Exception ex) {
 					MessageBox.Show(ex.Message);
@@ -7163,7 +7164,7 @@ namespace OpenDental {
 				//so that we can discontinue any medications in the database which were active that are now discontinued in eRx.
 			}
 #if DEBUG//For capturing the xmlReponse with the newlines properly showing.
-			string tempFile=PrefC.GetRandomTempFile(".txt");
+			string tempFile= Storage.GetTempFileName(".txt");
 			File.WriteAllText(tempFile,xmlResponse);
 #endif
 			XmlDocument xml=new XmlDocument();

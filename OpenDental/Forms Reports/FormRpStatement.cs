@@ -22,6 +22,7 @@ using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Tables;
 using System.Linq;
 using CodeBase;
+using OpenDentBusiness.IO;
 
 namespace OpenDental
 {
@@ -199,7 +200,7 @@ namespace OpenDental
 			sheet.Parameters.Add(new SheetParameter(true, "Statement") { ParamValue = StmtCur });
 			SheetFiller.FillFields(sheet, dataSet, StmtCur, pat: pat, fam: fam);
 			SheetUtil.CalculateHeights(sheet, dataSet, StmtCur, pat: pat, patGuar: fam.Guarantor);
-			string tempPath = CodeBase.ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(), StmtCur.PatNum.ToString() + ".pdf");
+			string tempPath = Storage.CombinePaths(Storage.GetTempPath(), StmtCur.PatNum.ToString() + ".pdf");
 			SheetPrinting.CreatePdf(sheet, tempPath, StmtCur, dataSet, null, pat: pat, patGuar: fam.Guarantor);
 			List<Def> listImageCatDefs = Defs.GetDefsForCategory(DefCat.ImageCats, true);
 			long category = 0;

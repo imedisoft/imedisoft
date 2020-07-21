@@ -86,7 +86,6 @@ namespace OpenDentBusiness.Crud{
 		}
 
         ///<summary>Inserts one WikiListHist into the database.  Provides option to use the existing priKey.</summary>
-        [Obsolete]
         public static long Insert(WikiListHist wikiListHist,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
 				wikiListHist.WikiListHistNum=ReplicationServers.GetKey("wikilisthist","WikiListHistNum");

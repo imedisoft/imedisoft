@@ -3,6 +3,7 @@ using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Tables;
 using OpenDental.UI;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
@@ -164,7 +165,7 @@ namespace OpenDental
                 Height = container.Height
             };
 
-            string tempImageFileName = PrefC.GetRandomTempFile(".tmp");
+            string tempImageFileName = Storage.GetTempFileName(".tmp");
 			bitmap.SetResolution(100, 100);
 			bitmap.Save(tempImageFileName);
 			textFrame.AddImage(tempImageFileName);

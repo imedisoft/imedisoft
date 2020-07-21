@@ -101,44 +101,6 @@ namespace OpenDental
 				=> control;
 		}
 
-		[Obsolete("Registration keys are not needed.")]
-		public class RegKeySetup : SetupWizClass
-		{
-			private readonly SetupWizControl control = new UserControlSetupWizRegKey();
-
-			public override ODSetupCategory Category
-				=> ODSetupCategory.PreSetup;
-
-			public override string Description
-			{
-				get
-				{
-					string description =
-						"Some items need to be set up before the program can be used effectively.\r\n" +
-						"This wizard's purpose is to help you quickly set those items up so that you can get started using the program.";
-
-					if (Status != ODSetupStatus.Complete)
-					{
-						description += "\r\n\r\nIt looks like you have yet to enter your Registration Key.";
-					}
-
-					description += "\r\nEntering your Registration Key is a necessary first step in order for the program to function.";
-					return description;
-				}
-			}
-
-			public override ODSetupStatus Status
-				=> string.IsNullOrEmpty(PrefC.GetString(PrefName.RegistrationKey)) ?
-					ODSetupStatus.NotStarted :
-					ODSetupStatus.Complete;
-
-			public override string Name
-				=> "Registration Key";
-
-			public override SetupWizControl SetupControl
-				=> control;
-		}
-
 		public class FeatureSetup : SetupWizClass
 		{
 			private readonly SetupWizControl control = new UserControlSetupWizFeatures();

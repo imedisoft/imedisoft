@@ -1,31 +1,14 @@
-using CodeBase;
-using Microsoft.Win32;
-using OpenDental.UI;
 using OpenDentBusiness;
-using OpenDentBusiness.Mobile;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Net;
-using System.ServiceProcess;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
-using System.Globalization;
-using System.Data;
-using System.Linq;
-using System.IO;
-using WebServiceSerializer;
-using OpenDentBusiness.WebServiceMainHQ;
-using OpenDentBusiness.WebTypes.WebSched.TimeSlot;
-using Imedisoft;
 
-namespace OpenDental {
+namespace OpenDental
+{
 
-	public partial class FormEServicesMobileSynch:ODForm {
+    public partial class FormEServicesMobileSynch:ODForm {
 		private static Imedisoft.MobileWeb.Mobile mb=new Imedisoft.MobileWeb.Mobile();
 		//private static int _batchSize=100;
 		///<summary>This variable prevents the synching methods from being called when a previous synch is in progress.</summary>
@@ -144,18 +127,6 @@ namespace OpenDental {
 
 		///<summary>Uploads Preferences to the Patient Portal /Mobile Web.</summary>
 		public static void UploadPreference(PrefName prefname) {
-			if(PrefC.GetString(PrefName.RegistrationKey)=="") {
-				return;//Prevents a bug when using the trial version with no registration key.  Practice edit, OK, was giving error.
-			}
-			try {
-				if(TestWebServiceExists()) {
-					Prefm prefm = Prefms.GetPrefm(prefname.ToString());
-					//mb.SetPreference(PrefC.GetString(PrefName.RegistrationKey),prefm);
-				}
-			}
-			catch(Exception ex) {
-				MessageBox.Show(ex.Message);//may not show if called from a thread but that does not matter - the failing of this method should not stop the  the code from proceeding.
-			}
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {
@@ -256,13 +227,13 @@ namespace OpenDental {
 					synchDelPat=false;// synching delPatNumList is timeconsuming (15 seconds) for a dental office with around 5000 patients and it's mostly the same records that have to be deleted every time a synch happens. So it's done only once hourly.
 				}
 				//MobileWeb
-				List<long> patNumList=Patientms.GetChangedSincePatNums(changedPat);
-				List<long> aptNumList=Appointmentms.GetChangedSinceAptNums(changedSince,PrefC.GetDate(PrefName.MobileExcludeApptsBeforeDate));
-				List<long> rxNumList=RxPatms.GetChangedSinceRxNums(changedSince);
-				List<long> provNumList=Providerms.GetChangedSinceProvNums(changedProv);
-				List<long> pharNumList=Pharmacyms.GetChangedSincePharmacyNums(changedSince);
-				List<long> allergyDefNumList=AllergyDefms.GetChangedSinceAllergyDefNums(changedSince);
-				List<long> allergyNumList=Allergyms.GetChangedSinceAllergyNums(changedSince);
+				//List<long> patNumList=Patientms.GetChangedSincePatNums(changedPat);
+				//List<long> aptNumList=Appointmentms.GetChangedSinceAptNums(changedSince,PrefC.GetDate(PrefName.MobileExcludeApptsBeforeDate));
+				//List<long> rxNumList=RxPatms.GetChangedSinceRxNums(changedSince);
+				//List<long> provNumList=Providerms.GetChangedSinceProvNums(changedProv);
+				//List<long> pharNumList=Pharmacyms.GetChangedSincePharmacyNums(changedSince);
+				//List<long> allergyDefNumList=AllergyDefms.GetChangedSinceAllergyDefNums(changedSince);
+				//List<long> allergyNumList=Allergyms.GetChangedSinceAllergyNums(changedSince);
 				//exclusively Patient Portal
 				/*
 				List<long> eligibleForUploadPatNumList=Patientms.GetPatNumsEligibleForSynch();
@@ -276,16 +247,16 @@ namespace OpenDental {
 				List<long> statementNumList=Statementms.GetChangedSinceStatementNums(changedStatement,eligibleForUploadPatNumList,statementLimitPerPatient);
 				List<long> documentNumList=Documentms.GetChangedSinceDocumentNums(changedDocument,statementNumList);
 				List<long> recallNumList=Recallms.GetChangedSinceRecallNums(changedRecall);*/
-				List<long> delPatNumList=Patientms.GetPatNumsForDeletion();
+				//List<long> delPatNumList=Patientms.GetPatNumsForDeletion();
 				//List<DeletedObject> dO=DeletedObjects.GetDeletedSince(changedDeleted);dennis: delete this line later
 				List<long> deletedObjectNumList=DeletedObjects.GetChangedSinceDeletedObjectNums(changedDeleted);//to delete appointments from mobile
-				totalCount=patNumList.Count+aptNumList.Count+rxNumList.Count+provNumList.Count+pharNumList.Count
+				totalCount=0//patNumList.Count+aptNumList.Count+rxNumList.Count+provNumList.Count+pharNumList.Count
 					//+labPanelNumList.Count+labResultNumList.Count+medicationNumList.Count+medicationPatNumList.Count
 					//+allergyDefNumList.Count//+allergyNumList.Count+diseaseDefNumList.Count+diseaseNumList.Count+icd9NumList.Count
 					//+statementNumList.Count+documentNumList.Count+recallNumList.Count
 					+deletedObjectNumList.Count;
 				if(synchDelPat) {
-					totalCount+=delPatNumList.Count;
+					//totalCount+=delPatNumList.Count;
 				}
 				double currentVal=0;
 				if(Application.OpenForms["FormProgress"]!=null) {// without this line the following error is thrown: "Invoke or BeginInvoke cannot be called on a control until the window handle has been created." or a null pointer exception is thrown when an automatic synch is done by the system.
@@ -293,11 +264,11 @@ namespace OpenDental {
 						new object[] { currentVal,"?currentVal of ?maxVal records uploaded",totalCount,"" });
 				}
 				_isSynching=true;
-				SynchGeneric(patNumList,SynchEntity.patient,totalCount,ref currentVal);
-				SynchGeneric(aptNumList,SynchEntity.appointment,totalCount,ref currentVal);
-				SynchGeneric(rxNumList,SynchEntity.prescription,totalCount,ref currentVal);
-				SynchGeneric(provNumList,SynchEntity.provider,totalCount,ref currentVal);
-				SynchGeneric(pharNumList,SynchEntity.pharmacy,totalCount,ref currentVal);
+				//SynchGeneric(patNumList,SynchEntity.patient,totalCount,ref currentVal);
+				//SynchGeneric(aptNumList,SynchEntity.appointment,totalCount,ref currentVal);
+				//SynchGeneric(rxNumList,SynchEntity.prescription,totalCount,ref currentVal);
+				//SynchGeneric(provNumList,SynchEntity.provider,totalCount,ref currentVal);
+				//SynchGeneric(pharNumList,SynchEntity.pharmacy,totalCount,ref currentVal);
 				//pat portal
 				/*
 				SynchGeneric(labPanelNumList,SynchEntity.labpanel,totalCount,ref currentVal);
@@ -313,7 +284,7 @@ namespace OpenDental {
 				SynchGeneric(documentNumList,SynchEntity.document,totalCount,ref currentVal);
 				SynchGeneric(recallNumList,SynchEntity.recall,totalCount,ref currentVal);*/
 				if(synchDelPat) {
-					SynchGeneric(delPatNumList,SynchEntity.patientdel,totalCount,ref currentVal);
+					//SynchGeneric(delPatNumList,SynchEntity.patientdel,totalCount,ref currentVal);
 				}
 				//DeleteObjects(dO,totalCount,ref currentVal);// this has to be done at this end because objects may have been created and deleted between synchs. If this function is place above then the such a deleted object will not be deleted from the server.
 				SynchGeneric(deletedObjectNumList,SynchEntity.deletedobject,totalCount,ref currentVal);// this has to be done at this end because objects may have been created and deleted between synchs. If this function is place above then the such a deleted object will not be deleted from the server.

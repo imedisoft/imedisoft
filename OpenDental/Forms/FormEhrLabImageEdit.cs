@@ -8,6 +8,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
 using System.IO;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public partial class FormEhrLabImageEdit:ODForm {
@@ -87,11 +88,11 @@ namespace OpenDental {
 		private void PaintPreviewPicture() {
 			try {
 				Document doc=GetSelectedDocument();
-				string imagePath=FileAtoZ.CombinePaths(_patFolder,doc.FileName);
-				if(!FileAtoZ.Exists(imagePath)) {
+				string imagePath= Storage.CombinePaths(_patFolder,doc.FileName);
+				if(!Storage.FileExists(imagePath)) {
 					throw new Exception("File not found");
 				}
-				Image tmpImg=FileAtoZ.GetImage(imagePath);
+				Image tmpImg= Storage.GetImage(imagePath);
 				float imgScale=1;//will be between 0 and 1
 				if(tmpImg.PhysicalDimension.Height>picturePreview.Height || tmpImg.PhysicalDimension.Width>picturePreview.Width) {//image is too large
 					//Image is larger than PictureBox, resize to fit.

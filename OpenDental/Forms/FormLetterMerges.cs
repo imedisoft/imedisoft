@@ -14,6 +14,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 	/// <summary>
@@ -627,10 +628,10 @@ namespace OpenDental{
 					Document doc=SaveToImageFolder(tempFilePath,letterCur);
 					string patFolder=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 					string fileName=ImageStore.GetFilePath(doc,patFolder);
-					if(!FileAtoZ.Exists(fileName)) {
+					if(!Storage.FileExists(fileName)) {
 						throw new ApplicationException(Lans.g("LetterMerge","Error opening document"+" "+doc.FileName));
 					}
-					FileAtoZ.StartProcess(fileName);
+					Storage.Run(fileName);
 					WrdApp.ActiveDocument.Close();//Necessary since we created an extra document
 					try {
 						File.Delete(tempFilePath);//Clean up the temp file
@@ -706,7 +707,7 @@ namespace OpenDental{
 			docSave.Description=letterCur.Description+docSave.DocNum;//no extension.
 			docSave.FileName=ODFileUtils.CleanFileName(docSave.Description)+GetFileExtensionForWordDoc(fileSourcePath);
 			string fileDestPath=ImageStore.GetFilePath(docSave,ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()));
-			FileAtoZ.Copy(fileSourcePath,fileDestPath);
+			Storage.Copy(fileSourcePath,fileDestPath);
 			Documents.Update(docSave);
 			return docSave;
 		}

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	/// <summary>
@@ -369,7 +370,7 @@ namespace OpenDental {
 
 		private void gridAttachments_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			EmailAttach attach=_listEmailAttachDisplayed[gridAttachments.SelectedIndices[0]];
-			FileAtoZ.OpenFile(FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),attach.ActualFileName),attach.DisplayedFileName);
+			Storage.Run(Storage.CombinePaths(EmailAttaches.GetAttachPath(),attach.ActualFileName),attach.DisplayedFileName);
 		}
 
 		private void butSubjectFields_Click(object sender,EventArgs e) {
@@ -415,7 +416,7 @@ namespace OpenDental {
 
 		private void menuItemOpen_Click(object sender,EventArgs e) {
 			EmailAttach attach=_listEmailAttachDisplayed[gridAttachments.SelectedIndices[0]];
-			FileAtoZ.OpenFile(FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),attach.ActualFileName),attach.DisplayedFileName);
+			Storage.Run(Storage.CombinePaths(EmailAttaches.GetAttachPath(),attach.ActualFileName),attach.DisplayedFileName);
 		}
 
 		private void menuItemRename_Click(object sender,EventArgs e) {

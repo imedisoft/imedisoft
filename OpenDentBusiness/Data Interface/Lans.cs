@@ -66,19 +66,6 @@ namespace OpenDentBusiness
 			CultureInfo.CurrentCulture.Name == "en-US" ? null : GetTableFromCache(true);
 
 		/// <summary>
-		/// Fills the local cache with the passed in DataTable.
-		/// </summary>
-		public static void FillCacheFromTable(DataTable table)
-		{
-			if (CultureInfo.CurrentCulture.Name == "en-US")
-			{
-				return;
-			}
-
-			cache.FillCacheFromTable(table);
-		}
-
-		/// <summary>
 		/// Always refreshes the ClientWeb's cache.
 		/// </summary>
 		public static DataTable GetTableFromCache(bool doRefreshCache) 
@@ -149,7 +136,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static void DeleteItems(string classType, List<string> englishList)
 		{
-			string command = "DELETE FROM language WHERE ClassType='" + DataConnectionBase.SOut.String(classType) + "' AND (";
+			string command = "DELETE FROM language WHERE ClassType='" + SOut.String(classType) + "' AND (";
 
 			for (int i = 0; i < englishList.Count; i++)
 			{

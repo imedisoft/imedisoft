@@ -3,12 +3,14 @@ using OpenDentBusiness;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness.WebTypes.WebForms {
+namespace OpenDentBusiness.WebTypes.WebForms
+{
 	[Serializable]
-	[CrudTable(IsMissingInGeneral=true,CrudLocationOverride=@"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud",NamespaceOverride="OpenDentBusiness.WebTypes.WebForms.Crud",CrudExcludePrefC=true)]
-	public class WebForms_Sheet:TableBase {
+	[CrudTable(IsMissingInGeneral = true, CrudLocationOverride = @"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud", NamespaceOverride = "OpenDentBusiness.WebTypes.WebForms.Crud", CrudExcludePrefC = true)]
+	public class WebForms_Sheet : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long SheetID;
 		///<summary>FK to customers.patient.PatNum.</summary>
 		public long DentalOfficeID;
@@ -21,7 +23,7 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 		///This means that there needs to be a backwards compatible fix put in place when this enum type gets corrected.</summary>
 		public SheetFieldType SheetType;
 		///<summary>The date and time of the sheet as it will be displayed in the commlog.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.DateT)]
+		[CrudColumn(SpecialType = CrudSpecialColType.DateT)]
 		public DateTime DateTimeSheet;
 		///<summary>The default fontSize for the sheet.  The actual font must still be saved with each sheetField.</summary>
 		public float FontSize;
@@ -41,34 +43,12 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 		public long SheetDefNum;
 
 		///<Summary></Summary>
-		[CrudColumn(IsNotDbColumn=true)]
+		[CrudColumn(IsNotDbColumn = true)]
 		[XmlIgnore]
 		public List<WebForms_SheetField> SheetFields;
 
-		public WebForms_Sheet(){
-
+		public WebForms_Sheet()
+		{
 		}
-		
-    public WebForms_Sheet Copy(){
-			return (WebForms_Sheet)this.MemberwiseClone();
-		}
-
-		///<summary>Used only for serialization purposes</summary>
-		[XmlElement("SheetFields",typeof(WebForms_SheetField[]))]
-		public WebForms_SheetField[] SheetFieldsXml {
-			get {
-				if(SheetFields==null) {
-					return new WebForms_SheetField[0];
-				}
-				return SheetFields.ToArray();
-			}
-			set {
-				SheetFields=new List<WebForms_SheetField>();
-				for(int i=0;i<value.Length;i++) {
-					SheetFields.Add(value[i]);
-				}
-			}
-		}
-
 	}
 }

@@ -11,6 +11,7 @@ using CodeBase;
 using CDT;
 using System.Collections.Generic;
 using System.Linq;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 	/// <summary>
@@ -1374,7 +1375,7 @@ namespace OpenDental{
 					if(!_claimFormCur.PrintImages){
 						continue;
 					}
-					string fileName=FileAtoZ.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),_claimFormCur.Items[i].ImageFileName);
+					string fileName=Storage.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),_claimFormCur.Items[i].ImageFileName);
 					Image thisImage=null;
 					switch(_claimFormCur.Items[i].ImageFileName) {
 						case "ADA2006.gif":
@@ -1396,11 +1397,11 @@ namespace OpenDental{
 							thisImage= Imedisoft.Properties.Resources._1500_02_12;
 							break;
 						default:
-							if(!FileAtoZ.Exists(fileName)) {
+							if(!Storage.FileExists(fileName)) {
 								MessageBox.Show("File not found.");
 								continue;
 							}
-							thisImage=FileAtoZ.GetImage(fileName);
+							thisImage= Storage.GetImage(fileName);
 							if(thisImage==null) {
 								continue;
 							}

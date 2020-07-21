@@ -7,6 +7,7 @@ using OpenDentBusiness;
 using CodeBase;
 using System.Xml;
 using OpenDental.UI;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public partial class FormEhrSummaryOfCare:ODForm {
@@ -106,60 +107,75 @@ namespace OpenDental {
 		///strAlterateFilPathXslCCD is a full file path to an alternative style sheet. 
 		///This file will only be used in the case where the EHR dll version of the stylesheet couldn not be loaded. 
 		///If neither method works for attaining the stylesheet then an excption will be thrown.</summary>
-		public static bool DisplayCCD(string strXmlCCD,Patient patCur,string strAlterateFilPathXslCCD) {
+		public static bool DisplayCCD(string strXmlCCD, Patient patCur, string strAlterateFilPathXslCCD)
+		{
 			//string xmltext=GetSampleMissingStylesheet();
-			XmlDocument doc=new XmlDocument();
-			try {
+			XmlDocument doc = new XmlDocument();
+			try
+			{
 				doc.LoadXml(strXmlCCD);
 			}
-			catch {
+			catch
+			{
 				throw new XmlException("Invalid XML");
 			}
-			string xmlFileName="";
-			string xslFileName="";
-			string xslContents="";
-			if(doc.DocumentElement.Name.ToLower()=="clinicaldocument") {//CCD, CCDA, and C32.
-				xmlFileName="ccd.xml";
-				xslFileName="ccd.xsl";
-				xslContents=FormEHR.GetEhrResource("CCD");
-				if(xslContents=="") { //XSL load from EHR dll failed so see if caller provided an alternative
-					if(strAlterateFilPathXslCCD!="") { //alternative XSL file was provided so use that for our stylesheet
-						xslContents=FileAtoZ.ReadAllText(strAlterateFilPathXslCCD);
+			string xmlFileName = "";
+			string xslFileName = "";
+			string xslContents = "";
+			if (doc.DocumentElement.Name.ToLower() == "clinicaldocument")
+			{//CCD, CCDA, and C32.
+				xmlFileName = "ccd.xml";
+				xslFileName = "ccd.xsl";
+				xslContents = FormEHR.GetEhrResource("CCD");
+				if (xslContents == "")
+				{ //XSL load from EHR dll failed so see if caller provided an alternative
+					if (strAlterateFilPathXslCCD != "")
+					{ //alternative XSL file was provided so use that for our stylesheet
+						xslContents = Storage.ReadAllText(strAlterateFilPathXslCCD);
 					}
 				}
-				if(xslContents=="") { //one last check to see if we succeeded in finding a stylesheet
+				if (xslContents == "")
+				{ //one last check to see if we succeeded in finding a stylesheet
 					throw new Exception("No stylesheet found");
 				}
 			}
-			else if(doc.DocumentElement.Name.ToLower()=="continuityofcarerecord" || doc.DocumentElement.Name.ToLower()=="ccr:continuityofcarerecord") {//CCR
-				xmlFileName="ccr.xml";
-				xslFileName="ccr.xsl";
-				xslContents=FormEHR.GetEhrResource("CCR");
+			else if (doc.DocumentElement.Name.ToLower() == "continuityofcarerecord" || doc.DocumentElement.Name.ToLower() == "ccr:continuityofcarerecord")
+			{//CCR
+				xmlFileName = "ccr.xml";
+				xslFileName = "ccr.xsl";
+				xslContents = FormEHR.GetEhrResource("CCR");
 			}
-			else {
+			else
+			{
 				MessageBox.Show("This is not a valid CCD, CCDA, CCR, or C32 message.  Only the raw text will be shown");
 				MessageBox.Show(strXmlCCD);
 				return false;
 			}
-			XmlNode node=doc.SelectSingleNode("/processing-instruction(\"xml-stylesheet\")");
-			if(node==null) {//document does not contain any stylesheet instruction, so add one
-				XmlProcessingInstruction pi=doc.CreateProcessingInstruction("xml-stylesheet","type=\"text/xsl\" href=\""+xslFileName+"\"");
-				doc.InsertAfter(pi,doc.ChildNodes[0]);
+			XmlNode node = doc.SelectSingleNode("/processing-instruction(\"xml-stylesheet\")");
+			if (node == null)
+			{//document does not contain any stylesheet instruction, so add one
+				XmlProcessingInstruction pi = doc.CreateProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + xslFileName + "\"");
+				doc.InsertAfter(pi, doc.ChildNodes[0]);
 			}
-			else {//alter the existing instruction
-				XmlProcessingInstruction pi=(XmlProcessingInstruction)node;
-				pi.Value="type=\"text/xsl\" href=\""+xslFileName+"\"";
+			else
+			{//alter the existing instruction
+				XmlProcessingInstruction pi = (XmlProcessingInstruction)node;
+				pi.Value = "type=\"text/xsl\" href=\"" + xslFileName + "\"";
 			}
-			File.WriteAllText(Path.Combine(PrefC.GetTempFolderPath(),xmlFileName),doc.InnerXml.ToString());
-			File.WriteAllText(Path.Combine(PrefC.GetTempFolderPath(),xslFileName),xslContents);
-			FormEhrSummaryCcdEdit formESCD=new FormEhrSummaryCcdEdit(ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),xmlFileName),patCur);
+
+			Storage.WriteAllText(Storage.CombinePaths(Storage.GetTempPath(), xmlFileName), doc.InnerXml.ToString());
+			Storage.WriteAllText(Storage.CombinePaths(Storage.GetTempPath(), xslFileName), xslContents);
+			FormEhrSummaryCcdEdit formESCD = new FormEhrSummaryCcdEdit(Storage.CombinePaths(Storage.GetTempPath(), xmlFileName), patCur);
 			formESCD.ShowDialog();
-			string[] arrayFileNames={"ccd.xml","ccd.xsl","ccr.xml","ccr.xsl"};
-			for(int i=0;i<arrayFileNames.Length;i++) {
-				try {
-					File.Delete(ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),arrayFileNames[i]));
+			string[] arrayFileNames = { "ccd.xml", "ccd.xsl", "ccr.xml", "ccr.xsl" };
+			for (int i = 0; i < arrayFileNames.Length; i++)
+			{
+				try
+				{
+					Storage.DeleteFile(Storage.CombinePaths(Storage.GetTempPath(), arrayFileNames[i]));
 				}
-				catch {
+				catch
+				{
 					//Do nothing because the file could have been in use or there were not sufficient permissions.
 					//This file will most likely get deleted next time a file is created.
 				}

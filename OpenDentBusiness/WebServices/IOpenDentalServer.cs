@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OpenDentBusiness {
-	public interface IOpenDentalServer {
+﻿namespace OpenDentBusiness
+{
+    public interface IOpenDentalServer
+	{
 		string ProcessRequest(string dtoString);
 	}
 }

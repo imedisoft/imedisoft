@@ -17,22 +17,6 @@ namespace OpenDentBusiness{
 		///There is a DBM that will correct invalid NewerDays in the database.</summary>
 		public const double NewerDaysMax=3000;
 
-		#region Get Methods
-		#endregion
-
-		#region Modification Methods
-		
-		#region Insert
-		#endregion
-
-		#region Update
-		#endregion
-
-		#region Delete
-		#endregion
-
-		#endregion
-
 		#region Misc Methods
 		///<summary>Returns the Date that the user is restricted to for the passed-in permission. 
 		///Returns MinVal if the user is not restricted or does not have the permission.</summary>
@@ -214,7 +198,7 @@ namespace OpenDentBusiness{
 					+"INNER JOIN userod ON userod.UserNum=usergroupattach.UserNum AND userod.IsHidden=0 "
 					+"WHERE grouppermission.PermType='"+POut.Long((int)permType)+"' "
 					+"AND grouppermission.UserGroupNum!="+POut.Long(groupNum)+") t";//This query is Oracle compatable
-				if(Database.ExecuteScalar(command)=="0") {//no other users outside of this group have SecurityAdmin
+				if(Database.ExecuteLong(command)==0) {//no other users outside of this group have SecurityAdmin
 					throw new Exception(Lans.g("FormSecurity","There must always be at least one user in a user group that has the Security Admin permission."));
 				}
 			}
@@ -250,12 +234,10 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets a list of GroupPermissions for the supplied UserGroupNum without using the local cache.  Useful for multithreaded connections.</summary>
 		public static List<GroupPermission> GetPermsNoCache(long userGroupNum) {
-			
-			List<GroupPermission> retVal=new List<GroupPermission>();
-			string command="SELECT * FROM grouppermission WHERE UserGroupNum="+POut.Long(userGroupNum);
+            string command="SELECT * FROM grouppermission WHERE UserGroupNum="+POut.Long(userGroupNum);
 			DataTable tableGroupPerms=Database.ExecuteDataTable(command);
-			retVal=Crud.GroupPermissionCrud.TableToList(tableGroupPerms);
-			return retVal;
+            List<GroupPermission> retVal = Crud.GroupPermissionCrud.TableToList(tableGroupPerms);
+            return retVal;
 		}
 
 		///<summary>Gets a list of GroupPermissions that are associated with reports.  Uses Reports (22) permission.</summary>

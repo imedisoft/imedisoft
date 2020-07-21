@@ -11,9 +11,6 @@ using WebServiceSerializer;
 namespace OpenDentBusiness.WebTypes.WebForms {
 	public class WebForms_Sheets {
 		
-		/// <summary></summary>
-		/// <param name="regKey"></param>
-		/// <returns></returns>
 		public static bool TryGetSheets(out List<WebForms_Sheet> listWebFormsSheets,string regKey=null) {
 			listWebFormsSheets=new List<WebForms_Sheet>();
 			if(string.IsNullOrEmpty(regKey)) {

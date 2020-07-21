@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using CodeBase;
 using OpenDentBusiness.FileIO;
+using OpenDentBusiness.IO;
 
 namespace OpenDentBusiness.HL7 {
 	///<summary>This is the engine that will parse our incoming HL7 messages for MedLab interfaces.</summary>
@@ -960,7 +961,7 @@ namespace OpenDentBusiness.HL7 {
 				}
 				else
 				{//Cloud, create random temp folder
-					embeddedFilePath = PrefC.GetTempFolderPath();
+					embeddedFilePath = Storage.GetTempPath();
 				}
 				embeddedFile = ODFileUtils.CreateRandomFile(embeddedFilePath, ".pdf");
 				byte[] byteArray = Convert.FromBase64String(sb.ToString());

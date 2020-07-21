@@ -14,6 +14,7 @@ using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDental.Thinfinity;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public delegate void SaveStatementToDocDelegate(Statement stmt,Sheet sheet,string pdfFileName="");
@@ -1118,7 +1119,7 @@ namespace OpenDental {
 			}
 			//Format Email
 			fileName=DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
-			filePathAndName=FileAtoZ.CombinePaths(attachPath,fileName);
+			filePathAndName=Storage.CombinePaths(attachPath,fileName);
 			string pdfFile=filePathAndName;
 			
 			if(!string.IsNullOrEmpty(_tempPdfFile) && File.Exists(_tempPdfFile)) {
@@ -1234,7 +1235,7 @@ namespace OpenDental {
 				filePathAndName=_tempPdfFile;
 			}
 			else {
-				filePathAndName=PrefC.GetRandomTempFile(".pdf");
+				filePathAndName=Storage.GetTempFileName(".pdf");
 				//Graphics g=this.CreateGraphics();
 				if(IsStatement) {
 					SheetPrinting.CreatePdf(SheetCur,filePathAndName,Stmt,_dataSet,MedLabCur);
@@ -1399,7 +1400,7 @@ namespace OpenDental {
 				catch {
 				}
 				//Get a temporary location for the file
-				_tempPdfFile=PrefC.GetRandomTempFile(".pdf");
+				_tempPdfFile=Storage.GetTempFileName(".pdf");
 				SheetPrinting.CreatePdf(SheetCur,_tempPdfFile,Stmt,MedLabCur);
 				//Import pdf, this will move the pdf into the correct location for the patient.
 				long defNum=Defs.GetByExactName(DefCat.ImageCats,"Letters");
@@ -1681,7 +1682,7 @@ namespace OpenDental {
 						return;
 					}
 				}
-				string filePathAndName=PrefC.GetRandomTempFile(".pdf");
+				string filePathAndName=Storage.GetTempFileName(".pdf");
 				SheetPrinting.CreatePdf(SheetCur,filePathAndName,null);
 				//create doc--------------------------------------------------------------------------------------
 				OpenDentBusiness.Document docc=null;
@@ -1714,7 +1715,7 @@ namespace OpenDental {
 				return true;
 			}
 			Patient patCur = Patients.GetPat(SheetCur.PatNum);
-			string tempFile = PrefC.GetRandomTempFile(".pdf");
+			string tempFile = Storage.GetTempFileName(".pdf");
 
 			SheetPrinting.CreatePdf(SheetCur, tempFile, null);
 

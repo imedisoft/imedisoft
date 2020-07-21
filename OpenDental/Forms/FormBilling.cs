@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading;
 using MySql.Data.MySqlClient;
 using OpenDental.Thinfinity;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -810,7 +811,7 @@ namespace OpenDental{
 			#region Printing Statements
 			//now print-------------------------------------------------------------------------------------
 			if(_hasToShowPdf) {
-				string tempFileOutputDocument = PrefC.GetRandomTempFile(".pdf");
+				string tempFileOutputDocument = Storage.GetTempFileName(".pdf");
 				outputDocument.Save(tempFileOutputDocument);
 
 					try {
@@ -1131,9 +1132,9 @@ namespace OpenDental{
 					attachPath=EmailAttaches.GetAttachPath();
 					rnd=new Random();
 					fileName=DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
-					filePathAndName=FileAtoZ.CombinePaths(attachPath,fileName);
+					filePathAndName=Storage.CombinePaths(attachPath,fileName);
 
-						FileAtoZ.Copy(savedPdfPath,filePathAndName/*,FileAtoZSourceDestination.LocalToAtoZ,uploadMessage:"Uploading statement..."*/);
+					Storage.Copy(savedPdfPath,filePathAndName/*,FileAtoZSourceDestination.LocalToAtoZ,uploadMessage:"Uploading statement..."*/);
 					
 					//Process.Start(filePathAndName);
 					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"40%",40,100,ProgBarStyle.Blocks,"3")));

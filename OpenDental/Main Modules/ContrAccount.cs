@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 
@@ -3611,7 +3612,7 @@ namespace OpenDental {
 			sheet.Parameters.Add(new SheetParameter(true,"Statement") { ParamValue=stmt });
 			SheetFiller.FillFields(sheet,dataSet,stmt);
 			SheetUtil.CalculateHeights(sheet,dataSet,stmt);
-			string tempPath=CodeBase.ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),stmt.PatNum.ToString()+".pdf");
+			string tempPath=CodeBase.ODFileUtils.CombinePaths(Storage.GetTempPath(),stmt.PatNum.ToString()+".pdf");
 			SheetPrinting.CreatePdf(sheet,tempPath,stmt,dataSet,null);
 			long category=0;
 			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
@@ -3652,8 +3653,8 @@ namespace OpenDental {
 				string attachPath=EmailAttaches.GetAttachPath();
 				Random rnd=new Random();
 				string fileName=DateTime.Now.ToString("yyyyMMdd")+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf";
-				string filePathAndName=FileAtoZ.CombinePaths(attachPath,fileName);
-				FileAtoZ.Copy(ImageStore.GetFilePath(Documents.GetByNum(stmt.DocNum),guarFolder),filePathAndName);
+				string filePathAndName=Storage.CombinePaths(attachPath,fileName);
+				Storage.Copy(ImageStore.GetFilePath(Documents.GetByNum(stmt.DocNum),guarFolder),filePathAndName);
 				//Process.Start(filePathAndName);
 				EmailMessage message=Statements.GetEmailMessageForStatement(stmt,guarantor);
 				EmailAttach attach=new EmailAttach();
@@ -3691,11 +3692,11 @@ namespace OpenDental {
 				Document doc=Documents.GetByNum(stmt.DocNum);
 				string imgPath=ImageStore.GetFilePath(doc,guarFolder);
 				DateTime now=DateTime.Now;
-				while(DateTime.Now<now.AddSeconds(5) && !FileAtoZ.Exists(imgPath)) {//wait up to 5 seconds.
+				while(DateTime.Now<now.AddSeconds(5) && !Storage.FileExists(imgPath)) {//wait up to 5 seconds.
 					Application.DoEvents();
 				}
 				try {
-					FileAtoZ.StartProcess(imgPath);
+					Storage.Run(imgPath);
 				}
 				catch(Exception ex) {
 					FriendlyException.Show($"Unable to open the following file: {doc.FileName}",ex);

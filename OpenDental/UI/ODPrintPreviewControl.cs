@@ -294,7 +294,7 @@ namespace OpenDental.UI {
 
 					//.Net uses PrintControllerWithStatusDialog which breaks the web.
 					//Document.PrintController=new PrintControllerWithStatusDialog(previewController,"DIALOG TEXT");
-					throw new ODException("You can not use the ODWebPrintPreviewControl when not using WEB");
+					//throw new ODException("You can not use the ODWebPrintPreviewControl when not using WEB");
 				
 				// Want to make sure we've reverted any security asserts before we call Print -- that calls into user code
 				Document.Print();

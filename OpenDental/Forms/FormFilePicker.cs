@@ -1,22 +1,19 @@
+using CodeBase;
+using OpenDental.UI;
+using OpenDentBusiness.IO;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Linq;
-using OpenDental.UI;
-using System.Drawing;
-using OpenDentBusiness;
 using System.IO;
-using CodeBase;
-using OpenDental.Thinfinity;
+using System.Linq;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormFilePicker:ODForm {
+namespace OpenDental
+{
+    public partial class FormFilePicker:ODForm {
 		///<summary>List of selected files, including their path.</summary>
 		public List<string> SelectedFiles=new List<string>();
 		///<summary>If this is true, the "Select Local File" button will be invisible.</summary>
 		public bool DoHideLocalButton;
-		///<summary>Re-use the memory for each new thumbmail.  This prevents memory leaks.</summary>
-		private Bitmap _thumbnail;
 		///<summary>The SelectedFiles are local files, not files from the cloud.</summary>
 		public bool WasLocalFileSelected { get; private set; }
 
@@ -38,7 +35,7 @@ namespace OpenDental {
 			GridColumn col=new GridColumn(Lan.G("FilePickerTable","File Name"),20){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
-			GridRow row;
+			//GridRow row;
 			//Get list of contents in directory of textPath.Text
 			//OpenDentalCloud.Core.TaskStateListFolders state=CloudStorage.ListFolderContents(textPath.Text);
 			//List<string> listFiles=state.ListFolderPathsDisplay;
@@ -92,7 +89,7 @@ namespace OpenDental {
 				return;
 			}
 			foreach(string fileName in dlg.FileNames) {
-				FileAtoZ.Copy(fileName,FileAtoZ.CombinePaths(textPath.Text,Path.GetFileName(fileName)));
+				Storage.Copy(fileName, Storage.CombinePaths(textPath.Text,Path.GetFileName(fileName)));
 			}
 			FillGrid();
 		}

@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using System.Linq;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -375,11 +376,11 @@ namespace OpenDental{
 							//In the case when the A to Z folders are not being used, an invalid form image path is returned
 							//and we simply print without the background image (just as if the background image were removed
 							//from the A to Z folders where it was expected.
-							string fileName=FileAtoZ.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),ClaimFormCur.Items[i].ImageFileName);
-							if(!FileAtoZ.Exists(fileName)) {
+							string fileName= Storage.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),ClaimFormCur.Items[i].ImageFileName);
+							if(!Storage.FileExists(fileName)) {
 								continue;
 							}
-							thisImage=FileAtoZ.GetImage(fileName);
+							thisImage= Storage.GetImage(fileName);
 							if(thisImage==null) {
 								continue;
 							}

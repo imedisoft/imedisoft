@@ -1,5 +1,6 @@
 using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -92,10 +93,6 @@ namespace OpenDental {
 				&&!ODEnvironment.IdIsThisComputer(PrefC.GetString(PrefName.WebServiceServerName).ToLower()))//and not on web server 
 			{
 				MessageBox.Show(Lan.G(this,"Updates are only allowed from the web server")+": "+PrefC.GetString(PrefName.WebServiceServerName));
-				return;
-			}
-			if(ReplicationServers.ServerIsBlocked()) {
-				MessageBox.Show("Updates are not allowed on this replication server");
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -302,7 +299,7 @@ namespace OpenDental {
 			string destDir= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
 			string destPath2=null;
 			if(destDir==null) {//Not using A to Z folders?
-				destDir=PrefC.GetTempFolderPath();
+				destDir= Storage.GetTempPath();
 			}
 			else {//using A to Z folders.
 				destPath2=ODFileUtils.CombinePaths(destDir,"SetupFiles");
@@ -435,7 +432,7 @@ namespace OpenDental {
 			string patchName="Setup.exe";
 			string destDir= OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
 			if(destDir==null) {
-				destDir=PrefC.GetTempFolderPath();
+				destDir=Storage.GetTempPath();
 			}
 			PrefL.DownloadInstallPatchFromURI(textWebsitePath.Text+textUpdateCode.Text+"/"+patchName,//Source URI
 				ODFileUtils.CombinePaths(destDir,patchName),true,false,null);//Local destination file.

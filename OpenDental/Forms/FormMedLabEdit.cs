@@ -9,6 +9,7 @@ using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDental.Thinfinity;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public partial class FormMedLabEdit:ODForm {
@@ -333,7 +334,7 @@ namespace OpenDental {
 			Sheet sheet=SheetUtil.CreateSheet(sheetDef,_medLabCur.PatNum);
 			SheetFiller.FillFields(sheet,null,null,_medLabCur);
 			//create the file in the temp folder location, then import so it works when storing images in the db
-			string tempPath=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),_medLabCur.PatNum.ToString()+".pdf");
+			string tempPath=Storage.CombinePaths(Storage.GetTempPath(), _medLabCur.PatNum.ToString()+".pdf");
 			SheetPrinting.CreatePdf(sheet,tempPath,null,_medLabCur);
 			HL7Def defCur=HL7Defs.GetOneDeepEnabled(true);
 			long category=defCur.LabResultImageCat;

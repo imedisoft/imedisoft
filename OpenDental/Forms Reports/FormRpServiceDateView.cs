@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using PdfSharp.Pdf;
 
 namespace OpenDental {
@@ -103,7 +104,7 @@ namespace OpenDental {
 				MessageBox.Show("No image category set for Statements.");
 				return;
 			}
-			string tempFile=PrefC.GetRandomTempFile(".pdf");
+			string tempFile= Storage.GetTempFileName(".pdf");
 			CreatePDF(tempFile);
 			Patient patCur=_fam.GetPatient(PatNum);
 
@@ -117,10 +118,10 @@ namespace OpenDental {
 
 			string fileName=ODFileUtils.CleanFileName(docSave.Description);
 			string filePath=ImageStore.GetPatientFolder(patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
-			while(FileAtoZ.Exists(FileAtoZ.CombinePaths(filePath,fileName+".pdf"))) {
+			while(Storage.FileExists(Storage.CombinePaths(filePath,fileName+".pdf"))) {
 				fileName+="x";
 			}
-			FileAtoZ.Copy(tempFile,ODFileUtils.CombinePaths(filePath,fileName+".pdf"));
+			Storage.Copy(tempFile,Storage.CombinePaths(filePath,fileName+".pdf"));
 			docSave.FileName=fileName+".pdf";//file extension used for both DB images and AtoZ images
 			Documents.Update(docSave);
 			try {

@@ -1,89 +1,89 @@
+using CodeBase;
+using OpenDental.UI;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using OpenDentBusiness;
-using OpenDental.UI;
-using System.Reflection;
 using System.Linq;
-using System.ComponentModel;
-using CodeBase;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormSetupWizard:ODForm {
-		private List<SetupWizard.SetupWizClass> _listSetupWizItems;
+namespace OpenDental
+{
+    public partial class FormSetupWizard : ODForm
+	{
+		private List<SetupWizard.SetupWizClass> setupWizardItems;
 
-		public FormSetupWizard() {
+		public FormSetupWizard()
+		{
 			InitializeComponent();
-			Lan.F(this);
 		}
 
-		private void FormSetupWizard_Load(object sender,EventArgs e) {
+		private void FormSetupWizard_Load(object sender, EventArgs e)
+		{
 			FillGrid();
 		}
 
-		private void FillListSetupItems() {
-			_listSetupWizItems= new List<SetupWizard.SetupWizClass>();
-			_listSetupWizItems.Add(new SetupWizard.RegKeySetup());
-			_listSetupWizItems.Add(new SetupWizard.FeatureSetup());
-			_listSetupWizItems.Add(new SetupWizard.ProvSetup());
-			_listSetupWizItems.Add(new SetupWizard.EmployeeSetup());
-			_listSetupWizItems.Add(new SetupWizard.FeeSchedSetup());
-			if(PrefC.HasClinicsEnabled) {
-				_listSetupWizItems.Add(new SetupWizard.ClinicSetup());
+		private void FillListSetupItems()
+		{
+			setupWizardItems = new List<SetupWizard.SetupWizClass>();
+			setupWizardItems.Add(new SetupWizard.FeatureSetup());
+			setupWizardItems.Add(new SetupWizard.ProvSetup());
+			setupWizardItems.Add(new SetupWizard.EmployeeSetup());
+			setupWizardItems.Add(new SetupWizard.FeeSchedSetup());
+			if (PrefC.HasClinicsEnabled)
+			{
+				setupWizardItems.Add(new SetupWizard.ClinicSetup());
 			}
-			_listSetupWizItems.Add(new SetupWizard.OperatorySetup());
-			_listSetupWizItems.Add(new SetupWizard.PracticeSetup());
-			_listSetupWizItems.Add(new SetupWizard.PrinterSetup());
-			_listSetupWizItems.Add(new SetupWizard.DefinitionSetup());
-			//_listSetupWizItems.Add(new SetupWizard.ScheduleSetup());
-			//_listSetupWizItems.Add(new SetupWizard.CarrierSetup());
-			//_listSetupWizItems.Add(new SetupWizard.ClearinghouseSetup());
-			//Add more here.
+			setupWizardItems.Add(new SetupWizard.OperatorySetup());
+			setupWizardItems.Add(new SetupWizard.PracticeSetup());
+			setupWizardItems.Add(new SetupWizard.PrinterSetup());
+			setupWizardItems.Add(new SetupWizard.DefinitionSetup());
 		}
 
-		private void FillGrid() {
+		private void FillGrid()
+		{
 			FillListSetupItems();
+
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			//ODGridColumn col = new ODGridColumn("Setup Item",250);
-			gridMain.ListGridColumns.Add(new GridColumn("Setup Item",250));
-			//col = new ODGridColumn("Status",100,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(new GridColumn("Status",100,HorizontalAlignment.Center));
-			//col = new ODGridColumn("?",35,HorizontalAlignment.Center);
-			//col.ImageList=imageList1;
-			gridMain.ListGridColumns.Add(new GridColumn("?",35,HorizontalAlignment.Center) { ImageList=imageList1 });
+			gridMain.ListGridColumns.Add(new GridColumn("Setup Item", 250));
+			gridMain.ListGridColumns.Add(new GridColumn("Status", 100, HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn("?", 35, HorizontalAlignment.Center) { ImageList = imageList1 });
 			gridMain.ListGridRows.Clear();
-			//Add the method rows to the grid.
-			List<GridRow> listRows = ConstructGridRows();
-			foreach(GridRow row in listRows) {
-				gridMain.ListGridRows.Add(row);
+
+			var gridRows = ConstructGridRows();
+			foreach (var gridRow in gridRows)
+			{
+				gridMain.ListGridRows.Add(gridRow);
 			}
+
 			gridMain.EndUpdate();
 		}
 
-		private List<GridRow> ConstructGridRows() {
+		private List<GridRow> ConstructGridRows()
+		{
 			//the Tag of a Parent Row is its ODSetupCategory.
 			//the Tag of a Child Row is a SetupWizClass
 			List<GridRow> listSetupRows = new List<GridRow>();
 			List<GridRow> listCategoryRows = new List<GridRow>();
 			List<GridRow> listRowsAll = new List<GridRow>();
 			int statusCellNum = 0;
-			foreach(SetupWizard.SetupWizClass setupItem in _listSetupWizItems) {
+			foreach (SetupWizard.SetupWizClass setupItem in setupWizardItems)
+			{
 				GridRow row = new GridRow();
-				row.Cells.Add("     "+setupItem.Name);
+				row.Cells.Add("     " + setupItem.Name);
 				row.Cells.Add(setupItem.Status.GetDescription());
-				statusCellNum=row.Cells.Count-1;
+				statusCellNum = row.Cells.Count - 1;
 				row.Cells[statusCellNum].ColorBackG = SetupWizard.GetColor(setupItem.Status);
 				row.Cells.Add("0");
 				//row.ColorBackG=SetupWizard.GetColor(setupItem.GetStatus);
-				row.Tag=setupItem;
+				row.Tag = setupItem;
 				listSetupRows.Add(row);
 			}
 			//now add parent rows to the list
-			foreach(GridRow rowCur in listSetupRows) {
+			foreach (GridRow rowCur in listSetupRows)
+			{
 				ODSetupCategory catCur = ((SetupWizard.SetupWizClass)rowCur.Tag).Category;
 				//bool exists = false;
 				////if the parent row doesn't exist..
@@ -94,16 +94,17 @@ namespace OpenDental {
 				//		break;
 				//	}
 				//}
-				if(listCategoryRows.Any(x => x.Tag is ODSetupCategory && (ODSetupCategory)x.Tag == catCur)) {
+				if (listCategoryRows.Any(x => x.Tag is ODSetupCategory && (ODSetupCategory)x.Tag == catCur))
+				{
 					continue;
 				}
 				//add the parent row.
 				GridRow row = new GridRow();
-				row.Cells.Add("\r\n"+catCur.GetDescription()+"\r\n");
+				row.Cells.Add("\r\n" + catCur.GetDescription() + "\r\n");
 				row.Cells.Add("");
 				row.Cells.Add("");
-				row.Tag=catCur;
-				row.Bold=true;
+				row.Tag = catCur;
+				row.Bold = true;
 				//row.ColorLborder=Color.Black;
 				listCategoryRows.Add(row);
 				//}
@@ -117,22 +118,25 @@ namespace OpenDental {
 				//}
 			}
 			//Assign colors to parent rows.
-			foreach(GridRow rowCur in listCategoryRows) {
-				if(listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag))
+			foreach (GridRow rowCur in listCategoryRows)
+			{
+				if (listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag))
 					.All(x => ((SetupWizard.SetupWizClass)x.Tag).Status == ODSetupStatus.Complete || ((SetupWizard.SetupWizClass)x.Tag).Status == ODSetupStatus.Optional))
 				{
 					//rowCur.ColorBackG = SetupWizard.GetColor(ODSetupStatus.Complete);
-					rowCur.Cells[statusCellNum].Text="\r\n"+ODSetupStatus.Complete.GetDescription();
-					rowCur.Cells[statusCellNum].ColorBackG=SetupWizard.GetColor(ODSetupStatus.Complete);
-					
+					rowCur.Cells[statusCellNum].Text = "\r\n" + ODSetupStatus.Complete.GetDescription();
+					rowCur.Cells[statusCellNum].ColorBackG = SetupWizard.GetColor(ODSetupStatus.Complete);
+
 				}
-				else {
+				else
+				{
 					//rowCur.ColorBackG = SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
-					rowCur.Cells[statusCellNum].Text="\r\n"+ODSetupStatus.NeedsAttention.GetDescription();
-					rowCur.Cells[statusCellNum].ColorBackG=SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
+					rowCur.Cells[statusCellNum].Text = "\r\n" + ODSetupStatus.NeedsAttention.GetDescription();
+					rowCur.Cells[statusCellNum].ColorBackG = SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 				}
 			}
-			foreach(GridRow rowCur in listCategoryRows) {
+			foreach (GridRow rowCur in listCategoryRows)
+			{
 				listRowsAll.Add(rowCur);
 				listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag)).DefaultIfEmpty(new GridRow()).LastOrDefault().ColorLborder = Color.Black;
 				listRowsAll.AddRange(listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag)));
@@ -140,34 +144,43 @@ namespace OpenDental {
 			return listRowsAll;
 		}
 
-		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
+		private void gridMain_CellClick(object sender, ODGridClickEventArgs e)
+		{
 			GridRow clickedRow = gridMain.ListGridRows[e.Row];
 			GridColumn clickedCol = gridMain.ListGridColumns[e.Col];
-			if(clickedRow.Tag.GetType() == typeof(ODSetupCategory)) {
-				for(int i = 0;i < gridMain.ListGridRows.Count;i++) {
+			if (clickedRow.Tag.GetType() == typeof(ODSetupCategory))
+			{
+				for (int i = 0; i < gridMain.ListGridRows.Count; i++)
+				{
 					GridRow row = gridMain.ListGridRows[i];
-					if(row.Tag is SetupWizard.SetupWizClass
-						&& ((SetupWizard.SetupWizClass)row.Tag).Category == (ODSetupCategory)clickedRow.Tag) {
-						gridMain.SetSelected(i,true);
+					if (row.Tag is SetupWizard.SetupWizClass
+						&& ((SetupWizard.SetupWizClass)row.Tag).Category == (ODSetupCategory)clickedRow.Tag)
+					{
+						gridMain.SetSelected(i, true);
 					}
 				}
 				return;
 			}
-			if(clickedRow.Tag.GetType().BaseType != typeof(SetupWizard.SetupWizClass)
-				|| clickedCol.ImageList == null) {
+			if (clickedRow.Tag.GetType().BaseType != typeof(SetupWizard.SetupWizClass)
+				|| clickedCol.ImageList == null)
+			{
 				return;
 			}
 			MessageBox.Show(((SetupWizard.SetupWizClass)clickedRow.Tag).Description);
 		}
 
-		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
+		private void gridMain_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
 			//Show a "Congatulations, you've already finished this!" section for finished sections.
 			GridRow clickedRow = gridMain.ListGridRows[e.Row];
 			FormSetupWizardProgress FormSWP;
 			List<SetupWizard.SetupWizClass> listSetupClasses = new List<SetupWizard.SetupWizClass>();
-			if(clickedRow.Tag.GetType().BaseType != typeof(SetupWizard.SetupWizClass)) { //category clicked
-				foreach(SetupWizard.SetupWizClass setupWizClass in _listSetupWizItems) { //for each row, add the row and an intro and complete class.
-					if(setupWizClass.Category == (ODSetupCategory)clickedRow.Tag) {
+			if (clickedRow.Tag.GetType().BaseType != typeof(SetupWizard.SetupWizClass))
+			{ //category clicked
+				foreach (SetupWizard.SetupWizClass setupWizClass in setupWizardItems)
+				{ //for each row, add the row and an intro and complete class.
+					if (setupWizClass.Category == (ODSetupCategory)clickedRow.Tag)
+					{
 						SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name, setupWizClass.Description);
 						SetupWizard.SetupComplete complete = new SetupWizard.SetupComplete(setupWizClass.Name);
 						listSetupClasses.Add(intro);
@@ -175,57 +188,63 @@ namespace OpenDental {
 						listSetupClasses.Add(complete);
 					}
 				}
-				FormSWP=new FormSetupWizardProgress(listSetupClasses,true);
+				FormSWP = new FormSetupWizardProgress(listSetupClasses, true);
 				FormSWP.ShowDialog();
 			}
-			else { //single row clicked
+			else
+			{ //single row clicked
 				SetupWizard.SetupWizClass setupWizClass = (SetupWizard.SetupWizClass)clickedRow.Tag;
-				SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name,setupWizClass.Description);
+				SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name, setupWizClass.Description);
 				SetupWizard.SetupComplete complete = new SetupWizard.SetupComplete(setupWizClass.Name);
 				listSetupClasses.Add(intro);
 				listSetupClasses.Add(setupWizClass);
 				listSetupClasses.Add(complete);
-				FormSWP=new FormSetupWizardProgress(listSetupClasses,false);
+				FormSWP = new FormSetupWizardProgress(listSetupClasses, false);
 				FormSWP.ShowDialog();
 			}
 			FillGrid();
 		}
 
-		private void butAll_Click(object sender,EventArgs e) {
+		private void butAll_Click(object sender, EventArgs e)
+		{
 			List<SetupWizard.SetupWizClass> listSetupClasses = new List<OpenDental.SetupWizard.SetupWizClass>();
-			foreach(SetupWizard.SetupWizClass setupWizClass in _listSetupWizItems) { //for each row, add the row and an intro and complete class.
-					SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name,setupWizClass.Description);
-					SetupWizard.SetupComplete complete = new SetupWizard.SetupComplete(setupWizClass.Name);
-					listSetupClasses.Add(intro);
-					listSetupClasses.Add(setupWizClass);
-					listSetupClasses.Add(complete);
+			foreach (SetupWizard.SetupWizClass setupWizClass in setupWizardItems)
+			{ //for each row, add the row and an intro and complete class.
+				SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name, setupWizClass.Description);
+				SetupWizard.SetupComplete complete = new SetupWizard.SetupComplete(setupWizClass.Name);
+				listSetupClasses.Add(intro);
+				listSetupClasses.Add(setupWizClass);
+				listSetupClasses.Add(complete);
 			}
-			FormSetupWizardProgress FormSWP = new FormSetupWizardProgress(listSetupClasses,true);
+			FormSetupWizardProgress FormSWP = new FormSetupWizardProgress(listSetupClasses, true);
 			FormSWP.ShowDialog();
 			FillGrid();
 		}
 
-		private void butSelected_Click(object sender,EventArgs e) {
+		private void butSelected_Click(object sender, EventArgs e)
+		{
 			List<SetupWizard.SetupWizClass> listSetupClasses = new List<SetupWizard.SetupWizClass>();
-			foreach(int rowNum in gridMain.SelectedIndices) {
+			foreach (int rowNum in gridMain.SelectedIndices)
+			{
 				GridRow selectedRow = gridMain.ListGridRows[rowNum];
-				if(selectedRow.Tag.GetType().BaseType != typeof(OpenDental.SetupWizard.SetupWizClass)) {
+				if (selectedRow.Tag.GetType().BaseType != typeof(OpenDental.SetupWizard.SetupWizClass))
+				{
 					continue;
 				}
 				SetupWizard.SetupWizClass setupWizClass = (SetupWizard.SetupWizClass)selectedRow.Tag;
-				SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name,setupWizClass.Description);
+				SetupWizard.SetupIntro intro = new SetupWizard.SetupIntro(setupWizClass.Name, setupWizClass.Description);
 				SetupWizard.SetupComplete complete = new SetupWizard.SetupComplete(setupWizClass.Name);
 				listSetupClasses.Add(intro);
 				listSetupClasses.Add(setupWizClass);
 				listSetupClasses.Add(complete);
 			}
-			FormSetupWizardProgress FormSWP = new FormSetupWizardProgress(listSetupClasses,false);
+			FormSetupWizardProgress FormSWP = new FormSetupWizardProgress(listSetupClasses, false);
 			FormSWP.ShowDialog();
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
-
 	}
 }

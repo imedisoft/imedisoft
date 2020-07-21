@@ -1288,7 +1288,7 @@ namespace OpenDentBusiness
 		/// <summary>Boolean.  True if random primary keys have been turned on. There is no interface to change this preference because as of 17.2, all users of
 		/// replication must use primary key offset instead of random primary keys.
 		///Causes all CRUD classes to look for an unused random PK before inserting instead of leaving it up to auto incrementing.</summary>
-		[Obsolete]
+		// TODO: [Obsolete]
 		RandomPrimaryKeys,
 
 
@@ -1394,10 +1394,10 @@ namespace OpenDentBusiness
 		///When false, the recurring charge date will be used as the recurring charge payment date.</summary>
 		RecurringChargesUseTransDate,
 
-		[Obsolete]
+		// TODO: [Obsolete]
 		RegistrationKey,
 
-		[Obsolete]
+		// TODO: [Obsolete]
 		RegistrationKeyIsDisabled,
 
 

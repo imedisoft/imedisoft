@@ -24,6 +24,7 @@ using OpenDentBusiness;
 using PayConnectService = OpenDentBusiness.PayConnectService;
 using OpenDentBusiness.WebTypes.Shared.XWeb;
 using PdfSharp.Pdf;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	///<summary></summary>
@@ -484,13 +485,15 @@ namespace OpenDental {
 			}
 			string attachPath=EmailAttaches.GetAttachPath();
 			Random rnd=new Random();
-			string tempFile=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),
-				DateTime.Now.ToString("yyyyMMdd")+"_"+DateTime.Now.TimeOfDay.Ticks.ToString()+rnd.Next(1000).ToString()+".pdf");
+
+			string tempFile = Path.Combine(Path.GetTempPath(),
+				DateTime.Now.ToString("yyyyMMdd") + "_" + DateTime.Now.TimeOfDay.Ticks.ToString() + rnd.Next(1000).ToString() + ".pdf");
+
 			PdfDocumentRenderer pdfRenderer=new PdfDocumentRenderer(true,PdfFontEmbedding.Always);
 			pdfRenderer.Document=CreatePDFDoc(_paymentCur.Receipt);
 			pdfRenderer.RenderDocument();
 			pdfRenderer.PdfDocument.Save(tempFile);
-			FileAtoZ.Copy(tempFile,FileAtoZ.CombinePaths(attachPath,Path.GetFileName(tempFile)));
+			Storage.Copy(tempFile, Storage.CombinePaths(attachPath, Path.GetFileName(tempFile)));
 			EmailMessage message=new EmailMessage();
 			message.PatNum=_paymentCur.PatNum;
 			message.ToAddress=_patCur.Email;
@@ -2605,7 +2608,7 @@ namespace OpenDental {
 		///original transaction.</summary>
 		private void VoidXChargeTransaction(string transID,string amount,bool isDebit) {
 			ProcessStartInfo info=new ProcessStartInfo(_xProg.Path);
-			string resultfile=PrefC.GetRandomTempFile("txt");
+			string resultfile=Storage.GetTempFileName(".txt");
 			File.Delete(resultfile);//delete the old result file.
 			info.Arguments="";
 			if(isDebit) {
@@ -3143,7 +3146,7 @@ namespace OpenDental {
 				return null;
 			}
 			_xChargeMilestone="XResult File";
-			string resultfile=PrefC.GetRandomTempFile("txt");
+			string resultfile=Storage.GetTempFileName(".txt");
 			try {
 				File.Delete(resultfile);//delete the old result file.
 			}

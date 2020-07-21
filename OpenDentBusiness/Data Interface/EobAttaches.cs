@@ -46,7 +46,7 @@ namespace OpenDentBusiness{
 		public static bool Exists(long claimPaymentNum) {
 			
 			string command="SELECT COUNT(*) FROM eobattach WHERE ClaimPaymentNum="+POut.Long(claimPaymentNum);
-			if(Database.ExecuteScalar(command)=="0") {
+			if(Database.ExecuteLong(command)==0) {
 				return false;
 			}
 			return true;

@@ -12,6 +12,7 @@ using OpenDental.UI;
 using System.Text.RegularExpressions;
 using CodeBase;
 using DataConnectionBase;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public partial class FormWiki:ODForm {
@@ -583,13 +584,13 @@ namespace OpenDental {
 			}
 			else if(e.Url.ToString().Contains("wikifilecloud:")) {
 				string fileName=e.Url.ToString().Substring(e.Url.ToString().LastIndexOf("wikifilecloud:")+14);
-				if(!FileAtoZ.Exists(fileName)) {
+				if(!Storage.FileExists(fileName)) {
 					MessageBox.Show(Lan.G(this,"File does not exist: ")+fileName);
 					e.Cancel=true;
 					return;
 				}
 				try {
-					FileAtoZ.StartProcess(fileName);
+					Storage.Run(fileName);
 				}
 				catch {
 				}
@@ -598,13 +599,13 @@ namespace OpenDental {
 			}
 			else if(e.Url.ToString().Contains("foldercloud:")) {
 				string folderName=e.Url.ToString().Substring(e.Url.ToString().LastIndexOf("foldercloud:")+12);
-				if(!FileAtoZ.DirectoryExists(folderName)) {
+				if(!Storage.DirectoryExists(folderName)) {
 					MessageBox.Show(Lan.G(this,"Folder does not exist: ")+folderName);
 					e.Cancel=true;
 					return;
 				}
 				try {
-					FileAtoZ.OpenDirectory(folderName);
+					Storage.OpenDirectory(folderName);
 				}
 				catch {
 				}

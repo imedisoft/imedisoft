@@ -1,31 +1,18 @@
 using CodeBase;
-using Microsoft.Win32;
 using OpenDental.UI;
 using OpenDentBusiness;
-using OpenDentBusiness.Mobile;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Net;
-using System.ServiceProcess;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Forms;
-using System.Xml;
-using System.Globalization;
-using System.Data;
 using System.Linq;
-using System.IO;
-using WebServiceSerializer;
-using OpenDental.Forms;
-using OpenDentBusiness.WebServiceMainHQ;
-using OpenDentBusiness.WebTypes.WebSched.TimeSlot;
+using System.Windows.Forms;
 
-namespace OpenDental {
+namespace OpenDental
+{
 
-	public partial class FormEServicesPatientPortal:ODForm {
+    public partial class FormEServicesPatientPortal:ODForm {
 		///<summary>The currently selected clinic for Patient Portal Invites.</summary>
 		private Clinic _clinicCurPPInvite;
 		private bool _doSetInvalidClinicPrefs=false;

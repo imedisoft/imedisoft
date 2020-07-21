@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public partial class FormDatabaseMaintTemp:ODForm {
@@ -82,7 +83,7 @@ namespace OpenDental {
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {
-			string fileName=CodeBase.ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),"results.txt");
+			string fileName=Storage.CombinePaths(Storage.GetTempPath(), "results.txt");
 			ODFileUtils.WriteAllTextThenStart(fileName,textResults.Text,"");
 			MessageBox.Show("Please print from the text editor.");
 		}

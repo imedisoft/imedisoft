@@ -4,13 +4,15 @@ using OpenDentBusiness;
 using System.Windows.Forms;
 using System;
 
-namespace OpenDentBusiness.WebTypes.WebForms {
+namespace OpenDentBusiness.WebTypes.WebForms
+{
 	[Serializable]
-	[CrudTable(IsMissingInGeneral=true,HasBatchWriteMethods=true,CrudLocationOverride=@"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud",
-		NamespaceOverride="OpenDentBusiness.WebTypes.WebForms.Crud",CrudExcludePrefC=true)]
-	public class WebForms_SheetFieldDef:TableBase {
+	[CrudTable(IsMissingInGeneral = true, HasBatchWriteMethods = true, CrudLocationOverride = @"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud",
+		NamespaceOverride = "OpenDentBusiness.WebTypes.WebForms.Crud", CrudExcludePrefC = true)]
+	public class WebForms_SheetFieldDef : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long WebSheetFieldDefID;
 		///<summary>FK to webforms_sheetdef.WebSheetDefID</summary>
 		public long WebSheetDefID;
@@ -35,7 +37,7 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 		///<para>For Pat Images, this is blank.  The filename of a PatImage will later be stored in SheetField.FieldValue.</para>
 		///<para>For ComboBoxes, the chosen option, semicolon, then a pipe delimited list of options such as: March;January|February|March|April</para>
 		///<para>For ScreenCharts, a semicolon delimited list of comma separated surfaces.  It may look like S,P,N;S,S,S;... etc.</para></summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
+		[CrudColumn(SpecialType = CrudSpecialColType.TextIsClob)]
 		public string FieldValue;
 		///<summary>The fontSize for this field regardless of the default for the sheet.  The actual font must be saved with each sheetField.</summary>
 		public float FontSize;
@@ -62,7 +64,7 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 		///<summary>Set to true if this field is required to have a value before the sheet is closed.</summary>
 		public bool IsRequired;
 		///<summary>The Bitmap should be converted to Base64 using POut.Bitmap() before placing in this field.  Not stored in the database.  Only used when uploading SheetDefs to the web server.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
+		[CrudColumn(SpecialType = CrudSpecialColType.TextIsClob)]
 		public string ImageData;
 		///<summary>Tab stop order for all fields. One-based.  Only checkboxes and input fields can have values other than 0.</summary>
 		public int TabOrder;
@@ -81,25 +83,5 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 		///<summary>Human readable label that will be displayed for radio button item in mobile mode. 
 		///Cannot use UiLabelMobile for this purpose as it is already dedicated to the radio group header that groups radio button items together.</summary>
 		public string UiLabelMobileRadioButton;
-
-		///<summary>Used only for serialization purposes</summary>
-		[XmlElement("ItemColor",typeof(int))]
-		public int ColorOverrideXml {
-			get {
-				return ItemColor.ToArgb();
-			}
-			set {
-				ItemColor=Color.FromArgb(value);
-			}
-		}
-		
-		public WebForms_SheetFieldDef(){
-
-		}
-		
-		public WebForms_SheetFieldDef Copy(){
-			return (WebForms_SheetFieldDef)this.MemberwiseClone();
-		}
-
 	}
 }

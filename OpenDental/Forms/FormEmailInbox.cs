@@ -9,6 +9,7 @@ using OpenDentBusiness;
 using CodeBase;
 using System.Linq;
 using OpenDental.UI;
+using OpenDentBusiness.IO;
 
 namespace OpenDental {
 	public partial class FormEmailInbox:ODForm {
@@ -674,9 +675,9 @@ namespace OpenDental {
 				if(emailMessage.Attachments[i].DisplayedFileName.ToLower()!="smime.p7s") {
 					continue;
 				}
-				string smimeP7sFilePath=FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),emailMessage.Attachments[i].ActualFileName);
-				string localFile=PrefC.GetRandomTempFile(".p7s");
-				FileAtoZ.Copy(smimeP7sFilePath,localFile);
+				string smimeP7sFilePath=Storage.CombinePaths(EmailAttaches.GetAttachPath(),emailMessage.Attachments[i].ActualFileName);
+				string localFile= Storage.GetTempFileName(".p7s");
+				Storage.Copy(smimeP7sFilePath,localFile);
 				X509Certificate2 certSig=EmailMessages.GetEmailSignatureFromSmimeP7sFile(localFile);
 				FormEmailDigitalSignature form=new FormEmailDigitalSignature(certSig);
 				if(form.ShowDialog()==DialogResult.OK) {

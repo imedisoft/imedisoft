@@ -1,30 +1,16 @@
 using CodeBase;
-using Microsoft.Win32;
-using OpenDental.UI;
 using OpenDentBusiness;
-using OpenDentBusiness.Mobile;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Net;
-using System.ServiceProcess;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Forms;
-using System.Xml;
-using System.Globalization;
 using System.Data;
 using System.Linq;
-using System.IO;
+using System.Windows.Forms;
 using WebServiceSerializer;
-using OpenDentBusiness.WebServiceMainHQ;
-using OpenDentBusiness.WebTypes.WebSched.TimeSlot;
 
-namespace OpenDental {
+namespace OpenDental
+{
 
-	public partial class FormEServicesMassEmail:ODForm {
+    public partial class FormEServicesMassEmail:ODForm {
 		private bool _doSetInvalidClinicPrefs=false;
 		private string _activateMessage;
 		private WebServiceMainHQProxy.EServiceSetup.SignupOut _signupOut;

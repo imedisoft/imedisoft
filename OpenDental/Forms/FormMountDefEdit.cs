@@ -23,8 +23,6 @@ namespace OpenDental{
 		private Point _pointItemOrig;
 		/// <summary>To shrink or enlarge the mount to make it fit in the space available.</summary>
 		private float _ratio;
-		/// <summary>This is the entire area available for drawing.</summary>
-		private Rectangle _rectangleBack;
 		/// <summary>This is the outline of the mount.</summary>
 		private Rectangle _rectangleMount;
 		private int _selectedIndex=-1;
@@ -600,7 +598,7 @@ namespace OpenDental{
 		#region Methods - EventHandlers - Paint
 		private void FormMountDefEdit_Paint(object sender, PaintEventArgs e){
 			Graphics g=e.Graphics;//alias
-			g.FillRectangle(SystemBrushes.Control,_rectangleBack);
+			//g.FillRectangle(SystemBrushes.Control,_rectangleBack);
 			g.DrawRectangle(Pens.Blue,_rectangleMount);
 			RectangleF rectItem;
 			Point point;

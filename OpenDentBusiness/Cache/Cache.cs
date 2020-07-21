@@ -12,15 +12,13 @@ namespace OpenDentBusiness
 {
     public class Cache
 	{
-		public static void Refresh(params InvalidType[] invalidTypes) => Refresh(true, invalidTypes);
-
 		/// <summary>
 		/// itypesStr= comma-delimited list of int.
 		/// Called directly from UI in one spot.
 		/// Called from above repeatedly.
 		/// The end result is that both server and client have been properly refreshed.
 		/// </summary>
-		public static void Refresh(bool doRefreshServerCache, params InvalidType[] invalidTypes)
+		public static void Refresh(params InvalidType[] invalidTypes)
 		{
 			GetCacheDs(invalidTypes);
 		}

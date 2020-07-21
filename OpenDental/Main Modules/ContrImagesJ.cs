@@ -18,6 +18,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using OpenDental.Thinfinity;
+using OpenDentBusiness.IO;
 #endregion using
 
 namespace OpenDental{
@@ -32,7 +33,7 @@ namespace OpenDental{
 		private Size[] _arraySizesOriginal;
 		///<summary>Only used when a single doc or mount item is selected.  This is the raw image that is the basis for BrightContrast adjustments.  Mount image might be scaled but it won't have any color adj.  If scaled, it's the same ratio as original.  We use width to calc scale, since height could be off by a parial pixel.</summary>
 		private Bitmap _bitmapRaw;
-		private Cursor _cursorPan;
+		//private Cursor _cursorPan;
 		private DateTime _dateTimeMouseDownPanel;
 		private Family _familyCur=null;
 		//private Form _formImaging;
@@ -89,7 +90,7 @@ namespace OpenDental{
 		public ContrImagesJ(){
 			InitializeComponent();
 			// TODO: _cursorPan=new Cursor(GetType(),"CursorPalm.cur");
-			panelMain.Cursor=_cursorPan;
+			//panelMain.Cursor=_cursorPan;
 			panelMain.MouseWheel += panelMain_MouseWheel;
 			try {
 				_sigBoxTopaz=TopazWrapper.GetTopaz();
@@ -373,7 +374,7 @@ namespace OpenDental{
 			button=new ODToolBarButton(Lan.G(this,"Templates"),-1,"",TB.Forms);
 			button.Style=ODToolBarButtonStyle.DropDownButton;
 			menuForms=new ContextMenu();
-			string formDir=FileAtoZ.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),"Forms");
+			string formDir=Storage.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),"Forms");
 
 				if(Directory.Exists(formDir)) {
 					DirectoryInfo dirInfo=new DirectoryInfo(formDir);
@@ -2115,7 +2116,7 @@ namespace OpenDental{
 					toolBarPaint.Buttons[TB.Crop.ToString()].Pushed=true;
 					break;
 				case EnumCropPanAdj.Pan:
-					panelMain.Cursor=_cursorPan;
+					//panelMain.Cursor=_cursorPan;
 					toolBarPaint.Buttons[TB.Pan.ToString()].Pushed=true;
 					break;
 				case EnumCropPanAdj.Adj:
@@ -2415,16 +2416,16 @@ namespace OpenDental{
 		private void ToolBarExport_ClickWeb(){
 			if(IsDocumentShowing()){
 				string tempFilePath=ODFileUtils.CombinePaths(Path.GetTempPath(),_documentShowing.FileName);
-				string docPath=FileAtoZ.CombinePaths(ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),_documentShowing.FileName);
-				FileAtoZ.Copy(docPath,tempFilePath/*,FileAtoZSourceDestination.AtoZToLocal,"Exporting file..."*/);
+				string docPath= Storage.CombinePaths(ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),_documentShowing.FileName);
+				Storage.Copy(docPath,tempFilePath/*,FileAtoZSourceDestination.AtoZToLocal,"Exporting file..."*/);
 				ThinfinityUtils.ExportForDownload(tempFilePath);
 				MessageBox.Show("Done.");
 				return;
 			}
 			if(IsMountItemShowing()){
 				string tempFilePath=ODFileUtils.CombinePaths(Path.GetTempPath(),_arrayDocumentsShowing[_idxSelectedInMount].FileName);
-				string docPath=FileAtoZ.CombinePaths(ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),_arrayDocumentsShowing[_idxSelectedInMount].FileName);
-				FileAtoZ.Copy(docPath,tempFilePath/*,FileAtoZSourceDestination.AtoZToLocal,"Exporting file..."*/);
+				string docPath= Storage.CombinePaths(ImageStore.GetPatientFolder(_patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath()),_arrayDocumentsShowing[_idxSelectedInMount].FileName);
+				Storage.Copy(docPath,tempFilePath/*,FileAtoZSourceDestination.AtoZToLocal,"Exporting file..."*/);
 				ThinfinityUtils.ExportForDownload(tempFilePath);
 				MessageBox.Show("Done.");
 				return;
@@ -3037,7 +3038,7 @@ namespace OpenDental{
 		}
 
 		private void ToolBarScanMulti_Click() {
-			string tempFile=PrefC.GetRandomTempFile(".pdf");
+			string tempFile=Storage.GetTempFileName(".pdf");
 			try {
 				xImageDeviceManager.Obfuscator.ActivateEZTwain();
 			}

@@ -1,5 +1,6 @@
 ﻿using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,7 @@ namespace OpenDental
 					return;
 				}
 				string patFolder = ImageStore.GetPatientFolder(pat, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
-				FileAtoZ.OpenFile(ImageStore.GetFilePath(sheetDoc, patFolder));
+				Storage.Run(ImageStore.GetFilePath(sheetDoc, patFolder));
 			}
 			else
 			{

@@ -13,6 +13,7 @@ using System.Linq;
 using CodeBase;
 using System.IO;
 using OpenDental.Thinfinity;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 	/// <summary>
@@ -1248,7 +1249,7 @@ namespace OpenDental{
 			SheetParameter.SetParameter(sheet,"DepositNum",_depositCur.DepositNum);
 			SheetFiller.FillFields(sheet);
 			SheetUtil.CalculateHeights(sheet);
-			string filePathAndName=PrefC.GetRandomTempFile(".pdf");
+			string filePathAndName= Storage.GetTempFileName(".pdf");
 			SheetPrinting.CreatePdf(sheet,filePathAndName,null);
 
 				Process.Start(filePathAndName);
@@ -1292,10 +1293,10 @@ namespace OpenDental{
 			SheetFiller.FillFields(sheet);
 			SheetUtil.CalculateHeights(sheet);
 			string sheetName=sheet.Description+"_"+DateTime.Now.ToString("yyyyMMdd_hhmmssfff")+".pdf";
-			string tempFile=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),sheetName);
-			string filePathAndName=FileAtoZ.CombinePaths(EmailAttaches.GetAttachPath(),sheetName);
+			string tempFile=Storage.CombinePaths(Storage.GetTempPath(),sheetName);
+			string filePathAndName=Storage.CombinePaths(EmailAttaches.GetAttachPath(),sheetName);
 			SheetPrinting.CreatePdf(sheet,tempFile,null);
-			FileAtoZ.Copy(tempFile,filePathAndName);
+			Storage.Copy(tempFile,filePathAndName);
 			EmailMessage message=new EmailMessage();
 			EmailAddress address=EmailAddresses.GetByClinic(Clinics.ClinicNum);
 			message.FromAddress=address.GetFrom();

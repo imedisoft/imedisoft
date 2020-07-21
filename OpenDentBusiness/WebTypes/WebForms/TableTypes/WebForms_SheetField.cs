@@ -4,12 +4,14 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using OpenDentBusiness;
 
-namespace OpenDentBusiness.WebTypes.WebForms {
+namespace OpenDentBusiness.WebTypes.WebForms
+{
 	[Serializable]
-	[CrudTable(IsMissingInGeneral=true,CrudLocationOverride=@"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud",NamespaceOverride="OpenDentBusiness.WebTypes.WebForms.Crud",CrudExcludePrefC=true)]
-	public class WebForms_SheetField:TableBase {
+	[CrudTable(IsMissingInGeneral = true, CrudLocationOverride = @"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud", NamespaceOverride = "OpenDentBusiness.WebTypes.WebForms.Crud", CrudExcludePrefC = true)]
+	public class WebForms_SheetField : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long SheetFieldID;
 		///<summary>FK to webforms_sheetdef.SheetID</summary>
 		public long SheetID;
@@ -32,7 +34,7 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 		///<para>ScreenChart: Contains a semicolon delimited list of a single number followed by groups of comma separated surfaces.
 		///The first digit represents what type of ScreenChart it is.  0 = Permanent, 1 = Primary
 		///It may look like 0;S,P,N;S,S,S;... etc.</para></summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
+		[CrudColumn(SpecialType = CrudSpecialColType.TextIsClob)]
 		public string FieldValue;
 		///<summary>The fontSize for this field regardless of the default for the sheet.  The actual font must be saved with each sheetField.</summary>
 		public float FontSize;
@@ -74,24 +76,8 @@ namespace OpenDentBusiness.WebTypes.WebForms {
 		///Cannot use UiLabelMobile for this purpose as it is already dedicated to the radio group header that groups radio button items together.</summary>
 		public string UiLabelMobileRadioButton;
 
-		///<summary>Used only for serialization purposes</summary>
-		[XmlElement("ItemColor",typeof(int))]
-		public int ColorOverrideXml {
-			get {
-				return ItemColor.ToArgb();
-			}
-			set {
-				ItemColor=Color.FromArgb(value);
-			}
+		public WebForms_SheetField()
+		{
 		}
-		
-		public WebForms_SheetField(){
-
-		}
-		
-		public WebForms_SheetField Copy(){
-			return (WebForms_SheetField)this.MemberwiseClone();
-		}
-
 	}
 }

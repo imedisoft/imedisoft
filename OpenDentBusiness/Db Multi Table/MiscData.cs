@@ -13,19 +13,13 @@ using System.Reflection;
 
 namespace OpenDentBusiness
 {
-    /// <summary>
-    /// Miscellaneous database functions.
-    /// </summary>
     public class MiscData
 	{
 		/// <summary>
 		/// Gets the current date/Time direcly from the server.
 		/// Mostly used to prevent uesr from altering the workstation date to bypass security.
 		/// </summary>
-		public static DateTime GetNowDateTime()
-		{
-			return SIn.DateT(Database.ExecuteString("SELECT NOW()"));
-		}
+		public static DateTime GetNowDateTime() => Database.ExecuteDateTime("SELECT NOW()") ?? DateTime.MinValue;
 
 		/// <summary>
 		/// Gets the current date/Time with milliseconds directly from server.

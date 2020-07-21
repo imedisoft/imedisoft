@@ -1,5 +1,6 @@
 using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace OpenDental.Bridges
 			string infoFile = listXDRProperties.FirstOrDefault(x => x.PropertyDesc == XDR.PropertyDescs.InfoFilePath)?.PropertyValue;
 			if (infoFile.Trim() == "")
 			{
-				infoFile = CodeBase.ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(), "infofile.txt");
+				infoFile = CodeBase.ODFileUtils.CombinePaths(Storage.GetTempPath(), "infofile.txt");
 			}
 
 			if (pat != null)

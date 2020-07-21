@@ -23,7 +23,7 @@ namespace OpenDentBusiness
         /// This property is just a shortcut to this pref to make typing faster.
         /// This pref is used a lot.
         /// </summary>
-        [Obsolete]
+        // TODO: [Obsolete]
         public static bool RandomKeys => GetBool(PrefName.RandomPrimaryKeys);
 
 		/// <summary>
@@ -159,7 +159,6 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// For UI display when we store a zero/meaningless value as -1. Returns "0" when useZero is true, otherwise "".
 		/// </summary>
-		[Obsolete("UI specific, should not be here...")]
 		public static string GetLongHideNegOne(PrefName preferenceName, bool useZero = false)
 		{
 			long value = GetLong(preferenceName);
@@ -238,7 +237,6 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Gets YN value for use in pref setup windows with a 3 state checkbox.
 		/// </summary>
-		[Obsolete("UI specific, should not be here...")]
 		public static System.Windows.Forms.CheckState GetYNCheckState(PrefName preferenceName)
 		{
 			YN yn = (YN)SIn.Int(Prefs.GetOne(preferenceName).ValueString);

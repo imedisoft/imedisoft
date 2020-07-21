@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.IO;
+using OpenDentBusiness.IO;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormImagePicker:ODForm {
@@ -33,7 +35,7 @@ namespace OpenDental {
 			gridMain.ListGridRows.Clear();
 			List<string> listFileNames=null;
 			try {
-				listFileNames=FileAtoZ.GetFilesInDirectory(_imageFolder);//All files from the wiki file path, including images and other files.
+				listFileNames = Storage.EnumerateDirectory(_imageFolder).ToList();
 			}
 			catch(Exception ex) {
 				MessageBox.Show(this,ex.Message);
@@ -71,7 +73,7 @@ namespace OpenDental {
 				return;
 			}
 			string imagePath=ImageNamesList[gridMain.GetSelectedIndex()];
-			Image tmpImg=FileAtoZ.GetImage(imagePath);//Could throw an exception if someone deletes the image right after this window loads.
+			Image tmpImg=Storage.GetImage(imagePath);//Could throw an exception if someone deletes the image right after this window loads.
 			float imgScale=1;//will be between 0 and 1
 			if(tmpImg.PhysicalDimension.Height>picturePreview.Height || tmpImg.PhysicalDimension.Width>picturePreview.Width) {//image is too large
 				//Image is larger than PictureBox, resize to fit.
@@ -108,8 +110,8 @@ namespace OpenDental {
 			Invalidate();
 			foreach(string fileName in openFD.FileNames) {
 				//check file types?
-				string destinationPath=FileAtoZ.CombinePaths(_imageFolder,Path.GetFileName(fileName));
-				if(FileAtoZ.Exists(destinationPath)){
+				string destinationPath=Storage.CombinePaths(_imageFolder,Path.GetFileName(fileName));
+				if(Storage.FileExists(destinationPath)){
 					switch(MessageBox.Show(Lan.G(this,"Overwrite Existing File")+": "+destinationPath,"",MessageBoxButtons.YesNoCancel)){
 						case DialogResult.No://rename, do not overwrite
 							InputBox ip=new InputBox(Lan.G(this,"New file name."));
@@ -119,7 +121,7 @@ namespace OpenDental {
 								continue;//cancel, next file.
 							}
 							bool cancel=false;
-							while(!cancel && FileAtoZ.Exists(FileAtoZ.CombinePaths(_imageFolder,ip.textResult.Text))){
+							while(!cancel && Storage.FileExists(Storage.CombinePaths(_imageFolder,ip.textResult.Text))){
 								MessageBox.Show("File name already exists.");
 								if(ip.ShowDialog()!=DialogResult.OK) {
 									cancel=true;
@@ -128,11 +130,11 @@ namespace OpenDental {
 							if(cancel) {
 								continue;//cancel rename, and go to next file.
 							}
-							destinationPath=FileAtoZ.CombinePaths(_imageFolder,ip.textResult.Text);
+							destinationPath= Storage.CombinePaths(_imageFolder,ip.textResult.Text);
 							break;//proceed to save file.
 						case DialogResult.Yes://overwrite
 							try {
-								FileAtoZ.Delete(destinationPath);
+								Storage.DeleteFile(destinationPath);
 							}
 							catch(Exception ex){
 								MessageBox.Show(Lan.G(this,"Cannot copy file")+":" +fileName+"\r\n"+ex.Message);
@@ -143,7 +145,7 @@ namespace OpenDental {
 							continue;//skip this file.
 					}
 				}
-				FileAtoZ.Copy(fileName,destinationPath);
+				Storage.Copy(fileName,destinationPath);
 			}
 			FillGrid();
 			if(openFD.FileNames.Length==1) {//if importing exactly one image, select it upon returning.

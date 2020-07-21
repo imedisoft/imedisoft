@@ -1,5 +1,6 @@
 using CodeBase;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System;
 using System.IO;
 using System.Media;
@@ -44,7 +45,7 @@ namespace OpenDental {
 			}
 			else {//butStart.Text=="Stop"
 				timerRecord.Stop();
-				_tempPath=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),"recsound"+".wav");
+				_tempPath=Storage.CombinePaths(Storage.GetTempPath(),"recsound"+".wav");
 				mciSendString("save recsound "+_tempPath,"",0,0);
 				mciSendString("close recsound ","",0,0);
 				butStart.Text=Lan.G(this,"Record");

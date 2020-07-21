@@ -4,6 +4,7 @@ using Imedisoft.Properties;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
+using OpenDentBusiness.IO;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -177,26 +178,26 @@ namespace Imedisoft.Forms
 				return;
             }
 
-			string logFolderPath = "QueryMonitorLogs";
-			string logFileName = "";
+			string logPath;
 			try
 			{
 				// Create the query monitor log folder in the AtoZ image path.
-				if (!OpenDentBusiness.FileIO.FileAtoZ.DirectoryExistsRelative(logFolderPath))
-				{
-					OpenDentBusiness.FileIO.FileAtoZ.CreateDirectoryRelative(logFolderPath);
-				}
+				var path = Storage.CombinePaths(Storage.GetRootPath(), "QueryMonitorLogs");
+				if (!Storage.DirectoryExists(path))
+                {
+					Storage.CreateDirectory(path);
+                }
 
 				// Get a unique file name within the log folder.
-				logFileName = $"QueryMonitorLog_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
-				while (OpenDentBusiness.FileIO.FileAtoZ.ExistsRelative(logFolderPath, logFileName))
+				logPath = Storage.CombinePaths(path, $"QueryMonitorLog_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
+				while (Storage.FileExists(logPath))
 				{
-					logFileName = $"QueryMonitorLog_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+					logPath = Storage.CombinePaths(path, $"QueryMonitorLog_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
 					Thread.Sleep(100);
 				}
 
 				// Dump the entire query history into the log file.
-				OpenDentBusiness.FileIO.FileAtoZ.WriteAllTextRelative(logFolderPath, logFileName,
+				Storage.WriteAllText(logPath,
 					$"Query Monitor Log - {DateTime.Now}, OD User: {Security.CurUser.UserName}, Computer: {Environment.MachineName}\r\n" +
 					$"{string.Join("\r\n", queriesDictionary.Values.Select(x => x.ToString()))}");
 			}
@@ -218,7 +219,7 @@ namespace Imedisoft.Forms
 			{
 				try
 				{
-					FileAtoZ.StartProcessRelative(logFolderPath, logFileName);
+					Storage.RunRelative(logPath);
 				}
 				catch (Exception ex)
 				{
@@ -243,7 +244,7 @@ namespace Imedisoft.Forms
 
 				ShowInfo(Translation.Common.Copied);
 			}
-			catch (Exception ex)
+			catch
 			{
 				ShowError(Translation.Common.CouldNotCopyContentsToClipboard);
 			}

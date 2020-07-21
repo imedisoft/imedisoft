@@ -11,6 +11,7 @@ using System.Linq;
 using CodeBase;
 using System.Data;
 using System.Text;
+using OpenDentBusiness.IO;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -1598,9 +1599,9 @@ namespace OpenDental{
 			if(string.IsNullOrEmpty(ProvCur.WebSchedImageLocation)) {
 				return;
 			}
-			string fullImagePath=FileAtoZ.CombinePaths(ImageStore.GetProviderImagesFolder(),ProvCur.WebSchedImageLocation);
+			string fullImagePath=Storage.CombinePaths(ImageStore.GetProviderImagesFolder(),ProvCur.WebSchedImageLocation);
 			try {
-				pictureWebSched.Image=FileAtoZ.GetImage(fullImagePath);
+				pictureWebSched.Image= Storage.GetImage(fullImagePath);
 			}
 			catch(Exception ex) {
 				Shown+=new EventHandler((o,e) => FriendlyException.Show(Lans.g(this,"Unable to display image."),ex));
@@ -1673,21 +1674,21 @@ namespace OpenDental{
 				MessageBox.Show("Only allowed to import an image.");
 				return;
 			}
-			string atoZFileName=FileAtoZ.CombinePaths(ImageStore.GetProviderImagesFolder(),Path.GetFileName(localFileName));
-			if(FileAtoZ.Exists(atoZFileName)) {
+			string atoZFileName= Storage.CombinePaths(ImageStore.GetProviderImagesFolder(),Path.GetFileName(localFileName));
+			if(Storage.FileExists(atoZFileName)) {
 				int attempts=1;
-				string newAtoZFileName=FileAtoZ.AppendSuffix(atoZFileName,"_"+attempts);
-				while(FileAtoZ.Exists(newAtoZFileName)) {
+				string newAtoZFileName= OpenDentBusiness.FileIO.FileAtoZ.AppendSuffix(atoZFileName,"_"+attempts);
+				while(Storage.FileExists(newAtoZFileName)) {
 					if(attempts++ > 1000) {
 						MessageBox.Show("Unable to upload image.");
 						return;
 					}
-					newAtoZFileName=FileAtoZ.AppendSuffix(atoZFileName,"_"+attempts);
+					newAtoZFileName= OpenDentBusiness.FileIO.FileAtoZ.AppendSuffix(atoZFileName,"_"+attempts);
 				}
 				atoZFileName=newAtoZFileName;
 			}
 			try {
-				FileAtoZ.Upload(localFileName,atoZFileName);
+				Storage.Upload(localFileName,atoZFileName);
 			}
 			catch(Exception ex) {
 				FriendlyException.Show(Lans.g(this,"Unable to upload image."),ex);

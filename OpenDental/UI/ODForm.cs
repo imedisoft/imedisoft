@@ -245,7 +245,7 @@ namespace OpenDental {
 					.Distinct()
 					.ToArray();
 
-				Cache.Refresh(true, invalidTypes);
+				Cache.Refresh(invalidTypes);
 
 				onProcess(_listSubscribedForms, signals);
 			});

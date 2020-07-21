@@ -1,29 +1,16 @@
 using CodeBase;
-using Microsoft.Win32;
 using OpenDental.UI;
 using OpenDentBusiness;
-using OpenDentBusiness.Mobile;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Net;
-using System.ServiceProcess;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Forms;
-using System.Xml;
-using System.Globalization;
 using System.Data;
+using System.Drawing;
 using System.Linq;
-using System.IO;
-using WebServiceSerializer;
-using OpenDentBusiness.WebServiceMainHQ;
-using OpenDentBusiness.WebTypes.WebSched.TimeSlot;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormEServicesEClipboard:ODForm {
+namespace OpenDental
+{
+    public partial class FormEServicesEClipboard:ODForm {
 		#region Fields - Private
 		///<summary>Helper to manager prefs relating to eClipboard and getting them to/from the db.</summary>
 		private ClinicPrefHelper _clinicPrefHelperEClipboard=new ClinicPrefHelper(
