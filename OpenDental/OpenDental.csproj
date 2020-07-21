@@ -13,7 +13,7 @@
     <AssemblyName>OpenDental</AssemblyName>
     <TargetZone>LocalIntranet</TargetZone>
     <GenerateManifests>false</GenerateManifests>
-    <ApplicationIcon>Misc\App.ico</ApplicationIcon>
+    <ApplicationIcon>imedisoft.ico</ApplicationIcon>
     <StartupObject>
     </StartupObject>
     <FileUpgradeFlags>
@@ -8809,6 +8809,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EraseCircle.cur" />
     <EmbeddedResource Include="CursorPalm.cur" />
+    <Resource Include="imedisoft.ico" />
     <Content Include="Misc\App.ico" />
     <Content Include="Misc\TerminalMgr.ico" />
     <EmbeddedResource Include="Forms Reports\FormRpInsOverpaid.resx">
