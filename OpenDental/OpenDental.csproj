@@ -952,6 +952,13 @@
       <DependentUpon>FormOpenDental.cs</DependentUpon>
     </Compile>
     <Compile Include="Misc\WebServiceRequest.cs" />
+    <Compile Include="ODR\Aggregate.cs" />
+    <Compile Include="ODR\ValidDate.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ODR\ValidDouble.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SheetFramework\SheetPrintingJob.cs" />
     <Compile Include="SheetFramework\SheetUtilL.cs" />
     <Compile Include="UI\Appt J\ContrApptPanel.cs">
@@ -5469,6 +5476,14 @@
     <EmbeddedResource Include="Main Modules\ContrImagesJ.resx">
       <DependentUpon>ContrImagesJ.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ODR\ValidDate.resx">
+      <DependentUpon>ValidDate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODR\ValidDouble.resx">
+      <DependentUpon>ValidDouble.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReportingComplex\FormParameterInput.resx" />
     <EmbeddedResource Include="ReportingComplex\FormReportComplex.resx" />
     <EmbeddedResource Include="Forms Reports\FormRpCustomAging.resx">
@@ -9401,10 +9416,6 @@
     <ProjectReference Include="..\Imedisoft.Translation\Imedisoft.Translation.csproj">
       <Project>{3218c76d-d512-43ce-a588-5e136df5888a}</Project>
       <Name>Imedisoft.Translation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ODR\xODR.csproj">
-      <Project>{84688345-BB6A-4F2F-8672-A82B52FD433B}</Project>
-      <Name>xODR</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenDentalGraph\OpenDentalGraph.csproj">
       <Project>{015e240b-23fb-4d91-b20c-ce221ddccb0f}</Project>

@@ -316,7 +316,7 @@ namespace OpenDental{
 			}
 #endif
 			else if(prog.ProgName==ProgramName.Sirona.ToString()) {
-				Sirona.SendData(prog,pat);
+				// TODO: Sirona.SendData(prog,pat);
 				return;
 			}
 			else if(prog.ProgName==ProgramName.SMARTDent.ToString()) {

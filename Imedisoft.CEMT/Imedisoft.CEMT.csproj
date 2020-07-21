@@ -310,10 +310,6 @@
       <Project>{063eccee-21c7-4300-b616-2f256ff12fce}</Project>
       <Name>Imedisoft.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ODR\xODR.csproj">
-      <Project>{84688345-BB6A-4F2F-8672-A82B52FD433B}</Project>
-      <Name>xODR</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenDental\OpenDental.csproj">
       <Project>{8136317d-c936-49b6-9e31-d90f02d2f207}</Project>
       <Name>OpenDental</Name>
