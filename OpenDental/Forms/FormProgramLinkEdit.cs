@@ -208,7 +208,7 @@ namespace Imedisoft.Forms
 			{//Clinics are Enabled and the user is restricted.
 			 //TODO: change this logic to be explicit instead of implicit (i.e get a list of all controls we want to explicitly disable.)
 				List<Control> listEnabled = new List<Control>() {
-					programNameLabel,programNameTextBox,descriptionLabel,descriptionTextBox,enabledCheckBox,hideButtonsCheckBox,pathLabel,pathTextBox,label4,textCommandLine,label9,buttonTextLabel,buttonTextTextBox,
+					programNameLabel,programNameTextBox,descriptionLabel,descriptionTextBox,enabledCheckBox,hideButtonsCheckBox,pathLabel,pathTextBox,label4,textCommandLine,buttonTextLabel,buttonTextTextBox,
 					propertiesGrid,notesLabel,notesTextBox,label6,toolbarsListBox,buttonImageLabel,buttonImagePictureBox,butClear,butImport,deleteButton
 					};
 				foreach (Control ctl in this.GetAllControls().Where(x => x.In(listEnabled)))

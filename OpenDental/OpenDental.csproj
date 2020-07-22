@@ -8741,6 +8741,7 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconFolderOpen.png" />
     <None Include="Resources\IconTrash.png" />
     <None Include="Resources\IconTimes.png" />
     <None Include="Resources\IconPlus.png" />
