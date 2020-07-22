@@ -7,6 +7,7 @@ namespace Imedisoft.Data.Cache
     public abstract class DictionaryCache<TKey, TValue> : ICache<TValue>
     {
         private readonly Dictionary<TKey, TValue> items = new Dictionary<TKey, TValue>();
+		private bool requiresRefresh = true;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Dictionary{TKey, TValue}"/> class.
@@ -27,6 +28,8 @@ namespace Imedisoft.Data.Cache
 		{
 			var result = new List<TValue>();
 
+			if (requiresRefresh) Refresh();
+
 			if (predicate != null && !IsEmpty)
 			{
 				lock (items)
@@ -46,6 +49,8 @@ namespace Imedisoft.Data.Cache
 		public TValue Find(TKey key)
 		{
 			if (IsEmpty) return default;
+
+			if (requiresRefresh) Refresh();
 
 			lock (items)
 			{
@@ -93,6 +98,8 @@ namespace Imedisoft.Data.Cache
 		{
 			if (predicate == null || IsEmpty) return 0;
 
+			if (requiresRefresh) Refresh();
+
 			int matches = 0;
 
 			lock (items)
@@ -129,6 +136,8 @@ namespace Imedisoft.Data.Cache
                     }
 				}
 			}
+
+			requiresRefresh = false;
 		}
 
 		/// <summary>
@@ -149,6 +158,8 @@ namespace Imedisoft.Data.Cache
 		/// <returns>All cache entries.</returns>
 		public List<TValue> GetAll()
 		{
+			if (requiresRefresh) Refresh();
+
 			lock (items)
 			{
 				return new List<TValue>(items.Values);
@@ -163,6 +174,8 @@ namespace Imedisoft.Data.Cache
 		public TValue FirstOrDefault(Predicate<TValue> predicate)
 		{
 			if (predicate == null) return default;
+
+			if (requiresRefresh) Refresh();
 
 			lock (items)
 			{
