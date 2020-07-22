@@ -996,7 +996,7 @@ namespace OpenDental{
 
 		private void toolBarMain_ButtonClick(object sender, ODToolBarButtonClickEventArgs e){
 			if(e.Button.Tag.GetType()==typeof(Program)) {
-				ProgramL.Execute(((Program)e.Button.Tag).ProgramNum,_patCur);
+				ProgramL.Execute(((Program)e.Button.Tag).Id,_patCur);
 				return;
 			}
 			if(e.Button.Tag.GetType()!=typeof(TB)) {

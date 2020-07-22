@@ -200,12 +200,12 @@ namespace OpenDental {
 
 		private void FormTrojanCollectSetup_Load(object sender,EventArgs e) {
 			_progCur=Programs.GetCur(ProgramName.TrojanExpressCollect);
-			textExportFolder.Text=ProgramProperties.GetPropVal(_progCur.ProgramNum,"FolderPath");
-			long billtype=PIn.Long(ProgramProperties.GetPropVal(_progCur.ProgramNum,"BillingType"));
+			textExportFolder.Text=ProgramProperties.GetPropVal(_progCur.Id,"FolderPath");
+			long billtype=PIn.Long(ProgramProperties.GetPropVal(_progCur.Id,"BillingType"));
 			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
 			comboBillType.Items.AddRange(_listBillingTypeDefs.Select(x => x.ItemName).ToArray());
 			comboBillType.SelectedIndex=Math.Max(_listBillingTypeDefs.FindIndex(x => x.DefNum==billtype),0);
-			textPassword.Text=ProgramProperties.GetPropVal(_progCur.ProgramNum,"Password");
+			textPassword.Text=ProgramProperties.GetPropVal(_progCur.Id,"Password");
 			checkEnabled.Checked=_progCur.Enabled;
 		}
 
@@ -262,9 +262,9 @@ namespace OpenDental {
 				hasChanges=true;
 			}
 			if(hasChanges
-				| ProgramProperties.SetProperty(_progCur.ProgramNum,"FolderPath",textExportFolder.Text)>0
-				| ProgramProperties.SetProperty(_progCur.ProgramNum,"BillingType",billtype.ToString())>0
-				| ProgramProperties.SetProperty(_progCur.ProgramNum,"Password",textPassword.Text)>0)
+				| ProgramProperties.SetProperty(_progCur.Id,"FolderPath",textExportFolder.Text)>0
+				| ProgramProperties.SetProperty(_progCur.Id,"BillingType",billtype.ToString())>0
+				| ProgramProperties.SetProperty(_progCur.Id,"Password",textPassword.Text)>0)
 			{
 				DataValid.SetInvalid(InvalidType.Programs);
 			}

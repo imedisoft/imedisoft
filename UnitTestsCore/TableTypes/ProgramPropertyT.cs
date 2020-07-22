@@ -14,11 +14,11 @@ namespace UnitTestsCore {
 			string computerName="")
 		{
 			ProgramProperty prop=new ProgramProperty();
-			prop.ProgramNum=programNum;
-			prop.PropertyDesc=propertyDesc;
-			prop.PropertyValue=propertyValue;
-			prop.ComputerName=computerName;
-			prop.ClinicNum=clinicNum;
+			prop.ProgramId=programNum;
+			prop.Name=propertyDesc;
+			prop.Value=propertyValue;
+			prop.MachineName=computerName;
+			prop.ClinicId=clinicNum;
 			ProgramProperties.Insert(prop);
 			ProgramProperties.RefreshCache();
 			return prop;
@@ -33,9 +33,9 @@ namespace UnitTestsCore {
 
 		public static void UpdateProgramProperty(ProgramName progName,string propertyDesc,string propertyValue,long clinicNum=0) {
 			Program prog=Programs.GetProgram(Programs.GetProgramNum(progName));
-			ProgramProperty progProp=ProgramProperties.GetFirstOrDefault(x => x.ProgramNum==prog.ProgramNum && x.PropertyDesc==propertyDesc 
-				&& x.ClinicNum==clinicNum);
-			progProp.PropertyValue=propertyValue;
+			ProgramProperty progProp=ProgramProperties.GetFirstOrDefault(x => x.ProgramId==prog.Id && x.Name==propertyDesc 
+				&& x.ClinicId==clinicNum);
+			progProp.Value=propertyValue;
 			ProgramProperties.Update(progProp);
 		}
 	}

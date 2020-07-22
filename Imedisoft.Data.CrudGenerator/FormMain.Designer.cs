@@ -35,11 +35,13 @@ namespace Imedisoft.Data.CrudGenerator
             this.typesComboBox = new System.Windows.Forms.ListBox();
             this.iconsImageList = new System.Windows.Forms.ImageList(this.components);
             this.assemblyTextBox = new System.Windows.Forms.TextBox();
+            this.namespaceTextBox = new System.Windows.Forms.TextBox();
+            this.namespaceLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // exportButton
             // 
-            this.exportButton.Location = new System.Drawing.Point(12, 438);
+            this.exportButton.Location = new System.Drawing.Point(12, 465);
             this.exportButton.Name = "exportButton";
             this.exportButton.Size = new System.Drawing.Size(110, 30);
             this.exportButton.TabIndex = 2;
@@ -53,11 +55,11 @@ namespace Imedisoft.Data.CrudGenerator
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.snippetTextBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.snippetTextBox.Location = new System.Drawing.Point(198, 12);
+            this.snippetTextBox.Location = new System.Drawing.Point(198, 39);
             this.snippetTextBox.Multiline = true;
             this.snippetTextBox.Name = "snippetTextBox";
             this.snippetTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.snippetTextBox.Size = new System.Drawing.Size(774, 637);
+            this.snippetTextBox.Size = new System.Drawing.Size(774, 610);
             this.snippetTextBox.TabIndex = 3;
             this.snippetTextBox.WordWrap = false;
             // 
@@ -68,7 +70,7 @@ namespace Imedisoft.Data.CrudGenerator
             this.typesComboBox.FormattingEnabled = true;
             this.typesComboBox.IntegralHeight = false;
             this.typesComboBox.ItemHeight = 18;
-            this.typesComboBox.Location = new System.Drawing.Point(12, 39);
+            this.typesComboBox.Location = new System.Drawing.Point(12, 66);
             this.typesComboBox.Name = "typesComboBox";
             this.typesComboBox.Size = new System.Drawing.Size(180, 393);
             this.typesComboBox.TabIndex = 1;
@@ -83,17 +85,36 @@ namespace Imedisoft.Data.CrudGenerator
             // 
             // assemblyTextBox
             // 
-            this.assemblyTextBox.Location = new System.Drawing.Point(12, 12);
+            this.assemblyTextBox.Location = new System.Drawing.Point(12, 39);
             this.assemblyTextBox.Name = "assemblyTextBox";
             this.assemblyTextBox.ReadOnly = true;
             this.assemblyTextBox.Size = new System.Drawing.Size(180, 21);
             this.assemblyTextBox.TabIndex = 0;
             this.assemblyTextBox.TabStop = false;
             // 
+            // namespaceTextBox
+            // 
+            this.namespaceTextBox.Location = new System.Drawing.Point(300, 12);
+            this.namespaceTextBox.Name = "namespaceTextBox";
+            this.namespaceTextBox.Size = new System.Drawing.Size(300, 21);
+            this.namespaceTextBox.TabIndex = 5;
+            this.namespaceTextBox.Text = "OpenDentBusiness";
+            // 
+            // namespaceLabel
+            // 
+            this.namespaceLabel.AutoSize = true;
+            this.namespaceLabel.Location = new System.Drawing.Point(232, 15);
+            this.namespaceLabel.Name = "namespaceLabel";
+            this.namespaceLabel.Size = new System.Drawing.Size(62, 13);
+            this.namespaceLabel.TabIndex = 4;
+            this.namespaceLabel.Text = "Namespace";
+            // 
             // FormMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(984, 661);
+            this.Controls.Add(this.namespaceLabel);
+            this.Controls.Add(this.namespaceTextBox);
             this.Controls.Add(this.assemblyTextBox);
             this.Controls.Add(this.typesComboBox);
             this.Controls.Add(this.snippetTextBox);
@@ -115,5 +136,7 @@ namespace Imedisoft.Data.CrudGenerator
         private System.Windows.Forms.ListBox typesComboBox;
         private System.Windows.Forms.ImageList iconsImageList;
         private System.Windows.Forms.TextBox assemblyTextBox;
+        private System.Windows.Forms.TextBox namespaceTextBox;
+        private System.Windows.Forms.Label namespaceLabel;
     }
 }

@@ -112,17 +112,17 @@ namespace OpenDental {
 				bool hasPaySimple=false;
 				Dictionary<string,int> dictEnabledProcessors=new Dictionary<string,int>();
 				int idx=0;
-				bool hasXChargePreventCcAdd=PIn.Bool(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.Xcharge).ProgramNum,
+				bool hasXChargePreventCcAdd=PIn.Bool(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.Xcharge).Id,
 					ProgramProperties.PropertyDescs.XCharge.XChargePreventSavingNewCC,Clinics.ClinicNum));
 				if(Programs.IsEnabled(ProgramName.Xcharge) && !hasXChargePreventCcAdd) {
 					dictEnabledProcessors["X-Charge"]=idx++;
 				}
-				bool hasPayConnectPreventCcAdd=PIn.Bool(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.PayConnect).ProgramNum,
+				bool hasPayConnectPreventCcAdd=PIn.Bool(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.PayConnect).Id,
 					PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,Clinics.ClinicNum));
 				if(Programs.IsEnabled(ProgramName.PayConnect) && !hasPayConnectPreventCcAdd) {
 					dictEnabledProcessors["PayConnect"]=idx++;
 				}
-				bool hasPaySimplePreventCCAdd=PIn.Bool(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.PaySimple).ProgramNum,
+				bool hasPaySimplePreventCCAdd=PIn.Bool(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.PaySimple).Id,
 					PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,Clinics.ClinicNum));
 				if(Programs.IsEnabled(ProgramName.PaySimple) && !hasPaySimplePreventCCAdd) {
 					dictEnabledProcessors["PaySimple"]=idx++;
@@ -155,8 +155,8 @@ namespace OpenDental {
 				if(hasXCharge) {
 					Program prog=Programs.GetCur(ProgramName.Xcharge);
 					string path=Programs.GetProgramPath(prog);
-					string xUsername=ProgramProperties.GetPropVal(prog.ProgramNum,"Username",Clinics.ClinicNum).Trim();
-					string xPassword=ProgramProperties.GetPropVal(prog.ProgramNum,"Password",Clinics.ClinicNum).Trim();
+					string xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.ClinicNum).Trim();
+					string xPassword=ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.ClinicNum).Trim();
 					//Force user to retry entering information until it's correct or they press cancel
 					while(!File.Exists(path) || string.IsNullOrEmpty(xPassword) || string.IsNullOrEmpty(xUsername)) {
 						MessageBox.Show("The Path, Username, and/or Password for X-Charge have not been set or are invalid.");
@@ -170,8 +170,8 @@ namespace OpenDental {
 						}
 						prog=Programs.GetCur(ProgramName.Xcharge);//refresh local variable prog to reflect any changes made in setup window
 						path=Programs.GetProgramPath(prog);
-						xUsername=ProgramProperties.GetPropVal(prog.ProgramNum,"Username",Clinics.ClinicNum).Trim();
-						xPassword=ProgramProperties.GetPropVal(prog.ProgramNum,"Password",Clinics.ClinicNum).Trim();
+						xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.ClinicNum).Trim();
+						xPassword=ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.ClinicNum).Trim();
 					}
 					xPassword=CodeBase.MiscUtils.Decrypt(xPassword);
 					ProcessStartInfo info=new ProcessStartInfo(path);

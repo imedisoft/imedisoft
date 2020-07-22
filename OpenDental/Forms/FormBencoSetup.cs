@@ -12,12 +12,12 @@ namespace OpenDental {
 		public FormBencoSetup() {
 			InitializeComponent();
 			_prog=Programs.GetCur(ProgramName.BencoPracticeManagement);
-			_listToolButs=ToolButItems.GetForProgram(_prog.ProgramNum); //Only set up for Main Toolbar
+			_listToolButs=ToolButItems.GetForProgram(_prog.Id); //Only set up for Main Toolbar
 		}
 
 		private void FormBencoSetup_Load(object sender,EventArgs e) {
 			checkEnable.Checked=_prog.Enabled;
-			textProgDesc.Text=_prog.ProgDesc;
+			textProgDesc.Text=_prog.Description;
 			textPath.Text=_prog.Path;
 			textButText.Text=_listToolButs.FirstOrDefault()?.ButtonText??"Benco";
 			FillToolBars();
@@ -64,14 +64,14 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//Program
 			_prog.Enabled=checkEnable.Checked;
-			_prog.ProgDesc=textProgDesc.Text;
+			_prog.Description=textProgDesc.Text;
 			_prog.Path=textPath.Text;
 			Programs.Update(_prog);
 			//Toolbar button
-			ToolButItems.DeleteAllForProgram(_prog.ProgramNum);
+			ToolButItems.DeleteAllForProgram(_prog.Id);
 			foreach(ToolBarsAvail toolbar in listToolBars.SelectedItems) {
 				ToolButItem newBut=new ToolButItem();
-				newBut.ProgramNum=_prog.ProgramNum;
+				newBut.ProgramNum=_prog.Id;
 				newBut.ToolBar=toolbar;
 				newBut.ButtonText=textButText.Text;
 				ToolButItems.Insert(newBut);

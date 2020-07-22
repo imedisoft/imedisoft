@@ -721,7 +721,7 @@ namespace OpenDental
 
 		private bool SetAdvertising(ProgramName progName, XmlDocument doc)
 		{
-			ProgramProperty property = ProgramProperties.GetForProgram(Programs.GetCur(progName).ProgramNum).FirstOrDefault(x => x.PropertyDesc == "Disable Advertising HQ");
+			ProgramProperty property = ProgramProperties.GetForProgram(Programs.GetCur(progName).Id).FirstOrDefault(x => x.Name == "Disable Advertising HQ");
 			ProgramProperty propOld = null;
 			XmlNode node = doc.SelectSingleNode("//" + progName.ToString());
 			if (node == null)
@@ -731,8 +731,8 @@ namespace OpenDental
 			if (property == null)
 			{
 				property = new ProgramProperty();
-				property.PropertyDesc = "Disable Advertising HQ";
-				property.ProgramNum = Programs.GetCur(progName).ProgramNum;
+				property.Name = "Disable Advertising HQ";
+				property.ProgramId = Programs.GetCur(progName).Id;
 			}
 			else
 			{
@@ -742,7 +742,7 @@ namespace OpenDental
 			//"false" from HQ == 1 for the property value.
 			//This is because the boolean from HQ is whether or not to show the advertisement, whereas in OD the boolean is whether or not to hide the advertisement
 			bool isDisabledByHQ = !(node.InnerText.ToLower() == "true");
-			property.PropertyValue = POut.Bool(isDisabledByHQ);
+			property.Value = POut.Bool(isDisabledByHQ);
 			if (propOld == null)
 			{
 				ProgramProperties.Insert(property);
@@ -1376,7 +1376,7 @@ namespace OpenDental
 			}
 			else if (e.Button.Tag.GetType() == typeof(Program))
 			{
-				ProgramL.Execute(((Program)e.Button.Tag).ProgramNum, Patients.GetPat(CurPatNum));
+				ProgramL.Execute(((Program)e.Button.Tag).Id, Patients.GetPat(CurPatNum));
 			}
 		}
 

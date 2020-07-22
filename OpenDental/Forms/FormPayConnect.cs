@@ -89,7 +89,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,"TerminalProcessingEnabled",_clinicNum))) {
+			if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.Id,"TerminalProcessingEnabled",_clinicNum))) {
 				try {
 					//If the config file for the DentalXChange credit card processing .dll doesn't exist, construct it from the included resource.
 					if(!File.Exists("DpsPos.dll.config")) {
@@ -101,14 +101,14 @@ namespace OpenDental {
 					//We will still allow them to run the transaction. Probably the worse that will happen is the timeout variable will be less than desired.
 				}
 			}
-			if(!PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,"TerminalProcessingEnabled",_clinicNum))
+			if(!PIn.Bool(ProgramProperties.GetPropVal(_progCur.Id,"TerminalProcessingEnabled",_clinicNum))
 				|| _isAddingCard) //When adding a card, the web service must be used.
 			{
 				groupProcessMethod.Visible=false;
 				Height-=55;//All the controls except for the Transaction Type group box should be anchored to the bottom, so they will move themselves up.
 			}
 			else {
-				string procMethod=ProgramProperties.GetPropValForClinicOrDefault(_progCur.ProgramNum,
+				string procMethod=ProgramProperties.GetPropValForClinicOrDefault(_progCur.Id,
 					PayConnect.ProgramProperties.DefaultProcessingMethod,_clinicNum);
 				if(procMethod=="0") {
 					radioWebService.Checked=true;
@@ -147,7 +147,7 @@ namespace OpenDental {
 				checkForceDuplicate.Checked=true;
 				checkForceDuplicate.Enabled=false;
 			}
-			if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,_clinicNum))) {
+			if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.Id,PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,_clinicNum))) {
 				textCardNumber.ReadOnly=true;
 			}
 		}
@@ -289,7 +289,7 @@ namespace OpenDental {
 			checkForceDuplicate.Enabled=true;
 			FillFieldsFromCard();
 			textNameOnCard.Text=_patCur.GetNameFL();
-			if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,_clinicNum))) {
+			if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.Id,PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,_clinicNum))) {
 				textCardNumber.ReadOnly=true;
 			}
 		}
@@ -371,7 +371,7 @@ namespace OpenDental {
 				MessageBox.Show("Ref Number required.");
 				return false;
 			}
-			string paytype=ProgramProperties.GetPropVal(_progCur.ProgramNum,"PaymentType",_clinicNum);
+			string paytype=ProgramProperties.GetPropVal(_progCur.Id,"PaymentType",_clinicNum);
 			if(!Defs.GetDefsForCategory(DefCat.PaymentTypes,true).Any(x => x.DefNum.ToString()==paytype)) { //paytype is not a valid DefNum
 				MessageBox.Show("The PayConnect payment type has not been set.");
 				return false;
@@ -427,8 +427,8 @@ namespace OpenDental {
 				return false;
 			}
 			//verify the selected clinic has a username and password type entered
-			if(ProgramProperties.GetPropVal(_progCur.ProgramNum,"Username",_clinicNum)==""
-				|| ProgramProperties.GetPropVal(_progCur.ProgramNum,"Password",_clinicNum)=="") //if username or password is blank
+			if(ProgramProperties.GetPropVal(_progCur.Id,"Username",_clinicNum)==""
+				|| ProgramProperties.GetPropVal(_progCur.Id,"Password",_clinicNum)=="") //if username or password is blank
 			{
 				MessageBox.Show("The PayConnect username and/or password has not been set.");
 				return false;
@@ -534,7 +534,7 @@ namespace OpenDental {
 				expYear=_creditCardCur.PayConnectTokenExp.Year;
 				expMonth=_creditCardCur.PayConnectTokenExp.Month;
 			}
-			else if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,_clinicNum))) {
+			else if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.Id,PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,_clinicNum))) {
 				MessageBox.Show("Cannot add a new credit card.");
 				return false;
 			}

@@ -50,8 +50,8 @@ namespace OpenDental {
 				comboClinic.SelectedClinicNum=Clinics.ClinicNum;
 				_selectedClinicNum=Clinics.ClinicNum;
 			}
-			_dictClinicListProgProps=ProgramProperties.GetForProgram(_progCur.ProgramNum)//get list of all props for the program
-				.GroupBy(x => x.ClinicNum)//group each clinic
+			_dictClinicListProgProps=ProgramProperties.GetForProgram(_progCur.Id)//get list of all props for the program
+				.GroupBy(x => x.ClinicId)//group each clinic
 				.ToDictionary(x => x.Key,x => x.ToList());//turn list into a dictionary of key=ClinicNum, value=List<ProgramProperty> for the clinic
 			DateTime dateTSend=PrefC.GetDateT(PrefName.TransworldServiceTimeDue);
 			if(dateTSend!=DateTime.MinValue) {
@@ -100,38 +100,38 @@ namespace OpenDental {
 				listPropsCurClinic=_dictClinicListProgProps[0];//dictionary guaranteed to have ClinicNum 0 in it
 			}
 			foreach(ProgramProperty propCur in listPropsCurClinic) {
-				switch(propCur.PropertyDesc) {
+				switch(propCur.Name) {
 					case "SftpServerAddress":
-						textSftpAddress.Text=propCur.PropertyValue;
+						textSftpAddress.Text=propCur.Value;
 						continue;
 					case "SftpServerPort":
-						textSftpPort.Text=propCur.PropertyValue;
+						textSftpPort.Text=propCur.Value;
 						continue;
 					case "SftpUsername":
-						textSftpUsername.Text=propCur.PropertyValue;
+						textSftpUsername.Text=propCur.Value;
 						continue;
 					case "SftpPassword":
-						textSftpPassword.Text=propCur.PropertyValue;
+						textSftpPassword.Text=propCur.Value;
 						continue;
 					case "ClientIdAccelerator":
-						textClientIdAccelerator.Text=propCur.PropertyValue;
+						textClientIdAccelerator.Text=propCur.Value;
 						continue;
 					case "ClientIdCollection":
-						textClientIdCollection.Text=propCur.PropertyValue;
+						textClientIdCollection.Text=propCur.Value;
 						continue;
 					case "IsThankYouLetterEnabled":
-						checkThankYouLetter.Checked=PIn.Bool(propCur.PropertyValue);
+						checkThankYouLetter.Checked=PIn.Bool(propCur.Value);
 						continue;
 					case "SelectedServices":
-						checkAccelService.Checked=propCur.PropertyValue.Contains(((int)TsiDemandType.Accelerator).ToString());
-						checkPRService.Checked=propCur.PropertyValue.Contains(((int)TsiDemandType.ProfitRecovery).ToString());
-						checkCollService.Checked=propCur.PropertyValue.Contains(((int)TsiDemandType.Collection).ToString());
+						checkAccelService.Checked=propCur.Value.Contains(((int)TsiDemandType.Accelerator).ToString());
+						checkPRService.Checked=propCur.Value.Contains(((int)TsiDemandType.ProfitRecovery).ToString());
+						checkCollService.Checked=propCur.Value.Contains(((int)TsiDemandType.Collection).ToString());
 						continue;
 					case "SyncExcludePosAdjType":
-							comboPosAdjType.SetSelectedDefNum(PIn.Long(propCur.PropertyValue)); 
+							comboPosAdjType.SetSelectedDefNum(PIn.Long(propCur.Value)); 
 						continue;
 					case "SyncExcludeNegAdjType":
-							comboNegAdjType.SetSelectedDefNum(PIn.Long(propCur.PropertyValue));
+							comboNegAdjType.SetSelectedDefNum(PIn.Long(propCur.Value));
 						continue;
 				}
 			}
@@ -140,9 +140,9 @@ namespace OpenDental {
 		
 		///<summary>Handles both visibility and checking of checkHideButtons.</summary>
 		private void SetAdvertising() {
-			ProgramProperty prop=_dictClinicListProgProps[0].FirstOrDefault(x => x.PropertyDesc=="Disable Advertising");//dict guaranteed to contain key 0
+			ProgramProperty prop=_dictClinicListProgProps[0].FirstOrDefault(x => x.Name=="Disable Advertising");//dict guaranteed to contain key 0
 			checkHideButtons.Visible=(prop!=null && !checkEnabled.Checked);//show check box if disable prop exists and program is not enabled
-			checkHideButtons.Checked=(prop?.PropertyValue=="1");//check box checked if disable prop exists and is set to "1" for HQ
+			checkHideButtons.Checked=(prop?.Value=="1");//check box checked if disable prop exists and is set to "1" for HQ
 		}
 
 		private void checkEnabled_Click(object sender,EventArgs e) {
@@ -157,9 +157,9 @@ namespace OpenDental {
 			if(!_dictClinicListProgProps.TryGetValue(_selectedClinicNum,out listPropsCur)) {
 				//if there isn't a list of props for the clinic, create a new list for comparison and possibly for inserting for the clinic
 				listPropsCur=listHqProps.Select(x => new ProgramProperty() {
-					ProgramNum=x.ProgramNum,
-					ClinicNum=_selectedClinicNum,
-					PropertyDesc=x.PropertyDesc
+					ProgramId=x.ProgramId,
+					ClinicId=_selectedClinicNum,
+					Name=x.Name
 				}).ToList();
 			}
 			//these are the props that will be synced with HQ and used to determine whether a clinic's props should be deleted or used instead of the HQ props
@@ -167,39 +167,39 @@ namespace OpenDental {
 			string[] listSyncedProps=new[] { "SftpServerAddress","SftpServerPort","SftpUsername","SftpPassword","ClientIdAccelerator","ClientIdCollection",
 				"IsThankYouLetterEnabled","SelectedServices","SyncExcludePosAdjType","SyncExcludeNegAdjType" };
 			foreach(ProgramProperty propCur in listPropsCur) {//update the currently selected props with the current form values
-				switch(propCur.PropertyDesc) {
+				switch(propCur.Name) {
 					case "SftpServerAddress":
-						propCur.PropertyValue=textSftpAddress.Text;
+						propCur.Value=textSftpAddress.Text;
 						continue;
 					case "SftpServerPort":
-						propCur.PropertyValue=textSftpPort.Text;
+						propCur.Value=textSftpPort.Text;
 						continue;
 					case "SftpUsername":
-						propCur.PropertyValue=textSftpUsername.Text;
+						propCur.Value=textSftpUsername.Text;
 						continue;
 					case "SftpPassword":
-						propCur.PropertyValue=textSftpPassword.Text;
+						propCur.Value=textSftpPassword.Text;
 						continue;
 					case "ClientIdAccelerator":
-						propCur.PropertyValue=textClientIdAccelerator.Text;
+						propCur.Value=textClientIdAccelerator.Text;
 						continue;
 					case "ClientIdCollection":
-						propCur.PropertyValue=textClientIdCollection.Text;
+						propCur.Value=textClientIdCollection.Text;
 						continue;
 					case "IsThankYouLetterEnabled":
-						propCur.PropertyValue=POut.Bool(checkThankYouLetter.Checked);
+						propCur.Value=POut.Bool(checkThankYouLetter.Checked);
 						continue;
 					case "Disable Advertising":
-						_dictClinicListProgProps.Values.SelectMany(x => x.Where(y => y.PropertyDesc=="Disable Advertising")).ToList()
-							.ForEach(y => y.PropertyValue=POut.Bool(checkHideButtons.Checked));
-						propCur.PropertyValue=POut.Bool(checkHideButtons.Checked);//in case list is for a new clinic and not in dict
+						_dictClinicListProgProps.Values.SelectMany(x => x.Where(y => y.Name=="Disable Advertising")).ToList()
+							.ForEach(y => y.Value=POut.Bool(checkHideButtons.Checked));
+						propCur.Value=POut.Bool(checkHideButtons.Checked);//in case list is for a new clinic and not in dict
 						continue;
 					case "Disable Advertising HQ":
 						//false if prop is null or if the value is anything but "1"
-						bool isAdvertDisabledHQ=(listHqProps.FirstOrDefault(x => x.PropertyDesc=="Disable Advertising HQ")?.PropertyValue=="1");
-						_dictClinicListProgProps.Values.SelectMany(x => x.Where(y => y.PropertyDesc=="Disable Advertising HQ")).ToList()
-							.ForEach(x => x.PropertyValue=POut.Bool(isAdvertDisabledHQ));//in case list is for a new clinic and not in dict
-						propCur.PropertyValue=POut.Bool(isAdvertDisabledHQ);
+						bool isAdvertDisabledHQ=(listHqProps.FirstOrDefault(x => x.Name=="Disable Advertising HQ")?.Value=="1");
+						_dictClinicListProgProps.Values.SelectMany(x => x.Where(y => y.Name=="Disable Advertising HQ")).ToList()
+							.ForEach(x => x.Value=POut.Bool(isAdvertDisabledHQ));//in case list is for a new clinic and not in dict
+						propCur.Value=POut.Bool(isAdvertDisabledHQ);
 						continue;
 					case "SelectedServices":
 						List<int> selectedServices=new List<int>();
@@ -212,25 +212,25 @@ namespace OpenDental {
 						if(checkCollService.Checked) {
 							selectedServices.Add((int)TsiDemandType.Collection);
 						}
-						propCur.PropertyValue=string.Join(",",selectedServices);
+						propCur.Value=string.Join(",",selectedServices);
 						continue;
 					case "SyncExcludePosAdjType":
-							propCur.PropertyValue=comboPosAdjType.GetSelectedDefNum().ToString();
+							propCur.Value=comboPosAdjType.GetSelectedDefNum().ToString();
 						continue;
 					case "SyncExcludeNegAdjType":
-							propCur.PropertyValue=comboNegAdjType.GetSelectedDefNum().ToString();
+							propCur.Value=comboNegAdjType.GetSelectedDefNum().ToString();
 						continue;
 				}
 			}
 			if(_selectedClinicNum==0) {//if HQ selected
 				_dictClinicListProgProps.ToList()//go through all clinic properties
 					.RemoveAll(x => x.Key>0 //remove the non-HQ clinic props
-						&& x.Value.All(y => !listSyncedProps.Contains(y.PropertyDesc)//the prop is an HQ only prop, i.e. the clinic prop is ignored
-							|| listHqProps.Any(z => z.PropertyDesc==y.PropertyDesc && z.PropertyValue==y.PropertyValue)));//have matching HQ prop desc and value
+						&& x.Value.All(y => !listSyncedProps.Contains(y.Name)//the prop is an HQ only prop, i.e. the clinic prop is ignored
+							|| listHqProps.Any(z => z.Name==y.Name && z.Value==y.Value)));//have matching HQ prop desc and value
 			}
 			else {
-				if(listPropsCur.All(x => !listSyncedProps.Contains(x.PropertyDesc)//if all props for the non-HQ clinic are HQ only props, i.e. the clinic prop is ignored
-					|| listHqProps.Any(y => y.PropertyDesc==x.PropertyDesc && y.PropertyValue==x.PropertyValue)))//have matching HQ prop desc and value
+				if(listPropsCur.All(x => !listSyncedProps.Contains(x.Name)//if all props for the non-HQ clinic are HQ only props, i.e. the clinic prop is ignored
+					|| listHqProps.Any(y => y.Name==x.Name && y.Value==x.Value)))//have matching HQ prop desc and value
 				{
 					//remove non-HQ clinic props, they are synced with HQ
 					_dictClinicListProgProps.Remove(_selectedClinicNum);//does not throw exception if dict doesn't contain the key! (according to MSDN)
@@ -323,7 +323,11 @@ namespace OpenDental {
 				_progCur.Enabled=checkEnabled.Checked;
 				Programs.Update(_progCur);
 			}
-			ProgramProperties.Sync(_dictClinicListProgProps.Where(x => comboClinic.ListClinics.Select(x => x.ClinicNum).Contains(x.Key)).SelectMany(x => x.Value).ToList(),_progCur.ProgramNum,comboClinic.ListClinics.Select(x => x.ClinicNum).ToList());
+
+			ProgramProperties.Sync(
+				_dictClinicListProgProps.Where(x => comboClinic.ListClinics.Select(x => x.ClinicNum).Contains(x.Key)).SelectMany(x => x.Value).ToList(),
+				_progCur.Id,comboClinic.ListClinics.Select(x => x.ClinicNum).ToList());
+
 			DataValid.SetInvalid(InvalidType.Programs);
 			string updateFreq=numericSendFrequency.Value+" "+(FrequencyUnit)comboSendFrequencyUnits.SelectedIndex;
 			bool hasChanged=false;

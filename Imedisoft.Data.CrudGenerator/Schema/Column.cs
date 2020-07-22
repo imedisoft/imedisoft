@@ -27,6 +27,11 @@ namespace Imedisoft.Data.CrudGenerator.Schema
         public Type Type { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the column is read only.
+        /// </summary>
+        public bool ReadOnly { get; }
+
+        /// <summary>
         /// Determines whether the column represents a numeric type.
         /// </summary>
         public bool IsNumeric => 
@@ -49,6 +54,7 @@ namespace Imedisoft.Data.CrudGenerator.Schema
 
             FieldName = fieldInfo.Name;
             Name = columnAttribute?.Name ?? FieldName;
+            ReadOnly = columnAttribute?.ReadOnly ?? false;
 
             IsPrimaryKey = fieldInfo.GetCustomAttribute<PrimaryKeyAttribute>() != null;
 

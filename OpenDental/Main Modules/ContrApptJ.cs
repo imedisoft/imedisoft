@@ -676,7 +676,7 @@ namespace OpenDental {
 				if(_patCur!=null) {
 					pat=Patients.GetPat(_patCur.PatNum);
 				}
-				ProgramL.Execute(((Program)e.Button.Tag).ProgramNum,pat);
+				ProgramL.Execute(((Program)e.Button.Tag).Id,pat);
 			}
 		}
 

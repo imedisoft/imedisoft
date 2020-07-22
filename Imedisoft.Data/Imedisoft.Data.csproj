@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations\ColumnAttribute.cs" />
+    <Compile Include="Annotations\ForeignKeyAttribute.cs" />
     <Compile Include="Annotations\IgnoreAttribute.cs" />
     <Compile Include="Annotations\PrimaryKeyAttribute.cs" />
     <Compile Include="Annotations\TableAttribute.cs" />

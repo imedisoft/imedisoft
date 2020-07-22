@@ -1,458 +1,528 @@
+using CodeBase;
+using DataConnectionBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Cache;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
-using CodeBase;
-using DataConnectionBase;
 using System.Text.RegularExpressions;
-using Imedisoft.Data;
 
-namespace OpenDentBusiness {
-
-	///<summary></summary>
-	public class ProgramProperties{
-		#region Get Methods
-		#endregion
-
-		#region Modification Methods
-		
-		#region Insert
-		#endregion
-
-		#region Update
-		#endregion
-
-		#region Delete
-		#endregion
-
-		#endregion
-
-		#region Misc Methods
-		#endregion
-
-		#region CachePattern
-
-		private class ProgramPropertyCache : CacheListAbs<ProgramProperty> {
-			protected override List<ProgramProperty> GetCacheFromDb() {
-				string command="SELECT * FROM programproperty";
-				return Crud.ProgramPropertyCrud.SelectMany(command);
-			}
-			protected override List<ProgramProperty> TableToList(DataTable table) {
-				return Crud.ProgramPropertyCrud.TableToList(table);
-			}
-			protected override ProgramProperty Copy(ProgramProperty programProperty) {
-				return programProperty.Copy();
-			}
-			protected override DataTable ListToTable(List<ProgramProperty> listProgramPropertys) {
-				return Crud.ProgramPropertyCrud.ListToTable(listProgramPropertys,"ProgramProperty");
-			}
-			protected override void FillCacheIfNeeded() {
-				ProgramProperties.GetTableFromCache(false);
-			}
-		}
-		
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static ProgramPropertyCache _programPropertyCache=new ProgramPropertyCache();
-
-		public static ProgramProperty GetFirstOrDefault(Func<ProgramProperty,bool> match,bool isShort=false) {
-			return _programPropertyCache.GetFirstOrDefault(match,isShort);
-		}
-
-		public static List<ProgramProperty> GetWhere(Predicate<ProgramProperty> match,bool isShort=false) {
-			return _programPropertyCache.GetWhere(match,isShort);
-		}
-
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache() {
-			return GetTableFromCache(true);
-		}
-
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table) {
-			_programPropertyCache.FillCacheFromTable(table);
-		}
-
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			
-			return _programPropertyCache.GetTableFromCache(doRefreshCache);
-		}
-
-		#endregion
-
-		///<summary></summary>
-		public static void Update(ProgramProperty programProp){
-			
-			Crud.ProgramPropertyCrud.Update(programProp);
-		}
-
-		///<summary></summary>
-		public static bool Update(ProgramProperty programProp,ProgramProperty programPropOld){
-			
-			return Crud.ProgramPropertyCrud.Update(programProp,programPropOld);
-		}
-
-		///<summary>Returns true if the program property was updated.  False if no change needed.  Callers need to invalidate cache as needed.</summary>
-		public static bool UpdateProgramPropertyWithValue(ProgramProperty programProp,string newValue) {
-			//No need to check RemotingRole; no call to db.
-			if(programProp.PropertyValue==newValue) {
-				return false;
-			}
-			programProp.PropertyValue=newValue;
-			ProgramProperties.Update(programProp);
-			return true;
-		}
-
-		///<summary>This is called from FormClinicEdit and from InsertOrUpdateLocalOverridePath.  PayConnect can have clinic specific login credentials,
-		///so the ProgramProperties for PayConnect are duplicated for each clinic.  The properties duplicated are Username, Password, and PaymentType.
-		///There's also a 'Headquarters' or no clinic set of these props with ClinicNum 0, which is the set of props inserted with each new clinic.</summary>
-		public static long Insert(ProgramProperty programProp){
-			
-			return Crud.ProgramPropertyCrud.Insert(programProp);
-		}
-
-		///<summary></summary>
-		public static void InsertMany(List<ProgramProperty> listProgramProps) {
-			
-			Crud.ProgramPropertyCrud.InsertMany(listProgramProps);
-		}
-
-		///<summary>Copies rows for a given programNum for each clinic in listClinicNums.  Returns true if changes were made to the db.</summary>
-		public static bool InsertForClinic(long programNum, List<long> listClinicNums)
+namespace OpenDentBusiness
+{
+    public partial class ProgramProperties
+	{
+		[CacheGroup(nameof(InvalidType.Programs))]
+		private class ProgramPropertyCache : ListCache<ProgramProperty>
 		{
+            protected override IEnumerable<ProgramProperty> Load()
+				=> SelectMany("SELECT * FROM programproperty");
+		}
 
-			if (listClinicNums == null || listClinicNums.Count == 0)
+		private static readonly ProgramPropertyCache cache = new ProgramPropertyCache();
+
+		public static ProgramProperty GetFirstOrDefault(Predicate<ProgramProperty> match) 
+			=> cache.FirstOrDefault(match);
+
+		public static List<ProgramProperty> GetWhere(Predicate<ProgramProperty> match) 
+			=> cache.Find(match);
+
+		public static void RefreshCache()
+			=> cache.Refresh();
+
+		/// <summary>
+		/// Returns true if the program property was updated. 
+		/// False if no change needed. Callers need to invalidate cache as needed.
+		/// </summary>
+		public static bool UpdateProgramPropertyWithValue(ProgramProperty programProperty, string newValue)
+		{
+			if (programProperty.Value == newValue)
 			{
 				return false;
 			}
-			bool hasInsert = false;
-			string command = "";
 
-			command = "INSERT INTO programproperty (ProgramNum,PropertyDesc,PropertyValue,ComputerName,ClinicNum) ";
-			for (int i = 0; i < listClinicNums.Count; i++)
+			programProperty.Value = newValue;
+
+			Update(programProperty);
+
+			return true;
+		}
+
+		/// <summary>
+		/// Copies rows for a given programNum for each clinic in listClinicNums.
+		/// Returns true if changes were made to the db.
+		/// </summary>
+		public static bool InsertForClinic(long programId, List<long> clinicIds)
+		{
+			if (clinicIds == null || clinicIds.Count == 0)
+			{
+				return false;
+			}
+
+            var command = "INSERT INTO programproperty (ProgramNum,PropertyDesc,PropertyValue,ComputerName,ClinicNum) ";
+            for (int i = 0; i < clinicIds.Count; i++)
 			{
 				if (i > 0)
 				{
 					command += " UNION ";
 				}
-				command += "SELECT ProgramNum,PropertyDesc,PropertyValue,ComputerName," + POut.Long(listClinicNums[i]) + " "
-					+ "FROM programproperty "
-					+ "WHERE ProgramNum=" + POut.Long(programNum) + " "
-					+ "AND ClinicNum=0";
+
+				command += 
+					"SELECT ProgramNum,PropertyDesc,PropertyValue,ComputerName," + clinicIds[i] + " " +
+					"FROM programproperty WHERE ProgramNum=" + programId + " AND ClinicNum=0";
 			}
-			hasInsert = (Database.ExecuteInsert(command) > 0);
 
-
-			return hasInsert;
+            return Database.ExecuteInsert(command) > 0;
 		}
 
-		///<summary>Safe to call on any program. Only returns true if the program is not enabled 
-		///AND the program has a property of "Disable Advertising" = 1 OR "Disable Advertising HQ" = 1.
-		///This means that either the office has disabled the ad or HQ has disabled the ad.</summary>
-		public static bool IsAdvertisingDisabled(ProgramName progName) {
-			Program program=Programs.GetCur(progName);
-			return IsAdvertisingDisabled(program);
-		}
+		/// <summary>
+		/// Safe to call on any program. Only returns true if the program is not enabled 
+		/// AND the program has a property of "Disable Advertising" = 1 OR "Disable Advertising HQ" = 1.
+		/// This means that either the office has disabled the ad or HQ has disabled the ad.
+		/// </summary>
+		public static bool IsAdvertisingDisabled(ProgramName programName) 
+			=> IsAdvertisingDisabled(Programs.GetCur(programName));
 
-		///<summary>Safe to call on any program. Only returns true if the program is not enabled 
-		///AND the program has a property of "Disable Advertising" = 1 OR "Disable Advertising HQ" = 1.
-		///This means that either the office has disabled the ad or HQ has disabled the ad.</summary>
-		public static bool IsAdvertisingDisabled(Program program) {
-			if(program==null || program.Enabled) {
-				return false;//do not block advertising
+		/// <summary>
+		/// Safe to call on any program. Only returns true if the program is not enabled 
+		/// AND the program has a property of "Disable Advertising" = 1 OR "Disable Advertising HQ" = 1.
+		/// This means that either the office has disabled the ad or HQ has disabled the ad.
+		/// </summary>
+		public static bool IsAdvertisingDisabled(Program program)
+		{
+			if (program == null || program.Enabled)
+			{
+				return false; // do not block advertising
 			}
-			return GetForProgram(program.ProgramNum).Any(x => (x.PropertyDesc=="Disable Advertising" && x.PropertyValue=="1") //Office has decided to hide the advertising
-				|| (x.PropertyDesc=="Disable Advertising HQ" && x.PropertyValue=="1"));//HQ has decided to hide the advertising
+
+			return GetForProgram(program.Id).Any(x => 
+				(x.Name == "Disable Advertising" && x.Value == "1") || //Office has decided to hide the advertising
+				(x.Name == "Disable Advertising HQ" && x.Value == "1"));//HQ has decided to hide the advertising
 		}
 
-		///<summary>True if this is a program that we advertise.</summary>
-		public static bool IsAdvertisingBridge(long programNum) {
-			return GetForProgram(programNum).Any(x => x.PropertyDesc.In("Disable Advertising","Disable Advertising HQ"));
-		}
+		/// <summary>
+		/// Gets the value of the program property with the specified name.
+		/// </summary>
+		/// <param name="programId">The ID of the program.</param>
+		/// <param name="programPropertyName">The name of the property.</param>
+		/// <param name="clinicId">The ID of the clinic.</param>
+		/// <param name="machineName">The name of the machine.</param>
+		/// <returns>The value of the property or a empty string if the property is not set.</returns>
+		public static string Get(long programId, string programPropertyName, long? clinicId, string machineName)
+        {
+			var programProperties = cache.Find(prop => prop.ProgramId == programId && prop.Name == programPropertyName.ToLower());
+			var programProperty = programProperties.FirstOrDefault(prop =>
+				prop.ClinicId == 0 && prop.MachineName == "");
 
-		///<summary>Returns a list of ProgramProperties with the specified programNum and the specified clinicNum from the cache.
-		///To get properties when clinics are not enabled or properties for 'Headquarters' use clinicNum 0.
-		///Does not include path overrides.</summary>
-		public static List<ProgramProperty> GetListForProgramAndClinic(long programNum,long clinicNum) {
-			//No need to check RemotingRole; no call to db.
-			return ProgramProperties.GetWhere(x => x.ProgramNum==programNum && x.ClinicNum==clinicNum && x.PropertyDesc!="");
-		}
+			if (clinicId.HasValue)
+			{
+				// Is there a clinic specific property with a machine override?
+				programProperty = programProperties.FirstOrDefault(prop =>
+					prop.ClinicId == clinicId &&
+					prop.MachineName.Equals(machineName, StringComparison.InvariantCultureIgnoreCase));
 
-		///<summary>Returns a List of ProgramProperties attached to the specified programNum with the given clinicnum.  
-		///Includes the default program properties as well (ClinicNum==0).</summary>
-		public static List<ProgramProperty> GetListForProgramAndClinicWithDefault(long programNum,long clinicNum) {
-			//No need to check RemotingRole; no call to db.
-			List<ProgramProperty> listClinicProperties=GetWhere(x => x.ProgramNum==programNum && x.ClinicNum==clinicNum);
-			if(clinicNum==0) {
-				return listClinicProperties;//return the defaults cause ClinicNum of 0 is default.
+				// Is there is a clinic specific property?
+				programProperty ??= programProperties.FirstOrDefault(prop =>
+					prop.ClinicId == clinicId);
 			}
-			//Get all the defaults and return a list of defaults mixed with overrides.
-			List<ProgramProperty> listClinicAndDefaultProperties=GetWhere(x => x.ProgramNum==programNum && x.ClinicNum==0
-				&& !listClinicProperties.Any(y => y.PropertyDesc==x.PropertyDesc));
-			listClinicAndDefaultProperties.AddRange(listClinicProperties);
+
+			// Is there a global machine override?
+			programProperty ??= programProperties.FirstOrDefault(prop => 
+				prop.ClinicId == 0 &&
+				prop.MachineName.Equals(machineName, StringComparison.InvariantCultureIgnoreCase));
+
+			// Return the value of the highest priority property or a blank value if the property hasn't been configured.
+			return programProperty?.Value ?? "";
+        }
+
+		/// <summary>
+		/// Gets the value of the program property with the specified name.
+		/// </summary>
+		/// <param name="programId"></param>
+		/// <param name="programPropertyName"></param>
+		/// <param name="clinicId"></param>
+		/// <returns></returns>
+		public static string Get(long programId, string programPropertyName, long? clinicId = null)
+			=> Get(programId, programPropertyName, clinicId, Environment.MachineName);
+
+
+
+
+
+
+
+		/// <summary>
+		/// True if this is a program that we advertise.
+		/// </summary>
+		public static bool IsAdvertisingBridge(long programId) 
+			=> GetForProgram(programId).Any(x => x.Name.In("Disable Advertising", "Disable Advertising HQ"));
+
+		/// <summary>
+		/// Returns a list of ProgramProperties with the specified programNum and the specified clinicNum from the cache.
+		/// To get properties when clinics are not enabled or properties for 'Headquarters' use clinicNum 0.
+		/// Does not include path overrides.
+		/// </summary>
+		public static List<ProgramProperty> GetListForProgramAndClinic(long programId, long clinicId) 
+			=> GetWhere(x => x.ProgramId == programId && x.ClinicId == clinicId && x.Name != "");
+
+		/// <summary>
+		/// Returns a List of ProgramProperties attached to the specified programNum with the given clinicnum.  
+		/// Includes the default program properties as well (ClinicNum==0).
+		/// </summary>
+		public static List<ProgramProperty> GetListForProgramAndClinicWithDefault(long programId, long clinicId)
+		{
+			var clinicProperties = GetWhere(x => x.ProgramId == programId && x.ClinicId == clinicId);
+			if (clinicId == 0)
+			{
+				return clinicProperties; // return the defaults cause ClinicNum of 0 is default.
+			}
+
+			// Get all the defaults and return a list of defaults mixed with overrides.
+			List<ProgramProperty> listClinicAndDefaultProperties = GetWhere(x => x.ProgramId == programId && x.ClinicId == 0
+				  && !clinicProperties.Any(y => y.Name == x.Name));
+			listClinicAndDefaultProperties.AddRange(clinicProperties);
 			return listClinicAndDefaultProperties;//Clinic users need to have all properties, defaults with the clinic overrides.
 		}
 
-		///<summary>Returns the property value of the clinic override or default program property if no clinic override is found.</summary>
-		public static string GetPropValForClinicOrDefault(long programNum,string desc,long clinicNum) {
-			//No need to check RemotingRole; no call to db.
-			return GetListForProgramAndClinicWithDefault(programNum,clinicNum).FirstOrDefault(x => x.PropertyDesc==desc).PropertyValue;
-		}
+		/// <summary>
+		/// Returns the property value of the clinic override or default program property if no clinic override is found.
+		/// </summary>
+		public static string GetPropValForClinicOrDefault(long programNum, string desc, long clinicNum) 
+			=> GetListForProgramAndClinicWithDefault(programNum, clinicNum).FirstOrDefault(x => x.Name == desc).Value;
 
-		///<summary>Returns a list of ProgramProperties attached to the specified programNum.  Does not include path overrides.
-		///Uses thread-safe caching pattern.  Each call to this method creates an copy of the entire ProgramProperty cache.</summary>
-		public static List<ProgramProperty> GetForProgram(long programNum) {
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.ProgramNum==programNum && x.PropertyDesc!="").OrderBy(x => x.ClinicNum).ThenBy(x => x.ProgramPropertyNum).ToList();
-		}
+		/// <summary>
+		/// Returns a list of ProgramProperties attached to the specified programNum.
+		/// Does not include path overrides.
+		/// Uses thread-safe caching pattern. 
+		/// Each call to this method creates an copy of the entire ProgramProperty cache.
+		/// </summary>
+		public static List<ProgramProperty> GetForProgram(long programNum) 
+			=> GetWhere(x => x.ProgramId == programNum && x.Name != "")
+				.OrderBy(x => x.ClinicId)
+				.ThenBy(x => x.Id)
+				.ToList();
 
-		///<summary>Sets the program property for all clinics.  Returns the number of rows changed.</summary>
-		public static long SetProperty(long programNum,string desc,string propval) {
-			
-			string command=$@"UPDATE programproperty SET PropertyValue='{POut.String(propval)}'
-				WHERE ProgramNum={POut.Long(programNum)}
-				AND PropertyDesc='{POut.String(desc)}'";
-			return Database.ExecuteNonQuery(command);
-		}
+		/// <summary>
+		/// Sets the program property for all clinics. Returns the number of rows changed.
+		/// </summary>
+		public static long SetProperty(long programId, string desc, string propval) 
+			=> Database.ExecuteNonQuery(
+				$"UPDATE programproperty SET PropertyValue='{POut.String(propval)}' " +
+				$"WHERE ProgramNum={programId} AND PropertyDesc='{POut.String(desc)}'");
 
-		///<summary>After GetForProgram has been run, this gets one of those properties.  DO NOT MODIFY the returned property.  Read only.</summary>
-		public static ProgramProperty GetCur(List<ProgramProperty> listForProgram,string desc) {
-			//No need to check RemotingRole; no call to db.
-			return listForProgram.FirstOrDefault(x => x.PropertyDesc==desc);
-		}
+		/// <summary>
+		/// After GetForProgram has been run, this gets one of those properties. DO NOT MODIFY the returned property. Read only.
+		/// </summary>
+		public static ProgramProperty GetCur(List<ProgramProperty> programProperties, string propertyDescription) 
+			=> programProperties.FirstOrDefault(x => x.Name == propertyDescription);
 
-		///<summary>Throws exception if program property is not found.</summary>
-		public static string GetPropVal(long programNum,string desc) {
-			//No need to check RemotingRole; no call to db.
-			ProgramProperty programProperty=GetFirstOrDefault(x => x.ProgramNum==programNum && x.PropertyDesc==desc);
-			if(programProperty!=null) {
-				return programProperty.PropertyValue;
-			}
-			throw new ApplicationException("Property not found: "+desc);
-		}
+		/// <summary>
+		/// Throws exception if program property is not found.
+		/// </summary>
+		public static string GetPropVal(long programNum, string desc) 
+			=> GetFirstOrDefault(x => x.ProgramId == programNum && x.Name == desc)?.Value 
+				?? throw new ApplicationException("Property not found: " + desc);
 
-		public static string GetPropVal(ProgramName programName,string desc) {
-			//No need to check RemotingRole; no call to db.
-			long programNum=Programs.GetProgramNum(programName);
-			return GetPropVal(programNum,desc);
-		}
+		public static string GetPropVal(ProgramName programName, string desc) 
+			=> GetPropVal(Programs.GetProgramNum(programName), desc);
 
-		///<summary>Returns the PropertyVal for programNum and clinicNum specified with the description specified.  If the property doesn't exist,
-		///returns an empty string.  For the PropertyVal for 'Headquarters' or clincs not enabled, use clinicNum 0.</summary>
-		public static string GetPropVal(long programNum,string desc,long clinicNum) {
-			return GetPropValFromList(ProgramProperties.GetWhere(x => x.ProgramNum==programNum),desc,clinicNum);
-		}
+		/// <summary>
+		/// Returns the PropertyVal for programNum and clinicNum specified with the description specified. 
+		/// If the property doesn't exist, returns an empty string. 
+		/// For the PropertyVal for 'Headquarters' or clincs not enabled, use clinicNum 0.
+		/// </summary>
+		public static string GetPropVal(long programId, string propertyDesc, long clinicId) 
+			=> GetPropValFromList(GetWhere(x => x.ProgramId == programId), propertyDesc, clinicId);
 
-		///<summary>Returns the PropertyVal from the list by PropertyDesc and ClinicNum.
-		///For the 'Headquarters' or for clinics not enabled, omit clinicNum or send clinicNum 0.  If not found returns an empty string.
-		///Primarily used when a local list has been copied from the cache and may differ from what's in the database.  Also possibly useful if dealing with a filtered list </summary>
-		public static string GetPropValFromList(List<ProgramProperty> listProps,string propertyDesc,long clinicNum=0) {
-			string retval="";
-			ProgramProperty prop=listProps.Where(x => x.ClinicNum==clinicNum).Where(x => x.PropertyDesc==propertyDesc).FirstOrDefault();
-			if(prop!=null) {
-				retval=prop.PropertyValue;
-			}
-			return retval;
-		}
+		/// <summary>
+		/// Returns the PropertyVal from the list by PropertyDesc and ClinicNum.
+		/// For the 'Headquarters' or for clinics not enabled, omit clinicNum or send clinicNum 0.  If not found returns an empty string.
+		/// Primarily used when a local list has been copied from the cache and may differ from what's in the database. 
+		/// Also possibly useful if dealing with a filtered list
+		/// </summary>
+		public static string GetPropValFromList(List<ProgramProperty> properties, string propertyDesc, long clinicId = 0) 
+			=> properties
+				.Where(x => x.ClinicId == clinicId && x.Name == propertyDesc)
+				.FirstOrDefault()?.Value ?? "";
 
-		///<summary>Returns the property with the matching description from the provided list.  Null if the property cannot be found by the description.</summary>
-		public static ProgramProperty GetPropByDesc(string propertyDesc,List<ProgramProperty> listProperties) {
-			//No need to check RemotingRole; no call to db.
-			ProgramProperty property=null;
-			for(int i=0;i<listProperties.Count;i++) {
-				if(listProperties[i].PropertyDesc==propertyDesc) {
-					property=listProperties[i];
-					break;
+		/// <summary>
+		/// Returns the property with the matching description from the provided list. 
+		/// Null if the property cannot be found by the description.
+		/// </summary>
+		public static ProgramProperty GetPropByDesc(string propertyDesc, List<ProgramProperty> properties)
+		{
+			for (int i = 0; i < properties.Count; i++)
+			{
+				if (properties[i].Name == propertyDesc)
+				{
+					return properties[i];
 				}
 			}
-			return property;
+
+			return null;
 		}
 
-		///<summary>Returns the property with the matching description from the provided list.  Null if the property cannot be found by the description.</summary>
-		public static ProgramProperty GetPropForProgByDesc(long programNum,string propertyDesc) {
-			//No need to check RemotingRole; no call to db.
-			return GetForProgram(programNum).FirstOrDefault(x => x.PropertyDesc==propertyDesc);
-		}
+		/// <summary>
+		/// Returns the property with the matching description from the provided list.
+		/// Null if the property cannot be found by the description.
+		/// </summary>
+		public static ProgramProperty GetPropForProgByDesc(long programNum, string propertyDesc) 
+			=> GetForProgram(programNum).FirstOrDefault(x => x.Name == propertyDesc);
 
-		///<summary>Returns the property with the matching description from the provided list.  Null if the property cannot be found by the description.</summary>
-		public static ProgramProperty GetPropForProgByDesc(long programNum,string propertyDesc,long clinicNum=0) {
-			//No need to check RemotingRole; no call to db.
-			return GetForProgram(programNum).FirstOrDefault(x => x.PropertyDesc==propertyDesc && x.ClinicNum==clinicNum);
-		}
+		/// <summary>
+		/// Returns the property with the matching description from the provided list.
+		/// Null if the property cannot be found by the description.
+		/// </summary>
+		public static ProgramProperty GetPropForProgByDesc(long programNum, string propertyDesc, long clinicNum = 0) 
+			=> GetForProgram(programNum).FirstOrDefault(x => x.Name == propertyDesc && x.ClinicId == clinicNum);
 
-		///<summary>Used in FormUAppoint to get frequent and current data.</summary>
-		public static string GetValFromDb(long programNum,string desc) {
-			
-			string command="SELECT PropertyValue FROM programproperty WHERE ProgramNum="+POut.Long(programNum)
-				+" AND PropertyDesc='"+POut.String(desc)+"'";
-			DataTable table=Database.ExecuteDataTable(command);
-			if(table.Rows.Count==0){
-				return "";
+		/// <summary>
+		/// Used in FormUAppoint to get frequent and current data.
+		/// </summary>
+		public static string GetValFromDb(long programNum, string desc) 
+			=> Database.ExecuteString(
+				"SELECT PropertyValue FROM programproperty " +
+				"WHERE ProgramNum=" + programNum + " AND PropertyDesc='" + POut.String(desc) + "'");
+
+		/// <summary>
+		/// Returns the path override for the current computer and the specified programNum. 
+		/// Returns empty string if no override found.
+		/// </summary>
+		public static string GetLocalPathOverrideForProgram(long programNum) 
+			=> GetFirstOrDefault(x => 
+				x.ProgramId == programNum && 
+				x.Name == "" && 
+				x.MachineName.ToUpper() == Environment.MachineName.ToUpper())?.Value ?? "";
+		
+
+		/// <summary>
+		/// This will insert or update a local path override property for the specified programNum.
+		/// </summary>
+		public static void InsertOrUpdateLocalOverridePath(long programId, string newPath)
+		{
+			var programProperty = 
+				GetFirstOrDefault(x => 
+					x.ProgramId == programId && 
+					x.Name == "" && 
+					x.MachineName.ToUpper() == Environment.MachineName.ToUpper());
+
+			if (programProperty != null)
+			{
+				programProperty.Value = newPath;
+
+				Update(programProperty);
+
+				return; // Will only be one override per computer per program.
 			}
-			return table.Rows[0][0].ToString();
+
+            Insert(new ProgramProperty
+			{
+				ProgramId = programId,
+				Value = newPath,
+
+				MachineName = Environment.MachineName.ToUpper()
+			});
 		}
 
-		///<summary>Returns the path override for the current computer and the specified programNum.  Returns empty string if no override found.</summary>
-		public static string GetLocalPathOverrideForProgram(long programNum) {
-			//No need to check RemotingRole; no call to db.
-			ProgramProperty programProperty=GetFirstOrDefault(x => x.ProgramNum==programNum
-					&& x.PropertyDesc==""
-					&& x.ComputerName.ToUpper()==Environment.MachineName.ToUpper());
-			return (programProperty==null ? "" : programProperty.PropertyValue);
+		/// <summary>
+		/// Syncs list against cache copy of program properties. listProgPropsNew should never include local path overrides (PropertyDesc=="").
+		/// This sync uses the cache copy of program properties rather than a stale list because we want to make sure we never have
+		/// duplicate properties and concurrency isn't really an issue.
+		/// </summary>
+		public static bool Sync(List<ProgramProperty> newProperties, long programId)
+		{
+			Database.ExecuteNonQuery("DELETE FROM programproperty WHERE ProgramNum = " + programId);
+
+			foreach (var property in newProperties)
+            {
+				property.ProgramId = programId;
+
+				Insert(property);
+            }
+
+			cache.Refresh();
+
+			return true;
 		}
 
-		///<summary>This will insert or update a local path override property for the specified programNum.</summary>
-		public static void InsertOrUpdateLocalOverridePath(long programNum,string newPath) {
-			//No need to check RemotingRole; no call to db.
-			ProgramProperty programProperty=GetFirstOrDefault(x => x.ProgramNum==programNum
-					&& x.PropertyDesc==""
-					&& x.ComputerName.ToUpper()==Environment.MachineName.ToUpper());
-			if(programProperty!=null) {
-				programProperty.PropertyValue=newPath;
-				ProgramProperties.Update(programProperty);
-				return;//Will only be one override per computer per program.
+		/// <summary>
+		/// Syncs list against cache copy of program properties. 
+		/// listProgPropsNew should never include local path overrides (PropertyDesc=="").
+		/// This sync uses the cache copy of program properties rather than a stale list because we want to make sure we never have duplicate properties and concurrency isn't really an issue. 
+		/// This WILL delete program properties from the database if missing from listProgPropsNew for the specified clinics.
+		/// Only include clinics to which the current user is allowed access.
+		/// </summary>
+		public static void Sync(List<ProgramProperty> newProperties, long programId, List<long> clinicsIds)
+		{
+			var existingProperties = GetWhere(x => 
+				x.ProgramId == programId && 
+				x.Name != "" && 
+				clinicsIds.Contains(x.ClinicId));
+
+			Database.ExecuteNonQuery("DELETE FROM programproperty WHERE ProgramNum = " + programId + " AND ClinicNum IN (" + string.Join(", ", clinicsIds) + ")");
+
+			foreach (var property in newProperties)
+			{
+				property.ProgramId = programId;
+
+				Insert(property);
 			}
-			//Path override does not exist for the current computer so create a new one.
-			ProgramProperty pp=new ProgramProperty();
-			pp.ProgramNum=programNum;
-			pp.PropertyValue=newPath;
-			pp.ComputerName=Environment.MachineName.ToUpper();
-			ProgramProperties.Insert(pp);
+
+			cache.Refresh();
 		}
 
-		///<summary>Syncs list against cache copy of program properties.  listProgPropsNew should never include local path overrides (PropertyDesc=="").
-		///This sync uses the cache copy of program properties rather than a stale list because we want to make sure we never have duplicate properties
-		///and concurrency isn't really an issue.</summary>
-		public static bool Sync(List<ProgramProperty> listProgPropsNew,long programNum) {
-			
-			//prevents delete of program properties for clinics added while editing program properties.
-			List<long> listClinicNums = listProgPropsNew.Select(x => x.ClinicNum).Distinct().ToList();
-			List<ProgramProperty> listProgPropsDb=ProgramProperties.GetWhere(x => x.ProgramNum==programNum 
-				&& x.PropertyDesc!="" 
-				&& listClinicNums.Contains(x.ClinicNum));
-			return Crud.ProgramPropertyCrud.Sync(listProgPropsNew,listProgPropsDb);
-		}
-
-		///<summary>Syncs list against cache copy of program properties.  listProgPropsNew should never include local path overrides (PropertyDesc=="").
-		///This sync uses the cache copy of program properties rather than a stale list because we want to make sure we never have duplicate properties
-		///and concurrency isn't really an issue. This WILL delete program properties from the database if missing from listProgPropsNew for the specified
-		///clinics.  Only include clinics to which the current user is allowed access.</summary>
-		public static void Sync(List<ProgramProperty> listProgPropsNew,long programNum,List<long> listClinicNums) {
-			
-			List<ProgramProperty> listProgPropsDb=GetWhere(x => x.ProgramNum==programNum && x.PropertyDesc!="" && listClinicNums.Contains(x.ClinicNum));
-			Crud.ProgramPropertyCrud.Sync(listProgPropsNew,listProgPropsDb);
-		}
-
-		///<summary>Exception means failed. Return means success. paymentsAllowed should be check after return. If false then assume payments cannot be made for this clinic.</summary>
-		public static void GetXWebCreds(long clinicNum,out OpenDentBusiness.WebTypes.Shared.XWeb.WebPaymentProperties xwebProperties) {
+		/// <summary>
+		/// Exception means failed. Return means success. 
+		/// paymentsAllowed should be check after return. 
+		/// If false then assume payments cannot be made for this clinic.
+		/// </summary>
+		public static void GetXWebCreds(long clinicId, out WebTypes.Shared.XWeb.WebPaymentProperties xwebProperties)
+		{
 			string xWebID;
 			string authKey;
 			string terminalID;
-			long paymentTypeDefNum;
-			xwebProperties=new WebTypes.Shared.XWeb.WebPaymentProperties();
-			//No need to check RemotingRole;no call to db.
-			//Secure arguments are held in the db.
-			OpenDentBusiness.Program programXcharge=OpenDentBusiness.Programs.GetCur(OpenDentBusiness.ProgramName.Xcharge);
-			if(programXcharge==null) { //XCharge not setup.
-				throw new ODException("X-Charge program link not found.",ODException.ErrorCodes.XWebProgramProperties);
+
+            var program = Programs.GetCur(ProgramName.Xcharge);
+			if (program == null)
+			{ //XCharge not setup.
+				throw new ODException("X-Charge program link not found.", 
+					ODException.ErrorCodes.XWebProgramProperties);
 			}
-			if(!programXcharge.Enabled) { //XCharge not turned on.
-				throw new ODException("X-Charge program link is disabled.",ODException.ErrorCodes.XWebProgramProperties);
+
+			if (!program.Enabled)
+			{ //XCharge not turned on.
+				throw new ODException("X-Charge program link is disabled.", 
+					ODException.ErrorCodes.XWebProgramProperties);
 			}
-			//Validate ALL XWebID, AuthKey, and TerminalID.  Each is required for X-Web to work.
-			List<OpenDentBusiness.ProgramProperty> listXchargeProperties=OpenDentBusiness.ProgramProperties.GetListForProgramAndClinic(programXcharge.ProgramNum,clinicNum);
-			xWebID=OpenDentBusiness.ProgramProperties.GetPropValFromList(listXchargeProperties,"XWebID",clinicNum);
-			authKey=OpenDentBusiness.ProgramProperties.GetPropValFromList(listXchargeProperties,"AuthKey",clinicNum);
-			terminalID=OpenDentBusiness.ProgramProperties.GetPropValFromList(listXchargeProperties,"TerminalID",clinicNum);
-			string paymentTypeDefString=OpenDentBusiness.ProgramProperties.GetPropValFromList(listXchargeProperties,"PaymentType",clinicNum);
-			if(string.IsNullOrEmpty(xWebID)||string.IsNullOrEmpty(authKey)||string.IsNullOrEmpty(terminalID)||!long.TryParse(paymentTypeDefString,out paymentTypeDefNum)) {
-				throw new ODException("X-Web program properties not found.",ODException.ErrorCodes.XWebProgramProperties);
+
+			// Validate ALL XWebID, AuthKey, and TerminalID. Each is required for X-Web to work.
+			var properties = GetListForProgramAndClinic(program.Id, clinicId);
+			xWebID = GetPropValFromList(properties, "XWebID", clinicId);
+			authKey = GetPropValFromList(properties, "AuthKey", clinicId);
+			terminalID = GetPropValFromList(properties, "TerminalID", clinicId);
+			string paymentTypeDefString = GetPropValFromList(properties, "PaymentType", clinicId);
+			if (string.IsNullOrEmpty(xWebID) || string.IsNullOrEmpty(authKey) || string.IsNullOrEmpty(terminalID) || !long.TryParse(paymentTypeDefString, out long paymentTypeDefNum))
+			{
+				throw new ODException("X-Web program properties not found.", 
+					ODException.ErrorCodes.XWebProgramProperties);
 			}
-			//XWeb ID must be 12 digits, Auth Key 32 alphanumeric characters, and Terminal ID 8 digits.
-			if(!Regex.IsMatch(xWebID,"^[0-9]{12}$")
-				||!Regex.IsMatch(authKey,"^[A-Za-z0-9]{32}$")
-				||!Regex.IsMatch(terminalID,"^[0-9]{8}$")) {
-				throw new ODException("X-Web program properties not valid.",ODException.ErrorCodes.XWebProgramProperties);
+
+			// XWeb ID must be 12 digits, Auth Key 32 alphanumeric characters, and Terminal ID 8 digits.
+			if (!Regex.IsMatch(xWebID, "^[0-9]{12}$") || !Regex.IsMatch(authKey, "^[A-Za-z0-9]{32}$") || !Regex.IsMatch(terminalID, "^[0-9]{8}$"))
+			{
+				throw new ODException("X-Web program properties not valid.",
+					ODException.ErrorCodes.XWebProgramProperties);
 			}
-			string asString=OpenDentBusiness.ProgramProperties.GetPropValFromList(listXchargeProperties,"IsOnlinePaymentsEnabled",clinicNum);
-			xwebProperties.XWebID=xWebID;
-			xwebProperties.TerminalID=terminalID;
-			xwebProperties.AuthKey=authKey;
-			xwebProperties.PaymentTypeDefNum=paymentTypeDefNum;
-			xwebProperties.IsPaymentsAllowed=OpenDentBusiness.PIn.Bool(asString);
+
+			string isPaymentsAllowed = GetPropValFromList(properties, "IsOnlinePaymentsEnabled", clinicId);
+
+            xwebProperties = new WebTypes.Shared.XWeb.WebPaymentProperties
+            {
+                XWebID = xWebID,
+                TerminalID = terminalID,
+                AuthKey = authKey,
+                PaymentTypeDefNum = paymentTypeDefNum,
+                IsPaymentsAllowed = PIn.Bool(isPaymentsAllowed)
+            };
+        }
+
+		/// <summary>
+		/// Exception means failed. Return means success.
+		/// paymentsAllowed should be check after return.
+		/// If false then assume payments cannot be made for this clinic.
+		/// </summary>
+		public static void GetPayConnectPatPortalCreds(long clinicNum, out PayConnect.WebPaymentProperties payConnectProps)
+		{
+			var program = Programs.GetCur(ProgramName.PayConnect);
+			if (program == null)
+			{
+				throw new ODException("PayConnect program link not found.",
+					ODException.ErrorCodes.PayConnectProgramProperties);
+			}
+
+			if (!program.Enabled)
+			{
+				throw new ODException("PayConnect program link is disabled.", 
+					ODException.ErrorCodes.PayConnectProgramProperties);
+			}
+
+			var properties = GetListForProgramAndClinic(program.Id, clinicNum);
+			var token = GetPropValFromList(properties, PayConnect.ProgramProperties.PatientPortalPaymentsToken, clinicNum);
+			if (string.IsNullOrEmpty(token))
+			{
+				throw new ODException("PayConnect online token not found.", 
+					ODException.ErrorCodes.PayConnectProgramProperties);
+			}
+
+			string isPaymentsAllowed = GetPropValFromList(properties, PayConnect.ProgramProperties.PatientPortalPaymentsEnabled, clinicNum);
+
+            payConnectProps = new PayConnect.WebPaymentProperties
+            {
+                Token = token,
+                IsPaymentsAllowed = PIn.Bool(isPaymentsAllowed)
+            };
+        }
+
+		/// <summary>
+		/// Deletes a given programproperty from the table based upon its programPropertyNum.
+		/// Must have a property description in the GetDeletablePropertyDescriptions() list to delete
+		/// </summary>
+		public static void Delete(ProgramProperty programProperty)
+		{
+			if (!GetDeletablePropertyDescriptions().Contains(programProperty.Name))
+			{
+				throw new Exception("Not allowed to delete the ProgramProperty with a description of: " + programProperty.Name);
+			}
+
+			Database.ExecuteNonQuery("DELETE FROM programproperty WHERE ProgramPropertyNum=" + programProperty.Id);
 		}
 
-		///<summary>Exception means failed. Return means success. paymentsAllowed should be check after return. If false then assume payments cannot be made for this clinic.</summary>
-		public static void GetPayConnectPatPortalCreds(long clinicNum,out PayConnect.WebPaymentProperties payConnectProps) {
-			//No need to check RemotingRole;no call to db.
-			//Secure arguments are held in the db.
-			payConnectProps=new PayConnect.WebPaymentProperties();
-			OpenDentBusiness.Program programPayConnect=OpenDentBusiness.Programs.GetCur(OpenDentBusiness.ProgramName.PayConnect);
-			if(programPayConnect==null) { //PayConnect not setup.
-				throw new ODException("PayConnect program link not found.",ODException.ErrorCodes.PayConnectProgramProperties);
-			}
-			if(!programPayConnect.Enabled) { //PayConnect not turned on.
-				throw new ODException("PayConnect program link is disabled.",ODException.ErrorCodes.PayConnectProgramProperties);
-			}
-			//Validate the online token, since it is requiored for PayConnect online payments to work.
-			List<OpenDentBusiness.ProgramProperty> listPayConnectProperties=OpenDentBusiness.ProgramProperties.GetListForProgramAndClinic(programPayConnect.ProgramNum,clinicNum);
-			payConnectProps.Token=OpenDentBusiness.ProgramProperties.GetPropValFromList(listPayConnectProperties,PayConnect.ProgramProperties.PatientPortalPaymentsToken,clinicNum);
-			if(string.IsNullOrEmpty(payConnectProps.Token)) {
-				throw new ODException("PayConnect online token not found.",ODException.ErrorCodes.PayConnectProgramProperties);
-			}
-			string paymentsAllowedVal=OpenDentBusiness.ProgramProperties.GetPropValFromList(listPayConnectProperties,PayConnect.ProgramProperties.PatientPortalPaymentsEnabled,clinicNum);
-			payConnectProps.IsPaymentsAllowed=OpenDentBusiness.PIn.Bool(paymentsAllowedVal);
-		}
-
-		///<summary>Deletes a given programproperty from the table based upon its programPropertyNum.
-		///Must have a property description in the GetDeletablePropertyDescriptions() list to delete</summary>
-		public static void Delete(ProgramProperty prop) {
-			
-			if(!GetDeletablePropertyDescriptions().Contains(prop.PropertyDesc)) {
-				throw new Exception("Not allowed to delete the ProgramProperty with a description of: "+prop.PropertyDesc);
-			}
-			string command="DELETE FROM programproperty WHERE ProgramPropertyNum="+POut.Long(prop.ProgramPropertyNum);
-			Database.ExecuteNonQuery(command);
-		}
-
-		///<summary>Deleting from the ProgramProperty table should be considered dangerous and extremely deliberate, anyone looking to do so must
-		///explicitly add their condition to this method in the future.</summary>
-		private static List<string> GetDeletablePropertyDescriptions() {
+		/// <summary>
+		/// Deleting from the ProgramProperty table should be considered dangerous and extremely deliberate, anyone looking to do so must
+		/// explicitly add their condition to this method in the future.
+		/// </summary>
+		private static List<string> GetDeletablePropertyDescriptions()
+		{
 			return new List<string>() {
 				PropertyDescs.ClinicHideButton,
 			};
 		}
 
-		public class PropertyDescs {
-			public const string ImageFolder="Image Folder";
-			public const string PatOrChartNum="Enter 0 to use PatientNum, or 1 to use ChartNum";
-			public const string Username="Username";
-			public const string Password="Password";
-			public const string ClinicHideButton="ClinicHideButton";
+		public static class PropertyDescs
+		{
+			public const string ImageFolder = "Image Folder";
+			public const string PatOrChartNum = "Enter 0 to use PatientNum, or 1 to use ChartNum";
+			public const string Username = "Username";
+			public const string Password = "Password";
+			public const string ClinicHideButton = "ClinicHideButton";
 
-			//Prevents this class from being instansiated.
-			private PropertyDescs() { }
-
-			public static class TransWorld {
-				public const string SyncExcludePosAdjType="SyncExcludePosAdjType";
-				public const string SyncExcludeNegAdjType="SyncExcludeNegAdjType";
+			public static class TransWorld
+			{
+				public const string SyncExcludePosAdjType = "SyncExcludePosAdjType";
+				public const string SyncExcludeNegAdjType = "SyncExcludeNegAdjType";
 			}
-			public static class XCharge {
-				public const string XChargeForceRecurringCharge="XChargeForceRecurringCharge";
-				public const string XChargePreventSavingNewCC="XChargePreventSavingNewCC";
+
+			public static class XCharge
+			{
+				public const string XChargeForceRecurringCharge = "XChargeForceRecurringCharge";
+				public const string XChargePreventSavingNewCC = "XChargePreventSavingNewCC";
 			}
 		}
 	}
+
+	/// <summary>
+	/// Container for the names of frequently used program properties.
+	/// </summary>
+	public static class ProgramPropertyName
+    {
+		public const string DisableAdvertising = "Disable Advertising";
+		public const string DisableAdvertisingHq = "Disable Advertising HQ";
+
+		public const string ProgramPathOverride = "program_path_override";
+
+		public const string PatientIdentificationType = "identification_type";
+
+	}
 }
-
-
-
-
-
-
-
-
-
-

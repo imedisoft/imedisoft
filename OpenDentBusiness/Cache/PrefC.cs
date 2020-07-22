@@ -370,8 +370,8 @@ namespace OpenDentBusiness
 
 			if (progXCharge.Enabled)
 			{
-				var programProperties = ProgramProperties.GetForProgram(progXCharge.ProgramNum);
-				if (programProperties.Any(x => x.PropertyDesc == "IsOnlinePaymentsEnabled" && x.PropertyValue == "1"))
+				var programProperties = ProgramProperties.GetForProgram(progXCharge.Id);
+				if (programProperties.Any(x => x.Name == "IsOnlinePaymentsEnabled" && x.Value == "1"))
 				{
 					progEnabledForPayments = ProgramName.Xcharge;
 					return true;
@@ -380,8 +380,8 @@ namespace OpenDentBusiness
 
 			if (progPayConnect.Enabled)
 			{
-				var programProperties = ProgramProperties.GetForProgram(progPayConnect.ProgramNum);
-				if (programProperties.Any(x => x.PropertyDesc == PayConnect.ProgramProperties.PatientPortalPaymentsEnabled && x.PropertyValue == "1"))
+				var programProperties = ProgramProperties.GetForProgram(progPayConnect.Id);
+				if (programProperties.Any(x => x.Name == PayConnect.ProgramProperties.PatientPortalPaymentsEnabled && x.Value == "1"))
 				{
 					progEnabledForPayments = ProgramName.PayConnect;
 					return true;

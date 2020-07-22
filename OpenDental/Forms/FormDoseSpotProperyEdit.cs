@@ -34,14 +34,14 @@ namespace OpenDental {
 			}
 			Program programErx=Programs.GetCur(ProgramName.eRx);
 			ProgramProperty ppClinicID=ListProperties
-					.FirstOrDefault(x => x.ClinicNum!=_clinicCur.ClinicNum && x.PropertyDesc==Erx.PropertyDescs.ClinicID && x.PropertyValue!="");
+					.FirstOrDefault(x => x.ClinicId!=_clinicCur.ClinicNum && x.Name==Erx.PropertyDescs.ClinicID && x.Value!="");
 			ProgramProperty ppClinicKey=null;
 			if(ppClinicID!=null) {
 				ppClinicKey=ListProperties
-					.FirstOrDefault(x => x.ClinicNum==ppClinicID.ClinicNum && x.PropertyDesc==Erx.PropertyDescs.ClinicKey && x.PropertyValue!="");
+					.FirstOrDefault(x => x.ClinicId==ppClinicID.ClinicId && x.Name==Erx.PropertyDescs.ClinicKey && x.Value!="");
 			}
-			if(ppClinicID==null || string.IsNullOrWhiteSpace(ppClinicID.PropertyValue)
-				|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.PropertyValue))
+			if(ppClinicID==null || string.IsNullOrWhiteSpace(ppClinicID.Value)
+				|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.Value))
 			{
 				//No clinicID/clinicKey found.  This would be the first clinic to register
 				butRegisterClinic.Enabled=false;
@@ -69,14 +69,14 @@ namespace OpenDental {
 			try {
 				Program programErx=Programs.GetCur(ProgramName.eRx);
 				ProgramProperty ppClinicID=ListProperties
-					.FirstOrDefault(x => x.ClinicNum!=_clinicCur.ClinicNum && x.PropertyDesc==Erx.PropertyDescs.ClinicID && x.PropertyValue!="");
+					.FirstOrDefault(x => x.ClinicId!=_clinicCur.ClinicNum && x.Name==Erx.PropertyDescs.ClinicID && x.Value!="");
 				ProgramProperty ppClinicKey=null;
 				if(ppClinicID!=null) {
 					ppClinicKey=ListProperties
-						.FirstOrDefault(x => x.ClinicNum==ppClinicID.ClinicNum && x.PropertyDesc==Erx.PropertyDescs.ClinicKey && x.PropertyValue!="");
+						.FirstOrDefault(x => x.ClinicId==ppClinicID.ClinicId && x.Name==Erx.PropertyDescs.ClinicKey && x.Value!="");
 				}
-				if(ppClinicID==null || string.IsNullOrWhiteSpace(ppClinicID.PropertyValue)
-					|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.PropertyValue))
+				if(ppClinicID==null || string.IsNullOrWhiteSpace(ppClinicID.Value)
+					|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.Value))
 				{
 					//Should never happen since we disable this button if we can't find a valid clinicID/clinicKey combo ahead of time
 					throw new ODException("No registered clinics found.  "
@@ -84,7 +84,7 @@ namespace OpenDental {
 				}
 				string clinicID="";
 				string clinicKey="";
-				DoseSpot.RegisterClinic(_clinicCur.ClinicNum,ppClinicID.PropertyValue,ppClinicKey.PropertyValue
+				DoseSpot.RegisterClinic(_clinicCur.ClinicNum,ppClinicID.Value,ppClinicKey.Value
 					,DoseSpot.GetUserID(Security.CurUser,_clinicCur.ClinicNum),out clinicID,out clinicKey);
 				textClinicID.Text=clinicID;
 				textClinicKey.Text=clinicKey;

@@ -28,7 +28,7 @@ namespace OpenDental {
 			try {				
 				string accessTokenFinal=WebSerializer.DeserializePrimitiveOrThrow<string>(
 					WebServiceMainHQProxy.GetWebServiceMainHQInstance().GetDropboxAccessToken(WebSerializer.SerializePrimitive<string>(textAccessToken.Text)));
-				ProgramPropertyAccessToken.PropertyValue=accessTokenFinal;
+				ProgramPropertyAccessToken.Value=accessTokenFinal;
 				ProgramProperties.Update(ProgramPropertyAccessToken);
 				DataValid.SetInvalid(InvalidType.Programs);
 			}

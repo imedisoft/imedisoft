@@ -964,7 +964,7 @@ namespace OpenDental {
 				}
 			}
 			else if(e.Button.Tag.GetType()==typeof(Program)) {
-				ProgramL.Execute(((Program)e.Button.Tag).ProgramNum,_patCur);
+				ProgramL.Execute(((Program)e.Button.Tag).Id,_patCur);
 			}
 		}
 
@@ -998,7 +998,7 @@ namespace OpenDental {
 				}
 			}
 			else if(e.Button.Tag.GetType()==typeof(Program)) {//bad
-				ProgramL.Execute(((Program)e.Button.Tag).ProgramNum,_patCur);
+				ProgramL.Execute(((Program)e.Button.Tag).Id,_patCur);
 			}
 		}
 		#endregion Methods - Events Handlers

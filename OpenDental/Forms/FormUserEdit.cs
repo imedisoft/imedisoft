@@ -159,7 +159,7 @@ namespace OpenDental{
 				butUnlock.Visible=false;
 			}
 			_listDoseSpotUserPrefOld=UserOdPrefs.GetByUserAndFkeyAndFkeyType(UserCur.Id,
-				Programs.GetCur(ProgramName.eRx).ProgramNum,UserOdFkeyType.Program,
+				Programs.GetCur(ProgramName.eRx).Id,UserOdFkeyType.Program,
 				Clinics.GetForUserod(Security.CurUser,true).Select(x => x.ClinicNum)
 				.Union(new List<long>() { 0 })//Always include 0 clinic, this is the default, NOT a headquarters only value.
 				.Distinct()

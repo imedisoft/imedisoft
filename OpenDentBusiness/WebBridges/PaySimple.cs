@@ -236,10 +236,10 @@ namespace OpenDentBusiness {
 			if(clinicNum==-1) {
 				clinicNum=Clinics.ClinicNum;
 			}
-			string apiUserName=ProgramProperties.GetPropValForClinicOrDefault(Programs.GetCur(ProgramName.PaySimple).ProgramNum
+			string apiUserName=ProgramProperties.GetPropValForClinicOrDefault(Programs.GetCur(ProgramName.PaySimple).Id
 				,PropertyDescs.PaySimpleApiUserName
 				,clinicNum);
-			string apiKey=ProgramProperties.GetPropValForClinicOrDefault(Programs.GetCur(ProgramName.PaySimple).ProgramNum
+			string apiKey=ProgramProperties.GetPropValForClinicOrDefault(Programs.GetCur(ProgramName.PaySimple).Id
 				,PropertyDescs.PaySimpleApiKey
 				,clinicNum);
 #if DEBUG
@@ -265,9 +265,9 @@ namespace OpenDentBusiness {
 			if(!progPaySimple.Enabled) {
 				throw new ODException(Lans.g("PaySimple","PaySimple is not enabled."));
 			}
-			string apiUserName=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.ProgramNum,PropertyDescs.PaySimpleApiUserName,clinicNum);
-			string apiKey=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.ProgramNum,PropertyDescs.PaySimpleApiKey,clinicNum);
-			string payType=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.ProgramNum,PropertyDescs.PaySimplePayTypeCC,clinicNum);
+			string apiUserName=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.Id,PropertyDescs.PaySimpleApiUserName,clinicNum);
+			string apiKey=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.Id,PropertyDescs.PaySimpleApiKey,clinicNum);
+			string payType=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.Id,PropertyDescs.PaySimplePayTypeCC,clinicNum);
 			if(string.IsNullOrWhiteSpace(apiUserName) || string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(payType)) {
 				throw new ODException(Lans.g("PaySimple","PaySimple Username, Key, or PayType is empty."));
 			}

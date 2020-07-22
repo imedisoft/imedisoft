@@ -1788,7 +1788,7 @@ namespace OpenDental {
 				}
 			}
 			else if(e.Button.Tag.GetType()==typeof(Program)) {
-				ProgramL.Execute(((Program)e.Button.Tag).ProgramNum,_patCur);
+				ProgramL.Execute(((Program)e.Button.Tag).Id,_patCur);
 			}
 			Plugins.HookAddCode(this,"ContrAccount.ToolBarMain_ButtonClick_end",_patCur,e);
 		}

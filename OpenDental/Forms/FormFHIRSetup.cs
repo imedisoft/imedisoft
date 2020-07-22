@@ -25,7 +25,7 @@ namespace OpenDental {
 		private void FormFHIRSetup_Load(object sender,EventArgs e) {
 			Program prog=Programs.GetCur(ProgramName.FHIR);
 			checkEnabled.Checked=prog.Enabled;
-			textSubInterval.Text=ProgramProperties.GetPropVal(prog.ProgramNum,"SubscriptionProcessingFrequency");
+			textSubInterval.Text=ProgramProperties.GetPropVal(prog.Id,"SubscriptionProcessingFrequency");
 			comboPayType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PaymentTypes,true));
 			comboPayType.SetSelectedDefNum(PrefC.GetLong(PrefName.ApiPaymentType));
 			//Let the load finish before we call HQ
@@ -186,7 +186,7 @@ namespace OpenDental {
 			Program prog=Programs.GetCur(ProgramName.FHIR);
 			prog.Enabled=checkEnabled.Checked;
 			Programs.Update(prog);
-			ProgramProperty progProp=ProgramProperties.GetPropByDesc("SubscriptionProcessingFrequency",ProgramProperties.GetForProgram(prog.ProgramNum));
+			ProgramProperty progProp=ProgramProperties.GetPropByDesc("SubscriptionProcessingFrequency",ProgramProperties.GetForProgram(prog.Id));
 			ProgramProperties.UpdateProgramPropertyWithValue(progProp,textSubInterval.Text);
 			DataValid.SetInvalid(InvalidType.Programs);
 			if(Prefs.UpdateLong(PrefName.ApiPaymentType,comboPayType.GetSelectedDefNum())) {

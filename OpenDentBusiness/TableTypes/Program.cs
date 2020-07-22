@@ -1,46 +1,69 @@
+using Imedisoft.Data.Annotations;
 using System;
 
-namespace OpenDentBusiness{
+namespace OpenDentBusiness
+{
+    /// <summary>
+    /// Each row is a bridge to an outside program, frequently an imaging program. 
+    /// Most of the bridges are hard coded, and simply need to be enabled. 
+    /// But user can also add their own custom bridge.
+    /// </summary>
+    [Table]
+	public class Program : TableBase
+	{
+		[Column("ProgramNum"), PrimaryKey]
+		public long Id;
 
-	///<summary>Each row is a bridge to an outside program, frequently an imaging program.  Most of the bridges are hard coded, and simply need to be enabled.  But user can also add their own custom bridge.</summary>
-	[Serializable]
-	public class Program:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
-		public long ProgramNum;
-		///<summary>Unique name for built-in program bridges. Not user-editable. enum ProgramName</summary>
-		public string ProgName;
-		///<summary>Description that shows.</summary>
-		public string ProgDesc;
-		///<summary>True if enabled.</summary>
+		/// <summary>
+		/// The name of the program. This value is hardcoded and cannot be modified.
+		/// </summary>
+		[Column("ProgName", ReadOnly = true)]
+		public string Name;
+
+		/// <summary>
+		/// A description of the program.
+		/// </summary>
+		[Column("ProgDesc")]
+		public string Description; // TODO: Description should be provided by the bridge, that way it can be translated...
+
+		/// <summary>
+		/// A value indicating whether the program is enabled.
+		/// </summary>
 		public bool Enabled;
-		///<summary>The path of the executable to run or file to open.</summary>
+
+		/// <summary>
+		/// The path of the executable to run or file to open.
+		/// </summary>
 		public string Path;
-		///<summary>Some programs will accept command line arguments.</summary>
+
+		/// <summary>
+		/// Some programs will accept command line arguments.
+		/// </summary>
 		public string CommandLine;
-		///<summary>Notes about this program link. Peculiarities, etc.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
+
+		/// <summary>
+		/// Notes about this program link. Peculiarities, etc.
+		/// </summary>
 		public string Note;
-		///<summary>If this is a Plugin, then this is the filename of the dll.  The dll must be located in the application directory.</summary>
-		public string PluginDllName;
-		///<summary>If no image, then will be an empty string.  In this case, the bitmap will be null when loaded from the database.
-		///Must be a 22 x 22 image, and thus needs (width) x (height) x (depth) = 22 x 22 x 4 = 1936 bytes.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
+
+		/// <summary>
+		/// If no image, then will be an empty string. In this case, the bitmap will be null when loaded from the database.
+		/// 
+		/// Must be a 22 x 22 image, and thus needs (width) x (height) x (depth) = 22 x 22 x 4 = 1936 bytes.
+		/// </summary>
 		public string ButtonImage;
-		/// <summary>For custom program links only.  Stores the template of a file to be generated when launching the program link.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
-		public string FileTemplate;
-		/// <summary>For custom program links only.  Stores the path of a file to be generated when launching the program link.</summary>
-		public string FilePath;
 
-		public Program Copy(){
-			return (Program)this.MemberwiseClone();
+		public Program Copy()
+		{
+			return (Program)MemberwiseClone();
 		}
-
 	}
 
-	///<summary>This enum is stored in the database as strings rather than as numbers, so we can do the order alphabetically and we can change it whenever we want.</summary>
-	public enum ProgramName {
+	/// <summary>
+	/// This enum is stored in the database as strings rather than as numbers, so we can do the order alphabetically and we can change it whenever we want.
+	/// </summary>
+	public enum ProgramName
+	{
 		None,
 		ActeonImagingSuite,
 		Adstra,
@@ -160,18 +183,4 @@ namespace OpenDentBusiness{
 		XVWeb,
 		ZImage
 	}
-
-	
-
-
 }
-
-
-
-
-
-
-
-
-
-

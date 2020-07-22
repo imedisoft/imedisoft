@@ -292,13 +292,13 @@ namespace OpenDentBusiness {
 					if(useXCharge) {
 						_progCur=Programs.GetCur(ProgramName.Xcharge);
 						bool doForceDuplicatesThisCharge=forceDuplicates || (!_isManual && PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(
-							_progCur.ProgramNum,ProgramProperties.PropertyDescs.XCharge.XChargeForceRecurringCharge,chargeData.RecurringCharge.ClinicNum)));
+							_progCur.Id,ProgramProperties.PropertyDescs.XCharge.XChargeForceRecurringCharge,chargeData.RecurringCharge.ClinicNum)));
 						SendXCharge(chargeData,doForceDuplicatesThisCharge,strBuilderResultFileXCharge,listClinicNumsBadCredentialsXCharge);
 					}
 					else if(usePayConnect) {
 						_progCur=Programs.GetCur(ProgramName.PayConnect);
 						bool doForceDuplicatesThisCharge=forceDuplicates || (!_isManual && PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(
-							_progCur.ProgramNum,PayConnect.ProgramProperties.PayConnectForceRecurringCharge,chargeData.RecurringCharge.ClinicNum)));
+							_progCur.Id,PayConnect.ProgramProperties.PayConnectForceRecurringCharge,chargeData.RecurringCharge.ClinicNum)));
 						SendPayConnect(chargeData,doForceDuplicatesThisCharge,strBuilderResultFilePayConnect);
 					}
 					else if(usePaySimple) {
@@ -415,8 +415,8 @@ namespace OpenDentBusiness {
 				MarkFailed(chargeData,Lans.g(_lanThis,"The X-Charge Username or Password for the clinic has not been set."),LogLevel.Info);
 				return false;
 			}
-			string username=ProgramProperties.GetPropVal(_progCur.ProgramNum,"Username",clinicNumCur);
-			string password=ProgramProperties.GetPropVal(_progCur.ProgramNum,"Password",clinicNumCur);
+			string username=ProgramProperties.GetPropVal(_progCur.Id,"Username",clinicNumCur);
+			string password=ProgramProperties.GetPropVal(_progCur.Id,"Password",clinicNumCur);
 			if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)) {//clinicNumCur is not in listClinicNumsBadCredentials yet
 				string clinicAbbr="Headquarters";
 				if(clinicNumCur>0) {
@@ -900,7 +900,7 @@ namespace OpenDentBusiness {
 				paymentCur.PayType=PrefC.GetLong(PrefName.RecurringChargesPayTypeCC);
 			}
 			if(paymentCur.PayType==0) {//Pref default not set or this is ACH
-				paymentCur.PayType=PIn.Int(ProgramProperties.GetPropVal(_progCur.ProgramNum,ppPayTypeDesc,paymentCur.ClinicNum));
+				paymentCur.PayType=PIn.Int(ProgramProperties.GetPropVal(_progCur.Id,ppPayTypeDesc,paymentCur.ClinicNum));
 			}
 			if(recCharge.PaymentType!=0) {
 				paymentCur.PayType=recCharge.PaymentType;//Set the payment type to the recurring charges payment type override.

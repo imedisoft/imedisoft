@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		private ProgramProperty ErxOptionPP {
 			get {
-				ProgramProperty retVal=_listProgramProperties.FirstOrDefault(x => x.PropertyDesc==Erx.PropertyDescs.ErxOption);
+				ProgramProperty retVal=_listProgramProperties.FirstOrDefault(x => x.Name==Erx.PropertyDescs.ErxOption);
 				if(retVal==null) {
 					throw new Exception("The database is missing an eRx option program property.");
 				}
@@ -44,9 +44,9 @@ namespace OpenDental {
 				if(_progCur==null) {
 					throw new Exception("The eRx bridge is missing from the database.");
 				}
-				_listProgramProperties=ProgramProperties.GetForProgram(_progCur.ProgramNum);
+				_listProgramProperties=ProgramProperties.GetForProgram(_progCur.Id);
 				checkEnabled.Checked=_progCur.Enabled;
-				_eRxOption=PIn.Enum<ErxOption>(ErxOptionPP.PropertyValue);
+				_eRxOption=PIn.Enum<ErxOption>(ErxOptionPP.Value);
 				if(_eRxOption==ErxOption.Legacy) {
 					radioNewCrop.Checked=true;
 				}
@@ -59,41 +59,41 @@ namespace OpenDental {
 					//HideLegacy();
 				}
 				textNewCropAccountID.Text=PrefC.GetString(PrefName.NewCropAccountId);
-				List<ProgramProperty> listClinicIDs=_listProgramProperties.FindAll(x => x.PropertyDesc==Erx.PropertyDescs.ClinicID);
-				List<ProgramProperty> listClinicKeys=_listProgramProperties.FindAll(x => x.PropertyDesc==Erx.PropertyDescs.ClinicKey);
+				List<ProgramProperty> listClinicIDs=_listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicID);
+				List<ProgramProperty> listClinicKeys=_listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicKey);
 				//Always make sure clinicnum 0 (HQ) exists, regardless of if clinics are enabled
-				if(!listClinicIDs.Exists(x => x.ClinicNum==0)) {
+				if(!listClinicIDs.Exists(x => x.ClinicId==0)) {
 					ProgramProperty ppClinicID=new ProgramProperty();
-					ppClinicID.ProgramNum=_progCur.ProgramNum;
-					ppClinicID.ClinicNum=0;
-					ppClinicID.PropertyDesc=Erx.PropertyDescs.ClinicID;
-					ppClinicID.PropertyValue="";
+					ppClinicID.ProgramId=_progCur.Id;
+					ppClinicID.ClinicId=0;
+					ppClinicID.Name=Erx.PropertyDescs.ClinicID;
+					ppClinicID.Value="";
 					_listProgramProperties.Add(ppClinicID);
 				}
-				if(!listClinicKeys.Exists(x => x.ClinicNum==0)) {
+				if(!listClinicKeys.Exists(x => x.ClinicId==0)) {
 					ProgramProperty ppClinicKey=new ProgramProperty();
-					ppClinicKey.ProgramNum=_progCur.ProgramNum;
-					ppClinicKey.ClinicNum=0;
-					ppClinicKey.PropertyDesc=Erx.PropertyDescs.ClinicKey;
-					ppClinicKey.PropertyValue="";
+					ppClinicKey.ProgramId=_progCur.Id;
+					ppClinicKey.ClinicId=0;
+					ppClinicKey.Name=Erx.PropertyDescs.ClinicKey;
+					ppClinicKey.Value="";
 					_listProgramProperties.Add(ppClinicKey);
 				}
 				if(PrefC.HasClinicsEnabled) {
 					foreach(Clinic clinicCur in Clinics.GetAllForUserod(Security.CurUser)) {
-						if(!listClinicIDs.Exists(x => x.ClinicNum==clinicCur.ClinicNum)) {//Only add a program property if it doesn't already exist.
+						if(!listClinicIDs.Exists(x => x.ClinicId==clinicCur.ClinicNum)) {//Only add a program property if it doesn't already exist.
 							ProgramProperty ppClinicID=new ProgramProperty();
-							ppClinicID.ProgramNum=_progCur.ProgramNum;
-							ppClinicID.ClinicNum=clinicCur.ClinicNum;
-							ppClinicID.PropertyDesc=Erx.PropertyDescs.ClinicID;
-							ppClinicID.PropertyValue="";
+							ppClinicID.ProgramId=_progCur.Id;
+							ppClinicID.ClinicId=clinicCur.ClinicNum;
+							ppClinicID.Name=Erx.PropertyDescs.ClinicID;
+							ppClinicID.Value="";
 							_listProgramProperties.Add(ppClinicID);
 						}
-						if(!listClinicKeys.Exists(x => x.ClinicNum==clinicCur.ClinicNum)) {//Only add a program property if it doesn't already exist.
+						if(!listClinicKeys.Exists(x => x.ClinicId==clinicCur.ClinicNum)) {//Only add a program property if it doesn't already exist.
 							ProgramProperty ppClinicKey=new ProgramProperty();
-							ppClinicKey.ProgramNum=_progCur.ProgramNum;
-							ppClinicKey.ClinicNum=clinicCur.ClinicNum;
-							ppClinicKey.PropertyDesc=Erx.PropertyDescs.ClinicKey;
-							ppClinicKey.PropertyValue="";
+							ppClinicKey.ProgramId=_progCur.Id;
+							ppClinicKey.ClinicId=clinicCur.ClinicNum;
+							ppClinicKey.Name=Erx.PropertyDescs.ClinicKey;
+							ppClinicKey.Value="";
 							_listProgramProperties.Add(ppClinicKey);
 						}
 					}
@@ -146,15 +146,15 @@ namespace OpenDental {
 		private GridRow CreateDoseSpotGridRow(DoseSpotGridRowModel model) {
 			GridRow row=new GridRow();
 			row.Cells.Add(model.Clinic.Abbr);
-			row.Cells.Add(model.ClinicIDProperty==null ? "" : model.ClinicIDProperty.PropertyValue);
-			row.Cells.Add(model.ClinicKeyProperty==null ? "" : model.ClinicKeyProperty.PropertyValue);
+			row.Cells.Add(model.ClinicIDProperty==null ? "" : model.ClinicIDProperty.Value);
+			row.Cells.Add(model.ClinicKeyProperty==null ? "" : model.ClinicKeyProperty.Value);
 			row.Tag=model;
 			return row;
 		}
 
 		private ProgramProperty GetPropertyForClinic(long clinicNum,string propDesc) {
-			return _listProgramProperties.FindAll(x => x.ClinicNum==clinicNum)
-					.FirstOrDefault(x => x.PropertyDesc==propDesc);
+			return _listProgramProperties.FindAll(x => x.ClinicId==clinicNum)
+					.FirstOrDefault(x => x.Name==propDesc);
 		}
 
 		///<summary>All references removed in I12045.</summary>
@@ -198,22 +198,22 @@ namespace OpenDental {
 
 		private void gridProperties_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			DoseSpotGridRowModel model=(DoseSpotGridRowModel)gridProperties.ListGridRows[e.Row].Tag;
-			FormDoseSpotPropertyEdit FormDPE=new FormDoseSpotPropertyEdit(model.Clinic,model.ClinicIDProperty.PropertyValue,model.ClinicKeyProperty.PropertyValue,_listProgramProperties);
+			FormDoseSpotPropertyEdit FormDPE=new FormDoseSpotPropertyEdit(model.Clinic,model.ClinicIDProperty.Value,model.ClinicKeyProperty.Value,_listProgramProperties);
 			FormDPE.ShowDialog();
 			if(FormDPE.DialogResult==DialogResult.OK) {
 				int clinicIdPos=_listProgramProperties.IndexOf(GetPropertyForClinic(model.Clinic.ClinicNum,Erx.PropertyDescs.ClinicID));
-				_listProgramProperties[clinicIdPos].PropertyValue=FormDPE.ClinicIdVal;
+				_listProgramProperties[clinicIdPos].Value=FormDPE.ClinicIdVal;
 				int clinicKeyPos=_listProgramProperties.IndexOf(GetPropertyForClinic(model.Clinic.ClinicNum,Erx.PropertyDescs.ClinicKey));
-				_listProgramProperties[clinicKeyPos].PropertyValue=FormDPE.ClinicKeyVal;
+				_listProgramProperties[clinicKeyPos].Value=FormDPE.ClinicKeyVal;
 			}
 			FillGridDoseSpot();//Always fill grid because clinics could have been editted in FormDoseSpotPropertyEdit.
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			ErxOptionPP.PropertyValue=POut.Int((int)_eRxOption);
+			ErxOptionPP.Value=POut.Int((int)_eRxOption);
 			_progCur.Enabled=checkEnabled.Checked;
 			Programs.Update(_progCur);
-			ProgramProperties.Sync(_listProgramProperties,_progCur.ProgramNum);
+			ProgramProperties.Sync(_listProgramProperties,_progCur.Id);
 			DataValid.SetInvalid(InvalidType.Programs);
 			DialogResult=DialogResult.OK;
 		}

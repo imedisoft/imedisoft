@@ -86,7 +86,7 @@ namespace OpenDental {
 				tabControl.SelectedTab=tabACH;
 				textRoutingNumber.Select();
 			}
-			if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,_clinicNum))) {
+			if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.Id,PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,_clinicNum))) {
 				textCardNumber.ReadOnly=true;
 				textRoutingNumber.ReadOnly=true;
 				textCheckSaveNumber.ReadOnly=true;
@@ -275,7 +275,7 @@ namespace OpenDental {
 				expYear=_creditCardCur.CCExpiration.Year;
 				expMonth=_creditCardCur.CCExpiration.Month;
 			}
-			else if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,_clinicNum))) {
+			else if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.Id,PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,_clinicNum))) {
 				MessageBox.Show("Cannot add a new credit card.");
 				return null;
 			}
@@ -371,7 +371,7 @@ namespace OpenDental {
 			{
 				accountNumber=_creditCardCur.PaySimpleToken;
 			}
-			else if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,_clinicNum))) {
+			else if(PIn.Bool(ProgramProperties.GetPropVal(_progCur.Id,PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,_clinicNum))) {
 				MessageBox.Show("Cannot add a new ACH payment.");
 				return null;
 			}
@@ -498,7 +498,7 @@ namespace OpenDental {
 				MessageBox.Show("Ref Number required.");
 				return false;
 			}
-			string paytype=ProgramProperties.GetPropValForClinicOrDefault(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimplePayTypeCC,_clinicNum);
+			string paytype=ProgramProperties.GetPropValForClinicOrDefault(_progCur.Id,PaySimple.PropertyDescs.PaySimplePayTypeCC,_clinicNum);
 			if(!Defs.GetDefsForCategory(DefCat.PaymentTypes,true).Any(x => x.DefNum.ToString()==paytype)) { //paytype is not a valid DefNum
 				MessageBox.Show("The PaySimple payment type has not been set.");
 				return false;
@@ -565,8 +565,8 @@ namespace OpenDental {
 
 		private bool IsPaySimpleSetup() {
 			//verify the selected clinic has a username and API key entered
-			if(string.IsNullOrWhiteSpace(ProgramProperties.GetPropValForClinicOrDefault(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimpleApiUserName,_clinicNum))
-				|| string.IsNullOrWhiteSpace(ProgramProperties.GetPropValForClinicOrDefault(_progCur.ProgramNum,PaySimple.PropertyDescs.PaySimpleApiKey,_clinicNum))) 
+			if(string.IsNullOrWhiteSpace(ProgramProperties.GetPropValForClinicOrDefault(_progCur.Id,PaySimple.PropertyDescs.PaySimpleApiUserName,_clinicNum))
+				|| string.IsNullOrWhiteSpace(ProgramProperties.GetPropValForClinicOrDefault(_progCur.Id,PaySimple.PropertyDescs.PaySimpleApiKey,_clinicNum))) 
 			{
 				MessageBox.Show("The PaySimple username and/or key has not been set.");
 				return false;

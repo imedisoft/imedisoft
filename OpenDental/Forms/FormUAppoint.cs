@@ -404,7 +404,7 @@ namespace OpenDental{
 
 		private void FormUAppoint_Load(object sender, System.EventArgs e) {
 			ODThread odThreadUpdateText=new ODThread(300,(o) => {
-				string syncStatus=ProgramProperties.GetValFromDb(ProgramCur.ProgramNum,"SynchStatus");
+				string syncStatus=ProgramProperties.GetValFromDb(ProgramCur.Id,"SynchStatus");
 				ODException.SwallowAnyException(() => { this.Invoke(() => { textSynchStatus.Text=syncStatus; }); });
 			});
 			odThreadUpdateText.Start();
@@ -414,11 +414,11 @@ namespace OpenDental{
 
 		private void FillForm(){
 			ProgramProperties.RefreshCache();
-			textProgName.Text=ProgramCur.ProgName;
-			textProgDesc.Text=ProgramCur.ProgDesc;
+			textProgName.Text=ProgramCur.Name;
+			textProgDesc.Text=ProgramCur.Description;
 			checkEnabled.Checked=ProgramCur.Enabled;
 			textPath.Text=ProgramCur.Path;
-			PropertyList=ProgramProperties.GetForProgram(ProgramCur.ProgramNum);
+			PropertyList=ProgramProperties.GetForProgram(ProgramCur.Id);
 			textUsername.Text=GetProp("Username");
 			textPassword.Text=GetProp("Password");
 			textWorkstationName.Text=GetProp("WorkstationName");
@@ -433,8 +433,8 @@ namespace OpenDental{
 
 		private string GetProp(string desc){
 			for(int i=0;i<PropertyList.Count;i++){
-				if(PropertyList[i].PropertyDesc==desc){
-					return PropertyList[i].PropertyValue;
+				if(PropertyList[i].Name==desc){
+					return PropertyList[i].Value;
 				}
 			}
 			throw new ApplicationException("Property not found: "+desc);
@@ -444,14 +444,14 @@ namespace OpenDental{
 			if(!SaveToDb()){
 				return;
 			}
-			string propVal=ProgramProperties.GetPropVal(ProgramCur.ProgramNum,"SynchStatus");
+			string propVal=ProgramProperties.GetPropVal(ProgramCur.Id,"SynchStatus");
 			if(ProgramCur.Enabled 
 				&& propVal=="Initial synchronization running.")
 			{
 				MessageBox.Show("Initial synchronization is running.  Not allowed to restart.  You could uncheck the Enabled box and then click this button to stop the sychronization.");
 				return;
 			}
-			propVal=ProgramProperties.GetPropVal(ProgramCur.ProgramNum,"DateTimeLastUploaded");
+			propVal=ProgramProperties.GetPropVal(ProgramCur.Id,"DateTimeLastUploaded");
 			DateTime datet=PIn.Date(propVal);
 			if(datet.Year<1880){
 				if(!MsgBox.Show(MsgBoxButtons.YesNo,"This is an initial synchronization.  It could take a while.  You can probably continue to work on this computer, but you will need to leave the program running on this workstation until the synch is done.  Begin initial synchronization?"))
@@ -459,7 +459,7 @@ namespace OpenDental{
 					return;
 				}
 				File.AppendAllText(logfile,DateTime.Now.ToString()+"  Initial synchronization running.\r\n");
-				ProgramProperties.SetProperty(ProgramCur.ProgramNum,"SynchStatus","Initial synchronization running.");
+				ProgramProperties.SetProperty(ProgramCur.Id,"SynchStatus","Initial synchronization running.");
 			}
 			StartThreadIfEnabled();
 		}
@@ -494,11 +494,11 @@ namespace OpenDental{
 		private static void ThreadStartTarget(object data){
 			File.WriteAllText(logfile,DateTime.Now.ToString()+"  Synch thread started.\r\n");//creates or clears the log
 			Program prog=(Program)data;
-			int intervalSec=PIn.Int(ProgramProperties.GetPropVal(prog.ProgramNum,"IntervalSeconds"));
+			int intervalSec=PIn.Int(ProgramProperties.GetPropVal(prog.Id,"IntervalSeconds"));
 			int intervalSecError=intervalSec*4;
-			string username=ProgramProperties.GetPropVal(prog.ProgramNum,"Username");
-			string password=ProgramProperties.GetPropVal(prog.ProgramNum,"Password");
-			DateTime dateTimeLastUploaded=PIn.Date(ProgramProperties.GetPropVal(prog.ProgramNum,"DateTimeLastUploaded"));
+			string username=ProgramProperties.GetPropVal(prog.Id,"Username");
+			string password=ProgramProperties.GetPropVal(prog.Id,"Password");
+			DateTime dateTimeLastUploaded=PIn.Date(ProgramProperties.GetPropVal(prog.Id,"DateTimeLastUploaded"));
 			//track delta here
 			DateTime nowServer=MiscData.GetNowDateTime();
 			TimeSpan deltaTimeSpan=nowServer-DateTime.Now;//this was tested to work by adding delta to local time
@@ -578,7 +578,7 @@ namespace OpenDental{
 					+codesToSynch.Count;
 				if(totalObjectsToSynch==0){//if there are still no objects
 					File.AppendAllText(logfile,DateTime.Now.ToString()+"  Current.  Sleeping between synch.\r\n");
-					ProgramProperties.SetProperty(prog.ProgramNum,"SynchStatus","Current.  Sleeping between synch.");
+					ProgramProperties.SetProperty(prog.Id,"SynchStatus","Current.  Sleeping between synch.");
 					Thread.Sleep(TimeSpan.FromSeconds(intervalSec));//sleep for a while
 					continue;
 				}
@@ -608,7 +608,7 @@ namespace OpenDental{
 					synchstatus+=codesToSynch.Count.ToString()+" codes, ";
 				}
 				File.AppendAllText(logfile,DateTime.Now.ToString()+"  "+synchstatus+"\r\n");
-				ProgramProperties.SetProperty(prog.ProgramNum,"SynchStatus",synchstatus);
+				ProgramProperties.SetProperty(prog.Id,"SynchStatus",synchstatus);
 				strBuild=new StringBuilder();
 				writer=XmlWriter.Create(strBuild,settings);
 				writer.WriteStartElement("PracticeClient");
@@ -938,7 +938,7 @@ namespace OpenDental{
 					//typical error is: Bad gateway
 					//This can happen even during a normal upload sequence soon after a successful post.
 					File.AppendAllText(logfile,DateTime.Now.ToString()+"  Error:"+ex.Message+"   Sleeping for "+intervalSecError.ToString()+" seconds."+"\r\n");
-					ProgramProperties.SetProperty(prog.ProgramNum,"SynchStatus","Error:"+ex.Message+"   Sleeping for "+intervalSecError.ToString()+" seconds.");
+					ProgramProperties.SetProperty(prog.Id,"SynchStatus","Error:"+ex.Message+"   Sleeping for "+intervalSecError.ToString()+" seconds.");
 					Thread.Sleep(TimeSpan.FromSeconds(intervalSecError));
 					continue;
 				}
@@ -948,7 +948,7 @@ namespace OpenDental{
 				readStream.Close();
 				if(responseStr!="<server error=\"false\" />\r\n"){
 					File.AppendAllText(logfile,DateTime.Now.ToString()+"  ServerError.  "+responseStr+"  Sleeping for "+intervalSecError.ToString()+" seconds.\r\n");
-					ProgramProperties.SetProperty(prog.ProgramNum,"SynchStatus","ServerError.  "+responseStr+"  Sleeping for "+intervalSecError.ToString()+" seconds.");
+					ProgramProperties.SetProperty(prog.Id,"SynchStatus","ServerError.  "+responseStr+"  Sleeping for "+intervalSecError.ToString()+" seconds.");
 					Thread.Sleep(TimeSpan.FromSeconds(intervalSecError));
 					continue;
 				}
@@ -1021,7 +1021,7 @@ namespace OpenDental{
 				}
 				if(totalObjectsToSynch==objectsInThisPost){
 					dateTimeLastUploaded=timeStartSynch+deltaTimeSpan;
-					ProgramProperties.SetProperty(prog.ProgramNum,"DateTimeLastUploaded",POut.DateT(dateTimeLastUploaded,false));
+					ProgramProperties.SetProperty(prog.Id,"DateTimeLastUploaded",POut.DateT(dateTimeLastUploaded,false));
 					//POut.PDateT(MiscData.GetNowDateTime()));
 				}
 				//there are still objects to upload.
@@ -1080,17 +1080,17 @@ namespace OpenDental{
 					return false;
 				}
 			}
-			ProgramCur.ProgDesc=textProgDesc.Text;
+			ProgramCur.Description=textProgDesc.Text;
 			ProgramCur.Enabled=checkEnabled.Checked;
 			ProgramCur.Path=textPath.Text;
 			ProgramCur.Note=textNote.Text;
 			Programs.Update(ProgramCur);
-			ProgramProperties.SetProperty(ProgramCur.ProgramNum,"Username",textUsername.Text);
-			ProgramProperties.SetProperty(ProgramCur.ProgramNum,"Password",textPassword.Text);
-			ProgramProperties.SetProperty(ProgramCur.ProgramNum,"WorkstationName",textWorkstationName.Text.ToUpper());
-			ProgramProperties.SetProperty(ProgramCur.ProgramNum,"IntervalSeconds",intervalSec.ToString());
+			ProgramProperties.SetProperty(ProgramCur.Id,"Username",textUsername.Text);
+			ProgramProperties.SetProperty(ProgramCur.Id,"Password",textPassword.Text);
+			ProgramProperties.SetProperty(ProgramCur.Id,"WorkstationName",textWorkstationName.Text.ToUpper());
+			ProgramProperties.SetProperty(ProgramCur.Id,"IntervalSeconds",intervalSec.ToString());
 			if(textDateTimeLastUploaded2.Text!=""){
-				ProgramProperties.SetProperty(ProgramCur.ProgramNum,"DateTimeLastUploaded",POut.DateT(datetime,false));
+				ProgramProperties.SetProperty(ProgramCur.Id,"DateTimeLastUploaded",POut.DateT(datetime,false));
 			}
 			DataValid.SetInvalid(InvalidType.Programs);
 			return true;

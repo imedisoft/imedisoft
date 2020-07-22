@@ -739,6 +739,46 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconArrowDown {
+            get {
+                object obj = ResourceManager.GetObject("IconArrowDown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconArrowLeft {
+            get {
+                object obj = ResourceManager.GetObject("IconArrowLeft", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconArrowRight {
+            get {
+                object obj = ResourceManager.GetObject("IconArrowRight", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconArrowUp {
+            get {
+                object obj = ResourceManager.GetObject("IconArrowUp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconMediaPlay {
             get {
                 object obj = ResourceManager.GetObject("IconMediaPlay", resourceCulture);
@@ -752,6 +792,46 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconMediaStop {
             get {
                 object obj = ResourceManager.GetObject("IconMediaStop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconMinus {
+            get {
+                object obj = ResourceManager.GetObject("IconMinus", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconPlus {
+            get {
+                object obj = ResourceManager.GetObject("IconPlus", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconTimes {
+            get {
+                object obj = ResourceManager.GetObject("IconTimes", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconTrash {
+            get {
+                object obj = ResourceManager.GetObject("IconTrash", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

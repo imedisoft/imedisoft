@@ -272,8 +272,8 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Programs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Programs.ToString());
-				Programs.GetTableFromCache(true);
-				ProgramProperties.GetTableFromCache(true);
+				Programs.RefreshCache();
+				ProgramProperties.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.ProviderErxs) || refreshAll)
 			{

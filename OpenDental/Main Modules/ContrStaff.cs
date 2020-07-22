@@ -929,20 +929,20 @@ namespace OpenDental
 			else {
 				listClinicNums.Add(0);
 			}
-			List<ProgramProperty> listProperties=ProgramProperties.GetForProgram(progCur.ProgramNum);
+			List<ProgramProperty> listProperties=ProgramProperties.GetForProgram(progCur.Id);
 			foreach(long clinicNum in listClinicNums) {
 				List<ProgramProperty> listPropsForClinic=new List<ProgramProperty>();
-				if(listProperties.All(x => x.ClinicNum!=clinicNum)) {//if no prog props exist for the clinic, continue, clinicNum 0 will be tested once as well
+				if(listProperties.All(x => x.ClinicId!=clinicNum)) {//if no prog props exist for the clinic, continue, clinicNum 0 will be tested once as well
 					continue;
 				}
-				listPropsForClinic=listProperties.FindAll(x => x.ClinicNum==clinicNum);
-				string sftpAddress=listPropsForClinic.Find(x => x.PropertyDesc=="SftpServerAddress")?.PropertyValue??"";
+				listPropsForClinic=listProperties.FindAll(x => x.ClinicId==clinicNum);
+				string sftpAddress=listPropsForClinic.Find(x => x.Name=="SftpServerAddress")?.Value??"";
 				int sftpPort;
-				if(!int.TryParse(listPropsForClinic.Find(x => x.PropertyDesc=="SftpServerPort")?.PropertyValue??"",out sftpPort)) {
+				if(!int.TryParse(listPropsForClinic.Find(x => x.Name=="SftpServerPort")?.Value??"",out sftpPort)) {
 					sftpPort=22;//default to port 22
 				}
-				string userName=listPropsForClinic.Find(x => x.PropertyDesc=="SftpUsername")?.PropertyValue??"";
-				string userPassword=listPropsForClinic.Find(x => x.PropertyDesc=="SftpPassword")?.PropertyValue??"";
+				string userName=listPropsForClinic.Find(x => x.Name=="SftpUsername")?.Value??"";
+				string userPassword=listPropsForClinic.Find(x => x.Name=="SftpPassword")?.Value??"";
 				if(Sftp.TestConnection(sftpAddress,userName,userPassword,sftpPort)) {
 					return true;
 				}

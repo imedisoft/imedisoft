@@ -46,8 +46,8 @@ namespace OpenDental {
 			_listClientIDs=new List<string>();
 			long progNum=Programs.GetProgramNum(ProgramName.Transworld);
 			if(progNum>0) {
-				_listClientIDs=ProgramProperties.GetWhere(x => x.ProgramNum==progNum && x.PropertyDesc.In("ClientIdAccelerator","ClientIdCollection"))
-					.Select(x => x.PropertyValue).Distinct().ToList();
+				_listClientIDs=ProgramProperties.GetWhere(x => x.ProgramId==progNum && x.Name.In("ClientIdAccelerator","ClientIdCollection"))
+					.Select(x => x.Value).Distinct().ToList();
 			}
 			_listClientIDs.ForEach(x => comboBoxMultiClientIDs.Items.Add(x));
 			#endregion Fill Client IDs

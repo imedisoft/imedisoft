@@ -34,8 +34,8 @@ namespace OpenDentBusiness {
 
 		///<summary>The proxy's working directory.</summary>
 		public static string SendAndReceiveUpdateRequestXml() {
-			List<string> listProgramsEnabled=Programs.GetWhere(x => x.Enabled && !string.IsNullOrWhiteSpace(x.ProgName))
-				.Select(x => x.ProgName).ToList();
+			List<string> listProgramsEnabled=Programs.GetWhere(x => x.Enabled && !string.IsNullOrWhiteSpace(x.Name))
+				.Select(x => x.Name).ToList();
 			//prepare the xml document to send--------------------------------------------------------------------------------------
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;

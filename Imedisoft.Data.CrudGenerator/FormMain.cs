@@ -103,7 +103,7 @@ namespace Imedisoft.Data.CrudGenerator
 				{
 					var table = new Table(type);
 
-					snippetTextBox.Text = EntityClassGenerator.Generate(table, "OpenDentBusiness.Crud");
+					snippetTextBox.Text = EntityClassGenerator.Generate(table, namespaceTextBox.Text);
 				}
 				catch (Exception ex)
 				{

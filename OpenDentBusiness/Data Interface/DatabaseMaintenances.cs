@@ -7294,45 +7294,45 @@ namespace OpenDentBusiness {
 			return log;
 		}
 
-		[DbmMethodAttr]
-		public static string ProgramPropertiesMissingForClinic(bool verbose,DbmMode modeCur) {
-			//X-Charge and PayConnect are currently the only program links that use ClinicNum.
-			string progNumStr=POut.Long(Programs.GetProgramNum(ProgramName.Xcharge))+","+POut.Long(Programs.GetProgramNum(ProgramName.PayConnect));
-			string command="SELECT DISTINCT pphq.*,clinic.ClinicNum missingClinicNum "//Distinct in case there are duplicate prog props with a ClinicNum 0.
-				+"FROM programproperty pphq "
-				+"INNER JOIN clinic ON TRUE "
-				+"LEFT JOIN programproperty ppcl ON ppcl.ProgramNum=pphq.ProgramNum "
-				+"AND ppcl.PropertyDesc=pphq.PropertyDesc "
-					+"AND ppcl.ClinicNum=clinic.ClinicNum "
-				+"WHERE pphq.ProgramNum IN ("+progNumStr+") "
-				+"AND pphq.ClinicNum=0 "
-				+"AND pphq.PropertyDesc!='' "
-				+"AND ppcl.ClinicNum IS NULL ";
-			DataTable tableProgProps=Database.ExecuteDataTable(command);
-			string log="";
-			switch(modeCur) {
-				case DbmMode.Check:
-					int numFound=tableProgProps.Rows.Count;
-					if(numFound>0 || verbose) {
-						log+=Lans.g("FormDatabaseMaintenance","X-Charge and/or PayConnect missing program property entries found: ")
-							+numFound+"\r\n";
-					}
-					break;
-				case DbmMode.Fix:
-					List<ProgramProperty> listProgProps=Crud.ProgramPropertyCrud.TableToList(tableProgProps);
-					for(int i = 0;i<listProgProps.Count;i++) {
-						listProgProps[i].ClinicNum=PIn.Long(tableProgProps.Rows[i]["missingClinicNum"].ToString());
-						ProgramProperties.Insert(listProgProps[i]);
-					}
-					long numberFixed=tableProgProps.Rows.Count;
-					if(numberFixed>0 || verbose) {
-						log+=Lans.g("FormDatabaseMaintenance","X-Charge and/or PayConnect missing program property entries inserted: ")
-							+numberFixed.ToString()+"\r\n";
-					}
-					break;
-			}
-			return log;
-		}
+		//[DbmMethodAttr]
+		//public static string ProgramPropertiesMissingForClinic(bool verbose,DbmMode modeCur) {
+		//	//X-Charge and PayConnect are currently the only program links that use ClinicNum.
+		//	string progNumStr=POut.Long(Programs.GetProgramNum(ProgramName.Xcharge))+","+POut.Long(Programs.GetProgramNum(ProgramName.PayConnect));
+		//	string command="SELECT DISTINCT pphq.*,clinic.ClinicNum missingClinicNum "//Distinct in case there are duplicate prog props with a ClinicNum 0.
+		//		+"FROM programproperty pphq "
+		//		+"INNER JOIN clinic ON TRUE "
+		//		+"LEFT JOIN programproperty ppcl ON ppcl.ProgramNum=pphq.ProgramNum "
+		//		+"AND ppcl.PropertyDesc=pphq.PropertyDesc "
+		//			+"AND ppcl.ClinicNum=clinic.ClinicNum "
+		//		+"WHERE pphq.ProgramNum IN ("+progNumStr+") "
+		//		+"AND pphq.ClinicNum=0 "
+		//		+"AND pphq.PropertyDesc!='' "
+		//		+"AND ppcl.ClinicNum IS NULL ";
+		//	DataTable tableProgProps=Database.ExecuteDataTable(command);
+		//	string log="";
+		//	switch(modeCur) {
+		//		case DbmMode.Check:
+		//			int numFound=tableProgProps.Rows.Count;
+		//			if(numFound>0 || verbose) {
+		//				log+=Lans.g("FormDatabaseMaintenance","X-Charge and/or PayConnect missing program property entries found: ")
+		//					+numFound+"\r\n";
+		//			}
+		//			break;
+		//		case DbmMode.Fix:
+		//			List<ProgramProperty> listProgProps=Crud.ProgramPropertyCrud.TableToList(tableProgProps);
+		//			for(int i = 0;i<listProgProps.Count;i++) {
+		//				listProgProps[i].ClinicId=PIn.Long(tableProgProps.Rows[i]["missingClinicNum"].ToString());
+		//				ProgramProperties.Insert(listProgProps[i]);
+		//			}
+		//			long numberFixed=tableProgProps.Rows.Count;
+		//			if(numberFixed>0 || verbose) {
+		//				log+=Lans.g("FormDatabaseMaintenance","X-Charge and/or PayConnect missing program property entries inserted: ")
+		//					+numberFixed.ToString()+"\r\n";
+		//			}
+		//			break;
+		//	}
+		//	return log;
+		//}
 
 		[DbmMethodAttr(HasBreakDown = true)]
 		public static string ProviderHiddenWithClaimPayments(bool verbose,DbmMode modeCur) {

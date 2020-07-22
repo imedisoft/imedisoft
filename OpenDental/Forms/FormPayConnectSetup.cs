@@ -449,7 +449,7 @@ namespace OpenDental
 				}
 				_indexClinicRevert=comboClinic.SelectedIndex;
 			}
-			_listProgProps=ProgramProperties.GetForProgram(_progCur.ProgramNum);
+			_listProgProps=ProgramProperties.GetForProgram(_progCur.Id);
 			FillFields();
 		}
 
@@ -519,24 +519,24 @@ namespace OpenDental
 				payTypeCur=_listPaymentTypeDefs[comboPaymentType.SelectedIndex].DefNum.ToString();
 			}
 			//for each distinct ClinicNum in the prog property list for PayConnect except HQ
-			foreach(long clinicNum in _listProgProps.Select(x => x.ClinicNum).Where(x => x>0).Distinct()) {
+			foreach(long clinicNum in _listProgProps.Select(x => x.ClinicId).Where(x => x>0).Distinct()) {
 				//if this clinic has a different username or password, skip it
-				if(!_listProgProps.Exists(x => x.ClinicNum==clinicNum && x.PropertyDesc=="Username" && x.PropertyValue==hqUsername)
-					|| !_listProgProps.Exists(x => x.ClinicNum==clinicNum && x.PropertyDesc=="Password" && x.PropertyValue==hqPassword))
+				if(!_listProgProps.Exists(x => x.ClinicId==clinicNum && x.Name=="Username" && x.Value==hqUsername)
+					|| !_listProgProps.Exists(x => x.ClinicId==clinicNum && x.Name=="Password" && x.Value==hqPassword))
 				{
 					continue;
 				}
 				//this clinic had a matching username and password, so update the username and password to keep it synched with HQ
-				_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc=="Username")
-					.ForEach(x => x.PropertyValue=textUsername.Text);//always 1 item; null safe
-				_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc=="Password")
-					.ForEach(x => x.PropertyValue=textPassword.Text);//always 1 item; null safe
+				_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name=="Username")
+					.ForEach(x => x.Value=textUsername.Text);//always 1 item; null safe
+				_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name=="Password")
+					.ForEach(x => x.Value=textPassword.Text);//always 1 item; null safe
 				if(string.IsNullOrEmpty(payTypeCur)) {
 					continue;
 				}
 				//update clinic payment type if it originally matched HQ's payment type and the selected payment type is valid
-				_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc=="PaymentType" && x.PropertyValue==hqPayType)
-					.ForEach(x => x.PropertyValue=payTypeCur);//always 1 item; null safe
+				_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name=="PaymentType" && x.Value==hqPayType)
+					.ForEach(x => x.Value=payTypeCur);//always 1 item; null safe
 			}
 		}
 
@@ -547,24 +547,24 @@ namespace OpenDental
 			}
 			string processingMethodSelected=comboDefaultProcessing.SelectedIndex.ToString();
 			//set the values in the list for this clinic
-			_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc=="Username")
-				.ForEach(x => x.PropertyValue=textUsername.Text);//always 1 item; null safe
-			_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc=="Password")
-				.ForEach(x => x.PropertyValue=textPassword.Text);//always 1 item; null safe
-			_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc=="PaymentType")
-				.ForEach(x => x.PropertyValue=payTypeSelected);//always 1 item; null safe
-			_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc==PayConnect.ProgramProperties.DefaultProcessingMethod)
-				.ForEach(x => x.PropertyValue=processingMethodSelected);
-			_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc=="TerminalProcessingEnabled")
-				.ForEach(x => x.PropertyValue=POut.Bool(checkTerminal.Checked));//always 1 item; null safe
-			_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc==PayConnect.ProgramProperties.PayConnectForceRecurringCharge)
-				.ForEach(x => x.PropertyValue=POut.Bool(checkForceRecurring.Checked));
-			_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc==PayConnect.ProgramProperties.PayConnectPreventSavingNewCC)
-				.ForEach(x => x.PropertyValue=POut.Bool(checkPreventSavingNewCC.Checked));
-			_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc==PayConnect.ProgramProperties.PatientPortalPaymentsEnabled)
-				.ForEach(x => x.PropertyValue=POut.Bool(checkPatientPortalPayEnabled.Checked));
-			_listProgProps.FindAll(x => x.ClinicNum==clinicNum && x.PropertyDesc==PayConnect.ProgramProperties.PatientPortalPaymentsToken)
-				.ForEach(x => x.PropertyValue=textToken.Text);
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name=="Username")
+				.ForEach(x => x.Value=textUsername.Text);//always 1 item; null safe
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name=="Password")
+				.ForEach(x => x.Value=textPassword.Text);//always 1 item; null safe
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name=="PaymentType")
+				.ForEach(x => x.Value=payTypeSelected);//always 1 item; null safe
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PayConnect.ProgramProperties.DefaultProcessingMethod)
+				.ForEach(x => x.Value=processingMethodSelected);
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name=="TerminalProcessingEnabled")
+				.ForEach(x => x.Value=POut.Bool(checkTerminal.Checked));//always 1 item; null safe
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PayConnect.ProgramProperties.PayConnectForceRecurringCharge)
+				.ForEach(x => x.Value=POut.Bool(checkForceRecurring.Checked));
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PayConnect.ProgramProperties.PayConnectPreventSavingNewCC)
+				.ForEach(x => x.Value=POut.Bool(checkPreventSavingNewCC.Checked));
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PayConnect.ProgramProperties.PatientPortalPaymentsEnabled)
+				.ForEach(x => x.Value=POut.Bool(checkPatientPortalPayEnabled.Checked));
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PayConnect.ProgramProperties.PatientPortalPaymentsToken)
+				.ForEach(x => x.Value=textToken.Text);
 		}
 
 		private void checkPatientPortalPayEnabled_Click(object sender,EventArgs e) {
@@ -587,9 +587,9 @@ namespace OpenDental
 				}
 				//User wants to disable XWeb online payments and use PayConnect online payments
 				ProgramProperty ppOnlinePaymentEnabled=ProgramProperties.GetWhere(x =>
-					x.ProgramNum==Programs.GetCur(ProgramName.Xcharge).ProgramNum
-					&& x.ClinicNum==clinicNum
-					&& x.PropertyDesc=="IsOnlinePaymentsEnabled")
+					x.ProgramId==Programs.GetCur(ProgramName.Xcharge).Id
+					&& x.ClinicId==clinicNum
+					&& x.Name=="IsOnlinePaymentsEnabled")
 					.FirstOrDefault();
 				if(ppOnlinePaymentEnabled==null) {
 					return;//Should never happen since we successfully found it in the GetXWebCreds method.
@@ -727,13 +727,13 @@ namespace OpenDental
 				_progCur.Enabled=checkEnabled.Checked;
 				Programs.Update(_progCur);
 			}
-			ProgramProperties.Sync(_listProgProps,_progCur.ProgramNum);
+			ProgramProperties.Sync(_listProgProps,_progCur.Id);
 			//Find all clinics that have PayConnect online payments enabled
-			_listProgProps.FindAll(x => x.PropertyDesc==PayConnect.ProgramProperties.PatientPortalPaymentsEnabled && PIn.Bool(x.PropertyValue)).ForEach(x => {
+			_listProgProps.FindAll(x => x.Name==PayConnect.ProgramProperties.PatientPortalPaymentsEnabled && PIn.Bool(x.Value)).ForEach(x => {
 				//Find all XWeb program properties that we saved in this session.  Only clinics that have changes will have an XWeb property in memory.
 				//This is needed to ensure that we don't disable XWeb online payments if someone
 				// checks to use PayConnect online payments and then decides to keep it disabled during the same session.
-				ProgramProperty ppXWebOnlinePayments=_listXWebWebPayProgProps.FirstOrDefault(y => y.ClinicNum==x.ClinicNum);
+				ProgramProperty ppXWebOnlinePayments=_listXWebWebPayProgProps.FirstOrDefault(y => y.ClinicId==x.ClinicId);
 				if(ppXWebOnlinePayments!=null) {
 					ProgramProperties.UpdateProgramPropertyWithValue(ppXWebOnlinePayments,POut.Bool(false));
 				}

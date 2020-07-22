@@ -819,7 +819,7 @@ namespace OpenDental{
 				}
 			}
 			else if(e.Button.Tag.GetType()==typeof(Program)) {
-				ProgramL.Execute(((Program)e.Button.Tag).ProgramNum,PatCur);
+				ProgramL.Execute(((Program)e.Button.Tag).Id,PatCur);
 			}
 			Plugins.HookAddCode(this,"ContrTreat.ToolBarMain_ButtonClick_end",PatCur,e);
 		}

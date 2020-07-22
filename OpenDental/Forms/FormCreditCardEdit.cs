@@ -430,8 +430,8 @@ namespace OpenDental {
 					+"sufficient permissions.");
 				return;
 			}
-			string xUsername=ProgramProperties.GetPropVal(prog.ProgramNum,"Username",Clinics.ClinicNum);
-			string xPassword=CodeBase.MiscUtils.Decrypt(ProgramProperties.GetPropVal(prog.ProgramNum,"Password",Clinics.ClinicNum));
+			string xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.ClinicNum);
+			string xPassword=CodeBase.MiscUtils.Decrypt(ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.ClinicNum));
 			info.Arguments+="/TRANSACTIONTYPE:ARCHIVEVAULTDELETE ";
 			info.Arguments+="/XCACCOUNTID:"+CreditCardCur.XChargeToken+" ";
 			info.Arguments+="/RESULTFILE:\""+resultfile+"\" ";
@@ -581,8 +581,8 @@ namespace OpenDental {
 						MessageBox.Show("Could not delete XResult.txt file.  It may be in use by another program, flagged as read-only, or you might not have sufficient permissions.");
 						return;
 					}
-					string xUsername=ProgramProperties.GetPropVal(prog.ProgramNum,"Username",Clinics.ClinicNum);
-					string xPassword=CodeBase.MiscUtils.Decrypt(ProgramProperties.GetPropVal(prog.ProgramNum,"Password",Clinics.ClinicNum));
+					string xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.ClinicNum);
+					string xPassword=CodeBase.MiscUtils.Decrypt(ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.ClinicNum));
 					//We can only change exp date for X-Charge via ARCHIVEAULTUPDATE.
 					info.Arguments+="/TRANSACTIONTYPE:ARCHIVEVAULTUPDATE ";
 					info.Arguments+="/XCACCOUNTID:"+CreditCardCur.XChargeToken+" ";

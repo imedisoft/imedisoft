@@ -616,7 +616,7 @@ namespace OpenDentBusiness
 			{//TODO: refine to use show Family
 				#region Commlog
 				List<Def> listCommLogTypeDefs = Defs.GetDefsForCategory(DefCat.CommLogTypes);
-				long podiumProgramNum = Programs.GetCur(ProgramName.Podium).ProgramNum;
+				long podiumProgramNum = Programs.GetCur(ProgramName.Podium).Id;
 				bool showPodiumCommlogs = PIn.Bool(ProgramProperties.GetPropVal(podiumProgramNum, Podium.PropertyDescs.ShowCommlogsInChartAndAccount));
 				string wherePodiumCommlog = "";
 				if (!showPodiumCommlogs)

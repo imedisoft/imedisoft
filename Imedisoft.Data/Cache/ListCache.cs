@@ -7,6 +7,7 @@ namespace Imedisoft.Data.Cache
     public abstract class ListCache<TValue> : ICache<TValue>
     {
 		private readonly List<TValue> items = new List<TValue>();
+		private bool requiresRefresh = true;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ListCache{TValue}"/> class.
@@ -26,6 +27,8 @@ namespace Imedisoft.Data.Cache
 		public List<TValue> Find(Predicate<TValue> predicate)
         {
 			var result = new List<TValue>();
+
+			if (requiresRefresh) Refresh();
 
 			if (predicate != null && !IsEmpty)
 			{
@@ -52,6 +55,8 @@ namespace Imedisoft.Data.Cache
 		public int Count(Predicate<TValue> predicate)
         {
 			if (predicate == null || IsEmpty) return 0;
+
+			if (requiresRefresh) Refresh();
 
 			int matches = 0;
 
@@ -86,7 +91,10 @@ namespace Imedisoft.Data.Cache
 					items.AddRange(entries);
 				}
 			}
-        }
+
+			requiresRefresh = false;
+
+		}
 
 		/// <summary>
 		/// Loads cache content from the database.
@@ -99,6 +107,8 @@ namespace Imedisoft.Data.Cache
 		/// <returns>All cache entries.</returns>
 		public List<TValue> GetAll()
 		{
+			if (requiresRefresh) Refresh();
+
 			lock (items)
 			{
 				return new List<TValue>(items);
@@ -113,6 +123,8 @@ namespace Imedisoft.Data.Cache
 		public TValue FirstOrDefault(Predicate<TValue> predicate)
         {
 			if (predicate == null) return default;
+
+			if (requiresRefresh) Refresh();
 
 			lock (items)
             {

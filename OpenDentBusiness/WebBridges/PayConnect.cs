@@ -17,8 +17,8 @@ namespace OpenDentBusiness {
 
 		private static PayConnectService.Credentials GetCredentials(Program prog,long clinicNum){
 			PayConnectService.Credentials cred=new PayConnectService.Credentials();
-			cred.Username=OpenDentBusiness.ProgramProperties.GetPropVal(prog.ProgramNum,"Username",clinicNum);
-			cred.Password=OpenDentBusiness.ProgramProperties.GetPropVal(prog.ProgramNum,"Password",clinicNum);
+			cred.Username=OpenDentBusiness.ProgramProperties.GetPropVal(prog.Id,"Username",clinicNum);
+			cred.Password=OpenDentBusiness.ProgramProperties.GetPropVal(prog.Id,"Password",clinicNum);
 			cred.Client="OpenDental2";
 #if DEBUG
 			cred.ServiceID="DCI Web Service ID: 002778";//Testing

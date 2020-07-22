@@ -21,12 +21,12 @@ namespace OpenDental {
 
 		private void FormDoseSpotAssignUserId_Load(object sender,EventArgs e) {
       _listClinicsInComboBox=Clinics.GetForUserod(Security.CurUser,true,"Headquarters");
-      List<ProgramProperty> listProgramProperties=ProgramProperties.GetForProgram(Programs.GetCur(ProgramName.eRx).ProgramNum);
-      _listClinicIDs=listProgramProperties.FindAll(x => x.PropertyDesc==Erx.PropertyDescs.ClinicID);
-      _listClinicKeys=listProgramProperties.FindAll(x => x.PropertyDesc==Erx.PropertyDescs.ClinicKey);
+      List<ProgramProperty> listProgramProperties=ProgramProperties.GetForProgram(Programs.GetCur(ProgramName.eRx).Id);
+      _listClinicIDs=listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicID);
+      _listClinicKeys=listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicKey);
       _listClinicsInComboBox.RemoveAll(x =>//Remove all clinics that already have a DoseSpot Clinic ID OR Clinic Key entered
-        _listClinicIDs.FindAll(y => !string.IsNullOrWhiteSpace(y.PropertyValue)).Select(y => y.ClinicNum).Contains(x.ClinicNum) 
-        || _listClinicKeys.FindAll(y => !string.IsNullOrWhiteSpace(y.PropertyValue)).Select(y => y.ClinicNum).Contains(x.ClinicNum)
+        _listClinicIDs.FindAll(y => !string.IsNullOrWhiteSpace(y.Value)).Select(y => y.ClinicId).Contains(x.ClinicNum) 
+        || _listClinicKeys.FindAll(y => !string.IsNullOrWhiteSpace(y.Value)).Select(y => y.ClinicId).Contains(x.ClinicNum)
       );
       FillComboBox();
 			textClinicId.Text=_clinicErxCur.ClinicId;//ClinicID passed from Alert
@@ -51,30 +51,30 @@ namespace OpenDental {
 			}
       _clinicErxCur.ClinicNum=comboClinics.GetSelected<Clinic>().ClinicNum;
       Program progErx=Programs.GetCur(ProgramName.eRx);
-      ProgramProperty ppClinicID=_listClinicIDs.FirstOrDefault(x => x.ClinicNum==_clinicErxCur.ClinicNum);
+      ProgramProperty ppClinicID=_listClinicIDs.FirstOrDefault(x => x.ClinicId==_clinicErxCur.ClinicNum);
       if(ppClinicID==null) {
         ppClinicID=new ProgramProperty();
-        ppClinicID.ProgramNum=progErx.ProgramNum;
-        ppClinicID.ClinicNum=_clinicErxCur.ClinicNum;
-        ppClinicID.PropertyDesc=Erx.PropertyDescs.ClinicID;
-        ppClinicID.PropertyValue=_clinicErxCur.ClinicId;
+        ppClinicID.ProgramId=progErx.Id;
+        ppClinicID.ClinicId=_clinicErxCur.ClinicNum;
+        ppClinicID.Name=Erx.PropertyDescs.ClinicID;
+        ppClinicID.Value=_clinicErxCur.ClinicId;
         ProgramProperties.Insert(ppClinicID);
       }
       else {
-        ppClinicID.PropertyValue=_clinicErxCur.ClinicId;
+        ppClinicID.Value=_clinicErxCur.ClinicId;
         ProgramProperties.Update(ppClinicID);
       }
-      ProgramProperty ppClinicKey=_listClinicKeys.FirstOrDefault(x => x.ClinicNum==_clinicErxCur.ClinicNum);
+      ProgramProperty ppClinicKey=_listClinicKeys.FirstOrDefault(x => x.ClinicId==_clinicErxCur.ClinicNum);
       if(ppClinicKey==null) {
         ppClinicKey=new ProgramProperty();
-        ppClinicKey.ProgramNum=progErx.ProgramNum;
-        ppClinicKey.ClinicNum=_clinicErxCur.ClinicNum;
-        ppClinicKey.PropertyDesc=Erx.PropertyDescs.ClinicKey;
-        ppClinicKey.PropertyValue=_clinicErxCur.ClinicKey;
+        ppClinicKey.ProgramId=progErx.Id;
+        ppClinicKey.ClinicId=_clinicErxCur.ClinicNum;
+        ppClinicKey.Name=Erx.PropertyDescs.ClinicKey;
+        ppClinicKey.Value=_clinicErxCur.ClinicKey;
         ProgramProperties.Insert(ppClinicKey);
       }
       else {
-        ppClinicKey.PropertyValue=_clinicErxCur.ClinicKey;
+        ppClinicKey.Value=_clinicErxCur.ClinicKey;
         ProgramProperties.Update(ppClinicKey);
       }
       DataValid.SetInvalid(InvalidType.Programs);

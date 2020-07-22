@@ -522,7 +522,7 @@ namespace OpenDental{
 			//textScanDocQuality.Text=PrefC.GetLong(PrefName.ScannerCompression).ToString();
 			slider.MinVal=PrefC.GetInt(PrefName.ImageWindowingMin);
 			slider.MaxVal=PrefC.GetInt(PrefName.ImageWindowingMax);
-			Program programSuni=Programs.GetFirstOrDefault(x => x.ProgDesc=="Suni");
+			Program programSuni=Programs.GetFirstOrDefault(x => x.Description=="Suni");
 			if(programSuni!=null && programSuni.Enabled){
 				int exposureLevelVal=ComputerPrefs.LocalComputer.SensorExposure;
 				if(exposureLevelVal<(int)upDownExposure.Minimum || exposureLevelVal>(int)upDownExposure.Maximum){

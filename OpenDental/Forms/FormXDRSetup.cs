@@ -69,17 +69,17 @@ namespace OpenDental {
 				if(comboClinic.SelectedIndex>0) {//0 is always "All" so only check for greater than 0.
 					clinicNum=_listUserClinicNums[comboClinic.SelectedIndex];
 				}
-				_listProgramProperties=ProgramProperties.GetListForProgramAndClinicWithDefault(_progCur.ProgramNum,clinicNum);
-				_patNumOrChartNum=_listProgramProperties.FirstOrDefault(x => x.PropertyDesc==XDR.PropertyDescs.PatNumOrChartNum);
-				_infoFilePath=_listProgramProperties.FirstOrDefault(x => x.PropertyDesc==XDR.PropertyDescs.InfoFilePath);
-				List<ProgramProperty> listLocationIDs=ProgramProperties.GetForProgram(_progCur.ProgramNum).FindAll(x => x.PropertyDesc==XDR.PropertyDescs.LocationID);
+				_listProgramProperties=ProgramProperties.GetListForProgramAndClinicWithDefault(_progCur.Id,clinicNum);
+				_patNumOrChartNum=_listProgramProperties.FirstOrDefault(x => x.Name==XDR.PropertyDescs.PatNumOrChartNum);
+				_infoFilePath=_listProgramProperties.FirstOrDefault(x => x.Name==XDR.PropertyDescs.InfoFilePath);
+				List<ProgramProperty> listLocationIDs=ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Name==XDR.PropertyDescs.LocationID);
 				_dictLocationIDs.Clear();
 				//If clinics is off, this will only grab the program property with a 0 clinicNum (_listUserClinicNums will only have 0).
 				foreach(ProgramProperty ppCur in listLocationIDs) {
-					if(_dictLocationIDs.ContainsKey(ppCur.ClinicNum) || !_listUserClinicNums.Contains(ppCur.ClinicNum)) {
+					if(_dictLocationIDs.ContainsKey(ppCur.ClinicId) || !_listUserClinicNums.Contains(ppCur.ClinicId)) {
 						continue;
 					}
-					_dictLocationIDs.Add(ppCur.ClinicNum,ppCur);
+					_dictLocationIDs.Add(ppCur.ClinicId,ppCur);
 				}
 			}
 			catch {
@@ -92,13 +92,13 @@ namespace OpenDental {
 
 		private void FillForm() {
 			//ComboClinic is filled in the load method
-			if(PIn.Int(_patNumOrChartNum.PropertyValue)==1) {
+			if(PIn.Int(_patNumOrChartNum.Value)==1) {
 				radioChart.Checked=true;
 			}
 			else {
 				radioPatient.Checked=true;
 			}
-			List<ToolButItem> listToolButItems=ToolButItems.GetForProgram(_progCur.ProgramNum);
+			List<ToolButItem> listToolButItems=ToolButItems.GetForProgram(_progCur.Id);
 			listToolBars.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(ToolBarsAvail)).Length;i++) {
 				listToolBars.Items.Add(Enum.GetNames(typeof(ToolBarsAvail))[i]);
@@ -111,11 +111,11 @@ namespace OpenDental {
 			textButtonText.Text=listToolButItems[0].ButtonText;
 			pictureBox.Image=PIn.Bitmap(_progCur.ButtonImage);
 			try {
-				textInfoFile.Text=_infoFilePath.PropertyValue;
-				_pathOverrideOld=ProgramProperties.GetLocalPathOverrideForProgram(_progCur.ProgramNum);
+				textInfoFile.Text=_infoFilePath.Value;
+				_pathOverrideOld=ProgramProperties.GetLocalPathOverrideForProgram(_progCur.Id);
 				textOverride.Text=_pathOverrideOld;
 				if(_dictLocationIDs.ContainsKey(_clinicNumCur)) {
-					textLocationID.Text=_dictLocationIDs[_clinicNumCur].PropertyValue;
+					textLocationID.Text=_dictLocationIDs[_clinicNumCur].Value;
 				}
 			}
 			catch(Exception) {
@@ -132,11 +132,11 @@ namespace OpenDental {
 				//Headquarters is selected so only update the location ID (might have changed) on all other location ID properties that match the "old" location ID of HQ.
 				if(_dictLocationIDs.ContainsKey(_clinicNumCur)) {
 					//Get the location ID so that we correctly update all program properties with a matching location ID.
-					string locationIdOld=_dictLocationIDs[_clinicNumCur].PropertyValue;
+					string locationIdOld=_dictLocationIDs[_clinicNumCur].Value;
 					foreach(KeyValuePair<long,ProgramProperty> item in _dictLocationIDs) {
 						ProgramProperty ppCur=item.Value;
-						if(ppCur.PropertyValue==locationIdOld) {
-							ppCur.PropertyValue=textLocationID.Text;
+						if(ppCur.Value==locationIdOld) {
+							ppCur.Value=textLocationID.Text;
 						}
 					}
 				}
@@ -148,14 +148,14 @@ namespace OpenDental {
 				ppLocationID=_dictLocationIDs[_clinicNumCur];//Override the database's property with what is in memory.
 			}
 			else {//Get default programproperty from db.
-				ppLocationID=ProgramProperties.GetListForProgramAndClinicWithDefault(_progCur.ProgramNum,_clinicNumCur)
-					.FirstOrDefault(x => x.PropertyDesc==XDR.PropertyDescs.LocationID);
+				ppLocationID=ProgramProperties.GetListForProgramAndClinicWithDefault(_progCur.Id,_clinicNumCur)
+					.FirstOrDefault(x => x.Name==XDR.PropertyDescs.LocationID);
 			}
-			if(ppLocationID.ClinicNum==0) {//No program property for current clinic, since _clinicNumCur!=0
+			if(ppLocationID.ClinicId==0) {//No program property for current clinic, since _clinicNumCur!=0
 				ProgramProperty ppLocationIDNew=ppLocationID.Copy();
-				ppLocationIDNew.ProgramPropertyNum=0;
-				ppLocationIDNew.ClinicNum=_clinicNumCur;
-				ppLocationIDNew.PropertyValue=textLocationID.Text;
+				ppLocationIDNew.Id=0;
+				ppLocationIDNew.ClinicId=_clinicNumCur;
+				ppLocationIDNew.Value=textLocationID.Text;
 				if(!_dictLocationIDs.ContainsKey(_clinicNumCur)) {//Should always happen
 					_dictLocationIDs.Add(_clinicNumCur,ppLocationIDNew);
 				}
@@ -163,7 +163,7 @@ namespace OpenDental {
 			}
 			//At this point we know that the clinicnum isn't 0 and the database has a property for that clinicnum.
 			if(_dictLocationIDs.ContainsKey(_clinicNumCur)) {//Should always happen
-				ppLocationID.PropertyValue=textLocationID.Text;
+				ppLocationID.Value=textLocationID.Text;
 				_dictLocationIDs[_clinicNumCur]=ppLocationID;
 			}
 			else {
@@ -176,12 +176,12 @@ namespace OpenDental {
 			_progCur.Enabled=checkEnabled.Checked;
 			_progCur.Path=textPath.Text;
 			_progCur.ButtonImage=POut.Bitmap((Bitmap)pictureBox.Image,System.Drawing.Imaging.ImageFormat.Png);
-			ToolButItems.DeleteAllForProgram(_progCur.ProgramNum);
+			ToolButItems.DeleteAllForProgram(_progCur.Id);
 			//Then add one toolButItem for each highlighted row in listbox
 			ToolButItem toolButItemCur;
 			for(int i=0;i<listToolBars.SelectedIndices.Count;i++) {
 				toolButItemCur=new ToolButItem() {
-					ProgramNum=_progCur.ProgramNum,
+					ProgramNum=_progCur.Id,
 					ButtonText=textButtonText.Text,
 					ToolBar=(ToolBarsAvail)listToolBars.SelectedIndices[i]
 				};
@@ -189,7 +189,7 @@ namespace OpenDental {
 			}
 			if(_pathOverrideOld!=textOverride.Text) {//If there was no previous override _pathOverrideOld will be empty string.
 				_hasProgramPropertyChanged=true;
-				ProgramProperties.InsertOrUpdateLocalOverridePath(_progCur.ProgramNum,textOverride.Text);
+				ProgramProperties.InsertOrUpdateLocalOverridePath(_progCur.Id,textOverride.Text);
 			}
 			UpdateProgramProperty(_patNumOrChartNum,POut.Bool(radioChart.Checked));//Will need to be enhanced if another radio button ever gets added.
 			UpdateProgramProperty(_infoFilePath,textInfoFile.Text);
@@ -198,20 +198,20 @@ namespace OpenDental {
 		}
 
 		private void UpdateProgramProperty(ProgramProperty ppFromDb,string newpropertyValue) {
-			if(ppFromDb.PropertyValue==newpropertyValue) {
+			if(ppFromDb.Value==newpropertyValue) {
 				return;
 			}
-			ppFromDb.PropertyValue=newpropertyValue;
+			ppFromDb.Value=newpropertyValue;
 			ProgramProperties.Update(ppFromDb);
 			_hasProgramPropertyChanged=true;
 		}
 
 		private void UpsertProgramPropertiesForClinics() {
-			List<ProgramProperty> listLocationIDsFromDb=ProgramProperties.GetForProgram(_progCur.ProgramNum).FindAll(x => x.PropertyDesc==XDR.PropertyDescs.LocationID);
+			List<ProgramProperty> listLocationIDsFromDb=ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Name==XDR.PropertyDescs.LocationID);
 			List<ProgramProperty> listLocationIDsCur=_dictLocationIDs.Values.ToList();
 			foreach(ProgramProperty ppCur in listLocationIDsCur) {
-				if(listLocationIDsFromDb.Exists(x => x.ProgramPropertyNum == ppCur.ProgramPropertyNum)) {
-					UpdateProgramProperty(listLocationIDsFromDb[listLocationIDsFromDb.FindIndex(x => x.ProgramPropertyNum == ppCur.ProgramPropertyNum)],ppCur.PropertyValue);//ppCur.PropertyValue will match textLocationID.Text
+				if(listLocationIDsFromDb.Exists(x => x.Id == ppCur.Id)) {
+					UpdateProgramProperty(listLocationIDsFromDb[listLocationIDsFromDb.FindIndex(x => x.Id == ppCur.Id)],ppCur.Value);//ppCur.PropertyValue will match textLocationID.Text
 				}
 				else {
 					ProgramProperties.Insert(ppCur);//Program property for that clinicnum didn't exist, so insert it into the db.
@@ -225,10 +225,10 @@ namespace OpenDental {
 			_clinicNumCur=_listUserClinicNums[comboClinic.SelectedIndex];
 			//This will either display the HQ value, or the clinic specific value.
 			if(_dictLocationIDs.ContainsKey(_clinicNumCur)) {
-				textLocationID.Text=_dictLocationIDs[_clinicNumCur].PropertyValue;
+				textLocationID.Text=_dictLocationIDs[_clinicNumCur].Value;
 			}
 			else {
-				textLocationID.Text=_dictLocationIDs[0].PropertyValue;//Default to showing the HQ value when filling info for a clinic with no program property.
+				textLocationID.Text=_dictLocationIDs[0].Value;//Default to showing the HQ value when filling info for a clinic with no program property.
 			}
 		}
 

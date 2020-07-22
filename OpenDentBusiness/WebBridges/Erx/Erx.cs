@@ -20,12 +20,12 @@ namespace OpenDentBusiness {
 			if(progCur==null) {
 				throw new ODException(Lans.g("eRx","The eRx bridge is missing from the database."));
 			}
-			List<ProgramProperty> listProgramProperties=ProgramProperties.GetForProgram(progCur.ProgramNum);
-			ProgramProperty propCur=listProgramProperties.FirstOrDefault(x => x.PropertyDesc==PropertyDescs.ErxOption);
+			List<ProgramProperty> listProgramProperties=ProgramProperties.GetForProgram(progCur.Id);
+			ProgramProperty propCur=listProgramProperties.FirstOrDefault(x => x.Name==PropertyDescs.ErxOption);
 			if(propCur==null) {
 				throw new ODException(Lans.g("eRx","The eRx Option program property is missing from the database."));
 			}
-			return PIn.Enum<ErxOption>(propCur.PropertyValue);
+			return PIn.Enum<ErxOption>(propCur.Value);
 		}
 
 		///<summary>If this value is found in a MedicationPat or RxPat's ErxGuid column, it is a med/rx created in Open Dental, NOT imported from an eRx solution.</summary>

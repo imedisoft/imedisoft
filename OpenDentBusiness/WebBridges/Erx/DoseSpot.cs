@@ -80,9 +80,9 @@ namespace OpenDentBusiness {
 			}
       Clinic clinic=Clinics.GetClinic(clinicErx.ClinicNum);
       List<ProgramProperty> listDoseSpotClinicProperties=ProgramProperties.GetForProgram(Programs.GetProgramNum(ProgramName.eRx))
-          .FindAll(x => x.ClinicNum==0
-            && (x.PropertyDesc==Erx.PropertyDescs.ClinicID || x.PropertyDesc==Erx.PropertyDescs.ClinicKey)
-            && !string.IsNullOrWhiteSpace(x.PropertyValue));
+          .FindAll(x => x.ClinicId==0
+            && (x.Name==Erx.PropertyDescs.ClinicID || x.Name==Erx.PropertyDescs.ClinicKey)
+            && !string.IsNullOrWhiteSpace(x.Value));
       if(clinic!=null || clinicAutomaticallyAttached) {
         //A clinic was associated with the clinicerx successfully, no user action needed.
         alert=new AlertItem {
@@ -134,10 +134,10 @@ namespace OpenDentBusiness {
 				AlertItems.Insert(alert);
 				//set userodpref to UserId
 				Program programErx=Programs.GetCur(ProgramName.eRx);
-				UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(listDoseUsers[0].Id,programErx.ProgramNum,UserOdFkeyType.Program);
+				UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(listDoseUsers[0].Id,programErx.Id,UserOdFkeyType.Program);
 				userDosePref.ValueString=providerErx.UserId;//assign DoseSpot User ID
 				if(userDosePref.IsNew) {
-					userDosePref.Fkey=programErx.ProgramNum;
+					userDosePref.Fkey=programErx.Id;
 					UserOdPrefs.Insert(userDosePref);
 				}
 				else {
@@ -361,7 +361,7 @@ namespace OpenDentBusiness {
 				}
 				else {
 					//The prescriber ID for each medication is the doctor that approved the prescription.
-					UserOdPref userPref=UserOdPrefs.GetByFkeyAndFkeyType(Programs.GetCur(ProgramName.eRx).ProgramNum,UserOdFkeyType.Program)
+					UserOdPref userPref=UserOdPrefs.GetByFkeyAndFkeyType(Programs.GetCur(ProgramName.eRx).Id,UserOdFkeyType.Program)
 					.FirstOrDefault(x => x.ValueString==medication.PrescriberId.ToString());
 					if(userPref==null) {//The Dose Spot User ID from this medication is not present in Open Dental.
 						continue;//I don't know if we want to do anything with this.  Maybe we want to just get the ErxLog from before this medication was made.
@@ -553,22 +553,22 @@ namespace OpenDentBusiness {
 				programErx=Programs.GetCur(ProgramName.eRx);
 			}
 			if(listErxProperties==null) {
-				listErxProperties=ProgramProperties.GetForProgram(programErx.ProgramNum)
-					.FindAll(x => x.ClinicNum==clinicNum
-						&& (x.PropertyDesc==Erx.PropertyDescs.ClinicID || x.PropertyDesc==Erx.PropertyDescs.ClinicKey));
+				listErxProperties=ProgramProperties.GetForProgram(programErx.Id)
+					.FindAll(x => x.ClinicId==clinicNum
+						&& (x.Name==Erx.PropertyDescs.ClinicID || x.Name==Erx.PropertyDescs.ClinicKey));
 			}
-			ProgramProperty ppClinicID=listErxProperties.FirstOrDefault(x => x.ClinicNum==clinicNum && x.PropertyDesc==Erx.PropertyDescs.ClinicID);
-			ProgramProperty ppClinicKey=listErxProperties.FirstOrDefault(x => x.ClinicNum==clinicNum && x.PropertyDesc==Erx.PropertyDescs.ClinicKey);
+			ProgramProperty ppClinicID=listErxProperties.FirstOrDefault(x => x.ClinicId==clinicNum && x.Name==Erx.PropertyDescs.ClinicID);
+			ProgramProperty ppClinicKey=listErxProperties.FirstOrDefault(x => x.ClinicId==clinicNum && x.Name==Erx.PropertyDescs.ClinicKey);
 			//If the current clinic doesn't have a clinic id/key, use a different clinic to make them.
-			if(ppClinicID==null || string.IsNullOrWhiteSpace(ppClinicID.PropertyValue)
-				|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.PropertyValue))
+			if(ppClinicID==null || string.IsNullOrWhiteSpace(ppClinicID.Value)
+				|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.Value))
 			{
 				throw new ODException(((clinicNum==0)?"HQ ":Clinics.GetAbbr(clinicNum)+" ")
 					+Lans.g("DoseSpot","is missing a valid ClinicID or Clinic Key.  This should have been entered when setting up DoseSpot."));
 			}
 			else {
-				clinicID=ppClinicID.PropertyValue;
-				clinicKey=ppClinicKey.PropertyValue;
+				clinicID=ppClinicID.Value;
+				clinicKey=ppClinicKey.Value;
 			}
 		}
 
@@ -598,10 +598,10 @@ namespace OpenDentBusiness {
 			//}
 			#endregion
 			DoseSpotREST.PostClinic(token,clinicCur,out clinicIdNew,out clinicKeyNew);
-			long erxProgramNum=Programs.GetCur(ProgramName.eRx).ProgramNum;
+			long erxProgramNum=Programs.GetCur(ProgramName.eRx).Id;
 			List<ProgramProperty> listPropsForClinic=ProgramProperties.GetListForProgramAndClinic(erxProgramNum,clinicNum);
-			ProgramProperty ppClinicID=listPropsForClinic.FirstOrDefault(x => x.PropertyDesc==Erx.PropertyDescs.ClinicID);
-			ProgramProperty ppClinicKey=listPropsForClinic.FirstOrDefault(x => x.PropertyDesc==Erx.PropertyDescs.ClinicKey);
+			ProgramProperty ppClinicID=listPropsForClinic.FirstOrDefault(x => x.Name==Erx.PropertyDescs.ClinicID);
+			ProgramProperty ppClinicKey=listPropsForClinic.FirstOrDefault(x => x.Name==Erx.PropertyDescs.ClinicKey);
 			//Update the database with the new id/key.
 			InsertOrUpdate(ppClinicID,erxProgramNum,Erx.PropertyDescs.ClinicID,clinicIdNew,clinicNum);
 			InsertOrUpdate(ppClinicKey,erxProgramNum,Erx.PropertyDescs.ClinicKey,clinicKeyNew,clinicNum);
@@ -794,9 +794,9 @@ namespace OpenDentBusiness {
 
 		public static UserOdPref GetDoseSpotUserIdFromPref(long userNum,long clinicNum) {
 			Program programErx=Programs.GetCur(ProgramName.eRx);
-			UserOdPref retVal=UserOdPrefs.GetByCompositeKey(userNum,programErx.ProgramNum,UserOdFkeyType.Program,clinicNum);
+			UserOdPref retVal=UserOdPrefs.GetByCompositeKey(userNum,programErx.Id,UserOdFkeyType.Program,clinicNum);
 			if(clinicNum!=0 && retVal.IsNew || string.IsNullOrWhiteSpace(retVal.ValueString)) {
-				retVal=UserOdPrefs.GetByCompositeKey(userNum,programErx.ProgramNum,UserOdFkeyType.Program,0);//Try the default userodpref if the clinic specific one is empty.
+				retVal=UserOdPrefs.GetByCompositeKey(userNum,programErx.Id,UserOdFkeyType.Program,0);//Try the default userodpref if the clinic specific one is empty.
 			}
 			return retVal;
 		}
@@ -815,28 +815,28 @@ namespace OpenDentBusiness {
 		///This will be used when sending the clinics to ODHQ for enabling/disabling.
 		///This will create ClinicNum 0 entries, thus supporting offices without clinics enabled, as well as clinics using the "Headquarters" clinic.</summary>
 		private static void MakeClinicErxsForDoseSpot() {
-			long programNum=Programs.GetCur(ProgramName.eRx).ProgramNum;
-			List<ProgramProperty> listClinicIDs=ProgramProperties.GetWhere(x => x.ProgramNum==programNum && x.PropertyDesc==Erx.PropertyDescs.ClinicID);
-			List<ProgramProperty> listClinicKeys=ProgramProperties.GetWhere(x => x.ProgramNum==programNum && x.PropertyDesc==Erx.PropertyDescs.ClinicKey);
+			long programNum=Programs.GetCur(ProgramName.eRx).Id;
+			List<ProgramProperty> listClinicIDs=ProgramProperties.GetWhere(x => x.ProgramId==programNum && x.Name==Erx.PropertyDescs.ClinicID);
+			List<ProgramProperty> listClinicKeys=ProgramProperties.GetWhere(x => x.ProgramId==programNum && x.Name==Erx.PropertyDescs.ClinicKey);
 			bool isRefreshNeeded=false;
 			foreach(ProgramProperty ppClinicId in listClinicIDs) {
-				ProgramProperty ppClinicKey=listClinicKeys.FirstOrDefault(x => x.ClinicNum==ppClinicId.ClinicNum);
-				if(ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.PropertyValue) || string.IsNullOrWhiteSpace(ppClinicId.PropertyValue)) {
+				ProgramProperty ppClinicKey=listClinicKeys.FirstOrDefault(x => x.ClinicId==ppClinicId.ClinicId);
+				if(ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.Value) || string.IsNullOrWhiteSpace(ppClinicId.Value)) {
 					continue;
 				}
-				ClinicErx clinicErxCur=ClinicErxs.GetByClinicNum(ppClinicId.ClinicNum);
+				ClinicErx clinicErxCur=ClinicErxs.GetByClinicNum(ppClinicId.ClinicId);
 				if(clinicErxCur==null) {
 					clinicErxCur=new ClinicErx();
-					clinicErxCur.ClinicNum=ppClinicId.ClinicNum;
-					clinicErxCur.ClinicId=ppClinicId.PropertyValue;
-					clinicErxCur.ClinicKey=ppClinicKey.PropertyValue;
-					clinicErxCur.ClinicDesc=Clinics.GetDesc(ppClinicId.ClinicNum);
+					clinicErxCur.ClinicNum=ppClinicId.ClinicId;
+					clinicErxCur.ClinicId=ppClinicId.Value;
+					clinicErxCur.ClinicKey=ppClinicKey.Value;
+					clinicErxCur.ClinicDesc=Clinics.GetDesc(ppClinicId.ClinicId);
 					clinicErxCur.EnabledStatus=ErxStatus.PendingAccountId;
 					ClinicErxs.Insert(clinicErxCur);
 				}
 				else {
-					clinicErxCur.ClinicId=ppClinicId.PropertyValue;
-					clinicErxCur.ClinicKey=ppClinicKey.PropertyValue;
+					clinicErxCur.ClinicId=ppClinicId.Value;
+					clinicErxCur.ClinicKey=ppClinicKey.Value;
 					ClinicErxs.Update(clinicErxCur);
 				}
 				isRefreshNeeded=true;
@@ -874,14 +874,14 @@ namespace OpenDentBusiness {
 		private static void InsertOrUpdate(ProgramProperty ppCur,long programNum,string propDesc,string propValue,long clinicNum) {
 			if(ppCur==null) {
 				ppCur=new ProgramProperty();
-				ppCur.ProgramNum=programNum;
-				ppCur.PropertyDesc=propDesc;
-				ppCur.PropertyValue=propValue;
-				ppCur.ClinicNum=clinicNum;
+				ppCur.ProgramId=programNum;
+				ppCur.Name=propDesc;
+				ppCur.Value=propValue;
+				ppCur.ClinicId=clinicNum;
 				ProgramProperties.Insert(ppCur);
 			}
 			else {
-				ppCur.PropertyValue=propValue;
+				ppCur.Value=propValue;
 				ProgramProperties.Update(ppCur);
 			}
 		}

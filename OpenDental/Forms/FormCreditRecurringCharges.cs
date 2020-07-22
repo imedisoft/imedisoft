@@ -57,7 +57,7 @@ namespace OpenDental {
 				progCur = Programs.GetCur(ProgramName.PayConnect);
 				labelUpdated.Visible = false;
 				checkForceDuplicates.Visible = true;
-				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.ProgramNum,
+				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.Id,
 					PayConnect.ProgramProperties.PayConnectForceRecurringCharge, Clinics.ClinicNum));
 			}
 			if (Programs.IsEnabled(ProgramName.Xcharge))
@@ -66,7 +66,7 @@ namespace OpenDental {
 				labelUpdated.Visible = true;
 				checkForceDuplicates.Visible = true;
 				string xPath = Programs.GetProgramPath(progCur);
-				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.ProgramNum,
+				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.Id,
 					ProgramProperties.PropertyDescs.XCharge.XChargeForceRecurringCharge, Clinics.ClinicNum));
 				if (!File.Exists(xPath))
 				{//program path is invalid

@@ -1,191 +1,207 @@
-namespace OpenDental {
-	partial class FormProgramLinkHideClinics {
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+namespace Imedisoft.Forms
+{
+    partial class FormProgramLinkHideClinics
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing) {
-			if(disposing&&(components!=null)) {
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormProgramLinkHideClinics));
-			this.labelHidden = new System.Windows.Forms.Label();
-			this.listboxHiddenClinics = new System.Windows.Forms.ListBox();
-			this.listboxVisibleClinics = new System.Windows.Forms.ListBox();
-			this.labelVisible = new System.Windows.Forms.Label();
-			this.butLeft = new OpenDental.UI.Button();
-			this.butRight = new OpenDental.UI.Button();
-			this.butCancel = new OpenDental.UI.Button();
-			this.labelClinicStateWarning = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.checkOrderAlphabetical = new System.Windows.Forms.CheckBox();
-			this.butOK = new OpenDental.UI.Button();
-			this.SuspendLayout();
-			// 
-			// labelHidden
-			// 
-			this.labelHidden.Location = new System.Drawing.Point(12, 74);
-			this.labelHidden.Name = "labelHidden";
-			this.labelHidden.Size = new System.Drawing.Size(180, 18);
-			this.labelHidden.TabIndex = 37;
-			this.labelHidden.Text = "Hidden";
-			this.labelHidden.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// listboxHiddenClinics
-			// 
-			this.listboxHiddenClinics.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormProgramLinkHideClinics));
+            this.hiddenLabel = new System.Windows.Forms.Label();
+            this.hiddenListBox = new System.Windows.Forms.ListBox();
+            this.visibleListBox = new System.Windows.Forms.ListBox();
+            this.visibleLabel = new System.Windows.Forms.Label();
+            this.leftButton = new OpenDental.UI.Button();
+            this.rightButton = new OpenDental.UI.Button();
+            this.cancelButton = new OpenDental.UI.Button();
+            this.restrictionLabel = new System.Windows.Forms.Label();
+            this.clinicsLabel = new System.Windows.Forms.Label();
+            this.alphabeticalCheckBox = new System.Windows.Forms.CheckBox();
+            this.acceptButton = new OpenDental.UI.Button();
+            this.SuspendLayout();
+            // 
+            // hiddenLabel
+            // 
+            this.hiddenLabel.AutoSize = true;
+            this.hiddenLabel.Location = new System.Drawing.Point(12, 72);
+            this.hiddenLabel.Name = "hiddenLabel";
+            this.hiddenLabel.Size = new System.Drawing.Size(40, 13);
+            this.hiddenLabel.TabIndex = 2;
+            this.hiddenLabel.Text = "Hidden";
+            // 
+            // hiddenListBox
+            // 
+            this.hiddenListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this.listboxHiddenClinics.FormattingEnabled = true;
-			this.listboxHiddenClinics.Location = new System.Drawing.Point(12, 95);
-			this.listboxHiddenClinics.Name = "listboxHiddenClinics";
-			this.listboxHiddenClinics.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-			this.listboxHiddenClinics.Size = new System.Drawing.Size(180, 368);
-			this.listboxHiddenClinics.TabIndex = 38;
-			this.listboxHiddenClinics.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListboxHiddenClinics_MouseClick);
-			// 
-			// listboxVisibleClinics
-			// 
-			this.listboxVisibleClinics.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.listboxVisibleClinics.FormattingEnabled = true;
-			this.listboxVisibleClinics.Location = new System.Drawing.Point(260, 95);
-			this.listboxVisibleClinics.Name = "listboxVisibleClinics";
-			this.listboxVisibleClinics.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-			this.listboxVisibleClinics.Size = new System.Drawing.Size(180, 368);
-			this.listboxVisibleClinics.TabIndex = 42;
-			this.listboxVisibleClinics.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListboxVisibleClinics_MouseClick);
-			// 
-			// labelVisible
-			// 
-			this.labelVisible.Location = new System.Drawing.Point(260, 74);
-			this.labelVisible.Name = "labelVisible";
-			this.labelVisible.Size = new System.Drawing.Size(180, 18);
-			this.labelVisible.TabIndex = 41;
-			this.labelVisible.Text = "Visible";
-			this.labelVisible.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butLeft
-			// 
-			this.butLeft.Image = global::Imedisoft.Properties.Resources.Left;
-			this.butLeft.Location = new System.Drawing.Point(204, 201);
-			this.butLeft.Name = "butLeft";
-			this.butLeft.Size = new System.Drawing.Size(44, 24);
-			this.butLeft.TabIndex = 40;
-			this.butLeft.Click += new System.EventHandler(this.butLeft_Click);
-			// 
-			// butRight
-			// 
-			this.butRight.Image = global::Imedisoft.Properties.Resources.Right;
-			this.butRight.Location = new System.Drawing.Point(204, 167);
-			this.butRight.Name = "butRight";
-			this.butRight.Size = new System.Drawing.Size(44, 24);
-			this.butRight.TabIndex = 39;
-			this.butRight.Click += new System.EventHandler(this.butRight_Click);
-			// 
-			// butCancel
-			// 
-			this.butCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCancel.Location = new System.Drawing.Point(365, 473);
-			this.butCancel.Name = "butCancel";
-			this.butCancel.Size = new System.Drawing.Size(75, 24);
-			this.butCancel.TabIndex = 3;
-			this.butCancel.Text = "&Cancel";
-			this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
-			// 
-			// labelClinicStateWarning
-			// 
-			this.labelClinicStateWarning.ForeColor = System.Drawing.Color.DarkRed;
-			this.labelClinicStateWarning.Location = new System.Drawing.Point(12, 56);
-			this.labelClinicStateWarning.Name = "labelClinicStateWarning";
-			this.labelClinicStateWarning.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.labelClinicStateWarning.Size = new System.Drawing.Size(310, 17);
-			this.labelClinicStateWarning.TabIndex = 77;
-			this.labelClinicStateWarning.Text = "Some clinics not shown due to user clinic restriction.";
-			// 
-			// label3
-			// 
-			this.label3.ForeColor = System.Drawing.Color.Black;
-			this.label3.Location = new System.Drawing.Point(12, 4);
-			this.label3.Name = "label3";
-			this.label3.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.label3.Size = new System.Drawing.Size(436, 29);
-			this.label3.TabIndex = 78;
-			this.label3.Text = "Program Link button will be hidden for clinics on the left, and visible for clini" +
+            this.hiddenListBox.FormattingEnabled = true;
+            this.hiddenListBox.IntegralHeight = false;
+            this.hiddenListBox.Location = new System.Drawing.Point(12, 88);
+            this.hiddenListBox.Name = "hiddenListBox";
+            this.hiddenListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.hiddenListBox.Size = new System.Drawing.Size(180, 350);
+            this.hiddenListBox.TabIndex = 3;
+            this.hiddenListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListboxHiddenClinics_MouseClick);
+            // 
+            // visibleListBox
+            // 
+            this.visibleListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.visibleListBox.FormattingEnabled = true;
+            this.visibleListBox.IntegralHeight = false;
+            this.visibleListBox.Location = new System.Drawing.Point(252, 88);
+            this.visibleListBox.Name = "visibleListBox";
+            this.visibleListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.visibleListBox.Size = new System.Drawing.Size(180, 350);
+            this.visibleListBox.TabIndex = 7;
+            this.visibleListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListboxVisibleClinics_MouseClick);
+            // 
+            // visibleLabel
+            // 
+            this.visibleLabel.AutoSize = true;
+            this.visibleLabel.Location = new System.Drawing.Point(249, 72);
+            this.visibleLabel.Name = "visibleLabel";
+            this.visibleLabel.Size = new System.Drawing.Size(36, 13);
+            this.visibleLabel.TabIndex = 6;
+            this.visibleLabel.Text = "Visible";
+            // 
+            // leftButton
+            // 
+            this.leftButton.Image = global::Imedisoft.Properties.Resources.IconArrowLeft;
+            this.leftButton.Location = new System.Drawing.Point(202, 251);
+            this.leftButton.Name = "leftButton";
+            this.leftButton.Size = new System.Drawing.Size(40, 25);
+            this.leftButton.TabIndex = 5;
+            this.leftButton.Click += new System.EventHandler(this.butLeft_Click);
+            // 
+            // rightButton
+            // 
+            this.rightButton.Image = global::Imedisoft.Properties.Resources.IconArrowRight;
+            this.rightButton.Location = new System.Drawing.Point(202, 220);
+            this.rightButton.Name = "rightButton";
+            this.rightButton.Size = new System.Drawing.Size(40, 25);
+            this.rightButton.TabIndex = 4;
+            this.rightButton.Click += new System.EventHandler(this.butRight_Click);
+            // 
+            // cancelButton
+            // 
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelButton.Location = new System.Drawing.Point(352, 464);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(80, 25);
+            this.cancelButton.TabIndex = 10;
+            this.cancelButton.Text = "&Cancel";
+            // 
+            // restrictionLabel
+            // 
+            this.restrictionLabel.AutoSize = true;
+            this.restrictionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(70)))), ((int)(((byte)(140)))));
+            this.restrictionLabel.Location = new System.Drawing.Point(12, 49);
+            this.restrictionLabel.Margin = new System.Windows.Forms.Padding(3, 0, 3, 10);
+            this.restrictionLabel.Name = "restrictionLabel";
+            this.restrictionLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.restrictionLabel.Size = new System.Drawing.Size(254, 13);
+            this.restrictionLabel.TabIndex = 1;
+            this.restrictionLabel.Text = "Some clinics not shown due to user clinic restriction.";
+            // 
+            // clinicsLabel
+            // 
+            this.clinicsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.clinicsLabel.ForeColor = System.Drawing.Color.Black;
+            this.clinicsLabel.Location = new System.Drawing.Point(12, 9);
+            this.clinicsLabel.Name = "clinicsLabel";
+            this.clinicsLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.clinicsLabel.Size = new System.Drawing.Size(420, 40);
+            this.clinicsLabel.TabIndex = 0;
+            this.clinicsLabel.Text = "Program Link button will be hidden for clinics on the left, and visible for clini" +
     "cs on the right.";
-			// 
-			// checkOrderAlphabetical
-			// 
-			this.checkOrderAlphabetical.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.checkOrderAlphabetical.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkOrderAlphabetical.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkOrderAlphabetical.Location = new System.Drawing.Point(328, 55);
-			this.checkOrderAlphabetical.Name = "checkOrderAlphabetical";
-			this.checkOrderAlphabetical.Size = new System.Drawing.Size(111, 18);
-			this.checkOrderAlphabetical.TabIndex = 79;
-			this.checkOrderAlphabetical.Text = "Order Alphabetical";
-			this.checkOrderAlphabetical.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkOrderAlphabetical.UseVisualStyleBackColor = true;
-			this.checkOrderAlphabetical.CheckedChanged += new System.EventHandler(this.CheckOrderAlphabetical_CheckedChanged);
-			// 
-			// butOK
-			// 
-			this.butOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butOK.Location = new System.Drawing.Point(284, 473);
-			this.butOK.Name = "butOK";
-			this.butOK.Size = new System.Drawing.Size(75, 24);
-			this.butOK.TabIndex = 80;
-			this.butOK.Text = "&OK";
-			this.butOK.Click += new System.EventHandler(this.butOK_Click);
-			// 
-			// FormProgramLinkHideClinics
-			// 
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(451, 506);
-			this.Controls.Add(this.butOK);
-			this.Controls.Add(this.checkOrderAlphabetical);
-			this.Controls.Add(this.label3);
-			this.Controls.Add(this.labelClinicStateWarning);
-			this.Controls.Add(this.listboxVisibleClinics);
-			this.Controls.Add(this.labelVisible);
-			this.Controls.Add(this.butLeft);
-			this.Controls.Add(this.butRight);
-			this.Controls.Add(this.listboxHiddenClinics);
-			this.Controls.Add(this.labelHidden);
-			this.Controls.Add(this.butCancel);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "FormProgramLinkHideClinics";
-			this.Text = "Hide Program Link Button by Clinic";
-			this.ResumeLayout(false);
+            // 
+            // alphabeticalCheckBox
+            // 
+            this.alphabeticalCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.alphabeticalCheckBox.AutoSize = true;
+            this.alphabeticalCheckBox.Location = new System.Drawing.Point(12, 469);
+            this.alphabeticalCheckBox.Name = "alphabeticalCheckBox";
+            this.alphabeticalCheckBox.Size = new System.Drawing.Size(115, 17);
+            this.alphabeticalCheckBox.TabIndex = 8;
+            this.alphabeticalCheckBox.Text = "Order Alphabetical";
+            this.alphabeticalCheckBox.UseVisualStyleBackColor = true;
+            this.alphabeticalCheckBox.CheckedChanged += new System.EventHandler(this.CheckOrderAlphabetical_CheckedChanged);
+            // 
+            // acceptButton
+            // 
+            this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.acceptButton.Location = new System.Drawing.Point(266, 464);
+            this.acceptButton.Name = "acceptButton";
+            this.acceptButton.Size = new System.Drawing.Size(80, 25);
+            this.acceptButton.TabIndex = 9;
+            this.acceptButton.Text = "&OK";
+            this.acceptButton.Click += new System.EventHandler(this.butOK_Click);
+            // 
+            // FormProgramLinkHideClinics
+            // 
+            this.AcceptButton = this.acceptButton;
+            this.CancelButton = this.cancelButton;
+            this.ClientSize = new System.Drawing.Size(444, 501);
+            this.Controls.Add(this.acceptButton);
+            this.Controls.Add(this.alphabeticalCheckBox);
+            this.Controls.Add(this.clinicsLabel);
+            this.Controls.Add(this.restrictionLabel);
+            this.Controls.Add(this.visibleListBox);
+            this.Controls.Add(this.visibleLabel);
+            this.Controls.Add(this.leftButton);
+            this.Controls.Add(this.rightButton);
+            this.Controls.Add(this.hiddenListBox);
+            this.Controls.Add(this.hiddenLabel);
+            this.Controls.Add(this.cancelButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "FormProgramLinkHideClinics";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Hide Program Link Button by Clinic";
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
-		}
+        }
 
-		#endregion
+        #endregion
 
-		private OpenDental.UI.Button butCancel;
-		private System.Windows.Forms.Label labelHidden;
-		private System.Windows.Forms.ListBox listboxHiddenClinics;
-		private UI.Button butRight;
-		private UI.Button butLeft;
-		private System.Windows.Forms.ListBox listboxVisibleClinics;
-		private System.Windows.Forms.Label labelVisible;
-		private System.Windows.Forms.Label labelClinicStateWarning;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.CheckBox checkOrderAlphabetical;
-		private UI.Button butOK;
-	}
+        private OpenDental.UI.Button cancelButton;
+        private System.Windows.Forms.Label hiddenLabel;
+        private System.Windows.Forms.ListBox hiddenListBox;
+        private OpenDental.UI.Button rightButton;
+        private OpenDental.UI.Button leftButton;
+        private System.Windows.Forms.ListBox visibleListBox;
+        private System.Windows.Forms.Label visibleLabel;
+        private System.Windows.Forms.Label restrictionLabel;
+        private System.Windows.Forms.Label clinicsLabel;
+        private System.Windows.Forms.CheckBox alphabeticalCheckBox;
+        private OpenDental.UI.Button acceptButton;
+    }
 }

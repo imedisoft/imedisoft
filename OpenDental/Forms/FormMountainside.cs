@@ -218,9 +218,9 @@ namespace OpenDental{
 
 		private void FillForm(){
 			ProgramProperties.RefreshCache();
-			PropertyList=ProgramProperties.GetForProgram(ProgramCur.ProgramNum);
-			textProgName.Text=ProgramCur.ProgName;
-			textProgDesc.Text=ProgramCur.ProgDesc;
+			PropertyList=ProgramProperties.GetForProgram(ProgramCur.Id);
+			textProgName.Text=ProgramCur.Name;
+			textProgDesc.Text=ProgramCur.Description;
 			checkEnabled.Checked=ProgramCur.Enabled;
 			textHL7FolderOut.Text=PrefC.GetString(PrefName.HL7FolderOut);
 		}
@@ -238,7 +238,7 @@ namespace OpenDental{
 				MessageBox.Show("HL7 out folder may not be blank.");
 				return false;
 			}
-			ProgramCur.ProgDesc=textProgDesc.Text;
+			ProgramCur.Description=textProgDesc.Text;
 			ProgramCur.Enabled=checkEnabled.Checked;
 			Programs.Update(ProgramCur);
 			Prefs.UpdateString(PrefName.HL7FolderOut,textHL7FolderOut.Text);

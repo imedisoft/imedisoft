@@ -3255,7 +3255,7 @@ namespace OpenDental {
 				}
 			}
 			else if(e.Button.Tag.GetType()==typeof(Program)) {
-				ProgramL.Execute(((Program)e.Button.Tag).ProgramNum,_patCur);
+				ProgramL.Execute(((Program)e.Button.Tag).Id,_patCur);
 			}
 		}
 		#endregion Methods - Event Handlers - Toolbars
@@ -7069,7 +7069,7 @@ namespace OpenDental {
 			if(_patCur==null) {
 				return false;
 			}
-			ErxOption erxOption=PIn.Enum<ErxOption>(ProgramProperties.GetPropForProgByDesc(programNewCrop.ProgramNum,Erx.PropertyDescs.ErxOption).PropertyValue);
+			ErxOption erxOption=PIn.Enum<ErxOption>(ProgramProperties.GetPropForProgByDesc(programNewCrop.Id,Erx.PropertyDescs.ErxOption).Value);
 			if(erxOption!=ErxOption.Legacy && erxOption!=ErxOption.DoseSpotWithLegacy) {
 				return false;
 			}
@@ -7498,7 +7498,7 @@ namespace OpenDental {
 			if(progErx==null || !progErx.Enabled) {
 				return;
 			}
-			ErxOption erxOption=PIn.Enum<ErxOption>(ProgramProperties.GetPropForProgByDesc(progErx.ProgramNum,Erx.PropertyDescs.ErxOption).PropertyValue);
+			ErxOption erxOption=PIn.Enum<ErxOption>(ProgramProperties.GetPropForProgByDesc(progErx.Id,Erx.PropertyDescs.ErxOption).Value);
 			if(erxOption!=ErxOption.DoseSpot && erxOption!=ErxOption.DoseSpotWithLegacy) {
 				return;
 			}
@@ -7941,8 +7941,8 @@ namespace OpenDental {
 				return;//FormErx is already open for this patient.  Simply bring it to the front to make the user aware that it is still there.
 			}
 			Program programErx=Programs.GetCur(ProgramName.eRx);
-			ProgramProperty ppErxOption=ProgramProperties.GetPropForProgByDesc(programErx.ProgramNum,Erx.PropertyDescs.ErxOption);
-			ErxOption erxOption=PIn.Enum<ErxOption>(ppErxOption.PropertyValue);
+			ProgramProperty ppErxOption=ProgramProperties.GetPropForProgByDesc(programErx.Id,Erx.PropertyDescs.ErxOption);
+			ErxOption erxOption=PIn.Enum<ErxOption>(ppErxOption.Value);
 			string doseSpotClinicID="";
 			string doseSpotClinicKey="";
 			string doseSpotUserID="";
@@ -8080,9 +8080,9 @@ namespace OpenDental {
 						clinicNum=_patCur.ClinicNum;
 					}
 				}
-				List<ProgramProperty> listDoseSpotProperties=ProgramProperties.GetForProgram(programErx.ProgramNum)
-					.FindAll(x => x.ClinicNum==clinicNum 
-						&& (x.PropertyDesc==Erx.PropertyDescs.ClinicID || x.PropertyDesc==Erx.PropertyDescs.ClinicKey));
+				List<ProgramProperty> listDoseSpotProperties=ProgramProperties.GetForProgram(programErx.Id)
+					.FindAll(x => x.ClinicId==clinicNum 
+						&& (x.Name==Erx.PropertyDescs.ClinicID || x.Name==Erx.PropertyDescs.ClinicKey));
 				byte[] arrayPostData=new byte[1];
 				string queryString="";
 				bool isDoseSpotAccessAllowed=true;

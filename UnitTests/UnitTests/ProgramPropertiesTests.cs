@@ -31,7 +31,7 @@ namespace UnitTests.ProgramProperties_Tests {
 		[TestCleanup]
 		public void TearDownTest() {
 			ProgramPropertyT.ClearProgamPropertyTable();
-			ProgramProperties.InsertMany(_listProgramProperties);
+			// TODO: ProgramProperties.InsertMany(_listProgramProperties);
 			ProgramProperties.RefreshCache();
 		}
 
@@ -45,9 +45,9 @@ namespace UnitTests.ProgramProperties_Tests {
 		///the GetDeletablePropertyDescriptions() list, in this case ProgramProperties.PropertyDescs.ClinicHideButton.</summary>
 		public void ProgramProperties_Delete_DeletesWhenDescriptionInGetDeletablePropertyDescriptions() {
 			ProgramProperty prop=ProgramPropertyT.CreateProgramProperty(10,ProgramProperties.PropertyDescs.ClinicHideButton,1);
-			ProgramProperty getPropBefore=ProgramProperties.GetPropForProgByDesc(prop.ProgramNum,prop.PropertyDesc);
+			ProgramProperty getPropBefore=ProgramProperties.GetPropForProgByDesc(prop.ProgramId,prop.Name);
 			Assert.IsNotNull(getPropBefore);
-			Assert.AreEqual(prop.ProgramPropertyNum,getPropBefore.ProgramPropertyNum);
+			Assert.AreEqual(prop.Id,getPropBefore.Id);
 			try {
 				ProgramProperties.Delete(prop);
 			}
@@ -55,7 +55,7 @@ namespace UnitTests.ProgramProperties_Tests {
 			}
 			ProgramProperties.RefreshCache();//Make sure data is as current as it can be.
 			//Ensure it was deleted.
-			ProgramProperty getPropAfter=ProgramProperties.GetPropForProgByDesc(prop.ProgramNum,prop.PropertyDesc);
+			ProgramProperty getPropAfter=ProgramProperties.GetPropForProgByDesc(prop.ProgramId,prop.Name);
 			Assert.IsNull(getPropAfter);//No longer in DB
 		}
 
@@ -64,9 +64,9 @@ namespace UnitTests.ProgramProperties_Tests {
 		///in GetDeletablePropertyDescriptions(), instead it throws an exception (which we catch here) and then remains in the db.</summary>
 		public void ProgramProperties_Delete_DoesNotDeleteWhenDescriptionIsNotInGetDeletablePropertyDescriptions() {
 			ProgramProperty prop=ProgramPropertyT.CreateProgramProperty(20,"Stuff",2);
-			ProgramProperty getPropBefore=ProgramProperties.GetPropForProgByDesc(prop.ProgramNum,prop.PropertyDesc);
+			ProgramProperty getPropBefore=ProgramProperties.GetPropForProgByDesc(prop.ProgramId,prop.Name);
 			Assert.IsNotNull(getPropBefore);
-			Assert.AreEqual(prop.ProgramPropertyNum,getPropBefore.ProgramPropertyNum);
+			Assert.AreEqual(prop.Id,getPropBefore.Id);
 			try {
 				ProgramProperties.Delete(prop);
 			}
@@ -75,9 +75,9 @@ namespace UnitTests.ProgramProperties_Tests {
 			}
 			ProgramProperties.RefreshCache();//Make sure data is as current as it can be.
 			//Ensure it was NOT deleted since the description is most certainly not in GetDeletablePropertyDescriptions().
-			ProgramProperty getPropAfter=ProgramProperties.GetPropForProgByDesc(prop.ProgramNum,prop.PropertyDesc);
+			ProgramProperty getPropAfter=ProgramProperties.GetPropForProgByDesc(prop.ProgramId,prop.Name);
 			Assert.IsNotNull(getPropAfter);//Still in DB
-			Assert.AreEqual(prop.ProgramPropertyNum,getPropAfter.ProgramPropertyNum);//And we know its the ProgramProperty we put in.
+			Assert.AreEqual(prop.Id,getPropAfter.Id);//And we know its the ProgramProperty we put in.
 		}
 
 	}

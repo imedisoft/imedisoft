@@ -35,7 +35,7 @@ namespace OpenDental {
 		private List<Userod> GetListDoseSpotUsers(bool includeProv,string provNpi="") {
 			List<Userod> retVal=new List<Userod>();
 			List<Provider> listProviders=Providers.GetWhere(x => x.NationalProvID==provNpi,true);
-			List<UserOdPref> listUserPrefDoseSpotIds=UserOdPrefs.GetAllByFkeyAndFkeyType(_programErx.ProgramNum,UserOdFkeyType.Program);
+			List<UserOdPref> listUserPrefDoseSpotIds=UserOdPrefs.GetAllByFkeyAndFkeyType(_programErx.Id,UserOdFkeyType.Program);
 			listUserPrefDoseSpotIds=listUserPrefDoseSpotIds.FindAll(x => string.IsNullOrWhiteSpace(x.ValueString));
 			if(includeProv) {
 				retVal=Userods.GetWhere(
@@ -69,10 +69,10 @@ namespace OpenDental {
 				MessageBox.Show("Please select a user.");
 				return;
 			}
-			UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(_selectedUserNum,_programErx.ProgramNum,UserOdFkeyType.Program);
+			UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(_selectedUserNum,_programErx.Id,UserOdFkeyType.Program);
 			userDosePref.ValueString=_providerErxCur.UserId.ToString();
 			if(userDosePref.IsNew) {
-				userDosePref.Fkey=_programErx.ProgramNum;
+				userDosePref.Fkey=_programErx.Id;
 				UserOdPrefs.Insert(userDosePref);
 			}
 			else { 

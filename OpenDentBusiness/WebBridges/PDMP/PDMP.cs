@@ -30,7 +30,7 @@ namespace OpenDentBusiness
 			{
 				if (!program.Enabled)
 				{
-					sbErrors.AppendLine(program.ProgName + Lans.g("PDMP", " must be enabled in Program Links."));
+					sbErrors.AppendLine(program.Name + Lans.g("PDMP", " must be enabled in Program Links."));
 					result = sbErrors.ToString();
 					return;
 				}
@@ -79,9 +79,9 @@ namespace OpenDentBusiness
 				}
 
 				// Validation passed and we can now call the PDMP API.
-				string facilityId = ProgramProperties.GetPropVal(program.ProgramNum, facilityIdPropDesc);
-				string clientUsername = ProgramProperties.GetPropVal(program.ProgramNum, userNamePropDesc);
-				string clientPassword = ProgramProperties.GetPropVal(program.ProgramNum, passwordPropDesc);
+				string facilityId = ProgramProperties.GetPropVal(program.Id, facilityIdPropDesc);
+				string clientUsername = ProgramProperties.GetPropVal(program.Id, userNamePropDesc);
+				string clientPassword = ProgramProperties.GetPropVal(program.Id, passwordPropDesc);
 				try
 				{
 					// Each state may use a different API for its PDMP services. Implement appropriate classes to handle each state we support.

@@ -273,7 +273,7 @@ namespace OpenDentBusiness{
 				PayAmt=amount,
 				PayDate=DateTime.Now,
 				PaymentSource=ccSource,
-				PayType=PIn.Long(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.PayConnect).ProgramNum,"PaymentType",clinicNum)),
+				PayType=PIn.Long(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.PayConnect).Id,"PaymentType",clinicNum)),
 				ProcessStatus=ProcessStat.OnlinePending,
 				Receipt=receipt,
 				PayNote=payNote,

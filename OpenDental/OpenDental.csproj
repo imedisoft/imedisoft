@@ -366,135 +366,139 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bridges\Benco.cs" />
-    <Compile Include="Bridges\DexisIntegrator.cs" />
-    <Compile Include="Bridges\XDR.cs" />
-    <Compile Include="Bridges\FormOryxUserSettings.cs">
+    <Compile Include="Bridges\BridgeManager.cs" />
+    <Compile Include="Bridges\BridgeParameter.cs" />
+    <Compile Include="Bridges\CommandLineBridge.cs" />
+    <Compile Include="Bridges\Tmp\Benco.cs" />
+    <Compile Include="Bridges\Tmp\DexisIntegrator.cs" />
+    <Compile Include="Bridges\IBridge.cs" />
+    <Compile Include="Bridges\Tmp\XDR.cs" />
+    <Compile Include="Bridges\Tmp\FormOryxUserSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Bridges\FormOryxUserSettings.designer.cs">
+    <Compile Include="Bridges\Tmp\FormOryxUserSettings.designer.cs">
       <DependentUpon>FormOryxUserSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Bridges\Oryx.cs" />
-    <Compile Include="Bridges\DentalXChange.cs" />
-    <Compile Include="Bridges\Midway.cs" />
-    <Compile Include="Bridges\ApteryxImage.cs" />
-    <Compile Include="Bridges\CADI.cs" />
-    <Compile Include="Bridges\Carestream.cs" />
-    <Compile Include="Bridges\HdxWill.cs" />
-    <Compile Include="Bridges\NewTomNNT.cs" />
-    <Compile Include="Bridges\iDixel.cs" />
-    <Compile Include="Bridges\Adstra.cs" />
-    <Compile Include="Bridges\Apteryx.cs" />
-    <Compile Include="Bridges\AudaxCeph.cs" />
-    <Compile Include="Bridges\Cerec.cs" />
-    <Compile Include="Bridges\Apixia.cs" />
-    <Compile Include="Bridges\BioPAK.cs" />
-    <Compile Include="Bridges\CaptureLink.cs" />
-    <Compile Include="Bridges\ClioSoft.cs" />
-    <Compile Include="Bridges\ClaimX_Statements.cs" />
-    <Compile Include="Bridges\CDS.cs" />
-    <Compile Include="Bridges\CleaRay.cs" />
-    <Compile Include="Bridges\OrthoInsight3d.cs" />
-    <Compile Include="Bridges\PandaPerioAdvanced.cs" />
-    <Compile Include="Bridges\PayConnectTerminal.cs" />
-    <Compile Include="Bridges\PracticeByNumbers.cs" />
-    <Compile Include="Bridges\DentalIntel.cs" />
-    <Compile Include="Bridges\EDS_Statements.cs" />
-    <Compile Include="Bridges\OrthoCad.cs" />
-    <Compile Include="Bridges\RapidCall.cs" />
-    <Compile Include="Bridges\Romexis.cs" />
-    <Compile Include="Bridges\DentalTek.cs" />
-    <Compile Include="Bridges\DemandForce.cs">
+    <Compile Include="Bridges\Tmp\Oryx.cs" />
+    <Compile Include="Bridges\Tmp\DentalXChange.cs" />
+    <Compile Include="Bridges\Tmp\Midway.cs" />
+    <Compile Include="Bridges\Tmp\ApteryxImage.cs" />
+    <Compile Include="Bridges\Tmp\CADI.cs" />
+    <Compile Include="Bridges\Tmp\Carestream.cs" />
+    <Compile Include="Bridges\Tmp\HdxWill.cs" />
+    <Compile Include="Bridges\Tmp\NewTomNNT.cs" />
+    <Compile Include="Bridges\Tmp\iDixel.cs" />
+    <Compile Include="Bridges\Tmp\Adstra.cs" />
+    <Compile Include="Bridges\Tmp\Apteryx.cs" />
+    <Compile Include="Bridges\Tmp\AudaxCeph.cs" />
+    <Compile Include="Bridges\Tmp\Cerec.cs" />
+    <Compile Include="Bridges\Tmp\Apixia.cs" />
+    <Compile Include="Bridges\Tmp\BioPAK.cs" />
+    <Compile Include="Bridges\Tmp\CaptureLink.cs" />
+    <Compile Include="Bridges\Tmp\ClioSoft.cs" />
+    <Compile Include="Bridges\Tmp\ClaimX_Statements.cs" />
+    <Compile Include="Bridges\Tmp\CDS.cs" />
+    <Compile Include="Bridges\Tmp\CleaRay.cs" />
+    <Compile Include="Bridges\Tmp\OrthoInsight3d.cs" />
+    <Compile Include="Bridges\Tmp\PandaPerioAdvanced.cs" />
+    <Compile Include="Bridges\Tmp\PayConnectTerminal.cs" />
+    <Compile Include="Bridges\Tmp\PracticeByNumbers.cs" />
+    <Compile Include="Bridges\Tmp\DentalIntel.cs" />
+    <Compile Include="Bridges\Tmp\EDS_Statements.cs" />
+    <Compile Include="Bridges\Tmp\OrthoCad.cs" />
+    <Compile Include="Bridges\Tmp\RapidCall.cs" />
+    <Compile Include="Bridges\Tmp\Romexis.cs" />
+    <Compile Include="Bridges\Tmp\DentalTek.cs" />
+    <Compile Include="Bridges\Tmp\DemandForce.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Bridges\Office.cs" />
-    <Compile Include="Bridges\HandyDentist.cs" />
-    <Compile Include="Bridges\Irys.cs" />
-    <Compile Include="Bridges\PandaPerio.cs" />
-    <Compile Include="Bridges\Scanora.cs" />
-    <Compile Include="Bridges\SmartDent.cs" />
-    <Compile Include="Bridges\ActeonImagingSuite.cs" />
-    <Compile Include="Bridges\Triana.cs" />
-    <Compile Include="Bridges\Visora.cs" />
-    <Compile Include="Bridges\VistaDent.cs" />
-    <Compile Include="Bridges\DentalStudio.cs" />
-    <Compile Include="Bridges\DivvyPostcardService.cs" />
-    <Compile Include="Bridges\Guru.cs">
+    <Compile Include="Bridges\Tmp\Office.cs" />
+    <Compile Include="Bridges\Tmp\HandyDentist.cs" />
+    <Compile Include="Bridges\Tmp\Irys.cs" />
+    <Compile Include="Bridges\Tmp\PandaPerio.cs" />
+    <Compile Include="Bridges\Tmp\Scanora.cs" />
+    <Compile Include="Bridges\Tmp\SmartDent.cs" />
+    <Compile Include="Bridges\Impl\ActeonImagingSuite.cs" />
+    <Compile Include="Bridges\Tmp\Triana.cs" />
+    <Compile Include="Bridges\Tmp\Visora.cs" />
+    <Compile Include="Bridges\Tmp\VistaDent.cs" />
+    <Compile Include="Bridges\Tmp\DentalStudio.cs" />
+    <Compile Include="Bridges\Tmp\DivvyPostcardService.cs" />
+    <Compile Include="Bridges\Tmp\Guru.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Bridges\Tscan.cs" />
-    <Compile Include="Bridges\POS_statements.cs" />
-    <Compile Include="Bridges\RayMage.cs" />
-    <Compile Include="Bridges\MiPACS.cs" />
-    <Compile Include="Bridges\QuickBooks.cs" />
-    <Compile Include="Bridges\VixWinBase36.cs" />
-    <Compile Include="Bridges\VixWinBase41.cs" />
-    <Compile Include="Bridges\EvaSoft.cs" />
-    <Compile Include="Bridges\PaperlessTechnology.cs" />
-    <Compile Include="Bridges\Patterson.cs" />
-    <Compile Include="Bridges\PreXion.cs" />
-    <Compile Include="Bridges\Ewoo.cs" />
-    <Compile Include="Bridges\FormTrophyNamePick.cs">
+    <Compile Include="Bridges\Tmp\Tscan.cs" />
+    <Compile Include="Bridges\Tmp\POS_statements.cs" />
+    <Compile Include="Bridges\Tmp\RayMage.cs" />
+    <Compile Include="Bridges\Tmp\MiPACS.cs" />
+    <Compile Include="Bridges\Tmp\QuickBooks.cs" />
+    <Compile Include="Bridges\Tmp\VixWinBase36.cs" />
+    <Compile Include="Bridges\Tmp\VixWinBase41.cs" />
+    <Compile Include="Bridges\Tmp\EvaSoft.cs" />
+    <Compile Include="Bridges\Tmp\PaperlessTechnology.cs" />
+    <Compile Include="Bridges\Tmp\Patterson.cs" />
+    <Compile Include="Bridges\Tmp\PreXion.cs" />
+    <Compile Include="Bridges\Tmp\Ewoo.cs" />
+    <Compile Include="Bridges\Tmp\FormTrophyNamePick.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Bridges\FormTrophyNamePick.Designer.cs">
+    <Compile Include="Bridges\Tmp\FormTrophyNamePick.Designer.cs">
       <DependentUpon>FormTrophyNamePick.cs</DependentUpon>
     </Compile>
-    <Compile Include="Bridges\Camsight.cs" />
-    <Compile Include="Bridges\Cliniview.cs" />
-    <Compile Include="Bridges\ICat.cs" />
-    <Compile Include="Bridges\ECW.cs" />
-    <Compile Include="Bridges\Progeny.cs" />
-    <Compile Include="Bridges\Sopro.cs" />
-    <Compile Include="Bridges\Dolphin.cs" />
-    <Compile Include="Bridges\Digora.cs" />
-    <Compile Include="Bridges\EHG_statements.cs" />
-    <Compile Include="Bridges\FormHouseCalls.cs">
+    <Compile Include="Bridges\Tmp\Camsight.cs" />
+    <Compile Include="Bridges\Tmp\Cliniview.cs" />
+    <Compile Include="Bridges\Tmp\ICat.cs" />
+    <Compile Include="Bridges\Tmp\ECW.cs" />
+    <Compile Include="Bridges\Tmp\Progeny.cs" />
+    <Compile Include="Bridges\Tmp\Sopro.cs" />
+    <Compile Include="Bridges\Tmp\Dolphin.cs" />
+    <Compile Include="Bridges\Tmp\Digora.cs" />
+    <Compile Include="Bridges\Tmp\EHG_statements.cs" />
+    <Compile Include="Bridges\Tmp\FormHouseCalls.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Bridges\FormIap.cs">
+    <Compile Include="Bridges\Tmp\FormIap.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Bridges\FormPatienteBill.cs">
+    <Compile Include="Bridges\Tmp\FormPatienteBill.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Bridges\FormPatienteBill.designer.cs">
+    <Compile Include="Bridges\Tmp\FormPatienteBill.designer.cs">
       <DependentUpon>FormPatienteBill.cs</DependentUpon>
     </Compile>
-    <Compile Include="Bridges\FormPrintReport.cs">
+    <Compile Include="Bridges\Tmp\FormPrintReport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Bridges\FormPrintReport.designer.cs">
+    <Compile Include="Bridges\Tmp\FormPrintReport.designer.cs">
       <DependentUpon>FormPrintReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Bridges\Dxis.cs" />
-    <Compile Include="Bridges\Vipersoft.cs" />
-    <Compile Include="Bridges\DBSWin.cs" />
-    <Compile Include="Bridges\DentalEye.cs" />
-    <Compile Include="Bridges\DentForms.cs" />
-    <Compile Include="Bridges\DentX.cs" />
-    <Compile Include="Bridges\Dexis.cs" />
-    <Compile Include="Bridges\DrCeph.cs" />
-    <Compile Include="Bridges\FloridaProbe.cs" />
-    <Compile Include="Bridges\Iap.cs" />
-    <Compile Include="Bridges\ImageFX.cs" />
-    <Compile Include="Bridges\Lightyear.cs" />
-    <Compile Include="Bridges\MediaDent.cs" />
-    <Compile Include="Bridges\Owandy.cs" />
-    <Compile Include="Bridges\PerioPal.cs" />
-    <Compile Include="Bridges\Planmeca.cs" />
-    <Compile Include="Bridges\Schick.cs" />
-    <Compile Include="Bridges\Sirona.cs" />
-    <Compile Include="Bridges\TigerView.cs" />
-    <Compile Include="Bridges\Trojan.cs" />
-    <Compile Include="Bridges\Trophy.cs" />
-    <Compile Include="Bridges\TrophyEnhanced.cs" />
-    <Compile Include="Bridges\VixWin.cs" />
-    <Compile Include="Bridges\VixWinNumbered.cs" />
-    <Compile Include="Bridges\VixWinOld.cs" />
-    <Compile Include="Bridges\XVWeb.cs" />
-    <Compile Include="Bridges\ZImage.cs" />
+    <Compile Include="Bridges\Tmp\Dxis.cs" />
+    <Compile Include="Bridges\Tmp\Vipersoft.cs" />
+    <Compile Include="Bridges\Tmp\DBSWin.cs" />
+    <Compile Include="Bridges\Tmp\DentalEye.cs" />
+    <Compile Include="Bridges\Tmp\DentForms.cs" />
+    <Compile Include="Bridges\Tmp\DentX.cs" />
+    <Compile Include="Bridges\Tmp\Dexis.cs" />
+    <Compile Include="Bridges\Tmp\DrCeph.cs" />
+    <Compile Include="Bridges\Tmp\FloridaProbe.cs" />
+    <Compile Include="Bridges\Tmp\Iap.cs" />
+    <Compile Include="Bridges\Tmp\ImageFX.cs" />
+    <Compile Include="Bridges\Tmp\Lightyear.cs" />
+    <Compile Include="Bridges\Tmp\MediaDent.cs" />
+    <Compile Include="Bridges\Tmp\Owandy.cs" />
+    <Compile Include="Bridges\Tmp\PerioPal.cs" />
+    <Compile Include="Bridges\Tmp\Planmeca.cs" />
+    <Compile Include="Bridges\Tmp\Schick.cs" />
+    <Compile Include="Bridges\Tmp\Sirona.cs" />
+    <Compile Include="Bridges\Tmp\TigerView.cs" />
+    <Compile Include="Bridges\Tmp\Trojan.cs" />
+    <Compile Include="Bridges\Tmp\Trophy.cs" />
+    <Compile Include="Bridges\Tmp\TrophyEnhanced.cs" />
+    <Compile Include="Bridges\Tmp\VixWin.cs" />
+    <Compile Include="Bridges\Tmp\VixWinNumbered.cs" />
+    <Compile Include="Bridges\Tmp\VixWinOld.cs" />
+    <Compile Include="Bridges\Tmp\XVWeb.cs" />
+    <Compile Include="Bridges\Tmp\ZImage.cs" />
     <Compile Include="Forms Reports\FormQuery.designer.cs">
       <DependentUpon>FormQuery.cs</DependentUpon>
     </Compile>
@@ -632,6 +636,15 @@
     </Compile>
     <Compile Include="Forms\FormPath.Designer.cs">
       <DependentUpon>FormPath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormProgramLinkEdit.Designer.cs">
+      <DependentUpon>FormProgramLinkEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormProgramLinks.Designer.cs">
+      <DependentUpon>FormProgramLinks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormProgramProperty.Designer.cs">
+      <DependentUpon>FormProgramProperty.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormRedundantIndexes.cs">
       <SubType>Form</SubType>
@@ -1874,12 +1887,6 @@
     </Compile>
     <Compile Include="Forms\FormProviderMerge.designer.cs">
       <DependentUpon>FormProviderMerge.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormProgramLinkOutputFile .cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormProgramLinkOutputFile .designer.cs">
-      <DependentUpon>FormProgramLinkOutputFile .cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormReqFieldCondEdit.cs">
       <SubType>Form</SubType>
@@ -5258,15 +5265,15 @@
       <DependentUpon>FormRpProdGoal.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Bridges\FormHouseCalls.resx">
+    <EmbeddedResource Include="Bridges\Tmp\FormHouseCalls.resx">
       <DependentUpon>FormHouseCalls.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Bridges\FormIap.resx">
+    <EmbeddedResource Include="Bridges\Tmp\FormIap.resx">
       <DependentUpon>FormIap.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Bridges\FormPrintReport.resx">
+    <EmbeddedResource Include="Bridges\Tmp\FormPrintReport.resx">
       <DependentUpon>FormPrintReport.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -5274,7 +5281,7 @@
       <DependentUpon>FormRpProcOverpaid.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Bridges\FormOryxUserSettings.resx">
+    <EmbeddedResource Include="Bridges\Tmp\FormOryxUserSettings.resx">
       <DependentUpon>FormOryxUserSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Reports\FormRpServiceDateView.resx">
@@ -5920,9 +5927,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormProviderMerge.resx">
       <DependentUpon>FormProviderMerge.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormProgramLinkOutputFile .resx">
-      <DependentUpon>FormProgramLinkOutputFile .cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormReqFieldCondEdit.resx">
       <DependentUpon>FormReqFieldCondEdit.cs</DependentUpon>
@@ -8737,6 +8741,14 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconTrash.png" />
+    <None Include="Resources\IconTimes.png" />
+    <None Include="Resources\IconPlus.png" />
+    <None Include="Resources\IconMinus.png" />
+    <None Include="Resources\IconArrowUp.png" />
+    <None Include="Resources\IconArrowRight.png" />
+    <None Include="Resources\IconArrowLeft.png" />
+    <None Include="Resources\IconArrowDown.png" />
     <None Include="Resources\Icon32Database.png" />
     <None Include="Resources\IconMediaStop.png" />
     <None Include="Resources\IconMediaPlay.png" />
@@ -8814,11 +8826,11 @@
     <None Include="Resources\UDS3b.gif" />
     <None Include="Resources\UDS3a.gif" />
     <None Include="Web References\MobileWeb\Mobile.disco" />
-    <EmbeddedResource Include="Bridges\FormTrophyNamePick.resx">
+    <EmbeddedResource Include="Bridges\Tmp\FormTrophyNamePick.resx">
       <DependentUpon>FormTrophyNamePick.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Bridges\FormPatienteBill.resx">
+    <EmbeddedResource Include="Bridges\Tmp\FormPatienteBill.resx">
       <DependentUpon>FormPatienteBill.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

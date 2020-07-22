@@ -239,7 +239,7 @@ namespace OpenDental{
 			/*Show checkDoseSpotConsent if DoseSpot is enabled. Currently, consent cannot be revoked with DoseSpot,
 			so the check box is checked and disabled if consent was previously given.*/
 			Program progErx=Programs.GetCur(ProgramName.eRx);
-			ErxOption erxOption=PIn.Enum<ErxOption>(ProgramProperties.GetPropForProgByDesc(progErx.ProgramNum,Erx.PropertyDescs.ErxOption).PropertyValue);
+			ErxOption erxOption=PIn.Enum<ErxOption>(ProgramProperties.GetPropForProgByDesc(progErx.Id,Erx.PropertyDescs.ErxOption).Value);
 			if(progErx.Enabled && (erxOption==ErxOption.DoseSpot || erxOption==ErxOption.DoseSpotWithLegacy)) {
 				checkDoseSpotConsent.Visible=true;
 				checkDoseSpotConsent.Checked=_patCurNote.Consent.HasFlag(PatConsentFlags.ShareMedicationHistoryErx);
