@@ -513,6 +513,8 @@
     <Compile Include="Reports\RpProcOverpaid.cs" />
     <Compile Include="Reports\RpProdGoal.cs" />
     <Compile Include="Reports\RpServiceDateView.cs" />
+    <Compile Include="Services\Models\FeatureRequestDto.cs" />
+    <Compile Include="Services\Models\FeatureRequestStatus.cs" />
     <Compile Include="SheetFramework\GraphicsHelper.cs" />
     <Compile Include="SheetFramework\SheetDataTableUtil.cs" />
     <Compile Include="SheetFramework\SheetDrawingJob.cs" />

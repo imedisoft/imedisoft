@@ -1,629 +1,208 @@
-using Imedisoft.customerUpdates;
 using OpenDental.UI;
-using OpenDentBusiness;
+using OpenDentBusiness.Services.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Xml;
 
-namespace OpenDental {
-	/// <summary></summary>
-	public class FormFeatureRequest:ODForm {
-		private OpenDental.UI.Button butClose;
-		private System.Windows.Forms.Label label1;
-		private IContainer components;
-		private Label labelVote;
-		private Label label5;
-		private TextBox textSearch;
-		private OpenDental.UI.ODGrid gridMain;
-		private OpenDental.UI.Button buttonAdd;
-		private Label labelSearchFirst;
-		private OpenDental.UI.Button butSearch;
-		private ODDataTable table;
-		///<summary>Set to true when this window was launched from HQ.  Allows the window to be put into management mode.</summary>
-		private bool isAdminMode;
-		private UI.Button butOK;
-		///<summary>Used in the JobManager system for attaching features to jobs.</summary>
-		public bool IsSelectionMode;
-		private UI.Button butEdit;
-		private CheckBox checkMine;
-		private CheckBox checkMyVotes;
-		///<summary>Only for IsSelectionMode, returns the selected num.</summary>
-		public long SelectedFeatureNum=0;
-		/// <summary>Used to fill grid in FillGrid. Filters operate on this local copy. Fill by calling RefreshRequestTable()</summary>
-		private ODDataTable _tableRequests;
+namespace Imedisoft.Forms
+{
+    public partial class FormFeatureRequest : FormBase
+	{
+		private List<FeatureRequestDto> featureRequests;
+		private List<FeatureRequestDto> featureRequestsFiltered;
 
-		///<summary></summary>
-		public FormFeatureRequest()
+		public FormFeatureRequest() => InitializeComponent();
+
+		private void FormFeatureRequest_Load(object sender, EventArgs e)
 		{
-			components=new System.ComponentModel.Container();
-			//
-			// Required for Windows Form Designer support
-			//
-			InitializeComponent();
-			Lan.F(this);
+			editButton.Visible = false;
+
+			FillGrid();
 		}
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
+		private void SearchButton_Click(object sender, EventArgs e)
 		{
-			if( disposing )
+			requestsGrid.SetSelected(false);
+
+			Search();
+		}
+
+		private void Search()
+		{
+			// TODO: Make web service call the retreive the requests...
+
+			FillGrid();
+		}
+
+		private void FillGrid()
+		{
+			featureRequestsFiltered = new List<FeatureRequestDto>(featureRequests);
+			featureRequestsFiltered.Sort(SortFeatureRequests);
+
+			long selectedRequestId = 0;
+
+			int selectedIndex = requestsGrid.GetSelectedIndex();
+			if (selectedIndex != -1)
 			{
-				if(components != null)
+				if (requestsGrid.ListGridRows[selectedIndex].Tag is FeatureRequestDto featureRequest)
 				{
-					components.Dispose();
+					selectedRequestId = featureRequest.Id;
 				}
 			}
-			base.Dispose( disposing );
-		}
 
-		#region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFeatureRequest));
-			this.label1 = new System.Windows.Forms.Label();
-			this.labelVote = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.textSearch = new System.Windows.Forms.TextBox();
-			this.labelSearchFirst = new System.Windows.Forms.Label();
-			this.butSearch = new OpenDental.UI.Button();
-			this.buttonAdd = new OpenDental.UI.Button();
-			this.gridMain = new OpenDental.UI.ODGrid();
-			this.butClose = new OpenDental.UI.Button();
-			this.butOK = new OpenDental.UI.Button();
-			this.butEdit = new OpenDental.UI.Button();
-			this.checkMine = new System.Windows.Forms.CheckBox();
-			this.checkMyVotes = new System.Windows.Forms.CheckBox();
-			this.SuspendLayout();
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(0, 0);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(100, 23);
-			this.label1.TabIndex = 0;
-			// 
-			// labelVote
-			// 
-			this.labelVote.Location = new System.Drawing.Point(218, 9);
-			this.labelVote.Name = "labelVote";
-			this.labelVote.Size = new System.Drawing.Size(511, 16);
-			this.labelVote.TabIndex = 51;
-			this.labelVote.Text = "Vote for your favorite features here. Please remember that we cannot ever give an" +
-    "y time estimates.";
-			// 
-			// label5
-			// 
-			this.label5.Location = new System.Drawing.Point(5, 33);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(90, 18);
-			this.label5.TabIndex = 56;
-			this.label5.Text = "Search terms";
-			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textSearch
-			// 
-			this.textSearch.Location = new System.Drawing.Point(94, 33);
-			this.textSearch.Name = "textSearch";
-			this.textSearch.Size = new System.Drawing.Size(167, 20);
-			this.textSearch.TabIndex = 0;
-			// 
-			// labelSearchFirst
-			// 
-			this.labelSearchFirst.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.labelSearchFirst.Location = new System.Drawing.Point(91, 633);
-			this.labelSearchFirst.Name = "labelSearchFirst";
-			this.labelSearchFirst.Size = new System.Drawing.Size(180, 18);
-			this.labelSearchFirst.TabIndex = 61;
-			this.labelSearchFirst.Text = "A search is required first";
-			this.labelSearchFirst.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.labelSearchFirst.Visible = false;
-			// 
-			// butSearch
-			// 
-			this.butSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butSearch.Location = new System.Drawing.Point(267, 30);
-			this.butSearch.Name = "butSearch";
-			this.butSearch.Size = new System.Drawing.Size(75, 24);
-			this.butSearch.TabIndex = 1;
-			this.butSearch.Text = "Search";
-			this.butSearch.Click += new System.EventHandler(this.butSearch_Click);
-			// 
-			// buttonAdd
-			// 
-			this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonAdd.Image = global::Imedisoft.Properties.Resources.Add;
-			this.buttonAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.buttonAdd.Location = new System.Drawing.Point(12, 630);
-			this.buttonAdd.Name = "buttonAdd";
-			this.buttonAdd.Size = new System.Drawing.Size(75, 24);
-			this.buttonAdd.TabIndex = 2;
-			this.buttonAdd.Text = "Add";
-			this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
-			// 
-			// gridMain
-			// 
-			this.gridMain.AllowSortingByColumn = true;
-			this.gridMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.gridMain.HasMultilineHeaders = true;
-			this.gridMain.Location = new System.Drawing.Point(12, 59);
-			this.gridMain.Name = "gridMain";
-			this.gridMain.Size = new System.Drawing.Size(861, 568);
-			this.gridMain.TabIndex = 59;
-			this.gridMain.Title = "Feature Requests";
-			this.gridMain.TranslationName = "TableRequests";
-			this.gridMain.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridMain_CellDoubleClick);
-			// 
-			// butClose
-			// 
-			this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butClose.Location = new System.Drawing.Point(798, 630);
-			this.butClose.Name = "butClose";
-			this.butClose.Size = new System.Drawing.Size(75, 24);
-			this.butClose.TabIndex = 4;
-			this.butClose.Text = "&Close";
-			this.butClose.Click += new System.EventHandler(this.butClose_Click);
-			// 
-			// butOK
-			// 
-			this.butOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butOK.Location = new System.Drawing.Point(717, 630);
-			this.butOK.Name = "butOK";
-			this.butOK.Size = new System.Drawing.Size(75, 24);
-			this.butOK.TabIndex = 3;
-			this.butOK.Text = "&OK";
-			this.butOK.Visible = false;
-			this.butOK.Click += new System.EventHandler(this.butOK_Click);
-			// 
-			// butEdit
-			// 
-			this.butEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butEdit.Location = new System.Drawing.Point(221, 630);
-			this.butEdit.Name = "butEdit";
-			this.butEdit.Size = new System.Drawing.Size(75, 24);
-			this.butEdit.TabIndex = 62;
-			this.butEdit.Text = "Edit";
-			this.butEdit.Click += new System.EventHandler(this.butEdit_Click);
-			// 
-			// checkMine
-			// 
-			this.checkMine.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkMine.Location = new System.Drawing.Point(352, 33);
-			this.checkMine.Name = "checkMine";
-			this.checkMine.Size = new System.Drawing.Size(71, 18);
-			this.checkMine.TabIndex = 63;
-			this.checkMine.Text = "Mine";
-			this.checkMine.UseVisualStyleBackColor = true;
-			this.checkMine.CheckedChanged += new System.EventHandler(this.checkMine_CheckedChanged);
-			// 
-			// checkMyVotes
-			// 
-			this.checkMyVotes.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkMyVotes.Location = new System.Drawing.Point(411, 33);
-			this.checkMyVotes.Name = "checkMyVotes";
-			this.checkMyVotes.Size = new System.Drawing.Size(86, 18);
-			this.checkMyVotes.TabIndex = 64;
-			this.checkMyVotes.Text = "My Votes";
-			this.checkMyVotes.UseVisualStyleBackColor = true;
-			this.checkMyVotes.CheckedChanged += new System.EventHandler(this.checkMyVotes_CheckedChanged);
-			// 
-			// FormFeatureRequest
-			// 
-			this.AcceptButton = this.butSearch;
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(882, 657);
-			this.Controls.Add(this.checkMyVotes);
-			this.Controls.Add(this.checkMine);
-			this.Controls.Add(this.butEdit);
-			this.Controls.Add(this.butOK);
-			this.Controls.Add(this.butSearch);
-			this.Controls.Add(this.labelSearchFirst);
-			this.Controls.Add(this.buttonAdd);
-			this.Controls.Add(this.textSearch);
-			this.Controls.Add(this.label5);
-			this.Controls.Add(this.gridMain);
-			this.Controls.Add(this.labelVote);
-			this.Controls.Add(this.butClose);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MinimumSize = new System.Drawing.Size(870, 300);
-			this.Name = "FormFeatureRequest";
-			this.Text = "Feature Requests";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormUpdate_FormClosing);
-			this.Load += new System.EventHandler(this.FormFeatureRequest_Load);
-			this.ResumeLayout(false);
-			this.PerformLayout();
+			requestsGrid.BeginUpdate();
+			requestsGrid.ListGridColumns.Clear();
+			requestsGrid.ListGridColumns.Add(new GridColumn("Req#", 40, GridSortingStrategy.AmountParse));
+			requestsGrid.ListGridColumns.Add(new GridColumn("Mine", 40, GridSortingStrategy.StringCompare));
+			requestsGrid.ListGridColumns.Add(new GridColumn("Comments", 70, GridSortingStrategy.AmountParse));
+			requestsGrid.ListGridColumns.Add(new GridColumn("Version", 75, GridSortingStrategy.VersionNumber));
+			requestsGrid.ListGridColumns.Add(new GridColumn("Diff", 40, GridSortingStrategy.AmountParse));
+			requestsGrid.ListGridColumns.Add(new GridColumn("Weight", 45, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			requestsGrid.ListGridColumns.Add(new GridColumn("Status", 90, GridSortingStrategy.StringCompare));
+			requestsGrid.ListGridColumns.Add(new GridColumn("Description", 500, GridSortingStrategy.StringCompare));
+			requestsGrid.ListGridRows.Clear();
 
-		}
-		#endregion
-
-		private void FormFeatureRequest_Load(object sender, System.EventArgs e) {
-			if(IsSelectionMode) {
-				this.Text="Select a Feature Request";
-				butClose.Text="Cancel";
-				butOK.Visible=true;
-				labelSearchFirst.Visible=false;
-				labelVote.Visible=false;
-			}
-			else {
-				butEdit.Visible=false;
-			}
-			_tableRequests=new ODDataTable();
-			FillGrid(); //Fills column headings on load
-			/*
-				if(Security.IsAuthorized(Permissions.Setup,true)) {
-					butCheck2.Visible=true;
-				}
-				else {
-					textConnectionMessage.Text=Lan.g(this,"Not authorized for")+" "+GroupPermissions.GetDesc(Permissions.Setup);
-				}
-			*/
-			//if(!Synch()){
-			//	return;
-			//}
-			//FillGrid();
-		}
-
-		private void butSearch_Click(object sender,EventArgs e) {
-			gridMain.SetSelected(false);
-			try{
-				RefreshRequestTable();
-				FillGrid();
-			}
-			catch{
-				MessageBox.Show("This feature won't work until you install Microsoft dotNET 3.5.");
-			}
-		}
-
-		///<summary>Makes a web call to WebServiceCustomersUpdate in order to get an updated list of feature requests.</summary>
-		private void RefreshRequestTable() {
-			//Always clear the table first.
-			_tableRequests=new ODDataTable();
-			Cursor=Cursors.WaitCursor;
-			//Yes, this would be slicker if it were asynchronous, but no time right now.
-			#region prepare the xml document to send--------------------------------------------------------------------------------------
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent=true;
-			settings.IndentChars=("    ");
-			StringBuilder strbuild=new StringBuilder();
-			using(XmlWriter writer=XmlWriter.Create(strbuild,settings)) {
-				writer.WriteStartElement("FeatureRequestGetList");
-				writer.WriteStartElement("RegistrationKey");
-				writer.WriteString(PrefC.GetString(PrefName.RegistrationKey));
-				writer.WriteEndElement();
-				writer.WriteStartElement("SearchString");
-				writer.WriteString(textSearch.Text);
-				writer.WriteEndElement();
-				writer.WriteEndElement();
-			}
-#if DEBUG
-			Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
-			#else
-				OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
-				updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);
-			#endif
-			#endregion
-			#region Send the message and get the result-------------------------------------------------------------------------------------
-			string result="";
-			try {
-				result=updateService.FeatureRequestGetList(strbuild.ToString());
-			}
-			catch(Exception ex) {
-				Cursor=Cursors.Default;
-				MessageBox.Show("Error: "+ex.Message);
-				return;
-			}
-			#endregion
-			Cursor=Cursors.Default;
-			XmlDocument doc=new XmlDocument();
-			doc.LoadXml(result);
-			#region Process errors------------------------------------------------------------------------------------------------------------
-			XmlNode node=doc.SelectSingleNode("//Error");
-			if(node!=null) {
-				//textConnectionMessage.Text=node.InnerText;
-				MessageBox.Show(node.InnerText,"Error");
-				return;
-			}
-			node=doc.SelectSingleNode("//KeyDisabled");
-			if(node==null) {
-				//no error, and no disabled message
-				if(Prefs.UpdateBool(PrefName.RegistrationKeyIsDisabled,false)) {//this is one of two places in the program where this happens.
-					DataValid.SetInvalid(InvalidType.Prefs);
-				}
-			}
-			else {
-				//textConnectionMessage.Text=node.InnerText;
-				MessageBox.Show(node.InnerText);
-				if(Prefs.UpdateBool(PrefName.RegistrationKeyIsDisabled,true)) {//this is one of two places in the program where this happens.
-					DataValid.SetInvalid(InvalidType.Prefs);
-				}
-				return;
-			}
-			#endregion
-			#region Process a valid return value------------------------------------------------------------------------------------------------
-			node=doc.SelectSingleNode("//IsAdminMode");
-			if(node.InnerText=="true") {
-				isAdminMode=true;
-			}
-			else {
-				isAdminMode=false;
-			}
-			node=doc.SelectSingleNode("//ResultTable");
-			#endregion
-			_tableRequests=new ODDataTable(node.InnerXml);
-		}
-
-		private void FillGrid() {
-			table=_tableRequests;
-			table.Rows.Sort(FeatureRequestSort);//Sort user submited/voted features to the top. 
-			//FillGrid used to start here------------------------------------------------
-			long selectedRequestId=0;
-			int selectedIndex=gridMain.GetSelectedIndex();
-			if(selectedIndex!=-1){
-				if(table.Rows.Count>selectedIndex){
-					selectedRequestId=PIn.Long(table.Rows[gridMain.GetSelectedIndex()]["RequestId"]);
-				}
-			}
-			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableRequest","Req#"),40,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRequest","Mine"),40,GridSortingStrategy.StringCompare);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRequest","My Votes"),60,GridSortingStrategy.StringCompare);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRequest","Total Votes"),70,GridSortingStrategy.StringCompare);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRequest","Comments"),70,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRequest","Version\r\nCompleted"),75,GridSortingStrategy.VersionNumber);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRequest","Diff"),40,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRequest","Weight"),45,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRequest","Approval"),90,GridSortingStrategy.StringCompare);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRequest","Description"),500,GridSortingStrategy.StringCompare);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
-			GridRow row;
-			for(int i=0;i<table.Rows.Count;i++) {
-				if((checkMine.Checked && PIn.String(table.Rows[i]["isMine"])!="X") 
-					|| (checkMyVotes.Checked && PIn.String(table.Rows[i]["myVotes"])==""))
-				{
+			foreach (var featureRequest in featureRequestsFiltered)
+            {
+				if (mineCheckBox.Checked && !featureRequest.IsMine)
 					continue;
-				}
-				row=new GridRow();
-				row.Cells.Add(table.Rows[i]["RequestId"]);
-				row.Cells.Add(table.Rows[i]["isMine"]);
-				row.Cells.Add(table.Rows[i]["myVotes"]);
-				row.Cells.Add(table.Rows[i]["totalVotes"]);
-				row.Cells.Add(table.Rows[i]["TotalComments"]);
-				row.Cells.Add(table.Rows[i]["versionCompleted"]);
-				row.Cells.Add(table.Rows[i]["Difficulty"]);
-				row.Cells.Add(PIn.Double(table.Rows[i]["Weight"]).ToString("F"));
-				row.Cells.Add(table.Rows[i]["approval"]);
-				row.Cells.Add(table.Rows[i]["Description"]);
-				//If they voted or pledged on this feature, mark it so they can see. Can be re-added when/if they need to be more visible.
-				if(table.Rows[i]["isMine"].ToString()!=""
-					&& table.Rows[i]["personalVotes"].ToString()=="0"
-					&& table.Rows[i]["personalCrit"].ToString()=="0"
-					&& table.Rows[i]["personalPledged"].ToString()=="0"
-					&& table.Rows[i]["approval"].ToString()!="Complete") 
+
+				var gridRow = new GridRow();
+				gridRow.Cells.Add(featureRequest.Id.ToString());
+				gridRow.Cells.Add(featureRequest.IsMine ? "X" : "");
+				gridRow.Cells.Add(featureRequest.TotalComments.ToString());
+				gridRow.Cells.Add(featureRequest.VersionCompleted);
+				gridRow.Cells.Add(featureRequest.Difficulty.ToString());
+				gridRow.Cells.Add(featureRequest.Weight.ToString("F"));
+				gridRow.Cells.Add(FeatureRequestDto.GetStatusString(featureRequest.Status));
+				gridRow.Cells.Add(featureRequest.Description);
+
+				// If they voted or pledged on this feature, mark it so they can see.
+				if (featureRequest.IsMine && !featureRequest.IsCritical && featureRequest.Pledge == 0 &&
+					featureRequest.Status != FeatureRequestStatus.Complete)
 				{
-					row.ColorBackG=Color.FromArgb(255,255,230);//light yellow.
+					gridRow.ColorBackG = Color.FromArgb(255, 255, 230); // Light yellow.
 				}
-				gridMain.ListGridRows.Add(row);
-				row.Tag=table.Rows[i];
+
+				requestsGrid.ListGridRows.Add(gridRow);
+				gridRow.Tag = featureRequest;
 			}
-			gridMain.EndUpdate();
-			for(int i=0;i<table.Rows.Count;i++){
-				if(selectedRequestId.ToString()==table.Rows[i]["RequestId"]){
-					gridMain.SetSelected(i,true);
-				}
-			}
+
+			requestsGrid.EndUpdate();
+
+			if (selectedRequestId > 0)
+            {
+				for (int i = 0; i < requestsGrid.ListGridRows.Count; ++i)
+                {
+					if (requestsGrid.ListGridRows[i].Tag is FeatureRequestDto featureRequest && featureRequest.Id == selectedRequestId)
+                    {
+						requestsGrid.SetSelected(i, true);
+
+						break;
+                    }
+                }
+            }
 		}
 
-		private void buttonAdd_Click(object sender,EventArgs e) {
-			string warning="The majority of feature requests that users submit are duplicates of existing requests.  "
-				+"Please take the time to do a thorough search for different keywords and become familiar with similar requests before adding one of your own.  "
-				+"Continue?";
-			if(!IsSelectionMode && !MsgBox.Show(MsgBoxButtons.OKCancel,warning)) {
+		private void AddButton_Click(object sender, EventArgs e)
+		{
+			string warning = 
+				"The majority of feature requests that users submit are duplicates of existing requests. " +
+				"Please take the time to do a thorough search for different keywords and become familiar with similar requests before adding one of your own. " +
+				"Continue?";
+
+			if (Prompt(warning) != DialogResult.No)
+			{
 				return;
 			}
-			FormRequestEdit FormR=new FormRequestEdit();
-			//FormR.IsNew=true;
-			FormR.IsAdminMode=isAdminMode;
-			FormR.ShowDialog();
-			textSearch.Text="";//so we can see our new request
-			RefreshRequestTable();
-			FillGrid();
+
+			var featureRequest = new FeatureRequestDto();
+			using (var formRequestEdit = new FormRequestEdit(featureRequest))
+			{
+				formRequestEdit.ShowDialog(this);
+			}
+
+			searchTextBox.Text = "";
+
+			Search();
 		}
 
-		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			ODDataRow gridRow=(ODDataRow)gridMain.ListGridRows[e.Row].Tag;
-			if(IsSelectionMode) {
-				SelectedFeatureNum=PIn.Long(gridRow["RequestId"]);
-				DialogResult=DialogResult.OK;
+		private void RequestsGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+            if (!(requestsGrid.ListGridRows[e.Row].Tag is FeatureRequestDto featureRequest)) return;
+
+			using (var formRequestEdit = new FormRequestEdit(featureRequest))
+			{
+				formRequestEdit.ShowDialog(this);
+			}
+
+			Search();
+		}
+
+		private void MineCheckBox_CheckedChanged(object sender, EventArgs e) 
+			=> FillGrid();
+
+		private void MyVotesCheckBox_CheckedChanged(object sender, EventArgs e) 
+			=> FillGrid();
+
+		private void EditButton_Click(object sender, EventArgs e)
+		{
+			var index = requestsGrid.GetSelectedIndex();
+			if (index == -1)
+			{
+				ShowInfo("Please select a feature request.");
+
 				return;
 			}
-			FormRequestEdit FormR=new FormRequestEdit();
-			FormR.RequestId=PIn.Long(gridRow["RequestId"]);
-			FormR.IsAdminMode=isAdminMode;
-			FormR.ShowDialog();
-			//The user could have voted towards this request or done something else and we need to refresh the table and the grid.
-			//If the user had sorted the grid by a specific column, this call will lose their column sort and put it back to the default.
-			RefreshRequestTable();
-			FillGrid();
-		}
 
-		private void checkMine_CheckedChanged(object sender,EventArgs e) {
-			FillGrid();
-		}
+            if (!(requestsGrid.ListGridRows[index].Tag is FeatureRequestDto featureRequest))
+            {
+                return;
+            }
 
-		private void checkMyVotes_CheckedChanged(object sender,EventArgs e) {
-			FillGrid();	
-		}
-
-		private void butEdit_Click(object sender,EventArgs e) {
-			if(gridMain.SelectedIndices.Length==0) {
-				MessageBox.Show("Please select a feature request.");
-				return;
+            using (var formRequestEdit = new FormRequestEdit(featureRequest))
+			{
+				formRequestEdit.ShowDialog(this);
 			}
-			ODDataRow gridRow=(ODDataRow)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
-			FormRequestEdit FormR=new FormRequestEdit();
-			FormR.RequestId=PIn.Long(gridRow["RequestId"]);
-			FormR.IsAdminMode=isAdminMode;
-			FormR.ShowDialog();
-			//The user could have voted towards this request or done something else and we need to refresh the table and the grid.
-			//If the user had sorted the grid by a specific column, this call will lose their column sort and put it back to the default.
-			RefreshRequestTable();
-			FillGrid();
+
+			Search();
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			if(gridMain.SelectedIndices.Length==0) {
-				MessageBox.Show("Please select a feature request.");
-				return;
+		private void CancelButton_Click(object sender, EventArgs e) => Close();
+
+		private int SortFeatureRequests(FeatureRequestDto x, FeatureRequestDto y)
+		{
+			// Sort by status...
+			if (x.Status != y.Status)
+            {
+				return x.Status.CompareTo(y.Status);
+            }
+
+			// Move personal items towards the top.
+			var xPledge = x.Pledge > 0 || x.IsCritical;
+			var yPledge = y.Pledge > 0 || y.IsCritical;
+			if (xPledge != yPledge) return xPledge.CompareTo(yPledge);
+
+			// Move items with larger number of votes to to the top.
+			if (xPledge && yPledge)
+            {
+				if (x.Weight != y.Weight)
+                {
+					return -x.Weight.CompareTo(y.Weight);
+                }
+            }
+
+			if (x.IsMine != y.IsMine) return x.IsMine ? 1 : -1;
+
+			// Sort by weight...
+			if (x.Weight != y.Weight)
+			{
+				return -x.Weight.CompareTo(y.Weight);
 			}
-			SelectedFeatureNum=PIn.Long(table.Rows[gridMain.GetSelectedIndex()]["RequestId"]);
-			DialogResult=DialogResult.OK;
+
+			// Finally sort by ID.
+			return x.Id.CompareTo(y.Id);
 		}
-
-		private void butClose_Click(object sender, System.EventArgs e) {
-			if(IsSelectionMode) {
-				DialogResult=DialogResult.Cancel;
-			}
-			Close();
-		}
-
-		private void FormUpdate_FormClosing(object sender,FormClosingEventArgs e) {
-			
-		}
-
-		///<summary>For sorting FRs because we do not have access to the ApprovalEnum in Resuests.cs in the WebServiceCustomerUpdates solution.</summary>
-		private static List<string> _arrayApprovalEnumStrings=new List<string> {
-			"New",//0
-			"NeedsClarification",//1
-			"Redundant",//2
-			"TooBroad",//3
-			"NotARequest",//4
-			"AlreadyDone",//5
-			"Obsolete",//6
-			"Approved",//7
-			"InProgress",//8
-			"Complete"//9
-		};
-
-		///<summary>Used to sort feature requests for user to the top of the list.</summary>
-		private int FeatureRequestSort(ODDataRow x,ODDataRow y) {
-			if(isAdminMode) {
-				//Sorting order
-				//	1) Complete items to the bottom
-				//	2) New features
-				//	3) Status
-				//	4) Weight
-				//	5) Request ID if all else fails
-				//Part 1
-				int xIdx=_arrayApprovalEnumStrings.FindIndex(e=>e==x["approval"].ToString());
-				int yIdx=_arrayApprovalEnumStrings.FindIndex(e=>e==y["approval"].ToString());
-				if(xIdx!=yIdx && (xIdx==9||yIdx==9)) {// 9=="complete"
-					return (xIdx==9).CompareTo(yIdx==9);
-				}
-				//Part 2
-				if(xIdx!=yIdx && (xIdx==0||yIdx==0)) {// 0="new"
-					return -((xIdx==0).CompareTo(yIdx==0));
-				}
-				//Part 3
-				if(xIdx!=yIdx) {
-					return xIdx.CompareTo(yIdx);
-				}
-				//Part 4
-				if(x["Weight"].ToString()!=y["Weight"].ToString()) {
-					return -(PIn.Double(x["Weight"].ToString()).CompareTo(PIn.Double(y["Weight"].ToString())));//Larger number of votes go to the top
-				}
-				//Part 5
-				return PIn.Long(x["RequestId"].ToString()).CompareTo(PIn.Long(y["RequestId"].ToString()));
-			}
-			else { //Typical sorting order for all users (non-HQ)
-				//Sorting order
-				//  1) Complete items to the bottom
-				//  2) Status - this enum is already ordered by importance.  e.g. NeedsClarification HAS to be towards the top (2nd in enum after new).
-				//  3) Personal requests to top
-				//  4) Personal requests sorted by weight
-				//  5) Group by "Mine"
-				//  6) Weight by magnitude
-				//  7) Request ID by magnitude
-				//Part 1
-				int xIdx=_arrayApprovalEnumStrings.FindIndex(e=>e==x["approval"].ToString());
-				int yIdx=_arrayApprovalEnumStrings.FindIndex(e=>e==y["approval"].ToString());
-				if(xIdx!=yIdx && (xIdx==9||yIdx==9)) {// 9=="complete"
-					return (xIdx==9).CompareTo(yIdx==9);
-				}
-				//Part 2
-				if(xIdx!=yIdx) {
-					return xIdx.CompareTo(yIdx);
-				}
-				//Part 3
-				bool xIsPersonal=false;
-				bool yIsPersonal=false;
-				xIsPersonal=x["personalVotes"].ToString()!="0" || x["personalCrit"].ToString()!="0" || x["personalPledged"].ToString()!="0";
-				yIsPersonal=y["personalVotes"].ToString()!="0" || y["personalCrit"].ToString()!="0" || y["personalPledged"].ToString()!="0";
-				if(xIsPersonal!=yIsPersonal) {
-					return -xIsPersonal.CompareTo(yIsPersonal);//negative comparison to move personal items to top.
-				}
-				//Part 4
-				if(xIsPersonal && yIsPersonal) {
-					if(x["Weight"].ToString()!=y["Weight"].ToString()) {
-						return -(PIn.Double(x["Weight"].ToString()).CompareTo(PIn.Double(y["Weight"].ToString())));//Larger number of votes go to the top
-					}
-				}
-				//Part 5; Sort "Mine" entries above non-"Mine" entries.  "Mine" means any feature that this office has submitted.
-				if(x["isMine"].ToString()!=y["isMine"].ToString()) {//One is the customer's, the other isn't.
-					return -(x["isMine"].ToString().CompareTo(y["isMine"].ToString()));//It will either be "" or X, and "X" goes to the top
-				}
-				//Part 6
-				if(x["Weight"].ToString()!=y["Weight"].ToString()) {
-					return -(PIn.Double(x["Weight"].ToString()).CompareTo(PIn.Double(y["Weight"].ToString())));//Larger number of votes go to the top
-				}
-				//Part 7
-				return PIn.Long(x["RequestId"].ToString()).CompareTo(PIn.Long(y["RequestId"].ToString()));
-			}
-		}
-	}
-
-	
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
