@@ -49,7 +49,7 @@ namespace OpenDental {
 				}
 			}
 			//For now, only one user group can be defined as the default security group for students/instructors.
-			Prefs.UpdateLong(PrefName.SecurityGroupForStudents,FormUGP.UserGroup.UserGroupNum);
+			Prefs.UpdateLong(PrefName.SecurityGroupForStudents,FormUGP.UserGroup.Id);
 			textStudents.Text=FormUGP.UserGroup.Description;
 			DataValid.SetInvalid(InvalidType.Prefs);
 		}
@@ -79,7 +79,7 @@ namespace OpenDental {
 				}
 			}
 			//For now, only one user group can be defined as the default security group for students/instructors.
-			Prefs.UpdateLong(PrefName.SecurityGroupForInstructors,FormUGP.UserGroup.UserGroupNum);
+			Prefs.UpdateLong(PrefName.SecurityGroupForInstructors,FormUGP.UserGroup.Id);
 			textInstructors.Text=FormUGP.UserGroup.Description;
 			DataValid.SetInvalid(InvalidType.Prefs);
 		}

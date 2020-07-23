@@ -408,7 +408,7 @@ namespace OpenDentBusiness.HL7 {
 				//OBX-6 Units.  Required if OBX-2 is "NM" or "SN" (SN appears to be missing from definition).
 				if(vaccineObs.ValType==VaccineObsType.Numeric) {
 					Ucum ucum=Ucums.GetByCode(vaccineObs.UcumCode);
-					WriteCE(6,ucum.UcumCode,ucum.Description,"UCUM");
+					WriteCE(6,ucum.Code,ucum.Description,"UCUM");
 				}
 				//OBX-7 References Range.  Optional.
 				//OBX-8 Abnormal Flags.  Optional.
@@ -700,7 +700,7 @@ namespace OpenDentBusiness.HL7 {
 			if(vaccine.AdministeredAmt>0 && vaccine.DrugUnitNum!=0) {
 				DrugUnit drugUnit=DrugUnits.GetOne(vaccine.DrugUnitNum);
 				Ucum ucum=Ucums.GetByCode(drugUnit.UnitIdentifier);
-				WriteCE(7,ucum.UcumCode,ucum.Description,"UCUM");//UCUM is not in table HL70396, but it there was a note stating that it was required in the guide and UCUM was required in the test cases.
+				WriteCE(7,ucum.Code,ucum.Description,"UCUM");//UCUM is not in table HL70396, but it there was a note stating that it was required in the guide and UCUM was required in the test cases.
 			}
 			//RXA-8 Administered Dosage Form.  Optional.
 			//RXA-9 Administration Notes.  Required if RXA-20 is "CP" or "PA".  Value set NIP 0001.  Type CE.

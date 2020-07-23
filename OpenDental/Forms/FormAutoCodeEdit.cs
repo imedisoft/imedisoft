@@ -220,17 +220,17 @@ namespace OpenDental{
       int count=0;
 			AutoCodeItems.RefreshCache();
 			AutoCodeConds.RefreshCache();
-			_listAutoCodeConds=AutoCodeConds.GetDeepCopy();
-			listForCode=AutoCodeItems.GetListForCode(AutoCodeCur.AutoCodeNum);
+			_listAutoCodeConds=AutoCodeConds.GetAll();
+			listForCode=AutoCodeItems.GetListForCode(AutoCodeCur.Id);
 			tbAutoItem.ResetRows(listForCode.Count);
 			tbAutoItem.SetGridColor(Color.Gray);
 			tbAutoItem.SetBackGColor(Color.White);
 			for(int i=0;i<listForCode.Count;i++) {
-        tbAutoItem.Cell[0,i]=ProcedureCodes.GetProcCode(listForCode[i].CodeNum).ProcCode;
-				tbAutoItem.Cell[1,i]=ProcedureCodes.GetProcCode(listForCode[i].CodeNum).Descript;
+        tbAutoItem.Cell[0,i]=ProcedureCodes.GetProcCode(listForCode[i].ProcedureCodeId).ProcCode;
+				tbAutoItem.Cell[1,i]=ProcedureCodes.GetProcCode(listForCode[i].ProcedureCodeId).Descript;
         count=0;
         for(int j=0;j<_listAutoCodeConds.Count;j++){
-          if(_listAutoCodeConds[j].AutoCodeItemNum==listForCode[i].AutoCodeItemNum){
+          if(_listAutoCodeConds[j].AutoCodeItemId==listForCode[i].Id){
 						if(count!=0){
 							tbAutoItem.Cell[2,i]+=", ";
 						}
@@ -254,7 +254,7 @@ namespace OpenDental{
 		  FormAutoItemEdit FormAIE=new FormAutoItemEdit();
       FormAIE.IsNew=true;
 			FormAIE.AutoCodeItemCur=new AutoCodeItem();
-			FormAIE.AutoCodeItemCur.AutoCodeNum=AutoCodeCur.AutoCodeNum;
+			FormAIE.AutoCodeItemCur.AutoCodeId=AutoCodeCur.Id;
       FormAIE.ShowDialog();
       FillTable();
 		}
@@ -265,7 +265,6 @@ namespace OpenDental{
         return;
 			}
 			AutoCodeItem AutoCodeItemCur=listForCode[tbAutoItem.SelectedRow];
-      AutoCodeConds.DeleteForItemNum(AutoCodeItemCur.AutoCodeItemNum);
       AutoCodeItems.Delete(AutoCodeItemCur);
 			FillTable();
 		}  
@@ -315,7 +314,7 @@ namespace OpenDental{
 			for(int i=0;i<listForCode.Count;i++) {//Attach the conditions to the items for better organization
 				listForCode[i].ListConditions=new List<AutoCodeCond>();
         for(int j=0;j<_listAutoCodeConds.Count;j++){//Fill conditions for this AutoCodeItem
-          if(_listAutoCodeConds[j].AutoCodeItemNum==listForCode[i].AutoCodeItemNum){
+          if(_listAutoCodeConds[j].AutoCodeItemId==listForCode[i].Id){
 						listForCode[i].ListConditions.Add(_listAutoCodeConds[j]);
           }
         }

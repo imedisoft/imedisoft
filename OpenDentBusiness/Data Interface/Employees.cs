@@ -297,7 +297,7 @@ namespace OpenDentBusiness{
 						listEmpsUnassigned.Add(empCur);
 						listEmpsWithClinic.Add(empCur);
 					}
-					else if(dictUserClinics[userCur.Id].Any(x => x.ClinicNum==clinicNum)) {//user restricted to this clinic
+					else if(dictUserClinics[userCur.Id].Any(x => x.ClinicId==clinicNum)) {//user restricted to this clinic
 						listEmpsWithClinic.Add(empCur);
 					}
 				}

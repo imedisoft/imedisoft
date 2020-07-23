@@ -525,7 +525,7 @@ namespace OpenDentBusiness{
 			if(tempFileName==null) {
 				return;
 			}
-			Dictionary<string,Ucum> dictUcums=Ucums.GetAll().ToDictionary(x => x.UcumCode,x => x);
+			Dictionary<string,Ucum> dictUcums=Ucums.GetAll().ToDictionary(x => x.Code,x => x);
 			string[] lines=File.ReadAllLines(tempFileName);
 			string[] arrayUcum;
 			Ucum ucum=new Ucum();
@@ -546,7 +546,7 @@ namespace OpenDentBusiness{
 					}
 					continue;
 				}
-				ucum.UcumCode			=arrayUcum[0];
+				ucum.Code			=arrayUcum[0];
 				ucum.Description	=arrayUcum[1];
 				ucum.IsInUse			=false;
 				Ucums.Insert(ucum);

@@ -69,9 +69,9 @@ namespace CentralManager
 			foreach (UserGroup userGroup in listUserGroups)
 			{//for each CEMT user group
 			 //get all usergroupattaches, userods, and grouppermissions.
-				List<UserGroupAttach> listUserGroupAttaches = UserGroupAttaches.GetForUserGroup(userGroup.UserGroupNum);
-				List<Userod> listUserOds = Userods.GetForGroup(userGroup.UserGroupNum);
-				List<GroupPermission> listGroupPermissions = GroupPermissions.GetPerms(userGroup.UserGroupNum);
+				List<UserGroupAttach> listUserGroupAttaches = UserGroupAttaches.GetForUserGroup(userGroup.Id);
+				List<Userod> listUserOds = Userods.GetForGroup(userGroup.Id);
+				List<GroupPermission> listGroupPermissions = GroupPermissions.GetPerms(userGroup.Id);
 				//then create a new CentralUserData and add it to the list.
 				listCentralUserData.Add(new CentralUserData(userGroup, listUserOds, listGroupPermissions, listUserGroupAttaches));
 			}
@@ -213,13 +213,13 @@ namespace CentralManager
 				List<GroupPermission> listGroupPerms = new List<GroupPermission>();
 				for (int j = 0; j < listRemoteCEMTUserGroups.Count; j++)
 				{
-					if (listCentralUserData[i].UserGroup.UserGroupNumCEMT == listRemoteCEMTUserGroups[j].UserGroupNumCEMT)
+					if (listCentralUserData[i].UserGroup.CentralUserGroupId == listRemoteCEMTUserGroups[j].CentralUserGroupId)
 					{
 						for (int k = 0; k < listCentralUserData[i].ListGroupPermissions.Count; k++)
 						{
-							listCentralUserData[i].ListGroupPermissions[k].UserGroupNum = listRemoteCEMTUserGroups[j].UserGroupNum;//fixing primary keys to be what's in remote db
+							listCentralUserData[i].ListGroupPermissions[k].UserGroupNum = listRemoteCEMTUserGroups[j].Id;//fixing primary keys to be what's in remote db
 						}
-						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].UserGroupNum);
+						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].Id);
 					}
 				}
 				CentralUserods.Sync(listCentralUserData[i].ListUsers, ref listRemoteUsers);
@@ -330,13 +330,13 @@ namespace CentralManager
 				List<GroupPermission> listGroupPerms = new List<GroupPermission>();
 				for (int j = 0; j < listRemoteCEMTUserGroups.Count; j++)
 				{
-					if (listCentralUserData[i].UserGroup.UserGroupNumCEMT == listRemoteCEMTUserGroups[j].UserGroupNumCEMT)
+					if (listCentralUserData[i].UserGroup.CentralUserGroupId == listRemoteCEMTUserGroups[j].CentralUserGroupId)
 					{
 						for (int k = 0; k < listCentralUserData[i].ListGroupPermissions.Count; k++)
 						{
-							listCentralUserData[i].ListGroupPermissions[k].UserGroupNum = listRemoteCEMTUserGroups[j].UserGroupNum;//fixing primary keys to be what's in remote db
+							listCentralUserData[i].ListGroupPermissions[k].UserGroupNum = listRemoteCEMTUserGroups[j].Id;//fixing primary keys to be what's in remote db
 						}
-						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].UserGroupNum);
+						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].Id);
 					}
 				}
 				CentralUserods.Sync(listCentralUserData[i].ListUsers, ref listRemoteUsers);

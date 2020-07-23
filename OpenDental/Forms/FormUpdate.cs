@@ -34,7 +34,7 @@ namespace OpenDental {
 			labelVersion.Text=Lan.G(this,"Using Version:")+" "+Application.ProductVersion;
 			UpdateHistory updateHistory=UpdateHistories.GetForVersion(Application.ProductVersion);
 			if(updateHistory!=null) {
-				labelVersion.Text+="  "+Lan.G(this,"Since")+": "+updateHistory.DateTimeUpdated.ToShortDateString();
+				labelVersion.Text+="  "+Lan.G(this,"Since")+": "+updateHistory.InstalledOn.ToShortDateString();
 			}
 			if(PrefC.GetBool(PrefName.UpdateWindowShowsClassicView)) {
 				//Default location is (74,9).  We move it 5 pixels up since butShowPrev is 5 pixels bigger then labelVersion

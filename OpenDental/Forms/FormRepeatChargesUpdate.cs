@@ -180,11 +180,6 @@ namespace OpenDental{
 			if(!CheckBeginDateTime()) {
 				return;
 			}
-			//If the AvaTax API is not available at HQ show popup and return.
-			if(AvaTax.IsEnabled() && !AvaTax.PingAvaTax()) {
-				MessageBox.Show("Unable to connect to AvaTax API.");
-				return;
-			}
 			Cursor=Cursors.WaitCursor;
 			RepeatChargeResult result=RepeatCharges.RunRepeatingCharges(MiscData.GetNowDateTime(),checkRunAging.Checked);
 			string metrics=result.ProceduresAddedCount+" "+Lan.G(this,"procedures added.")+"\r\n"+result.ClaimsAddedCount+" "

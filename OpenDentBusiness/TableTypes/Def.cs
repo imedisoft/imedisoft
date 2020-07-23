@@ -1,27 +1,30 @@
+using Imedisoft.Data.Annotations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Xml.Serialization;
-using System.ComponentModel;
 
-namespace OpenDentBusiness {
-	///<summary>The info in the definition table is used by other tables extensively.  Almost every table in the database links to definition.  
-	///Almost all links to this table will be to a DefNum.  Using the DefNum, you can find any of the other fields of interest, usually the ItemName.  
-	///Make sure to look at the Defs class to see how the definitions are used.  Loaded into memory ahead of time for speed.  Some types of info such as 
-	///operatories started out life in this table, but then got moved to their own table when more complexity was needed.</summary>
-	[Serializable]
-	[CrudTable(TableName="definition")]
-	public class Def:TableBase {
+namespace OpenDentBusiness
+{
+    ///<summary>The info in the definition table is used by other tables extensively.  Almost every table in the database links to definition.  
+    ///Almost all links to this table will be to a DefNum.  Using the DefNum, you can find any of the other fields of interest, usually the ItemName.  
+    ///Make sure to look at the Defs class to see how the definitions are used.  Loaded into memory ahead of time for speed.  Some types of info such as 
+    ///operatories started out life in this table, but then got moved to their own table when more complexity was needed.</summary>
+    [Serializable]
+	[Table("definition")]
+	public class Def : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long DefNum;
 		///<summary>Enum:DefCat</summary>
 		public DefCat Category;
 		///<summary>Order that each item shows on various lists. 0-indexed.</summary>
 		public int ItemOrder;
 		///<summary>Each category is a little different.  This field is usually the common name of the item.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.CleanText)]
+		[CrudColumn(SpecialType = CrudSpecialColType.CleanText)]
 		public string ItemName;
 		///<summary>This field can be used to store extra info about the item.</summary>
 		public string ItemValue;
@@ -32,18 +35,22 @@ namespace OpenDentBusiness {
 		public bool IsHidden;
 
 		///<summary>Used only for serialization purposes</summary>
-		[XmlElement("ItemColor",typeof(int))]
-		public int ItemColorXml {
-			get {
+		[XmlElement("ItemColor", typeof(int))]
+		public int ItemColorXml
+		{
+			get
+			{
 				return ItemColor.ToArgb();
 			}
-			set {
+			set
+			{
 				ItemColor = Color.FromArgb(value);
 			}
 		}
 
 		///<summary>Returns a copy of the def.</summary>
-		public Def Copy() {
+		public Def Copy()
+		{
 			return (Def)MemberwiseClone();
 		}
 
@@ -67,7 +74,8 @@ namespace OpenDentBusiness {
 	///<summary>Definition Category. Go to the definition setup window in the program to see how each of these categories is used.
 	/// If you add a category, make sure to add it to the switch statement of FormDefinitions so the user can edit it.
 	/// Add a "NotUsed" description attribute to defs that shouldn't show up in FormDefinitions.</summary>
-	public enum DefCat {
+	public enum DefCat
+	{
 		///<summary>0- Colors to display in Account module.</summary>
 		[Description("Account Colors")]
 		AccountColors,
@@ -225,13 +233,15 @@ namespace OpenDentBusiness {
 		TimeCardAdjTypes,
 	}
 
-	public enum DefCatMiscColors {
+	public enum DefCatMiscColors
+	{
 		//0-8 can be added as needed.
 		///<summary>9 - This color is used for the fields in the family module for the in case of emergency contacts.</summary>
-		FamilyModuleICE=9,
+		FamilyModuleICE = 9,
 	}
 
-	public class DefCatOptions {
+	public class DefCatOptions
+	{
 		public DefCat DefCat;
 		public bool CanEditName;
 		public bool EnableValue;
@@ -248,22 +258,17 @@ namespace OpenDentBusiness {
 		///<summary>Indicates that the Color for these definitions can be left empty when editing.</summary>
 		public bool DoShowNoColor;
 
-		public DefCatOptions(DefCat defCat,bool canDelete=false,bool canEditName=true,bool canHide=true,bool enableColor=false,bool enableValue=false,
-			bool isValidDefNum=false,bool showNoColor=false) 
+		public DefCatOptions(DefCat defCat, bool canDelete = false, bool canEditName = true, bool canHide = true, bool enableColor = false, bool enableValue = false,
+			bool isValidDefNum = false, bool showNoColor = false)
 		{
-			DefCat=defCat;
-			CanDelete=canDelete;
-			CanEditName=canEditName;
-			CanHide=canHide;
-			EnableColor=enableColor;
-			EnableValue=enableValue;
-			IsValueDefNum=isValidDefNum;
-			DoShowNoColor=showNoColor;
+			DefCat = defCat;
+			CanDelete = canDelete;
+			CanEditName = canEditName;
+			CanHide = canHide;
+			EnableColor = enableColor;
+			EnableValue = enableValue;
+			IsValueDefNum = isValidDefNum;
+			DoShowNoColor = showNoColor;
 		}
 	}
-
-
-
-
-
 }

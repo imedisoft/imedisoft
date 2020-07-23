@@ -497,7 +497,7 @@ namespace OpenDentBusiness{
 				listInterventions.Add(cdsi);
 			}
 			//Fill object lists to be checked---------------------------------------------------------------------------------------------------------------
-			List<Allergy> listAllergies=Allergies.GetAll(patCur.PatNum,false);
+			List<Allergy> listAllergies=Allergies.GetByPatient(patCur.PatNum,false);
 			List<Disease> listDiseases=Diseases.Refresh(patCur.PatNum,true);
 			List<DiseaseDef> listDiseaseDefs=new List<DiseaseDef>();
 			List<EhrLab> listEhrLabs=EhrLabs.GetAllForPat(patCur.PatNum);
@@ -505,7 +505,7 @@ namespace OpenDentBusiness{
 			List<MedicationPat> listMedicationPats=MedicationPats.Refresh(patCur.PatNum,false);
 			List<AllergyDef> listAllergyDefs=new List<AllergyDef>();
 			for(int i=0;i<listAllergies.Count;i++){
-				listAllergyDefs.Add(AllergyDefs.GetOne(listAllergies[i].AllergyDefNum));
+				listAllergyDefs.Add(AllergyDefs.GetOne(listAllergies[i].AllergyDefId));
 			}
 			for(int i=0;i<listDiseases.Count;i++){
 				listDiseaseDefs.Add(DiseaseDefs.GetItem(listDiseases[i].DiseaseDefNum));
@@ -601,8 +601,8 @@ namespace OpenDentBusiness{
 			}
 			//Allergy
 			for(int a=0;a<listAllergies.Count;a++) {
-				if(ehrTrig.AllergyDefNumList.Contains(" "+listAllergies[a].AllergyDefNum+" ")) {
-					AllergyDef allergyDefCur=AllergyDefs.GetOne(listAllergies[a].AllergyDefNum);
+				if(ehrTrig.AllergyDefNumList.Contains(" "+listAllergies[a].AllergyDefId+" ")) {
+					AllergyDef allergyDefCur=AllergyDefs.GetOne(listAllergies[a].AllergyDefId);
 					if(allergyDefCur!=null) {
 						listObjectMatches.Add(allergyDefCur);
 						triggerMessage+="  -(Allergy) "+allergyDefCur.Description+"\r\n";

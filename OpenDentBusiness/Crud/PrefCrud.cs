@@ -44,9 +44,9 @@ namespace OpenDentBusiness.Crud{
 			Pref pref;
 			foreach(DataRow row in table.Rows) {
 				pref=new Pref();
-				pref.PrefNum    = PIn.Long  (row["PrefNum"].ToString());
-				pref.PrefName   = PIn.String(row["PrefName"].ToString());
-				pref.ValueString= PIn.String(row["ValueString"].ToString());
+				pref.Id    = PIn.Long  (row["PrefNum"].ToString());
+				pref.Name   = PIn.String(row["PrefName"].ToString());
+				pref.Value= PIn.String(row["ValueString"].ToString());
 				pref.Comments   = PIn.String(row["Comments"].ToString());
 				retVal.Add(pref);
 			}
@@ -65,9 +65,9 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("Comments");
 			foreach(Pref pref in listPrefs) {
 				table.Rows.Add(new object[] {
-					POut.Long  (pref.PrefNum),
-					            pref.PrefName,
-					            pref.ValueString,
+					POut.Long  (pref.Id),
+					            pref.Name,
+					            pref.Value,
 					            pref.Comments,
 				});
 			}
@@ -82,7 +82,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one Pref into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Pref pref,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				pref.PrefNum=ReplicationServers.GetKey("preference","PrefNum");
+				pref.Id=ReplicationServers.GetKey("preference","PrefNum");
 			}
 			string command="INSERT INTO preference (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -90,16 +90,16 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="PrefName,ValueString,Comments) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(pref.PrefNum)+",";
+				command+=POut.Long(pref.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(pref.PrefName)+"',"
+				 "'"+POut.String(pref.Name)+"',"
 				+    DbHelper.ParamChar+"paramValueString,"
 				+    DbHelper.ParamChar+"paramComments)";
-			if(pref.ValueString==null) {
-				pref.ValueString="";
+			if(pref.Value==null) {
+				pref.Value="";
 			}
-			var paramValueString = new MySqlParameter("paramValueString", POut.StringParam(pref.ValueString));
+			var paramValueString = new MySqlParameter("paramValueString", POut.StringParam(pref.Value));
 			if(pref.Comments==null) {
 				pref.Comments="";
 			}
@@ -108,9 +108,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramValueString,paramComments);
 			}
 			else {
-				pref.PrefNum=Database.ExecuteInsert(command,paramValueString,paramComments);
+				pref.Id=Database.ExecuteInsert(command,paramValueString,paramComments);
 			}
-			return pref.PrefNum;
+			return pref.Id;
 		}
 
 		///<summary>Inserts one Pref into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -123,23 +123,23 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO preference (";
 			if(!useExistingPK) {
-				pref.PrefNum=ReplicationServers.GetKeyNoCache("preference","PrefNum");
+				pref.Id=ReplicationServers.GetKeyNoCache("preference","PrefNum");
 			}
 			if(useExistingPK) {
 				command+="PrefNum,";
 			}
 			command+="PrefName,ValueString,Comments) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(pref.PrefNum)+",";
+				command+=POut.Long(pref.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(pref.PrefName)+"',"
+				 "'"+POut.String(pref.Name)+"',"
 				+    DbHelper.ParamChar+"paramValueString,"
 				+    DbHelper.ParamChar+"paramComments)";
-			if(pref.ValueString==null) {
-				pref.ValueString="";
+			if(pref.Value==null) {
+				pref.Value="";
 			}
-			var paramValueString = new MySqlParameter("paramValueString", POut.StringParam(pref.ValueString));
+			var paramValueString = new MySqlParameter("paramValueString", POut.StringParam(pref.Value));
 			if(pref.Comments==null) {
 				pref.Comments="";
 			}
@@ -148,22 +148,22 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramValueString,paramComments);
 			}
 			else {
-				pref.PrefNum=Database.ExecuteInsert(command,paramValueString,paramComments);
+				pref.Id=Database.ExecuteInsert(command,paramValueString,paramComments);
 			}
-			return pref.PrefNum;
+			return pref.Id;
 		}
 
 		///<summary>Updates one Pref in the database.</summary>
 		public static void Update(Pref pref) {
 			string command="UPDATE preference SET "
-				+"PrefName   = '"+POut.String(pref.PrefName)+"', "
+				+"PrefName   = '"+POut.String(pref.Name)+"', "
 				+"ValueString=  "+DbHelper.ParamChar+"paramValueString, "
 				+"Comments   =  "+DbHelper.ParamChar+"paramComments "
-				+"WHERE PrefNum = "+POut.Long(pref.PrefNum);
-			if(pref.ValueString==null) {
-				pref.ValueString="";
+				+"WHERE PrefNum = "+POut.Long(pref.Id);
+			if(pref.Value==null) {
+				pref.Value="";
 			}
-			var paramValueString = new MySqlParameter("paramValueString", POut.StringParam(pref.ValueString));
+			var paramValueString = new MySqlParameter("paramValueString", POut.StringParam(pref.Value));
 			if(pref.Comments==null) {
 				pref.Comments="";
 			}
@@ -174,11 +174,11 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one Pref in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(Pref pref,Pref oldPref) {
 			string command="";
-			if(pref.PrefName != oldPref.PrefName) {
+			if(pref.Name != oldPref.Name) {
 				if(command!="") { command+=",";}
-				command+="PrefName = '"+POut.String(pref.PrefName)+"'";
+				command+="PrefName = '"+POut.String(pref.Name)+"'";
 			}
-			if(pref.ValueString != oldPref.ValueString) {
+			if(pref.Value != oldPref.Value) {
 				if(command!="") { command+=",";}
 				command+="ValueString = "+DbHelper.ParamChar+"paramValueString";
 			}
@@ -189,16 +189,16 @@ namespace OpenDentBusiness.Crud{
 			if(command=="") {
 				return false;
 			}
-			if(pref.ValueString==null) {
-				pref.ValueString="";
+			if(pref.Value==null) {
+				pref.Value="";
 			}
-			var paramValueString = new MySqlParameter("paramValueString", POut.StringParam(pref.ValueString));
+			var paramValueString = new MySqlParameter("paramValueString", POut.StringParam(pref.Value));
 			if(pref.Comments==null) {
 				pref.Comments="";
 			}
 			var paramComments = new MySqlParameter("paramComments", POut.StringParam(pref.Comments));
 			command="UPDATE preference SET "+command
-				+" WHERE PrefNum = "+POut.Long(pref.PrefNum);
+				+" WHERE PrefNum = "+POut.Long(pref.Id);
 			Database.ExecuteNonQuery(command,paramValueString,paramComments);
 			return true;
 		}
@@ -206,10 +206,10 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(Pref,Pref) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(Pref pref,Pref oldPref) {
-			if(pref.PrefName != oldPref.PrefName) {
+			if(pref.Name != oldPref.Name) {
 				return true;
 			}
-			if(pref.ValueString != oldPref.ValueString) {
+			if(pref.Value != oldPref.Value) {
 				return true;
 			}
 			if(pref.Comments != oldPref.Comments) {

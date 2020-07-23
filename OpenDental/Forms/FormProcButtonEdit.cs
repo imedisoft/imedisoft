@@ -363,7 +363,7 @@ namespace OpenDental{
 			for(int i=0;i<_listShortDeep.Count;i++) {
 				listAutoCodes.Items.Add(_listShortDeep[i].Description);
 				for(int j=0;j<auto.Length;j++){
-					if(auto[j]==_listShortDeep[i].AutoCodeNum) {
+					if(auto[j]==_listShortDeep[i].Id) {
 						listAutoCodes.SetSelected(i,true);
 						break;
 					}
@@ -433,7 +433,7 @@ namespace OpenDental{
       }
 		foreach(int index in listAutoCodes.SelectedIndices){
 				AutoCode autoCode=_listShortDeep[index];
-				if(AutoCodeItems.GetListForCode(autoCode.AutoCodeNum).Count==0) {
+				if(AutoCodeItems.GetListForCode(autoCode.Id).Count==0) {
 					//This AutoCode was saved with no AutoCodeItems attached, which is invalid.
 					MessageBox.Show(this,Lan.G(this,"The following AutoCode has no associated Procedure Codes: ")+"\r\n"+autoCode.Description+"\r\n"
 						+Lan.G(this,"AutoCode must be setup correctly before it can be used with a Quick Proc Button."));
@@ -469,7 +469,7 @@ namespace OpenDental{
       for(int i=0;i<listAutoCodes.SelectedIndices.Count;i++){
         item=new ProcButtonItem();
         item.ProcButtonNum=ProcButtonCur.ProcButtonNum;
-        item.AutoCodeNum=_listShortDeep[listAutoCodes.SelectedIndices[i]].AutoCodeNum;
+        item.AutoCodeNum=_listShortDeep[listAutoCodes.SelectedIndices[i]].Id;
 				item.ItemOrder=i+1;//not i++, that would mess up the itteration.
 				ProcButtonItems.Insert(item);
       }

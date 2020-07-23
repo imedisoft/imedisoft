@@ -28,6 +28,20 @@ namespace Imedisoft.Data
 			!string.IsNullOrEmpty(DataConnection.ServerName);
 
 		/// <summary>
+		///		<para>
+		///			Converts the value of the first column into the given type.
+		///		</para>
+		///		<para>
+		///			Created primarily for usage with <see cref="SelectOne{T}(string, DataRecordBuilder{T}, MySqlParameter[])"/>
+		///			and <see cref="SelectMany{T}(string, DataRecordBuilder{T}, MySqlParameter[])"/>.
+		///		</para>
+		/// </summary>
+		/// <typeparam name="T">The type to convert to.</typeparam>
+		/// <returns>The converted value.</returns>
+		public static T ToScalar<T>(MySqlDataReader dataReader)
+			=> (T)Convert.ChangeType(dataReader[0], typeof(T));
+
+		/// <summary>
 		/// Checks whether the specified command is allowed and if the user has the correct
 		/// permission(s) to run the command.
 		/// </summary>

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.IO;
 using OpenDental.UI;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormUcums:ODForm {
@@ -44,10 +45,10 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
-			_listUcum=Ucums.GetBySearchText(textCode.Text);
+			_listUcum=Ucums.GetBySearchText(textCode.Text).ToList();
 			for(int i=0;i<_listUcum.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(_listUcum[i].UcumCode);
+				row.Cells.Add(_listUcum[i].Code);
 				row.Cells.Add(_listUcum[i].Description);
 				row.Tag=_listUcum[i];
 				gridMain.ListGridRows.Add(row);

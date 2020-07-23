@@ -29,7 +29,7 @@ namespace OpenDental {
 				butDelete.Enabled=false;
 				butOK.Enabled=false;
 			}
-			listOldAlertCategoryLinks=AlertCategoryLinks.GetForCategory(_categoryCur.AlertCategoryNum);
+			listOldAlertCategoryLinks=AlertCategoryLinks.GetForCategory(_categoryCur.Id);
 			InitAlertTypeSelections();
 		}
 
@@ -59,7 +59,7 @@ namespace OpenDental {
 			listNewAlertCategoryType.RemoveAll(x => !listSelectedTypes.Contains(x.AlertType));//Remove unselected AlertTypes
 			foreach(AlertType type in listSelectedTypes) {
 				if(!listOldAlertCategoryLinks.Exists(x => x.AlertType==type)) {//Add newly selected AlertTypes.
-					listNewAlertCategoryType.Add(new AlertCategoryLink(_categoryCur.AlertCategoryNum,type));
+					listNewAlertCategoryType.Add(new AlertCategoryLink(_categoryCur.Id,type));
 				}
 			}
 			AlertCategoryLinks.Sync(listNewAlertCategoryType,listOldAlertCategoryLinks);
@@ -76,8 +76,8 @@ namespace OpenDental {
 			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you would like to delete this?")) {
 				return;
 			}
-			AlertCategoryLinks.DeleteForCategory(_categoryCur.AlertCategoryNum);
-			AlertCategories.Delete(_categoryCur.AlertCategoryNum);
+			AlertCategoryLinks.DeleteForCategory(_categoryCur.Id);
+			AlertCategories.Delete(_categoryCur.Id);
 			DataValid.SetInvalid(InvalidType.AlertCategories,InvalidType.AlertCategories);
 			DialogResult=DialogResult.OK;
 		}

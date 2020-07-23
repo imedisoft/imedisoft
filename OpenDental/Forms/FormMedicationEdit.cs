@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using System.Linq;
 
 namespace OpenDental{
 	/// <summary>
@@ -372,7 +373,7 @@ namespace OpenDental{
 			}
 			AllergyDef alD=AllergyDefs.GetAllergyDefFromMedication(MedicationCur.MedicationNum);
 			if(alD!=null) {
-				_patNameAllergies=Allergies.GetPatNamesForAllergy(alD.AllergyDefNum);
+				_patNameAllergies=Allergies.GetPatNamesForAllergy(alD.AllergyDefNum).ToArray();
 				comboPatientAllergy.Items.Clear();
 				comboPatientAllergy.Items.AddRange(_patNameAllergies);
 				if(_patNameAllergies.Length>0) {

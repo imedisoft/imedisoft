@@ -268,7 +268,7 @@ namespace OpenDental{
 			labelVersion.Text=Lan.G(this,"Version:")+" "+Application.ProductVersion;
 			UpdateHistory updateHistory=UpdateHistories.GetForVersion(Application.ProductVersion);
 			if(updateHistory!=null) {
-				labelVersion.Text+="  "+Lan.G(this,"Since:")+" "+updateHistory.DateTimeUpdated.ToShortDateString();
+				labelVersion.Text+="  "+Lan.G(this,"Since:")+" "+updateHistory.InstalledOn.ToShortDateString();
 			}
 			//keeps the trailing year up to date
 			labelCopyright.Text=softwareName+" "+Lan.G(this,"Copyright 2003-")+DateTime.Now.ToString("yyyy")+", Jordan Sparks, D.M.D.";

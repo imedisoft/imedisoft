@@ -247,7 +247,7 @@ namespace OpenDentBusiness.HL7 {
 					}
 					else {
 						Ucum ucum=Ucums.GetByCode(obs.UcumCode);
-						WriteCE(6,ucum.UcumCode,ucum.Description,"UCUM");
+						WriteCE(6,ucum.Code,ucum.Description,"UCUM");
 					}
 				}
 				//OBX-7 References Range.  No longer used.

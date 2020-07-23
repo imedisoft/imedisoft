@@ -688,7 +688,7 @@ namespace OpenDental{
 			if(FormA.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			depAL.Add(FormA.SelectedAccount.AccountNum);
+			depAL.Add(FormA.SelectedAccount.Id);
 			FillDepList();
 		}
 
@@ -707,7 +707,7 @@ namespace OpenDental{
 			if(FormA.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			PickedDepAccountNum=FormA.SelectedAccount.AccountNum;
+			PickedDepAccountNum=FormA.SelectedAccount.Id;
 			textAccountInc.Text=Accounts.GetDescript(PickedDepAccountNum);
 		}
 
@@ -958,7 +958,7 @@ namespace OpenDental{
 			if(FormA.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			PickedPayAccountNum=FormA.SelectedAccount.AccountNum;
+			PickedPayAccountNum=FormA.SelectedAccount.Id;
 			textAccountCashInc.Text=Accounts.GetDescript(PickedPayAccountNum);
 		}
 

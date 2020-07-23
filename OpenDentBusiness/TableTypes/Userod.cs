@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using Imedisoft.Data.Annotations;
@@ -104,7 +105,10 @@ namespace OpenDentBusiness
             set => Password = value.ToString();
         }
 
-        ///<summary>The password hash, not the actual password.  If no password has been entered, then this will be blank.</summary>
+        /// <summary>
+        /// The password hash, not the actual password. 
+        /// If no password has been entered, then this will be blank.
+        /// </summary>
         public string PasswordHash => LoginDetails.Hash;
 
         ///<summary>All valid users should NOT set this value to anything other than None otherwise permission checking will act unexpectedly.
@@ -113,44 +117,32 @@ namespace OpenDentBusiness
         [XmlIgnore]
         public EServiceTypes EServiceType { get; set; }
 
-        public Userod Copy()
-        {
-            return (Userod) this.MemberwiseClone();
-        }
+        public Userod Copy() 
+            => (Userod)MemberwiseClone();
 
-        public override string ToString()
-        {
-            return UserName;
-        }
+        public override string ToString() 
+            => UserName;
 
-        public bool IsInUserGroup(long userGroupNum)
-        {
-            return Userods.IsInUserGroup(Id, userGroupNum);
-        }
+        public bool IsInUserGroup(long userGroupNum) 
+            => Userods.IsInUserGroup(Id, userGroupNum);
 
-        ///<summary>Gets all of the usergroups attached to this user.</summary>
-        public List<UserGroup> GetGroups(bool includeCEMT = false)
-        {
-            return UserGroups.GetForUser(Id, includeCEMT);
-        }
+        /// <summary>
+        /// Gets all of the usergroups attached to this user.
+        /// </summary>
+        public List<UserGroup> GetGroups(bool includeCEMT = false) => UserGroups.GetForUser(Id, includeCEMT).ToList();
     }
 
-    ///<summary></summary>
     public enum EServiceTypes
     {
-        ///<summmary>Not an eService user.  All valid users should be this type otherwise permission checking will act differently.</summmary>
+        /// <summmary>
+        /// Not an eService user. 
+        /// All valid users should be this type otherwise permission checking will act differently.
+        /// </summmary>
         None,
 
-        ///<summary></summary>
         EConnector,
-
-        ///<summary></summary>
         Broadcaster,
-
-        ///<summary></summary>
         BroadcastMonitor,
-
-        ///<summary></summary>
         ServiceMainHQ,
     }
 }

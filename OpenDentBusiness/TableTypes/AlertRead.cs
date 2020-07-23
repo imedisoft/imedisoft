@@ -1,30 +1,29 @@
-﻿using System;
+﻿using Imedisoft.Data.Annotations;
+using System;
 
-namespace OpenDentBusiness {
-	///<summary></summary>
-	[Serializable()]
-	[CrudTable(IsSynchable=true)]
-	public class AlertRead:TableBase{
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
-		public long AlertReadNum;
-		///<summary>FK to alertitem.AlertItemNum.</summary>
-		public long AlertItemNum;
-		///<summary>FK to userod.UserNum.</summary>
-		public long UserNum;
+namespace OpenDentBusiness
+{
+    [Table]
+	[CrudTable(IsSynchable = true)]
+	public class AlertRead : TableBase
+	{
+		[PrimaryKey]
+		public long Id;
 
-		public AlertRead() {
-			
+		[Column("AlertItemNum"), ForeignKey(typeof(AlertItem), nameof(AlertItem.AlertItemNum))]
+		public long AlertItemId;
+
+		[Column("UserNum"), ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		public long UserId;
+
+		public AlertRead()
+		{
 		}
 
-		public AlertRead(long alertItemNum,long userNum) {
-			this.AlertItemNum=alertItemNum;
-			this.UserNum=userNum;
-		}
-
-		///<summary></summary>
-		public AlertRead Copy() {
-			return (AlertRead)this.MemberwiseClone();
+		public AlertRead(long alertItemId, long userId)
+		{
+			AlertItemId = alertItemId;
+			UserId = userId;
 		}
 	}
 }

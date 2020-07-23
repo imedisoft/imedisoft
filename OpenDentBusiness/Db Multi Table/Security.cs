@@ -185,7 +185,7 @@ namespace OpenDentBusiness{
 				return true;
 			}
 			//Include CEMT users, as a CEMT user could be logged in when this is checked.
-			DateTime dateLimit =GetDateLimit(perm,curUser.GetGroups(true).Select(x => x.UserGroupNum).ToList()); 
+			DateTime dateLimit =GetDateLimit(perm,curUser.GetGroups(true).Select(x => x.Id).ToList()); 
 			if(date>dateLimit){//authorized
 				return true;
 			}

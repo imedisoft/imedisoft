@@ -224,13 +224,13 @@ namespace OpenDental{
 			textDescription.Text=_accountCur.Description;
 			for(int i=0;i<Enum.GetNames(typeof(AccountType)).Length;i++){
 				listAcctType.Items.Add(Lan.G("enumAccountType",Enum.GetNames(typeof(AccountType))[i]));
-				if((int)_accountCur.AcctType==i){
+				if((int)_accountCur.Type==i){
 					listAcctType.SelectedIndex=i;
 				}
 			}
 			textBankNumber.Text=_accountCur.BankNumber;
 			checkInactive.Checked=_accountCur.Inactive;
-			butColor.BackColor=_accountCur.AccountColor;
+			butColor.BackColor=_accountCur.Color;
 		}
 
 		private void butColor_Click(object sender,EventArgs e) {
@@ -267,10 +267,10 @@ namespace OpenDental{
 				return;
 			}
 			_accountCur.Description=textDescription.Text;
-			_accountCur.AcctType=(AccountType)listAcctType.SelectedIndex;
+			_accountCur.Type=(AccountType)listAcctType.SelectedIndex;
 			_accountCur.BankNumber=textBankNumber.Text;
 			_accountCur.Inactive=checkInactive.Checked;
-			_accountCur.AccountColor=butColor.BackColor;
+			_accountCur.Color=butColor.BackColor;
 			if(IsNew){
 				Accounts.Insert(_accountCur);
 			}

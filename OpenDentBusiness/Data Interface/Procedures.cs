@@ -1038,9 +1038,6 @@ namespace OpenDentBusiness {
 			else {//In case someone tried to programmatically set the DateComplete when they shouldn't have.
 				procedure.DateComplete=DateTime.MinValue;
 			}
-			if(procedure.ProcStatus==ProcStat.TP && AvaTax.DoSendProcToAvalara(procedure)) {
-				procedure.TaxAmt=(double)AvaTax.GetEstimate(procedure.CodeNum,procedure.PatNum,procedure.ProcFee);
-			}
 			Crud.ProcedureCrud.Insert(procedure);
 			//Do the sales tax adjustments first because we might be changing the proc note if an error occurs.
 			if(procedure.ProcStatus==ProcStat.C && !skipDiscountPlanAdjustment) {
@@ -1115,7 +1112,7 @@ namespace OpenDentBusiness {
 			return wasUpdated;
 		}
 
-		///<summary>Updates only the changed columns.  Called from 44 places.  Also creates adjustments for discounts and sales tax, and updates payment 
+		///<summary>Updates only the changed columns. Also creates adjustments for discounts and sales tax, and updates payment 
 		///plan charges.</summary>
 		public static bool Update(Procedure procedure,Procedure oldProcedure,bool isPaySplit=false,bool isSilent=false
 			,bool isProcLinkedToOrthoCase=false) 
@@ -1130,15 +1127,6 @@ namespace OpenDentBusiness {
 							procedure.AptNum=0;
 							break;//If there is another appointment in the loop, then it must be a planned appointment which we do not care about here.
 						}
-					}
-				}
-				if(AvaTax.DoSendProcToAvalara(procedure,isSilent)) {//checks isHQ
-					if(procedure.ProcFee!=oldProcedure.ProcFee || procedure.Discount!=oldProcedure.Discount) {
-						double procFee=procedure.ProcFee;
-						if(procedure.ProcStatus==ProcStat.TP) {
-							procFee-=procedure.Discount;
-						}
-						procedure.TaxAmt=(double)AvaTax.GetEstimate(procedure.CodeNum,procedure.PatNum,procFee);
 					}
 				}
 			}
@@ -1739,12 +1727,6 @@ namespace OpenDentBusiness {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to a patient payment."));
 			}
 			command="SELECT COUNT(*) FROM adjustment WHERE ProcNum="+POut.Long(procNum);
-			//While using AvaTax we want procedures with auto-generated sales tax adjustments to be deleted, so that Procedures.Delete can clean up
-			//the adjustment and send a call to Avalara, rather than having the user manually delete the adjustment and then the procedure, this is the best
-			//way to ensure that our Avalara transaction data is synced with what we have in our program.
-			if(AvaTax.IsEnabled()) {
-				command+=" AND AdjType<>"+POut.Long(AvaTax.SalesTaxAdjType);
-			}
 			if(Database.ExecuteString(command)!="0") {
 				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to an adjustment."));
 			}

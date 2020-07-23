@@ -378,8 +378,8 @@ namespace OpenDental{
 
 		private void Add_Click() {
 			Account acct=new Account();
-			acct.AcctType=AccountType.Asset;
-			acct.AccountColor=Color.White;
+			acct.Type=AccountType.Asset;
+			acct.Color=Color.White;
 			FormAccountEdit FormA=new FormAccountEdit(acct);
 			FormA.IsNew=true;
 			FormA.ShowDialog();

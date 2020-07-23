@@ -1041,10 +1041,10 @@ namespace OpenDentBusiness {
 					int numFixed=table.Rows.Count;
 					for(int i = 0;i<table.Rows.Count;i++) {
 						AutoCode autoCode=new AutoCode();
-						autoCode.AutoCodeNum=PIn.Long(table.Rows[i]["AutoCodeNum"].ToString());
+						autoCode.Id=PIn.Long(table.Rows[i]["AutoCodeNum"].ToString());
 						autoCode.Description="UNKNOWN";
-						Crud.AutoCodeCrud.Insert(autoCode);
-						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,autoCode.AutoCodeNum,DbmLogFKeyType.AutoCode,DbmLogActionType.Insert,methodName,
+						AutoCodes.Insert(autoCode);
+						listDbmLogs.Add(new DbmLog(Security.CurUser.Id,autoCode.Id,DbmLogFKeyType.AutoCode,DbmLogActionType.Insert,methodName,
 							"Added a new AutoCode from AutoCodeItemsWithNoAutoCode"));
 					}
 					if(numFixed>0) {
@@ -1074,13 +1074,13 @@ namespace OpenDentBusiness {
 					break;
 				case DbmMode.Fix:
 					command=@"SELECT * FROM autocode WHERE NOT EXISTS(SELECT * FROM autocodeitem WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
-					List<AutoCode> listAutoCodes=Crud.AutoCodeCrud.SelectMany(command).ToList();
+					List<AutoCode> listAutoCodes=AutoCodes.SelectMany(command).ToList();
 					List<DbmLog> listDbmLogs=new List<DbmLog>();
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command=@"DELETE FROM autocode WHERE NOT EXISTS(
 						SELECT * FROM autocodeitem WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
 					long numberFixed=Database.ExecuteNonQuery(command);
-					listAutoCodes.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.AutoCodeNum,DbmLogFKeyType.AutoCode,
+					listAutoCodes.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurUser.Id,x.Id,DbmLogFKeyType.AutoCode,
 						DbmLogActionType.Delete,methodName,"Deleted AutoCode:"+x.Description+" from AutoCodesDeleteWithNoItems")));
 					if(numberFixed>0) {
 						Signalods.SetInvalid(InvalidType.AutoCodes);
@@ -1112,12 +1112,12 @@ namespace OpenDentBusiness {
 					string methodName=MethodBase.GetCurrentMethod().Name;
 					command=@"SELECT * FROM automation WHERE automation.SheetDefNum!=0 AND NOT EXISTS(
 					SELECT SheetDefNum FROM sheetdef WHERE automation.SheetDefNum=sheetdef.SheetDefNum)";
-					List<Automation> listAutomation=Crud.AutomationCrud.SelectMany(command);
+					List<Automation> listAutomation=Automations.SelectMany(command).ToList();
 					command=@"DELETE FROM automation WHERE automation.SheetDefNum!=0 AND NOT EXISTS(
 					SELECT SheetDefNum FROM sheetdef WHERE automation.SheetDefNum=sheetdef.SheetDefNum)";
 					long numberFixed=Database.ExecuteNonQuery(command);
 					//Add to listDbmlogs
-					listAutomation.ForEach(x => listDbmlogs.Add(new DbmLog(Security.CurUser.Id,x.AutomationNum,DbmLogFKeyType.Automation,
+					listAutomation.ForEach(x => listDbmlogs.Add(new DbmLog(Security.CurUser.Id,x.Id,DbmLogFKeyType.Automation,
 						DbmLogActionType.Delete,methodName,"Deleted automation from AutomationTriggersWithNoSheetDefs.")));
 					if(numberFixed!=0 || verbose) {
 						Crud.DbmLogCrud.InsertMany(listDbmlogs);
@@ -4663,7 +4663,7 @@ namespace OpenDentBusiness {
 							Account account=new Account();
 							account.Description="UNKNOWN";
 							account.Inactive=false;//Just in case.
-							account.AcctType=AccountType.Asset;//Default account type.  This DBM check was added to fix orphaned automatic payment journal entries, which should have been associated to an income account.
+							account.Type=AccountType.Asset;//Default account type.  This DBM check was added to fix orphaned automatic payment journal entries, which should have been associated to an income account.
 							accountNum=Accounts.Insert(account);
 						}
 						//Update the journalentry table.

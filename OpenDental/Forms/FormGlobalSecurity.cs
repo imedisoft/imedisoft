@@ -53,10 +53,10 @@ namespace OpenDental {
 				butChange.Enabled=false;
 				labelGlobalDateLockDisabled.Visible=true;
 			}
-			List<UserGroup> listGroupsNotAdmin=UserGroups.GetList().FindAll(x => !GroupPermissions.HasPermission(x.UserGroupNum,Permissions.SecurityAdmin,0));
+			List<UserGroup> listGroupsNotAdmin=UserGroups.GetList().FindAll(x => !GroupPermissions.HasPermission(x.Id,Permissions.SecurityAdmin,0));
 			for(int i=0;i<listGroupsNotAdmin.Count;i++){
 				comboGroups.Items.Add(listGroupsNotAdmin[i].Description,listGroupsNotAdmin[i]);
-				if(PrefC.GetLong(PrefName.DefaultUserGroup)==listGroupsNotAdmin[i].UserGroupNum) {
+				if(PrefC.GetLong(PrefName.DefaultUserGroup)==listGroupsNotAdmin[i].Id) {
 					comboGroups.SelectedIndex=i;
 				}
 			}
@@ -200,7 +200,7 @@ namespace OpenDental {
 				| Prefs.UpdateString(PrefName.DomainLoginPath,textDomainLoginPath.Text)
 				| Prefs.UpdateBool(PrefName.DomainLoginEnabled,checkDomainLoginEnabled.Checked)
 				| (_domainObjectGuid!=null && Prefs.UpdateString(PrefName.DomainObjectGuid,_domainObjectGuid))
-				| Prefs.UpdateLong(PrefName.DefaultUserGroup,comboGroups.SelectedIndex==-1?0:comboGroups.GetSelected<UserGroup>().UserGroupNum)
+				| Prefs.UpdateLong(PrefName.DefaultUserGroup,comboGroups.SelectedIndex==-1?0:comboGroups.GetSelected<UserGroup>().Id)
 				| Prefs.UpdateBool(PrefName.SecurityLogOffAllowUserOverride,checkAllowLogoffOverride.Checked)
 				| Prefs.UpdateBool(PrefName.PatientMaintainedOnUserChange,checkMaintainPatient.Checked)
 				) 

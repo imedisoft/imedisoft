@@ -26,7 +26,7 @@ namespace OpenDental {
 		private void FillGrids(long selectedIneranlKey=0,long selectedCustomKey=0) {
 			_listCustomAlertCategory.Clear();
 			_listInternalAlertCategory.Clear();
-			AlertCategories.GetDeepCopy().ForEach(x =>
+			AlertCategories.GetAll().ForEach(x =>
 			{
 				if(x.IsHQCategory) {
 					_listInternalAlertCategory.Add(x);
@@ -51,10 +51,10 @@ namespace OpenDental {
 			for(int i=0;i<_listInternalAlertCategory.Count;i++){
 				row=new GridRow();
 				row.Cells.Add(_listInternalAlertCategory[i].Description);
-				row.Tag=_listInternalAlertCategory[i].AlertCategoryNum;
+				row.Tag=_listInternalAlertCategory[i].Id;
 				gridInternal.ListGridRows.Add(row);
 				int index=gridInternal.ListGridRows.Count-1;
-				if(selectedIneranlKey==_listInternalAlertCategory[i].AlertCategoryNum) {
+				if(selectedIneranlKey==_listInternalAlertCategory[i].Id) {
 					gridCustom.SetSelected(index,true);
 				}
 			}
@@ -72,10 +72,10 @@ namespace OpenDental {
 			for(int i=0;i<_listCustomAlertCategory.Count;i++){
 				row=new GridRow();
 				row.Cells.Add(_listCustomAlertCategory[i].Description);
-				row.Tag=_listCustomAlertCategory[i].AlertCategoryNum;
+				row.Tag=_listCustomAlertCategory[i].Id;
 				gridCustom.ListGridRows.Add(row);
 				index=gridCustom.ListGridRows.Count-1;
-				if(selectedCustomKey!=_listCustomAlertCategory[i].AlertCategoryNum) {
+				if(selectedCustomKey!=_listCustomAlertCategory[i].Id) {
 					index=0;
 				}
 			}
@@ -119,11 +119,11 @@ namespace OpenDental {
 			alertCat.IsHQCategory=false;
 			alertCat.Description+=Lan.G(this,"(Copy)");
 			//alertCat.AlertCategoryNum reflects the original pre-copied PK. After Insert this will be a new PK for the new row.
-			List<AlertCategoryLink> listAlertCategoryType=AlertCategoryLinks.GetForCategory(alertCat.AlertCategoryNum);
-			alertCat.AlertCategoryNum=AlertCategories.Insert(alertCat);
+			List<AlertCategoryLink> listAlertCategoryType=AlertCategoryLinks.GetForCategory(alertCat.Id);
+			alertCat.Id=AlertCategories.Insert(alertCat);
 			//At this point alertCat has a new PK, so we need to update and insert our new copied alertCategoryLinks
 			listAlertCategoryType.ForEach(x => {
-				x.AlertCategoryNum=alertCat.AlertCategoryNum;
+				x.AlertCategoryId=alertCat.Id;
 				AlertCategoryLinks.Insert(x);
 			});
 			DataValid.SetInvalid(InvalidType.AlertCategories,InvalidType.AlertCategoryLinks);

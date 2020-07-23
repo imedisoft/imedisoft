@@ -1489,12 +1489,6 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.AdjustmentEdit,FormAP.SelectedAdjustment.AdjDate)) {
 				return;
 			}
-			if(AvaTax.IsEnabled() && 
-				(FormAP.SelectedAdjustment.AdjType==AvaTax.SalesTaxAdjType || FormAP.SelectedAdjustment.AdjType==AvaTax.SalesTaxReturnAdjType) && 
-					!Security.IsAuthorized(Permissions.SalesTaxAdjEdit)) 
-			{
-				return;
-			}
 			List<PaySplit> listPaySplitsForAdjustment=PaySplits.GetForAdjustments(new List<long>{FormAP.SelectedAdjustment.AdjNum});
 			if(listPaySplitsForAdjustment.Count>0) {
 				MessageBox.Show("Cannot attach adjustment which has associated payments");

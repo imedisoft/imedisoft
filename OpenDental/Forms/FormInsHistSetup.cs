@@ -53,7 +53,7 @@ namespace OpenDental {
 						&& x.ProcNum==proc.ProcNum);
 				}
 				text=((claimProc!=null && proc!=null && proc.ProcDate.Year>1880) ? proc.ProcDate.ToShortDateString() : NO_INSHIST);
-				bool isPrefSet=listInsHistPref.Exists(x => x.PrefName==prefName.ToString() && !string.IsNullOrWhiteSpace(x.ValueString));
+				bool isPrefSet=listInsHistPref.Exists(x => x.Name==prefName.ToString() && !string.IsNullOrWhiteSpace(x.Value));
 				TextBox textBoxCur=GetControlForPrefName(prefName);
 				if(!isPrefSet) {
 					text=NO_INSHISTSET;

@@ -346,7 +346,7 @@ namespace OpenDental {
 					foreach(JournalEntry journalEntry in JournalEntries.GetForTrans(trans.TransactionNum)) {
 						Account account=Accounts.GetAccount(journalEntry.AccountNum);
 						//The account could be null if the AccountNum was never set correctly due to the automatic payment entry setup missing an income account from older versions.
-						if(account!=null && account.AcctType==AccountType.Asset) {
+						if(account!=null && account.Type==AccountType.Asset) {
 							textDepositAccount.Text=journalEntry.DateDisplayed.ToShortDateString();
 							if(journalEntry.DebitAmt>0) {
 								textDepositAccount.Text+=" "+journalEntry.DebitAmt.ToString("c");
@@ -2450,7 +2450,7 @@ namespace OpenDental {
 			else {
 				labelDepositAccount.Visible=true;
 				comboDepositAccount.Visible=true;
-				_arrayDepositAcctNums=AccountingAutoPays.GetPickListAccounts(autoPay);
+				_arrayDepositAcctNums=AccountingAutoPays.GetPickListAccounts(autoPay).ToArray();
 				comboDepositAccount.Items.Clear();
 				comboDepositAccount.Items.AddRange(_arrayDepositAcctNums.Select(x => Accounts.GetDescript(x)).ToArray());
 				if(comboDepositAccount.Items.Count>0) {

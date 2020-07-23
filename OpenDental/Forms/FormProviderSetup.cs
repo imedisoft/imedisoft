@@ -1179,7 +1179,7 @@ namespace OpenDental{
 				user.UserName=GetUniqueUserName(prov.LName,prov.FName);
 				user.LoginDetails=Authentication.GenerateLoginDetailsSHA512(user.UserName);
 				try{
-					Userods.Insert(user,comboUserGroup.ListSelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.UserGroupNum).ToList());
+					Userods.Insert(user,comboUserGroup.ListSelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
 				}
 				catch(ApplicationException ex){
 					MessageBox.Show(ex.Message);

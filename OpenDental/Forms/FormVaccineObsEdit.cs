@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormVaccineObsEdit:ODForm {
@@ -47,7 +48,7 @@ namespace OpenDental {
 			comboUnits.Items.Clear();
 			comboUnits.Items.Add("none");
 			comboUnits.SelectedIndex=0;
-			List<string> listUcumCodes=Ucums.GetAllCodes();
+			List<string> listUcumCodes=Ucums.GetAllCodes().ToList();
 			for(int i=0;i<listUcumCodes.Count;i++) {
 				string ucumCode=listUcumCodes[i];
 				comboUnits.Items.Add(ucumCode);

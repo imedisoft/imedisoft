@@ -520,7 +520,7 @@ namespace OpenDentBusiness{
 				absOld=-oldAmt;
 			}
 			for(int i=0;i<jeL.Count;i++) {//we make sure down below that this count is exactly 2.
-				if(Accounts.GetAccount(jeL[i].AccountNum).AcctType==AccountType.Asset) {
+				if(Accounts.GetAccount(jeL[i].AccountNum).Type==AccountType.Asset) {
 					oldAcct=jeL[i].AccountNum;
 				}
 				if(jeL[i].DebitAmt==absOld) {
@@ -628,7 +628,7 @@ namespace OpenDentBusiness{
 				signChanged=true;
 			}
 			for(int i=0;i<2;i++){
-				if(Accounts.GetAccount(jeL[i].AccountNum).AcctType==AccountType.Asset) {
+				if(Accounts.GetAccount(jeL[i].AccountNum).Type==AccountType.Asset) {
 					oldAcct=jeL[i].AccountNum;
 				}
 				if(jeL[i].DebitAmt==absOld) {

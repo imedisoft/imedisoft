@@ -58,7 +58,7 @@ namespace OpenDental {
 
 		private void fillCombos() {
 			//Units of measure----------------------------------------
-			_listUCUM=Ucums.GetAll();
+			_listUCUM=Ucums.GetAll().ToList();
 			if(_listUCUM.Count==0) {
 				MessageBox.Show("Units of measure have not been imported. Go to the code system importer window to import UCUM codes to continue.");
 				DialogResult=DialogResult.Cancel;
@@ -66,8 +66,8 @@ namespace OpenDental {
 			}
 			int _tempSelectedIndex=0;
 			for(int i=0;i<_listUCUM.Count;i++) {
-				comboUnits.Items.Add(_listUCUM[i].UcumCode);
-				if(_listUCUM[i].UcumCode=="mg/dL") {//arbitrarily chosen common unit of measure.
+				comboUnits.Items.Add(_listUCUM[i].Code);
+				if(_listUCUM[i].Code=="mg/dL") {//arbitrarily chosen common unit of measure.
 					_tempSelectedIndex=i;
 				}
 			}

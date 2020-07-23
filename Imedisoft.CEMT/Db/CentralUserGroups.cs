@@ -17,8 +17,8 @@ namespace CentralManager
 			List<UserGroup> listUpdNew = new List<UserGroup>();
 			List<UserGroup> listUpdDB = new List<UserGroup>();
 			List<UserGroup> listDel = new List<UserGroup>();
-			listNew.Sort((UserGroup x, UserGroup y) => { return x.UserGroupNumCEMT.CompareTo(y.UserGroupNumCEMT); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((UserGroup x, UserGroup y) => { return x.UserGroupNumCEMT.CompareTo(y.UserGroupNumCEMT); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((UserGroup x, UserGroup y) => { return x.CentralUserGroupId.CompareTo(y.CentralUserGroupId); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((UserGroup x, UserGroup y) => { return x.CentralUserGroupId.CompareTo(y.CentralUserGroupId); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew = 0;
 			int idxDB = 0;
 			UserGroup fieldNew;
@@ -51,13 +51,13 @@ namespace CentralManager
 					idxDB++;
 					continue;
 				}
-				else if (fieldNew.UserGroupNumCEMT < fieldDB.UserGroupNumCEMT)
+				else if (fieldNew.CentralUserGroupId < fieldDB.CentralUserGroupId)
 				{//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if (fieldNew.UserGroupNumCEMT > fieldDB.UserGroupNumCEMT)
+				else if (fieldNew.CentralUserGroupId > fieldDB.CentralUserGroupId)
 				{//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
@@ -73,7 +73,7 @@ namespace CentralManager
 			//Commit changes to DB
 			for (int i = 0; i < listIns.Count; i++)
 			{
-				UserGroups.InsertNoCache(listIns[i]);
+				UserGroups.Insert(listIns[i]);
 			}
 
 			for (int i = 0; i < listUpdNew.Count; i++)

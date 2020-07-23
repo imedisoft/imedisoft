@@ -121,11 +121,11 @@ namespace UnitTests.AlertItems_Tests {
 			CreateAlertItem(true);
 			//Second AlertItem is an AlertItem for HQ(ClinicNum==0).
 			CreateAlertItem(false);
-			List<AlertCategory> listAlertCats=AlertCategories.GetDeepCopy();
+			List<AlertCategory> listAlertCats=AlertCategories.GetAll();
 			List<AlertSub> listAlertSubOld=new List<AlertSub>();
 			List<AlertSub> listAlertSubNew=new List<AlertSub>();
 			foreach(AlertCategory alertCat in listAlertCats) {
-				AlertSub alSub=new AlertSub(userAdmin.Id,-1,alertCat.AlertCategoryNum);
+				AlertSub alSub=new AlertSub(userAdmin.Id,-1,alertCat.Id);
 				listAlertSubNew.Add(alSub);
 			}
 			AlertSubs.Sync(listAlertSubNew,listAlertSubOld);

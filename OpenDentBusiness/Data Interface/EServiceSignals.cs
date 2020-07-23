@@ -134,8 +134,8 @@ namespace OpenDentBusiness{
 			if(eServiceSignalLast==null || eServiceSignalLast.Severity!=eServiceSignalSeverity.Working) { //First ever heartbeat or critical which was not previously critical.
 				if(eServiceSignalLast!=null && eServiceSignalLast.Severity==eServiceSignalSeverity.Critical
 					//Do not create a signal if the eConnector was stopped because of an update
-					&& (eServiceSignalLast.SigDateTime > UpdateHistories.GetLastUpdateHistory().DateTimeUpdated
-						|| UpdateHistories.GetLastUpdateHistory().DateTimeUpdated.AddMinutes(10) < dtNow))
+					&& (eServiceSignalLast.SigDateTime > UpdateHistories.GetLastUpdateHistory().InstalledOn
+						|| UpdateHistories.GetLastUpdateHistory().InstalledOn.AddMinutes(10) < dtNow))
 				{ 
 					//Changing from critical to working so alert user that this change took place and tell them how long we were in critical state.
 					//Insert() will also insert Alert.

@@ -28,7 +28,7 @@ namespace OpenDental {
 			}
 			for(int i=0;i<allergyDefList.Count;i++) {
 				comboAllergies.Items.Add(allergyDefList[i].Description);
-				if(!AllergyCur.IsNew && allergyDefList[i].AllergyDefNum==AllergyCur.AllergyDefNum) {
+				if(!AllergyCur.IsNew && allergyDefList[i].AllergyDefNum==AllergyCur.AllergyDefId) {
 					allergyIndex=i;
 				}
 			}
@@ -74,8 +74,8 @@ namespace OpenDental {
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")){
 				return;
 			}
-			Allergies.Delete(AllergyCur.AllergyNum);
-			SecurityLogs.MakeLogEntry(Permissions.PatAllergyListEdit,AllergyCur.PatNum,AllergyDefs.GetDescription(AllergyCur.AllergyDefNum)+" deleted");
+			Allergies.Delete(AllergyCur.Id);
+			SecurityLogs.MakeLogEntry(Permissions.PatAllergyListEdit,AllergyCur.PatientId,AllergyDefs.GetDescription(AllergyCur.AllergyDefId)+" deleted");
 			DialogResult=DialogResult.OK;
 		}
 
@@ -97,7 +97,7 @@ namespace OpenDental {
 			else {
 				AllergyCur.DateAdverseReaction=DateTime.MinValue;
 			}
-			AllergyCur.AllergyDefNum=allergyDefList[comboAllergies.SelectedIndex].AllergyDefNum;
+			AllergyCur.AllergyDefId=allergyDefList[comboAllergies.SelectedIndex].AllergyDefNum;
 			AllergyCur.Reaction=textReaction.Text;
 			AllergyCur.SnomedReaction="";
 			if(snomedReaction!=null) {
@@ -106,11 +106,11 @@ namespace OpenDental {
 			AllergyCur.StatusIsActive=checkActive.Checked;
 			if(AllergyCur.IsNew) {
 				Allergies.Insert(AllergyCur);
-				SecurityLogs.MakeLogEntry(Permissions.PatAllergyListEdit,AllergyCur.PatNum,AllergyDefs.GetDescription(AllergyCur.AllergyDefNum)+" added");
+				SecurityLogs.MakeLogEntry(Permissions.PatAllergyListEdit,AllergyCur.PatientId,AllergyDefs.GetDescription(AllergyCur.AllergyDefId)+" added");
 			}
 			else {
 				Allergies.Update(AllergyCur);
-				SecurityLogs.MakeLogEntry(Permissions.PatAllergyListEdit,AllergyCur.PatNum,AllergyDefs.GetDescription(AllergyCur.AllergyDefNum)+" edited");
+				SecurityLogs.MakeLogEntry(Permissions.PatAllergyListEdit,AllergyCur.PatientId,AllergyDefs.GetDescription(AllergyCur.AllergyDefId)+" edited");
 			}
 			DialogResult=DialogResult.OK;
 		}

@@ -7,7 +7,6 @@ using OpenDentBusiness;
 namespace OpenDentBusiness.WebTypes.WebForms
 {
 	[Serializable]
-	[CrudTable(IsMissingInGeneral = true, CrudLocationOverride = @"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud", NamespaceOverride = "OpenDentBusiness.WebTypes.WebForms.Crud", CrudExcludePrefC = true)]
 	public class WebForms_SheetField : TableBase
 	{
 		///<summary>Primary key.</summary>

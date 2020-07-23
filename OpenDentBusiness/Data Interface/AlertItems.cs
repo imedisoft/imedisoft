@@ -172,11 +172,11 @@ namespace OpenDentBusiness{
 				listAlertCatNums=listUserAlertSubs.Select(y => y.AlertCategoryNum).ToList();
 			}
 			//AlertTypes current user is subscribed to.
-			List<AlertType> listUserAlertLinks=AlertCategoryLinks.GetWhere(x => listAlertCatNums.Contains(x.AlertCategoryNum))
+			List<AlertType> listUserAlertLinks=AlertCategoryLinks.GetWhere(x => listAlertCatNums.Contains(x.AlertCategoryId))
 				.Select(x => x.AlertType).ToList();
 			List<long> listAllAlertCatNums=listUserAlertSubsAll.Select(y => y.AlertCategoryNum).ToList();
 			//AlertTypes current user is subscribed to for AlertItems which are not clinic specific.
-			List<AlertType> listAllUserAlertLinks=AlertCategoryLinks.GetWhere(x => listAllAlertCatNums.Contains(x.AlertCategoryNum))
+			List<AlertType> listAllUserAlertLinks=AlertCategoryLinks.GetWhere(x => listAllAlertCatNums.Contains(x.AlertCategoryId))
 				.Select(x => x.AlertType).ToList();
 			//Each inner list is a group of alerts that are duplicates of each other.
 			List<List<AlertItem>> listUniqueAlerts=new List<List<AlertItem>>();

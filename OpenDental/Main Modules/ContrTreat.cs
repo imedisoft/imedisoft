@@ -1131,7 +1131,7 @@ namespace OpenDental{
 			else {
 				fields.RemoveAll(x => x.InternalName=="Pri Ins" || x.InternalName=="Sec Ins" || x.InternalName=="Allowed");//If patient does have discount plan, don't show Pri or Sec Ins or allowed fee.
 			}
-			bool hasSalesTax=HasSalesTax(fields);
+
 			//Changing to TreatPlan other than Active/Inactive.  CheckBox states have already been reset to user selections if changing to the Active/Inactive TreatPlan.
 			if(hasSelectedTpChanged && !_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus.In(TreatPlanStatus.Active,TreatPlanStatus.Inactive)) {
 				bool wasShowInsChecked=checkShowIns.Checked;
@@ -1157,10 +1157,7 @@ namespace OpenDental{
 				if(fields[i].InternalName=="Discount" && !checkShowDiscount.Checked){
 					continue;
 				}
-				if(fields[i].InternalName=="Pat" && !checkShowIns.Checked && !checkShowDiscount.Checked && !hasSalesTax){
-					continue;
-				}
-				if(fields[i].InternalName=="Tax Est" && !hasSalesTax) {
+				if(fields[i].InternalName=="Pat" && !checkShowIns.Checked && !checkShowDiscount.Checked){
 					continue;
 				}
 				if(fields[i].InternalName=="Fee" 
@@ -1276,7 +1273,7 @@ namespace OpenDental{
 							}
 							break;
 						case "Pat":
-							if(checkShowIns.Checked || checkShowDiscount.Checked || hasSalesTax) {
+							if(checkShowIns.Checked || checkShowDiscount.Checked) {
 								row.Cells.Add(RowsMain[i].Pat.ToString("F"));
 							}
 							break;
@@ -1315,9 +1312,6 @@ namespace OpenDental{
 							}
 							break;
 						case "Tax Est":
-							if(hasSalesTax) {
-								row.Cells.Add(RowsMain[i].TaxEst.ToString("F"));
-							}
 							break;
 						case "Prov":
 							if(RowsMain[i].ProvNum>0){
@@ -1384,7 +1378,6 @@ namespace OpenDental{
 			else {
 				fields.RemoveAll(x => x.InternalName=="Pri Ins" || x.InternalName=="Sec Ins");//If patient does have discount plan, don't show Pri or Sec Ins.
 			}
-			bool hasSalesTax=HasSalesTax(fields);
 			for(int i=0;i<fields.Count;i++) {
 				if(fields[i].Description=="") {
 					col=new GridColumn(fields[i].InternalName,fields[i].ColumnWidth);
@@ -1401,10 +1394,10 @@ namespace OpenDental{
 				if(fields[i].InternalName=="Discount" && !checkShowDiscount.Checked) {
 					continue;
 				}
-				if(fields[i].InternalName=="Pat" && !checkShowIns.Checked && !checkShowDiscount.Checked && !hasSalesTax) {
+				if(fields[i].InternalName=="Pat" && !checkShowIns.Checked && !checkShowDiscount.Checked) {
 					continue;
 				}
-				if(fields[i].InternalName=="Tax Est" && !hasSalesTax) {
+				if(fields[i].InternalName=="Tax Est") {
 					continue;
 				}
 				if(fields[i].InternalName=="Fee" 
@@ -1539,7 +1532,7 @@ namespace OpenDental{
 							}
 							break;
 						case "Pat":
-							if(checkShowIns.Checked || checkShowDiscount.Checked || hasSalesTax) {
+							if(checkShowIns.Checked || checkShowDiscount.Checked) {
 								if(PrefC.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()==Lan.G("TableTP","Total")
 									|| RowsMain[i].Description.ToString()==Lan.G("TableTP","Subtotal")) 
 								{
@@ -1575,9 +1568,6 @@ namespace OpenDental{
 							}
 							break;
 						case "Tax Est":
-							if(hasSalesTax) {
-								row.Cells.Add(RowsMain[i].TaxEst.ToString("F"));
-							}
 							break;
 						case "Prov":
 							if(RowsMain[i].ProvNum>0){
@@ -1641,14 +1631,6 @@ namespace OpenDental{
 			//Get all patient-specific InsPlans
 			List<InsPlan> listPatInsPlans=InsPlanList.FindAll(x => listPatInsSubs.Any(y => y.PlanNum==x.PlanNum));
 			return SubstitutionLinks.HasSubstCodeForProcCode(procCode,row.Tth.ToString(),_listSubstLinks,listPatInsPlans);
-		}
-
-		public static bool HasSalesTax(long patNum, List<DisplayField> fields) {
-			return AvaTax.IsTaxable(patNum) && fields.Any(x => x.InternalName=="Tax Est");
-		}
-
-		private bool HasSalesTax(List<DisplayField> fields) {
-			return PatCur!=null && HasSalesTax(PatCur.PatNum, fields);
 		}
 
 		private void FillSummary(){
@@ -3305,9 +3287,7 @@ namespace OpenDental{
 					dictOrthoProcLinksForProcList,dictOrthoCases,dictOrthoSchedules,listOrthoProcLinksAll);
 				Procedures.ComputeEstimates(procCur,PatCur.PatNum,claimProcList,false,InsPlanList,PatPlanList,BenefitList,PatCur.Age,SubList,
 					orthoProcLink,orthoCase,orthoSchedule,listOrthoProcLinksForOrthoCase,listFees);
-				if(AvaTax.DoSendProcToAvalara(procCur)) { //If needed, update the sales tax amount as well (checks HQ)
-					procCur.TaxAmt=(double)AvaTax.GetEstimate(procCur.CodeNum,procCur.PatNum,procCur.ProcFee);
-				}
+
 				//If the proc fee changed or the tax amt changed, update the procedurelog entry
 				if((procOld.ProcFee!=procCur.ProcFee) || (procOld.TaxAmt!=procCur.TaxAmt)) {
 					Procedures.Update(procCur,procOld);

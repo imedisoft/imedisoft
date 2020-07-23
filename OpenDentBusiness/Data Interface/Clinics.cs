@@ -622,7 +622,7 @@ namespace OpenDentBusiness{
 			listClinics.AddRange(GetDeepCopy(true));//don't include hidden clinics
 			if(PrefC.HasClinicsEnabled && curUser.ClinicIsRestricted && curUser.ClinicNum!=0) {
 				//If Clinics are enabled and user is restricted, then only return clinics the person has permission for.
-				List<long> listUserClinicNums=UserClinics.GetForUser(curUser.Id).Select(x => x.ClinicNum).ToList();
+				List<long> listUserClinicNums=UserClinics.GetForUser(curUser.Id).Select(x => x.ClinicId).ToList();
 				listClinics.RemoveAll(x => !listUserClinicNums.Contains(x.ClinicNum));//Remove all clinics that are not in the list of UserClinics.
 			}
 			return listClinics;
@@ -637,7 +637,7 @@ namespace OpenDentBusiness{
 			}
 			if(curUser.ClinicIsRestricted && curUser.ClinicNum!=0) {
 				List<UserClinic> listUserClinics=UserClinics.GetForUser(curUser.Id);
-				return listClinics.FindAll(x => listUserClinics.Exists(y => y.ClinicNum==x.ClinicNum)).ToList();
+				return listClinics.FindAll(x => listUserClinics.Exists(y => y.ClinicId==x.ClinicNum)).ToList();
 			}
 			return listClinics;
 		}

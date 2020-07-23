@@ -784,12 +784,6 @@
     <Compile Include="Forms\FormSupportStatus.designer.cs">
       <DependentUpon>FormSupportStatus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormTaxAddress.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormTaxAddress.designer.cs">
-      <DependentUpon>FormTaxAddress.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormUserEdit.designer.cs">
       <DependentUpon>FormUserEdit.cs</DependentUpon>
     </Compile>
@@ -1081,29 +1075,11 @@
     <Compile Include="Forms Reports\FormRpDiscountPlan.designer.cs">
       <DependentUpon>FormRpDiscountPlan.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormAvaTax.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormAvaTax.designer.cs">
-      <DependentUpon>FormAvaTax.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormAutoNoteResponsePicker.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormAutoNoteResponsePicker.designer.cs">
       <DependentUpon>FormAutoNoteResponsePicker.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormPrepaymentEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormPrepaymentEdit.designer.cs">
-      <DependentUpon>FormPrepaymentEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormPrepaymentTool.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormPrepaymentTool.designer.cs">
-      <DependentUpon>FormPrepaymentTool.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormApptSearchAdvanced.cs">
       <SubType>Form</SubType>
@@ -5416,9 +5392,6 @@
     <EmbeddedResource Include="Forms\FormSupportStatus.resx">
       <DependentUpon>FormSupportStatus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormTaxAddress.resx">
-      <DependentUpon>FormTaxAddress.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormXDRSetup.resx">
       <DependentUpon>FormXDRSetup.cs</DependentUpon>
     </EmbeddedResource>
@@ -5502,17 +5475,8 @@
     <EmbeddedResource Include="Forms Reports\FormRpDiscountPlan.resx">
       <DependentUpon>FormRpDiscountPlan.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormAvaTax.resx">
-      <DependentUpon>FormAvaTax.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormAutoNoteResponsePicker.resx">
       <DependentUpon>FormAutoNoteResponsePicker.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormPrepaymentEdit.resx">
-      <DependentUpon>FormPrepaymentEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormPrepaymentTool.resx">
-      <DependentUpon>FormPrepaymentTool.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormApptSearchAdvanced.resx">
       <DependentUpon>FormApptSearchAdvanced.cs</DependentUpon>

@@ -1,6 +1,8 @@
 ﻿using Imedisoft.Data.Annotations;
+using OpenDentBusiness.DoseSpotService;
 using System;
 using System.Reflection;
+using System.Text;
 
 namespace Imedisoft.Data.CrudGenerator.Schema
 {
@@ -53,12 +55,36 @@ namespace Imedisoft.Data.CrudGenerator.Schema
             var columnAttribute = fieldInfo.GetCustomAttribute<ColumnAttribute>();
 
             FieldName = fieldInfo.Name;
-            Name = columnAttribute?.Name ?? FieldName;
+            Name = ToSnakeCase(columnAttribute?.Name ?? FieldName);
             ReadOnly = columnAttribute?.ReadOnly ?? false;
 
             IsPrimaryKey = fieldInfo.GetCustomAttribute<PrimaryKeyAttribute>() != null;
 
             Type = fieldInfo.FieldType;
+        }
+
+
+        private static string ToSnakeCase(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return "";
+            
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.Append(char.ToLower(name[0]));
+            for (int i = 1; i < name.Length; ++i)
+            {
+                if (char.IsLetter(name[i]) && char.IsUpper(name[i]))
+                {
+                    stringBuilder.Append('_');
+                    stringBuilder.Append(char.ToLower(name[i]));
+                }
+                else
+                {
+                    stringBuilder.Append(name[i]);
+                }
+            }
+
+            return stringBuilder.ToString();
         }
 
         /// <summary>

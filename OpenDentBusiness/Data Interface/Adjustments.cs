@@ -91,40 +91,6 @@ namespace OpenDentBusiness
 			return Crud.AdjustmentCrud.SelectMany(command).ToList();
 		}
 
-		///<summary>Returns the sales tax adjustment attached to this procedure with a TaxTransID. We do not use the AvaTax.SalesTaxAdjType in case the
-		///defnum has changed in the past. </summary>
-		public static Adjustment GetSalesTaxForProc(long procNum)
-		{
-			string command = "SELECT * FROM adjustment WHERE ProcNum=" + POut.Long(procNum) + " AND AdjType=" + POut.Long(AvaTax.SalesTaxAdjType);
-			return Crud.AdjustmentCrud.SelectMany(command).FirstOrDefault(x => x.AdjType == AvaTax.SalesTaxAdjType);
-		}
-
-		///<summary>Sums all adjustments for a proc then returns that sum. Pass false to canIncludeTax in order to exclude sales tax from the end amount.
-		///</summary>
-		public static double GetTotForProc(long procNum, bool canIncludeTax = true)
-		{
-			string command = "SELECT SUM(AdjAmt) FROM adjustment"
-				+ " WHERE ProcNum=" + POut.Long(procNum);
-			if (AvaTax.IsEnabled() && !canIncludeTax)
-			{
-				command += " AND AdjType NOT IN (" + string.Join(",", POut.Long(AvaTax.SalesTaxAdjType), POut.Long(AvaTax.SalesTaxReturnAdjType)) + ")";
-			}
-			return Database.ExecuteDouble(command);
-		}
-
-		///<summary></summary>
-		public static double GetTotTaxForProc(Procedure proc)
-		{
-			if (!AvaTax.DoSendProcToAvalara(proc))
-			{
-				return 0;
-			}
-			string command = "SELECT SUM(AdjAmt) FROM adjustment"
-				+ " WHERE ProcNum=" + POut.Long(proc.ProcNum)
-				+ " AND AdjType IN (" + string.Join(",", POut.Long(AvaTax.SalesTaxAdjType), POut.Long(AvaTax.SalesTaxReturnAdjType)) + ")";
-			return Database.ExecuteDouble(command);
-		}
-
 		/// <summary>Returns a DataTable of adjustments of a given adjustment type and for a given pat</summary>
 		public static List<Adjustment> GetAdjustForPatByType(long patNum, long adjType)
 		{
@@ -255,24 +221,6 @@ namespace OpenDentBusiness
 			TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(adjustmentCur);
 			SecurityLogs.MakeLogEntry(Permissions.AdjustmentCreate, procedure.PatNum, "Adjustment made for discount plan: " + adjustmentCur.AdjAmt.ToString("f"));
 		}
-
-		public static void CreateSalesTaxRefundIfNeeded(Procedure procedure, Adjustment adjustmentExistingLocked)
-		{
-			Adjustment adjustmentSalesTaxReturn = new Adjustment();
-			adjustmentSalesTaxReturn.DateEntry = DateTime.Today;
-			adjustmentSalesTaxReturn.AdjDate = DateTime.Today;
-			adjustmentSalesTaxReturn.ProcDate = procedure.ProcDate;
-			adjustmentSalesTaxReturn.ProvNum = procedure.ProvNum;
-			adjustmentSalesTaxReturn.PatNum = procedure.PatNum;
-			adjustmentSalesTaxReturn.AdjType = AvaTax.SalesTaxReturnAdjType;
-			adjustmentSalesTaxReturn.ClinicNum = procedure.ClinicNum;
-			adjustmentSalesTaxReturn.ProcNum = procedure.ProcNum;
-			if (AvaTax.DoCreateReturnAdjustment(procedure, adjustmentExistingLocked, adjustmentSalesTaxReturn))
-			{
-				Insert(adjustmentSalesTaxReturn);
-				TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(adjustmentSalesTaxReturn);
-			}
-		}
 		#endregion
 
 		#region Update
@@ -338,66 +286,6 @@ namespace OpenDentBusiness
 		///in the Avatax API.</summary>
 		public static void CreateOrUpdateSalesTaxIfNeeded(Procedure procedure, Adjustment salesTaxAdj = null, bool doCalcTax = true, bool isRepeatCharge = false)
 		{
-			if (!AvaTax.DoSendProcToAvalara(procedure, isRepeatCharge))
-			{ //tests isHQ
-				return;
-			}
-			if (salesTaxAdj == null)
-			{
-				salesTaxAdj = Adjustments.GetSalesTaxForProc(procedure.ProcNum);
-			}
-			//If we didn't find any existing adjustments to modify, create an adjustment instead
-			if (salesTaxAdj == null)
-			{
-				salesTaxAdj = new Adjustment();
-				salesTaxAdj.DateEntry = DateTime.Today;
-				salesTaxAdj.AdjDate = procedure.ProcDate;
-				salesTaxAdj.ProcDate = procedure.ProcDate;
-				salesTaxAdj.ProvNum = procedure.ProvNum;
-				salesTaxAdj.PatNum = procedure.PatNum;
-				salesTaxAdj.AdjType = AvaTax.SalesTaxAdjType;
-				salesTaxAdj.ClinicNum = procedure.ClinicNum;
-				salesTaxAdj.ProcNum = procedure.ProcNum;
-			}
-			//if the sales tax adjustment is locked, create a sales tax refund adjustment instead
-			if (procedure.ProcDate <= AvaTax.TaxLockDate)
-			{
-				CreateSalesTaxRefundIfNeeded(procedure, salesTaxAdj);
-				return;
-			}
-			if (!doCalcTax)
-			{ //Should only ever happen for pre-payments, where we've already called the api to get the tax amount
-				salesTaxAdj.AdjAmt = procedure.TaxAmt;
-				Insert(salesTaxAdj);
-			}
-			else if (AvaTax.DidUpdateAdjustment(procedure, salesTaxAdj))
-			{
-				string note = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + ": Tax amount changed from $" + procedure.TaxAmt.ToString("f2") + " to $" + salesTaxAdj.AdjAmt.ToString("f2");
-				if (!(procedure.TaxAmt - salesTaxAdj.AdjAmt).IsZero())
-				{
-					procedure.TaxAmt = salesTaxAdj.AdjAmt;
-					Crud.ProcedureCrud.Update(procedure);
-				}
-				if (salesTaxAdj.AdjNum == 0)
-				{
-					//The only way to get salesTaxAdj.AdjAmt=0 when AvaTax.DidUpdateAdjustment() returns true is if there was an error.
-					if (isRepeatCharge && salesTaxAdj.AdjAmt == 0)
-					{//this is an error; we would normally not save a new adjustment with amt $0
-						throw new ODException("Encountered an error communicating with AvaTax.  Skip for repeating charges only.  " + salesTaxAdj.AdjNote);
-					}
-					Insert(salesTaxAdj);//This could be an error or a new adjustment/repeating charge, either way we want to insert
-				}
-				else
-				{ //updating an existing adjustment. We don't need to check isRepeatCharge because of 
-					if (!string.IsNullOrWhiteSpace(salesTaxAdj.AdjNote))
-					{
-						salesTaxAdj.AdjNote += Environment.NewLine;
-					}
-					salesTaxAdj.AdjNote += note; //If we are updating this adjustment, leave a note indicating what changed
-					Update(salesTaxAdj);
-				}
-			}
-			TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(salesTaxAdj);
 		}
 
 		///<summary>(HQ Only) When we create, modify, or delete a non-sales tax adjustment that is attached to a procedure, we may also need to update
@@ -406,15 +294,6 @@ namespace OpenDentBusiness
 		///create a sales tax adjustment only if the procedure is taxable.</summary>
 		public static void CreateOrUpdateSalesTaxIfNeeded(Adjustment modifiedAdj)
 		{
-			if (AvaTax.IsEnabled() && modifiedAdj.ProcNum > 0 && modifiedAdj.AdjType != AvaTax.SalesTaxAdjType && modifiedAdj.AdjType != AvaTax.SalesTaxReturnAdjType)
-			{
-				Adjustment taxAdjForProc = GetSalesTaxForProc(modifiedAdj.ProcNum);
-				if (taxAdjForProc != null)
-				{
-					Procedure proc = Procedures.GetOneProc(modifiedAdj.ProcNum, false);
-					CreateOrUpdateSalesTaxIfNeeded(proc, taxAdjForProc);
-				}
-			}
 		}
 
 		///<summary>Returns the number of finance or billing charges deleted.</summary>

@@ -1639,7 +1639,7 @@ namespace OpenDental{
 
 		#region Allergies Tab
 		private void FillAllergies() {
-			allergyList=Allergies.GetAll(PatCur.PatNum,checkShowInactiveAllergies.Checked);
+			allergyList=Allergies.GetByPatient(PatCur.PatNum,checkShowInactiveAllergies.Checked);
 			gridAllergies.BeginUpdate();
 			gridAllergies.ListGridColumns.Clear();
 			GridColumn col;
@@ -1661,7 +1661,7 @@ namespace OpenDental{
 				if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 					row.Cells.Add("0");//index of infobutton
 				}
-				AllergyDef allergyDef=AllergyDefs.GetOne(allergyList[i].AllergyDefNum);
+				AllergyDef allergyDef=AllergyDefs.GetOne(allergyList[i].AllergyDefId);
 				row.Cells.Add(allergyDef==null ? "MISSING ALLERGY" : allergyDef.Description);
 				if(allergyList[i].DateAdverseReaction<DateTime.Parse("1-1-1800")) {
 					row.Cells.Add(allergyList[i].Reaction);
@@ -1687,7 +1687,7 @@ namespace OpenDental{
 			if(e.Col!=0) {
 				return;
 			}
-			List<KnowledgeRequest> listKnowledgeRequests=EhrTriggers.ConvertToKnowledgeRequests(AllergyDefs.GetOne(allergyList[e.Row].AllergyDefNum));
+			List<KnowledgeRequest> listKnowledgeRequests=EhrTriggers.ConvertToKnowledgeRequests(AllergyDefs.GetOne(allergyList[e.Row].AllergyDefId));
 			FormInfobutton FormIB=new FormInfobutton(listKnowledgeRequests);
 			FormIB.PatCur=PatCur;
 			FormIB.ShowDialog();
@@ -1703,7 +1703,7 @@ namespace OpenDental{
 				&& CDSPermissions.GetForUser(Security.CurUser.Id).AllergyCDS) 
 			{
 				FormCDSIntervention FormCDSI=new FormCDSIntervention();
-				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(AllergyDefs.GetOne(FAE.AllergyCur.AllergyDefNum),PatCur);
+				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(AllergyDefs.GetOne(FAE.AllergyCur.AllergyDefId),PatCur);
 				FormCDSI.ShowIfRequired(false);
 			}
 			FillAllergies();
@@ -1717,7 +1717,7 @@ namespace OpenDental{
 			FormAllergyEdit formA=new FormAllergyEdit();
 			formA.AllergyCur=new Allergy();
 			formA.AllergyCur.StatusIsActive=true;
-			formA.AllergyCur.PatNum=PatCur.PatNum;
+			formA.AllergyCur.PatientId=PatCur.PatNum;
 			formA.AllergyCur.IsNew=true;
 			formA.ShowDialog();
 			if(formA.DialogResult!=DialogResult.OK) {
@@ -1725,7 +1725,7 @@ namespace OpenDental{
 			}
 			if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).AllergyCDS) {
 				FormCDSIntervention FormCDSI=new FormCDSIntervention();
-				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(AllergyDefs.GetOne(formA.AllergyCur.AllergyDefNum),PatCur);
+				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(AllergyDefs.GetOne(formA.AllergyCur.AllergyDefId),PatCur);
 				FormCDSI.ShowIfRequired(false);
 			}
 			FillAllergies();

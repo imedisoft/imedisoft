@@ -1065,7 +1065,7 @@ namespace OpenDental
 			foreach(PrefName prefName in _listWebSchedVerifyPrefNames) {
 				_listWebSchedVerifyClinicPrefs.AddRange(ClinicPrefs.GetPrefAllClinics(prefName));
 				Pref pref=Prefs.GetPref(prefName.ToString());
-				_listWebSchedVerifyClinicPrefs.Add(new ClinicPref() { ClinicNum=CLINIC_NUM_DEFAULT, PrefName=prefName, ValueString=pref.ValueString });
+				_listWebSchedVerifyClinicPrefs.Add(new ClinicPref() { ClinicNum=CLINIC_NUM_DEFAULT, PrefName=prefName, ValueString=pref.Value });
 			}
 			_listWebSchedVerifyClinicPrefs_Old=_listWebSchedVerifyClinicPrefs.Select(x => x.Clone()).ToList();
 			//Fill in the UI

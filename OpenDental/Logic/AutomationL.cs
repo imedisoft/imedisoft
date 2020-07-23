@@ -23,21 +23,21 @@ namespace OpenDental {
 			List<Automation> listAutomations=Automations.GetDeepCopy();
 			bool automationHappened=false;
 			for(int i=0;i<listAutomations.Count;i++) {
-				if(listAutomations[i].Autotrigger!=trigger) {
+				if(listAutomations[i].Trigger!=trigger) {
 					continue;
 				}
 				if(trigger==AutomationTrigger.CompleteProcedure || trigger==AutomationTrigger.ScheduleProcedure) {
 					if(procCodes==null || procCodes.Count==0) {
 						continue;//fail silently
 					}
-					string[] arrayCodes=listAutomations[i].ProcCodes.Split(',');
+					string[] arrayCodes=listAutomations[i].ProcedureCodes.Split(',');
 					if(procCodes.All(x => !arrayCodes.Contains(x))) {
 						continue;
 					}
 				}
 				//matching automation item has been found
 				//Get possible list of conditions that exist for this automation item
-				List<AutomationCondition> autoConditionsList=AutomationConditions.GetListByAutomationNum(listAutomations[i].AutomationNum);
+				List<AutomationCondition> autoConditionsList=AutomationConditions.GetListByAutomationNum(listAutomations[i].Id);
 				if(autoConditionsList.Count>0 && !CheckAutomationConditions(autoConditionsList,patNum,triggerObj)) {
 					continue;
 				}
@@ -72,7 +72,7 @@ namespace OpenDental {
 						continue;
 					case AutomationAction.PopUpThenDisable10Min:
 						Plugins.HookAddCode(null,"AutomationL.Trigger_PopUpThenDisable10Min_begin",listAutomations[i],procCodes,patNum);
-						long automationNum=listAutomations[i].AutomationNum;
+						long automationNum=listAutomations[i].Id;
 						bool hasAutomationBlock=FormOpenDental.DicBlockedAutomations.ContainsKey(automationNum);
 						if(hasAutomationBlock && FormOpenDental.DicBlockedAutomations[automationNum].ContainsKey(patNum)) {//Automation block exist for current patient.
 							continue;
@@ -93,7 +93,7 @@ namespace OpenDental {
 					case AutomationAction.PrintPatientLetter:
 					case AutomationAction.ShowExamSheet:
 					case AutomationAction.ShowConsentForm:
-						sheetDef=SheetDefs.GetSheetDef(listAutomations[i].SheetDefNum);
+						sheetDef=SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId);
 						sheet=SheetUtil.CreateSheet(sheetDef,patNum);
 						SheetParameter.SetParameter(sheet,"PatNum",patNum);
 						SheetFiller.FillFields(sheet);
@@ -109,7 +109,7 @@ namespace OpenDental {
 							automationHappened=true;
 							continue;
 						}
-						sheetDef=SheetDefs.GetSheetDef(listAutomations[i].SheetDefNum);
+						sheetDef=SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId);
 						sheet=SheetUtil.CreateSheet(sheetDef,patNum);
 						SheetParameter.SetParameter(sheet,"PatNum",patNum);
 						SheetParameter.SetParameter(sheet,"ReferralNum",referralNum);
@@ -155,7 +155,7 @@ namespace OpenDental {
 							continue;
 						}
 						aptOld=aptNew.Copy();
-						aptNew.AppointmentTypeNum=listAutomations[i].AppointmentTypeNum;
+						aptNew.AppointmentTypeNum=listAutomations[i].AppointmentTypeId;
 						AppointmentType aptTypeCur=AppointmentTypes.GetFirstOrDefault(x => x.AppointmentTypeNum==aptNew.AppointmentTypeNum);
 						if(aptTypeCur!=null) {
 							aptNew.ColorOverride=aptTypeCur.AppointmentTypeColor;
@@ -193,7 +193,7 @@ namespace OpenDental {
 						foreach(RxPat rx in listRx.Where(x => !string.IsNullOrWhiteSpace(x.PatientInstruction))){
 							//This logic is an exact copy of FormRxManage.butPrintSelect_Click()'s logic when 1 Rx is selected.  
 							//If this is updated, that method needs to be updated as well.
-							sheetDef=SheetDefs.GetSheetDef(listAutomations[i].SheetDefNum);
+							sheetDef=SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId);
 							sheet=SheetUtil.CreateSheet(sheetDef,patNum);
 							SheetParameter.SetParameter(sheet,"RxNum",rx.RxNum);
 							SheetFiller.FillFields(sheet);

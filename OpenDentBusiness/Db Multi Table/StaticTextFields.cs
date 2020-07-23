@@ -356,7 +356,7 @@ namespace OpenDentBusiness {
 			}
 			if (IsQueryNeeded(ref ListAllergies, StaticTextFieldDependency.ListAllergies))
 			{
-				ListAllergies = Allergies.GetAll(pat.PatNum, false);
+				ListAllergies = Allergies.GetByPatient(pat.PatNum, false);
 			}
 			if (IsQueryNeeded(ref ListMedicationPats, StaticTextFieldDependency.ListMedicationPats))
 			{

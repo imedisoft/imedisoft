@@ -71,7 +71,7 @@ namespace OpenDentBusiness
 			if (refreshAll || invalidTypes.Contains(InvalidType.Automation))
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Automation.ToString());
-				Automations.GetTableFromCache(true);
+				Automations.RefreshCache();
 			}
 
 			if (invalidTypes.Contains(InvalidType.AutoNotes) || refreshAll)
@@ -332,8 +332,8 @@ namespace OpenDentBusiness
 				//It is completely safe to skip over getting the user cache when IsCacheAllowed is false because the setter for that boolean nulls the cache.
 				//This means that the cache will refill itself automatically the next time it is accessed as soon as the boolean flips back to true.
                 Userods.RefreshCache();
+				UserGroups.RefreshCache();
 
-				UserGroups.GetTableFromCache(true);
 				GroupPermissions.GetTableFromCache(true);
 				UserGroupAttaches.GetTableFromCache(true);
 			}
@@ -389,7 +389,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.UserClinics) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.UserClinics.ToString());
-				UserClinics.GetTableFromCache(true);
+				UserClinics.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.UserQueries) || refreshAll)
 			{

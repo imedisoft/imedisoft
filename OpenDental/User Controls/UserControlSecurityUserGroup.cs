@@ -87,7 +87,7 @@ namespace OpenDental {
 					return;
 				}
 				foreach(ODBoxItem<UserGroup> boxItemUserGroupCur in listUserGroupTabUserGroups.Items) {
-					if(boxItemUserGroupCur.Tag.UserGroupNum == value.UserGroupNum) {
+					if(boxItemUserGroupCur.Tag.Id == value.Id) {
 						listUserGroupTabUserGroups.SelectedItem=boxItemUserGroupCur;
 						break;
 					}
@@ -123,7 +123,7 @@ namespace OpenDental {
 				#region Load UserGroups Tab
 				securityTreeUserGroup.FillTreePermissionsInitial();
 				FillListUserGroupTabUserGroups();
-				securityTreeUserGroup.FillForUserGroup(SelectedUserGroup.UserGroupNum);
+				securityTreeUserGroup.FillForUserGroup(SelectedUserGroup.Id);
 				FillAssociatedUsers();
 				#endregion
 			}
@@ -210,7 +210,7 @@ namespace OpenDental {
 				retVal.RemoveAll(x => x.ClinicNum!=((ODBoxItem<Clinic>)comboClinic.SelectedItem).Tag.ClinicNum);
 			}
 			if(comboGroups.SelectedIndex>0) {
-				retVal.RemoveAll(x => !x.IsInUserGroup(((ODBoxItem<UserGroup>)comboGroups.SelectedItem).Tag.UserGroupNum));
+				retVal.RemoveAll(x => !x.IsInUserGroup(((ODBoxItem<UserGroup>)comboGroups.SelectedItem).Tag.Id));
 			}
 			if(!string.IsNullOrWhiteSpace(textPowerSearch.Text)) {
 				switch(((ODBoxItem<UserFilters>)comboShowOnly.SelectedItem).Tag) {
@@ -234,7 +234,7 @@ namespace OpenDental {
 
 		///<summary>Refreshes the security tree in the "Users" tab.</summary>
 		private void RefreshUserTree() {
-			securityTreeUser.FillForUserGroup(listUserTabUserGroups.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.UserGroupNum).ToList());
+			securityTreeUser.FillForUserGroup(listUserTabUserGroups.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
 		}
 
 		///<summary>Refreshes the UserGroups list box on the "User" tab. Also refreshes the security tree. 
@@ -380,7 +380,7 @@ namespace OpenDental {
 			foreach(UserGroup groupCur in UserGroups.GetList(IsForCEMT)) {
 				ODBoxItem<UserGroup> boxItemCur = new ODBoxItem<UserGroup>(groupCur.Description,groupCur);
 				listUserGroupTabUserGroups.Items.Add(boxItemCur);
-				if(selectedGroup != null && groupCur.UserGroupNum == selectedGroup.UserGroupNum) {
+				if(selectedGroup != null && groupCur.Id == selectedGroup.Id) {
 					listUserGroupTabUserGroups.SelectedItem = boxItemCur;
 				}
 			}
@@ -394,7 +394,7 @@ namespace OpenDental {
 		///This also dynamically sets the height of the control.</summary>
 		private void FillAssociatedUsers() {
 			listAssociatedUsers.Items.Clear();
-			List<Userod> listUsers = Userods.GetForGroup(SelectedUserGroup.UserGroupNum);
+			List<Userod> listUsers = Userods.GetForGroup(SelectedUserGroup.Id);
 			foreach(Userod userCur in listUsers) {
 				listAssociatedUsers.Items.Add(new ODBoxItem<Userod>(userCur.UserName,userCur));
 			}
@@ -407,7 +407,7 @@ namespace OpenDental {
 			if(_isFillingList) {
 				return;
 			}
-			securityTreeUserGroup.FillForUserGroup(((ODBoxItem<UserGroup>)listUserGroupTabUserGroups.SelectedItem).Tag.UserGroupNum);
+			securityTreeUserGroup.FillForUserGroup(((ODBoxItem<UserGroup>)listUserGroupTabUserGroups.SelectedItem).Tag.Id);
 			FillAssociatedUsers();
 		}
 

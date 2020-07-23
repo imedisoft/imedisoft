@@ -3646,7 +3646,7 @@ namespace OpenDental {
 					#region Allergies
 					case "Allergies":
 						if(doRefreshData || LoadData.ListAllergies==null) {
-							LoadData.ListAllergies=Allergies.GetAll(_patCur.PatNum,false);
+							LoadData.ListAllergies=Allergies.GetByPatient(_patCur.PatNum,false);
 						}
 						List<Allergy> listAllergies=LoadData.ListAllergies;
 						row=new GridRow();
@@ -3673,10 +3673,10 @@ namespace OpenDental {
 							//In the instance that an AllergyDef is somehow deleted/removed from the DB, create an AllergyDef - display only - based upon the selected 
 							//number. Populate it with a description that tells the user that the Allergy is missing. 
 							//The user can click on the allergy in FormMedical and remedy the issue on their own.
-							AllergyDef allergyDef=AllergyDefs.GetOne(listAllergies[i].AllergyDefNum);
+							AllergyDef allergyDef=AllergyDefs.GetOne(listAllergies[i].AllergyDefId);
 							if(allergyDef==null) {
 								allergyDef=new AllergyDef() {
-									AllergyDefNum=listAllergies[i].AllergyDefNum,
+									AllergyDefNum=listAllergies[i].AllergyDefId,
 									Description="MISSING ALLERGY"
 								};
 							}
@@ -9203,12 +9203,12 @@ namespace OpenDental {
 					if(_toothChartRelay.SelectedTeeth.Count==0) {
 						AutoCodeItem autoCodeItem=null;
 						if(AutoCodeItems.GetContainsKey(ProcCur.CodeNum)) { 
-							autoCodeItem=AutoCodeItems.GetListForCode(AutoCodeItems.GetOne(ProcCur.CodeNum).AutoCodeNum)
-								.FirstOrDefault(x => x.CodeNum==ProcCur.CodeNum);
+							autoCodeItem=AutoCodeItems.GetListForCode(AutoCodeItems.GetOne(ProcCur.CodeNum).AutoCodeId)
+								.FirstOrDefault(x => x.ProcedureCodeId==ProcCur.CodeNum);
 						}
 						List<AutoCodeCond> listAutoCodeCond=new List<AutoCodeCond>();
 						if(autoCodeItem!=null) {
-							listAutoCodeCond=AutoCodeConds.GetListForItem(autoCodeItem.AutoCodeItemNum);
+							listAutoCodeCond=AutoCodeConds.GetByAutoCodeItem(autoCodeItem.Id);
 						}
 						if(listAutoCodeCond.Count==1) {
 							if(listAutoCodeCond[0].Cond==AutoCondition.Maxillary) {
@@ -9288,7 +9288,7 @@ namespace OpenDental {
 					return;
 				}
 				AutoCode autoCode=AutoCodes.GetOne(autoCodeNum);
-				if(AutoCodeItems.GetListForCode(autoCode.AutoCodeNum).Count==0) {
+				if(AutoCodeItems.GetListForCode(autoCode.Id).Count==0) {
 					//AutoCode is not setup correctly.
 					MessageBox.Show(this,Lan.G(this,"The following AutoCode has no associated Procedure Codes: ")+"\r\n"+autoCode.Description+"\r\n"
 						+Lan.G(this,"AutoCode must be setup correctly before it can be used with a Quick Proc Button."));

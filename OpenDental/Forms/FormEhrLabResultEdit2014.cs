@@ -297,7 +297,7 @@ namespace OpenDental {
 			if(FormU.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			textObsUnitsID.Text=FormU.SelectedUcum.UcumCode;
+			textObsUnitsID.Text=FormU.SelectedUcum.Code;
 			textObsUnitsCodeSystem.Text="UCUM";
 			textObsUnitsText.Text=FormU.SelectedUcum.Description;
 			textObsUnitsTextOrig.Text=FormU.SelectedUcum.Description;

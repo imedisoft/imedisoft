@@ -17,7 +17,7 @@ namespace UnitTestsCore {
 		}
 
 		private static void AddToDict(string prefName,string newValue) {
-			string oldValue=Prefs.GetPref(prefName.ToString()).ValueString;
+			string oldValue=Prefs.GetPref(prefName.ToString()).Value;
 			if(oldValue==newValue || _dictPrefsOrig.ContainsKey(prefName)) {
 				return;
 			}

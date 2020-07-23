@@ -88,16 +88,16 @@ namespace OpenDentBusiness{
 		public static List<UserGroupAttach> TranslateCEMTToLocal(List<UserGroupAttach> listUserGroupAttachCEMT) {
 			List<UserGroupAttach> retVal = new List<UserGroupAttach>();
 			List<Userod> listRemoteUsers = Userods.GetUsersNoCache();
-			List<UserGroup> listRemoteGroups = UserGroups.GetCEMTGroupsNoCache();
+			List<UserGroup> listRemoteGroups = UserGroups.GetCEMTGroupsNoCache().ToList();
 			foreach(UserGroupAttach attachCur in listUserGroupAttachCEMT) {
 				Userod userCur = listRemoteUsers.FirstOrDefault(x => attachCur.UserNum == x.UserNumCEMT);
-				UserGroup userGroupCur = listRemoteGroups.FirstOrDefault(x => attachCur.UserGroupNum == x.UserGroupNumCEMT);
+				UserGroup userGroupCur = listRemoteGroups.FirstOrDefault(x => attachCur.UserGroupNum == x.CentralUserGroupId);
 				if(userCur == null || userGroupCur == null) {
 					continue;
 				}
 				UserGroupAttach userGroupAttachNew = new UserGroupAttach() {
 					UserNum = userCur.Id,
-					UserGroupNum = userGroupCur.UserGroupNum
+					UserGroupNum = userGroupCur.Id
 				};
 				retVal.Add(userGroupAttachNew);
 			}
@@ -140,12 +140,12 @@ namespace OpenDentBusiness{
 			listAdd = listAdd.GroupBy(x => new { x.UserNum,x.UserGroupNum }).Select(x => x.First()).ToList();
 			//Get users and user groups from remote db to compare against for log entrys
 			List<Userod> listRemoteUsers = Userods.GetUsersNoCache();
-			List<UserGroup> listRemoteGroups = UserGroups.GetCEMTGroupsNoCache();
+			List<UserGroup> listRemoteGroups = UserGroups.GetCEMTGroupsNoCache().ToList();
 			foreach(UserGroupAttach userGroupAdd in listAdd) {
 				rowsChanged++;
 				UserGroupAttaches.Insert(userGroupAdd);
 				Userod user=listRemoteUsers.FirstOrDefault(x => x.Id==userGroupAdd.UserNum);
-				UserGroup userGroup=listRemoteGroups.FirstOrDefault(x => x.UserGroupNum==userGroupAdd.UserGroupNum);
+				UserGroup userGroup=listRemoteGroups.FirstOrDefault(x => x.Id==userGroupAdd.UserGroupNum);
 				SecurityLogs.MakeLogEntryNoCache(Permissions.SecurityAdmin,0,"User: "+user.UserName+" added to user group: "
 					+userGroup.Description+" by CEMT user: "+Security.CurUser.UserName);
 			}
@@ -153,7 +153,7 @@ namespace OpenDentBusiness{
 				rowsChanged++;
 				UserGroupAttaches.Delete(userGroupDel);
 				Userod user=listRemoteUsers.FirstOrDefault(x => x.Id==userGroupDel.UserNum);
-				UserGroup userGroup=listRemoteGroups.FirstOrDefault(x => x.UserGroupNum==userGroupDel.UserGroupNum);
+				UserGroup userGroup=listRemoteGroups.FirstOrDefault(x => x.Id==userGroupDel.UserGroupNum);
 				SecurityLogs.MakeLogEntryNoCache(Permissions.SecurityAdmin,0,"User: "+user.UserName+" removed from user group: "
 					+userGroup.Description+" by CEMT user: "+Security.CurUser.UserName);
 			}

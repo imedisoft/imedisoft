@@ -165,7 +165,7 @@ namespace OpenDental {
 		private string GetHiddenPrefString(PrefName pref) {
 			try {
 				Pref hiddenPref=Prefs.GetOne(pref);
-				return hiddenPref.ValueString;
+				return hiddenPref.Value;
 			}
 			catch {
 				return null;

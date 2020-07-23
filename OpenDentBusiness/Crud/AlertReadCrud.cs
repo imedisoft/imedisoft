@@ -41,9 +41,9 @@ namespace OpenDentBusiness.Crud{
 			AlertRead alertRead;
 			foreach(DataRow row in table.Rows) {
 				alertRead=new AlertRead();
-				alertRead.AlertReadNum= PIn.Long  (row["AlertReadNum"].ToString());
-				alertRead.AlertItemNum= PIn.Long  (row["AlertItemNum"].ToString());
-				alertRead.UserNum     = PIn.Long  (row["UserNum"].ToString());
+				alertRead.Id= PIn.Long  (row["AlertReadNum"].ToString());
+				alertRead.AlertItemId= PIn.Long  (row["AlertItemNum"].ToString());
+				alertRead.UserId     = PIn.Long  (row["UserNum"].ToString());
 				retVal.Add(alertRead);
 			}
 			return retVal;
@@ -60,9 +60,9 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("UserNum");
 			foreach(AlertRead alertRead in listAlertReads) {
 				table.Rows.Add(new object[] {
-					POut.Long  (alertRead.AlertReadNum),
-					POut.Long  (alertRead.AlertItemNum),
-					POut.Long  (alertRead.UserNum),
+					POut.Long  (alertRead.Id),
+					POut.Long  (alertRead.AlertItemId),
+					POut.Long  (alertRead.UserId),
 				});
 			}
 			return table;
@@ -76,7 +76,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one AlertRead into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(AlertRead alertRead,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				alertRead.AlertReadNum=ReplicationServers.GetKey("alertread","AlertReadNum");
+				alertRead.Id=ReplicationServers.GetKey("alertread","AlertReadNum");
 			}
 			string command="INSERT INTO alertread (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -84,18 +84,18 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="AlertItemNum,UserNum) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(alertRead.AlertReadNum)+",";
+				command+=POut.Long(alertRead.Id)+",";
 			}
 			command+=
-				     POut.Long  (alertRead.AlertItemNum)+","
-				+    POut.Long  (alertRead.UserNum)+")";
+				     POut.Long  (alertRead.AlertItemId)+","
+				+    POut.Long  (alertRead.UserId)+")";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				alertRead.AlertReadNum=Database.ExecuteInsert(command);
+				alertRead.Id=Database.ExecuteInsert(command);
 			}
-			return alertRead.AlertReadNum;
+			return alertRead.Id;
 		}
 
 		///<summary>Inserts one AlertRead into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -108,52 +108,52 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO alertread (";
 			if(!useExistingPK) {
-				alertRead.AlertReadNum=ReplicationServers.GetKeyNoCache("alertread","AlertReadNum");
+				alertRead.Id=ReplicationServers.GetKeyNoCache("alertread","AlertReadNum");
 			}
 			if(useExistingPK) {
 				command+="AlertReadNum,";
 			}
 			command+="AlertItemNum,UserNum) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(alertRead.AlertReadNum)+",";
+				command+=POut.Long(alertRead.Id)+",";
 			}
 			command+=
-				     POut.Long  (alertRead.AlertItemNum)+","
-				+    POut.Long  (alertRead.UserNum)+")";
+				     POut.Long  (alertRead.AlertItemId)+","
+				+    POut.Long  (alertRead.UserId)+")";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				alertRead.AlertReadNum=Database.ExecuteInsert(command);
+				alertRead.Id=Database.ExecuteInsert(command);
 			}
-			return alertRead.AlertReadNum;
+			return alertRead.Id;
 		}
 
 		///<summary>Updates one AlertRead in the database.</summary>
 		public static void Update(AlertRead alertRead) {
 			string command="UPDATE alertread SET "
-				+"AlertItemNum=  "+POut.Long  (alertRead.AlertItemNum)+", "
-				+"UserNum     =  "+POut.Long  (alertRead.UserNum)+" "
-				+"WHERE AlertReadNum = "+POut.Long(alertRead.AlertReadNum);
+				+"AlertItemNum=  "+POut.Long  (alertRead.AlertItemId)+", "
+				+"UserNum     =  "+POut.Long  (alertRead.UserId)+" "
+				+"WHERE AlertReadNum = "+POut.Long(alertRead.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one AlertRead in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(AlertRead alertRead,AlertRead oldAlertRead) {
 			string command="";
-			if(alertRead.AlertItemNum != oldAlertRead.AlertItemNum) {
+			if(alertRead.AlertItemId != oldAlertRead.AlertItemId) {
 				if(command!="") { command+=",";}
-				command+="AlertItemNum = "+POut.Long(alertRead.AlertItemNum)+"";
+				command+="AlertItemNum = "+POut.Long(alertRead.AlertItemId)+"";
 			}
-			if(alertRead.UserNum != oldAlertRead.UserNum) {
+			if(alertRead.UserId != oldAlertRead.UserId) {
 				if(command!="") { command+=",";}
-				command+="UserNum = "+POut.Long(alertRead.UserNum)+"";
+				command+="UserNum = "+POut.Long(alertRead.UserId)+"";
 			}
 			if(command=="") {
 				return false;
 			}
 			command="UPDATE alertread SET "+command
-				+" WHERE AlertReadNum = "+POut.Long(alertRead.AlertReadNum);
+				+" WHERE AlertReadNum = "+POut.Long(alertRead.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -161,10 +161,10 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(AlertRead,AlertRead) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(AlertRead alertRead,AlertRead oldAlertRead) {
-			if(alertRead.AlertItemNum != oldAlertRead.AlertItemNum) {
+			if(alertRead.AlertItemId != oldAlertRead.AlertItemId) {
 				return true;
 			}
-			if(alertRead.UserNum != oldAlertRead.UserNum) {
+			if(alertRead.UserId != oldAlertRead.UserId) {
 				return true;
 			}
 			return false;
@@ -184,8 +184,8 @@ namespace OpenDentBusiness.Crud{
 			List<AlertRead> listUpdNew =new List<AlertRead>();
 			List<AlertRead> listUpdDB  =new List<AlertRead>();
 			List<AlertRead> listDel    =new List<AlertRead>();
-			listNew.Sort((AlertRead x,AlertRead y) => { return x.AlertReadNum.CompareTo(y.AlertReadNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((AlertRead x,AlertRead y) => { return x.AlertReadNum.CompareTo(y.AlertReadNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((AlertRead x,AlertRead y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((AlertRead x,AlertRead y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
@@ -213,12 +213,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.AlertReadNum<fieldDB.AlertReadNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.AlertReadNum>fieldDB.AlertReadNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -239,7 +239,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].AlertReadNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

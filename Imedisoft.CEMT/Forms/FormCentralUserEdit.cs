@@ -31,7 +31,7 @@ namespace Imedisoft.CEMT.Forms
             {
 				var index = userGroupsListBox.Items.Add(userGroup);
 
-				if (user.IsInUserGroup(userGroup.UserGroupNum))
+				if (user.IsInUserGroup(userGroup.Id))
                 {
 					userGroupsListBox.SetSelected(index, true);
                 }
@@ -63,7 +63,7 @@ namespace Imedisoft.CEMT.Forms
 		private void RefreshUserTree() 
 			=> securityTreeUser.FillForUserGroup(
 				userGroupsListBox.SelectedItems.OfType<UserGroup>()
-					.Select(userGroup => userGroup.UserGroupNum)
+					.Select(userGroup => userGroup.Id)
 					.ToList());
 
 		private void UserGroupsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -168,13 +168,13 @@ namespace Imedisoft.CEMT.Forms
 				if (user.IsNew)
 				{
 					long userId = Userods.Insert(user, 
-						userGroupsListBox.SelectedItems.OfType<UserGroup>().Select(x => x.UserGroupNum).ToList(),
+						userGroupsListBox.SelectedItems.OfType<UserGroup>().Select(x => x.Id).ToList(),
 						true);
 				}
 				else
 				{
 					Userods.Update(user, 
-						userGroupsListBox.SelectedItems.OfType<UserGroup>().Select(x => x.UserGroupNum).ToList());
+						userGroupsListBox.SelectedItems.OfType<UserGroup>().Select(x => x.Id).ToList());
 				}
 			}
 			catch (Exception exception)

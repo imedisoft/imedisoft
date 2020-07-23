@@ -133,7 +133,6 @@ namespace OpenDentBusiness {
 					listRepeatingCharges.Select(x => x.ProcCode).Distinct().Select(x => ProcedureCodes.GetProcCode(x).CodeNum).ToList());
 				DateTime startedUsingFKs=UpdateHistories.GetDateForVersion(new Version("16.1.0.0"));//We started using FKs from procs to repeat charges in 16.1.
 				List<long> listAddedPatNums=new List<long>();
-				bool didEncounterAvaTaxError=false;
 				OrthoCaseProcLinkingData orthoCaseProcLinkingData=new OrthoCaseProcLinkingData(listRepeatingCharges.Select(x => x.PatNum).ToList());
 				foreach(RepeatCharge repeatCharge in listRepeatingCharges) {
 					if(!repeatCharge.IsEnabled || (repeatCharge.DateStop.Year > 1880 && repeatCharge.DateStop.AddMonths(3) < dateRun)) {
@@ -176,7 +175,6 @@ namespace OpenDentBusiness {
 					foreach(DateTime billingDate in listBillingDates) {
 						Procedure procAdded=AddProcForRepeatCharge(repeatCharge,billingDate,dateRun,orthoCaseProcLinkingData);
 						if(procAdded.ProcNum==0) { //error we actually don't want to add this procedure
-							didEncounterAvaTaxError=true;
 							continue;
 						}
 						List<Claim> listClaimsAdded=new List<Claim>();
@@ -190,9 +188,6 @@ namespace OpenDentBusiness {
 							listAddedPatNums.Add(procAdded.PatNum);
 						}
 					}
-				}
-				if(AvaTax.IsEnabled() && didEncounterAvaTaxError) {
-					result.ErrorMsg+="One or more procedures were skipped due to AvaTax related errors. See local logs for more details.";
 				}
 				if(doComputeAging && listAddedPatNums.Count>0) {
 					List<long> listGuarantors=Patients.GetGuarantorsForPatNums(listAddedPatNums);
@@ -391,17 +386,7 @@ namespace OpenDentBusiness {
 				Procedures.Insert(procedure,isRepeatCharge:true,skipDiscountPlanAdjustment:orthoCaseProcLinkingData.CanProcLinkToOrthoCase(procedure));
 				OrthoProcLinks.TryLinkProcForActiveOrthoCaseAndUpdate(orthoCaseProcLinkingData,procedure);
 			}
-			catch(Exception e) {
-				if(AvaTax.DoSendProcToAvalara(procedure,isSilent:true)) { //Avatax errors should only happen in HQ but just in case
-					Adjustments.DeleteForProcedure(procedure.ProcNum);
-					Procedures.Delete(procedure.ProcNum);
-					if(!string.IsNullOrWhiteSpace(repeatCharge.Note)) {
-						repeatCharge.Note+=Environment.NewLine;
-					}
-					repeatCharge.Note+=e.Message;
-					RepeatCharges.Update(repeatCharge);//save the note with the error
-					return new Procedure(); //main thing is this has proc num 0 so we know to skip this procedure
-				}
+			catch{
 			}
 			return procedure;
 		}

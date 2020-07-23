@@ -284,7 +284,7 @@ namespace OpenDentBusiness
 				List<UserClinic> listUserClinics = new List<UserClinic>();
 				for (int i = 0; i < listClinicNums.Count; i++)
 				{
-					listUserNumsInClinic.AddRange(UserClinics.GetForClinic(listClinicNums[i]).Select(y => y.UserNum).Distinct().ToList());
+					listUserNumsInClinic.AddRange(UserClinics.GetForClinic(listClinicNums[i]).Select(y => y.UserId).Distinct().ToList());
 				}
 				listUserNumsInClinic.AddRange(GetUsers().FindAll(x => !x.ClinicIsRestricted).Select(x => x.Id).Distinct().ToList());//Always add unrestricted users into the list.
 				listUserNumsInClinic = listUserNumsInClinic.Distinct().ToList();//Remove duplicates that could possibly be in the list.
@@ -434,7 +434,7 @@ namespace OpenDentBusiness
 		{
 			string command;
 			//Check if the user group that the students or instructors are trying to go to has the SecurityAdmin permission.
-			if (!GroupPermissions.HasPermission(userGroup.UserGroupNum, Permissions.SecurityAdmin, 0))
+			if (!GroupPermissions.HasPermission(userGroup.Id, Permissions.SecurityAdmin, 0))
 			{
 				//We need to make sure that moving these users to the new user group does not eliminate all SecurityAdmin users in db.
 				command = "SELECT COUNT(*) FROM usergroupattach "
@@ -460,7 +460,7 @@ namespace OpenDentBusiness
 				}
 			}
 			command = "UPDATE userod INNER JOIN provider ON userod.ProvNum=provider.ProvNum "
-					+ "SET UserGroupNum=" + POut.Long(userGroup.UserGroupNum) + " "
+					+ "SET UserGroupNum=" + POut.Long(userGroup.Id) + " "
 					+ "WHERE provider.IsInstructor=" + POut.Bool(isInstructor);
 			if (!isInstructor)
 			{
@@ -527,7 +527,7 @@ namespace OpenDentBusiness
 			{
 				throw new Exception(Lans.g("Userods", "The current user must be in at least one user group."));
 			}
-			Validate(false, userToUpdate, true, listUserGroups.Select(x => x.UserGroupNum).ToList());
+			Validate(false, userToUpdate, true, listUserGroups.Select(x => x.Id).ToList());
 			Crud.UserodCrud.Update(userToUpdate);
 		}
 
@@ -720,10 +720,10 @@ namespace OpenDentBusiness
 			copy.ClinicIsRestricted = user.ClinicIsRestricted;
 			copy.ClinicNum = user.ClinicNum;
 			//Insert also validates the user.
-			copy.Id = Insert(copy, UserGroups.GetForUser(user.Id, isForCemt).Select(x => x.UserGroupNum).ToList(), isForCemt);
+			copy.Id = Insert(copy, UserGroups.GetForUser(user.Id, isForCemt).Select(x => x.Id).ToList(), isForCemt);
 			#region UserClinics
 			List<UserClinic> listUserClinics = new List<UserClinic>(UserClinics.GetForUser(user.Id));
-			listUserClinics.ForEach(x => x.UserNum = copy.Id);
+			listUserClinics.ForEach(x => x.UserId = copy.Id);
 			UserClinics.Sync(listUserClinics, copy.Id);
 			#endregion
 			#region Alerts

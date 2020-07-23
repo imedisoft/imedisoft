@@ -154,7 +154,7 @@ namespace OpenDentBusiness
 		/// Gets a pref of type long.
 		/// </summary>
 		public static long GetLong(PrefName preferenceName) 
-			=> SIn.Long(Prefs.GetOne(preferenceName).ValueString);
+			=> SIn.Long(Prefs.GetOne(preferenceName).Value);
 
 		/// <summary>
 		/// For UI display when we store a zero/meaningless value as -1. Returns "0" when useZero is true, otherwise "".
@@ -177,31 +177,31 @@ namespace OpenDentBusiness
 		/// Also used for historical queries in ConvertDatabase.
 		/// </summary>
 		public static int GetInt(PrefName preferenceName) 
-			=> SIn.Int(Prefs.GetOne(preferenceName).ValueString);
+			=> SIn.Int(Prefs.GetOne(preferenceName).Value);
 
 		/// <summary>
 		/// Gets a pref of type byte. Used when the pref is a very small integer (0-255).
 		/// </summary>
 		public static byte GetByte(PrefName preferenceName) 
-			=> SIn.Byte(Prefs.GetOne(preferenceName).ValueString);
+			=> SIn.Byte(Prefs.GetOne(preferenceName).Value);
 		
 		/// <summary>
 		/// Gets a pref of type double.
 		/// </summary>
 		public static double GetDouble(PrefName preferenceName) 
-			=> SIn.Double(Prefs.GetOne(preferenceName).ValueString);
+			=> SIn.Double(Prefs.GetOne(preferenceName).Value);
 
 		/// <summary>
 		/// Gets a pref of type double.
 		/// </summary>
 		public static double GetDouble(PrefName preferenceName, bool doUseEnUSFormat) 
-			=> SIn.Double(Prefs.GetOne(preferenceName).ValueString, doUseEnUSFormat);
+			=> SIn.Double(Prefs.GetOne(preferenceName).Value, doUseEnUSFormat);
 
 		/// <summary>
 		/// Gets a pref of type bool.
 		/// </summary>
 		public static bool GetBool(PrefName preferenceName) 
-			=> SIn.Bool(Prefs.GetOne(preferenceName).ValueString);
+			=> SIn.Bool(Prefs.GetOne(preferenceName).Value);
 
 		/// <summary>
 		/// Gets the bool value for a YN pref. If Unknown, then returns the default.
@@ -209,7 +209,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static bool GetYN(PrefName preferenceName)
 		{
-			YN yn = (YN)SIn.Int(Prefs.GetOne(preferenceName).ValueString);
+			YN yn = (YN)SIn.Int(Prefs.GetOne(preferenceName).Value);
 			if (yn == YN.Yes)
 			{
 				return true;
@@ -239,7 +239,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static System.Windows.Forms.CheckState GetYNCheckState(PrefName preferenceName)
 		{
-			YN yn = (YN)SIn.Int(Prefs.GetOne(preferenceName).ValueString);
+			YN yn = (YN)SIn.Int(Prefs.GetOne(preferenceName).Value);
 			if (yn == YN.Yes)
 			{
 				return System.Windows.Forms.CheckState.Checked;
@@ -272,7 +272,7 @@ namespace OpenDentBusiness
 
 				if (pref != null)
                 {
-					return SIn.Bool(pref.ValueString);
+					return SIn.Bool(pref.Value);
                 }
             }
             catch
@@ -286,7 +286,7 @@ namespace OpenDentBusiness
 		/// Gets a pref of type string.
 		/// </summary>
 		public static string GetString(PrefName preferenceName) 
-			=> Prefs.GetOne(preferenceName).ValueString;
+			=> Prefs.GetOne(preferenceName).Value;
 
 		/// <summary>
 		/// Gets a pref of type string without using the cache.
@@ -303,7 +303,7 @@ namespace OpenDentBusiness
 
             try
             {
-				return Prefs.GetOne(preferenceName)?.ValueString ?? "";
+				return Prefs.GetOne(preferenceName)?.Value ?? "";
             }
             catch
             {
@@ -316,25 +316,25 @@ namespace OpenDentBusiness
 		/// Gets a pref of type date.
 		/// </summary>
 		public static DateTime GetDate(PrefName preferenceName) 
-			=> SIn.Date(Prefs.GetOne(preferenceName).ValueString);
+			=> SIn.Date(Prefs.GetOne(preferenceName).Value);
 
 		/// <summary>
 		/// Gets a pref of type datetime.
 		/// </summary>
 		public static DateTime GetDateT(PrefName preferenceName) // TODO: Deprecate this in favor of GetDate()
-			=> SIn.Date(Prefs.GetOne(preferenceName).ValueString);
+			=> SIn.Date(Prefs.GetOne(preferenceName).Value);
 
 		/// <summary>
 		/// Gets a color from an int32 pref.
 		/// </summary>
 		public static Color GetColor(PrefName preferenceName) 
-			=> Color.FromArgb(SIn.Int(Prefs.GetOne(preferenceName).ValueString));
+			=> Color.FromArgb(SIn.Int(Prefs.GetOne(preferenceName).Value));
 
 		/// <summary>
 		/// Used sometimes for prefs that are not part of the enum, especially for outside developers.
 		/// </summary>
 		public static string GetRaw(string preferenceName) 
-			=> Prefs.GetOne(preferenceName).ValueString;
+			=> Prefs.GetOne(preferenceName).Value;
 
 		/// <summary>
 		/// Gets culture info from DB if possible, if not returns current culture.
@@ -347,9 +347,9 @@ namespace OpenDentBusiness
 			{
 				var preference = Prefs.GetOne("LanguageAndRegion");
 
-				if (!string.IsNullOrEmpty(preference?.ValueString))
+				if (!string.IsNullOrEmpty(preference?.Value))
 				{
-					cultureInfo = CultureInfo.GetCultureInfo(preference.ValueString);
+					cultureInfo = CultureInfo.GetCultureInfo(preference.Value);
 				}
 			});
 

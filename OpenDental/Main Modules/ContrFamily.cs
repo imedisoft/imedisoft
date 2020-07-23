@@ -652,16 +652,6 @@ namespace OpenDental{
 				FormPatFieldEdit FormPF=new FormPatFieldEdit(field);
 				FormPF.ShowDialog();
 			}
-			else if(gridPat.ListGridRows[e.Row].Tag is Address) {
-				Address address=(Address)gridPat.ListGridRows[e.Row].Tag;
-				if(address.IsNew) { //add the patCur's patNum is new
-					address.PatNumTaxPhysical=PatCur.PatNum;
-				}
-				FormTaxAddress formTaxAddress=new FormTaxAddress();
-				formTaxAddress.AddressCur=address;
-				formTaxAddress.PatCur=PatCur;
-				formTaxAddress.ShowDialog();
-			}
 			ModuleSelected(PatCur.PatNum);
 		}
 

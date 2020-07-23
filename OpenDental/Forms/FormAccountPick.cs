@@ -169,10 +169,10 @@ namespace OpenDental{
 					continue;
 				}
 				row=new GridRow();
-				row.Cells.Add(Lan.G("enumAccountType",listAccounts[i].AcctType.ToString()));
+				row.Cells.Add(Lan.G("enumAccountType",listAccounts[i].Type.ToString()));
 				row.Cells.Add(listAccounts[i].Description);
-				if(listAccounts[i].AcctType==AccountType.Asset){
-					row.Cells.Add(Accounts.GetBalance(listAccounts[i].AccountNum,listAccounts[i].AcctType).ToString("n"));
+				if(listAccounts[i].Type==AccountType.Asset){
+					row.Cells.Add(Accounts.GetBalance(listAccounts[i].Id,listAccounts[i].Type).ToString("n"));
 				}
 				else{
 					row.Cells.Add("");
@@ -185,11 +185,11 @@ namespace OpenDental{
 					row.Cells.Add("");
 				}
 				if(i<listAccounts.Count-1//if not the last row
-					&& listAccounts[i].AcctType != listAccounts[i+1].AcctType){
+					&& listAccounts[i].Type != listAccounts[i+1].Type){
 					row.ColorLborder=Color.Black;
 				}
 				row.Tag=listAccounts[i].Clone();
-				row.ColorBackG=listAccounts[i].AccountColor;
+				row.ColorBackG=listAccounts[i].Color;
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();

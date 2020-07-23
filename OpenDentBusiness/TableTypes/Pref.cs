@@ -1,52 +1,57 @@
-﻿using System;
+﻿using CodeBase;
+using Imedisoft.Data.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Text;
-using CodeBase;
 
 namespace OpenDentBusiness
 {
-	/// <summary>
-	/// Stores small bits of data for a wide variety of purposes.
-	/// Any data that's too small to warrant its own table will usually end up here.
-	/// </summary>
-	[Serializable]
-	[CrudTable(TableName = "preference")]
+    /// <summary>
+    /// Stores small bits of data for a wide variety of purposes.
+    /// Any data that's too small to warrant its own table will usually end up here.
+    /// </summary>
+    [Table("preference")]
 	public class Pref : TableBase
 	{
-		[CrudColumn(IsPriKey = true)]
-		public long PrefNum;
+		[Column("PrefNum"), PrimaryKey]
+		public long Id;
 
 		/// <summary>
 		/// The text 'key' in the key/value pairing.
 		/// </summary>
-		public string PrefName;
+		[Column("PrefName")]
+		public string Name;
 
 		/// <summary>
 		/// The stored value.
 		/// </summary>
-		[CrudColumn(SpecialType = CrudSpecialColType.TextIsClob)]
-		public string ValueString;
+		[Column("ValueString")]
+		public string Value;
 
 		/// <summary>
 		/// Documentation on usage and values of each pref.  Mostly deprecated now in favor of using XML comments in the code.
 		/// </summary>
-		[CrudColumn(SpecialType = CrudSpecialColType.TextIsClob)]
+		[Column("Comments")]
 		public string Comments;
 
 		public Pref Copy() => (Pref)MemberwiseClone();
 	}
 
-	///<summary>Because this enum is stored in the database as strings rather than as numbers, we can do the order alphabetically.  
-	///Deprecated preferences will start with "Deprecated" in the summary section.
-	///Preferences that are missing in general will start with "Missing in general" in the summary section.</summary>
+	/// <summary>
+	/// Because this enum is stored in the database as strings rather than as numbers, we can do the order alphabetically.  
+	/// Deprecated preferences will start with "Deprecated" in the summary section.
+	/// Preferences that are missing in general will start with "Missing in general" in the summary section.
+	/// </summary>
 	public enum PrefName
 	{
 		///<summary>ONLY USED FOR PREF-BOUND UI ELEMENTS or as temporary in memory place holder.  Never in the DB.</summary>
 		[PrefName(ValueType = PrefValueType.NONE)]
 		NotApplicable,
+
 		AccountingCashIncomeAccount,
+
 		///<summary>The default cash payment type used to determine the CashSumTotal for deposit slips.</summary>
 		AccountingCashPaymentType,
 		AccountingDepositAccounts,

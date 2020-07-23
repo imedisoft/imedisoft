@@ -744,7 +744,7 @@ namespace OpenDental{
 					labelDepositAccount.Text=Lan.G(this,"Deposited into Account");
 					List<JournalEntry> jeL=JournalEntries.GetForTrans(trans.TransactionNum);
 					for(int i=0;i<jeL.Count;i++) {
-						if(Accounts.GetAccount(jeL[i].AccountNum).AcctType==AccountType.Asset) {
+						if(Accounts.GetAccount(jeL[i].AccountNum).Type==AccountType.Asset) {
 							comboDepositAccount.Items.Add(Accounts.GetDescript(jeL[i].AccountNum));
 							comboDepositAccount.SelectedIndex=0;
 							textDepositAccount.Text=jeL[i].DateDisplayed.ToShortDateString()

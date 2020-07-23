@@ -299,7 +299,7 @@ namespace OpenDental{
 			//AccountCur=Accounts.ListShort[comboAccount.SelectedIndex];
 			textAccount.Text=AccountPicked.Description;
 			butChange.Text=Lan.G(this,"Change");
-			if(Accounts.DebitIsPos(AccountPicked.AcctType)) {
+			if(Accounts.DebitIsPos(AccountPicked.Type)) {
 				labelDebit.Text=Lan.G(this,"Debit")+Lan.G(this,"(+)");
 				labelCredit.Text=Lan.G(this,"Credit")+Lan.G(this,"(-)");
 			}
@@ -355,11 +355,11 @@ namespace OpenDental{
 				MessageBox.Show("Only one amount can be filled in.");
 				return;
 			}
-			if(AccountPicked==null || AccountPicked.AccountNum==0) {
+			if(AccountPicked==null || AccountPicked.Id==0) {
 				MessageBox.Show("Please select an account.");
 				return;
 			}
-			EntryCur.AccountNum=AccountPicked.AccountNum;
+			EntryCur.AccountNum=AccountPicked.Id;
 			EntryCur.DebitAmt=PIn.Double(textDebit.Text);
 			EntryCur.CreditAmt=PIn.Double(textCredit.Text);
 			EntryCur.Memo=textMemo.Text;

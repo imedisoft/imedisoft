@@ -47,7 +47,7 @@ namespace OpenDental {
 					if(!Patients.GetAllFamilyPatNums(new List<long>() { kvp.Key }).Contains(PatCur.PatNum)) {
 						continue;//Not in the same family.
 					}
-					autoCur=listAutomations.FirstOrDefault(x => x.AutomationNum==automationNum);
+					autoCur=listAutomations.FirstOrDefault(x => x.Id==automationNum);
 					if(autoCur==null) {
 						continue;
 					}
@@ -85,17 +85,17 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
-			_listPopups.RemoveAll(x => x.PopupLevel==EnumPopupLevel.Automation && !listAutomations.Any(y => y.AutomationNum==x.PopupNum));
+			_listPopups.RemoveAll(x => x.PopupLevel==EnumPopupLevel.Automation && !listAutomations.Any(y => y.Id==x.PopupNum));
 			for(int i=0;i<_listPopups.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(Patients.GetPat(_listPopups[i].PatNum).GetNameLF());
 				if(_listPopups[i].PopupLevel==EnumPopupLevel.Automation) {
-					autoCur=Automations.GetFirstOrDefault(x => x.AutomationNum==_listPopups[i].PopupNum);//Get by PK.
+					autoCur=Automations.GetFirstOrDefault(x => x.Id==_listPopups[i].PopupNum);//Get by PK.
 					//this should never happen because we remove any where the AutomationNum is not in Automations.Listt
 					//if(autoCur==null) {
 					//	continue;
 					//}
-					row.Cells.Add(Lan.G("enumEnumPopupLevel","Auto")+": "+Lan.G("enumEnumPopupLevel",autoCur.Autotrigger.ToString()));
+					row.Cells.Add(Lan.G("enumEnumPopupLevel","Auto")+": "+Lan.G("enumEnumPopupLevel",autoCur.Trigger.ToString()));
 					row.Cells.Add("");//Disabled column. Will never happen for automations.
 					row.Cells.Add(_listPopups[i].DateTimeEntry.ToShortTimeString());
 				}

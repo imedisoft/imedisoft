@@ -463,11 +463,11 @@ Allergies
 				Start("tbody");
 				for(int i=0;i<listAllergiesFiltered.Count;i++) {
 					Allergy allergy=listAllergiesFiltered[i];
-					if(allergy.PatNum==0) {
+					if(allergy.PatientId==0) {
 						allergyDef=new AllergyDef();
 					}
 					else {
-						allergyDef=AllergyDefs.GetOne(allergy.AllergyDefNum);
+						allergyDef=AllergyDefs.GetOne(allergy.AllergyDefId);
 					}
 					Start("tr");
 					//if(allergyDef.SnomedAllergyTo!="") {//Is Snomed allergy.
@@ -507,11 +507,11 @@ Allergies
 			}
 			for(int i=0;i<listAllergiesFiltered.Count;i++) {
 				Allergy allergy=listAllergiesFiltered[i];
-				if(allergy.PatNum==0) {
+				if(allergy.PatientId==0) {
 					allergyDef=new AllergyDef();
 				}
 				else {
-					allergyDef=AllergyDefs.GetOne(allergy.AllergyDefNum);
+					allergyDef=AllergyDefs.GetOne(allergy.AllergyDefId);
 				}
 				string allergyType="";
 				string allergyTypeName="";
@@ -570,17 +570,17 @@ Allergies
 					StartAndEnd("statusCode","code","completed");
 				}
 				Start("effectiveTime");
-				if(allergy.DateTStamp.Year<1880) {
+				if(allergy.DateLastModified.Year<1880) {
 					StartAndEnd("low","nullFlavor","UNK");
 					StartAndEnd("high","nullFlavor","UNK");
 				}
 				else if(allergy.StatusIsActive) {
-					StartAndEnd("low","value",allergy.DateTStamp.ToString("yyyyMMdd"));
+					StartAndEnd("low","value",allergy.DateLastModified.ToString("yyyyMMdd"));
 					StartAndEnd("high","nullFlavor","UNK");
 				}
 				else {
 					StartAndEnd("low","nullFlavor","UNK");
-					StartAndEnd("high","value",allergy.DateTStamp.ToString("yyyyMMdd"));
+					StartAndEnd("high","value",allergy.DateLastModified.ToString("yyyyMMdd"));
 				}
 				End("effectiveTime");
 				Start("entryRelationship","typeCode","SUBJ");
@@ -639,7 +639,7 @@ Allergies
 				StartAndEnd("code","code","33999-4","codeSystem",strCodeSystemLoinc,"codeSystemName",strCodeSystemNameLoinc,"displayName","Status");
 				StartAndEnd("statusCode","code","completed");//fixed value (required)
 				string status=allergy.StatusIsActive?"Active":"Inactive";
-				if(allergy.AllergyNum==0) {
+				if(allergy.Id==0) {
 					Start("value");
 					_w.WriteAttributeString("xsi","type",null,"CE");
 					Attribs("nullFlavor","UNK");
@@ -667,11 +667,11 @@ Allergies
 				StartAndEnd("code","code","ASSERTION","codeSystem","2.16.840.1.113883.5.4");
 				StartAndEnd("statusCode","code","completed");//fixed value (required)
 				Start("effectiveTime");
-				if(allergy.DateTStamp.Year<1880) {
+				if(allergy.DateLastModified.Year<1880) {
 					StartAndEnd("low","nullFlavor","UNK");
 				}
 				else if(allergy.StatusIsActive) {
-					StartAndEnd("low","value",allergy.DateTStamp.ToString("yyyyMMdd"));
+					StartAndEnd("low","value",allergy.DateLastModified.ToString("yyyyMMdd"));
 				}
 				else {
 					StartAndEnd("low","nullFlavor","UNK");
@@ -2628,10 +2628,10 @@ Vital Signs
 		private static void FilterAllergy(Patient patCur) {
 			//TODO: Add validation for UNII codes once the table has been implemented.
 			AllergyDef allergyDef;
-			List<Allergy> listAllergiesAll=Allergies.Refresh(patCur.PatNum);
+			List<Allergy> listAllergiesAll=Allergies.GetByPatient(patCur.PatNum);
 			List<Allergy> listAllergiesFiltered=new List<Allergy>();
 			for(int i=0;i<listAllergiesAll.Count;i++) {
-				allergyDef=AllergyDefs.GetOne(listAllergiesAll[i].AllergyDefNum);
+				allergyDef=AllergyDefs.GetOne(listAllergiesAll[i].AllergyDefId);
 				bool isMedAllergy=false;
 				if(allergyDef.MedicationNum!=0) {
 					Medication med=Medications.GetMedication(allergyDef.MedicationNum);

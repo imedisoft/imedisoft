@@ -62,10 +62,10 @@ namespace OpenDental{
 			_isFillingList=true;
 			for(int i=0;i<_listUserGroups.Count;i++){
 				listUserGroup.Items.Add(new ODBoxItem<UserGroup>(_listUserGroups[i].Description,_listUserGroups[i]));
-				if(!_isFromAddUser && UserCur.IsInUserGroup(_listUserGroups[i].UserGroupNum)) {
+				if(!_isFromAddUser && UserCur.IsInUserGroup(_listUserGroups[i].Id)) {
 					listUserGroup.SetSelected(i,true);
 				}
-				if(_isFromAddUser && _listUserGroups[i].UserGroupNum==PrefC.GetLong(PrefName.DefaultUserGroup)) {
+				if(_isFromAddUser && _listUserGroups[i].Id==PrefC.GetLong(PrefName.DefaultUserGroup)) {
 					listUserGroup.SetSelected(i,true);
 				}
 			}
@@ -108,11 +108,11 @@ namespace OpenDental{
 			}
 			List<long> listAlertCatNums=_listUserAlertTypesOld.Select(x => x.AlertCategoryNum).Distinct().ToList();
 			listAlertSubMulti.Items.Clear();
-			_listAlertCategories=AlertCategories.GetDeepCopy();
+			_listAlertCategories=AlertCategories.GetAll();
 			List<long> listUserAlertCatNums=_listUserAlertTypesOld.Select(x => x.AlertCategoryNum).ToList();
 			foreach(AlertCategory cat in _listAlertCategories) {
 				int index=listAlertSubMulti.Items.Add(Lan.G(this,cat.Description));
-				listAlertSubMulti.SetSelected(index,listUserAlertCatNums.Contains(cat.AlertCategoryNum));
+				listAlertSubMulti.SetSelected(index,listUserAlertCatNums.Contains(cat.Id));
 			}
 			if(!PrefC.HasClinicsEnabled) {
 				tabClinics.Enabled=false;//Disables all controls in the clinics tab.  Tab is still selectable.
@@ -142,7 +142,7 @@ namespace OpenDental{
 					if(UserCur.ClinicNum==_listClinics[i].ClinicNum) {
 						listClinic.SetSelected(i+1,true);
 					}
-					if(UserCur.ClinicNum!=0 && listUserClinics.Exists(x => x.ClinicNum==_listClinics[i].ClinicNum)) {
+					if(UserCur.ClinicNum!=0 && listUserClinics.Exists(x => x.ClinicId==_listClinics[i].ClinicNum)) {
 						listClinicMulti.SetSelected(i,true);//No "All" option, don't select i+1
 					}
 					if(!isAllClinicsSubscribed && _listUserAlertTypesOld.Exists(x => x.ClinicNum==_listClinics[i].ClinicNum)) {
@@ -184,7 +184,7 @@ namespace OpenDental{
 
 		///<summary>Refreshes the security tree in the "Users" tab.</summary>
 		private void RefreshUserTree() {
-			securityTreeUser.FillForUserGroup(listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.UserGroupNum).ToList());
+			securityTreeUser.FillForUserGroup(listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
 		}
 
 		private void listUserGroup_SelectedIndexChanged(object sender,EventArgs e) {
@@ -321,11 +321,11 @@ namespace OpenDental{
 				return;
 			}
 			if(_isFromAddUser && !Security.IsAuthorized(Permissions.SecurityAdmin,true)
-				&& (listUserGroup.SelectedItems.Count!=1 || listUserGroup.GetSelected<UserGroup>().UserGroupNum!=PrefC.GetLong(PrefName.DefaultUserGroup)))
+				&& (listUserGroup.SelectedItems.Count!=1 || listUserGroup.GetSelected<UserGroup>().Id!=PrefC.GetLong(PrefName.DefaultUserGroup)))
 			{
 				MessageBox.Show("This user must be assigned to the default user group.");
 				for(int i=0;i<listUserGroup.Items.Count;i++) {
-					if(((ODBoxItem<UserGroup>)listUserGroup.Items[i]).Tag.UserGroupNum==PrefC.GetLong(PrefName.DefaultUserGroup)) {
+					if(((ODBoxItem<UserGroup>)listUserGroup.Items[i]).Tag.Id==PrefC.GetLong(PrefName.DefaultUserGroup)) {
 						listUserGroup.SetSelected(i,true);
 					}
 					else {
@@ -343,7 +343,7 @@ namespace OpenDental{
 					listUserClinics.Add(new UserClinic(_listClinics[listClinicMulti.SelectedIndices[i]].ClinicNum,UserCur.Id));
 				}
 				//If they set the user up with a default clinic and it's not in the restricted list, return.
-				if(!listUserClinics.Exists(x => x.ClinicNum==_listClinics[listClinic.SelectedIndex-1].ClinicNum)) {
+				if(!listUserClinics.Exists(x => x.ClinicId==_listClinics[listClinic.SelectedIndex-1].ClinicNum)) {
 					MessageBox.Show("User cannot have a default clinic that they are not restricted to.");
 					return;
 				}
@@ -384,16 +384,16 @@ namespace OpenDental{
 			}
 			try{
 				if(IsNew){
-					Userods.Insert(UserCur,listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.UserGroupNum).ToList());
+					Userods.Insert(UserCur,listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
 					//Set the userodprefs to the new user's UserNum that was just retreived from the database.
 					_listDoseSpotUserPrefNew.ForEach(x => x.UserNum=UserCur.Id);
-					listUserClinics.ForEach(x => x.UserNum=UserCur.Id);//Set the user clinic's UserNum to the one we just inserted.
+					listUserClinics.ForEach(x => x.UserId=UserCur.Id);//Set the user clinic's UserNum to the one we just inserted.
 					SecurityLogs.MakeLogEntry(Permissions.AddNewUser,0,"New user '"+UserCur.UserName+"' added");
 				}
 				else{
 					List<UserGroup> listNewUserGroups=listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag).ToList();
 					List<UserGroup> listOldUserGroups=UserCur.GetGroups();
-					Userods.Update(UserCur,listNewUserGroups.Select(x => x.UserGroupNum).ToList());
+					Userods.Update(UserCur,listNewUserGroups.Select(x => x.Id).ToList());
 					//if this is the current user, update the user, credentials, etc.
 					if(UserCur.Id==Security.CurUser.Id) {
 						Security.CurUser=UserCur.Copy();
@@ -405,7 +405,7 @@ namespace OpenDental{
 					Func<List<UserGroup>,List<UserGroup>,List<UserGroup>> funcGetMissing=(listCur,listCompare) => {
 						List<UserGroup> retVal=new List<UserGroup>();
 						foreach(UserGroup group in listCur) {
-							if(listCompare.Exists(x => x.UserGroupNum==group.UserGroupNum)) {
+							if(listCompare.Exists(x => x.Id==group.Id)) {
 								continue;
 							}
 							retVal.Add(group);
@@ -445,7 +445,7 @@ namespace OpenDental{
 			//List of AlertTypes that are selected.
 			List<long> listUserAlertCats=new List<long>();
 			foreach(int index in listAlertSubMulti.SelectedIndices) {
-				listUserAlertCats.Add(_listAlertCategories[index].AlertCategoryNum);
+				listUserAlertCats.Add(_listAlertCategories[index].Id);
 			}
 			List<long> listClinics=new List<long>();
 			foreach(int index in listAlertSubsClinicsMulti.SelectedIndices) {

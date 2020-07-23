@@ -307,19 +307,19 @@ namespace OpenDental{
 			_listCommLogTypeDefs=Defs.GetDefsForCategory(DefCat.CommLogTypes,true);
 			textDescription.Text=AutoCur.Description;
 			_listAptTypes=new List<AppointmentType>() { new AppointmentType() { AppointmentTypeName="none" } };
-			AppointmentTypes.GetWhere(x => !x.IsHidden || x.AppointmentTypeNum==AutoCur.AppointmentTypeNum)
+			AppointmentTypes.GetWhere(x => !x.IsHidden || x.AppointmentTypeNum==AutoCur.AppointmentTypeId)
 				.ForEach(x => _listAptTypes.Add(x));
 			_listAptTypes=_listAptTypes.OrderBy(x => x.AppointmentTypeNum>0).ThenBy(x => x.ItemOrder).ToList();
 			Enum.GetNames(typeof(AutomationTrigger)).ToList().ForEach(x => comboTrigger.Items.Add(x));
-			comboTrigger.SelectedIndex=(int)AutoCur.Autotrigger;
-			textProcCodes.Text=AutoCur.ProcCodes;//although might not be visible.
+			comboTrigger.SelectedIndex=(int)AutoCur.Trigger;
+			textProcCodes.Text=AutoCur.ProcedureCodes;//although might not be visible.
 			textMessage.Text=AutoCur.MessageContent;
 			FillGrid();
 		}
 
 		private void FillGrid() {
 			AutomationConditions.RefreshCache();
-			autoList=AutomationConditions.GetListByAutomationNum(AutoCur.AutomationNum);
+			autoList=AutomationConditions.GetListByAutomationNum(AutoCur.Id);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("AutomationCondition","Field"),200));
@@ -343,7 +343,7 @@ namespace OpenDental{
 				_listAutoActions.Remove(AutomationAction.PrintRxInstruction);
 			}
 			_listAutoActions.ForEach(x => comboAction.Items.Add(x.GetDescription()));
-			if((int)AutoCur.Autotrigger==comboTrigger.SelectedIndex) {
+			if((int)AutoCur.Trigger==comboTrigger.SelectedIndex) {
 				comboAction.SelectedIndex=_listAutoActions.IndexOf(AutoCur.AutoAction);
 			}
 			else {
@@ -396,7 +396,7 @@ namespace OpenDental{
 					comboActionObject.Visible=true;
 					//_listAppointmentType contains 'none' with AppointmentTypeNum of 0 at index 0, just add list to combo and FindIndex will always be valid
 					_listAptTypes.ForEach(x => comboActionObject.Items.Add(x.AppointmentTypeName));
-					comboActionObject.SelectedIndex=_listAptTypes.FindIndex(x => AutoCur.AppointmentTypeNum==x.AppointmentTypeNum);//should always be >=0
+					comboActionObject.SelectedIndex=_listAptTypes.FindIndex(x => AutoCur.AppointmentTypeId==x.AppointmentTypeNum);//should always be >=0
 					return;
 				case AutomationAction.PrintPatientLetter:
 				case AutomationAction.PrintReferralLetter:
@@ -408,7 +408,7 @@ namespace OpenDental{
 					comboActionObject.Visible=true;
 					List<SheetDef> listSheetDefs=SheetDefs.GetDeepCopy().FindAll(x => !SheetDefs.IsDashboardType(x));
 					listSheetDefs.ForEach(x => comboActionObject.Items.Add(x.Description));
-					comboActionObject.SelectedIndex=listSheetDefs.FindIndex(x => AutoCur.SheetDefNum==x.SheetDefNum);//can be -1
+					comboActionObject.SelectedIndex=listSheetDefs.FindIndex(x => AutoCur.SheetDefinitionId==x.SheetDefNum);//can be -1
 					return;
 				case AutomationAction.ChangePatStatus:
 					labelActionObject.Visible=true;
@@ -449,7 +449,7 @@ namespace OpenDental{
 			FormAutomationConditionEdit FormACE=new FormAutomationConditionEdit();
 			FormACE.IsNew=true;
 			FormACE.ConditionCur=new AutomationCondition();
-			FormACE.ConditionCur.AutomationNum=AutoCur.AutomationNum;
+			FormACE.ConditionCur.AutomationNum=AutoCur.Id;
 			FormACE.ShowDialog();
 			if(FormACE.DialogResult!=DialogResult.OK) {
 				return;
@@ -462,7 +462,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;//delete takes place in FormClosing
 			}
 			else {
-				AutomationConditions.DeleteByAutomationNum(AutoCur.AutomationNum);
+				AutomationConditions.DeleteByAutomationNum(AutoCur.Id);
 				Automations.Delete(AutoCur);
 				DialogResult=DialogResult.OK;
 			}
@@ -478,10 +478,10 @@ namespace OpenDental{
 				return;
 			}
 			AutoCur.Description=textDescription.Text;
-			AutoCur.Autotrigger=(AutomationTrigger)comboTrigger.SelectedIndex;//should never be <0
+			AutoCur.Trigger=(AutomationTrigger)comboTrigger.SelectedIndex;//should never be <0
 			#region ProcCodes
-			AutoCur.ProcCodes="";//set to correct proc code string below if necessary
-			if(new[] { AutomationTrigger.CompleteProcedure,AutomationTrigger.ScheduleProcedure }.Contains(AutoCur.Autotrigger)) {
+			AutoCur.ProcedureCodes="";//set to correct proc code string below if necessary
+			if(new[] { AutomationTrigger.CompleteProcedure,AutomationTrigger.ScheduleProcedure }.Contains(AutoCur.Trigger)) {
 				if(textProcCodes.Text.Contains(" ")){
 					MessageBox.Show("Procedure codes cannot contain any spaces.");
 					return;
@@ -495,7 +495,7 @@ namespace OpenDental{
 					MessageBox.Show(Lan.G(this,"The following procedure code(s) are not valid")+": "+strInvalidCodes);
 					return;
 				}
-				AutoCur.ProcCodes=textProcCodes.Text;
+				AutoCur.ProcedureCodes=textProcCodes.Text;
 			}
 			#endregion ProcCodes
 			#region Automation Action
@@ -509,11 +509,11 @@ namespace OpenDental{
 				{ AutomationAction.PrintRxInstruction,Tuple.Create(SheetTypeEnum.RxInstruction,"an Rx instruction sheet") }
 			};
 			AutoCur.AutoAction=_listAutoActions[comboAction.SelectedIndex];
-			AutoCur.SheetDefNum=0;
+			AutoCur.SheetDefinitionId=0;
 			AutoCur.CommType=0;
 			AutoCur.MessageContent="";
 			AutoCur.AptStatus=ApptStatus.None;
-			AutoCur.AppointmentTypeNum=0;
+			AutoCur.AppointmentTypeId=0;
 			switch(AutoCur.AutoAction) {
 				case AutomationAction.CreateCommlog:
 					if(comboActionObject.SelectedIndex==-1) {
@@ -545,7 +545,7 @@ namespace OpenDental{
 						MessageBox.Show(this,Lan.G(this,"The selected sheet type must be")+" "+dictAutoActionSheetType[AutoCur.AutoAction].Item2+".");
 						return;
 					}
-					AutoCur.SheetDefNum=listSheets[comboActionObject.SelectedIndex].SheetDefNum;
+					AutoCur.SheetDefinitionId=listSheets[comboActionObject.SelectedIndex].SheetDefNum;
 					break;
 				case AutomationAction.SetApptASAP:
 					break;
@@ -554,7 +554,7 @@ namespace OpenDental{
 						MessageBox.Show("An appointment type must be selected.");
 						return;
 					}
-					AutoCur.AppointmentTypeNum=_listAptTypes[comboActionObject.SelectedIndex].AppointmentTypeNum;
+					AutoCur.AppointmentTypeId=_listAptTypes[comboActionObject.SelectedIndex].AppointmentTypeNum;
 					break;
 				case AutomationAction.ChangePatStatus:
 					if(comboAction.SelectedIndex==-1) {
@@ -579,7 +579,7 @@ namespace OpenDental{
 			}
 			//this happens if cancel or if user deletes a new automation
 			if(IsNew) {
-				AutomationConditions.DeleteByAutomationNum(AutoCur.AutomationNum);
+				AutomationConditions.DeleteByAutomationNum(AutoCur.Id);
 				Automations.Delete(AutoCur);
 			}
 		}

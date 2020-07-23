@@ -320,10 +320,10 @@ namespace OpenDentBusiness {
 					continue;
 				}
 				Pref preference=Prefs.GetPref(pushablePref.PrefName);
-				if(preference.ValueString==pushablePref.ValueString) {//No change.
+				if(preference.Value==pushablePref.ValueString) {//No change.
 					continue;
 				}
-				preference.ValueString=pushablePref.ValueString;
+				preference.Value=pushablePref.ValueString;
 				Prefs.Update(preference);
 				isCacheInvalid=true;
 				//If this preference does not exist at the dental office yet, disregard.
@@ -816,18 +816,18 @@ namespace OpenDentBusiness {
 			if(updateServerName!="" && !ODEnvironment.IdIsThisComputer(updateServerName)){//When set, only send data from update server
 				return;
 			}
-			List<UpdateHistory> listUpdates=UpdateHistories.GetPreviousUpdateHistories(2);//Sorted by UpdateHistory.DateTimeUpdated DESC
+			List<UpdateHistory> listUpdates=UpdateHistories.GetPreviousUpdateHistories(2).ToList();//Sorted by UpdateHistory.DateTimeUpdated DESC
 			string versionFrom;
 			string versionTo;
-			if(listUpdates.Count>0 && listUpdates[0].DateTimeUpdated.Date!=DateTime.Today) {//Only send out version info to HQ on same day as update.)
+			if(listUpdates.Count>0 && listUpdates[0].InstalledOn.Date!=DateTime.Today) {//Only send out version info to HQ on same day as update.)
 				return;
 			}
 			else if(listUpdates.Count==2) {
-				versionFrom=listUpdates[1].ProgramVersion;
-				versionTo=listUpdates[0].ProgramVersion;
+				versionFrom=listUpdates[1].Version;
+				versionTo=listUpdates[0].Version;
 			}
 			else {//Most likely a new customer with 1 or 0 updates.
-				versionFrom=(listUpdates.Count==1?listUpdates[0].ProgramVersion:"0.0.0.0");
+				versionFrom=(listUpdates.Count==1?listUpdates[0].Version:"0.0.0.0");
 				versionTo=PrefC.GetString(PrefName.ProgramVersion);
 			}
 			List<PayloadItem> listPayloadItems=new List<PayloadItem>(){

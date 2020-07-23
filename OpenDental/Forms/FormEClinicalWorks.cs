@@ -677,7 +677,7 @@ namespace OpenDental{
 			_listUserGroups=UserGroups.GetList();
 			for(int i=0;i<_listUserGroups.Count;i++) {
 				comboDefaultUserGroup.Items.Add(_listUserGroups[i].Description);
-				if(GetProp("DefaultUserGroup")==_listUserGroups[i].UserGroupNum.ToString()) {
+				if(GetProp("DefaultUserGroup")==_listUserGroups[i].Id.ToString()) {
 					comboDefaultUserGroup.SelectedIndex=i;
 				}
 			}
@@ -863,7 +863,7 @@ namespace OpenDental{
 				ProgramProperties.SetProperty(ProgramCur.Id,"eCWServer",textECWServer.Text);//this property will not exist if using Oracle, eCW will never use Oracle
 				Prefs.UpdateString(PrefName.HL7FolderIn,textHL7FolderIn.Text);
 				ProgramProperties.SetProperty(ProgramCur.Id,"DefaultUserGroup",
-					_listUserGroups[comboDefaultUserGroup.SelectedIndex].UserGroupNum.ToString());
+					_listUserGroups[comboDefaultUserGroup.SelectedIndex].Id.ToString());
 				if(checkShowImages.Checked) {
 					ProgramProperties.SetProperty(ProgramCur.Id,"ShowImagesModule","1");
 				}

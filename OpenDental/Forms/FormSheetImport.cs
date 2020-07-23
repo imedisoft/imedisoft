@@ -1238,7 +1238,7 @@ namespace OpenDental {
 				for(int i=0;i<allergyList.Count;i++) {
 					fieldVal="";
 					if(i<1) {
-						allergies=Allergies.GetAll(PatCur.PatNum,true);
+						allergies=Allergies.GetByPatient(PatCur.PatNum,true);
 					}
 					row=new SheetImportRow();
 					row.FieldName=allergyList[i].FieldName.Remove(0,8);
@@ -1246,7 +1246,7 @@ namespace OpenDental {
 					row.OldValObj=null;
 					//Check if allergy exists.
 					for(int j=0;j<allergies.Count;j++) {
-						if(AllergyDefs.GetDescription(allergies[j].AllergyDefNum)==allergyList[i].FieldName.Remove(0,8)) {
+						if(AllergyDefs.GetDescription(allergies[j].AllergyDefId)==allergyList[i].FieldName.Remove(0,8)) {
 							if(allergies[j].StatusIsActive) {
 								row.OldValDisplay="Y";
 							}
@@ -2465,8 +2465,8 @@ namespace OpenDental {
 						for(int j=0;j<allergyList.Count;j++) {
 							if(allergyList[j].Description==allergySheet.FieldName.Remove(0,8)) {
 								Allergy newAllergy=new Allergy();
-								newAllergy.AllergyDefNum=allergyList[j].AllergyDefNum;
-								newAllergy.PatNum=PatCur.PatNum;
+								newAllergy.AllergyDefId=allergyList[j].AllergyDefNum;
+								newAllergy.PatientId=PatCur.PatNum;
 								newAllergy.StatusIsActive=true;
 								Allergies.Insert(newAllergy);
 								break;

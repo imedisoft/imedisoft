@@ -2527,10 +2527,6 @@ namespace OpenDental {
 		}
 
 		private void menuDeleteTaken_Click(object sender,EventArgs e) {
-			Cursor=Cursors.WaitCursor;
-			TaskTakens.DeleteForTask(_clickedTask.TaskNum);
-			Cursor=Cursors.Default;
-			MessageBox.Show("Task taken deleted");
 		}
 
 		private void menuTaskPriority_Click(Task task,Def priorityDef) {

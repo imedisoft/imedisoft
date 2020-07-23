@@ -16,8 +16,6 @@ namespace OpenDentBusiness
 		{
 			TableName = "";
 			IsDeleteForbidden = false;
-			IsMissingInGeneral = false;
-			IsMobile = false;
 			IsSynchable = false;
 			AuditPerms = CrudAuditPerm.None;
 			IsSecurityStamped = false;
@@ -34,23 +32,6 @@ namespace OpenDentBusiness
 		/// Set to true for tables where rows are not deleted.
 		/// </summary>
         public bool IsDeleteForbidden { get; set; }
-
-        /// <summary>
-		/// Set to true for tables that are part of internal tools and not found in the general release. 
-		/// The Crud generator will gracefully skip these tables if missing from the database that it's running against.
-		/// It also won't try to generate a dataInterface s class.
-		/// </summary>
-        public bool IsMissingInGeneral { get; set; }
-
-        /// <summary>
-		/// Set to true for tables that are used on server for mobile services. 
-		/// These are 'lite' versions of the main tables, and end with m. 
-		/// A composite primary key will be expected. 
-		/// The Crud generator will generate these crud files in a different place than the other crud files. 
-		/// It will also generate the dataInterface 'ms' class to a different location.
-		/// It also won't validate that the table exists in the test database.
-		/// </summary>
-        public bool IsMobile { get; set; }
 
         public bool IsSynchable { get; set; }
 
@@ -75,18 +56,6 @@ namespace OpenDentBusiness
         public bool IsSecurityStamped { get; set; }
 
         public bool HasBatchWriteMethods { get; set; }
-
-        /// <summary>
-		/// If crud file location is different than .../OpenDentBusiness/Crud.
-		/// </summary>
-        public string CrudLocationOverride { get; set; }
-
-        /// <summary>
-        /// If namespace is different than OpenDentBusiness.Crud.
-        /// </summary>
-        public string NamespaceOverride { get; set; }
-
-		public bool CrudExcludePrefC { get; set; }
 
 		public bool IsTableHist { get; set; }
 

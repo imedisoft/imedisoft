@@ -6,7 +6,6 @@ using System.Collections.Generic;
 namespace OpenDentBusiness.WebTypes.WebForms
 {
 	[Serializable]
-	[CrudTable(IsMissingInGeneral = true, CrudLocationOverride = @"..\..\..\OpenDentBusiness\WebTypes\WebForms\Crud", NamespaceOverride = "OpenDentBusiness.WebTypes.WebForms.Crud", CrudExcludePrefC = true)]
 	public class WebForms_SheetDef : TableBase
 	{
 		///<summary>Primary key.</summary>
@@ -41,8 +40,6 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		///This field needs to be treated as if it were a real db column so that the GWT to and from data table row methods contain ClinicNum.</summary>
 		public long ClinicNum;
 
-		[CrudColumn(IsNotDbColumn = true)]
-		[XmlIgnore]
 		public List<WebForms_SheetFieldDef> SheetFieldDefs;
 	}
 }

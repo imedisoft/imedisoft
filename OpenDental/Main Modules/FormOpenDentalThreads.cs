@@ -372,7 +372,7 @@ namespace OpenDental
 				return;
 			}
 			DateTime dateOriginal = MiscData.GetNowDateTime().AddMinutes(-30);
-			featurePref.ValueString = dateOriginal.AddDays(1).ToString(CultureInfo.InvariantCulture);//default try again in one day unless set below.
+			featurePref.Value = dateOriginal.AddDays(1).ToString(CultureInfo.InvariantCulture);//default try again in one day unless set below.
 			Prefs.Update(featurePref);
 			Signalods.SetInvalid(InvalidType.Prefs);
 			string response = WebServiceMainHQProxy.GetWebServiceMainHQInstance()

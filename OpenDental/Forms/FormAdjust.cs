@@ -39,15 +39,6 @@ namespace OpenDental {
 		}
 
 		private void FormAdjust_Load(object sender, System.EventArgs e) {
-			if(AvaTax.IsEnabled()) {
-				//We do not want to allow the user to make edits or delete SalesTax and SalesTaxReturn Adjustments.  Popup if no permission so user knows why disabled.
-				if(AvaTax.IsEnabled() && 
-					(_adjustmentCur.AdjType==AvaTax.SalesTaxAdjType || _adjustmentCur.AdjType==AvaTax.SalesTaxReturnAdjType) && 
-					!Security.IsAuthorized(Permissions.SalesTaxAdjEdit)) {
-					DisableAllExcept(textNote,butCancel);
-					textNote.ReadOnly=true;//This will allow the user to copy the note if desired.
-				}
-			}
 			if(IsNew){
 				if(!Security.IsAuthorized(Permissions.AdjustmentCreate,true)) {//Date not checked here.  Message will show later.
 					if(!Security.IsAuthorized(Permissions.AdjustmentEditZero,true)) {//Let user create an adjustment of zero if they have this perm.
@@ -294,12 +285,6 @@ namespace OpenDental {
 			}
 			if(!isDiscountPlanAdj && listTypeNeg.SelectedIndex==-1 && listTypePos.SelectedIndex==-1){
 				MessageBox.Show("Please select a type first.");
-				return;
-			}
-			if(IsNew && AvaTax.IsEnabled() && listTypePos.SelectedIndex>-1 && 
-				(_listAdjPosCats[listTypePos.SelectedIndex].DefNum==AvaTax.SalesTaxAdjType || _listAdjPosCats[listTypePos.SelectedIndex].DefNum==AvaTax.SalesTaxReturnAdjType) && 
-				!Security.IsAuthorized(Permissions.SalesTaxAdjEdit))
-			{
 				return;
 			}
 			if(PrefC.GetInt(PrefName.RigorousAdjustments)==0 && _adjustmentCur.ProcNum==0) {

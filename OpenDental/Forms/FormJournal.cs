@@ -277,7 +277,7 @@ namespace OpenDental{
 		private void FormJournal_Load(object sender,EventArgs e) {
 			DateTime firstofYear=new DateTime(InitialAsOfDate.Year,1,1);
 			textDateTo.Text=InitialAsOfDate.ToShortDateString();
-			if(_acctCur.AcctType==AccountType.Income || _acctCur.AcctType==AccountType.Expense){
+			if(_acctCur.Type==AccountType.Income || _acctCur.Type==AccountType.Expense){
 				textDateFrom.Text=firstofYear.ToShortDateString();
 			}
 			LayoutToolBar();
@@ -290,7 +290,7 @@ namespace OpenDental{
 		public void LayoutToolBar() {
 			ToolBarMain.Buttons.Clear();
 			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Add Entry"),0,"","Add"));
-			if(_acctCur.AcctType==AccountType.Asset){
+			if(_acctCur.Type==AccountType.Asset){
 				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Reconcile"),-1,"","Reconcile"));
 			}
 			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print"),1,"","Print"));
@@ -337,7 +337,7 @@ namespace OpenDental{
 			}
 			ODGrid gridToFill=isPrinting?gridMainPrint:gridMain;
 			gridToFill.BeginUpdate();
-			gridToFill.Title=_acctCur.Description+" ("+Lan.G("enumAccountType",_acctCur.AcctType.ToString())+")";
+			gridToFill.Title=_acctCur.Description+" ("+Lan.G("enumAccountType",_acctCur.Type.ToString())+")";
 			gridToFill.ListGridColumns.Clear();
 			GridColumn col=new GridColumn(Lan.G("TableJournal","Chk #"),60,HorizontalAlignment.Center);
 			gridToFill.ListGridColumns.Add(col);
@@ -347,9 +347,9 @@ namespace OpenDental{
 			gridToFill.ListGridColumns.Add(col);
 			col=new GridColumn(Lan.G("TableJournal","Splits"),isPrinting?200:220,HorizontalAlignment.Left);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Debit"+(Accounts.DebitIsPos(_acctCur.AcctType)?"(+)":"(-)")),70,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableJournal","Debit"+(Accounts.DebitIsPos(_acctCur.Type)?"(+)":"(-)")),70,HorizontalAlignment.Right);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Credit"+(Accounts.DebitIsPos(_acctCur.AcctType)?"(-)":"(+)")),70,HorizontalAlignment.Right);
+			col=new GridColumn(Lan.G("TableJournal","Credit"+(Accounts.DebitIsPos(_acctCur.Type)?"(-)":"(+)")),70,HorizontalAlignment.Right);
 			gridToFill.ListGridColumns.Add(col);
 			col=new GridColumn(Lan.G("TableJournal","Balance"),78,HorizontalAlignment.Right);
 			gridToFill.ListGridColumns.Add(col);
@@ -363,7 +363,7 @@ namespace OpenDental{
 			DateTime dateTo=string.IsNullOrEmpty(textDateTo.Text)?DateTime.MaxValue:PIn.Date(textDateTo.Text);
 			double filterAmt=string.IsNullOrEmpty(textAmt.errorProvider1.GetError(textAmt))?PIn.Double(textAmt.Text):0;
 			if(doRefresh || _listJEntries==null || _dictTransUsers==null) {
-				_listJEntries=JournalEntries.GetForAccount(_acctCur.AccountNum);
+				_listJEntries=JournalEntries.GetForAccount(_acctCur.Id);
 				_dictTransUsers=Transactions.GetManyTrans(_listJEntries.Select(x => x.TransactionNum).ToList())
 					.ToDictionary(x => x.TransactionNum,x => x.UserNum);
 			}
@@ -374,12 +374,12 @@ namespace OpenDental{
 				if(_listJEntries[i].DateDisplayed>dateTo) {
 					break;
 				}
-				if(new[] { AccountType.Income,AccountType.Expense }.Contains(_acctCur.AcctType) && _listJEntries[i].DateDisplayed<dateFrom) {
+				if(new[] { AccountType.Income,AccountType.Expense }.Contains(_acctCur.Type) && _listJEntries[i].DateDisplayed<dateFrom) {
 					continue;//For income and expense accounts, previous balances are not included. Only the current timespan
 				}
 				//DebitIsPos=true for checking acct, bal+=DebitAmt-CreditAmt
-				bal+=(Accounts.DebitIsPos(_acctCur.AcctType)?1:-1)*((decimal)_listJEntries[i].DebitAmt-(decimal)_listJEntries[i].CreditAmt);
-				if(new[] { AccountType.Asset,AccountType.Liability,AccountType.Equity }.Contains(_acctCur.AcctType) && _listJEntries[i].DateDisplayed<dateFrom) {
+				bal+=(Accounts.DebitIsPos(_acctCur.Type)?1:-1)*((decimal)_listJEntries[i].DebitAmt-(decimal)_listJEntries[i].CreditAmt);
+				if(new[] { AccountType.Asset,AccountType.Liability,AccountType.Equity }.Contains(_acctCur.Type) && _listJEntries[i].DateDisplayed<dateFrom) {
 					continue;//For asset, liability, and equity accounts, older entries do affect the current balance
 				}
 				if(filterAmt!=0 && filterAmt!=_listJEntries[i].CreditAmt && filterAmt!=_listJEntries[i].DebitAmt){
@@ -410,7 +410,7 @@ namespace OpenDental{
 			Transaction trans=new Transaction();
 			trans.UserNum=Security.CurUser.Id;
 			Transactions.Insert(trans);//we now have a TransactionNum, and datetimeEntry has been set
-			FormTransactionEdit FormT=new FormTransactionEdit(trans.TransactionNum,_acctCur.AccountNum);
+			FormTransactionEdit FormT=new FormTransactionEdit(trans.TransactionNum,_acctCur.Id);
 			FormT.IsNew=true;
 			FormT.ShowDialog();
 			if(FormT.DialogResult==DialogResult.Cancel){
@@ -423,7 +423,7 @@ namespace OpenDental{
 		private void Reconcile_Click() {
 			int selectedRow=gridMain.GetSelectedIndex();
 			int scrollValue=gridMain.ScrollValue;
-			FormReconciles FormR=new FormReconciles(_acctCur.AccountNum);
+			FormReconciles FormR=new FormReconciles(_acctCur.Id);
 			FormR.ShowDialog();
 			FillGrid();
 			gridMain.SetSelected(selectedRow,true);
@@ -456,7 +456,7 @@ namespace OpenDental{
 				int center=bounds.X+bounds.Width/2;
 				#region printHeading
 				if(!_headingPrinted) {
-					text=_acctCur.Description+" ("+Lan.G("enumAccountType",_acctCur.AcctType.ToString())+")";
+					text=_acctCur.Description+" ("+Lan.G("enumAccountType",_acctCur.Type.ToString())+")";
 					g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 					yPos+=(int)g.MeasureString(text,headingFont).Height;
 					text=DateTime.Today.ToShortDateString();
@@ -492,7 +492,7 @@ namespace OpenDental{
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			int selectedRow=e.Row;
 			int scrollValue=gridMain.ScrollValue;
-			FormTransactionEdit FormT=new FormTransactionEdit((long)gridMain.ListGridRows[e.Row].Tag,_acctCur.AccountNum);
+			FormTransactionEdit FormT=new FormTransactionEdit((long)gridMain.ListGridRows[e.Row].Tag,_acctCur.Id);
 			FormT.ShowDialog();
 			if(FormT.DialogResult==DialogResult.Cancel) {
 				return;

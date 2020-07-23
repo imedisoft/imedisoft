@@ -8,9 +8,9 @@ namespace UnitTestsCore {
 		public static long CreateUserGroup(string description) {
 			UserGroup newGroup=new UserGroup();
 			newGroup.Description=description;
-			newGroup.UserGroupNum=UserGroups.Insert(newGroup);
+			newGroup.Id=UserGroups.Insert(newGroup);
 			UserGroups.RefreshCache();
-			return newGroup.UserGroupNum;
+			return newGroup.Id;
 		}
 	}
 }

@@ -875,21 +875,6 @@ namespace OpenDental {
 		}
 
 		private void menuPrepayment_Click(object sender,EventArgs e) {
-			if(_patCur==null) {
-				return;
-			}
-			FormPrepaymentTool formPT=new FormPrepaymentTool(_patCur);
-			if(formPT.ShowDialog()==DialogResult.OK) {
-				Family famCur=Patients.GetFamily(_patCur.PatNum);
-				FormPayment formPayment=new FormPayment(_patCur,famCur,formPT.ReturnPayment,false);
-				formPayment.IsNew=true;
-				Payments.Insert(formPT.ReturnPayment);
-				RefreshModuleData(_patCur.PatNum,false);
-				RefreshModuleScreen(false);
-				formPayment.ShowDialog();
-			}
-			RefreshModuleData(_patCur.PatNum,false);
-			RefreshModuleScreen(false);
 		}
 		#endregion Methods - Event Handlers Menus
 

@@ -1857,14 +1857,14 @@ namespace OpenDentBusiness{
 					#endregion
 					#region AllergyList
 					case EhrMeasureType.AllergyList:
-						List<Allergy> listAllergies=Allergies.Refresh(pat.PatNum);
+						List<Allergy> listAllergies=Allergies.GetByPatient(pat.PatNum);
 						if(listAllergies.Count==0) {
 							mu.Details="No allergies entered.";
 						}
 						else{
 							mu.Met=MuMet.True;
 							bool allergiesNone=false;
-							if(listAllergies.Count==1 && listAllergies[0].AllergyDefNum==PrefC.GetLong(PrefName.AllergiesIndicateNone)) {
+							if(listAllergies.Count==1 && listAllergies[0].AllergyDefId==PrefC.GetLong(PrefName.AllergiesIndicateNone)) {
 								allergiesNone=true;
 							}
 							if(allergiesNone) {
@@ -5707,14 +5707,14 @@ namespace OpenDentBusiness{
 					#endregion
 					#region AllergyList
 					case EhrMeasureType.AllergyList:
-						List<Allergy> listAllergies=Allergies.Refresh(pat.PatNum);
+						List<Allergy> listAllergies=Allergies.GetByPatient(pat.PatNum);
 						if(listAllergies.Count==0) {
 							mu.Details="No allergies entered.";
 						}
 						else{
 							mu.Met=MuMet.True;
 							bool allergiesNone=false;
-							if(listAllergies.Count==1 && listAllergies[0].AllergyDefNum==PrefC.GetLong(PrefName.AllergiesIndicateNone)) {
+							if(listAllergies.Count==1 && listAllergies[0].AllergyDefId==PrefC.GetLong(PrefName.AllergiesIndicateNone)) {
 								allergiesNone=true;
 							}
 							if(allergiesNone) {

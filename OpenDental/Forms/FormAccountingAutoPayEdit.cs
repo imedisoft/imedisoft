@@ -225,7 +225,7 @@ namespace OpenDental{
 			if(FormA.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			accountAL.Add(FormA.SelectedAccount.AccountNum);
+			accountAL.Add(FormA.SelectedAccount.Id);
 			FillList();
 		}
 

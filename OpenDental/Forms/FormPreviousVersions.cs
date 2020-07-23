@@ -28,11 +28,10 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row=null;
-			List<UpdateHistory> listUpdateHistories=UpdateHistories.GetAll();
-			foreach(UpdateHistory updateHistory in listUpdateHistories) {
+			foreach(UpdateHistory updateHistory in UpdateHistories.GetAll()) {
 				row=new GridRow();
-				row.Cells.Add(updateHistory.ProgramVersion);
-				row.Cells.Add(updateHistory.DateTimeUpdated.ToString());
+				row.Cells.Add(updateHistory.Version);
+				row.Cells.Add(updateHistory.InstalledOn.ToString());
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();

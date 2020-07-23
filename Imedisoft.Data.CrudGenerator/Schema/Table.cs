@@ -55,7 +55,7 @@ namespace Imedisoft.Data.CrudGenerator.Schema
                     $"The type '{type.FullName}' does is missing the '{typeof(TableAttribute).FullName}' attribute.", nameof(type));
             }
 
-            Name = tableAttribute.Name ?? type.Name;
+            Name = (tableAttribute.Name ?? type.Name).ToLower();
             AllowUpdate = tableAttribute.AllowUpdate;
             AllowDelete = tableAttribute.AllowDelete;
 

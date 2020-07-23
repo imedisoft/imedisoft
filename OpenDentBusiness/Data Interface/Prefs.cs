@@ -32,11 +32,11 @@ namespace OpenDentBusiness
 					var preference = new Pref();
 					if (containsPrefNum)
 					{
-						preference.PrefNum = SIn.Long(row["PrefNum"].ToString());
+						preference.Id = SIn.Long(row["PrefNum"].ToString());
 					}
 
-					preference.PrefName = SIn.String(row["PrefName"].ToString());
-					preference.ValueString = SIn.String(row["ValueString"].ToString());
+					preference.Name = SIn.String(row["PrefName"].ToString());
+					preference.Value = SIn.String(row["ValueString"].ToString());
 
 					preferences.Add(preference);
 				}
@@ -54,7 +54,7 @@ namespace OpenDentBusiness
 				=> Prefs.GetTableFromCache(false);
 
 			protected override string GetDictKey(Pref preference) 
-				=> preference.PrefName;
+				=> preference.Name;
 
 			protected override Pref GetDictValue(Pref preference) 
 				=> preference;
@@ -69,13 +69,13 @@ namespace OpenDentBusiness
 
 				foreach (var preference in preferences)
 				{
-					if (preferencesDict.ContainsKey(preference.PrefName))
+					if (preferencesDict.ContainsKey(preference.Name))
 					{
-						duplicatePreferences.Add(preference.PrefName);//The current preference is a duplicate preference.
+						duplicatePreferences.Add(preference.Name);//The current preference is a duplicate preference.
 					}
 					else
 					{
-						preferencesDict.Add(preference.PrefName, preference);
+						preferencesDict.Add(preference.Name, preference);
 					}
 				}
 
@@ -133,7 +133,7 @@ namespace OpenDentBusiness
 				return new List<Pref>();
 			}
 
-			return Cache.GetWhere(x => x.PrefName.In(preferenceNames));
+			return Cache.GetWhere(x => x.Name.In(preferenceNames));
 		}
 
 		public static DataTable RefreshCache() => GetTableFromCache(true);
@@ -151,7 +151,7 @@ namespace OpenDentBusiness
 			=> Cache.GetTableFromCache(refreshCache);
 
 		public static void UpdateValueForKey(Pref preference) 
-			=> Cache.SetValueForKey(preference.PrefName, preference);
+			=> Cache.SetValueForKey(preference.Name, preference);
 
 		/// <summary>
 		/// Gets a pref of type bool without using the cache.
@@ -160,8 +160,8 @@ namespace OpenDentBusiness
 			"SELECT ValueString FROM preference WHERE PrefName = '" + SOut.String(preferenceName.ToString()) + "'"));
 
 		public static void Update(Pref preference) => Database.ExecuteNonQuery(
-			"UPDATE preference SET ValueString = '" + SOut.String(preference.ValueString) + "' " +
-			"WHERE PrefName = '" + SOut.String(preference.PrefName) + "'");
+			"UPDATE preference SET ValueString = '" + SOut.String(preference.Value) + "' " +
+			"WHERE PrefName = '" + SOut.String(preference.Name) + "'");
 
 		/// <summary>
 		/// Updates a pref of type int. Returns true if a change was required, or false if no change needed.
@@ -225,8 +225,8 @@ namespace OpenDentBusiness
 
             UpdateValueForKey(new Pref
 			{
-				PrefName = prefName.ToString(),
-				ValueString = newValue.ToString()
+				Name = prefName.ToString(),
+				Value = newValue.ToString()
 			});
 
 			return true;
@@ -266,8 +266,8 @@ namespace OpenDentBusiness
 
             UpdateValueForKey(new Pref
 			{
-				PrefName = preferenceName.ToString(),
-				ValueString = newValue.ToString()
+				Name = preferenceName.ToString(),
+				Value = newValue.ToString()
 			});
 
 			return true;
@@ -290,8 +290,8 @@ namespace OpenDentBusiness
 
             UpdateValueForKey(new Pref
 			{
-				PrefName = preferenceName.ToString(),
-				ValueString = SOut.Bool(newValue)
+				Name = preferenceName.ToString(),
+				Value = SOut.Bool(newValue)
 			});
 
 			return true;
@@ -322,8 +322,8 @@ namespace OpenDentBusiness
 
             UpdateValueForKey(new Pref
 			{
-				PrefName = preferenceName.ToString(),
-				ValueString = newValue
+				Name = preferenceName.ToString(),
+				Value = newValue
 			});
 
 			return true;
@@ -356,8 +356,8 @@ namespace OpenDentBusiness
 
             UpdateValueForKey(new Pref
 			{
-				PrefName = preferenceName,
-				ValueString = newValue
+				Name = preferenceName,
+				Value = newValue
 			});
 
 			return true;
@@ -380,8 +380,8 @@ namespace OpenDentBusiness
 
             UpdateValueForKey(new Pref
 			{
-				PrefName = prefName.ToString(),
-				ValueString = SOut.DateT(newValue, false)
+				Name = prefName.ToString(),
+				Value = SOut.DateT(newValue, false)
 			});
 
 			return true;

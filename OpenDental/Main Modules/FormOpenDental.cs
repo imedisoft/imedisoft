@@ -6417,7 +6417,7 @@ namespace OpenDental
 				if (_listAlertItems != null && _listAlertReads != null)
 				{
 					List<long> listAlertItemNums = _listAlertItems.Select(x => x.AlertItemNum).ToList();//All alert nums for current alertItems.
-					List<long> listAlertReadItemNums = _listAlertReads.Select(x => x.AlertItemNum).ToList();//All alert nums for read alertItems.
+					List<long> listAlertReadItemNums = _listAlertReads.Select(x => x.AlertItemId).ToList();//All alert nums for read alertItems.
 					if (!menuItemNoAlerts.Visible && //menuItemNoAlerts is only Visible when there are no AlertItems to show.
 							!listAlertItemNums.All(x => listAlertReadItemNums.Contains(x)))
 					{
@@ -6438,7 +6438,7 @@ namespace OpenDental
 			}
 			else
 			{//This is an alert menuItem.
-				if (!_listAlertReads.Exists(x => x.AlertItemNum == alertItem.AlertItemNum))
+				if (!_listAlertReads.Exists(x => x.AlertItemId == alertItem.AlertItemNum))
 				{//User has not acknowleged alert yet.
 					backGroundColor = AlertBackgroudColorHelper(alertItem.Severity);
 					colorText = AlertTextColorHelper(alertItem.Severity);
@@ -6672,7 +6672,7 @@ namespace OpenDental
 		///<summary>Refreshes AlertReads for current user and creates a new one if one does not exist for given alertItem.</summary>
 		private void AlertReadsHelper(List<long> listAlertItemNums)
 		{
-			listAlertItemNums.RemoveAll(x => _listAlertReads.Exists(y => y.AlertItemNum == x));//Remove all the ones the user has already read.
+			listAlertItemNums.RemoveAll(x => _listAlertReads.Exists(y => y.AlertItemId == x));//Remove all the ones the user has already read.
 			listAlertItemNums.ForEach(x => AlertReads.Insert(new AlertRead(x, Security.CurUser.Id)));
 		}
 		#endregion Alerts

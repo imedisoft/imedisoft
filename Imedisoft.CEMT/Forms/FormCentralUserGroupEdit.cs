@@ -60,7 +60,7 @@ namespace Imedisoft.CEMT.Forms
 				{
 					long userGroupId = UserGroups.Insert(userGroup);
 
-					userGroup.UserGroupNumCEMT = userGroupId;
+					userGroup.CentralUserGroupId = userGroupId;
 
 					UserGroups.Update(userGroup);
 				}

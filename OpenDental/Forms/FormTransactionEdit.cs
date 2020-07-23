@@ -673,7 +673,7 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Add(col);
 			string str=Lan.G("TableTransSplits","Debit");
 			if(AccountOfOrigin!=null){
-				if(Accounts.DebitIsPos(AccountOfOrigin.AcctType)) {
+				if(Accounts.DebitIsPos(AccountOfOrigin.Type)) {
 					str+=Lan.G(this,"(+)");
 				}
 				else {
@@ -684,7 +684,7 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Add(col);
 			str=Lan.G("TableTransSplits","Credit");
 			if(AccountOfOrigin!=null){
-				if(Accounts.DebitIsPos(AccountOfOrigin.AcctType)) {
+				if(Accounts.DebitIsPos(AccountOfOrigin.Type)) {
 					str+=Lan.G(this,"(-)");
 				}
 				else {
@@ -745,7 +745,7 @@ namespace OpenDental{
 			else if(JournalList.Count==1){
 				double amt=0;
 				//first we assume that the sole entry is for the current account
-				if(Accounts.DebitIsPos(AccountOfOrigin.AcctType)) {//this is used for checking account
+				if(Accounts.DebitIsPos(AccountOfOrigin.Type)) {//this is used for checking account
 					if(((JournalEntry)JournalList[0]).DebitAmt>0) {
 						amt=((JournalEntry)JournalList[0]).DebitAmt;
 					}
@@ -762,7 +762,7 @@ namespace OpenDental{
 					}
 				}
 				//then, if we assumed wrong, change the sign
-				if(((JournalEntry)JournalList[0]).AccountNum!=AccountOfOrigin.AccountNum){
+				if(((JournalEntry)JournalList[0]).AccountNum!=AccountOfOrigin.Id){
 					amt=-amt;
 				}
 				textAmount.Text=amt.ToString("n");
@@ -771,7 +771,7 @@ namespace OpenDental{
 					textAccount.Text="";
 					butChange.Text=Lan.G(this,"Pick");
 				}
-				else if(((JournalEntry)JournalList[0]).AccountNum==AccountOfOrigin.AccountNum){
+				else if(((JournalEntry)JournalList[0]).AccountNum==AccountOfOrigin.Id){
 					AccountPicked=null;
 					textAccount.Text="";
 					butChange.Text=Lan.G(this,"Pick");
@@ -787,7 +787,7 @@ namespace OpenDental{
 			else{//count=2
 				JournalEntry journalCur;
 				JournalEntry journalOther;
-				if(((JournalEntry)JournalList[0]).AccountNum==AccountOfOrigin.AccountNum){
+				if(((JournalEntry)JournalList[0]).AccountNum==AccountOfOrigin.Id){
 					//if the first entry is for the account of origin
 					journalCur=(JournalEntry)JournalList[0];
 					journalOther=(JournalEntry)JournalList[1];
@@ -796,7 +796,7 @@ namespace OpenDental{
 					journalCur=(JournalEntry)JournalList[1];
 					journalOther=(JournalEntry)JournalList[0];
 				}
-				if(Accounts.DebitIsPos(AccountOfOrigin.AcctType)){//this is used for checking account
+				if(Accounts.DebitIsPos(AccountOfOrigin.Type)){//this is used for checking account
 					if(journalCur.DebitAmt>0){
 						textAmount.Text=journalCur.DebitAmt.ToString("n");
 					}
@@ -1013,14 +1013,14 @@ namespace OpenDental{
 			else {
 				entry.DateDisplayed=PIn.Date(textDate.Text);
 			}
-			entry.AccountNum=AccountOfOrigin.AccountNum;
+			entry.AccountNum=AccountOfOrigin.Id;
 			double amt=0;
 			if(textAmount.errorProvider1.GetError(textAmount)==""){//if no error
 				amt=PIn.Double(textAmount.Text);
 			}
 			//if amt==0, then both credit and debit remain 0
 			if(amt>0){
-				if(Accounts.DebitIsPos(AccountOfOrigin.AcctType)) {//used for checking
+				if(Accounts.DebitIsPos(AccountOfOrigin.Type)) {//used for checking
 					entry.DebitAmt=amt;
 				}
 				else {
@@ -1028,7 +1028,7 @@ namespace OpenDental{
 				}
 			}
 			else if(amt<0){
-				if(Accounts.DebitIsPos(AccountOfOrigin.AcctType)) {//used for checking
+				if(Accounts.DebitIsPos(AccountOfOrigin.Type)) {//used for checking
 					entry.CreditAmt=-amt;
 				}
 				else {
@@ -1048,7 +1048,7 @@ namespace OpenDental{
 				entry.AccountNum=0;
 			}
 			else{
-				entry.AccountNum=AccountPicked.AccountNum;
+				entry.AccountNum=AccountPicked.Id;
 			}
 			entry.Memo=textMemo.Text;
 			entry.CheckNumber=textCheckNumber.Text;

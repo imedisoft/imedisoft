@@ -144,7 +144,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(PrefC.GetLong(PrefName.DefaultUserGroup)==CurGroup.UserGroupNum) {
+			if(PrefC.GetLong(PrefName.DefaultUserGroup)==CurGroup.Id) {
 				MessageBox.Show("Cannot delete user group that is set as the default user group.");
 				return;
 			}

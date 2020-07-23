@@ -113,7 +113,7 @@ namespace UnitTests.Userods_Tests
 			Assert.AreEqual(listUserClinicsExpected.Count, listUserClinics.Count);
 			foreach (UserClinic expected in listUserClinicsExpected)
 			{
-				Assert.IsTrue(listUserClinics.Exists(x => x.ClinicNum == expected.ClinicNum));
+				Assert.IsTrue(listUserClinics.Exists(x => x.ClinicId == expected.ClinicId));
 			}
 			List<AlertSub> listAlertSubs = AlertSubs.GetAllForUser(copy.Id);
 			Assert.AreEqual(listAlertSubsExpected.Count, listAlertSubs.Count);

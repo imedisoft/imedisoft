@@ -7,15 +7,13 @@ namespace OpenDentBusiness
 	public class AlertCategoryLink : TableBase
 	{
 		[PrimaryKey]
-		public long AlertCategoryLinkNum;
+		public long Id;
+
+		[Column("AlertCategoryNum"), ForeignKey(typeof(AlertCategory), nameof(AlertCategory.Id))]
+		public long AlertCategoryId;
 
 		/// <summary>
-		/// FK to AlertCategory.AlertCategoryNum.
-		/// </summary>
-		public long AlertCategoryNum;
-
-		/// <summary>
-		/// Enum:AlertType Identifies what types of alert this row is assocaited to.
+		/// Identifies what types of alert this row is associated with.
 		/// </summary>
 		public AlertType AlertType;
 
@@ -25,7 +23,7 @@ namespace OpenDentBusiness
 
 		public AlertCategoryLink(long alertCategoryNum, AlertType alertType)
 		{
-			AlertCategoryNum = alertCategoryNum;
+			AlertCategoryId = alertCategoryNum;
 			AlertType = alertType;
 		}
 

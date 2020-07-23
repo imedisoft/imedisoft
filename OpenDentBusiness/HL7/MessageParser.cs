@@ -766,15 +766,15 @@ namespace OpenDentBusiness.HL7 {
 				return;//no allergydef for this rxnorm exists
 			}
 			//see if there is already an active allergy with this AllergyDefNum for this patient
-			List<Allergy> listAllergForPat=Allergies.GetAll(pat.PatNum,false);
+			List<Allergy> listAllergForPat=Allergies.GetByPatient(pat.PatNum,false);
 			for(int i=0;i<listAllergForPat.Count;i++) {
-				if(listAllergForPat[i].AllergyDefNum==allergyDefCur.AllergyDefNum) {
+				if(listAllergForPat[i].AllergyDefId==allergyDefCur.AllergyDefNum) {
 					return;//already an active allergy with this AllergyDefNum
 				}
 			}
 			Allergy allergyCur=new Allergy();
-			allergyCur.AllergyDefNum=allergyDefCur.AllergyDefNum;
-			allergyCur.PatNum=pat.PatNum;
+			allergyCur.AllergyDefId=allergyDefCur.AllergyDefNum;
+			allergyCur.PatientId=pat.PatNum;
 			allergyCur.StatusIsActive=true;
 			Allergies.Insert(allergyCur);
 			if(_isVerboseLogging) {

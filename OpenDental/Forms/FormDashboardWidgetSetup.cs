@@ -21,7 +21,7 @@ namespace OpenDental {
 		public FormDashboardWidgetSetup() {
 			InitializeComponent();
 			Lan.F(this);
-			_userGroupNum=UserGroups.GetForUser(Security.CurUser.Id,false).FirstOrDefault().UserGroupNum;
+			_userGroupNum=UserGroups.GetForUser(Security.CurUser.Id,false).FirstOrDefault().Id;
 		}
 		
 		private void FormDashboardSetup_Load(object sender,EventArgs e) {
@@ -34,11 +34,11 @@ namespace OpenDental {
 		private void InitializeOnStartup() {
 			_listUserGroups=UserGroups.GetList();
 			comboUserGroup.Items.AddList(_listUserGroups,x => x.Description);
-			comboUserGroup.SetSelectedKey<UserGroup>(_userGroupNum,x=>x.UserGroupNum);
+			comboUserGroup.SetSelectedKey<UserGroup>(_userGroupNum,x=>x.Id);
 			if(comboUserGroup.SelectedIndex==-1) {
 				comboUserGroup.SelectedIndex=0;
 			}
-			_listGroupPermissions=GroupPermissions.GetForUserGroups(_listUserGroups.Select(x => x.UserGroupNum).ToList(),Permissions.DashboardWidget);
+			_listGroupPermissions=GroupPermissions.GetForUserGroups(_listUserGroups.Select(x => x.Id).ToList(),Permissions.DashboardWidget);
 			_listGroupPermissionsOld=_listGroupPermissions.Select(x => x.Copy()).ToList();
 		}
 
@@ -89,7 +89,7 @@ namespace OpenDental {
 
 		///<summary>Determines if there is a GroupPermission for any of the arrayUserGroups that matches the sheetDashboard.</summary>
 		private bool IsUserGroupAllowed(SheetDef sheetDefWidget,UserGroup userGroup) {
-			if(_listGroupPermissions.Any(x => x.UserGroupNum==userGroup.UserGroupNum && x.FKey==sheetDefWidget.SheetDefNum)) {
+			if(_listGroupPermissions.Any(x => x.UserGroupNum==userGroup.Id && x.FKey==sheetDefWidget.SheetDefNum)) {
 				return true;
 			}
 			return false;
@@ -103,13 +103,13 @@ namespace OpenDental {
 
 		private bool ToggleDashboardPermission(UserGroup userGroup,SheetDef sheetDefWidget) {
 			GroupPermission selectedGroupPermission=_listGroupPermissions
-				.FirstOrDefault(x => x.UserGroupNum==userGroup.UserGroupNum && x.FKey==sheetDefWidget.SheetDefNum);
+				.FirstOrDefault(x => x.UserGroupNum==userGroup.Id && x.FKey==sheetDefWidget.SheetDefNum);
 			if(selectedGroupPermission==null) {
 				GroupPermission groupPermission=new GroupPermission() {
 					NewerDate=DateTime.MinValue,
 					NewerDays=0,
 					PermType=Permissions.DashboardWidget,
-					UserGroupNum=userGroup.UserGroupNum,
+					UserGroupNum=userGroup.Id,
 					FKey=sheetDefWidget.SheetDefNum,
 				};
 				_listGroupPermissions.Add(groupPermission);
@@ -124,13 +124,13 @@ namespace OpenDental {
 		private void SetDashboardPermission(UserGroup userGroup,params SheetDef[] arraySheetDefWidgets) {
 			foreach(SheetDef sheetDefWidget in arraySheetDefWidgets) {
 				GroupPermission selectedGroupPermission=_listGroupPermissions
-					.FirstOrDefault(x => x.UserGroupNum==userGroup.UserGroupNum && x.FKey==sheetDefWidget.SheetDefNum);
+					.FirstOrDefault(x => x.UserGroupNum==userGroup.Id && x.FKey==sheetDefWidget.SheetDefNum);
 				if(selectedGroupPermission==null) {
 					GroupPermission groupPermission=new GroupPermission() {
 						NewerDate=DateTime.MinValue,
 						NewerDays=0,
 						PermType=Permissions.DashboardWidget,
-						UserGroupNum=userGroup.UserGroupNum,
+						UserGroupNum=userGroup.Id,
 						FKey=sheetDefWidget.SheetDefNum,
 					};
 					_listGroupPermissions.Add(groupPermission);

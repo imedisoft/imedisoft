@@ -6,8 +6,8 @@ namespace OpenDentBusiness
     [Table]
 	public class AlertCategory : TableBase
 	{
-		[PrimaryKey]
-		public long AlertCategoryNum;
+		[Column("AlertCategoryNum"), PrimaryKey]
+		public long Id;
 
 		/// <summary>
 		/// False by default, indicates that this is a row that can not be edited or deleted.

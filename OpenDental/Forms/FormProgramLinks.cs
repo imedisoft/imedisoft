@@ -129,12 +129,6 @@ namespace Imedisoft.Forms
 					dialogResult = formPS.ShowDialog();
 					break;
 
-				case "AvaTax":
-					FormAvaTax formAT = new FormAvaTax();
-					formAT.ProgramCur = program;
-					dialogResult = formAT.ShowDialog();
-					break;
-
 				case "XDR":
 					FormXDRSetup FormXS = new FormXDRSetup();
 					dialogResult = FormXS.ShowDialog();

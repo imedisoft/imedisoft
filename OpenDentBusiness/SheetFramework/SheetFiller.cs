@@ -970,7 +970,7 @@ namespace OpenDentBusiness {
 					if(activeAllergies!="") {
 						activeAllergies+=", ";
 					}
-					activeAllergies+=AllergyDefs.GetDescription(listAllergies[i].AllergyDefNum);
+					activeAllergies+=AllergyDefs.GetDescription(listAllergies[i].AllergyDefId);
 				}
 				#endregion
 				#region Medication
@@ -2446,9 +2446,9 @@ namespace OpenDentBusiness {
 				}
 				if(field.FieldType==SheetFieldType.CheckBox) {
 					if(field.FieldName.StartsWith("allergy:")) {//"allergy:Pen"
-						List<Allergy> allergies=Allergies.GetAll(pat.PatNum,true);
+						List<Allergy> allergies=Allergies.GetByPatient(pat.PatNum,true);
 						for(int i=0;i<allergies.Count;i++) {
-							if(AllergyDefs.GetDescription(allergies[i].AllergyDefNum)==field.FieldName.Remove(0,8)) {
+							if(AllergyDefs.GetDescription(allergies[i].AllergyDefId)==field.FieldName.Remove(0,8)) {
 								if(allergies[i].StatusIsActive && field.RadioButtonValue=="Y") {
 									field.FieldValue="X";
 								}

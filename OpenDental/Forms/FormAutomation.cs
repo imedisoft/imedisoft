@@ -151,11 +151,11 @@ namespace OpenDental{
 			for(int i=0;i<_listAutomations.Count;i++){
 				row=new OpenDental.UI.GridRow();
 				row.Cells.Add(_listAutomations[i].Description);
-				if(_listAutomations[i].Autotrigger==AutomationTrigger.CompleteProcedure) {
-					row.Cells.Add(_listAutomations[i].ProcCodes);
+				if(_listAutomations[i].Trigger==AutomationTrigger.CompleteProcedure) {
+					row.Cells.Add(_listAutomations[i].ProcedureCodes);
 				}
 				else {
-					row.Cells.Add(_listAutomations[i].Autotrigger.ToString());
+					row.Cells.Add(_listAutomations[i].Trigger.ToString());
 				}
 				row.Cells.Add(_listAutomations[i].AutoAction.ToString());
 				//details: 
@@ -165,10 +165,10 @@ namespace OpenDental{
 						+".  "+_listAutomations[i].MessageContent;
 				}
 				else if(_listAutomations[i].AutoAction==AutomationAction.PrintPatientLetter) {
-					detail+=SheetDefs.GetDescription(_listAutomations[i].SheetDefNum);
+					detail+=SheetDefs.GetDescription(_listAutomations[i].SheetDefinitionId);
 				}
 				else if(_listAutomations[i].AutoAction==AutomationAction.PrintReferralLetter) {
-					detail+=SheetDefs.GetDescription(_listAutomations[i].SheetDefNum);
+					detail+=SheetDefs.GetDescription(_listAutomations[i].SheetDefinitionId);
 				}
 				else if(_listAutomations[i].AutoAction==AutomationAction.ChangePatStatus) {
 					detail+=Lans.g("enum"+nameof(PatientStatus),_listAutomations[i].PatStatus.GetDescription());
