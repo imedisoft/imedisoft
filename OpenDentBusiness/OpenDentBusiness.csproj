@@ -212,10 +212,6 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.6.1\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="CDT, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Required dlls\CDT.dll</HintPath>
-    </Reference>
     <Reference Include="Google.Apis">
       <HintPath>..\Required dlls\Google.Apis.dll</HintPath>
     </Reference>
@@ -276,10 +272,6 @@
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Required dlls\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="ODCrypt, Version=18.2.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Required dlls\ODCrypt.dll</HintPath>
     </Reference>
     <Reference Include="OpenPop">
       <HintPath>..\Required dlls\OpenPop.dll</HintPath>

@@ -386,8 +386,8 @@ namespace OpenDentBusiness{
 		///<summary>Gets the hashstring from the provided string that is typically generated from GetStringForSignatureHash().
 		///This is done seperate of building the string so that new line replacements can be done when validating signatures before hashing.</summary>
 		public static string GetHashStringForSignature(string str) {
-			//No need to check RemotingRole; no call to db.
-			return Encoding.ASCII.GetString(ODCrypt.MD5.Hash(Encoding.UTF8.GetBytes(str)));
+			return "";
+			// TODO: return Encoding.ASCII.GetString(ODCrypt.MD5.Hash(Encoding.UTF8.GetBytes(str)));
 		}
 
 		///<summary>Get all open, dynamic payment plans.</summary>

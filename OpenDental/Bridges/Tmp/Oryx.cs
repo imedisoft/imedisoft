@@ -47,16 +47,11 @@ namespace OpenDental.Bridges
 					return;
 				}
 				string apiUrl = clientUrl.TrimEnd('/') + "/api/auth/opendental/v1/login";
-				string passwordPlain;
-				if (!CDT.Class1.Decrypt(passwordPref.ValueString, out passwordPlain))
-				{
-					MsgBox.Show("Unable to decrypt password");
-					return;
-				}
+
 				var content = new
 				{
 					username = userNamePref.ValueString,
-					password = passwordPlain,
+					password = passwordPref.ValueString,
 					patientId = (pat != null ? pat.PatNum.ToString() : ""),
 				};
 				string contentJson = JsonConvert.SerializeObject(content);

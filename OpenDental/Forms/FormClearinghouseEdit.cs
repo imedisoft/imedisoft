@@ -1213,21 +1213,10 @@ namespace OpenDental{
 
 		///<summary>Pass in a clearinghouse with an unconcealed password. Will do nothing if the password is blank.</summary>
 		private void ConcealClearinghousePass(Clearinghouse clearinghouse) {
-			string concealedPassword = "";
-			if(string.IsNullOrEmpty(clearinghouse.Password)) {
-				return;
-			}
-			if(CDT.Class1.ConcealClearinghouse(clearinghouse.Password,out concealedPassword)) {
-				clearinghouse.Password=concealedPassword;
-			}
 		}
 
 		///<summary>Pass in a clearinghouse with a concealed password. Will do nothing if the password is blank.</summary>
 		private void RevealClearinghousePass(Clearinghouse clearinghouse) {
-			string revealedClearinghousePass = Clearinghouses.GetRevealPassword(clearinghouse.Password);
-			if(revealedClearinghousePass!="") {
-				clearinghouse.Password=revealedClearinghousePass;
-			}
 		}
 
 		///<summary>All cached clearinghouses' passwords are NOT hashed. 

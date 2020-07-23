@@ -133,9 +133,9 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(property.Name);
 				if (ProgramCur.Name == ProgramName.XVWeb.ToString() && property.Name == XVWeb.ProgramProps.Password)
 				{
-                    CDT.Class1.Decrypt(property.Value, out string decrypted);
+                    //CDT.Class1.Decrypt(property.Value, out string decrypted);
 
-                    gridRow.Cells.Add(new string('*', decrypted.Length));//Show the password as '*'
+                    gridRow.Cells.Add(new string('*', property.Value.Length));//Show the password as '*'
 
 				}
 				else if (ProgramCur.Name == ProgramName.XVWeb.ToString() && property.Name == XVWeb.ProgramProps.ImageCategory)

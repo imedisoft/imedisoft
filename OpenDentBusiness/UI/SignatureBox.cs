@@ -73,7 +73,8 @@ namespace OpenDental.UI {
 
 		///<summary>The data that's begin signed.  A 16 byte hash will be created off this data, and used to encrypt the signature.  Use this OR SetKeyString.  But once the choice is made for a particular data type, it may never be changed.</summary>
 		public void SetAutoKeyData(string keyData){
-			hash=ODCrypt.MD5.Hash(Encoding.UTF8.GetBytes(keyData));
+			hash = new byte[0];
+			// TODO: hash=ODCrypt.MD5.Hash(Encoding.UTF8.GetBytes(keyData));
 		}
 
 		///<summary>Encrypts signature text and returns a base 64 string so that it can go directly into the database.</summary>

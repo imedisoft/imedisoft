@@ -21,10 +21,12 @@ namespace OpenDentBusiness
 			{
 				return "";
 			}
-			else if (CDT.Class1.GetMandibularCodes().Any(x => x.ProcCode == code.ProcCode))
-			{
-				return "L";
-			}
+			//else if (CDT.Class1.GetMandibularCodes().Any(x => x.ProcCode == code.ProcCode))
+			//{
+			//	return "L";
+			//}
+
+			// TODO: Find out what CDT.Class1.GetMandibularCodes() does and implement it here...
 
 			//We assume that if this isn't a Mandibular code then it is Maxillary or "upper arch"
 			return "U";

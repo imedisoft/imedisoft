@@ -1,3 +1,5 @@
+using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -5,14 +7,11 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using CodeBase;
-using Imedisoft.Data;
-using ODCrypt;
 
 namespace OpenDentBusiness
 {
-	///<summary></summary>
-	public class UserWebs
+    ///<summary></summary>
+    public class UserWebs
 	{
 		#region Get Methods
 
@@ -153,45 +152,6 @@ namespace OpenDentBusiness
 				i++;
 			}
 			return retVal;
-		}
-
-		///<summary>Generates a random password 8 char long containing at least one uppercase, one lowercase, and one number.</summary>
-		public static string PassGen(int len)
-		{
-			if (len < 0)
-			{
-				len = 0;
-			}
-			//Leave out characters that can cause confusion (o,O,0,l,1,I).
-			string lowerCase = "abcdefgijkmnopqrstwxyz";
-			string upperCase = "ABCDEFGHJKLMNPQRSTWXYZ";
-			string numbers = "23456789";
-			string allChars = lowerCase + upperCase + numbers;
-			string passChars = "";
-			//Grab a letter from each so know we have one of each.
-			foreach (string s in new string[] { lowerCase, upperCase, numbers })
-			{
-				passChars += s[CryptUtil.Random<int>() % s.Length];
-			}
-			//Start at 3 because we already added 3 characters
-			for (int i = 3; i < len; i++)
-			{
-				passChars += allChars[ODCrypt.CryptUtil.Random<int>() % allChars.Length];
-			}
-			//Now that we have our character set, now we do a Fisher-Yates shuffle.
-			char[] chars = passChars.ToCharArray();
-			int arraysize = chars.Length;
-			int random;
-			char temp;
-			for (int i = 0; i < arraysize; i++)
-			{
-				random = i + (int)(CryptUtil.Random<int>() % (arraysize - i));
-				temp = chars[random];
-				chars[random] = chars[i];
-				chars[i] = temp;
-			}
-			//Take a substring in case the requested length is 1 or 2 characters.
-			return new string(chars).Substring(0, len);
 		}
 
 		///<summary>Generates a random password 8 char long containing at least one uppercase, one lowercase, and one number.</summary>

@@ -236,7 +236,7 @@ namespace OpenDental{
 				_codeList=null;//Is only filled when the code tool runs because the user might not need to download the codes.
 			}
 			else { //USA
-				_codeList=CDT.Class1.GetADAcodes();
+				// TODO: _codeList=CDT.Class1.GetADAcodes();
 				//If this is not the full USA release version, then disable the D-code import because the CDT codes will not be available.
 				if(_codeList==null || _codeList.Count==0) {
 					checkDcodes.Checked=false;

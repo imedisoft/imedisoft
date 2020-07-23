@@ -348,26 +348,26 @@ namespace OpenDental{
 					Image thisImage;
 					string extension;
 					switch(ClaimFormCur.Items[i].ImageFileName) {
-						case "ADA2006.gif":
-							thisImage=CDT.Class1.GetADA2006();
-							extension=".gif";
-							break;
-						case "ADA2012.gif":
-							thisImage=CDT.Class1.GetADA2012();
-							extension=".gif";
-							break;
-						case "ADA2012_J430D.gif":
-							thisImage=CDT.Class1.GetADA2012_J430D();
-							extension=".gif";
-							break;
-						case "ADA2018_J432.gif":
-							thisImage=CDT.Class1.GetADA2018_J432();
-							extension=".gif";
-							break;
-						case "ADA2019_J430.gif":
-							thisImage=CDT.Class1.GetADA2019_J430();
-							extension=".gif";
-							break;
+						//case "ADA2006.gif":
+						//	thisImage=CDT.Class1.GetADA2006();
+						//	extension=".gif";
+						//	break;
+						//case "ADA2012.gif":
+						//	thisImage=CDT.Class1.GetADA2012();
+						//	extension=".gif";
+						//	break;
+						//case "ADA2012_J430D.gif":
+						//	thisImage=CDT.Class1.GetADA2012_J430D();
+						//	extension=".gif";
+						//	break;
+						//case "ADA2018_J432.gif":
+						//	thisImage=CDT.Class1.GetADA2018_J432();
+						//	extension=".gif";
+						//	break;
+						//case "ADA2019_J430.gif":
+						//	thisImage=CDT.Class1.GetADA2019_J430();
+						//	extension=".gif";
+						//	break;
 						case "1500_02_12.gif":
 							thisImage= Imedisoft.Properties.Resources._1500_02_12;
 							extension=".gif";

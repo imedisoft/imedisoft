@@ -914,7 +914,11 @@ namespace OpenDentBusiness{
 		///<summary>Resets the descriptions for all ADA codes to the official wording.  Required by the license.</summary>
 		public static int ResetADAdescriptions() {
 			//No need to check RemotingRole; no call to db.
-			return ResetADAdescriptions(CDT.Class1.GetADAcodes());
+			// return ResetADAdescriptions(CDT.Class1.GetADAcodes());
+
+			// TODO: Find out what CDT.Class1.GetADACodes() does and implement it here....
+
+			return 0;
 		}
 
 		///<summary>Resets the descriptions for all ADA codes to the official wording.  Required by the license.</summary>

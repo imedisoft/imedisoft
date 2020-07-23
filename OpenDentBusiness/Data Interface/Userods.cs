@@ -1,7 +1,6 @@
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
-using ODCrypt;
 using System;
 using System.Collections.Generic;
 using System.Data;

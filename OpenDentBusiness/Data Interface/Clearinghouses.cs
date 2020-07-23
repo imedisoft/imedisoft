@@ -255,9 +255,9 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static string GetRevealPassword(string concealPassword)
 		{
-            CDT.Class1.RevealClearinghouse(concealPassword, out string revealPassword);
-
-            return revealPassword;
+            //CDT.Class1.RevealClearinghouse(concealPassword, out string revealPassword);
+			// TODO: Fix me??
+            return concealPassword;
 		}
 
 		/// <summary>

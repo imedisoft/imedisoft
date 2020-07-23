@@ -1,4 +1,3 @@
-using CDT;
 using CodeBase;
 using System;
 using System.Collections.Generic;
@@ -66,9 +65,7 @@ namespace OpenDentBusiness {
 					}
 					registrationKey.RegKey=strBuild.ToString();
 				}
-				else{
-					registrationKey.RegKey=CDT.Class1.GenerateRandKey();
-				}
+
 				if(registrationKey.RegKey==""){
 					//Don't loop forever when software is unverified.
 					return 0;//not sure what consequence this would have.

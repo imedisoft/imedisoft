@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
-using CDT;
 using System.Collections.Generic;
 using System.Linq;
 using OpenDentBusiness.IO;
@@ -748,32 +747,33 @@ namespace OpenDental{
 		{
 			extension = "";
 			Image img = null;
-			if (claimFormItem.ImageFileName == "ADA2006.gif")
-			{
-				img = CDT.Class1.GetADA2006();
-				extension = ".gif";
-			}
-			else if (claimFormItem.ImageFileName == "ADA2012.gif")
-			{
-				img = CDT.Class1.GetADA2012();
-				extension = ".gif";
-			}
-			else if (claimFormItem.ImageFileName == "ADA2012_J430D.gif")
-			{
-				img = CDT.Class1.GetADA2012_J430D();
-				extension = ".gif";
-			}
-			else if (claimFormItem.ImageFileName == "ADA2018_J432.gif")
-			{
-				img = CDT.Class1.GetADA2018_J432();
-				extension = ".gif";
-			}
-			else if (claimFormItem.ImageFileName == "ADA2019_J430.gif")
-			{
-				img = CDT.Class1.GetADA2019_J430();
-				extension = ".gif";
-			}
-			else if (claimFormItem.ImageFileName == "1500_02_12.gif")
+			//if (claimFormItem.ImageFileName == "ADA2006.gif")
+			//{
+			//	img = CDT.Class1.GetADA2006();
+			//	extension = ".gif";
+			//}
+			//else if (claimFormItem.ImageFileName == "ADA2012.gif")
+			//{
+			//	img = CDT.Class1.GetADA2012();
+			//	extension = ".gif";
+			//}
+			//else if (claimFormItem.ImageFileName == "ADA2012_J430D.gif")
+			//{
+			//	img = CDT.Class1.GetADA2012_J430D();
+			//	extension = ".gif";
+			//}
+			//else if (claimFormItem.ImageFileName == "ADA2018_J432.gif")
+			//{
+			//	img = CDT.Class1.GetADA2018_J432();
+			//	extension = ".gif";
+			//}
+			//else if (claimFormItem.ImageFileName == "ADA2019_J430.gif")
+			//{
+			//	img = CDT.Class1.GetADA2019_J430();
+			//	extension = ".gif";
+			//}
+			//else 
+			if (claimFormItem.ImageFileName == "1500_02_12.gif")
 			{
 				img = Imedisoft.Properties.Resources._1500_02_12;
 				extension = ".gif";
@@ -1378,21 +1378,21 @@ namespace OpenDental{
 					string fileName=Storage.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),_claimFormCur.Items[i].ImageFileName);
 					Image thisImage=null;
 					switch(_claimFormCur.Items[i].ImageFileName) {
-						case "ADA2006.gif":
-							thisImage=CDT.Class1.GetADA2006();
-							break;
-						case "ADA2012.gif":
-							thisImage=CDT.Class1.GetADA2012();
-							break;
-						case "ADA2012_J430D.gif":
-							thisImage=CDT.Class1.GetADA2012_J430D();
-							break;
-						case "ADA2018_J432.gif":
-							thisImage=CDT.Class1.GetADA2018_J432();
-							break;
-						case "ADA2019_J430.gif":
-							thisImage=CDT.Class1.GetADA2019_J430();
-							break;
+						//case "ADA2006.gif":
+						//	thisImage=CDT.Class1.GetADA2006();
+						//	break;
+						//case "ADA2012.gif":
+						//	thisImage=CDT.Class1.GetADA2012();
+						//	break;
+						//case "ADA2012_J430D.gif":
+						//	thisImage=CDT.Class1.GetADA2012_J430D();
+						//	break;
+						//case "ADA2018_J432.gif":
+						//	thisImage=CDT.Class1.GetADA2018_J432();
+						//	break;
+						//case "ADA2019_J430.gif":
+						//	thisImage=CDT.Class1.GetADA2019_J430();
+						//	break;
 						case "1500_02_12.gif":
 							thisImage= Imedisoft.Properties.Resources._1500_02_12;
 							break;

@@ -524,19 +524,6 @@ namespace OpenDentBusiness
 				
 			public static string Database 
 				=> GetString(PrefName.ReportingServerDbName);
-	
-			public static string MySqlUser 
-				=> GetString(PrefName.ReportingServerMySqlUser);
-
-			public static string MySqlPass
-			{
-				get
-				{
-					string pass;
-					CDT.Class1.Decrypt(GetString(PrefName.ReportingServerMySqlPassHash), out pass);
-					return pass;
-				}
-			}
 		}
 	}
 }

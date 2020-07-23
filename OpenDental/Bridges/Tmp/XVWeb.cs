@@ -142,8 +142,6 @@ namespace OpenDental.Bridges
 				}
 			}
 			//decrypt hashed password from database before sending
-			string decryptedPassword;
-			CDT.Class1.Decrypt(ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.XVWeb), ProgramProps.Password), out decryptedPassword);
 			UriBuilder uriBuilder = GetApiUri(true);
 			uriBuilder.Path += "token";
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uriBuilder.ToString());
@@ -151,7 +149,7 @@ namespace OpenDental.Bridges
 			var postData = new
 			{
 				username = ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.XVWeb), ProgramProps.Username),
-				password = decryptedPassword
+				password = ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.XVWeb), ProgramProps.Password)
 			};
 			string postString = JsonConvert.SerializeObject(postData);
 			request.ContentType = "application/json";

@@ -317,29 +317,9 @@ namespace OpenDentBusiness{
 		///<summary>Gets the hashstring from the provided string that is typically generated from GetStringForSignatureHash().
 		///This is done seperate of building the string so that new line replacements can be done when validating signatures before hashing.</summary>
 		public static string GetHashStringForSignature(string str) {
-			return Encoding.ASCII.GetString(ODCrypt.MD5.Hash(Encoding.UTF8.GetBytes(str)));
+
+			return "";
+			// TODO: return Encoding.ASCII.GetString(ODCrypt.MD5.Hash(Encoding.UTF8.GetBytes(str)));
 		}
-
-		/*
-		Only pull out the methods below as you need them.  Otherwise, leave them commented out.
-
-		///<summary></summary>
-		public static List<OrthoChart> Refresh(long patNum){
-			
-			string command="SELECT * FROM orthochart WHERE PatNum = "+POut.Long(patNum);
-			return Crud.OrthoChartCrud.SelectMany(command);
-		}
-
-		///<summary>Gets one OrthoChart from the db.</summary>
-		public static OrthoChart GetOne(long orthoChartNum){
-			
-			return Crud.OrthoChartCrud.SelectOne(orthoChartNum);
-		}
-
-		
-		*/
-
-
-
 	}
 }

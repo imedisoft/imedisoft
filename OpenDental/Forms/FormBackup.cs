@@ -45,9 +45,7 @@ namespace OpenDental {
 			}
 			#endregion
 			#region Archive Tab
-			string decryptedPass;
-			CDT.Class1.Decrypt(PrefC.GetString(PrefName.ArchivePassHash),out decryptedPass);
-			textArchivePass.Text=decryptedPass;
+			textArchivePass.Text= PrefC.GetString(PrefName.ArchivePassHash);
 			textArchivePass.PasswordChar=(textArchivePass.Text=="" ? default(char) : '*');
 			textArchiveServerName.Text=PrefC.GetString(PrefName.ArchiveServerName);
 			textArchiveUser.Text=PrefC.GetString(PrefName.ArchiveUserName);
@@ -102,9 +100,7 @@ namespace OpenDental {
 			hasChanged |= Prefs.UpdateString(PrefName.BackupRestoreAtoZToPath,textBackupRestoreAtoZToPath.Text);
 			hasChanged |= Prefs.UpdateString(PrefName.ArchiveServerName,textArchiveServerName.Text);
 			hasChanged |= Prefs.UpdateString(PrefName.ArchiveUserName,textArchiveUser.Text);
-			string encryptedPass;
-      CDT.Class1.Encrypt(textArchivePass.Text,out encryptedPass);
-			hasChanged |= Prefs.UpdateString(PrefName.ArchivePassHash,encryptedPass);
+			hasChanged |= Prefs.UpdateString(PrefName.ArchivePassHash, textArchivePass.Text);
 			return hasChanged;
 		}
 

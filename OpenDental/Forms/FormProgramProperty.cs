@@ -28,9 +28,9 @@ namespace Imedisoft.Forms
 
 			if (encrypted && programProperty.Value != "")
 			{
-                CDT.Class1.Decrypt(programProperty.Value, out string decryptedText);
+                // TODO: CDT.Class1.Decrypt(programProperty.Value, out string decryptedText);
 
-                valueTextBox.Text = decryptedText;
+                valueTextBox.Text = programProperty.Value;
 			}
 			else
 			{
@@ -44,9 +44,9 @@ namespace Imedisoft.Forms
 
 			if (encrypted)
 			{
-                CDT.Class1.Encrypt(programProperty.Value, out string encryptedText);
+                // TODO: CDT.Class1.Encrypt(programProperty.Value, out string encryptedText);
 
-                programProperty.Value = encryptedText;
+                //programProperty.Value = encryptedText;
 			}
 
 			ProgramProperties.Update(programProperty);

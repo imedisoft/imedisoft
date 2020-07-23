@@ -152,7 +152,8 @@ namespace OpenDentBusiness
 			Array.Copy(filebytes, 0, buffer, 0, fileLength);
 			Array.Copy(textbytes, 0, buffer, fileLength, textbytes.Length);
 
-			return Encoding.ASCII.GetString(ODCrypt.MD5.Hash(buffer));
+			return "";
+			// TODO: return Encoding.ASCII.GetString(ODCrypt.MD5.Hash(buffer));
 		}
 
 		public static Bitmap[] OpenImages(IEnumerable<Document> documents, string patientFolder)
