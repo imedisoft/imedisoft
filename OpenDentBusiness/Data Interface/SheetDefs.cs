@@ -225,7 +225,7 @@ namespace OpenDentBusiness{
 			sheetdef.SheetFieldDefs.AddRange(SheetFieldDefs.GetWhere(x => x.SheetDefNum==sheetdef.SheetDefNum 
 				&& x.FieldType!=SheetFieldType.Image
 				&& x.FieldType!=SheetFieldType.Parameter));//Defs never store parameters. Fields store filled parameters, but that's different.
-			sheetdef.Parameters=SheetParameter.GetForType(sheetdef.SheetType);
+			sheetdef.Parameters=SheetParameter.GetForType(sheetdef.SheetType).ToList();
 		}
 
 		///<summary>Gets all custom sheetdefs(without fields or parameters) for a particular type.</summary>

@@ -102,7 +102,7 @@ namespace OpenDentBusiness{
 		public SheetDef(SheetTypeEnum sheetType){
 			SheetType=sheetType;
 			PageCount=1;
-			Parameters=SheetParameter.GetForType(sheetType);
+			Parameters=SheetParameter.GetForType(sheetType).ToList();
 			SheetFieldDefs=new List<SheetFieldDef>();
 		}
 

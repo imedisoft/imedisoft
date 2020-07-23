@@ -109,7 +109,7 @@ namespace OpenDentBusiness{
 				sheetDef=(SheetDef)serializer.Deserialize(reader);
 			}
 			if(sheetDef.Parameters==null) {
-				sheetDef.Parameters=SheetParameter.GetForType(sheetDef.SheetType);
+				sheetDef.Parameters=SheetParameter.GetForType(sheetDef.SheetType).ToList();
 			}
 			return sheetDef;
 		}

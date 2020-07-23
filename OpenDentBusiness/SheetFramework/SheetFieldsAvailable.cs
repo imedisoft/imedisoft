@@ -5,17 +5,6 @@ using CodeBase;
 
 namespace OpenDentBusiness{
 	public class SheetFieldsAvailable {
-		/*public static List<SheetFieldDef> GetListInput(SheetTypeEnum sheetType){
-			return GetList(sheetType,OutInCheck.In);
-		}
-
-		public static List<SheetFieldDef> GetListOutput(SheetTypeEnum sheetType){
-			return GetList(sheetType,OutInCheck.Out);
-		}
-
-		public static List<SheetFieldDef> GetListCheckBox(SheetTypeEnum sheetType){
-			return GetList(sheetType,OutInCheck.Check);
-		}*/
 
 		///<summary>Returns a list of SheetFieldDefs associated to the given sheetType and layoutMode.</summary>
 		///<param name="sheetType">The sheet type to consider.</param>
