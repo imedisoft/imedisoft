@@ -1365,8 +1365,8 @@
     <Compile Include="Reports\RpUnfinalizedInsPay.cs" />
     <Compile Include="Reports\RpRouting.cs" />
     <Compile Include="Reports\RpUnearnedIncome.cs" />
-    <Compile Include="TableTypes\AlertCategoryLink.cs" />
-    <Compile Include="TableTypes\AlertCategory.cs" />
+    <Compile Include="Data\Models\AlertCategoryLink.cs" />
+    <Compile Include="Data\Models\AlertCategory.cs" />
     <Compile Include="TableTypes\AsapComm.cs" />
     <Compile Include="TableTypes\DefLink.cs" />
     <Compile Include="TableTypes\Etrans835Attach.cs" />

@@ -6,13 +6,13 @@ namespace OpenDentBusiness
     [Table]
 	public class AlertCategory : TableBase
 	{
-		[Column("AlertCategoryNum"), PrimaryKey]
+		[PrimaryKey]
 		public long Id;
 
 		/// <summary>
 		/// False by default, indicates that this is a row that can not be edited or deleted.
 		/// </summary>
-		public bool IsHQCategory;
+		public bool IsHqCategory;
 
 		/// <summary>
 		/// Name used by HQ to identify the type of alert category this started as, allows us to associate new alerts.

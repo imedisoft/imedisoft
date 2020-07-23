@@ -24,7 +24,7 @@ namespace OpenDental {
 		private void FormAlertCategoryEdit_Load(object sender,EventArgs e) {
 			textDesc.Text=_categoryCur.Description;
 			listShownAlertTypes=Enum.GetValues(typeof(AlertType)).OfType<AlertType>().ToList();
-			if(_categoryCur.IsHQCategory) {
+			if(_categoryCur.IsHqCategory) {
 				textDesc.Enabled=false;
 				butDelete.Enabled=false;
 				butOK.Enabled=false;
@@ -43,7 +43,7 @@ namespace OpenDental {
 		}
 
 		private void listBoxAlertTypes_MouseClick(object sender,MouseEventArgs e) {
-			if(_categoryCur.IsHQCategory) {
+			if(_categoryCur.IsHqCategory) {
 				InitAlertTypeSelections();
 				MessageBox.Show("You can only edit custom alert categories.");
 			}

@@ -21,8 +21,8 @@ namespace OpenDentBusiness
 		{
 			return new AlertCategory
 			{
-				Id = (long)dataReader["alert_category_num"],
-				IsHQCategory = (Convert.ToInt32(dataReader["is_h_q_category"]) == 1),
+				Id = (long)dataReader["id"],
+				IsHqCategory = (Convert.ToInt32(dataReader["is_hq_category"]) == 1),
 				InternalName = (string)dataReader["internal_name"],
 				Description = (string)dataReader["description"]
 			};
@@ -37,8 +37,8 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Selects the <see cref="AlertCategory"/> object with the specified key from the database.
 		/// </summary>
-		public static AlertCategory SelectOne(Int64 alert_category_num)
-			=> SelectOne("SELECT * FROM `alertcategory` WHERE `alert_category_num` = " + alert_category_num);
+		public static AlertCategory SelectOne(Int64 id)
+			=> SelectOne("SELECT * FROM `alertcategory` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Selects multiple <see cref="AlertCategory"/> objects from the database using the specified SQL command.
@@ -52,9 +52,9 @@ namespace OpenDentBusiness
 		public static long Insert(AlertCategory alertCategory)
 			=> alertCategory.Id = Database.ExecuteInsert(
 				"INSERT INTO `alertcategory` " +
-				"(`is_h_q_category`, `internal_name`, `description`) " +
+				"(`is_hq_category`, `internal_name`, `description`) " +
 				"VALUES (" +
-					"@is_h_q_category, @internal_name, @description" +
+					"@is_hq_category, @internal_name, @description" +
 				")");
 
 		/// <summary>
@@ -63,12 +63,12 @@ namespace OpenDentBusiness
 		public static void Update(AlertCategory alertCategory)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `alertcategory` SET " +
-					"`is_h_q_category` = @is_h_q_category, " +
+					"`is_hq_category` = @is_hq_category, " +
 					"`internal_name` = @internal_name, " +
 					"`description` = @description " +
-				"WHERE `alert_category_num` = @alert_category_num",
-					new MySqlParameter("alert_category_num", alertCategory.Id),
-					new MySqlParameter("is_h_q_category", (alertCategory.IsHQCategory ? 1 : 0)),
+				"WHERE `id` = @id",
+					new MySqlParameter("id", alertCategory.Id),
+					new MySqlParameter("is_hq_category", (alertCategory.IsHqCategory ? 1 : 0)),
 					new MySqlParameter("internal_name", alertCategory.InternalName ?? ""),
 					new MySqlParameter("description", alertCategory.Description ?? ""));
 
@@ -80,10 +80,10 @@ namespace OpenDentBusiness
 			var updates = new List<string>();
 			var parameters = new List<MySqlParameter>();
 
-			if (alertcategoryNew.IsHQCategory != alertcategoryOld.IsHQCategory)
+			if (alertcategoryNew.IsHqCategory != alertcategoryOld.IsHqCategory)
 			{
-				updates.Add("`is_h_q_category` = @is_h_q_category");
-				parameters.Add(new MySqlParameter("is_h_q_category", (alertcategoryNew.IsHQCategory ? 1 : 0)));
+				updates.Add("`is_hq_category` = @is_hq_category");
+				parameters.Add(new MySqlParameter("is_hq_category", (alertcategoryNew.IsHqCategory ? 1 : 0)));
 			}
 
 			if (alertcategoryNew.InternalName != alertcategoryOld.InternalName)
@@ -100,11 +100,11 @@ namespace OpenDentBusiness
 
 			if (updates.Count == 0) return false;
 
-			parameters.Add(new MySqlParameter("alert_category_num", alertcategoryNew.Id));
+			parameters.Add(new MySqlParameter("id", alertcategoryNew.Id));
 
 			Database.ExecuteNonQuery("UPDATE `alertcategory` " +
 				"SET " + string.Join(", ", updates) + " " +
-				"WHERE `alert_category_num` = @alert_category_num",
+				"WHERE `id` = @id",
 					parameters.ToArray());
 
 			return true;
@@ -113,8 +113,8 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Deletes a single <see cref="AlertCategory"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 alert_category_num)
-			 => Database.ExecuteNonQuery("DELETE FROM `alertcategory` WHERE `alert_category_num` = " + alert_category_num);
+		public static void Delete(Int64 id)
+			 => Database.ExecuteNonQuery("DELETE FROM `alertcategory` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Deletes the specified <see cref="AlertCategory"/> object from the database.

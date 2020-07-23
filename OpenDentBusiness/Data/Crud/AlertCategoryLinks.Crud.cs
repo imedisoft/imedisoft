@@ -23,7 +23,7 @@ namespace OpenDentBusiness
 			return new AlertCategoryLink
 			{
 				Id = (long)dataReader["id"],
-				AlertCategoryId = (long)dataReader["alert_category_num"],
+				AlertCategoryId = (long)dataReader["alert_category_id"],
 				AlertType = (AlertType)Convert.ToInt32(dataReader["alert_type"])
 			};
 		}
@@ -52,9 +52,9 @@ namespace OpenDentBusiness
 		public static long Insert(AlertCategoryLink alertCategoryLink)
 			=> alertCategoryLink.Id = Database.ExecuteInsert(
 				"INSERT INTO `alertcategorylink` " +
-				"(`alert_category_num`, `alert_type`) " +
+				"(`alert_category_id`, `alert_type`) " +
 				"VALUES (" +
-					"@alert_category_num, @alert_type" +
+					"@alert_category_id, @alert_type" +
 				")");
 
 		/// <summary>
@@ -63,11 +63,11 @@ namespace OpenDentBusiness
 		public static void Update(AlertCategoryLink alertCategoryLink)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `alertcategorylink` SET " +
-					"`alert_category_num` = @alert_category_num, " +
+					"`alert_category_id` = @alert_category_id, " +
 					"`alert_type` = @alert_type " +
 				"WHERE `id` = @id",
 					new MySqlParameter("id", alertCategoryLink.Id),
-					new MySqlParameter("alert_category_num", alertCategoryLink.AlertCategoryId),
+					new MySqlParameter("alert_category_id", alertCategoryLink.AlertCategoryId),
 					new MySqlParameter("alert_type", (int)alertCategoryLink.AlertType));
 
 		/// <summary>
@@ -80,8 +80,8 @@ namespace OpenDentBusiness
 
 			if (alertcategorylinkNew.AlertCategoryId != alertcategorylinkOld.AlertCategoryId)
 			{
-				updates.Add("`alert_category_num` = @alert_category_num");
-				parameters.Add(new MySqlParameter("alert_category_num", alertcategorylinkNew.AlertCategoryId));
+				updates.Add("`alert_category_id` = @alert_category_id");
+				parameters.Add(new MySqlParameter("alert_category_id", alertcategorylinkNew.AlertCategoryId));
 			}
 
 			if (alertcategorylinkNew.AlertType != alertcategorylinkOld.AlertType)

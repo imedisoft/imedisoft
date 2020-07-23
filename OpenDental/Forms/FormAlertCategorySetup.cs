@@ -28,7 +28,7 @@ namespace OpenDental {
 			_listInternalAlertCategory.Clear();
 			AlertCategories.GetAll().ForEach(x =>
 			{
-				if(x.IsHQCategory) {
+				if(x.IsHqCategory) {
 					_listInternalAlertCategory.Add(x);
 				}
 				else {
@@ -116,7 +116,7 @@ namespace OpenDental {
 		}
 
 		private void InsertCopyAlertCategory(AlertCategory alertCat) {
-			alertCat.IsHQCategory=false;
+			alertCat.IsHqCategory=false;
 			alertCat.Description+=Lan.G(this,"(Copy)");
 			//alertCat.AlertCategoryNum reflects the original pre-copied PK. After Insert this will be a new PK for the new row.
 			List<AlertCategoryLink> listAlertCategoryType=AlertCategoryLinks.GetForCategory(alertCat.Id);
