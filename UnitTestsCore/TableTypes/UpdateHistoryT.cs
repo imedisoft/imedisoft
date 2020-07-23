@@ -10,7 +10,7 @@ namespace UnitTestsCore
 		///<summary>Inserts an UpdateHistory for the version passed in if there is no entry for that version. Returns the primary key of the row inserted
 		///or 0 if an UpdateHistory of that version already exists.</summary>
 		public static long CreateUpdateHistory(string version,DateTime dateTimeUpdate=default(DateTime)) {
-			List<UpdateHistory> listUpdates=UpdateHistories.GetAll();
+			List<UpdateHistory> listUpdates=UpdateHistories.GetAll().ToList();
 			if(listUpdates.Any(x=>x.Version==version)) {
 				return 0;
 			}

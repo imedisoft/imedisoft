@@ -196,7 +196,7 @@ namespace CentralManager
 				return;//Skip on to the next connection.
 			}
 			#endregion Detect Conflicts
-			List<UserGroup> listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache();
+			List<UserGroup> listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache().ToList();
 			List<UserGroup> listCEMTUserGroups = new List<UserGroup>();
 			List<AlertSub> listRemoteAlertSubs = AlertSubs.GetAll();
 			List<Clinic> listRemoteClinics = Clinics.GetClinicsNoCache();
@@ -207,7 +207,7 @@ namespace CentralManager
 			}
 			//SyncUserGroups returns the list of UserGroups for deletion so it can be used after syncing Users and GroupPermissions.
 			List<UserGroup> listRemoteCEMTUserGroupsForDeletion = CentralUserGroups.Sync(listCEMTUserGroups, listRemoteCEMTUserGroups);
-			listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache();
+			listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache().ToList();
 			for (int i = 0; i < listCentralUserData.Count; i++)
 			{
 				List<GroupPermission> listGroupPerms = new List<GroupPermission>();
@@ -312,7 +312,7 @@ namespace CentralManager
 			}
 			#endregion Detect Conflicts
 
-			List<UserGroup> listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache();
+			List<UserGroup> listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache().ToList();
 			List<UserGroup> listCEMTUserGroups = new List<UserGroup>();
 			List<AlertSub> listRemoteAlertSubs = AlertSubs.GetAll();
 			List<Clinic> listRemoteClinics = Clinics.GetClinicsNoCache();
@@ -324,7 +324,7 @@ namespace CentralManager
 
 			//SyncUserGroups returns the list of UserGroups for deletion so it can be used after syncing Users and GroupPermissions.
 			List<UserGroup> listRemoteCEMTUserGroupsForDeletion = CentralUserGroups.Sync(listCEMTUserGroups, listRemoteCEMTUserGroups);
-			listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache();
+			listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache().ToList();
 			for (int i = 0; i < listCentralUserData.Count; i++)
 			{
 				List<GroupPermission> listGroupPerms = new List<GroupPermission>();
