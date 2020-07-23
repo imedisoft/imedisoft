@@ -20,8 +20,8 @@ namespace Imedisoft.Data.CrudGenerator
         {
 			assemblyTextBox.Text = Path.GetFileName(assembly.Location);
 
-			typesComboBox.BeginUpdate();
-			typesComboBox.Items.Clear();
+			typesListBox.BeginUpdate();
+			typesListBox.Items.Clear();
 
 			foreach (var type in assembly.GetTypes())
             {
@@ -36,15 +36,15 @@ namespace Imedisoft.Data.CrudGenerator
 					continue;
                 }
 
-				typesComboBox.Items.Add(type);
+				typesListBox.Items.Add(type);
 			}
 
-			if (typesComboBox.Items.Count > 0)
+			if (typesListBox.Items.Count > 0)
             {
-				typesComboBox.SelectedIndex = 0;
+				typesListBox.SelectedIndex = 0;
             }
 
-			typesComboBox.EndUpdate();
+			typesListBox.EndUpdate();
         }
 
 		private void FormMain_Load(object sender, EventArgs e)
@@ -64,7 +64,7 @@ namespace Imedisoft.Data.CrudGenerator
 
 			if (e.Index != -1)
 			{
-				if (typesComboBox.Items[e.Index] is Type type)
+				if (typesListBox.Items[e.Index] is Type type)
 				{
 					var color = e.State.HasFlag(DrawItemState.Selected) ?
 						SystemColors.HighlightText :
@@ -76,7 +76,7 @@ namespace Imedisoft.Data.CrudGenerator
 					e.Graphics.DrawImage(image, new Point(e.Bounds.X + 3, imageY));
 
 					TextRenderer.DrawText(e.Graphics,
-						type.Name, typesComboBox.Font,
+						type.Name, typesListBox.Font,
 						Rectangle.FromLTRB(
 							e.Bounds.Left + 20,
 							e.Bounds.Top,
@@ -89,15 +89,15 @@ namespace Imedisoft.Data.CrudGenerator
 
 		private void TypesComboBox_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
-			var index = typesComboBox.IndexFromPoint(e.Location);
+			var index = typesListBox.IndexFromPoint(e.Location);
 			if (index == -1)
 			{
 				return;
 			}
 
-			typesComboBox.SelectedIndex = index;
+			typesListBox.SelectedIndex = index;
 
-			if (typesComboBox.SelectedItem is Type type)
+			if (typesListBox.SelectedItem is Type type)
 			{
 				try
 				{

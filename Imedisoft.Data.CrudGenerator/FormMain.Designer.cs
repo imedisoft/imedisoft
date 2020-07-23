@@ -32,7 +32,7 @@ namespace Imedisoft.Data.CrudGenerator
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.exportButton = new System.Windows.Forms.Button();
             this.snippetTextBox = new System.Windows.Forms.TextBox();
-            this.typesComboBox = new System.Windows.Forms.ListBox();
+            this.typesListBox = new System.Windows.Forms.ListBox();
             this.iconsImageList = new System.Windows.Forms.ImageList(this.components);
             this.assemblyTextBox = new System.Windows.Forms.TextBox();
             this.namespaceTextBox = new System.Windows.Forms.TextBox();
@@ -63,19 +63,20 @@ namespace Imedisoft.Data.CrudGenerator
             this.snippetTextBox.TabIndex = 3;
             this.snippetTextBox.WordWrap = false;
             // 
-            // typesComboBox
+            // typesListBox
             // 
-            this.typesComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.typesComboBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.typesComboBox.FormattingEnabled = true;
-            this.typesComboBox.IntegralHeight = false;
-            this.typesComboBox.ItemHeight = 18;
-            this.typesComboBox.Location = new System.Drawing.Point(12, 66);
-            this.typesComboBox.Name = "typesComboBox";
-            this.typesComboBox.Size = new System.Drawing.Size(180, 393);
-            this.typesComboBox.TabIndex = 1;
-            this.typesComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TypesComboBox_DrawItem);
-            this.typesComboBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TypesComboBox_MouseDoubleClick);
+            this.typesListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.typesListBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.typesListBox.FormattingEnabled = true;
+            this.typesListBox.IntegralHeight = false;
+            this.typesListBox.ItemHeight = 18;
+            this.typesListBox.Location = new System.Drawing.Point(12, 66);
+            this.typesListBox.Name = "typesListBox";
+            this.typesListBox.Size = new System.Drawing.Size(180, 393);
+            this.typesListBox.Sorted = true;
+            this.typesListBox.TabIndex = 1;
+            this.typesListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TypesComboBox_DrawItem);
+            this.typesListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TypesComboBox_MouseDoubleClick);
             // 
             // iconsImageList
             // 
@@ -116,7 +117,7 @@ namespace Imedisoft.Data.CrudGenerator
             this.Controls.Add(this.namespaceLabel);
             this.Controls.Add(this.namespaceTextBox);
             this.Controls.Add(this.assemblyTextBox);
-            this.Controls.Add(this.typesComboBox);
+            this.Controls.Add(this.typesListBox);
             this.Controls.Add(this.snippetTextBox);
             this.Controls.Add(this.exportButton);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -133,7 +134,7 @@ namespace Imedisoft.Data.CrudGenerator
         #endregion
         private System.Windows.Forms.Button exportButton;
         private System.Windows.Forms.TextBox snippetTextBox;
-        private System.Windows.Forms.ListBox typesComboBox;
+        private System.Windows.Forms.ListBox typesListBox;
         private System.Windows.Forms.ImageList iconsImageList;
         private System.Windows.Forms.TextBox assemblyTextBox;
         private System.Windows.Forms.TextBox namespaceTextBox;
