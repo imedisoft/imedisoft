@@ -239,7 +239,7 @@ namespace OpenDental{
 			if(FormU.DialogResult==DialogResult.Cancel){
 				return;
 			}
-			UserCur.LoginDetails=FormU.LoginDetails;
+			UserCur.PasswordHash=FormU.PasswordHash;
 			UserCur.PasswordIsStrong=FormU.PasswordIsStrong;
 			_passwordTyped=FormU.PasswordTyped;
 			if(string.IsNullOrEmpty(UserCur.PasswordHash)) {
@@ -256,7 +256,7 @@ namespace OpenDental{
 			{
 				return;
 			}
-			UserCur.DateTFail=DateTime.MinValue;
+			UserCur.FailedLoginDateTime=DateTime.MinValue;
 			UserCur.FailedAttempts=0;
 			try {
 				Userods.Update(UserCur);

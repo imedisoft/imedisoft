@@ -86,7 +86,7 @@ namespace Imedisoft.CEMT.Forms
 					return;
 				}
 
-				user.LoginDetails = formCentralUserPasswordEdit.LoginDetails;
+				user.PasswordHash = formCentralUserPasswordEdit.PasswordHash;
 			}
 
 			passwordButton.Text = 
@@ -106,7 +106,7 @@ namespace Imedisoft.CEMT.Forms
 				return;
             }
 
-			user.DateTFail = DateTime.MinValue;
+			user.FailedLoginDateTime = DateTime.MinValue;
 			user.FailedAttempts = 0;
 
 			try

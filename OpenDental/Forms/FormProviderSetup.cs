@@ -1177,7 +1177,7 @@ namespace OpenDental{
 				Userod user=new Userod();
 				user.ProvNum=prov.ProvNum;
 				user.UserName=GetUniqueUserName(prov.LName,prov.FName);
-				user.LoginDetails=Authentication.GenerateLoginDetailsSHA512(user.UserName);
+				user.PasswordHash= Password.Hash(user.UserName);
 				try{
 					Userods.Insert(user,comboUserGroup.ListSelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
 				}

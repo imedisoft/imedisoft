@@ -1,18 +1,12 @@
-﻿using System;
+﻿using OpenDentBusiness;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Security.Cryptography;
-using System.Text;
-using System.Drawing.Printing;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using OpenDentBusiness;
-using System.Globalization;
 
-namespace OpenDental {
-	public partial class FormPatientPortal:ODForm {
+namespace OpenDental
+{
+    public partial class FormPatientPortal:ODForm {
 		private Patient _patCur;
 		///<summary>The current UserWeb instance from the passed in Patient.</summary>
 		private UserWeb _userWebCur;
@@ -36,7 +30,7 @@ namespace OpenDental {
 				_userWebCur.FKey=_patCur.PatNum;
 				_userWebCur.FKeyType=UserWebFKeyType.PatientPortal;
 				_userWebCur.RequireUserNameChange=true;
-				_userWebCur.Password=Authentication.GeneratePasswordHash("",HashTypes.None);
+				_userWebCur.PasswordHash = Password.Hash("");
 				UserWebs.Insert(_userWebCur);
 			}
 			_userWebOld=_userWebCur.Copy();
@@ -79,9 +73,9 @@ namespace OpenDental {
 				textOnlinePassword.ReadOnly=false;
 				//3. Save password to db.
 				// We only save the hash of the generated password.
-				_userWebCur.LoginDetails=Authentication.GenerateLoginDetailsSHA512(passwordGenerated);
+				_userWebCur.PasswordHash=Password.Hash(passwordGenerated);
 				UserWebs.Update(_userWebCur,_userWebOld);
-				_userWebOld.LoginDetails=_userWebCur.LoginDetails;
+				_userWebOld.PasswordHash = _userWebCur.PasswordHash;
 				//4. Insert EhrMeasureEvent
 				EhrMeasureEvent newMeasureEvent=new EhrMeasureEvent();
 				newMeasureEvent.DateTEvent=DateTime.Now;
@@ -100,9 +94,9 @@ namespace OpenDental {
 				//2. Make in uneditable
 				textOnlinePassword.ReadOnly=true;
 				//3. Save password to db
-				_userWebCur.LoginDetails=Authentication.GenerateLoginDetailsSHA512(textOnlinePassword.Text);
+				_userWebCur.PasswordHash = Password.Hash(textOnlinePassword.Text);
 				UserWebs.Update(_userWebCur,_userWebOld);
-				_userWebOld.LoginDetails=_userWebCur.LoginDetails;
+				_userWebOld.PasswordHash = _userWebCur.PasswordHash;
 				//4. Rename button
 				butGiveAccess.Text="Provide Online Access";
 				Cursor=Cursors.Default;
@@ -131,9 +125,9 @@ namespace OpenDental {
 			string passwordGenerated=UserWebs.GenerateRandomPassword(8);
 			textOnlinePassword.Text=passwordGenerated;
 			// We only save the hash of the generated password.
-			_userWebCur.LoginDetails=Authentication.GenerateLoginDetailsSHA512(passwordGenerated);
+			_userWebCur.PasswordHash = Password.Hash(passwordGenerated);
 			UserWebs.Update(_userWebCur,_userWebOld);
-			_userWebOld.LoginDetails=_userWebCur.LoginDetails;
+			_userWebOld.PasswordHash = _userWebCur.PasswordHash;
 			Cursor=Cursors.Default;
 		}
 
@@ -214,7 +208,7 @@ namespace OpenDental {
 					shouldPrint=true;
 				}
 				shouldUpdateUserWeb=true;
-				_userWebCur.LoginDetails=Authentication.GenerateLoginDetailsSHA512(textOnlinePassword.Text);
+				_userWebCur.PasswordHash = Password.Hash(textOnlinePassword.Text);
 			}
 			if(shouldPrint) {
 				DialogResult result=MessageBox.Show(Lan.G(this,"Online Username or Password changed but was not printed, would you like to print?")

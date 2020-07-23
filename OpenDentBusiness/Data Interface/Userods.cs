@@ -345,88 +345,72 @@ namespace OpenDentBusiness
 			return EhrProvKeys.HasProvHadKey(prov.LName, prov.FName);
 		}
 
-		///<summary>Searches the database for a corresponding user by username (not case sensitive).  Returns null is no match found.
-		///Once a user has been found, if the number of failed log in attempts exceeds the limit an exception is thrown with a message to display to the 
-		///user.  Then the hash of the plaintext password (if usingEcw is true, password needs to be hashed before passing into this method) is checked 
-		///against the password hash that is currently in the database.  Once the plaintext password passed in is validated, this method will upgrade the 
-		///hashing algorithm for the password (if necessary) and then returns the entire user object for the corresponding user found.  Throws exceptions 
-		///with error message to display to the user if anything goes wrong.  Manipulates the appropriate log in failure columns in the db as 
-		///needed.</summary>
-		public static Userod CheckUserAndPassword(string username, string plaintext, bool isEcw)
+		/// <summary>
+		/// Searches the database for a corresponding user by username (not case sensitive). 
+		/// Returns null is no match found.
+		/// Once a user has been found, if the number of failed log in attempts exceeds the limit an exception is thrown with a message to display to the user.
+		/// Then the hash of the plaintext password (if usingEcw is true, password needs to be hashed before passing into this method) is checked against the password hash that is currently in the database.
+		/// Once the plaintext password passed in is validated, this method will upgrade the hashing algorithm for the password (if necessary) and then returns the entire user object for the corresponding user found. 
+		/// Throws exceptions with error message to display to the user if anything goes wrong. 
+		/// Manipulates the appropriate log in failure columns in the db as needed.
+		/// Null will be returned when hasExceptions is false and no matching user found, credentials are invalid, or account is locked.
+		/// </summary>
+		public static Userod CheckUserAndPassword(string username, string plaintext, bool isEcw, bool hasExceptions = true)
 		{
-			return CheckUserAndPassword(username, plaintext, isEcw, true);
-		}
+			// Do not use the cache here because an administrator could have cleared the log in failure attempt columns for this user.
 
-		///<summary>Searches the database for a corresponding user by username (not case sensitive).  Returns null is no match found.
-		///Once a user has been found, if the number of failed log in attempts exceeds the limit an exception is thrown with a message to display to the 
-		///user.  Then the hash of the plaintext password (if usingEcw is true, password needs to be hashed before passing into this method) is checked 
-		///against the password hash that is currently in the database.  Once the plaintext password passed in is validated, this method will upgrade the 
-		///hashing algorithm for the password (if necessary) and then returns the entire user object for the corresponding user found.  Throws exceptions 
-		///with error message to display to the user if anything goes wrong.  Manipulates the appropriate log in failure columns in the db as 
-		///needed.  Null will be returned when hasExceptions is false and no matching user found, credentials are invalid, or account is locked.</summary>
-		public static Userod CheckUserAndPassword(string username, string plaintext, bool isEcw, bool hasExceptions)
-		{
-			//Do not use the cache here because an administrator could have cleared the log in failure attempt columns for this user.
-			//Also, middle tier calls this method every single time a process request comes to it.
-			Userod userDb = GetUserByNameNoCache(username);
-			if (userDb == null)
+			var user = GetUserByNameNoCache(username);
+			if (user == null)
 			{
 				if (hasExceptions)
 				{
-					throw new ODException(Lans.g("Userods", "Invalid username or password."), ODException.ErrorCodes.CheckUserAndPasswordFailed);
+					throw new ODException("Invalid username or password.", ODException.ErrorCodes.CheckUserAndPasswordFailed);
 				}
+
 				return null;
 			}
-			DateTime dateTimeNowDb = MiscData.GetNowDateTime();
-			//We found a user via matching just the username passed in.  Now we need to check to see if they have exceeded the log in failure attempts.
-			//For now we are hardcoding a 5 minute delay when the user has failed to log in 5 times in a row.  
-			//An admin user can reset the password or the failure attempt count for the user failing to log in via the Security window.
-			if (userDb.DateTFail.Year > 1880 //The user has failed to log in recently
-				&& dateTimeNowDb.Subtract(userDb.DateTFail) < TimeSpan.FromMinutes(5) //The last failure has been within the last 5 minutes.
-				&& userDb.FailedAttempts >= 5) //The user failed 5 or more times.
+
+			// We found a user via matching just the username passed in. Now we need to check to see if they have exceeded the log in failure attempts.
+			// For now we are hardcoding a 5 minute delay when the user has failed to log in 5 times in a row.
+			// An admin user can reset the password or the failure attempt count for the user failing to log in via the Security window.
+			var serverTime = MiscData.GetNowDateTime();
+			if (user.FailedLoginDateTime.Year > 1880 && serverTime.Subtract(user.FailedLoginDateTime) < TimeSpan.FromMinutes(5) && user.FailedAttempts >= 5)
 			{
 				if (hasExceptions)
 				{
-					throw new ApplicationException(Lans.g("Userods", "Account has been locked due to failed log in attempts."
-						+ "\r\nCall your security admin to unlock your account or wait at least 5 minutes."));
+					throw new ApplicationException(
+						"Account has been locked due to failed log in attempts.\r\n" +
+						"Call your security admin to unlock your account or wait at least 5 minutes.");
 				}
+
 				return null;
 			}
-			bool isPasswordValid = Authentication.CheckPassword(userDb, plaintext, isEcw);
-			Userod userNew = userDb.Copy();
-			//If the last failed log in attempt was more than 5 minutes ago, reset the columns in the database so the user can try 5 more times.
-			if (userDb.DateTFail.Year > 1880 && dateTimeNowDb.Subtract(userDb.DateTFail) > TimeSpan.FromMinutes(5))
+
+			var passwordOk = Password.Verify(plaintext, user.PasswordHash);
+			if (!passwordOk)
 			{
-				userNew.FailedAttempts = 0;
-				userNew.DateTFail = DateTime.MinValue;
+				user.FailedLoginDateTime = serverTime;
+				user.FailedAttempts += 1;
 			}
-			if (!isPasswordValid)
+            else
+            {
+				user.FailedAttempts = 0;
+				user.FailedLoginDateTime = DateTime.MinValue;
+			}
+
+			UserodCrud.Update(user);
+
+			if (!passwordOk)
 			{
-				userNew.DateTFail = dateTimeNowDb;
-				userNew.FailedAttempts += 1;
-			}
-			//Synchronize the database with the results of the log in attempt above
-			Crud.UserodCrud.Update(userNew, userDb);
-			if (isPasswordValid)
-			{
-				//Upgrade the encryption for the password if this is not an eCW user (eCW uses md5) and the password is using an outdated hashing algorithm.
-				if (!isEcw && !string.IsNullOrEmpty(plaintext) && userNew.LoginDetails.HashType != HashTypes.SHA3_512)
-				{
-					//Update the password to the default hash type which should be the most secure hashing algorithm possible.
-					Authentication.UpdatePasswordUserod(userNew, plaintext, HashTypes.SHA3_512);
-					//The above method is almost guaranteed to have changed the password for userNew so go back out the db and get the changes that were made.
-					userNew = GetUserNoCache(userNew.Id);
-				}
-				return userNew;
-			}
-			else
-			{//Password was not valid.
 				if (hasExceptions)
 				{
-					throw new ODException(Lans.g("Userods", "Invalid username or password."), ODException.ErrorCodes.CheckUserAndPasswordFailed);
+					throw new ODException("Invalid username or password.", ODException.ErrorCodes.CheckUserAndPasswordFailed);
 				}
+
 				return null;
 			}
+
+			return user;
 		}
 
 		///<summary>Updates all students/instructors to the specified user group.  Surround with try/catch because it can throw exceptions.</summary>
@@ -492,7 +476,7 @@ namespace OpenDentBusiness
 			//Validate(false,userod,false);//Can't use this validate. it's for normal updating only.
 			string command = "UPDATE userod SET "
 				+ "UserName          = '" + POut.String(userod.UserName) + "', "
-				+ "Password          = '" + POut.String(userod.Password) + "', "
+				+ "Password          = '" + POut.String(userod.PasswordHash) + "', "
 				//+"UserGroupNum      =  "+POut.Long(userod.UserGroupNum)+", "//need to find primary key of remote user group
 				+ "EmployeeNum       =  " + POut.Long(userod.EmployeeNum) + ", "
 				+ "ClinicNum         =  " + POut.Long(userod.ClinicNum) + ", "
@@ -508,26 +492,22 @@ namespace OpenDentBusiness
 			Database.ExecuteNonQuery(command);
 		}
 
-		///<summary>DEPRICATED DO NOT USE. Use OpenDentBusiness.Authentication class instead.  For middle tier backward-compatability only.</summary>
-		public static void UpdatePassword(Userod userod, string newPassHashed, bool isPasswordStrong)
-		{
-			//Before 18.3, we only used MD5
-			UpdatePassword(userod, new PasswordContainer(HashTypes.MD5, "", newPassHashed), isPasswordStrong);
-		}
-
 		///<summary>Surround with try/catch because it can throw exceptions.
 		///Same as Update(), only the Validate call skips checking duplicate names for hidden users.</summary>
-		public static void UpdatePassword(Userod userod, PasswordContainer loginDetails, bool isPasswordStrong)
+		public static void UpdatePassword(Userod userod, string passwordHash, bool isPasswordStrong)
 		{
 			Userod userToUpdate = userod.Copy();
-			userToUpdate.LoginDetails = loginDetails;
+			userToUpdate.PasswordHash = passwordHash;
 			userToUpdate.PasswordIsStrong = isPasswordStrong;
+
 			List<UserGroup> listUserGroups = userToUpdate.GetGroups(); //do not include CEMT users.
 			if (listUserGroups.Count < 1)
 			{
-				throw new Exception(Lans.g("Userods", "The current user must be in at least one user group."));
+				throw new Exception("The current user must be in at least one user group.");
 			}
+
 			Validate(false, userToUpdate, true, listUserGroups.Select(x => x.Id).ToList());
+
 			Crud.UserodCrud.Update(userToUpdate);
 		}
 
@@ -701,12 +681,12 @@ namespace OpenDentBusiness
 		/// Inserts a new user into table and returns that new user. Not all fields are copied from original user.
 		/// </summary>
 		/// <param name="user">The user that we will be copying from, not all fields are copied.</param>
-		/// <param name="loginDetails"></param>
+		/// <param name="passwordHash"></param>
 		/// <param name="isPasswordStrong"></param>
 		/// <param name="username"></param>
 		/// <param name="isForCemt">When true newly inserted user.UserNumCEMT will be set to the user.UserNum</param>
 		/// <returns></returns>
-		public static Userod CopyUser(Userod user, PasswordContainer loginDetails, bool isPasswordStrong, string username = null, bool isForCemt = false)
+		public static Userod CopyUser(Userod user, string passwordHash, bool isPasswordStrong, string username = null, bool isForCemt = false)
 		{
 			if (!TryGetUniqueUsername(username ?? (user.UserName + "(Copy)"), 0, false, isForCemt, out string uniqueUserName))
 			{
@@ -715,7 +695,7 @@ namespace OpenDentBusiness
 			Userod copy = new Userod();
 			//if function is ever called outside of the security form this ensures that we will know if a user is a copy of another user
 			copy.UserName = uniqueUserName;
-			copy.LoginDetails = loginDetails;
+			copy.PasswordHash = passwordHash;
 			copy.PasswordIsStrong = isPasswordStrong;
 			copy.ClinicIsRestricted = user.ClinicIsRestricted;
 			copy.ClinicNum = user.ClinicNum;

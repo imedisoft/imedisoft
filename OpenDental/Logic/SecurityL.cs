@@ -42,7 +42,7 @@ namespace OpenDental
 
 				try
 				{
-					Userods.UpdatePassword(Security.CurUser, formUserPassword.LoginDetails, isPasswordStrong);
+					Userods.UpdatePassword(Security.CurUser, formUserPassword.PasswordHash, isPasswordStrong);
 				}
 				catch (Exception exception)
 				{
@@ -53,7 +53,7 @@ namespace OpenDental
 				}
 
 				Security.CurUser.PasswordIsStrong = formUserPassword.PasswordIsStrong;
-				Security.CurUser.LoginDetails = formUserPassword.LoginDetails;
+				Security.CurUser.PasswordHash = formUserPassword.PasswordHash;
 				Security.PasswordTyped = formUserPassword.PasswordTyped;
 			}
 

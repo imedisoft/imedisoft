@@ -23,22 +23,11 @@ namespace OpenDentBusiness {
 		///<summary>An override for the default registrationkey.Note for new reseller customers.</summary>
 		public string Note;
 
-		/// <summary>The getter will return a struct created from the database-ready password which is stored in the Password field.
-		/// The setter will manipulate the Password variable to the string representation of this PasswordContainer object.</summary>
-		public PasswordContainer LoginDetails {
-			get {
-				return Authentication.DecodePass(this.ResellerPassword);
-			}
-			set {
-				this.ResellerPassword=value.ToString();
-			}
-		}
-
 		///<summary>The password hash, not the actual password.  If no password has been entered, then this will be blank.</summary>
-		public string PasswordHash {
-			get {
-				return LoginDetails.Hash;
-			}
+		public string PasswordHash
+        {
+			get => ResellerPassword;
+			set => ResellerPassword = value;
 		}
 
 		///<summary>Returns a copy of this Reseller.</summary>

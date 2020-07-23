@@ -303,7 +303,7 @@ namespace OpenDental {
 				if(FormIB.DialogResult==DialogResult.OK) {
 					//Validate the password typed in against all the users associated to the selected provider.
 					foreach(Userod user in listUsers) {
-						if(Authentication.CheckPassword(user,FormIB.textResult.Text)) {
+						if(Password.Verify(FormIB.textResult.Text, user.PasswordHash)) {
 							return true;
 						}
 					}

@@ -18,7 +18,7 @@ namespace UnitTestsCore {
 			}
 			Userod newUser=new Userod();
 			newUser.UserName=userName;
-			newUser.LoginDetails=Authentication.GenerateLoginDetails(password,HashTypes.SHA3_512);
+			newUser.PasswordHash=Password.Hash(password);
 			newUser.ClinicNum=clinicNum;
 			newUser.ClinicIsRestricted=isClinicIsRestricted;
 			do {
@@ -37,7 +37,7 @@ namespace UnitTestsCore {
 
 		public static void ClearPasswords() {
 			var users=Userods.GetAll();
-			users.ForEach(x => { x.Password=""; Userods.Update(x); });
+			users.ForEach((System.Action<Userod>)(x => { x.PasswordHash=""; Userods.Update(x); }));
 		}
 	}
 }

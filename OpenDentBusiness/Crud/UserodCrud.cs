@@ -23,7 +23,7 @@ namespace OpenDentBusiness.Crud
 			{
 				Id = (long)dataReader["UserNum"],
 				UserName = (string)dataReader["UserName"],
-				Password = (string)dataReader["Password"],
+				PasswordHash = (string)dataReader["Password"],
 				UserGroupNum = (long)dataReader["UserGroupNum"],
 				EmployeeNum = (long)dataReader["EmployeeNum"],
 				ClinicNum = (long)dataReader["ClinicNum"],
@@ -36,7 +36,7 @@ namespace OpenDentBusiness.Crud
 				ClinicIsRestricted = (Convert.ToInt32(dataReader["ClinicIsRestricted"]) == 1),
 				InboxHidePopups = (Convert.ToInt32(dataReader["InboxHidePopups"]) == 1),
 				UserNumCEMT = (long)dataReader["UserNumCEMT"],
-				DateTFail = (DateTime)dataReader["DateTFail"],
+				FailedLoginDateTime = (DateTime)dataReader["DateTFail"],
 				FailedAttempts = (byte)dataReader["FailedAttempts"],
 				DomainUser = (string)dataReader["DomainUser"],
 				IsPasswordResetRequired = (Convert.ToInt32(dataReader["IsPasswordResetRequired"]) == 1),
@@ -105,7 +105,7 @@ namespace OpenDentBusiness.Crud
 				"WHERE `UserNum` = @UserNum",
 					new MySqlParameter("UserNum", userod.Id),
 					new MySqlParameter("UserName", userod.UserName ?? ""),
-					new MySqlParameter("Password", userod.Password ?? ""),
+					new MySqlParameter("Password", userod.PasswordHash ?? ""),
 					new MySqlParameter("UserGroupNum", userod.UserGroupNum),
 					new MySqlParameter("EmployeeNum", userod.EmployeeNum),
 					new MySqlParameter("ClinicNum", userod.ClinicNum),
@@ -118,7 +118,7 @@ namespace OpenDentBusiness.Crud
 					new MySqlParameter("ClinicIsRestricted", (userod.ClinicIsRestricted ? 1 : 0)),
 					new MySqlParameter("InboxHidePopups", (userod.InboxHidePopups ? 1 : 0)),
 					new MySqlParameter("UserNumCEMT", userod.UserNumCEMT),
-					new MySqlParameter("DateTFail", userod.DateTFail),
+					new MySqlParameter("DateTFail", userod.FailedLoginDateTime),
 					new MySqlParameter("FailedAttempts", userod.FailedAttempts),
 					new MySqlParameter("DomainUser", userod.DomainUser ?? ""),
 					new MySqlParameter("IsPasswordResetRequired", (userod.IsPasswordResetRequired ? 1 : 0)),
@@ -140,10 +140,10 @@ namespace OpenDentBusiness.Crud
 				parameters.Add(new MySqlParameter("UserName", userodNew.UserName ?? ""));
 			}
 
-			if (userodNew.Password != userodOld.Password)
+			if (userodNew.PasswordHash != userodOld.PasswordHash)
 			{
 				updates.Add("`Password` = @Password");
-				parameters.Add(new MySqlParameter("Password", userodNew.Password ?? ""));
+				parameters.Add(new MySqlParameter("Password", userodNew.PasswordHash ?? ""));
 			}
 
 			if (userodNew.UserGroupNum != userodOld.UserGroupNum)
@@ -218,10 +218,10 @@ namespace OpenDentBusiness.Crud
 				parameters.Add(new MySqlParameter("UserNumCEMT", userodNew.UserNumCEMT));
 			}
 
-			if (userodNew.DateTFail != userodOld.DateTFail)
+			if (userodNew.FailedLoginDateTime != userodOld.FailedLoginDateTime)
 			{
 				updates.Add("`DateTFail` = @DateTFail");
-				parameters.Add(new MySqlParameter("DateTFail", userodNew.DateTFail));
+				parameters.Add(new MySqlParameter("DateTFail", userodNew.FailedLoginDateTime));
 			}
 
 			if (userodNew.FailedAttempts != userodOld.FailedAttempts)

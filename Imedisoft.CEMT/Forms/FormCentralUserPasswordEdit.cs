@@ -6,12 +6,10 @@ namespace Imedisoft.CEMT.Forms
 {
     public partial class FormCentralUserPasswordEdit : FormBase
 	{
-		//public string HashedResult;
-
 		private readonly bool isCreate;
 		private readonly bool isSecurityWindow;
 
-		public PasswordContainer LoginDetails;
+		public string PasswordHash;
 
 		public FormCentralUserPasswordEdit(string userName, bool isCreate, bool isSecurityWindow)
 		{
@@ -50,7 +48,7 @@ namespace Imedisoft.CEMT.Forms
 				}
 
 				// If user's current password is blank we dont care what they put for the old one.
-				if (currentPassword != "" && !Authentication.CheckPassword(user, currentTextBox.Text))
+				if (currentPassword != "" && !Password.Verify(currentTextBox.Text, user.PasswordHash))
 				{
 					MessageBox.Show(this, "Current password incorrect.");
 					return;
@@ -65,11 +63,11 @@ namespace Imedisoft.CEMT.Forms
 			}
 			else
 			{
-				LoginDetails = Authentication.GenerateLoginDetailsSHA512(newTextBox.Text);
+				PasswordHash = Password.Hash(newTextBox.Text);
 				if (user?.UserName == Security.CurUser.UserName || isSecurityWindow)
 				{
 					Security.PasswordTyped = newTextBox.Text;
-					//They're updating the password for the logged in user.  Update CurUser for when they sync then attempt to log into remote DB.
+					//They're updating the password for the logged in user. Update CurUser for when they sync then attempt to log into remote DB.
 				}
 			}
 

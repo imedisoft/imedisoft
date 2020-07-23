@@ -79,9 +79,9 @@ namespace UnitTests.Userods_Tests
 			UserOdPrefs.Insert(new UserOdPref() { UserNum = user.Id, ClinicNum = clinic.ClinicNum, Fkey = clinic.ClinicNum, FkeyType = UserOdFkeyType.ClinicLast });
 			//Setup user
 			//Fields given by method caller
-			PasswordContainer loginDetailsNotExpected = user.LoginDetails;
+			string passwordHashNotExpected = user.PasswordHash;
 			string password = "Asdf1234!@#$";
-			PasswordContainer loginDetails = Authentication.GenerateLoginDetailsSHA512(password);
+			string passwordHash = Password.Hash(password);
 			bool isPasswordStrong = string.IsNullOrEmpty(Userods.IsPasswordStrong(password));
 			string copiedUserName = user.UserName + "(Copy)";
 			//Fields directly copied
@@ -91,15 +91,15 @@ namespace UnitTests.Userods_Tests
 			List<UserClinic> listUserClinicsExpected = UserClinics.GetForUser(user.Id);//Mimics 
 			List<AlertSub> listAlertSubsExpected = AlertSubs.GetAllForUser(user.Id);
 			//Copy User
-			long copiedUserNum = Userods.CopyUser(user, loginDetails, isPasswordStrong, copiedUserName, isForCemt: false).Id;
+			long copiedUserNum = Userods.CopyUser(user, passwordHash, isPasswordStrong, copiedUserName, isForCemt: false).Id;
 			Cache.Refresh(InvalidType.AllLocal);
 			Userod copy = Userods.GetUser(copiedUserNum);
 			//Assert
 			//Fields given by method caller
 			Assert.AreEqual(copiedUserName, copy.UserName);
 			Assert.AreEqual(isPasswordStrong, copy.PasswordIsStrong);
-			Assert.AreEqual(loginDetails.ToString(), copy.Password);
-			Assert.AreNotEqual(loginDetailsNotExpected.ToString(), copy.Password);//Source user's password should not have been copied.
+			Assert.AreEqual(passwordHash.ToString(), copy.PasswordHash);
+			Assert.AreNotEqual(passwordHashNotExpected, copy.PasswordHash);//Source user's password should not have been copied.
 																				  //Fields directly copied
 			Assert.AreEqual(clinicIsRestrictedExpected, copy.ClinicIsRestricted);
 			Assert.AreEqual(clinicNumExpected, copy.ClinicNum);
@@ -130,7 +130,7 @@ namespace UnitTests.Userods_Tests
 			Assert.AreEqual(0, copy.AnesthProvType);
 			Assert.AreEqual(false, copy.DefaultHidePopups);
 			Assert.AreEqual(0, copy.UserNumCEMT);
-			Assert.AreEqual(DateTime.MinValue, copy.DateTFail);
+			Assert.AreEqual(DateTime.MinValue, copy.FailedLoginDateTime);
 			Assert.AreEqual(0, copy.FailedAttempts);
 			Assert.AreEqual("", copy.DomainUser);
 			Assert.AreEqual("", copy.MobileWebPin);
@@ -149,8 +149,8 @@ namespace UnitTests.Userods_Tests
 			Userod user = UserodT.CreateUser();
 			//Setup user
 			//Fields given by method caller
-			Userods.CopyUser(user, user.LoginDetails, false, isForCemt: false);//First copy
-			long copiedUserNum2 = Userods.CopyUser(user, user.LoginDetails, false, isForCemt: false).Id;//Second copy
+			Userods.CopyUser(user, user.PasswordHash, false, isForCemt: false);//First copy
+			long copiedUserNum2 = Userods.CopyUser(user, user.PasswordHash, false, isForCemt: false).Id;//Second copy
 			Cache.Refresh(InvalidType.Security);
 			Userod copy = Userods.GetUser(copiedUserNum2);
 			Assert.AreEqual(user.UserName + "(Copy)(2)", copy.UserName);

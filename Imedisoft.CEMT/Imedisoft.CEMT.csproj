@@ -148,18 +148,6 @@
     <Compile Include="FormCentralProdInc.Designer.cs">
       <DependentUpon>FormCentralProdInc.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormCentralPasswordCheck.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormCentralPasswordCheck.Designer.cs">
-      <DependentUpon>FormCentralPasswordCheck.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormCentralPasswordChange.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormCentralPasswordChange.Designer.cs">
-      <DependentUpon>FormCentralPasswordChange.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormCentralConnectionEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -244,14 +232,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormCentralProdInc.resx">
       <DependentUpon>FormCentralProdInc.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormCentralPasswordCheck.resx">
-      <DependentUpon>FormCentralPasswordCheck.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormCentralPasswordChange.resx">
-      <DependentUpon>FormCentralPasswordChange.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormCentralConnectionEdit.resx">
       <DependentUpon>FormCentralConnectionEdit.cs</DependentUpon>

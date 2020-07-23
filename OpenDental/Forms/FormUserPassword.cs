@@ -5,11 +5,13 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 
-namespace OpenDental{
+namespace OpenDental
+{
 	/// <summary>
 	/// Summary description for FormBasicTemplate.
 	/// </summary>
-	public class FormUserPassword : ODForm {
+	public class FormUserPassword : ODForm
+	{
 		private OpenDental.UI.Button butCancel;
 		private OpenDental.UI.Button butOK;
 		private System.Windows.Forms.Label labelNew;
@@ -18,6 +20,7 @@ namespace OpenDental{
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
+
 		private bool IsCreate;
 		private TextBox textUserName;
 		private Label label3;
@@ -27,37 +30,37 @@ namespace OpenDental{
 		public bool IsInSecurityWindow;
 		public bool PasswordIsStrong;
 		public string PasswordTyped;
-		public PasswordContainer LoginDetails;
+		public string PasswordHash;
 		private bool _isPasswordReset;
 		private bool _isCopiedUser;
 
 		///<summary>Set isPasswwordReset to true if creating rather than changing a password.</summary>
-		public FormUserPassword(bool isCreate,string username, bool isPasswordReset=false,bool isCopiedUser=false)
+		public FormUserPassword(bool isCreate, string username, bool isPasswordReset = false, bool isCopiedUser = false)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 			Lan.F(this);
-			IsCreate=isCreate;
-			textUserName.Text=username;
-			_isPasswordReset=isPasswordReset;
-			_isCopiedUser=isCopiedUser;
+			IsCreate = isCreate;
+			textUserName.Text = username;
+			_isPasswordReset = isPasswordReset;
+			_isCopiedUser = isCopiedUser;
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if(components != null)
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -187,97 +190,81 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormUserPassword_Load(object sender, System.EventArgs e) {
-			if(IsCreate){
-				Text=Lan.G(this,"Create Password");
+		private void FormUserPassword_Load(object sender, System.EventArgs e)
+		{
+			if (IsCreate)
+			{
+				Text = Lan.G(this, "Create Password");
 			}
-			if(_isCopiedUser) {
-				Text=Lan.G(this,"Create Password for Copied User");
+			if (_isCopiedUser)
+			{
+				Text = Lan.G(this, "Create Password for Copied User");
 			}
-			if(IsInSecurityWindow) {
-				labelCurrent.Visible=false;
-				textCurrent.Visible=false;
+			if (IsInSecurityWindow)
+			{
+				labelCurrent.Visible = false;
+				textCurrent.Visible = false;
 			}
-			if(_isPasswordReset) {
-				labelCurrent.Text="New Password";
-				labelNew.Text="Re-Enter Password";
-				butCancel.Visible=false;
-				butOK.Location=butCancel.Location;
-				this.ControlBox=false;
+			if (_isPasswordReset)
+			{
+				labelCurrent.Text = "New Password";
+				labelNew.Text = "Re-Enter Password";
+				butCancel.Visible = false;
+				butOK.Location = butCancel.Location;
+				this.ControlBox = false;
 			}
 		}
 
-		private void checkShow_Click(object sender,EventArgs e) {
+		private void checkShow_Click(object sender, EventArgs e)
+		{
 			//char ch=textPassword.PasswordChar;
-			if(checkShow.Checked) {
-				textPassword.PasswordChar='\0';
+			if (checkShow.Checked)
+			{
+				textPassword.PasswordChar = '\0';
 			}
-			else {
-				textPassword.PasswordChar='*';
+			else
+			{
+				textPassword.PasswordChar = '*';
 			}
 		}
 
-		private void butOK_Click(object sender, System.EventArgs e) {
-			if(_isPasswordReset) {
-				if(textPassword.Text!=textCurrent.Text || string.IsNullOrWhiteSpace(textPassword.Text)) {
+		private void butOK_Click(object sender, System.EventArgs e)
+		{
+			if (_isPasswordReset)
+			{
+				if (textPassword.Text != textCurrent.Text || string.IsNullOrWhiteSpace(textPassword.Text))
+				{
 					MessageBox.Show("Passwords must match and not be empty.");
 					return;
 				}
 			}
-			else if(!IsInSecurityWindow
-				&& !Authentication.CheckPassword(Security.CurUser,textCurrent.Text))
+			else if (!IsInSecurityWindow && !Password.Verify(textCurrent.Text, Security.CurUser.PasswordHash))
 			{
 				MessageBox.Show("Current password incorrect.");
 				return;
 			}
-			string explanation=Userods.IsPasswordStrong(textPassword.Text);
-			if(PrefC.GetBool(PrefName.PasswordsMustBeStrong)) {
-				if(explanation!="") {
+			string explanation = Userods.IsPasswordStrong(textPassword.Text);
+			if (PrefC.GetBool(PrefName.PasswordsMustBeStrong))
+			{
+				if (explanation != "")
+				{
 					MessageBox.Show(explanation);
 					return;
 				}
 			}
+
 			//If the PasswordsMustBeStrong preference is off, still store whether or not the password is strong in case the preference is turned on later
-			PasswordIsStrong=string.IsNullOrEmpty(explanation);
-			if(Programs.UsingEcwTightOrFullMode()) {//Same check as FormLogOn
-				LoginDetails=Authentication.GenerateLoginDetails(textPassword.Text,HashTypes.MD5_ECW);
-			}
-			else {
-				LoginDetails=Authentication.GenerateLoginDetailsSHA512(textPassword.Text);
-			}
-			PasswordTyped=textPassword.Text; //update the stored typed password for middle tier refresh
-			DialogResult=DialogResult.OK;
+			PasswordIsStrong = string.IsNullOrEmpty(explanation);
+
+			PasswordHash = Password.Hash(textPassword.Text);
+
+			PasswordTyped = textPassword.Text; //update the stored typed password for middle tier refresh
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender, System.EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, System.EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
-
-		
-
-		
-
-
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

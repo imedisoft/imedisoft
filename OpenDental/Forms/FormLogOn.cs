@@ -113,9 +113,7 @@ namespace OpenDental {
 			string passwordTyped=textPassword.Text;
 
 			Userod userCur=null;
-			if(isEcw) {//ecw requires hash, but non-ecw requires actual password
-				passwordTyped=Authentication.HashPasswordMD5(passwordTyped,true);
-			}
+
 
 
 					try {

@@ -48,7 +48,7 @@ namespace OpenDentBusiness.Crud{
 				userWeb.FKey                 = PIn.Long  (row["FKey"].ToString());
 				userWeb.FKeyType             = (OpenDentBusiness.UserWebFKeyType)PIn.Int(row["FKeyType"].ToString());
 				userWeb.UserName             = PIn.String(row["UserName"].ToString());
-				userWeb.Password             = PIn.String(row["Password"].ToString());
+				userWeb.PasswordHash             = PIn.String(row["Password"].ToString());
 				userWeb.PasswordResetCode    = PIn.String(row["PasswordResetCode"].ToString());
 				userWeb.RequireUserNameChange= PIn.Bool  (row["RequireUserNameChange"].ToString());
 				userWeb.DateTimeLastLogin    = PIn.Date (row["DateTimeLastLogin"].ToString());
@@ -79,7 +79,7 @@ namespace OpenDentBusiness.Crud{
 					POut.Long  (userWeb.FKey),
 					POut.Int   ((int)userWeb.FKeyType),
 					            userWeb.UserName,
-					            userWeb.Password,
+					            userWeb.PasswordHash,
 					            userWeb.PasswordResetCode,
 					POut.Bool  (userWeb.RequireUserNameChange),
 					POut.DateT (userWeb.DateTimeLastLogin,false),
@@ -111,7 +111,7 @@ namespace OpenDentBusiness.Crud{
 				     POut.Long  (userWeb.FKey)+","
 				+    POut.Int   ((int)userWeb.FKeyType)+","
 				+"'"+POut.String(userWeb.UserName)+"',"
-				+"'"+POut.String(userWeb.Password)+"',"
+				+"'"+POut.String(userWeb.PasswordHash)+"',"
 				+"'"+POut.String(userWeb.PasswordResetCode)+"',"
 				+    POut.Bool  (userWeb.RequireUserNameChange)+","
 				+    POut.DateT (userWeb.DateTimeLastLogin)+","
@@ -163,7 +163,7 @@ namespace OpenDentBusiness.Crud{
 					sbRow.Append(POut.Long(userWeb.FKey)); sbRow.Append(",");
 					sbRow.Append(POut.Int((int)userWeb.FKeyType)); sbRow.Append(",");
 					sbRow.Append("'"+POut.String(userWeb.UserName)+"'"); sbRow.Append(",");
-					sbRow.Append("'"+POut.String(userWeb.Password)+"'"); sbRow.Append(",");
+					sbRow.Append("'"+POut.String(userWeb.PasswordHash)+"'"); sbRow.Append(",");
 					sbRow.Append("'"+POut.String(userWeb.PasswordResetCode)+"'"); sbRow.Append(",");
 					sbRow.Append(POut.Bool(userWeb.RequireUserNameChange)); sbRow.Append(",");
 					sbRow.Append(POut.DateT(userWeb.DateTimeLastLogin)); sbRow.Append(",");
@@ -210,7 +210,7 @@ namespace OpenDentBusiness.Crud{
 				     POut.Long  (userWeb.FKey)+","
 				+    POut.Int   ((int)userWeb.FKeyType)+","
 				+"'"+POut.String(userWeb.UserName)+"',"
-				+"'"+POut.String(userWeb.Password)+"',"
+				+"'"+POut.String(userWeb.PasswordHash)+"',"
 				+"'"+POut.String(userWeb.PasswordResetCode)+"',"
 				+    POut.Bool  (userWeb.RequireUserNameChange)+","
 				+    POut.DateT (userWeb.DateTimeLastLogin)+","
@@ -230,7 +230,7 @@ namespace OpenDentBusiness.Crud{
 				+"FKey                 =  "+POut.Long  (userWeb.FKey)+", "
 				+"FKeyType             =  "+POut.Int   ((int)userWeb.FKeyType)+", "
 				+"UserName             = '"+POut.String(userWeb.UserName)+"', "
-				+"Password             = '"+POut.String(userWeb.Password)+"', "
+				+"Password             = '"+POut.String(userWeb.PasswordHash)+"', "
 				+"PasswordResetCode    = '"+POut.String(userWeb.PasswordResetCode)+"', "
 				+"RequireUserNameChange=  "+POut.Bool  (userWeb.RequireUserNameChange)+", "
 				+"DateTimeLastLogin    =  "+POut.DateT (userWeb.DateTimeLastLogin)+", "
@@ -254,9 +254,9 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="UserName = '"+POut.String(userWeb.UserName)+"'";
 			}
-			if(userWeb.Password != oldUserWeb.Password) {
+			if(userWeb.PasswordHash != oldUserWeb.PasswordHash) {
 				if(command!="") { command+=",";}
-				command+="Password = '"+POut.String(userWeb.Password)+"'";
+				command+="Password = '"+POut.String(userWeb.PasswordHash)+"'";
 			}
 			if(userWeb.PasswordResetCode != oldUserWeb.PasswordResetCode) {
 				if(command!="") { command+=",";}
@@ -295,7 +295,7 @@ namespace OpenDentBusiness.Crud{
 			if(userWeb.UserName != oldUserWeb.UserName) {
 				return true;
 			}
-			if(userWeb.Password != oldUserWeb.Password) {
+			if(userWeb.PasswordHash != oldUserWeb.PasswordHash) {
 				return true;
 			}
 			if(userWeb.PasswordResetCode != oldUserWeb.PasswordResetCode) {

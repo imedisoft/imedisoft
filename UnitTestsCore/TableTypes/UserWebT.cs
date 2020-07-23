@@ -15,7 +15,7 @@ namespace UnitTestsCore
 				FKey = fKey,
 				FKeyType = fKeyType,
 				UserName = userName,
-				Password = password,
+				PasswordHash = password,
 				RequireUserNameChange = requireUserNameChange,
 				RequirePasswordChange = requirePasswordChange,
 				PasswordResetCode = passwordResetCode,

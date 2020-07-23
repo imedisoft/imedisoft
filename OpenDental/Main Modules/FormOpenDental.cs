@@ -7125,21 +7125,8 @@ namespace OpenDental
 				Userod user = Userods.GetUserByName(userName, true);
 				if (user == null)
 				{
-					if (Programs.UsingEcwTightOrFullMode() && userName != "")
-					{
-						user = new Userod();
-						user.UserName = userName;
-						user.LoginDetails = Authentication.GenerateLoginDetailsMD5(passHash, true);
-						//This can fail if duplicate username because of capitalization differences.
-						Userods.Insert(user, new List<long> { PIn.Long(ProgramProperties.GetPropVal(ProgramName.eClinicalWorks, "DefaultUserGroup")) });
-						DataValid.SetInvalid(InvalidType.Security);
-					}
-					else
-					{//not using eCW in tight integration mode
-					 //So present logon screen
-						ShowLogOn();
-						user = Security.CurUser.Copy();
-					}
+					ShowLogOn();
+					user = Security.CurUser.Copy();
 				}
 				//Can't use Userods.CheckPassword, because we only have the hashed password.
 				if (passHash != user.PasswordHash || !Programs.UsingEcwTightOrFullMode())
@@ -7445,7 +7432,7 @@ namespace OpenDental
 					{
 						Security.CurUser.IsPasswordResetRequired = false;
 						Userods.Update(Security.CurUser);
-						Userods.UpdatePassword(Security.CurUser, FormUP.LoginDetails, isPasswordStrong);
+						Userods.UpdatePassword(Security.CurUser, FormUP.PasswordHash, isPasswordStrong);
 						Security.PasswordTyped = FormUP.PasswordTyped;//Update the last typed in for middle tier refresh
 						Security.CurUser = Userods.GetUserNoCache(Security.CurUser.Id);//UpdatePassword() changes multiple fields.  Refresh from db.
 					}

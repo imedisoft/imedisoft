@@ -53,7 +53,7 @@ namespace OpenDental {
 			if(formPassword.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
-			Userod newUser=Userods.CopyUser(user,formPassword.LoginDetails,formPassword.PasswordIsStrong,newUserName);
+			Userod newUser=Userods.CopyUser(user,formPassword.PasswordHash,formPassword.PasswordIsStrong,newUserName);
 			DataValid.SetInvalid(InvalidType.Security,InvalidType.UserClinics);//Must be called after Userods.CopyUser(...)
 			userControlSecurityTabs.FillGridUsers();
 			userControlSecurityTabs.SelectedUser=newUser;

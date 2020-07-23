@@ -329,7 +329,7 @@ namespace CentralManager
 					return;
 				}
 
-				Security.CurUser.LoginDetails = formCentralUserPasswordEdit.LoginDetails;
+				Security.CurUser.PasswordHash = formCentralUserPasswordEdit.PasswordHash;
 				try
 				{
 					Userods.Update(Security.CurUser);

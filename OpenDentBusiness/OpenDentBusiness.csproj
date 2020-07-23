@@ -1661,9 +1661,6 @@
     <Compile Include="X12\X270.cs" />
     <Compile Include="X12\X837_4010.cs" />
     <Compile Include="X12\X997.cs" />
-    <Compile Include="ODDataSet\ODDataRow.cs" />
-    <Compile Include="ODDataSet\ODDataSet.cs" />
-    <Compile Include="ODDataSet\ODDataTable.cs" />
     <Compile Include="Db\PIn.cs" />
     <Compile Include="Db\POut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

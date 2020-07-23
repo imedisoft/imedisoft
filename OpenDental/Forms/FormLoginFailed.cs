@@ -26,14 +26,6 @@ namespace OpenDental {
 				bool useEcwAlgorithm=Programs.UsingEcwTightOrFullMode();
 				//ecw requires hash, but non-ecw requires actual password
 				password=textPassword.Text;
-				if(useEcwAlgorithm) {
-					//It doesn't matter what Security.CurUser is when it is null because we are technically trying to set it for the first time.
-					//It cannot be null before invoking HashPassword because middle needs it to NOT be null when creating the credentials for DtoGetString.
-					if(Security.CurUser==null) {
-						Security.CurUser=new Userod();
-					}
-					password=Authentication.HashPasswordMD5(password,true);
-				}
 				string username=textUser.Text;
 				#if DEBUG
 				if(username=="") {

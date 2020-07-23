@@ -229,7 +229,7 @@ namespace OpenDental {
 			_resellerCur.BillingType=billingType;
 			_resellerCur.UserName=textUserName.Text;
 			if(textPassword.Text!="********") {
-				_resellerCur.LoginDetails=Authentication.GenerateLoginDetailsSHA512(textPassword.Text);
+				_resellerCur.PasswordHash=Password.Hash(textPassword.Text);
 			}
 			Resellers.Update(_resellerCur);
 			DialogResult=DialogResult.OK;
