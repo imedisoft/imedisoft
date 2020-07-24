@@ -25,11 +25,12 @@ namespace OpenDentBusiness
 					HasClinics = PrefC.HasClinicsEnabled,
 					ListenerTypeInt = (int)ListenerServiceType.ListenerServiceProxy,
 					MethodNameInt = (int)WebServiceMainHQProxy.EServiceSetup.SetupMethod.GetSignupOutFull,
-					Phones = GetPhonesForAll(),
+					Phones = new List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutPhone>(),
 					Prompts = new List<string>(),
 					SignupPortalPermissionInt = (int)SignupPortalPermission.FullPermission,
 					SignupPortalUrl = GetHostedUrlForCode(eServiceCode.SignupPortal),
 				};
+
 				//Write the response out as a plain string. We will deserialize it on the other side.
 				return WebSerializer.SerializePrimitive<string>(WebSerializer.WriteXml(signupOut));
 			}
@@ -53,56 +54,38 @@ namespace OpenDentBusiness
 		{
 			if (PrefC.HasClinicsEnabled)
 			{
-				List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService> listEServices
-					= new List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService>();
-				foreach (Clinic clinic in Clinics.GetDeepCopy(true))
+				var services = new List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService>();
+				foreach (var clinic in Clinics.GetDeepCopy(true))
 				{
-					listEServices.AddRange(GetEServicesForClinic(clinic.ClinicNum));
+					services.AddRange(GetEServicesForClinic(clinic.ClinicNum));
 				}
-				return listEServices;
+
+				return services;
 			}
-			else
-			{
-				return GetEServicesForClinic(0);
-			}
+
+			return GetEServicesForClinic(0);
 		}
 
 		/// <summary>
 		/// Returns all possible eServices for the clinic passed in.
 		/// </summary>
-		private List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService> GetEServicesForClinic(long clinicNum = 0)
-		{
-			return new List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService>() {
-				GetEServiceForCode(eServiceCode.Bundle,clinicNum),
-				GetEServiceForCode(eServiceCode.ConfirmationRequest,clinicNum),
-				//GetEServiceForCode(eServiceCode.FeaturePortal,clinicNum),
-				//GetEServiceForCode(eServiceCode.FHIR,clinicNum),
-				//GetEServiceForCode(eServiceCode.HQManager,clinicNum),
-				//GetEServiceForCode(eServiceCode.HQProxyService,clinicNum),
-
-				//If you need to test texting signup, uncomment the following lines. Note: this will modify your db (clinics and texting prefs).
-				//GetEServiceForCode(eServiceCode.IntegratedTexting,clinicNum),
-				//GetEServiceForCode(eServiceCode.IntegratedTextingUsage,clinicNum),
-
-				//GetEServiceForCode(eServiceCode.ListenerService,clinicNum),
-				GetEServiceForCode(eServiceCode.MobileWeb,clinicNum),
-				//GetEServiceForCode(eServiceCode.OAuth,clinicNum),
-				GetEServiceForCode(eServiceCode.PatientPortal,clinicNum),
-				GetEServiceForCode(eServiceCode.PatientPortalMakePayment,clinicNum),
-				GetEServiceForCode(eServiceCode.PatientPortalViewStatement,clinicNum),
-				//GetEServiceForCode(eServiceCode.ResellerPortal,clinicNum),
-				//GetEServiceForCode(eServiceCode.ResellerSoftwareOnly,clinicNum),
-				GetEServiceForCode(eServiceCode.SignupPortal,clinicNum),
-				GetEServiceForCode(eServiceCode.SoftwareUpdate,clinicNum),
-				//GetEServiceForCode(eServiceCode.Undefined,clinicNum),
-				GetEServiceForCode(eServiceCode.WebForms,clinicNum),
-				GetEServiceForCode(eServiceCode.EClipboard,clinicNum),
-				GetEServiceForCode(eServiceCode.WebSched,clinicNum),
-				GetEServiceForCode(eServiceCode.WebSchedASAP,clinicNum),
-				GetEServiceForCode(eServiceCode.WebSchedNewPatAppt,clinicNum),
-				GetEServiceForCode(eServiceCode.EmailMassUsage,clinicNum),
+		private List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService> GetEServicesForClinic(long clinicId = 0) 
+			=> new List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService>() {
+				GetEServiceForCode(eServiceCode.Bundle, clinicId),
+				GetEServiceForCode(eServiceCode.ConfirmationRequest, clinicId),
+				GetEServiceForCode(eServiceCode.MobileWeb, clinicId),
+				GetEServiceForCode(eServiceCode.PatientPortal, clinicId),
+				GetEServiceForCode(eServiceCode.PatientPortalMakePayment, clinicId),
+				GetEServiceForCode(eServiceCode.PatientPortalViewStatement, clinicId),
+				GetEServiceForCode(eServiceCode.SignupPortal, clinicId),
+				GetEServiceForCode(eServiceCode.SoftwareUpdate, clinicId),
+				GetEServiceForCode(eServiceCode.WebForms, clinicId),
+				GetEServiceForCode(eServiceCode.EClipboard, clinicId),
+				GetEServiceForCode(eServiceCode.WebSched, clinicId),
+				GetEServiceForCode(eServiceCode.WebSchedASAP, clinicId),
+				GetEServiceForCode(eServiceCode.WebSchedNewPatAppt, clinicId),
+				GetEServiceForCode(eServiceCode.EmailMassUsage, clinicId),
 			};
-		}
 
 		private WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService GetEServiceForCode(eServiceCode code, long clinicNum = 0)
 		{
@@ -120,6 +103,7 @@ namespace OpenDentBusiness
 					SmsContractDate = DateTime.Today.AddYears(-1),
 				};
 			}
+
 			return new WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService()
 			{
 				ClinicNum = clinicNum,
@@ -134,44 +118,39 @@ namespace OpenDentBusiness
 		{
 			switch (code)
 			{
-				case (eServiceCode.MobileWeb):
+				case eServiceCode.MobileWeb:
 					return "http://127.0.0.1:5000/MobileWeb.html";
-				case (eServiceCode.PatientPortal):
-				case (eServiceCode.PatientPortalMakePayment):
-				case (eServiceCode.PatientPortalViewStatement):
+
+				case eServiceCode.PatientPortal:
+				case eServiceCode.PatientPortalMakePayment:
+				case eServiceCode.PatientPortalViewStatement:
 					return "http://127.0.0.1:4000/PatientPortal.html";
-				case (eServiceCode.SignupPortal):
+
+				case eServiceCode.SignupPortal:
 					return "http://127.0.0.1:8888/SignupPortal";
-				case (eServiceCode.WebForms):
+
+				case eServiceCode.WebForms:
 					return "http://127.0.0.1:3000/WebForms.html";
-				case (eServiceCode.WebSched):
-				case (eServiceCode.WebSchedASAP):
-				case (eServiceCode.WebSchedNewPatAppt):
+
+				case eServiceCode.WebSched:
+				case eServiceCode.WebSchedASAP:
+				case eServiceCode.WebSchedNewPatAppt:
 					return "http://127.0.0.1:8000/WebSched.html";
-				case (eServiceCode.EmailMassUsage):
+
+				case eServiceCode.EmailMassUsage:
 					return "https://www.opendental.com/site/massemail.html";
+
 				default:
 					return "";
 			}
 		}
 
-		private List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutPhone> GetPhonesForAll()
-		{
-			//This will cause the local debug db not to sync the SmsPhone table. This just means that SmsPhone table can't be trusted in debug mode.
-			//If you need to test "real" VLNs, just make a list here that includes known VLNs that are actually owned by HQ for debugging.
-			return new List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutPhone>();
-		}
-
-		public new string EmailHostingSignup(string officeData)
-		{
-			return PayloadHelper.CreateSuccessResponse(new List<PayloadItem> {
+		public new string EmailHostingSignup(string officeData) 
+			=> PayloadHelper.CreateSuccessResponse(new List<PayloadItem> {
 				new PayloadItem("guid","AccountGUID"),
 			});
-		}
 
-		public new string EmailHostingChangeClinicStatus(string officeData)
-		{
-			return PayloadHelper.CreateSuccessResponse("Success", "ChangeClinicStatusResponse");
-		}
+		public new string EmailHostingChangeClinicStatus(string officeData) 
+			=> PayloadHelper.CreateSuccessResponse("Success", "ChangeClinicStatusResponse");
 	}
 }

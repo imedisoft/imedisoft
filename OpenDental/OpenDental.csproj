@@ -1637,12 +1637,6 @@
     <Compile Include="Forms\FormInCaseOfEmergency.designer.cs">
       <DependentUpon>FormInCaseOfEmergency.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormDropboxAuthorize.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormDropboxAuthorize.designer.cs">
-      <DependentUpon>FormDropboxAuthorize.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormFHIRAPIKeyEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -5766,9 +5760,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormXWebTransactions.resx">
       <DependentUpon>FormXWebTransactions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormDropboxAuthorize.resx">
-      <DependentUpon>FormDropboxAuthorize.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormFHIRSetup.resx">
       <DependentUpon>FormFHIRSetup.cs</DependentUpon>

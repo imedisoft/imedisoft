@@ -21,13 +21,11 @@ namespace UnitTests.ODThread_Tests {
 		///<summary>This method will execute just before each test in this class.</summary>
 		[TestInitialize]
 		public void SetupTest() {
-			RunTestsAgainstDirectConnection();//Run against direct connection as these tests have many queries ran and are not relevant to middle tier.
 		}
 
 		///<summary>This method will execute after each test in this class.</summary>
 		[TestCleanup]
 		public void TearDownTest() {
-			RevertMiddleTierSettingsIfNeeded();
 			//Some weird database connection stuff happens in this class so set the main db connection back to the UnitTest db.
 			UnitTestsCore.DatabaseTools.SetDbConnection(UnitTestDbName);
 		}

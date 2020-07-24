@@ -49,31 +49,5 @@ namespace OpenDentBusiness{
 				ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteNonQuery(command));
 			}
 		}
-
-		/*
-		Only pull out the methods below as you need them.  Otherwise, leave them commented out.
-
-		///<summary>Gets one DashboardAR from the db.</summary>
-		public static DashboardAR GetOne(long dashboardARNum){
-			
-			return Crud.DashboardARCrud.SelectOne(dashboardARNum);
-		}
-
-		///<summary></summary>
-		public static void Update(DashboardAR dashboardAR){
-			
-			Crud.DashboardARCrud.Update(dashboardAR);
-		}
-
-		///<summary></summary>
-		public static void Delete(long dashboardARNum) {
-			
-			string command= "DELETE FROM dashboardar WHERE DashboardARNum = "+POut.Long(dashboardARNum);
-			Db.ExecuteNonQuery(command);
-		}
-		*/
-
-
-
 	}
 }

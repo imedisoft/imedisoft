@@ -39,57 +39,14 @@ namespace CodeBase
 			return path;
 		}
 
-		public static string CombinePaths(string path1, string path2) 
-			=> CombinePaths(new string[] { path1, path2 });
-
-		public static string CombinePaths(string path1, string path2, char separator) 
-			=> CombinePaths(new string[] { path1, path2 }, separator);
-
-		public static string CombinePaths(string path1, string path2, string path3) 
-			=> CombinePaths(new string[] { path1, path2, path3 });
-
-		public static string CombinePaths(string path1, string path2, string path3, char separator) 
-			=> CombinePaths(new string[] { path1, path2, path3 }, separator);
-
-		public static string CombinePaths(string path1, string path2, string path3, string path4) 
-			=> CombinePaths(new string[] { path1, path2, path3, path4 });
-
 		/// <summary>
 		/// OS independent path cominations. Ensures that each of the given path pieces are separated by the correct path 
 		/// separator for the current operating system. There is guaranteed not to be a trailing path separator at the 
 		/// end of the returned string (to accomodate file paths), unless the last specified path piece in the array is 
 		/// the empty string.
 		/// </summary>
-		public static string CombinePaths(string[] paths)
-		{
-			string finalPath = "";
-
-			for (int i = 0; i < paths.Length; i++)
-			{
-				string path = RemoveTrailingSeparators(paths[i]);
-
-				// Add an appropriate slash to divide the path peices, but do not use a trailing slash on the last piece.
-				if (i < paths.Length - 1)
-				{
-					if (path != null && path.Length > 0)
-					{
-						path += Path.DirectorySeparatorChar;
-					}
-				}
-
-				finalPath += path;
-			}
-
-			return finalPath;
-		}
-
-		/// <summary>
-		/// Ensures that each of the given path pieces are separated by the passed in separator character. 
-		/// There is guaranteed not to be a trailing path separator at the end of the returned string (to accomodate file paths), 
-		/// unless the last specified path piece in the array is the empty string.
-		/// </summary>
-		public static string CombinePaths(string[] paths, char separator) 
-			=> CombinePaths(paths).Replace(Path.DirectorySeparatorChar, separator);
+		public static string CombinePaths(params string[] paths) 
+			=> Path.Combine(paths);
 
 		/// <summary>
 		/// This function takes a valid folder path. 
@@ -172,11 +129,10 @@ namespace CodeBase
 		/// <summary>
 		/// Appends the suffix at the end of the file name but before the extension.
 		/// </summary>
-		public static string AppendSuffix(string filePath, string suffix)
-		{
-			string ext = Path.GetExtension(filePath);
-			return CombinePaths(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath) + suffix + ext);
-		}
+		public static string AppendSuffix(string path, string suffix) 
+			=> CombinePaths(
+				Path.GetDirectoryName(path),
+				string.Concat(Path.GetFileNameWithoutExtension(path), suffix, Path.GetExtension(path)));
 
 		/// <summary>
 		/// Removes invalid characters from the passed in file name.
@@ -203,61 +159,27 @@ namespace CodeBase
 			return Process.Start(path, commandLineArgs);
 		}
 
-		/// <summary>
-		/// Write the given text to the given file.  
-		/// </summary>
-		public static void WriteAllText(string filePath, string text) 
-			=> File.WriteAllText(filePath, text);
+		public static void WriteAllText(string path, string text) 
+			=> File.WriteAllText(path, text);
 
-		/// <summary>
-		/// Write the given text to the given file, then start a new process with the given path.  
-		/// </summary>
-		public static Process WriteAllTextThenStart(string filePath, string fileText, string processPath) 
-			=> WriteAllTextThenStart(filePath, fileText, processPath, "");
+		public static Process WriteAllTextThenStart(string path, string text, string processPath, string commandLine = "") 
+			=> WriteAllTextThenStart(path, text, Encoding.UTF8, processPath, commandLine);
 
-		/// <summary>
-		/// Write the given text to the given file, then start a new process with the given path.  
-		/// </summary>
-		public static Process WriteAllTextThenStart(string filePath, string fileText, string processPath, string commandLineArgs)
-		{
-			File.WriteAllText(filePath, fileText);
-			return Process.Start(processPath, commandLineArgs);
-		}
-
-		/// <summary>
-		/// Write the given text to the given file, then start a new process with the given path.  
-		/// </summary>
-		public static Process WriteAllTextThenStart(string filePath, string fileText, Encoding encoding, string processPath, string commandLineArgs)
-		{
-			File.WriteAllText(filePath, fileText, encoding);
-			return Process.Start(processPath, commandLineArgs);
-		}
+		public static Process WriteAllTextThenStart(string path, string text, Encoding encoding, string processPath, string commandLine) 
+			=> WriteAllBytesThenStart(path, encoding.GetBytes(text), processPath, commandLine);
 
 		/// <summary>Write the given filebytes and launches a file.</summary>
-		/// <param name="filePath">The location to write the bytes to.</param>
-		/// <param name="fileBytes">The bytes to write to the file.</param>
+		/// <param name="path">The location to write the bytes to.</param>
+		/// <param name="bytes">The bytes to write to the file.</param>
 		/// <param name="processPath">The path of the file to launch.</param>
-		/// <param name="commandLineArgs">Command line arguments to pass to processPath.</param>
-		public static Process WriteAllBytesThenStart(string filePath, byte[] fileBytes, string processPath, string commandLineArgs)
+		/// <param name="commandLine">Command line arguments to pass to processPath.</param>
+		public static Process WriteAllBytesThenStart(string path, byte[] bytes, string processPath, string commandLine)
 		{
-			File.WriteAllBytes(filePath, fileBytes);
+			File.WriteAllBytes(path, bytes);
 
-			if (!string.IsNullOrEmpty(processPath))
-			{
-				return Process.Start(processPath, commandLineArgs);
-			}
+			if (!string.IsNullOrEmpty(processPath)) path = processPath;
 
-			return Process.Start(filePath, commandLineArgs);
-		}
-
-		/// <summary>
-		/// Returns the directory in which the program executable rests.
-		/// To get the full path for the program executable, use Applicaiton.ExecutablePath.
-		/// </summary>
-		public static string GetProgramDirectory()
-		{
-			int endPos = Application.ExecutablePath.LastIndexOf(Path.DirectorySeparatorChar);
-			return Application.ExecutablePath.Substring(0, endPos + 1);
+			return Process.Start(path, commandLine);
 		}
 
 		/// <summary>

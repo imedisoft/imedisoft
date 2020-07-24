@@ -279,7 +279,7 @@ namespace OpenDentBusiness
 			string retVal="";
 			for(int i=0;i<SupplementalSegments.Count;i++) {
 				if(SupplementalSegments[i].SegmentID=="DTP") {
-					retVal+=DTP271.GetQualifierDescript(SupplementalSegments[i].Get(1))+": "
+					retVal+=DTP271.GetQualifierDescription(SupplementalSegments[i].Get(1))+": "
 						+DTP271.GetDateStr(SupplementalSegments[i].Get(2),SupplementalSegments[i].Get(3));
 				}
 			}

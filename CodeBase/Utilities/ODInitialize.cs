@@ -12,12 +12,12 @@ namespace CodeBase
 		/// Useful for methods that should behave differently in unit tests, such as 
 		/// FriendlyException.Show().
 		/// </summary>
-		public static bool IsRunningInUnitTest;
+		public static bool IsRunningInUnitTest { get; set; }
 
 		/// <summary>
 		/// Indicates that Initialize has been invoked at least once and has successfully executed.
 		/// </summary>
-		public static bool HasInitialized;
+		public static bool HasInitialized { get; private set; }
 
 		/// <summary>
 		/// This method is called from all Open Dental programs or projects.

@@ -63,8 +63,7 @@ namespace CodeBase
 				=> firedEvent.GetRemoveMethod().Invoke(this, new object[] { firedEventDelegate });
 
 			// Keep track of when the form is closed to the monitor thread can quit when it happens.
-			FormClosed += (s, e) 
-				=> formHasClosed = true;
+			FormClosed += (s, e) => formHasClosed = true;
 		}
 
 		/// <summary>

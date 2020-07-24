@@ -63,22 +63,12 @@ namespace UnitTests
 			throw new Exception("Active solution configuration must be set to Debug for running unit tests.");
 #endif
 			CreateAndSetUnitTestUser();
-			RevertMiddleTierSettingsIfNeeded();//Set initial connection
 		}
 
 		[TestInitialize]
 		public void ResetTest()
 		{
 			PrefT.RevertPrefChanges();
-		}
-
-		protected static void RunTestsAgainstDirectConnection()
-		{
-			OpenDentBusiness.WebServices.OpenDentalServerProxy.MockOpenDentalServerCur = null;
-		}
-
-		protected static void RevertMiddleTierSettingsIfNeeded()
-		{
 		}
 
 		public static EmailAddress InsertEmailAddress()

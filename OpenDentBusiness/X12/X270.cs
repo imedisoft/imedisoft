@@ -324,17 +324,17 @@ IEA*1*000012145~";
 
 		///<summary>Converts any string to an acceptable format for X12. Converts to all caps and strips off all invalid characters. Optionally shortens the string to the specified length and/or makes sure the string is long enough by padding with spaces.</summary>
 		private static string Sout(string inputStr,int maxL,int minL) {
-			return X12Generator.Sout(inputStr,maxL,minL);
+			return X12Generator.TidyString(inputStr,maxL,minL);
 		}
 
 		///<summary>Converts any string to an acceptable format for X12. Converts to all caps and strips off all invalid characters. Optionally shortens the string to the specified length and/or makes sure the string is long enough by padding with spaces.</summary>
 		private static string Sout(string str,int maxL) {
-			return X12Generator.Sout(str,maxL,-1);
+			return X12Generator.TidyString(str,maxL,-1);
 		}
 
 		///<summary>Converts any string to an acceptable format for X12. Converts to all caps and strips off all invalid characters. Optionally shortens the string to the specified length and/or makes sure the string is long enough by padding with spaces.</summary>
 		private static string Sout(string str) {
-			return X12Generator.Sout(str,-1,-1);
+			return X12Generator.TidyString(str,-1,-1);
 		}
 
 		public static string Validate(Clearinghouse clearinghouseClin,Carrier carrier,Provider billProv,Clinic clinic,InsPlan insPlan,Patient subscriber,InsSub insSub,Patient patForRequest) {

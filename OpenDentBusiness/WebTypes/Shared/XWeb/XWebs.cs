@@ -1,22 +1,22 @@
-﻿using OpenDentBusiness;
+﻿using CodeBase;
+using Newtonsoft.Json;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using CodeBase;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using System.IO;
-using Newtonsoft.Json;
-using System.Linq;
-using System.Reflection;
 using WebServiceSerializer;
 
 namespace OpenDentBusiness.WebTypes.Shared.XWeb
 {
-	public class XWebs
+    public class XWebs
 	{
 #if DEBUG
 		private const string EdgeExpressHostPayUrl = "https://ee.test.paygateway.com/HostPayService/v1/hostpay/transactions/";
@@ -50,16 +50,16 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb
 		/// </summary>
 		public static bool UseXWebTestGateway = false;
 
-		#region Public Interface
-		///<summary>Creates and returns the EdgeExpress URL and validation OTK which can be used to make a payment for an unspecified credit card.
-		///</summary>
+		/// <summary>
+		/// Creates and returns the EdgeExpress URL and validation OTK which can be used to make a payment for an unspecified credit card.
+		/// </summary>
 		public static XWebResponse GetEdgeExpressUrlForPayment(long patNum, string payNote, double amount, bool createAlias, CreditCardSource ccSource)
 		{
-			//No need to check RemotingRole;no call to db.
 			if (ccSource != CreditCardSource.XWeb && ccSource != CreditCardSource.XWebPortalLogin)
 			{
 				throw new ODException("Invalid CreditCardSource: " + ccSource.ToString(), ODException.ErrorCodes.OtkArgsInvalid);
 			}
+
 			//Validate the amount.
 			if (amount < 0.00 || amount > 99999.99)
 			{
@@ -78,44 +78,40 @@ namespace OpenDentBusiness.WebTypes.Shared.XWeb
 			return response;
 		}
 
-		///<summary>Make a payment using HPF directly.  Throws exceptions.</summary>
+		/// <summary>
+		/// Make a payment using HPF directly.  Throws exceptions.
+		/// </summary>
 		public static XWebResponse MakePaymentWithAlias(long patNum, string payNote, double amount, long creditCardNum, bool createPayment,
 			ChargeSource chargeSource = ChargeSource.PatientPortal, bool forceDuplicates = true)
 		{
-			//No need to check RemotingRole;no call to db.
 			XWebInputDTGPaymentSale input = new XWebInputDTGPaymentSale(patNum, payNote, amount, creditCardNum, createPayment, forceDuplicates);
 			input.ChargeSource = chargeSource;
 			return input.GenerateOutput();
 		}
 
-		///<summary>Void a payment using DTG directly. This is only valid for payments on the same day on which they originated.  Throws exceptions.</summary>
-		public static XWebResponse VoidPayment(long patNum, string payNote, long xWebResponseNum)
-		{
-			//No need to check RemotingRole;no call to db.
-			return new XWebInputDTGPaymentVoid(patNum, payNote, xWebResponseNum).GenerateOutput();
-		}
+		/// <summary>
+		/// Void a payment using DTG directly. This is only valid for payments on the same day on which they originated. Throws exceptions.
+		/// </summary>
+		public static XWebResponse VoidPayment(long patientId, string payNote, long xWebResponseNum) 
+			=> new XWebInputDTGPaymentVoid(patientId, payNote, xWebResponseNum).GenerateOutput();
 
 		///<summary>Return a payment amount to a credit card using DTG directly.  Use this when void is not an option or you want to credit directly to the credit card without first having a transaction to void.  Throws exceptions.</summary>
-		public static XWebResponse ReturnPayment(long patNum, string payNote, double amount, long creditCardNum, bool createPayment)
-		{
-			//No need to check RemotingRole;no call to db.
-			return new XWebInputDTGPaymentReturn(patNum, payNote, amount, creditCardNum, createPayment).GenerateOutput();
-		}
+		public static XWebResponse ReturnPayment(long patientId, string payNote, double amount, long creditCardNum, bool createPayment) 
+			=> new XWebInputDTGPaymentReturn(patientId, payNote, amount, creditCardNum, createPayment).GenerateOutput();
 
-		///<summary>Delete a credit card from the database and delete it from XWeb repository using DTG directly.  Throws exceptions.</summary>
+		/// <summary>
+		/// Delete a credit card from the database and delete it from XWeb repository using DTG directly. Throws exceptions.
+		/// </summary>
 		public static XWebResponse DeleteCreditCard(long patNum, long creditCardNum)
 		{
-			//No need to check RemotingRole;no call to db.
 			return new XWebInputDTGDeleteAlias(patNum, creditCardNum).GenerateOutput();
 		}
 
-		///<summary>Makes a web request to X-Charge to get the status for the OTK passed in.  Throws exceptions.</summary>
-		public static XWebResponse GetOtkStatus(long patNum, string orderId)
-		{
-			//No need to check RemotingRole;no call to db.
-			return SendEdgeExpressRequest(patNum, EdgeExpressTransactionType.QueryPayment, EdgeExpressDirectPayUrl, orderId: orderId);
-		}
-		#endregion
+		/// <summary>
+		/// Makes a web request to X-Charge to get the status for the OTK passed in. Throws exceptions.
+		/// </summary>
+		public static XWebResponse GetOtkStatus(long patNum, string orderId) 
+			=> SendEdgeExpressRequest(patNum, EdgeExpressTransactionType.QueryPayment, EdgeExpressDirectPayUrl, orderId: orderId);
 
 		#region EdgeExpress
 

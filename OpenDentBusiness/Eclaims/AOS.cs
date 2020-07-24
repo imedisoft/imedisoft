@@ -16,10 +16,10 @@ namespace OpenDentBusiness.Eclaims
 		/// Returns true if the communications were successful, and false if they failed.
 		/// </summary>
 		public static bool Launch(Clearinghouse clearinghouseClin, int batchNum)
-		{ 
+		{
 			try
 			{
-				ODFileUtils.ProcessStart(clearinghouseClin.ClientProgram);
+				Process.Start(clearinghouseClin.ClientProgram);
 			}
 			catch (Exception ex)
 			{

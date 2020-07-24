@@ -4,25 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenDentBusiness {
+namespace OpenDentBusiness
+{
 	///<summary>This interface needs to have any method from WebServiceMainHQ that you want to use. This allows for testing code without having to
 	///have an instance of WebServiceMainHQ setup.</summary>
-	public interface IWebServiceMainHQ {
+	public interface IWebServiceMainHQ
+	{
 		///<summary>RealWebServiceMainHQ must be able to change the URL at runtime. URL is typically a property of each web reference in c#. 
 		///Placing this here allows the mock instance to see this property also.</summary>
 		string Url { get; set; }
 		string HandleConfirmationsApptChanged(string officeData);
-		List<long> GetEServiceClinicsAllowed(List<long> listClinicNums,eServiceCode eService);
+		List<long> GetEServiceClinicsAllowed(List<long> listClinicNums, eServiceCode eService);
 		string WebSchedAsapSend(string officeData);
 		string TestConnection(string officeData);
 		string TestConnectionDb(string officeData);
-		string SetEConnectorType(string officeData,bool isListening);
-		string BuildWebSchedNewPatApptURLs(string registrationKey,string clinicNums);
+		string SetEConnectorType(string officeData, bool isListening);
+		string BuildWebSchedNewPatApptURLs(string registrationKey, string clinicNums);
 		string EServiceSetup(string officeData);
 		string EnableAdditionalFeatures(string officeData);
 		void SetEConnectorStatsAsync(string payload);
 		string SmsSend(string officeData);
-		string BuildOAuthUrl(string registrationKey,string appName);
+		string BuildOAuthUrl(string registrationKey, string appName);
 		string GetDropboxAccessToken(string accessCode);
 		string GetFHIRAPIKeysForOffice(string officeData);
 		string GenerateWebAppUrl(string officeData);
@@ -45,7 +47,7 @@ namespace OpenDentBusiness {
 		string BuildWebSchedUrl(string shortGuid);
 		string BuildWebSchedASAPUrl(string shortGuid);
 		string SubmitUnhandledException(string officeData);
-		string ValidateEService(string registrationKey,string eService);
+		string ValidateEService(string registrationKey, string eService);
 		string GenerateShortGUIDs(string officeData);
 		string BuildPatientPortalStatementUrl(string shortGuid);
 		string BuildConfirmationRequestUrlQuick(string shortGuid);
@@ -53,9 +55,9 @@ namespace OpenDentBusiness {
 		string ODXamValidateLogin(string loginData);
 		string ODXamTwoFactorAuth(string twoFactorAuthRequestJSON);
 		string CreateNewHelpKey(string officeData);
-		string GetManualPage(string formName,string programVersion);
+		string GetManualPage(string formName, string programVersion);
 		string CanadaCarrierUpdate(string officeData);
-		string SendPushNotification(string officeData,string pushPayloadJson);
+		string SendPushNotification(string officeData, string pushPayloadJson);
 		string InsertPaySimpleACHId(string officeData);
 		string GetPaySimpleWebHookUrl();
 		string CustomerUpdateCommitted(string officeData);

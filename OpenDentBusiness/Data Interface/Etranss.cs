@@ -556,10 +556,10 @@ namespace OpenDentBusiness{
 					  Database.ExecuteNonQuery(command);
 					}
 					else {//partially accepted
-					  List<int> transNums=x999.GetTransNums();
+					  List<int> transNums=x999.GetTransactionNumbers();
 					  string ack;
 					  for(int i=0;i<transNums.Count;i++) {
-					    ack=x999.GetAckForTrans(transNums[i]);
+					    ack=x999.GetAckForTransaction(transNums[i]);
 					    if(ack=="A"||ack=="R") {//accepted or rejected
 					      command="UPDATE etrans SET AckCode='"+ack+"', "
 					        +"AckEtransNum="+POut.Long(etrans.EtransNum)

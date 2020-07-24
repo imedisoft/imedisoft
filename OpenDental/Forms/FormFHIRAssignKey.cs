@@ -12,39 +12,46 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using WebServiceSerializer;
 
-namespace OpenDental {
-	public partial class FormFHIRAssignKey:ODForm {
-
-		public FormFHIRAssignKey() {
+namespace OpenDental
+{
+	public partial class FormFHIRAssignKey : ODForm
+	{
+		public FormFHIRAssignKey()
+		{
 			InitializeComponent();
-			Lan.F(this);
 		}
 
-		private void ButOK_Click(object sender,EventArgs e) {
-			if(textKey.Text=="") {
+		private void ButOK_Click(object sender, EventArgs e)
+		{
+			if (textKey.Text == "")
+			{
 				MessageBox.Show("Please enter an API key.");
 				return;
 			}
-			string officeData=PayloadHelper.CreatePayload(PayloadHelper.CreatePayloadContent(textKey.Text,"APIKey"),eServiceCode.FHIR);
+
+			string officeData = PayloadHelper.CreatePayload(PayloadHelper.CreatePayloadContent(textKey.Text, "APIKey"), eServiceCode.FHIR);
 			string result;
-			try {
-				Cursor=Cursors.WaitCursor;
-				result=WebServiceMainHQProxy.GetWebServiceMainHQInstance().AssignFHIRAPIKey(officeData);
+			try
+			{
+				Cursor = Cursors.WaitCursor;
+				result = WebServiceMainHQProxy.GetWebServiceMainHQInstance().AssignFHIRAPIKey(officeData);
 				PayloadHelper.CheckForError(result);
 			}
-			catch(Exception ex) {
+			catch (Exception ex)
+			{
 				MsgBox.Show(ex.Message);
-				Cursor=Cursors.Default;
+				Cursor = Cursors.Default;
 				return;
 			}
-			MessageBox.Show(WebSerializer.DeserializeTag<string>(result,"Response"));
-			DialogResult=DialogResult.OK;
+
+			MessageBox.Show(WebSerializer.DeserializeTag<string>(result, "Response"));
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 
 	}
-
 }

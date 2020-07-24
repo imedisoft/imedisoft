@@ -1,30 +1,30 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using OpenDental.UI;
-using OpenDentBusiness.HL7;
-using SparksToothChart;
-using OpenDentBusiness;
 using CodeBase;
-using PdfSharp.Pdf;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.Rendering;
 using MigraDoc.Rendering.Printing;
-using Document=OpenDentBusiness.Document;
-using OpenDentBusiness.WebTypes;
-using System.Text.RegularExpressions;
+using OpenDental.UI;
+using OpenDentBusiness;
+using OpenDentBusiness.HL7;
 using OpenDentBusiness.IO;
+using OpenDentBusiness.WebTypes;
+using PdfSharp.Pdf;
+using SparksToothChart;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Document = OpenDentBusiness.Document;
 
-namespace OpenDental{
-///<summary></summary>
-	public class ContrTreat : System.Windows.Forms.UserControl{
+namespace OpenDental
+{
+    ///<summary></summary>
+    public class ContrTreat : System.Windows.Forms.UserControl{
 		//private AxFPSpread.AxvaSpread axvaSpread2;
 		private System.Windows.Forms.Label label1;
 		private System.ComponentModel.IContainer components;// Required designer variable.

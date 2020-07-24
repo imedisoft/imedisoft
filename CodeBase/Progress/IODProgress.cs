@@ -1,7 +1,19 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace CodeBase
 {
+	public interface IProgressBox
+    {
+		void UpdateProgress(object state);
+    }
+
+
+
+
+
+
+
 	public interface IODProgress
 	{
 		///<summary>Used within translations as the sender object</summary>
@@ -19,18 +31,10 @@ namespace CodeBase
 	///This is an implementation of the Null Object Pattern.</summary>
 	public class ODProgressDoNothing : IODProgress
 	{
-		///<summary>A singleton instance of this class that can be used repeatedly so that each consumer doesn't have to create a new object.</summary>
-		private static ODProgressDoNothing _instance = new ODProgressDoNothing();
-		[XmlIgnore]
-		public static ODProgressDoNothing Instance
-		{
-			get
-			{
-				return _instance;
-			}
-		}
+        [XmlIgnore]
+        public static ODProgressDoNothing Instance { get; } = new ODProgressDoNothing();
 
-		public string LanThis
+        public string LanThis
 		{
 			get
 			{

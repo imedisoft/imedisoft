@@ -22,8 +22,9 @@ namespace OpenDentBusiness
 		private static string endSegment="~"+Environment.NewLine;
 		private static int seg;//segments for a particular ST-SE transaction
 
-		public X837_5010(string messageText):base(messageText){
-		
+		public X837_5010(string messageText) : base(messageText)
+		{
+
 		}
 		
 		public static void GenerateMessageText(StreamWriter sw,Clearinghouse clearinghouseClin,int batchNum,List<ClaimSendQueueItem> listQueueItems,EnumClaimMedType medType) {

@@ -4374,7 +4374,7 @@ namespace OpenDental{
 								}
 							}
 							if(isDependentRequest || date.Segment.Get(1)!="347"){
-								string dtpDescript=DTP271.GetQualifierDescript(date.Segment.Get(1));
+								string dtpDescript=DTP271.GetQualifierDescription(date.Segment.Get(1));
 								string note="As of "+DateTime.Today.ToShortDateString()+" - "+patName+": "+Lan.G(this,dtpDescript)+", "+dtpDateStr+"\n";
 								textSubscNote.Text=textSubscNote.Text.Insert(0,note);
 							}

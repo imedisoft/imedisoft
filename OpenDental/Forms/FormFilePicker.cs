@@ -149,11 +149,11 @@ namespace OpenDental
 			//If it's a file, return it as the only item selected.
 			if(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text.Contains(".")) {//They selected a file because there is an extension.
 				SelectedFiles.Clear();
-				SelectedFiles.Add(ODFileUtils.CombinePaths(textPath.Text,gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text,'/'));
+				SelectedFiles.Add(ODFileUtils.CombinePaths(textPath.Text,gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text));
 				DialogResult=DialogResult.OK;
 			}
 			else {
-				textPath.Text=ODFileUtils.CombinePaths(textPath.Text,gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text,'/');
+				textPath.Text=ODFileUtils.CombinePaths(textPath.Text,gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text);
 				FillGrid();
 			}
 		}
@@ -174,7 +174,7 @@ namespace OpenDental
 			//Add all selected files to the list to be returned
 			SelectedFiles.Clear();//Just in case
 			foreach(int idx in gridMain.SelectedIndices) {
-				SelectedFiles.Add(ODFileUtils.CombinePaths(textPath.Text,gridMain.ListGridRows[idx].Cells[0].Text,'/'));
+				SelectedFiles.Add(ODFileUtils.CombinePaths(textPath.Text,gridMain.ListGridRows[idx].Cells[0].Text));
 			}
 			DialogResult=DialogResult.OK;
 		}

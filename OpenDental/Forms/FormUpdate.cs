@@ -104,7 +104,7 @@ namespace OpenDental {
 			Application.DoEvents();
 			string result="";
 			try {
-				result=CustomerUpdatesProxy.SendAndReceiveUpdateRequestXml();
+				//result=CustomerUpdatesProxy.SendAndReceiveUpdateRequestXml();
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;

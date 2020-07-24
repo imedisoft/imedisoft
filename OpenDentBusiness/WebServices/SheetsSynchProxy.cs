@@ -5,64 +5,55 @@ using CodeBase;
 using OpenDentBusiness;
 using WebServiceSerializer;
 
-namespace OpenDentBusiness {
-	public class SheetsSynchProxy {
-	
-		///<summary></summary>
-		private static int _timeoutOverride=100000;//100 seconds
-		///<summary></summary>
-		private static string _urlOverride="";
+namespace OpenDentBusiness
+{
+	public class SheetsSynchProxy
+	{
+        /// <summary>
+		/// Used when we would like to override the service timeout.
+		/// Will reset itself back to the default value after service instance is finished.
+		/// </summary>
+        public static int TimeoutOverride { get; set; } = 100000;
 
-		///<summary>Used when we would like to override the service timeout.
-		///Will reset itself back to the default value after service instance is finished.</summary>
-		public static int TimeoutOverride {
-			get {
-				return _timeoutOverride;
-			}
-			set {
-				_timeoutOverride=value;
-			}
-		}
-		
-		///<summary>Used when we would like to override the service URL.
-		///Will reset itself back to the default value after service instance is finished.</summary>
-		public static string UrlOverride {
-			get {
-				return _urlOverride;
-			}
-			set {
-				_urlOverride=value;
-			}
-		}
+        /// <summary>
+		/// Used when we would like to override the service URL.
+		/// Will reset itself back to the default value after service instance is finished.
+		/// </summary>
+        public static string UrlOverride { get; set; } = "";
 
-		public static ISheetsSynch MockSheetSynchService {
-			private get;//Use GetWebServiceInstance()
-			set;
-		}
+        public static ISheetsSynch MockSheetSynchService { private get; set; }
 
-		/// <summary></summary>
-		public static ISheetsSynch GetWebServiceInstance() {
-			if(MockSheetSynchService!=null) {
+		public static ISheetsSynch GetWebServiceInstance()
+		{
+			if (MockSheetSynchService != null)
+			{
 				return MockSheetSynchService;
 			}
-			SheetsSynchReal service=new SheetsSynchReal();
-			service.Timeout=100000;
-			if(TimeoutOverride!=service.Timeout) {
-				service.Timeout=TimeoutOverride;
-				TimeoutOverride=100000;
+
+            var service = new SheetsSynchReal
+            {
+                Timeout = 100000
+            };
+
+            if (TimeoutOverride != service.Timeout)
+			{
+				service.Timeout = TimeoutOverride;
+				TimeoutOverride = 100000;
 			}
-			if(string.IsNullOrEmpty(UrlOverride)) {
-				service.Url=PrefC.GetString(PrefName.WebHostSynchServerURL);
+
+			if (string.IsNullOrEmpty(UrlOverride))
+			{
+				service.Url = PrefC.GetString(PrefName.WebHostSynchServerURL);
 			}
-			else { 
-				service.Url=UrlOverride;
-				UrlOverride="";
+			else
+			{
+				service.Url = UrlOverride;
+				UrlOverride = "";
 			}
-			#if DEBUG
-			//service.Url="http://localhost:2923/SheetsSynch.asmx";
-			#endif
+
 			return service;
 		}
 
 	}
 }
+

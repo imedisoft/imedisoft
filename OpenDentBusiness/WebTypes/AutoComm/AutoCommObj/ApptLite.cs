@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace OpenDentBusiness.AutoComm {
+namespace OpenDentBusiness.AutoComm
+{
 	///<summary>This class contains fields that are useful in appointment-type AutoComms.</summary>
-	public class ApptLite : AutoCommObj {
+	public class ApptLite : AutoCommObj
+	{
 		///<summary>From Appointment table.</summary>
 		public ApptStatus AptStatus;
 		///<summary>From Appointment table.</summary>
@@ -21,64 +23,69 @@ namespace OpenDentBusiness.AutoComm {
 		///<summary>From Appointment table, in minutes.</summary>
 		public int Length;
 
-		public ApptLite() {
+		public ApptLite()
+		{
 			//Required for PatPortInviteLite
 		}
 
-		public ApptLite(Appointment appt,PatComm patComm,bool isForThankYou=false) {
-			PrimaryKey=appt.AptNum;
+		public ApptLite(Appointment appt, PatComm patComm, bool isForThankYou = false)
+		{
+			PrimaryKey = appt.AptNum;
 			//For most AutoCommApptAbs, this will be AptDateTime, but for ApptThankYous, SecDateTEntry is used.
-			DateTimeEvent=isForThankYou ? appt.SecDateTEntry : appt.AptDateTime;
-			AptDateTime=appt.AptDateTime;
-			DateTimeAskedToArrive=appt.DateTimeAskedToArrive;
-			if(DateTimeAskedToArrive.Year<1880) {
-				DateTimeAskedToArrive=DateTimeEvent;
+			DateTimeEvent = isForThankYou ? appt.SecDateTEntry : appt.AptDateTime;
+			AptDateTime = appt.AptDateTime;
+			DateTimeAskedToArrive = appt.DateTimeAskedToArrive;
+			if (DateTimeAskedToArrive.Year < 1880)
+			{
+				DateTimeAskedToArrive = DateTimeEvent;
 			}
-			AptStatus=appt.AptStatus;
-			ClinicNum=appt.ClinicNum;
-			PatNum=appt.PatNum;
-			ProvNum=appt.ProvNum;
-			Clinic clinic=(appt.ClinicNum==0) ? Clinics.GetPracticeAsClinicZero() : Clinics.GetClinic(appt.ClinicNum);
-			OfficeName=Clinics.GetOfficeName(clinic);
-			OfficePhone=Clinics.GetOfficePhone(clinic);
-			OfficeEmail=EmailAddresses.GetByClinic(clinic?.ClinicNum??0).EmailUsername;
-			Length=appt.Length;
+			AptStatus = appt.AptStatus;
+			ClinicNum = appt.ClinicNum;
+			PatNum = appt.PatNum;
+			ProvNum = appt.ProvNum;
+			Clinic clinic = (appt.ClinicNum == 0) ? Clinics.GetPracticeAsClinicZero() : Clinics.GetClinic(appt.ClinicNum);
+			OfficeName = Clinics.GetOfficeName(clinic);
+			OfficePhone = Clinics.GetOfficePhone(clinic);
+			OfficeEmail = EmailAddresses.GetByClinic(clinic?.ClinicNum ?? 0).EmailUsername;
+			Length = appt.Length;
 			SetPatientContact(patComm);
 		}
 
-		public ApptLite(DataRow row,List<ClinicRule> listClinicRules) {
-			PrimaryKey=PIn.Long(row["AptNum"].ToString());
+		public ApptLite(DataRow row, List<ClinicRule> listClinicRules)
+		{
+			PrimaryKey = PIn.Long(row["AptNum"].ToString());
 			//For most AutoCommApptAbs, this will be AptDateTime, but for ApptThankYous, SecDateTEntry is used.
-			DateTimeEvent=PIn.Date(row["DateTimeEvent"].ToString());
-			AptDateTime=PIn.Date(row["AptDateTime"].ToString());
-			DateTimeAskedToArrive=PIn.Date(row["DateTimeAskedToArrive"].ToString());
-			if(DateTimeAskedToArrive.Year<1880) {
-				DateTimeAskedToArrive=DateTimeEvent;
+			DateTimeEvent = PIn.Date(row["DateTimeEvent"].ToString());
+			AptDateTime = PIn.Date(row["AptDateTime"].ToString());
+			DateTimeAskedToArrive = PIn.Date(row["DateTimeAskedToArrive"].ToString());
+			if (DateTimeAskedToArrive.Year < 1880)
+			{
+				DateTimeAskedToArrive = DateTimeEvent;
 			}
-			AptStatus=(ApptStatus)PIn.Int(row["AptStatus"].ToString());
-			ClinicNum=PIn.Long(row["ClinicNum"].ToString());
-			PatNum=PIn.Long(row["PatNum"].ToString());
-			ProvNum=PIn.Long(row["ProvNum"].ToString());
-			Clinic clinic=listClinicRules.FirstOrDefault(x => x.RuleClinic.ClinicNum==ClinicNum)?.RuleClinic??new Clinic();
-			OfficeName=OpenDentBusiness.Clinics.GetOfficeName(clinic);
-			OfficePhone=OpenDentBusiness.Clinics.GetOfficePhone(clinic);
-			OfficeEmail=EmailAddresses.GetByClinic(clinic.ClinicNum).EmailUsername;
-			Length=PIn.Int(row["AptLength"].ToString());
+			AptStatus = (ApptStatus)PIn.Int(row["AptStatus"].ToString());
+			ClinicNum = PIn.Long(row["ClinicNum"].ToString());
+			PatNum = PIn.Long(row["PatNum"].ToString());
+			ProvNum = PIn.Long(row["ProvNum"].ToString());
+			Clinic clinic = listClinicRules.FirstOrDefault(x => x.RuleClinic.ClinicNum == ClinicNum)?.RuleClinic ?? new Clinic();
+			OfficeName = Clinics.GetOfficeName(clinic);
+			OfficePhone = Clinics.GetOfficePhone(clinic);
+			OfficeEmail = EmailAddresses.GetByClinic(clinic.ClinicNum).EmailUsername;
+			Length = PIn.Int(row["AptLength"].ToString());
 		}
 
-		public ApptThankYouSent.CalendarIcsInfo ToCalendarIcs() {
-			return new ApptThankYouSent.CalendarIcsInfo() {
-				PatNum=PatNum,
-				Title=ClinicPrefs.GetPrefValue(PrefName.ApptThankYouCalendarTitle,ClinicNum),
-				Location=OfficeName,
-				AptNum=PrimaryKey,
-				DateStart=AptDateTime,
-				DateEnd=AptDateTime.AddMinutes(Length),
-				OfficeEmail=OfficeEmail,
-				Method=ApptThankYouSent.CalendarIcsInfo.CalMethod.Request,
+		public ApptThankYouSent.CalendarIcsInfo ToCalendarIcs()
+		{
+			return new ApptThankYouSent.CalendarIcsInfo()
+			{
+				PatNum = PatNum,
+				Title = ClinicPrefs.GetPrefValue(PrefName.ApptThankYouCalendarTitle, ClinicNum),
+				Location = OfficeName,
+				AptNum = PrimaryKey,
+				DateStart = AptDateTime,
+				DateEnd = AptDateTime.AddMinutes(Length),
+				OfficeEmail = OfficeEmail,
+				Method = ApptThankYouSent.CalendarIcsInfo.CalMethod.Request,
 			};
 		}
-
-		
 	}
 }

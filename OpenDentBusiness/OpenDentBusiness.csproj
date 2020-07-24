@@ -558,7 +558,6 @@
     <Compile Include="WebBridges\PDMP\PDMP.cs" />
     <Compile Include="WebBridges\PDMP\PDMPLogicoy.cs" />
     <Compile Include="WebBridges\PDMP\PDMPScript.cs" />
-    <Compile Include="WebServices\CustomerUpdatesProxy.cs" />
     <Compile Include="TableTypes\CommOptOut.cs" />
     <Compile Include="TableTypes\DbmLog.cs" />
     <Compile Include="TableTypes\ProviderClinic.cs" />
@@ -1598,13 +1597,10 @@
     <Compile Include="WebServices\OpenDentalServerReal.cs" />
     <Compile Include="WebServices\PayloadHelper.cs" />
     <Compile Include="WebServices\SheetsSynchProxy.cs" />
-    <Compile Include="WebServices\WebServiceHqServer.cs" />
     <Compile Include="WebServices\WebServiceMainHQMockDemo.cs" />
-    <Compile Include="WebServices\OpenDentalServerProxy.cs" />
     <Compile Include="WebServices\SheetsSynchReal.cs" />
     <Compile Include="WebServices\WebServiceMainHQReal.cs" />
     <Compile Include="WebServices\WebServiceMainHQProxy.cs" />
-    <Compile Include="WebServiceTests.cs" />
     <Compile Include="WebTypes\AutoComm\Arrivals\Arrivals.cs" />
     <Compile Include="WebTypes\AutoComm\AutoCommObj\ApptLite.cs" />
     <Compile Include="WebTypes\AutoComm\AutoCommObj\AutoCommObj.cs" />
@@ -1626,8 +1622,6 @@
     <Compile Include="WebTypes\Shared\XWeb\XWebs.cs" />
     <Compile Include="WebTypes\WebForms\Data Interface\WebForms_Preferences.cs" />
     <Compile Include="WebTypes\WebForms\Data Interface\WebForms_SheetDefs.cs" />
-    <Compile Include="WebTypes\WebForms\Data Interface\WebForms_SheetFieldDefs.cs" />
-    <Compile Include="WebTypes\WebForms\Data Interface\WebForms_SheetFields.cs" />
     <Compile Include="WebTypes\WebForms\Data Interface\WebForms_Sheets.cs" />
     <Compile Include="WebTypes\WebForms\TableTypes\WebForms_Log.cs" />
     <Compile Include="WebTypes\WebForms\TableTypes\WebForms_Preference.cs" />
@@ -1662,7 +1656,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Reports\Reports.cs" />
-    <Compile Include="Settings.cs" />
     <Compile Include="SheetFramework\SheetEnums.cs">
       <SubType>Code</SubType>
     </Compile>

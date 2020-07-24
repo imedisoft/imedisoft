@@ -55,18 +55,8 @@ namespace OpenDentBusiness{
 			}
 		}
 
-		public static string CurComputerName {
-			get {
-				if(_curComputerNameT!=null) {//Allows an empty string.
-					return _curComputerNameT;
-				}
-				return curComputerName;
-			}
-			set {
-				_curComputerNameT=value;
-				curComputerName=value;
-			}
-		}
+		[Obsolete("Use Environment.MachineName instead")]
+		public static string CurComputerName => Environment.MachineName;
 
 		///<summary>Remember the password that the user typed in. This is always saved on Log On. 
 		///Do not store it in the database.  We will need it when connecting to the web service.

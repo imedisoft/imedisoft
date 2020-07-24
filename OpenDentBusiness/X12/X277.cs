@@ -10,24 +10,36 @@ namespace OpenDentBusiness
 	public class X277:X12object {
 
 		private List<X12Segment> segments;
+
 		///<summary>NM1 of loop 2100A.</summary>
 		private int segNumInfoSourceNM101;
+
 		///<summary>NM1 of loop 2100B.</summary>
 		private int segNumInfoReceiverNM101;
+
 		///<summary>NM1 of loop 2100C.</summary>
 		private List<int> segNumsBillingProviderNM1;
+
 		///<summary>NM1 of loop 2100D.</summary>
 		private List<int> segNumsPatientDetailNM1;
+
 		///<summary>TRN of loop 2200D.</summary>
 		private List<int> segNumsClaimTrackingNumberTRN;
 
-		public static bool Is277(X12object xobj) {
-			if(xobj.FunctGroups.Count!=1) {//Exactly 1 GS segment in each 277.
+		public static bool Is277(X12object xobj)
+		{
+			if (xobj.FunctGroups.Count != 1)
+			{
+				//Exactly 1 GS segment in each 277.
 				return false;
 			}
-			if(xobj.FunctGroups[0].Header.Get(1)=="HN") {//GS01 (pgs. 139 & 7)
+
+			if (xobj.FunctGroups[0].Header.Get(1) == "HN")
+			{
+				//GS01 (pgs. 139 & 7)
 				return true;
 			}
+
 			return false;
 		}
 

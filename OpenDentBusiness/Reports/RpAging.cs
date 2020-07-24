@@ -1,22 +1,20 @@
-﻿using System;
+﻿using DataConnectionBase;
+using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using DataConnectionBase;
-using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
 	public class RpAging
 	{
-		public static DataTable GetAgingTable(RpAgingParamObject rpo)
-		{
-			string queryAg = GetQueryString(rpo);
-			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(queryAg));
-		}
+		public static DataTable GetAgingTable(RpAgingParamObject reportParams) 
+			=> Database.ExecuteDataTable(GetQueryString(reportParams));
+		
 
 		public static string GetQueryString(RpAgingParamObject rpo)
 		{

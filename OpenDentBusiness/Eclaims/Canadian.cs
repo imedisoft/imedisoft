@@ -1427,63 +1427,65 @@ namespace OpenDentBusiness.Eclaims {
 				}
 				string certFilePath=ODFileUtils.CombinePaths(saveFolder,certFileName);
 				if(!File.Exists(certFilePath)) {
-					byte[] arrayCertFileBytes=null;
-					try {
-						XmlWriterSettings settings=new XmlWriterSettings();
-						settings.Indent=true;
-						settings.IndentChars=("    ");
-						StringBuilder strbuild=new StringBuilder();
-						using(XmlWriter writer=XmlWriter.Create(strbuild,settings)){
-							writer.WriteElementString("RegistrationKey",PrefC.GetString(PrefName.RegistrationKey));
-						}
-						string response=null;
-						if(network.Abbrev=="ABC") {//Alberta Blue Cross
-							response=CustomerUpdatesProxy.GetWebServiceInstance().RequestCertCanadaABC(strbuild.ToString());
-						}
-						else if(network.Abbrev=="TELUS A" || network.Abbrev=="TELUS B") {
-#if DEBUG
-							response=CustomerUpdatesProxy.GetWebServiceInstance().RequestCertCanadaTelusAandBtest(strbuild.ToString());
-#else
-							response=CustomerUpdatesProxy.GetWebServiceInstance().RequestCertCanadaTelusAandB(strbuild.ToString());
-#endif
-						}
-						XmlDocument doc=new XmlDocument();
-						doc.LoadXml(response);
-						XmlNode node=doc.SelectSingleNode("//Error");
-						if(node!=null) {
-							errorMsg=node.InnerText;
-							return "";//Return empty response, since we never received one.
-						}
-						node=doc.SelectSingleNode("//KeyDisabled");
-						if(node!=null) {
-							if(Prefs.UpdateBool(PrefName.RegistrationKeyIsDisabled,true)) {
-								Signalods.Insert(new Signalod() { IType=InvalidType.Prefs });
-								Prefs.RefreshCache();
-							}
-							errorMsg=node.InnerText;
-							return "";//Return empty response, since we never received one.
-						}
-						//no error, and no disabled message
-						if(Prefs.UpdateBool(PrefName.RegistrationKeyIsDisabled,false)) {
-							Signalods.Insert(new Signalod() { IType=InvalidType.Prefs });
-							Prefs.RefreshCache();
-						}
-						node=doc.SelectSingleNode("//FileData64");
-						arrayCertFileBytes=Convert.FromBase64String(node.InnerText);
-					}
-					catch(Exception ex) {
-						errorMsg=Lans.g("Canadian","Failed to download certificate file")+"\r\n  "+ex.Message;
-						return "";//Return empty response, since we never received one.
-					}
-					try {
-						File.WriteAllBytes(certFilePath,arrayCertFileBytes);
-					}
-					catch(Exception ex) {
-						errorMsg=Lans.g("Canadian","Failed to export certificate file to path")+" '"+certFilePath+"'\r\n  "+ex.Message;
-						return "";//Return empty response, since we never received one.
-					}
+					// TODO: Fix this...
+//					byte[] arrayCertFileBytes=null;
+//					try {
+//						XmlWriterSettings settings=new XmlWriterSettings();
+//						settings.Indent=true;
+//						settings.IndentChars=("    ");
+//						StringBuilder strbuild=new StringBuilder();
+//						using(XmlWriter writer=XmlWriter.Create(strbuild,settings)){
+//							writer.WriteElementString("RegistrationKey",PrefC.GetString(PrefName.RegistrationKey));
+//						}
+//						string response=null;
+//						if(network.Abbrev=="ABC") {//Alberta Blue Cross
+//							response=CustomerUpdatesProxy.GetWebServiceInstance().RequestCertCanadaABC(strbuild.ToString());
+//						}
+//						else if(network.Abbrev=="TELUS A" || network.Abbrev=="TELUS B") {
+//#if DEBUG
+//							response=CustomerUpdatesProxy.GetWebServiceInstance().RequestCertCanadaTelusAandBtest(strbuild.ToString());
+//#else
+//							response=CustomerUpdatesProxy.GetWebServiceInstance().RequestCertCanadaTelusAandB(strbuild.ToString());
+//#endif
+//						}
+//						XmlDocument doc=new XmlDocument();
+//						doc.LoadXml(response);
+//						XmlNode node=doc.SelectSingleNode("//Error");
+//						if(node!=null) {
+//							errorMsg=node.InnerText;
+//							return "";//Return empty response, since we never received one.
+//						}
+//						node=doc.SelectSingleNode("//KeyDisabled");
+//						if(node!=null) {
+//							if(Prefs.UpdateBool(PrefName.RegistrationKeyIsDisabled,true)) {
+//								Signalods.Insert(new Signalod() { IType=InvalidType.Prefs });
+//								Prefs.RefreshCache();
+//							}
+//							errorMsg=node.InnerText;
+//							return "";//Return empty response, since we never received one.
+//						}
+//						//no error, and no disabled message
+//						if(Prefs.UpdateBool(PrefName.RegistrationKeyIsDisabled,false)) {
+//							Signalods.Insert(new Signalod() { IType=InvalidType.Prefs });
+//							Prefs.RefreshCache();
+//						}
+//						node=doc.SelectSingleNode("//FileData64");
+//						arrayCertFileBytes=Convert.FromBase64String(node.InnerText);
+//					}
+//					catch(Exception ex) {
+//						errorMsg=Lans.g("Canadian","Failed to download certificate file")+"\r\n  "+ex.Message;
+//						return "";//Return empty response, since we never received one.
+//					}
+//					try {
+//						File.WriteAllBytes(certFilePath,arrayCertFileBytes);
+//					}
+//					catch(Exception ex) {
+//						errorMsg=Lans.g("Canadian","Failed to export certificate file to path")+" '"+certFilePath+"'\r\n  "+ex.Message;
+//						return "";//Return empty response, since we never received one.
+//					}
 				}
 			}
+
 			string officeSequenceNumber=msgText.Substring(12,6);//Field A02. Office Sequence Number is always part of every message type and is always in the same place.
 			int fileNum=PIn.Int(officeSequenceNumber)%1000;
 			//first, delete the result file from previous communication so that no such files can affect the loop logic below.

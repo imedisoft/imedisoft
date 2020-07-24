@@ -60,6 +60,8 @@ namespace OpenDental
 			{
 				return false;
 			}
+
+
 			try
 			{
 				ODProgress.ShowAction(() => DatabaseMaintenances.RepairAndOptimize(),
