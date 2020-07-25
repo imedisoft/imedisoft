@@ -8779,8 +8779,6 @@
     <EmbeddedResource Include="EraseCircle.cur" />
     <EmbeddedResource Include="CursorPalm.cur" />
     <Resource Include="imedisoft.ico" />
-    <Content Include="Misc\App.ico" />
-    <Content Include="Misc\TerminalMgr.ico" />
     <EmbeddedResource Include="Forms Reports\FormRpInsOverpaid.resx">
       <DependentUpon>FormRpInsOverpaid.cs</DependentUpon>
       <SubType>Designer</SubType>
