@@ -14,8 +14,6 @@ namespace OpenDental.UI
 		private static readonly Color colorTop = Color.FromArgb(255, 255, 255);
 		private static readonly Color colorBottom = Color.FromArgb(200, 200, 200);
 		private static readonly Color colorBottomDisabled = Color.FromArgb(230, 230, 230);
-		private static readonly Color colorPressedTop = Color.FromArgb(255, 255, 255);
-		private static readonly Color colorPressedBottom = Color.FromArgb(180, 180, 180);
 		private static readonly Color colorText = Color.FromArgb(0, 0, 0);
 		private static readonly Color colorTextGlow = Color.FromArgb(255, 255, 255);
 		private static readonly Color colorTextDisabled = Color.FromArgb(120, 120, 120);
@@ -243,7 +241,7 @@ namespace OpenDental.UI
 						break;
 
 					case ButtonState.Pressed:
-						using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(0, Height), colorPressedTop, colorPressedBottom))
+						using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(0, Height), colorBottom, colorTop))
 						{
 							g.FillPath(brush, path);
 
@@ -311,9 +309,9 @@ namespace OpenDental.UI
                     using var textGlowBrush = new SolidBrush(colorTextGlow);
 
                     var textGlowRectangle = new RectangleF(
-                        ClientRectangle.X + .5f, ClientRectangle.Y + .5f,
-                        ClientRectangle.Width,
-                        ClientRectangle.Height);
+						ClientRectangle.X + .5f, ClientRectangle.Y + .5f,
+						ClientRectangle.Width,
+						ClientRectangle.Height);
 
                     g.DrawString(Text, Font, textGlowBrush, textGlowRectangle, stringFormat);
                 }
