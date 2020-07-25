@@ -1,37 +1,17 @@
-using OpenDentBusiness;
-using System;
+using Imedisoft.Properties;
 using System.Drawing;
-using System.Globalization;
-using System.IO;
 using System.Windows.Forms;
 
-namespace OpenDental
+namespace Imedisoft.Forms
 {
-    ///<summary>A splash screen to show when the program launches.</summary>
-    public partial class FormSplash : Form
+    public class FormSplash : Form
 	{
-
-		///<summary>Launches a splash screen.</summary>
 		public FormSplash()
-		{
-			InitializeComponent();
-			Lan.F(this);
-		}
-
-		private void FormSplash_Load(object sender, EventArgs e)
-		{
-			if (CultureInfo.CurrentCulture.Name.EndsWith("CA"))
-			{//Canadian. en-CA or fr-CA
-				BackgroundImage = Imedisoft.Properties.Resources.splashCanada;
-			}
-			if (File.Exists(Directory.GetCurrentDirectory() + @"\Splash.jpg"))
-			{
-				BackgroundImage = new Bitmap(Directory.GetCurrentDirectory() + @"\Splash.jpg");
-			}
-			if (Plugins.PluginsAreLoaded)
-			{
-				Plugins.HookAddCode(this, "FormSplash.FormSplash_Load_end");
-			}
-		}
-	}
+        {
+            BackgroundImage = Resources.Splash;
+            FormBorderStyle = FormBorderStyle.None;
+            Size = new Size(500, 300);
+            StartPosition = FormStartPosition.CenterScreen;
+        }
+    }
 }

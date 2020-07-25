@@ -1403,9 +1403,9 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap splashCanada {
+        public static System.Drawing.Bitmap Splash {
             get {
-                object obj = ResourceManager.GetObject("splashCanada", resourceCulture);
+                object obj = ResourceManager.GetObject("Splash", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

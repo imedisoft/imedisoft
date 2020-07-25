@@ -205,6 +205,8 @@ namespace OpenDental
 			_formOpenDentalS = this;
 			Logger.LogInfo("Initializing Open Dental...");
 			CommandLineArgs = cla;
+
+
 			FormSplash formSplash = new FormSplash();
 			if (CommandLineArgs.Length == 0)
 			{
