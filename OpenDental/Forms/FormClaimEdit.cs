@@ -77,9 +77,8 @@ namespace OpenDental
 			}
 		}
 
-		protected override string ShowHelpOverride() {
-			return ClaimCur.ClaimType.ToLower()=="preauth" ? "FormClaimEditPreauth" : "FormClaimEdit";
-		}
+        public override string HelpSubject 
+			=> ClaimCur.ClaimType.ToLower() == "preauth" ? "FormClaimEditPreauth" : "FormClaimEdit";
 
 		///<summary>Set isForOrthoAutoPay to true to automatically show the supplemental payment window on Shown().</summary>
 		public FormClaimEdit(Claim claimCur, Patient patCur,Family famCur, bool isForOrthoAutoPay = false) {

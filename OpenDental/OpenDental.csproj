@@ -998,6 +998,7 @@
       <DependentUpon>ComboBoxJ.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Dpi.cs" />
+    <Compile Include="UI\HelpSubjectAttribute.cs" />
     <Compile Include="UI\ImagesModule\PanelImagesModule.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -8143,9 +8144,6 @@
     <EmbeddedResource Include="UI\ImagesModule\WindowingSlider.resx">
       <SubType>Designer</SubType>
       <DependentUpon>WindowingSlider.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ODForm.resx">
-      <DependentUpon>ODForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ODPictureBox.resx">
       <DependentUpon>ODPictureBox.cs</DependentUpon>

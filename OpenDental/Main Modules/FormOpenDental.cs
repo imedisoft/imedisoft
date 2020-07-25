@@ -40,7 +40,6 @@ using System.Xml;
 
 namespace OpenDental
 {
-    ///<summary></summary>
     public partial class FormOpenDental : ODForm
 	{
 		#region Fields
@@ -278,28 +277,31 @@ namespace OpenDental
 			//Plugins.HookAddCode(this,"FormOpenDental.Constructor_end");//Can't do this because no plugins loaded.
 			formSplash.Close();
 		}
-		#endregion Constructor
+        #endregion Constructor
 
-		protected override string ShowHelpOverride()
+        public override string HelpSubject 
 		{
-			switch (moduleBar.SelectedModule)
+			get
 			{
-				case EnumModuleType.Appointments:
-					return nameof(ContrAppt);
-				case EnumModuleType.Family:
-					return nameof(ContrFamily);
-				case EnumModuleType.Account:
-					return nameof(ContrAccount);
-				case EnumModuleType.TreatPlan:
-					return nameof(ContrTreat);
-				case EnumModuleType.Chart:
-					return nameof(ContrChart);
-				case EnumModuleType.Images:
-					return nameof(ContrImages);
-				case EnumModuleType.Manage:
-					return nameof(ContrStaff);
-				default:
-					return "";
+				switch (moduleBar.SelectedModule)
+				{
+					case EnumModuleType.Appointments:
+						return nameof(ContrAppt);
+					case EnumModuleType.Family:
+						return nameof(ContrFamily);
+					case EnumModuleType.Account:
+						return nameof(ContrAccount);
+					case EnumModuleType.TreatPlan:
+						return nameof(ContrTreat);
+					case EnumModuleType.Chart:
+						return nameof(ContrChart);
+					case EnumModuleType.Images:
+						return nameof(ContrImages);
+					case EnumModuleType.Manage:
+						return nameof(ContrStaff);
+					default:
+						return "";
+				}
 			}
 		}
 
@@ -699,7 +701,6 @@ namespace OpenDental
 			menuItemEnterprise.Visible = PrefC.GetBool(PrefName.ShowFeatureEnterprise);
 			menuItemReactivation.Visible = PrefC.GetBool(PrefName.ShowFeatureReactivations);
 			ComputerPrefs.UpdateLocalComputerOS();
-			HelpButtonXAdjustment = ComputerPrefs.LocalComputer.HelpButtonXAdjustment;
 			WikiPages.NavPageDelegate = S_WikiLoadPage;
 			//We are about to start signal processing for the first time so set the initial refresh timestamp.
 			Signalods.SignalLastRefreshed = MiscData.GetNowDateTime();
@@ -7700,7 +7701,7 @@ namespace OpenDental
 			SetTimersAndThreads(false);//Safe to stop timers since this method was invoked on the main thread if required.
 			userControlPatientDashboard.CloseDashboard(true);
 			ShowLogOn();
-			ShowHelpButtonSafe();
+
 			//If a different user logs on and they have clinics enabled, and they don't want data to persist, then clear the patient drop down history
 			//since the current user may not have permission to access patients from the same clinic(s) as the old user
 			if (oldUser.Id == Security.CurUser.Id || !PrefC.HasClinicsEnabled)
@@ -7890,19 +7891,7 @@ namespace OpenDental
 				Computers.ClearHeartBeat(Environment.MachineName);
 			}
 			catch { }
-			//Update help button adjustment location when form closes. Reduces amount of DB calls.
-			try
-			{
-				if (!HelpButtonXAdjustment.IsEqual(ComputerPrefs.LocalComputer.HelpButtonXAdjustment))
-				{
-					ComputerPrefs.LocalComputer.HelpButtonXAdjustment = HelpButtonXAdjustment;
-					ComputerPrefs.Update(ComputerPrefs.LocalComputer);
-				}
-			}
-			catch
-			{
 
-			}
 			FormUAppoint.AbortThread();
 
 			ODThread.QuitSyncThreadsByGroupName(0, "");

@@ -1324,9 +1324,9 @@ namespace OpenDental{
 		#endregion Methods - Manage
 
 		#region Methods - Other
-		protected override string ShowHelpOverride() {
-			return tabControlMain.SelectedTab.Name;
-		}
+
+		public override string HelpSubject => tabControlMain.SelectedTab.Name;
+
 		#endregion
 	}
 }

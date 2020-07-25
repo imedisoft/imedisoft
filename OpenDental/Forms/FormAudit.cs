@@ -9,11 +9,10 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using System.Data;
 using CodeBase;
+using Imedisoft.UI;
 
 namespace OpenDental{
-	/// <summary>
-	/// Summary description for FormBasicTemplate.
-	/// </summary>
+	[HelpSubject]
 	public class FormAudit : ODForm {
 		///<summary>The selected patNum.  Can be 0 to include all.</summary>
 		private long PatNum;
