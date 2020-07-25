@@ -8180,10 +8180,6 @@
       <DependentUpon>ODtextBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="User Controls\ModuleBar.resx">
-      <DependentUpon>ModuleBar.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="User Controls\SetupWizControls\UserControlSetupWizDefinitions.resx">
       <DependentUpon>UserControlSetupWizDefinitions.cs</DependentUpon>
     </EmbeddedResource>
@@ -8675,6 +8671,13 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Icon32Images.png" />
+    <None Include="Resources\Icon32CalendarAlt.png" />
+    <None Include="Resources\Icon32Users.png" />
+    <None Include="Resources\Icon32Tooth.png" />
+    <None Include="Resources\Icon32MoneyCheckAlt.png" />
+    <None Include="Resources\Icon32Cogs.png" />
+    <None Include="Resources\Icon32ClipboardList.png" />
     <None Include="Resources\ProgramIconBlue.ico" />
     <None Include="Resources\ProgramIconRed.ico" />
     <None Include="Resources\ProgramIconDefault.ico" />

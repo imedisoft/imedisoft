@@ -514,4 +514,25 @@
   <data name="ProgramIconRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ProgramIconRed.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon32ClipboardList" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32ClipboardList.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32Cogs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32Cogs.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32MoneyCheckAlt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32MoneyCheckAlt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32Tooth" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32Tooth.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32Users" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32Users.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32CalendarAlt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32CalendarAlt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32Images" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32Images.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
