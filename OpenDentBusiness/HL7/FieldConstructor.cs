@@ -172,8 +172,8 @@ namespace OpenDentBusiness.HL7 {
 					if(msgType==MessageTypeHL7.SRR) {
 						return "OpenDentalHL7";
 					}
-					if(Security.CurUser!=null) {
-						return Security.CurUser.UserName;
+					if(Security.CurrentUser!=null) {
+						return Security.CurrentUser.UserName;
 					}
 					return "";
 				#endregion Appointment

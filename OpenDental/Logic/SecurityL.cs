@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 using System;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace OpenDental
 		/// Returns true if password was changed successfully.
 		/// Set isForcedLogOff to force the program to log the user off if they cancel out of the Change Password window.
 		/// </summary>
-		public static bool ChangePassword(bool forcedLogOff, bool refreshSecurityCache = true)
+		public static bool ChangePassword(bool forcedLogOff)
 		{
-			if (Security.CurUser.UserNumCEMT != 0)
+			if (Security.CurrentUser.UserNumCEMT != 0)
 			{
 				ODMessageBox.Show("Use the CEMT tool to change your password.", "Imedisoft",
 					MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -23,7 +24,7 @@ namespace OpenDental
 				return false;
 			}
 
-			using (var formUserPassword = new FormUserPassword(false, Security.CurUser.UserName))
+			using (var formUserPassword = new FormUserPassword(Security.CurrentUser.UserName, false))
 			{
 				formUserPassword.ShowDialog();
 
@@ -42,7 +43,7 @@ namespace OpenDental
 
 				try
 				{
-					Userods.UpdatePassword(Security.CurUser, formUserPassword.PasswordHash, isPasswordStrong);
+					Userods.UpdatePassword(Security.CurrentUser, formUserPassword.PasswordHash, isPasswordStrong);
 				}
 				catch (Exception exception)
 				{
@@ -52,14 +53,10 @@ namespace OpenDental
 					return false;
 				}
 
-				Security.CurUser.PasswordIsStrong = formUserPassword.PasswordIsStrong;
-				Security.CurUser.PasswordHash = formUserPassword.PasswordHash;
-				Security.PasswordTyped = formUserPassword.PasswordTyped;
-			}
+				Security.CurrentUser.PasswordIsStrong = formUserPassword.PasswordIsStrong;
+				Security.CurrentUser.PasswordHash = formUserPassword.PasswordHash;
 
-			if (refreshSecurityCache)
-			{
-				DataValid.SetInvalid(InvalidType.Security);
+				// TODO: Save the user?
 			}
 
 			return true;

@@ -468,7 +468,7 @@ namespace OpenDental {
 			_listList=DisplayReports.GetForCategory(DisplayReportCategory.Lists,false);
 			_listPublicHealth=DisplayReports.GetForCategory(DisplayReportCategory.PublicHealth,false);
 			_listArizonaPrimary=DisplayReports.GetForCategory(DisplayReportCategory.ArizonaPrimaryCare,false);
-			_listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurUser.IsInUserGroup(x.UserGroupNum)).ToList();
+			_listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupNum)).ToList();
 			//add the items to the list boxes and set the list box heights. (positions too?)
 			listProdInc.Items.Clear();
 			listDaily.Items.Clear();
@@ -654,7 +654,7 @@ namespace OpenDental {
 				MessageBox.Show("You do not have permission to run this report.");
 				return;
 			}
-			if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportProdIncAllProviders,true)) {
+			if(Security.CurrentUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportProdIncAllProviders,true)) {
 				MessageBox.Show("The current user needs to be a provider or have the 'All Providers' permission for this report");
 				return;
 			}
@@ -731,7 +731,7 @@ namespace OpenDental {
 		{
 			if(doValidatePerm) {
 				if(listReportPermissions==null) {
-					listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurUser.IsInUserGroup(x.UserGroupNum)).ToList();
+					listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupNum)).ToList();
 				}
 				if(!listReportPermissions.Exists(x => x.FKey==displayReport.DisplayReportNum)) {
 					MsgBox.Show("You do not have permission to run this report.");
@@ -802,7 +802,7 @@ namespace OpenDental {
 					SecurityLogs.MakeLogEntry(Permissions.Reports,0,"Provider Payroll Detailed report run.");
 					break;
 				case "ODAdjustments"://Adjustments
-					if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
+					if(Security.CurrentUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
 						MsgBox.Show("The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
 						break;
 					}
@@ -811,7 +811,7 @@ namespace OpenDental {
 					SecurityLogs.MakeLogEntry(Permissions.Reports,0,"Adjustments report run.");
 					break;
 				case "ODPayments"://Payments
-					if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
+					if(Security.CurrentUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
 						MsgBox.Show("The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
 						break;
 					}
@@ -820,7 +820,7 @@ namespace OpenDental {
 					SecurityLogs.MakeLogEntry(Permissions.Reports,0,"Daily Payments report run.");
 					break;
 				case "ODProcedures"://Procedures
-					if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
+					if(Security.CurrentUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
 						MsgBox.Show("The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
 						break;
 					}
@@ -832,7 +832,7 @@ namespace OpenDental {
 					SecurityLogs.MakeLogEntry(Permissions.Reports,0,"Procedures overpaid report run.");
 					return ReportNonModalSelection.ODProcsOverpaid;
 				case "ODWriteoffs"://Writeoffs
-					if(Security.CurUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
+					if(Security.CurrentUser.ProvNum==0 && !Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
 						MsgBox.Show("The current user needs to be a provider or have the 'All Providers' permission for Daily reports");
 						break;
 					}

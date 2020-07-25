@@ -10,6 +10,7 @@ using System.Linq;
 using CodeBase;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	/// <summary>
@@ -1193,16 +1194,16 @@ namespace OpenDental {
 			}
 			else {//trying to edit an existing task, so need to block some things
 				bool isTaskForCurUser=true;
-				if(_taskCur.UserNum!=Security.CurUser.Id) {//current user didn't write this task, so block them.
+				if(_taskCur.UserNum!=Security.CurrentUser.Id) {//current user didn't write this task, so block them.
 					isTaskForCurUser=false;//Delete will only be enabled if the user has the TaskEdit and TaskNoteEdit permissions.
 				}
-				if(_taskCur.TaskListNum!=Security.CurUser.TaskListInBox) {//the task is not in the logged-in user's inbox
+				if(_taskCur.TaskListNum!=Security.CurrentUser.TaskListInBox) {//the task is not in the logged-in user's inbox
 					isTaskForCurUser=false;
 				}
 				if(isTaskForCurUser) {//this just allows getting the NoteList less often
 					_listTaskNotes=TaskNotes.GetForTask(_taskCur.TaskNum);//so we can check so see if other users have added notes
 					for(int i=0;i<_listTaskNotes.Count;i++) {
-						if(Security.CurUser.Id!=_listTaskNotes[i].UserNum) {
+						if(Security.CurrentUser.Id!=_listTaskNotes[i].UserNum) {
 							isTaskForCurUser=false;
 							break;
 						}
@@ -1299,7 +1300,7 @@ namespace OpenDental {
 			long mailboxUserNum=0;
 			if(PrefC.GetBool(PrefName.TasksNewTrackedByUser) && _taskCur.TaskListNum !=0) {
 				mailboxUserNum=TaskLists.GetMailboxUserNum(_taskCur.TaskListNum);
-				if(mailboxUserNum != 0 && mailboxUserNum != Security.CurUser.Id) {
+				if(mailboxUserNum != 0 && mailboxUserNum != Security.CurrentUser.Id) {
 					_startedInOthersInbox=true;
 					checkNew.Checked=false;
 					checkNew.Enabled=false;
@@ -1320,7 +1321,7 @@ namespace OpenDental {
 						_taskCur.IsUnread=TaskUnreads.IsUnread(mailboxUserNum,_taskCur);
 					}
 					else {
-						_taskCur.IsUnread=TaskUnreads.IsUnread(Security.CurUser.Id,_taskCur);
+						_taskCur.IsUnread=TaskUnreads.IsUnread(Security.CurrentUser.Id,_taskCur);
 						if(_taskCur.IsUnread) {
 							checkNew.Checked=true;
 							_mightNeedSetRead=true;
@@ -1418,7 +1419,7 @@ namespace OpenDental {
 				labelReply.Visible=false;
 				butReply.Visible=false;
 			}
-			else if(_listTaskNotes.Count==0 && _taskCur.UserNum==Security.CurUser.Id) {//if this is my task
+			else if(_listTaskNotes.Count==0 && _taskCur.UserNum==Security.CurrentUser.Id) {//if this is my task
 				labelReply.Visible=false;
 				butReply.Visible=false;
 			}
@@ -1429,7 +1430,7 @@ namespace OpenDental {
 				else {//reply to most recent author who is not me
 					//loop backward through the notes to find who to reply to
 					for(int i=_listTaskNotes.Count-1;i>=0;i--) {
-						if(_listTaskNotes[i].UserNum!=Security.CurUser.Id) {
+						if(_listTaskNotes[i].UserNum!=Security.CurrentUser.Id) {
 							_replyToUserNum=_listTaskNotes[i].UserNum;
 							break;
 						}
@@ -1548,7 +1549,7 @@ namespace OpenDental {
 			form.TaskNoteCur=new TaskNote();
 			form.TaskNoteCur.TaskNum=_taskCur.TaskNum;
 			form.TaskNoteCur.DateTimeNote=DateTime.Now;//Will be slightly adjusted at server.
-			form.TaskNoteCur.UserNum=Security.CurUser.Id;
+			form.TaskNoteCur.UserNum=Security.CurrentUser.Id;
 			form.TaskNoteCur.IsNew=true;
 			form.TaskNoteCur.Note=initialText;
 			form.EditComplete=OnNoteEditComplete_Add;
@@ -1564,7 +1565,7 @@ namespace OpenDental {
 			}
 			FillGrid();
 			Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-			TaskUnreads.AddUnreads(_taskCur,Security.CurUser.Id);//we also need to tell the database about all the users with unread tasks
+			TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
 			SendSignalsRefillLocal(_taskCur);
 		}
 
@@ -1588,7 +1589,7 @@ namespace OpenDental {
 				_mightNeedSetRead=false;//so that the automation won't happen again
 			}
 			Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-			TaskUnreads.AddUnreads(_taskCur,Security.CurUser.Id);//we also need to tell the database about all the users with unread tasks
+			TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
 			SendSignalsRefillLocal(_taskCur);
 		}
 
@@ -1839,10 +1840,10 @@ namespace OpenDental {
 		}
 
 		private void butChangeUser_Click(object sender,EventArgs e) {
-			FormLogOn FormChangeUser=new FormLogOn(isSimpleSwitch:true);
+			FormLogOn FormChangeUser=new FormLogOn(isTemporary:true);
 			FormChangeUser.ShowDialog();
 			if(FormChangeUser.DialogResult==DialogResult.OK) {
-				_taskCur.UserNum=FormChangeUser.CurUserSimpleSwitch.Id; //assign task new UserNum
+				_taskCur.UserNum=FormChangeUser.User.Id; //assign task new UserNum
 				textUser.Text=Userods.GetName(_taskCur.UserNum); //update user textbox on task.
 			}
 		}
@@ -2017,7 +2018,7 @@ namespace OpenDental {
 					}
 					if(Tasks.IsReminderTask(_taskCur) && _taskCur.DateTimeEntry>DateTime.Now) {//Future Reminder.
 						if(!_taskCur.IsUnread) {
-							TaskUnreads.SetUnread(Security.CurUser.Id,_taskCur);//Future Reminders need to stay Unread for this user so they popup at due time.
+							TaskUnreads.SetUnread(Security.CurrentUser.Id,_taskCur);//Future Reminders need to stay Unread for this user so they popup at due time.
 						}
 					}
 					else if(!_startedInOthersInbox) {
@@ -2028,16 +2029,16 @@ namespace OpenDental {
 						//Because the task could have been modified by another user at this point
 						//RefreshTask();
 						if(checkNew.Checked) {
-							TaskUnreads.SetUnread(Security.CurUser.Id,_taskCur);
+							TaskUnreads.SetUnread(Security.CurrentUser.Id,_taskCur);
 						}
 						else {
-							TaskUnreads.SetRead(Security.CurUser.Id,_taskCur);
+							TaskUnreads.SetRead(Security.CurrentUser.Id,_taskCur);
 						}
 					}
 					else if(!checkNew.Checked) {//Just in case, checkbox should not be enabled or checked when _startedInOthersInbox is true.
 						//A task was sent to a tasklist I'm subscribed to, but before I had a chance to open it, it was sent to someone else's inbox.
 						//If I open this task, I've read it, so it should still be marked as read for me.
-						TaskUnreads.SetRead(Security.CurUser.Id,_taskCur);
+						TaskUnreads.SetRead(Security.CurrentUser.Id,_taskCur);
 						_statusChanged=true;
 					}
 				}
@@ -2091,7 +2092,7 @@ namespace OpenDental {
 					}
 					if(!_taskCur.Equals(_taskOld) || NotesChanged) {//We want to make a TaskHist entry if notes were changed as well as if the task was changed.
 						TaskHist taskHist=new TaskHist(_taskOld);
-						taskHist.UserNumHist=Security.CurUser.Id;
+						taskHist.UserNumHist=Security.CurrentUser.Id;
 						taskHist.IsNoteChange=NotesChanged;
 						TaskHists.Insert(taskHist);
 					}
@@ -2169,7 +2170,7 @@ namespace OpenDental {
 			SendSignalsRefillLocal(_taskCur,_taskCur.TaskListNum,false);
 			TaskHist taskHistory=new TaskHist(_taskOld);
 			taskHistory.IsNoteChange=NotesChanged;
-			taskHistory.UserNum=Security.CurUser.Id;
+			taskHistory.UserNum=Security.CurrentUser.Id;
 			TaskHists.Insert(taskHistory);
 			SecurityLogs.MakeLogEntry(Permissions.TaskEdit,0,"Task "+POut.Long(_taskCur.TaskNum)+" deleted",0);
 			DialogResult=DialogResult.OK;
@@ -2195,7 +2196,7 @@ namespace OpenDental {
 				form.TaskNoteCur=new TaskNote();
 				form.TaskNoteCur.TaskNum=_taskCur.TaskNum;
 				form.TaskNoteCur.DateTimeNote=DateTime.Now;//Will be slightly adjusted at server.
-				form.TaskNoteCur.UserNum=Security.CurUser.Id;
+				form.TaskNoteCur.UserNum=Security.CurrentUser.Id;
 				form.TaskNoteCur.IsNew=true;
 				form.TaskNoteCur.Note="";
 				form.EditComplete=OnNoteEditComplete_Reply;
@@ -2207,7 +2208,7 @@ namespace OpenDental {
 				return;
 			}
 			Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-			TaskUnreads.AddUnreads(_taskCur,Security.CurUser.Id);//we also need to tell the database about all the users with unread tasks
+			TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
 			//Both tasklistnums are different, since SaveCur() returned true.  Thereore, send signals for both task lists.
 			SendSignalsRefillLocal(_taskCur,taskListNumCur);
 			DialogResult=DialogResult.OK;
@@ -2226,7 +2227,7 @@ namespace OpenDental {
 				return;
 			}
 			Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-			TaskUnreads.AddUnreads(_taskCur,Security.CurUser.Id);//we also need to tell the database about all the users with unread tasks
+			TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
 			SendSignalsRefillLocal(_taskCur,taskListNumCur);
 			DialogResult=DialogResult.OK;
 			Close();
@@ -2256,7 +2257,7 @@ namespace OpenDental {
 			//Check for changes.  If something changed, send a signal.
 			if(NotesChanged || !_taskCur.Equals(_taskOld) || _statusChanged) {
 				Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-				TaskUnreads.AddUnreads(_taskCur,Security.CurUser.Id);//we also need to tell the database about all the users with unread tasks
+				TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
 			}
 			SendSignalsRefillLocal(_taskCur,taskListNumCur);
 			DialogResult=DialogResult.OK;
@@ -2286,13 +2287,13 @@ namespace OpenDental {
 					MessageBox.Show(ex.Message);
 					return false;
 				}
-				if(taskCopy.TaskListNum==Userods.GetInbox(Security.CurUser.Id)) {//My inbox.
+				if(taskCopy.TaskListNum==Userods.GetInbox(Security.CurrentUser.Id)) {//My inbox.
 					FormTaskEdit formT=new OpenDental.FormTaskEdit(taskCopy);//Maintain previous behavior. If I send to myself, should popup.
 					formT.Show();//Non-modal. 
 					UserControlTasks.RefillLocalTaskGrids(taskCopy,_listTaskNotes,null);//Refills local grids with _taskCur, which has a new taskNum now.
 				}
 				else {//Sent to someone else. Task should popup for that user.
-					TaskUnreads.AddUnreads(taskCopy,Security.CurUser.Id);//Tell the database about all the users with unread tasks prior to sending signals.
+					TaskUnreads.AddUnreads(taskCopy,Security.CurrentUser.Id);//Tell the database about all the users with unread tasks prior to sending signals.
 					Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,taskCopy.TaskNum);//popup
 					Signalods.SetInvalid(InvalidType.TaskList,KeyType.Undefined,taskCopy.TaskListNum);//signal so all instances of UserControlTasks refreshes.
 				}
@@ -2342,7 +2343,7 @@ namespace OpenDental {
 				|| (_taskOld.ReminderType==TaskReminderType.NoReminder && _taskCur.ReminderType!=TaskReminderType.NoReminder)) //Add taskunread for when "due"
 			{ 
 				Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-				TaskUnreads.AddUnreads(_taskCur,Security.CurUser.Id);//we also need to tell the database about all the users with unread tasks
+				TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
 			}
 			SendSignalsRefillLocal(_taskCur);
 			DialogResult=DialogResult.OK;
@@ -2398,8 +2399,8 @@ namespace OpenDental {
 				//No more automation here
 			}
 			else {
-				if(Security.CurUser!=null) {//Because tasks are modal, user may log off and this form may close with no user.
-					TaskUnreads.SetRead(Security.CurUser.Id,_taskCur);//no matter why it was closed
+				if(Security.CurrentUser!=null) {//Because tasks are modal, user may log off and this form may close with no user.
+					TaskUnreads.SetRead(Security.CurrentUser.Id,_taskCur);//no matter why it was closed
 				}
 			}
 			if(DialogResult==DialogResult.OK) {
@@ -2413,7 +2414,7 @@ namespace OpenDental {
 				//This should only ever be hit if the user clicked cancel or X.  Everything else will have dialogue result OK and exit above.
 				//Make a TaskHist entry to note that the task notes were changed.
 				TaskHist taskHist = new TaskHist(_taskOld);
-				taskHist.UserNumHist=Security.CurUser.Id;
+				taskHist.UserNumHist=Security.CurrentUser.Id;
 				taskHist.IsNoteChange=true;
 				TaskHists.Insert(taskHist);
 				//Task has already been invalidated in FromTaskNoteEdit when the Note was added/edited.  Other Users have already been notified the task changed.
@@ -2432,7 +2433,7 @@ namespace OpenDental {
 					return;//Silently leave because the user could be trying to cancel out of a task that had been edited by another user.
 				}
 				Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-				TaskUnreads.AddUnreads(_taskCur,Security.CurUser.Id);//we also need to tell the database about all the users with unread tasks
+				TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
 				SendSignalsRefillLocal(_taskCur);
 			}
 		}

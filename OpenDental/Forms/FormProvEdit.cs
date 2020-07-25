@@ -1480,7 +1480,7 @@ namespace OpenDental{
 				radioSSN.Checked=true;
 			}
 			_listProvClinicsOld=ProviderClinics.GetListForProvider(ProvCur.ProvNum,
-				Clinics.GetForUserod(Security.CurUser,true).Select(x => x.ClinicNum)
+				Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum)
 				.Union(new List<long>() { 0 })//Always include 0 clinic, this is the default, NOT a headquarters only value.
 				.Distinct()
 				.ToList());
@@ -1582,7 +1582,7 @@ namespace OpenDental{
 			}
 			if(PrefC.HasClinicsEnabled) {
 				_listProvClinicLinks=ProviderClinicLinks.GetForProvider(ProvCur.ProvNum);
-				_listClinicsForUser=Clinics.GetForUserod(Security.CurUser);
+				_listClinicsForUser=Clinics.GetForUserod(Security.CurrentUser);
 				//If there are no ProviderClinicLinks, then the provider is associated to all clinics.
 				bool doSelectAll=(_listProvClinicLinks.Count==0 || _listClinicsForUser.All(x => _listProvClinicLinks.Any(y => y.ClinicNum==x.ClinicNum)));
 				listBoxClinics.SetItems(_listClinicsForUser,x => x.Abbr,x => !doSelectAll && _listProvClinicLinks.Any(y => y.ClinicNum==x.ClinicNum));

@@ -526,7 +526,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT task.*, "
 				+"(SELECT COUNT(*) FROM taskunread WHERE task.TaskNum=taskunread.TaskNum "
-				+"AND taskunread.UserNum="+POut.Long(Security.CurUser.Id)+") AS IsUnread, "
+				+"AND taskunread.UserNum="+POut.Long(Security.CurrentUser.Id)+") AS IsUnread, "
 				+"tasklist.Descript AS ParentDesc "
 				+"FROM task "
 				+"LEFT JOIN tasklist ON task.TaskListNum=tasklist.TaskListNum ";
@@ -888,7 +888,7 @@ namespace OpenDentBusiness{
 			}
 			long newTaskNum=Tasks.Insert(taskNext);
 			//If we could we'd just call DataValid.SetInvalidTask(newTaskNum,true); but we're in ODBuisness so we'll do what we can to emulate it
-			TaskUnreads.AddUnreads(taskNext,Security.CurUser.Id);  //We need the new copy to marked as unread for everyone for when it is "due"
+			TaskUnreads.AddUnreads(taskNext,Security.CurrentUser.Id);  //We need the new copy to marked as unread for everyone for when it is "due"
 			//Here we do our best to follow the signal logic in OpenDental namespace.  This may be unneccessary because the copied task isn't due 
 			//for at least a day.  There will already be one signal for the old task being marked due, this is just for the copied task.
 			Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,newTaskNum);

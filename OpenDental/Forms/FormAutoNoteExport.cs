@@ -15,7 +15,7 @@ namespace OpenDental {
 		}
 
 		private void FormAutoNoteExport_Load(object sender,System.EventArgs e) {
-			_userPrefExpandedDefNums=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.AutoNoteExpandedCats).FirstOrDefault();
+			_userPrefExpandedDefNums=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.AutoNoteExpandedCats).FirstOrDefault();
 			AutoNoteL.FillListTree(treeNotes,_userPrefExpandedDefNums);
 		}
 

@@ -24,7 +24,7 @@ namespace OpenDental {
 			textSupplier.Text=Suppliers.GetName(ListSuppliersAll,SupplyOrderCur.SupplierNum);
 			if(SupplyOrderCur.DatePlaced.Year>2200){
 				textDatePlaced.Text=DateTime.Today.ToShortDateString();
-				SupplyOrderCur.UserNum=Security.CurUser.Id;
+				SupplyOrderCur.UserNum=Security.CurrentUser.Id;
 			}
 			else{
 				textDatePlaced.Text=SupplyOrderCur.DatePlaced.ToShortDateString();

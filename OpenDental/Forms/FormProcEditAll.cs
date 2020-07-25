@@ -117,7 +117,7 @@ namespace OpenDental {
 			comboClinic.SelectedIndex=0;//Selection is not changed if isAllProcsForSameClinic is false.
 			bool isAllProcsForSameClinic=ProcList.Select(x => x.ClinicNum).Distinct().ToList().Count==1;
 			bool isListAlpha = PrefC.GetBool(PrefName.ClinicListIsAlphabetical);
-			_listClinics=Clinics.GetForUserod(Security.CurUser);
+			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 			if(isListAlpha) {
 				_listClinics=_listClinics.OrderBy(x => x.Abbr).ToList();
 			}

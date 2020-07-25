@@ -98,7 +98,7 @@ namespace OpenDental {
 			textFilledCity.Text=VaccinePatCur.FilledCity;
 			textFilledSt.Text=VaccinePatCur.FilledST;
 			if(IsNew) {
-				VaccinePatCur.UserNum=Security.CurUser.Id;
+				VaccinePatCur.UserNum=Security.CurrentUser.Id;
 			}
 			Userod user=Userods.GetUser(VaccinePatCur.UserNum);
 			if(user!=null) {//Will be null for vaccines entered in older versions, before the UserNum column was created.

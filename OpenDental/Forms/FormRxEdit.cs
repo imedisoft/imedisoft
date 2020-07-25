@@ -618,16 +618,16 @@ namespace OpenDental{
 				butView.Visible=false;
 				labelView.Visible=false;
 				sheet=null;
-				if(PrefC.GetBool(PrefName.ShowFeatureEhr) && Security.CurUser.ProvNum!=0) {//Is CPOE
+				if(PrefC.GetBool(PrefName.ShowFeatureEhr) && Security.CurrentUser.ProvNum!=0) {//Is CPOE
 					labelCPOE.Visible=true;
 					comboProv.Enabled=false;
 					butPickProv.Enabled=false;
-					RxPatCur.ProvNum=Security.CurUser.ProvNum;
+					RxPatCur.ProvNum=Security.CurrentUser.ProvNum;
 				}
 				else {
-					Provider provUser=Providers.GetProv(Security.CurUser.ProvNum);
+					Provider provUser=Providers.GetProv(Security.CurrentUser.ProvNum);
 					if(provUser!=null && !provUser.IsSecondary) {//Only set the provider on the Rx if the provider is not a hygienist.
-						RxPatCur.ProvNum=Security.CurUser.ProvNum;
+						RxPatCur.ProvNum=Security.CurrentUser.ProvNum;
 					}
 				}
 			}

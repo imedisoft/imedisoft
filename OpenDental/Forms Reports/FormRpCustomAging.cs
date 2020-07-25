@@ -67,7 +67,7 @@ namespace OpenDental {
 				return;
 			}
 			listBoxClins.Items.Clear();
-			List<Clinic> listClinics=Clinics.GetForUserod(Security.CurUser,true);
+			List<Clinic> listClinics=Clinics.GetForUserod(Security.CurrentUser,true);
 			for(int i=0;i<listClinics.Count;i++) {
 				listBoxClins.Items.Add(new ODBoxItem<Clinic>(listClinics[i].Abbr,listClinics[i]));
 				listBoxClins.SetSelected(i,true);

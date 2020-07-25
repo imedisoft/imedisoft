@@ -19,6 +19,7 @@ using CodeBase;
 using SparksToothChart;
 using OpenDental.UI;
 using System.Text.RegularExpressions;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -86,7 +87,7 @@ namespace OpenDental{
 		private UI.Button butEditAutoNote;
 		private DataTable TablePlanned;
 		///<summary>Users can temporarily log in on this form.  Defaults to Security.CurUser.</summary>
-		private Userod _curUser=Security.CurUser;
+		private Userod _curUser=Security.CurrentUser;
 		///<summary>True if the user clicked the Change User button.</summary>
 		private bool _hasUserChanged;
 		private Label labelPermAlert;
@@ -778,7 +779,7 @@ namespace OpenDental{
 			string keyData=GetSignatureKey();
 			signatureBoxWrapper.FillSignature(GroupCur.SigIsTopaz,keyData,GroupCur.Signature);
 			signatureBoxWrapper.BringToFront();
-			if(!(Security.IsAuthorized(Permissions.GroupNoteEditSigned,true) || signatureBoxWrapper.SigIsBlank || GroupCur.UserNum==Security.CurUser.Id)) {
+			if(!(Security.IsAuthorized(Permissions.GroupNoteEditSigned,true) || signatureBoxWrapper.SigIsBlank || GroupCur.UserNum==Security.CurrentUser.Id)) {
 				//User does not have permission and this note was signed by someone else.
 				textNotes.ReadOnly=true;
 				signatureBoxWrapper.Enabled=false;
@@ -1318,10 +1319,10 @@ namespace OpenDental{
 		}
 
 		private void butChangeUser_Click(object sender,EventArgs e) {
-			FormLogOn FormChangeUser=new FormLogOn(isSimpleSwitch:true);
+			FormLogOn FormChangeUser=new FormLogOn(isTemporary:true);
 			FormChangeUser.ShowDialog();
 			if(FormChangeUser.DialogResult==DialogResult.OK) {
-				_curUser=FormChangeUser.CurUserSimpleSwitch; //assign temp user
+				_curUser=FormChangeUser.User; //assign temp user
 				bool canUserSignNote=Userods.CanUserSignNote(_curUser);//only show if user can sign
 				signatureBoxWrapper.Enabled=canUserSignNote;
 				if(!labelPermAlert.Visible && !canUserSignNote) {

@@ -85,7 +85,7 @@ namespace OpenDental {
 				string clinicID="";
 				string clinicKey="";
 				DoseSpot.RegisterClinic(_clinicCur.ClinicNum,ppClinicID.Value,ppClinicKey.Value
-					,DoseSpot.GetUserID(Security.CurUser,_clinicCur.ClinicNum),out clinicID,out clinicKey);
+					,DoseSpot.GetUserID(Security.CurrentUser,_clinicCur.ClinicNum),out clinicID,out clinicKey);
 				textClinicID.Text=clinicID;
 				textClinicKey.Text=clinicKey;
 			}

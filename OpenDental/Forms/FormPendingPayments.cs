@@ -35,7 +35,7 @@ namespace OpenDental {
 		}
 
 		private void RefreshPayments() {			
-			if(PrefC.HasClinicsEnabled && Security.CurUser.ClinicIsRestricted) {				
+			if(PrefC.HasClinicsEnabled && Security.CurrentUser.ClinicIsRestricted) {				
 				_listPayments=Payments.GetNeedingProcessed(_listClinics.Select(x => x.ClinicNum).ToList());
 			}
 			else {
@@ -48,7 +48,7 @@ namespace OpenDental {
 		private void FillGrid() {
 			List<Payment> listPaymentsClinic=new List<Payment>();
 			if(PrefC.HasClinicsEnabled && comboClinic.SelectedIndex!=0) {//Not 'All' selected
-				if(Security.CurUser.ClinicIsRestricted) {
+				if(Security.CurrentUser.ClinicIsRestricted) {
 					long clinicNum=_listClinics[comboClinic.SelectedIndex-1].ClinicNum;//Minus 1 for 'All'
 					listPaymentsClinic=_listPayments.FindAll(x => x.ClinicNum==clinicNum);
 				}
@@ -102,11 +102,11 @@ namespace OpenDental {
 		}
 
 		public void FillClinics() {
-			_listClinics=Clinics.GetForUserod(Security.CurUser);
+			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 			comboClinic.Items.Add(Lan.G(this,"All"));
 			comboClinic.SelectedIndex=0;
 			int offset=1;
-			if(!Security.CurUser.ClinicIsRestricted) {
+			if(!Security.CurrentUser.ClinicIsRestricted) {
 				comboClinic.Items.Add(Lan.G(this,"Unassigned"));
 				offset++;
 			}

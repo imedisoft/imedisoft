@@ -567,7 +567,7 @@ namespace OpenDental{
 				checkAllClin.Visible=false;
 			}
 			else {
-				List<Clinic> listClinics = Clinics.GetForUserod(Security.CurUser,true,"Unassigned").ToList();
+				List<Clinic> listClinics = Clinics.GetForUserod(Security.CurrentUser,true,"Unassigned").ToList();
 				if(!listClinics.Exists(x => x.ClinicNum==Clinics.ClinicNum)) {//Could have a hidden clinic selected
 					listClinics.Add(Clinics.GetClinic(Clinics.ClinicNum));
 				}
@@ -692,7 +692,7 @@ namespace OpenDental{
 			}
 			if(PrefC.HasClinicsEnabled) {
 				//if "All" is selected and the user is not restricted, show ALL clinics, including the 0 clinic.
-				if(checkAllClin.Checked && !Security.CurUser.ClinicIsRestricted){
+				if(checkAllClin.Checked && !Security.CurrentUser.ClinicIsRestricted){
 					rpo.ListClinicNums.Clear();
 					rpo.ListClinicNums.Add(0);
 					rpo.ListClinicNums.AddRange(Clinics.GetDeepCopy().Select(x => x.ClinicNum));

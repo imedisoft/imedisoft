@@ -31,7 +31,7 @@ namespace OpenDental {
 			//Master Page
 			WikiPage masterPage=WikiPages.MasterPage;
 			masterPage.PageContent=textMaster.Text;
-			masterPage.UserNum=Security.CurUser.Id;
+			masterPage.UserNum=Security.CurrentUser.Id;
 			WikiPages.InsertAndArchive(masterPage);
 			DataValid.SetInvalid(InvalidType.Wiki);
 			DialogResult=DialogResult.OK;

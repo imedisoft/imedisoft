@@ -82,7 +82,7 @@ namespace OpenDental
 			//we want to continue to use the same layout the user is currently viewing.
 			//If the user logs off/exits for the day the next time they log in they will get the new practice default layout.
 			if (!_hasUserLoggedOff
-				&& _userNumCur == Security.CurUser.Id
+				&& _userNumCur == Security.CurrentUser.Id
 				&& _clinicNumCur == Clinics.ClinicNum
 				&& _sheetDefDynamicLayoutCur != null
 				&& ListSheetDefsLayout.Any(x => x.SheetDefNum == _sheetDefDynamicLayoutCur.SheetDefNum))
@@ -91,7 +91,7 @@ namespace OpenDental
 			}
 			#region UserOdPref based layout selection. If no UserOdPref use practice default or first item in list as last line of defense.
 			SheetDef def = null;
-			List<UserOdPref> listPrefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id, UserOdFkeyType.DynamicChartLayout);
+			List<UserOdPref> listPrefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.DynamicChartLayout);
 			UserOdPref userPref = listPrefs.FirstOrDefault();//There is only at most a single link per user.
 			if (userPref != null//User has viewed the chart module before
 				&& ListSheetDefsLayout.Any(x => x.SheetDefNum == userPref.Fkey))//Layout still exists in the list of options
@@ -131,7 +131,7 @@ namespace OpenDental
 			, bool isForcedRefresh = false, bool isUserSelection = false)
 		{
 			_hasUserLoggedOff = false;//At this point we are showing the chart module to a user, reset.
-			_userNumCur = Security.CurUser.Id;
+			_userNumCur = Security.CurrentUser.Id;
 			_clinicNumCur = Clinics.ClinicNum;
 			if (!isForcedRefresh && _sheetDefDynamicLayoutCur != null && sheetDef.SheetDefNum == _sheetDefDynamicLayoutCur.SheetDefNum)
 			{
@@ -188,7 +188,7 @@ namespace OpenDental
 		///Should only be called when a user selects a specific layout.</summary>
 		private void UpdateChartLayoutUserPref()
 		{
-			UserOdPref userPref = UserOdPrefs.GetFirstOrNewByUserAndFkeyType(Security.CurUser.Id, UserOdFkeyType.DynamicChartLayout);
+			UserOdPref userPref = UserOdPrefs.GetFirstOrNewByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.DynamicChartLayout);
 			userPref.Fkey = _sheetDefDynamicLayoutCur.SheetDefNum;
 			if (!PrefC.HasClinicsEnabled || Clinics.ClinicNum == 0
 				|| !ClinicPrefs.TryGetLong(PrefName.SheetsDefaultChartModule, Clinics.ClinicNum, out long defaultSheetDefNum))

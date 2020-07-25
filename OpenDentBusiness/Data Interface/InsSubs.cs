@@ -159,7 +159,7 @@ namespace OpenDentBusiness{
 		public static long Insert(InsSub insSub,bool useExistingPK) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			insSub.SecUserNumEntry=Security.CurUser.Id;
+			insSub.SecUserNumEntry=Security.CurrentUser.Id;
 			insSub.InsSubNum=Crud.InsSubCrud.Insert(insSub,useExistingPK);
 			InsEditPatLogs.MakeLogEntry(insSub,null,InsEditPatLogType.Subscriber);
 			return insSub.InsSubNum;
@@ -361,7 +361,7 @@ namespace OpenDentBusiness{
 				inssub.BenefitNotes="";
 				inssub.SubscNote="";
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-				inssub.SecUserNumEntry=Security.CurUser.Id;
+				inssub.SecUserNumEntry=Security.CurrentUser.Id;
 				long insSubNumNew=InsSubs.Insert(inssub);
 				string command="SELECT PatNum FROM patplan WHERE InsSubNum="+POut.Long(oldInsSubNum);
 				DataTable tablePatsForInsSub=Database.ExecuteDataTable(command);
@@ -421,7 +421,7 @@ namespace OpenDentBusiness{
 				plan=new InsPlan();
 				plan.CarrierNum=carrier.CarrierNum;
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-				plan.SecUserNumEntry=Security.CurUser.Id;
+				plan.SecUserNumEntry=Security.CurrentUser.Id;
 				InsPlans.Insert(plan); //log taken care of in a subfunction.
 			}
 			subCur.PlanNum=plan.PlanNum;

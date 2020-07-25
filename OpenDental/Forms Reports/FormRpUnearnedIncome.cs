@@ -28,7 +28,7 @@ namespace OpenDental {
 		#region Fill Methods
 		private void FillClinics() {
 			if(PrefC.HasClinicsEnabled) {//fill clinic list
-				List<Clinic> listClinics=Clinics.GetForUserod(Security.CurUser,true,Lan.G(this,"Unassigned"));
+				List<Clinic> listClinics=Clinics.GetForUserod(Security.CurrentUser,true,Lan.G(this,"Unassigned"));
 				foreach(Clinic clinCur in listClinics) {
 					ODBoxItem<Clinic> boxItemCur = new ODBoxItem<Clinic>(clinCur.Abbr,clinCur);
 					listUnearnedAllocationClins.Items.Add(boxItemCur);

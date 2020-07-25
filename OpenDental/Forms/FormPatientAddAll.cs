@@ -813,7 +813,7 @@ namespace OpenDental {
 				_commlog=new Commlog();
 				_commlog.CommDateTime=DateTime.Now;
 				_commlog.CommType=Commlogs.GetTypeAuto(CommItemTypeAuto.MISC);
-				_commlog.UserNum=Security.CurUser.Id;
+				_commlog.UserNum=Security.CurrentUser.Id;
 				_commlog.IsNew=true;
 			}
 			FormCommItem FormCI=new FormCommItem(_commlog);

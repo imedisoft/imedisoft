@@ -1031,7 +1031,7 @@ namespace OpenDentBusiness {
 		public static long Insert(Procedure procedure,bool doCalcTax=true,bool isRepeatCharge=false,bool skipDiscountPlanAdjustment=false) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			procedure.SecUserNumEntry=Security.CurUser.Id;
+			procedure.SecUserNumEntry=Security.CurrentUser.Id;
 			if(procedure.ProcStatus==ProcStat.C) {
 				procedure.DateComplete=DateTime.Today;
 			}
@@ -1452,7 +1452,7 @@ namespace OpenDentBusiness {
 		public static void Sync(List<Procedure> listNew,List<Procedure> listOld) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			Crud.ProcedureCrud.Sync(listNew,listOld,Security.CurUser.Id);
+			Crud.ProcedureCrud.Sync(listNew,listOld,Security.CurrentUser.Id);
 		}
 
 		public static void SetTPActive(long patNum,List<long> listProcNums) {
@@ -1785,7 +1785,7 @@ namespace OpenDentBusiness {
 			else {
 				proc.ToothNum=toothNum;
 			}
-			proc.UserNum=Security.CurUser.Id;
+			proc.UserNum=Security.CurrentUser.Id;
 			proc.CodeNum=codeNum;
 			proc.ProcDate=DateTime.Today;
 			proc.DateTP=DateTime.Today;
@@ -1858,7 +1858,7 @@ namespace OpenDentBusiness {
 				ProcStatus=ProcStat.C,
 				Surf="",
 				ToothNum="",
-				UserNum=Security.CurUser.Id,
+				UserNum=Security.CurrentUser.Id,
 				ProcDate=procDate,
 				DateEntryC=DateTime.Today,
 				SecDateEntry=DateTime.Today,
@@ -3714,7 +3714,7 @@ namespace OpenDentBusiness {
 				return listProcsInAppt;//Nothing to do.
 			}
 			List<Procedure> listProcsOld=listProcsInAppt.Select(x => x.Copy()).ToList();
-			listProcsInAppt=SetCompleteInApptInList(apt,PlanList,patPlans,patient,listProcsInAppt,subList,Security.CurUser);
+			listProcsInAppt=SetCompleteInApptInList(apt,PlanList,patPlans,patient,listProcsInAppt,subList,Security.CurrentUser);
 			List<Procedure> listProcsCompleted=listProcsInAppt.FindAll(x => listProcsOld.Any(y => y.ProcNum==x.ProcNum && y.ProcStatus!=ProcStat.C));
 			listProcsCompleted.ForEach(x => LogProcComplCreate(apt.PatNum,x,x.ToothNum));
 			List<Procedure> listProcsAlreadyComplete=listProcsInAppt.FindAll(x => listProcsOld.Any(y => y.ProcNum==x.ProcNum && y.ProcStatus==ProcStat.C));
@@ -3766,7 +3766,7 @@ namespace OpenDentBusiness {
 			proc.RevCode=procCodeCur.RevenueCodeDefault;
 			proc.DiagnosticCode=PrefC.GetString(PrefName.ICD9DefaultForNewProcs);
 			proc.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default proc place of service for the Practice is used. 
-			if(Userods.IsUserCpoe(Security.CurUser)) {
+			if(Userods.IsUserCpoe(Security.CurrentUser)) {
 				//This procedure is considered CPOE because the provider is the one that has added it.
 				proc.IsCpoe=true;
 			}

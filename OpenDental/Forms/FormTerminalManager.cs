@@ -54,16 +54,16 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled) {
 				//Option "All" is selected and at least one clinic is signed up for the eClipboard feature
 				if(contrClinicPicker.IsAllSelected && PrefC.GetString(PrefName.EClipboardClinicsSignedUp)!="") {
-					listMobileDevices=MobileAppDevices.GetForUser(Security.CurUser).FindAll(x => x.IsAllowed);
+					listMobileDevices=MobileAppDevices.GetForUser(Security.CurrentUser).FindAll(x => x.IsAllowed);
 				}
 				//A specific clinic is selected and that is signed up for the eClipboard feature
 				else if(MobileAppDevices.IsClinicSignedUpForEClipboard(contrClinicPicker.SelectedClinicNum)) {
-					listMobileDevices=MobileAppDevices.GetForUser(Security.CurUser).FindAll(x => x.IsAllowed && x.ClinicNum==contrClinicPicker.SelectedClinicNum);
+					listMobileDevices=MobileAppDevices.GetForUser(Security.CurrentUser).FindAll(x => x.IsAllowed && x.ClinicNum==contrClinicPicker.SelectedClinicNum);
 				}
 			}
 			//We aren't using clinics and the zero clinic is signed up
 			else if(MobileAppDevices.IsClinicSignedUpForEClipboard(0)) {
-				listMobileDevices=MobileAppDevices.GetForUser(Security.CurUser).FindAll(x => x.IsAllowed);
+				listMobileDevices=MobileAppDevices.GetForUser(Security.CurrentUser).FindAll(x => x.IsAllowed);
 			}
 			//Add the clinics we decided on the the d
 			foreach(MobileAppDevice device in listMobileDevices) {

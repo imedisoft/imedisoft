@@ -20,7 +20,7 @@ namespace OpenDental
 
 		public ClinicPrefHelper(params PrefName[] prefNames)
 		{
-			var clinics = Clinics.GetForUserod(Security.CurUser, doIncludeHQ: true);
+			var clinics = Clinics.GetForUserod(Security.CurrentUser, doIncludeHQ: true);
 
 			foreach (var prefName in prefNames.Distinct())
 			{

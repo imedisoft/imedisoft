@@ -25,10 +25,10 @@ namespace OpenDental {
 			listUser.Items.AddRange(_listUsers.Select(x => x.UserName).ToArray());
 			checkAllUsers.Checked=true;
 			if(PrefC.HasClinicsEnabled) {
-				if(!Security.CurUser.ClinicIsRestricted) {
+				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add(Lan.G(this,"Unassigned"));
 				}
-				_listClinics=Clinics.GetForUserod(Security.CurUser);
+				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 				listClin.Items.AddRange(_listClinics.Select(x => x.Abbr).ToArray());
 				checkAllClinics.Checked=true;
 			}
@@ -71,7 +71,7 @@ namespace OpenDental {
 				}
 				else {
 					for(int i = 0;i<listClin.SelectedIndices.Count;i++) {
-						if(Security.CurUser.ClinicIsRestricted) {
+						if(Security.CurrentUser.ClinicIsRestricted) {
 							listSelectedClinics.Add(_listClinics[listClin.SelectedIndices[i]]);
 						}
 						else {
@@ -169,7 +169,7 @@ namespace OpenDental {
 				}
 				else {
 					for(int i = 0;i<listClin.SelectedIndices.Count;i++) {
-						if(Security.CurUser.ClinicIsRestricted) {
+						if(Security.CurrentUser.ClinicIsRestricted) {
 							listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]].ClinicNum);
 						}
 						else if(listClin.SelectedIndices[i]!=0) {
@@ -177,7 +177,7 @@ namespace OpenDental {
 						}
 					}
 				}
-				if(!Security.CurUser.ClinicIsRestricted && (listClin.GetSelected(0) || checkAllClinics.Checked)) {
+				if(!Security.CurrentUser.ClinicIsRestricted && (listClin.GetSelected(0) || checkAllClinics.Checked)) {
 					listClinicNums.Add(0);
 				}
 			}

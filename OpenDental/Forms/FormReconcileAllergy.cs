@@ -533,7 +533,7 @@ namespace OpenDental {
 			//newMeasureEvent.MoreInfo="";
 			//EhrMeasureEvents.Insert(newMeasureEvent);
 			for(int inter=0;inter<_listAllergyReconcile.Count;inter++) {
-				if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).AllergyCDS) {
+				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).AllergyCDS) {
 					AllergyDef alDInter=AllergyDefs.GetOne(_listAllergyReconcile[inter].AllergyDefId);
 					FormCDSIntervention FormCDSI=new FormCDSIntervention();
 					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(alDInter,_patCur);

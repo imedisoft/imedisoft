@@ -37,11 +37,11 @@ namespace OpenDental {
 
 		///<summary>Fills the clinics combo box with the clincs available to this user.</summary>
 		private void FillClinics() {
-			_listClinics=Clinics.GetForUserod(Security.CurUser);
+			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 			comboClinic.Items.Add(Lan.G(this,"All"));
 			comboClinic.SelectedIndex=0;
 			int offset=1;
-			if(!Security.CurUser.ClinicIsRestricted) {
+			if(!Security.CurrentUser.ClinicIsRestricted) {
 				comboClinic.Items.Add(Lan.G(this,"Unassigned"));
 				offset++;
 			}
@@ -55,7 +55,7 @@ namespace OpenDental {
 		private void FillGrid() {
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled && comboClinic.SelectedIndex!=0) {//Not 'All' selected
-				if(Security.CurUser.ClinicIsRestricted) {
+				if(Security.CurrentUser.ClinicIsRestricted) {
 					listClinicNums.Add(_listClinics[comboClinic.SelectedIndex-1].ClinicNum);//Minus 1 for 'All'
 				}
 				else {

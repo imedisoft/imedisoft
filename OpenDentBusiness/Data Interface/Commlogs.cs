@@ -124,7 +124,7 @@ namespace OpenDentBusiness{
 		public static void InsertForRecallOrReactivation(long patNum, CommItemMode _mode, int numberOfReminders, long defNumNewStatus, CommItemTypeAuto type = CommItemTypeAuto.RECALL)
 		{
 			//No need to check RemotingRole; no call to db.
-			InsertForRecallOrReactivation(patNum, _mode, numberOfReminders, defNumNewStatus, CommItemSource.User, Security.CurUser.Id//Recall commlog not associated to the Web Sched app.
+			InsertForRecallOrReactivation(patNum, _mode, numberOfReminders, defNumNewStatus, CommItemSource.User, Security.CurrentUser.Id//Recall commlog not associated to the Web Sched app.
 				, DateTime.Now, type);
 		}
 

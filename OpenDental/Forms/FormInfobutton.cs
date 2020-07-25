@@ -373,10 +373,10 @@ namespace OpenDental {
 						w.WriteStartElement("assignedEntity");
 							w.WriteAttributeString("classCode","ASSIGNED");
 							w.WriteStartElement("name");
-								w.WriteString(Security.CurUser.UserName);
+								w.WriteString(Security.CurrentUser.UserName);
 							w.WriteEndElement();//name
 							w.WriteStartElement("certificateText");
-								w.WriteString(Security.CurUser.PasswordHash);
+								w.WriteString(Security.CurrentUser.PasswordHash);
 							w.WriteEndElement();//certificateText
 							w.WriteStartElement("assignedAuthorizedPerson");
 								w.WriteAttributeString("classCode","PSN");

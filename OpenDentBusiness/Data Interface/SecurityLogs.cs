@@ -297,7 +297,7 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; no call to db.
 			SecurityLog securityLog=new SecurityLog();
 			securityLog.PermType=permType;
-			securityLog.UserNum=Security.CurUser.Id;
+			securityLog.UserNum=Security.CurrentUser.Id;
 			securityLog.LogText=logText;
 			securityLog.CompName=Security.CurComputerName;
 			securityLog.PatNum=patNum;

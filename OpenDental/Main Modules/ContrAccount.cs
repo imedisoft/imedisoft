@@ -234,10 +234,10 @@ namespace OpenDental {
 		}
 
 		private void checkShowDetail_Click(object sender,EventArgs e) {
-			UserOdPref userOdPrefProcBreakdown=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.AcctProcBreakdown).FirstOrDefault();
+			UserOdPref userOdPrefProcBreakdown=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.AcctProcBreakdown).FirstOrDefault();
 			if(userOdPrefProcBreakdown==null) {
 				userOdPrefProcBreakdown=new UserOdPref();
-				userOdPrefProcBreakdown.UserNum=Security.CurUser.Id;
+				userOdPrefProcBreakdown.UserNum=Security.CurrentUser.Id;
 				userOdPrefProcBreakdown.FkeyType=UserOdFkeyType.AcctProcBreakdown;
 				userOdPrefProcBreakdown.Fkey=0;
 			}
@@ -1893,7 +1893,7 @@ namespace OpenDental {
 
 		///<summary></summary>
 		public void ModuleSelected(long patNum,bool isSelectingFamily) {
-			UserOdPref userOdPrefProcBreakdown=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.AcctProcBreakdown).FirstOrDefault();
+			UserOdPref userOdPrefProcBreakdown=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.AcctProcBreakdown).FirstOrDefault();
 			if(userOdPrefProcBreakdown==null) {
 				checkShowDetail.Checked=true;
 			}
@@ -2083,7 +2083,7 @@ namespace OpenDental {
 							}
 							listLogsForInsert.Add(new TsiTransLog() {
 								PatNum=pAging.PatNum,//this is the account guarantor, since these are reconciled by guars
-								UserNum=Security.CurUser.Id,
+								UserNum=Security.CurrentUser.Id,
 								TransType=TsiTransType.None,
 								//TransDateTime=DateTime.Now,//set on insert, not editable by user
 								//DemandType=TsiDemandType.Accelerator,//only valid for placement msgs

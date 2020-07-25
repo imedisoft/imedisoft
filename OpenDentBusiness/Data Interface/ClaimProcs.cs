@@ -773,7 +773,7 @@ namespace OpenDentBusiness
 		public static long Insert(ClaimProc cp)
 		{
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			cp.SecUserNumEntry = Security.CurUser.Id;
+			cp.SecUserNumEntry = Security.CurrentUser.Id;
 			if (new[] { ClaimProcStatus.Received, ClaimProcStatus.Supplemental }.Contains(cp.Status))
 			{
 				cp.DateSuppReceived = DateTime.Today;

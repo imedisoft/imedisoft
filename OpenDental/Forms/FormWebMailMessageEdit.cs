@@ -107,8 +107,8 @@ namespace OpenDental {
 			if(_emailMessage!=null) {
 				_patRegarding=Patients.GetLim(_emailMessage.PatNumSubj);
 			}
-			if(Security.CurUser!=null) {
-				_provUserCur=Providers.GetProv(Security.CurUser.ProvNum);
+			if(Security.CurrentUser!=null) {
+				_provUserCur=Providers.GetProv(Security.CurrentUser.ProvNum);
 			}
 			List<long> listProvNums=listUsers.Select(x => x.ProvNum).Distinct().ToList();
 			_listProviders=Providers.GetProvsByProvNums(listProvNums);

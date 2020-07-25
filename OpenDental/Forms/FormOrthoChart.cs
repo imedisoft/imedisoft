@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -41,7 +42,7 @@ namespace OpenDental {
 		///<summary>Keeps track of the dates that can be edited by the user currently logged in.  This is simply to save database calls.</summary>
 		private Dictionary<DateTime,bool> _dictCanEditDay=new Dictionary<DateTime, bool>();
 		///<summary>Users can temporarily log in on this form.  Defaults to Security.CurUser.</summary>
-		private Userod _curUser=Security.CurUser;
+		private Userod _curUser=Security.CurrentUser;
 
 		public FormOrthoChart(Patient patCur) : this(patCur,0) {
 		}
@@ -707,10 +708,10 @@ namespace OpenDental {
 				MessageBox.Show("You need either Ortho Chart Edit (full) or Ortho Chart Edit (same user, signed) to edit this ortho chart.");
 				return;
 			}
-			FormLogOn FormChangeUser=new FormLogOn(isSimpleSwitch:true);
+			FormLogOn FormChangeUser=new FormLogOn(isTemporary:true);
 			FormChangeUser.ShowDialog();
 			if(FormChangeUser.DialogResult==DialogResult.OK) {
-				_curUser=FormChangeUser.CurUserSimpleSwitch; //assign temp user
+				_curUser=FormChangeUser.User; //assign temp user
 				EnableSignatureBox(_curUser);
 				ClearSignature(orthoChartRow);
 				textUser.Text=_curUser.UserName; //update user textbox.

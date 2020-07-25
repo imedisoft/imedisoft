@@ -157,7 +157,7 @@ namespace OpenDental
 		}
 
 		private void FillGridSmsUsage() {
-			List<Clinic> listClinics=Clinics.GetForUserod(Security.CurUser);
+			List<Clinic> listClinics=Clinics.GetForUserod(Security.CurrentUser);
 			if(!PrefC.HasClinicsEnabled) { //No clinics so just get the practice as a clinic.
 				listClinics.Clear();
 				listClinics.Add(Clinics.GetPracticeAsClinicZero());

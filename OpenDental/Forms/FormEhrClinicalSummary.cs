@@ -95,8 +95,8 @@ namespace OpenDental {
 				return;
 			}
 			Provider prov=null;
-			if(Security.CurUser.ProvNum!=0) {//If the current user is a provider.
-				prov=Providers.GetProv(Security.CurUser.ProvNum);
+			if(Security.CurrentUser.ProvNum!=0) {//If the current user is a provider.
+				prov=Providers.GetProv(Security.CurrentUser.ProvNum);
 			}
 			else {
 				prov=Providers.GetProv(PatCur.PriProv);//PriProv is not 0, because EhrCCD.ValidatePatient() will block if PriProv is 0.

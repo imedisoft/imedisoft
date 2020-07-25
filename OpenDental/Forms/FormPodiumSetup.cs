@@ -36,7 +36,7 @@ namespace OpenDental {
 
 		private void FormPodiumSetup_Load(object sender,EventArgs e) {
 			if(PrefC.HasClinicsEnabled) {//Using clinics
-				if(Security.CurUser.ClinicIsRestricted) {
+				if(Security.CurrentUser.ClinicIsRestricted) {
 					if(checkEnabled.Checked) {
 						checkEnabled.Enabled=false;
 					}
@@ -55,11 +55,11 @@ namespace OpenDental {
 			}
 			try {
 				List<long> listUserClinicNums;
-				if(Security.CurUser.ClinicIsRestricted) {//user is clinic restricted and shouldn't have access to HQ
-					listUserClinicNums=Clinics.GetForUserod(Security.CurUser).Select(x => x.ClinicNum).ToList();
+				if(Security.CurrentUser.ClinicIsRestricted) {//user is clinic restricted and shouldn't have access to HQ
+					listUserClinicNums=Clinics.GetForUserod(Security.CurrentUser).Select(x => x.ClinicNum).ToList();
 				}
 				else {
-					listUserClinicNums=Clinics.GetForUserod(Security.CurUser,true).Select(x => x.ClinicNum).ToList();
+					listUserClinicNums=Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum).ToList();
 				}
 				long clinicNum=0;
 				if(!comboClinic.IsUnassignedSelected) {

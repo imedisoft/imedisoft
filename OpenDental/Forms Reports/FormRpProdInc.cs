@@ -480,7 +480,7 @@ namespace OpenDental {
 			textToday.Text=DateTime.Today.ToShortDateString();
 			if(!Security.IsAuthorized(Permissions.ReportProdIncAllProviders,true)) {
 				//They either have permission or have a provider at this point.  If they don't have permission they must have a provider.
-				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurUser.ProvNum);
+				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProvNum);
 				Provider prov=_listProviders.FirstOrDefault();
 				if(prov!=null) {
 					_listProviders.AddRange(Providers.GetWhere(x => x.FName == prov.FName && x.LName == prov.LName && x.ProvNum != prov.ProvNum));
@@ -516,8 +516,8 @@ namespace OpenDental {
 			else {
 				checkClinicInfo.Checked=PrefC.GetBool(PrefName.ReportPandIhasClinicInfo);
 				checkClinicBreakdown.Checked=PrefC.GetBool(PrefName.ReportPandIhasClinicBreakdown);
-				_listClinics=Clinics.GetForUserod(Security.CurUser);
-				if(!Security.CurUser.ClinicIsRestricted) {
+				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add(Lan.G(this,"Unassigned"));
 					listClin.SetSelected(0,true);
 				}
@@ -783,7 +783,7 @@ namespace OpenDental {
 			List<Clinic> listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				for(int i=0;i<listClin.SelectedIndices.Count;i++) {
-					if(Security.CurUser.ClinicIsRestricted) {
+					if(Security.CurrentUser.ClinicIsRestricted) {
 						listClinics.Add(_listClinics[listClin.SelectedIndices[i]]);//we know that the list is a 1:1 to _listClinics
 					}
 					else {
@@ -869,7 +869,7 @@ namespace OpenDental {
 						if(i>0) {
 							clinNames+=", ";
 						}
-						if(Security.CurUser.ClinicIsRestricted) {
+						if(Security.CurrentUser.ClinicIsRestricted) {
 							clinNames+=_listClinics[listClin.SelectedIndices[i]].Abbr;
 						}
 						else {
@@ -1103,7 +1103,7 @@ namespace OpenDental {
 			List<Clinic> listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				for(int i=0;i<listClin.SelectedIndices.Count;i++) {
-					if(Security.CurUser.ClinicIsRestricted) {
+					if(Security.CurrentUser.ClinicIsRestricted) {
 						listClinics.Add(_listClinics[listClin.SelectedIndices[i]]);//we know that the list is a 1:1 to _listClinics
 					}
 					else {
@@ -1158,7 +1158,7 @@ namespace OpenDental {
 						if(i>0) {
 							clinNames+=", ";
 						}
-						if(Security.CurUser.ClinicIsRestricted) {
+						if(Security.CurrentUser.ClinicIsRestricted) {
 							clinNames+=_listClinics[listClin.SelectedIndices[i]].Abbr;
 						}
 						else {
@@ -1314,7 +1314,7 @@ namespace OpenDental {
 			List<Clinic> listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				for(int i=0;i<listClin.SelectedIndices.Count;i++) {
-					if(Security.CurUser.ClinicIsRestricted) {
+					if(Security.CurrentUser.ClinicIsRestricted) {
 						listClinics.Add(_listClinics[listClin.SelectedIndices[i]]);//we know that the list is a 1:1 to _listClinics
 					}
 					else {
@@ -1369,7 +1369,7 @@ namespace OpenDental {
 						if(i>0) {
 							clinNames+=", ";
 						}
-						if(Security.CurUser.ClinicIsRestricted) {
+						if(Security.CurrentUser.ClinicIsRestricted) {
 							clinNames+=_listClinics[listClin.SelectedIndices[i]].Abbr;
 						}
 						else {
@@ -1512,7 +1512,7 @@ namespace OpenDental {
 			List<Clinic> listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				for(int i=0;i<listClin.SelectedIndices.Count;i++) {
-					if(Security.CurUser.ClinicIsRestricted) {
+					if(Security.CurrentUser.ClinicIsRestricted) {
 						listClinics.Add(_listClinics[listClin.SelectedIndices[i]]);//we know that the list is a 1:1 to _listClinics
 					}
 					else {
@@ -1528,7 +1528,7 @@ namespace OpenDental {
 					}
 				}
 			}
-			bool hasAllClinics=(!Security.CurUser.ClinicIsRestricted && checkAllClin.Checked);
+			bool hasAllClinics=(!Security.CurrentUser.ClinicIsRestricted && checkAllClin.Checked);
 			DataSet ds=RpProdInc.GetProviderDataForClinics(dateFrom,dateTo,listProvs,listClinics,checkAllProv.Checked,hasAllClinics
 				,checkUnearned.Checked,GetWriteoffType());
 			report.ReportName="Provider P&I";
@@ -1558,7 +1558,7 @@ namespace OpenDental {
 						if(i>0) {
 							clinNames+=", ";
 						}
-						if(Security.CurUser.ClinicIsRestricted) {
+						if(Security.CurrentUser.ClinicIsRestricted) {
 							clinNames+=_listClinics[listClin.SelectedIndices[i]].Abbr;
 						}
 						else {

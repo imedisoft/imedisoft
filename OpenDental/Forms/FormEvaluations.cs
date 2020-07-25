@@ -19,7 +19,7 @@ namespace OpenDental {
 		}
 
 		private void FormEvaluations_Load(object sender,EventArgs e) {
-			_userProv=Providers.GetProv(Security.CurUser.ProvNum);
+			_userProv=Providers.GetProv(Security.CurrentUser.ProvNum);
 			//_userProv will only be allowed to be null if the user is an admin. Checking for null in this block is not necessary.
 			if(!Security.IsAuthorized(Permissions.AdminDentalEvaluations,true)) {
 				//Admins are allowed to look at and edit all evaluations, but they cannot add new evaluations

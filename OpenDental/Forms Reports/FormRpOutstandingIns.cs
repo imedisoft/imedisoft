@@ -878,7 +878,7 @@ namespace OpenDental
 				{
 					long clinicNum = gridMain.SelectedTags<RpOutstandingIns.OutstandingInsClaim>()[0].ClinicNum;
 					//If the user is clinic restricted, only enable 'Got to Account' when the clinicNum matches
-					rightClickMenu.MenuItems[0].Enabled = clinicNum.In(Clinics.GetForUserod(Security.CurUser, true, comboClinics.HqDescription).Select(x => x.ClinicNum));
+					rightClickMenu.MenuItems[0].Enabled = clinicNum.In(Clinics.GetForUserod(Security.CurrentUser, true, comboClinics.HqDescription).Select(x => x.ClinicNum));
 				}
 			});
 			FillCustomTrack();
@@ -1203,7 +1203,7 @@ namespace OpenDental
 					GotoModule.GotoAccount(((RpOutstandingIns.OutstandingInsClaim)gridMain.ListGridRows[index].Tag).PatNum);
 					break;
 				case 1://Assign to Me
-					AssignUserHelper(Security.CurUser.Id);
+					AssignUserHelper(Security.CurrentUser.Id);
 					break;
 				case 2://Assign to User
 					AssignUserHelper(_listClaimSentEditUsers[((MenuItem)sender).Index].Id);
@@ -1442,7 +1442,7 @@ namespace OpenDental
 		private void butMine_Click(object sender, EventArgs e)
 		{
 			FillClinics();
-			ComboUserPickHelper(Security.CurUser.Id);
+			ComboUserPickHelper(Security.CurrentUser.Id);
 		}
 
 		private void ComboDateFilterBy_SelectionChangeCommitted(object sender, EventArgs e)

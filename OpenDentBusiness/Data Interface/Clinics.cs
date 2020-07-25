@@ -193,13 +193,13 @@ namespace OpenDentBusiness{
 					return;//no change
 				}
 				_clinicNum=value;
-				if(Security.CurUser==null) {
+				if(Security.CurrentUser==null) {
 					return;
 				}
 				if(PrefC.GetString(PrefName.ClinicTrackLast)!="User") {
 					return;
 				}
-				List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.ClinicLast);//should only be one.
+				List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.ClinicLast);//should only be one.
 				if(prefs.Count>0) {
 					prefs.ForEach(x => x.Fkey=value);
 					prefs.ForEach(UserOdPrefs.Update);
@@ -207,7 +207,7 @@ namespace OpenDentBusiness{
 				}
 				UserOdPrefs.Insert(
 					new UserOdPref() {
-						UserNum=Security.CurUser.Id,
+						UserNum=Security.CurrentUser.Id,
 						FkeyType=UserOdFkeyType.ClinicLast,
 						Fkey=value,
 					});
@@ -217,20 +217,20 @@ namespace OpenDentBusiness{
 		///<summary>Sets Clinics.ClinicNum. Used when logging on to determines what clinic to start with based on user and workstation preferences.</summary>
 		public static void LoadClinicNumForUser() {
 			_clinicNum=0;//aka headquarters clinic when clinics are enabled.
-			if(!PrefC.HasClinicsEnabled || Security.CurUser==null) {
+			if(!PrefC.HasClinicsEnabled || Security.CurrentUser==null) {
 				return;
 			}
-			List<Clinic> listClinics = Clinics.GetForUserod(Security.CurUser);
+			List<Clinic> listClinics = Clinics.GetForUserod(Security.CurrentUser);
 			switch(PrefC.GetString(PrefName.ClinicTrackLast)) {
 				case "Workstation":
-					if(Security.CurUser.ClinicIsRestricted && Security.CurUser.ClinicNum!=ComputerPrefs.LocalComputer.ClinicNum) {//The user is restricted and it's not the clinic this computer has by default
+					if(Security.CurrentUser.ClinicIsRestricted && Security.CurrentUser.ClinicNum!=ComputerPrefs.LocalComputer.ClinicNum) {//The user is restricted and it's not the clinic this computer has by default
 						//User's default clinic isn't the LocalComputer's clinic, see if they have access to the Localcomputer's clinic, if so, use it.
 						Clinic clinic=listClinics.Find(x => x.ClinicNum==ComputerPrefs.LocalComputer.ClinicNum);
 						if(clinic!=null) {
 							_clinicNum=clinic.ClinicNum;
 						}
 						else {
-							_clinicNum=Security.CurUser.ClinicNum;//Use the user's default clinic if they don't have access to LocalComputer's clinic.
+							_clinicNum=Security.CurrentUser.ClinicNum;//Use the user's default clinic if they don't have access to LocalComputer's clinic.
 						}
 					}
 					else {//The user is not restricted, just use the clinic in the ComputerPref table.
@@ -238,13 +238,13 @@ namespace OpenDentBusiness{
 					}
 					return;//Error
 				case "User":
-					List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.ClinicLast);//should only be one or none.
+					List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.ClinicLast);//should only be one or none.
 					if(prefs.Count==0) {
 						UserOdPref pref =
 							new UserOdPref() {
-								UserNum=Security.CurUser.Id,
+								UserNum=Security.CurrentUser.Id,
 								FkeyType=UserOdFkeyType.ClinicLast,
-								Fkey=Security.CurUser.ClinicNum//default clinic num
+								Fkey=Security.CurrentUser.ClinicNum//default clinic num
 							};
 						UserOdPrefs.Insert(pref);
 						prefs.Add(pref);
@@ -255,8 +255,8 @@ namespace OpenDentBusiness{
 					return;
 				case "None":
 				default:
-					if(listClinics.Any(x => x.ClinicNum==Security.CurUser.ClinicNum)) {
-						_clinicNum=Security.CurUser.ClinicNum;
+					if(listClinics.Any(x => x.ClinicNum==Security.CurrentUser.ClinicNum)) {
+						_clinicNum=Security.CurrentUser.ClinicNum;
 					}
 					break;
 			}
@@ -280,10 +280,10 @@ namespace OpenDentBusiness{
 			}
 			//We want to always upsert a user pref for the user because we will be looking at it for MobileWeb regardless of the preference for 
 			//ClinicTrackLast.
-			List<UserOdPref> UserPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.ClinicLast);//should only be one or none.
+			List<UserOdPref> UserPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.ClinicLast);//should only be one or none.
 			if(UserPrefs.Count==0) {
 				UserOdPref pref=new UserOdPref() {
-					UserNum=Security.CurUser.Id,
+					UserNum=Security.CurrentUser.Id,
 					FkeyType=UserOdFkeyType.ClinicLast,
 					Fkey=Clinics.ClinicNum
 				};

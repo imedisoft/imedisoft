@@ -645,7 +645,7 @@ namespace OpenDental{
 				comboEmailFrom.Items.Add(_listEmailAddresses[i].EmailUsername);
 			}
 			//Add user specific email address if present.
-			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurUser.Id);//can be null
+			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurrentUser.Id);//can be null
 			if(emailAddressMe!=null) {
 				_listEmailAddresses.Insert(0,emailAddressMe);
 				comboEmailFrom.Items.Insert(1,Lan.G(this,"Me")+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
@@ -1595,7 +1595,7 @@ namespace OpenDental{
 			try {
 				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Sending text messages")+"..."
 					,progressBarEventType: ProgBarEventType.TextMsg)));
-				List<SmsToMobile> listSmsToMobiles=SmsToMobiles.SendSmsMany(listTextsToSend,user:Security.CurUser);
+				List<SmsToMobile> listSmsToMobiles=SmsToMobiles.SendSmsMany(listTextsToSend,user:Security.CurrentUser);
 				//listDictPatnumsSkipped[2] tracks errors for patients skipped due to Misc reasons.
 				HandleSmsSent(listSmsToMobiles,listStmtNumsToUpdate,listDictPatnumsSkipped[2]);
 				texted+=listSmsToMobiles.Where(x => x.SmsStatus!=SmsDeliveryStatus.FailNoCharge).Count();

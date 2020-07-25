@@ -457,7 +457,7 @@ namespace OpenDentBusiness{
 		public static long Insert(Fee fee,bool doCheckFeeSchedGroups=true) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			fee.SecUserNumEntry=Security.CurUser.Id;
+			fee.SecUserNumEntry=Security.CurrentUser.Id;
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				//If this fee isn't in a group don't bother checking.
 				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched,fee.ClinicNum)!=null) {
@@ -471,7 +471,7 @@ namespace OpenDentBusiness{
 		public static void InsertMany(List<Fee> listFees,bool doCheckFeeSchedGroups=true) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			listFees.ForEach(x => x.SecUserNumEntry=Security.CurUser.Id);
+			listFees.ForEach(x => x.SecUserNumEntry=Security.CurrentUser.Id);
 			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				FeeSchedGroups.UpsertGroupFees(listFees);
 			}

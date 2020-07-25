@@ -93,7 +93,7 @@ namespace OpenDental {
 			}
 			if(SmsPhones.IsIntegratedTextingEnabled()) {
 				try {
-					SmsToMobiles.SendSmsSingle(patNum,wirelessPhone,message,clinicNum,smsMessageSource,user:Security.CurUser);  //Can pass in 0 as PatNum if no patient selected.
+					SmsToMobiles.SendSmsSingle(patNum,wirelessPhone,message,clinicNum,smsMessageSource,user:Security.CurrentUser);  //Can pass in 0 as PatNum if no patient selected.
 					return true;
 				}
 				catch(Exception ex) {
@@ -139,7 +139,7 @@ namespace OpenDental {
 			commlog.Note=msg;//phone,note
 			commlog.PatNum=patNum;
 			commlog.SentOrReceived=CommSentOrReceived.Sent;
-			commlog.UserNum=Security.CurUser.Id;
+			commlog.UserNum=Security.CurrentUser.Id;
 			commlog.DateTimeEnd=DateTime.Now;
 			Commlogs.Insert(commlog);
 			SecurityLogs.MakeLogEntry(Permissions.CommlogEdit,commlog.PatNum,"Insert Text Message");

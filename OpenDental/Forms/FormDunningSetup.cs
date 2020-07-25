@@ -29,7 +29,7 @@ namespace OpenDental {
 
 		private void FillGrids(bool doRefreshList=false) {
 			if(doRefreshList) {
-				_listAllDunnings=Dunnings.Refresh(Clinics.GetForUserod(Security.CurUser,true).Select(x => x.ClinicNum).ToList());
+				_listAllDunnings=Dunnings.Refresh(Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum).ToList());
 			}
 			List<Dunning> listSubDunnings=_listAllDunnings.FindAll(x => ValidateDunningFilters(x));
 			if(!PrefC.GetBool(PrefName.ShowFeatureSuperfamilies)) {

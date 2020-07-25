@@ -94,11 +94,11 @@ namespace OpenDental {
 			if(EhrProvKeys.GetKeysByFLName(ProvPat.LName,ProvPat.FName).Count==0) {
 				labelProvPat.Text+=" (no ehr provider key entered)";
 			}
-			if(Security.CurUser.ProvNum==0) {
+			if(Security.CurrentUser.ProvNum==0) {
 				labelProvUser.Text="none";
 			}
 			else {
-				Provider provUser=Providers.GetProv(Security.CurUser.ProvNum);
+				Provider provUser=Providers.GetProv(Security.CurrentUser.ProvNum);
 				labelProvUser.Text=Providers.GetLongDesc(provUser.ProvNum);
 				if(EhrProvKeys.GetKeysByFLName(provUser.LName,provUser.FName).Count==0) {
 					labelProvUser.Text+=" (no ehr provider key entered)";
@@ -482,7 +482,7 @@ namespace OpenDental {
 					case EhrMeasureType.CPOE_RadiologyOrdersOnly:
 						//As of v15.4 we started storing radiology orders at the procedure level by flagging the procedure itself as IsCpoe.
 						//Show the radiology order window which will be the best way for the provider to mark "radiology orders" as CPOE.
-						FormRadOrderList FormROL=new FormRadOrderList(Security.CurUser);
+						FormRadOrderList FormROL=new FormRadOrderList(Security.CurrentUser);
 						FormROL.ShowDialog();//Do not use a non-modal window in this case due to needing to refresh the grid after closing.
 						//FormEhrLabOrders FormRad=new FormEhrLabOrders();
 						//FormRad.PatCur=PatCur;

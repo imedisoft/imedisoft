@@ -473,7 +473,7 @@ namespace OpenDental{
 			}
 			if(PrefC.HasClinicsEnabled) {
 				groupPaySettings.Text=Lan.G(this,"Clinic Payment Settings");
-				if(Security.CurUser.ClinicIsRestricted) {
+				if(Security.CurrentUser.ClinicIsRestricted) {
 					//if program link is enabled, disable the enable check box so the restricted user cannot disable for all clinics
 					checkEnabled.Enabled=!_progCur.Enabled;
 				}
@@ -709,7 +709,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a payment type first.");
 				return false;
 			}
-			if(!isAllClinics || !PrefC.HasClinicsEnabled || Security.CurUser.ClinicIsRestricted) {
+			if(!isAllClinics || !PrefC.HasClinicsEnabled || Security.CurrentUser.ClinicIsRestricted) {
 				return true;
 			}
 			//only validate payment types for all clinics if isAllClinics==true and clinics are enabled and the current user is not restricted to a clinic

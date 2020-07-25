@@ -70,7 +70,7 @@ namespace OpenDentBusiness{
 		public static long Insert(ProcTP proc) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			proc.SecUserNumEntry=Security.CurUser.Id;
+			proc.SecUserNumEntry=Security.CurrentUser.Id;
 			return Crud.ProcTPCrud.Insert(proc);
 		}
 

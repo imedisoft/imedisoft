@@ -1060,7 +1060,7 @@ namespace OpenDental{
 			for(int i=0;i<listCategories.Items.Count;i++) {
 				listCategories.SetSelected(i,true);
 			}
-			_listClinics=Clinics.GetForUserod(Security.CurUser);
+			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 			_listProviders=Providers.GetDeepCopy(true);
 			_colorProv=Defs.GetColor(DefCat.FeeColors,Defs.GetByExactName(DefCat.FeeColors,"Provider"));
 			_colorProvClinic=Defs.GetColor(DefCat.FeeColors,Defs.GetByExactName(DefCat.FeeColors,"Provider and Clinic"));

@@ -79,7 +79,7 @@ namespace OpenDental {
 					_listProgramProperties.Add(ppClinicKey);
 				}
 				if(PrefC.HasClinicsEnabled) {
-					foreach(Clinic clinicCur in Clinics.GetAllForUserod(Security.CurUser)) {
+					foreach(Clinic clinicCur in Clinics.GetAllForUserod(Security.CurrentUser)) {
 						if(!listClinicIDs.Exists(x => x.ClinicId==clinicCur.ClinicNum)) {//Only add a program property if it doesn't already exist.
 							ProgramProperty ppClinicID=new ProgramProperty();
 							ppClinicID.ProgramId=_progCur.Id;
@@ -129,7 +129,7 @@ namespace OpenDental {
 			clinicHqModel.ClinicKeyProperty=GetPropertyForClinic(0,Erx.PropertyDescs.ClinicKey);
 			gridProperties.ListGridRows.Add(CreateDoseSpotGridRow(clinicHqModel));//If clinics isn't enabled, this will be the only row in the grid.
 			if(PrefC.HasClinicsEnabled) {
-				foreach(Clinic clinicCur in Clinics.GetAllForUserod(Security.CurUser)) {
+				foreach(Clinic clinicCur in Clinics.GetAllForUserod(Security.CurrentUser)) {
 					if(!checkShowHiddenClinics.Checked && clinicCur.IsHidden) {
 						continue;
 					}

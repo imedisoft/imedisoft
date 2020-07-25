@@ -223,14 +223,14 @@ namespace OpenDentBusiness{
 				return new List<AlertItem>();
 			}
 			long provNum = 0;
-			if (Security.CurUser != null && Userods.IsUserCpoe(Security.CurUser))
+			if (Security.CurrentUser != null && Userods.IsUserCpoe(Security.CurrentUser))
 			{
-				provNum = Security.CurUser.ProvNum;
+				provNum = Security.CurrentUser.ProvNum;
 			}
 			long curUserNum = 0;
-			if (Security.CurUser != null)
+			if (Security.CurrentUser != null)
 			{
-				curUserNum = Security.CurUser.Id;
+				curUserNum = Security.CurrentUser.Id;
 			}
 			string command = "";
 			command = "SELECT * FROM alertitem "

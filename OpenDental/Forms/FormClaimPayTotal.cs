@@ -625,7 +625,7 @@ namespace OpenDental {
 					ClaimSnapshots.CreateClaimSnapshot(_listClaimProcsOld,ClaimSnapshotTrigger.InsPayment,claimCur.ClaimType);
 				}
 			}
-			ClaimTrackings.InsertClaimProcReceived(ClaimProcsToEdit[0].ClaimNum,Security.CurUser.Id);
+			ClaimTrackings.InsertClaimProcReceived(ClaimProcsToEdit[0].ClaimNum,Security.CurrentUser.Id);
 			//Make audit trail entries if writeoff or inspayamt's were changed. The claimprocs are updated outside of this form,
 			//but all of the information we need for audit trail logging lives inside the form so we do it here.
 			MakeAuditTrailEntries();

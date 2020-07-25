@@ -191,7 +191,7 @@ namespace OpenDentBusiness{
 				}
 				//New ortho charts can be created on behalf of another user so only default to the currently logged in user if no UserNum set.
 				if(listIns[i].UserNum==0) {
-					listIns[i].UserNum=Security.CurUser.Id;
+					listIns[i].UserNum=Security.CurrentUser.Id;
 				}
 				Insert(listIns[i]);
 			}

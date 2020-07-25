@@ -34,7 +34,7 @@ namespace OpenDental {
 		///<summary>Indicates whether the "All" option is enabled for the listbox for clinics.</summary>
 		private bool _isAllClinicsEnabled {
 			get{
-				return PrefC.HasClinicsEnabled && !Security.CurUser.ClinicIsRestricted && !PrefC.GetBool(PrefName.EnterpriseApptList);
+				return PrefC.HasClinicsEnabled && !Security.CurrentUser.ClinicIsRestricted && !PrefC.GetBool(PrefName.EnterpriseApptList);
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace OpenDental {
 			SetFilterControlsAndAction(() => FillGrids(),
 				textPatientEnrollmentDays,textInsBenefitEligibilityDays,textAppointmentScheduledDays,textVerifyCarrier);
 			if(PrefC.GetBool(PrefName.InsVerifyDefaultToCurrentUser)) {
-				_verifyUserNum=Security.CurUser.Id;
+				_verifyUserNum=Security.CurrentUser.Id;
 			}
 			if(!PrefC.HasClinicsEnabled) {
 				labelClinic.Visible=false;
@@ -183,7 +183,7 @@ namespace OpenDental {
 			listBoxVerifyRegions.Items.Clear();
 			if(PrefC.HasClinicsEnabled) {
 				_listRegionDefs=Defs.GetDefsForCategory(DefCat.Regions,true);
-				List<Clinic> listClinicsForUser=Clinics.GetForUserod(Security.CurUser);
+				List<Clinic> listClinicsForUser=Clinics.GetForUserod(Security.CurrentUser);
 				if(_listRegionDefs.Count!=0) {
 					_listRegionDefs.RemoveAll(x => !listClinicsForUser.Any(y => y.Region==x.DefNum));
 					listBoxVerifyRegions.Items.Add(Lan.G(this,"All"));
@@ -227,7 +227,7 @@ namespace OpenDental {
 				}
 				indexCur++;
 			}
-			if(!Security.CurUser.ClinicIsRestricted && !_isRegionSelected) {//Show "Unassigned" if user is not restricted and no region is selected.
+			if(!Security.CurrentUser.ClinicIsRestricted && !_isRegionSelected) {//Show "Unassigned" if user is not restricted and no region is selected.
 				//Add Unassigned at the bottom. ClinicNum of 0.
 				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>(Lan.G(this,"Unassigned"),new Clinic { ClinicNum=0 }));
 				if(_listClinicNumsVerifyClinicsFilter.Contains(0)) {

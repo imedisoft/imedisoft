@@ -549,7 +549,7 @@ namespace OpenDentBusiness{
 		public static long Insert(FeeSched feeSched) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			feeSched.SecUserNumEntry=Security.CurUser.Id;
+			feeSched.SecUserNumEntry=Security.CurrentUser.Id;
 			return Crud.FeeSchedCrud.Insert(feeSched);
 		}
 
@@ -563,7 +563,7 @@ namespace OpenDentBusiness{
 		public static bool Sync(List<FeeSched> listNew,List<FeeSched> listOld) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			return Crud.FeeSchedCrud.Sync(listNew,listOld,Security.CurUser.Id);
+			return Crud.FeeSchedCrud.Sync(listNew,listOld,Security.CurrentUser.Id);
 		}
 
 		///<summary>Returns the description of the fee schedule.  Appends (hidden) if the fee schedule has been hidden.</summary>

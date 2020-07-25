@@ -19,8 +19,7 @@ namespace UnitTests.Userods_Tests
 		public void Cleanup()
 		{
 			CredentialsFailedAfterLoginEvent.Fired -= CredentialsFailedAfterLoginEvent_Fired1;
-			Security.CurUser = Userods.GetFirstOrDefault(x => x.UserName == UnitTestUserName);
-			Security.PasswordTyped = UnitTestPassword;
+			Security.CurrentUser = Userods.GetFirstOrDefault(x => x.UserName == UnitTestUserName);
 		}
 
 		private void CredentialsFailedAfterLoginEvent_Fired1(ODEventArgs e)

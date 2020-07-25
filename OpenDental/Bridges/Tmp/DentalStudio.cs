@@ -21,7 +21,7 @@ namespace OpenDental.Bridges
 			string userName = ProgramProperties.GetPropVal(ProgramCur.Id, "UserName (clear to use OD username)");
 			if (userName == "")
 			{//Give the customer the option to use OD usernames.
-				userName = Security.CurUser.UserName;
+				userName = Security.CurrentUser.UserName;
 			}
 			str += Tidy(userName) + " ";
 
@@ -30,7 +30,7 @@ namespace OpenDental.Bridges
 			if (userName == "")
 			{//Give the customer the option to use OD usernames.
 			 //TODO: Dental Studio might need to be contacted or our bridge might need to be enhanced for sending / updating password hashes.
-				userPassword = Security.CurUser.PasswordHash;
+				userPassword = Security.CurrentUser.PasswordHash;
 			}
 			str += Tidy(userPassword) + " ";
 

@@ -36,8 +36,7 @@ namespace CentralManager {
 		}
 
 		private void FormCentralProdInc_Load(object sender,System.EventArgs e) {
-			_userOld=Security.CurUser;
-			_passwordTypedOld=Security.PasswordTyped;
+			_userOld=Security.CurrentUser;
 			textToday.Text=DateTime.Today.ToShortDateString();
 			switch(DailyMonthlyAnnual) {
 				case "Daily":
@@ -968,8 +967,7 @@ namespace CentralManager {
 
 		private void FormCentralProdInc_FormClosing(object sender,FormClosingEventArgs e) {
 			//This window can potentially change the username and password and we want to put them back to what they were before the window was launched.
-			Security.CurUser=_userOld;
-			Security.PasswordTyped=_passwordTypedOld;
+			Security.CurrentUser=_userOld;
 		}
 
 		///<summary>Stores data needed to run the Cemt P&I reports.</summary>

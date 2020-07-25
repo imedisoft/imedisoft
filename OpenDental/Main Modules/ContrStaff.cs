@@ -921,8 +921,8 @@ namespace OpenDental
 			Program progCur=Programs.GetCur(ProgramName.Transworld);
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {
-				listClinicNums=Clinics.GetAllForUserod(Security.CurUser).Select(x => x.ClinicNum).ToList();
-				if(!Security.CurUser.ClinicIsRestricted) {
+				listClinicNums=Clinics.GetAllForUserod(Security.CurrentUser).Select(x => x.ClinicNum).ToList();
+				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClinicNums.Add(0);
 				}
 			}
@@ -1142,7 +1142,7 @@ namespace OpenDental
 				listStatus.Items.Add(Lan.G("enumTimeClockStatus",statusDescript));
 			}
 			for(int i=0;i<_listEmployees.Count;i++) {
-				if(_listEmployees[i].EmployeeNum==Security.CurUser.EmployeeNum) {
+				if(_listEmployees[i].EmployeeNum==Security.CurrentUser.EmployeeNum) {
 					SelectEmpI(i);
 					return;
 				}
@@ -1226,7 +1226,7 @@ namespace OpenDental
 				return;
 			}
 			if(PrefC.GetBool(PrefName.TimecardSecurityEnabled)){
-				if(Security.CurUser.EmployeeNum!=_listEmployees[e.Row].EmployeeNum) {
+				if(Security.CurrentUser.EmployeeNum!=_listEmployees[e.Row].EmployeeNum) {
 					if(!Security.IsAuthorized(Permissions.TimecardsEditAll,true)){
 						SelectEmpI(-1,false);
 						return;

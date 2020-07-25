@@ -198,7 +198,7 @@ namespace Imedisoft.Forms
 
 				// Dump the entire query history into the log file.
 				Storage.WriteAllText(logPath,
-					$"Query Monitor Log - {DateTime.Now}, OD User: {Security.CurUser.UserName}, Computer: {Environment.MachineName}\r\n" +
+					$"Query Monitor Log - {DateTime.Now}, OD User: {Security.CurrentUser.UserName}, Computer: {Environment.MachineName}\r\n" +
 					$"{string.Join("\r\n", queriesDictionary.Values.Select(x => x.ToString()))}");
 			}
 			catch (ODException exception)

@@ -48,7 +48,7 @@ namespace OpenDental {
 			row.Cells.Add(userPrefDefault.ValueString);
 			row.Tag=userPrefDefault;
 			gridUserProperties.ListGridRows.Add(row);
-			foreach(Clinic clinicCur in Clinics.GetForUserod(Security.CurUser)) {
+			foreach(Clinic clinicCur in Clinics.GetForUserod(Security.CurrentUser)) {
 				row=new GridRow();
 				UserOdPref userPrefCur=_listUserPref.Find(x => x.ClinicNum==clinicCur.ClinicNum);
 				//wasn't in list, check Db and create a new one if needed

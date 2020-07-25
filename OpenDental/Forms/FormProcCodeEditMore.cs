@@ -29,7 +29,7 @@ namespace OpenDental {
 
 		///<summary></summary>
 		private void FillAndSortListFees() {
-			List<long> listClinicNums=Clinics.GetForUserod(Security.CurUser,true).Select(x => x.ClinicNum).ToList();
+			List<long> listClinicNums=Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum).ToList();
 			_listFees=Fees.GetFeesForCode(_procCode.CodeNum,listClinicNums);//already sorted
 		}
 

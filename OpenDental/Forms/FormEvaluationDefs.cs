@@ -110,7 +110,7 @@ namespace OpenDental {
 			evalNew.DateEval=DateTime.Today;
 			evalNew.EvalTitle=evalDef.EvalTitle;
 			evalNew.GradingScaleNum=evalDef.GradingScaleNum;
-			evalNew.InstructNum=Security.CurUser.ProvNum;
+			evalNew.InstructNum=Security.CurrentUser.ProvNum;
 			evalNew.SchoolCourseNum=evalDef.SchoolCourseNum;
 			evalNew.EvaluationNum=Evaluations.Insert(evalNew);
 			List<EvaluationCriterionDef> evalCritDefs=EvaluationCriterionDefs.GetAllForEvaluationDef(evalDef.EvaluationDefNum);

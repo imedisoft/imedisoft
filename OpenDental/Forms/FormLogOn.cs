@@ -1,158 +1,163 @@
+using OpenDental;
 using OpenDentBusiness;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-using CodeBase;
 
-namespace OpenDental {
-	///<summary></summary>
-	public partial class FormLogOn : ODForm {
-		///<summary>Used when temporarily switching users. Currently only used when overriding signed notes.
-		///The user will not be logged on (Security.CurUser is untouched) but CurUserSimpleSwitch will be set to the desired user.</summary>
-		private bool _isSimpleSwitch;
-		///<summary>Gets set to the user that just successfully logged in when in Simple Switch mode.</summary>
-		public Userod CurUserSimpleSwitch;
-		///<summary>If set AND available, this will be the user automatically selected when the form opens.</summary>
-		private string _userNameAutoSelect;
-		///<summary>This form will not always be able to directly refresh the userod cache (Security) so it will be up to calling methods.</summary>
-		private bool _refreshSecurityCache=false;
-		///<summary>Set to true when the calling method has indicated that it will take care of any Security cache refreshing.</summary>
-		private bool _doRefreshSecurityCache=false;
+namespace Imedisoft.Forms
+{
+    public partial class FormLogOn : FormBase
+	{
+		private readonly bool isTemporary;
 
-		///<summary>Will be true when the calling method needs to refresh the security cache themselves due to changes.</summary>
-		public bool RefreshSecurityCache {
-			get {
-				return _refreshSecurityCache;
-			}
-		}
+		/// <summary>
+		/// Gets the user that has logged on.
+		/// </summary>
+		public Userod User { get; private set; }
 
-		///<summary>Set userNumSelected to automatically select the corresponding user in the list (if available).
-		///Set isSimpleSwitch true if temporarily switching users for some reason.  This will leave Security.CurUser alone and will instead
-		///indicate which user was chosen / successfully logged in via CurUserSimpleSwitch.</summary>
-		public FormLogOn(long userNumSelected=0,bool isSimpleSwitch=false,bool doRefreshSecurityCache=true) {
+        /// <summary>
+		/// Will be true when the calling method needs to refresh the security cache themselves due to changes.
+		/// </summary>
+        public bool RefreshSecurityCache { get; private set; } = false;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FormLogOn"/> class.
+		/// </summary>
+		/// <param name="isTemporary">
+		///		<para>
+		///			Set to true if this is a temporary log on. User in scenario's where we 
+		///			temporarily need to switch to another user.
+		///		</para>
+		///		<para>
+		///			When performing a temporary login the <see cref="Security.CurrentUser"/> is not
+		///			updated, instead the logged in user should be accessed through the 
+		///			<see cref="User"/> property of this form.
+		///		</para>
+		/// </param>
+		public FormLogOn(bool isTemporary = false)
+		{
 			InitializeComponent();
-			Plugins.HookAddCode(this,"FormLogOn.InitializeComponent_end");
-			Lan.F(this);
-			if(userNumSelected > 0) {
-				_userNameAutoSelect=Userods.GetUserNameNoCache(userNumSelected);
-			}
-			else if(Security.CurUser!=null) {
-				_userNameAutoSelect=Security.CurUser.UserName;
-			}
-			_isSimpleSwitch=isSimpleSwitch;
-			_doRefreshSecurityCache=doRefreshSecurityCache;
-			if(!isSimpleSwitch) {//Not a temporary login.
-				try {
-					//Use office default theme after we have the database data and until the user logs in below (the user may have a them override set).
-					ModuleBar.SetIcons(PrefC.GetBool(PrefName.ColorTheme));
-					//ODColorTheme.SetTheme((EnumTheme)PrefC.GetInt(PrefName.ColorTheme));
-				}
-				catch {
-					//try/catch in case you are trying to convert from an older version of OD and need to update the DB.
-				}
-			}
+
+			this.isTemporary = isTemporary;
 		}
 
-		private void FormLogOn_Load(object sender,EventArgs e) {
-			TextBox textSelectOnLoad=textPassword;
-			if(PrefC.GetBool(PrefName.UserNameManualEntry)) {
-				listUser.Visible=false;
-				textUser.Visible=true;
-				textSelectOnLoad=textUser;//Focus should start with user name text box.
+		private void FormLogOn_Load(object sender, EventArgs e)
+		{
+			if (PrefC.GetBool(PrefName.UserNameManualEntry))
+			{
+				usersListBox.Visible = false;
+				userTextBox.Visible = true;
+				userTextBox.Focus();
 			}
-			else {//Show a list of users.
-				//Only show the show CEMT user check box if not manually typing user names and there are CEMT users present in the db.
-				checkShowCEMTUsers.Visible=Userods.HasUsersForCEMTNoCache();
+			else
+			{
+				showCentralUsersCheckBox.Visible = Userods.HasUsersForCEMTNoCache();
 			}
+
 			FillListBox();
-			this.Focus();//Attempted fix, customers had issue with UI not defaulting focus to this form on startup.
-			textSelectOnLoad.Select();//Give focus to appropriate text box.
-			Plugins.HookAddCode(this,"FormLogOn.Load_end",_isSimpleSwitch);
+
+			Focus();
 		}
 
-		private void listUser_MouseUp(object sender,MouseEventArgs e) {
-			textPassword.Focus();
+		private void UsersListBox_MouseUp(object sender, MouseEventArgs e)
+		{
+			passwordTextBox.Focus();
 		}
 
-		///<summary>Fills the User list with non-hidden, non-CEMT user names.  Only shows non-hidden CEMT users if Show CEMT users is checked.</summary>
-		private void FillListBox() {
-			listUser.BeginUpdate();
-			listUser.Items.Clear();
-			List<string> listUserNames=Userods.GetUserNamesNoCache(checkShowCEMTUsers.Checked);
-			foreach(string userName in listUserNames) {
-				listUser.Items.Add(userName);
-				if(_userNameAutoSelect!=null && _userNameAutoSelect.Trim().ToLower()==userName.Trim().ToLower()) {
-					listUser.SelectedIndex=listUser.Items.Count-1;
-				}
+		private void FillListBox()
+		{
+			usersListBox.BeginUpdate();
+			usersListBox.Items.Clear();
+
+			var currentUserName = Security.CurrentUser?.UserName;
+
+			var userNames = Userods.GetUserNamesNoCache(showCentralUsersCheckBox.Checked);
+
+			foreach (string userName in userNames)
+			{
+				usersListBox.Items.Add(userName);
+				if (userName.Equals(currentUserName, StringComparison.CurrentCultureIgnoreCase))
+                {
+					usersListBox.SelectedItem = userName;
+                }
 			}
-			if(listUser.SelectedIndex==-1 && listUser.Items.Count>0){//It is possible there are no users in the list if all users are CEMT users.
-				listUser.SelectedIndex=0;
+
+			if (usersListBox.SelectedItem == null && 
+				usersListBox.Items.Count > 0)
+			{
+				usersListBox.SelectedIndex = 0;
 			}
-			listUser.EndUpdate();
+
+			usersListBox.EndUpdate();
 		}
 
-		private void checkShowCEMTUsers_CheckedChanged(object sender,EventArgs e) {
+		private void ShowCentralUsersCheckBox_CheckedChanged(object sender, EventArgs e)
+		{
 			FillListBox();
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			bool isEcw=Programs.UsingEcwTightOrFullMode();
-			string userName="";
-			if(PrefC.GetBool(PrefName.UserNameManualEntry)) {
-				//Check the user name using ToLower and Trim because Open Dental is case insensitive and does not allow white-space in regards to user names.
-				userName=listUser.Items.Cast<string>().FirstOrDefault(x => x.Trim().ToLower()==textUser.Text.Trim().ToLower());
+		private void AcceptButton_Click(object sender, EventArgs e)
+		{
+            string userName;
+
+            if (PrefC.GetBool(PrefName.UserNameManualEntry))
+			{
+				userName = userTextBox.Text.Trim();
+				if (userName.Length == 0)
+                {
+					ShowError("You have to enter your username.");
+
+					return;
+                }
 			}
-			else {
-				userName=listUser.SelectedItem?.ToString();
+			else
+			{
+				userName = usersListBox.SelectedItem?.ToString();
+				if (string.IsNullOrEmpty(userName))
+                {
+					ShowError("You have to select a user.");
+
+					return;
+                }
 			}
-			if(string.IsNullOrEmpty(userName)) {
-				MessageBox.Show("Login failed");
+
+			var password = passwordTextBox.Text;
+
+			try
+			{
+				User = Userods.CheckUserAndPassword(userName, password);
+			}
+			catch (Exception exception)
+			{
+				ShowError(exception.Message);
+
 				return;
 			}
-			string passwordTyped=textPassword.Text;
 
-			Userod userCur=null;
+			if (!isTemporary)
+			{
+				Security.CurrentUser = User;
 
+				if (PrefC.GetBool(PrefName.PasswordsMustBeStrong) && PrefC.GetBool(PrefName.PasswordsWeakChangeToStrong))
+				{
+					if (Userods.IsPasswordStrong(password) != "")
+					{
+						ShowInfo("You must change your password to a strong password due to the current Security settings.");
 
-
-					try {
-						userCur=Userods.CheckUserAndPassword(userName,passwordTyped,isEcw);
-					}
-					catch(Exception ex) {
-						MessageBox.Show(ex.Message);
-						return;
-					}
-				
-			
-			//successful login.
-			if(_isSimpleSwitch) {
-				CurUserSimpleSwitch=userCur;
-			}
-			else {//Not a temporary login.
-				Security.CurUser=userCur;//Need to set for SecurityL.ChangePassword and calls.
-				if(PrefC.GetBool(PrefName.PasswordsMustBeStrong) && PrefC.GetBool(PrefName.PasswordsWeakChangeToStrong)){
-					if(Userods.IsPasswordStrong(passwordTyped)!="") {//Password is not strong
-						MessageBox.Show("You must change your password to a strong password due to the current Security settings.");
-						if(!SecurityL.ChangePassword(true,_doRefreshSecurityCache)) {
-							return;//Failed password update.
+						if (!SecurityL.ChangePassword(true))
+						{
+							return;
 						}
-						_refreshSecurityCache=true;//Indicate to calling method that they should manually refresh the Security cache.
+
+						RefreshSecurityCache = true;
 					}
 				}
-				Security.IsUserLoggedIn=true;
-				//Jason approved always storing the cleartext password that the user typed in 
-				//since this is necessary for Reporting Servers over middle tier and was already happening when a user logged in over middle tier.
-				Security.PasswordTyped=passwordTyped;
-				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,Lan.G(this,"User:")+" "+Security.CurUser.UserName+" "+Lan.G(this,"has logged on."));
+				
+				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurrentUser.UserName + " has logged on.");
+				
 				UserOdPrefL.SetThemeForUserIfNeeded();
 			}
-			Plugins.HookAddCode(this,"FormLogOn.butOK_Click_end");
-			DialogResult=DialogResult.OK;
-		}
 
-		private void butExit_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+			DialogResult = DialogResult.OK;
 		}
 	}
 }

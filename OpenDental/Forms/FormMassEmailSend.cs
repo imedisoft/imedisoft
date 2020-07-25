@@ -88,7 +88,7 @@ namespace OpenDental {
 				result=ReplaceTags.ReplaceMisc(bracketReplacement);
 			}
 			if(result==bracketReplacement) {
-				result=ReplaceTags.ReplaceUser(bracketReplacement,Security.CurUser);
+				result=ReplaceTags.ReplaceUser(bracketReplacement,Security.CurrentUser);
 			}
 			if(result==bracketReplacement) {
 				result=Appointments.ReplaceAppointment(bracketReplacement,apt);
@@ -105,7 +105,7 @@ namespace OpenDental {
 			message=Patients.ReplacePatient(message,pat);
 			message=Patients.ReplaceGuarantor(message,guarantor);
 			message=ReplaceTags.ReplaceMisc(message);
-			message=ReplaceTags.ReplaceUser(message,Security.CurUser);
+			message=ReplaceTags.ReplaceUser(message,Security.CurrentUser);
 			message=Appointments.ReplaceAppointment(message,apt);
 			message=Clinics.ReplaceOffice(message,clinicPat);
 			return message;

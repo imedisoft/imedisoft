@@ -49,7 +49,7 @@ namespace OpenDental {
 			}
 			for(int i=0;i<listProvsKeyed.Count;i++) {
 				comboProv.Items.Add(listProvsKeyed[i].GetLongDesc());
-				if(Security.CurUser.ProvNum==listProvsKeyed[i].ProvNum) {
+				if(Security.CurrentUser.ProvNum==listProvsKeyed[i].ProvNum) {
 					comboProv.SelectedIndex=i;
 				}
 			}

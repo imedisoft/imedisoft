@@ -31,7 +31,7 @@ namespace Imedisoft.Forms
 		{
 			InitializeComponent();
 
-			showClinicStateWarning(Security.CurUser.ClinicIsRestricted);
+			showClinicStateWarning(Security.CurrentUser.ClinicIsRestricted);
 			alphabeticalCheckBox.Checked = PrefC.GetBool(PrefName.ClinicListIsAlphabetical);
 			programId = programCur.Id;
 			List<Clinic> listVisibleButtonsForClinics = listUserClinics.Select(x => x.Copy()).ToList();//Copy so we don't affect the source list.
@@ -70,7 +70,7 @@ namespace Imedisoft.Forms
 		{
 			//Get the users total list of unrestricted clinics, then acquire their list of ProgramProperties so we can tell which PL buttons 
 			//should be hidden based upon the ProgramProperty PropertyDesc indicator. 
-			List<Clinic> listUserClinics = Clinics.GetForUserod(Security.CurUser, doIncludeHQ: true, hqClinicName: "HQ");
+			List<Clinic> listUserClinics = Clinics.GetForUserod(Security.CurrentUser, doIncludeHQ: true, hqClinicName: "HQ");
 			//Get the cached list of button hiding ProgramProperties for clinics this user has access to, i.e. the "Old" list.
 			List<ProgramProperty> listHiddenForUserOld = ProgramProperties.GetForProgram(programId)
 				.Where(x => x.Name == ProgramProperties.PropertyDescs.ClinicHideButton

@@ -209,7 +209,7 @@ namespace OpenDentBusiness.Eclaims
 				for (int j = 0; j < queueItems.Count; j++)
 				{
 					Etrans etrans = Etranss.SetClaimSentOrPrinted(queueItems[j].ClaimNum, queueItems[j].PatNum,
-						clearinghouseClin.HqClearinghouseNum, etype, batchNum, Security.CurUser.Id);
+						clearinghouseClin.HqClearinghouseNum, etype, batchNum, Security.CurrentUser.Id);
 					etrans.EtransMessageTextNum = etransMsgText.EtransMessageTextNum;
 					Etranss.Update(etrans);
 					//Now we need to update our cache of claims to reflect the change that took place in the database above in Etranss.SetClaimSentOrPrinted()

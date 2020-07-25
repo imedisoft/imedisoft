@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		private void FormAutoNoteCompose_Load(object sender,EventArgs e) {
 			_listAutoNoteCatDefs=Defs.GetDefsForCategory(DefCat.AutoNoteCats,true);
-			_userOdCurPref=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.AutoNoteExpandedCats).FirstOrDefault();
+			_userOdCurPref=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.AutoNoteExpandedCats).FirstOrDefault();
 			FillListTree();
 		}
 
@@ -434,7 +434,7 @@ namespace OpenDental {
 				.Where(x => x.Tag is Def && x.IsExpanded).Select(x => ((Def)x.Tag).DefNum).Where(x => x>0).ToList();
 			if(_userOdCurPref==null) {
 				UserOdPrefs.Insert(new UserOdPref() {
-					UserNum=Security.CurUser.Id,
+					UserNum=Security.CurrentUser.Id,
 					FkeyType=UserOdFkeyType.AutoNoteExpandedCats,
 					ValueString=string.Join(",",listExpandedDefNums)
 				});

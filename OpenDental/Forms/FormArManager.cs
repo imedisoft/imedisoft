@@ -44,7 +44,7 @@ namespace OpenDental
 			_listBillTypesNoColl=billTypeDefs.Where(x => x.ItemValue.ToLower()!="c" && x.ItemValue.ToLower()!="ce").Select(x => x.Copy()).ToList();//This probably needs to change
 			_listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
-				_listClinics.AddRange(Clinics.GetForUserod(Security.CurUser,true,Lan.G(this,"Unassigned")).OrderBy(x => x.ClinicNum!=0).ThenBy(x => x.ItemOrder));
+				_listClinics.AddRange(Clinics.GetForUserod(Security.CurrentUser,true,Lan.G(this,"Unassigned")).OrderBy(x => x.ClinicNum!=0).ThenBy(x => x.ItemOrder));
 			}
 			else {//clinics disabled
 				_listClinics.Add(Clinics.GetPracticeAsClinicZero(Lan.G(this,"Unassigned")));
@@ -56,7 +56,7 @@ namespace OpenDental
 				_dictClinicProgProps=ProgramProperties.GetForProgram(_tsiProg.Id)
 					.FindAll(x => _listClinics.Any(y => y.ClinicNum==x.ClinicId))//will contain the HQ "clinic" if clinics are disabled or user unrestricted
 					.GroupBy(x => x.ClinicId).ToDictionary(x => x.Key,x => x.ToList());
-				if(PrefC.HasClinicsEnabled && !Security.CurUser.ClinicIsRestricted && _dictClinicProgProps.ContainsKey(0)) {
+				if(PrefC.HasClinicsEnabled && !Security.CurrentUser.ClinicIsRestricted && _dictClinicProgProps.ContainsKey(0)) {
 					//if clinics are enabled and the user is not restricted, any clinic without prog props will use the HQ prog props for the sftp connection
 					_listClinics.FindAll(x => !_dictClinicProgProps.ContainsKey(x.ClinicNum)).ForEach(x => _dictClinicProgProps[x.ClinicNum]=_dictClinicProgProps[0]);
 				}
@@ -656,7 +656,7 @@ namespace OpenDental
 					continue;//Only test the HQ clinic (ClinicNum=0) if clinics are not enabled
 				}
 				if(!_dictClinicProgProps.TryGetValue(clinicNum,out List<ProgramProperty> listProgProps) //if the clinic doesn't have prog props, use HQ's
-					&& (clinicNum==0 || !PrefC.HasClinicsEnabled || Security.CurUser.ClinicIsRestricted || !_dictClinicProgProps.TryGetValue(0,out listProgProps)))
+					&& (clinicNum==0 || !PrefC.HasClinicsEnabled || Security.CurrentUser.ClinicIsRestricted || !_dictClinicProgProps.TryGetValue(0,out listProgProps)))
 				{
 					listClinicsSkipped.Add(clinicNum);
 					continue;
@@ -1404,7 +1404,7 @@ namespace OpenDental
 						}
 						dictClinicNumListTransLogs[clinicNum].Add(new TsiTransLog() {
 							PatNum=pAgingCur.PatNum,
-							UserNum=Security.CurUser.Id,
+							UserNum=Security.CurrentUser.Id,
 							TransType=TsiTransType.RI,
 							//TransDateTime=DateTime.Now,//set on insert, not editable by user
 							//DemandType=TsiDemandType.Accelerator,//only used for placement messages
@@ -1427,7 +1427,7 @@ namespace OpenDental
 						dictClinicPlacementMsgs[clinicNum].Add(pAgingCur.PatNum,msg);
 						TsiTransLog logCur=new TsiTransLog() {
 							PatNum=pAgingCur.PatNum,
-							UserNum=Security.CurUser.Id,
+							UserNum=Security.CurrentUser.Id,
 							TransType=TsiTransType.PL,
 							//TransDateTime=DateTime.Now,//set on insert, not editable by user
 							DemandType=demandType,
@@ -1989,7 +1989,7 @@ namespace OpenDental
 					}
 					dictClinicNumListTransLogs[clinicNum].Add(new TsiTransLog() {
 						PatNum=pAgingCur.PatNum,
-						UserNum=Security.CurUser.Id,
+						UserNum=Security.CurrentUser.Id,
 						TransType=transType,
 						//TransDateTime=DateTime.Now,//set on insert, not editable by user
 						//DemandType=TsiDemandType.Accelerator,//only valid for placement msgs

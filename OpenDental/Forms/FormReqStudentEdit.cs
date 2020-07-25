@@ -319,7 +319,7 @@ namespace OpenDental{
 		private void FormReqStudentEdit_Load(object sender, System.EventArgs e) {
 			//There should only be two types of users who are allowed to get this far:
 			//Students editing their own req, and users with setup perm.  But we will double check.
-			Provider provUser=Providers.GetProv(Security.CurUser.ProvNum);
+			Provider provUser=Providers.GetProv(Security.CurrentUser.ProvNum);
 			if(provUser!=null && !provUser.IsInstructor) {//A student is logged in
 				//the student only has permission to view/attach/detach their own requirements
 				if(provUser.ProvNum!=ReqCur.ProvNum) {

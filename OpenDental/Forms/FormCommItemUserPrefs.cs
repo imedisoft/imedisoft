@@ -21,14 +21,14 @@ namespace OpenDental {
 		}
 
 		private void FormCommItemUserPrefs_Load(object sender,EventArgs e) {
-			if(Security.CurUser==null || Security.CurUser.Id < 1) {
+			if(Security.CurrentUser==null || Security.CurrentUser.Id < 1) {
 				MessageBox.Show("Invalid user currently logged in.  No user preferences can be saved.");
 				DialogResult=DialogResult.Abort;
 				return;
 			}
-			_userNumCur=Security.CurUser.Id;
+			_userNumCur=Security.CurrentUser.Id;
 			//Add the user name of the user currently logged in to the title of this window much like we do for FormOpenDental.
-			this.Text+=" {"+Security.CurUser.UserName+"}";
+			this.Text+=" {"+Security.CurrentUser.UserName+"}";
 			_userOdPrefClearNote=UserOdPrefs.GetByUserAndFkeyType(_userNumCur,UserOdFkeyType.CommlogPersistClearNote).FirstOrDefault();
 			_userOdPrefEndDate=UserOdPrefs.GetByUserAndFkeyType(_userNumCur,UserOdFkeyType.CommlogPersistClearEndDate).FirstOrDefault();
 			_userOdPrefUpdateDateTimeNewPat=UserOdPrefs.GetByUserAndFkeyType(_userNumCur,UserOdFkeyType.CommlogPersistUpdateDateTimeWithNewPatient).FirstOrDefault();

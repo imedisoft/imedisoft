@@ -59,7 +59,7 @@ namespace OpenDental {
 				Cursor=Cursors.WaitCursor;
 				return false;
 			}
-			SmsToMobiles.SendSmsSingle(patComm.PatNum,patComm.SmsPhone,message,clinicNum,_messageSource,true,Security.CurUser);
+			SmsToMobiles.SendSmsSingle(patComm.PatNum,patComm.SmsPhone,message,clinicNum,_messageSource,true,Security.CurrentUser);
 			return true;
 		}
 

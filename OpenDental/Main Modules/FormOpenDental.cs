@@ -560,7 +560,7 @@ namespace OpenDental
 			//If the user is restricted to a clinic(s), and the computerpref clinic is not one of the user's restricted clinics, the user's clinic will be selected
 			//If the user is not restricted, or if the user is restricted but has access to the computerpref clinic, the computerpref clinic will be selected
 			//The ClinicNum will determine which view is loaded, either from the computerpref table or from the userodapptview table
-			if (PrefC.HasClinicsEnabled && Security.CurUser != null)
+			if (PrefC.HasClinicsEnabled && Security.CurrentUser != null)
 			{//If block must be run before StartCacheFillForFees() so correct clinic filtration occurs.
 				Clinics.LoadClinicNumForUser();
 				RefreshMenuClinics();
@@ -1609,7 +1609,7 @@ namespace OpenDental
 			message.PatNum = CurPatNum;
 			Patient pat = Patients.GetPat(CurPatNum);
 			message.ToAddress = pat.Email;
-			EmailAddress selectedAddress = EmailAddresses.GetNewEmailDefault(Security.CurUser.Id, pat.ClinicNum);
+			EmailAddress selectedAddress = EmailAddresses.GetNewEmailDefault(Security.CurrentUser.Id, pat.ClinicNum);
 			message.FromAddress = selectedAddress.GetFrom();
 			FormEmailMessageEdit FormE = new FormEmailMessageEdit(message, selectedAddress);
 			FormE.IsNew = true;
@@ -1753,7 +1753,7 @@ namespace OpenDental
 			commlog.CommType = Commlogs.GetTypeAuto(CommItemTypeAuto.MISC);
 			commlog.Mode_ = CommItemMode.Phone;
 			commlog.SentOrReceived = CommSentOrReceived.Received;
-			commlog.UserNum = Security.CurUser.Id;
+			commlog.UserNum = Security.CurrentUser.Id;
 			commlog.IsNew = true;
 			return commlog;
 		}
@@ -1924,7 +1924,7 @@ namespace OpenDental
 			task.KeyNum = CurPatNum;
 			task.ObjectType = TaskObjectType.Patient;
 			task.TaskListNum = FormT.ListSelectedLists[0];
-			task.UserNum = Security.CurUser.Id;
+			task.UserNum = Security.CurrentUser.Id;
 			FormTaskEdit FormTE = new FormTaskEdit(task, taskOld);
 			FormTE.IsNew = true;
 			FormTE.Show();
@@ -1932,7 +1932,7 @@ namespace OpenDental
 
 		private void menuTask_Popup(object sender, EventArgs e)
 		{
-			menuItemTaskNewForUser.Text = Lan.G(this, "for") + " " + Security.CurUser.UserName;
+			menuItemTaskNewForUser.Text = Lan.G(this, "for") + " " + Security.CurrentUser.UserName;
 			menuItemTaskReminders.Text = Lan.G(this, "Reminders");
 			int reminderTaskNewCount = GetNewReminderTaskCount();
 			if (reminderTaskNewCount > 0)
@@ -2346,11 +2346,11 @@ namespace OpenDental
 		private void RefreshMenuClinics()
 		{
 			menuClinics.MenuItems.Clear();
-			List<Clinic> listClinics = Clinics.GetForUserod(Security.CurUser);
+			List<Clinic> listClinics = Clinics.GetForUserod(Security.CurrentUser);
 			if (listClinics.Count < 30)
 			{ //This number of clinics will fit in a 990x735 form.
 				MenuItem menuItem;
-				if (!Security.CurUser.ClinicIsRestricted)
+				if (!Security.CurrentUser.ClinicIsRestricted)
 				{
 					menuItem = new MenuItem(Lan.G(this, "Headquarters"), menuClinic_Click);
 					menuItem.Tag = new Clinic();//Having a ClinicNum of 0 will make OD act like 'Headquarters'.  This allows the user to see unassigned appt views, all operatories, etc.
@@ -2389,7 +2389,7 @@ namespace OpenDental
 		{
 			FormClinics FormC = new FormClinics();
 			FormC.IsSelectionMode = true;
-			if (!Security.CurUser.ClinicIsRestricted)
+			if (!Security.CurrentUser.ClinicIsRestricted)
 			{
 				FormC.IncludeHQInList = true;
 			}
@@ -3027,7 +3027,7 @@ namespace OpenDental
 						return;
 					}
 				}
-				if (Security.CurUser == null)
+				if (Security.CurrentUser == null)
 				{
 					//User must be at the log in screen, so no need to process signals. We will need to look for shutdown signals since the last refreshed time when the user attempts to log in.
 					_hasSignalProcessingPaused = true;
@@ -3056,16 +3056,16 @@ namespace OpenDental
 				//Currently do nothing.
 			}
 			#region Task Preprocessing
-			if (_tasksUserNum != Security.CurUser.Id //The user has changed since the last signal tick was run (when logoff then logon),
+			if (_tasksUserNum != Security.CurrentUser.Id //The user has changed since the last signal tick was run (when logoff then logon),
 				|| _listReminderTasks == null || _listNormalTaskNums == null)//or first time processing signals since the program started.
 			{
 				// TODO: Logger.LogToPath("CurUser change", LogPath.Signals, LogPhase.Start);
-				_tasksUserNum = Security.CurUser.Id;
-				List<Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(Security.CurUser.Id, Clinics.ClinicNum);//Get all tasks pertaining to current user.
+				_tasksUserNum = Security.CurrentUser.Id;
+				List<Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(Security.CurrentUser.Id, Clinics.ClinicNum);//Get all tasks pertaining to current user.
 				_listNormalTaskNums = new List<long>();
 				_listReminderTasks = new List<Task>();
 				_listReminderTasksOverLimit = new List<Task>();
-				List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id, UserOdFkeyType.TaskListBlock);
+				List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
 				if (_dictAllTaskLists == null || listRefreshedTasks.Exists(x => !_dictAllTaskLists.ContainsKey(x.TaskListNum)))
 				{//Refresh dict if needed.
 					_dictAllTaskLists = TaskLists.GetAll().ToDictionary(x => x.TaskListNum);
@@ -3125,7 +3125,7 @@ namespace OpenDental
 					listSignals.Add(sig);
 				}
 				UserControlTasks.RefreshTasksForAllInstances(listSignals);
-				List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id, UserOdFkeyType.TaskListBlock);
+				List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
 				foreach (Task reminderTask in listDueReminderTasks)
 				{
 					TaskPopupHelper(reminderTask, listBlockedTaskLists);
@@ -3134,7 +3134,7 @@ namespace OpenDental
 			}
 			else if (_listReminderTasksOverLimit.Count > 0)
 			{//Try to display any due reminders that previously exceeded our limit of FormTaskEdit to show.
-				List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id, UserOdFkeyType.TaskListBlock);
+				List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
 				for (int i = _listReminderTasksOverLimit.Count - 1; i >= 0; i--)
 				{//TaskPopupHelper
 					TaskPopupHelper(_listReminderTasksOverLimit[i], listBlockedTaskLists);
@@ -3414,20 +3414,20 @@ namespace OpenDental
 				{//We care about notes and task sender only if it's not a reminder.
 					if (notesForThisTask.Count == 0)
 					{//'sender' is the usernum on the task and it's not a reminder
-						if (taskPopup.UserNum == Security.CurUser.Id)
+						if (taskPopup.UserNum == Security.CurrentUser.Id)
 						{
 							return;
 						}
 					}
 					else
 					{//'sender' is the user on the last added note
-						if (notesForThisTask[notesForThisTask.Count - 1].UserNum == Security.CurUser.Id)
+						if (notesForThisTask[notesForThisTask.Count - 1].UserNum == Security.CurrentUser.Id)
 						{
 							return;
 						}
 					}
 				}
-				List<TaskList> listUserTaskListSubsTrunk = TaskLists.RefreshUserTrunk(Security.CurUser.Id);//Get the list of directly subscribed tasklists.
+				List<TaskList> listUserTaskListSubsTrunk = TaskLists.RefreshUserTrunk(Security.CurrentUser.Id);//Get the list of directly subscribed tasklists.
 				List<long> listUserTaskListSubNums = listUserTaskListSubsTrunk.Select(x => x.TaskListNum).ToList();
 				bool isUserSubscribed = listUserTaskListSubNums.Contains(taskPopup.TaskListNum);//First check if user is directly subscribed.
 				if (!isUserSubscribed)
@@ -4105,7 +4105,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			if (Security.CurUser == null)
+			if (Security.CurrentUser == null)
 			{
 				Environment.Exit(0);//shouldn't be possible, would have to have a user logged in to get here, but just in case, exit the program
 			}
@@ -4116,7 +4116,7 @@ namespace OpenDental
 			try
 			{
 				SetTimersAndThreads(false);//Safe to stop timers since this method was invoked on the main thread if required.
-				Security.IsUserLoggedIn = false;
+				Security.CurrentUser = null;
 				string errorMsg = (string)e.Tag;
 				_formLoginFailed = new FormLoginFailed(errorMsg);
 				_formLoginFailed.ShowDialog();
@@ -4198,7 +4198,7 @@ namespace OpenDental
 		private void menuItemLogOff_Click(object sender, System.EventArgs e)
 		{
 			NullUserCheck("menuItemLogOff_Click");
-			if (!AreYouSurePrompt(Security.CurUser.Id, Lan.G(this, "Are you sure you would like to log off?")))
+			if (!AreYouSurePrompt(Security.CurrentUser.Id, Lan.G(this, "Are you sure you would like to log off?")))
 			{
 				return;
 			}
@@ -4230,7 +4230,7 @@ namespace OpenDental
 					{
 						UserOdPrefs.Insert(new UserOdPref()
 						{
-							UserNum = Security.CurUser.Id,
+							UserNum = Security.CurrentUser.Id,
 							FkeyType = UserOdFkeyType.SuppressLogOffMessage
 						});
 					}
@@ -4254,11 +4254,11 @@ namespace OpenDental
 
 		private void menuItemUserEmailAddress_Click(object sender, EventArgs e)
 		{
-			EmailAddress emailAddressCur = EmailAddresses.GetForUser(Security.CurUser.Id);
+			EmailAddress emailAddressCur = EmailAddresses.GetForUser(Security.CurrentUser.Id);
 			FormEmailAddressEdit formEAE;
 			if (emailAddressCur == null)
 			{
-				formEAE = new FormEmailAddressEdit(Security.CurUser.Id);
+				formEAE = new FormEmailAddressEdit(Security.CurrentUser.Id);
 			}
 			else
 			{
@@ -4610,7 +4610,7 @@ namespace OpenDental
 				return;
 			}
 			//Users that are clinic restricted are not allowed to setup Fee Schedule Groups.
-			if (Security.CurUser.ClinicIsRestricted)
+			if (Security.CurrentUser.ClinicIsRestricted)
 			{
 				MessageBox.Show("You are restricted from accessing certain clinics.  Only user without clinic restrictions can edit Fee Schedule Groups.");
 				return;
@@ -5115,9 +5115,9 @@ namespace OpenDental
 			}
 			//clinics is enabled
 			long clinicNumOld = Clinics.ClinicNum;
-			if (Security.CurUser.ClinicIsRestricted)
+			if (Security.CurrentUser.ClinicIsRestricted)
 			{
-				Clinics.ClinicNum = Security.CurUser.ClinicNum;
+				Clinics.ClinicNum = Security.CurrentUser.ClinicNum;
 			}
 			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicNum);
 			SetSmsNotificationText(doUseSignalInterval: (clinicNumOld == Clinics.ClinicNum));//Clinic selection changed, update sms notifications.
@@ -5281,7 +5281,7 @@ namespace OpenDental
 			//this menu item is only visible if the clinics show feature is enabled (!EasyNoClinics)
 			if (Clinics.GetDesc(Clinics.ClinicNum) == "")
 			{//will be empty string if ClinicNum is not valid, in case they deleted the clinic
-				Clinics.ClinicNum = Security.CurUser.ClinicNum;
+				Clinics.ClinicNum = Security.CurrentUser.ClinicNum;
 				SetSmsNotificationText(doUseSignalInterval: true);//Update sms notification text.
 				Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicNum);
 			}
@@ -5493,14 +5493,14 @@ namespace OpenDental
 			Cursor = Cursors.WaitCursor;
 			//Check if the user has permission to view all providers in production and income reports
 			bool hasAllProvsPermission = Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true);
-			if (!hasAllProvsPermission && Security.CurUser.ProvNum == 0)
+			if (!hasAllProvsPermission && Security.CurrentUser.ProvNum == 0)
 			{
 				if (!MsgBox.Show(MsgBoxButtons.OKCancel, "The current user must be a provider or have the 'All Providers' permission to view provider reports. Continue?"))
 				{
 					return;
 				}
 			}
-			_formDashboardEditTab = new OpenDentalGraph.FormDashboardEditTab(Security.CurUser.ProvNum, !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true)) { IsEditMode = false };
+			_formDashboardEditTab = new OpenDentalGraph.FormDashboardEditTab(Security.CurrentUser.ProvNum, !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true)) { IsEditMode = false };
 			_formDashboardEditTab.FormClosed += new FormClosedEventHandler((object senderF, FormClosedEventArgs eF) => { _formDashboardEditTab = null; });
 			Cursor = Cursors.Default;
 			_formDashboardEditTab.Show();
@@ -5540,7 +5540,7 @@ namespace OpenDental
 
 		private void menuItemReportsUnfinalizedPay_Click(object sender, EventArgs e)
 		{
-			if (!GroupPermissions.HasReportPermission(DisplayReports.ReportNames.UnfinalizedInsPay, Security.CurUser))
+			if (!GroupPermissions.HasReportPermission(DisplayReports.ReportNames.UnfinalizedInsPay, Security.CurrentUser))
 			{
 				MessageBox.Show("You do not have permission to run this report.");
 				return;
@@ -5893,7 +5893,7 @@ namespace OpenDental
 
 		private void menuItemEvaluations_Click(object sender, EventArgs e)
 		{
-			if (!Security.IsAuthorized(Permissions.AdminDentalEvaluations, true) && (Security.CurUser.ProvNum == 0 || Providers.GetProv(Security.CurUser.ProvNum).SchoolClassNum != 0))
+			if (!Security.IsAuthorized(Permissions.AdminDentalEvaluations, true) && (Security.CurrentUser.ProvNum == 0 || Providers.GetProv(Security.CurrentUser.ProvNum).SchoolClassNum != 0))
 			{
 				MessageBox.Show("Only Instructors may view or edit evaluations.");
 				return;
@@ -5982,7 +5982,7 @@ namespace OpenDental
 
 		private void menuItemReqStudents_Click(object sender, EventArgs e)
 		{
-			Provider prov = Providers.GetProv(Security.CurUser.ProvNum);
+			Provider prov = Providers.GetProv(Security.CurrentUser.ProvNum);
 			if (prov == null)
 			{
 				MessageBox.Show("The current user is not attached to a provider. Attach the user to a provider to gain access to this feature.");
@@ -6175,7 +6175,7 @@ namespace OpenDental
 				//This order of operations helps avoid unnecessary UI flicker and slowness because we don't actually close the entire Dashboard control.
 				actionOpenNewDashboard = new Action(() =>
 				{
-					UserOdPref userPrefDashboard = UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id, UserOdFkeyType.Dashboard).FirstOrDefault();
+					UserOdPref userPrefDashboard = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.Dashboard).FirstOrDefault();
 					List<UserControlDashboardWidget> listOpenWidgets = userControlPatientDashboard.ListOpenWidgets;
 					userControlPatientDashboard.AddWidget(sheetDefWidget);
 					foreach (UserControlDashboardWidget widget in listOpenWidgets)
@@ -6194,20 +6194,20 @@ namespace OpenDental
 				{
 					UserOdPref userPrefDashboard = new UserOdPref()
 					{//If Patient Dashboard was not open, so we need a new user pref for the current user.
-						UserNum = Security.CurUser.Id,
+						UserNum = Security.CurrentUser.Id,
 						Fkey = sheetDefWidget.SheetDefNum,
 						FkeyType = UserOdFkeyType.Dashboard,
 						ClinicNum = Clinics.ClinicNum
 					};
-					if (Security.CurUser.Id != 0)
+					if (Security.CurrentUser.Id != 0)
 					{//If the userNum is 0 for the following command it will delete all Patient Dashboard UserOdPrefs!
 					 //if any Patient Dashboard UserOdPrefs already exists for this user, remove them. This could happen due to a previous concurrency bug.
-						UserOdPrefs.DeleteForValueString(Security.CurUser.Id, UserOdFkeyType.Dashboard, "");
+						UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, "");
 					}
 					userPrefDashboard.UserOdPrefNum = UserOdPrefs.Insert(userPrefDashboard);//Pre-insert for PK.
 					try
 					{
-						InitDashboards(Security.CurUser.Id, userPrefDashboard);
+						InitDashboards(Security.CurrentUser.Id, userPrefDashboard);
 					}
 					catch (NotImplementedException niex)
 					{
@@ -6238,10 +6238,10 @@ namespace OpenDental
 				this.InvokeIfRequired(() =>
 				{
 					MessageBox.Show("Dashboards are disabled when Tasks are docked to the right.");
-					if (Security.CurUser.Id != 0)
+					if (Security.CurrentUser.Id != 0)
 					{//If the userNum is 0 for the following command it will delete all Patient Dashboard UserOdPrefs!
 					 //Stop the Patient Dashboard from attempting to open on next login.
-						UserOdPrefs.DeleteForValueString(Security.CurUser.Id, UserOdFkeyType.Dashboard, "");
+						UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, "");
 					}
 				});
 				return;
@@ -6262,10 +6262,10 @@ namespace OpenDental
 			userControlPatientDashboard.Initialize(sheetDefDashboard, () => { this.InvokeIfRequired(() => LayoutControls()); }
 				, () =>
 				{//What to do when the user closes the dashboard.
-					if (Security.CurUser.Id != 0)
+					if (Security.CurrentUser.Id != 0)
 					{//If the userNum is 0 for the following command it will delete all Patient Dashboard UserOdPrefs!
 					 //Stop the Patient Dashboard from attempting to open on next login.
-						UserOdPrefs.DeleteForValueString(Security.CurUser.Id, UserOdFkeyType.Dashboard, "");
+						UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, "");
 					}
 					RefreshMenuDashboards();
 					if (ContrAppt2.Visible)
@@ -6586,12 +6586,12 @@ namespace OpenDental
 						List<FormRadOrderList> listFormROLs = Application.OpenForms.OfType<FormRadOrderList>().ToList();
 						if (listFormROLs.Count > 0)
 						{
-							listFormROLs[0].RefreshRadOrdersForUser(Security.CurUser);
+							listFormROLs[0].RefreshRadOrdersForUser(Security.CurrentUser);
 							listFormROLs[0].BringToFront();
 						}
 						else
 						{
-							FormRadOrderList FormROL = new FormRadOrderList(Security.CurUser);
+							FormRadOrderList FormROL = new FormRadOrderList(Security.CurrentUser);
 							FormROL.Show();
 							FormROL.FormClosed += this.alertFormClosingHelper;
 						}
@@ -6680,7 +6680,7 @@ namespace OpenDental
 		private void AlertReadsHelper(List<long> listAlertItemNums)
 		{
 			listAlertItemNums.RemoveAll(x => _listAlertReads.Exists(y => y.AlertItemId == x));//Remove all the ones the user has already read.
-			listAlertItemNums.ForEach(x => AlertReads.Insert(new AlertRead(x, Security.CurUser.Id)));
+			listAlertItemNums.ForEach(x => AlertReads.Insert(new AlertRead(x, Security.CurrentUser.Id)));
 		}
 		#endregion Alerts
 
@@ -6689,7 +6689,7 @@ namespace OpenDental
 		{
 			menuItemReportsStandard.MenuItems.Clear();
 			menuItemReportsUserQuery.MenuItems.Clear();
-			if (Security.CurUser == null)
+			if (Security.CurrentUser == null)
 			{
 				return;
 			}
@@ -6698,7 +6698,7 @@ namespace OpenDental
 			if (listDisplayReports.Count > 0)
 			{
 				List<long> listReportPermissionFkeys = GroupPermissions.GetPermsForReports()
-					.Where(x => Security.CurUser.IsInUserGroup(x.UserGroupNum))
+					.Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupNum))
 					.Select(x => x.FKey)
 					.ToList();
 				listDisplayReports.RemoveAll(x => !listReportPermissionFkeys.Contains(x.DisplayReportNum));//Remove reports user does not have permission for
@@ -7118,9 +7118,9 @@ namespace OpenDental
 
 			//Users are allowed to use eCW tight integration without command line.  They can manually launch Open Dental.
 			//We always want to trigger login window for eCW tight, even if no username was passed in.
-			if ((Programs.UsingEcwTightOrFullMode() && Security.CurUser == null)
+			if ((Programs.UsingEcwTightOrFullMode() && Security.CurrentUser == null)
 				//Or if a username was passed in and it's different from the current user
-				|| (userName != "" && (Security.CurUser == null || Security.CurUser.UserName != userName)))
+				|| (userName != "" && (Security.CurrentUser == null || Security.CurrentUser.UserName != userName)))
 			{
 				//Use the username and passhash that was passed in to determine which user to log in
 				//log out------------------------------------
@@ -7133,7 +7133,7 @@ namespace OpenDental
 				if (user == null)
 				{
 					ShowLogOn();
-					user = Security.CurUser.Copy();
+					user = Security.CurrentUser.Copy();
 				}
 				//Can't use Userods.CheckPassword, because we only have the hashed password.
 				if (passHash != user.PasswordHash || !Programs.UsingEcwTightOrFullMode())
@@ -7144,8 +7144,8 @@ namespace OpenDental
 				else
 				{//password accepted and using eCW tight.
 				 //this part usually happens in the logon window
-					Security.CurUser = user.Copy();
-					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurUser.UserName + " " + Lan.G(this, "has logged on via command line."));
+					Security.CurrentUser = user.Copy();
+					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on via command line."));
 				}
 				moduleBar.SelectedIndex = Security.GetModule(moduleBar.IndexOf(LastModule));
 				moduleBar.Invalidate();
@@ -7263,23 +7263,13 @@ namespace OpenDental
 		private void LogOnOpenDentalUser(string odUser, string odPassword)
 		{
 			//CurUser will be set if using web service because login from ChooseDatabase window.
-			if (Security.CurUser != null)
+			if (Security.CurrentUser != null)
 			{
 				CheckForPasswordReset();
-				Security.IsUserLoggedIn = true;
-				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurUser.UserName + " " + Lan.G(this, "has logged on."));
+				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on."));
 				return;
 			}
 			UserOdPrefL.SetThemeForUserIfNeeded();
-			#region eCW Tight or Full
-			//Leave Security.CurUser null if a user was passed in on the commandline.  If starting OD manually, it continues below.
-			if (Programs.UsingEcwTightOrFullMode() && odUser != "")
-			{
-				//Purposefully leave Security.CurUser as null.
-				Security.IsUserLoggedIn = true;//This might be wrong.  We set to true for backward compatibility.
-				return;
-			}
-			#endregion
 			#region Command Line Args
 			//Both a username and password was passed in via command line arguments.
 			if (odUser != "" && odPassword != "")
@@ -7287,7 +7277,7 @@ namespace OpenDental
 				try
 				{
 					bool isEcwTightOrFullMode = Programs.UsingEcwTightOrFullMode();
-					Security.CurUser = Userods.CheckUserAndPassword(odUser, odPassword, isEcwTightOrFullMode);
+					Security.CurrentUser = Userods.CheckUserAndPassword(odUser, odPassword, isEcwTightOrFullMode);
 					UserOdPrefL.SetThemeForUserIfNeeded();
 				}
 				catch (Exception ex)
@@ -7296,11 +7286,11 @@ namespace OpenDental
 					Application.Exit();
 					return;
 				}
-				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurUser.UserName + " " + Lan.G(this, "has logged on via command line."));
+				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on via command line."));
 			}
 			#endregion
 			#region Good Old-fashioned Log On
-			if (Security.CurUser == null)
+			if (Security.CurrentUser == null)
 			{//Security.CurUser could be set if valid command line arguments were passed in.
 				#region Admin User No Password
 				if (!Userods.HasSecurityAdminUserNoCache())
@@ -7312,10 +7302,10 @@ namespace OpenDental
 				long userNumFirstAdminNoPass = Userods.GetFirstSecurityAdminUserNumNoPasswordNoCache();
 				if (userNumFirstAdminNoPass > 0)
 				{
-					Security.CurUser = Userods.GetUserNoCache(userNumFirstAdminNoPass);
+					Security.CurrentUser = Userods.GetUserNoCache(userNumFirstAdminNoPass);
 					CheckForPasswordReset();
 					UserOdPrefL.SetThemeForUserIfNeeded();
-					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurUser.UserName + " " + Lan.G(this, "has logged on."));
+					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on."));
 				}
 				#endregion
 				#region Domain Login
@@ -7343,7 +7333,6 @@ namespace OpenDental
 							domainGuid != domainGuidPref)
 						{
 							ShowLogOn();
-							Security.IsUserLoggedIn = true;
 							return;
 						}
 						SerializableDictionary<long, string> dictDomainUserNumsAndNames = Userods.GetUsersByDomainUserNameNoCache(Environment.UserName);
@@ -7357,10 +7346,10 @@ namespace OpenDental
 							box.ShowDialog();
 							if (box.DialogResult == DialogResult.OK)
 							{
-								Security.CurUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.ElementAt(box.SelectedIndex));
+								Security.CurrentUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.ElementAt(box.SelectedIndex));
 								CheckForPasswordReset();
 								UserOdPrefL.SetThemeForUserIfNeeded();
-								SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurUser.UserName + " "
+								SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " "
 									+ Lan.G(this, "has logged on automatically via ActiveDirectory."));
 							}
 							else
@@ -7370,17 +7359,16 @@ namespace OpenDental
 						}
 						else
 						{ //log on automatically if only one user is linked to current domain user
-							Security.CurUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.First());
+							Security.CurrentUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.First());
 							CheckForPasswordReset();
 							UserOdPrefL.SetThemeForUserIfNeeded();
-							SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurUser.UserName + " "
+							SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " "
 									+ Lan.G(this, "has logged on automatically via ActiveDirectory."));
 						}
 					}
 					catch
 					{
 						ShowLogOn();
-						Security.IsUserLoggedIn = true;
 						return;
 					}
 				}
@@ -7393,13 +7381,12 @@ namespace OpenDental
 				#endregion
 			}
 			#endregion
-			Security.IsUserLoggedIn = true;//User is guaranteed to be logged in at this point.
 		}
 
 		///<summary>Show the log on window.</summary>
 		private void ShowLogOn()
 		{
-            FormLogOn_ = new FormLogOn(doRefreshSecurityCache: false);
+            FormLogOn_ = new FormLogOn();
 			FormLogOn_.ShowDialog(this);
 			if (FormLogOn_.DialogResult != DialogResult.OK)
 			{
@@ -7415,39 +7402,42 @@ namespace OpenDental
 			}
 		}
 
-		///<summary>Checks to see if the currently logged-in user needs to reset their password.
-		///If they do, then this method will force the user to reset the password otherwise the program will exit.</summary>
+		/// <summary>
+		/// Checks to see if the currently logged-in user needs to reset their password.
+		/// If they do, then this method will force the user to reset the password otherwise the program will exit.
+		/// </summary>
 		private void CheckForPasswordReset()
 		{
-			if (Security.CurUser == null)
-			{
-				return;//There are a lot of bug submissions where we are trying to check if a null user needs a password reset.
-			}
+			if (Security.CurrentUser == null) return;
+
 			try
 			{
-				if (Security.CurUser.IsPasswordResetRequired)
+				if (Security.CurrentUser.IsPasswordResetRequired)
 				{
-					FormUserPassword FormUP = new FormUserPassword(false, Security.CurUser.UserName, true);
-					FormUP.ShowDialog();
-					if (FormUP.DialogResult == DialogResult.Cancel)
-					{//Shouldn't be possible
-						Cursor = Cursors.Default;
-						Application.Exit();
-					}
-					bool isPasswordStrong = FormUP.PasswordIsStrong;
-					try
-					{
-						Security.CurUser.IsPasswordResetRequired = false;
-						Userods.Update(Security.CurUser);
-						Userods.UpdatePassword(Security.CurUser, FormUP.PasswordHash, isPasswordStrong);
-						Security.PasswordTyped = FormUP.PasswordTyped;//Update the last typed in for middle tier refresh
-						Security.CurUser = Userods.GetUserNoCache(Security.CurUser.Id);//UpdatePassword() changes multiple fields.  Refresh from db.
-					}
-					catch (Exception ex)
-					{
-						MessageBox.Show(ex.Message);
-					}
-				}
+                    using var formUserPassword = new FormUserPassword(Security.CurrentUser.UserName, true);
+
+                    if (formUserPassword.ShowDialog() == DialogResult.Cancel) // Shouldn't be possible
+                    {
+                        Cursor = Cursors.Default;
+
+                        Application.Exit();
+                    }
+
+                    bool isPasswordStrong = formUserPassword.PasswordIsStrong;
+                    try
+                    {
+                        Security.CurrentUser.IsPasswordResetRequired = false;
+
+                        Userods.Update(Security.CurrentUser);
+                        Userods.UpdatePassword(Security.CurrentUser, formUserPassword.PasswordHash, isPasswordStrong);
+
+                        Security.CurrentUser = Userods.GetUserNoCache(Security.CurrentUser.Id);//UpdatePassword() changes multiple fields.  Refresh from db.
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
 			}
 			finally
 			{
@@ -7455,8 +7445,8 @@ namespace OpenDental
 				//This catches domain logins, middle-tier, regular login, and logging in with passwords disabled.
 				try
 				{
-					Security.CurUser.DateTLastLogin = DateTime.Now;
-					Userods.Update(Security.CurUser);//Unfortunately there is no update(new,old) for Userods yet due to comlexity.
+					Security.CurrentUser.DateTLastLogin = DateTime.Now;
+					Userods.Update(Security.CurrentUser);//Unfortunately there is no update(new,old) for Userods yet due to comlexity.
 				}
 				catch (Exception ex)
 				{
@@ -7689,20 +7679,19 @@ namespace OpenDental
 			}
 			if (isForced)
 			{
-				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurUser.UserName + " has auto logged off.");
+				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurrentUser.UserName + " has auto logged off.");
 			}
 			else
 			{
-				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurUser.UserName + " has logged off.");
+				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurrentUser.UserName + " has logged off.");
 			}
 			Clinics.LogOff();
-			Userod oldUser = Security.CurUser;
-			Security.CurUser = null;
+			Userod oldUser = Security.CurrentUser;
+			Security.CurrentUser = null;
 			_listReminderTasks = null;
 			_listNormalTaskNums = null;
 			ContrAppt2.RefreshReminders(new List<Task>());
 			RefreshTasksNotification();
-			Security.IsUserLoggedIn = false;
 			Text = PatientL.GetMainTitle(null, 0);
 			SetTimersAndThreads(false);//Safe to stop timers since this method was invoked on the main thread if required.
 			userControlPatientDashboard.CloseDashboard(true);
@@ -7710,7 +7699,7 @@ namespace OpenDental
 
 			//If a different user logs on and they have clinics enabled, and they don't want data to persist, then clear the patient drop down history
 			//since the current user may not have permission to access patients from the same clinic(s) as the old user
-			if (oldUser.Id == Security.CurUser.Id || !PrefC.HasClinicsEnabled)
+			if (oldUser.Id == Security.CurrentUser.Id || !PrefC.HasClinicsEnabled)
 			{
 				//continue //we do not need to blank out patient or menu
 			}
@@ -7722,7 +7711,7 @@ namespace OpenDental
 			else
 			{
 				//Preserve data if new user is allowed to access the same clinics
-				List<Clinic> listClinicsForUser = Clinics.GetAllForUserod(Security.CurUser);
+				List<Clinic> listClinicsForUser = Clinics.GetAllForUserod(Security.CurrentUser);
 				List<Patient> listMenuPatsLim = PatientL.GetPatientsLimFromMenu();
 				foreach (Patient patLim in listMenuPatsLim)
 				{
@@ -7767,7 +7756,7 @@ namespace OpenDental
 		///notify HQ with additional information when a null Security.CurUser is detected.  Does nothing if CurUser is not null.</summary>
 		private void NullUserCheck(string methodName)
 		{
-			if (Security.CurUser != null)
+			if (Security.CurrentUser != null)
 			{
 				return;
 			}
@@ -7793,7 +7782,7 @@ namespace OpenDental
 			//CurUser will be null if Open Dental is already in a 'logged off' state.  Check Security.IsUserLoggedIn as well because Middle Tier does not 
 			//set CurUser to null when logging off.
 			//Also catches the case where Open Dental has NEVER connected to a database yet and checking PrefC would throw an exception (no db conn).
-			if (Security.CurUser == null || !Security.IsUserLoggedIn)
+			if (Security.CurrentUser == null || !Security.IsUserLoggedIn)
 			{
 				return;
 			}
@@ -7828,9 +7817,9 @@ namespace OpenDental
 
 		private void FormOpenDental_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (e.CloseReason == CloseReason.UserClosing && Security.CurUser != null && Security.IsUserLoggedIn)
+			if (e.CloseReason == CloseReason.UserClosing && Security.CurrentUser != null && Security.IsUserLoggedIn)
 			{
-				if (!AreYouSurePrompt(Security.CurUser.Id, "Are you sure you would like to close?"))
+				if (!AreYouSurePrompt(Security.CurrentUser.Id, "Are you sure you would like to close?"))
 				{
 					e.Cancel = true;
 					return;
@@ -7902,11 +7891,11 @@ namespace OpenDental
 
 			ODThread.QuitSyncThreadsByGroupName(0, "");
 
-			if (Security.CurUser != null)
+			if (Security.CurrentUser != null)
 			{
 				try
 				{
-					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurUser.UserName + " has logged off.");
+					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurrentUser.UserName + " has logged off.");
 					Clinics.LogOff();
 				}
 				catch

@@ -15,7 +15,7 @@ namespace UnitTests.OrthoCases_Tests {
 		[TestMethod]
 		public void OrthoCases_Activate_ActivateAnOrthoCaseAndDeactivateOthersForPat() {
 			Userod user=UserodT.CreateUser();
-			Security.CurUser=user;
+			Security.CurrentUser=user;
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			Procedure bandingProc1=ProcedureT.CreateProcedure(pat,"D8080",ProcStat.TP,"",0);
 			Procedure bandingProc2=ProcedureT.CreateProcedure(pat,"D8080",ProcStat.TP,"",0);
@@ -61,7 +61,7 @@ namespace UnitTests.OrthoCases_Tests {
 			Prefs.UpdateString(PrefName.OrthoDebondCodes,"D8070");
 			Prefs.UpdateString(PrefName.OrthoVisitCodes,"D8060");
 			Userod user=UserodT.CreateUser();
-			Security.CurUser=user;
+			Security.CurrentUser=user;
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			Procedure bandingProc=ProcedureT.CreateProcedure(pat,"D8080",ProcStat.C,"",0);
 			Procedure visitProc=ProcedureT.CreateProcedure(pat,"D8060",ProcStat.C,"",0);
@@ -91,7 +91,7 @@ namespace UnitTests.OrthoCases_Tests {
 		public void OrthoCases_UpdateDatesByLinkedProc_UpdateBandingAndDebondDates() {
 			Prefs.UpdateString(PrefName.OrthoDebondCodes,"D8070");
 			Userod user=UserodT.CreateUser();
-			Security.CurUser=user;
+			Security.CurrentUser=user;
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			Procedure bandingProc=ProcedureT.CreateProcedure(pat,"D8080",ProcStat.C,"",0);
 			Procedure debondProc=ProcedureT.CreateProcedure(pat,"D8070",ProcStat.C,"",0,procDate:DateTime.Today.AddDays(2));
@@ -135,10 +135,10 @@ namespace UnitTests.OrthoCases_Tests {
 			Assert.AreEqual(orthoCase.IsActive,false);
 			Assert.AreEqual(listAllProcLinks.Count,3);
 			Assert.AreEqual(debondProcLink.ProcNum,debondProc.ProcNum);
-			Assert.AreEqual(debondProcLink.SecUserNumEntry,Security.CurUser.Id);
+			Assert.AreEqual(debondProcLink.SecUserNumEntry,Security.CurrentUser.Id);
 			Assert.AreEqual(listVisitProcLinks.Count,1);
 			Assert.AreEqual(listVisitProcLinks[0].ProcNum,visitProc.ProcNum);
-			Assert.AreEqual(listVisitProcLinks[0].SecUserNumEntry,Security.CurUser.Id);
+			Assert.AreEqual(listVisitProcLinks[0].SecUserNumEntry,Security.CurrentUser.Id);
 		}
 
 		///<summary>Make sure that fees for procedures linked to orthocases are set correctly.</summary>
@@ -243,7 +243,7 @@ namespace UnitTests.OrthoCases_Tests {
 			orthoPlanLinkPatPayPlan.OrthoCaseNum=orthoCaseNum;
 			orthoPlanLinkPatPayPlan.FKey=payPlanDynamic1.PayPlanNum;
 			orthoPlanLinkPatPayPlan.IsActive=true;
-			orthoPlanLinkPatPayPlan.SecUserNumEntry=Security.CurUser.Id;
+			orthoPlanLinkPatPayPlan.SecUserNumEntry=Security.CurrentUser.Id;
 			orthoPlanLinkPatPayPlan.OrthoPlanLinkNum=OrthoPlanLinks.Insert(orthoPlanLinkPatPayPlan);
 			//Link visitProc1 to ortho case and confirm that it linked to payPlanDynamic1.
 			OrthoCaseProcLinkingData orthoCaseProcLinkingData=new OrthoCaseProcLinkingData(pat.PatNum);

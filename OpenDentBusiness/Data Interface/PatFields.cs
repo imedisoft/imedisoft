@@ -52,7 +52,7 @@ namespace OpenDentBusiness {
 		public static long Insert(PatField patField) {
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			patField.SecUserNumEntry=Security.CurUser.Id;
+			patField.SecUserNumEntry=Security.CurrentUser.Id;
 			return Crud.PatFieldCrud.Insert(patField);
 		}
 

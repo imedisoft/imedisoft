@@ -302,7 +302,7 @@ namespace OpenDental{
 			}
 			comboHours.Text="1";
 			MinutesDisabled=0;
-			if(PopupCur.UserNum != Security.CurUser.Id 
+			if(PopupCur.UserNum != Security.CurrentUser.Id 
 				&& !Security.IsAuthorized(Permissions.PopupEdit,true)) 
 			{
 				textDescription.ReadOnly=true;
@@ -318,7 +318,7 @@ namespace OpenDental{
 					Popups.Insert(popupArchive);
 					PopupCur.Description=textDescription.Text;
 					PopupCur.DateTimeEntry=DateTime.Now;
-					PopupCur.UserNum=Security.CurUser.Id;
+					PopupCur.UserNum=Security.CurrentUser.Id;
 					Popups.Update(PopupCur);
 				}
 			}

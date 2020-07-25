@@ -370,7 +370,7 @@ namespace OpenDental
 			}
 			//Rows
 			gridMobileAppDevices.ListGridRows.Clear();
-			List<MobileAppDevice> listDevicesToShow=MobileAppDevices.GetForUser(Security.CurUser);
+			List<MobileAppDevice> listDevicesToShow=MobileAppDevices.GetForUser(Security.CurrentUser);
 			if(_clinicNumEClipboardTab>0) {
 				listDevicesToShow.RemoveAll(x => x.ClinicNum!=_clinicNumEClipboardTab);
 			}
@@ -426,7 +426,7 @@ namespace OpenDental
 			//bool isClinicSignedUp=EClipboardDisplayAsEnabled();
 			bool isClinicSignedUp=MobileAppDevices.IsClinicSignedUpForEClipboard(_clinicNumEClipboardTab);
 			if(PrefC.HasClinicsEnabled && _clinicNumEClipboardTab==0) {
-				isClinicSignedUp=Clinics.GetForUserod(Security.CurUser).Any(x => MobileAppDevices.IsClinicSignedUpForEClipboard(x.ClinicNum));
+				isClinicSignedUp=Clinics.GetForUserod(Security.CurrentUser).Any(x => MobileAppDevices.IsClinicSignedUpForEClipboard(x.ClinicNum));
 			}
 			bool notUsingDefaults=_clinicNumEClipboardTab==0 || !checkEClipboardUseDefaults.Checked;
 			bool enableSheets=checkEClipboardCreateMissingForms.Checked;

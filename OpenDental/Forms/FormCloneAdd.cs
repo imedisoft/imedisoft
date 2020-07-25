@@ -87,7 +87,7 @@ namespace OpenDental {
 		private void FillClinicComboBoxes() {
 			_dictSpecialtyClinics=new Dictionary<long,List<Clinic>>();
 			//Fill the list of clinics for this user.
-			List<Clinic> listClinicsForUser=Clinics.GetForUserod(Security.CurUser);
+			List<Clinic> listClinicsForUser=Clinics.GetForUserod(Security.CurrentUser);
 			//Make a deep copy of the list of clinics so that we can filter down to the clinics that have no specialty specified if all are hidden.
 			List<Clinic> listClinicsNoSpecialty=listClinicsForUser.Select(x => x.Copy()).ToList();
 			//Fill the list of defLinks used by clones of this patient.

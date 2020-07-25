@@ -204,7 +204,7 @@ namespace Imedisoft.Forms
 		/// </summary>
 		private void DisableUIElementsBasedOnClinicRestriction()
 		{
-			if (PrefC.HasClinicsEnabled && Security.CurUser.ClinicIsRestricted)
+			if (PrefC.HasClinicsEnabled && Security.CurrentUser.ClinicIsRestricted)
 			{//Clinics are Enabled and the user is restricted.
 			 //TODO: change this logic to be explicit instead of implicit (i.e get a list of all controls we want to explicitly disable.)
 				List<Control> listEnabled = new List<Control>() {
@@ -377,7 +377,7 @@ namespace Imedisoft.Forms
 
 		private void ClinicsButton_Click(object sender, EventArgs e)
 		{
-			var clinics = Clinics.GetForUserod(Security.CurUser, doIncludeHQ: true, hqClinicName: "HQ");
+			var clinics = Clinics.GetForUserod(Security.CurrentUser, doIncludeHQ: true, hqClinicName: "HQ");
 			var clinicIds = clinics.Select(c => c.ClinicNum).ToList();
 
 			var properties = 

@@ -408,7 +408,7 @@ namespace OpenDental{
 
 		private void Add_Click(){
 			Transaction trans=new Transaction();
-			trans.UserNum=Security.CurUser.Id;
+			trans.UserNum=Security.CurrentUser.Id;
 			Transactions.Insert(trans);//we now have a TransactionNum, and datetimeEntry has been set
 			FormTransactionEdit FormT=new FormTransactionEdit(trans.TransactionNum,_acctCur.Id);
 			FormT.IsNew=true;

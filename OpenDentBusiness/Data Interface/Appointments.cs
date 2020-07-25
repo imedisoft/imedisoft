@@ -2441,7 +2441,7 @@ namespace OpenDentBusiness
 				procCur.BaseUnits=procCodeCur.BaseUnits;
 				procCur.DiagnosticCode=PrefC.GetString(PrefName.ICD9DefaultForNewProcs);
 				procCur.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used.
-				if(Userods.IsUserCpoe(Security.CurUser)) {
+				if(Userods.IsUserCpoe(Security.CurrentUser)) {
 					//This procedure is considered CPOE because the provider is the one that has added it.
 					procCur.IsCpoe=true;
 				}
@@ -2470,7 +2470,7 @@ namespace OpenDentBusiness
 				appt.SecUserNumEntry=secUserNum;
 			}
 			else {//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-				appt.SecUserNumEntry=Security.CurUser.Id;
+				appt.SecUserNumEntry=Security.CurrentUser.Id;
 			}
 			//make sure all fields are properly filled:
 			if(appt.Confirmed==0){
@@ -2964,7 +2964,7 @@ namespace OpenDentBusiness
 		///Returns true if a change was made, otherwise false.</summary>
 		public static bool Sync(List<Appointment> listNew,List<Appointment> listOld,long patNum,long userNum=0,bool isOpMerge=false) {
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			userNum=Security.CurUser.Id;
+			userNum=Security.CurrentUser.Id;
 			bool isChanged=Crud.AppointmentCrud.Sync(listNew,listOld,userNum);
 			if(isChanged) {
 				if(isOpMerge) { //If this is operatory merge the list could be very long.  Just send a generalized, invalid appt signal, this shouldn't happen often anyway.

@@ -31,7 +31,7 @@ namespace OpenDental{
 				checkAllClinics.Checked=true;
 				listBoxClinic.Visible=true;
 				listBoxClinic.SelectedIndices.Clear();
-				_listClinics=Clinics.GetForUserod(Security.CurUser,(!Security.CurUser.ClinicIsRestricted),"Unassigned");
+				_listClinics=Clinics.GetForUserod(Security.CurrentUser,(!Security.CurrentUser.ClinicIsRestricted),"Unassigned");
 				foreach(Clinic clinic in _listClinics) {
 					ODBoxItem<Clinic> boxClinic=new ODBoxItem<Clinic>(clinic.Abbr,clinic);
 					listBoxClinic.Items.Add(boxClinic);

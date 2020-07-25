@@ -1162,7 +1162,7 @@ namespace OpenDental{
 				if(comboClinic.IsAllSelected) {
 					//When below preference is false, don't hide user restricted clinics from view. Just return clinicNums as an empty string.
 					//If this preference is true, we DO hide user restricted clinics from view.
-					if(PrefC.GetBool(PrefName.PatientSelectFilterRestrictedClinics) && (Security.CurUser.ClinicIsRestricted || !checkShowArchived.Checked)) {
+					if(PrefC.GetBool(PrefName.PatientSelectFilterRestrictedClinics) && (Security.CurrentUser.ClinicIsRestricted || !checkShowArchived.Checked)) {
 						//only set clinicNums if user is unrestricted and showing hidden clinics, otherwise the search will show patients from all clinics
 						clinicNums=string.Join(",",comboClinic.ListClinics
 							//.Where(x => !x.IsHidden || checkShowArchived.Checked)//Only show hidden clinics if "Show Archived" is checked
@@ -1439,7 +1439,7 @@ namespace OpenDental{
 			if(PrefC.HasClinicsEnabled){
 				long patClinicNum=PIn.Long(_DataTablePats.Rows[gridMain.GetSelectedIndex()]["ClinicNum"].ToString());
 				List<long> listUserClinicNums=comboClinic.ListClinics.Select(x => x.ClinicNum).ToList();
-				if(!Security.CurUser.ClinicIsRestricted) {
+				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listUserClinicNums.Add(0);
 				}
 				//If the user has security permissions to search all patients, or patient is assigned to one of the user's unrestricted clinics,

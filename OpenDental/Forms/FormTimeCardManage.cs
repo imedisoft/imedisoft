@@ -50,7 +50,7 @@ namespace OpenDental {
 				comboClinic.Visible=false;
 			}
 			else {//clinics
-				if(!Security.CurUser.ClinicIsRestricted) {
+				if(!Security.CurrentUser.ClinicIsRestricted) {
 					comboClinic.IncludeAll=true;
 				}
 				comboClinic.SelectedClinicNum=Clinics.ClinicNum;
@@ -69,7 +69,7 @@ namespace OpenDental {
 			long clinicNum=0;
 			bool isAll=false;
 			if(PrefC.HasClinicsEnabled) {
-				if(Security.CurUser.ClinicIsRestricted) {
+				if(Security.CurrentUser.ClinicIsRestricted) {
 					clinicNum=comboClinic.SelectedClinicNum;
 				}
 				else {//All and Headquarters are the first two available options.
@@ -847,7 +847,7 @@ namespace OpenDental {
 					+Lan.G(this,"Paycheck Date")+": "+textDatePaycheck.Text;
 				if(PrefC.HasClinicsEnabled) {
 					text+="\r\n"+Lan.G(this,"Clinic")+": ";
-					if(Security.CurUser.ClinicIsRestricted) {
+					if(Security.CurrentUser.ClinicIsRestricted) {
 						text+=Clinics.GetAbbr(comboClinic.SelectedClinicNum);
 					}
 					else {//All and Headquarters are the first two available options.

@@ -274,7 +274,7 @@ namespace OpenDental{
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			List<long> operatoryNums = new List<long>();
-			if(comboClinic.IsAllSelected && !Security.CurUser.ClinicIsRestricted) {//"All"
+			if(comboClinic.IsAllSelected && !Security.CurrentUser.ClinicIsRestricted) {//"All"
 				operatoryNums=null;
 			}
 			else {//"All" that the user has access to or it could be just a single clinic the user has selected

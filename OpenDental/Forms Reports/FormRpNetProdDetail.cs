@@ -361,8 +361,8 @@ namespace OpenDental{
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
 			if(PrefC.HasClinicsEnabled){
-				_listClinics=Clinics.GetForUserod(Security.CurUser);
-				if(!Security.CurUser.ClinicIsRestricted) {
+				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add(Lan.G(this,"Unassigned"));
 					listClin.SetSelected(0,true);
 				}
@@ -506,7 +506,7 @@ namespace OpenDental{
 			List<Clinic> listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				for(int i=0;i<listClin.SelectedIndices.Count;i++) {
-					if(Security.CurUser.ClinicIsRestricted) {
+					if(Security.CurrentUser.ClinicIsRestricted) {
 						listClinics.Add(_listClinics[listClin.SelectedIndices[i]]);//we know that the list is a 1:1 to _listClinics
 					}
 					else {
@@ -558,7 +558,7 @@ namespace OpenDental{
 						if(i>0) {
 							clinNames+=", ";
 						}
-						if(Security.CurUser.ClinicIsRestricted) {
+						if(Security.CurrentUser.ClinicIsRestricted) {
 							clinNames+=_listClinics[listClin.SelectedIndices[i]].Abbr;
 						}
 						else {

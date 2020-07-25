@@ -441,7 +441,7 @@ namespace OpenDental.Bridges
                 CommType = Commlogs.GetTypeAuto(CommItemTypeAuto.MISC),
                 Mode_ = CommItemMode.None,
                 Note = note,
-                UserNum = Security.CurUser.Id
+                UserNum = Security.CurrentUser.Id
             };
 
             Commlogs.Insert(comm);

@@ -700,7 +700,7 @@ namespace OpenDental {
 				return;
 			}
 			//Only unrestricted users should be using fee tools with feeschedgroups.
-			checkShowGroups.Visible=(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && !Security.CurUser.ClinicIsRestricted);
+			checkShowGroups.Visible=(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && !Security.CurrentUser.ClinicIsRestricted);
 			comboGroup.Location=new Point(100,46);
 			comboGroupTo.Location=new Point(100,45);
 			FillComboBoxes();
@@ -1507,7 +1507,7 @@ namespace OpenDental {
 			}
 			int indexPrevClinic=-1;
 			if(PrefC.HasClinicsEnabled
-				&& !Security.CurUser.ClinicIsRestricted
+				&& !Security.CurrentUser.ClinicIsRestricted
 				&& comboGlobalUpdateClinics.IsAllSelected 
 				&& !string.IsNullOrEmpty(PrefC.GetString(PrefName.GlobalUpdateWriteOffLastClinicCompleted)))//previous 'All' run was interrupted, resume
 			{

@@ -69,7 +69,7 @@ namespace OpenDental {
 			}
 			//Send light version of clinics to HQ to be used by signup portal below. Get back all args needed from HQ in order to perform the operations of this window.
 			SignupPortalPermission perm=GetUserSignupPortalPermissions();
-			SecurityLogs.MakeLogEntry(Permissions.Setup,0,$"User {Security.CurUser.UserName} entered EService Setup with SignupPortalPermission {perm}");
+			SecurityLogs.MakeLogEntry(Permissions.Setup,0,$"User {Security.CurrentUser.UserName} entered EService Setup with SignupPortalPermission {perm}");
 			if(signupOut==null) { //the first time this loads signupOut will be null, so we won't have a previous state to compare
 				signupOut=WebServiceMainHQProxy.GetEServiceSetupFull(perm);
 			}

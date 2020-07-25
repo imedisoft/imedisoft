@@ -161,7 +161,7 @@ namespace OpenDental {
 			listAddresses.RemoveAll(x => x.EmailAddressNum==PrefC.GetLong(PrefName.EmailNotifyAddressNum));
 			//Add clinic defaults that the user has access to.  Do not add duplicates.
 			if(PrefC.HasClinicsEnabled) {
-				List<Clinic> listClinicForUser=Clinics.GetForUserod(Security.CurUser);
+				List<Clinic> listClinicForUser=Clinics.GetForUserod(Security.CurrentUser);
 				for(int i=0;i<listClinicForUser.Count;i++) {
 					EmailAddress emailClinic=EmailAddresses.GetByClinic(listClinicForUser[i].ClinicNum);
 					if(listAddresses.Any(x => x.EmailAddressNum == emailClinic.EmailAddressNum)) {
@@ -171,7 +171,7 @@ namespace OpenDental {
 				}
 			}
 			EmailAddress emailAddressPractice=EmailAddresses.GetOne(PrefC.GetLong(PrefName.EmailDefaultAddressNum));
-			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurUser.Id);
+			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurrentUser.Id);
 			//Add addresses which are: not associated to anything, or not default, or unique per clinic.			
 			_listEmailAddresses=new List<EmailAddress>();
 			comboEmailAddress.Items.Clear();
@@ -196,11 +196,11 @@ namespace OpenDental {
 			if(comboEmailAddress.Items.Count > 0) {
 				comboEmailAddress.SelectedIndex=0;//This could be the default practice address, or personal address, or another address.
 			}
-			if(Security.CurUser.ProvNum!=0) { //If the first item in the combobox is selected, make checks to see if the current user has a provnum.
+			if(Security.CurrentUser.ProvNum!=0) { //If the first item in the combobox is selected, make checks to see if the current user has a provnum.
 				comboEmailAddress.Items.Insert(0,"WebMail");//Only providers have access to see Webmail messages.
 				_listEmailAddresses.Insert(0,new EmailAddress {
 					EmailUsername="WebMail",
-					WebmailProvNum=Security.CurUser.ProvNum
+					WebmailProvNum=Security.CurrentUser.ProvNum
 				});
 			}
 			for(int i=0;i<_listEmailAddresses.Count;i++) {
@@ -224,7 +224,7 @@ namespace OpenDental {
 		private int GetMessages() {
 			_isRefreshInbox=true;
 			FillGridInbox();//Show what is in db.
-			if(comboEmailAddress.SelectedIndex==0 && Security.CurUser.ProvNum!=0) { //WebMail is selected
+			if(comboEmailAddress.SelectedIndex==0 && Security.CurrentUser.ProvNum!=0) { //WebMail is selected
 				return 0;//Webmail messages are in the database, so we will not need to receive email from the email server.
 			}
 			if(AddressCur.EmailUsername=="" || AddressCur.Pop3ServerIncoming=="") {//Email address not setup.
@@ -307,7 +307,7 @@ namespace OpenDental {
 			}
 			else {
 				if(AddressCur.EmailUsername=="WebMail") {
-					listEmailsFiltered=_listInboxEmails.Where(x => x.ProvNumWebMail==Security.CurUser.ProvNum).ToList();
+					listEmailsFiltered=_listInboxEmails.Where(x => x.ProvNumWebMail==Security.CurrentUser.ProvNum).ToList();
 				}
 				else {
 					listEmailsFiltered=_listInboxEmails.Where(x => EmailMessages.GetAddressSimple(x.RecipientAddress).ToLower().Contains(AddressCur.EmailUsername.ToLower())).ToList();
@@ -428,7 +428,7 @@ namespace OpenDental {
 			}
 			else {
 				if(AddressCur.EmailUsername=="WebMail") {
-					listEmailsFiltered=_listSentEmails.Where(x => x.ProvNumWebMail==Security.CurUser.ProvNum).ToList();
+					listEmailsFiltered=_listSentEmails.Where(x => x.ProvNumWebMail==Security.CurrentUser.ProvNum).ToList();
 				}
 				else {
 					listEmailsFiltered=_listSentEmails.Where(x => AddressCur.EmailUsername.ToLower() == EmailMessages.GetAddressSimple(x.FromAddress).ToLower()).ToList();
@@ -974,7 +974,7 @@ namespace OpenDental {
 			if(AddressCur.EmailUsername==""||AddressCur.Pop3ServerIncoming=="") {//Email address not setup.
 				Text="Email Inbox - The currently selected email address is not setup to receive email.";
 			}
-			if(comboEmailAddress.SelectedIndex==0&&Security.CurUser.ProvNum!=0) { //WebMail is selected
+			if(comboEmailAddress.SelectedIndex==0&&Security.CurrentUser.ProvNum!=0) { //WebMail is selected
 				Text="Email Inbox for "+AddressCur.EmailUsername;
 			}
 			Cursor=Cursors.WaitCursor;

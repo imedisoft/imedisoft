@@ -2620,7 +2620,7 @@ namespace OpenDental {
 			info.Arguments+="/XCTRANSACTIONID:"+transID+" /LOCKXCTRANSACTIONID ";
 			info.Arguments+="/AMOUNT:"+amount+" /LOCKAMOUNT ";
 			info.Arguments+="/RECEIPT:Pat"+_paymentCur.PatNum.ToString()+" ";//aka invoice#
-			info.Arguments+="\"/CLERK:"+Security.CurUser.UserName+"\" /LOCKCLERK ";
+			info.Arguments+="\"/CLERK:"+Security.CurrentUser.UserName+"\" /LOCKCLERK ";
 			info.Arguments+="/RESULTFILE:\""+resultfile+"\" ";
 			info.Arguments+="/USERID:"+ProgramProperties.GetPropVal(_xProg.Id,"Username",_paymentCur.ClinicNum)+" ";
 			info.Arguments+="/PASSWORD:"+CodeBase.MiscUtils.Decrypt(ProgramProperties.GetPropVal(_xProg.Id,"Password",_paymentCur.ClinicNum))+" ";
@@ -3273,7 +3273,7 @@ namespace OpenDental {
 			else {
 				info.Arguments+="/RECEIPT:PREPAID ";//aka invoice#
 			}
-			info.Arguments+="\"/CLERK:"+Security.CurUser.UserName+"\" /LOCKCLERK ";
+			info.Arguments+="\"/CLERK:"+Security.CurrentUser.UserName+"\" /LOCKCLERK ";
 			info.Arguments+="/RESULTFILE:\""+resultfile+"\" ";
 			info.Arguments+="/USERID:"+ProgramProperties.GetPropVal(_xProg.Id,"Username",_paymentCur.ClinicNum)+" ";
 			info.Arguments+="/PASSWORD:"+CodeBase.MiscUtils.Decrypt(ProgramProperties.GetPropVal(_xProg.Id,"Password",_paymentCur.ClinicNum))+" ";

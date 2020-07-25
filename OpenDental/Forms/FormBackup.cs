@@ -669,7 +669,7 @@ namespace OpenDental {
 					PayloadItem pliStatus=new PayloadItem(
 						(int)(checkSupplementalBackupEnabled.Checked?SupplementalBackupStatuses.Enabled:SupplementalBackupStatuses.Disabled),
 						"SupplementalBackupStatus");
-					PayloadItem pliAdminUserName=new PayloadItem(Security.CurUser.UserName,"AdminUserName");
+					PayloadItem pliAdminUserName=new PayloadItem(Security.CurrentUser.UserName,"AdminUserName");
 					string officeData=PayloadHelper.CreatePayload(new List<PayloadItem>() { pliStatus,pliAdminUserName },eServiceCode.SupplementalBackup);
 					WebServiceMainHQProxy.GetWebServiceMainHQInstance().SetSupplementalBackupStatus(officeData);
 				}

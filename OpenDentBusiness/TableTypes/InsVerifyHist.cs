@@ -28,7 +28,7 @@ namespace OpenDentBusiness {
 			this.DateLastAssigned=insVerify.DateLastAssigned;
 			this.DateTimeEntry=insVerify.DateTimeEntry;
 			this.HoursAvailableForVerification=insVerify.HoursAvailableForVerification;
-			this.VerifyUserNum=Security.CurUser.Id;
+			this.VerifyUserNum=Security.CurrentUser.Id;
 			this.SecDateTEdit=insVerify.SecDateTEdit;
 		}
 

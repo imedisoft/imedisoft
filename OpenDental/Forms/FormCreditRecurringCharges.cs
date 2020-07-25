@@ -102,11 +102,11 @@ namespace OpenDental {
 			_listUserClinics = new List<Clinic>();
 			if (PrefC.HasClinicsEnabled)
 			{
-				if (!Security.CurUser.ClinicIsRestricted)
+				if (!Security.CurrentUser.ClinicIsRestricted)
 				{
 					_listUserClinics.Add(new Clinic() { Description = Lan.G(this, "Unassigned") });
 				}
-				Clinics.GetForUserod(Security.CurUser).ForEach(x => _listUserClinics.Add(x));
+				Clinics.GetForUserod(Security.CurrentUser).ForEach(x => _listUserClinics.Add(x));
 				for (int i = 0; i < _listUserClinics.Count; i++)
 				{
 					listClinics.Items.Add(_listUserClinics[i].Description);

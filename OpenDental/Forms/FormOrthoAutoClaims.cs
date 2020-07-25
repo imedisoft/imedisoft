@@ -20,7 +20,7 @@ namespace OpenDental {
 
 		private void FormAutoOrtho_Load(object sender,EventArgs e) {
 			_tableOutstandingAutoClaims=PatPlans.GetOutstandingOrtho();
-			if(!Security.CurUser.ClinicIsRestricted) {
+			if(!Security.CurrentUser.ClinicIsRestricted) {
 				comboClinics.IncludeAll=true;
 			}
 			if(comboClinics.IncludeAll && Clinics.ClinicNum==0) {
@@ -71,7 +71,7 @@ namespace OpenDental {
 			foreach(DataRow rowCur in _tableOutstandingAutoClaims.Rows) {
 				//need a check for if clinics is on here
 				if(PrefC.HasClinicsEnabled //Clinics are enabled
-					&& (Security.CurUser.ClinicIsRestricted || !comboClinics.IsAllSelected) 
+					&& (Security.CurrentUser.ClinicIsRestricted || !comboClinics.IsAllSelected) 
 					&& clinicNum!=PIn.Long(rowCur["ClinicNum"].ToString()))   //currently selected clinic doesn't match the row's clinic
 				{
 					continue;

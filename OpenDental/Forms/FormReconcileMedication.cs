@@ -401,7 +401,7 @@ namespace OpenDental {
 			newMeasureEvent.MoreInfo="";
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			for(int inter=0;inter<_listMedicationPatReconcile.Count;inter++) {
-				if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).MedicationCDS) {
+				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).MedicationCDS) {
 					Medication medInter=Medications.GetMedicationFromDbByRxCui(_listMedicationPatReconcile[inter].RxCui);
 					FormCDSIntervention FormCDSI=new FormCDSIntervention();
 					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(medInter,_patCur);

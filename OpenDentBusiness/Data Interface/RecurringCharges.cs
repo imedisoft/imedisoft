@@ -189,12 +189,12 @@ namespace OpenDentBusiness {
 		public List<RecurringChargeData> FillCharges(List<Clinic> listUserClinics) {
 			DeleteNotYetCharged();
 			List<long> listClinicNums=new List<long>();
-			if(PrefC.HasClinicsEnabled && Security.CurUser.ClinicIsRestricted) {
+			if(PrefC.HasClinicsEnabled && Security.CurrentUser.ClinicIsRestricted) {
 				listClinicNums=listUserClinics.Select(x => x.ClinicNum).ToList();
 			}
 			//if no clinics are selected but clinics are enabled and the user is restricted, the results will be empty so no need to run the report
 			//if clinics are enabled and the user is not restricted and selects no clinics, there will not be a clinic filter in the query, so all clinics
-			if(PrefC.HasClinicsEnabled && Security.CurUser.ClinicIsRestricted && listClinicNums.Count==0) {
+			if(PrefC.HasClinicsEnabled && Security.CurrentUser.ClinicIsRestricted && listClinicNums.Count==0) {
 				ListRecurringChargeData=new List<RecurringChargeData>();
 			}
 			else {
@@ -476,7 +476,7 @@ namespace OpenDentBusiness {
 				info.Arguments+="\"/ZIP:"+zipPat+"\" ";
 			}
 			info.Arguments+="/RECEIPT:Pat"+chargeData.RecurringCharge.PatNum+" ";//aka invoice#
-			info.Arguments+="\"/CLERK:"+Security.CurUser.UserName+" R\" /LOCKCLERK ";
+			info.Arguments+="\"/CLERK:"+Security.CurrentUser.UserName+" R\" /LOCKCLERK ";
 			info.Arguments+="/RESULTFILE:\""+resultfile+"\" ";
 			info.Arguments+="/USERID:"+username+" ";
 			info.Arguments+="/PASSWORD:"+password+" ";
@@ -683,7 +683,7 @@ namespace OpenDentBusiness {
 				strBuilderResultText.AppendLine("TRANS TYPE="+PayConnectService.transType.SALE.ToString());
 				strBuilderResultText.AppendLine("AUTH CODE="+payConnectResponse.AuthCode);
 				strBuilderResultText.AppendLine("ENTRY=MANUAL");
-				strBuilderResultText.AppendLine("CLERK="+Security.CurUser.UserName);
+				strBuilderResultText.AppendLine("CLERK="+Security.CurrentUser.UserName);
 				strBuilderResultText.AppendLine("TRANSACTION NUMBER="+payConnectResponse.RefNumber);
 				if(ccCur!=null) {
 					strBuilderResultText.AppendLine("ACCOUNT="+ccCur.CCNumberMasked);//XXXXXXXXXXXX1234, all but last four numbers replaced with X's
@@ -769,7 +769,7 @@ namespace OpenDentBusiness {
 					ccExpMonth=ccCur.CCExpiration.Month;
 					expStr=ccExpMonth.ToString().PadLeft(2,'0')+(ccExpYear%100);
 				}
-				strBuilderResultText.AppendLine(response.ToNoteString(clinicDesc,"Manual",Security.CurUser.UserName,expStr,"PaySimple Token"));
+				strBuilderResultText.AppendLine(response.ToNoteString(clinicDesc,"Manual",Security.CurrentUser.UserName,expStr,"PaySimple Token"));
 				resultAmt=(double)response.Amount;
 				response.BuildReceiptString(ccCur.CCNumberMasked,ccExpMonth,ccExpYear,"",clinicNumCur,isACH: ccCur.CCSource==CreditCardSource.PaySimpleACH);
 				receipt=response.TransactionReceipt;
@@ -849,7 +849,7 @@ namespace OpenDentBusiness {
 				DateTime newPayDate=GetPayDate(chargeCur);
 				//Test if the user can create a payment with the new pay date.
 				bool isBeforeLockDate;
-				if(Security.CurUser.Id > 0) {
+				if(Security.CurrentUser.Id > 0) {
 					isBeforeLockDate=(!Security.IsAuthorized(Permissions.PaymentCreate,newPayDate,true));
 				}
 				else {

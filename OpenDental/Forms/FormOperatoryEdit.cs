@@ -524,7 +524,7 @@ namespace OpenDental{
 				return;
 			}
 			//Operatory operatory=Operatories.GetOperatory(contrApptPanel.OpNumClicked);
-			if(Security.CurUser.ClinicIsRestricted && !Clinics.GetForUserod(Security.CurUser).Exists(x => x.ClinicNum==OpCur.ClinicNum)) {
+			if(Security.CurrentUser.ClinicIsRestricted && !Clinics.GetForUserod(Security.CurrentUser).Exists(x => x.ClinicNum==OpCur.ClinicNum)) {
 				MessageBox.Show("You are restricted from accessing the clinic belonging to the selected operatory.  No changes will be made.");
 				return;
 			}

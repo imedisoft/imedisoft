@@ -122,7 +122,7 @@ namespace OpenDental {
 		}
 
 		private void butMe_Click(object sender,EventArgs e) {
-			SelectedUserNum=Security.CurUser.Id;
+			SelectedUserNum=Security.CurrentUser.Id;
 			ListSelectedUserNums=new List<long>() { };
 			DialogResult=DialogResult.OK;
 		}

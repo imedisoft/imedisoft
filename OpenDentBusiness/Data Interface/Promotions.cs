@@ -119,7 +119,7 @@ namespace OpenDentBusiness{
 						result=ReplaceTags.ReplaceMisc(bracketReplacement);
 					}
 					if(result==bracketReplacement) {
-						result=ReplaceTags.ReplaceUser(bracketReplacement,Security.CurUser);
+						result=ReplaceTags.ReplaceUser(bracketReplacement,Security.CurrentUser);
 					}
 					if(result==bracketReplacement) {
 						result=Appointments.ReplaceAppointment(bracketReplacement,apt);
@@ -135,7 +135,7 @@ namespace OpenDentBusiness{
 					message=Patients.ReplacePatient(message,pat);
 					message=Patients.ReplaceGuarantor(message,guarantor);
 					message=ReplaceTags.ReplaceMisc(message);
-					message=ReplaceTags.ReplaceUser(message,Security.CurUser);
+					message=ReplaceTags.ReplaceUser(message,Security.CurrentUser);
 					message=Appointments.ReplaceAppointment(message,apt);
 					message=Clinics.ReplaceOffice(message,clinicPat);
 					return message;
@@ -193,7 +193,7 @@ namespace OpenDentBusiness{
 					RecipientAddress=uniqueIdPair.Key,
 					SentOrReceived=EmailSentOrReceived.Sent,
 					ToAddress=uniqueIdPair.Key,
-					UserNum=Security.CurUser?.Id??0,
+					UserNum=Security.CurrentUser?.Id??0,
 					Subject=subject,
 				};
 				//Insert so we have the primary key available.

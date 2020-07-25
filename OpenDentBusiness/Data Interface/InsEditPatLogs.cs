@@ -101,7 +101,7 @@ namespace OpenDentBusiness{
 				default:
 					break;
 			}
-			long curUserNum=Security.CurUser?.Id??0;
+			long curUserNum=Security.CurrentUser?.Id??0;
 			InsEditPatLog logCur;
 			if(itemOld == null) { //new, just inserted. Show PriKey Column only.
 				logCur=new InsEditPatLog() {

@@ -1157,11 +1157,11 @@ namespace OpenDental{
 				RefreshListPlaque();
 			}
 			listExams.SelectedIndex=PerioExams.ListExams.Count-1;//this works even if no items.
-			_userPrefCurrentOnly=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.PerioCurrentExamOnly).FirstOrDefault();
+			_userPrefCurrentOnly=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.PerioCurrentExamOnly).FirstOrDefault();
 			if(_userPrefCurrentOnly != null && PIn.Bool(_userPrefCurrentOnly.ValueString)) {
 				checkShowCurrent.Checked=true;
 			}
-			_userPrefCustomAdvance=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.PerioAutoAdvanceCustom).FirstOrDefault();
+			_userPrefCustomAdvance=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.PerioAutoAdvanceCustom).FirstOrDefault();
 			if(_userPrefCustomAdvance!=null && PIn.Bool(_userPrefCustomAdvance.ValueString)) {
 				radioCustom.Checked=true;
 				gridP.Direction=AutoAdvanceDirection.Custom;
@@ -2493,7 +2493,7 @@ namespace OpenDental{
 		private void butClose_Click(object sender,System.EventArgs e) {
 			if(_userPrefCurrentOnly==null) {
 				UserOdPrefs.Insert(new UserOdPref() {
-					UserNum=Security.CurUser.Id,
+					UserNum=Security.CurrentUser.Id,
 					FkeyType=UserOdFkeyType.PerioCurrentExamOnly,
 					ValueString=POut.Bool(checkShowCurrent.Checked)
 				});
@@ -2506,7 +2506,7 @@ namespace OpenDental{
 			}
 			if(_userPrefCustomAdvance==null) {
 				UserOdPrefs.Insert(new UserOdPref() {
-					UserNum=Security.CurUser.Id,
+					UserNum=Security.CurrentUser.Id,
 					FkeyType=UserOdFkeyType.PerioAutoAdvanceCustom,
 					ValueString=POut.Bool(radioCustom.Checked)
 				});

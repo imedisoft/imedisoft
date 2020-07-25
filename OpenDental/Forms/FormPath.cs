@@ -46,7 +46,7 @@ namespace Imedisoft.Forms
 					"Could not find the path for storing images and documents.", "Imedisoft", 
 					MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-				if (Security.CurUser == null || !Security.IsAuthorized(Permissions.Setup))
+				if (Security.CurrentUser == null || !Security.IsAuthorized(Permissions.Setup))
 				{
 					// The user is still allowed to set the "Path override for this computer", thus the user has a way to temporariliy get into OD in worst case.
 					// For example, if the primary folder path is wrong or has changed, the user can set the path override for this computer to get into OD, then

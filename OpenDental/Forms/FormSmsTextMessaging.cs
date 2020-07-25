@@ -172,7 +172,7 @@ namespace OpenDental {
 			checkSent.Checked=isSent;
 			checkRead.Checked=isReceived;
 			_smsNotifier=smsNotifier;
-			_groupByPref=UserOdPrefs.GetFirstOrNewByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.SmsGroupBy);
+			_groupByPref=UserOdPrefs.GetFirstOrNewByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.SmsGroupBy);
 			if(_groupByPref.ValueString=="1") {
 				radioGroupByPatient.Checked=true;
 			}
@@ -922,7 +922,7 @@ namespace OpenDental {
 				if(Plugins.HookMethod(this,"FormSmsTextMessaging.butReply_Click_sendSmsSingle",_selectedPatNum,_selectedMobileNumber,textReply.Text,YN.Yes)) {
 					goto HookSkipSmsCall;
 				}
-				SmsToMobiles.SendSmsSingle(_selectedPatNum,_selectedMobileNumber,textReply.Text,clinicNum,SmsMessageSource.DirectSms,user: Security.CurUser);
+				SmsToMobiles.SendSmsSingle(_selectedPatNum,_selectedMobileNumber,textReply.Text,clinicNum,SmsMessageSource.DirectSms,user: Security.CurrentUser);
 			}
 			catch(Exception ex) {
 				if(!FormEServicesSetup.ProcessSendSmsException(ex)) {

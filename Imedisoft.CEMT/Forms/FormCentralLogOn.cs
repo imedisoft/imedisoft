@@ -44,8 +44,7 @@ namespace Imedisoft.CEMT.Forms
 				return;
 			}
 
-			Security.CurUser = user.Copy();
-			Security.PasswordTyped = passwordTextBox.Text;
+			Security.CurrentUser = user.Copy();
 
 			DialogResult = DialogResult.OK;
 		}

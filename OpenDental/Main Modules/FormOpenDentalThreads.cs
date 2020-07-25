@@ -1,6 +1,7 @@
 ﻿using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -171,7 +172,7 @@ namespace OpenDental
 					return;//user has been inactive for a while, so stop checking alerts.
 				}
 				long clinicNumCur = Clinics.ClinicNum;
-				long userNumCur = Security.CurUser.Id;
+				long userNumCur = Security.CurrentUser.Id;
 				// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 				List<List<AlertItem>> listUniqueAlerts = AlertItems.GetUniqueAlerts(userNumCur, clinicNumCur);
 				//We will set the alert's tag to all the items in its list so that all can be marked read/deleted later.
@@ -416,7 +417,7 @@ namespace OpenDental
 				return;
 			}
 			//If the user currently logged in has permission to view eService settings, turn on the listener monitor.
-			if (Security.CurUser == null || !Security.IsAuthorized(Permissions.EServicesSetup, true))
+			if (Security.CurrentUser == null || !Security.IsAuthorized(Permissions.EServicesSetup, true))
 			{
 				return;//Do not start the listener service monitor for users without permission.
 			}
@@ -570,7 +571,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			if (Security.CurUser == null)
+			if (Security.CurrentUser == null)
 			{//nobody logged on
 				return;
 			}
@@ -633,17 +634,17 @@ namespace OpenDental
 			ODThread odThread = new ODThread((o) =>
 			{
 				RefreshMenuDashboards();
-				if (Security.CurUser != null)
+				if (Security.CurrentUser != null)
 				{
-					InitDashboards(Security.CurUser.Id);
+					InitDashboards(Security.CurrentUser.Id);
 				}
 			});
 			//If the thread that attempts to start Open Dental dashboard fails for any reason, silently fail.
 			odThread.AddExceptionHandler(ex =>
 			{
-				if (Security.CurUser != null && Security.CurUser.Id != 0)
+				if (Security.CurrentUser != null && Security.CurrentUser.Id != 0)
 				{//Defensive to ensure all Patient Dashboard userprefs are not deleted.
-					UserOdPrefs.DeleteForValueString(Security.CurUser.Id, UserOdFkeyType.Dashboard, string.Empty);//All Dashboard userodprefs for this user.
+					UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, string.Empty);//All Dashboard userodprefs for this user.
 				}
 			});
 			odThread.GroupName = FormODThreadNames.Dashboard.GetDescription();
@@ -772,7 +773,7 @@ namespace OpenDental
 				List<TaskNote> listRefreshedTaskNotes = null;
 				List<UserOdPref> listBlockedTaskLists = null;
 				//JM: Bug fix, but we do not know what would cause Security.CurUser to be null. Worst case task wont show till next signal tick.
-				long userNumCur = Security.CurUser?.Id ?? 0;
+				long userNumCur = Security.CurrentUser?.Id ?? 0;
 				List<OpenDentBusiness.Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(userNumCur, Clinics.ClinicNum, listEditedTaskNums);
 				if (listRefreshedTasks.Count > 0)
 				{

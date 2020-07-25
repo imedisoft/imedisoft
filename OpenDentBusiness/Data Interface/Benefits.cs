@@ -89,7 +89,7 @@ namespace OpenDentBusiness {
 			
 			Crud.BenefitCrud.Update(ben,benOld);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			InsEditLogs.MakeLogEntry(ben,benOld,InsEditLogType.Benefit,Security.CurUser.Id);
+			InsEditLogs.MakeLogEntry(ben,benOld,InsEditLogType.Benefit,Security.CurrentUser.Id);
 		}
 
 		///<summary></summary>
@@ -98,7 +98,7 @@ namespace OpenDentBusiness {
 			long benNum=Crud.BenefitCrud.Insert(ben);
 			if(ben.PlanNum != 0) {//Does not log PatPlan benefits
 				//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-				InsEditLogs.MakeLogEntry(ben,null,InsEditLogType.Benefit,Security.CurUser.Id);
+				InsEditLogs.MakeLogEntry(ben,null,InsEditLogType.Benefit,Security.CurrentUser.Id);
 			}
 			return benNum;
 		}
@@ -109,7 +109,7 @@ namespace OpenDentBusiness {
 			string command="DELETE FROM benefit WHERE BenefitNum ="+POut.Long(ben.BenefitNum);
 			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			InsEditLogs.MakeLogEntry(null,ben,InsEditLogType.Benefit,Security.CurUser.Id);
+			InsEditLogs.MakeLogEntry(null,ben,InsEditLogType.Benefit,Security.CurrentUser.Id);
 		}
 
 		///<summary>Only for display purposes rather than any calculations.  Gets an annual max from the supplied list of benefits.  Ignores benefits that do not match either the planNum or the patPlanNum.  Because it starts at the top of the benefit list, it will get the most general limitation first.  Returns -1 if none found.  Usually, set isFam to false unless we are specifically interested in that value.</summary>
@@ -1586,7 +1586,7 @@ namespace OpenDentBusiness {
 			Database.ExecuteNonQuery(command);
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listBenefits.ForEach(x => {
-				InsEditLogs.MakeLogEntry(null,x,InsEditLogType.Benefit,Security.CurUser.Id);
+				InsEditLogs.MakeLogEntry(null,x,InsEditLogType.Benefit,Security.CurrentUser.Id);
 			});
 		}
 

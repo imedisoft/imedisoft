@@ -1439,7 +1439,7 @@ namespace OpenDental {
 				TaskUnreads.DeleteForTask(taskCur);//clear out taskunreads. We have too many tasks to read the done ones.
 				Tasks.Update(taskCur,taskOld);
 				TaskHist taskHist=new TaskHist(taskOld);
-				taskHist.UserNumHist=Security.CurUser.Id;
+				taskHist.UserNumHist=Security.CurrentUser.Id;
 				TaskHists.Insert(taskHist);
 				long signalNum=Signalods.SetInvalid(InvalidType.Task,KeyType.Task,taskCur.TaskNum);
 				UserControlTasks.RefillLocalTaskGrids(taskCur,TaskNotes.GetForTask(taskCur.TaskNum),new List<long>() { signalNum });
@@ -6958,7 +6958,7 @@ namespace OpenDental {
 				if(procNew.ProcStatus.In(ProcStat.EC,ProcStat.EO)) {
 					procNew.DiagnosticCode="";
 				}
-				if(Userods.IsUserCpoe(Security.CurUser)) {
+				if(Userods.IsUserCpoe(Security.CurrentUser)) {
 					//Only change the status of IsCpoe to true.  Never set it back to false for any reason.  Once true, always true.
 					procNew.IsCpoe=true;
 				}
@@ -7080,10 +7080,10 @@ namespace OpenDental {
 			//O = Outside Prescription - indicates the prescription was created on the MedEntry page, not prescribed.
 			prescriptionHistoryRequest.PrescriptionSubStatus="S";
 			patientInfoRequester.UserType="Staff";//Allowed values: Doctor,Staff
-			if(Security.CurUser.ProvNum!=0) {//If the current OD user is associated to a doctor, then the request is from a doctor, otherwise from a staff member.
+			if(Security.CurrentUser.ProvNum!=0) {//If the current OD user is associated to a doctor, then the request is from a doctor, otherwise from a staff member.
 			  patientInfoRequester.UserType="Doctor";
 			}
-			patientInfoRequester.UserId=POut.Long(Security.CurUser.Id);
+			patientInfoRequester.UserId=POut.Long(Security.CurrentUser.Id);
 			//Send the request to NewCrop. Always returns all current medications, and returns medications between the StartHistory and EndHistory dates if requesting archived medications.
 			//The patientIdType parameter was added for another vendor and is not often used. We do not use this field. We must pass empty string.
 			//The includeSchema parameter is useful for first-time debugging, but in release mode, we should pass N for no.
@@ -7476,7 +7476,7 @@ namespace OpenDental {
 				int countErrors=0;
 				int countPendingPrescriptions=0;
 				try {
-					doseSpotUserID=DoseSpot.GetUserID(Security.CurUser,clinicNum);
+					doseSpotUserID=DoseSpot.GetUserID(Security.CurrentUser,clinicNum);
 					DoseSpot.GetClinicIdAndKey(clinicNum,doseSpotUserID,null,null,out doseSpotClinicID,out doseSpotClinicKey);
 				}
 				catch{
@@ -7837,7 +7837,7 @@ namespace OpenDental {
 			commlogCur.CommType=Commlogs.GetTypeAuto(CommItemTypeAuto.MISC);
 			commlogCur.Mode_=CommItemMode.Phone;
 			commlogCur.SentOrReceived=CommSentOrReceived.Received;
-			commlogCur.UserNum=Security.CurUser.Id;
+			commlogCur.UserNum=Security.CurrentUser.Id;
 			commlogCur.IsNew=true;
 			FormCommItem formCommItem=new FormCommItem(commlogCur);
 			if(formCommItem.ShowDialog()==DialogResult.OK) {
@@ -7903,10 +7903,10 @@ namespace OpenDental {
 			string doseSpotClinicID="";
 			string doseSpotClinicKey="";
 			string doseSpotUserID="";
-			bool isEmp=Erx.IsUserAnEmployee(Security.CurUser);
+			bool isEmp=Erx.IsUserAnEmployee(Security.CurrentUser);
 			Provider prov=null;
-			if(!isEmp && Security.CurUser.ProvNum!=0) {
-				prov=Providers.GetProv(Security.CurUser.ProvNum);
+			if(!isEmp && Security.CurrentUser.ProvNum!=0) {
+				prov=Providers.GetProv(Security.CurrentUser.ProvNum);
 			}
 			else {
 				prov=Providers.GetProv(_patCur.PriProv);
@@ -7934,7 +7934,7 @@ namespace OpenDental {
 			string message="";
 			List<long> listInvalidProvs=Providers.GetInvalidProvsByTermDate(new List<long> { prov.ProvNum },DateTime.Now);
 			if(listInvalidProvs.Count>0) {
-				if(!isEmp && Security.CurUser.ProvNum!=0) {
+				if(!isEmp && Security.CurrentUser.ProvNum!=0) {
 					message="The provider attached to this user has a Term Date that has expired. "
 						+"Please select another user or change the provider's term date.";
 				}
@@ -8024,7 +8024,7 @@ namespace OpenDental {
 					MessageBox.Show(Lan.G(this,"eRx is currently disabled.")+"\r\n"+Lan.G(this,"To enable, see our online manual for instructions."));
 					return;
 				}
-				if(Security.CurUser.EmployeeNum==0 && Security.CurUser.ProvNum==0) {
+				if(Security.CurrentUser.EmployeeNum==0 && Security.CurrentUser.ProvNum==0) {
 					MessageBox.Show("This user must be associated with either a provider or an employee.  The security admin must make this change before this user can submit prescriptions.");
 					return;
 				}
@@ -8044,7 +8044,7 @@ namespace OpenDental {
 				string queryString="";
 				bool isDoseSpotAccessAllowed=true;
 				try {
-					doseSpotUserID=DoseSpot.GetUserID(Security.CurUser,clinicNum);
+					doseSpotUserID=DoseSpot.GetUserID(Security.CurrentUser,clinicNum);
 					DoseSpot.GetClinicIdAndKey(clinicNum,doseSpotUserID,programErx,listDoseSpotProperties,out doseSpotClinicID,out doseSpotClinicKey);
 					//BuildDoseSpotPostDataBytes will validate patient information and throw exceptions.
 					OIDExternal oIdExternal=DoseSpot.GetDoseSpotPatID(_patCur.PatNum);
@@ -8169,13 +8169,13 @@ namespace OpenDental {
 				erxDoseSpotLog.PatNum=_patCur.PatNum;
 				erxDoseSpotLog.MsgText=queryString;
 				erxDoseSpotLog.ProvNum=prov.ProvNum;
-				erxDoseSpotLog.UserNum=Security.CurUser.Id;
+				erxDoseSpotLog.UserNum=Security.CurrentUser.Id;
 				SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxDoseSpotLog.PatNum,Lan.G(this,"eRx DoseSpot entry made for provider")+" "+Providers.GetAbbr(erxDoseSpotLog.ProvNum));
 				ErxLogs.Insert(erxDoseSpotLog);
 				return;
 			}
 			//Validation------------------------------------------------------------------------------------------------------------------------------------------------------
-			if(Security.CurUser.EmployeeNum==0 && Security.CurUser.ProvNum==0) {
+			if(Security.CurrentUser.EmployeeNum==0 && Security.CurrentUser.ProvNum==0) {
 				MessageBox.Show("This user must be associated with either a provider or an employee.  The security admin must make this change before this user can submit prescriptions.");
 				return;
 			}
@@ -8200,13 +8200,13 @@ namespace OpenDental {
 					}
 				}
 				if(isEmp) {
-					emp=Employees.GetEmp(Security.CurUser.EmployeeNum);
+					emp=Employees.GetEmp(Security.CurrentUser.EmployeeNum);
 					if(emp.LName=="") {//Checked in UI, but check here just in case this database was converted from another software.
-						MessageBox.Show(Lan.G(this,"Employee last name missing for user")+": "+Security.CurUser.UserName);
+						MessageBox.Show(Lan.G(this,"Employee last name missing for user")+": "+Security.CurrentUser.UserName);
 						return;
 					}
 					if(emp.FName=="") {//Not validated in UI.
-						MessageBox.Show(Lan.G(this,"Employee first name missing for user")+": "+Security.CurUser.UserName);
+						MessageBox.Show(Lan.G(this,"Employee first name missing for user")+": "+Security.CurrentUser.UserName);
 						return;
 					}
 				}
@@ -8292,7 +8292,7 @@ namespace OpenDental {
 			erxLog.PatNum=_patCur.PatNum;
 			erxLog.MsgText=clickThroughXml;
 			erxLog.ProvNum=prov.ProvNum;
-			erxLog.UserNum=Security.CurUser.Id;
+			erxLog.UserNum=Security.CurrentUser.Id;
 			SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxLog.PatNum,Lan.G(this,"eRx entry made for provider")+" "+Providers.GetAbbr(erxLog.ProvNum));
 			ErxLogs.Insert(erxLog);
 		}
@@ -8851,7 +8851,7 @@ namespace OpenDental {
 			ProcCur.RevCode=procCodeCur.RevenueCodeDefault;
 			ProcCur.DiagnosticCode=PrefC.GetString(PrefName.ICD9DefaultForNewProcs);
 			ProcCur.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used. 
-			if(Userods.IsUserCpoe(Security.CurUser)) {
+			if(Userods.IsUserCpoe(Security.CurrentUser)) {
 				//This procedure is considered CPOE because the provider is the one that has added it.
 				ProcCur.IsCpoe=true;
 			}

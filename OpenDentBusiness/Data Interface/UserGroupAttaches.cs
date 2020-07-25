@@ -147,7 +147,7 @@ namespace OpenDentBusiness{
 				Userod user=listRemoteUsers.FirstOrDefault(x => x.Id==userGroupAdd.UserNum);
 				UserGroup userGroup=listRemoteGroups.FirstOrDefault(x => x.Id==userGroupAdd.UserGroupNum);
 				SecurityLogs.MakeLogEntryNoCache(Permissions.SecurityAdmin,0,"User: "+user.UserName+" added to user group: "
-					+userGroup.Description+" by CEMT user: "+Security.CurUser.UserName);
+					+userGroup.Description+" by CEMT user: "+Security.CurrentUser.UserName);
 			}
 			foreach(UserGroupAttach userGroupDel in listDel) {
 				rowsChanged++;
@@ -155,7 +155,7 @@ namespace OpenDentBusiness{
 				Userod user=listRemoteUsers.FirstOrDefault(x => x.Id==userGroupDel.UserNum);
 				UserGroup userGroup=listRemoteGroups.FirstOrDefault(x => x.Id==userGroupDel.UserGroupNum);
 				SecurityLogs.MakeLogEntryNoCache(Permissions.SecurityAdmin,0,"User: "+user.UserName+" removed from user group: "
-					+userGroup.Description+" by CEMT user: "+Security.CurUser.UserName);
+					+userGroup.Description+" by CEMT user: "+Security.CurrentUser.UserName);
 			}
 			return rowsChanged;
 		}

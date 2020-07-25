@@ -36,7 +36,7 @@ namespace OpenDental {
 			comboSupplier.IncludeAll=true;
 			comboSupplier.Items.AddList(_listSuppliers,x=>x.Name);
 			comboSupplier.IsAllSelected=true;
-			_userPrefShowReceived=UserOdPrefs.GetByUserAndFkeyType(Security.CurUser.Id,UserOdFkeyType.ReceivedSupplyOrders).FirstOrDefault();
+			_userPrefShowReceived=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.ReceivedSupplyOrders).FirstOrDefault();
 			if(_userPrefShowReceived!=null && PIn.Bool(_userPrefShowReceived.ValueString)) {
 				checkShowReceived.Checked=true;
 			} 
@@ -370,7 +370,7 @@ namespace OpenDental {
 		private void butClose_Click(object sender,EventArgs e) {
 			if(_userPrefShowReceived==null) {
 				UserOdPrefs.Insert(new UserOdPref() {
-					UserNum=Security.CurUser.Id,
+					UserNum=Security.CurrentUser.Id,
 					FkeyType=UserOdFkeyType.ReceivedSupplyOrders,
 					ValueString=POut.Bool(checkShowReceived.Checked)
 				});

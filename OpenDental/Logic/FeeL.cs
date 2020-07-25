@@ -112,7 +112,7 @@ namespace OpenDental
 				return false;
 			}
 			//Make sure the user has permission to edit the clinic of the fee schedule being edited.
-			if (Security.CurUser.ClinicIsRestricted && clinicNum != Clinics.ClinicNum)
+			if (Security.CurrentUser.ClinicIsRestricted && clinicNum != Clinics.ClinicNum)
 			{
 				if (clinicNum == 0 && feeSched != null && feeSched.IsGlobal)
 				{

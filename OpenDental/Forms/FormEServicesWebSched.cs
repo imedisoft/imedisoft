@@ -1121,7 +1121,7 @@ namespace OpenDental
 
 		///<summary>Save template changes made in WebSchedVerify.</summary>
 		private void SaveTabWebSchedVerify() {
-			List<long> listClinics=Clinics.GetForUserod(Security.CurUser).Select(x => x.ClinicNum).ToList();
+			List<long> listClinics=Clinics.GetForUserod(Security.CurrentUser).Select(x => x.ClinicNum).ToList();
 			foreach(PrefName prefName in _listWebSchedVerifyPrefNames) {
 				foreach(long clinicNum in listClinics) {
 					ClinicPref newClinicPref=_listWebSchedVerifyClinicPrefs.FirstOrDefault(x => x.PrefName==prefName && x.ClinicNum==clinicNum);

@@ -64,11 +64,6 @@ namespace Imedisoft.CEMT.Forms
 			else
 			{
 				PasswordHash = Password.Hash(newTextBox.Text);
-				if (user?.UserName == Security.CurUser.UserName || isSecurityWindow)
-				{
-					Security.PasswordTyped = newTextBox.Text;
-					//They're updating the password for the logged in user. Update CurUser for when they sync then attempt to log into remote DB.
-				}
 			}
 
 			DialogResult = DialogResult.OK;

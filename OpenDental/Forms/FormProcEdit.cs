@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -54,7 +55,7 @@ namespace OpenDental {
 		private Snomed _snomedBodySite=null;
 		private bool _isQuickAdd=false;
 		///<summary>Users can temporarily log in on this form.  Defaults to Security.CurUser.</summary>
-		private Userod _curUser=Security.CurUser;
+		private Userod _curUser=Security.CurrentUser;
 		///<summary>True if the user clicked the Change User button.</summary>
 		private bool _hasUserChanged;
 		///<summary></summary>
@@ -368,7 +369,7 @@ namespace OpenDental {
 			if(Security.IsAuthorized(Permissions.ProcedureNoteFull,true)) {
 				canEditNote=true;
 			}
-			else if(Security.IsAuthorized(Permissions.ProcedureNoteUser,true) && (_procCur.UserNum==Security.CurUser.Id || signatureBoxWrapper.SigIsBlank)) {
+			else if(Security.IsAuthorized(Permissions.ProcedureNoteUser,true) && (_procCur.UserNum==Security.CurrentUser.Id || signatureBoxWrapper.SigIsBlank)) {
 				canEditNote=true;//They have limited permission and this is their note that they signed.
 			}
 			if(!canEditNote) {
@@ -3337,10 +3338,10 @@ namespace OpenDental {
 		}
 
 		private void butChangeUser_Click(object sender,EventArgs e) {
-			FormLogOn FormChangeUser=new FormLogOn(isSimpleSwitch:true);
+			FormLogOn FormChangeUser=new FormLogOn(isTemporary:true);
 			FormChangeUser.ShowDialog();
 			if(FormChangeUser.DialogResult==DialogResult.OK) { //if successful
-				_curUser=FormChangeUser.CurUserSimpleSwitch; //assign temp user
+				_curUser=FormChangeUser.User; //assign temp user
 				bool canUserSignNote=Userods.CanUserSignNote(_curUser);//only show if user can sign
 				signatureBoxWrapper.Enabled=canUserSignNote;
 				if(!labelPermAlert.Visible && !canUserSignNote) {

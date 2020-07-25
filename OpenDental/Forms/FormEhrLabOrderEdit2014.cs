@@ -183,7 +183,7 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				col=new GridColumn("",18);//infoButton
 				col.ImageList=imageListInfoButton;
 				gridMain.ListGridColumns.Add(col);
@@ -205,7 +205,7 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<EhrLabCur.ListEhrLabResults.Count;i++) {
 				row=new GridRow();
-				if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 					row.Cells.Add("0");//index of infobutton
 				}
 				if(EhrLabCur.ListEhrLabResults[i].ObservationDateTime==null || EhrLabCur.ListEhrLabResults[i].ObservationDateTime=="") {
@@ -459,7 +459,7 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
-			if(!CDSPermissions.GetForUser(Security.CurUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+			if(!CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				return;
 			}
 			if(e.Col!=0) {
@@ -531,8 +531,8 @@ namespace OpenDental {
 			if(!EntriesAreValid()) {
 				return;
 			} 
-			Provider prov=Providers.GetProv(Security.CurUser.ProvNum);
-			if(Security.CurUser.ProvNum!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
+			Provider prov=Providers.GetProv(Security.CurrentUser.ProvNum);
+			if(Security.CurrentUser.ProvNum!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
 				EhrLabCur.IsCpoe=true;
 			}
 			//if(EhrLabCur.PatNum==0) {
@@ -610,7 +610,7 @@ namespace OpenDental {
 			EhrLabs.SaveToDB(EhrLabCur);
 			Patient patCur=Patients.GetPat(EhrLabCur.PatNum);
 			for(int i=0;i<EhrLabCur.ListEhrLabResults.Count;i++) {
-				if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).LabTestCDS) {
+				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).LabTestCDS) {
 					FormCDSIntervention FormCDSI=new FormCDSIntervention();
 					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(EhrLabCur.ListEhrLabResults[i],patCur);
 					FormCDSI.ShowIfRequired(false);

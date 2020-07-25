@@ -111,13 +111,13 @@ namespace OpenDental {
 					//TODO: The code above works, but ignores more recent lab results. Although the lab order my be unchanged there may be updated lab results.
 					//It would be better to check for updated results, unfortunately results have no unique identifiers.
 				}
-				Provider prov=Providers.GetProv(Security.CurUser.ProvNum);
-				if(Security.CurUser.ProvNum!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
+				Provider prov=Providers.GetProv(Security.CurrentUser.ProvNum);
+				if(Security.CurrentUser.ProvNum!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
 					ListEhrLabs[i].IsCpoe=true;
 				}
 				listEhrLabs[i]=EhrLabs.SaveToDB(listEhrLabs[i]);//SAVE
 				for(int j=0;j<listEhrLabs[i].ListEhrLabResults.Count;j++) {//EHR TRIGGER
-					if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).LabTestCDS) {
+					if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).LabTestCDS) {
 						FormCDSIntervention FormCDSI=new FormCDSIntervention();
 						FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(listEhrLabs[i].ListEhrLabResults[j],PatCur);
 						FormCDSI.ShowIfRequired(false);
@@ -149,7 +149,7 @@ namespace OpenDental {
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			EhrLabs.SaveToDB(FormLOE.EhrLabCur);
 			for(int i=0;i<FormLOE.EhrLabCur.ListEhrLabResults.Count;i++) {
-				if(CDSPermissions.GetForUser(Security.CurUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurUser.Id).LabTestCDS) {
+				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).LabTestCDS) {
 					FormCDSIntervention FormCDSI=new FormCDSIntervention();
 					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(FormLOE.EhrLabCur.ListEhrLabResults[i],PatCur);
 					FormCDSI.ShowIfRequired(false);

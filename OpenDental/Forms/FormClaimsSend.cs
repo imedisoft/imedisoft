@@ -430,7 +430,7 @@ namespace OpenDental{
 				butNextUnsent.Visible=false;
 			}
 			else {
-				_listClinics=Clinics.GetForUserod(Security.CurUser);
+				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 			}
 			comboCustomTracking.Items.Add(Lan.G(this,"all"));
 			comboCustomTracking.SelectedIndex=0;
@@ -504,7 +504,7 @@ namespace OpenDental{
 			}
 			comboClinic.Items.Clear();
 			_listNumberOfClaims.Clear();
-			if(!Security.CurUser.ClinicIsRestricted) {
+			if(!Security.CurrentUser.ClinicIsRestricted) {
 				comboClinic.Items.Add(Lan.G(this,"Unassigned/Default"));
 				comboClinic.SelectedIndex=0;
 			}
@@ -717,7 +717,7 @@ namespace OpenDental{
 			long clinicNum=0;
 			long customTracking=0;
 			if(PrefC.HasClinicsEnabled) {
-				if(Security.CurUser.ClinicIsRestricted) {//If the user is restricted to specific clinics (has no Unassigned/Default option)
+				if(Security.CurrentUser.ClinicIsRestricted) {//If the user is restricted to specific clinics (has no Unassigned/Default option)
 					clinicNum=_listClinics[comboClinic.SelectedIndex].ClinicNum;
 				}
 				else if(comboClinic.SelectedIndex!=0) {//If not restricted to specific clinics and not selecting Unassigned/Default
@@ -887,7 +887,7 @@ namespace OpenDental{
 				if(!FormCP.PrintImmediate(Lan.G(this,"Multiple claims printed"),PrintSituation.Claim,0,(doUsePrinterSettingsForAll && !isFirstIteration))) {
 					return;
 				}
-				Etranss.SetClaimSentOrPrinted(queueItem.ClaimNum,queueItem.PatNum,0,EtransType.ClaimPrinted,0,Security.CurUser.Id);
+				Etranss.SetClaimSentOrPrinted(queueItem.ClaimNum,queueItem.PatNum,0,EtransType.ClaimPrinted,0,Security.CurrentUser.Id);
 				isFirstIteration=false;
 			}
 			FillGrid();
@@ -1182,7 +1182,7 @@ namespace OpenDental{
 
 		private void butNextUnsent_Click(object sender,EventArgs e) {
 			int clinicSelectedAdjust=0;
-			if(!Security.CurUser.ClinicIsRestricted && comboClinic.SelectedIndex!=0) {
+			if(!Security.CurrentUser.ClinicIsRestricted && comboClinic.SelectedIndex!=0) {
 				clinicSelectedAdjust=1;
 			}
 			int newClinicSelected=-1;

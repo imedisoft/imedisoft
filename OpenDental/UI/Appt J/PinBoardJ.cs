@@ -54,7 +54,7 @@ namespace OpenDental.UI {
 						continue;
 					}
 					Appointments.Delete(appt.AptNum,true);
-					if(Security.CurUser==null){// E.g. clicking Log Off invalidates the user.
+					if(Security.CurrentUser==null){// E.g. clicking Log Off invalidates the user.
 						continue;
 					}
 					//Make a security log if we still have a valid user logged in. 

@@ -91,7 +91,7 @@ namespace OpenDentBusiness{
 		///<summary></summary>
 		public static long Insert(TreatPlan tp) {
 			
-			tp.SecUserNumEntry=Security.CurUser.Id;
+			tp.SecUserNumEntry=Security.CurrentUser.Id;
 			return Crud.TreatPlanCrud.Insert(tp);
 		}
 
@@ -214,7 +214,7 @@ namespace OpenDentBusiness{
 					PatNum=patNum,
 					//UserNumPresenter=userNum,
 					//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-					SecUserNumEntry=Security.CurUser.Id,
+					SecUserNumEntry=Security.CurrentUser.Id,
 					TPType=tpType
 				};
 				TreatPlans.Insert(activePlan);
@@ -235,7 +235,7 @@ namespace OpenDentBusiness{
 					PatNum=patNum,
 					//UserNumPresenter=userNum,
 					//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-					SecUserNumEntry=Security.CurUser.Id,
+					SecUserNumEntry=Security.CurrentUser.Id,
 					TPType=tpType
 				};
 				TreatPlans.Insert(unassignedPlan);

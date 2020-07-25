@@ -272,7 +272,7 @@ namespace OpenDental {
 		private void comboClinic_SelectionChangeCommitted(object sender,EventArgs e) {
 			SaveEbill(_eBillCur);
 			Ebill eBill=null;
-			if((!Security.CurUser.ClinicIsRestricted || Clinics.ClinicNum==0) && comboClinic.IsUnassignedSelected) {
+			if((!Security.CurrentUser.ClinicIsRestricted || Clinics.ClinicNum==0) && comboClinic.IsUnassignedSelected) {
 				eBill=_eBillDefault;
 			}
 			else {//Otherwise locate the Ebill from the cache.

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -160,7 +161,7 @@ namespace OpenDental{
 			}
 			_listDoseSpotUserPrefOld=UserOdPrefs.GetByUserAndFkeyAndFkeyType(UserCur.Id,
 				Programs.GetCur(ProgramName.eRx).Id,UserOdFkeyType.Program,
-				Clinics.GetForUserod(Security.CurUser,true).Select(x => x.ClinicNum)
+				Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum)
 				.Union(new List<long>() { 0 })//Always include 0 clinic, this is the default, NOT a headquarters only value.
 				.Distinct()
 				.ToList());
@@ -233,15 +234,13 @@ namespace OpenDental{
 
 		private void butPassword_Click(object sender, System.EventArgs e) {
 			bool isCreate=string.IsNullOrEmpty(UserCur.PasswordHash);
-			FormUserPassword FormU=new FormUserPassword(isCreate,UserCur.UserName);
-			FormU.IsInSecurityWindow=true;
+			FormUserPassword FormU=new FormUserPassword(UserCur.UserName, isCreate: isCreate, inSecurityWindow: true);
 			FormU.ShowDialog();
 			if(FormU.DialogResult==DialogResult.Cancel){
 				return;
 			}
 			UserCur.PasswordHash=FormU.PasswordHash;
 			UserCur.PasswordIsStrong=FormU.PasswordIsStrong;
-			_passwordTyped=FormU.PasswordTyped;
 			if(string.IsNullOrEmpty(UserCur.PasswordHash)) {
 				butPassword.Text=Lan.G(this,"Create Password");
 			}
@@ -395,11 +394,8 @@ namespace OpenDental{
 					List<UserGroup> listOldUserGroups=UserCur.GetGroups();
 					Userods.Update(UserCur,listNewUserGroups.Select(x => x.Id).ToList());
 					//if this is the current user, update the user, credentials, etc.
-					if(UserCur.Id==Security.CurUser.Id) {
-						Security.CurUser=UserCur.Copy();
-						if(_passwordTyped!=null) {
-							Security.PasswordTyped=_passwordTyped; //update the password typed for middle tier refresh
-						}
+					if(UserCur.Id==Security.CurrentUser.Id) {
+						Security.CurrentUser=UserCur.Copy();
 					}
 					//Log changes to the User's UserGroups.
 					Func<List<UserGroup>,List<UserGroup>,List<UserGroup>> funcGetMissing=(listCur,listCompare) => {
@@ -416,11 +412,11 @@ namespace OpenDental{
 					List<UserGroup> listAddedGroups=funcGetMissing(listNewUserGroups,listOldUserGroups);
 					if(listRemovedGroups.Count>0) {//Only log if there are items in the list
 						SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"User "+UserCur.UserName+
-							" removed from User group(s): "+string.Join(", ",listRemovedGroups.Select(x => x.Description).ToArray())+" by: "+Security.CurUser.UserName);
+							" removed from User group(s): "+string.Join(", ",listRemovedGroups.Select(x => x.Description).ToArray())+" by: "+Security.CurrentUser.UserName);
 					}
 					if(listAddedGroups.Count>0) {//Only log if there are items in the list.
 						SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"User "+UserCur.UserName+
-							" added to User group(s): "+string.Join(", ",listAddedGroups.Select(x => x.Description).ToArray())+" by: "+Security.CurUser.UserName);
+							" added to User group(s): "+string.Join(", ",listAddedGroups.Select(x => x.Description).ToArray())+" by: "+Security.CurrentUser.UserName);
 					}
 				}
 				if(UserClinics.Sync(listUserClinics,UserCur.Id)) {//Either syncs new list, or clears old list if no longer restricted.

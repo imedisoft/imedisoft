@@ -84,7 +84,7 @@ namespace OpenDental.UI {
 		///<summary>Property backer.</summary>
 		private bool _showLabel=true;
 		///<summary>As this combo is initialized, the user defaults to CurUser. Can be changed.</summary>
-		private Userod _userod=Security.CurUser;
+		private Userod _userod=Security.CurrentUser;
 		/// <summary>If this gets changed, then all places where this combo is used must be slightly adjusted.  This is a design weakness of this control, so just don't change it.  Wide enough to handle both "Clinic" and "Clinics".</summary>
 		private int _widthLabelArea=37;
 		#endregion Fields - Private

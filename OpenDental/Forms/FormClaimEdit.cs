@@ -2335,7 +2335,7 @@ namespace OpenDental
 			}
 			if(!notAuthorized) {//if already sent, we want to block users from changing sent date without permission.
 				//also changes claimstatus to sent, and date:
-				Etranss.SetClaimSentOrPrinted(ClaimCur.ClaimNum,ClaimCur.PatNum,0,EtransType.ClaimPrinted,0,Security.CurUser.Id);
+				Etranss.SetClaimSentOrPrinted(ClaimCur.ClaimNum,ClaimCur.PatNum,0,EtransType.ClaimPrinted,0,Security.CurrentUser.Id);
 			}
 			//ClaimCur.ClaimStatus="S";
 			//ClaimCur.DateSent=DateTime.Today;

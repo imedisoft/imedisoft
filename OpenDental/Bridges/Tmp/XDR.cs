@@ -64,7 +64,7 @@ namespace OpenDental.Bridges
 							sw.WriteLine("SX=M");
 						}
 						sw.WriteLine($"LO={locationID}");
-						sw.WriteLine($"UN={Security.CurUser.UserName}");
+						sw.WriteLine($"UN={Security.CurrentUser.UserName}");
 					}
 					ODFileUtils.WriteAllBytesThenStart(infoFile, memStream.ToArray(), path, "\"@" + infoFile + "\"");
 				}

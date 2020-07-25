@@ -9,7 +9,7 @@ namespace UnitTests
     ///<summary>Contains the queries, scripts, and tools to clear the database of data from previous unitTest runs.</summary>
     class DatabaseTools {
 		public static string FreshFromDump(string serverAddr,string port,string userName,string password) {
-			Security.CurUser=Security.CurUser??new Userod();
+			Security.CurrentUser=Security.CurrentUser??new Userod();
 
 				string command="DROP DATABASE IF EXISTS "+TestBase.UnitTestDbName;
 				try {

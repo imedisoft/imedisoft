@@ -102,8 +102,7 @@ namespace UnitTests
 		{
 			CreateUnitTestUser();
 			//Get the Admin user, should always exist
-			Security.CurUser = Userods.GetUserByName(UnitTestUserName, false);
-			Security.PasswordTyped = UnitTestPassword;//For middle tier unit tests.
+			Security.CurrentUser = Userods.GetUserByName(UnitTestUserName, false);
 		}
 
 		///<summary>Creates a database and a preference table so that DataConnection can pass our arbitrary test query.</summary>

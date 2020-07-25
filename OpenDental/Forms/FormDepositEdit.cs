@@ -1388,7 +1388,7 @@ namespace OpenDental{
 					//create a transaction here
 					Transaction trans=new Transaction();
 					trans.DepositNum=_depositCur.DepositNum;
-					trans.UserNum=Security.CurUser.Id;
+					trans.UserNum=Security.CurrentUser.Id;
 					Transactions.Insert(trans);
 					//first the deposit entry
 					JournalEntry je=new JournalEntry();

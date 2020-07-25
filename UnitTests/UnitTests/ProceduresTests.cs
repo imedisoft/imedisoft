@@ -1016,7 +1016,7 @@ namespace UnitTests.Procedures_Test {
 			insInfo.ListAllProcs.Add(proc2);
 			List<Procedure> listProcs=new List<Procedure> { proc1, proc2 };
 			//Also computes estimates
-			Procedures.SetCompleteInApptInList(apt,insInfo.ListInsPlans,insInfo.ListPatPlans,pat,listProcs,insInfo.ListInsSubs,Security.CurUser);
+			Procedures.SetCompleteInApptInList(apt,insInfo.ListInsPlans,insInfo.ListPatPlans,pat,listProcs,insInfo.ListInsSubs,Security.CurrentUser);
 			insInfo.ListAllClaimProcs=ClaimProcs.Refresh(pat.PatNum);
 			Assert.AreEqual(50,insInfo.ListAllClaimProcs.First(x => x.ProcNum==proc1.ProcNum).DedEst);
 			Assert.AreEqual(0,insInfo.ListAllClaimProcs.First(x => x.ProcNum==proc2.ProcNum).DedEst);
@@ -1046,7 +1046,7 @@ namespace UnitTests.Procedures_Test {
 			insInfo.ListAllProcs.Add(proc3);
 			List<Procedure> listProcs=new List<Procedure> { proc1, proc2, proc3 };
 			//Also computes estimates
-			Procedures.SetCompleteInApptInList(apt,insInfo.ListInsPlans,insInfo.ListPatPlans,pat,listProcs,insInfo.ListInsSubs,Security.CurUser);
+			Procedures.SetCompleteInApptInList(apt,insInfo.ListInsPlans,insInfo.ListPatPlans,pat,listProcs,insInfo.ListInsSubs,Security.CurrentUser);
 			insInfo.ListAllClaimProcs=ClaimProcs.Refresh(pat.PatNum);
 			Assert.AreEqual(0,insInfo.ListAllClaimProcs.First(x => x.ProcNum==proc1.ProcNum).DedEst);
 			Assert.AreEqual(50,insInfo.ListAllClaimProcs.First(x => x.ProcNum==proc2.ProcNum).DedEst);
@@ -1079,7 +1079,7 @@ namespace UnitTests.Procedures_Test {
 			insInfo.ListAllProcs.Add(proc3);
 			List<Procedure> listProcs = new List<Procedure> { proc1,proc2,proc3 };
 			//Also computes estimates
-			Procedures.SetCompleteInApptInList(apt,insInfo.ListInsPlans,insInfo.ListPatPlans,pat,listProcs,insInfo.ListInsSubs,Security.CurUser);
+			Procedures.SetCompleteInApptInList(apt,insInfo.ListInsPlans,insInfo.ListPatPlans,pat,listProcs,insInfo.ListInsSubs,Security.CurrentUser);
 			insInfo.ListAllClaimProcs=ClaimProcs.Refresh(pat.PatNum);
 			Assert.AreEqual(100,insInfo.ListAllClaimProcs.First(x => x.ProcNum==proc1.ProcNum).InsPayEst);
 			Assert.AreEqual(120,insInfo.ListAllClaimProcs.First(x => x.ProcNum==proc2.ProcNum).InsPayEst);
@@ -1120,7 +1120,7 @@ namespace UnitTests.Procedures_Test {
 			insInfo.ListAllProcs.Add(proc3);
 			List<Procedure> listProcs=new List<Procedure> { proc1, proc2, proc3 };
 			//Also computes estimates
-			Procedures.SetCompleteInApptInList(apt,insInfo.ListInsPlans,insInfo.ListPatPlans,pat,listProcs,insInfo.ListInsSubs,Security.CurUser);
+			Procedures.SetCompleteInApptInList(apt,insInfo.ListInsPlans,insInfo.ListPatPlans,pat,listProcs,insInfo.ListInsSubs,Security.CurrentUser);
 			insInfo.ListAllClaimProcs=ClaimProcs.Refresh(pat.PatNum);
 			//Total InsPayEst for the 3 procs on the appointment should be the remaining $120.
 			Assert.AreEqual(120,insInfo.ListAllClaimProcs.Where(x=>x.ProcNum.In(listProcs.Select(y=>y.ProcNum).ToList())).Sum(x => x.InsPayEst));
@@ -1148,7 +1148,7 @@ namespace UnitTests.Procedures_Test {
 			//Attach already completed and claim attached procedure to this appointment.
 			proc1.AptNum=apt.AptNum;
 			Procedures.SetCompleteInApptInList(apt,insInfo.ListInsPlans,insInfo.ListPatPlans,pat,new List<Procedure>() {proc1},insInfo.ListInsSubs
-				,Security.CurUser);
+				,Security.CurrentUser);
 			insInfo.ListAllClaimProcs=ClaimProcs.Refresh(pat.PatNum);
 			Assert.AreEqual(50,insInfo.ListAllClaimProcs.First(x => x.ProcNum==proc1.ProcNum).InsPayEst);//Correct ins est.
 			Assert.AreEqual("",insInfo.ListAllClaimProcs.First(x => x.ProcNum==proc1.ProcNum).EstimateNote);//No frequency limitation reached.

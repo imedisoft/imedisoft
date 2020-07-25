@@ -96,7 +96,7 @@ namespace OpenDental {
 
 		private List<Clinic> GetAvailableClinics() {
 			List<Clinic> listAvailableClinics=new List<Clinic>();
-			listAvailableClinics=Clinics.GetForUserod(Security.CurUser);
+			listAvailableClinics=Clinics.GetForUserod(Security.CurrentUser);
 			//Get list of Clinics in the current group.  Use in memory list to account for uncommitted changes.
 			List<long> listClinicNumsInUse=_listClinicsInGroup.Select(x => x.ClinicNum).ToList();
 			if(_listOtherGroupsWithFeeSched.Count>0) {

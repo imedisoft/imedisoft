@@ -1173,7 +1173,7 @@ namespace OpenDentBusiness {
 		public static void SetMedicationHistConsent(Patient pat,long clinicNum,Program programErx=null,List<ProgramProperty> listProgramProperties=null) {
 			ValidatePatientData(pat);
 			//Get Token
-			string doseSpotUserID=GetUserID(Security.CurUser,clinicNum);
+			string doseSpotUserID=GetUserID(Security.CurrentUser,clinicNum);
 			GetClinicIdAndKey(clinicNum,doseSpotUserID,programErx,listProgramProperties,out string doseSpotClinicID,out string doseSpotClinicKey);
 			string token=DoseSpotREST.GetToken(doseSpotUserID,doseSpotClinicID,doseSpotClinicKey);
 			//Get DoseSpotPatID
@@ -1384,7 +1384,7 @@ namespace OpenDentBusiness {
 			});
 			if(resObj.Result.ResultCode.ToUpper().Contains("ERROR")) {
 				ODException.ErrorCodes errorCode=ODException.ErrorCodes.NotDefined;
-				if(Erx.IsUserAnEmployee(Security.CurUser) 
+				if(Erx.IsUserAnEmployee(Security.CurrentUser) 
 					&& (resObj.Result.ResultDescription.ToLower().Contains("not authorized") || resObj.Result.ResultDescription.ToLower().Contains("unauthorized")))
 				{
 					errorCode=ODException.ErrorCodes.DoseSpotNotAuthorized;

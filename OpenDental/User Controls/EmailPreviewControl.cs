@@ -159,7 +159,7 @@ namespace OpenDental {
 				if(_isSigningEnabled) {
 					SetSig(EmailMessages.GetCertFromPrivateStore(_emailMessage.FromAddress));
 				}
-				_emailMessage.UserNum=Security.CurUser.Id;//UserNum is also updated when sent. Setting here to display when composing.
+				_emailMessage.UserNum=Security.CurrentUser.Id;//UserNum is also updated when sent. Setting here to display when composing.
 			}
 			else {//sent or received (not composing)
 				//For all email received or sent types, we disable most of the controls and put the window into a mostly read-only state.
@@ -312,7 +312,7 @@ namespace OpenDental {
       //3. All other email addresses not tied to a user
       _listEmailAddresses=new List<EmailAddress>();
       EmailAddress emailAddressDefault=EmailAddresses.GetByClinic(clinicNum);
-      EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurUser.Id);
+      EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurrentUser.Id);
       if(emailAddressDefault!=null) {
         _listEmailAddresses.Add(emailAddressDefault);
       }
@@ -612,7 +612,7 @@ namespace OpenDental {
 			//Next Scheduled Appointment Information
 			templateText=Appointments.ReplaceAppointment(templateText,aptNext); //handles null nextApts.
 			//Currently Logged in User Information
-			templateText=ReplaceTags.ReplaceUser(templateText,Security.CurUser);
+			templateText=ReplaceTags.ReplaceUser(templateText,Security.CurrentUser);
 			//Clinic Information
 			templateText=Clinics.ReplaceOffice(templateText,clinic);
 			//Misc Information

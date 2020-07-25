@@ -533,7 +533,7 @@ namespace OpenDental.UI {
 		}
 
 		private void butESign_Click(object sender,EventArgs e) {
-			Userod curUser=_userSig??Security.CurUser;
+			Userod curUser=_userSig??Security.CurrentUser;
 			Provider provCur=Providers.GetProv(curUser.ProvNum);
 			string digitalSignature=Lans.g(this,"Digitally Signed by ");
 			if(provCur!=null) {

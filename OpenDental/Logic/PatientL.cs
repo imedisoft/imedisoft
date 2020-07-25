@@ -163,9 +163,9 @@ namespace OpenDental
 				}
 			}
 
-			if (Security.CurUser != null)
+			if (Security.CurrentUser != null)
 			{
-				result += " {" + Security.CurUser.UserName + "}";
+				result += " {" + Security.CurrentUser.UserName + "}";
 			}
 
 			if (patient == null || patient.PatNum == 0 || patient.PatNum == -1)

@@ -68,7 +68,7 @@ namespace OpenDental {
 			row.Tag=_provClinicDefault;
 			gridProvProperties.ListGridRows.Add(row);
 			if(PrefC.HasClinicsEnabled) {
-				foreach(Clinic clinicCur in Clinics.GetForUserod(Security.CurUser)) {
+				foreach(Clinic clinicCur in Clinics.GetForUserod(Security.CurrentUser)) {
 					row=new GridRow();
 					ProviderClinic provClinic=_listProvClinic.Find(x => x.ClinicNum == clinicCur.ClinicNum);
 					//Doesn't exist in Db, create a new one

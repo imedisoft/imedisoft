@@ -121,7 +121,7 @@ namespace OpenDental {
 				trackCur.Note=textNotes.Text;
 				trackCur.TrackingDefNum=comboCustomTracking.GetSelectedDefNum();
 				trackCur.TrackingErrorDefNum=errorCodeDef.DefNum;
-				trackCur.UserNum=Security.CurUser.Id;
+				trackCur.UserNum=Security.CurrentUser.Id;
 				if(trackCur.ClaimTrackingNum==0) { //new claim tracking status.
 					ClaimTrackings.Insert(trackCur);
 				}

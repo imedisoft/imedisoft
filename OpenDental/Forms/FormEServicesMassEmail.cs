@@ -61,7 +61,7 @@ namespace OpenDental
 			if(PrefC.HasClinicsEnabled) {
 				ODBoxItem<Clinic> clinicItem=new ODBoxItem<Clinic>("Defaults",new Clinic() {Description="Defaults",Abbr="Defaults" });
 				comboClinicMassEmail.Items.Add(clinicItem);
-				foreach(Clinic item in Clinics.GetForUserod(Security.CurUser)) {
+				foreach(Clinic item in Clinics.GetForUserod(Security.CurrentUser)) {
 					clinicItem=new ODBoxItem<Clinic>(item.Abbr,item);
 					comboClinicMassEmail.Items.Add(clinicItem);
 				}

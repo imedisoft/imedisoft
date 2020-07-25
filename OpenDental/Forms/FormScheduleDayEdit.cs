@@ -509,7 +509,7 @@ namespace OpenDental{
 			butOkSchedule.Visible=ShowOkSchedule;
 			_listClinics=new List<Clinic>();
 			_listClinics.Add(new Clinic() { Abbr="" });//so HQ always comes before other clinics in the sort order; only for notes and holidays
-			Clinics.GetForUserod(Security.CurUser).ForEach(x => _listClinics.Add(x));
+			Clinics.GetForUserod(Security.CurrentUser).ForEach(x => _listClinics.Add(x));
 			//filled here instead of FillGrid since the list of clinics doesn't change when the grid is filtered and refilled.
 			_dictClinicNumClinic=_listClinics.ToDictionary(x => x.ClinicNum);//speed up sorting of schedules.
 			comboClinic.SelectedClinicNum=_clinicNumInitial;

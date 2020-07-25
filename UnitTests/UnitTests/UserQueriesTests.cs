@@ -169,7 +169,7 @@ namespace UnitTests.UserQueries_Tests
 		{
 			long group1 = UserGroupT.CreateUserGroup(userGroupName);
 			Userod userWOCommandPerm = UserodT.CreateUser(MethodBase.GetCurrentMethod().Name + DateTime.Now.Ticks, userGroupNumbers: new List<long>() { group1 });
-			Security.CurUser = userWOCommandPerm;
+			Security.CurrentUser = userWOCommandPerm;
 		}
 
 		[TestMethod]

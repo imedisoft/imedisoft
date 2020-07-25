@@ -380,7 +380,7 @@ namespace OpenDental {
 				,DateTime.DaysInMonth(DateTime.Today.Year,DateTime.Today.Month)).ToShortDateString();
 			if(!Security.IsAuthorized(Permissions.ReportProdIncAllProviders,true)) {
 				//They either have permission or have a provider at this point.  If they don't have permission they must have a provider.
-				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurUser.ProvNum);
+				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProvNum);
 				Provider prov=_listProviders.FirstOrDefault();
 				if(prov!=null) {
 					_listProviders.AddRange(Providers.GetWhere(x => x.FName == prov.FName && x.LName == prov.LName && x.ProvNum != prov.ProvNum));
@@ -414,8 +414,8 @@ namespace OpenDental {
 			}
 			else {
 				checkClinicBreakdown.Checked=PrefC.GetBool(PrefName.ReportPandIhasClinicBreakdown);
-				_listClinics=Clinics.GetForUserod(Security.CurUser);
-				if(!Security.CurUser.ClinicIsRestricted) {
+				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add(Lan.G(this,"Unassigned"));
 					listClin.SetSelected(0,true);
 				}
@@ -552,7 +552,7 @@ namespace OpenDental {
 			List<long> listSelectedClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {
 				if(listClin.SelectedIndices.Count>0) {
-					int offset=Security.CurUser.ClinicIsRestricted?0:1;
+					int offset=Security.CurrentUser.ClinicIsRestricted?0:1;
 					listClinics.AddRange(listClin.SelectedIndices.OfType<int>()
 						.Select(x => offset==1 && x==0?new Clinic { ClinicNum=0,Abbr=Lan.G(this,"Unassigned") }:_listClinics[x-offset]));
 				}

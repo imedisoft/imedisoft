@@ -53,15 +53,15 @@ namespace OpenDental {
 			_listUserClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				_listUserClinics.Add(new Clinic() { ClinicNum=-1,Description=Lan.G(this,"All") });//ClinicNum will be -1 at index 0, "All" means all the user has access to
-				if(!Security.CurUser.ClinicIsRestricted) {
+				if(!Security.CurrentUser.ClinicIsRestricted) {
 					//ClinicNum 0 at index==1, "Headquarters" means any where MedLab.PatAccountNum does not match any clinic.MedLabAccountNum
 					_listUserClinics.Add(new Clinic() { ClinicNum=0,Description=Lan.G(this,"Unassigned") });
 				}
-				_listUserClinics.AddRange(Clinics.GetForUserod(Security.CurUser));
+				_listUserClinics.AddRange(Clinics.GetForUserod(Security.CurrentUser));
 				_listUserClinics.ForEach(x => comboClinic.Items.Add(x.Description));
 				_dictLabAcctClinic=_listUserClinics.Where(x => !string.IsNullOrEmpty(x.MedLabAccountNum))
 					.ToDictionary(x => x.MedLabAccountNum,x => x.Description);
-				if(!Security.CurUser.ClinicIsRestricted && Clinics.ClinicNum==0) {//if unrestricted and the currently selected clinic is HQ
+				if(!Security.CurrentUser.ClinicIsRestricted && Clinics.ClinicNum==0) {//if unrestricted and the currently selected clinic is HQ
 					comboClinic.SelectedIndex=1;//all users will have the "All" clinic, unrestricted users will also have the "Unassigned" clinic, so index==1
 				}
 				else {

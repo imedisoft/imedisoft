@@ -709,7 +709,7 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; no call to db.
 			//When batch email operations are performed, we sometimes do this check further up in the UI.  This check is here to as a catch-all.
             //Security.CurUser will be null if this is called from a third party application (like Patient Portal).  We want to continue if that is the case.
-			if(Security.CurUser!=null && !Security.IsAuthorized(Permissions.EmailSend,true)) {//we need to suppress the message
+			if(Security.CurrentUser!=null && !Security.IsAuthorized(Permissions.EmailSend,true)) {//we need to suppress the message
 				return;
 			}
 			if(emailAddress.IsImplicitSsl) {
@@ -837,7 +837,7 @@ namespace OpenDentBusiness{
 			}
 			//Always send the email through this centralized method.  We cannot assume we have a database context inside SendEmail.
 			SendEmail.WireEmailUnsecure(ODEmailAddressToBasic(emailAddress),ODEmailMessageToBasic(emailMessage),nameValueCollectionHeaders,arrayAlternateViews);
-			emailMessage.UserNum=Security.CurUser.Id;
+			emailMessage.UserNum=Security.CurrentUser.Id;
 			SecurityLogs.MakeLogEntry(Permissions.EmailSend,emailMessage.PatNum,"Email Sent");
 		}
 
@@ -848,7 +848,7 @@ namespace OpenDentBusiness{
 				throw new Exception(Lans.g("EmailMessages","Digitally signed messages cannot be sent over implicit SSL."));//See detailed comments in the private version of SendEmailUnsecure().
 			}
 			//No need to check RemotingRole; no call to db.
-			emailMessage.UserNum=Security.CurUser.Id;
+			emailMessage.UserNum=Security.CurrentUser.Id;
 			emailMessage.FromAddress=emailAddressFrom.EmailUsername.Trim();//Cannot be emailAddressFrom.SenderAddress, or else will not find the correct signing certificate.  Used in ConvertEmailMessageToMessage().
 			Health.Direct.Common.Mail.Message msg=ConvertEmailMessageToMessage(emailMessage,true);
 			Health.Direct.Agent.MessageEnvelope msgEnvelope=new Health.Direct.Agent.MessageEnvelope(msg);

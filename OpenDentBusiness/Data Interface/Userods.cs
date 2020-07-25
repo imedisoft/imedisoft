@@ -117,7 +117,7 @@ namespace OpenDentBusiness
 		public static bool CanUserSignNote(Userod user = null)
 		{
 			//No need to check RemotingRole; no call to db.
-			Userod userSig = user == null ? Security.CurUser : user;
+			Userod userSig = user == null ? Security.CurrentUser : user;
 			if (PrefC.GetBool(PrefName.NotesProviderSignatureOnly) && userSig.ProvNum == 0)
 			{
 				return false;//Prefernce is on and our user is not a provider.
@@ -354,7 +354,7 @@ namespace OpenDentBusiness
 		/// Manipulates the appropriate log in failure columns in the db as needed.
 		/// Null will be returned when hasExceptions is false and no matching user found, credentials are invalid, or account is locked.
 		/// </summary>
-		public static Userod CheckUserAndPassword(string username, string plaintext, bool isEcw, bool hasExceptions = true)
+		public static Userod CheckUserAndPassword(string username, string plaintextPassword, bool isEcw = false, bool hasExceptions = true)
 		{
 			// Do not use the cache here because an administrator could have cleared the log in failure attempt columns for this user.
 
@@ -385,7 +385,7 @@ namespace OpenDentBusiness
 				return null;
 			}
 
-			var passwordOk = Password.Verify(plaintext, user.PasswordHash);
+			var passwordOk = Password.Verify(plaintextPassword, user.PasswordHash);
 			if (!passwordOk)
 			{
 				user.FailedLoginDateTime = serverTime;

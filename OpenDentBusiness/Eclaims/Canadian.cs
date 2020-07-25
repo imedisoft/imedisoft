@@ -871,7 +871,7 @@ namespace OpenDentBusiness.Eclaims {
 			etransAck.CarrierNum=etrans.CarrierNum;
 			etransAck.ClaimNum=etrans.ClaimNum;
 			etransAck.DateTimeTrans=DateTime.Now;
-			etransAck.UserNum=Security.CurUser.Id;
+			etransAck.UserNum=Security.CurrentUser.Id;
 			CCDFieldInputter fieldInputter=null;
 			if(errorMsg!=""){
 				etransAck.Etype=EtransType.AckError;
@@ -1006,7 +1006,7 @@ namespace OpenDentBusiness.Eclaims {
 		///<summary>Throws exception. Similar to Etrans.SetClaimSentOrPrinted(...) but not set the claim sent in the DB.
 		///Creates and inserts an etrans using given information then returns it.</summary>
 		public static Etrans CreateEtransForSendClaim(long claimNum,long patNum,long clearinghouseNum,EtransType etype) {
-			Etrans etrans=Etranss.CreateEtransForClaim(claimNum,patNum,clearinghouseNum,etype,batchNumber:0,Security.CurUser.Id);
+			Etrans etrans=Etranss.CreateEtransForClaim(claimNum,patNum,clearinghouseNum,etype,batchNumber:0,Security.CurrentUser.Id);
 			try {
 				etrans=Etranss.SetCanadianEtransFields(etrans);//etrans.CarrierNum, etrans.CarrierNum2 and etrans.EType all set prior to calling this.
 			}

@@ -276,7 +276,7 @@ namespace CentralManager
 
 			DisplayFields.RefreshCache();
 
-			Text += " - " + Security.CurUser.UserName;
+			Text += " - " + Security.CurrentUser.UserName;
 
 			connections = CentralConnections.GetConnections();
 
@@ -285,7 +285,7 @@ namespace CentralManager
 			FillComboGroups(PrefC.GetLong(PrefName.ConnGroupCEMT));
 			FillConnectionsGrid();
 
-			reportPermissions = GroupPermissions.GetPermsForReports().Where(x => Security.CurUser.IsInUserGroup(x.UserGroupNum)).ToList();
+			reportPermissions = GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupNum)).ToList();
 			_listDisplayReports_ProdInc = DisplayReports.GetForCategory(DisplayReportCategory.ProdInc, false);
 		}
 
@@ -317,22 +317,22 @@ namespace CentralManager
 				}
 			}
 
-			Text = "Central Manager - " + Security.CurUser.UserName;
+			Text = "Central Manager - " + Security.CurrentUser.UserName;
 		}
 
 		private void PasswordMenuItem_Click(object sender, EventArgs e)
 		{
-			using (var formCentralUserPasswordEdit = new FormCentralUserPasswordEdit(Security.CurUser.UserName, false, false))
+			using (var formCentralUserPasswordEdit = new FormCentralUserPasswordEdit(Security.CurrentUser.UserName, false, false))
 			{
 				if (formCentralUserPasswordEdit.ShowDialog(this) == DialogResult.Cancel)
 				{
 					return;
 				}
 
-				Security.CurUser.PasswordHash = formCentralUserPasswordEdit.PasswordHash;
+				Security.CurrentUser.PasswordHash = formCentralUserPasswordEdit.PasswordHash;
 				try
 				{
-					Userods.Update(Security.CurUser);
+					Userods.Update(Security.CurrentUser);
 				}
 				catch (Exception ex)
 				{
@@ -395,7 +395,7 @@ namespace CentralManager
 		{
 			if (!Security.IsAuthorized(Permissions.Setup)) return;
 
-			using (var formCentralReportSetup = new FormCentralReportSetup(Security.CurUser.Id, true))
+			using (var formCentralReportSetup = new FormCentralReportSetup(Security.CurrentUser.Id, true))
 			{
 				formCentralReportSetup.ShowDialog();
 			}
@@ -439,7 +439,7 @@ namespace CentralManager
 				return;
 			}
 
-			if (Security.CurUser.ProvNum == 0 && !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true))
+			if (Security.CurrentUser.ProvNum == 0 && !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true))
 			{
 				ShowInfo("The current user needs to have the 'All Providers' permission for this report");
 				return;

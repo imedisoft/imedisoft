@@ -358,14 +358,14 @@ namespace OpenDental {
 				foreach(string title in listInvalidWikiPages) {
 					WikiPage wp=new WikiPage();
 					wp.PageTitle=title;
-					wp.UserNum=Security.CurUser.Id;
+					wp.UserNum=Security.CurrentUser.Id;
 					wp.PageContent="[["+WikiPageCur.WikiPageNum+"]]\r\n"//link back
 						+"<h1>"+title+"</h1>\r\n";//page title
 					WikiPages.InsertAndArchive(wp);
 				}
 			}
 			WikiPageCur.PageContent=WikiPages.ConvertTitlesToPageNums(textContent.Text);
-			WikiPageCur.UserNum=Security.CurUser.Id;
+			WikiPageCur.UserNum=Security.CurrentUser.Id;
 			Regex regex=new Regex(@"\[\[(keywords:).+?\]\]");//only grab first match
 			Match m=regex.Match(textContent.Text);
 			WikiPageCur.KeyWords=m.Value.Replace("[[keywords:","").TrimEnd(']');//will be empty string if no match
@@ -404,7 +404,7 @@ namespace OpenDental {
         return;
       }
 			WikiPageCur.PageContent=WikiPages.ConvertTitlesToPageNums(textContent.Text);
-			WikiPageCur.UserNum=Security.CurUser.Id;
+			WikiPageCur.UserNum=Security.CurrentUser.Id;
 			Regex regex=new Regex(@"\[\[(keywords:).+?\]\]");//only grab first match
 			Match m=regex.Match(textContent.Text);
 			WikiPageCur.KeyWords=m.Value.Replace("[[keywords:","").TrimEnd(']');//will be empty string if no match

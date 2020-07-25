@@ -85,8 +85,8 @@ namespace OpenDental{
 		///<summary>If true, Time Card Security is enabled and should be considered for the current user.</summary>
 		private bool _isTimeCardSecurityApplicable {
 			get{
-				return Security.CurUser!=null &&
-				Security.CurUser.EmployeeNum==EmployeeCur.EmployeeNum &&
+				return Security.CurrentUser!=null &&
+				Security.CurrentUser.EmployeeNum==EmployeeCur.EmployeeNum &&
 				PrefC.GetBool(PrefName.TimecardSecurityEnabled);
 			} 
 		}

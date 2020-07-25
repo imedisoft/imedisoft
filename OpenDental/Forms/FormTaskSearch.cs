@@ -105,7 +105,7 @@ namespace OpenDental {
 			}
 			long userNum=0;
 			if(comboUsers.SelectedIndex==1){//Me
-				userNum=Security.CurUser.Id;
+				userNum=Security.CurrentUser.Id;
 			}
 			else if(comboUsers.SelectedIndex!=0) {
 				userNum=_listUsers[comboUsers.SelectedIndex-2].Id;//1(All) + 1(Me)= 2
@@ -217,7 +217,7 @@ namespace OpenDental {
 			Task task = new Task() { TaskListNum=-1 };//don't show it in any list yet.
 			Tasks.Insert(task);
 			Task taskOld = task.Copy();
-			task.UserNum=Security.CurUser.Id;
+			task.UserNum=Security.CurrentUser.Id;
 			task.TaskListNum=FormTLS.ListSelectedLists[0];
 			FormTaskEdit FormTE = new FormTaskEdit(task,taskOld);
 			FormTE.IsNew=true;

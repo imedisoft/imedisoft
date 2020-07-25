@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using System.Linq;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormSecurity:ODForm {
@@ -48,8 +49,7 @@ namespace OpenDental {
 				return;
 			}
 			//New username format; user.UserName(copy)(X)
-			FormUserPassword formPassword=new FormUserPassword(false,newUserName,isCopiedUser:true);
-			formPassword.IsInSecurityWindow=true;//Do not show or validate current password UI since this is a new user.
+			FormUserPassword formPassword=new FormUserPassword(newUserName, inSecurityWindow: true);
 			if(formPassword.ShowDialog()!=DialogResult.OK) {
 				return;
 			}

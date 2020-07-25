@@ -162,7 +162,7 @@ namespace OpenDental
 		private void setListClinicsAndDictRulesHelper() {
 			if(PrefC.HasClinicsEnabled) {//CLINICS
 				_ecListClinics=new List<Clinic>() { new Clinic() { Description="Defaults",Abbr="Defaults" } };
-				_ecListClinics.AddRange(Clinics.GetForUserod(Security.CurUser));
+				_ecListClinics.AddRange(Clinics.GetForUserod(Security.CurrentUser));
 			}
 			else {//NO CLINICS
 				_ecListClinics=new List<Clinic>() { new Clinic() { Description="Practice",Abbr="Practice" } };

@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		private void FormProcNoteAppend_Load(object sender,EventArgs e) {
 			signatureBoxWrapper.SetAllowDigitalSig(true);
-			textUser.Text=Security.CurUser.UserName;
+			textUser.Text=Security.CurrentUser.UserName;
 			textNotes.Text=ProcCur.Note;
 			if(!Userods.CanUserSignNote()) {
 				signatureBoxWrapper.Enabled=false;
@@ -71,9 +71,9 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			Procedure procOld=ProcCur.Copy();
-			ProcCur.UserNum=Security.CurUser.Id;
+			ProcCur.UserNum=Security.CurrentUser.Id;
 			ProcCur.Note=textNotes.Text+"\r\n"
-				+DateTime.Now.ToShortDateString()+" "+DateTime.Now.ToShortTimeString()+" "+Security.CurUser.UserName+":  "
+				+DateTime.Now.ToShortDateString()+" "+DateTime.Now.ToShortTimeString()+" "+Security.CurrentUser.UserName+":  "
 				+textAppended.Text;
 			try {
 				SaveSignature();

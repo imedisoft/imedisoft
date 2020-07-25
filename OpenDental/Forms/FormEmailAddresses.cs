@@ -62,7 +62,7 @@ namespace OpenDental {
 				listUsers.AddRange(Userods.GetUsers());//If authorized, get all non-hidden users.
 			}
 			else {
-				listUsers.Add(Security.CurUser);//Otherwise, just this user.
+				listUsers.Add(Security.CurrentUser);//Otherwise, just this user.
 			}
 			foreach(Userod user in listUsers) {
 				EmailAddress userAddress=EmailAddresses.GetForUser(user.Id);
