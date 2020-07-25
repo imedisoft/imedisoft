@@ -1278,15 +1278,7 @@ namespace OpenDental {
 			ToothChartRelay toothChartRelay= new ToothChartRelay();
 			toothChartRelay.SetToothChartWrapper(toothChartWrapper);
 			Control toothChart=null;//the Sparks3D tooth chart
-			if(ToothChartRelay.IsSparks3DPresent){
-				toothChart=toothChartRelay.GetToothChart();
-				toothChart.Location=new Point(0,0);
-				toothChart.Size=new Size(500,370);
-				toothChart.Visible=true;
-				this.splitContainer1.Panel1.Controls.Add(toothChart);
-				toothChart.BringToFront();
-			}
-			else{
+
 				toothChartWrapper.Size=new Size(500,370);
 				toothChartWrapper.UseHardware=ComputerPrefs.LocalComputer.GraphicsUseHardware;
 				toothChartWrapper.PreferredPixelFormatNumber=ComputerPrefs.LocalComputer.PreferredPixelFormatNum;
@@ -1304,7 +1296,7 @@ namespace OpenDental {
 				//The preferred pixel format number changes to the selected pixel format number after a context is chosen.
 				ComputerPrefs.LocalComputer.PreferredPixelFormatNum=toothChartWrapper.PreferredPixelFormatNumber;
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
-			}
+			
 			toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
 			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
 			toothChartRelay.ColorBackgroundMain=listDefs[14].ItemColor;
@@ -1314,11 +1306,6 @@ namespace OpenDental {
 			//toothChartRelay.AutoFinish=true;/??
 			_imageToothChart=toothChartRelay.GetBitmap();
 			toothChartWrapper.Dispose();
-			if(ToothChartRelay.IsSparks3DPresent){
-				toothChart.Visible=false;
-				this.splitContainer1.Panel1.Controls.Remove(toothChart);
-				toothChart.Dispose();//only local scope, anyway
-			}
 			//return imageRetVal;
 		}
 

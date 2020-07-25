@@ -27,19 +27,9 @@ namespace OpenDental {
 		private void FormPerioGraphic_Load(object sender,EventArgs e) {
 			_toothChartRelay= new ToothChartRelay();
 			_toothChartRelay.SetToothChartWrapper(toothChartWrapper);
-			if(ToothChartRelay.IsSparks3DPresent){
-				toothChartWrapper.Visible=false;
-				toothChart=_toothChartRelay.GetToothChart();
-				toothChart.Location=toothChartWrapper.Location;
-				toothChart.Size=toothChartWrapper.Size;
-				toothChart.Visible=true;
-				this.Controls.Add(toothChart);
-				toothChart.BringToFront();
-			}
-			else{
 				toothChartWrapper.DeviceFormat=new ToothChartDirectX.DirectXDeviceFormat(ComputerPrefs.LocalComputer.DirectXFormat);//Must be set before draw mode
 				toothChartWrapper.DrawMode=DrawingMode.DirectX;
-			}
+			
 			_toothChartRelay.BeginUpdate();
 			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
 			_toothChartRelay.ColorBackgroundMain=Color.White;
@@ -70,7 +60,7 @@ namespace OpenDental {
 			}
 			List<PerioMeasure> listMeas=PerioMeasures.GetAllForExam(_perioExamCur.PerioExamNum);
 			#region CAL old
-			if (!ToothChartRelay.IsSparks3DPresent){
+
 				//compute CAL's for each site.  If a CAL is valid, pass it in.
 				PerioMeasure measureProbe;
 				PerioMeasure measureGM;
@@ -181,7 +171,7 @@ namespace OpenDental {
 						_toothChartRelay.AddPerioMeasure(t,PerioSequenceType.CAL,calMB,calB,calDB,calML,calL,calDL);
 					}
 				}
-			}
+			
 			#endregion CAL old
 			for (int i=0;i<listMeas.Count;i++) {
 				if(listMeas[i].SequenceType==PerioSequenceType.SkipTooth) {

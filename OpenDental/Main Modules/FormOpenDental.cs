@@ -211,7 +211,9 @@ namespace OpenDental
 				formSplash.Show();
 			}
 			InitializeComponent();
+
 			SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
+
 			//toolbar		
 			ToolBarMain = new ODToolBar();
 			ToolBarMain.Location = new Point(51, 0);
@@ -220,6 +222,7 @@ namespace OpenDental
 			ToolBarMain.ImageList = imageListMain;
 			ToolBarMain.ButtonClick += new ODToolBarButtonClickEventHandler(ToolBarMain_ButtonClick);
 			this.Controls.Add(ToolBarMain);
+
 			//outlook bar
 			moduleBar = new ModuleBar();
 			moduleBar.Location = new Point(0, 0);
@@ -227,54 +230,62 @@ namespace OpenDental
 			moduleBar.Dock = DockStyle.Left;
 			moduleBar.ButtonClicked += new ButtonClickedEventHandler(myOutlookBar_ButtonClicked);
 			this.Controls.Add(moduleBar);
+
 			//MAIN MODULE CONTROLS
 			//contrApptJ
 			ContrAppt2 = new ContrAppt() { Visible = false };
 			ContrAppt2.Dock = DockStyle.Fill;
 			splitContainerNoFlickerDashboard.Panel1.Controls.Add(ContrAppt2);
+
 			//contrFamily
 			ContrFamily2 = new ContrFamily() { Visible = false };
 			ContrFamily2.Dock = DockStyle.Fill;
 			ContrFamily2.Dock = DockStyle.Fill;
 			splitContainerNoFlickerDashboard.Panel1.Controls.Add(ContrFamily2);
+
 			//contrFamilyEcw
 			ContrFamily2Ecw = new ContrFamilyEcw() { Visible = false };
 			ContrFamily2.Dock = DockStyle.Fill;
 			splitContainerNoFlickerDashboard.Panel1.Controls.Add(ContrFamily2Ecw);
+
 			//contrAccount
 			ContrAccount2 = new ContrAccount() { Visible = false };
 			ContrAccount2.Dock = DockStyle.Fill;
 			splitContainerNoFlickerDashboard.Panel1.Controls.Add(ContrAccount2);
+
 			//contrTreat
 			ContrTreat2 = new ContrTreat() { Visible = false };
 			ContrTreat2.Dock = DockStyle.Fill;
 			splitContainerNoFlickerDashboard.Panel1.Controls.Add(ContrTreat2);
+
 			//contrChart
 			ContrChart2 = new ContrChart() { Visible = false };
 			ContrChart2.Dock = DockStyle.Fill;
 			splitContainerNoFlickerDashboard.Panel1.Controls.Add(ContrChart2);
+
 			//contrImages
 			//Moved down to Load because it needs a pref to decide which one to load.
 			//contrManage
 			ContrManage2 = new ContrStaff() { Visible = false };
 			ContrManage2.Dock = DockStyle.Fill;
 			splitContainerNoFlickerDashboard.Panel1.Controls.Add(ContrManage2);
+
+
 			userControlPatientDashboard = new UserControlDashboard();
 			userControlPatientDashboard.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
 			userControlPatientDashboard.Size = new Size(splitContainerNoFlickerDashboard.Panel2.Width, splitContainerNoFlickerDashboard.Panel2.Height);
 			splitContainerNoFlickerDashboard.Panel2.Controls.Add(userControlPatientDashboard);
+			
+			
 			userControlTasks1 = new UserControlTasks() { Visible = false };
 			this.Controls.Add(userControlTasks1);
+
+
 			panelSplitter.ContextMenu = menuSplitter;
 			menuItemDockBottom.Checked = true;
-			//phoneSmall.Visible=false;
-			//this.Controls.Add(phoneSmall);
-			//phonePanel=new UserControlPhonePanel();
-			//phonePanel.Visible=false;
-			//this.Controls.Add(phonePanel);
-			//phonePanel.GoToChanged += new System.EventHandler(this.phonePanel_GoToChanged);
+
 			Logger.LogInfo("Open Dental initialization complete.");
-			//Plugins.HookAddCode(this,"FormOpenDental.Constructor_end");//Can't do this because no plugins loaded.
+
 			formSplash.Close();
 		}
         #endregion Constructor
@@ -2495,10 +2506,6 @@ namespace OpenDental
 				}
 				else
 				{//docked Right
-				 //phoneSmall.Visible=false;
-				 //phonePanel.Visible=false;
-				 //butBigPhones.Visible=false;
-				 //labelMsg.Visible=false;
 					if (panelSplitter.Width > 8)
 					{//docking needs to be changed
 						panelSplitter.Width = 7;
@@ -2518,16 +2525,12 @@ namespace OpenDental
 			}
 			else
 			{
-				//phoneSmall.Visible=false;
-				//phonePanel.Visible=false;
-				//butBigPhones.Visible=false;
-				//labelMsg.Visible=false;
 				panelSplitter.Visible = false;
 			}
+
 			splitContainerNoFlickerDashboard.Location = position;
 			splitContainerNoFlickerDashboard.Height = height;
 			splitContainerNoFlickerDashboard.Width = width;
-			//Size sizePanel1=splitContainerNoFlickerDashboard.Panel1.ClientSize;
 			if (userControlPatientDashboard.IsInitialized && userControlPatientDashboard.ListOpenWidgets.Count > 0)
 			{
 				if (splitContainerNoFlickerDashboard.Panel2Collapsed)
@@ -2540,6 +2543,7 @@ namespace OpenDental
 			{
 				splitContainerNoFlickerDashboard.Panel2Collapsed = true;
 			}
+
 			FillSignalButtons(null);//Refresh using cache only, do not run query, because this is fired a lot when resizing window or docted task control.
 		}
 

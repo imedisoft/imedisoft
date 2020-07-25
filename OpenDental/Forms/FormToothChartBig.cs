@@ -105,15 +105,7 @@ namespace OpenDental{
 		private void FormToothChartingBig_Load(object sender,EventArgs e) {
 			_toothChartRelay= new ToothChartRelay();
 			_toothChartRelay.SetToothChartWrapper(toothChartWrapper);
-			if(ToothChartRelay.IsSparks3DPresent){
-				toothChartWrapper.Visible=false;//already not visible
-				toothChart=_toothChartRelay.GetToothChart();
-				toothChart.Dock = System.Windows.Forms.DockStyle.Fill;
-				toothChart.Location=toothChartWrapper.Location;
-				toothChart.Size=toothChartWrapper.Size;
-				this.Controls.Add(toothChart);
-			}
-			else{
+
 				toothChartWrapper.Visible=true;
 				//ComputerPref computerPref=ComputerPrefs.GetForLocalComputer();
 				toothChartWrapper.UseHardware=ComputerPrefs.LocalComputer.GraphicsUseHardware;
@@ -132,7 +124,7 @@ namespace OpenDental{
 				//The preferred pixel format number changes to the selected pixel format number after a context is chosen.
 				ComputerPrefs.LocalComputer.PreferredPixelFormatNum=toothChartWrapper.PreferredPixelFormatNumber;
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
-			}
+			
 			FillToothChart();
 			//toothChart.Refresh();
 		}

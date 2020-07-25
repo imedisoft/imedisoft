@@ -565,17 +565,20 @@ namespace OpenDental
 				AddDropDown(button, programCur);
 				toolBar.Buttons.Add(button);
 			}
+
+
+
+
 			for (int i = 0; i < toolBar.Buttons.Count; i++)
-			{//Reset the new index, because it might have changed due to removing/adding to the Images list.
-				if (toolBar.Buttons[i].Tag.GetType() != typeof(Program))
-				{
-					continue;
-				}
-				Program programCur = (Program)toolBar.Buttons[i].Tag;
-				string key = programCur.Id.ToString() + programCur.Name.ToString();
-				if (toolBar.ImageList.Images.ContainsKey(key))
-				{
-					toolBar.Buttons[i].ImageIndex = toolBar.ImageList.Images.IndexOfKey(key);
+			{
+				if (toolBar.Buttons[i].Tag is Program program)
+                {
+					string key = program.Id.ToString() + program.Name.ToString();
+
+					if (toolBar.ImageList.Images.ContainsKey(key))
+					{
+						toolBar.Buttons[i].ImageIndex = toolBar.ImageList.Images.IndexOfKey(key);
+					}
 				}
 			}
 		}

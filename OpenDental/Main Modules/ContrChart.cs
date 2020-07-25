@@ -4282,8 +4282,6 @@ namespace OpenDental {
 			butErxAccess.Visible = false;
 			tabProc.TabPages.Remove(tabCustomer);
 
-			if (!ToothChartRelay.IsSparks3DPresent)
-			{
 				//ComputerPref computerPref=ComputerPrefs.GetForLocalComputer();
 				toothChartWrapper.UseHardware = ComputerPrefs.LocalComputer.GraphicsUseHardware;
 				toothChartWrapper.PreferredPixelFormatNumber = ComputerPrefs.LocalComputer.PreferredPixelFormatNum;
@@ -4293,7 +4291,7 @@ namespace OpenDental {
 				//The preferred pixel format number changes to the selected pixel format number after a context is chosen.
 				ComputerPrefs.LocalComputer.PreferredPixelFormatNum = toothChartWrapper.PreferredPixelFormatNumber;
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
-			}
+			
 			if (_patCur != null)
 			{
 				FillToothChart(true);
@@ -4367,53 +4365,16 @@ namespace OpenDental {
 				return;
 			}
 			_initializedOnStartup=true;
-			if(File.Exists(@"Sparks3D\Sparks3D.dll")){
-				if(PrefC.GetBoolSilent(PrefName.DirectX11ToothChartUseIfAvail,true)){
-					ToothChartRelay.IsSparks3DPresent=true;
-				}
-				if(ComputerPrefs.LocalComputer.GraphicsUseDirectX11==YN.No) {
-					ToothChartRelay.IsSparks3DPresent=false;
-				}
-				if(ComputerPrefs.LocalComputer.GraphicsUseDirectX11==YN.Yes) {
-					ToothChartRelay.IsSparks3DPresent=true;
-				}
-				//We'll just go ahead and let everyone use it, whether on support or not.
-				//The code below might be useful if we decide to restrict usage a little more.
-				//if(ODBuild.IsTrial()){
-				//	ToothChartRelay.IsSparks3DPresent=true;
-				//}
-				//else if(OpenDentalHelp.ODHelp.IsEncryptedKeyValid()){//always true in debug
-				//	ToothChartRelay.IsSparks3DPresent=true;
-				//}
-			}
+
 			_toothChartRelay= new ToothChartRelay();//IsSparks3DPresent could have been set back to false here
 			_toothChartRelay.SetToothChartWrapper(toothChartWrapper);
-			if(ToothChartRelay.IsSparks3DPresent){
-				try{
-					toothChartWrapper.Visible=false;//already not visible
-					toothChart=_toothChartRelay.GetToothChart();
-					toothChart.Location=toothChartWrapper.Location;
-					toothChart.Size=toothChartWrapper.Size;
-					_toothChartRelay.SegmentDrawn+=toothChart_SegmentDrawn;
-					_toothChartRelay.ToothSelectionsChanged += toothChart_ToothSelectionsChanged;
-					this.Controls.Add(toothChart);
-					_toothChartRelay.ResetTeeth();
-					_toothChartRelay.EndUpdate();//Initializes various pointers so that closing OD won't cause null memory error
-				}
-				catch{
-					//EndUpdate can fail.
-					ToothChartRelay.IsSparks3DPresent=false;
-					if(toothChart.Visible){
-						toothChart.Visible=false;//might need to be more aggressive and actually delete it
-					}
-				}
-			}
-			if(!ToothChartRelay.IsSparks3DPresent){
+
+
 				toothChartWrapper.Visible=true;
 				//ComputerPref localComputerPrefs=ComputerPrefs.GetForLocalComputer();
 				this.toothChartWrapper.DeviceFormat=new ToothChartDirectX.DirectXDeviceFormat(ComputerPrefs.LocalComputer.DirectXFormat);
 				this.toothChartWrapper.DrawMode=ComputerPrefs.LocalComputer.GraphicsSimple;//triggers ResetControls.
-			}
+			
 			_procStatusNew=ProcStat.TP;
 			if(IsTPChartingAvailable) {
 				FillListPriorities();//Mimics old ChartLayoutHelper logic
@@ -6667,12 +6628,8 @@ namespace OpenDental {
 						control=panelToothTrackBar;
 						break;
 					case "toothChart":
-						if(ToothChartRelay.IsSparks3DPresent) {
-							control=toothChart;
-						}
-						else {
 							control=toothChartWrapper;
-						}
+						
 						break;
 					case "PanelEcw":
 						control=panelEcw;
@@ -8498,14 +8455,10 @@ namespace OpenDental {
 				procTemp.CodeNum=PIn.Long(table.Rows[i]["CodeNum"].ToString());
 				listProcedures.Add(procTemp);
 			}
-			if(ToothChartRelay.IsSparks3DPresent) {
-				FormPerio formPerio=new FormPerio(_patCur,null);
-				formPerio.ShowDialog();
-			}
-			else{
+
 				FormPerio formPerio=new FormPerio(_patCur,listProcedures);
 				formPerio.ShowDialog();
-			}
+			
 		}
 
 		private void Tool_Ortho_Click() {

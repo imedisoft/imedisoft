@@ -324,15 +324,7 @@ namespace OpenDental
 			ToothChartRelay toothChartRelay = new ToothChartRelay(false);
 			toothChartRelay.SetToothChartWrapper(toothChartWrapper);
 			Control toothChart = null;//the Sparks3D tooth chart
-			if (ToothChartRelay.IsSparks3DPresent)
-			{
-				toothChart = toothChartRelay.GetToothChart();
-				toothChart.Location = new Point(0, 0);
-				toothChart.Size = new Size(width, height);
-				//form.Controls.Add(toothChart);
-			}
-			else
-			{
+
 				toothChartWrapper.Size = new Size(width, height);
 				toothChartWrapper.UseHardware = ComputerPrefs.LocalComputer.GraphicsUseHardware;
 				toothChartWrapper.PreferredPixelFormatNumber = ComputerPrefs.LocalComputer.PreferredPixelFormatNum;
@@ -345,7 +337,7 @@ namespace OpenDental
 				formOldBitmap.Size = new Size(width, height);
 				formOldBitmap.Controls.Add(toothChartWrapper);
 				//formOldBitmap.Show();
-			}
+			
 			toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
 			List<Def> listDefs = Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
 			toothChartRelay.ColorBackgroundMain = listDefs[colorBackgroundIndex].ItemColor;
@@ -407,22 +399,15 @@ namespace OpenDental
 			listProceduresFiltered.Sort(OpenDentBusiness.SheetPrinting.CompareProcListFiltered);
 			//Draw tooth chart
 			DrawProcsGraphics(listProceduresFiltered, toothChartRelay, toothInitialList);
-			if (!ToothChartRelay.IsSparks3DPresent)
-			{
+
 				toothChartWrapper.AutoFinish = true;
-			}
+			
 			toothChartRelay.EndUpdate();
-			if (ToothChartRelay.IsSparks3DPresent)
-			{
-				Image retVal = toothChartRelay.GetBitmap();
-				return retVal;
-			}
-			else
-			{
+
 				Image retVal = toothChartRelay.GetBitmap();
 				formOldBitmap.Close();//automatically disposes, too
 				return retVal;
-			}
+			
 		}
 
 		/*

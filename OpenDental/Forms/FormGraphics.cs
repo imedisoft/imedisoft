@@ -501,12 +501,9 @@ namespace OpenDental{
 			else {
 				radioDirectX11ThisCompUseGlobal.Checked=true;
 			}
-			if(ToothChartRelay.IsSparks3DPresent){
-				radioDirectX11Avail.Checked=true;
-			}
-			else{
+
 				radioDirectX11NotFound.Checked=true;
-			}
+			
 			if(ComputerPrefCur.GraphicsSimple==DrawingMode.Simple2D) {
 				radioSimpleChart.Checked=true;
 				group3DToothChart.Enabled=false;
