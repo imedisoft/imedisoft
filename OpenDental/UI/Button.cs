@@ -9,7 +9,7 @@ namespace OpenDental.UI
     public class Button : System.Windows.Forms.Button
 	{
 		private static readonly Color colorBorder = Color.FromArgb(0, 70, 140);
-		private static readonly Color colorBorderHighlight = Color.FromArgb(0, 110, 190);
+		private static readonly Color colorBorderHighlight = Color.FromArgb(160, 0, 110, 190);
 		private static readonly Color colorBorderDisabled = Color.FromArgb(150, 150, 150);
 		private static readonly Color colorTop = Color.FromArgb(255, 255, 255);
 		private static readonly Color colorBottom = Color.FromArgb(200, 200, 200);
@@ -229,12 +229,16 @@ namespace OpenDental.UI
 					case ButtonState.Hover:
 						using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(0, Height), colorTop, colorBottom))
 						{
+							var clip = g.Clip;
+
 							g.FillPath(brush, path);
-							using (var highlightPen = new Pen(colorBorderHighlight, 1.7f))
-                            {
-								g.DrawPath(highlightPen, path);
-                            }
-						}
+							g.Clip = new Region(path);
+
+                            using var highlightPen = new Pen(colorBorderHighlight, 3.5f);
+
+                            g.DrawPath(highlightPen, path);
+							g.Clip = clip;
+                        }
 						g.DrawPath(pen, path);
 						break;
 
@@ -257,23 +261,21 @@ namespace OpenDental.UI
 
 		private static Point GetImagePosition(ContentAlignment alignment, Image image, Rectangle bounds, Padding padding)
         {
-			switch (alignment)
-			{
-				case ContentAlignment.TopLeft: return new Point(padding.Left, padding.Top);
-				case ContentAlignment.TopCenter: return new Point(bounds.Width / 2 - image.Width / 2, padding.Top);
-				case ContentAlignment.TopRight: return new Point(bounds.Width - image.Width - padding.Right, padding.Top);
-				case ContentAlignment.MiddleLeft: return new Point(padding.Left, bounds.Height / 2 - image.Height / 2);
-				case ContentAlignment.MiddleRight: return new Point(bounds.Width - image.Width - padding.Right, bounds.Height / 2 - image.Height / 2);
-				case ContentAlignment.BottomLeft: return new Point(padding.Left, bounds.Height - image.Height - padding.Bottom);
-				case ContentAlignment.BottomCenter: return new Point(bounds.Width / 2 - image.Width / 2, bounds.Height - image.Height - padding.Bottom);
-				case ContentAlignment.BottomRight: return new Point(bounds.Width - image.Width - padding.Right, bounds.Height - image.Height - padding.Bottom);
-			}
+            return alignment switch
+            {
+                ContentAlignment.TopLeft => new Point(padding.Left, padding.Top),
+                ContentAlignment.TopCenter => new Point(bounds.Width / 2 - image.Width / 2, padding.Top),
+                ContentAlignment.TopRight => new Point(bounds.Width - image.Width - padding.Right, padding.Top),
+                ContentAlignment.MiddleLeft => new Point(padding.Left, bounds.Height / 2 - image.Height / 2),
+                ContentAlignment.MiddleRight => new Point(bounds.Width - image.Width - padding.Right, bounds.Height / 2 - image.Height / 2),
+                ContentAlignment.BottomLeft => new Point(padding.Left, bounds.Height - image.Height - padding.Bottom),
+                ContentAlignment.BottomCenter => new Point(bounds.Width / 2 - image.Width / 2, bounds.Height - image.Height - padding.Bottom),
+                ContentAlignment.BottomRight => new Point(bounds.Width - image.Width - padding.Right, bounds.Height - image.Height - padding.Bottom),
 
-			// Default to center the image..
-			return new Point(
-				bounds.Width / 2 - image.Width / 2, 
-				bounds.Height / 2 - image.Height / 2);
-		}
+                // Default to center the image..
+                _ => new Point(bounds.Width / 2 - image.Width / 2, bounds.Height / 2 - image.Height / 2),
+            };
+        }
 
 		private static Rectangle GetTextRectangleRelativeToImage(Rectangle rect, Image image, ContentAlignment imageAlignment)
         {
@@ -302,25 +304,23 @@ namespace OpenDental.UI
 
 			if (Image == null)
 			{
-				using (var textBrush = new SolidBrush(Enabled ? colorText : colorTextDisabled))
-				{
-					if (Enabled)
-					{
-                        using var textGlowBrush = new SolidBrush(colorTextGlow);
+                using var textBrush = new SolidBrush(Enabled ? colorText : colorTextDisabled);
 
-                        var textGlowRectangle = new RectangleF(
-                            ClientRectangle.X + .5f, ClientRectangle.Y + .5f,
-                            ClientRectangle.Width,
-                            ClientRectangle.Height);
+                if (Enabled)
+                {
+                    using var textGlowBrush = new SolidBrush(colorTextGlow);
 
-                        g.DrawString(Text, Font, textGlowBrush, textGlowRectangle, stringFormat);
-                    }
+                    var textGlowRectangle = new RectangleF(
+                        ClientRectangle.X + .5f, ClientRectangle.Y + .5f,
+                        ClientRectangle.Width,
+                        ClientRectangle.Height);
 
-					g.DrawString(Text, Font, textBrush, ClientRectangle, stringFormat);
+                    g.DrawString(Text, Font, textGlowBrush, textGlowRectangle, stringFormat);
+                }
 
-				}
+                g.DrawString(Text, Font, textBrush, ClientRectangle, stringFormat);
 
-				return;
+                return;
 			}
 
 			// Determine the location for the image and draw it...
@@ -339,22 +339,21 @@ namespace OpenDental.UI
 			{
 				var textRectangle = GetTextRectangleRelativeToImage(ClientRectangle, Image, ImageAlign);
 
-				using (var textBrush = new SolidBrush(Enabled ? colorText : colorTextDisabled))
-				{
-					if (Enabled)
-					{
-						using var textGlowBrush = new SolidBrush(colorTextGlow);
+                using var textBrush = new SolidBrush(Enabled ? colorText : colorTextDisabled);
 
-						var textGlowRectangle = new RectangleF(
-							textRectangle.X + .5f, textRectangle.Y + .5f,
-							textRectangle.Width, textRectangle.Height);
+                if (Enabled)
+                {
+                    using var textGlowBrush = new SolidBrush(colorTextGlow);
 
-						g.DrawString(Text, Font, textGlowBrush, textGlowRectangle, stringFormat);
-					}
+                    var textGlowRectangle = new RectangleF(
+                        textRectangle.X + .5f, textRectangle.Y + .5f,
+                        textRectangle.Width, textRectangle.Height);
 
-					g.DrawString(Text, Font, textBrush, textRectangle, stringFormat);
-				}
-			}
+                    g.DrawString(Text, Font, textGlowBrush, textGlowRectangle, stringFormat);
+                }
+
+                g.DrawString(Text, Font, textBrush, textRectangle, stringFormat);
+            }
 		}
 
 		/// <summary>
@@ -373,32 +372,27 @@ namespace OpenDental.UI
 			{
 				g.FillPath(brush, path);
 
-				using (var pen = new Pen(colorBorder))
-				{
-					g.DrawPath(pen, path);
-				}
-			}
+                using var pen = new Pen(colorBorder);
 
-			using (var stringFormat = new StringFormat())
-			{
-				stringFormat.Alignment = StringAlignment.Center;
-				stringFormat.LineAlignment = StringAlignment.Center;
+                g.DrawPath(pen, path);
+            }
 
-				var rectangleTextGlow = new RectangleF(
-					bounds.X + .5f, bounds.Y + .5f, 
-					bounds.Width, 
-					bounds.Height);
+            using var stringFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
 
-				using (var brushTextGlow = new SolidBrush(colorTextGlow))
-				{
-					g.DrawString(text, font, brushTextGlow, rectangleTextGlow, stringFormat);
-				}
+            var rectangleTextGlow = new RectangleF(
+                bounds.X + .5f, bounds.Y + .5f,
+                bounds.Width,
+                bounds.Height);
 
-				using (var brushText = new SolidBrush(colorText))
-				{
-					g.DrawString(text, font, brushText, bounds, stringFormat);
-				}
-			}
-		}
+			using var brushTextGlow = new SolidBrush(colorTextGlow);
+			using var brushText = new SolidBrush(colorText);
+
+            g.DrawString(text, font, brushTextGlow, rectangleTextGlow, stringFormat);
+            g.DrawString(text, font, brushText, bounds, stringFormat);
+        }
 	}
 }
