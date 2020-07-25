@@ -8673,6 +8673,10 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\ProgramIconBlue.ico" />
+    <None Include="Resources\ProgramIconRed.ico" />
+    <None Include="Resources\ProgramIconDefault.ico" />
+    <None Include="Resources\IconDefault.ico" />
     <None Include="Resources\Splash.png" />
     <None Include="Resources\IconFolderOpen.png" />
     <None Include="Resources\IconTrash.png" />

@@ -1,4 +1,5 @@
-﻿using OpenDental;
+﻿using Imedisoft.Properties;
+using OpenDental;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,6 +10,7 @@ namespace Imedisoft.Forms
         public FormBase()
         {
             Font = new Font("Tahoma", 8f);
+            Icon = Resources.ProgramIconBlue;
         }
 
         protected void ShowError(string errorMessage)
