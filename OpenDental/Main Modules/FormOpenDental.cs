@@ -526,7 +526,6 @@ namespace OpenDental
 			//Lan.Refresh();//automatically skips if current culture is en-US
 			//LanguageForeigns.Refresh(CultureInfo.CurrentCulture);//automatically skips if current culture is en-US			
 			moduleBar.RefreshButtons();
-			Lan.C("MainMenu", mainMenu);
 			if (CultureInfo.CurrentCulture.Name == "en-US")
 			{
 				menuItemTranslation.Visible = false;
@@ -836,7 +835,8 @@ namespace OpenDental
 				return false;
 			}
 
-			LanguageForeigns.RefreshCache();//automatically skips if current culture is en-US
+
+
 											//menuItemMergeDatabases.Visible=PrefC.GetBool(PrefName.RandomPrimaryKeys");
 			return true;
 		}
@@ -5926,13 +5926,6 @@ namespace OpenDental
 
 		private void menuItemTranslation_Click(object sender, System.EventArgs e)
 		{
-			if (!Security.IsAuthorized(Permissions.Setup))
-			{
-				return;
-			}
-			FormTranslationCat FormTC = new FormTranslationCat();
-			FormTC.ShowDialog();
-			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Translations");
 		}
 
 		private void menuItemMobileSetup_Click(object sender, EventArgs e)

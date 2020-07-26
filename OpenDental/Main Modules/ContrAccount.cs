@@ -1819,7 +1819,6 @@ namespace OpenDental {
 					butRefresh,
 					butCreditCard
 				});
-			Lan.C(this,contextMenuIns,contextMenuStatement);
 			LayoutToolBar();
 			textQuickProcs.AcceptsTab=true;
 			textQuickProcs.KeyDown+=textQuickCharge_KeyDown;

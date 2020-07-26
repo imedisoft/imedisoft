@@ -4380,54 +4380,6 @@ namespace OpenDental {
 				FillListPriorities();//Mimics old ChartLayoutHelper logic
 			}
 			ToggleCheckTreatPlans();//Mimics old ChartLayoutHelper logic
-			//can't use Lan.F
-			Lan.C(this,new Control[] {
-				checkDone,
-				butNew,
-				butClear,
-				checkShowTP,
-				checkShowC,
-				checkShowE,
-				checkShowR,
-				checkRx,
-				checkNotes,
-				checkTreatPlans,
-				labelDx,
-				butM,
-				butOI,
-				butD,
-				butL,
-				butBF,
-				butV,
-				groupBox2,
-				radioEntryTP,
-				radioEntryC,
-				radioEntryEC,
-				radioEntryEO,
-				radioEntryR,
-				checkToday,
-				labelDx,
-				label6,
-				butAddProc,
-				label14,
-				//textProcCode is handled in ClearButtons()
-				butOK,
-				label13,
-				tabEnterTx,
-				tabMissing,
-				tabMovements,
-				tabPrimary,
-				tabPlanned,
-				tabShow,
-				tabDraw,
-				gridChartViews,
-				gridPlanned,
-				gridProg,
-				gridPtInfo,
-				gridTpProcs,
-				gridTreatPlans,
-			},true);
-			Lan.C(this,menuProgRight,menuErx,menuToothChart);
 			LayoutToolBar();
 			//Passed-in controls will maintain their location and be shown but are not part of the dynamic layout fields.
 			_sheetLayoutController=new SheetLayoutController(this,ToolBarMain,tabControlImages,panelImages);

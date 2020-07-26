@@ -4782,15 +4782,6 @@
     <Compile Include="Forms\FormTransactionEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormTranslation.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormTranslationCat.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormTranslationEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\FormTreatPlanEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -7872,18 +7863,6 @@
     <EmbeddedResource Include="Forms\FormTransactionEdit.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormTransactionEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormTranslation.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>FormTranslation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormTranslationCat.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>FormTranslationCat.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormTranslationEdit.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>FormTranslationEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormTreatPlanEdit.resx">
       <SubType>Designer</SubType>

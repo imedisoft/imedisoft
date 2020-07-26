@@ -775,8 +775,6 @@
     <Compile Include="Crud\LabPanelCrud.cs" />
     <Compile Include="Crud\LabResultCrud.cs" />
     <Compile Include="Crud\LabTurnaroundCrud.cs" />
-    <Compile Include="Crud\LanguageCrud.cs" />
-    <Compile Include="Crud\LanguageForeignCrud.cs" />
     <Compile Include="Crud\LetterCrud.cs" />
     <Compile Include="Crud\LetterMergeCrud.cs" />
     <Compile Include="Crud\LetterMergeFieldCrud.cs" />
@@ -1195,7 +1193,6 @@
     <Compile Include="Data Interface\LabCases.cs" />
     <Compile Include="Data Interface\Laboratories.cs" />
     <Compile Include="Data Interface\LabTurnarounds.cs" />
-    <Compile Include="Data Interface\LanguageForeigns.cs" />
     <Compile Include="Data Interface\LetterMergeFields.cs" />
     <Compile Include="Data Interface\LetterMerges.cs" />
     <Compile Include="Data Interface\Letters.cs" />

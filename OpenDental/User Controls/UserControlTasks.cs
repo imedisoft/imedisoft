@@ -87,9 +87,6 @@ namespace OpenDental {
 
 		public UserControlTasks() {
 			InitializeComponent();
-			//this.listMain.ContextMenu = this.menuEdit;
-			//Lan.F(this);
-			Lan.C(this,menuEdit);
 			gridMain.ContextMenu=menuEdit;
 			_listInstances.Add(this);
 		}
