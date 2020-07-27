@@ -40,9 +40,6 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static bool IsUserLoggedIn => CurrentUser != null;
 
-		[Obsolete("Use Environment.MachineName instead")]
-		public static string CurComputerName => Environment.MachineName;
-
 		/// <summary>
 		/// Checks to see if current user is authorized.
 		/// It also checks any date restrictions.

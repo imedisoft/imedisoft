@@ -21,7 +21,6 @@ namespace OpenDental {
 		///<summary>The column index of the Status column within the Messages grid.
 		///This is a class-wide variable to prevent bugs if we decide to change the column order of the Messages grid.</summary>
 		private int _columnStatusIdx=0;
-		private UserOdPref _groupByPref=null;
 		private List<SmsFromMobile> _listSmsFromMobile=new List<SmsFromMobile>();
 		private List<SmsToMobile> _listSmsToMobile=new List<SmsToMobile>();
 		private Color _colorSelect=Color.FromArgb(224,243,255);
@@ -168,19 +167,25 @@ namespace OpenDental {
 		#region Init
 		public FormSmsTextMessaging(bool isSent,bool isReceived,Action<int> smsNotifier) {
 			InitializeComponent();
-			Lan.F(this);
+
 			checkSent.Checked=isSent;
 			checkRead.Checked=isReceived;
 			_smsNotifier=smsNotifier;
-			_groupByPref=UserOdPrefs.GetFirstOrNewByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.SmsGroupBy);
-			if(_groupByPref.ValueString=="1") {
-				radioGroupByPatient.Checked=true;
-			}
-			else if(_groupByPref.ValueString=="2") {
-				radioGroupByPhone.Checked=true;
-			}
-			else {
-				radioGroupByNone.Checked=true;
+
+			switch (UserPreference.GetInt(UserPreferenceName.SmsGroupBy, 0))
+            {
+				case 0:
+					radioGroupByNone.Checked = true;
+					break;
+
+				case 1:
+					radioGroupByPatient.Checked = true;
+					break;
+
+				case 2:
+					radioGroupByPhone.Checked = true;
+					break;
+
 			}
 		}
 
@@ -207,16 +212,13 @@ namespace OpenDental {
 			radioGroupByPatient.CheckedChanged+=new EventHandler(RadioGroupBy_CheckedChanged);
 			radioGroupByPhone.CheckedChanged+=new EventHandler(RadioGroupBy_CheckedChanged);
 			this.FormClosing+=new FormClosingEventHandler((o,e1) => {
-				if(radioGroupByNone.Checked) {
-					_groupByPref.ValueString="0";
-				}
-				else if(radioGroupByPatient.Checked) {
-					_groupByPref.ValueString="1";
-				}
-				else if(radioGroupByPhone.Checked) {
-					_groupByPref.ValueString="2";
-				}
-				UserOdPrefs.Upsert(_groupByPref);
+
+				var smsGroupBy = 0;
+				if (radioGroupByPatient.Checked) smsGroupBy = 1;
+				if (radioGroupByPatient.Checked) smsGroupBy = 2;
+
+				UserPreference.Set(UserPreferenceName.SmsGroupBy, smsGroupBy);
+
 			});
 			Plugins.HookAddCode(this,"FormSmsTextMessaging.Load_end");
 		}

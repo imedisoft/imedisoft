@@ -10,7 +10,6 @@ namespace OpenDental {
 		public bool IsShowArchivedTaskLists;
 		public DateTime DateTimeStartShowFinished;
 		public bool IsSortApptDateTime;
-		private UserOdPref _taskCollapsedPref;
 
 		public FormTaskOptions(bool isShowFinishedTasks,DateTime dateTimeStartShowFinished,bool isAptDateTimeSort,bool isShowArchivedTaskLists) {
 			InitializeComponent();
@@ -19,9 +18,9 @@ namespace OpenDental {
 			checkShowArchivedTaskLists.Checked=isShowArchivedTaskLists;
 			textStartDate.Text=dateTimeStartShowFinished.ToShortDateString();
 			checkTaskSortApptDateTime.Checked=isAptDateTimeSort;
-			List<UserOdPref> listPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.TaskCollapse);
-			_taskCollapsedPref=listPrefs.Count==0? null : listPrefs[0];
-			checkCollapsed.Checked=_taskCollapsedPref==null ? false : PIn.Bool(_taskCollapsedPref.ValueString);
+
+			checkCollapsed.Checked = UserPreference.GetBool(UserPreferenceName.TaskCollapse);
+
 			if(!isShowFinishedTasks) {
 				labelStartDate.Enabled=false;
 				textStartDate.Enabled=false;
@@ -50,18 +49,9 @@ namespace OpenDental {
 					textStartDate.Text=DateTimeOD.Today.AddDays(-7).ToShortDateString();
 				}
 			}
-			if(_taskCollapsedPref==null) {
-				_taskCollapsedPref=new UserOdPref();
-				_taskCollapsedPref.Fkey=0;
-				_taskCollapsedPref.FkeyType=UserOdFkeyType.TaskCollapse;
-				_taskCollapsedPref.UserNum=Security.CurrentUser.Id;
-				_taskCollapsedPref.ValueString=POut.Bool(checkCollapsed.Checked);
-				UserOdPrefs.Insert(_taskCollapsedPref);
-			}
-			else { 
-				_taskCollapsedPref.ValueString=POut.Bool(checkCollapsed.Checked);
-				UserOdPrefs.Update(_taskCollapsedPref);
-			}
+
+			UserPreference.Set(UserPreferenceName.TaskCollapse, checkCollapsed.Checked);
+
 			IsShowFinishedTasks=checkShowFinished.Checked;
 			IsShowArchivedTaskLists=checkShowArchivedTaskLists.Checked;
 			DateTimeStartShowFinished=PIn.Date(textStartDate.Text);//Note that this may have not been enabled but we'll pass it back anyway, won't be used.

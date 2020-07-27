@@ -642,10 +642,13 @@ namespace OpenDental
 			//If the thread that attempts to start Open Dental dashboard fails for any reason, silently fail.
 			odThread.AddExceptionHandler(ex =>
 			{
-				if (Security.CurrentUser != null && Security.CurrentUser.Id != 0)
-				{//Defensive to ensure all Patient Dashboard userprefs are not deleted.
-					UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, string.Empty);//All Dashboard userodprefs for this user.
-				}
+				//if (Security.CurrentUser != null && Security.CurrentUser.Id != 0)
+				//{
+
+
+				//	//Defensive to ensure all Patient Dashboard userprefs are not deleted.
+				//	UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, string.Empty);//All Dashboard userodprefs for this user.
+				//}
 			});
 			odThread.GroupName = FormODThreadNames.Dashboard.GetDescription();
 			odThread.Name = FormODThreadNames.Dashboard.GetDescription();
@@ -771,17 +774,21 @@ namespace OpenDental
 			ODThread threadTasks = new ODThread(new ODThread.WorkerDelegate((o) =>
 			{
 				List<TaskNote> listRefreshedTaskNotes = null;
-				List<UserOdPref> listBlockedTaskLists = null;
+				//List<UserOdPref> listBlockedTaskLists = null;
 				//JM: Bug fix, but we do not know what would cause Security.CurUser to be null. Worst case task wont show till next signal tick.
 				long userNumCur = Security.CurrentUser?.Id ?? 0;
 				List<OpenDentBusiness.Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(userNumCur, Clinics.ClinicNum, listEditedTaskNums);
-				if (listRefreshedTasks.Count > 0)
-				{
-					listRefreshedTaskNotes = TaskNotes.GetForTasks(listRefreshedTasks.Select(x => x.TaskNum).ToList());
-					listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(userNumCur, UserOdFkeyType.TaskListBlock);
-				}
-				this.Invoke((() => HandleRefreshedTasks(listSignalTasks, listEditedTaskNums, listRefreshedTasks, listRefreshedTaskNotes,
-					listBlockedTaskLists)));
+
+				// TODO: Fix me...
+
+				//if (listRefreshedTasks.Count > 0)
+				//{
+				//	listRefreshedTaskNotes = TaskNotes.GetForTasks(listRefreshedTasks.Select(x => x.TaskNum).ToList());
+				//	listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(userNumCur, UserOdFkeyType.TaskListBlock);
+				//}
+
+				//this.Invoke(() 
+				//	=> HandleRefreshedTasks(listSignalTasks, listEditedTaskNums, listRefreshedTasks, listRefreshedTaskNotes, listBlockedTaskLists));
 			}));
 			threadTasks.AddExceptionHandler((e) => { });
 			threadTasks.GroupName = FormODThreadNames.Tasks.GetDescription();

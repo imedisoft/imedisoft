@@ -92,7 +92,7 @@ namespace OpenDentBusiness{
 			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				Computer Cur=new Computer();
-				Cur.CompName=computerName;
+				Cur.MachineName=computerName;
 				Computers.Insert(Cur);
 			}
 		}
@@ -105,14 +105,14 @@ namespace OpenDentBusiness{
 
 		public static void Delete(Computer comp){
 			
-			string command= "DELETE FROM computer WHERE computernum = '"+comp.ComputerNum.ToString()+"'";
+			string command= "DELETE FROM computer WHERE computernum = '"+comp.Id.ToString()+"'";
  			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Only called from Printers.GetForSit</summary>
 		public static Computer GetCur(){
 			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.CompName.ToUpper()==Environment.MachineName.ToUpper());
+			return GetFirstOrDefault(x => x.MachineName.ToUpper()==Environment.MachineName.ToUpper());
 		}
 
 		///<summary>Returns all computers with an active heart beat.  A heart beat less than 4 minutes old is considered active.</summary>

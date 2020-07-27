@@ -74,7 +74,7 @@ namespace UnitTests.Userods_Tests
 			Clinic clinic = ClinicT.CreateClinic();
 			UserClinics.Insert(new UserClinic(clinic.ClinicNum, user.Id));
 			AlertSubs.Insert(new AlertSub(user.Id, clinic.ClinicNum, 1));
-			UserOdPrefs.Insert(new UserOdPref() { UserNum = user.Id, ClinicNum = clinic.ClinicNum, Fkey = clinic.ClinicNum, FkeyType = UserOdFkeyType.ClinicLast });
+			UserPreference.Set(user.Id, UserPreferenceName.ClinicLast, clinic.ClinicNum);
 			//Setup user
 			//Fields given by method caller
 			string passwordHashNotExpected = user.PasswordHash;
@@ -134,8 +134,8 @@ namespace UnitTests.Userods_Tests
 			Assert.AreEqual("", copy.MobileWebPin);
 			Assert.AreEqual(0, copy.MobileWebPinFailedAttempts);
 			Assert.AreEqual(DateTime.MinValue, copy.DateTLastLogin);
-			List<UserOdPref> listUserOdPrefs = UserOdPrefT.GetByUser(copy.Id);
-			Assert.AreEqual(0, listUserOdPrefs.Count);
+			//List<UserOdPref> listUserOdPrefs = UserOdPrefT.GetByUser(copy.Id);
+			//Assert.AreEqual(0, listUserOdPrefs.Count);
 		}
 
 		/// <summary>

@@ -12,8 +12,6 @@ namespace OpenDentBusiness
 			IsPriKey = false;
 			SpecialType = CrudSpecialColType.None;
 			IsNotDbColumn = false;
-			IsPriKeyMobile1 = false;
-			IsPriKeyMobile2 = false;
 		}
 
 		public bool IsPriKey { get; set; }
@@ -21,22 +19,13 @@ namespace OpenDentBusiness
 		public CrudSpecialColType SpecialType { get; set; }
 
 		public bool IsNotDbColumn { get; set; }
-
-		/// <summary>
-		/// Always present in a mobile table. 
-		/// Always CustomerNum, FK to PatNum.
-		/// </summary>
-		public bool IsPriKeyMobile1 { get; set; }
-
-		/// <summary>
-		/// Always present in a mobile table. 
-		/// Always the ordinary priKey of the table, used together with CustomerNum.
-		/// </summary>
-		public bool IsPriKeyMobile2 { get; set; }
-
 	}
 
-	///<summary>There are also some patterns we follow that do not require special types.  For enums, crud automatically generates tinyint.  For itemorders, we manually change mysql type to smallint?.  </summary>
+	/// <summary>
+	/// There are also some patterns we follow that do not require special types.
+	/// For enums, crud automatically generates tinyint.
+	/// For itemorders, we manually change mysql type to smallint?.
+	/// </summary>
 	[Flags]
 	public enum CrudSpecialColType
 	{

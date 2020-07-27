@@ -182,9 +182,8 @@ namespace OpenDental {
 			//	}
 			//}
 			_isTaskSortApptDateTime=PrefC.GetBool(PrefName.TaskSortApptDateTime);//This sets it for use and also for the task options default value.
-			List<UserOdPref> listPrefsForCollapsing=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.TaskCollapse);
-			_isCollapsedByDefault=listPrefsForCollapsing.Count==0 ? false : PIn.Bool(listPrefsForCollapsing[0].ValueString);
-			_hasListSwitched=true;
+			_isCollapsedByDefault = UserPreference.GetBool(UserPreferenceName.TaskCollapse);
+			_hasListSwitched =true;
 			_taskCollapsedState=_isCollapsedByDefault ? 1 : 0;
 			SetFiltersToDefault();//Fills Tree and Grid
 			if(tabContr.SelectedTab!=tabOpenTickets) {//because it will have alread been set
@@ -1380,7 +1379,7 @@ namespace OpenDental {
 			_isShowArchivedTaskLists=formTaskOptions.IsShowArchivedTaskLists;
 			_dateTimeStartShowFinished=formTaskOptions.DateTimeStartShowFinished;
 			_isTaskSortApptDateTime=formTaskOptions.IsSortApptDateTime;
-			_isCollapsedByDefault=PIn.Bool(UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.TaskCollapse)[0].ValueString);
+			_isCollapsedByDefault = UserPreference.GetBool(UserPreferenceName.TaskCollapse);
 			_hasListSwitched=true;//To display tasks in correctly collapsed/expanded state
 			FillGrid();
 		}

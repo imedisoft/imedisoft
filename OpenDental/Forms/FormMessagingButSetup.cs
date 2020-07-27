@@ -170,8 +170,8 @@ namespace OpenDental{
 			listComputers.Items.Add(Lan.G(this,"All"));
 			string s;
 			for(int i=0;i<_listComputers.Count;i++) {
-				s=_listComputers[i].CompName;
-				if(SystemInformation.ComputerName==_listComputers[i].CompName){
+				s=_listComputers[i].MachineName;
+				if(SystemInformation.ComputerName==_listComputers[i].MachineName){
 					s+=" "+Lan.G(this,"(this computer)");
 				}
 				listComputers.Items.Add(s);
@@ -219,7 +219,7 @@ namespace OpenDental{
 			}
 			else {
 				//remember, defaults are mixed into this list unless overridden:
-				_arraySigButDefs=SigButDefs.GetByComputer(_listComputers[listComputers.SelectedIndex-1].CompName);
+				_arraySigButDefs=SigButDefs.GetByComputer(_listComputers[listComputers.SelectedIndex-1].MachineName);
 			}
 			FillList();
 		}
@@ -235,14 +235,14 @@ namespace OpenDental{
 			int selected=listButtons.SelectedIndex;
 			SigButDef sigButDef=SigButDefs.GetByIndex(selected,_arraySigButDefs);
 			//Keep track of the currently selected computer name so we know what computer buttons to refresh after making changes.
-			string computerNameSelected=(listComputers.SelectedIndex > 0) ? _listComputers[listComputers.SelectedIndex-1].CompName : "";
+			string computerNameSelected=(listComputers.SelectedIndex > 0) ? _listComputers[listComputers.SelectedIndex-1].MachineName : "";
 			//Now create a new computer name variable that will represent the computer name for the SigButDef.
 			string computerNameSigButDef="";
 			if(sigButDef==null) {//Add
 				sigButDef=new SigButDef();
 				sigButDef.ButtonIndex=selected;
 				if(listComputers.SelectedIndex!=0) {
-					computerNameSigButDef=_listComputers[listComputers.SelectedIndex-1].CompName;
+					computerNameSigButDef=_listComputers[listComputers.SelectedIndex-1].MachineName;
 				}
 				sigButDef.ComputerName=computerNameSigButDef;
 				FormSigButDefEdit FormS=new FormSigButDefEdit(sigButDef.Copy());
@@ -251,14 +251,14 @@ namespace OpenDental{
 			}
 			else if(sigButDef.ComputerName=="" && listComputers.SelectedIndex!=0) {
 				//create a copy of the default, and treat it as a new
-				sigButDef.ComputerName=_listComputers[listComputers.SelectedIndex-1].CompName;
+				sigButDef.ComputerName=_listComputers[listComputers.SelectedIndex-1].MachineName;
 				FormSigButDefEdit FormS=new FormSigButDefEdit(sigButDef.Copy());
 				FormS.IsNew=true;
 				FormS.ShowDialog();
 			}
 			else {//edit
 				if(listComputers.SelectedIndex>0) {//If "All" is selected, the computerName will already be blank, so it only needs reset if it isn't "All".
-					computerNameSigButDef=_listComputers[listComputers.SelectedIndex-1].CompName;
+					computerNameSigButDef=_listComputers[listComputers.SelectedIndex-1].MachineName;
 				}
 				FormSigButDefEdit FormS=new FormSigButDefEdit(sigButDef.Copy());
 				FormS.ShowDialog();

@@ -486,7 +486,7 @@ namespace OpenDental{
 			if(!IsNew && checkExpanded.Checked!=DefCur.ItemValue.Contains("E")) {//If checkbox has been changed since opening form.
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"Expanded by default option changed.  This change will affect all users.  Continue?")) {
 					//Remove all user specific preferences to enforce the new default.
-					UserOdPrefs.DeleteForFkey(0,UserOdFkeyType.Definition,DefCur.DefNum);
+					// TODO: UserOdPrefs.DeleteForFkey(0,UserOdFkeyType.Definition,DefCur.DefNum);
 				}
 			}
 			if(checkClaimAttachments.Checked) {

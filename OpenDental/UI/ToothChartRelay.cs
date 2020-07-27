@@ -19,13 +19,6 @@ namespace OpenDental
 		{
 		}
 
-		#region Events
-		public event SparksToothChart.ToothChartDrawEventHandler SegmentDrawn = null;
-
-		public event SparksToothChart.ToothChartSelectionEventHandler ToothSelectionsChanged = null;
-
-		#endregion Events
-
 		#region Properties
 		public int Bottom
 		{

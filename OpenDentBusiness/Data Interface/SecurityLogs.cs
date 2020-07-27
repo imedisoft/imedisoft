@@ -299,7 +299,7 @@ namespace OpenDentBusiness{
 			securityLog.PermType=permType;
 			securityLog.UserNum=Security.CurrentUser.Id;
 			securityLog.LogText=logText;
-			securityLog.CompName=Security.CurComputerName;
+			securityLog.CompName=Environment.MachineName;
 			securityLog.PatNum=patNum;
 			securityLog.FKey=fKey;
 			securityLog.LogSource=logSource;
@@ -320,7 +320,7 @@ namespace OpenDentBusiness{
 			securityLog.PermType=permType;
 			securityLog.UserNum=userNum;
 			securityLog.LogText=logText;
-			securityLog.CompName=Security.CurComputerName;
+			securityLog.CompName= Environment.MachineName;
 			securityLog.PatNum=patnum;
 			securityLog.FKey=0;
 			securityLog.LogSource=source;

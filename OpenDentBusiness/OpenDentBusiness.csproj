@@ -537,6 +537,7 @@
     <Compile Include="TableTypes\Reactivation.cs" />
     <Compile Include="TableTypes\ProviderClinicLink.cs" />
     <Compile Include="TableTypes\ScheduledProcess.cs" />
+    <Compile Include="Data\UserOdPref.cs" />
     <Compile Include="UI\ODGridPageNav.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -881,7 +882,6 @@
     <Compile Include="Crud\TreatPlanAttachCrud.cs" />
     <Compile Include="Data\Crud\UpdateHistories.Crud.cs" />
     <Compile Include="Data\Crud\UserClinics.Crud.cs" />
-    <Compile Include="Crud\UserOdPrefCrud.cs" />
     <Compile Include="Crud\UserWebCrud.cs" />
     <Compile Include="Crud\XWebResponseCrud.cs" />
     <Compile Include="Data Interface\AlertItems.cs" />
@@ -910,7 +910,7 @@
     <Compile Include="Data Interface\SigMessages.cs" />
     <Compile Include="Data Interface\TreatPlanAttaches.cs" />
     <Compile Include="Data\UpdateHistories.cs" />
-    <Compile Include="Data Interface\UserOdPrefs.cs" />
+    <Compile Include="Data\UserPreference.cs" />
     <Compile Include="Data Interface\UserWebs.cs" />
     <Compile Include="Data Interface\XWebResponses.cs" />
     <Compile Include="Data\UserClinics.cs" />
@@ -1422,7 +1422,6 @@
     <Compile Include="Data\Models\UserClinic.cs" />
     <Compile Include="TableTypes\UserGroupAttach.cs" />
     <Compile Include="TableTypes\UserodApptView.cs" />
-    <Compile Include="TableTypes\UserOdPref.cs" />
     <Compile Include="TableTypes\UserWeb.cs" />
     <Compile Include="TableTypes\WebSchedRecall.cs" />
     <Compile Include="TableTypes\WikiListHist.cs" />

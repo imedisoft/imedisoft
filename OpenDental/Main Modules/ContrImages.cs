@@ -1149,36 +1149,38 @@ namespace OpenDental {
 					}
 				}
 				else {//User has changed.  Expand image categories based on user preference.
-					_listExpandedCats.Clear();
-					List<UserOdPref> _listUserOdPrefImageCats=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.Definition);//Update override list.
-					foreach(Def curDef in listDefsImageCats) {
-						//Should only be one value with associated Fkey.
-						UserOdPref userOdPrefTemp=_listUserOdPrefImageCats.FirstOrDefault(x => x.Fkey==curDef.DefNum);
-						if(userOdPrefTemp!=null) {//User has a preference for this image category.
-							if(!userOdPrefTemp.ValueString.Contains("E")) {//The user's preference is to collapse this category.
-								continue;
-							}
-							for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
-								NodeIdTag nodeIdTagCategory=(NodeIdTag)treeMain.Nodes[j].Tag;//Get current tree document node.
-								if(nodeIdTagCategory.PriKey==userOdPrefTemp.Fkey) {
-									treeMain.Nodes[j].Expand();//Expand folder.
-									break;
-								}
-							}
-						}
-						else {//User doesn't have a preference for this image category.
-							if(!curDef.ItemValue.Contains("E")) {//The default preference is to collapse this category.
-								continue;
-							}
-							for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
-								NodeIdTag nodeIdTagCategory=(NodeIdTag)treeMain.Nodes[j].Tag;//Get current tree document node.
-								if(nodeIdTagCategory.PriKey==curDef.DefNum) {
-									treeMain.Nodes[j].Expand();
-									break;
-								}
-							}
-						}
-					}
+
+					// TODO:
+					//_listExpandedCats.Clear();
+					//List<UserOdPref> _listUserOdPrefImageCats=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.Definition);//Update override list.
+					//foreach(Def curDef in listDefsImageCats) {
+					//	//Should only be one value with associated Fkey.
+					//	UserOdPref userOdPrefTemp=_listUserOdPrefImageCats.FirstOrDefault(x => x.Fkey==curDef.DefNum);
+					//	if(userOdPrefTemp!=null) {//User has a preference for this image category.
+					//		if(!userOdPrefTemp.ValueString.Contains("E")) {//The user's preference is to collapse this category.
+					//			continue;
+					//		}
+					//		for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
+					//			NodeIdTag nodeIdTagCategory=(NodeIdTag)treeMain.Nodes[j].Tag;//Get current tree document node.
+					//			if(nodeIdTagCategory.PriKey==userOdPrefTemp.Fkey) {
+					//				treeMain.Nodes[j].Expand();//Expand folder.
+					//				break;
+					//			}
+					//		}
+					//	}
+					//	else {//User doesn't have a preference for this image category.
+					//		if(!curDef.ItemValue.Contains("E")) {//The default preference is to collapse this category.
+					//			continue;
+					//		}
+					//		for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
+					//			NodeIdTag nodeIdTagCategory=(NodeIdTag)treeMain.Nodes[j].Tag;//Get current tree document node.
+					//			if(nodeIdTagCategory.PriKey==curDef.DefNum) {
+					//				treeMain.Nodes[j].Expand();
+					//				break;
+					//			}
+					//		}
+					//	}
+					//}
 				}
 				_userNumPrev=Security.CurrentUser.Id;//Update the Previous user num.
 				_isFillingTreeWithPref=false;//Disable flag
@@ -3057,37 +3059,35 @@ namespace OpenDental {
 			return ImageStore.GetHashString(doc);
 		}
 
-		private void UpdateUserOdPrefForImageCat(long defNum,bool isExpand) {
-			if(PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed)!=2) {//Document tree folders persistent expand/collapse per user.
+		private void UpdateUserOdPrefForImageCat(long defNum, bool isExpand)
+		{
+			if (PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed) != 2)
+			{//Document tree folders persistent expand/collapse per user.
 				return;
 			}
 			//Calls to Expand() and Collapse() in code cause the TreeDocuments_AfterExpand() and TreeDocuments_AfterCollapse() events to fire.
 			//This flag helps us ignore these two events when initializing the tree.
-			if(_isFillingTreeWithPref) {
+			if (_isFillingTreeWithPref)
+			{
 				return;
 			}
-			Def defImageCatCur=Defs.GetDefsForCategory(DefCat.ImageCats,true).FirstOrDefault(x => x.DefNum==defNum);
-			if(defImageCatCur==null) {
+			Def defImageCatCur = Defs.GetDefsForCategory(DefCat.ImageCats, true).FirstOrDefault(x => x.DefNum == defNum);
+			if (defImageCatCur == null)
+			{
 				return;//Should never happen, but if it does, there was something wrong with the treeDocument list, and thus nothing should be changed.
 			}
-			string defaultValue=defImageCatCur.ItemValue;//Stores the default ItemValue of the definition from the catList.
-			string curValue=defaultValue;//Stores the current edited ImageCats to compare to the default.
-			if(isExpand && !curValue.Contains("E")) {//Since we are expanding we would like to see if the expand flag is present.
-				curValue+="E";//If it is not, add expanded flag.
+			string defaultValue = defImageCatCur.ItemValue;//Stores the default ItemValue of the definition from the catList.
+			string curValue = defaultValue;//Stores the current edited ImageCats to compare to the default.
+			if (isExpand && !curValue.Contains("E"))
+			{//Since we are expanding we would like to see if the expand flag is present.
+				curValue += "E";//If it is not, add expanded flag.
 			}
-			else if(!isExpand && curValue.Contains("E")) {//Since we are collapsing we want to see if the expand flag is present.
-				curValue=curValue.Replace("E","");//If it is, remove expanded flag.
+			else if (!isExpand && curValue.Contains("E"))
+			{//Since we are collapsing we want to see if the expand flag is present.
+				curValue = curValue.Replace("E", "");//If it is, remove expanded flag.
 			}
-			//Always delete to remove previous value (prevents duplicates).
-			UserOdPrefs.DeleteForFkey(Security.CurrentUser.Id,UserOdFkeyType.Definition,defImageCatCur.DefNum);
-			if(defaultValue!=curValue) {//Insert an override in the UserOdPref table, only if the chosen value is different than the default.
-				UserOdPref userPrefCur=new UserOdPref();//Preference to be inserted to override.
-				userPrefCur.UserNum=Security.CurrentUser.Id;
-				userPrefCur.Fkey=defImageCatCur.DefNum;
-				userPrefCur.FkeyType=UserOdFkeyType.Definition;
-				userPrefCur.ValueString=curValue;
-				UserOdPrefs.Insert(userPrefCur);
-			}
+
+			UserPreference.Set(UserPreferenceName.Definition, curValue, defImageCatCur.DefNum);
 		}
 
 		///<summary>Invalidates some or all of the image settings.  This will cause those settings to be recalculated, either immediately, or when the current ApplySettings thread is finished.  If supplied settings is ApplySettings.NONE, then that part will be skipped.</summary>

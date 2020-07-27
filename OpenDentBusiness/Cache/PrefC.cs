@@ -483,18 +483,14 @@ namespace OpenDentBusiness
 			{
 				if (GetBool(PrefName.SecurityLogOffAllowUserOverride))
 				{
-					UserOdPref userOverride = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.LogOffTimerOverride).FirstOrDefault();
-					if (userOverride != null)
-					{
-						if (!int.TryParse(userOverride.ValueString, out int logOffMins))
-						{
-							throw new ODException($"Invalid LogOffTimerOverride set for user.\r\n"
-								+ $"UserNum: {Security.CurrentUser.Id}\r\n"
-								+ $"ValueString: {userOverride.ValueString}");
-						}
-						return logOffMins;
+					var logOffTimer = UserPreference.GetInt(UserPreferenceName.LogOffTimerOverride);
+
+					if (logOffTimer > 0)
+                    {
+						return logOffTimer;
 					}
 				}
+
 				return GetInt(PrefName.SecurityLogOffAfterMinutes);
 			}
 		}

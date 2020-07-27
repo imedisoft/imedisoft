@@ -25,15 +25,15 @@ namespace OpenDental{
 		///<summary>The alert categories that are available to be selected. Some alert types will not be displayed if this is not OD HQ.</summary>
 		private List<AlertCategory> _listAlertCategories;
 		///<summary>The UserOdPref for DoseSpot User ID.</summary>
-		private UserOdPref _doseSpotUserPrefDefault;
+		//private UserOdPref _doseSpotUserPrefDefault;
 		private List<Employee> _listEmployees;
 		private List<Provider> _listProviders;
 		private bool _isFromAddUser;
-		private List<UserOdPref> _listDoseSpotUserPrefOld;
-		private List<UserOdPref> _listDoseSpotUserPrefNew;
+		//private List<UserOdPref> _listDoseSpotUserPrefOld;
+		//private List<UserOdPref> _listDoseSpotUserPrefNew;
 		private bool _isFillingList;
-		private UserOdPref _logOffAfterMinutes;
-		private string _logOffAfterMinutesInitialValue;
+		//private UserOdPref _logOffAfterMinutes;
+		private int _logOffAfterMinutesInitialValue;
 
 		///<summary></summary>
 		public FormUserEdit(Userod userCur,bool isFromAddUser=false) {
@@ -43,10 +43,10 @@ namespace OpenDental{
 			_isFromAddUser=isFromAddUser;
 		}
 
-		private void FormUserEdit_Load(object sender, System.EventArgs e) {
-			_logOffAfterMinutes=UserOdPrefs.GetByUserAndFkeyType(UserCur.Id,UserOdFkeyType.LogOffTimerOverride).FirstOrDefault();
-			_logOffAfterMinutesInitialValue=(_logOffAfterMinutes==null) ? "" : _logOffAfterMinutes.ValueString;
-			textLogOffAfterMinutes.Text=_logOffAfterMinutesInitialValue;
+		private void FormUserEdit_Load(object sender, EventArgs e) {
+			var _logOffAfterMinutes=UserPreference.GetInt(UserCur.Id,UserPreferenceName.LogOffTimerOverride);
+			_logOffAfterMinutesInitialValue=_logOffAfterMinutes;
+			textLogOffAfterMinutes.Text=_logOffAfterMinutesInitialValue.ToString();
 			checkIsHidden.Checked=UserCur.IsHidden;
 			if(UserCur.Id!=0) {
 				textUserNum.Text=UserCur.Id.ToString();
@@ -159,28 +159,29 @@ namespace OpenDental{
 			if(IsNew) {
 				butUnlock.Visible=false;
 			}
-			_listDoseSpotUserPrefOld=UserOdPrefs.GetByUserAndFkeyAndFkeyType(UserCur.Id,
-				Programs.GetCur(ProgramName.eRx).Id,UserOdFkeyType.Program,
-				Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum)
-				.Union(new List<long>() { 0 })//Always include 0 clinic, this is the default, NOT a headquarters only value.
-				.Distinct()
-				.ToList());
-			_listDoseSpotUserPrefNew=_listDoseSpotUserPrefOld.Select(x => x.Clone()).ToList();
-			_doseSpotUserPrefDefault=_listDoseSpotUserPrefNew.Find(x => x.ClinicNum==0);
-			if(_doseSpotUserPrefDefault==null) {
-				_doseSpotUserPrefDefault=DoseSpot.GetDoseSpotUserIdFromPref(UserCur.Id,0);
-				_listDoseSpotUserPrefNew.Add(_doseSpotUserPrefDefault);
-			}
-			textDoseSpotUserID.Text=_doseSpotUserPrefDefault.ValueString;
-			if(_isFromAddUser && !Security.IsAuthorized(Permissions.SecurityAdmin,true)) {
-				butPassword.Visible=false;
-				checkRequireReset.Checked=true;
-				checkRequireReset.Enabled=false;
-				butUnlock.Visible=false;
-			}
-			if(!PrefC.HasClinicsEnabled) {
-				butDoseSpotAdditional.Visible=false;
-			}
+			// TODO:
+			//_listDoseSpotUserPrefOld=UserOdPrefs.GetByUserAndFkeyAndFkeyType(UserCur.Id,
+			//	Programs.GetCur(ProgramName.eRx).Id,UserOdFkeyType.Program,
+			//	Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum)
+			//	.Union(new List<long>() { 0 })//Always include 0 clinic, this is the default, NOT a headquarters only value.
+			//	.Distinct()
+			//	.ToList());
+			//_listDoseSpotUserPrefNew=_listDoseSpotUserPrefOld.Select(x => x.Clone()).ToList();
+			//_doseSpotUserPrefDefault=_listDoseSpotUserPrefNew.Find(x => x.ClinicNum==0);
+			//if(_doseSpotUserPrefDefault==null) {
+			//	_doseSpotUserPrefDefault=DoseSpot.GetDoseSpotUserIdFromPref(UserCur.Id,0);
+			//	_listDoseSpotUserPrefNew.Add(_doseSpotUserPrefDefault);
+			//}
+			//textDoseSpotUserID.Text=_doseSpotUserPrefDefault.ValueString;
+			//if(_isFromAddUser && !Security.IsAuthorized(Permissions.SecurityAdmin,true)) {
+			//	butPassword.Visible=false;
+			//	checkRequireReset.Checked=true;
+			//	checkRequireReset.Enabled=false;
+			//	butUnlock.Visible=false;
+			//}
+			//if(!PrefC.HasClinicsEnabled) {
+			//	butDoseSpotAdditional.Visible=false;
+			//}
 		}
 
 		///<summary>Refreshes the security tree in the "Users" tab.</summary>
@@ -267,14 +268,14 @@ namespace OpenDental{
 		}
 
 		private void butDoseSpotAdditional_Click(object sender,EventArgs e) {
-			_doseSpotUserPrefDefault.ValueString=textDoseSpotUserID.Text;
-			FormUserPrefAdditional FormUP=new FormUserPrefAdditional(_listDoseSpotUserPrefNew,UserCur);
-			FormUP.ShowDialog();
-			if(FormUP.DialogResult==DialogResult.OK) {
-				_listDoseSpotUserPrefNew=FormUP.ListUserPrefOut;
-				_doseSpotUserPrefDefault=_listDoseSpotUserPrefNew.Find(x => x.ClinicNum==0);
-				textDoseSpotUserID.Text=_doseSpotUserPrefDefault.ValueString;
-			}
+			//_doseSpotUserPrefDefault.ValueString=textDoseSpotUserID.Text;
+			//FormUserPrefAdditional FormUP=new FormUserPrefAdditional(_listDoseSpotUserPrefNew,UserCur);
+			//FormUP.ShowDialog();
+			//if(FormUP.DialogResult==DialogResult.OK) {
+			//	_listDoseSpotUserPrefNew=FormUP.ListUserPrefOut;
+			//	_doseSpotUserPrefDefault=_listDoseSpotUserPrefNew.Find(x => x.ClinicNum==0);
+			//	textDoseSpotUserID.Text=_doseSpotUserPrefDefault.ValueString;
+			//}
 		}
 
 		private bool IsValidLogOffMinutes() {
@@ -286,18 +287,20 @@ namespace OpenDental{
 			return true;
 		}
 
-		private void SaveLogOffPreferences() {
-			if(textLogOffAfterMinutes.Text.IsNullOrEmpty() && !_logOffAfterMinutesInitialValue.IsNullOrEmpty()) {
-				UserOdPrefs.Delete(_logOffAfterMinutes.UserOdPrefNum);
+		private void SaveLogOffPreferences()
+		{
+			var logOffTimer = textLogOffAfterMinutes.Text.Trim();
+			if (logOffTimer.Length == 0 || !int.TryParse(logOffTimer, out var logOffTimerOverride))
+			{
+				UserPreference.Delete(UserPreferenceName.LogOffTimerOverride);
 			}
-			else if(textLogOffAfterMinutes.Text!=_logOffAfterMinutesInitialValue) { //Only do this if the value has changed
-				if(_logOffAfterMinutes==null) {
-					_logOffAfterMinutes=new UserOdPref() { Fkey=0, FkeyType=UserOdFkeyType.LogOffTimerOverride, UserNum=UserCur.Id };
-				}
-				_logOffAfterMinutes.ValueString=textLogOffAfterMinutes.Text;
-				UserOdPrefs.Upsert(_logOffAfterMinutes);
-				if(!PrefC.GetBool(PrefName.SecurityLogOffAllowUserOverride)) {
-					MessageBox.Show("User logoff overrides will not take effect until the Global Security setting \"Allow user override for automatic logoff\" is checked");
+			else if (logOffTimerOverride != _logOffAfterMinutesInitialValue)
+			{
+				UserPreference.Set(UserPreferenceName.LogOffTimerOverride, logOffTimerOverride);
+
+				if (!PrefC.GetBool(PrefName.SecurityLogOffAllowUserOverride))
+				{
+					ODMessageBox.Show("User logoff overrides will not take effect until the Global Security setting \"Allow user override for automatic logoff\" is checked");
 				}
 			}
 		}
@@ -385,7 +388,7 @@ namespace OpenDental{
 				if(IsNew){
 					Userods.Insert(UserCur,listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
 					//Set the userodprefs to the new user's UserNum that was just retreived from the database.
-					_listDoseSpotUserPrefNew.ForEach(x => x.UserNum=UserCur.Id);
+					//_listDoseSpotUserPrefNew.ForEach(x => x.UserNum=UserCur.Id);
 					listUserClinics.ForEach(x => x.UserId=UserCur.Id);//Set the user clinic's UserNum to the one we just inserted.
 					SecurityLogs.MakeLogEntry(Permissions.AddNewUser,0,"New user '"+UserCur.UserName+"' added");
 				}
@@ -428,15 +431,15 @@ namespace OpenDental{
 				return;
 			}
 			//DoseSpot User ID Insert/Update/Delete
-			if(_doseSpotUserPrefDefault.ValueString!=textDoseSpotUserID.Text) {
-				if(string.IsNullOrWhiteSpace(textDoseSpotUserID.Text)) {
-					UserOdPrefs.DeleteMany(_doseSpotUserPrefDefault.UserNum,_doseSpotUserPrefDefault.Fkey,UserOdFkeyType.Program);
-				}
-				else {
-					_doseSpotUserPrefDefault.ValueString=textDoseSpotUserID.Text.Trim();
-					UserOdPrefs.Upsert(_doseSpotUserPrefDefault);
-				}
-			}
+			// TODO: if(_doseSpotUserPrefDefault.ValueString!=textDoseSpotUserID.Text) {
+			//	if(string.IsNullOrWhiteSpace(textDoseSpotUserID.Text)) {
+			//		UserOdPrefs.Delete(_doseSpotUserPrefDefault.UserNum,_doseSpotUserPrefDefault.Fkey,UserOdFkeyType.Program);
+			//	}
+			//	else {
+			//		_doseSpotUserPrefDefault.ValueString=textDoseSpotUserID.Text.Trim();
+			//		UserOdPrefs.Upsert(_doseSpotUserPrefDefault);
+			//	}
+			//}
 			DataValid.SetInvalid(InvalidType.Security);
 			//List of AlertTypes that are selected.
 			List<long> listUserAlertCats=new List<long>();
@@ -479,7 +482,7 @@ namespace OpenDental{
 			}
 			SaveLogOffPreferences();
 			AlertSubs.Sync(_listUserAlertTypesNew,_listUserAlertTypesOld);
-			UserOdPrefs.Sync(_listDoseSpotUserPrefNew,_listDoseSpotUserPrefOld);
+			// TODO: UserOdPrefs.Sync(_listDoseSpotUserPrefNew,_listDoseSpotUserPrefOld);
 			DialogResult=DialogResult.OK;
 		}
 

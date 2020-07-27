@@ -930,7 +930,6 @@
     <Compile Include="Logic\PayConnectL.cs" />
     <Compile Include="Logic\PayPlanL.cs" />
     <Compile Include="Logic\AppointmentL.cs" />
-    <Compile Include="Logic\UserOdPrefL.cs" />
     <Compile Include="Main Modules\ContrAccount.Designer.cs">
       <DependentUpon>ContrAccount.cs</DependentUpon>
     </Compile>

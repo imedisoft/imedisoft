@@ -133,16 +133,10 @@ namespace OpenDentBusiness {
 				};
 				AlertItems.Insert(alert);
 				//set userodpref to UserId
+
 				Program programErx=Programs.GetCur(ProgramName.eRx);
-				UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(listDoseUsers[0].Id,programErx.Id,UserOdFkeyType.Program);
-				userDosePref.ValueString=providerErx.UserId;//assign DoseSpot User ID
-				if(userDosePref.IsNew) {
-					userDosePref.Fkey=programErx.Id;
-					UserOdPrefs.Insert(userDosePref);
-				}
-				else {
-					UserOdPrefs.Update(userDosePref);
-				}
+
+				UserPreference.Set(listDoseUsers[0].Id, UserPreferenceName.Program, providerErx.UserId, programErx.Id);
 			}
 			else {//More than one or no user associated to the NPI, generate alert with form to have the office choose which user to assign.
 				alert=new AlertItem {
@@ -360,22 +354,26 @@ namespace OpenDentBusiness {
 					}
 				}
 				else {
-					//The prescriber ID for each medication is the doctor that approved the prescription.
-					UserOdPref userPref=UserOdPrefs.GetByFkeyAndFkeyType(Programs.GetCur(ProgramName.eRx).Id,UserOdFkeyType.Program)
-					.FirstOrDefault(x => x.ValueString==medication.PrescriberId.ToString());
-					if(userPref==null) {//The Dose Spot User ID from this medication is not present in Open Dental.
-						continue;//I don't know if we want to do anything with this.  Maybe we want to just get the ErxLog from before this medication was made.
-					}
-					Userod user=Userods.GetUser(userPref.UserNum);
-					Provider prov=new Provider();
-					isProv=!Erx.IsUserAnEmployee(user);
-					if(isProv) {//A user always be a provider if there is a ProvNum > 0
-						prov=Providers.GetProv(user.ProvNum);
-					}
-					else {
-						prov=Providers.GetProv(patCur.PriProv);
-					}
-					rx.ProvNum=prov.ProvNum;
+					// TODO: Should regular prefs for this, not user prefs...
+
+					////The prescriber ID for each medication is the doctor that approved the prescription.
+					//UserOdPref userPref=UserOdPrefs.GetByFkeyAndFkeyType(Programs.GetCur(ProgramName.eRx).Id,UserOdFkeyType.Program)
+					//.FirstOrDefault(x => x.ValueString==medication.PrescriberId.ToString());
+					//if(userPref==null) {//The Dose Spot User ID from this medication is not present in Open Dental.
+					//	continue;//I don't know if we want to do anything with this.  Maybe we want to just get the ErxLog from before this medication was made.
+					//}
+					//Userod user=Userods.GetUser(userPref.UserNum);
+					//Provider prov=new Provider();
+					//isProv=!Erx.IsUserAnEmployee(user);
+					//if(isProv) {//A user always be a provider if there is a ProvNum > 0
+					//	prov=Providers.GetProv(user.ProvNum);
+					//}
+					//else {
+					//	prov=Providers.GetProv(patCur.PriProv);
+					//}
+					//rx.ProvNum=prov.ProvNum;
+
+					throw new NotImplementedException();
 				}
 				long medicationPatNum=0;
 				if(Erx.IsDoseSpotPatReported(rx.ErxGuid) || Erx.IsTwoWayIntegrated(rx.ErxGuid)) {//For DoseSpot self reported, do not insert a prescription.
@@ -619,9 +617,9 @@ namespace OpenDentBusiness {
 			//At this point we know that we have a valid clinic/practice info and valid provider.
 			Program programErx=Programs.GetCur(ProgramName.eRx);
 			//Get the DoseSpotID for the current user
-			UserOdPref userPrefDoseSpotID=GetDoseSpotUserIdFromPref(userCur.Id,clinicNum);
+			var userPrefDoseSpotID=GetDoseSpotUserIdFromPref(userCur.Id,clinicNum);
 			//If the current user doesn't have a valid User ID, go retreive one from DoseSpot.
-			if(userPrefDoseSpotID==null || string.IsNullOrWhiteSpace(userPrefDoseSpotID.ValueString)) {
+			if(string.IsNullOrWhiteSpace(userPrefDoseSpotID)) {
 				//If there is no UserId for this user, throw an exception.  The below code was when we thought the Podio database matched the DoseSpot database.
 				//The below code would add a proxy clinician via the API and give back the DoseSpot User ID.
 				//This was causing issues with Podio and making sure the proxy clinician has access to the appropriate clinics.
@@ -677,7 +675,7 @@ namespace OpenDentBusiness {
 				#endregion
 			}
 			else {
-				retVal=userPrefDoseSpotID.ValueString;
+				retVal=userPrefDoseSpotID;
 			}
 			return retVal;
 		}
@@ -792,13 +790,17 @@ namespace OpenDentBusiness {
 			}
 		}
 
-		public static UserOdPref GetDoseSpotUserIdFromPref(long userNum,long clinicNum) {
-			Program programErx=Programs.GetCur(ProgramName.eRx);
-			UserOdPref retVal=UserOdPrefs.GetByCompositeKey(userNum,programErx.Id,UserOdFkeyType.Program,clinicNum);
-			if(clinicNum!=0 && retVal.IsNew || string.IsNullOrWhiteSpace(retVal.ValueString)) {
-				retVal=UserOdPrefs.GetByCompositeKey(userNum,programErx.Id,UserOdFkeyType.Program,0);//Try the default userodpref if the clinic specific one is empty.
-			}
-			return retVal;
+		public static string GetDoseSpotUserIdFromPref(long userNum, long clinicNum)
+		{
+			Program programErx = Programs.GetCur(ProgramName.eRx);
+
+			long? clinicId = null;
+			if (clinicNum > 0)
+            {
+				clinicId = clinicNum;
+            }
+
+			return UserPreference.GetString(userNum, UserPreferenceName.Program, programErx.Id, clinicId);
 		}
 		
 		public static OIDExternal CreateOIDForPatient(int doseSpotPatID,long patNum) {

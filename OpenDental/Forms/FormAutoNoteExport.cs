@@ -8,14 +8,14 @@ using System.IO;
 
 namespace OpenDental {
 	public partial class FormAutoNoteExport:ODForm {
-		private UserOdPref _userPrefExpandedDefNums;
+		private string _userPrefExpandedDefNums;
 
 		public FormAutoNoteExport() {
 			InitializeComponent();
 		}
 
 		private void FormAutoNoteExport_Load(object sender,System.EventArgs e) {
-			_userPrefExpandedDefNums=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.AutoNoteExpandedCats).FirstOrDefault();
+			_userPrefExpandedDefNums=UserPreference.GetString(UserPreferenceName.AutoNoteExpandedCats);
 			AutoNoteL.FillListTree(treeNotes,_userPrefExpandedDefNums);
 		}
 

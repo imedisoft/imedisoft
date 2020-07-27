@@ -122,7 +122,7 @@ namespace OpenDentBusiness{
 			if(compCur==null) {
 				return null;
 			}
-			return GetFirstOrDefault(x => x.ComputerNum==compCur.ComputerNum && x.PrintSit==sit);
+			return GetFirstOrDefault(x => x.ComputerNum==compCur.Id && x.PrintSit==sit);
 		}
 
 		///<summary>Either does an insert or an update to the database if need to create a Printer object.  Or it also deletes a printer object if needed.</summary>
@@ -171,7 +171,7 @@ namespace OpenDentBusiness{
 			List<Computer> listComputers=Computers.GetDeepCopy();
 			for(int i=0;i<listComputers.Count;i++) {
 				cur=new Printer();
-				cur.ComputerNum=listComputers[i].ComputerNum;
+				cur.ComputerNum=listComputers[i].Id;
 				cur.PrintSit=PrintSituation.Default;
 				cur.PrinterName="";
 				cur.DisplayPrompt=true;

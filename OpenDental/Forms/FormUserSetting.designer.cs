@@ -23,105 +23,93 @@ namespace OpenDental{
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormUserSetting));
-			this.butOK = new OpenDental.UI.Button();
-			this.butCancel = new OpenDental.UI.Button();
-			this.checkSuppressMessage = new System.Windows.Forms.CheckBox();
-			this.textLogOffAfterMinutes = new System.Windows.Forms.TextBox();
-			this.labelAutoLogoff = new System.Windows.Forms.Label();
-			this.checkAlternateIcons = new System.Windows.Forms.CheckBox();
-			this.SuspendLayout();
-			// 
-			// butOK
-			// 
-			this.butOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butOK.Location = new System.Drawing.Point(176, 228);
-			this.butOK.Name = "butOK";
-			this.butOK.Size = new System.Drawing.Size(75, 24);
-			this.butOK.TabIndex = 3;
-			this.butOK.Text = "&OK";
-			this.butOK.Click += new System.EventHandler(this.butOK_Click);
-			// 
-			// butCancel
-			// 
-			this.butCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.butCancel.Location = new System.Drawing.Point(257, 228);
-			this.butCancel.Name = "butCancel";
-			this.butCancel.Size = new System.Drawing.Size(75, 24);
-			this.butCancel.TabIndex = 2;
-			this.butCancel.Text = "&Cancel";
-			this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
-			// 
-			// checkSuppressMessage
-			// 
-			this.checkSuppressMessage.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkSuppressMessage.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkSuppressMessage.Location = new System.Drawing.Point(5, 25);
-			this.checkSuppressMessage.Name = "checkSuppressMessage";
-			this.checkSuppressMessage.Size = new System.Drawing.Size(327, 17);
-			this.checkSuppressMessage.TabIndex = 4;
-			this.checkSuppressMessage.Text = "Close/Log off message is suppressed";
-			this.checkSuppressMessage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textLogOffAfterMinutes
-			// 
-			this.textLogOffAfterMinutes.Location = new System.Drawing.Point(303, 77);
-			this.textLogOffAfterMinutes.Name = "textLogOffAfterMinutes";
-			this.textLogOffAfterMinutes.ReadOnly = true;
-			this.textLogOffAfterMinutes.Size = new System.Drawing.Size(29, 20);
-			this.textLogOffAfterMinutes.TabIndex = 264;
-			this.textLogOffAfterMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			// 
-			// labelAutoLogoff
-			// 
-			this.labelAutoLogoff.Location = new System.Drawing.Point(4, 71);
-			this.labelAutoLogoff.Name = "labelAutoLogoff";
-			this.labelAutoLogoff.Size = new System.Drawing.Size(298, 32);
-			this.labelAutoLogoff.TabIndex = 265;
-			this.labelAutoLogoff.Text = "Automatic logoff time in minutes\r\n(Note: Edit in User Edit window inside Security" +
+            this.acceptButton = new OpenDental.UI.Button();
+            this.cancelButton = new OpenDental.UI.Button();
+            this.supressMessageCheckBox = new System.Windows.Forms.CheckBox();
+            this.autoLogoffTextBox = new System.Windows.Forms.TextBox();
+            this.autoLogoffLabel = new System.Windows.Forms.Label();
+            this.SuspendLayout();
+            // 
+            // acceptButton
+            // 
+            this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.acceptButton.Location = new System.Drawing.Point(186, 204);
+            this.acceptButton.Name = "acceptButton";
+            this.acceptButton.Size = new System.Drawing.Size(80, 25);
+            this.acceptButton.TabIndex = 0;
+            this.acceptButton.Text = "&OK";
+            this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
+            // 
+            // cancelButton
+            // 
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelButton.Location = new System.Drawing.Point(272, 204);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(80, 25);
+            this.cancelButton.TabIndex = 1;
+            this.cancelButton.Text = "&Cancel";
+            // 
+            // supressMessageCheckBox
+            // 
+            this.supressMessageCheckBox.AutoSize = true;
+            this.supressMessageCheckBox.Location = new System.Drawing.Point(50, 74);
+            this.supressMessageCheckBox.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
+            this.supressMessageCheckBox.Name = "supressMessageCheckBox";
+            this.supressMessageCheckBox.Size = new System.Drawing.Size(203, 17);
+            this.supressMessageCheckBox.TabIndex = 4;
+            this.supressMessageCheckBox.Text = "Close/Log off message is suppressed";
+            // 
+            // autoLogoffTextBox
+            // 
+            this.autoLogoffTextBox.Location = new System.Drawing.Point(12, 12);
+            this.autoLogoffTextBox.Name = "autoLogoffTextBox";
+            this.autoLogoffTextBox.ReadOnly = true;
+            this.autoLogoffTextBox.Size = new System.Drawing.Size(29, 20);
+            this.autoLogoffTextBox.TabIndex = 2;
+            this.autoLogoffTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // autoLogoffLabel
+            // 
+            this.autoLogoffLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.autoLogoffLabel.Location = new System.Drawing.Point(47, 12);
+            this.autoLogoffLabel.Name = "autoLogoffLabel";
+            this.autoLogoffLabel.Size = new System.Drawing.Size(305, 32);
+            this.autoLogoffLabel.TabIndex = 3;
+            this.autoLogoffLabel.Text = "Automatic logoff time in minutes\r\n(Note: Edit in User Edit window inside Security" +
     " Settings)";
-			this.labelAutoLogoff.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkAlternateIcons
-			// 
-			this.checkAlternateIcons.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkAlternateIcons.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkAlternateIcons.Location = new System.Drawing.Point(123, 49);
-			this.checkAlternateIcons.Name = "checkAlternateIcons";
-			this.checkAlternateIcons.Size = new System.Drawing.Size(209, 17);
-			this.checkAlternateIcons.TabIndex = 266;
-			this.checkAlternateIcons.Text = "Module Buttons use Alternate Icons";
-			this.checkAlternateIcons.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkAlternateIcons.UseVisualStyleBackColor = true;
-			// 
-			// FormUserSetting
-			// 
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.CancelButton = this.butCancel;
-			this.ClientSize = new System.Drawing.Size(344, 264);
-			this.Controls.Add(this.checkAlternateIcons);
-			this.Controls.Add(this.textLogOffAfterMinutes);
-			this.Controls.Add(this.labelAutoLogoff);
-			this.Controls.Add(this.checkSuppressMessage);
-			this.Controls.Add(this.butOK);
-			this.Controls.Add(this.butCancel);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "FormUserSetting";
-			this.Text = "User Settings";
-			this.Load += new System.EventHandler(this.FormUserSetting_Load);
-			this.ResumeLayout(false);
-			this.PerformLayout();
+            // 
+            // FormUserSetting
+            // 
+            this.AcceptButton = this.acceptButton;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.CancelButton = this.cancelButton;
+            this.ClientSize = new System.Drawing.Size(364, 241);
+            this.Controls.Add(this.autoLogoffTextBox);
+            this.Controls.Add(this.autoLogoffLabel);
+            this.Controls.Add(this.supressMessageCheckBox);
+            this.Controls.Add(this.acceptButton);
+            this.Controls.Add(this.cancelButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "FormUserSetting";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "User Settings";
+            this.Load += new System.EventHandler(this.FormUserSetting_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 
 		#endregion
 
-		private OpenDental.UI.Button butOK;
-		private OpenDental.UI.Button butCancel;
-		private System.Windows.Forms.CheckBox checkSuppressMessage;
-		private System.Windows.Forms.TextBox textLogOffAfterMinutes;
-		private System.Windows.Forms.Label labelAutoLogoff;
-		private System.Windows.Forms.CheckBox checkAlternateIcons;
+		private OpenDental.UI.Button acceptButton;
+		private OpenDental.UI.Button cancelButton;
+		private System.Windows.Forms.CheckBox supressMessageCheckBox;
+		private System.Windows.Forms.TextBox autoLogoffTextBox;
+		private System.Windows.Forms.Label autoLogoffLabel;
 	}
 }

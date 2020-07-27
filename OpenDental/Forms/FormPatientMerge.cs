@@ -118,8 +118,7 @@ namespace OpenDental {
 				Signalods.Insert(listSignals.ToArray());//Refreshes existing tasks in all other tabs.
 				//Causes Task area and open Task Edit windows to refresh immediately.  No popups, alright to pass empty lists for listRefreshedTaskNotes and 
 				//listBlockedTaskLists.
-				FormOpenDental.S_HandleRefreshedTasks(listSignals,listPatientTasks.Select(x => x.TaskNum).ToList(),listPatientTasks,new List<TaskNote>()
-					,new List<UserOdPref>());
+				FormOpenDental.S_HandleRefreshedTasks(listSignals,listPatientTasks.Select(x => x.TaskNum).ToList(),listPatientTasks,new List<TaskNote>());
 				#endregion
 				//Now copy the physical images from the old patient to the new if they are using an AtoZ image share.
 				//This has to happen in the UI because the middle tier server might not have access to the image share.

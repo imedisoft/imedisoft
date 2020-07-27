@@ -23,7 +23,7 @@ namespace OpenDental {
 		public bool IsSelectionMode;
 		///<summary>On load, the UserOdPref that contains the comma delimited list of expanded category DefNums is retrieved from the database.  On close
 		///the UserOdPref is updated with the current expanded DefNums.</summary>
-		private UserOdPref _userOdCurPref;
+		private string _userOdCurPref;
 		private UI.Button butExport;
 		private UI.Button butImport;
 
@@ -190,7 +190,7 @@ namespace OpenDental {
 				butAdd.Visible=false;
 				labelSelection.Visible=true;
 			}
-			_userOdCurPref=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.AutoNoteExpandedCats).FirstOrDefault();
+			_userOdCurPref=UserPreference.GetString(UserPreferenceName.AutoNoteExpandedCats);
 			AutoNoteL.FillListTree(treeNotes,_userOdCurPref);
 		}
 
@@ -409,17 +409,8 @@ namespace OpenDental {
 				.Where(x => x.IsExpanded)
 				.Select(x => ((Def)x.Tag).DefNum)
 				.Where(x => x>0).ToList();
-			if(_userOdCurPref==null) {
-				UserOdPrefs.Insert(new UserOdPref() {
-					UserNum=Security.CurrentUser.Id,
-					FkeyType=UserOdFkeyType.AutoNoteExpandedCats,
-					ValueString=string.Join(",",listExpandedDefNums)
-				});
-			}
-			else {
-				_userOdCurPref.ValueString=string.Join(",",listExpandedDefNums);
-				UserOdPrefs.Update(_userOdCurPref);
-			}
+
+			UserPreference.Set(UserPreferenceName.AutoNoteExpandedCats, string.Join(",", listExpandedDefNums));
 		}
 	}
 

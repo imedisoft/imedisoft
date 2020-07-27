@@ -13,15 +13,6 @@ namespace OpenDental {
 		private Commlog _commlogOld;
 		///<summary>Set to true if this commlog window should always stay open.  Changes lots of functionality throughout the entire window.</summary>
 		private bool _isPersistent;
-		///<summary>The user pref that indicates if this user wants the Note text box to clear after a commlog is saved in persistent mode.
-		///Can be null and will be treated as turned on (true) if null.</summary>
-		private UserOdPref _userOdPrefClearNote;
-		///<summary>The user pref that indicates if this user wants the End text box to clear after a commlog is saved in persistent mode.
-		///Can be null and will be treated as turned on (true) if null</summary>
-		private UserOdPref _userOdPrefEndDate;
-		///<summary>The user pref that indicates if this user wants the Date / Time text box to clear after a commlog is saved in persistent mode.
-		///Can be null and will be treated as turned on (true) if null</summary>
-		private UserOdPref _userOdPrefUpdateDateTimeNewPat;
 		private const string _autoNotePromptRegex=@"\[Prompt:""[a-zA-Z_0-9 ]+""\]";
 		private bool _sigChanged;
 		private bool _isStartingUp;
@@ -144,9 +135,7 @@ namespace OpenDental {
 			if(Security.CurrentUser==null || Security.CurrentUser.Id < 1) {
 				return;
 			}
-			_userOdPrefClearNote=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.CommlogPersistClearNote).FirstOrDefault();
-			_userOdPrefEndDate=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.CommlogPersistClearEndDate).FirstOrDefault();
-			_userOdPrefUpdateDateTimeNewPat=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.CommlogPersistUpdateDateTimeWithNewPatient).FirstOrDefault();
+
 		}
 
 		///<summary>Helper method to update textDateTime with DateTime.Now</summary>
@@ -230,35 +219,46 @@ namespace OpenDental {
 
 		///<summary>Returns true if the commlog was able to save to the database.  Otherwise returns false.
 		///Set showMsg to true to show a meaningful message when the commlog cannot be saved.</summary>
-		private bool SaveCommItem(bool showMsg) {
-			if(!SyncCommlogWithUI(showMsg)) {
+		private bool SaveCommItem(bool showMsg)
+		{
+			if (!SyncCommlogWithUI(showMsg))
+			{
 				return false;
 			}
-			if(_isPersistent && string.IsNullOrWhiteSpace(_commlogCur.Note)) { //in persistent mode, we don't want to save empty commlogs
+			if (_isPersistent && string.IsNullOrWhiteSpace(_commlogCur.Note))
+			{ //in persistent mode, we don't want to save empty commlogs
 				return false;
 			}
-			if(_commlogOld.IsNew || _isPersistent) {
+			if (_commlogOld.IsNew || _isPersistent)
+			{
 				Commlogs.Insert(_commlogCur);
-				_commlogCur.IsNew=false;
-				_commlogOld=_commlogCur.Copy();
-				textCommlogNum.Text=_commlogCur.CommlogNum.ToString();
-				SecurityLogs.MakeLogEntry(Permissions.CommlogEdit,_commlogCur.PatNum,"Insert");
+				_commlogCur.IsNew = false;
+				_commlogOld = _commlogCur.Copy();
+				textCommlogNum.Text = _commlogCur.CommlogNum.ToString();
+				SecurityLogs.MakeLogEntry(Permissions.CommlogEdit, _commlogCur.PatNum, "Insert");
 				//Post insert persistent user preferences.
-				if(_isPersistent) {
-					if(_userOdPrefClearNote==null || PIn.Bool(_userOdPrefClearNote.ValueString)) {
+				if (_isPersistent)
+				{
+					if (UserPreference.GetBool(UserPreferenceName.CommlogPersistClearNote, true))
+					{ 
 						ClearNote();
 					}
-					if(_userOdPrefEndDate==null || PIn.Bool(_userOdPrefEndDate.ValueString)) {
+
+					if (UserPreference.GetBool(UserPreferenceName.CommlogPersistClearEndDate, true))
+					{
 						ClearDateTimeEnd();
 					}
-					ODException.SwallowAnyException(() => {
+
+					ODException.SwallowAnyException(() =>
+					{
 						FormOpenDental.S_RefreshCurrentModule();
 					});
 				}
 			}
-			else {
+			else
+			{
 				Commlogs.Update(_commlogCur);
-				SecurityLogs.MakeLogEntry(Permissions.CommlogEdit,_commlogCur.PatNum,"");
+				SecurityLogs.MakeLogEntry(Permissions.CommlogEdit, _commlogCur.PatNum, "");
 			}
 			return true;
 		}
@@ -348,15 +348,18 @@ namespace OpenDental {
 			textNote.Clear();
 		}
 
-		private void PatientChangedEvent_Fired(ODEventArgs e) {
-			if(e.EventType!=EventCategory.Patient || e.Tag.GetType()!=typeof(long)) {
+		private void PatientChangedEvent_Fired(ODEventArgs e)
+		{
+			if (e.EventType != EventCategory.Patient || e.Tag.GetType() != typeof(long))
+			{
 				return;
 			}
 			//The tag for this event is the newly selected PatNum
-			long patNum=(long)e.Tag;
-			_commlogCur.PatNum=patNum;
-			textPatientName.Text=Patients.GetLim(patNum).GetNameFL();
-			if(_isPersistent && (_userOdPrefUpdateDateTimeNewPat==null || PIn.Bool(_userOdPrefUpdateDateTimeNewPat.ValueString))) {
+			long patNum = (long)e.Tag;
+			_commlogCur.PatNum = patNum;
+			textPatientName.Text = Patients.GetLim(patNum).GetNameFL();
+			if (_isPersistent && UserPreference.GetBool(UserPreferenceName.CommlogPersistUpdateDateTimeWithNewPatient, true))
+			{
 				UpdateButNow();
 			}
 		}

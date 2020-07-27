@@ -17,10 +17,10 @@ namespace OpenDental {
 			public List<TreeNode> ListAutoNoteNodes=new List<TreeNode>();
 		}
 
-		public static void FillListTree(TreeView treeNotes,UserOdPref _userOdCurPref) {
+		public static void FillListTree(TreeView treeNotes,string _userOdCurPref) {
 			List<long> listExpandedDefNums=new List<long>();
 			if(treeNotes.Nodes.Count==0 && _userOdCurPref!=null) {//if this is the fill on load, the node count will be 0, expanded node list from pref
-				listExpandedDefNums=_userOdCurPref.ValueString.Split(',').Where(x => x!="" && x!="0").Select(x => PIn.Long(x)).ToList();
+				listExpandedDefNums=_userOdCurPref.Split(',').Where(x => x!="" && x!="0").Select(x => PIn.Long(x)).ToList();
 			}
 			else {//either not fill on load or no user pref, store the expanded node state to restore after filling tree
 						//only defs (category folders) can be expanded or have children nodes

@@ -410,8 +410,6 @@ namespace OpenDental
 					CentralConnections.TryToConnect(connectionString);
 
 					hasDatabaseConnection = true;
-
-					UserOdPrefL.SetThemeForUserIfNeeded();
 				}
 				catch
 				{
@@ -441,16 +439,6 @@ namespace OpenDental
 					moduleBar.RefreshButtons();
 				LayoutToolBar();
 			});
-			try
-			{
-				//Use office default theme after we have the database data and until the user logs in below (the user may have a them override set).
-				ModuleBar.SetIcons(PrefC.GetBool(PrefName.ColorTheme));
-				//ODColorTheme.SetTheme((EnumTheme)PrefC.GetInt(PrefName.ColorTheme));
-			}
-			catch
-			{
-				//try/catch in case you are trying to convert from an older version of OD and need to update the DB.
-			}
 			#endregion Theme
 
 			Plugins.LoadAllPlugins(this);
@@ -3065,7 +3053,7 @@ namespace OpenDental
 				_listNormalTaskNums = new List<long>();
 				_listReminderTasks = new List<Task>();
 				_listReminderTasksOverLimit = new List<Task>();
-				List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
+				//List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
 				if (_dictAllTaskLists == null || listRefreshedTasks.Exists(x => !_dictAllTaskLists.ContainsKey(x.TaskListNum)))
 				{//Refresh dict if needed.
 					_dictAllTaskLists = TaskLists.GetAll().ToDictionary(x => x.TaskListNum);
@@ -3097,7 +3085,7 @@ namespace OpenDental
 							if ((isTrackedByUser && taskForUser.IsUnread) || (!isTrackedByUser && taskForUser.TaskStatus == TaskStatusEnum.New))
 							{//See def of task.IsUnread
 							 //NOTE: POPUPS ONLY HAPPEN IF THEY ARE MARKED AS NEW. (Also, they will continue to pop up as long as they are marked "new")
-								TaskPopupHelper(taskForUser, listBlockedTaskLists);
+								// TODO: TaskPopupHelper(taskForUser, listBlockedTaskLists);
 							}
 						}
 					}
@@ -3125,20 +3113,24 @@ namespace OpenDental
 					listSignals.Add(sig);
 				}
 				UserControlTasks.RefreshTasksForAllInstances(listSignals);
-				List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
-				foreach (Task reminderTask in listDueReminderTasks)
-				{
-					TaskPopupHelper(reminderTask, listBlockedTaskLists);
-				}
+
+				// TODO:
+				//List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
+				//foreach (Task reminderTask in listDueReminderTasks)
+				//{
+				//	TaskPopupHelper(reminderTask, listBlockedTaskLists);
+				//}
 				// TODO: Logger.LogToPath("Reminder task due", LogPath.Signals, LogPhase.End);
 			}
 			else if (_listReminderTasksOverLimit.Count > 0)
 			{//Try to display any due reminders that previously exceeded our limit of FormTaskEdit to show.
-				List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
-				for (int i = _listReminderTasksOverLimit.Count - 1; i >= 0; i--)
-				{//TaskPopupHelper
-					TaskPopupHelper(_listReminderTasksOverLimit[i], listBlockedTaskLists);
-				}
+
+				// TODO:
+				//List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
+				//for (int i = _listReminderTasksOverLimit.Count - 1; i >= 0; i--)
+				//{//TaskPopupHelper
+				//	TaskPopupHelper(_listReminderTasksOverLimit[i], listBlockedTaskLists);
+				//}
 			}
 			else if (_dateReminderRefresh.Date < DateTimeOD.Today)
 			{
@@ -3378,7 +3370,7 @@ namespace OpenDental
 		}
 
 		///<summary>Takes one task and determines if it should popup for the current user.  Displays task popup if needed.</summary>
-		private void TaskPopupHelper(Task taskPopup, List<UserOdPref> listBlockedTaskLists, List<TaskNote> listNotesForTask = null)
+		private void TaskPopupHelper(Task taskPopup, /*List<UserOdPref> listBlockedTaskLists, */List<TaskNote> listNotesForTask = null)
 		{
 			try
 			{
@@ -3436,18 +3428,18 @@ namespace OpenDental
 				}
 				if (isUserSubscribed)
 				{//User is subscribed to this TaskList, or one of its ancestors.
-					if (!listBlockedTaskLists.Any(x => x.Fkey == taskPopup.TaskListNum && PIn.Bool(x.ValueString)))
-					{//Subscribed and Unblocked, Show it!
-						SoundPlayer soundplay = new SoundPlayer(Imedisoft.Properties.Resources.notify);
-						soundplay.Play();
-						FormTaskEdit FormT = new FormTaskEdit(taskPopup);
-						FormT.IsPopup = true;
-						if (taskPopup.ReminderType != TaskReminderType.NoReminder)
-						{//If a reminder task, make an audit trail entry
-							Tasks.TaskEditCreateLog(Permissions.TaskReminderPopup, $"Reminder task {taskPopup.TaskNum} shown to user", taskPopup);
-						}
-						FormT.Show();//non-modal
-					}
+					//if (!listBlockedTaskLists.Any(x => x.Fkey == taskPopup.TaskListNum && PIn.Bool(x.ValueString)))
+					//{//Subscribed and Unblocked, Show it!
+					//	SoundPlayer soundplay = new SoundPlayer(Imedisoft.Properties.Resources.notify);
+					//	soundplay.Play();
+					//	FormTaskEdit FormT = new FormTaskEdit(taskPopup);
+					//	FormT.IsPopup = true;
+					//	if (taskPopup.ReminderType != TaskReminderType.NoReminder)
+					//	{//If a reminder task, make an audit trail entry
+					//		Tasks.TaskEditCreateLog(Permissions.TaskReminderPopup, $"Reminder task {taskPopup.TaskNum} shown to user", taskPopup);
+					//	}
+					//	FormT.Show();//non-modal
+					//}
 				}
 			}
 			finally
@@ -3587,19 +3579,19 @@ namespace OpenDental
 		///<summary>Will invoke a refresh of tasks on the only instance of FormOpenDental. listRefreshedTaskNotes and listBlockedTaskLists are only used 
 		///for Popup tasks, only used if listRefreshedTasks includes at least one popup task.</summary>
 		public static void S_HandleRefreshedTasks(List<Signalod> listSignalTasks, List<long> listEditedTaskNums, List<Task> listRefreshedTasks,
-			List<TaskNote> listRefreshedTaskNotes, List<UserOdPref> listBlockedTaskLists)
+			List<TaskNote> listRefreshedTaskNotes/*, List<UserOdPref> listBlockedTaskLists*/)
 		{
-			_formOpenDentalS.HandleRefreshedTasks(listSignalTasks, listEditedTaskNums, listRefreshedTasks, listRefreshedTaskNotes, listBlockedTaskLists);
+			_formOpenDentalS.HandleRefreshedTasks(listSignalTasks, listEditedTaskNums, listRefreshedTasks, listRefreshedTaskNotes);
 		}
 
 		///<summary>Refreshes tasks and pops up as necessary. Invoked from thread callback in OnProcessSignals(). listRefreshedTaskNotes and 
 		///listBlockedTaskLists are only used for Popup tasks, only used if listRefreshedTasks includes at least one popup task.</summary>
 		private void HandleRefreshedTasks(List<Signalod> listSignalTasks, List<long> listEditedTaskNums, List<Task> listRefreshedTasks,
-			List<TaskNote> listRefreshedTaskNotes, List<UserOdPref> listBlockedTaskLists)
+			List<TaskNote> listRefreshedTaskNotes/*, List<UserOdPref> listBlockedTaskLists*/)
 		{
 			bool hasChangedReminders = UpdateTaskMetaData(listEditedTaskNums, listRefreshedTasks);
 			RefreshTasksNotification();
-			RefreshOpenTasksOrPopupNewTasks(listSignalTasks, listRefreshedTasks, listRefreshedTaskNotes, listBlockedTaskLists);
+			RefreshOpenTasksOrPopupNewTasks(listSignalTasks, listRefreshedTasks, listRefreshedTaskNotes);
 			//Refresh the appt module if reminders have changed, even if the appt module not visible.
 			//The user will load the appt module eventually and these refreshes are the only updates the appointment module receives for reminders.
 			if (hasChangedReminders)
@@ -3668,8 +3660,7 @@ namespace OpenDental
 			return hasChangedReminders;
 		}
 
-		private void RefreshOpenTasksOrPopupNewTasks(List<Signalod> listSignalTasks, List<Task> listRefreshedTasks, List<TaskNote> listRefreshedTaskNotes,
-			List<UserOdPref> listBlockedTaskLists)
+		private void RefreshOpenTasksOrPopupNewTasks(List<Signalod> listSignalTasks, List<Task> listRefreshedTasks, List<TaskNote> listRefreshedTaskNotes/*, List<UserOdPref> listBlockedTaskLists*/)
 		{
 			if (listSignalTasks == null)
 			{
@@ -3708,7 +3699,7 @@ namespace OpenDental
 			for (int i = 0; i < tasksPopup.Count; i++)
 			{
 				//Reminders sent to a subscribed tasklist will pop up prior to the reminder date/time.
-				TaskPopupHelper(tasksPopup[i], listBlockedTaskLists, listRefreshedTaskNotes?.FindAll(x => x.TaskNum == tasksPopup[i].TaskNum));
+				TaskPopupHelper(tasksPopup[i], /*listBlockedTaskLists, */listRefreshedTaskNotes?.FindAll(x => x.TaskNum == tasksPopup[i].TaskNum));
 			}
 			if (listSignalTasks.Count > 0 || tasksPopup.Count > 0)
 			{
@@ -4212,30 +4203,16 @@ namespace OpenDental
 		/// <param name="message">Used for passing in message that lets User know what is being done</param>
 		private bool AreYouSurePrompt(long userNum, string message)
 		{
-			UserOdPref logOffMessage = UserOdPrefs.GetByUserAndFkeyType(userNum, UserOdFkeyType.SuppressLogOffMessage).FirstOrDefault();
-
-			if (logOffMessage == null)
+			if (UserPreference.GetBool(UserPreferenceName.SuppressLogOffMessage) == false)
 			{
+				using var inputBox = new InputBox(message, "Do not show me this message again.", true, new Point(0, 40));
 
-				InputBox checkResult = new InputBox(message, "Do not show me this message again.", true, new Point(0, 40));
-
-				checkResult.ShowDialog();
-				if (checkResult.DialogResult == DialogResult.Cancel)
+				if (inputBox.ShowDialog(this) == DialogResult.Cancel)
 				{
 					return false;
 				}
-				else if (checkResult.DialogResult == DialogResult.OK)
-				{
-					if (checkResult.checkBoxResult.Checked)
-					{
-						UserOdPrefs.Insert(new UserOdPref()
-						{
-							UserNum = Security.CurrentUser.Id,
-							FkeyType = UserOdFkeyType.SuppressLogOffMessage
-						});
-					}
-				}
 
+				UserPreference.Set(UserPreferenceName.SuppressLogOffMessage, inputBox.checkBoxResult.Checked);
 			}
 
 			return true;
@@ -4742,7 +4719,7 @@ namespace OpenDental
 				timerSignals.Interval = PrefC.GetInt(PrefName.ProcessSigsIntervalInSecs) * 1000;
 				timerSignals.Enabled = true;
 			}
-			UserOdPrefL.SetThemeForUserIfNeeded();
+
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Misc");
 		}
 
@@ -6155,164 +6132,153 @@ namespace OpenDental
 		///<summary>Opens a UserControlDashboardWidget.  The user's permissions should be validated prior to calling this method.</summary>
 		private bool TryLaunchPatientDashboard(SheetDef sheetDefWidget)
 		{
-			Action actionOpenNewDashboard;
-			if (userControlPatientDashboard.IsInitialized)
-			{
-				if (userControlPatientDashboard.ListOpenWidgets.Any(x => x.Name == POut.Long(sheetDefWidget.SheetDefNum)))
-				{
-					//Clicked on the currently open Patient Dashboard.  This means "Close the Patient Dashboard".
-					userControlPatientDashboard.CloseDashboard(false);//Causes userodpref to be deleted.
-					return false;
-				}
-				//Changing which Patient Dashboard is being shown.  First add the new one, then close the old, and update user pref.
-				//This order of operations helps avoid unnecessary UI flicker and slowness because we don't actually close the entire Dashboard control.
-				actionOpenNewDashboard = new Action(() =>
-				{
-					UserOdPref userPrefDashboard = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.Dashboard).FirstOrDefault();
-					List<UserControlDashboardWidget> listOpenWidgets = userControlPatientDashboard.ListOpenWidgets;
-					userControlPatientDashboard.AddWidget(sheetDefWidget);
-					foreach (UserControlDashboardWidget widget in listOpenWidgets)
-					{
-						widget.CloseWidget();
-					}
-					ResizeDashboard();//Resize the splitter/Patient Dashboard container appropriately.
-					userPrefDashboard.Fkey = sheetDefWidget.SheetDefNum;
-					UserOdPrefs.Update(userPrefDashboard);
-					RefreshMenuDashboards();
-				});
-			}
-			else
-			{
-				actionOpenNewDashboard = new Action(() =>
-				{
-					UserOdPref userPrefDashboard = new UserOdPref()
-					{//If Patient Dashboard was not open, so we need a new user pref for the current user.
-						UserNum = Security.CurrentUser.Id,
-						Fkey = sheetDefWidget.SheetDefNum,
-						FkeyType = UserOdFkeyType.Dashboard,
-						ClinicNum = Clinics.ClinicNum
-					};
-					if (Security.CurrentUser.Id != 0)
-					{//If the userNum is 0 for the following command it will delete all Patient Dashboard UserOdPrefs!
-					 //if any Patient Dashboard UserOdPrefs already exists for this user, remove them. This could happen due to a previous concurrency bug.
-						UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, "");
-					}
-					userPrefDashboard.UserOdPrefNum = UserOdPrefs.Insert(userPrefDashboard);//Pre-insert for PK.
-					try
-					{
-						InitDashboards(Security.CurrentUser.Id, userPrefDashboard);
-					}
-					catch (NotImplementedException niex)
-					{
-						MessageBox.Show(this, "Error loading Patient Dashboard:\r\n" + niex.Message + "\r\nCorrect errors in Dashboard Setup.");
-					}
-					catch (Exception ex)
-					{
-						throw new Exception("Unexpected error loading Patient Dashboard: " + ex.Message, ex);//So we get bug submission.
-					}
-				});
-			}
-			ODProgress.ShowAction(actionOpenNewDashboard, Lan.G(this, "Starting Patient Dashboard"));
-			return userControlPatientDashboard.IsInitialized;
+			// TODO:
+			//Action actionOpenNewDashboard;
+			//if (userControlPatientDashboard.IsInitialized)
+			//{
+			//	if (userControlPatientDashboard.ListOpenWidgets.Any(x => x.Name == POut.Long(sheetDefWidget.SheetDefNum)))
+			//	{
+			//		//Clicked on the currently open Patient Dashboard.  This means "Close the Patient Dashboard".
+			//		userControlPatientDashboard.CloseDashboard(false);//Causes userodpref to be deleted.
+			//		return false;
+			//	}
+			//	//Changing which Patient Dashboard is being shown.  First add the new one, then close the old, and update user pref.
+			//	//This order of operations helps avoid unnecessary UI flicker and slowness because we don't actually close the entire Dashboard control.
+			//	actionOpenNewDashboard = new Action(() =>
+			//	{
+			//		UserOdPref userPrefDashboard = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.Dashboard).FirstOrDefault();
+			//		List<UserControlDashboardWidget> listOpenWidgets = userControlPatientDashboard.ListOpenWidgets;
+			//		userControlPatientDashboard.AddWidget(sheetDefWidget);
+			//		foreach (UserControlDashboardWidget widget in listOpenWidgets)
+			//		{
+			//			widget.CloseWidget();
+			//		}
+			//		ResizeDashboard();//Resize the splitter/Patient Dashboard container appropriately.
+			//		userPrefDashboard.Fkey = sheetDefWidget.SheetDefNum;
+			//		UserOdPrefs.Update(userPrefDashboard);
+			//		RefreshMenuDashboards();
+			//	});
+			//}
+			//else
+			//{
+			//	actionOpenNewDashboard = new Action(() =>
+			//	{
+			//		UserOdPref userPrefDashboard = new UserOdPref()
+			//		{//If Patient Dashboard was not open, so we need a new user pref for the current user.
+			//			UserNum = Security.CurrentUser.Id,
+			//			Fkey = sheetDefWidget.SheetDefNum,
+			//			FkeyType = UserOdFkeyType.Dashboard,
+			//			ClinicNum = Clinics.ClinicNum
+			//		};
+			//		if (Security.CurrentUser.Id != 0)
+			//		{//If the userNum is 0 for the following command it will delete all Patient Dashboard UserOdPrefs!
+			//		 //if any Patient Dashboard UserOdPrefs already exists for this user, remove them. This could happen due to a previous concurrency bug.
+			//			UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, "");
+			//		}
+			//		userPrefDashboard.UserOdPrefNum = UserOdPrefs.Insert(userPrefDashboard);//Pre-insert for PK.
+			//		try
+			//		{
+			//			InitDashboards(Security.CurrentUser.Id, userPrefDashboard);
+			//		}
+			//		catch (NotImplementedException niex)
+			//		{
+			//			MessageBox.Show(this, "Error loading Patient Dashboard:\r\n" + niex.Message + "\r\nCorrect errors in Dashboard Setup.");
+			//		}
+			//		catch (Exception ex)
+			//		{
+			//			throw new Exception("Unexpected error loading Patient Dashboard: " + ex.Message, ex);//So we get bug submission.
+			//		}
+			//	});
+			//}
+			//ODProgress.ShowAction(actionOpenNewDashboard, Lan.G(this, "Starting Patient Dashboard"));
+			//return userControlPatientDashboard.IsInitialized;
+			return true;
 		}
 
 		///<summary>Determines if there is a user preference for which Dashboard to open on startup, and launches it if the user has permissions to 
 		///launch the dashboard.</summary>
-		private void InitDashboards(long userNum, UserOdPref userPrefDashboard = null)
+		private void InitDashboards(long userNum/*, UserOdPref userPrefDashboard = null*/)
 		{
-			bool isOpenedManually = (userPrefDashboard != null);
-			userPrefDashboard = userPrefDashboard ?? UserOdPrefs.GetByUserAndFkeyType(userNum, UserOdFkeyType.Dashboard).FirstOrDefault();
-			if (userPrefDashboard == null)
-			{
-				return;//User didn't have the dashboard open the last time logged out.
-			}
-			if (userControlTasks1.Visible && ComputerPrefs.LocalComputer.TaskDock == 1)
-			{//Tasks are docked right
-				this.InvokeIfRequired(() =>
-				{
-					MessageBox.Show("Dashboards are disabled when Tasks are docked to the right.");
-					if (Security.CurrentUser.Id != 0)
-					{//If the userNum is 0 for the following command it will delete all Patient Dashboard UserOdPrefs!
-					 //Stop the Patient Dashboard from attempting to open on next login.
-						UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, "");
-					}
-				});
-				return;
-			}
-			SheetDef sheetDefDashboard = GetUserDashboard(userPrefDashboard);
-			if (sheetDefDashboard == null)
-			{//Couldn't find the SheetDef, no sense trying to initialize the Patient Dashboard.
-				if (isOpenedManually)
-				{//Only prompt if user attempted to open a Patient Dashboard from the menu.
-					this.InvokeIfRequired(() =>
-					{
-						MessageBox.Show("Patient Dashboard could not be found.");
-					});
-				}
-				return;
-			}
-			//Pass in SheetDef describing Dashboard layout.
-			userControlPatientDashboard.Initialize(sheetDefDashboard, () => { this.InvokeIfRequired(() => LayoutControls()); }
-				, () =>
-				{//What to do when the user closes the dashboard.
-					if (Security.CurrentUser.Id != 0)
-					{//If the userNum is 0 for the following command it will delete all Patient Dashboard UserOdPrefs!
-					 //Stop the Patient Dashboard from attempting to open on next login.
-						UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, "");
-					}
-					RefreshMenuDashboards();
-					if (ContrAppt2.Visible)
-					{//Ensure appointment view redraws.
-						ContrAppt2.ModuleSelected(CurPatNum);
-					}
-				}
-			);
-			RefreshMenuDashboards();
+			//bool isOpenedManually = (userPrefDashboard != null);
+			//userPrefDashboard = userPrefDashboard ?? UserOdPrefs.GetByUserAndFkeyType(userNum, UserOdFkeyType.Dashboard).FirstOrDefault();
+			//if (userPrefDashboard == null)
+			//{
+			//	return;//User didn't have the dashboard open the last time logged out.
+			//}
+			//if (userControlTasks1.Visible && ComputerPrefs.LocalComputer.TaskDock == 1)
+			//{//Tasks are docked right
+			//	this.InvokeIfRequired(() =>
+			//	{
+			//		MessageBox.Show("Dashboards are disabled when Tasks are docked to the right.");
+			//		if (Security.CurrentUser.Id != 0)
+			//		{//If the userNum is 0 for the following command it will delete all Patient Dashboard UserOdPrefs!
+			//		 //Stop the Patient Dashboard from attempting to open on next login.
+			//			UserOdPrefs.DeleteForValueString(Security.CurrentUser.Id, UserOdFkeyType.Dashboard, "");
+			//		}
+			//	});
+			//	return;
+			//}
+			//SheetDef sheetDefDashboard = GetUserDashboard(userPrefDashboard);
+			//if (sheetDefDashboard == null)
+			//{//Couldn't find the SheetDef, no sense trying to initialize the Patient Dashboard.
+			//	if (isOpenedManually)
+			//	{//Only prompt if user attempted to open a Patient Dashboard from the menu.
+			//		this.InvokeIfRequired(() =>
+			//		{
+			//			MessageBox.Show("Patient Dashboard could not be found.");
+			//		});
+			//	}
+			//	return;
+			//}
+			////Pass in SheetDef describing Dashboard layout.
+			//userControlPatientDashboard.Initialize(sheetDefDashboard, () => { this.InvokeIfRequired(() => LayoutControls()); }
+			//	, () =>
+			//	{
+			//		RefreshMenuDashboards();
+			//		if (ContrAppt2.Visible)
+			//		{//Ensure appointment view redraws.
+			//			ContrAppt2.ModuleSelected(CurPatNum);
+			//		}
+			//	}
+			//);
+			//RefreshMenuDashboards();
 		}
 
 		///<summary>Gets the current user's Patient Dashboard SheetDef.  Returns null if the SheetDef linked via userPrefDashboard does not exist.
 		///If the Patient Dashboard SheetDef linked via userPrefDashboard no longer exists, userPrefDashboard is deleted.</summary>
-		private static SheetDef GetUserDashboard(UserOdPref userPrefDashboard)
+		private static SheetDef GetUserDashboard(/*UserOdPref userPrefDashboard*/)
 		{
-			if (userPrefDashboard == null)
-			{
-				return null;
-			}
-			long sheetDefDashboardNum = userPrefDashboard.Fkey;
-			SheetDef sheetDefDashboard = SheetDefs.GetFirstOrDefault(x => x.SheetDefNum == sheetDefDashboardNum);
-			if (sheetDefDashboard == null)
-			{
-				//The linked Patient Dashboard for this user no longer exists.  Clean up the UserOdPref.
-				if (userPrefDashboard.UserNum != 0)
-				{//Defensive to ensure all Patient Dashboard userprefs are not deleted.
-					UserOdPrefs.DeleteForValueString(userPrefDashboard.UserNum, UserOdFkeyType.Dashboard, string.Empty);//All Dashboard userodprefs for this user.
-				}
-				else
-				{
-					UserOdPrefs.Delete(userPrefDashboard.UserOdPrefNum);//Otherwise, be safe and only delete this one userpref.
-				}
-			}
-			else if (sheetDefDashboard.SheetType == SheetTypeEnum.PatientDashboard)
-			{
-				//Previously, users could open multiple Patient Dashboard SheetDefs as UserControlDashboardWidgets within the UserControlDashboard container.
-				//These UserControlDashboardWidgets could be arranged by dragging/dropping them around the container, and this layout was saved on a user by
-				//user basis.
-				//In E13631, we only allow one UserControlDashboardWidget to be open at a time, and in E13629 we removed the drag/drop functionality.  This
-				//eliminates the need for a separate SheetDef to save the user's Patient Dashboard layout.  However, we want to as seemlessly as possible
-				//transition users away from the multiple Patient Dashboard functionality, ideally without any interruption in user experience.
-				//If the user had a saved layout, we will pick the first (hopefully only) UserControlDashboardWidget/SheetDef and use it as the last opened
-				//Patient Dashboard, simultaneously removing the user specific layout SheetDef and linking via userPrefDashboard to the first 
-				//UserControlDashboard that was previoulsy open. This will allow us to remove the obsolete layout SheetDef, as well as save the selected
-				//Patient Dashboard for the user.
-				SheetDefs.GetFieldsAndParameters(sheetDefDashboard);
-				//FieldValue corresponds to the Patient Dashboard widget SheetDef.SheetDefNum
-				long firstWidgetSheetDefNum = PIn.Long(sheetDefDashboard.SheetFieldDefs.FirstOrDefault().FieldValue);
-				SheetDefs.DeleteObject(sheetDefDashboard.SheetDefNum);//Delete the layout SheetDef.
-				sheetDefDashboard = SheetDefs.GetFirstOrDefault(x => x.SheetDefNum == firstWidgetSheetDefNum);
-				userPrefDashboard.Fkey = firstWidgetSheetDefNum;//May not exist.  Will get cleaned up later.
-				UserOdPrefs.Update(userPrefDashboard);
-			}
-			return sheetDefDashboard;
+			//if (userPrefDashboard == null)
+			//{
+			//	return null;
+			//}
+			//long sheetDefDashboardNum = userPrefDashboard.Fkey;
+			//SheetDef sheetDefDashboard = SheetDefs.GetFirstOrDefault(x => x.SheetDefNum == sheetDefDashboardNum);
+			//if (sheetDefDashboard == null)
+			//{
+			//}
+			//else if (sheetDefDashboard.SheetType == SheetTypeEnum.PatientDashboard)
+			//{
+			//	//Previously, users could open multiple Patient Dashboard SheetDefs as UserControlDashboardWidgets within the UserControlDashboard container.
+			//	//These UserControlDashboardWidgets could be arranged by dragging/dropping them around the container, and this layout was saved on a user by
+			//	//user basis.
+			//	//In E13631, we only allow one UserControlDashboardWidget to be open at a time, and in E13629 we removed the drag/drop functionality.  This
+			//	//eliminates the need for a separate SheetDef to save the user's Patient Dashboard layout.  However, we want to as seemlessly as possible
+			//	//transition users away from the multiple Patient Dashboard functionality, ideally without any interruption in user experience.
+			//	//If the user had a saved layout, we will pick the first (hopefully only) UserControlDashboardWidget/SheetDef and use it as the last opened
+			//	//Patient Dashboard, simultaneously removing the user specific layout SheetDef and linking via userPrefDashboard to the first 
+			//	//UserControlDashboard that was previoulsy open. This will allow us to remove the obsolete layout SheetDef, as well as save the selected
+			//	//Patient Dashboard for the user.
+			//	SheetDefs.GetFieldsAndParameters(sheetDefDashboard);
+			//	//FieldValue corresponds to the Patient Dashboard widget SheetDef.SheetDefNum
+			//	long firstWidgetSheetDefNum = PIn.Long(sheetDefDashboard.SheetFieldDefs.FirstOrDefault().FieldValue);
+			//	SheetDefs.DeleteObject(sheetDefDashboard.SheetDefNum);//Delete the layout SheetDef.
+			//	sheetDefDashboard = SheetDefs.GetFirstOrDefault(x => x.SheetDefNum == firstWidgetSheetDefNum);
+			//	userPrefDashboard.Fkey = firstWidgetSheetDefNum;//May not exist.  Will get cleaned up later.
+			//	UserOdPrefs.Update(userPrefDashboard);
+			//}
+			//return sheetDefDashboard;
+			return default;
 		}
 
 		///<summary>Determines if the Dashboard is currently visible.</summary>
@@ -7262,7 +7228,7 @@ namespace OpenDental
 				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on."));
 				return;
 			}
-			UserOdPrefL.SetThemeForUserIfNeeded();
+
 			#region Command Line Args
 			//Both a username and password was passed in via command line arguments.
 			if (odUser != "" && odPassword != "")
@@ -7271,7 +7237,6 @@ namespace OpenDental
 				{
 					bool isEcwTightOrFullMode = Programs.UsingEcwTightOrFullMode();
 					Security.CurrentUser = Userods.CheckUserAndPassword(odUser, odPassword, isEcwTightOrFullMode);
-					UserOdPrefL.SetThemeForUserIfNeeded();
 				}
 				catch (Exception ex)
 				{
@@ -7297,7 +7262,7 @@ namespace OpenDental
 				{
 					Security.CurrentUser = Userods.GetUserNoCache(userNumFirstAdminNoPass);
 					CheckForPasswordReset();
-					UserOdPrefL.SetThemeForUserIfNeeded();
+
 					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on."));
 				}
 				#endregion
@@ -7341,7 +7306,7 @@ namespace OpenDental
 							{
 								Security.CurrentUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.ElementAt(box.SelectedIndex));
 								CheckForPasswordReset();
-								UserOdPrefL.SetThemeForUserIfNeeded();
+
 								SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " "
 									+ Lan.G(this, "has logged on automatically via ActiveDirectory."));
 							}
@@ -7354,7 +7319,7 @@ namespace OpenDental
 						{ //log on automatically if only one user is linked to current domain user
 							Security.CurrentUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.First());
 							CheckForPasswordReset();
-							UserOdPrefL.SetThemeForUserIfNeeded();
+
 							SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " "
 									+ Lan.G(this, "has logged on automatically via ActiveDirectory."));
 						}

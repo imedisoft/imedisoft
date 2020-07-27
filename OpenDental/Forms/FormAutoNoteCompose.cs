@@ -12,7 +12,7 @@ namespace OpenDental {
 		public string MainTextNote;
 		///<summary>On load, the UserOdPref that contains the comma delimited list of expanded category DefNums is retrieved from the database.  On close
 		///the UserOdPref is updated with the current expanded DefNums.</summary>
-		private UserOdPref _userOdCurPref;
+		private string _userOdCurPref;
 		private List<Def> _listAutoNoteCatDefs;
 
 		public FormAutoNoteCompose() {
@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		private void FormAutoNoteCompose_Load(object sender,EventArgs e) {
 			_listAutoNoteCatDefs=Defs.GetDefsForCategory(DefCat.AutoNoteCats,true);
-			_userOdCurPref=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.AutoNoteExpandedCats).FirstOrDefault();
+			_userOdCurPref=UserPreference.GetString(UserPreferenceName.AutoNoteExpandedCats);
 			FillListTree();
 		}
 
@@ -35,7 +35,7 @@ namespace OpenDental {
 		private void FillListTree() {
 			List<long> listExpandedDefNums=new List<long>();
 			if(_userOdCurPref!=null) {//if this is the fill on load, the node count will be 0, expanded node list from pref
-				listExpandedDefNums=_userOdCurPref.ValueString.Split(',').Where(x => x!="" && x!="0").Select(x => PIn.Long(x)).ToList();
+				listExpandedDefNums=_userOdCurPref.Split(',').Where(x => x!="" && x!="0").Select(x => PIn.Long(x)).ToList();
 			}
 			//clear current tree contents
 			treeListMain.BeginUpdate();
@@ -432,17 +432,9 @@ namespace OpenDental {
 			//store the current node expanded state for this user
 			List<long> listExpandedDefNums=treeListMain.Nodes.OfType<TreeNode>().SelectMany(x => GetNodeAndChildren(x))
 				.Where(x => x.Tag is Def && x.IsExpanded).Select(x => ((Def)x.Tag).DefNum).Where(x => x>0).ToList();
-			if(_userOdCurPref==null) {
-				UserOdPrefs.Insert(new UserOdPref() {
-					UserNum=Security.CurrentUser.Id,
-					FkeyType=UserOdFkeyType.AutoNoteExpandedCats,
-					ValueString=string.Join(",",listExpandedDefNums)
-				});
-			}
-			else {
-				_userOdCurPref.ValueString=string.Join(",",listExpandedDefNums);
-				UserOdPrefs.Update(_userOdCurPref);
-			}
+
+
+			UserPreference.Set(UserPreferenceName.AutoNoteExpandedCats, string.Join(",", listExpandedDefNums));
 		}
 
 		///<summary>This holds AutoNote prompt responses. Mostly used when using the back button within the Prompt Responses.</summary>

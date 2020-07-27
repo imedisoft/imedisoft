@@ -262,11 +262,9 @@ namespace OpenDentBusiness{
 			Database.ExecuteNonQuery(command);
 			command="UPDATE wikipagehist SET PageTitle='"+POut.String(newPageTitle)+"'WHERE PageTitle='"+POut.String(wikiPage.PageTitle)+"'";
 			Database.ExecuteNonQuery(command);
+
 			//Update all home pages for users.
-			command="UPDATE userodpref SET ValueString='"+POut.String(newPageTitle)+"' "
-				+"WHERE FkeyType="+POut.Int((int)UserOdFkeyType.WikiHomePage)+" "
-				+"AND ValueString='"+POut.String(wikiPage.PageTitle)+"'";
-			Database.ExecuteNonQuery(command);
+			UserPreference.Update(UserPreferenceName.WikiHomePage, wikiPage.PageTitle, newPageTitle);
 			return;
 		}
 
@@ -459,7 +457,7 @@ namespace OpenDentBusiness{
 			wikiPage.DateTimeSaved=MiscData.GetNowDateTime();
 			Crud.WikiPageCrud.Update(wikiPage);
 			//Remove all associated home pages for all users.
-			UserOdPrefs.DeleteForValueString(0,UserOdFkeyType.WikiHomePage,pageTitle);
+			UserPreference.DeleteWithValue(UserPreferenceName.WikiHomePage,pageTitle);
 		}
 
 		public static WikiPageHist PageToHist(WikiPage wikiPage) {

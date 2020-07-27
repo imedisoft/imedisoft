@@ -210,7 +210,9 @@ namespace Imedisoft.Data
 		{
 			lastCommand = commandText;
 
-			return Execute(dataConnection => dataConnection.ExecuteScalar(commandText, true, parameters));
+			var result = Execute(dataConnection => dataConnection.ExecuteScalar(commandText, true, parameters));
+
+			return result == DBNull.Value ? null : result;
 		}
 
 		/// <summary>

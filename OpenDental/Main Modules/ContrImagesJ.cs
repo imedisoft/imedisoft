@@ -299,36 +299,37 @@ namespace OpenDental{
 					}
 				}
 				else {//User has changed.  Expand image categories based on user preference.
-					_listExpandedCats.Clear();
-					List<UserOdPref> _listUserOdPrefImageCats=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.Definition);//Update override list.
-					foreach(Def def in listDefsImageCats) {
-						//Should only be one value with associated Fkey.
-						UserOdPref userOdPrefTemp=_listUserOdPrefImageCats.FirstOrDefault(x => x.Fkey==def.DefNum);
-						if(userOdPrefTemp!=null) {//User has a preference for this image category.
-							if(!userOdPrefTemp.ValueString.Contains("E")) {//The user's preference is to collapse this category.
-								continue;
-							}
-							for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
-								NodeObjTag nodeObjTagCategory=(NodeObjTag)treeMain.Nodes[j].Tag;//Get current tree document node.
-								if(nodeObjTagCategory.Def.DefNum==userOdPrefTemp.Fkey) {
-									treeMain.Nodes[j].Expand();//Expand folder.
-									break;
-								}
-							}
-						}
-						else {//User doesn't have a preference for this image category.
-							if(!def.ItemValue.Contains("E")) {//The default preference is to collapse this category.
-								continue;
-							}
-							for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
-								NodeObjTag nodeObjTagCategory=(NodeObjTag)treeMain.Nodes[j].Tag;//Get current tree document node.
-								if(nodeObjTagCategory.Def.DefNum==def.DefNum) {
-									treeMain.Nodes[j].Expand();
-									break;
-								}
-							}
-						}
-					}
+					// TODO:
+					//_listExpandedCats.Clear();
+					//List<UserOdPref> _listUserOdPrefImageCats=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.Definition);//Update override list.
+					//foreach(Def def in listDefsImageCats) {
+					//	//Should only be one value with associated Fkey.
+					//	UserOdPref userOdPrefTemp=_listUserOdPrefImageCats.FirstOrDefault(x => x.Fkey==def.DefNum);
+					//	if(userOdPrefTemp!=null) {//User has a preference for this image category.
+					//		if(!userOdPrefTemp.ValueString.Contains("E")) {//The user's preference is to collapse this category.
+					//			continue;
+					//		}
+					//		for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
+					//			NodeObjTag nodeObjTagCategory=(NodeObjTag)treeMain.Nodes[j].Tag;//Get current tree document node.
+					//			if(nodeObjTagCategory.Def.DefNum==userOdPrefTemp.Fkey) {
+					//				treeMain.Nodes[j].Expand();//Expand folder.
+					//				break;
+					//			}
+					//		}
+					//	}
+					//	else {//User doesn't have a preference for this image category.
+					//		if(!def.ItemValue.Contains("E")) {//The default preference is to collapse this category.
+					//			continue;
+					//		}
+					//		for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
+					//			NodeObjTag nodeObjTagCategory=(NodeObjTag)treeMain.Nodes[j].Tag;//Get current tree document node.
+					//			if(nodeObjTagCategory.Def.DefNum==def.DefNum) {
+					//				treeMain.Nodes[j].Expand();
+					//				break;
+					//			}
+					//		}
+					//	}
+					//}
 				}
 				_userNumPrev=Security.CurrentUser.Id;//Update the Previous user num.
 				_isFillingTreeWithPref=false;//Disable flag
@@ -3219,16 +3220,17 @@ namespace OpenDental{
 			else if(!isExpand && curValue.Contains("E")) {//Since we are collapsing we want to see if the expand flag is present.
 				curValue=curValue.Replace("E","");//If it is, remove expanded flag.
 			}
-			//Always delete to remove previous value (prevents duplicates).
-			UserOdPrefs.DeleteForFkey(Security.CurrentUser.Id,UserOdFkeyType.Definition,defImageCatCur.DefNum);
-			if(defaultValue!=curValue) {//Insert an override in the UserOdPref table, only if the chosen value is different than the default.
-				UserOdPref userPrefCur=new UserOdPref();//Preference to be inserted to override.
-				userPrefCur.UserNum=Security.CurrentUser.Id;
-				userPrefCur.Fkey=defImageCatCur.DefNum;
-				userPrefCur.FkeyType=UserOdFkeyType.Definition;
-				userPrefCur.ValueString=curValue;
-				UserOdPrefs.Insert(userPrefCur);
-			}
+			// TODO: Fix me
+			////Always delete to remove previous value (prevents duplicates).
+			//UserOdPrefs.DeleteForFkey(Security.CurrentUser.Id,UserOdFkeyType.Definition,defImageCatCur.DefNum);
+			//if(defaultValue!=curValue) {//Insert an override in the UserOdPref table, only if the chosen value is different than the default.
+			//	UserOdPref userPrefCur=new UserOdPref();//Preference to be inserted to override.
+			//	userPrefCur.UserNum=Security.CurrentUser.Id;
+			//	userPrefCur.Fkey=defImageCatCur.DefNum;
+			//	userPrefCur.FkeyType=UserOdFkeyType.Definition;
+			//	userPrefCur.ValueString=curValue;
+			//	UserOdPrefs.Insert(userPrefCur);
+			//}
 		}
 		#endregion Methods - Private
 

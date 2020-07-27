@@ -37,8 +37,6 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			UserOdPrefL.SetThemeForUserIfNeeded();
-
 			if (PrefC.GetBool(PrefName.PasswordsMustBeStrong) && 
 				PrefC.GetBool(PrefName.PasswordsWeakChangeToStrong))
 			{

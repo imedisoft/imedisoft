@@ -3906,7 +3906,7 @@ namespace OpenDentBusiness
 					FKey=appt.AptNum,
 					LogSource=secLogSource,
 					DateTPrevious=appt.SecDateTEntry,
-					CompName=Security.CurComputerName
+					CompName= Environment.MachineName
 				});
 			}
 			else {
@@ -3921,7 +3921,7 @@ namespace OpenDentBusiness
 					FKey=appt.AptNum,
 					LogSource=LogSources.MobileWeb,
 					DateTPrevious=appt.SecDateTEntry,
-					CompName=Security.CurComputerName,
+					CompName= Environment.MachineName,
 				});
 			}
 			#endregion

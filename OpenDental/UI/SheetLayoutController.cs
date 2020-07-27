@@ -91,18 +91,17 @@ namespace OpenDental
 			}
 			#region UserOdPref based layout selection. If no UserOdPref use practice default or first item in list as last line of defense.
 			SheetDef def = null;
-			List<UserOdPref> listPrefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.DynamicChartLayout);
-			UserOdPref userPref = listPrefs.FirstOrDefault();//There is only at most a single link per user.
-			if (userPref != null//User has viewed the chart module before
-				&& ListSheetDefsLayout.Any(x => x.SheetDefNum == userPref.Fkey))//Layout still exists in the list of options
+
+			var sheetDefNum = UserPreference.GetLong(UserPreferenceName.DynamicChartLayout);
+			if (sheetDefNum > 0 && ListSheetDefsLayout.Any(x => x.SheetDefNum == sheetDefNum))//Layout still exists in the list of options
 			{
-				def = ListSheetDefsLayout.FirstOrDefault(x => x.SheetDefNum == userPref.Fkey);//Use previous layout when not practice or Clinic default.
+				def = ListSheetDefsLayout.FirstOrDefault(x => x.SheetDefNum == sheetDefNum);//Use previous layout when not practice or Clinic default.
 			}
 			else
 			{//Try to use the practice default.
 			 //If there is a Clinic default, get it.
 				if (!PrefC.HasClinicsEnabled || Clinics.ClinicNum == 0
-					|| !ClinicPrefs.TryGetLong(PrefName.SheetsDefaultChartModule, Clinics.ClinicNum, out long sheetDefNum))
+					|| !ClinicPrefs.TryGetLong(PrefName.SheetsDefaultChartModule, Clinics.ClinicNum, out sheetDefNum))
 				{
 					//Either, clinics are off, HQ is selected, or ClinicPref did not exist.
 					if (_hasUserLoggedOff)
@@ -188,23 +187,22 @@ namespace OpenDental
 		///Should only be called when a user selects a specific layout.</summary>
 		private void UpdateChartLayoutUserPref()
 		{
-			UserOdPref userPref = UserOdPrefs.GetFirstOrNewByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.DynamicChartLayout);
-			userPref.Fkey = _sheetDefDynamicLayoutCur.SheetDefNum;
-			if (!PrefC.HasClinicsEnabled || Clinics.ClinicNum == 0
-				|| !ClinicPrefs.TryGetLong(PrefName.SheetsDefaultChartModule, Clinics.ClinicNum, out long defaultSheetDefNum))
+			var sheetDefId = _sheetDefDynamicLayoutCur.SheetDefNum;
+
+			if (!PrefC.HasClinicsEnabled || Clinics.ClinicNum == 0|| !ClinicPrefs.TryGetLong(PrefName.SheetsDefaultChartModule, Clinics.ClinicNum, out long defaultSheetDefNum))
 			{
 				defaultSheetDefNum = PrefC.GetLong(PrefName.SheetsDefaultChartModule);
 			}
-			if (userPref.Fkey == defaultSheetDefNum)
+
+			if (sheetDefId == defaultSheetDefNum)
 			{
-				if (!userPref.IsNew)
-				{
-					UserOdPrefs.Delete(userPref.UserOdPrefNum);//Delete old entry, this will cause user to view any newly selected practice or clinic defaults.
-				}
+				UserPreference.Delete(UserPreferenceName.DynamicChartLayout);
+
 				//User selected the practice or clinic default, flag so that this user continues to get the appropriate default.
 				return;
 			}
-			UserOdPrefs.Upsert(userPref);
+
+			UserPreference.Set(UserPreferenceName.DynamicChartLayout, sheetDefId);
 		}
 
 		///<summary>Once all controls are set in their initial place this is called to adjust any controls which might be overlapping on the X axis

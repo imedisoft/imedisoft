@@ -186,32 +186,28 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>The currently selected clinic's ClinicNum.  Unlike the one stored in FormOpenDental, this is accessible from the business layer.</summary>
-		public static long ClinicNum {
+		public static long ClinicNum
+		{
 			get { return _clinicNum; }
-			set {
-				if(_clinicNum==value) {
+			set
+			{
+				if (_clinicNum == value)
+				{
 					return;//no change
 				}
-				_clinicNum=value;
-				if(Security.CurrentUser==null) {
+				_clinicNum = value;
+				if (Security.CurrentUser == null)
+				{
 					return;
 				}
-				if(PrefC.GetString(PrefName.ClinicTrackLast)!="User") {
+
+				if (PrefC.GetString(PrefName.ClinicTrackLast) != "User")
+				{
 					return;
 				}
-				List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.ClinicLast);//should only be one.
-				if(prefs.Count>0) {
-					prefs.ForEach(x => x.Fkey=value);
-					prefs.ForEach(UserOdPrefs.Update);
-					return;
-				}
-				UserOdPrefs.Insert(
-					new UserOdPref() {
-						UserNum=Security.CurrentUser.Id,
-						FkeyType=UserOdFkeyType.ClinicLast,
-						Fkey=value,
-					});
-			}//end set
+
+				UserPreference.Set(UserPreferenceName.ClinicLast, value);
+			}
 		}
 
 		///<summary>Sets Clinics.ClinicNum. Used when logging on to determines what clinic to start with based on user and workstation preferences.</summary>
@@ -237,22 +233,20 @@ namespace OpenDentBusiness{
 						_clinicNum=ComputerPrefs.LocalComputer.ClinicNum;
 					}
 					return;//Error
+
 				case "User":
-					List<UserOdPref> prefs = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.ClinicLast);//should only be one or none.
-					if(prefs.Count==0) {
-						UserOdPref pref =
-							new UserOdPref() {
-								UserNum=Security.CurrentUser.Id,
-								FkeyType=UserOdFkeyType.ClinicLast,
-								Fkey=Security.CurrentUser.ClinicNum//default clinic num
-							};
-						UserOdPrefs.Insert(pref);
-						prefs.Add(pref);
-					}
-					if(listClinics.Any(x => x.ClinicNum==prefs[0].Fkey)) {//user is restricted and does not have access to the computerpref clinic
-						_clinicNum=prefs[0].Fkey;
-					}
+					var clinicId = UserPreference.GetLong(UserPreferenceName.ClinicLast);
+
+					if (clinicId == 0)
+                    {
+						clinicId = Security.CurrentUser.ClinicNum;
+
+						UserPreference.Set(UserPreferenceName.ClinicLast, clinicId);
+                    }
+
+					if (listClinics.Any(x => x.ClinicNum == clinicId)) _clinicNum = clinicId;
 					return;
+
 				case "None":
 				default:
 					if(listClinics.Any(x => x.ClinicNum==Security.CurrentUser.ClinicNum)) {
@@ -263,37 +257,31 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Called when logging user off or closing opendental.</summary>
-		public static void LogOff() {
-			if(!PrefC.HasClinicsEnabled) {
-				_clinicNum=0;
+		public static void LogOff()
+		{
+			if (!PrefC.HasClinicsEnabled)
+			{
+				_clinicNum = 0;
 				return;
 			}
-			switch(PrefC.GetString(PrefName.ClinicTrackLast)) {
+
+			switch (PrefC.GetString(PrefName.ClinicTrackLast))
+			{
 				case "Workstation":
-					ComputerPrefs.LocalComputer.ClinicNum=Clinics.ClinicNum;
+					ComputerPrefs.LocalComputer.ClinicNum = ClinicNum;
 					ComputerPrefs.Update(ComputerPrefs.LocalComputer);
 					break;
-				case "User"://handled below
+
+				case "User":
 				case "None":
+
 				default:
 					break;
 			}
-			//We want to always upsert a user pref for the user because we will be looking at it for MobileWeb regardless of the preference for 
-			//ClinicTrackLast.
-			List<UserOdPref> UserPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.ClinicLast);//should only be one or none.
-			if(UserPrefs.Count==0) {
-				UserOdPref pref=new UserOdPref() {
-					UserNum=Security.CurrentUser.Id,
-					FkeyType=UserOdFkeyType.ClinicLast,
-					Fkey=Clinics.ClinicNum
-				};
-				UserOdPrefs.Insert(pref);
-			}
-			UserPrefs.ForEach(x => {
-				x.Fkey=Clinics.ClinicNum;
-				UserOdPrefs.Update(x);
-			});
-			_clinicNum=0;
+
+			UserPreference.Set(UserPreferenceName.ClinicLast, ClinicNum);
+
+			_clinicNum = 0;
 		}
 
 		///<summary></summary>

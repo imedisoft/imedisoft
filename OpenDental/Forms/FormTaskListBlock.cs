@@ -8,11 +8,11 @@ using System.Windows.Forms;
 namespace OpenDental {
 	public partial class FormTaskListBlocks:ODForm {
 		///<summary>A List of the task lists that the current user wants to block pop ups for.  Filled on load.</summary>
-		private List<UserOdPref> _listUserOdPrefTaskListBlocks;
-		private List<UserOdPref> _listUserDBPrefs;
+		//private List<UserOdPref> _listUserOdPrefTaskListBlocks;
+		//private List<UserOdPref> _listUserDBPrefs;
 		///<summary>Dictionary to hold changed task list subscriptions.</summary>
-		private Dictionary<long,UserOdPref> _dictBlockedTaskPrefs=new Dictionary<long, UserOdPref>();
-		private Dictionary<long,TaskList> _dictAllTaskLists=new Dictionary<long, TaskList>();
+		//private Dictionary<long,UserOdPref> _dictBlockedTaskPrefs=new Dictionary<long, UserOdPref>();
+		//private Dictionary<long,TaskList> _dictAllTaskLists=new Dictionary<long, TaskList>();
 		///<summary>Set to true when settings the checkmarks of parents so we don't roll back down through children for each parent recursivly.</summary>
 		private bool _isCheckingParents=false;
 		
@@ -24,24 +24,24 @@ namespace OpenDental {
 		}
 
 		private void FormTaskListBlock_Load(object sender,EventArgs e) {
-			_dictAllTaskLists=TaskLists.GetAll().ToDictionary(x => x.TaskListNum);//Used so we don't need to acces the database multiple times
-			_listUserOdPrefTaskListBlocks=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.TaskListBlock);
+			//_dictAllTaskLists=TaskLists.GetAll().ToDictionary(x => x.TaskListNum);//Used so we don't need to acces the database multiple times
+			// TODO: _listUserOdPrefTaskListBlocks=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.TaskListBlock);
 			//We pull the list then save it so the sync moethod is able to run correctly.  
 			//This correctly fixes users having duplicate task list preferences in the databse.
-			_listUserDBPrefs=_listUserOdPrefTaskListBlocks.Select(x => x.Clone()).ToList();
-			_listUserOdPrefTaskListBlocks=_listUserOdPrefTaskListBlocks.GroupBy(x => x.Fkey).Select(x => x.First()).ToList();
+			//_listUserDBPrefs=_listUserOdPrefTaskListBlocks.Select(x => x.Clone()).ToList();
+			//_listUserOdPrefTaskListBlocks=_listUserOdPrefTaskListBlocks.GroupBy(x => x.Fkey).Select(x => x.First()).ToList();
 			InitializeTree();
 		}
 
 		///<summary>Fetches the subscriptions that the user is currently subscribed too ad adds them to the treeview.</summary>
 		private void InitializeTree() {
-			treeSubscriptions.Nodes.Clear();
-			List<TaskList> listTaskListSubs=TaskLists.RefreshUserTrunk(Security.CurrentUser.Id);
-			//Only want active task lists that have no archived ancestors or no ancestors at all.
-			listTaskListSubs.RemoveAll(x => x.TaskListStatus==TaskListStatusEnum.Archived 
-				|| TaskLists.IsAncestorTaskListArchived(ref _dictAllTaskLists,x));
-			BuildTaskListTree(listTaskListSubs);
-			treeSubscriptions.ExpandAll();
+			//treeSubscriptions.Nodes.Clear();
+			//List<TaskList> listTaskListSubs=TaskLists.RefreshUserTrunk(Security.CurrentUser.Id);
+			////Only want active task lists that have no archived ancestors or no ancestors at all.
+			//listTaskListSubs.RemoveAll(x => x.TaskListStatus==TaskListStatusEnum.Archived 
+			//	|| TaskLists.IsAncestorTaskListArchived(ref _dictAllTaskLists,x));
+			//BuildTaskListTree(listTaskListSubs);
+			//treeSubscriptions.ExpandAll();
 		}
 
 		#region Building the Tree
@@ -51,22 +51,22 @@ namespace OpenDental {
 		///		task list hierarchy is correctly displayed for the user.
 		/// </summary>
 		private void BuildTaskListTree(List<TaskList> listTaskListSubs) {
-			//Add users inbox to the task list.
-			long inboxNum=Security.CurrentUser.TaskListInBox;
-			if(inboxNum!=0) {
-				listTaskListSubs.Add(_dictAllTaskLists[inboxNum]);
-			}
-			//Create a list of all leaves downstream from user's subscriptions.
-			List<TaskList> listLeafSubs=new List<TaskList>();
-			foreach(TaskList taskList in listTaskListSubs) {
-				listLeafSubs.AddRange(GetLeafSubsFromTask(taskList,listTaskListSubs));//Adds down stream leaf nodes.
-			}
-			//Create tree of TaskList subscriptions
-			treeSubscriptions.Nodes.AddRange(TreeBuilder(listLeafSubs).ToArray());//Works its way up to root nodes from given leaf nodes.
-			foreach(TreeNode roots in treeSubscriptions.Nodes) {
-				SetCheckBoxes(roots);
-			}
-			treeSubscriptions.Sort();//default sort is alphabetical by node text.
+			////Add users inbox to the task list.
+			//long inboxNum=Security.CurrentUser.TaskListInBox;
+			//if(inboxNum!=0) {
+			//	listTaskListSubs.Add(_dictAllTaskLists[inboxNum]);
+			//}
+			////Create a list of all leaves downstream from user's subscriptions.
+			//List<TaskList> listLeafSubs=new List<TaskList>();
+			//foreach(TaskList taskList in listTaskListSubs) {
+			//	listLeafSubs.AddRange(GetLeafSubsFromTask(taskList,listTaskListSubs));//Adds down stream leaf nodes.
+			//}
+			////Create tree of TaskList subscriptions
+			//treeSubscriptions.Nodes.AddRange(TreeBuilder(listLeafSubs).ToArray());//Works its way up to root nodes from given leaf nodes.
+			//foreach(TreeNode roots in treeSubscriptions.Nodes) {
+			//	SetCheckBoxes(roots);
+			//}
+			//treeSubscriptions.Sort();//default sort is alphabetical by node text.
 		}
 
 		///<summary>Recursively returns a list of all leaf nodes down stream from the given parent taskListNode.</summary>
@@ -125,19 +125,19 @@ namespace OpenDental {
 
 		///<summary>Goes through the given dictionary and works to add all parents of given TaskLists.</summary>
 		private Dictionary<long,TaskList> GetAllTaskListsRecursive(Dictionary<long, TaskList> dictCurTaskLists, long taskListNum) {
-			//No such Task List exists, so we return what was passed to us.
-			if(taskListNum==0) {
-				return dictCurTaskLists;
-			}
-			//Grab the TaskList then add all it's parents and ancestors.
-			TaskList taskList=_dictAllTaskLists[taskListNum];
-			if(taskList==null) {
-				return dictCurTaskLists;
-			}
-			dictCurTaskLists=GetAllTaskListsRecursive(dictCurTaskLists, taskList.Parent);	//Recursion
-			if(!dictCurTaskLists.ContainsKey(taskListNum)) {
-					dictCurTaskLists.Add(taskListNum,taskList);
-			}
+			////No such Task List exists, so we return what was passed to us.
+			//if(taskListNum==0) {
+			//	return dictCurTaskLists;
+			//}
+			////Grab the TaskList then add all it's parents and ancestors.
+			//TaskList taskList=_dictAllTaskLists[taskListNum];
+			//if(taskList==null) {
+			//	return dictCurTaskLists;
+			//}
+			//dictCurTaskLists=GetAllTaskListsRecursive(dictCurTaskLists, taskList.Parent);	//Recursion
+			//if(!dictCurTaskLists.ContainsKey(taskListNum)) {
+			//		dictCurTaskLists.Add(taskListNum,taskList);
+			//}
 			return dictCurTaskLists;
 		}
 		#endregion
@@ -155,9 +155,9 @@ namespace OpenDental {
 		/// <summary> Start from the roots of the tree, and work toward leaves.  Sets the node to checked if needed.
 		private void SetCheckBoxes(TreeNode node) {
 			node.Checked=false;//Unchecked if no block exists yet.
-			if(_listUserOdPrefTaskListBlocks.Exists(x => x.Fkey==(long)node.Tag && PIn.Bool(x.ValueString))) {
-				node.Checked=true;
-			}
+			//if(_listUserOdPrefTaskListBlocks.Exists(x => x.Fkey==(long)node.Tag && PIn.Bool(x.ValueString))) {
+			//	node.Checked=true;
+			//}
 			//Deal with children
 			foreach(TreeNode child in node.Nodes) {
 				SetCheckBoxes(child);//Recursion
@@ -227,17 +227,17 @@ namespace OpenDental {
 
 		///<summary>Goes through tree and sets up changes to the TaskList block preferences dictionary.</summary>
 		private void SetDictPrefsRecursive(TreeNode node) {
-			foreach(TreeNode child in node.Nodes) {
-				SetDictPrefsRecursive(child);	//Recursion
-			}
-			//Create preference
-			UserOdPref pref=new UserOdPref();
-			pref.Fkey=(long)node.Tag;
-			pref.FkeyType=UserOdFkeyType.TaskListBlock;
-			pref.UserNum=Security.CurrentUser.Id;
-			pref.ValueString=POut.Bool(node.Checked);
-			//Add preference to dictionary of preferences
-			_dictBlockedTaskPrefs[(long)node.Tag]=pref;
+			//foreach(TreeNode child in node.Nodes) {
+			//	SetDictPrefsRecursive(child);	//Recursion
+			//}
+			////Create preference
+			//UserOdPref pref=new UserOdPref();
+			//pref.Fkey=(long)node.Tag;
+			//pref.FkeyType=UserOdFkeyType.TaskListBlock;
+			//pref.UserNum=Security.CurrentUser.Id;
+			//pref.ValueString=POut.Bool(node.Checked);
+			////Add preference to dictionary of preferences
+			//_dictBlockedTaskPrefs[(long)node.Tag]=pref;
 		}
 
 		//~15ms with 8 TaskLists, about 1 frame @ 60fps
@@ -248,12 +248,12 @@ namespace OpenDental {
 				SetDictPrefsRecursive(node);
 			}
 			//Add new preferences and changes to database
-			foreach(UserOdPref editPref in _dictBlockedTaskPrefs.Values) {
-				if(_listUserOdPrefTaskListBlocks.Exists(x => x.Fkey==editPref.Fkey)) {
-					editPref.UserOdPrefNum=_listUserOdPrefTaskListBlocks.Find(x => x.Fkey==editPref.Fkey).UserOdPrefNum;
-				}
-			}
-			UserOdPrefs.Sync(_dictBlockedTaskPrefs.Select(x => x.Value).ToList(),_listUserDBPrefs);
+			//foreach(UserOdPref editPref in _dictBlockedTaskPrefs.Values) {
+			//	if(_listUserOdPrefTaskListBlocks.Exists(x => x.Fkey==editPref.Fkey)) {
+			//		editPref.UserOdPrefNum=_listUserOdPrefTaskListBlocks.Find(x => x.Fkey==editPref.Fkey).UserOdPrefNum;
+			//	}
+			//}
+			// TODO: UserOdPrefs.Sync(_dictBlockedTaskPrefs.Select(x => x.Value).ToList(),_listUserDBPrefs);
 			DialogResult=DialogResult.OK;
 			this.Close();
 		}

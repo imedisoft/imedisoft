@@ -34,20 +34,21 @@ namespace OpenDental {
 
 		private List<Userod> GetListDoseSpotUsers(bool includeProv,string provNpi="") {
 			List<Userod> retVal=new List<Userod>();
-			List<Provider> listProviders=Providers.GetWhere(x => x.NationalProvID==provNpi,true);
-			List<UserOdPref> listUserPrefDoseSpotIds=UserOdPrefs.GetAllByFkeyAndFkeyType(_programErx.Id,UserOdFkeyType.Program);
-			listUserPrefDoseSpotIds=listUserPrefDoseSpotIds.FindAll(x => string.IsNullOrWhiteSpace(x.ValueString));
-			if(includeProv) {
-				retVal=Userods.GetWhere(
-					x => !x.IsHidden && listProviders.Exists(y => y.ProvNum==x.ProvNum) //Find users that have a link to the NPI that has been passed in
-						&& !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.Id) //Also, these users shouldn't already have a DoseSpot User ID.
-					);
-			}
-			else {
-				retVal=Userods.GetWhere(
-					(x => !x.IsHidden && !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.Id)) //All users that don't already have a DoseSpot User ID.
-					);//Only consider non-hidden users.
-			}
+			// TODO:
+			//List<Provider> listProviders=Providers.GetWhere(x => x.NationalProvID==provNpi,true);
+			//List<UserOdPref> listUserPrefDoseSpotIds=UserOdPrefs.GetAllByFkeyAndFkeyType(_programErx.Id,UserOdFkeyType.Program);
+			//listUserPrefDoseSpotIds=listUserPrefDoseSpotIds.FindAll(x => string.IsNullOrWhiteSpace(x.ValueString));
+			//if(includeProv) {
+			//	retVal=Userods.GetWhere(
+			//		x => !x.IsHidden && listProviders.Exists(y => y.ProvNum==x.ProvNum) //Find users that have a link to the NPI that has been passed in
+			//			&& !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.Id) //Also, these users shouldn't already have a DoseSpot User ID.
+			//		);
+			//}
+			//else {
+			//	retVal=Userods.GetWhere(
+			//		(x => !x.IsHidden && !listUserPrefDoseSpotIds.Exists(y => y.UserNum==x.Id)) //All users that don't already have a DoseSpot User ID.
+			//		);//Only consider non-hidden users.
+			//}
 			return retVal;
 		}
 
@@ -69,15 +70,16 @@ namespace OpenDental {
 				MessageBox.Show("Please select a user.");
 				return;
 			}
-			UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(_selectedUserNum,_programErx.Id,UserOdFkeyType.Program);
-			userDosePref.ValueString=_providerErxCur.UserId.ToString();
-			if(userDosePref.IsNew) {
-				userDosePref.Fkey=_programErx.Id;
-				UserOdPrefs.Insert(userDosePref);
-			}
-			else { 
-				UserOdPrefs.Update(userDosePref);
-			}
+			// TODO:
+			//UserOdPref userDosePref=UserOdPrefs.GetByCompositeKey(_selectedUserNum,_programErx.Id,UserOdFkeyType.Program);
+			//userDosePref.ValueString=_providerErxCur.UserId.ToString();
+			//if(userDosePref.IsNew) {
+			//	userDosePref.Fkey=_programErx.Id;
+			//	UserOdPrefs.Insert(userDosePref);
+			//}
+			//else { 
+			//	UserOdPrefs.Update(userDosePref);
+			//}
 			DialogResult=DialogResult.OK;
 		}
 

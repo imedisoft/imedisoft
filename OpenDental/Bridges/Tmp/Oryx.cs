@@ -1,13 +1,12 @@
-using System;
-using System.Linq;
-using System.Net;
 using CodeBase;
 using Newtonsoft.Json;
 using OpenDentBusiness;
+using System;
+using System.Net;
 
 namespace OpenDental.Bridges
 {
-	public static class Oryx
+    public static class Oryx
 	{
 		/// <summary>
 		/// Makes an API call to get an Oryx URL to launch that is specific to the current user and patient.
@@ -18,6 +17,7 @@ namespace OpenDental.Bridges
 			try
 			{
 				clientUrl = OpenDentBusiness.ProgramProperties.GetPropVal(progOryx.Id, ProgramProperties.ClientUrl);
+
 				if (clientUrl == "")
 				{//Office has not signed up with Oryx yet, launch a promotional page.
 					string promoUrl = "http://www.opendental.com/resources/redirects/redirectoryx.html";
@@ -27,6 +27,7 @@ namespace OpenDental.Bridges
 					ODFileUtils.ProcessStart(promoUrl);
 					return;
 				}
+
 				if (!progOryx.Enabled)
 				{
 					MsgBox.Show("Oryx must be enabled in Program Links.");
@@ -36,11 +37,11 @@ namespace OpenDental.Bridges
 				{
 					clientUrl = "https://" + clientUrl;
 				}
-				UserOdPref userNamePref = UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurrentUser.Id, progOryx.Id, UserOdFkeyType.ProgramUserName)
-					.FirstOrDefault();
-				UserOdPref passwordPref = UserOdPrefs.GetByUserFkeyAndFkeyType(Security.CurrentUser.Id, progOryx.Id, UserOdFkeyType.ProgramPassword)
-					.FirstOrDefault();
-				if ((userNamePref == null || userNamePref.ValueString == "") && (passwordPref == null || passwordPref.ValueString == ""))
+
+				var username = UserPreference.GetString(UserPreferenceName.ProgramUserName, progOryx.Id);
+				var password = UserPreference.GetString(UserPreferenceName.ProgramPassword, progOryx.Id);
+
+				if (string.IsNullOrEmpty(username) && string.IsNullOrEmpty(password))
 				{
 					//User hasn't entered credentials yet. Launch the office's Oryx page where the user can then log in.
 					ODFileUtils.ProcessStart(clientUrl);
@@ -50,8 +51,8 @@ namespace OpenDental.Bridges
 
 				var content = new
 				{
-					username = userNamePref.ValueString,
-					password = passwordPref.ValueString,
+                    username,
+                    password,
 					patientId = (pat != null ? pat.PatNum.ToString() : ""),
 				};
 				string contentJson = JsonConvert.SerializeObject(content);
@@ -83,7 +84,8 @@ namespace OpenDental.Bridges
 					//Oryx has asked us to give a more helpful error message when this happens.
 					errorMessage += " This is likely because the Client URL is invalid.\r\nClient URL: " + clientUrl;
 				}
-				FriendlyException.Show(Lans.g("Oryx", errorMessage), ex);
+
+				FriendlyException.Show(errorMessage, ex);
 			}
 		}
 

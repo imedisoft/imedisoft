@@ -328,7 +328,7 @@ namespace OpenDental{
 			textCurComp.Text=Environment.MachineName.ToUpper();//current computer name
 			string itemName="";
 			for(int i=0;i<_listComputers.Count;i++){
-				itemName=_listComputers[i].CompName;
+				itemName=_listComputers[i].MachineName;
 					//+" ("+Computers.List[i].PrinterName+")";
 				listComputer.Items.Add(itemName);
 			}
@@ -339,7 +339,7 @@ namespace OpenDental{
 				return;
 			}
 			FormGraphics FormG=new FormGraphics();
-			FormG.ComputerPrefCur=ComputerPrefs.GetForComputer(_listComputers[listComputer.SelectedIndex].CompName);
+			FormG.ComputerPrefCur=ComputerPrefs.GetForComputer(_listComputers[listComputer.SelectedIndex].MachineName);
 			FormG.ShowDialog();
 		}
 
@@ -349,9 +349,9 @@ namespace OpenDental{
 				MessageBox.Show("You must select a computer name first.");
 				return;
 			}
-			ComputerPrefs.SetToSimpleGraphics(_listComputers[listComputer.SelectedIndex].CompName);
+			ComputerPrefs.SetToSimpleGraphics(_listComputers[listComputer.SelectedIndex].MachineName);
 			MessageBox.Show("Done.");
-			SecurityLogs.MakeLogEntry(Permissions.GraphicsEdit,0,"Set the graphics for computer "+_listComputers[listComputer.SelectedIndex].CompName+" to simple");
+			SecurityLogs.MakeLogEntry(Permissions.GraphicsEdit,0,"Set the graphics for computer "+_listComputers[listComputer.SelectedIndex].MachineName+" to simple");
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {

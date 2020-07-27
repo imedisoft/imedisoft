@@ -19,7 +19,7 @@ namespace OpenDental
 
 		private void FormShutdown_Load(object sender, EventArgs e)
 		{
-			List<string> runningComps = Computers.GetRunningComputers().Select(x => x.CompName).ToList();
+			List<string> runningComps = Computers.GetRunningComputers().Select(x => x.MachineName).ToList();
 			for (int i = 0; i < runningComps.Count; i++)
 			{
 				listMain.Items.Add(runningComps[i]);

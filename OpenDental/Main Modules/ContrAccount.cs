@@ -234,15 +234,7 @@ namespace OpenDental {
 		}
 
 		private void checkShowDetail_Click(object sender,EventArgs e) {
-			UserOdPref userOdPrefProcBreakdown=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.AcctProcBreakdown).FirstOrDefault();
-			if(userOdPrefProcBreakdown==null) {
-				userOdPrefProcBreakdown=new UserOdPref();
-				userOdPrefProcBreakdown.UserNum=Security.CurrentUser.Id;
-				userOdPrefProcBreakdown.FkeyType=UserOdFkeyType.AcctProcBreakdown;
-				userOdPrefProcBreakdown.Fkey=0;
-			}
-			userOdPrefProcBreakdown.ValueString=POut.Bool(checkShowDetail.Checked);
-			UserOdPrefs.Upsert(userOdPrefProcBreakdown);
+			UserPreference.Set(UserPreferenceName.AcctProcBreakdown, checkShowDetail.Checked);
 			if(_patCur==null){
 				return;
 			}
@@ -1892,13 +1884,7 @@ namespace OpenDental {
 
 		///<summary></summary>
 		public void ModuleSelected(long patNum,bool isSelectingFamily) {
-			UserOdPref userOdPrefProcBreakdown=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.AcctProcBreakdown).FirstOrDefault();
-			if(userOdPrefProcBreakdown==null) {
-				checkShowDetail.Checked=true;
-			}
-			else {
-				checkShowDetail.Checked=PIn.Bool(userOdPrefProcBreakdown.ValueString);
-			}
+			checkShowDetail.Checked = UserPreference.GetBool(UserPreferenceName.AcctProcBreakdown, true);
 			Logger.LogAction("RefreshModuleData",() => RefreshModuleData(patNum,isSelectingFamily));
 			Logger.LogAction("RefreshModuleScreen",() => RefreshModuleScreen(isSelectingFamily));
 			PatientDashboardDataEvent.Fire(EventCategory.ModuleSelected,_loadData);

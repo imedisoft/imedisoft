@@ -153,8 +153,6 @@ namespace Imedisoft.Forms
 				}
 				
 				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurrentUser.UserName + " has logged on.");
-				
-				UserOdPrefL.SetThemeForUserIfNeeded();
 			}
 
 			DialogResult = DialogResult.OK;

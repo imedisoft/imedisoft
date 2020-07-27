@@ -43,8 +43,8 @@ namespace OpenDentBusiness.Crud{
 			Computer computer;
 			foreach(DataRow row in table.Rows) {
 				computer=new Computer();
-				computer.ComputerNum  = PIn.Long  (row["ComputerNum"].ToString());
-				computer.CompName     = PIn.String(row["CompName"].ToString());
+				computer.Id  = PIn.Long  (row["ComputerNum"].ToString());
+				computer.MachineName     = PIn.String(row["CompName"].ToString());
 				computer.LastHeartBeat= PIn.Date (row["LastHeartBeat"].ToString());
 				retVal.Add(computer);
 			}
@@ -62,8 +62,8 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("LastHeartBeat");
 			foreach(Computer computer in listComputers) {
 				table.Rows.Add(new object[] {
-					POut.Long  (computer.ComputerNum),
-					            computer.CompName,
+					POut.Long  (computer.Id),
+					            computer.MachineName,
 					POut.DateT (computer.LastHeartBeat,false),
 				});
 			}
@@ -78,7 +78,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one Computer into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Computer computer,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				computer.ComputerNum=ReplicationServers.GetKey("computer","ComputerNum");
+				computer.Id=ReplicationServers.GetKey("computer","ComputerNum");
 			}
 			string command="INSERT INTO computer (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -86,18 +86,18 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="CompName,LastHeartBeat) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(computer.ComputerNum)+",";
+				command+=POut.Long(computer.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(computer.CompName)+"',"
+				 "'"+POut.String(computer.MachineName)+"',"
 				+    POut.DateT (computer.LastHeartBeat)+")";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				computer.ComputerNum=Database.ExecuteInsert(command);
+				computer.Id=Database.ExecuteInsert(command);
 			}
-			return computer.ComputerNum;
+			return computer.Id;
 		}
 
 		///<summary>Inserts one Computer into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -110,42 +110,42 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO computer (";
 			if(!useExistingPK) {
-				computer.ComputerNum=ReplicationServers.GetKeyNoCache("computer","ComputerNum");
+				computer.Id=ReplicationServers.GetKeyNoCache("computer","ComputerNum");
 			}
 			if(useExistingPK) {
 				command+="ComputerNum,";
 			}
 			command+="CompName,LastHeartBeat) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(computer.ComputerNum)+",";
+				command+=POut.Long(computer.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(computer.CompName)+"',"
+				 "'"+POut.String(computer.MachineName)+"',"
 				+    POut.DateT (computer.LastHeartBeat)+")";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				computer.ComputerNum=Database.ExecuteInsert(command);
+				computer.Id=Database.ExecuteInsert(command);
 			}
-			return computer.ComputerNum;
+			return computer.Id;
 		}
 
 		///<summary>Updates one Computer in the database.</summary>
 		public static void Update(Computer computer) {
 			string command="UPDATE computer SET "
-				+"CompName     = '"+POut.String(computer.CompName)+"', "
+				+"CompName     = '"+POut.String(computer.MachineName)+"', "
 				+"LastHeartBeat=  "+POut.DateT (computer.LastHeartBeat)+" "
-				+"WHERE ComputerNum = "+POut.Long(computer.ComputerNum);
+				+"WHERE ComputerNum = "+POut.Long(computer.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one Computer in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(Computer computer,Computer oldComputer) {
 			string command="";
-			if(computer.CompName != oldComputer.CompName) {
+			if(computer.MachineName != oldComputer.MachineName) {
 				if(command!="") { command+=",";}
-				command+="CompName = '"+POut.String(computer.CompName)+"'";
+				command+="CompName = '"+POut.String(computer.MachineName)+"'";
 			}
 			if(computer.LastHeartBeat != oldComputer.LastHeartBeat) {
 				if(command!="") { command+=",";}
@@ -155,7 +155,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE computer SET "+command
-				+" WHERE ComputerNum = "+POut.Long(computer.ComputerNum);
+				+" WHERE ComputerNum = "+POut.Long(computer.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -163,7 +163,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(Computer,Computer) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(Computer computer,Computer oldComputer) {
-			if(computer.CompName != oldComputer.CompName) {
+			if(computer.MachineName != oldComputer.MachineName) {
 				return true;
 			}
 			if(computer.LastHeartBeat != oldComputer.LastHeartBeat) {

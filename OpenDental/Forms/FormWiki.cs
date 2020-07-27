@@ -54,15 +54,15 @@ namespace OpenDental {
 		}
 
 		///<summary>Loads the user's home page or the wiki page with the title of "Home" if a custom home page has not been set before.</summary>
-		private void LoadWikiPageHome() {
+		private void LoadWikiPageHome()
+		{
 			historyNavBack--;//We have to decrement historyNavBack to tell whether or not we need to branch our page history or add to page history
-			List<UserOdPref> listUserOdPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.WikiHomePage);
-			if(listUserOdPrefs.Count > 0) {
-				LoadWikiPage(listUserOdPrefs[0].ValueString);
-			}
-			else {
-				LoadWikiPage("Home");
-			}
+
+			var homepage = UserPreference.GetString(UserPreferenceName.WikiHomePage);
+
+			if (string.IsNullOrEmpty(homepage)) homepage = "Home";
+
+			LoadWikiPage(homepage);
 		}
 
 		/// <summary>Because FormWikiEdit is no longer modal, this is necessary to be able to tell FormWiki to refresh when saving an edited page.</summary>
@@ -247,20 +247,9 @@ namespace OpenDental {
 				MessageBox.Show("Invalid wiki page selected.");
 				return;
 			}
-			List<UserOdPref> listUserOdPrefs=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.WikiHomePage);
-			if(listUserOdPrefs.Count > 0) {
-				//User is updating their current home page to a new one.
-				listUserOdPrefs[0].ValueString=WikiPageCur.PageTitle;
-				UserOdPrefs.Update(listUserOdPrefs[0]);
-			}
-			else {
-				//User is saving a custom home page for the first time.
-				UserOdPref userOdPref=new UserOdPref();
-				userOdPref.UserNum=Security.CurrentUser.Id;
-				userOdPref.ValueString=WikiPageCur.PageTitle;
-				userOdPref.FkeyType=UserOdFkeyType.WikiHomePage;
-				UserOdPrefs.Insert(userOdPref);
-			}
+
+			UserPreference.Set(UserPreferenceName.WikiHomePage, WikiPageCur.PageTitle);
+
 			MessageBox.Show("Home page saved.");
 		}
 

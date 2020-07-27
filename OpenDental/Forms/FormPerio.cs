@@ -119,8 +119,6 @@ namespace OpenDental{
 		///<summary>This is not a list of valid procedures.  The only values to be trusted in this list are the ToothNum and CodeNum.  Never used.</summary>
 		private List<Procedure> _listProcedures;
 		private PerioExam PerioExamCur;
-		private UserOdPref _userPrefCurrentOnly;
-		private UserOdPref _userPrefCustomAdvance;
 		private VoiceController _voiceController;
 		private PerioCell _prevLocation;
 		private PerioCell _curLocation;
@@ -1135,39 +1133,41 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormPerio_Load(object sender, System.EventArgs e) {
-			_listMiscColorDefs=Defs.GetDefsForCategory(DefCat.MiscColors,true);
-			butColorBleed.BackColor=_listMiscColorDefs[1].ItemColor;
-			butColorPus.BackColor=_listMiscColorDefs[2].ItemColor;
-			butColorPlaque.BackColor=_listMiscColorDefs[4].ItemColor;
-			butColorCalculus.BackColor=_listMiscColorDefs[5].ItemColor;
-			textRedProb.Text=PrefC.GetString(PrefName.PerioRedProb);
-			textRedMGJ.Text =PrefC.GetString(PrefName.PerioRedMGJ);
-			textRedGing.Text=PrefC.GetString(PrefName.PerioRedGing);
-			textRedCAL.Text =PrefC.GetString(PrefName.PerioRedCAL);
-			textRedFurc.Text=PrefC.GetString(PrefName.PerioRedFurc);
-			textRedMob.Text =PrefC.GetString(PrefName.PerioRedMob);
+		private void FormPerio_Load(object sender, System.EventArgs e)
+		{
+			_listMiscColorDefs = Defs.GetDefsForCategory(DefCat.MiscColors, true);
+			butColorBleed.BackColor = _listMiscColorDefs[1].ItemColor;
+			butColorPus.BackColor = _listMiscColorDefs[2].ItemColor;
+			butColorPlaque.BackColor = _listMiscColorDefs[4].ItemColor;
+			butColorCalculus.BackColor = _listMiscColorDefs[5].ItemColor;
+			textRedProb.Text = PrefC.GetString(PrefName.PerioRedProb);
+			textRedMGJ.Text = PrefC.GetString(PrefName.PerioRedMGJ);
+			textRedGing.Text = PrefC.GetString(PrefName.PerioRedGing);
+			textRedCAL.Text = PrefC.GetString(PrefName.PerioRedCAL);
+			textRedFurc.Text = PrefC.GetString(PrefName.PerioRedFurc);
+			textRedMob.Text = PrefC.GetString(PrefName.PerioRedMob);
 			//Procedure[] procList=Procedures.Refresh(PatCur.PatNum);
-			List<ToothInitial> initialList=ToothInitials.Refresh(PatCur.PatNum);
-			_listMissingTeeth=ToothInitials.GetMissingOrHiddenTeeth(initialList);
+			List<ToothInitial> initialList = ToothInitials.Refresh(PatCur.PatNum);
+			_listMissingTeeth = ToothInitials.GetMissingOrHiddenTeeth(initialList);
 			RefreshListExams();
-			if(Programs.UsingOrion) {
-				labelPlaqueHistory.Visible=true;
-				listPlaqueHistory.Visible=true;
+			if (Programs.UsingOrion)
+			{
+				labelPlaqueHistory.Visible = true;
+				listPlaqueHistory.Visible = true;
 				RefreshListPlaque();
 			}
-			listExams.SelectedIndex=PerioExams.ListExams.Count-1;//this works even if no items.
-			_userPrefCurrentOnly=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.PerioCurrentExamOnly).FirstOrDefault();
-			if(_userPrefCurrentOnly != null && PIn.Bool(_userPrefCurrentOnly.ValueString)) {
-				checkShowCurrent.Checked=true;
+			listExams.SelectedIndex = PerioExams.ListExams.Count - 1;//this works even if no items.
+
+			checkShowCurrent.Checked = UserPreference.GetBool(UserPreferenceName.PerioCurrentExamOnly);
+
+			radioCustom.Checked = UserPreference.GetBool(UserPreferenceName.PerioAutoAdvanceCustom);
+			if (radioCustom.Checked)
+			{
+				gridP.Direction = AutoAdvanceDirection.Custom;
 			}
-			_userPrefCustomAdvance=UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id,UserOdFkeyType.PerioAutoAdvanceCustom).FirstOrDefault();
-			if(_userPrefCustomAdvance!=null && PIn.Bool(_userPrefCustomAdvance.ValueString)) {
-				radioCustom.Checked=true;
-				gridP.Direction=AutoAdvanceDirection.Custom;
-			}
+
 			FillGrid();
-			Plugins.HookAddCode(this,"FormPerio.Load_end");
+			Plugins.HookAddCode(this, "FormPerio.Load_end");
 		}
 
 		///<summary>Goes to the first cell in the grid for this tooth.</summary>
@@ -2491,32 +2491,8 @@ namespace OpenDental{
 		}
 
 		private void butClose_Click(object sender,System.EventArgs e) {
-			if(_userPrefCurrentOnly==null) {
-				UserOdPrefs.Insert(new UserOdPref() {
-					UserNum=Security.CurrentUser.Id,
-					FkeyType=UserOdFkeyType.PerioCurrentExamOnly,
-					ValueString=POut.Bool(checkShowCurrent.Checked)
-				});
-			}
-			else {
-				if(_userPrefCurrentOnly.ValueString != POut.Bool(checkShowCurrent.Checked)) {//The user preference has changed.
-					_userPrefCurrentOnly.ValueString=POut.Bool(checkShowCurrent.Checked);
-					UserOdPrefs.Update(_userPrefCurrentOnly);
-				}
-			}
-			if(_userPrefCustomAdvance==null) {
-				UserOdPrefs.Insert(new UserOdPref() {
-					UserNum=Security.CurrentUser.Id,
-					FkeyType=UserOdFkeyType.PerioAutoAdvanceCustom,
-					ValueString=POut.Bool(radioCustom.Checked)
-				});
-			}
-			else {
-				if(_userPrefCustomAdvance.ValueString != POut.Bool(radioCustom.Checked)) {//The user preference has changed.
-					_userPrefCustomAdvance.ValueString=POut.Bool(radioCustom.Checked);
-					UserOdPrefs.Update(_userPrefCustomAdvance);
-				}
-			}
+			UserPreference.Set(UserPreferenceName.PerioCurrentExamOnly, checkShowCurrent.Checked);
+			UserPreference.Set(UserPreferenceName.PerioAutoAdvanceCustom, radioCustom.Checked);
 			Close();
 		}
 
